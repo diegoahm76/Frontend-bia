@@ -22,7 +22,7 @@ import {
   set_grantor,
   set_pqrs,
   set_pqr_status,
-} from '../../store/slice/pqrsdfSlice';
+} from '../../store/slice/centralDigitalizacionSlice';
 interface IProps {
   control_form: any | null;
   reset: any | null;

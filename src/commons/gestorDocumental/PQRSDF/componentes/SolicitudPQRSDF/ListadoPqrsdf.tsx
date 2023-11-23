@@ -48,23 +48,23 @@ const ListadoPqrsdf = () => {
   }, [pqrs]);
 
   useEffect(() => {
-    if ('id' in selectedPqr) {
-      // cambiar por id_pqr
-      // setear pqr seleccionado en pqr variable
-      // dispatch(
-      //   set_pqr(
-      //     pqrs.find(
-      //       (objeto: IObjPqr) => objeto.id_pqr === selectedPqr.id_pqr
-      //     ) ?? initial_state_pqr
-      //   )
-      // );
-      // dispatch(set_pqr_request(initial_state_pqr_request));
+    // if ('id' in selectedPqr) {
+    // cambiar por id_pqr
+    // setear pqr seleccionado en pqr variable
+    // dispatch(
+    //   set_pqr(
+    //     pqrs.find(
+    //       (objeto: IObjPqr) => objeto.id_pqr === selectedPqr.id_pqr
+    //     ) ?? initial_state_pqr
+    //   )
+    // );
+    // dispatch(set_pqr_request(initial_state_pqr_request));
 
-      // validar if esta radicado el pqr
-      set_button_option('component');
-      // si no lo esta
-      //set_button_option('restart')
-    }
+    // validar if esta radicado el pqr
+    set_button_option('component');
+    // si no lo esta
+    //set_button_option('restart')
+    // }
     // if ('id_pqr_request' in selectedPqr) {
     //   set_button_option('request');
     //   const pqr = pqrs.find(

@@ -22,8 +22,11 @@ import {
   set_grantor,
   set_pqrs,
   set_pqr_status,
-} from '../../store/slice/pqrsdfSlice';
-import { IObjCompany, IObjPerson } from '../../interfaces/pqrsdf';
+} from '../../store/slice/centralDigitalizacionSlice';
+import {
+  IObjCompany,
+  IObjPerson,
+} from '../../interfaces/central_digitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const PersonaTitular = () => {

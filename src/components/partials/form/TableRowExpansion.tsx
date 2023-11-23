@@ -24,6 +24,8 @@ interface IProps {
   setSelectedItem: any;
   expandedRows: DataTableExpandedRows | DataTableValueArray | undefined;
   setExpandedRows: any;
+  onRowToggleFunction: any;
+  initial_allow_expansion?: boolean;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TableRowExpansion = ({
@@ -33,6 +35,8 @@ const TableRowExpansion = ({
   setSelectedItem,
   setExpandedRows,
   expandedRows,
+  onRowToggleFunction,
+  initial_allow_expansion,
 }: IProps) => {
   const allow_expansion = (rowData: any) => {
     for (const propiedad in rowData) {
@@ -93,12 +97,18 @@ const TableRowExpansion = ({
         onSelectionChange={(e) => setSelectedItem(e.value)}
         value={products}
         expandedRows={expandedRows}
-        onRowToggle={(e) => setExpandedRows(e.data)}
+        onRowToggle={(e) => {
+          setExpandedRows(e.data);
+          onRowToggleFunction(e);
+        }}
         rowExpansionTemplate={rowExpansionTemplate}
         dataKey={definition_levels[0].column_id}
         tableStyle={{ minWidth: '60rem' }}
       >
-        <Column expander={allow_expansion} style={{ width: '5rem' }} />
+        <Column
+          expander={(initial_allow_expansion ?? false) || allow_expansion}
+          style={{ width: '5rem' }}
+        />
 
         {definition_levels[0].columns.map((option, index) => (
           <Column

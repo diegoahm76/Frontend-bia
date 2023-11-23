@@ -31,9 +31,9 @@ import {
   set_pqrs,
   set_presentation_types,
   set_storage_mediums,
-} from '../slice/pqrsdfSlice';
+} from '../slice/centralDigitalizacionSlice';
 import { api } from '../../../../../api/axios';
-import { IObjListType } from '../../interfaces/pqrsdf';
+import { IObjListType } from '../../interfaces/central_digitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (

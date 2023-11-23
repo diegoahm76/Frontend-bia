@@ -43,10 +43,17 @@ export interface IPqrsdf {
   file_typologies: IObjListType[];
   file_typology: IObjListType;
   metadata: IObjMetaData;
+
+  //Radicados pqr
+  filings: IObjFiled[];
+  filed: IObjFiled;
+  filed_types: IObjListType[];
+  filed_type: IObjListType;
+
 }
 
 export interface IObjListType {
-  id: number | null;
+  id: number | string | null;
   key: string | number | null;
   label: string | null;
   reference?: string | null; 
@@ -66,117 +73,135 @@ export interface IObjDocumentType {
 }
 
 export interface IObjPerson {
-  id_person?: number | null;
-  document_type_id?: number | string | null;
-  document_type?: number | string | null;
-  person_type_id?: number | string | null;
-  person_type?: number | string | null;
-  document?: number | string | null;
-  name?: string | null;
-  last_name?: string | null;
-  full_name?: string | null;
+  id_persona?: number | null;
+  tipo_documento_id?: number | string | null;
+  tipo_documento?: number | string | null;
+  tipo_persona?: number | string | null;
+  tipo_persona_desc?: number | string | null;
+  numero_documento?: number | string | null;
+  primer_nombre?: string | null;
+  primer_apellido?: string | null;
+  nombre_completo?: string | null;
 }
 
 export interface IObjCompany {
-  id_company?: number | null;
-  document_type_id?: number | null;
-  document_type?: number | string | null;
-  tradename?: string | null;
-  business_name?: string | null;
-  document?: number | string | null;
-  person_type_id?: number | null;
-  person_type?: string | number | null;
-  representatives_document_type_id?: number | null;
-  representatives_document_type?: number | string | null;
-  representatives_document?: number | string | null;
-  representatives_name?: string | null;
-  representatives_last_name?: string | null;
-  representatives_full_name?: string | null;
+  id_persona?: number | null;
+  tipo_documento_id?: number | string | null;
+  tipo_documento?: number | string | null;
+  tipo_persona?: number | string | null;
+  tipo_persona_desc?: number | string | null;
+  numero_documento?: number | string | null;
+  razon_social?: string | null;
+  nombre_comercial?: string | null;
+  persona_representante?: IObjPerson | null;
+  
 }
 
 export interface IObjPqr {
-  id_pqr?: number | null;
-  created_at?: string | Date | null;
-  filing_at?: string | null;
-  filing_number?: string | null;
-  pqr_status?: string | null;
-  pqr_status_id?: string | null;
-  pqr_request?: IObjPqrRequest[];
-  pqr_type?: string | null;
-  pqr_type_id?: number | null;
-  headline?: string | null;
-  subject?: string | null;
-  description?: string | null;
-  requires_response?: boolean | null;
-  is_anonymous?: boolean | null;
-  person_interposes_id?: number | null;
-  titular_person_id?: number | null;
-  code_owner_relationship?: string | number | null;
-  owner_relationship?: string | null;
-  media_type?: string | null;
-  media_type_id?: number | null;
-  presentation_type?: string | null;
-  code_presentation_type?: string | number | null;
-  destination_office?: string | null;
-  destination_office_id?: number | null;
-  person_create?: string | null;
-  person_create_id?: number | null;
-  reception_office?: string | null;
-  reception_office_id?: number | null;
-  filling_id?: number | null;
-  filling_at?: string | null;
-  requires_digitization?: boolean | null;
-  response_time?: number | null;
-  total_number_exhibit?: number | null;
-  total_number_pages?: number | null;
+  id_PQRSDF?: number | null; // id de pqr
+  fecha_registro?: string | Date | null; // fecha creación pqr
+  fecha_radicado?: string | null; // fecha de radicado pqr
+  numero_radicado?: string | null; // numero de radicado
+  nombre_estado_solicitud?: string | null; // estado de pqr
+  id_estado_actual_solicitud?: string | null; // id del estado de pqr
+  solicitudes_pqr?: IObjPqrRequest[]; // solicitudes de pqr
+
+  
+  tipo_PQRSDF?: string | null; // tipó de pqr
+  cod_tipo_PQRSDF?: number | null;// id de tipo de pqr
+  nombre_completo_titular?: string | null; // persona titular
+  asunto?: string | null; // asunto de pqr
+  descripcion?: string | null; // descripcion pqr
+  requiere_rta?: boolean | null;// requere respuesta
+  es_anonima?: boolean | null;// es anonimo
+  id_persona_interpone?: number | null;// id de la persona que interpone
+  id_persona_titular?: number | null; // id de la persona titular
+  cod_relacion_con_el_titular?: string | number | null; // codigo de relacion entre persona titular y persona que interpone
+  relacion_con_el_titular?: string | null; //relacion entre persona titular y persona que interpone
+  medio_solicitud?: string | null; // medio de entrega de documentacion
+  id_medio_solicitud?: number | null; // id medio de entrega de documentacion
+  forma_presentacion?: string | null; //tipo de presentacion
+  cod_forma_presentacion?: string | number | null; // id tipo de presentacion
+
+  sucursal_especifica_implicada?: string | null; // sucursal destino nombre
+  id_sucursal_especifica_implicada?: number | null; // id sucursal destino
+  persona_recibe?: string | null;// nombre persona que crea
+
+  id_persona_recibe?: number | null; // id persona que crea
+  sucursal_recepcion_fisica?: string | null; // sucursal de recepcion fisica
+  id_sucursal_recepcion_fisica?: number | null; // id de sucursal de recepcion fisica
+  id_radicado?: number | null; // id del radicado
+  requiere_digitalizacion?: boolean | null;// requiere digializacion
+  dias_para_respuesta?: number | null; // tiempo de respuesta
+  cantidad_anexos?: number | null;// total de anexos
+  nro_folios_totales?: number | null; // total folios en anexos
 }
 
 export interface IObjPqrRequest {
-  id_pqr_request?: number | null;
-  pqr_id?: number | null;
-  request_type_id?: number | null;
-  request_type?: string | null;
-  request_at?: string | null;
-  request_number?: string | null;
-  notification_at?: string | null;
-  organizational_unit_id?: number | null;
-  organizational_unit?: string | null;
-  subject?: string | null;
-  description?: string | null;
+  id_solicitud_al_usuario_sobre_pqrsdf?: number | null;
+  id_pqrsdf?: number | null;
+  cod_tipo_oficio?: number | null;
+  nombre_tipo_oficio?: string | null;
+  fecha_solicitud?: string | null;
+  numero_radicado_salida?: string | null;
+  fecha_radicado_salida?: string | null;
+  id_und_org_oficina_solicita?: number | null;
+  nombre_und_org_oficina_solicita?: string | null;
+  asunto?: string | null;
+  descripcion?: string | null;
 }
 
 export interface IObjExhibit {
-  id_exhibit?: number | null;
-  exhibit_name?: string | null;
-  exhibit_order?: number | null;
-  storage_medium?: string | null;
-  code_storage_medium?: string | number | null;
-  other_storage_medium?: string | number | null;
-  pages_number?: number | null;
-  is_digitized?: boolean | null;
+  id_anexo?: number | null;
+  nombre_anexo?: string | null;
+  orden_anexo_en_el_doc?: number | null;
+  medio_almacenamiento?: string | null;
+  cod_medio_almacenamiento?: string | number | null;
+  medio_almacenamiento_otros_cual?: string | number | null;
+  numero_folios?: number | null;
+  ya_digitalizado?: boolean | null;
+  observacion_digitalizacion?: string | null;
   exhibit_link?: string | null;
+  id_docu_de_arch_exp?: number | null;
   metadata: IObjMetaData | null;
 }
 
 export interface IObjMetaData {
-  id_metadata?: number | null;
-  exhibit_id?: number | null;
-  created_at?: string | null;
-  description?: number | null;
-  subject?: string | null;
-  file_category?: string | null;
-  code_file_category?: string | number | null;
-  is_original?: boolean | null;
-  has_physical_replica?: boolean | null;
-  has_typology?: boolean | null;
-  pages_number?: number | null;
-  file_origin?: string | null;
-  code_file_origin?: string | number | null;
-  exhibit_name?: string | null;
-  storage_medium?: string | null;
-  key_words?: string | null;
-  file_system_id?: number | null;
-  file_typology_id?: number | null;
-  file_typology?: string | null;
-  other_file_typology?: string | null;
+  id_metadatos_anexo_tmp?: number | null;
+  id_anexo?: number | null;
+  fecha_creacion_doc?: string | null;
+  descripcion?: number | null;
+  asunto?: string | null;
+  categoria_archivo?: string | null;
+  cod_categoria_archivo?: string | number | null;
+  es_version_original?: boolean | null;
+  tiene_replica_fisica?: boolean | null;
+
+  tiene_tipologia?: boolean | null;
+
+  numero_folios_documento?: number | null;
+  origen_archivo?: string | null;
+  cod_origen_archivo?: string | number | null;
+  nombre_anexo?: string | null;
+
+  cod_medio_almacenamiento?: string | null;
+  medio_almacenamiento?: string | null;
+  palabras_clave_doc?: string | null;
+  id_archivo_en_sistema?: number | null;
+
+  id_tipologia_doc?: number | null;
+  tipologia_doc?: string | null;
+  tipologia_no_creada_en_TRD?: string | null;
+}
+
+export interface IObjFiled {
+  id_radicado?: number | null;
+  cod_tipo_radicado?: string | number | null;
+  tipo_radicado?: number | string | null;
+  prefijo_radicado?: string | number | null;
+  agno_radicado?: string | number | null;
+  nro_radicado?: string | number | null;
+  fecha_radicado?: string | null;
+  id_persona_radica?: number | null;
+  id_radicado_asociado?: number | null;
 }

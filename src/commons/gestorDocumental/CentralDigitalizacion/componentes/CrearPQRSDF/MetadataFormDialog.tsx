@@ -22,8 +22,15 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 import { Title } from '../../../../../components';
-import { IObjMetaData, IObjPqr, IObjPqrRequest } from '../../interfaces/pqrsdf';
-import { set_exhibit, set_metadata } from '../../store/slice/pqrsdfSlice';
+import {
+  IObjMetaData,
+  IObjPqr,
+  IObjPqrRequest,
+} from '../../interfaces/central_digitalizacion';
+import {
+  set_exhibit,
+  set_metadata,
+} from '../../store/slice/centralDigitalizacionSlice';
 
 interface IProps {
   action?: string;

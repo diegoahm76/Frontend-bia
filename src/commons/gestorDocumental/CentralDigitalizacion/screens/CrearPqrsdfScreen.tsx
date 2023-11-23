@@ -9,12 +9,12 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
-import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
-import ListadoPqrsdf from '../componentes/SolicitudPQRSDF/ListadoPqrsdf';
-import TipoEmpresa from '../componentes/SolicitudPQRSDF/TipoEmpresa';
-import TipoPoderdante from '../componentes/SolicitudPQRSDF/TipoPoderdante';
-import TipoPersona from '../componentes/SolicitudPQRSDF/TipoPersona';
+import SeleccionTipoPersona from '../componentes/SolicitudesPendientes/SeleccionTipoPersona';
+import EstadoPqrsdf from '../componentes/SolicitudesPendientes/DigitalizacionesPendientes';
+import ListadoPqrsdf from '../componentes/SolicitudesPendientes/ListadoPqrsdf';
+import TipoEmpresa from '../componentes/SolicitudesPendientes/TipoEmpresa';
+import TipoPoderdante from '../componentes/SolicitudesPendientes/TipoPoderdante';
+import TipoPersona from '../componentes/SolicitudesPendientes/TipoPersona';
 import FormButton from '../../../../components/partials/form/FormButton';
 import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
@@ -25,11 +25,11 @@ import {
   set_on_behalf_of,
   set_pqr,
   set_type_applicant,
-} from '../store/slice/pqrsdfSlice';
+} from '../store/slice/centralDigitalizacionSlice';
 import FormStepper from '../../../../components/partials/form/FormStepper';
 import StepOne from '../componentes/CrearPQRSDF/StepOne';
 import StepTwo from '../componentes/CrearPQRSDF/StepTwo';
-import { IObjStepConfiguration } from '../interfaces/pqrsdf';
+import { IObjStepConfiguration } from '../interfaces/central_digitalizacion';
 import PersonaTitular from '../componentes/CrearPQRSDF/PersonaTitular';
 import PersonaInterpone from '../componentes/CrearPQRSDF/PersonaInterpone';
 import {

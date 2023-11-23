@@ -22,34 +22,37 @@ import {
   set_grantor,
   set_pqrs,
   set_pqr_status,
-} from '../../store/slice/pqrsdfSlice';
-import { IObjCompany, IObjPerson } from '../../interfaces/pqrsdf';
+} from '../../store/slice/centralDigitalizacionSlice';
+import {
+  IObjCompany,
+  IObjPerson,
+} from '../../interfaces/central_digitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const PersonaTitular = () => {
+const PersonaInterpone = () => {
   const dispatch = useAppDispatch();
   const { type_applicant, on_behalf_of, person, company, grantor, attorney } =
     useAppSelector((state) => state.pqrsdf_slice);
-  const { control: control_persona_titular, reset } = useForm<
+  const { control: control_persona_interpone, reset } = useForm<
     IObjPerson | IObjCompany
   >();
 
   useEffect(() => {
     switch (on_behalf_of.key) {
       case 'P':
-        reset(person);
+        reset(initial_state_person);
         break;
       case 'E':
         reset(company);
         break;
       case 'A':
-        reset(grantor);
+        reset(attorney);
         break;
       default:
         reset(initial_state_person);
         break;
     }
-  }, [person, grantor, company]);
+  }, [attorney, company, person]);
 
   return (
     <>
@@ -60,25 +63,18 @@ const PersonaTitular = () => {
           button_submit_icon_class={null}
           show_button={false}
           form_inputs={
-            type_applicant.key === 'A'
+            on_behalf_of.key === 'E'
               ? [
                   {
                     datum_type: 'title',
-                    title_label: 'Persona anonima',
-                  },
-                ]
-              : on_behalf_of.key === 'P'
-              ? [
-                  {
-                    datum_type: 'title',
-                    title_label: 'Persona titular',
+                    title_label: 'Representante legal',
                   },
                   {
                     datum_type: 'input_controller',
                     xs: 12,
                     md: 6,
-                    control_form: control_persona_titular,
-                    control_name: 'document_type',
+                    control_form: control_persona_interpone,
+                    control_name: ' representatives_document_type',
                     default_value: '',
                     rules: {},
                     label: 'Tipo de documento',
@@ -90,8 +86,8 @@ const PersonaTitular = () => {
                     datum_type: 'input_controller',
                     xs: 12,
                     md: 6,
-                    control_form: control_persona_titular,
-                    control_name: 'document',
+                    control_form: control_persona_interpone,
+                    control_name: 'representatives_document',
                     default_value: '',
                     rules: {
                       required_rule: { rule: true, message: 'Requerido' },
@@ -104,9 +100,9 @@ const PersonaTitular = () => {
                   {
                     datum_type: 'input_controller',
                     xs: 12,
-                    md: 12,
-                    control_form: control_persona_titular,
-                    control_name: 'full_name',
+                    md: 6,
+                    control_form: control_persona_interpone,
+                    control_name: 'representatives_full_name',
                     default_value: '',
                     rules: {},
                     label: 'Nombre completo',
@@ -114,63 +110,15 @@ const PersonaTitular = () => {
                     disabled: true,
                     helper_text: '',
                   },
-                ]
-              : on_behalf_of.key === 'E'
-              ? [
-                  {
-                    datum_type: 'title',
-                    title_label: 'Empresa',
-                  },
                   {
                     datum_type: 'input_controller',
                     xs: 12,
                     md: 6,
-                    control_form: control_persona_titular,
-                    control_name: 'document_type',
-                    default_value: '',
-                    rules: {},
-                    label: 'Tipo de documento',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
-                  },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 6,
-                    control_form: control_persona_titular,
-                    control_name: 'document',
-                    default_value: '',
-                    rules: {
-                      required_rule: { rule: true, message: 'Requerido' },
-                    },
-                    label: 'Número de documento',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
-                  },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 6,
-                    control_form: control_persona_titular,
-                    control_name: 'tradename',
-                    default_value: '',
-                    rules: {},
-                    label: 'Nombre comercial',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
-                  },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 6,
-                    control_form: control_persona_titular,
+                    control_form: control_persona_interpone,
                     control_name: 'business_name',
-                    default_value: '',
+                    default_value: 'Representante legal',
                     rules: {},
-                    label: 'Razón social',
+                    label: 'Relación con el titular',
                     type: 'text',
                     disabled: true,
                     helper_text: '',
@@ -180,13 +128,13 @@ const PersonaTitular = () => {
               ? [
                   {
                     datum_type: 'title',
-                    title_label: 'Persona titular',
+                    title_label: 'Persona apoderada',
                   },
                   {
                     datum_type: 'input_controller',
                     xs: 12,
                     md: 6,
-                    control_form: control_persona_titular,
+                    control_form: control_persona_interpone,
                     control_name: 'document_type',
                     default_value: '',
                     rules: {},
@@ -199,7 +147,7 @@ const PersonaTitular = () => {
                     datum_type: 'input_controller',
                     xs: 12,
                     md: 6,
-                    control_form: control_persona_titular,
+                    control_form: control_persona_interpone,
                     control_name: 'document',
                     default_value: '',
                     rules: {
@@ -213,12 +161,25 @@ const PersonaTitular = () => {
                   {
                     datum_type: 'input_controller',
                     xs: 12,
-                    md: 12,
-                    control_form: control_persona_titular,
+                    md: 6,
+                    control_form: control_persona_interpone,
                     control_name: 'full_name',
                     default_value: '',
                     rules: {},
                     label: 'Nombre completo',
+                    type: 'text',
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 6,
+                    control_form: control_persona_interpone,
+                    control_name: 'business_name',
+                    default_value: 'Apoderado',
+                    rules: {},
+                    label: 'Relación con el titular',
                     type: 'text',
                     disabled: true,
                     helper_text: '',
@@ -233,4 +194,4 @@ const PersonaTitular = () => {
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default PersonaTitular;
+export default PersonaInterpone;

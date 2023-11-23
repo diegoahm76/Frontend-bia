@@ -36,20 +36,20 @@ const PersonaInterpone = () => {
 
   useEffect(() => {
     switch (on_behalf_of.key) {
-      case 1:
+      case 'P':
         reset(initial_state_person);
         break;
-      case 2:
+      case 'E':
         reset(company);
         break;
-      case 3:
+      case 'A':
         reset(attorney);
         break;
       default:
         reset(initial_state_person);
         break;
     }
-  }, [attorney, company]);
+  }, [attorney, company, person]);
 
   return (
     <>
@@ -60,7 +60,7 @@ const PersonaInterpone = () => {
           button_submit_icon_class={null}
           show_button={false}
           form_inputs={
-            on_behalf_of.key === 2
+            on_behalf_of.key === 'E'
               ? [
                   {
                     datum_type: 'title',
@@ -121,7 +121,7 @@ const PersonaInterpone = () => {
                     helper_text: '',
                   },
                 ]
-              : on_behalf_of.key === 3
+              : on_behalf_of.key === 'A'
               ? [
                   {
                     datum_type: 'title',

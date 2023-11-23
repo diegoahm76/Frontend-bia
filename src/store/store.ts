@@ -59,6 +59,7 @@ import { AsigUniRespSlice } from "../commons/gestorDocumental/actividadesPrevias
 import { reportes_documentacion_slice } from "../commons/gestorDocumental/reportesDocumentacionPermisos/store/slice/indexReporteDocumentacion";
 import { DelOfiResSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/toolkit/slice/DelOfiResSlice";
 import { pqrsdf_slice } from "../commons/gestorDocumental/PQRSDF/store/slice/pqrsdfSlice";
+import { central_digitalizacion_slice } from "../commons/gestorDocumental/CentralDigitalizacion/store/slice/centralDigitalizacionSlice";
 import { planes_slice } from "../commons/seguimirntoPlanes/store/slice/indexPlanes";
 
 const persist_config = {
@@ -149,6 +150,7 @@ const app_reducers = combineReducers({
  // ! SEGUIMIENTO A PLANES
  // ? planes
  planes: planes_slice.reducer,
+  central_digitalizacion_slice: central_digitalizacion_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
