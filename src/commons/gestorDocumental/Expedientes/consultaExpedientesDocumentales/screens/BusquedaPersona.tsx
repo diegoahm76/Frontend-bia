@@ -6,13 +6,13 @@ import { DataTable } from 'primereact/datatable';
 import type * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { obtener_unidad_organizacional } from '../aperturaExpedientes/thunks/aperturaExpedientes';
-import { IList, InfoPersona } from '../../../../interfaces/globalModels';
-import { CustomSelect, Title } from '../../../../components';
-import { download_xls_dos } from '../../../../documentos-descargar/XLS_descargar';
-import { download_pdf_dos } from '../../../../documentos-descargar/PDF_descargar';
-import { useAppDispatch } from '../../../../hooks';
-import { obtener_personas, obtener_tipo_documento } from '../ConcesionAcceso/thunks/ConcesionAcceso';
+import { CustomSelect, Title } from '../../../../../components';
+import { download_xls_dos } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf_dos } from '../../../../../documentos-descargar/PDF_descargar';
+import { obtener_personas, obtener_tipo_documento } from '../../ConcesionAcceso/thunks/ConcesionAcceso';
+import { obtener_unidad_organizacional } from '../../aperturaExpedientes/thunks/aperturaExpedientes';
+import { IList, InfoPersona } from '../../../../../interfaces/globalModels';
+import { useAppDispatch } from '../../../../../hooks';
 
 interface IProps {
   set_persona: any;

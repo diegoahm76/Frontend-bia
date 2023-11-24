@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { BusquedaPersona } from "./BusquedaPersona";
-import { InfoPersona } from "../../../../interfaces/globalModels";
+import { InfoPersona } from "../../../../../interfaces/globalModels";
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,

@@ -11,7 +11,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { VerExpedientes } from "../../ConcesionAcceso/screens/VerExpedientes";
 import { VerDocumentos } from "../../ConcesionAcceso/screens/VerDocumentos";
-import { obtener_trd_actual_retirados } from "../thunks/indexacionExpedientes";
+import { obtener_trd_actual_retirados } from "../../indexacionExpedientes/thunks/indexacionExpedientes";
+import { expedientes_por_filtros } from "../thunks/ConsultaExpedientes";
 
 interface IProps {
     set_expediente: any,
@@ -137,7 +138,11 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             set_lt_serie(lista_con_subseries);
         })
     }
-
+    const expedientes_por_filtros_fc: () => void = () => {
+        dispatch(expedientes_por_filtros(tdr, seccion, serie, año)).then((response: any) => {
+            set_lt_tdr(response.data);
+        })
+    }
     const cambio_tdr: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_serie('');
         set_tipo_expediente('');
@@ -279,11 +284,10 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                     color='primary'
                                     variant='contained'
                                     startIcon={<SearchIcon />}
-                                    onClick={() => { set_abrir_modal_buscar(true); }}
+                                    onClick={() => { expedientes_por_filtros_fc(); }}
                                 >
                                     Buscar
                                 </Button>
-                                {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
                             </Stack>
                         </Box>
                     </Grid>
@@ -316,7 +320,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                         variant='outlined'
                                         startIcon={<VisibilityOutlinedIcon />}
                                         onClick={() => { set_abrir_modal_expedientes(true); }}
-                                        >
+                                    >
                                         Ver expedientes a los que me han dado acceso
                                     </Button>
                                     {abrir_modal_expedientes && <VerExpedientes is_modal_active={abrir_modal_expedientes} set_is_modal_active={set_abrir_modal_expedientes}></VerExpedientes>}
