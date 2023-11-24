@@ -5,186 +5,200 @@ import Grid from '@mui/material/Grid';
 import { TextField } from '@mui/material';
 import { Typography } from '@mui/material';
 import { api } from '../../../../api/axios';
+import Divider from '@mui/material/Divider';
 import { Title } from '../../../../components';
 import Accordion from '@mui/material/Accordion';
 import React, { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-
-export interface Select_Alerta {
-  cod_clase_alerta: string;
-  nombre_subsistema: string;
-  nombre_clase_alerta: string;
-  descripcion_clase_alerta: string;
-  cod_tipo_clase_alerta: string;
-  cod_categoria_clase_alerta: string;
-  cant_dias_previas: number | null;
-  frecuencia_previas: string | null;
-  cant_dias_post: number | null;
-  frecuencia_post: string | null;
-  envios_email: boolean;
-  mensaje_base_dia: string;
-  mensaje_base_previo: string | null;
-  mensaje_base_vencido: string | null;
-  nivel_prioridad: string;
-  activa: boolean;
-  asignar_responsable: boolean;
-  nombre_funcion_comple_mensaje: string;
-  id_modulo_destino: number;
-  id_modulo_generador: number;
-  cod_categoria_clase_alerta_display: string;
+const customStyles = {
+  position: 'relative',
+  background: '#FAFAFA',
+  borderRadius: '15px',
+  p: '20px',
+  m: '10px 0 20px 0',
+  mb: '20px',
+  boxShadow: '0px 3px 6px #042F4A26',
+};
+interface CuencaData {
+  id_macro_cuenca: number;
+  nombre_macro_cuenca: string;
 }
 
+interface MacroCuenca {
+  id_zona_hidrica: number;
+  nombre_zona_hidrica: string;
+  id_zona_hidrografica: string;
+  id_macro_cuenca: string;
+}
+
+interface ZonaHidrica {
+  id_sub_zona_hidrica: number;
+  nombre_sub_zona_hidrica: string;
+  codigo_rio: string;
+  id_zona_hidrica: number;
+  id_tipo_zona_hidrica: number;
+}
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Cuencas: React.FC = () => {
-  const [cuencas, set_cuencas] = useState<Select_Alerta[]>([]);
-  const fetch_cuencas = async (): Promise<void> => {
+  const [selectedMacroCuenca, setSelectedMacroCuenca] = useState(null);
+  const [selectedZonaHidrica, setSelectedZonaHidrica] = useState<number | null>(null); // El tipo de dato puede variar según tus necesidades
+
+  const [cuencas, setCuencas] = useState<CuencaData[]>([]);
+  const fetchCuencas = async (): Promise<void> => {
     try {
-      const url = "/transversal/alertas/configuracion_clase_alerta/get-by-subsistema/GEST/";
+      const url = "/hidrico/zonas-hidricas/macro-cuencas/get/";
       const res = await api.get(url);
-      const cuencas_data = res.data.data;
-      set_cuencas(cuencas_data);
+      const cuencasData: CuencaData[] = res.data?.data || [];
+      setCuencas(cuencasData);
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
-    void fetch_cuencas();
+    void fetchCuencas();
   }, []);
 
-  const handleButtonClick = () => {
-    console.log(cuencas);
+  const [macroCuencas, setMacroCuencas] = useState<MacroCuenca[]>([]);
+
+  const fetchMacroCuencas = async (): Promise<void> => {
+    try {
+      const url = `/hidrico/zonas-hidricas/zona_hidrica/get/${selectedMacroCuenca}/`;
+      const res = await api.get(url);
+      const macroCuencasData: MacroCuenca[] = res.data?.data || [];
+      setMacroCuencas(macroCuencasData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const customStyles = {
-    position: 'relative',
-    background: '#FAFAFA',
-    borderRadius: '15px',
-    p: '20px',
-    m: '10px 0 20px 0',
-    mb: '20px',
-    boxShadow: '0px 3px 6px #042F4A26',
+  useEffect(() => {
+    void fetchMacroCuencas();
+  }, [selectedMacroCuenca]);
+
+
+
+  const [zonasHidricas, setZonasHidricas] = useState<ZonaHidrica[]>([]);
+  const fetchZonasHidricas = async (): Promise<void> => {
+    try {
+      if (selectedZonaHidrica !== null) {
+        const url = `/hidrico/zonas-hidricas/subZonahidrica/get/${selectedZonaHidrica}/`;
+        const res = await api.get(url);
+        const zonasHidricasData: ZonaHidrica[] = res.data?.data || [];
+        setZonasHidricas(zonasHidricasData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
+  useEffect(() => {
+  void fetchZonasHidricas();
+}, [selectedZonaHidrica]);
+
+
+
+
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  // Inicializado en null, cámbialo al tipo de dato que sea apropiado para tu caso
+  const handleChange = (panel: string, idMacroCuenca: any) => (
+    event: React.ChangeEvent<{}>,
+    isExpanded: boolean
+  ) => {
+    setExpanded(isExpanded ? panel : false);
+    setSelectedMacroCuenca(idMacroCuenca); // Guarda el valor de id_macro_cuenca
+  };
+
+
+  const renderAccordions = () => {
+    return cuencas.map((cuenca, index) => (
+      <Accordion
+        key={index}
+        expanded={expanded === `panel${index + 1}`}
+        onChange={handleChange(`panel${index + 1}`, cuenca.id_macro_cuenca)}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls={`panel${index + 1}-content`}
+          id={`panel${index + 1}-header`}
+        >
+          <Typography>{cuenca.nombre_macro_cuenca}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography></Typography>
+          {expanded === `panel${index + 1}` && renderMacroCuencas()}
+        </AccordionDetails>
+      </Accordion>
+    ));
+  };
+
+
+  const renderZonasHidricas = () => {
+    return zonasHidricas.map((zonaHidrica, index) => (
+      <div key={index}>
+        {/* Aquí puedes agregar la estructura que prefieras para mostrar los detalles de zonaHidrica */}
+        <Typography>{zonaHidrica.nombre_sub_zona_hidrica}</Typography>
+        {index !== zonasHidricas.length - 1 && (
+          <Divider
+            style={{
+              width: '98%',
+              marginTop: '8px',
+              marginBottom: '8px',
+              marginLeft: 'auto',
+            }}
+          />
+        )}
+      </div>
+    ));
+  };
+  
+
+  
+  const [expandedPanel, setExpandedPanel] = useState<string | false>(false);
+  const renderMacroCuencas = () => {
+    return macroCuencas.map((macroCuenca, index) => (
+      <Accordion
+        key={index}
+        expanded={expandedPanel === `panel${index}`}
+        onChange={(event, isExpanded) => {
+          setExpandedPanel(isExpanded ? `panel${index}` : false);
+          setSelectedZonaHidrica(isExpanded ? macroCuenca.id_zona_hidrica : null);
+        }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>{macroCuenca.nombre_zona_hidrica}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography></Typography>
+          {expandedPanel === `panel${index}` && renderZonasHidricas()}
+        </AccordionDetails>
+      </Accordion>
+    ));
+  };
+
+
+
+
   return (
 
     <>
 
 
-      <Grid container spacing={2} m={2} p={2} item sx={customStyles}>
-        <button onClick={handleButtonClick}>Mostrar cuencas</button>
-
-        <Grid item xs={12}>
-          <Title title=" Creacion de cuencas " />
-        </Grid>
-
-        <Grid item xs={12} sm={3}>
-          <TextField
-            variant="outlined"
-            size="small"
-            required
-            label="Macro cuenca"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            name="Macro cuenca"
-          />
-        </Grid>
-
-
-
-        <Grid item xs={12} sm={3}>
-          <TextField
-            variant="outlined"
-            size="small"
-            required
-            label="Zona hidrica "
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            name="Zona hidrica "
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <TextField
-            variant="outlined"
-            size="small"
-            required
-            label="sup Zona hidrica "
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            name="sup Zona hidrica "
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <TextField
-            variant="outlined"
-            size="small"
-            required
-            label="tipo de zona hidrica  "
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            name="tipo de zona hidrica  "
-          />
-        </Grid>
-
-
-
-
-
-      </Grid>
+     
       <Grid container spacing={2} m={2} p={2} item sx={customStyles}>
         <Grid item xs={12}>
           <Title title=" Cuencas " />
         </Grid>
         <Grid item xs={12} sm={12}>
 
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Accordion 1</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>Accordion 1.1</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Accordion>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    >
-                      <Typography>Accordion 1.1.1</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                        malesuada lacus ex, sit amet blandit leo lobortis eget.
-                      </Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                </AccordionDetails>
-              </Accordion>
-            </AccordionDetails>
-          </Accordion>
+          <Grid item xs={12}>
+            {renderAccordions()}
 
-
+          </Grid>
 
         </Grid>
       </Grid>

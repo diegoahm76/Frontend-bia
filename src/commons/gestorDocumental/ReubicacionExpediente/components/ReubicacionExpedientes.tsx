@@ -34,42 +34,40 @@ const class_css = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Expedien: React.FC = () => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [open_modal, set_open_modal] = useState(false);
-    const { control: control_carpeta_destino, reset: reset_carpeta_destino, getValues: get_values_carpeta_destino, handleSubmit: handle_submit_carpeta_destino } = useForm<IObjCarpeta>();
+    const dispatch = useAppDispatch();
     const msj_error = "El campo es obligatorio."
+    const [expediente, set_expediente] = useState<any>(null);
+    const [open_modal, set_open_modal] = useState(false);
     const [lt_unidades_org, set_lt_unidades_org] = useState<any[]>([]);
     const [palabras_clave, set_palabras_clave] = useState<string>("");
     const [lt_palabras_clave, set_lt_palabras_clave] = useState<any>([]);
     const [error_fecha_creacion, set_msj_error_fecha_creacion] = useState<boolean>(false);
-    const [expediente, set_expediente] = useState<any>(null);
+    const { control: control_carpeta_destino, reset: reset_carpeta_destino, getValues: get_values_carpeta_destino, handleSubmit: handle_submit_carpeta_destino } = useForm<IObjCarpeta>();
 
     // console.log(expediente);
     const [serie_e, set_serie_e] = useState<any>();
+    const [titulo, set_titulo] = useState<string>("");
     const [usuario, set_usuario] = useState<any>(null);
-    const [fecha_creacion, set_fecha_creacion] = useState<Dayjs>(dayjs());
-    const [msj_error_titulo, set_msj_error_titulo] = useState<boolean>(false);
-    const [descripcion, set_descripcion] = useState<string>("");
-    const [und_organizacional, set_und_organizacional] = useState<string>("");
-    const [msj_error_und_organizacional, set_msj_error_und_organizacional] = useState<boolean>(false);
-    const [persona_titular, set_persona_titular] = useState<any>({});
-    const [persona_resp, set_persona_resp] = useState<any>({});
     const [carpetas, set_carpetas] = useState<any>([]);
+    const [limpiar, set_limpiar] = useState<boolean>(false);
+    const [expedientes, set_expedientes] = useState<any>([]);
+    const [persona_resp, set_persona_resp] = useState<any>({});
+    const [descripcion, set_descripcion] = useState<string>("");
+    const [configuracion, set_configuracion] = useState<any>(null);
+    const [persona_titular, set_persona_titular] = useState<any>({});
+    const [fecha_creacion, set_fecha_creacion] = useState<Dayjs>(dayjs());
+    const [und_organizacional, set_und_organizacional] = useState<string>("");
+    const [msj_error_titulo, set_msj_error_titulo] = useState<boolean>(false);
     const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
-    const [limpiar, set_limpiar] = useState<boolean>(false);
-    const [configuracion, set_configuracion] = useState<any>(null);
-    const [expedientes, set_expedientes] = useState<any>([]);
-    const [titulo, set_titulo] = useState<string>("");
+    const [msj_error_und_organizacional, set_msj_error_und_organizacional] = useState<boolean>(false);
     // Sección apertura
-    const [serie, set_serie] = useState<any>("");
     const [tdr, set_tdr] = useState<any>({});
+    const [serie, set_serie] = useState<any>("");
     const [seccion, set_seccion] = useState<string>("");
+    const handle_close_buscar = () => {  set_open_modal(false); };
     const [expanded, set_expanded] = useState<string | false>('panel1');
-    const handle_close_buscar = () => {
-        set_open_modal(false);
-    };
 
     const handle_mover_carpeta = (carpeta: any) => {
         reset_carpeta_destino(carpeta);
@@ -270,11 +268,11 @@ export const Expedien: React.FC = () => {
                 "carpetas_cajas_eliminar": carpetasEliminadas
             };
             const putUrl = `/gestor/expedientes-archivos/expedientes/agregar-eliminar-expediente-carpeta/update/${idExpediente}/`;
-    
+
             const putRes = await api.put(putUrl, putData);
             console.log('Respuesta de la solicitud PUT:', putRes.data);
             control_success("Expediente reubicado exitosamente");
-    
+
             limpiar_formulario();
         } catch (error: any) {
             if (error && error.response && error.response.data && error.response.data.detail) {
@@ -285,7 +283,7 @@ export const Expedien: React.FC = () => {
             }
         }
     };
-    
+
 
     //   useEffect(() => {
     //     fetchCuencas(idCarpetaCajaArray);
