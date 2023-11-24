@@ -7,17 +7,21 @@ import { Title } from "../../../../../components/Title";
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import ConcederAccesoExpediente from "../../ConcesionAcceso/screens/ConcederAccesoExpediente";
+import { useAppDispatch } from "../../../../../hooks";
+import { descargar_expediente } from "../thunks/ConsultaExpedientes";
 dayjs.extend(dayOfYear);
 interface IProps {
     expediente: any;
   }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
-    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [abrir_modal_conceder, set_abrir_modal_conceder] = useState<boolean>(false);
 
-    const salir_expediente: () => void = () => {
-        navigate('/home');
+    const descargar_expediente_id: () => void = () => {
+        dispatch(descargar_expediente(props.expediente?.id_expediente_documental)).then((response: any) => {
+
+        })
     }
 
     return (
@@ -235,7 +239,7 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                 color="primary"
                                 variant="outlined"
                                 startIcon={<CloudDownloadOutlinedIcon />}
-                                onClick={() => { }}
+                                onClick={() => { descargar_expediente_id() }}
                             >
                                 Descargar expediente
                             </Button>
@@ -243,7 +247,7 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                 color="primary"
                                 variant='outlined'
                                 startIcon={<ListOutlinedIcon />}
-                                onClick={() => { salir_expediente() }}
+                                onClick={() => { }}
                             >
                                 Ver índice electrónico
                             </Button>

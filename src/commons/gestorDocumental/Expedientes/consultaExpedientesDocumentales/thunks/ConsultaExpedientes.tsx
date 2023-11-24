@@ -43,6 +43,19 @@ export const expedientes_por_filtros: any = (id_trd_origen: string,id_und_seccio
     }
   };
 };
+
+// 
+export const descargar_expediente: any = (id_expediente: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/consulta/descargar/${id_expediente}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // Crear documento
 export const crear_indexacion_documentos: any = (obj_json: any, id_expediente: number) => {
   return async () => {
