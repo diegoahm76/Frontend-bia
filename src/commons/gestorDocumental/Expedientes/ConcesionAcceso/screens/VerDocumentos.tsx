@@ -31,7 +31,7 @@ export const VerDocumentos: React.FC<IProps> = (props: IProps) => {
 
     const columns: GridColDef[] = [
         {
-            field: 'numero_documento_persona_recibe_acceso',
+            field: 'identificacion_doc_en_expediente',
             headerName: 'IDENTIFICACIÓN',
             sortable: true,
             width: 150,
