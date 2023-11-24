@@ -102,13 +102,13 @@ export const ConcesionesPermisosVigentesDoc: React.FC<IProps> = (props: IProps) 
             field: 'nombre_persona_recibe_acceso',
             headerName: 'CONCEDIDO A',
             sortable: true,
-            width: 200
+            width: 300
         },
         {
             field: 'nombre_unidad_org_destinatario_conceder',
             headerName: 'UNIDAD ORGANIZACIONAL',
             sortable: true,
-            width: 200
+            width: 245
         },
         {
             field: 'fecha_acceso_inicia',
