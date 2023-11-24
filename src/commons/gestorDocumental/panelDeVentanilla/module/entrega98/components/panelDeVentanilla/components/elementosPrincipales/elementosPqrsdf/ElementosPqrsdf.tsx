@@ -11,6 +11,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import TaskIcon from '@mui/icons-material/Task';
 import {
+  setActionssToManagePermissions,
   setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,
   setListaHistoricoSolicitudes,
@@ -59,9 +60,61 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   >({});
 
   //* redux states
-  const { listaElementosPqrsfTramitesUotros } = useAppSelector(
+  const { listaElementosPqrsfTramitesUotros, actions } = useAppSelector(
     (state) => state.PanelVentanillaSlice
   );
+
+  // ? functions
+  const setActionsPQRSDF = (pqrsdf: any) => {
+    console.log(pqrsdf);
+
+    if (pqrsdf.estado_solicitud === 'EN GESTION') {
+      void Swal.fire({
+        title: 'Opps...',
+        icon: 'error',
+        text: `Esta PQRSDF ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
+        showConfirmButton: true,
+      });
+      return;
+    }
+
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(pqrsdf));
+    void Swal.fire({
+      icon: 'success',
+      title: 'Elemento seleccionado',
+      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      showConfirmButton: true,
+    });
+
+    const shouldDisable = (actionId: string) => {
+      const isAsigGrup = actionId === 'AsigGrup';
+      const isDigOrAsigGrup = ['Dig', 'AsigGrup'].includes(actionId);
+      const hasAnexos = pqrsdf.cantidad_anexos > 0;
+      const requiresDigitalization = pqrsdf.requiere_digitalizacion;
+      const isPQRSDF = pqrsdf.tipo_solicitud === 'PQRSDF';
+      // const isGuardado = pqrsdf.estado_solicitud === 'GUARDADO';
+      const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
+      const isEnVentanilla = [
+        'EN VENTANILLA SIN PENDIENTES',
+        'EN VENTANILLA CON PENDIENTES',
+      ].includes(pqrsdf.estado_solicitud);
+
+      return (
+        (isPQRSDF && actionId === 'ContinuarAsigGrup') ||
+        (isRadicado && hasAnexos && isDigOrAsigGrup) ||
+        (isRadicado && hasAnexos && requiresDigitalization && isAsigGrup) ||
+        (isEnVentanilla && requiresDigitalization && isAsigGrup)
+      );
+    };
+
+    const actionsPQRSDF = actions.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+
+    console.log(actionsPQRSDF);
+    dispatch(setActionssToManagePermissions(actionsPQRSDF));
+  };
 
   //* espacio para la definición de las columnas
   const columns = [
@@ -258,16 +311,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
                   // ? en consecuencia se debe manejar segun los estados que se deban ejecutar por cada pqr se´gún los documentos de modelado
                   /*dispatch(setActionssToManagePermissions())*/
-                  dispatch(
-                    setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
-                  );
-                  void Swal.fire({
-                    icon: 'success',
-                    title: 'Elemento seleccionado',
-                    text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
-                    showConfirmButton: true,
-                    // timer: 1500,
-                  });
+
+                  setActionsPQRSDF(params?.row);
                 }}
               >
                 <Avatar

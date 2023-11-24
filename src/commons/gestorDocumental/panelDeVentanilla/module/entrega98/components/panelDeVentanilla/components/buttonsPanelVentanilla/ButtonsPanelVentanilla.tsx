@@ -136,7 +136,10 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
     <>
       {/* se debe revisar ya que no si no hay un elemento seleccionado (pqrsdf, tramites y servicios, otros) es inncesario mostrar este elemento dial  */}
       {(() => {
-        switch (currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud) {
+        switch (
+          currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
+          currentElementPqrsdComplementoTramitesYotros?.tipo
+        ) {
           case 'PQRSDF':
             return (
               <Box
@@ -209,6 +212,38 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
                 sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
               >
                 <>Botones de Otros </>
+              </Box>
+            );
+
+          case 'Complemento de PQRSDF':
+            return (
+              <Box
+                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
+              >
+                <SpeedDial
+                  ariaLabel="SpeedDial basic example"
+                  sx={{ position: 'absolute', top: 0, left: 0 }}
+                  icon={<MultipleStopIcon />}
+                  direction="right"
+                >
+                  {actions.map(
+                    (action: {
+                      id: string;
+                      icon: any;
+                      name: string;
+                      path: string;
+                      disabled: boolean;
+                    }) =>
+                      action.disabled ? null : (
+                        <SpeedDialAction
+                          key={action.name}
+                          icon={action.icon}
+                          tooltipTitle={action.name}
+                          onClick={() => handleClickActionsGeneral(action)}
+                        />
+                      )
+                  )}
+                </SpeedDial>
               </Box>
             );
           default:

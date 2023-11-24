@@ -11,7 +11,10 @@ import { PanelVentanillaContext } from '../../../../../../../context/PanelVentan
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { Avatar, Chip, IconButton, Tooltip } from '@mui/material';
 import Swal from 'sweetalert2';
-import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/PanelVentanillaStore';
+import {
+  setActionssToManagePermissions,
+  setCurrentElementPqrsdComplementoTramitesYotros,
+} from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { Link } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
@@ -21,7 +24,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* states from redux store
-  const { listaComplementosRequerimientosOtros } = useAppSelector(
+  const { listaComplementosRequerimientosOtros, actions } = useAppSelector(
     (state) => state.PanelVentanillaSlice
   );
 
@@ -33,6 +36,58 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
+
+  const setActionsPQRSDF = (pqrsdf: any) => {
+    console.log(pqrsdf);
+
+    void Swal.fire({
+      icon: 'success',
+      title: 'Elemento seleccionado',
+      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      showConfirmButton: true,
+    });
+
+    const actionsPQRSDF = actions.map((action: any) => {
+      if (
+        (pqrsdf.tipo === 'Complemento de PQRSDF' && action.id === 'AsigPer') ||
+        action.id === 'AsigGrup'
+      ) {
+        return { ...action, disabled: true };
+      }
+      if (
+        pqrsdf.estado_solicitud === 'GUARDADO' &&
+        pqrsdf.cantidad_anexos > 0
+      ) {
+        if (action.id === 'Dig') {
+          return { ...action, disabled: true };
+        }
+        if (action.id === 'AsigGrup') {
+          return {
+            ...action,
+            disabled: true,
+          };
+        }
+      } else if (
+        pqrsdf.estado_solicitud === 'RADICADO' &&
+        pqrsdf.cantidad_anexos > 0 &&
+        !pqrsdf.requiere_digitalizacion
+      ) {
+        // Segundo caso
+        // No se necesita cambiar nada
+      } else if (
+        pqrsdf.estado_solicitud === 'RADICADO' &&
+        pqrsdf.cantidad_anexos > 0 &&
+        pqrsdf.requiere_digitalizacion
+      ) {
+        if (action.id === 'AsigGrup') {
+          return { ...action, disabled: true };
+        }
+      }
+      return action;
+    });
+    console.log(actionsPQRSDF);
+    dispatch(setActionssToManagePermissions(actionsPQRSDF));
+  };
 
   //* columns definition
   const columns = [
@@ -69,6 +124,9 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
               <Tooltip title="Ver info complemento asociado">
                 <IconButton
                   onClick={() => {
+                    /*
+                    setActionsPQRSDF(params.row);
+
                     dispatch(
                       setCurrentElementPqrsdComplementoTramitesYotros(
                         params?.row
@@ -79,8 +137,8 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                       title: 'Complemento seleccionado',
                       text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente o reinicies el módulo.',
                       showConfirmButton: true,
-                      // timer: 1500,
-                    });
+                    
+                    });*/
                   }}
                 >
                   <Avatar
