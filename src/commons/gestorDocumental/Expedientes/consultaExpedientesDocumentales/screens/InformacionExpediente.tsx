@@ -8,11 +8,12 @@ import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import ConcederAccesoExpediente from "../../ConcesionAcceso/screens/ConcederAccesoExpediente";
 dayjs.extend(dayOfYear);
-
+interface IProps {
+    expediente: any;
+  }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const InformacionExpediente: React.FC = () => {
+export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
     const navigate = useNavigate();
-    const [expediente, set_expediente] = useState<any>(null);
     const [abrir_modal_conceder, set_abrir_modal_conceder] = useState<boolean>(false);
 
     const salir_expediente: () => void = () => {
@@ -32,7 +33,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.titulo_expediente ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -42,7 +43,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.codigo_exp_und_serie_subserie ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -52,7 +53,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.nombre_und_org_oficina_respon_actual ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -62,7 +63,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.nombre_serie_origen ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -72,7 +73,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.nombre_subserie_origen ?? 'N/A'}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -82,7 +83,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.nombre_trd_origen ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -92,7 +93,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.tipo_expediente ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -102,7 +103,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente !== null ? dayjs(props.expediente?.fecha_apertura_expediente).format('YYYY') : ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -112,7 +113,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.nombre_persona_titular_exp_complejo ?? 'N/A'}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -122,7 +123,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.etapa_de_archivo_actual_exped ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -132,7 +133,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.fecha_folio_inicial ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -142,7 +143,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.fecha_folio_final ?? 'N/A'}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -152,7 +153,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.nombre_unidad_org_oficina_respon_original ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -162,7 +163,7 @@ export const InformacionExpediente: React.FC = () => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.nombre_und_org_oficina_respon_actual ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -185,7 +186,7 @@ export const InformacionExpediente: React.FC = () => {
                             >
                                 <Grid item xs={12} sm={4} sx={{ pointerEvents: 'none' }}>
                                     <Fab size="small" variant="extended" sx={true ? { marginX: '2px', marginY: '1px', backgroundColor: 'green', color: 'white', px: '20px' } : { marginX: '2px', marginY: '1px', backgroundColor: '#ff9800', color: 'black', px: '20px' }}>
-                                        {true ? 'Abierto' : 'Cerrado'}
+                                        {props.expediente?.estado === 'A' ? 'Abierto' : 'Cerrado'}
                                     </Fab>
                                 </Grid>
                             </Stack>
@@ -213,7 +214,7 @@ export const InformacionExpediente: React.FC = () => {
                             >
                                 Conceder acceso a expediente
                             </Button>
-                            {abrir_modal_conceder && <ConcederAccesoExpediente is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} expediente={expediente} ></ConcederAccesoExpediente>}
+                            {abrir_modal_conceder && <ConcederAccesoExpediente is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} expediente={props.expediente} ></ConcederAccesoExpediente>}
                         </Stack>
                     </Box>
                 </Grid>

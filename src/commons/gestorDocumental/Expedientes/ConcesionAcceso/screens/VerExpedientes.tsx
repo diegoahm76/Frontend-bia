@@ -5,10 +5,12 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useAppDispatch } from "../../../../../hooks";
 import { ver_expedientes } from "../thunks/ConcesionAcceso";
 import dayjs from "dayjs";
+import { buscar_expediente_id } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
+    set_expediente: any
 }
 
 const class_icon = {
@@ -68,8 +70,19 @@ export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
         }
     ];
 
+    const seleccion_expediente_grid = (seleccion_expediente: any): void => {
+        set_seleccion_expediente(expedientes.find((e: any) => e.id_concesion_acc === seleccion_expediente[0]));
+    }
+
     const boton_seleccionar: any = () => {
-        props.set_is_modal_active(false);
+        dispatch(buscar_expediente_id(seleccion_expediente.id_expediente)).then((response: any) => {
+            if(response.success){
+                props.set_expediente(response.data);   
+                props.set_is_modal_active(false);
+            }else{
+                props.set_expediente(null);  
+            }
+        });
     }
 
     return (
@@ -89,7 +102,8 @@ export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
                         pageSize={5}
                         rowsPerPageOptions={[5]}
                         rows={expedientes}
-                        getRowId={(row) => row.id_concesion_acc} />
+                        getRowId={(row) => row.id_concesion_acc} 
+                        onSelectionModelChange={seleccion_expediente_grid}/>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

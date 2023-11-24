@@ -36,13 +36,13 @@ export const ConcesionesPermisosVigentes: React.FC<IProps> = (props: IProps) => 
     }, []);
 
     const obtener_concesiones_realizados_fc: () => void = () => {
-        dispatch(obtener_concesiones_realizados(1,true)).then((response: any) => {
+        dispatch(obtener_concesiones_realizados(props.expediente?.id_expediente_documental,true)).then((response: any) => {
             if(response.success){
                 set_concesiones_realizadas(response.data);
                 set_actual_responsable(response.actual_responsable);
             }
         });
-        dispatch(obtener_concesiones_realizados(1,false)).then((response: any) => {
+        dispatch(obtener_concesiones_realizados(props.expediente?.id_expediente_documental,false)).then((response: any) => {
             if(response.success && response.actual_responsable){
                 set_actual_responsable(response.actual_responsable);
                 set_concesiones_realizadas_otros(response.data);
@@ -90,7 +90,7 @@ export const ConcesionesPermisosVigentes: React.FC<IProps> = (props: IProps) => 
             }
         });
         if (props.accion_guardar) {
-            dispatch(actualizar_acceso_expediente(1,concesiones,concesiones_otros)).then((response: any) => {
+            dispatch(actualizar_acceso_expediente(props.expediente?.id_expediente_documental,concesiones,concesiones_otros)).then((response: any) => {
                 if(response.success)
                     props.set_is_modal_active(false);
             });
