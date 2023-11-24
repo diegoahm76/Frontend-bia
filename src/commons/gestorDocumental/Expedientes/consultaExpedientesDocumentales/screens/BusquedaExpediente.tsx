@@ -3,13 +3,18 @@ import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../../hooks";
 import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
-import { obtener_expediente_id_serie, obtener_expediente_simple_id_serie, obtener_trd_actual_retirados } from "../thunks/indexacionExpedientes";
-import { obtener_config_expediente, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
-import dayjs from "dayjs";
+import { buscar_expediente_id, obtener_config_expediente, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
+import dayjs, { Dayjs } from "dayjs";
 import SearchIcon from '@mui/icons-material/Search';
 import BuscarExpediente from "../../indexacionExpedientes/screens/BuscarExpediente";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { VerExpedientes } from "../../ConcesionAcceso/screens/VerExpedientes";
+import { VerDocumentos } from "../../ConcesionAcceso/screens/VerDocumentos";
+import { obtener_trd_actual_retirados } from "../../indexacionExpedientes/thunks/indexacionExpedientes";
+import { expedientes_por_filtros } from "../thunks/ConsultaExpedientes";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 interface IProps {
     set_expediente: any,
@@ -25,9 +30,9 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     const [seccion, set_seccion] = useState<string>("");
     const [lt_serie, set_lt_serie] = useState<any>([]);
     const [serie, set_serie] = useState<any>("");
-    const [año, set_año] = useState<any>("");
-    const [tipo_expediente, set_tipo_expediente] = useState<string>("");
-    const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
+    const [año, set_año] = useState<any>(null);
+    const [abrir_modal_expedientes, set_abrir_modal_expedientes] = useState<boolean>(false);
+    const [abrir_modal_documentos, set_abrir_modal_documentos] = useState<boolean>(false);
     const [expediente, set_expediente] = useState<any>(null);
     const [expedientes, set_expedientes] = useState<any>([]);
     // Notificaciones
@@ -39,46 +44,48 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
 
     const columns: GridColDef[] = [
         {
-            field: 'codigo_exp_Agno',
+            field: 'codigo_exp_und_serie_subserie',
             headerName: 'CÓDIGO',
             sortable: true,
             width: 150,
         },
         {
-            field: 'codigo_exp_consec_por_agno',
+            field: 'nombre_trd_origen',
             headerName: 'TRD',
             sortable: true,
             width: 200,
         },
         {
-            field: 'tipologia',
+            field: 'titulo_expediente',
             headerName: 'TITULO',
             width: 200,
         },
         {
-            field: 'desde',
+            field: 'nombre_unidad_org',
             headerName: 'UNIDAD ORGANIZACIONAL',
             width: 200,
         },
         {
-            field: 'hasta',
+            field: 'nombre_serie_origen',
             headerName: 'SERIE',
             width: 200,
         },
         {
-            field: 'subserie',
+            field: 'nombre_subserie_origen',
             headerName: 'SUBSERIE',
             width: 200,
+            valueGetter: (params) => params.row.nombre_subserie_origen ?? 'N/A',
         },
         {
-            field: 'año',
+            field: 'codigo_exp_Agno',
             headerName: 'AÑO',
             width: 100,
         },
         {
-            field: 'persona',
+            field: 'nombre_persona_titular',
             headerName: 'PERSONA TITULAR',
             width: 200,
+            valueGetter: (params) => params.row.nombre_persona_titular ?? 'N/A',
         }
     ];
     const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
@@ -101,15 +108,11 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
         if (tdr !== "")
             obtener_unidades_marcadas_fc();
     }, [tdr]);
+    
     useEffect(() => {
         if (seccion !== "")
             obtener_serie_subserie_fc();
     }, [seccion]);
-
-    useEffect(() => {
-        // if (serie !== "")
-        // obtener_config_expediente_fc();
-    }, [serie]);
 
     const obtener_trd_actual_fc: () => void = () => {
         dispatch(obtener_trd_actual_retirados()).then((response: any) => {
@@ -126,37 +129,46 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             let lista_con_subseries: { id: any; nombre: string; }[] = [];
             response.data.forEach((series: any) => {
                 if (series.codigo_subserie !== null)
-                    lista_con_subseries.push({ id: series, nombre: series.codigo_serie + ' - ' + series.nombre_serie + '/' + series.codigo_subserie + ' - ' + series.nombre_subserie })
+                    lista_con_subseries.push({ id: series.id_catserie_unidadorg, nombre: series.codigo_serie + ' - ' + series.nombre_serie + '/' + series.codigo_subserie + ' - ' + series.nombre_subserie })
                 else
-                    lista_con_subseries.push({ id: series, nombre: series.codigo_serie + ' - ' + series.nombre_serie })
+                    lista_con_subseries.push({ id: series.id_catserie_unidadorg, nombre: series.codigo_serie + ' - ' + series.nombre_serie })
             });
             set_lt_serie(lista_con_subseries);
         })
     }
-
+    const expedientes_por_filtros_fc: () => void = () => {
+        const año_local =  año !== null ? año.format('YYYY') : '';
+        dispatch(expedientes_por_filtros(tdr?.id_trd ?? '', seccion, serie, año_local)).then((response: any) => {
+            set_expedientes(response.data);
+        })
+    }
     const cambio_tdr: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_serie('');
-        set_tipo_expediente('');
-        set_seccion('')
-        props.set_expediente(null);
+        set_seccion('');
+        set_expediente(null);
         set_tdr(e.target.value);
     }
 
     const cambio_seccion: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_serie('');
-        set_tipo_expediente('');
-        props.set_expediente(null);
+        set_expediente(null);
         set_seccion(e.target.value);
     }
 
     const cambio_serie: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
-        set_tipo_expediente('');
-        props.set_expediente(null);
+        set_expediente(null);
         set_serie(e.target.value);
     }
 
-    const cambio_año: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
-        set_año(e.target.value);
+    const cambio_año = (date: Dayjs | null): void => {
+        set_año(date);
+    }
+
+    const seleccion_expediente_grid = (seleccion_expediente: any): void => {
+        const expediente_local = expedientes.find((e: any) => e.id_expediente_documental === seleccion_expediente[0]);
+        dispatch(buscar_expediente_id(expediente_local.id_expediente_documental)).then((response: any) => {
+            response.success ? set_expediente(response.data) : set_expediente(null);     
+        });
     }
 
     useEffect(() => {
@@ -166,7 +178,6 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             set_serie("");
             set_lt_seccion([]);
             set_lt_serie([]);
-            set_tipo_expediente("");
             set_expediente(null);
         }
     }, [props.limpiar]);
@@ -240,20 +251,22 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                 justifyContent="center"
                             >
                                 <Grid item xs={12} sm={3}>
-                                    <FormControl size='small' fullWidth>
-                                        <InputLabel>Año</InputLabel>
-                                        <Select
-                                            label="Año"
-                                            value={año}
-                                            onChange={cambio_año}
-                                        >
-                                            {[{ id: 2023, nombre: '2023' }].map((m: any) => (
-                                                <MenuItem key={m.id} value={m.id}>
-                                                    {m.nombre}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="Año"
+                                         openTo="year"
+                                        value={año}
+                                        views={['year']}
+                                        onChange={(newValue) => { cambio_año(newValue); }}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                fullWidth
+                                                size="small"
+                                                {...params}
+                                            />
+                                        )}
+                                    />
+                                </LocalizationProvider>
                                 </Grid>
                             </Stack>
                         </Grid>
@@ -275,11 +288,10 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                     color='primary'
                                     variant='contained'
                                     startIcon={<SearchIcon />}
-                                    onClick={() => { set_abrir_modal_buscar(true); }}
+                                    onClick={() => { expedientes_por_filtros_fc(); }}
                                 >
                                     Buscar
                                 </Button>
-                                {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
                             </Stack>
                         </Box>
                     </Grid>
@@ -291,66 +303,69 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                             rows={expedientes}
-                            getRowId={(row) => row.orden_en_expediente} />
+                            getRowId={(row) => row.id_expediente_documental} 
+                            onSelectionModelChange={seleccion_expediente_grid}
+                            />
                     </Grid>
                     <Grid container>
-                    <Grid item xs={12} sm={9}>
-                        <Box
-                            component="form"
-                            sx={{ mt: '20px', mb: '20px' }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <Stack
-                                direction="row"
-                                justifyContent="flex-start"
-                                spacing={2}
-                                sx={{ mt: '20px' }}
+                        <Grid item xs={12} sm={9}>
+                            <Box
+                                component="form"
+                                sx={{ mt: '20px', mb: '20px' }}
+                                noValidate
+                                autoComplete="off"
                             >
-                                <Button
-                                    color='primary'
-                                    variant='outlined'
-                                    startIcon={<VisibilityOutlinedIcon />}
-                                // onClick={() => { set_abrir_modal_conceder(true); }}
+                                <Stack
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    spacing={2}
+                                    sx={{ mt: '20px' }}
                                 >
-                                    Ver expedientes a los que me han dado acceso
-                                </Button>
-                                <Button
-                                    color='primary'
-                                    variant='outlined'
-                                    startIcon={<VisibilityOutlinedIcon />}
-                                // onClick={() => { set_abrir_modal_conceder(true); }}
-                                >
-                                    Ver documentos a los que me han dado acceso
-                                </Button>
-                                {/* {abrir_modal_conceder && <ConcederAccesoExpediente is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} expediente={expediente} ></ConcederAccesoExpediente>} */}
-                            </Stack>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                        <Box
-                            component="form"
-                            sx={{ mt: '20px', mb: '20px' }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <Stack
-                                direction="row"
-                                justifyContent="flex-end"
-                                spacing={2}
-                                sx={{ mt: '20px' }}
+                                    <Button
+                                        color='primary'
+                                        variant='outlined'
+                                        startIcon={<VisibilityOutlinedIcon />}
+                                        onClick={() => { set_abrir_modal_expedientes(true); }}
+                                    >
+                                        Ver expedientes a los que me han dado acceso
+                                    </Button>
+                                    {abrir_modal_expedientes && <VerExpedientes is_modal_active={abrir_modal_expedientes} set_is_modal_active={set_abrir_modal_expedientes} set_expediente={set_expediente}></VerExpedientes>}
+                                    <Button
+                                        color='primary'
+                                        variant='outlined'
+                                        startIcon={<VisibilityOutlinedIcon />}
+                                        onClick={() => { set_abrir_modal_documentos(true); }}
+                                    >
+                                        Ver documentos a los que me han dado acceso
+                                    </Button>
+                                    {abrir_modal_documentos && <VerDocumentos is_modal_active={abrir_modal_documentos} set_is_modal_active={set_abrir_modal_documentos}></VerDocumentos>}
+                                </Stack>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <Box
+                                component="form"
+                                sx={{ mt: '20px', mb: '20px' }}
+                                noValidate
+                                autoComplete="off"
                             >
-                                <Button
-                                    color="primary"
-                                    variant="contained"
-                                    startIcon={<SearchIcon />}
-                                    onClick={() => { }}
+                                <Stack
+                                    direction="row"
+                                    justifyContent="flex-end"
+                                    spacing={2}
+                                    sx={{ mt: '20px' }}
                                 >
-                                    Búsqueda avanzada
-                                </Button>
-                            </Stack>
-                        </Box>
-                    </Grid>
+                                    <Button
+                                        color="primary"
+                                        variant="contained"
+                                        startIcon={<SearchIcon />}
+                                        onClick={() => { }}
+                                    >
+                                        Búsqueda avanzada
+                                    </Button>
+                                </Stack>
+                            </Box>
+                        </Grid>
                     </Grid>
                 </Box>
             </Grid>

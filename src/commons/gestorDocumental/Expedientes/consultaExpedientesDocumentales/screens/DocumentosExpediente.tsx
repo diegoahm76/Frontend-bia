@@ -1,28 +1,18 @@
 import { Grid, Box, Button, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { obtener_usuario_logueado } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 import { useAppDispatch } from "../../../../../hooks";
-import { useNavigate } from "react-router-dom";
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
+import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { Title } from "../../../../../components/Title";
-import { BusquedaExpediente } from "./BusquedaExpediente";
-import { InformacionExpediente } from "./InformacionExpediente";
+import ConcederAccesoDocumento from "../../ConcesionAcceso/screens/ConcederAccesoDocumento";
 dayjs.extend(dayOfYear);
-const class_css = {
-    position: 'relative',
-    background: '#FAFAFA',
-    borderRadius: '15px',
-    p: '20px',
-    mb: '20px',
-    boxShadow: '0px 3px 6px #042F4A26',
-}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DocumentosExpediente: React.FC = () => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+    const [documento, set_documento] = useState<any>(null);
+    const [abrir_modal_conceder, set_abrir_modal_conceder] = useState<boolean>(false);
 
     return (
         <>
@@ -33,6 +23,31 @@ export const DocumentosExpediente: React.FC = () => {
                         <Grid item xs={12} sm={4}>
                             Documentos de expedientes
                         </Grid>
+                        <Grid item xs={12} sm={4}>
+                    <Box
+                        component="form"
+                        sx={{ mt: '20px', mb: '20px' }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <Stack
+                            direction="row"
+                            justifyContent="flex-start"
+                            spacing={2}
+                            sx={{ mt: '20px' }}
+                        >
+                            <Button
+                                color='primary'
+                                variant='outlined'
+                                startIcon={<ListOutlinedIcon />}
+                                onClick={() => { set_abrir_modal_conceder(true); }}
+                            >
+                                Conceder acceso a documento
+                            </Button>
+                            {abrir_modal_conceder && <ConcederAccesoDocumento is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} documento={documento} ></ConcederAccesoDocumento>}
+                        </Stack>
+                    </Box>
+                </Grid>
                     </Grid>
                 </Box>
             </Grid>

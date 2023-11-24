@@ -1,10 +1,10 @@
 
-import { Box, Button, Dialog, DialogContent, Grid, TextField } from '@mui/material';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Box, Button, Grid, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch } from '../../../../../hooks';
+import { type GridColDef } from '@mui/x-data-grid';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import dayjs from 'dayjs';
 
 interface IProps {
     expediente: any;
@@ -12,9 +12,8 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
-    const dispatch = useAppDispatch();
-
     useEffect(() => {
+
     }, []);
 
 
@@ -68,7 +67,7 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.titulo_expediente ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={5}>
@@ -78,7 +77,7 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'Texto de prueba'}
+                                value={props.expediente?.codigo_exp_und_serie_subserie ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={2}>
@@ -88,7 +87,7 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={'2023'}
+                                value={props.expediente !== null ? dayjs(props.expediente?.fecha_apertura_expediente).format('YYYY') : ''}
                             />
                         </Grid>
                     </Grid>
