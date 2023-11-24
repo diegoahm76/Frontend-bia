@@ -1,56 +1,63 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip } from "@mui/material"
-import { useState, type Dispatch, type SetStateAction } from "react";
-import { InfoPersona } from "../../../../../interfaces/globalModels";
-import { BusquedaPersona } from "./BusquedaPersona";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip } from "@mui/material"
+import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useAppDispatch } from "../../../../../hooks";
+import { ver_documentos } from "../thunks/ConcesionAcceso";
+import dayjs from "dayjs";
 
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
 }
 
-const class_icon = {
-    width: 24,
-    height: 24,
-    background: '#fff',
-    border: '2px solid',
-};
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
+export const VerDocumentos: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
-    const [seleccion_expediente, set_seleccion_expediente] = useState<any>({});
-    const [expedientes, set_expedientes] = useState<any>([]);
+    const [seleccion_documento, set_seleccion_documento] = useState<any>({});
+    const [documentos, set_documentos] = useState<any>([]);
+
+    useEffect(() => {
+        ver_expedientes_fc();
+    }, []);
+
+    const ver_expedientes_fc: () => void = () => {
+        dispatch(ver_documentos()).then((response: any) => {
+            if(response.success){
+                set_documentos(response.data);
+            }
+        });
+    }
 
     const columns: GridColDef[] = [
         {
-            field: 'codigo_exp_Agno',
+            field: 'numero_documento_persona_recibe_acceso',
             headerName: 'IDENTIFICACIÓN',
             sortable: true,
             width: 150,
         },
         {
-            field: 'codigo_exp_consec_por_agno',
+            field: 'nombre_persona_recibe_acceso',
             headerName: 'NOMBRE',
             sortable: true,
             width: 200,
         },
         {
-            field: 'tipologia',
+            field: 'nombre_persona_concede_acceso',
             headerName: 'ACCESO OTORGADO POR',
             width: 200,
         },
         {
-            field: 'desde',
+            field: 'fecha_acceso_inicia',
             headerName: 'DESDE',
             width: 150,
+            valueGetter: (params) => dayjs(params.row.fecha_acceso_inicia).format('DD/MM/YYYY'),
         },
         {
-            field: 'hasta',
+            field: 'fecha_acceso_termina',
             headerName: 'HASTA',
             width: 150,
+            valueGetter: (params) => dayjs(params.row.fecha_acceso_termina).format('DD/MM/YYYY'),
         }
     ];
 
@@ -65,7 +72,7 @@ export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
             open={props.is_modal_active}
             onClose={() => { props.set_is_modal_active(false); }}
         >
-            <DialogTitle>{'Seleccionar expediente'}</DialogTitle>
+            <DialogTitle>{'Seleccionar documento'}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
                     <DataGrid
@@ -74,8 +81,8 @@ export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
                         columns={columns}
                         pageSize={5}
                         rowsPerPageOptions={[5]}
-                        rows={expedientes}
-                        getRowId={(row) => row.orden_en_expediente} />
+                        rows={documentos}
+                        getRowId={(row) => row.id_concesion_acc} />
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

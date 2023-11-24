@@ -3,15 +3,15 @@ import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../../hooks";
 import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
-import { obtener_expediente_id_serie, obtener_expediente_simple_id_serie, obtener_trd_actual_retirados } from "../thunks/indexacionExpedientes";
 import { obtener_config_expediente, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 import dayjs from "dayjs";
 import SearchIcon from '@mui/icons-material/Search';
 import BuscarExpediente from "../../indexacionExpedientes/screens/BuscarExpediente";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import { VerExpedientes } from "../../ConcesionAccesoExpedientes/screens/VerExpedientes";
-import { VerDocumentos } from "../../ConcesionAccesoDocumentos/screens/VerDocumentos";
+import { VerExpedientes } from "../../ConcesionAcceso/screens/VerExpedientes";
+import { VerDocumentos } from "../../ConcesionAcceso/screens/VerDocumentos";
+import { obtener_trd_actual_retirados } from "../thunks/indexacionExpedientes";
 
 interface IProps {
     set_expediente: any,

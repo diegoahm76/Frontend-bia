@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
-import { Title } from "../../../../../components/Title";
 import { BusquedaExpediente } from "./BusquedaExpediente";
 import { InformacionExpediente } from "./InformacionExpediente";
 import { DocumentosExpediente } from "./DocumentosExpediente";

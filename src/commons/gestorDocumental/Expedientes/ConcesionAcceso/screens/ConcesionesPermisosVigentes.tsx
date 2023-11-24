@@ -8,7 +8,7 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
-import { actualizar_acceso_expediente, obtener_concesiones_realizados } from '../thunks/ConcesionAccesoExpedientes';
+import { actualizar_acceso_expediente, obtener_concesiones_realizados } from '../thunks/ConcesionAcceso';
 interface IProps {
     expediente: any,
     concesion: any,
@@ -253,7 +253,7 @@ export const ConcesionesPermisosVigentes: React.FC<IProps> = (props: IProps) => 
                                 pageSize={5}
                                 rowsPerPageOptions={[5]}
                                 rows={concesiones_realizadas_otros}
-                                getRowId={(row) => uuidv4()} />
+                                getRowId={(row) => row.id_concesion_acc} />
                         </Grid>}
                     </Grid>
                 </Box>

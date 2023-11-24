@@ -6,7 +6,7 @@ import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { Title } from "../../../../../components/Title";
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
-import ConcederAccesoExpediente from "../../ConcesionAccesoExpedientes/screens/ConcederAccesoExpediente";
+import ConcederAccesoExpediente from "../../ConcesionAcceso/screens/ConcederAccesoExpediente";
 dayjs.extend(dayOfYear);
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

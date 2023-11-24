@@ -8,7 +8,7 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
-import { actualizar_acceso_documento, obtener_concesiones_realizados_doc } from '../thunks/ConcesionAccesoExpedientes';
+import { actualizar_acceso_documento, obtener_concesiones_realizados_doc } from '../thunks/ConcesionAcceso';
 interface IProps {
     documento: any,
     concesion: any,
@@ -25,7 +25,7 @@ const class_icon = {
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ConcesionesPermisosVigentes: React.FC<IProps> = (props: IProps) => {
+export const ConcesionesPermisosVigentesDoc: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
     const [concesiones_realizadas, set_concesiones_realizadas] = useState<any>([]);
     const [concesiones_realizadas_otros, set_concesiones_realizadas_otros] = useState<any>([]);
@@ -241,7 +241,7 @@ export const ConcesionesPermisosVigentes: React.FC<IProps> = (props: IProps) => 
                                 pageSize={5}
                                 rowsPerPageOptions={[5]}
                                 rows={concesiones_realizadas_otros}
-                                getRowId={(row) => uuidv4()} />
+                                getRowId={(row) => row.id_concesion_acc}  />
                         </Grid>}
                     </Grid>
                 </Box>

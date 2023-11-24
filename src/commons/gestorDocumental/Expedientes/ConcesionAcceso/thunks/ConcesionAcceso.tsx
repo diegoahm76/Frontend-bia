@@ -82,11 +82,11 @@ export const obtener_concesiones_realizados: any = (id_expediente: number, propi
   };
 };
 
-// Obtener concesiones de documentos realizados
-export const obtener_concesiones_realizados_doc: any = (id_documento: number, propios: boolean) => {
+// Obtener accesos dados de expedientes
+export const ver_expedientes: any = () => {
   return async () => {
     try {
-      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/concesion-acceso/documentos/get/${id_documento}/?propios=${propios}`);
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/concesion-acceso/expedientes/user/get/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -109,6 +109,8 @@ export const actualizar_acceso_expediente: any = (id_expediente: number,accesos:
   };
 };
 
+// Documentos
+
 // Actualizar acceso a documentos
 export const actualizar_acceso_documento: any = (id_documento: number,accesos: any, accesos_otros: any) => {
   return async () => {
@@ -123,12 +125,11 @@ export const actualizar_acceso_documento: any = (id_documento: number,accesos: a
   };
 };
 
-// Actualizar expediente
-export const actualizar_expediente: any = (id_expediente: number,expediente: any) => {
+// Obtener concesiones de documentos realizados
+export const obtener_concesiones_realizados_doc: any = (id_documento: number, propios: boolean) => {
   return async () => {
     try {
-      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/apertura-expediente/update/${id_expediente}/`,expediente);
-      control_success('El expediente fue actualizado correctamente.');
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/concesion-acceso/documentos/get/${id_documento}/?propios=${propios}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -137,12 +138,11 @@ export const actualizar_expediente: any = (id_expediente: number,expediente: any
   };
 };
 
-// Anulación expedientes
-export const anular_expediente: any = (id_expediente: number,motivo: any) => {
+// Obtener accesos dados de documentos
+export const ver_documentos: any = () => {
   return async () => {
     try {
-      const { data } = await api.put(`gestor/expedientes-archivos/expedientes/apertura-expediente/anular/${id_expediente}/`,motivo);
-      control_success('El expediente se anuló correctamente.');
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/concesion-acceso/documentos/user/get/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -150,4 +150,5 @@ export const anular_expediente: any = (id_expediente: number,motivo: any) => {
     }
   };
 };
+
 

@@ -5,8 +5,8 @@ import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch } from '../../../../../hooks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import { SeleccionPersona } from './SeleccionPersona';
-import { ConcesionesPermisosVigentes } from './ConcesionesPermisosVigentes';
+import { SeleccionPersonaDocumento } from './SeleccionPersonaDocumento';
+import { ConcesionesPermisosVigentesDoc } from './ConcesionesPermisosVigentesDoc';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
 import { obtener_usuario_logueado } from '../../aperturaExpedientes/thunks/aperturaExpedientes';
@@ -103,13 +103,13 @@ const ConcederAccesoDocumento: React.FC<IProps> = (props: IProps) => {
                         container
                         sx={class_css}
                     >
-                        <SeleccionPersona documento={props.documento} set_concesion={set_concesion} editar_concesion={editar_concesion}></SeleccionPersona>
+                        <SeleccionPersonaDocumento documento={props.documento} set_concesion={set_concesion} editar_concesion={editar_concesion}></SeleccionPersonaDocumento>
                     </Grid>
                     <Grid
                         container
                         sx={class_css}
                     >
-                        <ConcesionesPermisosVigentes documento={props.documento} concesion={concesion} accion_guardar={guardar} set_editar_concesion={set_editar_concesion} set_is_modal_active={props.set_is_modal_active}></ConcesionesPermisosVigentes>
+                        <ConcesionesPermisosVigentesDoc documento={props.documento} concesion={concesion} accion_guardar={guardar} set_editar_concesion={set_editar_concesion} set_is_modal_active={props.set_is_modal_active}></ConcesionesPermisosVigentesDoc>
                     </Grid>
                 </DialogContent>
                 <DialogActions>

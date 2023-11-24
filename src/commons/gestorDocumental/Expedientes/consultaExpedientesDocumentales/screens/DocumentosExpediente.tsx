@@ -1,17 +1,11 @@
 import { Grid, Box, Button, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { obtener_usuario_logueado } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 import { useAppDispatch } from "../../../../../hooks";
-import { useNavigate } from "react-router-dom";
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { Title } from "../../../../../components/Title";
-import { BusquedaExpediente } from "./BusquedaExpediente";
-import { InformacionExpediente } from "./InformacionExpediente";
-import ConcederAccesoDocumento from "../../ConcesionAccesoDocumentos/screens/ConcederAccesoDocumento";
+import ConcederAccesoDocumento from "../../ConcesionAcceso/screens/ConcederAccesoDocumento";
 dayjs.extend(dayOfYear);
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
