@@ -15,6 +15,9 @@ import type {
   ISubprogramas,
   IFuentesFinanciacion,
   IDetalleCuentas,
+  IConceptoPOAI,
+  IFuentes,
+  IBanco,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -165,6 +168,46 @@ export const initial_state_detalle_inversion: IDetalleCuentas = {
   id_actividad: null,
 };
 
+export const initial_state_concepto_poai: IConceptoPOAI = {
+  id_concepto: null,
+  nombre_indicador: '',
+  nombre: '',
+  concepto: '',
+  cuenta: '',
+  valor_total: null,
+  id_rubro: null,
+  id_indicador: null,
+  id_unidad_organizacional: null,
+};
+
+export const initial_state_fuente: IFuentes = {
+  id_fuente: null,
+  nombre_fuente: '',
+  vano_1: null,
+  vano_2: null,
+  vano_3: null,
+  vano_4: null,
+  concepto: '',
+  id_concepto: null,
+};
+
+export const initial_state_banco: IBanco = {
+  id_banco: null,
+  nombre_proyecto: '',
+  nombre_actividad: '',
+  nombre_indicador: '',
+  nombre_meta: '',
+  rubro: '',
+  banco_valor: null,
+  objeto_contrato: '',
+  id_proyecto: null,
+  id_actividad: null,
+  id_indicador: null,
+  id_meta: null,
+  id_rubro: null,
+  id_fuente_financiacion: null,
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
@@ -180,6 +223,9 @@ export const initial_state: IPlanesIndex = {
   subprograma: initial_state_subprogramas,
   fuente_financiacion: initial_state_fuentes_fianciacion,
   detalle_inversion: initial_state_detalle_inversion,
+  concepto_poai: initial_state_concepto_poai,
+  fuente: initial_state_fuente,
+  banco: initial_state_banco,
 };
 
 export const planes_slice = createSlice({
@@ -269,6 +315,21 @@ export const planes_slice = createSlice({
     ) => {
       state.detalle_inversion = action.payload;
     },
+    set_current_concepto_poai: (
+      state: IPlanesIndex,
+      action: PayloadAction<IConceptoPOAI>
+    ) => {
+      state.concepto_poai = action.payload;
+    },
+    set_current_fuente: (
+      state: IPlanesIndex,
+      action: PayloadAction<IFuentes>
+    ) => {
+      state.fuente = action.payload;
+    },
+    set_current_banco: (state: IPlanesIndex, action: PayloadAction<IBanco>) => {
+      state.banco = action.payload;
+    },
   },
 });
 
@@ -288,4 +349,7 @@ export const {
   set_current_subprograma,
   set_current_fuentes_financiacion,
   set_current_detalle_inversion,
+  set_current_concepto_poai,
+  set_current_fuente,
+  set_current_banco,
 } = planes_slice.actions;

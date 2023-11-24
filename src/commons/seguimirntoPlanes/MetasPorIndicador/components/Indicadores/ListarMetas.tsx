@@ -37,6 +37,12 @@ export const ListarMetas: React.FC = () => {
       width: 300,
     },
     {
+      field: 'nombre_meta',
+      headerName: 'NOMBRE META',
+      sortable: true,
+      width: 300,
+    },
+    {
       field: 'unidad_meta',
       headerName: 'UNIDAD META',
       sortable: true,

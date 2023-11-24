@@ -50,7 +50,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
     },
     {
       field: 'vano_1',
-      headerName: 'VANO 1',
+      headerName: 'AÑO 1',
       sortable: true,
       width: 150,
       valueFormatter: (params: GridValueFormatterParams) => {
@@ -67,7 +67,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
     },
     {
       field: 'vano_2',
-      headerName: 'VANO 2',
+      headerName: 'AÑO 2',
       sortable: true,
       width: 150,
       valueFormatter: (params: GridValueFormatterParams) => {
@@ -84,7 +84,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
     },
     {
       field: 'vano_3',
-      headerName: 'VANO 3',
+      headerName: 'AÑO 3',
       sortable: true,
       width: 150,
       valueFormatter: (params: GridValueFormatterParams) => {
@@ -101,7 +101,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
     },
     {
       field: 'vano_4',
-      headerName: 'VANO 4',
+      headerName: 'AÑO 4',
       sortable: true,
       width: 150,
       valueFormatter: (params: GridValueFormatterParams) => {

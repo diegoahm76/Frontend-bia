@@ -11,18 +11,3 @@ export const choicesTipoDeSolicitud = [
   },
   { value: 'Otros', label: 'Otros', idTipoSolicitud: 3 },
 ];
-
-/* radicado, ventanilla con pendientes, ventanilla sin pendientes */
-export const choicesEstadoActual = [
-  { value: 'Radicado', label: 'Radicado', idEstadoActual: 1 },
-  {
-    value: 'Ventanilla con pendientes',
-    label: 'Ventanilla con pendientes',
-    idEstadoActual: 2,
-  },
-  {
-    value: 'Ventanilla sin pendientes',
-    label: 'Ventanilla sin pendientes',
-    idEstadoActual: 3,
-  },
-];

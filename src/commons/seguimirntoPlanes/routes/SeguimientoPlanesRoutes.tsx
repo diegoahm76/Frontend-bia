@@ -14,6 +14,9 @@ import { RubrosRoutes } from '../Rubro/Rubro/router/RubrosRoutes';
 import { SubProgramasRoutes } from '../Subprogramas/router/SubProgramasRoutes';
 import { FuentesFinanciacionRoutes } from '../FinanciaciónIndicadores/router/FuentesFinanciacionRoutes';
 import { DetalleInversionRoutes } from '../DetalleInversionCuentas/router/DetalleInversionRoutes';
+import { ConceptoPOAIRoutes } from '../ConceptoPOAI/router/ConceptoPOAIRoutes';
+import { FuentesRoutes } from '../FuenteFinanciacion/router/FuentesFinanciacionRoutes';
+import { BancosRoutes } from '../BancoProyecto/router/BancosRoutes';
 
 const routes = [
   {
@@ -90,6 +93,23 @@ const routes = [
     path: 'detalle_inversion/',
     name: 'detalle_inversion',
     component: () => <DetalleInversionRoutes />,
+  },
+  // Concepto POAI
+  {
+    path: 'poai/',
+    name: 'poai',
+    component: () => <ConceptoPOAIRoutes />,
+  },
+  {
+    path: 'fuentes/',
+    name: 'fuentes',
+    component: () => <FuentesRoutes />,
+  },
+  // bancos
+  {
+    path: 'banco/',
+    name: 'banco',
+    component: () => <BancosRoutes />,
   },
   {
     path: '/*',

@@ -15,19 +15,24 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { Title } from "../../../../components";
-import { estante_deposito, get_depositos } from "../store/thunks/thunksArchivoFisico";
+import { LoadingButton } from "@mui/lab";
+import BusquedaAvanzadaFisico from "../components/BusquedaAvanzada";
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const ArchivoFisicoScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const [action, set_action] = useState<string>("create");
-
+    const [open_modal_avanzada, set_open_modal_avanzada] = useState(false);
     const [add_bien_is_active, set_add_bien_is_active] = useState<boolean>(false);
-    const { depositos } = useAppSelector((state) => state.archivo_fisico);
 
-
+    const handle_buscar = () => {
+        set_open_modal_avanzada(true);
+    };
+    const handle_close_buscar = () => {
+        set_open_modal_avanzada(false);
+    };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const action_template = (
-        //  node: INodo,
+      
         Column: any
     ) => {
         return (
@@ -108,11 +113,10 @@ export const ArchivoFisicoScreen: React.FC = () => {
         );
     };
     useEffect(() => {
-        void dispatch(get_depositos());
+       // void dispatch(get_depositos());
         //  void dispatch(estante_deposito(depositos.id_deposito))
     }, []);
 
-    console.log(depositos)
 
 
     return (
@@ -145,6 +149,26 @@ export const ArchivoFisicoScreen: React.FC = () => {
                             </TreeTable>
                         </Box>
                     </Grid>
+                    <Grid item xs={12} sm={4}>
+                    <LoadingButton
+                        variant="contained"
+                        onClick={handle_buscar}
+                        disabled={false}
+                    >
+                        Buscar
+                    </LoadingButton>
+                </Grid>
+
+                {open_modal_avanzada && (
+                    <Grid item xs={12} marginY={1}>
+                        <BusquedaAvanzadaFisico
+                          
+                            open={open_modal_avanzada}
+                           handle_close_buscar={handle_close_buscar}
+                         
+                        />
+                    </Grid>
+                )}
                 </Grid>
 
             </Grid>

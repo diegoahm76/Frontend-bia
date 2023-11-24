@@ -3,8 +3,8 @@ import React from 'react';
 import { ButtonsPanelVentanilla } from '../../components/panelDeVentanilla/components/buttonsPanelVentanilla/ButtonsPanelVentanilla';
 import { BuscadorPanelVentanilla } from '../../components/panelDeVentanilla/components/buscadorPanelVentanilla/BuscadorPanelVentanilla';
 import { ElementosPrincipales } from '../../components/panelDeVentanilla/components/elementosPrincipales/ElementosPrincipales';
-import { ComplementosElemento } from '../../components/panelDeVentanilla/components/complementos/ComplementosElemento';
 import { SalidaModulo } from '../../components/panelDeVentanilla/components/salidaModulo/SalidaModulo';
+import { SubElementoPrincipales } from '../../components/panelDeVentanilla/components/SubElementosGridDos/SubElementosPrincipales';
 
 export const PanelDeVentanillaScreen = (): JSX.Element => {
   return (
@@ -18,10 +18,9 @@ export const PanelDeVentanillaScreen = (): JSX.Element => {
       {/*
         Cuarta parte, elementos secundarios de la busqueda (pqrsdf, tramites u otros)
       */}
-      <ComplementosElemento />
+      <SubElementoPrincipales />
       {/* Acciones finales, salida del módulo */}
-      <SalidaModulo/>
-
+      <SalidaModulo />
     </>
   );
 };

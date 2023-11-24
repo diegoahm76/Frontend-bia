@@ -9,7 +9,7 @@ import type {
   Indicadores,
 } from '../../types/types';
 import { control_error } from '../../../../helpers';
-import { useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import {
   get_actividades,
@@ -20,6 +20,7 @@ import {
   get_tipos,
 } from '../services/services';
 import { IMedicion, ITipos } from '../../configuraciones/interfaces/interfaces';
+import { set_current_indicador } from '../../store/slice/indexPlanes';
 
 interface UserContext {
   // * id
@@ -35,6 +36,8 @@ interface UserContext {
   set_actividad_selected: (value: ValueProps[]) => void;
   productos_selected: ValueProps[];
   set_productos_selected: (value: ValueProps[]) => void;
+  indicadores_selected: ValueProps[];
+  set_indicadores_selected: (value: ValueProps[]) => void;
   // configutariones basicas selected
   medidor_selected: ValueProps[];
   set_medidor_selected: (value: ValueProps[]) => void;
@@ -65,6 +68,8 @@ export const DataContextIndicador = createContext<UserContext>({
   set_planes_selected: () => {},
   productos_selected: [],
   set_productos_selected: () => {},
+  indicadores_selected: [],
+  set_indicadores_selected: () => {},
   // configutariones basicas selected
   medidor_selected: [],
   set_medidor_selected: () => {},
@@ -98,6 +103,9 @@ export const UserProviderIndicador = ({
   const [actividad_selected, set_actividad_selected] = React.useState<
     ValueProps[]
   >([]);
+  const [indicadores_selected, set_indicadores_selected] = React.useState<
+    ValueProps[]
+  >([]);
   // configutariones basicas selected
   const [medidor_selected, set_medidor_selected] = React.useState<ValueProps[]>(
     []
@@ -113,6 +121,7 @@ export const UserProviderIndicador = ({
 
   // * fetch
   // //* declaracion context
+  // const dispatch = useAppDispatch();
   // const {
   //   producto: { id_producto },
   // } = useAppSelector((state) => state.planes);
@@ -139,8 +148,17 @@ export const UserProviderIndicador = ({
             nombre_plan: item.nombre_plan,
           })
         );
-
+        // dispatch(
+        //   set_current_indicador(data_indicador)
+        // );
         set_rows_indicador(data_indicador);
+        const data_indicador_selected: ValueProps[] | any = response.map(
+          (item: Indicadores) => ({
+            value: item.id_indicador,
+            label: item.nombre_indicador,
+          })
+        );
+        set_indicadores_selected(data_indicador_selected);
       }
     } catch (error: any) {
       control_error(
@@ -257,6 +275,8 @@ export const UserProviderIndicador = ({
     set_medidor_selected,
     tipos_selected,
     set_tipos_selected,
+    indicadores_selected,
+    set_indicadores_selected,
 
     // * rows
     rows_indicador,
