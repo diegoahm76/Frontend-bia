@@ -29,10 +29,24 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* context declaration
-  const { setRadicado, setValue } = useContext(PanelVentanillaContext);
-  const { handleGeneralLoading, handleThirdLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const {
+    setRadicado,
+    setValue,
+
+    anexos,
+    metadatos,
+    setAnexos,
+    setMetadatos,
+  } = useContext(PanelVentanillaContext);
+  const {
+    handleGeneralLoading,
+    handleThirdLoading,
+
+    openModalOne: infoAnexos,
+    openModalTwo: infoMetadatos,
+    handleOpenModalOne: handleOpenInfoAnexos,
+    handleOpenModalTwo: handleOpenInfoMetadatos,
+  } = useContext(ModalAndLoadingContext);
 
   const handleRequestRadicado = async (radicado: string) => {
     try {
@@ -92,7 +106,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       const hasAnexos = pqrsdf.cantidad_anexos > 0;
       const requiresDigitalization = pqrsdf.requiere_digitalizacion;
       const isPQRSDF = pqrsdf.tipo_solicitud === 'PQRSDF';
-      // const isGuardado = pqrsdf.estado_solicitud === 'GUARDADO';
       const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
       const isEnVentanilla = [
         'EN VENTANILLA SIN PENDIENTES',
@@ -101,12 +114,12 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
       return (
         (isPQRSDF && actionId === 'ContinuarAsigGrup') ||
+        (isRadicado && !hasAnexos && actionId === 'Dig') ||
         (isRadicado && hasAnexos && isDigOrAsigGrup) ||
         (isRadicado && hasAnexos && requiresDigitalization && isAsigGrup) ||
         (isEnVentanilla && requiresDigitalization && isAsigGrup)
       );
     };
-
     const actionsPQRSDF = actions.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
@@ -215,18 +228,10 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               <Tooltip title="Ver info pqrsdf">
                 <IconButton
                   onClick={() => {
-                    dispatch(
-                      setCurrentElementPqrsdComplementoTramitesYotros(
-                        params?.row
-                      )
-                    );
-                    void Swal.fire({
-                      icon: 'success',
-                      title: 'Elemento seleccionado',
-                      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente o reinicies el módulo.',
-                      showConfirmButton: true,
-                      // timer: 1500,
-                    });
+                    setActionsPQRSDF(params?.row);
+                    handleOpenInfoMetadatos(false);
+                    handleOpenInfoAnexos(false);
+                    setMetadatos([]);
                   }}
                 >
                   <Avatar

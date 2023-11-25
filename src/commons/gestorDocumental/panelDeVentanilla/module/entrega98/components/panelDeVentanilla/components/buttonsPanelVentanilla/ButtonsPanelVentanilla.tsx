@@ -33,6 +33,9 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
   );
+  const actionsComplementos = useAppSelector(
+    (state) => state.PanelVentanillaSlice.actionsComplementos
+  );
 
   const withValidation =
     (fn: Function) => (action: { disabled: boolean; path: string }) => {
@@ -226,7 +229,7 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
                   icon={<MultipleStopIcon />}
                   direction="right"
                 >
-                  {actions.map(
+                  {actionsComplementos.map(
                     (action: {
                       id: string;
                       icon: any;

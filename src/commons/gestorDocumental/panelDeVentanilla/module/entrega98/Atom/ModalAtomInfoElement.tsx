@@ -415,6 +415,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   variant="contained"
                   onClick={() => {
                     handleOpenInfoMetadatos(false);
+                    handleOpenInfoAnexos(false);
                     console.log('cerrando información de METADATO');
                   }}
                   startIcon={<CloseIcon />}
@@ -442,6 +443,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
             variant="outlined"
             onClick={() => {
               navigate('/app/gestor_documental/panel_ventanilla/');
+              handleOpenInfoMetadatos(false);
+              handleOpenInfoAnexos(false);
+              setMetadatos([]);
             }}
             startIcon={<ArrowBackIcon />}
           >

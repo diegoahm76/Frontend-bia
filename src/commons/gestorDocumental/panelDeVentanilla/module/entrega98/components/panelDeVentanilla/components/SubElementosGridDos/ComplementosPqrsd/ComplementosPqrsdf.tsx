@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
+import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 
 export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* dispatch declaration
@@ -29,7 +30,24 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   );
 
   //* context declaration
-  const { setRadicado, setValue } = useContext(PanelVentanillaContext);
+  const { setRadicado, setValue,
+  
+    anexos,
+    metadatos,
+    setAnexos,
+    setMetadatos,
+
+  } = useContext(PanelVentanillaContext);
+
+  const {
+    handleGeneralLoading,
+    handleThirdLoading,
+
+    openModalOne: infoAnexos,
+    openModalTwo: infoMetadatos,
+    handleOpenModalOne: handleOpenInfoAnexos,
+    handleOpenModalTwo: handleOpenInfoMetadatos,
+  } = useContext(ModalAndLoadingContext);
 
   // ? states
   //* loader button simulacion
@@ -37,9 +55,21 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
     {}
   );
 
-  const setActionsPQRSDF = (pqrsdf: any) => {
-    console.log(pqrsdf);
+  //* se va a tener que revisar luego está funciónP
+  const setActionsPQRSDF = (complemento: any) => {
+    console.log(complemento);
 
+    if (complemento.estado_solicitud === 'EN GESTION') {
+      void Swal.fire({
+        title: 'Opps...',
+        icon: 'error',
+        text: `Esta PQRSDF ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
+        showConfirmButton: true,
+      });
+      return;
+    }
+
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(complemento));
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
@@ -47,44 +77,29 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const actionsPQRSDF = actions.map((action: any) => {
-      if (
-        (pqrsdf.tipo === 'Complemento de PQRSDF' && action.id === 'AsigPer') ||
-        action.id === 'AsigGrup'
-      ) {
-        return { ...action, disabled: true };
+    const shouldDisable = (actionId: string) => {
+      const isEnviarSolicitud = actionId === 'EnviarSolicitud';
+      const isAsigGrup = actionId === 'AsigGrup';
+      const isAsigUser = actionId === 'AsigUser';
+      const hasAnexos = complemento.cantidad_anexos > 0;
+      const requiresDigitalization = complemento.requiere_digitalizacion;
+
+      // Primer caso: Complemento requiere digitalización
+      if (requiresDigitalization) {
+        return !(isEnviarSolicitud && hasAnexos) || isAsigGrup || isAsigUser;
       }
-      if (
-        pqrsdf.estado_solicitud === 'GUARDADO' &&
-        pqrsdf.cantidad_anexos > 0
-      ) {
-        if (action.id === 'Dig') {
-          return { ...action, disabled: true };
-        }
-        if (action.id === 'AsigGrup') {
-          return {
-            ...action,
-            disabled: true,
-          };
-        }
-      } else if (
-        pqrsdf.estado_solicitud === 'RADICADO' &&
-        pqrsdf.cantidad_anexos > 0 &&
-        !pqrsdf.requiere_digitalizacion
-      ) {
-        // Segundo caso
-        // No se necesita cambiar nada
-      } else if (
-        pqrsdf.estado_solicitud === 'RADICADO' &&
-        pqrsdf.cantidad_anexos > 0 &&
-        pqrsdf.requiere_digitalizacion
-      ) {
-        if (action.id === 'AsigGrup') {
-          return { ...action, disabled: true };
-        }
+
+      // Segundo caso: Complemento NO requiere digitalización
+      if (!requiresDigitalization) {
+        return isAsigUser;
       }
-      return action;
-    });
+    };
+
+    const actionsPQRSDF = actions.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+
     console.log(actionsPQRSDF);
     dispatch(setActionssToManagePermissions(actionsPQRSDF));
   };
@@ -124,21 +139,13 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
               <Tooltip title="Ver info complemento asociado">
                 <IconButton
                   onClick={() => {
-                    /*
+                    
                     setActionsPQRSDF(params.row);
 
-                    dispatch(
-                      setCurrentElementPqrsdComplementoTramitesYotros(
-                        params?.row
-                      )
-                    );
-                    void Swal.fire({
-                      icon: 'success',
-                      title: 'Complemento seleccionado',
-                      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente o reinicies el módulo.',
-                      showConfirmButton: true,
-                    
-                    });*/
+                    handleOpenInfoMetadatos(false);
+              handleOpenInfoAnexos(false);
+              setMetadatos([]);
+
                   }}
                 >
                   <Avatar
@@ -168,7 +175,8 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
 
                   // ? en consecuencia se debe manejar segun los estados que se deban ejecutar por cada pqr se´gún los documentos de modelado
                   /*dispatch(setActionssToManagePermissions())*/
-                  dispatch(
+                  setActionsPQRSDF(params.row);
+                 /* dispatch(
                     setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
                   );
                   void Swal.fire({
@@ -177,7 +185,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                     text: 'Has seleccionado un complemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
                     showConfirmButton: true,
                     // timer: 1500,
-                  });
+                  });*/
                 }}
               >
                 <Avatar
