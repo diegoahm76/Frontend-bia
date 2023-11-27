@@ -2,16 +2,20 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
 import Grid from '@mui/material/Grid';
+import { Button } from "@mui/material";
+import { CrearRios } from './CrearRios';
 import { TextField } from '@mui/material';
 import { Typography } from '@mui/material';
 import { api } from '../../../../api/axios';
 import Divider from '@mui/material/Divider';
+import AddIcon from "@mui/icons-material/Add";
 import { Title } from '../../../../components';
 import Accordion from '@mui/material/Accordion';
 import React, { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+
 const customStyles = {
   position: 'relative',
   background: '#FAFAFA',
@@ -80,7 +84,7 @@ export const Cuencas: React.FC = () => {
   }, [selectedMacroCuenca]);
 
 
-
+  //2
   const [zonasHidricas, setZonasHidricas] = useState<ZonaHidrica[]>([]);
   const fetchZonasHidricas = async (): Promise<void> => {
     try {
@@ -94,10 +98,10 @@ export const Cuencas: React.FC = () => {
       console.error(error);
     }
   };
-  
+
   useEffect(() => {
-  void fetchZonasHidricas();
-}, [selectedZonaHidrica]);
+    void fetchZonasHidricas();
+  }, [selectedZonaHidrica]);
 
 
 
@@ -155,9 +159,9 @@ export const Cuencas: React.FC = () => {
       </div>
     ));
   };
-  
 
-  
+
+
   const [expandedPanel, setExpandedPanel] = useState<string | false>(false);
   const renderMacroCuencas = () => {
     return macroCuencas.map((macroCuenca, index) => (
@@ -182,18 +186,38 @@ export const Cuencas: React.FC = () => {
 
 
 
+  const [is_modal_active, set_is_buscar] = useState<boolean>(false);
+  const handle_open_buscar = (): void => {
+    set_is_buscar(true);
+  };
 
   return (
 
     <>
 
+      <CrearRios is_modal_active={is_modal_active} set_is_modal_active={set_is_buscar} />
 
-     
+
+
+
       <Grid container spacing={2} m={2} p={2} item sx={customStyles}>
         <Grid item xs={12}>
           <Title title=" Cuencas " />
         </Grid>
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={2}>
+          <Button startIcon={<AddIcon />} onClick={handle_open_buscar} fullWidth variant="outlined"    >
+            Crear
+          </Button>
+        </Grid>
+        <Divider
+          style={{
+            width: '98%',
+            marginTop: '8px',
+            marginBottom: '8px',
+            marginLeft: 'auto',
+          }}
+        />
+        <Grid item marginTop={0} xs={12} sm={12}>
 
           <Grid item xs={12}>
             {renderAccordions()}

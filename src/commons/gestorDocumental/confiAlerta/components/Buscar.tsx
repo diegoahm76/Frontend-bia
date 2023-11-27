@@ -97,7 +97,7 @@ export const Buscar: React.FC<BuscarProps> = ({ handleClear, setSelectedEncuesta
     };
 
     return (
-        <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
+        <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl" >
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} marginTop={3}
                 sx={{
