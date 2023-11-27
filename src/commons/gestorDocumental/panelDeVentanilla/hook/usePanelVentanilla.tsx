@@ -16,16 +16,27 @@ export const usePanelVentanilla = () => {
   } = useForm({
     // ? pendiente el tipado, ya que por base de datos quizá cambie la información que se necesita
     defaultValues: {
+      // ? para pqrsdf
       tipo_de_solicitud: {
         value: '',
         label: '',
       },
-      estado_actual: {
+      estado_actual_solicitud: {
         value: '',
         label: '',
       },
-      radicado: '',
+      radicado: '', //* sirve para pqrsdf y tramites y servicios
+      // ? para trámite y servicios
+      nombre_titular: '',
+      asunto_proyecto: '',
+      pago_tramite: {
+        value: '',
+        label: '',
+      },
+      expediente: '',
     },
+
+    // ! se debe agregar tambien el de otros
   });
 
   //* ejecucion del watch
@@ -34,15 +45,29 @@ export const usePanelVentanilla = () => {
   // ? ------- funciones para el manejo de los elementos del panel de ventanilla -------
   const reset_search_form = () =>
     reset_busqueda_panel_ventanilla({
+      // ? para pqrsdf
+
+      //* se debe evaluar el borrado de los valores del selector llamado tipo de solicitud
       tipo_de_solicitud: {
         value: '',
         label: '',
       },
-      estado_actual: {
+      estado_actual_solicitud: {
         value: '',
         label: '',
       },
       radicado: '',
+
+      // ? para trámite y servicios
+      nombre_titular: '',
+      asunto_proyecto: '',
+      pago_tramite: {
+        value: '',
+        label: '',
+      },
+      expediente: '',
+
+      // ! se debe agregar tambien el de otros
     });
 
   // ! DECLARACIONES PARA LA ENTREGA 99 ................//
@@ -74,7 +99,11 @@ export const usePanelVentanilla = () => {
     // formState: formState_manejo_metadatos_modal,
     setValue: setValueManejoMetadatosModal,
     reset: resetManejoMetadatosModal,
+    watch: watchManejoMetadatosModal,
   } = useForm();
+
+  //
+  const watchExeManejoModalMetadatos = watchManejoMetadatosModal();
 
   return {
     // ! DECLARACIONES PARA LA ENTREGA 98 ................//
@@ -107,5 +136,6 @@ export const usePanelVentanilla = () => {
     handleSubmitManejoMetadatosModal,
     setValueManejoMetadatosModal,
     resetManejoMetadatosModal,
+    watchExeManejoModalMetadatos,
   };
 };

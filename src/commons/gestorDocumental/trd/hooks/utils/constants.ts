@@ -20,6 +20,8 @@ export const initial_state_format_documental_type = {
   },
   nombre: '',
   activo: true,
+  control_tamagno_max:false,
+  tamagno_max_mb: 0,
 };
 
 /* export const data_searched_trd_trd: SearchedTRD = {

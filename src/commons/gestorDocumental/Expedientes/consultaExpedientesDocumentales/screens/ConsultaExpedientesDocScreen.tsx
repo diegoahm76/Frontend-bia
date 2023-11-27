@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
-import { Title } from "../../../../../components/Title";
 import { BusquedaExpediente } from "./BusquedaExpediente";
 import { InformacionExpediente } from "./InformacionExpediente";
 import { DocumentosExpediente } from "./DocumentosExpediente";
@@ -41,12 +40,12 @@ export const ConsultaExpedientesDocScreen: React.FC = () => {
             >
                 <BusquedaExpediente set_expediente={set_expediente}  limpiar={false}></BusquedaExpediente>
             </Grid>
-            <Grid
+            {expediente !== null && <Grid
                 container
                 sx={class_css}
             >
-                <InformacionExpediente></InformacionExpediente>
-            </Grid>
+                <InformacionExpediente expediente={expediente}></InformacionExpediente>
+            </Grid>}
             <Grid
                 container
                 sx={class_css}

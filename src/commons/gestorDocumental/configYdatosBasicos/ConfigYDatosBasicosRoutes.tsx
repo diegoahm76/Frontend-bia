@@ -11,6 +11,7 @@ import { AdministrarTipologiasDocumentales } from '../trd/components/Tipologias/
 import { ModalProviderTRD } from '../trd/context/ModalsContextTrd';
 import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
 import { RadicadosRoutes } from '../TiposRadicado/router/RadicadosRoutes';
+import { RutasConfiguracionTipologuias } from '../trd/components/Tipologias/components/ConfiguracionTipologiasAño/routes/RutasConfiguracionTipologuias';
 
 
 interface RouteType {
@@ -40,6 +41,10 @@ export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
     {
       path: '/radicado/*',
       element: () => <RadicadosRoutes />
+    }
+    , {
+      path: '/configuraciontipologuiaño/*',
+      element: () => <RutasConfiguracionTipologuias />
     }
   ];
 

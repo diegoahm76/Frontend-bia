@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useMetaHook } from '../../hooks/useMetaHook';
 import { tipo_medida } from '../../../Indicadores/choices/selects';
+import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Agregarmeta: React.FC = () => {
@@ -179,7 +180,7 @@ export const Agregarmeta: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  type="number"
+                  // type="number"
                   label="Porcentaje meta"
                   variant="outlined"
                   value={value}
@@ -213,6 +214,9 @@ export const Agregarmeta: React.FC = () => {
                   disabled={false}
                   required={true}
                   onChange={onChange}
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
                   error={!!errors_meta.valor_meta}
                   helperText={
                     errors_meta.valor_meta
