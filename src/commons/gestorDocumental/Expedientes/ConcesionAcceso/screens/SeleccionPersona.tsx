@@ -14,7 +14,7 @@ import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import { obtener_persona_cc_nro } from '../thunks/ConcesionAcceso';
 import { v4 as uuidv4 } from 'uuid';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { BuscadorPersonaExpDoc } from '../../ConsultaExpedientesDocumentales/screens/BuscadorPersonaExpDoc';
+import { BuscadorPersonaExpDoc } from '../../consultaExpedientesDocumentales/screens/BuscadorPersonaExpDoc';
 
 interface IProps {
     expediente: any,
