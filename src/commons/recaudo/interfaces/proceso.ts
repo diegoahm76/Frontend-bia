@@ -56,7 +56,6 @@ export interface EtapaFiltrada {
 export interface DetallePeriodo {
   tamano: number;
   periodos: string[];
-  meses: string[][];
 }
 
 export interface DetallesPeriodos extends Record<string, DetallePeriodo>{};
