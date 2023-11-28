@@ -221,7 +221,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
 
     const seleccionar_exp_o_doc: any = (exp_o_doc: any) => {
         dispatch(buscar_expediente_id(exp_o_doc.id_expediente_documental)).then(((response: any) => {
-            response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+            response.data !== null ? props.set_expediente(response.data) : props.set_expediente(null);
             props.set_is_modal_active(false);
         }));
         const filtro_id_documento = exp_o_doc?.id_documento_de_archivo_exped === null || exp_o_doc?.id_documento_de_archivo_exped === undefined ? '' : exp_o_doc?.id_documento_de_archivo_exped;
