@@ -10,22 +10,23 @@ import { control_warning } from '../../../../../../../../almacen/configuracion/s
 import Swal from 'sweetalert2';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 import { useAppSelector } from '../../../../../../../../../hooks';
+import { withValidation } from './functions/validationAction';
+import { ButtonsPqrsdf } from './buttonsPqrsdf/ButtonsPqrsdf';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
 {
   /* se van a tener que añadir las condiciones, ya que el panel de Ventanilla va a terminar teniendo 3 bloques de botones
-
   1. botones de pqrsdf
   2. boton de tramites y servicios
   3. boton de otros
 */
 }
+
 export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
-  //* redux states
-  const actions = useAppSelector((state) => state.PanelVentanillaSlice.actions);
+
   const actionsTramitesYServicios = useAppSelector(
     (state) => state.PanelVentanillaSlice.actionsTramitesYServicios
   );
@@ -37,27 +38,12 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
     (state) => state.PanelVentanillaSlice.actionsComplementos
   );
 
-  const withValidation =
-    (fn: Function) => (action: { disabled: boolean; path: string }) => {
-      if (action.disabled) {
-        control_warning(
-          'Esta acción no está disponible para el elemento el cual seleccionaste'
-        );
-      } else {
-        navigate(action.path);
-        fn();
-      }
-    };
-
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
 
   const handleDigitalizacion = withValidation(async () => {
     await Swal.fire({
-      // showCancelButton: true,
-      //cancelButtonColor: '#d33',
-      //cancelButtonText: `Cancelar`,
       title: '¿Desea enviar la solicitud de digitalización?',
       text: 'Se enviará la solicitud de digitalización al módulo de central de digitalización.',
       showDenyButton: true,
@@ -99,16 +85,16 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
     //* por cada nombre se ejecutaran acciones diferentes, se debe analizar por si vienen cambios desde el backend que se plantee
     switch (action.id) {
       case 'Dig':
-        handleDigitalizacion(action);
+        handleDigitalizacion(action, navigate);
         break;
       case 'AsigPer':
-        handleAsignacionPersonal(action);
+        handleAsignacionPersonal(action, navigate);
         break;
       case 'AsigGrup':
-        handleAsignacionGrupo(action);
+        handleAsignacionGrupo(action, navigate);
         break;
       case 'ContinuarAsigGrup':
-        handleContinuarAsignacionAGrupo(action);
+        handleContinuarAsignacionAGrupo(action, navigate);
         break;
       default:
         break;
@@ -144,36 +130,7 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
           currentElementPqrsdComplementoTramitesYotros?.tipo
         ) {
           case 'PQRSDF':
-            return (
-              <Box
-                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
-              >
-                <SpeedDial
-                  ariaLabel="SpeedDial basic example"
-                  sx={{ position: 'absolute', top: 0, left: 0 }}
-                  icon={<MultipleStopIcon />}
-                  direction="right"
-                >
-                  {actions.map(
-                    (action: {
-                      id: string;
-                      icon: any;
-                      name: string;
-                      path: string;
-                      disabled: boolean;
-                    }) =>
-                      action.disabled ? null : (
-                        <SpeedDialAction
-                          key={action.name}
-                          icon={action.icon}
-                          tooltipTitle={action.name}
-                          onClick={() => handleClickActionsGeneral(action)}
-                        />
-                      )
-                  )}
-                </SpeedDial>
-              </Box>
-            );
+            return <ButtonsPqrsdf />;
           case 'Tramites y Servicios':
             // Caso para 'Tramites y Servicios'
             return (

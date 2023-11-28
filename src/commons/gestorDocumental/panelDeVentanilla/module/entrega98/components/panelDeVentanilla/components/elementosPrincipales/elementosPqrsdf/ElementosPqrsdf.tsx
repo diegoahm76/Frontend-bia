@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, useEffect, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { Avatar, Button, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
@@ -117,9 +118,11 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         (isRadicado && !hasAnexos && actionId === 'Dig') ||
         (isRadicado && hasAnexos && isDigOrAsigGrup) ||
         (isRadicado && hasAnexos && requiresDigitalization && isAsigGrup) ||
-        (isEnVentanilla && requiresDigitalization && isAsigGrup)
+        (isEnVentanilla && requiresDigitalization && isAsigGrup) ||
+        (actionId === 'Dig' && !requiresDigitalization) // Deshabilitar el botón de digitalización si no se requiere digitalización
       );
     };
+
     const actionsPQRSDF = actions.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
@@ -132,6 +135,55 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   //* espacio para la definición de las columnas
   const columns = [
     ...columnsPqrsdf,
+    {
+      headerName: 'Días para respuesta',
+      field: 'dias_respuesta',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        switch (true) {
+          case params.row.dias_respuesta > 7:
+            return (
+              <Chip
+                size="small"
+                label={`${params.row.dias_respuesta} día(s)`}
+                color="success"
+                variant="outlined"
+              />
+            );
+          case params.row.dias_respuesta < 7 && params.row.dias_respuesta > 4:
+            return (
+              <Chip
+                size="small"
+                label={`${params.row.dias_respuesta} día(s)`}
+                color="warning"
+                variant="outlined"
+              />
+            );
+          case params.row.dias_respuesta < 4 && params.row.dias_respuesta > 0:
+            return (
+              <Chip
+                label={`${params.row.dias_respuesta} día(s)`}
+                color="error"
+                variant="outlined"
+                size="small"
+              />
+            );
+          case params.row.dias_respuesta <= 0:
+            return (
+              <Chip
+                label={`Tiempo agotado hace ${Math.abs(
+                  params.row.dias_respuesta
+                )} día(s)`}
+                color="error"
+                variant="outlined"
+                size="small"
+              />
+            );
+          default:
+            return params.row.dias_respuesta;
+        }
+      },
+    },
     {
       headerName: 'Número de solicitudes de digitalización',
       field: 'numero_solicitudes_digitalizacion',
@@ -344,6 +396,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       },
     },
   ];
+
   /*rows={
     [
       ...listaElementosPqrsfTramitesUotros,

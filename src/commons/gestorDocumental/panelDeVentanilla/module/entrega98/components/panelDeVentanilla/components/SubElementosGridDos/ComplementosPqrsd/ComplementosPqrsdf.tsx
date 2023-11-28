@@ -30,13 +30,14 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   );
 
   //* context declaration
-  const { setRadicado, setValue,
-  
+  const {
+    setRadicado,
+    setValue,
+
     anexos,
     metadatos,
     setAnexos,
     setMetadatos,
-
   } = useContext(PanelVentanillaContext);
 
   const {
@@ -56,19 +57,26 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   );
 
   //* se va a tener que revisar luego está funciónP
-  const setActionsPQRSDF = (complemento: any) => {
-    console.log(complemento);
+  const shouldDisable = (actionId: string, complemento: any) => {
+    const isEnviarSolicitud = actionId === 'EnviarSolicitud';
+    const isAsigGrup = actionId === 'AsigGrup';
+    const isAsigUser = actionId === 'AsigUser';
+    const hasAnexos = complemento.cantidad_anexos > 0;
+    const requiresDigitalization = complemento.requiere_digitalizacion;
 
-    if (complemento.estado_solicitud === 'EN GESTION') {
-      void Swal.fire({
-        title: 'Opps...',
-        icon: 'error',
-        text: `Esta PQRSDF ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
-        showConfirmButton: true,
-      });
-      return;
+    // Primer caso: Complemento requiere digitalización
+    if (requiresDigitalization) {
+      return !(isEnviarSolicitud && hasAnexos) || isAsigGrup || isAsigUser;
     }
 
+    // Segundo caso: Complemento NO requiere digitalización
+    if (!requiresDigitalization) {
+      return isAsigUser;
+    }
+  };
+
+  const setActionsPQRSDF = (complemento: any) => {
+    console.log(complemento);
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(complemento));
     void Swal.fire({
       icon: 'success',
@@ -77,27 +85,9 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const shouldDisable = (actionId: string) => {
-      const isEnviarSolicitud = actionId === 'EnviarSolicitud';
-      const isAsigGrup = actionId === 'AsigGrup';
-      const isAsigUser = actionId === 'AsigUser';
-      const hasAnexos = complemento.cantidad_anexos > 0;
-      const requiresDigitalization = complemento.requiere_digitalizacion;
-
-      // Primer caso: Complemento requiere digitalización
-      if (requiresDigitalization) {
-        return !(isEnviarSolicitud && hasAnexos) || isAsigGrup || isAsigUser;
-      }
-
-      // Segundo caso: Complemento NO requiere digitalización
-      if (!requiresDigitalization) {
-        return isAsigUser;
-      }
-    };
-
     const actionsPQRSDF = actions.map((action: any) => ({
       ...action,
-      disabled: shouldDisable(action.id),
+      disabled: shouldDisable(action.id, complemento),
     }));
 
     console.log(actionsPQRSDF);
@@ -139,13 +129,11 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
               <Tooltip title="Ver info complemento asociado">
                 <IconButton
                   onClick={() => {
-                    
                     setActionsPQRSDF(params.row);
 
                     handleOpenInfoMetadatos(false);
-              handleOpenInfoAnexos(false);
-              setMetadatos([]);
-
+                    handleOpenInfoAnexos(false);
+                    setMetadatos([]);
                   }}
                 >
                   <Avatar
@@ -176,7 +164,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                   // ? en consecuencia se debe manejar segun los estados que se deban ejecutar por cada pqr se´gún los documentos de modelado
                   /*dispatch(setActionssToManagePermissions())*/
                   setActionsPQRSDF(params.row);
-                 /* dispatch(
+                  /* dispatch(
                     setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
                   );
                   void Swal.fire({

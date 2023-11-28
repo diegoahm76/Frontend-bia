@@ -1,38 +1,22 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Box, SpeedDial, SpeedDialAction } from '@mui/material';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '../../../../../../../../../../hooks';
-import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../../../../hooks';
+import { withValidation } from '../../functions/validationAction';
+import { showAlert } from '../../../../../../../../../../../utils/showAlert/ShowAlert';
 import Swal from 'sweetalert2';
-import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
-import { postDigitalizacionPqrsdfCompletemento } from '../../../../../../../toolkit/thunks/Pqrsdf/postDigitalizacion.service';
-import { resetPanelVentanillaFull } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 
-/* eslint-disable @typescript-eslint/naming-convention */
-export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
-  //* dispatch decalration
+export const ButtonsComplementos = (): JSX.Element => {
+  //* dispatch declaration
   const dispatch = useAppDispatch();
-  //* redux states
-  const actions = useAppSelector((state) => state.PanelVentanillaSlice.actions);
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
-  //* navigate declaration
+  //* navigate
   const navigate = useNavigate();
 
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
 
-  const sendDigitalizationRequest = async () => {
-    const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
-    await postDigitalizacionPqrsdfCompletemento(id_PQRSDF);
-    dispatch(resetPanelVentanillaFull());
-  };
+  const actionsComplementos = useAppSelector(
+    (state) => state.PanelVentanillaSlice.actionsComplementos
+  );
 
   const handleDigitalizacion = withValidation(async () => {
     await Swal.fire({
@@ -43,9 +27,14 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
       denyButtonText: `No, cancelar`,
       confirmButtonColor: '#3085d6',
       denyButtonColor: '#d33',
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
-        await sendDigitalizationRequest();
+        showAlert(
+          'Solicitud enviada',
+          'Diríjase al módulo de central de digitalización.',
+          'success'
+        );
+        //* se debe añadir la lógica del envío de la solicitud con una función extra
       } else if (result.isDenied) {
         showAlert(
           'Opps...',
@@ -68,21 +57,23 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
     console.log('Continuar con asignación de grupo')
   );
 
-  interface action {
-    [key: string]: any;
-  }
-
-  const actionHandlers: action = {
-    Dig: handleDigitalizacion,
-    AsigPer: handleAsignacionPersonal,
-    AsigGrup: handleAsignacionGrupo,
-    ContinuarAsigGrup: handleContinuarAsignacionAGrupo,
-  };
-
   const handleClickActionsGeneral = (action: any) => {
-    const handler = actionHandlers[action.id];
-    if (handler) {
-      handler(action, navigate);
+    //* por cada nombre se ejecutaran acciones diferentes, se debe analizar por si vienen cambios desde el backend que se plantee
+    switch (action.id) {
+      case 'Dig':
+        handleDigitalizacion(action, navigate);
+        break;
+      case 'AsigPer':
+        handleAsignacionPersonal(action, navigate);
+        break;
+      case 'AsigGrup':
+        handleAsignacionGrupo(action, navigate);
+        break;
+      case 'ContinuarAsigGrup':
+        handleContinuarAsignacionAGrupo(action, navigate);
+        break;
+      default:
+        break;
     }
   };
 
@@ -94,7 +85,7 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
         icon={<MultipleStopIcon />}
         direction="right"
       >
-        {actions.map(
+        {actionsComplementos.map(
           (action: {
             id: string;
             icon: any;
