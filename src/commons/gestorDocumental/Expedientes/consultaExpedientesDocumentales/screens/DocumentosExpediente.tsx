@@ -43,7 +43,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
 
 
     useEffect(() => {
-        console.log(props.documento);
+        set_metadata(null);
     }, [props.documento])
 
     return (
@@ -131,6 +131,8 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                                                         variant='outlined'
                                                         startIcon={<ListOutlinedIcon />}
                                                         href={metadata.ruta_archivo}
+                                                        target="_blank"
+                                                        download={metadata.identificacion_doc_en_expediente}
                                                     >
                                                         Descargar documento
                                                     </Button>
