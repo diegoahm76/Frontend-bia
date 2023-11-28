@@ -86,7 +86,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                                 </Grid>))}
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Card>
+                           {metadata !== null && <Card>
                                 <CardContent>
                                     <Typography sx={{ fontSize: 16, fontWeight: 410, marginBottom: '4px' }}>Documento seleccionado</Typography>
                                     <Grid container xs={12} sm={12}>
@@ -154,7 +154,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                                         </Grid>
                                     </Grid>
                                 </CardActions>
-                            </Card>
+                            </Card>}
                         </Grid>
                     </Grid>
                 </Box>
