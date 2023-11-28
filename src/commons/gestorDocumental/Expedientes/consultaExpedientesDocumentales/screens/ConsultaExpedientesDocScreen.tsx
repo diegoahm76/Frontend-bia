@@ -24,6 +24,7 @@ export const ConsultaExpedientesDocScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
+    const [documento, set_documento] = useState<any>(null);
     const [indice, set_indice] = useState<any>(null);
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
@@ -38,7 +39,7 @@ export const ConsultaExpedientesDocScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <BusquedaExpediente set_expediente={set_expediente}  limpiar={false}></BusquedaExpediente>
+                <BusquedaExpediente set_expediente={set_expediente} limpiar={false} set_documento={set_documento}></BusquedaExpediente>
             </Grid>
             {expediente !== null && <Grid
                 container
@@ -50,7 +51,7 @@ export const ConsultaExpedientesDocScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <DocumentosExpediente></DocumentosExpediente>
+                <DocumentosExpediente expediente={expediente} documento={documento}></DocumentosExpediente>
             </Grid>
             <Grid container>
                 <Grid item xs={12} sm={12}>

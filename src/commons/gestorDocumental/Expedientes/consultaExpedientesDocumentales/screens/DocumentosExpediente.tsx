@@ -7,9 +7,12 @@ import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { Title } from "../../../../../components/Title";
 import ConcederAccesoDocumento from "../../ConcesionAcceso/screens/ConcederAccesoDocumento";
 dayjs.extend(dayOfYear);
-
+interface IProps {
+    expediente: any,
+    documento: any
+  }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DocumentosExpediente: React.FC = () => {
+export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
     const [documento, set_documento] = useState<any>(null);
     const [abrir_modal_conceder, set_abrir_modal_conceder] = useState<boolean>(false);
