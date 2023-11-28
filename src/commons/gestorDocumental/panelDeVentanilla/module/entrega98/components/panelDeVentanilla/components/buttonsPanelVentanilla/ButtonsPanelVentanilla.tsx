@@ -12,6 +12,7 @@ import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert'
 import { useAppSelector } from '../../../../../../../../../hooks';
 import { withValidation } from './functions/validationAction';
 import { ButtonsPqrsdf } from './buttonsPqrsdf/ButtonsPqrsdf';
+import { ButtonsComplementos } from './buttonsPqrsdf/buttonsComplementos/ButtonsComplementos';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
@@ -177,34 +178,7 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
 
           case 'Complemento de PQRSDF':
             return (
-              <Box
-                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
-              >
-                <SpeedDial
-                  ariaLabel="SpeedDial basic example"
-                  sx={{ position: 'absolute', top: 0, left: 0 }}
-                  icon={<MultipleStopIcon />}
-                  direction="right"
-                >
-                  {actionsComplementos.map(
-                    (action: {
-                      id: string;
-                      icon: any;
-                      name: string;
-                      path: string;
-                      disabled: boolean;
-                    }) =>
-                      action.disabled ? null : (
-                        <SpeedDialAction
-                          key={action.name}
-                          icon={action.icon}
-                          tooltipTitle={action.name}
-                          onClick={() => handleClickActionsGeneral(action)}
-                        />
-                      )
-                  )}
-                </SpeedDial>
-              </Box>
+             <ButtonsComplementos/>
             );
           default:
             // Caso para null o cualquier otro valor

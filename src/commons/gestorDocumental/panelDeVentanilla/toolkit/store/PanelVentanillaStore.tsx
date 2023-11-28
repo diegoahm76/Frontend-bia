@@ -67,7 +67,7 @@ const actionsTramitesYServicios: any[] = [
   },
 ];
 
-const actionsComplementos: any[] =  [
+const actionsComplementos: any[] = [
   {
     id: 'Dig',
     icon: <DevicesIcon />,
@@ -83,7 +83,6 @@ const actionsComplementos: any[] =  [
     disabled: false,
   },
 ];
-
 
 const initialState: any = {
   // ? valores para los botones (acciones) que se ejercen dentro de panel de ventanilla
@@ -103,6 +102,7 @@ export const PanelVentanillaSlice = createSlice({
   name: 'PanelVentanillaSlice',
   initialState,
   reducers: {
+    // ! ------ STATES PARA PANEL DE VENTANILLA EN EL USO DE PQRSDF, TRÁMITES Y SERVICIOS Y OTROS, NO DE LOS MÓDULOS QUE DEPENDEN DE ESO ------
     //* este es editor de actions inicial de los botones, se deberá también definir los de tramites y servicios y otros
     setActionssToManagePermissions: (state, action: PayloadAction<any>) => {
       state.actions = action.payload;
