@@ -80,7 +80,19 @@ export const obtener_documentos_expediente: any = (id_expediente: number,id_docu
     }
   };
 };
-// 
+// Obtener metadata documento
+export const obtener_metadata: any = (id_documento: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/consulta/documentos-expedientes/metadata/get/${id_documento}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Descargar documentos expediente
 export const descargar_expediente: any = (id_expediente: number) => {
   return async () => {
     try {

@@ -605,7 +605,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                         )}
 
                     </>
-                    <Grid container justifyContent="flex-end">
+                    {busqueda !== '' && <Grid container justifyContent="flex-end">
                         <Grid item margin={2}>
                             <Button
                                 variant="contained"
@@ -622,7 +622,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                 Salir
                             </Button>
                         </Grid>
-                    </Grid>
+                    </Grid>}
                 </DialogContent>
             </Dialog>
         </>

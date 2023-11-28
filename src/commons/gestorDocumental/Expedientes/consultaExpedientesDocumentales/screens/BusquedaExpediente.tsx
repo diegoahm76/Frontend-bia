@@ -335,7 +335,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                     >
                                         Ver expedientes a los que me han dado acceso
                                     </Button>
-                                    {abrir_modal_expedientes && <VerExpedientes is_modal_active={abrir_modal_expedientes} set_is_modal_active={set_abrir_modal_expedientes} set_expediente={set_expediente}></VerExpedientes>}
+                                    {abrir_modal_expedientes && <VerExpedientes is_modal_active={abrir_modal_expedientes} set_is_modal_active={set_abrir_modal_expedientes} set_expediente={set_expediente} set_documento={set_documento}></VerExpedientes>}
                                     <Button
                                         color='primary'
                                         variant='outlined'
@@ -344,7 +344,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                     >
                                         Ver documentos a los que me han dado acceso
                                     </Button>
-                                    {abrir_modal_documentos && <VerDocumentos is_modal_active={abrir_modal_documentos} set_is_modal_active={set_abrir_modal_documentos}></VerDocumentos>}
+                                    {abrir_modal_documentos && <VerDocumentos is_modal_active={abrir_modal_documentos} set_is_modal_active={set_abrir_modal_documentos} set_expediente={set_expediente} set_documento={set_documento}></VerDocumentos>}
                                 </Stack>
                             </Box>
                         </Grid>
