@@ -103,7 +103,7 @@ export const AdminUsers: React.FC = () => {
               <>
                 <Grid container spacing={2} sx={{ mt: '5px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
-                    <Title title={`Datos personales ${tipo_persona}`} />
+                    <Title title={`Datos personales`} />
                   </Box>
                   {tipo_persona === 'N' ? (
                     <>
