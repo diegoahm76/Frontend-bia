@@ -47,7 +47,7 @@ export const columnsAtom = [
   {
     headerName: 'Observación de digitalización',
     field: 'observacion_digitalizacion',
-    minWidth: 350,
+    minWidth: 400,
   },
 ];
 

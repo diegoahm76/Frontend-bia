@@ -29,15 +29,4 @@ export const getAnexosPqrsdf = async (id_pqrsdf: any) => {
   }
 };
 
-/*const getArchivoAnexoPqrsdf = async (id_anexo: any) => {
-  try {
-    const url = `gestor/panel_ventanilla/pqrsdf/anexo/get/file/${id_anexo}/`;
-    const response = await api.get(url);
 
-    console.log(response.data)
-
-    return response.data;
-  } catch (err: any) {
-    control_error(err);
-  }
-}*/

@@ -30,6 +30,7 @@ import { containerStyles } from '../../../../tca/screens/utils/constants/constan
 import InfoIcon from '@mui/icons-material/Info';
 import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
 import { useAppSelector } from '../../../../../../hooks';
+import { getArchivoAnexoPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
@@ -51,9 +52,14 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
   } = useContext(ModalAndLoadingContext);
 
   //* datos que se setean dentro de los anexos y los metadatos
-  const { anexos, metadatos, setAnexos, setMetadatos } = useContext(
-    PanelVentanillaContext
-  );
+  const {
+    anexos,
+    metadatos,
+    setAnexos,
+    setMetadatos,
+    archivoAnexos,
+    setArchivoAnexos,
+  } = useContext(PanelVentanillaContext);
 
   const colums = [
     ...columnsAtom,
@@ -69,7 +75,11 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 onClick={() => {
                   console.log('ver anexo');
                   console.log(params.row);
-                  setAnexos(params.row);
+
+
+                  // void getArchivoAnexoPqrsdf(params.row.id)
+
+
                   //* se debe analizar si el estado persiste al abrir el modal se anexan los metadatos desde acá problablemente
                   handleOpenInfoAnexos(true);
                 }}
@@ -171,7 +181,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
         </Grid>
 
         <RenderDataGrid
-          rows={rowsEjemploAnexosDePqrsdf || []}
+          rows={anexos || []}
           columns={colums || []}
           title={titleOpcion}
           // ? se debe reemplazar ese button por el ojito que aparecere dentro de las columnas de la tabla para así ver los anexos

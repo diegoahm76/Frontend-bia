@@ -15,15 +15,18 @@ import {
   setActionssToManagePermissions,
   setCurrentElementPqrsdComplementoTramitesYotros,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { getAnexosComplemento } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosComplementos.service';
 
 export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
+  //* naviagte declaration
+  const navigate = useNavigate();
   //* states from redux store
   const {
     listaComplementosRequerimientosOtros,
@@ -125,39 +128,58 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            <Link
+            {/*<Link
               to={`/app/gestor_documental/panel_ventanilla/complemento_info/${params.row.idComplementoUsu_PQR}`}
-            >
-              <Tooltip title="Ver info complemento asociado">
-                <IconButton
-                  onClick={() => {
-                    setActionsPQRSDF(params.row);
+            >*/}
+            <Tooltip title="Ver info complemento asociado">
+              <IconButton
+                onClick={() => {
+                  void getAnexosComplemento(
+                    params?.row?.idComplementoUsu_PQR
+                  ).then((res) => {
+                    console.log(res);
+
+                    if (res.length > 0) {
+                      setAnexos(res);
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      setActionsPQRSDF(params?.row);
+                      navigate(
+                        `/app/gestor_documental/panel_ventanilla/complemento_info/${params.row.idComplementoUsu_PQR}`
+                      );
+                      return;
+                    }
+
+                    return;
+                  });
+
+                  /* setActionsPQRSDF(params.row);
 
                     handleOpenInfoMetadatos(false);
                     handleOpenInfoAnexos(false);
-                    setMetadatos([]);
+                    setMetadatos([]);*/
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
                   }}
+                  variant="rounded"
                 >
-                  <Avatar
+                  <VisibilityIcon
                     sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
                     }}
-                    variant="rounded"
-                  >
-                    <VisibilityIcon
-                      sx={{
-                        color: 'primary.main',
-                        width: '18px',
-                        height: '18px',
-                      }}
-                    />
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-            </Link>
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            {/*</Link>*/}
             <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {
