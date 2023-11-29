@@ -119,7 +119,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                                         </Stack>
                                         </Grid>
 
-                        <Grid item xs={12} sm={8}>
+                     {(props.documento !== null && props.documento !== undefined) &&   <Grid item xs={12} sm={8}>
                             {props.documento.map((c: any, index: number) => (
                                 <Grid item xs={12} sm={12} key={index}>
                                     <Accordion expanded={expandir === 'panel' + index} onChange={handle_change('panel' + index, c.anexos.length, c)} sx={{ marginBottom: '2px' }}>
@@ -150,7 +150,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                                         </Accordion>
                                     </Accordion>
                                 </Grid>))}
-                        </Grid>
+                        </Grid>}
                         <Grid item xs={12} sm={4}>
                            {metadata !== null && <Card>
                                 <CardContent>

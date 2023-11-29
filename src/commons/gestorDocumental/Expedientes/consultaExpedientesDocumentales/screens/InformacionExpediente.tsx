@@ -223,7 +223,7 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                             </Stack>
                         </Grid>
                     </Grid>
-                    <Grid container spacing={1}>
+                    {props.expediente.carpetas_caja.length > 0 && <Grid container spacing={1}>
                         <Grid item xs={12} sm={12}>
                             <Title title="Ubicación física" />
                         </Grid>
@@ -286,7 +286,7 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                     ))}
                                 </Accordion>
                             </Grid>))}
-                    </Grid>
+                    </Grid>}
                     <Grid container>
                         <Grid item xs={12} sm={4}>
                             <Box component="form" noValidate autoComplete="off" sx={{ mt: '20px' }}>
