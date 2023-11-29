@@ -516,7 +516,7 @@ export const AdminUsers: React.FC = () => {
                           {...register_admin_user('sucursal_defecto')}
                           value={watch_exe.sucursal_defecto}
                           onChange={(selectedOption) => {
-                            console.log(selectedOption);
+                            //console.log(selectedOption);
                             set_value_admin_user(
                               'sucursal_defecto',
                               selectedOption
@@ -530,7 +530,7 @@ export const AdminUsers: React.FC = () => {
                               zIndex: 99999,
                             }),
                           }}
-                          menuPlacement="top"
+                          menuPlacement="bottom"
                         />
                         <label>
                           <small
@@ -617,7 +617,7 @@ export const AdminUsers: React.FC = () => {
                 startIcon={<EditIcon />}
               >
                 {action_admin_users === 'EDIT'
-                  ? 'EDITAR'
+                  ? 'GUARDAR'
                   : action_admin_users === 'CREATE' && 'CREAR'}
               </LoadingButton>
             </Stack>
