@@ -8,8 +8,6 @@ import { Title } from "../../../../../components/Title";
 import ConcederAccesoDocumento from "../../ConcesionAcceso/screens/ConcederAccesoDocumento";
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import FolderIcon from '@mui/icons-material/Folder';
 import { obtener_metadata } from "../thunks/ConsultaExpedientes";
 dayjs.extend(dayOfYear);
 interface IProps {
@@ -55,7 +53,6 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                         <Grid item xs={12} sm={8}>
                             {props.documento.map((c: any, index: number) => (
                                 <Grid item xs={12} sm={12} key={index}>
-
                                     <Accordion expanded={expandir === 'panel' + index} onChange={handle_change('panel' + index, c.anexos.length, c)} sx={{ marginBottom: '2px' }}>
                                         <AccordionSummary expandIcon={c.anexos.length === 0 ? '' : <ExpandMoreIcon />} aria-controls="panel1d-content" id="panel1d-header">
                                             <TextSnippetOutlinedIcon sx={{ marginTop: '5px', marginRight: '10px', color: 'gray' }} />
