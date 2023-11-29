@@ -104,6 +104,18 @@ export const descargar_expediente: any = (id_expediente: number) => {
     }
   };
 };
+// Consultar permiso de acceso al módulo
+export const permiso_acceso_expediente: any = (id_expediente: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/concesion-acceso/permiso/get/${id_expediente}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // Crear documento
 export const crear_indexacion_documentos: any = (obj_json: any, id_expediente: number) => {
   return async () => {

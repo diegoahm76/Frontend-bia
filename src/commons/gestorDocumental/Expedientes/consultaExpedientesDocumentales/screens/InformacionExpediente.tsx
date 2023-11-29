@@ -10,7 +10,7 @@ import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import ConcederAccesoExpediente from "../../ConcesionAcceso/screens/ConcederAccesoExpediente";
 import { useAppDispatch } from "../../../../../hooks";
-import { descargar_expediente } from "../thunks/ConsultaExpedientes";
+import { descargar_expediente, permiso_acceso_expediente } from "../thunks/ConsultaExpedientes";
 dayjs.extend(dayOfYear);
 interface IProps {
     expediente: any;
@@ -20,20 +20,36 @@ interface IProps {
 export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
     const [abrir_modal_conceder, set_abrir_modal_conceder] = useState<boolean>(false);
-    const [expandir, set_expandir] = useState<string | false>(false);
-    const [expandir_anexo, set_expandir_anexo] = useState<string | false>(false);
+    const [expandir_estante, set_expandir_estante] = useState<string | false>(false);
+    const [expandir_bandeja, set_expandir_bandeja] = useState<string | false>(false);
+    const [expandir_cajas, set_expandir_cajas] = useState<string | false>(false);
+    const [expandir_carpetas_caja, set_expandir_carpetas_caja] = useState<string | false>(false);
+
+    const validar_permiso_acceso: () => void = () => {
+        dispatch(permiso_acceso_expediente(props.expediente?.id_expediente_documental)).then((response: any) => {
+            if(response.success)
+                set_abrir_modal_conceder(true);
+        })
+    }
+
     const descargar_expediente_id: () => void = () => {
         dispatch(descargar_expediente(props.expediente?.id_expediente_documental)).then((response: any) => {
 
         })
     }
+    const handle_change_carpetas_caja = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        set_expandir_carpetas_caja(newExpanded ? panel : false);
+    };
+    const handle_change_estante = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        set_expandir_estante(newExpanded ? panel : false);
+    };
+    const handle_change_bandeja = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        set_expandir_bandeja(newExpanded ? panel : false);
+    };
+    const handle_change_cajas = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        set_expandir_cajas(newExpanded ? panel : false);
+    };
 
-    const handle_change = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-        set_expandir(newExpanded ? panel : false);
-    };
-    const handle_change_anexos = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-        set_expandir_anexo(newExpanded ? panel : false);
-    };
 
     return (
         <>
@@ -213,8 +229,8 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                         </Grid>
                         {props.expediente.carpetas_caja.map((c: any, index: number) => (
                             <Grid item xs={12} sm={12} key={index}>
-                                <Accordion expanded={expandir_anexo === 'panelAn' + (index + 1)} onChange={handle_change_anexos('panelAn' + (index + 1))}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1And-content" id="panel1And-header">
+                                <Accordion expanded={expandir_carpetas_caja === 'panelCc' + (index + 1)} onChange={handle_change_carpetas_caja('panelCc' + (index + 1))}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panelCc-content" id="panelCc-header">
                                         <FolderOutlinedIcon sx={{ marginTop: '5px', marginRight: '10px', color: 'gray' }} />
                                         <Typography sx={{ fontSize: '15px', fontWeight: '420', display: 'inline-flex', flexDirection: 'row', marginTop: '7px' }}>
                                             {c.deposito}
@@ -222,8 +238,8 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                     </AccordionSummary>
                                     {c.estantes.map((e: any, sub_index: number) => (
                                         <Grid item xs={12} sm={12} key={sub_index} sx={{ marginLeft: '50px' }}>
-                                            <Accordion expanded={expandir_anexo === 'panelAn' + (index + 1)} onChange={handle_change_anexos('panelAn' + (index + 1))}>
-                                                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1And-content" id="panel1And-header">
+                                            <Accordion expanded={expandir_estante === 'panelE' + (index + 1)} onChange={handle_change_estante('panelE' + (index + 1))}>
+                                                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panelE-content" id="panelE-header">
                                                     <FolderOutlinedIcon sx={{ marginTop: '5px', marginRight: '10px', color: 'gray' }} />
                                                     <Typography sx={{ fontSize: '15px', fontWeight: '420', display: 'inline-flex', flexDirection: 'row', marginTop: '7px' }}>
                                                         {e.estante}
@@ -231,8 +247,8 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                                 </AccordionSummary>
                                                 {e.bandejas.map((b: any, sub_index: number) => (
                                                     <Grid item xs={12} sm={12} key={sub_index} sx={{ marginLeft: '50px' }}>
-                                                        <Accordion expanded={expandir_anexo === 'panelAn' + (index + 1)} onChange={handle_change_anexos('panelAn' + (index + 1))}>
-                                                            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1And-content" id="panel1And-header">
+                                                        <Accordion expanded={expandir_bandeja === 'panelB' + (index + 1)} onChange={handle_change_bandeja('panelB' + (index + 1))}>
+                                                            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panelB-content" id="panelB-header">
                                                                 <FolderOutlinedIcon sx={{ marginTop: '5px', marginRight: '10px', color: 'gray' }} />
                                                                 <Typography sx={{ fontSize: '15px', fontWeight: '420', display: 'inline-flex', flexDirection: 'row', marginTop: '7px' }}>
                                                                     {b.bandeja}
@@ -240,8 +256,8 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                                             </AccordionSummary>
                                                             {b.cajas.map((cj: any, sub_index: number) => (
                                                                 <Grid item xs={12} sm={12} key={sub_index} sx={{ marginLeft: '50px' }}>
-                                                                    <Accordion expanded={expandir_anexo === 'panelAn' + (index + 1)} onChange={handle_change_anexos('panelAn' + (index + 1))}>
-                                                                        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1And-content" id="panel1And-header">
+                                                                    <Accordion expanded={expandir_cajas === 'panelCj' + (index + 1)} onChange={handle_change_cajas('panelCj' + (index + 1))}>
+                                                                        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panelCj-content" id="panelCj-header">
                                                                             <FolderOutlinedIcon sx={{ marginTop: '5px', marginRight: '10px', color: 'gray' }} />
                                                                             <Typography sx={{ fontSize: '15px', fontWeight: '420', display: 'inline-flex', flexDirection: 'row', marginTop: '7px' }}>
                                                                                 {cj.caja}
@@ -279,7 +295,7 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
                                         color='primary'
                                         variant='outlined'
                                         startIcon={<ListOutlinedIcon />}
-                                        onClick={() => { set_abrir_modal_conceder(true); }}
+                                        onClick={() => { validar_permiso_acceso() }}
                                     >
                                         Conceder acceso a expediente
                                     </Button>
