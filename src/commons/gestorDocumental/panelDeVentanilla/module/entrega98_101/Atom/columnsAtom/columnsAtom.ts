@@ -19,10 +19,11 @@
 */
 
 // ? ------ AQUI VAN A ESTAR LAS COLUMNAS DE EJEMPLO para los anexos
+
 export const columnsAtom = [
   {
-    headerName: 'Nombre',
-    field: 'nombre',
+    headerName: 'Nombre del anexo',
+    field: 'nombre_anexo',
     minWidth: 300,
   },
   {
@@ -37,15 +38,15 @@ export const columnsAtom = [
   },
   {
     headerName: 'Digitalizado',
-    field: 'digitalizado',
+    field: 'ya_digitalizado',
     minWidth: 150,
     renderCell: (params: any) => {
-      return params.digitalizado ? 'Si' : 'No';
+      return params.value ? 'Si' : 'No';
     },
   },
   {
-    headerName: 'Observación',
-    field: 'observacion',
+    headerName: 'Observación de digitalización',
+    field: 'observacion_digitalizacion',
     minWidth: 350,
   },
 ];
@@ -129,7 +130,7 @@ export const rowsEJEMPLO = [
 
 export const rowsEjemploAnexosDePqrsdf = [
   {
-    radicado: "Radicado LXM-1122_2029",
+    radicado: 'Radicado LXM-1122_2029',
     nombre: 'Certificado de divorcio de usuario',
     medio_almacenamiento: 'Micro SD',
     numero_folios: '7',
@@ -137,7 +138,7 @@ export const rowsEjemploAnexosDePqrsdf = [
     observacion: 'Información legal',
   },
   {
-    radicado: "Radicado NXO-3344_2030",
+    radicado: 'Radicado NXO-3344_2030',
     nombre: 'Diploma de grado de usuario',
     medio_almacenamiento: 'Flash Drive',
     numero_folios: '8',
@@ -145,7 +146,7 @@ export const rowsEjemploAnexosDePqrsdf = [
     observacion: 'Información académica',
   },
   {
-    radicado: "Radicado PXQ-5566_2031",
+    radicado: 'Radicado PXQ-5566_2031',
     nombre: 'Certificado de empleo de usuario',
     medio_almacenamiento: 'Disco Blu-ray',
     numero_folios: '9',
@@ -153,7 +154,7 @@ export const rowsEjemploAnexosDePqrsdf = [
     observacion: 'Información laboral',
   },
   {
-    radicado: "Radicado RXS-7788_2032",
+    radicado: 'Radicado RXS-7788_2032',
     nombre: 'Certificado de residencia de usuario',
     medio_almacenamiento: 'Tarjeta de memoria',
     numero_folios: '10',
@@ -161,7 +162,7 @@ export const rowsEjemploAnexosDePqrsdf = [
     observacion: 'Información de residencia',
   },
   {
-    radicado: "Radicado TXU-9900_2033",
+    radicado: 'Radicado TXU-9900_2033',
     nombre: 'Certificado de defunción de usuario',
     medio_almacenamiento: 'Tarjeta SIM',
     numero_folios: '11',
@@ -169,7 +170,7 @@ export const rowsEjemploAnexosDePqrsdf = [
     observacion: 'Información de defunción',
   },
   {
-    radicado: "Radicado VXW-2233_2034",
+    radicado: 'Radicado VXW-2233_2034',
     nombre: 'Certificado de adopción de usuario',
     medio_almacenamiento: 'Tarjeta CF',
     numero_folios: '12',
@@ -177,7 +178,7 @@ export const rowsEjemploAnexosDePqrsdf = [
     observacion: 'Información de adopción',
   },
   {
-    radicado: "Radicado XXZ-4455_2035",
+    radicado: 'Radicado XXZ-4455_2035',
     nombre: 'Certificado de naturalización de usuario',
     medio_almacenamiento: 'Tarjeta SDHC',
     numero_folios: '13',
@@ -185,7 +186,7 @@ export const rowsEjemploAnexosDePqrsdf = [
     observacion: 'Información de naturalización',
   },
   {
-    radicado: "Radicado YXA-6677_2036",
+    radicado: 'Radicado YXA-6677_2036',
     nombre: 'Certificado de ciudadanía de usuario',
     medio_almacenamiento: 'Tarjeta XQD',
     numero_folios: '14',

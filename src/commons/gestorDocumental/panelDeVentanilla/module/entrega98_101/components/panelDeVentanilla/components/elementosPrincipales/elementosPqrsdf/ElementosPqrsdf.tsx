@@ -278,9 +278,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            {/*<Link
-              to={`/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`}
-            >*/}
             <Tooltip title="Ver info pqrsdf">
               <IconButton
                 onClick={() => {
@@ -289,8 +286,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
                     if (res.length > 0) {
                       setAnexos(res);
-                      handleOpenInfoMetadatos(false);
-                      handleOpenInfoAnexos(false);
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
                       setActionsPQRSDF(params?.row);
                       navigate(
                         `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`

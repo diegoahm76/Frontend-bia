@@ -31,21 +31,6 @@ import InfoIcon from '@mui/icons-material/Info';
 import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
 import { useAppSelector } from '../../../../../../hooks';
 
-/* complementos:
-            "nombre_completo_titular": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
-            "asunto": "AAAA",
-            "cantidad_anexos": 0,
-            "radicado": "ABC123-2023-R12345",
-
-*/
-
-/* pqrsdf 
-            "nombre_completo_titular": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
-            "asunto": "SIN IDENTIFICAR",
-            "cantidad_anexos": 3,
-            "radicado": "XYZ789-2023-R67890",
-*/
-
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
   const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
@@ -245,7 +230,6 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                     // ? --- al cerrar la infromación del anexo se debe cerrar el elemento del anexo y del metadato si estuviera abierto
                     handleOpenInfoAnexos(false);
                     handleOpenInfoMetadatos(false);
-                    console.log('cerrando información de anexo');
                   }}
                   startIcon={<CloseIcon />}
                 >
@@ -256,9 +240,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   variant="outlined"
                   onClick={() => {
                     // ? al cerrar la infromación del anexo se debe cerrar el elemento del anexo y del metadato si estuviera abierto
-                    console.log('cerrando información de anexo');
                     // handleOpenInfoAnexos(false);
-
                     //* se debe hacer la petición del anexo así mostrarlo
                     setMetadatos([]); //* seguramente será un objeto
                     handleOpenInfoMetadatos(true);
