@@ -20,6 +20,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
     const [abrir_modal_conceder, set_abrir_modal_conceder] = useState<boolean>(false);
     const [metadata, set_metadata] = useState<any>(null);
+    const [seleccion_documento, set_seleccion_documento] = useState<any>(null);
     const [expandir, set_expandir] = useState<string | false>(false);
     const [expandir_anexo, set_expandir_anexo] = useState<string | false>(false);
     const [filtro_uno, set_filtro_uno] = useState<any>("");
@@ -35,6 +36,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
     };
 
     const consultar_metadara = (anexo: any) => {
+        set_seleccion_documento(anexo);
         dispatch(obtener_metadata(anexo.id_documento_de_archivo_exped)).then((response: any) => {
             if (response.success) {
                 set_metadata(response.data);
@@ -119,7 +121,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                                         </Stack>
                                         </Grid>
 
-                        <Grid item xs={12} sm={8}>
+                     {(props.documento !== null && props.documento !== undefined) &&   <Grid item xs={12} sm={8}>
                             {props.documento.map((c: any, index: number) => (
                                 <Grid item xs={12} sm={12} key={index}>
                                     <Accordion expanded={expandir === 'panel' + index} onChange={handle_change('panel' + index, c.anexos.length, c)} sx={{ marginBottom: '2px' }}>
@@ -150,7 +152,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                                         </Accordion>
                                     </Accordion>
                                 </Grid>))}
-                        </Grid>
+                        </Grid>}
                         <Grid item xs={12} sm={4}>
                            {metadata !== null && <Card>
                                 <CardContent>
@@ -216,7 +218,7 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                                                     >
                                                         Conceder acceso a documento
                                                     </Button>
-                                                    {abrir_modal_conceder && <ConcederAccesoDocumento is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} documento={props.documento} ></ConcederAccesoDocumento>}
+                                                    {abrir_modal_conceder && <ConcederAccesoDocumento is_modal_active={abrir_modal_conceder} set_is_modal_active={set_abrir_modal_conceder} documento={seleccion_documento} metadata={metadata} ></ConcederAccesoDocumento>}
                                                 </Stack>
                                             </Box>
                                         </Grid>

@@ -1,6 +1,5 @@
 import { Grid, TextField, Box, Stack, Typography, Fab } from "@mui/material";
 import { Title } from "../../../../../components/Title";
-import { useAppDispatch } from "../../../../../hooks";
 import dayjs from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -13,8 +12,6 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
-    const dispatch = useAppDispatch();
-
     const columns: GridColDef[] = [
         {
             field: 'id_doc_indice_electronico_exp',
@@ -141,7 +138,6 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
                                     readOnly={true}
                                     renderInput={(params) => (
                                         <TextField
-                                            required
                                             fullWidth
                                             size="small"
                                             {...params}
@@ -159,7 +155,6 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
                                     readOnly={true}
                                     renderInput={(params) => (
                                         <TextField
-                                            required
                                             fullWidth
                                             size="small"
                                             {...params}
@@ -175,7 +170,7 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
                                         density="compact"
                                         autoHeight
                                         columns={columns}
-                                        pageSize={10}
+                                        pageSize={5}
                                         rowsPerPageOptions={[10]}
                                         rows={props.indice?.docs_indice_electronico_exp}
                                         getRowId={(row) => row.id_doc_indice_electronico_exp} />
