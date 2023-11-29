@@ -7,7 +7,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 interface IProps {
     expediente: any
 }
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
     return (

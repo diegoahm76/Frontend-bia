@@ -24,7 +24,6 @@ const class_css = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FirmaCierreIndiceScreen: React.FC = () => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
     const [indice, set_indice] = useState<any>(null);
