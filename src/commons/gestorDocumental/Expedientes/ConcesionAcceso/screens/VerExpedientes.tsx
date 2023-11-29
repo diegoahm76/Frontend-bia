@@ -6,7 +6,7 @@ import { useAppDispatch } from "../../../../../hooks";
 import { ver_expedientes } from "../thunks/ConcesionAcceso";
 import dayjs from "dayjs";
 import { buscar_expediente_id } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
-import { obtener_documentos_expediente } from "../../ConsultaExpedientesDocumentales/thunks/ConsultaExpedientes";
+import { obtener_documentos_expediente } from "../../consultaExpedientesDocumentales/thunks/ConsultaExpedientes";
 
 interface IProps {
     is_modal_active: boolean,
