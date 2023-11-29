@@ -10,14 +10,14 @@ import SaveIcon from '@mui/icons-material/Save';
 import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import moment from "moment";
 import { enviar_codigo_verificación, firma_cierre_indice, validar_codigo_verificación } from "../thunks/FirmaCierreIndice";
 
 interface IProps {
     expediente: any,
     indice: any,
-    limpiar: boolean
+    limpiar: any,
+    set_limpiar: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -76,12 +76,17 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
 
     const guardar_cierre_indice: () => void = () => {
         dispatch(firma_cierre_indice(props.indice?.id_indice_electronico_exp,observaciones)).then((response: any) => {
-            // set_validar(response.success);
+            props.set_limpiar(response.success);
         })
     }
 
     useEffect(() => {
         if (props.limpiar) {
+            set_codigo_verificacion("");
+            set_observaciones("");
+            set_validar(null);
+            set_reintentos(0);
+            set_deshabilitar(false);
         }
     }, [props.limpiar]);
 
