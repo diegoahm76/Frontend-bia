@@ -1,8 +1,7 @@
 
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch } from '../../../../../hooks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { SeleccionPersonaDocumento } from './SeleccionPersonaDocumento';
