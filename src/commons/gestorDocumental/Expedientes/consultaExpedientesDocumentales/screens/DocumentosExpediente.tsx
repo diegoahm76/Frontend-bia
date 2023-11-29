@@ -8,11 +8,12 @@ import { Title } from "../../../../../components/Title";
 import ConcederAccesoDocumento from "../../ConcesionAcceso/screens/ConcederAccesoDocumento";
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { obtener_metadata } from "../thunks/ConsultaExpedientes";
+import { obtener_documentos_expediente, obtener_metadata } from "../thunks/ConsultaExpedientes";
 dayjs.extend(dayOfYear);
 interface IProps {
     expediente: any,
-    documento: any
+    documento: any,
+    set_documento: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
@@ -21,6 +22,8 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
     const [metadata, set_metadata] = useState<any>(null);
     const [expandir, set_expandir] = useState<string | false>(false);
     const [expandir_anexo, set_expandir_anexo] = useState<string | false>(false);
+    const [filtro_uno, set_filtro_uno] = useState<any>("");
+    const [filtro_dos, set_filtro_dos] = useState<any>("");
 
     const handle_change = (panel: string, anexos: number, documento: any) => (event: React.SyntheticEvent, newExpanded: boolean) => {
         if (anexos !== 0)
@@ -39,6 +42,19 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
         });
     };
 
+    const filtrar_documentos: any = async () => {
+        dispatch(obtener_documentos_expediente(props.expediente.id_expediente_documental, '', filtro_uno, filtro_dos)).then(((response: any) => {
+            response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+        }));
+    }
+
+    const cambio_filtro_uno: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_filtro_uno(e.target.value);
+    };
+    const cambio_filtro_dos: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_filtro_dos(e.target.value);
+    };
+
 
     useEffect(() => {
         set_metadata(null);
@@ -50,6 +66,59 @@ export const DocumentosExpediente: React.FC<IProps> = (props: IProps) => {
                 <Title title="Documentos de expedientes" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
+                    <Grid item xs={12} sm={12}>
+                                <Stack
+                                    direction="row"
+                                    justifyContent="center"
+                                >
+                                    <Grid item xs={12} sm={10}>
+                                        <Title title="Filtrar" />
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="center"
+                                            spacing={2}
+                                            sx={{ mt: '15px' }}
+                                        >
+
+                        <Grid item xs={12} sm={5}>
+                        <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        fullWidth
+                                        size="small"
+                                        label="Titulo"
+                                        variant="outlined"
+                                        value={filtro_uno}
+                                        onChange={cambio_filtro_uno}
+                                    />
+                            </Grid>
+                            <Grid item xs={12} sm={5}>
+                            <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        fullWidth
+                                        size="small"
+                                        label="Palabras Clave"
+                                        variant="outlined"
+                                        value={filtro_dos}
+                                        onChange={cambio_filtro_dos}
+
+                                    />
+                            </Grid>
+                            <Grid item xs={12} sm={2}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={filtrar_documentos}
+                            >
+                                Buscar
+                            </Button>
+                            </Grid>
+                                        </Stack>
+                                        </Grid>
+                                        </Stack>
+                                        </Grid>
+
                         <Grid item xs={12} sm={8}>
                             {props.documento.map((c: any, index: number) => (
                                 <Grid item xs={12} sm={12} key={index}>

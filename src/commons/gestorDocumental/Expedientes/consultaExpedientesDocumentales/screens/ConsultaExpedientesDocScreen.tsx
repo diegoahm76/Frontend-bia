@@ -51,7 +51,7 @@ export const ConsultaExpedientesDocScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <DocumentosExpediente expediente={expediente} documento={documento}></DocumentosExpediente>
+                <DocumentosExpediente expediente={expediente} documento={documento} set_documento={set_documento}></DocumentosExpediente>
             </Grid>}
             <Grid container>
                 <Grid item xs={12} sm={12}>
