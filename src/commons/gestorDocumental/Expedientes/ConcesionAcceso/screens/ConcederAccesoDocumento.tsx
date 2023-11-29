@@ -1,19 +1,17 @@
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch } from '../../../../../hooks';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { SeleccionPersonaDocumento } from './SeleccionPersonaDocumento';
 import { ConcesionesPermisosVigentesDoc } from './ConcesionesPermisosVigentesDoc';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
-import { obtener_usuario_logueado } from '../../aperturaExpedientes/thunks/aperturaExpedientes';
 import { InformacionDocumento } from './InformacionDocumento';
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
     documento: any;
+    metadata: any;
 }
 
 const class_css = {
@@ -27,63 +25,15 @@ const class_css = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ConcederAccesoDocumento: React.FC<IProps> = (props: IProps) => {
-    const dispatch = useAppDispatch();
     const [concesion, set_concesion] = useState<any>(null);
-    const [usuario, set_usuario] = useState<any>(null);
     const [editar_concesion, set_editar_concesion] = useState<any>(null);
     const [guardar, set_guardar] = useState<boolean>(false);
-
-    useEffect(() => {
-        obtener_usuario_logueado_fc();
-    }, []);
 
     useEffect(() => {
         if (guardar) {
             set_guardar(false);
         }
     }, [guardar]);
-
-    const obtener_usuario_logueado_fc: () => void = () => {
-        dispatch(obtener_usuario_logueado()).then((response: any) => {
-            set_usuario(response);
-        })
-    }
-    const columns: GridColDef[] = [
-        {
-            field: 'codigo_exp_Agno',
-            headerName: 'AÑO',
-            sortable: true,
-            width: 250,
-        },
-        {
-            field: 'codigo_exp_consec_por_agno',
-            headerName: 'CONSECUTIVO',
-            sortable: true,
-            width: 250,
-        },
-        {
-            field: 'titulo_expediente',
-            headerName: 'TÍTULO EXPEDIENTE',
-            width: 300,
-        },
-        {
-            field: 'acciones',
-            headerName: 'ACCIONES',
-            width: 200,
-            renderCell: (params) => (
-                <Button onClick={() => seleccionar_expediente(params.row)} startIcon={<PlaylistAddCheckIcon />} />
-            ),
-
-        },
-    ];
-
-    const seleccionar_expediente: any = (expediente: any) => {
-
-    }
-
-    const mostrar_busqueda_expediente: any = async () => {
-
-    }
 
     return (
         <>
@@ -96,7 +46,7 @@ const ConcederAccesoDocumento: React.FC<IProps> = (props: IProps) => {
                         container
                         sx={class_css}
                     >
-                        <InformacionDocumento documento={props.documento}></InformacionDocumento>
+                        <InformacionDocumento documento={props.documento} metadata={props.metadata}></InformacionDocumento>
                     </Grid>
                     <Grid
                         container

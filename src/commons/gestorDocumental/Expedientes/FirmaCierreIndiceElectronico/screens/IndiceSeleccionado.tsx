@@ -138,7 +138,6 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
                                     readOnly={true}
                                     renderInput={(params) => (
                                         <TextField
-                                            required
                                             fullWidth
                                             size="small"
                                             {...params}
@@ -156,7 +155,6 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
                                     readOnly={true}
                                     renderInput={(params) => (
                                         <TextField
-                                            required
                                             fullWidth
                                             size="small"
                                             {...params}
