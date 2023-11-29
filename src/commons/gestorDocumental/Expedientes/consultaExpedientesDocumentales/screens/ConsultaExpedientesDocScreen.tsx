@@ -1,12 +1,10 @@
-import { Grid, Box, Button, Stack, TextField } from "@mui/material";
+import { Grid, Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { obtener_usuario_logueado } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
-import { useAppDispatch } from "../../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
 import dayOfYear from 'dayjs/plugin/dayOfYear';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { BusquedaExpediente } from "./BusquedaExpediente";
 import { InformacionExpediente } from "./InformacionExpediente";
 import { DocumentosExpediente } from "./DocumentosExpediente";
@@ -21,13 +19,22 @@ const class_css = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConsultaExpedientesDocScreen: React.FC = () => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
     const [documento, set_documento] = useState<any>(null);
-    const [indice, set_indice] = useState<any>(null);
-    const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (limpiar) {
+            set_expediente(null);
+            set_documento(null);
+            set_limpiar(false);
+        }
+    }, [limpiar]);
+
+    const limpiar_formulario = (): void => {
+        set_limpiar(true);
+    }
 
     const salir_expediente: () => void = () => {
         navigate('/home');
@@ -39,7 +46,7 @@ export const ConsultaExpedientesDocScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <BusquedaExpediente set_expediente={set_expediente} limpiar={false} set_documento={set_documento}></BusquedaExpediente>
+                <BusquedaExpediente set_expediente={set_expediente} limpiar={limpiar} set_documento={set_documento}></BusquedaExpediente>
             </Grid>
             {expediente !== null && <Grid
                 container
@@ -61,6 +68,14 @@ export const ConsultaExpedientesDocScreen: React.FC = () => {
                         spacing={2}
                         sx={{ mt: '10px' }}
                     >
+                        <Button
+                            // color='inherit'
+                            variant="outlined"
+                            startIcon={<CleanIcon />}
+                            onClick={() => { limpiar_formulario() }}
+                        >
+                            Limpiar
+                        </Button>
                         <Button
                             color="error"
                             variant='contained'

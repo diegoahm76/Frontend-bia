@@ -172,12 +172,14 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
 
     const seleccion_expediente_grid = (seleccion_expediente: any): void => {
         const expediente_local = expedientes.find((e: any) => e.id_expediente_documental === seleccion_expediente[0]);
-        dispatch(buscar_expediente_id(expediente_local.id_expediente_documental)).then((response: any) => {
-            response.success ? set_expediente(response.data) : set_expediente(null);     
-        });
-        dispatch(obtener_documentos_expediente(expediente_local.id_expediente_documental, '', '', '')).then(((response: any) => {
-            response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
-        }));
+        if(expediente_local !== undefined){
+            dispatch(buscar_expediente_id(expediente_local.id_expediente_documental)).then((response: any) => {
+                response.success ? set_expediente(response.data) : set_expediente(null);     
+            });
+            dispatch(obtener_documentos_expediente(expediente_local.id_expediente_documental, '', '', '')).then(((response: any) => {
+                response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+            }));
+        }
     }
 
     useEffect(() => {
@@ -187,7 +189,10 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             set_serie("");
             set_lt_seccion([]);
             set_lt_serie([]);
+            set_expedientes([]);
             set_expediente(null);
+            set_documento(null);
+            set_año(null);
         }
     }, [props.limpiar]);
 
