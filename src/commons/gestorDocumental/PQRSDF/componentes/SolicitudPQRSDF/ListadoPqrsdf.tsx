@@ -83,15 +83,17 @@ const ListadoPqrsdf = () => {
     // }
   }, [selectedPqr]);
 
-  const get_product_severity = (pqr: IObjPqr) => {
-    switch (pqr.pqr_status) {
-      case 'INSTOCK':
+  const get_product_severity: any = (pqr: IObjPqr) => {
+    switch (pqr.id_estado_actual_solicitud) {
+      case '6' || '7' || '8':
         return 'success';
+      case '1' || '2':
+        return 'primary';
 
-      case 'LOWSTOCK':
+      case '4':
         return 'warning';
 
-      case 'OUTOFSTOCK':
+      case '3':
         return 'danger';
 
       default:
@@ -101,33 +103,33 @@ const ListadoPqrsdf = () => {
 
   const columns_pqrs: ColumnProps[] = [
     {
-      field: 'pqr_type',
+      field: 'cod_tipo_PQRSDF',
       header: 'Tipo de tramite',
       sortable: true,
     },
     {
-      field: 'created_at',
+      field: 'fecha_registro',
       header: 'Fecha de creación',
       sortable: true,
     },
     {
-      field: 'filling_at',
+      field: 'fecha_radicado',
       header: 'Fecha de radicado',
       sortable: true,
     },
     {
-      field: 'filling_number',
+      field: 'numero_radicado',
       header: 'Número de radicado',
       sortable: true,
     },
 
     {
-      field: 'pqr_status',
+      field: 'nombre_estado_solicitud',
       header: 'Estado',
       sortable: true,
       body: (rowData) => (
         <Tag
-          value={rowData.pqr_status}
+          value={rowData.nombre_estado_solicitud}
           severity={get_product_severity(rowData)}
         ></Tag>
       ),
@@ -146,20 +148,24 @@ const ListadoPqrsdf = () => {
     },
   ];
   const columns_solicitud: ColumnProps[] = [
-    { field: 'request_type', header: 'Tipo de solicitud', sortable: true },
     {
-      field: 'request_at',
+      field: 'nombre_tipo_oficio',
+      header: 'Tipo de solicitud',
+      sortable: true,
+    },
+    {
+      field: 'fecha_radicado_salida',
       header: 'Fecha de radicado de salida',
       sortable: true,
     },
     {
-      field: 'request_number',
+      field: 'numero_radicado_salida',
       header: 'Número de radicado de salida',
       sortable: true,
     },
 
     {
-      field: 'notification_at',
+      field: 'fecha_radicado_salida',
       header: 'Fecha de notificación',
       sortable: true,
     },
@@ -185,20 +191,24 @@ const ListadoPqrsdf = () => {
   ];
   const definition_levels = [
     {
-      column_id: 'id_pqr',
+      column_id: 'id_PQRSDF',
       level: 0,
       columns: columns_pqrs,
       table_name: 'PQRSDF',
       property_name: '',
     },
     {
-      column_id: 'id_pqr_request',
+      column_id: 'id_solicitud_al_usuario_sobre_pqrsdf',
       level: 1,
       columns: columns_solicitud,
       table_name: 'Solicitudes de PQRSDF',
       property_name: 'orders',
     },
   ];
+
+  const get_x: any = (data: any) => {
+    console.log(data);
+  };
 
   return (
     <div className="card">
@@ -209,6 +219,7 @@ const ListadoPqrsdf = () => {
         setSelectedItem={setSelectedPqr}
         expandedRows={expandedRows}
         setExpandedRows={setExpandedRows}
+        onRowToggleFunction={get_x}
       />
       <Grid container direction="row" padding={2} spacing={2}>
         <Grid item xs={12} md={3}>
