@@ -15,7 +15,7 @@ import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/Buscado
 import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
-import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/Pqrsdf/getPqrsdfPanVen.service';
+import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 import {
   setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,

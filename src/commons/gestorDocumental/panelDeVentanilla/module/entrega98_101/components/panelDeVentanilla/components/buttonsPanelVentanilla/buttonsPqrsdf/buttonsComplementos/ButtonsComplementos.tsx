@@ -1,11 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Box, SpeedDial, SpeedDialAction } from '@mui/material';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../../../hooks';
 import { withValidation } from '../../functions/validationAction';
 import { showAlert } from '../../../../../../../../../../../utils/showAlert/ShowAlert';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { resetPanelVentanillaFull } from '../../../../../../../../toolkit/store/PanelVentanillaStore';
+import { postDigitalizacionComplementos } from '../../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service';
 
 export const ButtonsComplementos = (): JSX.Element => {
   //* dispatch declaration
@@ -13,10 +18,20 @@ export const ButtonsComplementos = (): JSX.Element => {
   //* navigate
   const navigate = useNavigate();
 
-
   const actionsComplementos = useAppSelector(
     (state) => state.PanelVentanillaSlice.actionsComplementos
   );
+  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+    (state) =>
+      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  );
+
+  const sendDigitalizationRequest = async () => {
+    const { idComplementoUsu_PQR } =
+      currentElementPqrsdComplementoTramitesYotros;
+    await postDigitalizacionComplementos(idComplementoUsu_PQR);
+    dispatch(resetPanelVentanillaFull());
+  };
 
   const handleDigitalizacion = withValidation(async () => {
     await Swal.fire({
@@ -27,14 +42,9 @@ export const ButtonsComplementos = (): JSX.Element => {
       denyButtonText: `No, cancelar`,
       confirmButtonColor: '#3085d6',
       denyButtonColor: '#d33',
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        showAlert(
-          'Solicitud enviada',
-          'Diríjase al módulo de central de digitalización.',
-          'success'
-        );
-        //* se debe añadir la lógica del envío de la solicitud con una función extra
+        await sendDigitalizationRequest();
       } else if (result.isDenied) {
         showAlert(
           'Opps...',
@@ -45,14 +55,14 @@ export const ButtonsComplementos = (): JSX.Element => {
     });
   });
 
-  const handleAsignacionPersonal = withValidation(() =>
+  /*  const handleAsignacionPersonal = withValidation(() =>
     console.log('Enviar solicitud al usuario')
   );
 
   const handleAsignacionGrupo = withValidation(() =>
     console.log('Asignar al grupo')
   );
-
+*/
   const handleContinuarAsignacionAGrupo = withValidation(() =>
     console.log('Continuar con asignación de grupo')
   );
@@ -63,12 +73,12 @@ export const ButtonsComplementos = (): JSX.Element => {
       case 'Dig':
         handleDigitalizacion(action, navigate);
         break;
-      case 'AsigPer':
+      /*case 'AsigPer':
         handleAsignacionPersonal(action, navigate);
         break;
       case 'AsigGrup':
         handleAsignacionGrupo(action, navigate);
-        break;
+        break;*/
       case 'ContinuarAsigGrup':
         handleContinuarAsignacionAGrupo(action, navigate);
         break;

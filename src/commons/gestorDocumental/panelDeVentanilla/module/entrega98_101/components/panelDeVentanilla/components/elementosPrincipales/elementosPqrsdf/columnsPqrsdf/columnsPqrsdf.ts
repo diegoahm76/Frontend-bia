@@ -30,12 +30,15 @@ export const columnsPqrsdf = [
   {
     headerName: 'Nombre completo del titular',
     field: 'nombre_completo_titular',
-    minWidth: 250,
+    minWidth: 400,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
   },
   {
     headerName: 'Asunto',
     field: 'asunto',
-    minWidth: 250,
+    minWidth: 450,
   },
   {
     headerName: 'Cantidad de anexos',
@@ -46,15 +49,14 @@ export const columnsPqrsdf = [
     headerName: 'Radicado',
     field: 'radicado',
     minWidth: 250,
+    renderCell: (params: any) => {
+      return params.row.radicado ? params.row.radicado : 'N/A';
+    },
   },
   {
     headerName: 'Fecha de radicado',
     field: 'fecha_radicado',
     minWidth: 250,
-    renderCell: (params: any) => {
-      const validData = formatDate(params.value);
-      return validData;
-    },
   },
   {
     headerName: 'Requiere digitalización',
@@ -67,7 +69,7 @@ export const columnsPqrsdf = [
   {
     headerName: 'Estado de solicitud',
     field: 'estado_solicitud',
-    minWidth: 250,
+    minWidth: 280,
   },
   {
     headerName: 'Estado de asignación de grupo',

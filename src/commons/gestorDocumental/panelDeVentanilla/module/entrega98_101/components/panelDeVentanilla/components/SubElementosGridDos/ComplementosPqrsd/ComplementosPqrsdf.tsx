@@ -9,7 +9,7 @@ import { columnsComplementoPqrsdf } from './columnsComplementoPqrsd/colComplePqr
 import { LoadingButton } from '@mui/lab';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { Avatar, Chip, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import Swal from 'sweetalert2';
 import {
   setActionssToManagePermissions,
@@ -25,9 +25,11 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* states from redux store
-  const { listaComplementosRequerimientosOtros, actions } = useAppSelector(
-    (state) => state.PanelVentanillaSlice
-  );
+  const {
+    listaComplementosRequerimientosOtros,
+    actions,
+    currentElementPqrsdComplementoTramitesYotros,
+  } = useAppSelector((state) => state.PanelVentanillaSlice);
 
   //* context declaration
   const {
@@ -213,6 +215,19 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       rows={[...listaComplementosRequerimientosOtros] ?? []}
       columns={columns ?? []}
       title="Complementos del elemento seleccionado"
+      aditionalElement={
+        currentElementPqrsdComplementoTramitesYotros?.tipo ? (
+          <Button
+            onClick={() => {
+              dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+            }}
+            variant="contained"
+            color="primary"
+          >
+            Quitar selección de complemento
+          </Button>
+        ) : null
+      }
     />
   );
 };

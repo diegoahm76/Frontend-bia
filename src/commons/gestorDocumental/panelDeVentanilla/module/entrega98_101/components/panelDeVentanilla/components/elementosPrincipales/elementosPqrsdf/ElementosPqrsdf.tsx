@@ -3,7 +3,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
@@ -23,12 +23,15 @@ import {
 } from '../../../../../../../../../../hooks';
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/Pqrsdf/getComplementos.service';
-import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/Pqrsdf/getHistoByRad.service';
+import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
+import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
+import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
+  //* navigate declaration
+  const navigate = useNavigate();
   //* context declaration
   const {
     setRadicado,
@@ -75,9 +78,11 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   >({});
 
   //* redux states
-  const { listaElementosPqrsfTramitesUotros, actions } = useAppSelector(
-    (state) => state.PanelVentanillaSlice
-  );
+  const {
+    listaElementosPqrsfTramitesUotros,
+    actions,
+    currentElementPqrsdComplementoTramitesYotros,
+  } = useAppSelector((state) => state.PanelVentanillaSlice);
 
   // ? functions
   const setActionsPQRSDF = (pqrsdf: any) => {
@@ -273,39 +278,56 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            <Link
-              //* estos ids se van a manejar a traves de los params.row
+            {/*<Link
               to={`/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`}
-            >
-              <Tooltip title="Ver info pqrsdf">
-                <IconButton
-                  onClick={() => {
-                    setActionsPQRSDF(params?.row);
-                    handleOpenInfoMetadatos(false);
-                    handleOpenInfoAnexos(false);
-                    setMetadatos([]);
+            >*/}
+            <Tooltip title="Ver info pqrsdf">
+              <IconButton
+                onClick={() => {
+                  void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    console.log(res);
+
+                    if (res.length > 0) {
+                      setAnexos(res);
+                      handleOpenInfoMetadatos(false);
+                      handleOpenInfoAnexos(false);
+                      setActionsPQRSDF(params?.row);
+                      navigate(
+                        `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                      );
+                      return;
+                    }
+
+                    return;
+                  });
+
+                  /*   setActionsPQRSDF(params?.row);
+                  handleOpenInfoMetadatos(false);
+                  handleOpenInfoAnexos(false);*/
+
+                  // setMetadatos([]);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
                   }}
+                  variant="rounded"
                 >
-                  <Avatar
+                  <VisibilityIcon
                     sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
                     }}
-                    variant="rounded"
-                  >
-                    <VisibilityIcon
-                      sx={{
-                        color: 'primary.main',
-                        width: '18px',
-                        height: '18px',
-                      }}
-                    />
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-            </Link>
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            {/* </Link>*/}
 
             {/*segundo elemento definición*/}
 
@@ -364,11 +386,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
             <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {
-                  //* se debe actualizar el array de acciones ya que de esa manera se va a determinar a que módulos va a tener acceso el elemento selccionado
-
-                  // ? en consecuencia se debe manejar segun los estados que se deban ejecutar por cada pqr se´gún los documentos de modelado
-                  /*dispatch(setActionssToManagePermissions())*/
-
                   setActionsPQRSDF(params?.row);
                 }}
               >
@@ -411,6 +428,19 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         rows={[...listaElementosPqrsfTramitesUotros] ?? []}
         columns={columns ?? []}
         title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
+        aditionalElement={
+          currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ? (
+            <Button
+              onClick={() => {
+                dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+              }}
+              variant="contained"
+              color="primary"
+            >
+              Quitar selección de PQRSDF
+            </Button>
+          ) : null
+        }
       />
     </>
   );

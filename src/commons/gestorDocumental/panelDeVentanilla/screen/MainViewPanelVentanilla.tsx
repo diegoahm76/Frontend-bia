@@ -13,7 +13,7 @@ import { containerStyles } from '../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../components';
 
 import { PanelVentanillaContext } from '../context/PanelVentanillaContext';
-import { getHistoricoByRadicado } from '../toolkit/thunks/Pqrsdf/getHistoByRad.service';
+import { getHistoricoByRadicado } from '../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { ModalAndLoadingContext } from '../../../../context/GeneralContext';
 import { setListaHistoricoSolicitudes } from '../toolkit/store/PanelVentanillaStore';
 import { useAppDispatch } from '../../../../hooks';

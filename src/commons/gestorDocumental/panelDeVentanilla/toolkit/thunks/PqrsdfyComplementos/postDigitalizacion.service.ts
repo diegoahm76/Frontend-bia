@@ -4,12 +4,10 @@ import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
 import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const postDigitalizacionPqrsdfCompletemento = async (data: any) => {
+export const postDigitalizacionPqrsdf = async (data: any) => {
   try {
     if (!data) {
-      control_warning(
-        'No se ha seleccionado ningún documento para digitalizar'
-      );
+      control_warning('No se ha seleccionado ninguna PQRSDF para digitalizar');
     }
     const url = `gestor/panel_ventanilla/pqrsdf/solicitudd_digitalizacion/create/`;
     const response = await api.post(url, {
@@ -24,8 +22,31 @@ export const postDigitalizacionPqrsdfCompletemento = async (data: any) => {
       );
     }
 
-
     return response;
+  } catch (err: any) {
+    showAlert('Opps...', `${err.response.data.detail}`, 'error');
+  }
+};
+
+export const postDigitalizacionComplementos = async (data: any) => {
+  try {
+    if (!data) {
+      control_warning(
+        'No se ha seleccionado ningún complemento para digitalizar'
+      );
+    }
+    const url = `gestor/panel_ventanilla/complementos/digitalizacion/create/`;
+    const response = await api.post(url, {
+      id_complemento_usu_pqr: data,
+    });
+
+    if (response.data.succes) {
+      showAlert(
+        'Digitalización exitosa',
+        'Se ha digitalizado correctamente la solicitud',
+        'success'
+      );
+    }
   } catch (err: any) {
     showAlert('Opps...', `${err.response.data.detail}`, 'error');
   }

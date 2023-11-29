@@ -8,7 +8,7 @@ import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAle
 import Swal from 'sweetalert2';
 import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
-import { postDigitalizacionPqrsdfCompletemento } from '../../../../../../../toolkit/thunks/Pqrsdf/postDigitalizacion.service';
+import { postDigitalizacionPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service';
 import { resetPanelVentanillaFull } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -30,7 +30,7 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
 
   const sendDigitalizationRequest = async () => {
     const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
-    await postDigitalizacionPqrsdfCompletemento(id_PQRSDF);
+    await postDigitalizacionPqrsdf(id_PQRSDF);
     dispatch(resetPanelVentanillaFull());
   };
 
