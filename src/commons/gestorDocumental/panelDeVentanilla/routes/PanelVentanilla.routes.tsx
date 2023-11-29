@@ -4,8 +4,10 @@ import { MainViewPanelVentanilla } from '../screen/MainViewPanelVentanilla';
 import { AsignacionUsuarioScreen } from '../module/entrega99/screen/AsignacionUsuarioScreen';
 import { PanelVentanillaProvider } from '../context/PanelVentanillaContext';
 import { ModalAndLoadingProvider } from '../../../../context/GeneralContext';
-import { VistaPqr } from '../module/entrega98/components/vistaPqr/VistaPqr';
-import { VistaComplemento } from '../module/entrega98/components/vistaComplemento/VistaComplemento';
+import { VistaPqr } from '../module/entrega98_101/components/vistaPqr/VistaPqr';
+import { VistaComplemento } from '../module/entrega98_101/components/vistaComplemento/VistaComplemento';
+import { MainAsigGrupoScreen } from '../module/entrega102/screen/MainAsigGrupoScreen';
+import { AsignacionGrupoProvider } from '../module/entrega102/context/AsignacionGrupoContext';
 
 const routes = [
   {
@@ -19,8 +21,17 @@ const routes = [
   },
   {
     path: 'asignar_a_grupo/',
-    component: () => <>Módulo de asignación a grupo</>,
+    component: () => (
+      <>
+        <AsignacionGrupoProvider>
+          <MainAsigGrupoScreen />
+        </AsignacionGrupoProvider>
+      </>
+    ),
   },
+
+  //* van a venit posteriorment los modulos que desprenden de trámites y servicios y otros
+
   {
     path: 'pqr_info/:id',
     component: () => <VistaPqr />,
