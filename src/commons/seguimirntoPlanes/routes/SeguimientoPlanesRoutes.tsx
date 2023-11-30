@@ -17,15 +17,16 @@ import { DetalleInversionRoutes } from '../DetalleInversionCuentas/router/Detall
 import { ConceptoPOAIRoutes } from '../ConceptoPOAI/router/ConceptoPOAIRoutes';
 import { FuentesRoutes } from '../FuenteFinanciacion/router/FuentesFinanciacionRoutes';
 import { BancosRoutes } from '../BancoProyecto/router/BancosRoutes';
+import { PlanAdquisicionesRoutes } from '../PlanAnualAdquisiciones/router/PlanAdquisicionesRoutes';
 
 const routes = [
   {
-    path: 'informacion/',
+    path: 'informacion/', // * Planes
     name: 'informacion',
     component: () => <PlanesRoutes />,
   },
   {
-    path: 'eje/',
+    path: 'eje/', // eje estrategico
     name: 'eje',
     component: () => <EjeEstretegicoRoutes />,
   },
@@ -100,6 +101,7 @@ const routes = [
     name: 'poai',
     component: () => <ConceptoPOAIRoutes />,
   },
+  // * Fuentes de financiacion poai
   {
     path: 'fuentes/',
     name: 'fuentes',
@@ -110,6 +112,12 @@ const routes = [
     path: 'banco/',
     name: 'banco',
     component: () => <BancosRoutes />,
+  },
+  // PlanAdquisicionesRoutes
+  {
+    path: 'plan_anual/',
+    name: 'plan_anual',
+    component: () => <PlanAdquisicionesRoutes />,
   },
   {
     path: '/*',
