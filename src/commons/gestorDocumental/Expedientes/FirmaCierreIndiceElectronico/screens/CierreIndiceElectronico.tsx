@@ -1,4 +1,4 @@
-import { Grid, TextField, Box, Stack, Accordion, AccordionSummary, Typography, AccordionDetails, Fab, Button } from "@mui/material";
+import { Grid, TextField, Box, Stack, Typography, Fab, Button } from "@mui/material";
 import { Title } from "../../../../../components/Title";
 import dayjs from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -27,7 +27,7 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
     const [codigo_verificacion, set_codigo_verificacion] = useState<string>("");
     const [observaciones, set_observaciones] = useState<string>("");
     const [deshabilitar, set_deshabilitar] = useState<boolean>(false);
-    const [validar, set_validar] = useState<boolean|null>(null);
+    const [validar, set_validar] = useState<boolean | null>(null);
     const [countdown, set_countdown] = useState<number>(60);
     const [reintentos, set_reintentos] = useState<number>(0);
     useEffect(() => {
@@ -47,8 +47,8 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
     };
 
     const enviar_codigo_verificacion: () => void = () => {
-        set_reintentos(reintentos+1);
-        if(reintentos+1 === 3){
+        set_reintentos(reintentos + 1);
+        if (reintentos + 1 === 3) {
             return
         }
         set_deshabilitar(true);
@@ -69,13 +69,13 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
         }, 1000);
     }
     const validar_codigo_verificacion: () => void = () => {
-        dispatch(validar_codigo_verificación(props.indice?.id_indice_electronico_exp,codigo_verificacion)).then((response: any) => {
+        dispatch(validar_codigo_verificación(props.indice?.id_indice_electronico_exp, codigo_verificacion)).then((response: any) => {
             set_validar(response.success);
         })
     }
 
     const guardar_cierre_indice: () => void = () => {
-        dispatch(firma_cierre_indice(props.indice?.id_indice_electronico_exp,observaciones)).then((response: any) => {
+        dispatch(firma_cierre_indice(props.indice?.id_indice_electronico_exp, observaciones)).then((response: any) => {
             props.set_limpiar(response.success);
         })
     }
@@ -96,49 +96,36 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                 <Title title="Cierre de índice electrónico" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={12}>
-                            <Stack
-                                direction="row"
-                                justifyContent="flex-end"
-                            >
-                                <Grid item xs={12} sm={2}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker
-                                            label="Fecha actual"
-                                            value={dayjs()}
-                                            onChange={(newValue) => { }}
-                                            readOnly={true}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    required
-                                                    fullWidth
-                                                    size="small"
-                                                    {...params}
-                                                />
-                                            )}
-                                        />
-                                    </LocalizationProvider>
-                                </Grid>
-                            </Stack>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Usuario que firma el cierre"
+                                type={'text'}
+                                size="small"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                fullWidth
+                                value={usuario?.nombre ?? ''}
+                            />
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack
-                                direction="row"
-                                justifyContent="center"
-                            >
-                                <Grid item xs={12} sm={5}>
-                                    <TextField
-                                        label="Usuario que firma el cierre"
-                                        type={'text'}
-                                        size="small"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                        fullWidth
-                                        value={usuario?.nombre ?? ''}
-                                    />
-                                </Grid>
-                            </Stack>
+                        <Grid item xs={12} sm={6}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    label="Fecha actual"
+                                    value={dayjs()}
+                                    onChange={(newValue) => { }}
+                                    readOnly={true}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <Stack
@@ -151,37 +138,29 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                                 <Typography sx={{ fontSize: '18px', fontWeight: '420' }}> Se enviará un codigó de verificación a los siguientes medios de contacto </Typography>
                             </Stack>
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack direction="row" justifyContent="center">
-                                <Grid item xs={12} sm={4}>
-                                    <TextField
-                                        label="Número telefónico"
-                                        type={'text'}
-                                        size="small"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                        fullWidth
-                                        value={usuario?.telefono_celular}
-                                    />
-                                </Grid>
-                            </Stack>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Número telefónico"
+                                type={'text'}
+                                size="small"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                fullWidth
+                                value={usuario?.telefono_celular}
+                            />
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack direction="row" justifyContent="center">
-                                <Grid item xs={12} sm={4}>
-                                    <TextField
-                                        label="Correo electrónico"
-                                        type={'text'}
-                                        size="small"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                        fullWidth
-                                        value={usuario?.email}
-                                    />
-                                </Grid>
-                            </Stack>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Correo electrónico"
+                                type={'text'}
+                                size="small"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                fullWidth
+                                value={usuario?.email}
+                            />
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <Stack direction="row" justifyContent="center">
@@ -219,15 +198,15 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
 
                             >
                                 <Grid item xs={12} sm={3}>
-                                <Button
-                                    color='primary'
-                                    variant='outlined'
-                                    startIcon={<CheckOutlinedIcon />}
-                                    onClick={() => { validar_codigo_verificacion()  }}
-                                    disabled={(reintentos !== 0 && reintentos < 3) && codigo_verificacion === ''}
-                                >
-                                    {reintentos < 3 ? 'Validar' : 'Superó los intentos permitidos'}
-                                </Button>
+                                    <Button
+                                        color='primary'
+                                        variant='outlined'
+                                        startIcon={<CheckOutlinedIcon />}
+                                        onClick={() => { validar_codigo_verificacion() }}
+                                        disabled={(reintentos !== 0 && reintentos < 3) && codigo_verificacion === ''}
+                                    >
+                                        {reintentos < 3 ? 'Validar' : 'Superó los intentos permitidos'}
+                                    </Button>
                                 </Grid>
                             </Stack>
                         </Grid>
@@ -244,23 +223,19 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                             </Stack>
                         </Grid>
                         <Grid item xs={12} sm={12}>
-                            <Stack direction="row" justifyContent="center">
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Observaciones de la firma de cierre del índice"
-                                        multiline
-                                        rows={3}
-                                        type={'text'}
-                                        size="small"
-                                        fullWidth
-                                        disabled={!validar}
-                                        onChange={cambio_observaciones}
-                                        value={observaciones}
-                                    />
-                                </Grid>
-                            </Stack>
+                            <TextField
+                                label="Observaciones de la firma de cierre del índice"
+                                multiline
+                                rows={2}
+                                type={'text'}
+                                size="small"
+                                fullWidth
+                                disabled={!validar}
+                                onChange={cambio_observaciones}
+                                value={observaciones}
+                            />
                         </Grid>
-                   {validar &&  <Grid item xs={12} sm={12}>
+                        {validar && <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="flex-end"
