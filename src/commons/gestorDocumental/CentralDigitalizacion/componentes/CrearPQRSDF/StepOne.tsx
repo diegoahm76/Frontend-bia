@@ -12,16 +12,16 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 import {
-  set_type_applicant,
-  set_on_behalf_of,
-  initial_state_person,
-  initial_state_company,
-  set_attorney,
-  set_person,
-  set_company,
-  set_grantor,
-  set_pqrs,
-  set_pqr_status,
+  // set_type_applicant,
+  // set_on_behalf_of,
+  // initial_state_person,
+  // initial_state_company,
+  // set_attorney,
+  // set_person,
+  // set_company,
+  // set_grantor,
+  // set_pqrs,
+  // set_pqr_status,
 } from '../../store/slice/centralDigitalizacionSlice';
 interface IProps {
   control_form: any | null;
@@ -42,9 +42,9 @@ const StepOne = ({ control_form, reset }: IProps) => {
   const on_change_select = (value: any, name: string): void => {
     if (name === 'pqr_status') {
       if (value !== undefined) {
-        dispatch(set_pqr_status(value));
+      //  dispatch(set_pqr_status(value));
       } else {
-        dispatch(set_pqr_status({ id: null, key: null, label: null }));
+      //  dispatch(set_pqr_status({ id: null, key: null, label: null }));
       }
     }
   };

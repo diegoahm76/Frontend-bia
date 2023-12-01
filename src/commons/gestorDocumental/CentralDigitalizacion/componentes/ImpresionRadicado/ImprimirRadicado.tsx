@@ -15,20 +15,20 @@ import { type AuthSlice } from '../../../../auth/interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
-import type {
-  IObjDocumentType,
-  IObjFiled,
-  IObjPerson,
-} from '../../interfaces/central_digitalizacion';
-import {
-  set_persons,
-  set_person,
-  set_person_type,
-  set_document_types,
-  set_document_type,
-  set_filed,
-  set_filings,
-} from '../../store/slice/centralDigitalizacionSlice';
+// import type {
+//   IObjDocumentType,
+//   IObjFiled,
+//   IObjPerson,
+// } from '../../interfaces/central_digitalizacion';
+// import {
+//   set_persons,
+//   set_person,
+//   set_person_type,
+//   set_document_types,
+//   set_document_type,
+//   set_filed,
+//   set_filings,
+// } from '../../store/slice/centralDigitalizacionSlice';
 import {
   get_document_types_service,
   get_person_document_service,

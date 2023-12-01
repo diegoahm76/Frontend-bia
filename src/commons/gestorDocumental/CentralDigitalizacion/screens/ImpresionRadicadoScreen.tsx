@@ -9,20 +9,20 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import SeleccionTipoPersona from '../componentes/SolicitudesPendientes/SeleccionTipoPersona';
-import EstadoPqrsdf from '../componentes/SolicitudesPendientes/DigitalizacionesPendientes';
-import ListadoPqrsdf from '../componentes/SolicitudesPendientes/ListadoPqrsdf';
-import TipoEmpresa from '../componentes/SolicitudesPendientes/TipoEmpresa';
-import TipoPoderdante from '../componentes/SolicitudesPendientes/TipoPoderdante';
-import TipoPersona from '../componentes/SolicitudesPendientes/TipoPersona';
+// import SeleccionTipoPersona from '../componentes/SolicitudesPendientes/SeleccionTipoPersona';
+// import EstadoPqrsdf from '../componentes/SolicitudesPendientes/DigitalizacionesPendientes';
+// import ListadoPqrsdf from '../componentes/SolicitudesPendientes/ListadoPqrsdf';
+// import TipoEmpresa from '../componentes/SolicitudesPendientes/TipoEmpresa';
+// import TipoPoderdante from '../componentes/SolicitudesPendientes/TipoPoderdante';
+// import TipoPersona from '../componentes/SolicitudesPendientes/TipoPersona';
 import FormButton from '../../../../components/partials/form/FormButton';
 import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
 import {
   reset_state,
-  set_pqr_status,
-  set_pqrs,
-  set_type_applicant,
+  // set_pqr_status,
+  // set_pqrs,
+  // set_type_applicant,
 } from '../store/slice/centralDigitalizacionSlice';
 import FormStepper from '../../../../components/partials/form/FormStepper';
 import {

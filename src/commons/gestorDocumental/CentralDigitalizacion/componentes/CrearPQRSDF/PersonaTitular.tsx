@@ -12,21 +12,22 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 import {
-  set_type_applicant,
-  set_on_behalf_of,
-  initial_state_person,
-  initial_state_company,
-  set_attorney,
-  set_person,
-  set_company,
-  set_grantor,
-  set_pqrs,
-  set_pqr_status,
+  // set_type_applicant,
+  // set_on_behalf_of,
+  // initial_state_person,
+  // initial_state_company,
+  // set_attorney,
+  // set_person,
+  // set_company,
+  // set_grantor,
+  // set_pqrs,
+  // set_pqr_status,
 } from '../../store/slice/centralDigitalizacionSlice';
 import {
-  IObjCompany,
+ // IObjCompany,
   IObjPerson,
 } from '../../interfaces/central_digitalizacion';
+import { IObjCompany } from '../../../PQRSDF/interfaces/pqrsdf';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const PersonaTitular = () => {
@@ -49,7 +50,7 @@ const PersonaTitular = () => {
         reset(grantor);
         break;
       default:
-        reset(initial_state_person);
+      //  reset(initial_state_person);
         break;
     }
   }, [person, grantor, company]);

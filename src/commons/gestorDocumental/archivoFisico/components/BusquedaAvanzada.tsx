@@ -36,15 +36,7 @@ import {
   avanzada_carpeta,
   avanzada_deposito,
   avanzada_estante,
-  tabla_arbol_deposito,
 } from '../store/thunks/thunksArchivoFisico';
-import { ColumnProps } from 'primereact/column';
-import TableRowExpansion from '../../../../components/partials/form/TableRowExpansion';
-import {
-  DataTableExpandedRows,
-  DataTableValueArray,
-} from 'primereact/datatable';
-import { initial_state_deposito, set_listado_depositos } from '../store/slice/indexArchivoFisico';
 
 interface IProps {
   open: any;
@@ -68,13 +60,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
   const [caja_seleccionado, set_caja_seleccionado] = useState<IObjcajas | null>(
     null
   );
-  const [selectedPqr, setSelectedPqr] = useState<any>();
 
-  const [expandedRows, setExpandedRows] = useState<
-    DataTableExpandedRows | DataTableValueArray | undefined
-  >(undefined);
-  const [rows_update, set_rows_update] =
-    useState<string[]>([]);
   const [selected_items, set_selected_items] = useState({
     tipoElemento: '',
     deposito: null,
@@ -83,112 +69,8 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
     caja: null,
     carpeta: null,
   });
-  const {
-    depositos,
-    estantes,
-    bandejas,
-    cajas,
-    carpetas,
-    arbol_deposito,
-    depositos_tabla,
-  } = useAppSelector((state) => state.archivo_fisico);
-
-  // ARBOL //////////////////////////////////////////////
-
-  const columns_arbol_deposito: ColumnProps[] = [
-    {
-      field: 'identificacion_por_entidad',
-      header: 'Identificaciòn Entidad',
-    },
-    {
-      field: 'nombre_deposito',
-      header: 'Deposito',
-    },
-  ];
-  const columns_arbol_estantes: ColumnProps[] = [
-    {
-      field: 'Informacion_Mostrar',
-      header: 'Estante',
-    },
-    {
-      field: 'identificacion_por_estante',
-      header: 'Identificacion',
-    },
-  ];
-  const columns_arbol_bandejas: ColumnProps[] = [
-    {
-      field: 'Informacion_Mostrar',
-      header: 'Bandeja',
-    },
-    {
-      field: 'identificacion_por_bandeja',
-      header: 'Identificacion',
-    },
-  ];
-  const columns_arbol_cajas: ColumnProps[] = [
-    {
-      field: 'Informacion_Mostrar',
-      header: 'Cajas',
-    },
-    {
-      field: 'identificacion_por_caja',
-      header: 'Identificacion',
-    },
-  ];
-  const columns_arbol_carpetas: ColumnProps[] = [
-    {
-      field: 'Informacion_Mostrar',
-      header: 'Carpeta',
-    },
-    {
-      field: 'identificacion_por_carpeta',
-      header: 'Identificaciona',
-    },
-  ];
-
-  const definition_levels = [
-    {
-      column_id: 'identificacion_por_entidad',
-      level: 0,
-      columns: columns_arbol_deposito,
-      table_name: 'Depositos',
-      property_name: '',
-    },
-    {
-      column_id: 'identificacion_por_estante',
-      level: 1,
-      columns: columns_arbol_estantes,
-      table_name: 'Estantes',
-      property_name: 'estante',
-    },
-    {
-      column_id: 'identificacion_por_bandeja',
-      level: 2,
-      columns: columns_arbol_bandejas,
-      table_name: 'Bandejas',
-      property_name: 'bandejas',
-    },
-    {
-      column_id: 'identificacion_por_caja',
-      level: 3,
-      columns: columns_arbol_cajas,
-      table_name: 'Cajas',
-      property_name: 'cajas',
-    },
-    {
-      column_id: 'identificacion_por_carpetas',
-      level: 4,
-      columns: columns_arbol_carpetas,
-      table_name: 'Carpetas',
-      property_name: 'carpetas',
-    },
-  ];
-
-  // AVANZADA//////////////////////////////////////////////////////
-  useEffect(() => {
-    //  void dispatch(get_trd())
-    //   void dispatch(get_tipologias())
-  }, []);
+  const { depositos, estantes, bandejas, cajas, carpetas, depositos_tabla } =
+    useAppSelector((state) => state.archivo_fisico);
 
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -524,46 +406,12 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
       console.log(caja_seleccionado);
     }
   }, [caja_seleccionado]);
-  useEffect(() => {
-    const deposito_actual:IObjDepositos | undefined = depositos_tabla.find(objeto => objeto.id_deposito === arbol_deposito.deposito.id_deposito);
-    if(deposito_actual !== undefined){
-      let deposito_actual_aux: IObjDepositos = initial_state_deposito
-      deposito_actual_aux = {
-        ...deposito_actual,
-        estante:arbol_deposito.estantes
-      };
-      const depositos_aux:IObjDepositos[] = depositos_tabla.map(objeto => {
-        if (objeto.id_deposito === deposito_actual_aux?.id_deposito) {
-          return deposito_actual_aux;
-        }
-        return objeto;
-      });
-      dispatch(set_listado_depositos(depositos_aux))
-    }
-  }, [arbol_deposito]);
 
   const handleBuscarClick = () => {
     set_selected_items((prevItems: any) => ({
       ...prevItems,
       tipoElemento: tipo_elemento_seleccionado,
     }));
-  };
-
-  const expansion_row_principal = (data:any) => {
-    const rows_update_aux=[]
-    for (let propiedad in data.data) {
-      const elemento_encontrado = rows_update.find(elemento => elemento === propiedad);
-      if (elemento_encontrado === undefined) {
-        const deposito_actual = depositos_tabla.find(objeto => objeto.identificacion_por_entidad === propiedad);
-        if (deposito_actual){
-          const flag = 'estante' in deposito_actual
-          if(!flag){
-          void dispatch (tabla_arbol_deposito(deposito_actual?.id_deposito ?? ''))}
-        }
-      } 
-        rows_update_aux.push(propiedad);
-    }
-    set_rows_update(rows_update_aux)
   };
 
   return (
@@ -588,17 +436,6 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
               marginLeft: '-5px',
             }}
           >
-            <TableRowExpansion
-              products={depositos_tabla}
-              definition_levels={definition_levels}
-              selectedItem={selectedPqr}
-              setSelectedItem={setSelectedPqr}
-              expandedRows={expandedRows}
-              setExpandedRows={setExpandedRows}
-              onRowToggleFunction={expansion_row_principal}
-              initial_allow_expansion={true}
-            />
-
             <Title title="BÚSQUEDA AVANZADA" />
             <Grid container sx={{ mt: '10px', mb: '20px' }}>
               <Grid container justifyContent="center">

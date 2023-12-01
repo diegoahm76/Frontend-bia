@@ -9,27 +9,27 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import SeleccionTipoPersona from '../componentes/SolicitudesPendientes/SeleccionTipoPersona';
-import EstadoPqrsdf from '../componentes/SolicitudesPendientes/DigitalizacionesPendientes';
-import ListadoPqrsdf from '../componentes/SolicitudesPendientes/ListadoPqrsdf';
-import TipoEmpresa from '../componentes/SolicitudesPendientes/TipoEmpresa';
-import TipoPoderdante from '../componentes/SolicitudesPendientes/TipoPoderdante';
-import TipoPersona from '../componentes/SolicitudesPendientes/TipoPersona';
+// import SeleccionTipoPersona from '../componentes/SolicitudesPendientes/SeleccionTipoPersona';
+// import EstadoPqrsdf from '../componentes/SolicitudesPendientes/DigitalizacionesPendientes';
+// import ListadoPqrsdf from '../componentes/SolicitudesPendientes/ListadoPqrsdf';
+// import TipoEmpresa from '../componentes/SolicitudesPendientes/TipoEmpresa';
+// import TipoPoderdante from '../componentes/SolicitudesPendientes/TipoPoderdante';
+// import TipoPersona from '../componentes/SolicitudesPendientes/TipoPersona';
 import FormButton from '../../../../components/partials/form/FormButton';
 import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
 import {
   reset_state,
-  set_attorney,
-  set_grantor,
-  set_on_behalf_of,
+ // set_attorney,
+///  set_grantor,
+//  set_on_behalf_of,
   set_pqr,
-  set_type_applicant,
+ // set_type_applicant,
 } from '../store/slice/centralDigitalizacionSlice';
 import FormStepper from '../../../../components/partials/form/FormStepper';
 import StepOne from '../componentes/CrearPQRSDF/StepOne';
 import StepTwo from '../componentes/CrearPQRSDF/StepTwo';
-import { IObjStepConfiguration } from '../interfaces/central_digitalizacion';
+// import { IObjStepConfiguration } from '../interfaces/central_digitalizacion';
 import PersonaTitular from '../componentes/CrearPQRSDF/PersonaTitular';
 import PersonaInterpone from '../componentes/CrearPQRSDF/PersonaInterpone';
 import {
@@ -42,6 +42,7 @@ import {
   get_presentation_types_service,
   get_storage_mediums_service,
 } from '../store/thunks/pqrsdfThunks';
+import { IObjStepConfiguration } from '../../PQRSDF/interfaces/pqrsdf';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearPqrsdfScreen(): JSX.Element {
   const dispatch = useAppDispatch();

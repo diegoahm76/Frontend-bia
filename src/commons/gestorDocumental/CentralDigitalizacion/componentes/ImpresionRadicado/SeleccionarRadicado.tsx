@@ -11,25 +11,26 @@ import { type AuthSlice } from '../../../../auth/interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
-import type {
-  IObjDocumentType,
-  IObjFiled,
-  IObjPerson,
-} from '../../interfaces/central_digitalizacion';
-import {
-  set_persons,
-  set_person,
-  set_person_type,
-  set_document_types,
-  set_document_type,
-  set_filed,
-  set_filings,
-} from '../../store/slice/centralDigitalizacionSlice';
+// import type {
+//   IObjDocumentType,
+//   IObjFiled,
+//   IObjPerson,
+// } from '../../interfaces/central_digitalizacion';
+// import {
+//   set_persons,
+//   set_person,
+//   set_person_type,
+//   set_document_types,
+//   set_document_type,
+//   set_filed,
+//   set_filings,
+// } from '../../store/slice/centralDigitalizacionSlice';
 import {
   get_document_types_service,
   get_person_document_service,
   get_persons_service,
 } from '../../store/thunks/pqrsdfThunks';
+import { IObjFiled } from '../../../PQRSDF/interfaces/pqrsdf';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarRadicado = () => {
   const dispatch = useAppDispatch();
@@ -125,12 +126,12 @@ const SeleccionarRadicado = () => {
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
-          set_current_model={set_filed}
+          //   set_current_model={set_filed}
           row_id={'id_persona'}
           columns_model={columns_radicados}
           models={filings}
           get_filters_models={get_radicados}
-          set_models={set_filings}
+          //   set_models={set_filings}
           reset_values={reset_radicado}
           button_submit_label="BUSCAR"
           form_inputs={[
@@ -148,10 +149,9 @@ const SeleccionarRadicado = () => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de radicado',
               disabled: true,
-              helper_text:
-                filed.id_radicado !== null
-                  ? 'Debe seleccionar un radicado'
-                  : '',
+              helper_text: filed.id_radicado !== null
+                ? 'Debe seleccionar un radicado'
+                : '',
               select_options: filed_types,
               option_label: 'label',
               option_key: 'key',
@@ -167,10 +167,9 @@ const SeleccionarRadicado = () => {
               label: 'Prefijo de radicado',
               type: 'text',
               disabled: true,
-              helper_text:
-                filed.id_radicado !== null
-                  ? 'Debe seleccionar un radicado'
-                  : '',
+              helper_text: filed.id_radicado !== null
+                ? 'Debe seleccionar un radicado'
+                : '',
             },
             {
               datum_type: 'input_controller',
@@ -183,10 +182,9 @@ const SeleccionarRadicado = () => {
               label: 'Año de radicado',
               type: 'number',
               disabled: true,
-              helper_text:
-                filed.id_radicado !== null
-                  ? 'Debe seleccionar un radicado'
-                  : '',
+              helper_text: filed.id_radicado !== null
+                ? 'Debe seleccionar un radicado'
+                : '',
             },
             {
               datum_type: 'input_controller',
@@ -199,10 +197,9 @@ const SeleccionarRadicado = () => {
               label: 'Número de radicado',
               type: 'number',
               disabled: true,
-              helper_text:
-                filed.id_radicado !== null
-                  ? 'Debe seleccionar un radicado'
-                  : '',
+              helper_text: filed.id_radicado !== null
+                ? 'Debe seleccionar un radicado'
+                : '',
             },
             {
               datum_type: 'date_picker_controller',
@@ -216,10 +213,9 @@ const SeleccionarRadicado = () => {
               },
               label: 'Fecha de radicado',
               disabled: true,
-              helper_text:
-                filed.id_radicado !== null
-                  ? 'Debe seleccionar un radicado'
-                  : '',
+              helper_text: filed.id_radicado !== null
+                ? 'Debe seleccionar un radicado'
+                : '',
               format: 'YYYY-MM-DD',
             },
           ]}
@@ -294,8 +290,7 @@ const SeleccionarRadicado = () => {
               helper_text: '',
               format: 'YYYY-MM-DD',
             },
-          ]}
-        />
+          ]} set_models={undefined}        />
       </Grid>
     </>
   );

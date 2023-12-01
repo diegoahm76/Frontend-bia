@@ -72,8 +72,8 @@ export const add_bien_service: any = (bien: any) => {
         visible_solicitudes: visible_solicitudes_const,
       };
       console.log(new_obj)
-      const { data } = await api.put(
-        'almacen/bienes/catalogo-bienes/create/',
+      const { data } = await api.post(
+        'almacen/bienes/catalogo-bienes/post/',
         new_obj,
       );
       dispatch(get_bienes_service());
@@ -149,88 +149,73 @@ export const delete_nodo_service: any = (id: number) => {
   };
 };
 
-// Eliminar nodo
-export const get_code_bien_service: any = (code: string | null) => {
-  return async (dispatch: Dispatch<any>) => {
-    let codigo = 0;
-    let nivel = 1;
-    let limit = 9;
-    if (code == null) {
+      export const get_code_bien_service_n: any = (code: string | null) => {
+        return async (dispatch: Dispatch<any>) => {
+          let codigo = 0;
+          let nivel = 1;
+          let limit = 9;
+          if (code == null) {
 
-      codigo = 1
-      nivel = 1
-      limit = 9
-    } else {
-      if (code.length === 1) {
-        codigo = Number(code) * 10
-        nivel = 2
-        limit = codigo + 9
-      } else if (code.length === 2) {
-        codigo = (Number(code) * 100) + 1
-        nivel = 3
-        limit = codigo + 99
-      } else if (code.length === 4) {
-        codigo = (Number(code) * 1000) + 1
-        nivel = 4
-        limit = codigo + 999
-      } else {
-        codigo = (Number(code) * 100000) + 1
-        nivel = 5
-        limit = codigo + 99999
-      }
-    }
-    for (let index = codigo; index <= limit; index++) {
-      try {
-        const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index.toString()}/`);
-        if (data.success) {
-          dispatch(get_code_bien(index.toString()))
-          return data;
-        } else {
-          if (index === limit) {
-            control_error('No se pueden crear mas nodos en este nivel');
+            codigo = 1
+            nivel = 1
+            limit = 9
+          } else {
+            if (code.length === 1) {
+              codigo = Number(code) * 10
+              nivel = 2
+              limit = codigo + 9
+            } else if (code.length === 2) {
+              codigo = (Number(code) * 100) + 1
+              nivel = 3
+              limit = codigo + 99
+            } else if (code.length === 4) {
+              codigo = (Number(code) * 1000) + 1
+              nivel = 4
+              limit = codigo + 999
+            } else {
+              codigo = (Number(code) * 100000) + 1
+              nivel = 5
+              limit = codigo + 99999
+            }
           }
-        }
+          for (let index = codigo; index <= limit; index++) {
+            try {
+              const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index.toString()}/`);
+              if (data.success) {
+                dispatch(get_code_bien(index.toString()))
+                return data;
+              } else {
+                if (index === limit) {
+                  control_error('No se pueden crear mas nodos en este nivel');
+                }
+              }
 
+            } catch (error: any) {
+
+            }
+
+          }
+
+        };
+      };
+
+export const get_code_bien_service = (
+  id_bien_padre: number | null  | undefined,
+  nivel_jerarquico: number | null | undefined,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.get(`almacen/bienes/catalogo-bienes-generador-codigo/?id_bien_padre=${id_bien_padre ?? ''}&nivel_jerarquico=${nivel_jerarquico ?? ''}`);
+
+          if (data.success === true) {
+              dispatch(get_code_bien(data.data));
+
+          }
+          return data;
       } catch (error: any) {
+          control_error(error.response.data.detail);
 
+          return error as AxiosError;
       }
-
-    }
-
   };
 };
-
-// Eliminar bien
-// export const delete_bien_service = (id_bien: number): any => {
-//   return async (dispatch: Dispatch<any>) => {
-//     try {
-//       const { data } = await api.delete(
-//         `almacen/bienes/catalogo-bienes/delete/${id_bien}/`
-//       );
-//       dispatch(get_bienes_service());
-//       control_success('El bien se eliminó correctamente');
-//       return data;
-//     } catch (error: any) {
-//       console.log('eliminar_bien_service');
-//       control_error(error.response.data.detail);
-//       console.log(error);
-//       return error as AxiosError;
-//     }
-//   };
-// };
-
-// export const delete_bien: any = (bien: any) => {
-//   return async (dispatch: Dispatch<any>) => {
-//    try {
-//      await api.delete(`almacen/bienes/catalogo-bienes/delete/${nodo.data.id_nodo}`);
-//     dispatch(add_bien_service());
-//     control_success('se elimino bien');
-//     return data;
-//    } catch(error:any) {
-//     console.log('delete');
-//     control_error(error.response.data.detail);
-//     return error as AxiosError;
-//    }
-
-//    }
-//   }

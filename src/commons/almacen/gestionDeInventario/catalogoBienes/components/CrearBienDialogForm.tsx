@@ -80,16 +80,16 @@ const CrearBienDialogForm = ({
   // };
 
   const on_submit = (data: FormValues): void => {
-    if (action === 'create_sub') {
-      data.id_bien = null
-      data.nivel_jerarquico = Number(current_nodo.data.bien?.nivel_jerarquico ?? 0) + 1
-      data.id_bien_padre = current_nodo.data.bien?.id_bien
-      data.nombre_padre = current_nodo.data.bien?.nombre
-    } else if (action === 'create') {
+   if (action === 'create_sub') {
+     data.id_bien = null
+     data.nivel_jerarquico = Number(current_nodo.data.bien?.nivel_jerarquico ?? 0) + 1
+     data.id_bien_padre = current_nodo.data.bien?.id_bien
+     data.nombre_padre = current_nodo.data.bien?.nombre
+  } else if (action === 'create') {
       data.nivel_jerarquico = 1;
-    }
-    data.maneja_hoja_vida = data.maneja_hoja_vida === "true"
-    data.solicitable_vivero = data.solicitable_vivero === "true"
+   }
+   data.maneja_hoja_vida = data.maneja_hoja_vida === "true"
+  data.solicitable_vivero = data.solicitable_vivero === "true"
     data.visible_solicitudes = data.visible_solicitudes === "true"
     console.log(data);
     void dispatch(add_bien_service(data));
@@ -137,7 +137,7 @@ const CrearBienDialogForm = ({
   useEffect(() => {
     if (action === 'create_sub') {
       if (current_nodo.data.bien?.nivel_jerarquico !== 5) {
-        void dispatch(get_code_bien_service(current_nodo.data.bien?.codigo_bien));
+        void dispatch(get_code_bien_service(current_nodo.data.bien?.id_bien_padre, current_nodo.data.bien?.nivel_jerarquico));
       }
       reset_bien({
         ...current_nodo.data.bien,
@@ -149,7 +149,7 @@ const CrearBienDialogForm = ({
         visible_solicitudes: (current_nodo.data.bien?.visible_solicitudes ?? false) ? "true" : "false"
       });
     } else if (action === 'create') {
-      void dispatch(get_code_bien_service(null));
+      void dispatch(get_code_bien_service(null, null));
       reset_bien(initial_state_current_nodo.data.bien)
     } else {
       reset_bien({
@@ -180,9 +180,7 @@ const CrearBienDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
-        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title={`Crear bien `} />
-        </Grid>
+      
         <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -224,7 +222,7 @@ const CrearBienDialogForm = ({
                     control_form: control_bien,
                     control_name: "codigo_bien",
                     default_value: "",
-                    rules: { required_rule: { rule: true, message: "requerida" } },
+                    rules: { },
                     label: "Codigo",
                     type: "number",
                     disabled: false,
