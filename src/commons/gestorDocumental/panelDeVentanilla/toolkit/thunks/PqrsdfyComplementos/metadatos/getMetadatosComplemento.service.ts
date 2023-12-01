@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { api } from "../../../../../../../api/axios";
-import { control_error, control_success } from "../../../../../../../helpers";
+import { api } from '../../../../../../../api/axios';
+import { control_error, control_success } from '../../../../../../../helpers';
 
 export const getMetadatoComplemento = async (
   id_anexo: number,
