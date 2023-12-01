@@ -47,6 +47,7 @@ import Swal from 'sweetalert2';
 //* component types
 import { type SideBarProps } from './types/types';
 import { useRoutes } from './hook/useRoutes';
+import { permisosPRUEBA } from './info';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SideBar: FC<SideBarProps> = ({
@@ -73,7 +74,7 @@ export const SideBar: FC<SideBarProps> = ({
   );
   // console.log(userinfo);
   // console.log(permisos_store);
-  const [permisos, set_permisos] = useState<any[]>([]);
+  const [permisos, set_permisos] = useState<any[]>(permisosPRUEBA);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
