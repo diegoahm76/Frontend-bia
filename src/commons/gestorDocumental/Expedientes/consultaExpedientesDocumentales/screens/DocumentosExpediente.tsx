@@ -1,15 +1,12 @@
 import { Grid, Box, Button, Stack, TextField, Accordion, AccordionSummary, Typography, AccordionDetails, Card, CardContent, CardActions } from "@mui/material";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 import { useAppDispatch } from "../../../../../hooks";
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
-import dayOfYear from 'dayjs/plugin/dayOfYear';
 import { Title } from "../../../../../components/Title";
 import ConcederAccesoDocumento from "../../ConcesionAcceso/screens/ConcederAccesoDocumento";
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { obtener_documentos_expediente, obtener_metadata } from "../thunks/ConsultaExpedientes";
-dayjs.extend(dayOfYear);
 interface IProps {
     expediente: any,
     documento: any,

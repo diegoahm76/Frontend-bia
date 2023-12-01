@@ -2,8 +2,6 @@ import { Grid, Box, Button, Stack, TextField, Typography, Fab, Accordion, Accord
 import { useState } from "react";
 import dayjs from "dayjs";
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import FolderIcon from '@mui/icons-material/Folder';
-import dayOfYear from 'dayjs/plugin/dayOfYear';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Title } from "../../../../../components/Title";
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
@@ -11,7 +9,6 @@ import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import ConcederAccesoExpediente from "../../ConcesionAcceso/screens/ConcederAccesoExpediente";
 import { useAppDispatch } from "../../../../../hooks";
 import { descargar_expediente, permiso_acceso_expediente } from "../thunks/ConsultaExpedientes";
-dayjs.extend(dayOfYear);
 interface IProps {
     expediente: any;
 }

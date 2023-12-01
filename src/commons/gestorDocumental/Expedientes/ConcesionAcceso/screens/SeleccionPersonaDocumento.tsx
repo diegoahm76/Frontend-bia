@@ -232,6 +232,7 @@ export const SeleccionPersonaDocumento: React.FC<IProps> = (props: IProps) => {
                                     <DatePicker
                                         label="Conceder acceso desde"
                                         value={acceso_desde}
+                                        inputFormat='DD/MM/YYYY'
                                         onChange={(newValue) => { cambio_acceso_desde(newValue); }}
                                         renderInput={(params) => (
                                             <TextField
@@ -253,6 +254,7 @@ export const SeleccionPersonaDocumento: React.FC<IProps> = (props: IProps) => {
                                     <DatePicker
                                         label="Conceder acceso hasta"
                                         value={acceso_hasta}
+                                        inputFormat='DD/MM/YYYY'
                                         onChange={(newValue) => { cambio_acceso_hasta(newValue); }}
                                         renderInput={(params) => (
                                             <TextField

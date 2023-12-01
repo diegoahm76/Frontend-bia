@@ -134,6 +134,7 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
                                 <DatePicker
                                     label="Fecha de apertura de índice"
                                     value={dayjs(props.indice?.fecha_indice_electronico)}
+                                    inputFormat='DD/MM/YYYY'
                                     onChange={(newValue) => { }}
                                     readOnly={true}
                                     renderInput={(params) => (
@@ -151,6 +152,7 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
                                 <DatePicker
                                     label="Fecha de cierre de índice"
                                     value={dayjs(props.indice?.fecha_cierre)}
+                                    inputFormat='DD/MM/YYYY'
                                     onChange={(newValue) => { }}
                                     readOnly={true}
                                     renderInput={(params) => (
