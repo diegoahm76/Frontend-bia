@@ -383,6 +383,17 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
             <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {
+                  if (params?.row?.estado_asignacion_grupo === 'EN GESTION') {
+                    control_warning(
+                      'No se pueden seleccionar esta pqrsdf ya que ha sido asignada a un grupo'
+                    );
+                    return;
+                  }
+
+                  dispatch(
+                    setListaElementosComplementosRequerimientosOtros([])
+                  );
+
                   setActionsPQRSDF(params?.row);
                 }}
               >

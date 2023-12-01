@@ -34,7 +34,7 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
   //* almacenar informacion de los anexos
   const [anexos, setAnexos] = useState<any>([]);
   //* archivo anexos
-  const [archivoAnexos, setArchivoAnexos] = useState<File | null | any>(null);
+  const [archivoAnexos, setArchivoAnexos] = useState<any>(null);
   //* almacenar informacion de los metadatos
   const [metadatos, setMetadatos] = useState<any>([]);
 

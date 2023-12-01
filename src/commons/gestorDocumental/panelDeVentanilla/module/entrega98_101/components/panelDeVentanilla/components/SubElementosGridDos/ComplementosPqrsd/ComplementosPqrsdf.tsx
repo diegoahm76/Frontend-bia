@@ -152,12 +152,6 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
 
                     return;
                   });
-
-                  /* setActionsPQRSDF(params.row);
-
-                    handleOpenInfoMetadatos(false);
-                    handleOpenInfoAnexos(false);
-                    setMetadatos([]);*/
                 }}
               >
                 <Avatar

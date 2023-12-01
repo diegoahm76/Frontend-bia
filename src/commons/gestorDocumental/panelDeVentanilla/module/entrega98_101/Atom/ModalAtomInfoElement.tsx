@@ -31,6 +31,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
 import { useAppSelector } from '../../../../../../hooks';
 import { getArchivoAnexoPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
+import { getArchivoAnexoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
@@ -72,16 +73,27 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
           <>
             <Tooltip title="Ver anexo">
               <IconButton
-                onClick={() => {
-                  console.log('ver anexo');
-                  console.log(params.row);
+                onClick={async () => {
+                  let archivo;
+                  if (params.row.pqrsdf) {
+                    archivo = await getArchivoAnexoPqrsdf(
+                      params.row.id_anexo,
+                      handleOpenInfoAnexos,
+                      handleOpenInfoMetadatos
+                    );
+                  } else {
+                    archivo = await getArchivoAnexoComplemento(
+                      params.row.id_anexo,
+                      handleOpenInfoAnexos,
+                      handleOpenInfoMetadatos
+                    );
+                  }
 
-
-                  // void getArchivoAnexoPqrsdf(params.row.id)
-
-
-                  //* se debe analizar si el estado persiste al abrir el modal se anexan los metadatos desde acá problablemente
-                  handleOpenInfoAnexos(true);
+                  setArchivoAnexos({
+                    anexoActual: params.row,
+                    archivo: archivo?.ruta_archivo,
+                    infoArchivo: archivo,
+                  });
                 }}
               >
                 <Avatar
@@ -195,8 +207,8 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
         {infoAnexos ? (
           <>
             <Title
-              title={`Anexo:  ${anexos?.radicado ?? ''} , Nombre de anexo : ${
-                anexos?.nombre ?? ''
+              title={`Anexo:  ${
+                archivoAnexos?.anexoActual?.nombre_anexo ?? ''
               }`}
             />
             <Grid
@@ -215,14 +227,21 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={anexos?.observacion ?? ''}
+                  value={
+                    archivoAnexos?.anexoActual?.observacion_digitalizacion ?? ''
+                  }
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
+              {/* se debe revisar si la URL se debe cambiar al punto master */}
+              {/* https://back-end-bia-beta.up.railway.app/media/Reporte%20(84).xlsx  */}
               <Grid item xs={12} sm={12}>
                 <DownloadButton
-                  fileName="prueba"
-                  fileUrl="https://back-end-bia-beta.up.railway.app/api/v1/documentos/1/download"
+                  fileName={`archivo anexo ${archivoAnexos?.anexoActual?.nombre_anexo}`}
+                  fileUrl={
+                    `https://back-end-bia-beta.up.railway.app${archivoAnexos?.archivo}` ??
+                    ''
+                  }
                   condition={false}
                 />
               </Grid>
@@ -250,9 +269,12 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   variant="outlined"
                   onClick={() => {
                     // ? al cerrar la infromación del anexo se debe cerrar el elemento del anexo y del metadato si estuviera abierto
-                    // handleOpenInfoAnexos(false);
+                   
+                    
                     //* se debe hacer la petición del anexo así mostrarlo
                     setMetadatos([]); //* seguramente será un objeto
+
+                    // infoArchivo?.id_anexo
                     handleOpenInfoMetadatos(true);
                   }}
                   startIcon={<InfoIcon />}
