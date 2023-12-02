@@ -8,6 +8,8 @@ export interface PanelVentanillaContextProps {
   setExpanded: React.Dispatch<React.SetStateAction<string | boolean>>;
   anexos: any;
   setAnexos: React.Dispatch<React.SetStateAction<any>>;
+  archivoAnexos: any;
+  setArchivoAnexos: React.Dispatch<React.SetStateAction<any>>;
   metadatos: any;
   setMetadatos: React.Dispatch<React.SetStateAction<any>>;
   skipped: Set<number>;

@@ -1,4 +1,4 @@
-import { Grid, TextField, Box, Stack, Accordion, AccordionSummary, Typography, AccordionDetails, Fab, Button } from "@mui/material";
+import { Grid, TextField, Box, Stack, Typography } from "@mui/material";
 import { Title } from "../../../../../components/Title";
 import dayjs from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -28,47 +28,36 @@ export const VerCierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                 <Title title="Cierre de índice electrónico" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={12}>
-                            <Stack
-                                direction="row"
-                                justifyContent="center"
-                            >
-                                <Grid item xs={12} sm={5}>
-                                    <TextField
-                                        label="Usuario que firmó el cierre"
-                                        type={'text'}
-                                        size="small"
-                                        disabled={true}
-                                        fullWidth
-                                        value={indice_cierre?.nombre_persona_firma_cierre ?? ''}
-                                    />
-                                </Grid>
-                            </Stack>
+                        <Grid item xs={12} sm={6}>
+
+                            <TextField
+                                label="Usuario que firmó el cierre"
+                                type={'text'}
+                                size="small"
+                                disabled={true}
+                                fullWidth
+                                value={indice_cierre?.nombre_persona_firma_cierre ?? ''}
+                            />
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack
-                                direction="row"
-                                justifyContent="center"
-                            >
-                                <Grid item xs={12} sm={3}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker
-                                            label="Fecha de la firma del cierre"
-                                            value={dayjs(indice_cierre?.fecha_cierre)}
-                                            onChange={(newValue) => { }}
-                                            disabled={true}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    required
-                                                    fullWidth
-                                                    size="small"
-                                                    {...params}
-                                                />
-                                            )}
+                        <Grid item xs={12} sm={6}>
+
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    label="Fecha de la firma del cierre"
+                                    value={dayjs(indice_cierre?.fecha_cierre)}
+                                    onChange={(newValue) => { }}
+                                    inputFormat='DD/MM/YYYY'
+                                    disabled={true}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
                                         />
-                                    </LocalizationProvider>
-                                </Grid>
-                            </Stack>
+                                    )}
+                                />
+                            </LocalizationProvider>
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <Stack
@@ -81,49 +70,37 @@ export const VerCierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
                                 <Typography sx={{ fontSize: '18px', fontWeight: '420' }}> Se verificó el código a través de los siguientes medios de contacto </Typography>
                             </Stack>
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack direction="row" justifyContent="center">
-                                <Grid item xs={12} sm={4}>
-                                    <TextField
-                                        label="Número telefónico"
-                                        type={'text'}
-                                        size="small"
-                                        disabled={true}
-                                        fullWidth
-                                        value={indice_cierre?.telefono_celular ?? ''}
-                                    />
-                                </Grid>
-                            </Stack>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Número telefónico"
+                                type={'text'}
+                                size="small"
+                                disabled={true}
+                                fullWidth
+                                value={indice_cierre?.telefono_celular ?? ''}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Correo electrónico"
+                                type={'text'}
+                                size="small"
+                                disabled={true}
+                                fullWidth
+                                value={indice_cierre?.email ?? ''}
+                            />
                         </Grid>
                         <Grid item xs={12} sm={12}>
-                            <Stack direction="row" justifyContent="center">
-                                <Grid item xs={12} sm={4}>
-                                    <TextField
-                                        label="Correo electrónico"
-                                        type={'text'}
-                                        size="small"
-                                        disabled={true}
-                                        fullWidth
-                                        value={indice_cierre?.email ?? ''}
-                                    />
-                                </Grid>
-                            </Stack>
-                        </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Stack direction="row" justifyContent="center">
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Observaciones de la firma de cierre del índice"
-                                        multiline
-                                        rows={3}
-                                        type={'text'}
-                                        size="small"
-                                        fullWidth
-                                        disabled={true}
-                                        value={indice_cierre?.observacion_firme_cierre ?? ''}
-                                    />
-                                </Grid>
-                            </Stack>
+                            <TextField
+                                label="Observaciones de la firma de cierre del índice"
+                                multiline
+                                rows={2}
+                                type={'text'}
+                                size="small"
+                                fullWidth
+                                disabled={true}
+                                value={indice_cierre?.observacion_firme_cierre ?? ''}
+                            />
                         </Grid>
                     </Grid>
                 </Box>

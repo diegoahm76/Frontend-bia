@@ -523,6 +523,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={fecha_incorporacion_exp}
                                     onChange={(newValue) => { cambio_fecha_incorporacion_exp(newValue) }}
                                     readOnly={creado_automaticamente}
+                                    inputFormat='DD/MM/YYYY'
                                     disabled={anulado}
                                     renderInput={(params) => (
                                         <TextField
@@ -544,6 +545,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={fecha_creacion_doc}
                                     onChange={(newValue) => { cambio_fecha_creacion_doc(newValue) }}
                                     readOnly={creado_automaticamente}
+                                    inputFormat='DD/MM/YYYY'
                                     disabled={anulado}
                                     renderInput={(params) => (
                                         <TextField

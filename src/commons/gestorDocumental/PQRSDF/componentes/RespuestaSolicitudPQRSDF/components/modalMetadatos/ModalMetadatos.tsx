@@ -456,7 +456,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 />
               </Grid>
 
-              <Grid xs={12} sm={12} sx={{ mt: '1.2rem', mb: '1.2rem' }}>
+              <Grid item xs={12} sm={12} sx={{ mt: '1.2rem', mb: '1.2rem' }}>
                 <Controller
                   name="autocomplete"
                   control={controlManejoMetadatosModal}
