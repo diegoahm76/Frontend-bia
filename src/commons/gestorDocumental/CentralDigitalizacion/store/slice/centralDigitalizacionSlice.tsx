@@ -95,7 +95,7 @@ export const initial_state_pqr_request: IObjPqrRequest = {
 export const initial_state_exhibit: IObjExhibit = {
   id_anexo: null,
   nombre_anexo: null,
-  orden_anexo_en_el_doc: null,
+  orden_anexo_doc: null,
   medio_almacenamiento: null,
   cod_medio_almacenamiento: null,
   medio_almacenamiento_otros_cual: null,

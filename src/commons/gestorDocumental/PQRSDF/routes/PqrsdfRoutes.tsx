@@ -8,7 +8,7 @@ export const PqrsdfRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="solicitud_pqrsdf" element={<SolicitudPqrsdfScreen />} />
-      <Route path="crear_pqrsdf" element={<CrearPqrsdfScreen />} />
+      <Route path="crear_pqrsdf/:id?" element={<CrearPqrsdfScreen />} />
       <Route path="imprimir_radicado" element={<ImpresionRadicadoScreen />} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>

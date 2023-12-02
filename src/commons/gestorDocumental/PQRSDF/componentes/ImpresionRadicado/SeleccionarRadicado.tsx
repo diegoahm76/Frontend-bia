@@ -27,6 +27,7 @@ import {
 } from '../../store/slice/pqrsdfSlice';
 import {
   get_document_types_service,
+  get_filings_service,
   get_person_document_service,
   get_persons_service,
 } from '../../store/thunks/pqrsdfThunks';
@@ -58,7 +59,7 @@ const SeleccionarRadicado = () => {
 
   const columns_radicados: GridColDef[] = [
     {
-      field: 'tipo_radicado',
+      field: 'nombre_tipo_radicado',
       headerName: 'Tipo de radicado',
       width: 250,
       renderCell: (params) => (
@@ -68,9 +69,9 @@ const SeleccionarRadicado = () => {
       ),
     },
     {
-      field: 'prefijo_radicado',
-      headerName: 'Prefijo de radicado',
-      width: 200,
+      field: 'titular',
+      headerName: 'Titular',
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -89,7 +90,7 @@ const SeleccionarRadicado = () => {
     },
 
     {
-      field: 'numero_radicado',
+      field: 'numero_radicado_completo',
       headerName: 'Número de radicado',
       width: 250,
       renderCell: (params) => (
@@ -111,14 +112,20 @@ const SeleccionarRadicado = () => {
   ];
 
   const get_radicados: any = async () => {
-    const tipo_radicado = get_values('cod_tipo_radicado') ?? '';
+    const cod_tipo_radicado = get_values('cod_tipo_radicado') ?? '';
     const prefijo_radicado = get_values('prefijo_radicado') ?? '';
     const agno_radicado = get_values('agno_radicado') ?? '';
     const nro_radicado = get_values('nro_radicado') ?? '';
     const fecha_radicado = get_values('fecha_radicado') ?? '';
-    // void dispatch(
-    //   get_filings_service(tipo_radicado, prefijo_radicado, agno_radicado, nro_radicado, fecha_radicado)
-    // );
+    const params: any = {
+      cod_tipo_radicado,
+      prefijo_radicado,
+      agno_radicado,
+      nro_radicado,
+      fecha_radicado,
+    };
+
+    void dispatch(get_filings_service(params));
   };
 
   return (
@@ -126,7 +133,7 @@ const SeleccionarRadicado = () => {
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
           set_current_model={set_filed}
-          row_id={'id_persona'}
+          row_id={'numero_radicado_completo'}
           columns_model={columns_radicados}
           models={filings}
           get_filters_models={get_radicados}
@@ -193,11 +200,11 @@ const SeleccionarRadicado = () => {
               xs: 12,
               md: 5,
               control_form: control_radicado,
-              control_name: 'numero_radicado',
+              control_name: 'numero_radicado_completo',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de radicado',
-              type: 'number',
+              type: 'text',
               disabled: true,
               helper_text:
                 filed.id_radicado !== null

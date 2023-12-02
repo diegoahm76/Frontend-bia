@@ -31,10 +31,10 @@ import PqrDetailDialog from './PqrDetailDialog';
 const ListadoPqrsdf = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { pqrs } = useAppSelector((state) => state.pqrsdf_slice);
+  const { pqrs, pqr } = useAppSelector((state) => state.pqrsdf_slice);
   const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
 
-  const [selectedPqr, setSelectedPqr] = useState<any>();
+  const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
   const [expandedRows, setExpandedRows] = useState<
     DataTableExpandedRows | DataTableValueArray | undefined
@@ -46,41 +46,48 @@ const ListadoPqrsdf = () => {
     setSelectedPqr({});
     set_detail_is_active(false);
   }, [pqrs]);
+  useEffect(() => {
+    console.log(button_option);
+  }, [button_option]);
 
   useEffect(() => {
-    // if ('id' in selectedPqr) {
-    // cambiar por id_pqr
-    // setear pqr seleccionado en pqr variable
-    // dispatch(
-    //   set_pqr(
-    //     pqrs.find(
-    //       (objeto: IObjPqr) => objeto.id_pqr === selectedPqr.id_pqr
-    //     ) ?? initial_state_pqr
-    //   )
-    // );
-    // dispatch(set_pqr_request(initial_state_pqr_request));
+    console.log(selectedPqr);
+    if (selectedPqr !== null) {
+      if ('id_PQRSDF' in selectedPqr) {
+        dispatch(
+          set_pqr(
+            pqrs.find(
+              (objeto: IObjPqr) => objeto.id_PQRSDF === selectedPqr.id_PQRSDF
+            ) ?? initial_state_pqr
+          )
+        );
+        dispatch(set_pqr_request(initial_state_pqr_request));
 
-    // validar if esta radicado el pqr
-    set_button_option('component');
-    // si no lo esta
-    //set_button_option('restart')
-    // }
-    // if ('id_pqr_request' in selectedPqr) {
-    //   set_button_option('request');
-    //   const pqr = pqrs.find(
-    //     (objeto: IObjPqr) =>
-    //       objeto.id_pqr === selectedPqr.id_pqr_request.split('-')[0]
-    //   );
-    //   dispatch(set_pqr(pqr ?? initial_state_pqr));
-    //   dispatch(
-    //     set_pqr_request(
-    //       pqr.pqr_request.find(
-    //         (objeto: IObjPqrRequest) =>
-    //           objeto.id_pqr_request === selectedPqr.id_pqr_request
-    //       ) ?? initial_state_pqr_request
-    //     )
-    //   );
-    // }
+        // validar if esta radicado el pqr
+        if (selectedPqr.fecha_radicado !== null) {
+          set_button_option('complement');
+        } else {
+          set_button_option('restart');
+        }
+      }
+      if ('id_solicitud_al_usuario_sobre_pqrsdf' in selectedPqr) {
+        set_button_option('request');
+        const pqr = pqrs.find(
+          (objeto: IObjPqr) =>
+            objeto.id_PQRSDF === selectedPqr.id_pqrsdf.split('-')[0]
+        );
+        dispatch(set_pqr(pqr ?? initial_state_pqr));
+        dispatch(
+          set_pqr_request(
+            pqr?.solicitudes_pqr?.find(
+              (objeto: IObjPqrRequest) =>
+                objeto.id_solicitud_al_usuario_sobre_pqrsdf ===
+                selectedPqr.id_solicitud_al_usuario_sobre_pqrsdf
+            ) ?? initial_state_pqr_request
+          )
+        );
+      }
+    }
   }, [selectedPqr]);
 
   const get_product_severity: any = (pqr: IObjPqr) => {
@@ -236,6 +243,7 @@ const ListadoPqrsdf = () => {
 
         <Grid item xs={12} md={3}>
           <FormButton
+            href={`/#/app/gestor_documental/pqrsdf/crear_pqrsdf/${pqr.id_PQRSDF}`}
             variant_button="contained"
             on_click_function={null}
             icon_class={null}

@@ -98,6 +98,7 @@ export function SolicitudPqrsdfScreen(): JSX.Element {
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton
+              href={`/#/app/gestor_documental/pqrsdf/crear_pqrsdf/`}
               variant_button="contained"
               on_click_function={null}
               icon_class={<SaveIcon />}

@@ -18,6 +18,8 @@ import {
   set_file_origins,
   set_file_typologies,
   set_file_typology,
+  set_filed_types,
+  set_filings,
   set_grantor,
   set_grantors,
   set_list_applicant_types,
@@ -27,6 +29,7 @@ import {
   set_person,
   set_person_types,
   set_persons,
+  set_pqr,
   set_pqr_types,
   set_pqrs,
   set_presentation_types,
@@ -135,7 +138,7 @@ export const get_presentation_types_service = (): any => {
     }
   };
 };
-// Obtener formas presentacion pqr
+// Obtener medios presentacion pqr
 export const get_media_types_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -191,6 +194,21 @@ export const get_storage_mediums_service = (): any => {
       return data;
     } catch (error: any) {
       console.log('get_storage_mediums_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener tipos radicados
+export const get_filed_types_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('gestor/choices/tipo-radicado/');
+      console.log(data);
+      dispatch(set_filed_types(map_list(data, true)));
+      return data;
+    } catch (error: any) {
+      console.log('get_filed_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -483,7 +501,7 @@ export const get_attorneys_service = (id: string | number): any => {
   };
 };
 
-// obtener apoderados
+// obtener pqrsdf
 export const get_pqrs_service = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -503,6 +521,157 @@ export const get_pqrs_service = (id: string | number): any => {
       return data;
     } catch (error: any) {
       console.log('get_pqrs_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener pqrsdf por id
+export const get_pqrsdf_id_service = (id: string | number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`gestor/pqr/get_pqrsdf-panel/${id}`);
+      console.log(data);
+
+      if ('data' in data) {
+        dispatch(set_pqr(data.data));
+        // control_success('Se selecciono el pqrsdf ');
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_pqrsdf_id_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// crear pqrsdf
+export const add_pqrsdf_service = (pqrsdf: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(pqrsdf);
+      const { data } = await api.post(`gestor/pqr/crear-pqrsdf/`, pqrsdf);
+      console.log(data);
+
+      control_success(data.detail);
+      dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('add_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar pqrsdf
+export const edit_pqrsdf_service = (pqrsdf: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`gestor/pqr/update-pqrsdf/`, pqrsdf);
+      console.log(data);
+
+      control_success(data.detail);
+      dispatch(set_pqr(data.data));
+
+      // if ('data' in data) {
+      //   dispatch(set_pqr(data.data));
+
+      // } else {
+      //   control_error(data.detail);
+      // }
+      return data;
+    } catch (error: any) {
+      console.log('edit_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// borrar pqrsdf
+export const delete_pqrsdf_service = (
+  id: number | string,
+  is_web: boolean
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const params: any = {
+        id_PQRSDF: id,
+        isCreateForWeb: is_web,
+      };
+      const { data } = await api.delete(`gestor/pqr/delete-pqrsdf/`, params);
+      console.log(data);
+
+      // if ('data' in data) {
+      //   dispatch(set_pqr(data.data));
+
+      // } else {
+      //   control_error(data.detail);
+      // }
+      return data;
+    } catch (error: any) {
+      console.log('delete_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// radicar pqrsdf
+export const radicar_pqrsdf_service = (
+  id: number | string,
+  id_user: number,
+  is_web: boolean
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const params: any = {
+        id_PQRSDF: id,
+        id_persona_guarda: id_user,
+        isCreateForWeb: is_web,
+      };
+      const { data } = await api.delete(`gestor/pqr/delete-pqrsdf/`, params);
+      console.log(data);
+
+      // if ('data' in data) {
+      //   dispatch(set_pqr(data.data));
+
+      // } else {
+      //   control_error(data.detail);
+      // }
+      return data;
+    } catch (error: any) {
+      console.log('delete_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener radicados filtro pqrsdf
+export const get_filings_service = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(params);
+      const { data } = await api.get(
+        `gestor/radicados/imprimir-radicado/?cod_tipo_radicado=${params.cod_tipo_radicado}&prefijo_radicado=${params.prefijo_radicado}&agno_radicado=${params.agno_radicado}&nro_radicado=${params.nro_radicado}&fecha_radicado=${params.fecha_radicado}`
+      );
+      console.log(data);
+      dispatch(set_filings(data.data));
+
+      // if ('data' in data) {
+      //   dispatch(set_pqr(data.data));
+
+      // } else {
+      //   control_error(data.detail);
+      // }
+      return data;
+    } catch (error: any) {
+      console.log('delete_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

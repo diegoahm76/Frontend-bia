@@ -80,7 +80,7 @@ export interface IObjPqrRequest {
 export interface IObjExhibit {
   id_anexo?: number | null;
   nombre_anexo?: string | null;
-  orden_anexo_en_el_doc?: number | null;
+  orden_anexo_doc?: number | null;
   medio_almacenamiento?: string | null;
   cod_medio_almacenamiento?: string | number | null;
   medio_almacenamiento_otros_cual?: string | number | null;
