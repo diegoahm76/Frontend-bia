@@ -25,7 +25,7 @@ export const get_paa_codigos_id_plan = async (
   id_plan: number
 ): Promise<IUnspsc[]> => {
   const response = await api.get(
-    `seguimiento-planes/consultar-paa-codigos-unsp/${id_plan}/`
+    `seguimiento-planes/consultar-paa-codigos-unsp-id-paa/${id_plan}/`
   );
   return response.data.data;
 };

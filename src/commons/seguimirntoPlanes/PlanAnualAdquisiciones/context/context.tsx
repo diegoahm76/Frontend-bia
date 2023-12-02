@@ -387,7 +387,7 @@ export const UserProviderAdquisiciones = ({
           nombre_producto_unsp: item.nombre_producto_unsp,
           codigo_unsp: item.codigo_unsp,
           id_plan: item.id_plan,
-          id_codigos: item.id_codigo,
+          id_codigo: item.id_codigo,
         }));
 
         set_rows_paa_codigos(data);

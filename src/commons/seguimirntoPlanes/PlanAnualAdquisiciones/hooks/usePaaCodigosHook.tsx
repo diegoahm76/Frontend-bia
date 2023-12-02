@@ -21,8 +21,8 @@ export const usePaaCodigosHook = (): any => {
       nombre_paa: '',
       nombre_producto_unsp: '',
       codigo_unsp: '',
-      id_plan: null,
-      id_codigo: null,
+      id_plan: 0,
+      id_codigo: 0,
     },
   });
 
@@ -34,8 +34,8 @@ export const usePaaCodigosHook = (): any => {
       nombre_paa: '',
       nombre_producto_unsp: '',
       codigo_unsp: '',
-      id_plan: null,
-      id_codigo: null,
+      id_plan: 0,
+      id_codigo: 0,
     });
   };
 

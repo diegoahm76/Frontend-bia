@@ -245,6 +245,36 @@ export interface IUnspsc {
   id_codigo?: number | null;
 }
 
+// Seguimiento PAI
+export interface ISeguimientoPAI {
+  id_seguimiento_pai?: number | null;
+  nombre_proyecto?: string;
+  nombre_producto?: string;
+  nombre_actividad?: string;
+  nombre_unidad?: string;
+  nombre_indicador?: string;
+  nombre_meta?: string;
+  razagada?: boolean;
+  mes?: string;
+  porcentaje_avance?: number | null;
+  fecha_registro_avance?: string;
+  entrega_vigencia?: string;
+  hizo?: string;
+  cuando?: string;
+  donde?: string;
+  resultado?: string;
+  participacion?: string;
+  beneficiarios?: string;
+  compromisos?: string;
+  contratros?: string;
+  id_unidad_organizacional?: number | null;
+  id_proyecto?: number | null;
+  id_producto?: number | null;
+  id_actividad?: number | null;
+  id_indicador?: number | null;
+  id_meta?: number | null;
+}
+
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
@@ -267,6 +297,7 @@ export interface IPlanesIndex {
   personas_planes: InfoPersona;
   paa_codigos: IUnspsc;
   mode_paa_codigos: IMode;
+  seguimiento_pai: ISeguimientoPAI;
 }
 
 // unidades organizacionales

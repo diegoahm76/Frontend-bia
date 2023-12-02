@@ -21,6 +21,7 @@ import type {
   IPlanAdquisiciones,
   InfoPersona,
   IUnspsc,
+  ISeguimientoPAI,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -272,6 +273,35 @@ export const mode_paa_codigos: IMode = {
   editar: false,
 };
 
+export const initial_state_segui_pai: ISeguimientoPAI = {
+  id_seguimiento_pai: null,
+  nombre_proyecto: '',
+  nombre_producto: '',
+  nombre_actividad: '',
+  nombre_unidad: '',
+  nombre_indicador: '',
+  nombre_meta: '',
+  razagada: false,
+  mes: '',
+  porcentaje_avance: null,
+  fecha_registro_avance: '',
+  entrega_vigencia: '',
+  hizo: '',
+  cuando: '',
+  donde: '',
+  resultado: '',
+  participacion: '',
+  beneficiarios: '',
+  compromisos: '',
+  contratros: '',
+  id_unidad_organizacional: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+  id_indicador: null,
+  id_meta: null,
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
@@ -294,6 +324,7 @@ export const initial_state: IPlanesIndex = {
   personas_planes: inicial_state_persona_planes,
   paa_codigos: initial_state_paa_codigos,
   mode_paa_codigos: mode_paa_codigos,
+  seguimiento_pai: initial_state_segui_pai,
 };
 
 export const planes_slice = createSlice({
@@ -422,6 +453,12 @@ export const planes_slice = createSlice({
     ) => {
       state.mode_paa_codigos = action.payload;
     },
+    set_current_seguimiento_pai: (
+      state: IPlanesIndex,
+      action: PayloadAction<ISeguimientoPAI>
+    ) => {
+      state.seguimiento_pai = action.payload;
+    },
   },
 });
 
@@ -448,4 +485,5 @@ export const {
   set_current_persona_planes,
   set_current_paa_codigos,
   set_current_mode_paa_codigos,
+  set_current_seguimiento_pai,
 } = planes_slice.actions;

@@ -18,6 +18,7 @@ import { ConceptoPOAIRoutes } from '../ConceptoPOAI/router/ConceptoPOAIRoutes';
 import { FuentesRoutes } from '../FuenteFinanciacion/router/FuentesFinanciacionRoutes';
 import { BancosRoutes } from '../BancoProyecto/router/BancosRoutes';
 import { PlanAdquisicionesRoutes } from '../PlanAnualAdquisiciones/router/PlanAdquisicionesRoutes';
+import { SeguimientoPAIRoutes } from '../SeguimientoPAI/router/SeguimientoPAIRoutes';
 
 const routes = [
   {
@@ -118,6 +119,12 @@ const routes = [
     path: 'plan_anual/',
     name: 'plan_anual',
     component: () => <PlanAdquisicionesRoutes />,
+  },
+  // SeguimientoPAIRoutes
+  {
+    path: 'seguimiento/',
+    name: 'seguimiento',
+    component: () => <SeguimientoPAIRoutes />,
   },
   {
     path: '/*',

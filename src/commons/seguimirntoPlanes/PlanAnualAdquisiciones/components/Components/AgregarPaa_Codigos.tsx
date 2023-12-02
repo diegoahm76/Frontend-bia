@@ -27,7 +27,9 @@ export const AgregarPaa_Codigos: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const { mode, paa_codigos } = useAppSelector((state) => state.planes);
+  const { mode_paa_codigos, paa_codigos } = useAppSelector(
+    (state) => state.planes
+  );
 
   const { codigos_unspsc_selected, fetch_data_codigos_unspsc } = useContext(
     DataContextAdquisiciones
@@ -38,10 +40,11 @@ export const AgregarPaa_Codigos: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (mode.crear) {
+    if (mode_paa_codigos.crear) {
       limpiar_formulario_paa_codidos();
     }
-    if (mode.editar) {
+    if (mode_paa_codigos.editar) {
+      console.log(paa_codigos, 'paa_codigos');
       reset_paa_codidos({
         nombre_paa: paa_codigos.nombre_paa,
         nombre_producto_unsp: paa_codigos.nombre_producto_unsp,
@@ -50,7 +53,7 @@ export const AgregarPaa_Codigos: React.FC = () => {
         id_codigo: paa_codigos.id_codigo,
       });
     }
-  }, [mode, paa_codigos]);
+  }, [mode_paa_codigos, paa_codigos]);
 
   return (
     <>
@@ -58,10 +61,10 @@ export const AgregarPaa_Codigos: React.FC = () => {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (mode.crear) {
+          if (mode_paa_codigos.crear) {
             onsubmit_paa_codidos();
           }
-          if (mode.editar) {
+          if (mode_paa_codigos.editar) {
             onsubmit_editar();
           }
         }}
@@ -84,7 +87,7 @@ export const AgregarPaa_Codigos: React.FC = () => {
           <Grid item xs={12}>
             <Title title="Registro de códigos unspsc a PAA" />
           </Grid>
-          {mode.editar ? (
+          {mode_paa_codigos.editar ? (
             <>
               <Grid item xs={12} sm={6}>
                 <Controller
@@ -171,7 +174,7 @@ export const AgregarPaa_Codigos: React.FC = () => {
                 startIcon={<SaveIcon />}
                 loading={is_saving_paa_codidos}
               >
-                {mode.editar ? 'Actualizar' : 'Guardar'}
+                {mode_paa_codigos.editar ? 'Actualizar' : 'Guardar'}
               </LoadingButton>
             </Grid>
           </Grid>

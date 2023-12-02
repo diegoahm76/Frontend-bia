@@ -213,6 +213,10 @@ export const useAdquisicionesHook = (): any => {
           return;
         }
       }
+      if (data.id_persona_responsable !== id_persona) {
+        data.id_persona_responsable = id_persona;
+      }
+
       console.log(data, 'data');
       set_is_saving_adquisiciones(true);
       // data.id_indicador = id_indicador;

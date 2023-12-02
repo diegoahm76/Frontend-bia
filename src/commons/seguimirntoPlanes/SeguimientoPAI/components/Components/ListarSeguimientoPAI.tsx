@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import {
@@ -10,39 +11,62 @@ import {
   IconButton,
 } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridColDef,
+  type GridValueFormatterParams,
+} from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_paa_codigos,
-  set_current_mode_paa_codigos,
+  set_current_seguimiento_pai,
+  set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
-import { DataContextAdquisiciones } from '../../context/context';
+import { DataContextSeguimientoPAI } from '../../context/context';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarPaaCodigos: React.FC = () => {
-  const columns_paa_codigos: GridColDef[] = [
+export const ListarSeguimientoPAI: React.FC = () => {
+  const columns_seguimiento_pai: GridColDef[] = [
     {
-      field: 'nombre_paa',
-      headerName: 'NOMBRE DEL PAA',
+      field: 'razagada',
+      headerName: 'REZAGADA',
       sortable: true,
-      width: 300,
+      width: 150,
+      renderCell: (params) => {
+        return params.row.razagada === true ? (
+          <Chip size="small" label="SI" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
     },
-    // {
-    //   field: 'nombre_producto_unsp',
-    //   headerName: 'NOMBRE DEL PRODUCTO UNSPSC',
-    //   sortable: true,
-    //   width: 300,
-    // },
     {
-      field: 'codigo_unsp',
-      headerName: 'CODIGO UNSPSC',
+      field: 'fecha_registro_avance',
+      headerName: 'FECHA REGISTRO AVANCE',
       sortable: true,
-      width: 300,
+      width: 150,
+    },
+    {
+      field: 'porcentaje_avance',
+      headerName: 'PORCENTAJE AVANCE',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'mes',
+      headerName: 'MES',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nombre_meta',
+      headerName: 'NOMBRE META',
+      sortable: true,
+      width: 250,
     },
     {
       field: 'acciones',
@@ -56,14 +80,13 @@ export const ListarPaaCodigos: React.FC = () => {
             size="small"
             onClick={() => {
               dispatch(
-                set_current_mode_paa_codigos({
+                set_current_mode_planes({
                   ver: true,
                   crear: false,
                   editar: true,
                 })
               );
-              console.log(params.row, 'params.row');
-              dispatch(set_current_paa_codigos(params.row));
+              dispatch(set_current_seguimiento_pai(params.row));
             }}
           >
             <Avatar
@@ -76,7 +99,7 @@ export const ListarPaaCodigos: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar PAA Códigos"
+                titleAccess="Editar seguimiento PAI"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -90,22 +113,21 @@ export const ListarPaaCodigos: React.FC = () => {
     },
   ];
 
-  const { rows_paa_codigos, fetch_data_paa_codigos } = useContext(
-    DataContextAdquisiciones
+  const { rows_seguimiento_pai, fetch_data_seguimiento_pai } = useContext(
+    DataContextSeguimientoPAI
   );
 
-  //* declaracion context
-  const {
-    plan_adquisiciones: { id_plan_anual },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   indicador: { id_indicador },
+  // } = useAppSelector((state) => state.planes);s
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (id_plan_anual) {
-      fetch_data_paa_codigos();
-    }
-  }, [id_plan_anual]);
+    // if (id_indicador) {
+    fetch_data_seguimiento_pai();
+    // }
+  }, []);
 
   return (
     <>
@@ -124,9 +146,9 @@ export const ListarPaaCodigos: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Title title="Listado codigos por plan " />
-        </Grid>
+        {/* <Grid item xs={12}>
+          <Title title="Listado de detalle inversión cuentas " />
+        </Grid> */}
         <>
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
@@ -139,21 +161,22 @@ export const ListarPaaCodigos: React.FC = () => {
                   }}
                 >
                   {download_xls({
-                    nurseries: rows_paa_codigos,
-                    columns: columns_paa_codigos,
+                    nurseries: rows_seguimiento_pai,
+                    columns: columns_seguimiento_pai,
                   })}
                   {download_pdf({
-                    nurseries: rows_paa_codigos,
-                    columns: columns_paa_codigos,
+                    nurseries: rows_seguimiento_pai,
+                    columns: columns_seguimiento_pai,
                     title: 'CREAR',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_paa_codigos}
-                  columns={columns_paa_codigos}
+                  rows={rows_seguimiento_pai}
+                  columns={columns_seguimiento_pai}
                   pageSize={10}
+                  // rowHeight={150}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
@@ -169,7 +192,7 @@ export const ListarPaaCodigos: React.FC = () => {
               disabled={false}
               onClick={() => {
                 dispatch(
-                  set_current_mode_paa_codigos({
+                  set_current_mode_planes({
                     ver: true,
                     crear: true,
                     editar: false,
@@ -177,7 +200,7 @@ export const ListarPaaCodigos: React.FC = () => {
                 );
               }}
             >
-              Agregar Código a PAA
+              Agregar Seguimiento PAI
             </Button>
           </Grid>
         </Grid>
