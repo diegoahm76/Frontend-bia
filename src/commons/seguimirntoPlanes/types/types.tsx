@@ -188,6 +188,93 @@ export interface IBanco {
   id_rubro?: number | null;
   id_fuente_financiacion?: number | null;
 }
+
+// PLAN ANUAL DE ADQUISICIONES
+export interface IPlanAdquisiciones {
+  id_plan_anual?: number | null;
+  nombre_plan?: string;
+  nombre_intervalo?: string;
+  nombre_modalidad?: string;
+  nombre_fuente?: string;
+  nombre_estado?: string;
+  nombre_unidad?: string;
+  nombre_ubicacion?: string;
+  persona_responsable?: string;
+  descripcion?: string;
+  mes_inicio?: String;
+  mes_oferta?: String;
+  duracion?: number | null;
+  valor_total_estimado?: number | null;
+  valor_vigencia_actual?: number | null;
+  vigencia_futura?: number | null;
+  decreto_paa?: boolean;
+  suministro_paa?: boolean;
+  id_plan?: number | null;
+  id_intervalo?: number | null;
+  id_modalidad?: number | null;
+  id_recurso_paa?: number | null;
+  id_estado_vf?: number | null;
+  id_unidad_organizacional?: number | null;
+  id_ubicaion?: number | null;
+  id_persona_responsable?: number | null;
+}
+export interface InfoPersona {
+  id_persona: number | null;
+  tipo_persona?: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  nombre_completo: string;
+  razon_social: string;
+  nombre_comercial: string;
+  tiene_usuario: boolean;
+  digito_verificacion: string;
+  tipo_usuario: string;
+  cod_naturaleza_empresa: string;
+}
+// PAA - Codigos unspsc
+export interface IUnspsc {
+  id_paacodigo?: number | null;
+  nombre_paa?: string;
+  nombre_producto_unsp?: string;
+  codigo_unsp?: string;
+  id_plan?: number | null;
+  id_codigo?: number | null;
+}
+
+// Seguimiento PAI
+export interface ISeguimientoPAI {
+  id_seguimiento_pai?: number | null;
+  nombre_proyecto?: string;
+  nombre_producto?: string;
+  nombre_actividad?: string;
+  nombre_unidad?: string;
+  nombre_indicador?: string;
+  nombre_meta?: string;
+  razagada?: boolean;
+  mes?: string;
+  porcentaje_avance?: number | null;
+  fecha_registro_avance?: string;
+  entrega_vigencia?: string;
+  hizo?: string;
+  cuando?: string;
+  donde?: string;
+  resultado?: string;
+  participacion?: string;
+  beneficiarios?: string;
+  compromisos?: string;
+  contratros?: string;
+  id_unidad_organizacional?: number | null;
+  id_proyecto?: number | null;
+  id_producto?: number | null;
+  id_actividad?: number | null;
+  id_indicador?: number | null;
+  id_meta?: number | null;
+}
+
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
@@ -206,6 +293,11 @@ export interface IPlanesIndex {
   concepto_poai: IConceptoPOAI;
   fuente: IFuentes;
   banco: IBanco;
+  plan_adquisiciones: IPlanAdquisiciones;
+  personas_planes: InfoPersona;
+  paa_codigos: IUnspsc;
+  mode_paa_codigos: IMode;
+  seguimiento_pai: ISeguimientoPAI;
 }
 
 // unidades organizacionales
