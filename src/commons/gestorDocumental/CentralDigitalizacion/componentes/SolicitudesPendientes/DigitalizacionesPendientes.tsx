@@ -12,54 +12,35 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 import {
-  set_type_applicant,
-  set_on_behalf_of,
-  initial_state_person,
-  initial_state_company,
-  set_attorney,
   set_person,
-  set_company,
-  set_grantor,
-} from '../../store/slice/pqrsdfSlice';
+  set_request_status,
+  set_request_type,
+} from '../../store/slice/centralDigitalizacionSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionTipoPersona = () => {
+const DigitalizacionesPendientes = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { control: control_seleccion_tipo_persona, reset } = useForm<any>();
-  const {
-    list_applicant_types,
-    list_on_behalf_of,
-    type_applicant,
-    on_behalf_of,
-  } = useAppSelector((state) => state.pqrsdf_slice);
+  const { control: control_solicitud, reset } = useForm<any>();
+  const { request_types, list_request_status, person } = useAppSelector(
+    (state) => state.central_digitalizacion_slice
+  );
 
   const on_change_select = (value: any, name: string): void => {
-    dispatch(set_person(initial_state_person));
-    dispatch(set_company(initial_state_company));
-    dispatch(set_grantor(initial_state_person));
-    dispatch(set_attorney(initial_state_person));
-    if (name === 'type_applicant') {
-      dispatch(set_on_behalf_of({ id: null, key: '', label: null }));
+    if (name === 'pqr_status') {
       if (value !== undefined) {
-        dispatch(set_type_applicant(value));
+        dispatch(set_request_type(value));
       } else {
-        dispatch(set_type_applicant({ id: null, key: null, label: null }));
+        dispatch(set_request_type({ id: null, key: null, label: null }));
       }
-    } else if (name === 'on_behalf_of') {
+    } else {
       if (value !== undefined) {
-        dispatch(set_on_behalf_of(value));
+        dispatch(set_request_status(value));
       } else {
-        dispatch(set_on_behalf_of({ id: null, key: null, label: null }));
+        dispatch(set_request_status({ id: null, key: null, label: null }));
       }
     }
   };
-  useEffect(() => {
-    reset({
-      type_applicant: type_applicant.key,
-      on_behalf_of: on_behalf_of.key,
-    });
-  }, [type_applicant, on_behalf_of]);
 
   return (
     <>
@@ -72,53 +53,52 @@ const SeleccionTipoPersona = () => {
           form_inputs={[
             {
               datum_type: 'title',
-              title_label: 'PQRSDF',
-            },
-            {
-              datum_type: 'select_controller',
-              xs: 12,
-              md: 4,
-              control_form: control_seleccion_tipo_persona,
-              control_name: 'type_applicant',
-              default_value: '',
-              rules: { required_rule: { rule: true, message: 'Requerido' } },
-              label: 'A nombre de',
-              disabled: false,
-              helper_text: 'Debe seleccionar campo',
-              select_options: list_applicant_types,
-              option_label: 'label',
-              option_key: 'key',
-              on_change_function: on_change_select,
-            },
-            {
-              datum_type: 'date_picker_controller',
-              xs: 12,
-              md: 4,
-              control_form: control_seleccion_tipo_persona,
-              control_name: 'fecha_actual',
-              default_value: new Date(),
-              rules: {},
-              label: 'Fecha',
-              disabled: true,
-              helper_text: '',
-              format: 'YYYY-MM-DD',
+              title_label: 'Tareas de digitalización',
             },
             {
               datum_type: 'select_controller',
               xs: 12,
               md: 3,
-              control_form: control_seleccion_tipo_persona,
-              control_name: 'on_behalf_of',
+              control_form: control_solicitud,
+              control_name: 'tipo_solicitud',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
-              label: 'En representación de',
+              label: 'Tipo de solicitud',
               disabled: false,
-              helper_text: 'Debe seleccionar campo',
-              select_options: list_on_behalf_of,
+              helper_text: '',
+              select_options: request_types,
               option_label: 'label',
               option_key: 'key',
-              hidden_text: type_applicant.id !== 'T',
               on_change_function: on_change_select,
+            },
+            {
+              datum_type: 'select_controller',
+              xs: 12,
+              md: 3,
+              control_form: control_solicitud,
+              control_name: 'estado_solicitud',
+              default_value: '',
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
+              label: 'Estado de solicitud',
+              disabled: false,
+              helper_text: '',
+              select_options: list_request_status,
+              option_label: 'label',
+              option_key: 'key',
+              on_change_function: on_change_select,
+            },
+            {
+              datum_type: 'input_controller',
+              xs: 12,
+              md: 3,
+              control_form: control_solicitud,
+              control_name: ' nro_radicado',
+              default_value: '',
+              rules: {},
+              label: 'Número de radicado',
+              type: 'text',
+              disabled: false,
+              helper_text: '',
             },
           ]}
         />
@@ -128,4 +108,4 @@ const SeleccionTipoPersona = () => {
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionTipoPersona;
+export default DigitalizacionesPendientes;

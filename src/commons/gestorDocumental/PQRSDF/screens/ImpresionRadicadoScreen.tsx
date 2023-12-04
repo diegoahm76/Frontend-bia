@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
@@ -23,44 +27,52 @@ import {
 import FormStepper from '../../../../components/partials/form/FormStepper';
 import {
   get_document_types_service,
+  get_filed_types_service,
   get_list_applicant_types_service,
   get_list_on_behalf_service,
   get_person_types_service,
   get_pqrs_status_aux_service,
 } from '../store/thunks/pqrsdfThunks';
-
+import SeleccionarRadicado from '../componentes/ImpresionRadicado/SeleccionarRadicado';
+import ImprimirRadicado from '../componentes/ImpresionRadicado/ImprimirRadicado';
+import PrintIcon from '@mui/icons-material/Print';
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function SolicitudPqrsdfScreen(): JSX.Element {
+export function ImpresionRadicadoScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const {
-    type_applicant,
-    on_behalf_of,
-    person,
-    company,
-    grantor,
-    attorney,
-    pqr_status,
-  } = useAppSelector((state) => state.pqrsdf_slice);
-  const initial_values = (): void => {
-    dispatch(get_document_types_service());
-    dispatch(get_person_types_service());
-    dispatch(get_list_applicant_types_service());
-    dispatch(get_list_on_behalf_service());
-    dispatch(get_pqrs_status_aux_service());
-  };
+  const { filed } = useAppSelector((state) => state.pqrsdf_slice);
+  const [visor, set_visor] = useState<any>();
+
+  const initial_values = (): void => {};
 
   useEffect(() => {
-    dispatch(get_document_types_service());
-    dispatch(get_person_types_service());
-    dispatch(get_list_applicant_types_service());
-    dispatch(get_list_on_behalf_service());
-    dispatch(get_pqrs_status_aux_service());
+    void dispatch(get_filed_types_service());
   }, []);
 
   useEffect(() => {
-    dispatch(set_pqr_status({ id: null, key: null, label: null }));
-    dispatch(set_pqrs([]));
-  }, [person, grantor, company]);
+    console.log(filed);
+  }, [filed]);
+
+  const descargarPDF = () => {
+    // Puedes convertir el contenido del visor a Blob
+    const byteString = atob(visor.split(',')[1]);
+    const mimeString = visor.split(',')[0].split(':')[1].split(';')[0];
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([uint8Array], { type: mimeString });
+
+    // Crea un enlace temporal y simula un clic para iniciar la descarga
+    const enlaceTemporal = document.createElement('a');
+    enlaceTemporal.href = URL.createObjectURL(blob);
+    enlaceTemporal.download = `reporte_radicado_${
+      filed.numero_radicado_completo ?? ''
+    }.pdf`;
+    enlaceTemporal.click();
+  };
   return (
     <>
       <Grid
@@ -75,40 +87,25 @@ export function SolicitudPqrsdfScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Solicitud PQRSDF"></Title>
+          <Title title="Impresión de radicados"></Title>
         </Grid>
-        <SeleccionTipoPersona />
-        {type_applicant.id === 'T' && on_behalf_of.id === 'P' && (
-          <TipoPersona />
+        <SeleccionarRadicado />
+        {filed.numero_radicado_completo !== null && (
+          <ImprimirRadicado visor={visor} set_visor={set_visor} />
         )}
-        {type_applicant.id === 'T' && on_behalf_of.id === 'E' && (
-          <TipoEmpresa />
-        )}
-        {type_applicant.id === 'T' && on_behalf_of.id === 'A' && (
-          <TipoPoderdante />
-        )}
-        {on_behalf_of.id === 'P'
-          ? person.id_persona !== null && <EstadoPqrsdf />
-          : on_behalf_of.id === 'E'
-          ? company.id_persona !== null && <EstadoPqrsdf />
-          : on_behalf_of.id === 'A' &&
-            grantor.id_persona !== null &&
-            attorney.id_persona !== null && <EstadoPqrsdf />}
-        {pqr_status.key === 'ESR' && <ListadoPqrsdf />}
+
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton
-              href={`/#/app/gestor_documental/pqrsdf/crear_pqrsdf/`}
               variant_button="contained"
-              on_click_function={null}
-              icon_class={<SaveIcon />}
-              disabled={!(pqr_status.key === 'N' || type_applicant.key === 'A')}
-              label="Crear PQRSDF"
+              on_click_function={descargarPDF}
+              icon_class={<PrintIcon />}
+              disabled={filed.numero_radicado_completo === null}
+              label="Imprimir"
               type_button="button"
-              color_button="success"
+              color_button="warning"
             />
           </Grid>
-
           <Grid item xs={12} md={3}>
             <Limpiar
               dispatch={dispatch}
