@@ -108,7 +108,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
             {Object.entries(params.value).map((entry) => {
               const [key, value] = entry;
               return (
-                <ListItemText key={params.row.id}>
+                <ListItemText key={`${params.row.id}-${key}`}>
                   <Stack direction={'row'} spacing={2} alignItems={'center'}>
                     <Typography variant="body1">{key}</Typography>:
                     {expediente_liquidado ?
