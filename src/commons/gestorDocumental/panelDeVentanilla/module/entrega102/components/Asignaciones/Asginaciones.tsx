@@ -12,6 +12,12 @@ export const Asignaciones = (): JSX.Element => {
   const { listaAsignaciones } = useContext(AsignacionGrupoContext);
   const { generalLoading } = useContext(ModalAndLoadingContext);
 
+  const estadoMapping: any = {
+    'EN ESPERA': { label: 'En espera', color: 'warning' },
+    ACEPTADA: { label: 'Aceptada', color: 'success' },
+    RECHAZADA: { label: 'Rechazada', color: 'error' },
+  };
+
   const columns = [
     ...columnsAsignaciones,
     {
@@ -19,29 +25,11 @@ export const Asignaciones = (): JSX.Element => {
       field: 'estado_asignado',
       minWidth: 150,
       renderCell: (params: any) => {
-        return (
-          <Chip
-            label={
-              params.row.estado_asignado === 'EN ESPERA'
-                ? 'En espera'
-                : params.row.estado_asignado === 'ACEPTADO'
-                ? 'Aceptado'
-                : params.row.estado_asignado === 'RECHAZADO'
-                ? 'Rechazado'
-                : 'En espera'
-            }
-            size="small"
-            color={
-              params.row.estado_asignado === 'EN ESPERA'
-                ? 'warning'
-                : params.row.estado_asignado === 'ACEPTADO'
-                ? 'success'
-                : params.row.estado_asignado === 'RECHAZADO'
-                ? 'error'
-                : 'warning'
-            }
-          />
-        );
+        const estado =
+          estadoMapping[params.row.estado_asignado] ||
+          estadoMapping['EN ESPERA'];
+
+        return <Chip label={estado.label} size="small" color={estado.color} />;
       },
     },
   ];

@@ -2,8 +2,13 @@
 import { Button, Grid, TextField } from '@mui/material';
 import React from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { useSstepperFn } from '../../stepper/functions/useSstepperFn';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
 
 export const FormParte1 = (): JSX.Element => {
+  // ? stepper hook
+  const { handleNext } = useSstepperFn();
+
   return (
     <form
       style={{
@@ -121,8 +126,11 @@ export const FormParte1 = (): JSX.Element => {
         <Button
           variant="contained"
           color="success"
+          startIcon={<SaveAsIcon />}
           onClick={() => {
-            console.log('click siuuu');
+            //* hacer validaciones previas antes de permitir el next, para el paso 2
+
+            handleNext();
           }}
           sx={{
             width: '60%',
