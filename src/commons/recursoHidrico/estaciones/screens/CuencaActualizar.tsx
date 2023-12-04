@@ -1,26 +1,35 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
-import { Divider, Button, Dialog, Grid, } from '@mui/material';
-import { TextField } from '@mui/material';
-import { Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import { Dialog, } from '@mui/material';
 import { api } from '../../../../api/axios';
 import { Title } from '../../../../components';
-import SaveIcon from '@mui/icons-material/Save';
-import Accordion from '@mui/material/Accordion';
+import EditIcon from '@mui/icons-material/Edit';
+import { Divider, Button, } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
+import { control_success } from '../../requets/Request';
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
+const customStyles = {
+    position: 'relative',
+    background: '#FAFAFA',
+    borderRadius: '15px',
+    p: '20px',
+    m: '10px 0 20px 0',
+    mb: '20px',
+    boxShadow: '0px 3px 6px #042F4A26',
+};
+interface pros {
+    fetchZonasHidricas: any;
+    selectedMacroCuenca: any;
+    selectedSubZonaHidrica: any;
+    isActualizarModalActivo: any;
+    selectedSubZonaHidricaId: any;
+    setIsActualizarModalActivo: any;
+}
 
 interface CuencaData {
     id_macro_cuenca: number;
@@ -32,40 +41,49 @@ interface TipoAgua {
     nombre_tipo_agua_zona_hidrica: string;
 }
 interface ZonaHidrica {
+    id_macro_cuenca: string;
     id_zona_hidrica: number;
     nombre_zona_hidrica: string;
     id_zona_hidrografica: string;
-    id_macro_cuenca: string;
 }
 interface TipoRio {
     id_tipo_zona_hidrica: number;
     nombre_tipo_zona_hidrica: string;
 }
-interface BuscarProps {
-    is_modal_active: any;
-    set_is_modal_active: any;
-    fetchZonasHidricas:any;
-}
+
 interface SubZonaHidricaForm {
-    nombre_sub_zona_hidrica: string;
     codigo_rio: string;
     id_zona_hidrica: number;
     id_tipo_zona_hidrica: number;
+    nombre_sub_zona_hidrica: string;
     id_tipo_agua_zona_hidrica: number;
 }
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
-
-export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_active, set_is_modal_active }) => {
+export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedMacroCuenca, selectedSubZonaHidrica, selectedSubZonaHidricaId, isActualizarModalActivo, setIsActualizarModalActivo }) => {
 
     const initialState: SubZonaHidricaForm = {
-        nombre_sub_zona_hidrica: "",
         codigo_rio: "",
         id_zona_hidrica: 0,
         id_tipo_zona_hidrica: 0,
+        nombre_sub_zona_hidrica: "",
         id_tipo_agua_zona_hidrica: 0,
     };
     const [formValues, setFormValues] = useState<SubZonaHidricaForm>(initialState);
+    const [selectedCuenca, setSelectedCuenca] = useState<number | "">("");
+    useEffect(() => {
+        if (selectedSubZonaHidrica) {
+            setSelectedCuenca(selectedMacroCuenca)
+            setFormValues({
+                codigo_rio: selectedSubZonaHidrica.codigo_rio,
+                id_zona_hidrica: selectedSubZonaHidrica.id_zona_hidrica,
+                id_tipo_zona_hidrica: selectedSubZonaHidrica.id_tipo_zona_hidrica,
+                nombre_sub_zona_hidrica: selectedSubZonaHidrica.nombre_sub_zona_hidrica,
+                id_tipo_agua_zona_hidrica: selectedSubZonaHidrica.id_tipo_agua_zona_hidrica,
+            });
+        }
+    }, [selectedSubZonaHidrica]);
     const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
         setFormValues({
             ...formValues,
@@ -73,35 +91,6 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
         });
     };
 
-    const validateForm = (): boolean => {
-        if (formValues.id_tipo_zona_hidrica === 0) {
-            control_error("Campo obligatorio: Tipo de zona");
-            return false;
-        }
-        if (!formValues.nombre_sub_zona_hidrica) {
-            control_error("Campo obligatorio: Nombre Sub Zona Hidrica");
-            return false;
-        }
-        if (!formValues.codigo_rio) {
-            control_error("Campo obligatorio: Código Río");
-            return false;
-        }
-        if (formValues.id_zona_hidrica === 0) {
-            control_error("Campo obligatorio:Zona Hidrica");
-            return false;
-        }
-
-        if (formValues.id_tipo_agua_zona_hidrica === 0) {
-            control_error("Campo obligatorio:Tipo agua zona hidrica");
-            return false;
-        }
-        return true;
-    };
-
-
-
-
-    const [selectedCuenca, setSelectedCuenca] = useState<number | "">("");
 
     const [cuencas, setCuencas] = useState<CuencaData[]>([]);
     const fetchCuencas = async (): Promise<void> => {
@@ -122,25 +111,7 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
         setSelectedCuenca(event.target.value as number);
     };
     // const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const handleSubmit = async () => {
-        if (!validateForm()) {
-            return; // Detiene la ejecución si la validación falla
-        }
 
-        try {
-            const url = "/hidrico/zonas-hidricas/sub_zona_hidrica/list-create/";
-            const response = await api.post(url, formValues);
-            control_success("Guardado exitosamente");
-            setFormValues(initialState);
-            setSelectedCuenca("");
-            fetchZonasHidricas();
-            set_is_modal_active(false);
-        } catch (error:any) {
-            // console.error(error);
-            control_error(error.response.data.detail);
-            // Manejar el error
-        }
-    };
 
     const [zonahidrica, setZonahidrica] = useState<ZonaHidrica[]>([]);
 
@@ -159,11 +130,8 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
         void fetchZonahidricas();
     }, [selectedCuenca]);
 
-    const [selectedZonaHidrica, setSelectedZonaHidrica] = useState<number | "">("");
 
-    const handleZonaHidricaChange = (event: SelectChangeEvent<number>) => {
-        setSelectedZonaHidrica(event.target.value as number);
-    };
+
 
     //tipo de rio 
     const [tipoRio, setTipoRio] = useState<TipoRio[]>([]);
@@ -201,34 +169,38 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
     useEffect(() => {
         void fetchTipoAguas();
     }, []);
-    const [selectedTipoRio, setSelectedTipoRio] = useState<number | "">("");
-    const handleTipoRioChange = (event: SelectChangeEvent<number>) => {
-        setSelectedTipoRio(event.target.value as number);
-    };
+
     const handle_close = (): void => {
-        set_is_modal_active(false);
+        setIsActualizarModalActivo(false);
     };
+    const handleActualizarSubZonaHidrica = async () => {
+        try {
+            const url = `/hidrico/zonas-hidricas/sub_zona_hidrica/update/${selectedSubZonaHidricaId}/`;
+            const payload = { ...formValues }; // Asegúrate de que formValues contenga los datos que deseas enviar
+            const response = await api.put(url, payload);
+            console.log("Sub-zona hídrica actualizada con éxito", response.data);
+            control_success("Actulizado ecitozamente");
+            fetchZonasHidricas()
+            setIsActualizarModalActivo(false);
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+        }
+    };
+
+
     return (
 
         <>
-            <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl"
-            >
-                {/* <button onClick={() => console.log(tipoRio)}>Mostrar zonahidrica en la consola</button> */}
 
-                <Grid container
-                    item xs={12} marginLeft={2} marginRight={2} marginTop={3}
-                    sx={{
 
-                        width: '900px', // Cambia '700px' por el ancho que desees
-                        height: '900px', // Cambia '500px' por el alto que desees
-                        position: 'relative',
-                        background: '#FAFAFA',
-                        borderRadius: '15px',
-                        p: '20px', m: '10px 0 20px 0', mb: '20px',
-                        boxShadow: '0px 3px 6px #042F4A26',
-                    }}
-                >
-                    <Title title=" Crear rios  " />
+
+            <Dialog open={isActualizarModalActivo} onClose={handle_close} maxWidth="xl">
+
+                <Grid container spacing={2} m={2} p={2} item sx={customStyles}>
+                    <Grid item xs={12}>
+                        <Title title=" Actualizar  " />
+                    </Grid>
+                 
                     <Grid container item xs={12} spacing={2} marginTop={2}>
                         <Grid item xs={12} sm={4}>
                             <FormControl required size="small" fullWidth >
@@ -348,27 +320,33 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Button
-                                color='success'
-                                variant='contained'
-                                startIcon={<SaveIcon />}
-                                onClick={handleSubmit}
-                            >
-                                Guardar
-                            </Button>
+                        <Button
+                        startIcon={<EditIcon />}
+                        variant='contained'
+                        onClick={handleActualizarSubZonaHidrica}
+                    >
+                        Actualizar
+                    </Button>
+
 
                         </Grid>
                     </Grid>
+
+                    {/* <Grid item xs={12}>
+                        <h1>ID Sub Zona Hídrica: {selectedSubZonaHidricaId}</h1>
+                        {selectedSubZonaHidrica && (
+                            <>
+                                <h1>Nombre: {selectedSubZonaHidrica.nombre_sub_zona_hidrica}</h1>
+                                <h1>Código del Río: {selectedSubZonaHidrica.codigo_rio}</h1>
+                                <h1>ID Zona Hídrica: {selectedSubZonaHidrica.id_zona_hidrica}</h1>
+                                <h1>ID Tipo Zona Hídrica: {selectedSubZonaHidrica.id_tipo_zona_hidrica}</h1>
+                                <h1>ID Tipo Agua Zona Hídrica: {selectedSubZonaHidrica.id_tipo_agua_zona_hidrica}</h1>
+                            </>
+                        )}
+                    </Grid> */}
                 </Grid>
 
-
-
-
             </Dialog>
-
-
-
-
 
 
 

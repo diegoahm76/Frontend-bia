@@ -66,7 +66,7 @@ export const Expedien: React.FC = () => {
     const [tdr, set_tdr] = useState<any>({});
     const [serie, set_serie] = useState<any>("");
     const [seccion, set_seccion] = useState<string>("");
-    const handle_close_buscar = () => {  set_open_modal(false); };
+    const handle_close_buscar = () => { set_open_modal(false); };
     const [expanded, set_expanded] = useState<string | false>('panel1');
 
     const handle_mover_carpeta = (carpeta: any) => {
@@ -285,48 +285,38 @@ export const Expedien: React.FC = () => {
     };
 
 
-    //   useEffect(() => {
-    //     fetchCuencas(idCarpetaCajaArray);
-    //   }, []); 
 
-    // const eliminadas = () => {
-
-    //     // console.log("xxxxxxx");
-    //     // console.log(carpetasEliminadas);
-    //     console.log();
-    //     console.log();
-
-    // };
 
     return (
         <>
             <Grid
                 container spacing={2} marginTop={2}
                 sx={class_css} >
-
                 <Title title={"Reubicación física de expedientes  "} />
             </Grid>
-
-            {/* <Button
-                                    color='success'
-                                    variant='contained'
-                                    onClick={eliminadas}>
-                                    Guardar
-                                </Button> */}
-
             <Grid
                 container spacing={2} marginTop={2}
                 sx={class_css} >
                 <Title title={"Selección de expedinte "} />
 
 
-                <Grid item xs={12} sm={3}>
-                    <Stack
+                {/* <Grid item xs={12} sm={3}> */}
+                {/* <Stack
                         direction="row"
                         justifyContent="flex-start"
                         spacing={2}
                         sx={{ mt: '20px' }}
-                    >
+                    > */}
+                <>
+                </>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="flex-end"
+                    marginTop={2}
+                    alignItems="center"
+                >
+                    <>
                         <Button
                             color='primary'
                             variant='contained'
@@ -335,95 +325,106 @@ export const Expedien: React.FC = () => {
                         >
                             Buscar expediente
                         </Button>
-                        {abrir_modal_buscar && <BuscarExpediente set_select_expediente={set_select_expediente} is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
-                    </Stack>
-                </Grid>
-                <Grid item xs={12} sm={10}>
 
+                    </>
+
+                    {/* </Grid> */}
+                    {abrir_modal_buscar && <BuscarExpediente set_select_expediente={set_select_expediente} is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
+                    {/* </Stack> */}
                 </Grid>
+                {select_expediente && select_expediente.nombre_unidad_org ? (
+                    <>
+                        <Grid item xs={12} sm={10}>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Titulo"
+                                type={'text'}
+                                size="small"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                fullWidth
+                                disabled
+                                value={titulo}
+                                onChange={cambio_titulo}
+                            />
+                            {msj_error_titulo && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Nombre unidad organizacional"
+                                type={'text'}
+                                size="small"
+                                disabled
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                fullWidth
+                                value={select_expediente?.nombre_unidad_org}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                label="Identificación del expediente"
+                                type={'text'}
+                                size="small"
+                                disabled
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                fullWidth
+                                value={select_expediente?.codigo_exp_und_serie_subserie}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                label="Serie    "
+                                type={'text'}
+                                size="small"
+                                disabled
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                fullWidth
+                                value={select_expediente?.nombre_serie_origen}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                label="Sub Serie "
+                                type={'text'}
+                                size="small"
+                                disabled
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                fullWidth
+                                value={select_expediente?.nombre_subserie_origen}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField
+                                label="Descripción"
+                                type={'text'}
+                                size="small"
+                                disabled
+                                multiline
+                                rows={3}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                fullWidth
+                                value={descripcion}
+                                onChange={cambio_descripcion}
+                            />
+                        </Grid>
+                    </>
+                ) : null}
 
 
-
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="Titulo"
-                        type={'text'}
-                        size="small"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        fullWidth
-                        value={titulo}
-                        onChange={cambio_titulo}
-                    />
-                    {msj_error_titulo && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="Nombre unidad organizacional"
-                        type={'text'}
-                        size="small"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        fullWidth
-                        value={select_expediente?.nombre_unidad_org}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <TextField
-                        label="Identificación del expediente"
-                        type={'text'}
-                        size="small"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        fullWidth
-                        value={select_expediente?.codigo_exp_und_serie_subserie}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <TextField
-                        label="Serie    "
-                        type={'text'}
-                        size="small"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        fullWidth
-                        value={select_expediente?.nombre_serie_origen}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <TextField
-                        label="Sub Serie "
-                        type={'text'}
-                        size="small"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        fullWidth
-                        value={select_expediente?.nombre_subserie_origen}
-                    />
-                </Grid>
-
-
-                <Grid item xs={12} sm={12}>
-                    <TextField
-                        label="Descripción"
-                        type={'text'}
-                        size="small"
-                        multiline
-                        rows={3}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        fullWidth
-                        value={descripcion}
-                        onChange={cambio_descripcion}
-                    />
-                </Grid>
                 <Grid item xs={12} sm={6}>
                     <Stack
                         direction="row"
@@ -467,22 +468,36 @@ export const Expedien: React.FC = () => {
                 sx={class_css} >
 
                 <Title title={"Actualización de ubicación fícica   "} />
+                <Grid item xs={12} sm={11}>
 
-                <Grid item xs={12} sm={6}>
-                    <Button
-                        color='primary'
-                        variant='contained'
-                        onClick={() => { set_open_modal(true) }}
-                    >
-                        Agregar
-                    </Button>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="flex-end"
+                    alignItems="center"
+                >
+                    <>
+
+                        <Button
+                            color='primary'
+                            variant='contained'
+                            onClick={() => { set_open_modal(true) }}
+                        >
+                            Agregar
+                        </Button>
+
+                    </>
+
+
 
                 </Grid>
 
 
-                <Grid item xs={12} sm={3}>
+
+                {/* <Grid item xs={12} sm={3}>
                     <Typography sx={{ fontSize: '18px', fontWeight: '500' }}> Ubicación física</Typography>
-                </Grid>
+                </Grid> */}
 
 
                 {carpetas.map((c: any, index: number) => (

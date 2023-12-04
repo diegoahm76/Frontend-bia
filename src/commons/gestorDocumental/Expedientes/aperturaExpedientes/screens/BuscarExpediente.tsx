@@ -7,6 +7,9 @@ import { useAppDispatch } from '../../../../../hooks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { buscar_expediente, buscar_expediente_id } from '../thunks/aperturaExpedientes';
 import dayjs from 'dayjs';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+
 
 interface IProps {
     is_modal_active: boolean,
@@ -303,6 +306,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                 <Grid item margin={2}>
                                     <Button
                                         variant="contained"
+                                        startIcon={<SearchIcon />}
                                         color="primary"
                                         onClick={mostrar_busqueda_expediente}
                                     >
@@ -313,6 +317,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                 <Grid item margin={2}>
                                     <Button variant="outlined"
                                         color="error"
+                                        startIcon={<ClearIcon />}
                                         onClick={() => { props.set_is_modal_active(false); }}>
                                         Salir
                                     </Button>
