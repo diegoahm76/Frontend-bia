@@ -30,20 +30,24 @@ export const ConsultaAñosAnteriores = () => {
     const [value_año, set_Value_año] = useState(year);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    
+ 
+
     const cantidadDigitos = (consulta_año_configuracion[0]?.cantidad_digitos !== undefined) ? consulta_año_configuracion[0]?.cantidad_digitos : 0;
     const valorInicial = (consulta_año_configuracion[0]?.consecutivo_inicial !== undefined) ? consulta_año_configuracion[0]?.consecutivo_inicial : 1;
     const tipoConfiguracion_selec =
         (consulta_año_configuracion[0]?.tipo_configuracion !== null && consulta_año_configuracion[0]?.tipo_configuracion !== "") ?
-        consulta_año_configuracion[0]?.tipo_configuracion : "Ninguno";
-    
-    const array_edit = (consulta_año_configuracion !== undefined) ? 
+            consulta_año_configuracion[0]?.tipo_configuracion : "Ninguno";
+
+    const array_edit = (consulta_año_configuracion !== undefined) ?
         consulta_año_configuracion.map(item => ({
             prefijo_consecutivo: item?.Prefijo_Consecutivo,
             cantidad_digitos: item?.cantidad_digitos,
             valor_inicial: item?.consecutivo_inicial,
             id_unidad_organizacional: item?.T247Id_UnidadOrganizacional
-        })) : [];
+        })) : null;
+
+
+const datatatata = array_edit !== undefined ? [] : array_edit;
 
 
     const HandleCompletarDatos = (e: any) => {
@@ -59,11 +63,10 @@ export const ConsultaAñosAnteriores = () => {
             },
             maneja_consecutivo: consulta_año_configuracion[0].maneja_consecutivo,
             variables_iniciales_dos: tipoConfiguracion_selec.toString(),
-            configuracion_por_unidad:array_edit
+             configuracion_por_unidad: datatatata
         });
         setIsModalOpen(false);
     };
-
 
 
 
@@ -83,15 +86,13 @@ export const ConsultaAñosAnteriores = () => {
 
     const busqueda_avanzadaAño_configuracion = async (): Promise<void> => {
         try {
-            let url = "/gestor/trd/configuracion-tipologia/consulta-años-anteriores/?agno_tipologia=2023";
+            let url = "/gestor/trd/configuracion-tipologia/consulta-años-anteriores/";
 
-            if (id_seleccionado) {
-                url += `&id_tipologia_doc=${id_seleccionado}`;
-            }
+            if (value_año) { url += `?agno_tipologia=${value_año}`; }
+            if (id_seleccionado) { url += `&id_tipologia_doc=${id_seleccionado}`; }
 
             const res: any = await api.get(url);
             const numero_consulta: any = res.data.data;
-            console.log(numero_consulta)
             set_consulta_año_configuracion(numero_consulta)
 
         } catch (error) {
@@ -112,7 +113,6 @@ export const ConsultaAñosAnteriores = () => {
 
         case "EM":
 
-            console.log("Realizar acciones para EM");
             columna_numero_1 = [
                 { attribute: "Tipo Configuración", value: consulta_año_configuracion[0]?.id_config_tipologia_doc_agno || "" },
                 { attribute: "Consecutivo Inicial", value: consulta_año_configuracion[0]?.consecutivo_inicial?.toString() || "" },
@@ -122,21 +122,22 @@ export const ConsultaAñosAnteriores = () => {
                 { attribute: "Consecutivo Final", value: consulta_año_configuracion[0]?.consecutivo_final || "" },
                 { attribute: "Fecha Consecutivo Final", value: formatDate(consulta_año_configuracion[0]?.fecha_consecutivo_final) },
             ];
-            nombre_configuracion="Empresa"
+            nombre_configuracion = "Empresa"
             break;
 
         case "Ninguno":
-            console.log("Realizar acciones para Ninguno");
+
+
             columna_numero_1 = [
                 { attribute: "Nombre Tipologuia", value: consulta_año_configuracion[0]?.nombre_tipologia || "" },
                 { attribute: "Tipo Configuración", value: "Ninguno" },
             ];
-            nombre_configuracion="NINGUNO"
+            nombre_configuracion = "NINGUNO"
             break;
 
         case "SS":
-            console.log("Realizar acciones para SS");
-            // Mapear la variable consulta_año_configuracion
+
+
             columna_numero_1 = consulta_año_configuracion.flatMap((item, index) => [
                 // { attribute: "Elemento " + (index + 1), value: "", style: { fontWeight: 'bold', color: 'darkslategray', fontSize: '16px' } }, // Ajusta el tamaño de la letra aquí
                 { attribute: "Tipo Configuración", value: item.id_config_tipologia_doc_agno || "" },
@@ -147,7 +148,7 @@ export const ConsultaAñosAnteriores = () => {
                 { attribute: "Consecutivo Final", value: item.consecutivo_final || "" },
                 { attribute: "Fecha Consecutivo Final", value: formatDate(item.fecha_consecutivo_final) },
             ]);
-            nombre_configuracion="SUBSECCION"
+            nombre_configuracion = "Unidad Organizacional"
             break;
         default:
             // Acciones por defecto si el valor no coincide con ninguno de los casos anteriores
@@ -174,9 +175,10 @@ export const ConsultaAñosAnteriores = () => {
         }
     };
 
-    const openModal = () => { setIsModalOpen(true);  };
+    const openModal = () => { setIsModalOpen(true); };
 
-    const closeModal = () =>{setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     useEffect(() => {
@@ -350,92 +352,92 @@ export const ConsultaAñosAnteriores = () => {
                                 <>
 
                                     <Grid item xs={6}>
-                                    <TextField
-                                        variant="outlined"
-                                        size="small"
-                                        fullWidth
-                                        label="Tpo Configuracion"
-                                        value={nombre_configuracion||""}
-                                        style={{ marginTop: 15, marginRight: 40 }}
+                                        <TextField
+                                            variant="outlined"
+                                            size="small"
+                                            fullWidth
+                                            label="Tpo Configuracion"
+                                            value={nombre_configuracion || ""}
+                                            style={{ marginTop: 15, marginRight: 40 }}
 
-                                    />
-                                     <TextField  
-                                        variant="outlined"
-                                        size="small"
-                                        fullWidth
-                                        label="Seccion o Subseccion"
-                                        value={consulta_año_configuracion[0].Seccion_Subseccion||""}
-                                        style={{ marginTop: 15, marginRight: 40 }}
+                                        />
+                                        <TextField
+                                            variant="outlined"
+                                            size="small"
+                                            fullWidth
+                                            label="Seccion o Subseccion"
+                                            value={consulta_año_configuracion[0].Seccion_Subseccion || ""}
+                                            style={{ marginTop: 15, marginRight: 40 }}
 
-                                    />
-                                </Grid>
+                                        />
+                                    </Grid>
 
-                            <Grid item xs={12}>
-                                {consulta_año_configuracion[0].id_tipologia !== 0 ? (
-                                    <DataGrid
-                                        density="compact"
-                                        style={{ marginTop: 15, width: "100%" }}
-                                        autoHeight
-                                        rows={consulta_año_configuracion || []}
-                                        columns={columnsss}
-                                        getRowId={(row) => uuidv4()}
-                                    />
-                                ) : (
-                                    <h3>No hay datos para mostrar</h3>
-                                )}
-                            </Grid>
+                                    <Grid item xs={12}>
+                                        {consulta_año_configuracion[0].id_tipologia !== 0 ? (
+                                            <DataGrid
+                                                density="compact"
+                                                style={{ marginTop: 15, width: "100%" }}
+                                                autoHeight
+                                                rows={consulta_año_configuracion || []}
+                                                columns={columnsss}
+                                                getRowId={(row) => uuidv4()}
+                                            />
+                                        ) : (
+                                            <h3>No hay datos para mostrar</h3>
+                                        )}
+                                    </Grid>
 
 
-                            <Grid item xs={12} sm={4} md={2.4} lg={1.9} justifyContent="center">
-                                <Button
-                                    startIcon={<EditIcon />}
-                                    variant="contained"
-                                    style={{ marginTop: 15 }}
-                                    onClick={HandleCompletarDatos}
-                                >
-                                    Editar configuración
+                                    <Grid item xs={12} sm={4} md={2.4} lg={1.9} justifyContent="center">
+                                        <Button
+                                            startIcon={<EditIcon />}
+                                            variant="contained"
+                                            style={{ marginTop: 15 }}
+                                            onClick={HandleCompletarDatos}
+                                        >
+                                            Editar configuración
 
-                                </Button>
-                            </Grid>
-                        </>
+                                        </Button>
+                                    </Grid>
+                                </>
                             )}
-                    </Grid>
-                </Grid>
-
-
-
-                <Grid container justifyContent="flex-end"
-                    sx={{
-                        position: 'relative',
-                        background: '#FAFAFA',
-                        borderRadius: '15px',
-                        p: '20px',
-                        mb: '20px',
-                        boxShadow: '0px 3px 6px #042F4A26',
-                    }}
-                >
-
-
-                    <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-                        <Button color='primary' onClick={limpiar_formulario_busqueda} style={{ width: "90%", marginTop: 15 }} variant="outlined" fullWidth startIcon={<CleanIcon />}>
-                            Limpiar
-                        </Button>
+                        </Grid>
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-                        <Button
-                            startIcon={<ClearIcon />}
-                            fullWidth
-                            style={{ width: "90%", marginTop: 15 }}
-                            variant="contained"
-                            color="error"
-                            onClick={closeModal}
-                        >
-                            Salir
-                        </Button>
-                    </Grid>
-                </Grid></>
-        </Dialog >
+
+
+                    <Grid container justifyContent="flex-end"
+                        sx={{
+                            position: 'relative',
+                            background: '#FAFAFA',
+                            borderRadius: '15px',
+                            p: '20px',
+                            mb: '20px',
+                            boxShadow: '0px 3px 6px #042F4A26',
+                        }}
+                    >
+
+
+                        <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+                            <Button color='primary' onClick={limpiar_formulario_busqueda} style={{ width: "90%", marginTop: 15 }} variant="outlined" fullWidth startIcon={<CleanIcon />}>
+                                Limpiar
+                            </Button>
+                        </Grid>
+
+                        <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+                            <Button
+                                startIcon={<ClearIcon />}
+                                fullWidth
+                                style={{ width: "90%", marginTop: 15 }}
+                                variant="contained"
+                                color="error"
+                                onClick={closeModal}
+                            >
+                                Salir
+                            </Button>
+                        </Grid>
+                    </Grid></>
+            </Dialog >
         </>
     )
 }
