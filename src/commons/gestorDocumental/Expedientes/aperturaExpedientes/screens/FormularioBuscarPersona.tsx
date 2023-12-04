@@ -8,13 +8,16 @@ import { control_error } from "../../../../../helpers";
 interface IProps {
     seccion: boolean,
     set_persona_titular?: any
+    expediente?: any
     set_persona_responsable?: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
-
+    useEffect(() => {
+        console.log(props.expediente?.expediente);
+    }, [props.expediente]);
     return (
         <>
             {props.seccion && <Grid item xs={12} sm={3}>
@@ -23,6 +26,7 @@ export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
                     variant='contained'
                     startIcon={<SearchIcon />}
                     onClick={() => { set_abrir_modal_persona(true); }}
+                    disabled={props.expediente?.expediente.length !== 0 && props.expediente?.expediente !== undefined}
                 >
                     Buscar persona
                 </Button>
@@ -41,6 +45,7 @@ export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
                         variant='contained'
                         startIcon={<SearchIcon />}
                         onClick={() => { set_abrir_modal_persona(true); }}
+                        disabled={props.expediente?.expediente.length !== 0 && props.expediente?.expediente !== undefined}
                     >
                         Buscar persona
                     </Button>

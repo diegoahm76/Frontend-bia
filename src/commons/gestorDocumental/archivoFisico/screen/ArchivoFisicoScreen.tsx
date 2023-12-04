@@ -1,153 +1,712 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { useState, useEffect } from "react";
-import { Column } from "primereact/column";
-import { TreeTable } from "primereact/treetable";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FolderIcon from "@mui/icons-material/Folder";
-import "primeicons/primeicons.css";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import Button from "@mui/material/Button";
-import { Grid, Stack, Box, Tooltip, IconButton, Avatar } from "@mui/material";
-import { v4 as uuidv4 } from 'uuid';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
-import { useAppDispatch, useAppSelector } from "../../../../hooks";
-import { Title } from "../../../../components";
-import { estante_deposito, get_depositos } from "../store/thunks/thunksArchivoFisico";
+import { useState, useEffect } from 'react';
+import { ColumnProps } from 'primereact/column';
+import 'primeicons/primeicons.css';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import { Grid, TextField, Typography } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { Title } from '../../../../components';
+import { LoadingButton } from '@mui/lab';
+import BusquedaAvanzadaFisico from '../components/BusquedaAvanzada';
+import {
+  avanzada_deposito,
+  tabla_arbol_deposito,
+} from '../store/thunks/thunksArchivoFisico';
+import {
+  IObjBandejaArbol,
+  IObjCajaArbol,
+  IObjDepositos,
+  IObjEstanteArbol,
+  IObjEstantes,
+} from '../interface/archivoFisico';
+import {
+  initial_state_deposito,
+  set_listado_depositos,
+} from '../store/slice/indexArchivoFisico';
+import StoreIcon from '@mui/icons-material/Store';
+import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
+import StorageIcon from '@mui/icons-material/Storage';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import FolderIcon from '@mui/icons-material/Folder';
+import {
+  DataTableExpandedRows,
+  DataTableValueArray,
+} from 'primereact/datatable';
+import TableRowExpansion from '../../../../components/partials/form/TableRowExpansion';
+import { Controller, useForm } from 'react-hook-form';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const ArchivoFisicoScreen: React.FC = () => {
-    const dispatch = useAppDispatch();
-    const [action, set_action] = useState<string>("create");
+  const { control: control_deposito, reset } = useForm<IObjDepositos>();
+  const { control: control_estante, reset: reset_estante } =
+    useForm<IObjEstanteArbol>();
+  const { control: control_bandeja, reset: reset_bandeja } =
+    useForm<IObjBandejaArbol>();
+  const { control: control_caja, reset: reset_caja } = useForm<IObjCajaArbol>();
+  const { arbol_deposito, depositos_tabla } = useAppSelector(
+    (state) => state.archivo_fisico
+  );
 
-    const [add_bien_is_active, set_add_bien_is_active] = useState<boolean>(false);
-    const { depositos } = useAppSelector((state) => state.archivo_fisico);
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const [selected_arbol, set_selected_arbol] = useState<any>();
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const [expanded_rows, set_expanded_rows] = useState<
+    DataTableExpandedRows | DataTableValueArray | undefined
+  >(undefined);
+  const [rows_update, set_rows_update] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+  const [open_modal_avanzada, set_open_modal_avanzada] = useState(false);
 
+  const [selected_row, set_selected_row] = useState<any | null>(null);
+  const handle_buscar = () => {
+    set_open_modal_avanzada(true);
+  };
+  const handle_close_buscar = () => {
+    set_open_modal_avanzada(false);
+  };
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const action_template = (
-        //  node: INodo,
-        Column: any
-    ) => {
-        return (
-            <>
+  useEffect(() => {
+    reset(selected_arbol);
+    reset_estante(selected_arbol);
+    reset_bandeja(selected_arbol);
+    reset_caja(selected_arbol);
+    console.log(selected_arbol);
+  }, [selected_arbol]);
 
-                <Tooltip title="Agregar">
-                    <IconButton
-                        onClick={() => {
-                            //  dispatch(current_bien(node));
-                            set_action("create_sub")
-                            set_add_bien_is_active(true)
-                        }}
-                    >
-                        <Avatar
-                            sx={{
-                                width: 40,
-                                height: 40,
-                                background: '#fff',
-                                border: '2px solid',
-                            }}
-                            variant="rounded"
-                        >
-                            <CreateNewFolderIcon
-                                sx={{ color: '#495057', width: '25px', height: '25px' }}
-                            />
-                        </Avatar>
-                    </IconButton>
-                </Tooltip>
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 
+  const columns_arbol_deposito: ColumnProps[] = [
+    {
+      field: 'nombre_deposito',
+      header: (
+        <div>
+          <span>Deposito</span>
+          <span style={{ marginLeft: '5px' }}>
+            <StoreIcon />
+          </span>
+        </div>
+      ),
+    },
+    {
+      field: 'identificacion_por_entidad',
+      header: (
+        <div>
+          <span>Identificación</span>
+          <span style={{ marginLeft: '5px' }}>
+            <StoreIcon />
+          </span>
+        </div>
+      ),
+    },
+  ];
+  const columns_arbol_estantes: ColumnProps[] = [
+    {
+      field: 'Informacion_Mostrar',
+      header: (
+        <div>
+          <span>Estante</span>
+          <span style={{ marginLeft: '5px' }}>
+            <IndeterminateCheckBoxIcon />
+          </span>
+        </div>
+      ),
+    },
+    {
+      field: 'identificacion_por_estante',
+      header: (
+        <div>
+          <span>Identificación</span>
+          <span style={{ marginLeft: '5px' }}>
+            <IndeterminateCheckBoxIcon />
+          </span>
+        </div>
+      ),
+    },
+  ];
+  const columns_arbol_bandejas: ColumnProps[] = [
+    {
+      field: 'Informacion_Mostrar',
+      header: (
+        <div>
+          <span>Bandeja</span>
+          <span style={{ marginLeft: '5px' }}>
+            <StorageIcon />
+          </span>
+        </div>
+      ),
+    },
+    {
+      field: 'identificacion_por_bandeja',
+      header: (
+        <div>
+          <span>Identificación</span>
+          <span style={{ marginLeft: '5px' }}>
+            <StorageIcon />
+          </span>
+        </div>
+      ),
+    },
+  ];
+  const columns_arbol_cajas: ColumnProps[] = [
+    {
+      field: 'Informacion_Mostrar',
+      header: (
+        <div>
+          <span>Cajas</span>
+          <span style={{ marginLeft: '5px' }}>
+            <Inventory2TwoToneIcon />
+          </span>
+        </div>
+      ),
+    },
+    {
+      field: 'identificacion_por_caja',
+      header: (
+        <div>
+          <span>Identificación</span>
+          <span style={{ marginLeft: '5px' }}>
+            <Inventory2TwoToneIcon />
+          </span>
+        </div>
+      ),
+    },
+  ];
+  const columns_arbol_carpetas: ColumnProps[] = [
+    {
+      field: 'Informacion_Mostrar',
+      header: (
+        <div>
+          <span>Carpeta</span>
+          <span style={{ marginLeft: '5px' }}>
+            <FolderIcon />
+          </span>
+        </div>
+      ),
+    },
+    {
+      field: 'identificacion_por_carpeta',
+      header: (
+        <div>
+          <span>Identificación</span>
+          <span style={{ marginLeft: '5px' }}>
+            <FolderIcon />
+          </span>
+        </div>
+      ),
+    },
+    {
+      field: 'ACCIÓN',
+      header: 'ACCIÓN',
+    },
+  ];
 
-                <Tooltip title="Editar">
-                    <IconButton
-                        onClick={() => {
-                            // dispatch(current_bien(node));
-                            set_action("editar")
-                            set_add_bien_is_active(true)
-                        }}
-                    >
-                        <Avatar
-                            sx={{
-                                width: 40,
-                                height: 40,
-                                background: '#fff',
-                                border: '2px solid',
-                            }}
-                            variant="rounded"
-                        >
-                            <EditIcon
-                                sx={{ color: '#495057', width: '25px', height: '25px' }}
-                            />
-                        </Avatar>
-                    </IconButton>
-                </Tooltip>
+  const definition_levels = [
+    {
+      column_id: 'identificacion_por_entidad',
+      level: 0,
+      columns: columns_arbol_deposito,
+      table_name: 'Depositos',
+      property_name: '',
+    },
+    {
+      column_id: 'identificacion_por_estante',
+      level: 1,
+      columns: columns_arbol_estantes,
+      table_name: 'Estantes',
+      property_name: 'estante',
+    },
+    {
+      column_id: 'identificacion_por_bandeja',
+      level: 2,
+      columns: columns_arbol_bandejas,
+      table_name: 'Bandejas',
+      property_name: 'bandejas',
+    },
+    {
+      column_id: 'identificacion_por_caja',
+      level: 3,
+      columns: columns_arbol_cajas,
+      table_name: 'Cajas',
+      property_name: 'cajas',
+    },
+    {
+      column_id: 'identificacion_por_carpetas',
+      level: 4,
+      columns: columns_arbol_carpetas,
+      table_name: 'Carpetas',
+      property_name: 'carpetas',
+    },
+  ];
 
-                <Tooltip title="Eliminar">
-                    <IconButton
-                        onClick={() => {
-                            //  dispatch(delete_nodo_service(node.data.id_nodo));
-                        }}
-                    >
-                        <Avatar
-                            sx={{
-                                width: 40,
-                                height: 40,
-                                background: '#fff',
-                                border: '2px solid',
-                            }}
-                            variant="rounded"
-                        >
-                            <DeleteIcon
-                                sx={{ color: '#495057', width: '25px', height: '25px' }}
-                            />
-                        </Avatar>
-                    </IconButton>
-                </Tooltip>
-
-            </>
-        );
-    };
-    useEffect(() => {
-        void dispatch(get_depositos());
-        //  void dispatch(estante_deposito(depositos.id_deposito))
-    }, []);
-
-    console.log(depositos)
-
-
-    return (
-        <>
-            <Grid
-                container
-                sx={{
-                    position: "relative",
-                    background: "#FAFAFA",
-                    borderRadius: "15px",
-                    p: "20px",
-                    mb: "20px",
-                    boxShadow: "0px 3px 6px #042F4A26",
-                }}
-            >
-                <Grid item xs={12}>
-                    <Title title="ARCHIVO FÍSICO" />
-
-                    <Grid item>
-                        <Box sx={{ width: "100%" }}>
-                            <TreeTable filterMode="strict">
-                                <Column
-                                    expander
-                                    body={(row) => uuidv4()}
-                                    style={{ width: "250px" }}
-                                ></Column>
-
-
-
-                            </TreeTable>
-                        </Box>
-                    </Grid>
-                </Grid>
-
-            </Grid>
-        </>
+  useEffect(() => {
+    void dispatch(avanzada_deposito());
+  }, []);
+  console.log(selected_arbol);
+  useEffect(() => {
+    const deposito_actual: IObjDepositos | undefined = depositos_tabla.find(
+      (objeto) => objeto.id_deposito === arbol_deposito.deposito.id_deposito
     );
+    if (deposito_actual !== undefined) {
+      let deposito_actual_aux: IObjDepositos = initial_state_deposito;
+      deposito_actual_aux = {
+        ...deposito_actual,
+        estante: arbol_deposito.estantes,
+      };
+      const depositos_aux: IObjDepositos[] = depositos_tabla.map((objeto) => {
+        if (objeto.id_deposito === deposito_actual_aux?.id_deposito) {
+          return deposito_actual_aux;
+        }
+        return objeto;
+      });
+      dispatch(set_listado_depositos(depositos_aux));
+    }
+  }, [arbol_deposito]);
+  const expansion_row_principal = (data: any) => {
+    const rows_update_aux = [];
+    for (let propiedad in data.data) {
+      const elemento_encontrado = rows_update.find(
+        (elemento) => elemento === propiedad
+      );
+      if (elemento_encontrado === undefined) {
+        const deposito_actual = depositos_tabla.find(
+          (objeto) => objeto.identificacion_por_entidad === propiedad
+        );
+        if (deposito_actual) {
+          const flag = 'estante' in deposito_actual;
+          if (!flag) {
+            void dispatch(
+              tabla_arbol_deposito(deposito_actual?.id_deposito ?? '')
+            );
+          }
+        }
+      }
+      rows_update_aux.push(propiedad);
+    }
+    set_rows_update(rows_update_aux);
+  };
+  return (
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Title title="ARCHIVO FÍSICO" />
+        {selected_arbol && selected_arbol.id_deposito && (
+          <Grid container justifyContent={'center'}>
+            <Typography
+              variant="h6"
+              align="center"
+              marginTop={2}
+              style={{ fontSize: '0.9rem' }}
+            >
+              TIPO DE ELEMENTO - DEPOSITOS
+            </Typography>
+          </Grid>
+       )}
+      {selected_arbol && selected_arbol.id_deposito && (
+          <Grid container justifyContent={'center'}>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="nombre_deposito"
+                control={control_deposito}
+                defaultValue=""
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Nombre"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="direccion_deposito"
+                control={control_deposito}
+                defaultValue=""
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Direccion"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="identificacion_por_entidad"
+                control={control_deposito}
+                defaultValue=""
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Identificacion"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={6} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="orden_ubicacion_por_entidad"
+                control={control_deposito}
+                defaultValue={0}
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Orden"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+         )}
+        {selected_arbol && selected_arbol.id_estante && ( 
+          <Grid container justifyContent={'center'}>
+            <Typography
+              variant="h6"
+              align="center"
+              marginTop={2}
+              style={{ fontSize: '0.9rem' }}
+            >
+              TIPO DE ELEMENTO - ESTANTE
+            </Typography>
+          </Grid>
+         )}
+          {selected_arbol && selected_arbol.id_estante && ( 
+          <Grid container justifyContent={'center'}>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="identificacion_por_estante"
+                control={control_estante}
+                defaultValue=""
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Identificacion"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="orden_estante"
+                control={control_estante}
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Orden"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+      
+      )}
+      {selected_arbol && selected_arbol.id_bandeja && ( 
+          <Grid container justifyContent={'center'}>
+            <Typography
+              variant="h6"
+              align="center"
+              marginTop={2}
+              style={{ fontSize: '0.9rem' }}
+            >
+              TIPO DE ELEMENTO - BANDEJA
+            </Typography>
+          </Grid>
+       
+       )}
+       {selected_arbol && selected_arbol.id_bandeja && ( 
+          <Grid container justifyContent={'center'}>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="identificacion_por_bandeja"
+                control={control_bandeja}
+                defaultValue=""
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Identificacion"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="orden_bandeja"
+                control={control_bandeja}
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Orden"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+        )}
+         {selected_arbol && selected_arbol.id_cajaa && ( 
+          <Grid container justifyContent={'center'}>
+            <Typography
+              variant="h6"
+              align="center"
+              marginTop={2}
+              style={{ fontSize: '0.9rem' }}
+            >
+              TIPO DE ELEMENTO - CAJA
+            </Typography>
+          </Grid>
+       
+          )}
+            {selected_arbol && selected_arbol.id_cajaa && ( 
+          <Grid container justifyContent={'center'}>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="identificacion_por_caja"
+                control={control_caja}
+                defaultValue=""
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Identificacion"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="orden_caja"
+                control={control_caja}
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Orden"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+      
+     
+      )}
+
+
+        <Grid container justifyContent={'center'}>
+          <TableRowExpansion
+            products={depositos_tabla}
+            definition_levels={definition_levels}
+            selectedItem={selected_arbol}
+            setSelectedItem={set_selected_arbol}
+            expandedRows={expanded_rows}
+            setExpandedRows={set_expanded_rows}
+            onRowToggleFunction={expansion_row_principal}
+            initial_allow_expansion={true}
+          />
+        </Grid>
+        {open_modal_avanzada && (
+          <Grid item xs={12} marginY={1}>
+            <BusquedaAvanzadaFisico
+              open={open_modal_avanzada}
+              handle_close_buscar={handle_close_buscar}
+            />
+          </Grid>
+        )}
+
+        <Grid container justifyContent="flex-end" marginTop={2}>
+          <LoadingButton
+            variant="contained"
+            onClick={handle_buscar}
+            disabled={false}
+          >
+            Buscar
+          </LoadingButton>
+        </Grid>
+      </Grid>
+    </>
+  );
 };

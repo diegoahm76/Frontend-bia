@@ -46,13 +46,6 @@ export const Acciones: FC<any> = (): JSX.Element => {
   // ? ---- context declaration ----
   const { handleSecondLoading } = useContext(ModalAndLoadingContext);
 
-  /* "id_ccd_nuevo": 176,
-    "unidades_responsables":[
-        {
-        "id_unidad_actual":5384,
-        "id_unidad_nueva":5388
-        }
-    ] */
   const handleSubmit = async () => {
     const dataToSend = {
       id_ccd_nuevo: ccdOrganigramaCurrentBusqueda?.id_ccd,

@@ -120,7 +120,6 @@ const MoverCarpeta = ({ control_carpeta_destino, open, handle_close_buscar, get_
                 <Button
                     variant="contained"
                     color="primary"
-
                 >
                     Buscar
                 </Button>

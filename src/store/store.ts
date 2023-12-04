@@ -60,6 +60,7 @@ import { reportes_documentacion_slice } from "../commons/gestorDocumental/report
 import { DelOfiResSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/toolkit/slice/DelOfiResSlice";
 import { pqrsdf_slice } from "../commons/gestorDocumental/PQRSDF/store/slice/pqrsdfSlice";
 import { central_digitalizacion_slice } from "../commons/gestorDocumental/CentralDigitalizacion/store/slice/centralDigitalizacionSlice";
+import { planes_slice } from "../commons/seguimirntoPlanes/store/slice/indexPlanes";
 
 const persist_config = {
   key: "macarenia_app",
@@ -144,6 +145,11 @@ const app_reducers = combineReducers({
   DelOfiResSlice: DelOfiResSlice.reducer,
   // pqrsdf
   pqrsdf_slice: pqrsdf_slice.reducer,
+
+  
+ // ! SEGUIMIENTO A PLANES
+ // ? planes
+ planes: planes_slice.reducer,
   central_digitalizacion_slice: central_digitalizacion_slice.reducer,
 });
 
