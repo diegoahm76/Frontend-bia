@@ -1,9 +1,6 @@
 
-import { Box, Button, Grid, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { type GridColDef } from '@mui/x-data-grid';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import dayjs from 'dayjs';
 
 interface IProps {
@@ -12,48 +9,6 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
-    useEffect(() => {
-
-    }, []);
-
-
-    const columns: GridColDef[] = [
-        {
-            field: 'codigo_exp_Agno',
-            headerName: 'AÑO',
-            sortable: true,
-            width: 250,
-        },
-        {
-            field: 'codigo_exp_consec_por_agno',
-            headerName: 'CONSECUTIVO',
-            sortable: true,
-            width: 250,
-        },
-        {
-            field: 'titulo_expediente',
-            headerName: 'TÍTULO EXPEDIENTE',
-            width: 300,
-        },
-        {
-            field: 'acciones',
-            headerName: 'ACCIONES',
-            width: 200,
-            renderCell: (params) => (
-                <Button onClick={() => seleccionar_expediente(params.row)} startIcon={<PlaylistAddCheckIcon />} />
-            ),
-
-        },
-    ];
-
-    const seleccionar_expediente: any = (expediente: any) => {
-
-    }
-
-    const mostrar_busqueda_expediente: any = async () => {
-
-    }
-
     return (
         <>
             <Grid item md={12} xs={12}>

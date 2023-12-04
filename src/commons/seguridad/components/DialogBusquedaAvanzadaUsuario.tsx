@@ -140,6 +140,9 @@ const dialog_busqueda_avanzada_usuario = ({
 
   return (
     <Dialog
+    sx={{
+      zIndex:9999,
+    }}
       open={is_modal_active}
       onClose={handle_close_busqueda_avanzada}
       fullWidth

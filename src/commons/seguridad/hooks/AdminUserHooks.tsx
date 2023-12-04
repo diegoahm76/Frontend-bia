@@ -88,7 +88,7 @@ export const initial_state_data_register: any = {
   persona_que_creo: '',
 };
 
-export const use_admin_users = (): AdminUserHook => {
+export const use_admin_users = () => {
   //* nuevo useState
   const [listaSucursales, setListaSucursales] = useState<any[]>([]);
   const [sucursalSelected, setSucursalSelected] = useState<any>();
@@ -103,7 +103,7 @@ export const use_admin_users = (): AdminUserHook => {
   const [numero_documento, set_numero_documento] = useState('');
   const [tipo_persona, set_tipo_persona] = useState('');
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
-  const [roles_opt, set_roles_opt] = useState<IList2[]>([]);
+  const [roles_opt, set_roles_opt] = useState<any[]>([]);
   // const rol_fixed = [roles_opt[0]];
   // const [roles, set_roles] = useState<IList2[]>([...rol_fixed]);
   const [roles, set_roles] = useState<IList2[]>([]);
@@ -180,6 +180,7 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const on_submit = handle_submit_admin_user(async (data_user) => {
+    console.log(data_user);
     try {
       set_loading_create_or_update(true);
       if (action_admin_users === 'CREATE') {
@@ -215,8 +216,34 @@ export const use_admin_users = (): AdminUserHook => {
           data_register.bloqueado.toString()
         );
         data_update_user.append('tipo_usuario', data_register.tipo_usuario);
+
+        /* for (let i = 0; i < roles.length; i++) {
+          if (roles[i].value === 1978547) {
+            [
+              {
+                value: 7,
+                label: 'zCamunda - Rol Actor-Dirección General',
+              },
+              {
+                value: 26,
+                label: 'zCamunda - Rol Actor-Funcionario',
+              },
+              {
+                value: 9,
+                label: 'zCamunda - Rol Actor-Grupo Aguas-Ingeniero de Revisión',
+              },
+            ].forEach((zCamundaRole) => {
+              data_update_user.append('roles', `${zCamundaRole.value}`);
+            });
+          } else {
+            // Si no es la opción agrupada, agregar el rol normalmente
+            data_update_user.append('roles', `${roles[i].value}`);
+          }
+        }*/
+
+        // ? anterior
+
         for (let i = 0; i < roles.length; i++) {
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           data_update_user.append('roles', `${roles[i].value}`);
         }
         data_update_user.append('profile_img', data_register.imagen_usuario);
@@ -537,7 +564,7 @@ export const use_admin_users = (): AdminUserHook => {
         value: user_info?.id_sucursal_empresa,
         label: user_info?.descripcion_sucursal_empresa,
       });*/
-  /*    watch_admin_user('sucursal_defecto').value = {
+      /*    watch_admin_user('sucursal_defecto').value = {
         value: user_info?.id_sucursal_empresa,
         label: user_info?.descripcion_sucursal_empresa,
       };*/
@@ -655,6 +682,8 @@ export const use_admin_users = (): AdminUserHook => {
     set_loading_inputs,
     reset_admin_user,
     clean_user_info,
+
+    set_roles_opt,
 
     //* nuevos export
     listaSucursales,

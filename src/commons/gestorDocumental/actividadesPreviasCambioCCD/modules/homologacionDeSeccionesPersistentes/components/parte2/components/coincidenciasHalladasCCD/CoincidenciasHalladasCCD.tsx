@@ -139,38 +139,6 @@ export const CoincidenciasHalladasCCD = (): JSX.Element | null => {
     }
   });
 
-  {
-    /*
-  deben ir dos condicionales
-  1. la del loading del componente para que aparezca el loader
-  2. si no hay ningún elemento dentro del array que se renderiza acá, no deberia mostrarse el componenten
-    */
-  }
-
-  {
-    /* cuando el loading esté en true se debe mostrar el loading para la carga progresiva del componenete en el momento en el que se necesite */
-  }
-
-  /* if (generalLoading) {
-    return (
-      <Grid
-        container
-        sx={{
-          ...containerStyles,
-          boxShadow: 'none',
-          background: 'none',
-          position: 'static',
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <Loader altura={200} />
-      </Grid>
-    );
-  }*/
-  {
-    /* si no hay coincidencias en las unidades del ccd este componente no se visualiza */
-  }
 
   if (homologacionUnidades?.length === 0) return <></>;
   return (

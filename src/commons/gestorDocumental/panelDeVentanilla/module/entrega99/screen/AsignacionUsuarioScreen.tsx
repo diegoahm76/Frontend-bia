@@ -11,7 +11,9 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     /*de entrada al módulo se van a tener que realizar ciertas solictudes para llenar infomación dentro de los campos de la entrega*/
   }
 
-  {/* esa información debe pasaar derecho a los frames predispuestos */}
+  {
+    /* esa información debe pasaar derecho a los frames predispuestos */
+  }
 
   useEffect(() => {
     console.log(
@@ -20,6 +22,8 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     console.log(
       'se realiza la solictud sobre la información de la persona que solicita el complemento'
     );
+
+    // ? tambien se entra a re iniciar el módulo de asignación de usuario || mejor cuando se de en el finish y se envie la solicitud al usuario, por tanto se hará en el componente de stepper o en submit de envío
   }, []);
 
   return (

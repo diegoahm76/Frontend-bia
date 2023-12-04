@@ -64,11 +64,11 @@ const MetadataFormDialog = ({
   useEffect(() => {
     reset_metadata(metadata);
     if (
-      metadata.key_words !== null &&
-      metadata.key_words !== '' &&
-      metadata.key_words !== undefined
+      metadata.palabras_clave_doc !== null &&
+      metadata.palabras_clave_doc !== '' &&
+      metadata.palabras_clave_doc !== undefined
     ) {
-      const labelsArray = metadata.key_words.split(',');
+      const labelsArray = metadata.palabras_clave_doc.split(',');
       const labelObjects = labelsArray.map((label: string, index: number) => ({
         key: index,
         label: label,
@@ -110,7 +110,7 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'code_file_category',
+                  control_name: 'cod_categoria_archivo',
                   default_value: '',
                   rules: {
                     required_rule: { rule: false, message: 'Requerido' },
@@ -127,8 +127,8 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'has_physical_replica',
-                  default_value: metadata.has_physical_replica,
+                  control_name: 'tiene_replica_fisica',
+                  default_value: metadata.tiene_replica_fisica,
                   rules: {},
                   label: 'Tiene réplica física',
                   disabled: false,
@@ -139,7 +139,7 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'code_file_origin',
+                  control_name: 'cod_origen_archivo',
                   default_value: '',
                   rules: {
                     required_rule: { rule: false, message: 'Requerido' },
@@ -156,8 +156,8 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'has_typology',
-                  default_value: metadata.has_typology,
+                  control_name: 'tiene_tipologia',
+                  default_value: metadata.tiene_tipologia,
                   rules: {},
                   label: 'Tiene tipología relacionada',
                   disabled: false,
@@ -168,7 +168,7 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'file_typology_id',
+                  control_name: 'id_tipologia_doc',
                   default_value: '',
                   rules: {
                     required_rule: { rule: false, message: 'Requerido' },
@@ -185,7 +185,7 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'other_file_typology',
+                  control_name: 'tipologia_no_creada_en_TRD',
                   default_value: '',
                   rules: {
                     required_rule: { rule: false, message: 'Requerido' },
@@ -203,12 +203,14 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 12,
                   control_form: control_metadata,
-                  control_name: 'subject',
+                  control_name: 'asunto',
                   default_value: '',
-                  rules: {},
+                  rules: {
+                    required_rule: { rule: false, message: 'Requerido' },
+                  },
                   label: 'Asunto',
                   type: 'text',
-                  disabled: true,
+                  disabled: false,
                   helper_text: '',
                 },
                 {
@@ -216,14 +218,14 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 12,
                   control_form: control_metadata,
-                  control_name: 'description',
+                  control_name: 'descripcion',
                   default_value: '',
                   rules: {},
-                  multiline: true,
-                  rows: 4,
+                  multiline_text: true,
+                  rows_text: 4,
                   label: 'Descripción',
                   type: 'text',
-                  disabled: true,
+                  disabled: false,
                   helper_text: '',
                 },
                 {
@@ -232,7 +234,7 @@ const MetadataFormDialog = ({
                   hidden_text: false,
                   character_separator: ',',
                   set_form: setValue,
-                  keywords: 'key_words',
+                  keywords: 'palabras_clave_doc',
                 },
               ]}
             />

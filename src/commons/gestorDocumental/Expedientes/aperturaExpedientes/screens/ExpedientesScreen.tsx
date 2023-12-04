@@ -680,7 +680,6 @@ export const ExpedientesScreen: React.FC = () => {
                                 {expediente?.expediente.length !== 0 ? 'Actualizar' : 'Guardar'}
                             </Button>}
                             <Button
-                                // color='inherit'
                                 variant="outlined"
                                 startIcon={<CleanIcon />}
                                 onClick={() => { limpiar_formulario() }}

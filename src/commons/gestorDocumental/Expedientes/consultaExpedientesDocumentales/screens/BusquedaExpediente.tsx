@@ -3,21 +3,22 @@ import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../../hooks";
 import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
-import { buscar_expediente_id, obtener_config_expediente, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
+import { buscar_expediente_id, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 import dayjs, { Dayjs } from "dayjs";
 import SearchIcon from '@mui/icons-material/Search';
-import BuscarExpediente from "../../indexacionExpedientes/screens/BuscarExpediente";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { VerExpedientes } from "../../ConcesionAcceso/screens/VerExpedientes";
 import { VerDocumentos } from "../../ConcesionAcceso/screens/VerDocumentos";
 import { obtener_trd_actual_retirados } from "../../indexacionExpedientes/thunks/indexacionExpedientes";
-import { expedientes_por_filtros } from "../thunks/ConsultaExpedientes";
+import { expedientes_por_filtros, obtener_documentos_expediente } from "../thunks/ConsultaExpedientes";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import BuscarExpediente from "./BuscarExpediente";
 
 interface IProps {
     set_expediente: any,
+    set_documento: any,
     limpiar: boolean
 }
 
@@ -34,6 +35,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     const [abrir_modal_expedientes, set_abrir_modal_expedientes] = useState<boolean>(false);
     const [abrir_modal_documentos, set_abrir_modal_documentos] = useState<boolean>(false);
     const [expediente, set_expediente] = useState<any>(null);
+    const [documento, set_documento] = useState<any>(null);
     const [expedientes, set_expedientes] = useState<any>([]);
     // Notificaciones
     const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
@@ -41,6 +43,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
     const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
     const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
+    const [buscar_expediente_active, set_buscar_expediente_active] = useState<boolean>(false);
 
     const columns: GridColDef[] = [
         {
@@ -103,6 +106,9 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     useEffect(() => {
         props.set_expediente(expediente);
     }, [expediente]);
+    useEffect(() => {
+        props.set_documento(documento);
+    }, [documento]);
 
     useEffect(() => {
         if (tdr !== "")
@@ -166,9 +172,14 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
 
     const seleccion_expediente_grid = (seleccion_expediente: any): void => {
         const expediente_local = expedientes.find((e: any) => e.id_expediente_documental === seleccion_expediente[0]);
-        dispatch(buscar_expediente_id(expediente_local.id_expediente_documental)).then((response: any) => {
-            response.success ? set_expediente(response.data) : set_expediente(null);     
-        });
+        if(expediente_local !== undefined){
+            dispatch(buscar_expediente_id(expediente_local.id_expediente_documental)).then((response: any) => {
+                response.success ? set_expediente(response.data) : set_expediente(null);     
+            });
+            dispatch(obtener_documentos_expediente(expediente_local.id_expediente_documental, '', '', '')).then(((response: any) => {
+                response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+            }));
+        }
     }
 
     useEffect(() => {
@@ -178,7 +189,10 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             set_serie("");
             set_lt_seccion([]);
             set_lt_serie([]);
+            set_expedientes([]);
             set_expediente(null);
+            set_documento(null);
+            set_año(null);
         }
     }, [props.limpiar]);
 
@@ -329,7 +343,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                     >
                                         Ver expedientes a los que me han dado acceso
                                     </Button>
-                                    {abrir_modal_expedientes && <VerExpedientes is_modal_active={abrir_modal_expedientes} set_is_modal_active={set_abrir_modal_expedientes} set_expediente={set_expediente}></VerExpedientes>}
+                                    {abrir_modal_expedientes && <VerExpedientes is_modal_active={abrir_modal_expedientes} set_is_modal_active={set_abrir_modal_expedientes} set_expediente={set_expediente} set_documento={set_documento}></VerExpedientes>}
                                     <Button
                                         color='primary'
                                         variant='outlined'
@@ -338,7 +352,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                     >
                                         Ver documentos a los que me han dado acceso
                                     </Button>
-                                    {abrir_modal_documentos && <VerDocumentos is_modal_active={abrir_modal_documentos} set_is_modal_active={set_abrir_modal_documentos}></VerDocumentos>}
+                                    {abrir_modal_documentos && <VerDocumentos is_modal_active={abrir_modal_documentos} set_is_modal_active={set_abrir_modal_documentos} set_expediente={set_expediente} set_documento={set_documento}></VerDocumentos>}
                                 </Stack>
                             </Box>
                         </Grid>
@@ -359,10 +373,11 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                                         color="primary"
                                         variant="contained"
                                         startIcon={<SearchIcon />}
-                                        onClick={() => { }}
+                                        onClick={() => { set_buscar_expediente_active(true) }}
                                     >
                                         Búsqueda avanzada
                                     </Button>
+                                    {buscar_expediente_active && <BuscarExpediente is_modal_active={buscar_expediente_active} set_is_modal_active={set_buscar_expediente_active} set_expediente={set_expediente} set_documento={set_documento}></BuscarExpediente>}
                                 </Stack>
                             </Box>
                         </Grid>

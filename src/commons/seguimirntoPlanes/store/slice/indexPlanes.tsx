@@ -18,6 +18,10 @@ import type {
   IConceptoPOAI,
   IFuentes,
   IBanco,
+  IPlanAdquisiciones,
+  InfoPersona,
+  IUnspsc,
+  ISeguimientoPAI,
 } from '../../types/types';
 
 export const initial_state_planes: IPlanes = {
@@ -208,6 +212,96 @@ export const initial_state_banco: IBanco = {
   id_fuente_financiacion: null,
 };
 
+export const initial_state_plan_adquisiciones: IPlanAdquisiciones = {
+  id_plan_anual: null,
+  nombre_plan: '',
+  nombre_intervalo: '',
+  nombre_modalidad: '',
+  nombre_fuente: '',
+  nombre_estado: '',
+  nombre_unidad: '',
+  nombre_ubicacion: '',
+  persona_responsable: '',
+  descripcion: '',
+  mes_inicio: '',
+  mes_oferta: '',
+  duracion: null,
+  valor_total_estimado: null,
+  valor_vigencia_actual: null,
+  vigencia_futura: null,
+  decreto_paa: false,
+  suministro_paa: false,
+  id_plan: null,
+  id_intervalo: null,
+  id_modalidad: null,
+  id_recurso_paa: null,
+  id_estado_vf: null,
+  id_unidad_organizacional: null,
+  id_ubicaion: null,
+  id_persona_responsable: null,
+};
+
+export const inicial_state_persona_planes: InfoPersona = {
+  id_persona: null,
+  tipo_persona: '',
+  tipo_documento: '',
+  numero_documento: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
+  tiene_usuario: false,
+  digito_verificacion: '',
+  tipo_usuario: '',
+  cod_naturaleza_empresa: '',
+};
+
+export const initial_state_paa_codigos: IUnspsc = {
+  id_paacodigo: null,
+  nombre_paa: '',
+  nombre_producto_unsp: '',
+  codigo_unsp: '',
+  id_plan: null,
+  id_codigo: null,
+};
+export const mode_paa_codigos: IMode = {
+  ver: false,
+  crear: false,
+  editar: false,
+};
+
+export const initial_state_segui_pai: ISeguimientoPAI = {
+  id_seguimiento_pai: null,
+  nombre_proyecto: '',
+  nombre_producto: '',
+  nombre_actividad: '',
+  nombre_unidad: '',
+  nombre_indicador: '',
+  nombre_meta: '',
+  razagada: false,
+  mes: '',
+  porcentaje_avance: null,
+  fecha_registro_avance: '',
+  entrega_vigencia: '',
+  hizo: '',
+  cuando: '',
+  donde: '',
+  resultado: '',
+  participacion: '',
+  beneficiarios: '',
+  compromisos: '',
+  contratros: '',
+  id_unidad_organizacional: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+  id_indicador: null,
+  id_meta: null,
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
@@ -226,6 +320,11 @@ export const initial_state: IPlanesIndex = {
   concepto_poai: initial_state_concepto_poai,
   fuente: initial_state_fuente,
   banco: initial_state_banco,
+  plan_adquisiciones: initial_state_plan_adquisiciones,
+  personas_planes: inicial_state_persona_planes,
+  paa_codigos: initial_state_paa_codigos,
+  mode_paa_codigos: mode_paa_codigos,
+  seguimiento_pai: initial_state_segui_pai,
 };
 
 export const planes_slice = createSlice({
@@ -330,6 +429,36 @@ export const planes_slice = createSlice({
     set_current_banco: (state: IPlanesIndex, action: PayloadAction<IBanco>) => {
       state.banco = action.payload;
     },
+    set_current_plan_adquisiciones: (
+      state: IPlanesIndex,
+      action: PayloadAction<IPlanAdquisiciones>
+    ) => {
+      state.plan_adquisiciones = action.payload;
+    },
+    set_current_persona_planes: (
+      state: IPlanesIndex,
+      action: PayloadAction<InfoPersona>
+    ) => {
+      state.personas_planes = action.payload;
+    },
+    set_current_paa_codigos: (
+      state: IPlanesIndex,
+      action: PayloadAction<IUnspsc>
+    ) => {
+      state.paa_codigos = action.payload;
+    },
+    set_current_mode_paa_codigos: (
+      state: IPlanesIndex,
+      action: PayloadAction<IMode>
+    ) => {
+      state.mode_paa_codigos = action.payload;
+    },
+    set_current_seguimiento_pai: (
+      state: IPlanesIndex,
+      action: PayloadAction<ISeguimientoPAI>
+    ) => {
+      state.seguimiento_pai = action.payload;
+    },
   },
 });
 
@@ -352,4 +481,9 @@ export const {
   set_current_concepto_poai,
   set_current_fuente,
   set_current_banco,
+  set_current_plan_adquisiciones,
+  set_current_persona_planes,
+  set_current_paa_codigos,
+  set_current_mode_paa_codigos,
+  set_current_seguimiento_pai,
 } = planes_slice.actions;

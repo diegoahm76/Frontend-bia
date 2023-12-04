@@ -6,11 +6,13 @@ import { useAppDispatch } from "../../../../../hooks";
 import { ver_expedientes } from "../thunks/ConcesionAcceso";
 import dayjs from "dayjs";
 import { buscar_expediente_id } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
+import { obtener_documentos_expediente } from "../../consultaExpedientesDocumentales/thunks/ConsultaExpedientes";
 
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
-    set_expediente: any
+    set_expediente: any,
+    set_documento: any
 }
 
 const class_icon = {
@@ -23,7 +25,7 @@ const class_icon = {
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
-    const [seleccion_expediente, set_seleccion_expediente] = useState<any>({});
+    const [seleccion_expediente, set_seleccion_expediente] = useState<any>(null);
     const [expedientes, set_expedientes] = useState<any>([]);
 
     useEffect(() => {
@@ -75,14 +77,18 @@ export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
     }
 
     const boton_seleccionar: any = () => {
-        dispatch(buscar_expediente_id(seleccion_expediente.id_expediente)).then((response: any) => {
-            if(response.success){
-                props.set_expediente(response.data);   
-                props.set_is_modal_active(false);
-            }else{
-                props.set_expediente(null);  
-            }
-        });
+        if(seleccion_expediente !== null){
+            dispatch(buscar_expediente_id(seleccion_expediente.id_expediente)).then((response: any) => {
+                if(response.success){
+                    response.data !== null ? props.set_expediente(response.data) : props.set_expediente(null);
+                    dispatch(obtener_documentos_expediente(response.data.id_expediente_documental, '', '', '')).then(((response: any) => {
+                        response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+                        props.set_is_modal_active(false);
+                    }));
+                    props.set_is_modal_active(false);
+                }
+            });
+        }
     }
 
     return (
