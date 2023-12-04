@@ -100,7 +100,7 @@ export function ImpresionRadicadoScreen(): JSX.Element {
               variant_button="contained"
               on_click_function={descargarPDF}
               icon_class={<PrintIcon />}
-              // disabled={filed.id_radicado === null}
+              disabled={filed.numero_radicado_completo === null}
               label="Imprimir"
               type_button="button"
               color_button="warning"

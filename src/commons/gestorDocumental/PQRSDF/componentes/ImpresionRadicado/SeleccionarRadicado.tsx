@@ -146,22 +146,19 @@ const SeleccionarRadicado = () => {
               title_label: 'Radicado',
             },
             {
-              datum_type: 'select_controller',
+              datum_type: 'input_controller',
               xs: 12,
               md: 4,
               control_form: control_radicado,
-              control_name: 'cod_tipo_radicado',
+              control_name: 'nombre_tipo_radicado',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de radicado',
               disabled: true,
               helper_text:
-                filed.id_radicado !== null
+                filed.numero_radicado_completo === null
                   ? 'Debe seleccionar un radicado'
                   : '',
-              select_options: filed_types,
-              option_label: 'label',
-              option_key: 'key',
             },
             {
               datum_type: 'input_controller',
@@ -175,7 +172,7 @@ const SeleccionarRadicado = () => {
               type: 'text',
               disabled: true,
               helper_text:
-                filed.id_radicado !== null
+                filed.numero_radicado_completo === null
                   ? 'Debe seleccionar un radicado'
                   : '',
             },
@@ -191,7 +188,7 @@ const SeleccionarRadicado = () => {
               type: 'number',
               disabled: true,
               helper_text:
-                filed.id_radicado !== null
+                filed.numero_radicado_completo === null
                   ? 'Debe seleccionar un radicado'
                   : '',
             },
@@ -207,7 +204,7 @@ const SeleccionarRadicado = () => {
               type: 'text',
               disabled: true,
               helper_text:
-                filed.id_radicado !== null
+                filed.numero_radicado_completo === null
                   ? 'Debe seleccionar un radicado'
                   : '',
             },
@@ -224,7 +221,7 @@ const SeleccionarRadicado = () => {
               label: 'Fecha de radicado',
               disabled: true,
               helper_text:
-                filed.id_radicado !== null
+                filed.numero_radicado_completo === null
                   ? 'Debe seleccionar un radicado'
                   : '',
               format: 'YYYY-MM-DD',

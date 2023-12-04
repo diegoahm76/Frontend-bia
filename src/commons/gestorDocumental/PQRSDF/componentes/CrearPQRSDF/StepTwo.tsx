@@ -81,7 +81,7 @@ const StepTwo = () => {
 
   useEffect(() => {
     reset(exhibit);
-    if (exhibit.id_anexo !== null) {
+    if ((exhibit.id_anexo ?? null) !== null) {
       if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
         if (typeof exhibit.exhibit_link === 'string') {
           const name = exhibit.exhibit_link?.split('/').pop() ?? '';
@@ -121,7 +121,6 @@ const StepTwo = () => {
         dispatch(
           set_exhibit({
             ...exhibit,
-            id_anexo: get_values('id_anexo'),
             nombre_anexo: get_values('nombre_anexo'),
             orden_anexo_doc: get_values('orden_anexo_doc'),
             medio_almacenamiento: get_values('medio_almacenamiento'),
@@ -145,7 +144,6 @@ const StepTwo = () => {
         dispatch(
           set_exhibit({
             ...exhibit,
-            id_anexo: get_values('id_anexo'),
             nombre_anexo: get_values('nombre_anexo'),
             orden_anexo_doc: get_values('orden_anexo_doc'),
             medio_almacenamiento: get_values('medio_almacenamiento'),
@@ -163,7 +161,6 @@ const StepTwo = () => {
         dispatch(
           set_exhibit({
             ...exhibit,
-            id_anexo: get_values('id_anexo'),
             nombre_anexo: get_values('nombre_anexo'),
             orden_anexo_doc: get_values('orden_anexo_doc'),
             medio_almacenamiento: get_values('medio_almacenamiento'),
@@ -182,7 +179,6 @@ const StepTwo = () => {
       dispatch(
         set_exhibit({
           ...exhibit,
-          id_anexo: get_values('id_anexo'),
           nombre_anexo: get_values('nombre_anexo'),
           orden_anexo_doc: get_values('orden_anexo_doc'),
           medio_almacenamiento: get_values('medio_almacenamiento'),
@@ -372,7 +368,9 @@ const StepTwo = () => {
               set_value: set_file,
               file_name,
               value_file:
-                exhibit.id_anexo !== null ? exhibit.exhibit_link ?? null : null,
+                (exhibit.id_anexo ?? null) !== null
+                  ? exhibit.exhibit_link ?? null
+                  : null,
             },
             {
               datum_type: 'input_controller',

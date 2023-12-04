@@ -74,7 +74,7 @@ const ImprimirRadicado = ({ visor, set_visor }: IProps) => {
   const crear_encabezado: () => {
     title: string;
   } = () => {
-    const title = `Resumen de radicado número${
+    const title = `Resumen de radicado número ${
       filed.numero_radicado_completo ?? ''
     }`;
     doc.setFont('Arial', 'normal');

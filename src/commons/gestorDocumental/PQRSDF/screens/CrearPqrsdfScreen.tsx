@@ -203,6 +203,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
   ]);
 
   const validate = (data: any) => {
+    console.log(data);
     dispatch(set_pqr({ ...pqr, ...data }));
   };
 
@@ -240,26 +241,9 @@ export function CrearPqrsdfScreen(): JSX.Element {
 
   useEffect(() => {
     console.log(exhibits);
-    dispatch(set_pqr({ ...pqr, anexos: exhibits }));
-    // const aux_items: IObjExhibit[] = [];
-    // exhibits.forEach((elemento: IObjExhibit, index: number) => {
-    //   if (elemento.id_anexo !== null) {
-    //     if (
-    //       elemento.exhibit_link === null ||
-    //       elemento.exhibit_link === undefined
-    //     ) {
-    //       aux_items.push({
-    //         ...elemento,
-    //         exhibit_link: elemento.metadatos?.archivo?.ruta_archivo ?? null,
-    //       });
-    //     } else {
-    //       aux_items.push(elemento);
-    //     }
-    //   } else {
-    //     aux_items.push(elemento);
-    //   }
-    // });
-    // dispatch(set_exhibits(aux_items));
+    if (exhibits.length > 0) {
+      dispatch(set_pqr({ ...pqr, anexos: exhibits }));
+    }
   }, [exhibits]);
 
   const on_submit = (data: IObjPqr): void => {
@@ -387,8 +371,8 @@ export function CrearPqrsdfScreen(): JSX.Element {
       form_data.append('isCreateForWeb', 'True');
 
       void dispatch(add_pqrsdf_service(form_data));
-      // dispatch(reset_state());
-      // initial_values();
+      dispatch(reset_state());
+      initial_values();
     }
   };
   const delete_pqr = (): void => {
