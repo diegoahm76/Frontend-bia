@@ -13,8 +13,11 @@ export const AsignacionGrupoProvider = ({ children }: any): JSX.Element => {
     useState<any>([]);
 
   const [listaSubGrupos, setListaSubGrupos] = useState<any>([]);
+  const [currentGrupo, setCurrentGrupo] = useState(null)
 
   const [liderAsignado, setLiderAsignado] = useState(null);
+
+  const [listaAsignaciones, setListaAsignaciones] = useState<any[]>([])
 
   // ? functions declaration
   /* const setCurrentElementPqrsdComplementoTramitesYotrosContext = (
@@ -30,8 +33,14 @@ export const AsignacionGrupoProvider = ({ children }: any): JSX.Element => {
     listaSubGrupos,
     setListaSubGrupos,
 
+    currentGrupo,
+    setCurrentGrupo,
+
     liderAsignado,
     setLiderAsignado,
+
+    listaAsignaciones,
+    setListaAsignaciones
   };
 
   return (

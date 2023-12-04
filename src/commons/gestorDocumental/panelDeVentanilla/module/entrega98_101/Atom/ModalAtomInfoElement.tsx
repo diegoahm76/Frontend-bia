@@ -18,12 +18,8 @@ import { Title } from '../../../../../../components';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {
-  columnsAtom,
-  rowsEJEMPLO,
-  rowsEjemploAnexosDePqrsdf,
-} from './columnsAtom/columnsAtom';
-import { useContext } from 'react';
+import { columnsAtom } from './columnsAtom/columnsAtom';
+import { useContext, useEffect } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
 import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
@@ -32,6 +28,9 @@ import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext'
 import { useAppSelector } from '../../../../../../hooks';
 import { getArchivoAnexoPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
 import { getArchivoAnexoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
+import { ar } from 'date-fns/locale';
+import { getMetadatosPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
+import { getMetadatoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
@@ -120,6 +119,12 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
       },
     },
   ];
+
+  useEffect(() => {
+    if (anexos.length === 0) {
+      navigate('/app/gestor_documental/panel_ventanilla/');
+    }
+  }, []);
 
   return (
     <>
@@ -267,15 +272,22 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 <Button
                   color="primary"
                   variant="outlined"
-                  onClick={() => {
-                    // ? al cerrar la infromación del anexo se debe cerrar el elemento del anexo y del metadato si estuviera abierto
-                   
-                    
-                    //* se debe hacer la petición del anexo así mostrarlo
-                    setMetadatos([]); //* seguramente será un objeto
-
-                    // infoArchivo?.id_anexo
-                    handleOpenInfoMetadatos(true);
+                  onClick={async () => {
+                    let metadatos;
+                    if (archivoAnexos?.anexoActual?.pqrsdf) {
+                      metadatos = await getMetadatosPqrsdf(
+                        archivoAnexos?.anexoActual?.id_anexo,
+                        handleOpenInfoMetadatos
+                      );
+                    } else {
+                      metadatos = await getMetadatoComplemento(
+                        archivoAnexos?.anexoActual?.id_anexo,
+                        handleOpenInfoMetadatos
+                      );
+                    }
+                    setMetadatos(metadatos);
+                    console.log(infoMetadatos);
+                    // handleOpenInfoMetadatos(true);
                   }}
                   startIcon={<InfoIcon />}
                 >
@@ -317,7 +329,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'5'}
+                  value={metadatos?.numero_folios ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -328,7 +340,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Metadatos asunto'}
+                  value={metadatos?.asunto ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -339,7 +351,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'11/05/2023'}
+                  value={metadatos?.fecha_creacion_archivo ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -353,7 +365,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Cédula de ciudadanía'}
+                  value={metadatos?.archivo_origen_sistema ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -364,7 +376,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Origen de archivo'}
+                  value={metadatos?.origen_archivo ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -375,7 +387,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Digital'}
+                  value={metadatos?.categoria_archivo ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -386,7 +398,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'SI'}
+                  value={metadatos?.tiene_replica_fisica ? 'SI' : 'NO'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -401,7 +413,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Clave1, Clave2. Clave3'}
+                  value={/*metadatos?.tiene_replica_fisica?.join(', ') ??*/ ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -429,8 +441,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   variant="contained"
                   onClick={() => {
                     handleOpenInfoMetadatos(false);
-                    handleOpenInfoAnexos(false);
-                    console.log('cerrando información de METADATO');
+                    // handleOpenInfoAnexos(false);
                   }}
                   startIcon={<CloseIcon />}
                 >
