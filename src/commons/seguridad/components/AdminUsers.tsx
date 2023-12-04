@@ -61,6 +61,7 @@ export const AdminUsers: React.FC = () => {
     setListaSucursales,
     setSucursalSelected,
     set_value_admin_user,
+    set_roles_opt,
   } = use_admin_users();
 
   const watch_exe = watch_admin_user();
@@ -81,11 +82,21 @@ export const AdminUsers: React.FC = () => {
         };
       });
 
-      console.log(sucursualesToUse);
-
       // Update the component state with the new list of sucursales
       setListaSucursales(sucursualesToUse);
     });
+
+    /* let zCamundaRoles = [];
+    let otherRoles = [];
+    roles_opt.forEach((role) => {
+      if (role.label.includes('zCamunda')) {
+        zCamundaRoles.push(role);
+      } else {
+        otherRoles.push(role);
+      }
+    });
+    otherRoles.push({ value: 1978547, label: 'Rol Camunda prueba' });
+    set_roles_opt(otherRoles);*/
   }, [watch_exe.tipo_usuario]);
 
   return (
@@ -103,7 +114,7 @@ export const AdminUsers: React.FC = () => {
               <>
                 <Grid container spacing={2} sx={{ mt: '5px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
-                    <Title title={`Datos personales ${tipo_persona}`} />
+                    <Title title={`Datos personales`} />
                   </Box>
                   {tipo_persona === 'N' ? (
                     <>
@@ -329,7 +340,15 @@ export const AdminUsers: React.FC = () => {
                       register={register_admin_user}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={9}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={9}
+                    sx={{
+                      zIndex: 109,
+                    }}
+                  >
                     {roles_opt.length > 0 && (
                       <Autocomplete
                         disabled={tipo_usuario === 'E' && true}
@@ -353,6 +372,32 @@ export const AdminUsers: React.FC = () => {
                         onChange={handle_change_autocomplete as any}
                       />
                     )}
+                    {/*
+                      normal 
+                    
+                    {roles_opt.length > 0 && (
+                      <Autocomplete
+                        disabled={tipo_usuario === 'E' && true}
+                        multiple
+                        fullWidth
+                        options={roles_opt}
+                        getOptionLabel={(option) => option?.label}
+                        isOptionEqualToValue={(option, value) =>
+                          option.value === value.value
+                        }
+                        value={roles ?? []}
+                        renderInput={(params) => (
+                          <TextField
+                            key={params.id}
+                            {...params}
+                            label="Selección de roles"
+                            placeholder="Roles asignados"
+                          />
+                        )}
+                        {...register_admin_user('roles')}
+                        onChange={handle_change_autocomplete as any}
+                      />
+                    )}*/}
                   </Grid>
                 </Grid>
               </>
@@ -509,14 +554,14 @@ export const AdminUsers: React.FC = () => {
                         style={{
                           padding: '10px',
                           justifyContent: 'center',
-                          zIndex: 99999,
+                          zIndex: 99,
                         }}
                       >
                         <Select
                           {...register_admin_user('sucursal_defecto')}
                           value={watch_exe.sucursal_defecto}
                           onChange={(selectedOption) => {
-                            console.log(selectedOption);
+                            //console.log(selectedOption);
                             set_value_admin_user(
                               'sucursal_defecto',
                               selectedOption
@@ -527,10 +572,10 @@ export const AdminUsers: React.FC = () => {
                           styles={{
                             control: (base) => ({
                               ...base,
-                              zIndex: 99999,
+                              zIndex: 99,
                             }),
                           }}
-                          menuPlacement="top"
+                          menuPlacement="bottom"
                         />
                         <label>
                           <small
@@ -617,7 +662,7 @@ export const AdminUsers: React.FC = () => {
                 startIcon={<EditIcon />}
               >
                 {action_admin_users === 'EDIT'
-                  ? 'EDITAR'
+                  ? 'GUARDAR'
                   : action_admin_users === 'CREATE' && 'CREAR'}
               </LoadingButton>
             </Stack>

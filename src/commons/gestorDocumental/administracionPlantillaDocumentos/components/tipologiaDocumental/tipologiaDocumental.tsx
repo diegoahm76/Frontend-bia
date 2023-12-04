@@ -5,7 +5,11 @@ import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { FormCreacionContext } from '../../context/CreaccionPlantillaContex';
 
+
+
 export const TipologiaDocumental: React.FC = () => {
+
+
 
   const { form, set_form } = useContext(FormCreacionContext);
 

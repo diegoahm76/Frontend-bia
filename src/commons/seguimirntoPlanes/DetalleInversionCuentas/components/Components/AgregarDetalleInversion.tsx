@@ -11,6 +11,7 @@ import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useDetalleInversionHook } from '../../hooks/useDetalleInversionHook';
 import { DataContextDetalleInversion } from '../../context/context';
 import { DataContextIndicador } from '../../../Indicadores/context/context';
+import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarDetalleInversion: React.FC = () => {
@@ -182,6 +183,9 @@ export const AgregarDetalleInversion: React.FC = () => {
                   size="small"
                   label="Valor detalle_inversion"
                   variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
                   multiline
                   value={value}
                   disabled={false}
