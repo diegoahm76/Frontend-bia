@@ -1,7 +1,7 @@
 import { type INodo } from './Nodo';
 
 export interface IBien {
-  code_bien?: string | null | undefined;
+  code_bien?:  string | null | undefined;
   nodo: INodo[];
   current_nodo: INodo;
   bienes: IObjBien[];

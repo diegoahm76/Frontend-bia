@@ -47,7 +47,7 @@ const control_success = (message: ToastContent) =>
 export const get_bienes_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('almacen/bienes/catalogo-bienes/get-list');
+      const { data } = await api.get('almacen/bienes/catalogo-bienes/get/list/');
       dispatch(get_bienes(data.data));
       return data;
     } catch (error: any) {
@@ -149,59 +149,59 @@ export const delete_nodo_service: any = (id: number) => {
   };
 };
 
-      export const get_code_bien_service_n: any = (code: string | null) => {
-        return async (dispatch: Dispatch<any>) => {
-          let codigo = 0;
-          let nivel = 1;
-          let limit = 9;
-          if (code == null) {
+      // export const get_code_bien_service_n: any = (code: string | null) => {
+      //   return async (dispatch: Dispatch<any>) => {
+      //     let codigo = 0;
+      //     let nivel = 1;
+      //     let limit = 9;
+      //     if (code == null) {
 
-            codigo = 1
-            nivel = 1
-            limit = 9
-          } else {
-            if (code.length === 1) {
-              codigo = Number(code) * 10
-              nivel = 2
-              limit = codigo + 9
-            } else if (code.length === 2) {
-              codigo = (Number(code) * 100) + 1
-              nivel = 3
-              limit = codigo + 99
-            } else if (code.length === 4) {
-              codigo = (Number(code) * 1000) + 1
-              nivel = 4
-              limit = codigo + 999
-            } else {
-              codigo = (Number(code) * 100000) + 1
-              nivel = 5
-              limit = codigo + 99999
-            }
-          }
-          for (let index = codigo; index <= limit; index++) {
-            try {
-              const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index.toString()}/`);
-              if (data.success) {
-                dispatch(get_code_bien(index.toString()))
-                return data;
-              } else {
-                if (index === limit) {
-                  control_error('No se pueden crear mas nodos en este nivel');
-                }
-              }
+      //       codigo = 1
+      //       nivel = 1
+      //       limit = 9
+      //     } else {
+      //       if (code.length === 1) {
+      //         codigo = Number(code) * 10
+      //         nivel = 2
+      //         limit = codigo + 9
+      //       } else if (code.length === 2) {
+      //         codigo = (Number(code) * 100) + 1
+      //         nivel = 3
+      //         limit = codigo + 99
+      //       } else if (code.length === 4) {
+      //         codigo = (Number(code) * 1000) + 1
+      //         nivel = 4
+      //         limit = codigo + 999
+      //       } else {
+      //         codigo = (Number(code) * 100000) + 1
+      //         nivel = 5
+      //         limit = codigo + 99999
+      //       }
+      //     }
+      //     for (let index = codigo; index <= limit; index++) {
+      //       try {
+      //         const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index.toString()}/`);
+      //         if (data.success) {
+      //           dispatch(get_code_bien(index.toString()))
+      //           return data;
+      //         } else {
+      //           if (index === limit) {
+      //             control_error('No se pueden crear mas nodos en este nivel');
+      //           }
+      //         }
 
-            } catch (error: any) {
+      //       } catch (error: any) {
 
-            }
+      //       }
 
-          }
+      //     }
 
-        };
-      };
+      //   };
+      // };
 
 export const get_code_bien_service = (
-  id_bien_padre: number | null  | undefined,
-  nivel_jerarquico: number | null | undefined,
+  id_bien_padre: string | number | null  | undefined,
+  nivel_jerarquico: string | number | null | undefined,
 ): any => {
   return async (dispatch: Dispatch<any>) => {
       try {

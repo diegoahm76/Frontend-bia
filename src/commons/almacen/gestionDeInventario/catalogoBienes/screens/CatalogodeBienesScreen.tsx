@@ -26,7 +26,7 @@ import {
   initial_state_current_nodo,
   current_bien,
 } from '../store/slices/indexCatalogodeBienes';
-import { type INodo } from '../interfaces/Nodo';
+import { data, type INodo } from '../interfaces/Nodo';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
@@ -35,7 +35,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
   const [action, set_action] = useState<string>('create');
 
   const [add_bien_is_active, set_add_bien_is_active] = useState<boolean>(false);
-  const { nodo } = useAppSelector((state) => state.bien);
+  const { nodo, code_bien, current_nodo } = useAppSelector((state) => state.bien);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const action_template = (node: INodo, Column: any) => {
@@ -48,7 +48,8 @@ export const CatalogodeBienesScreen: React.FC = () => {
                 dispatch(current_bien(node));
                 set_action('create_sub');
                 set_add_bien_is_active(true);
-                void dispatch(get_code_bien_service(null, 1));
+             //   on_submit_crear_hijo(node.data);
+
               }}
             >
               <Avatar
@@ -120,6 +121,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
   };
   useEffect(() => {
     void dispatch(get_bienes_service());
+  
   }, []);
 
 
@@ -131,6 +133,14 @@ export const CatalogodeBienesScreen: React.FC = () => {
   );
   };
 
+
+  const on_submit_crear_hijo= (data: any): void => {
+   console.log(data) 
+  void dispatch(get_code_bien_service(data.bien?.id_bien, data.bien?.nivel_jerarquico + 1)) 
+  }
+
+
+    
   return (
     <>
       <Grid
@@ -154,7 +164,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
                 dispatch(current_bien(initial_state_current_nodo));
                 set_action('create');
                 set_add_bien_is_active(true);
-                on_submit_crear_padre();
+             //   on_submit_crear_padre();
 
               }}
               type="button"
