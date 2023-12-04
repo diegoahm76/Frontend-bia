@@ -74,11 +74,11 @@ export interface FormLiquidacion {
 }
 
 export interface RowDetalles {
-  id: number,
-  mes_actual: string,
+  id: number;
   nombre_opcion: string;
   concepto: string;
   formula_aplicada: string;
   variables: Record<string, string>;
   valor_liquidado: string;
+  id_opcion_liquidacion: string;
 }

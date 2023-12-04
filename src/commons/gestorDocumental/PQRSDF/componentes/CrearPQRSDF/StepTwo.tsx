@@ -63,12 +63,17 @@ const StepTwo = () => {
     useState<boolean>(false);
 
   const on_submit_exhibit = (data: IObjExhibit): void => {
+    console.log(data);
     const exhibit_aux: IObjExhibit | undefined = exhibits.find(
       (p: IObjExhibit) => p.nombre_anexo === data.nombre_anexo
     );
     if (exhibit_aux === undefined) {
+      console.log(data);
       dispatch(set_exhibits([...exhibits, data]));
       dispatch(set_exhibit(initial_state_exhibit));
+      set_file(null);
+      set_file_name('');
+      set_action('agregar');
     } else {
       control_error(`Ya existe un archivo con nombre ${data.nombre_anexo}`);
     }
@@ -76,14 +81,37 @@ const StepTwo = () => {
 
   useEffect(() => {
     reset(exhibit);
-    if (exhibit.exhibit_link !== null) {
-      if (typeof exhibit.exhibit_link === 'string') {
-        const name = exhibit.exhibit_link?.split('/').pop() ?? '';
-        set_file_name(name);
+    if ((exhibit.id_anexo ?? null) !== null) {
+      if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
+        if (typeof exhibit.exhibit_link === 'string') {
+          const name = exhibit.exhibit_link?.split('/').pop() ?? '';
+          set_file_name(name);
+        } else {
+          if ('name' in exhibit.exhibit_link) {
+            set_file_name(String(exhibit.exhibit_link.name ?? ''));
+          }
+        }
+      } else {
+        dispatch(
+          set_exhibit({
+            ...exhibit,
+            exhibit_link: exhibit.metadato?.archivo?.ruta_archivo ?? null,
+          })
+        );
       }
     } else {
-      set_file_name('');
+      if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
+        if (typeof exhibit.exhibit_link === 'string') {
+          const name = exhibit.exhibit_link?.split('/').pop() ?? '';
+          set_file_name(name);
+        } else {
+          if ('name' in exhibit.exhibit_link) {
+            set_file_name(String(exhibit.exhibit_link.name ?? ''));
+          }
+        }
+      }
     }
+    dispatch(set_metadata(exhibit.metadato ?? initial_state_metadata));
   }, [exhibit]);
 
   useEffect(() => {
@@ -93,18 +121,17 @@ const StepTwo = () => {
         dispatch(
           set_exhibit({
             ...exhibit,
-            id_anexo: get_values('id_anexo'),
             nombre_anexo: get_values('nombre_anexo'),
-            orden_anexo_en_el_doc: get_values('orden_anexo_en_el_doc'),
+            orden_anexo_doc: get_values('orden_anexo_doc'),
             medio_almacenamiento: get_values('medio_almacenamiento'),
             cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
             medio_almacenamiento_otros_cual: get_values(
               'medio_almacenamiento_otros_cual'
             ),
             numero_folios: get_values('numero_folios'),
-            ya_digitalizado: get_values('ya_digitalizado'),
+            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
             exhibit_link: file,
-            metadata: metadata,
+            metadatos: metadata?.asunto ?? null !== null ? metadata : null,
           })
         );
       }
@@ -113,36 +140,96 @@ const StepTwo = () => {
 
   useEffect(() => {
     if (metadata !== null) {
+      if (metadata.asunto !== null && metadata.asunto !== '') {
+        dispatch(
+          set_exhibit({
+            ...exhibit,
+            nombre_anexo: get_values('nombre_anexo'),
+            orden_anexo_doc: get_values('orden_anexo_doc'),
+            medio_almacenamiento: get_values('medio_almacenamiento'),
+            cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+            medio_almacenamiento_otros_cual: get_values(
+              'medio_almacenamiento_otros_cual'
+            ),
+            numero_folios: get_values('numero_folios'),
+            ya_digitalizado: true,
+            exhibit_link: file,
+            metadatos: metadata,
+          })
+        );
+      } else {
+        dispatch(
+          set_exhibit({
+            ...exhibit,
+            nombre_anexo: get_values('nombre_anexo'),
+            orden_anexo_doc: get_values('orden_anexo_doc'),
+            medio_almacenamiento: get_values('medio_almacenamiento'),
+            cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+            medio_almacenamiento_otros_cual: get_values(
+              'medio_almacenamiento_otros_cual'
+            ),
+            numero_folios: get_values('numero_folios'),
+            ya_digitalizado: false,
+            exhibit_link: file,
+            metadatos: null,
+          })
+        );
+      }
+    } else {
       dispatch(
         set_exhibit({
           ...exhibit,
-          id_anexo: get_values('id_anexo'),
           nombre_anexo: get_values('nombre_anexo'),
-          orden_anexo_en_el_doc: get_values('orden_anexo_en_el_doc'),
+          orden_anexo_doc: get_values('orden_anexo_doc'),
           medio_almacenamiento: get_values('medio_almacenamiento'),
           cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
           medio_almacenamiento_otros_cual: get_values(
             'medio_almacenamiento_otros_cual'
           ),
           numero_folios: get_values('numero_folios'),
-          ya_digitalizado: get_values('ya_digitalizado'),
+          ya_digitalizado: false,
           exhibit_link: file,
-          metadata: metadata,
+          metadatos: null,
         })
       );
     }
   }, [metadata]);
 
   const add_metadata_form = (): void => {
-    if (exhibit.metadata === null) {
+    if (exhibit.metadatos === null) {
       dispatch(set_metadata(initial_state_metadata));
     } else {
-      dispatch(set_metadata(exhibit.metadata));
+      dispatch(set_metadata(exhibit.metadatos));
     }
     set_add_metadata_is_active(true);
   };
 
   const columns_list: GridColDef[] = [
+    {
+      field: 'descargar',
+      headerName: 'Ver',
+      width: 90,
+      renderCell: (params) => (
+        <>
+          {params.row.exhibit_link !== null &&
+            params.row.exhibit_link !== undefined &&
+            typeof exhibit.exhibit_link === 'string' &&
+            params.row.metadato.archivo.ruta_archivo !== '' &&
+            params.row.metadato.archivo.ruta_archivo !== null &&
+            typeof params.row.metadato.archivo.ruta_archivo === 'string' && (
+              <Tooltip title="Ver archivo">
+                <Grid item xs={1} md={1} spacing={1}>
+                  <DownloadButton
+                    fileUrl={params.row.metadato.archivo.ruta_archivo}
+                    fileName={'exhibit_link'}
+                    condition={false}
+                  />
+                </Grid>
+              </Tooltip>
+            )}
+        </>
+      ),
+    },
     {
       field: 'nombre_anexo',
       headerName: 'Nombre',
@@ -179,20 +266,6 @@ const StepTwo = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          {params.row.exhibit_link !== '' &&
-            params.row.exhibit_link !== null &&
-            typeof params.row.exhibit_link === 'string' && (
-              <Tooltip title="Ver archivo">
-                <Grid item xs={1} md={1} spacing={1}>
-                  <DownloadButton
-                    fileUrl={params.row.exhibit_link}
-                    fileName={'exhibit_link'}
-                    condition={false}
-                  />
-                </Grid>
-              </Tooltip>
-            )}
-
           <Tooltip title="Editar">
             <IconButton
               onClick={() => {
@@ -261,6 +334,7 @@ const StepTwo = () => {
         aux_items.push(option);
       }
     });
+    console.log(aux_items);
     dispatch(set_exhibits(aux_items));
   };
 
@@ -294,7 +368,9 @@ const StepTwo = () => {
               set_value: set_file,
               file_name,
               value_file:
-                exhibit.id_anexo !== null ? exhibit.exhibit_link ?? null : null,
+                (exhibit.id_anexo ?? null) !== null
+                  ? exhibit.exhibit_link ?? null
+                  : null,
             },
             {
               datum_type: 'input_controller',

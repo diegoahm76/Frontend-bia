@@ -30,6 +30,8 @@ interface IProps {
   message_success?: string | null;
   handle_submit?: any | null;
   validate?: any | null;
+  set_success: any;
+  step?: number | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -38,9 +40,19 @@ const FormStepper = ({
   message_success,
   handle_submit,
   validate,
+  set_success,
+  step,
 }: IProps) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
+  React.useEffect(() => {
+    setActiveStep(step ?? 0);
+  }, [step]);
+  React.useEffect(() => {
+    if (activeStep === configuration_steps.length) {
+      set_success(true);
+    }
+  }, [activeStep]);
 
   const isStepOptional = (step: number) => {
     return configuration_steps[step].optional ?? false;

@@ -109,6 +109,8 @@ export const initial_state_pqr: IObjPqr = {
   dias_para_respuesta: null,
   cantidad_anexos: null,
   nro_folios_totales: null,
+  anexos: [],
+  denuncia: null,
 };
 
 export const initial_state_pqr_request: IObjPqrRequest = {
@@ -154,13 +156,14 @@ export const person_types: IObjListType[] = [
 export const initial_state_exhibit: IObjExhibit = {
   id_anexo: null,
   nombre_anexo: null,
-  orden_anexo_en_el_doc: null,
+  orden_anexo_doc: null,
   medio_almacenamiento: null,
   cod_medio_almacenamiento: null,
   medio_almacenamiento_otros_cual: null,
   numero_folios: null,
   ya_digitalizado: null,
-  metadata: null,
+  exhibit_link: null,
+  metadatos: null,
 };
 
 export const initial_state_metadata: IObjMetaData = {
@@ -196,6 +199,7 @@ export const initial_state_filed: IObjFiled = {
   fecha_radicado: null,
   id_persona_radica: null,
   id_radicado_asociado: null,
+  numero_radicado_completo: null,
 };
 
 const initial_state: IPqrsdf = {

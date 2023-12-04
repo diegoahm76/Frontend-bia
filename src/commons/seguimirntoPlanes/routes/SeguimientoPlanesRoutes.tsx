@@ -14,15 +14,20 @@ import { RubrosRoutes } from '../Rubro/Rubro/router/RubrosRoutes';
 import { SubProgramasRoutes } from '../Subprogramas/router/SubProgramasRoutes';
 import { FuentesFinanciacionRoutes } from '../FinanciaciónIndicadores/router/FuentesFinanciacionRoutes';
 import { DetalleInversionRoutes } from '../DetalleInversionCuentas/router/DetalleInversionRoutes';
+import { ConceptoPOAIRoutes } from '../ConceptoPOAI/router/ConceptoPOAIRoutes';
+import { FuentesRoutes } from '../FuenteFinanciacion/router/FuentesFinanciacionRoutes';
+import { BancosRoutes } from '../BancoProyecto/router/BancosRoutes';
+import { PlanAdquisicionesRoutes } from '../PlanAnualAdquisiciones/router/PlanAdquisicionesRoutes';
+import { SeguimientoPAIRoutes } from '../SeguimientoPAI/router/SeguimientoPAIRoutes';
 
 const routes = [
   {
-    path: 'informacion/',
+    path: 'informacion/', // * Planes
     name: 'informacion',
     component: () => <PlanesRoutes />,
   },
   {
-    path: 'eje/',
+    path: 'eje/', // eje estrategico
     name: 'eje',
     component: () => <EjeEstretegicoRoutes />,
   },
@@ -90,6 +95,36 @@ const routes = [
     path: 'detalle_inversion/',
     name: 'detalle_inversion',
     component: () => <DetalleInversionRoutes />,
+  },
+  // Concepto POAI
+  {
+    path: 'poai/',
+    name: 'poai',
+    component: () => <ConceptoPOAIRoutes />,
+  },
+  // * Fuentes de financiacion poai
+  {
+    path: 'fuentes/',
+    name: 'fuentes',
+    component: () => <FuentesRoutes />,
+  },
+  // bancos
+  {
+    path: 'banco/',
+    name: 'banco',
+    component: () => <BancosRoutes />,
+  },
+  // PlanAdquisicionesRoutes
+  {
+    path: 'plan_anual/',
+    name: 'plan_anual',
+    component: () => <PlanAdquisicionesRoutes />,
+  },
+  // SeguimientoPAIRoutes
+  {
+    path: 'seguimiento/',
+    name: 'seguimiento',
+    component: () => <SeguimientoPAIRoutes />,
   },
   {
     path: '/*',

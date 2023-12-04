@@ -9,6 +9,7 @@ interface IProps {
   type_button: any;
   disabled?: boolean | null;
   style_button?: any;
+  href?: string | null;
   color_button?: OverridableStringUnion<
     | 'inherit'
     | 'primary'
@@ -30,10 +31,16 @@ const FormButton = ({
   disabled,
   style_button,
   color_button,
+  href,
 }: IProps) => {
   return (
     <Button
-      color={(label === 'GUARDAR' || label === 'guardar' || label === 'Guardar') ? 'success' : color_button ?? 'primary'}
+      href={href ?? ''}
+      color={
+        label === 'GUARDAR' || label === 'guardar' || label === 'Guardar'
+          ? 'success'
+          : color_button ?? 'primary'
+      }
       fullWidth
       variant={variant_button}
       // eslint-disable-next-line @typescript-eslint/no-misused-promises

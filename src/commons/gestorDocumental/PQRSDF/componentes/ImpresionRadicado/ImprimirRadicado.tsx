@@ -53,17 +53,13 @@ const ImprimirRadicado = ({ visor, set_visor }: IProps) => {
   const [doc, set_doc] = useState<jsPDF>(new jsPDF());
   const [doc_height, set_doc_height] = useState<number>(0);
 
-  // useEffect(() => {
-  //   if (filed.id_radicado !== null) {
-  //     set_doc(new jsPDF());
-  //     set_doc_height(doc.internal.pageSize.getHeight());
-  //   }
-  // }, [filed]);
   useEffect(() => {
-    set_doc(new jsPDF());
-    set_doc_height(doc.internal.pageSize.getHeight());
-    crear_encabezado();
-  }, []);
+    if (filed.numero_radicado_completo !== null) {
+      set_doc(new jsPDF());
+      set_doc_height(doc.internal.pageSize.getHeight());
+      crear_encabezado();
+    }
+  }, [filed]);
 
   const nueva_pagina: (
     doc: jsPDF,
@@ -78,7 +74,9 @@ const ImprimirRadicado = ({ visor, set_visor }: IProps) => {
   const crear_encabezado: () => {
     title: string;
   } = () => {
-    const title = `Resumen de radicado número${filed.nro_radicado ?? ''}`;
+    const title = `Resumen de radicado número ${
+      filed.numero_radicado_completo ?? ''
+    }`;
     doc.setFont('Arial', 'normal');
     doc.setFontSize(12);
     doc.addImage(logo_cormacarena_h, 'PNG', 160, 10, 40, 15);
@@ -105,7 +103,7 @@ const ImprimirRadicado = ({ visor, set_visor }: IProps) => {
     doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
     doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
     const linea_uno = `Tipo de radicado: ${
-      filed.tipo_radicado ?? 'Entrante'
+      filed.nombre_tipo_radicado ?? 'Entrante'
     }               Fecha: ${filed.fecha_radicado ?? '2023/10/15 18:00:00'}`;
     const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
     const x_linea_uno =
@@ -113,15 +111,15 @@ const ImprimirRadicado = ({ visor, set_visor }: IProps) => {
     doc.text(linea_uno, x_linea_uno, 45);
 
     const linea_dos = `Número de radicado: ${
-      filed.nro_radicado ?? '654664646546'
-    }               Asunto: ${'ndlsdkdklndksdslnjds'}`;
+      filed.numero_radicado_completo ?? '654664646546'
+    }               Asunto: ${filed.asunto}`;
     const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
     const x_linea_dos =
       (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
     doc.text(linea_dos, x_linea_dos, 55);
 
     const linea_tres = `Titular: ${
-      person.nombre_completo ?? 'Edgar Sneider Fuentes Agudelo'
+      filed.titular ?? 'Edgar Sneider Fuentes Agudelo'
     }`;
     const ancho_texto_linea_tres = doc.getTextWidth(linea_tres);
     const x_linea_tres =

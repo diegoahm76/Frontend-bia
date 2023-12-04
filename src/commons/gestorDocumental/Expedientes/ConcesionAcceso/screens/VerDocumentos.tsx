@@ -2,11 +2,10 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useAppDispatch } from "../../../../../hooks";
- // import { ver_documentos } from "../thunks/ConcesionAcceso";
+import { ver_documentos } from "../thunks/ConcesionAcceso";
 import dayjs from "dayjs";
 import { buscar_expediente_id } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
-import React from "react";
-// import { obtener_documentos_expediente, obtener_metadata } from "../../ConsultaExpedientesDocumentales/thunks/ConsultaExpedientes";
+import { obtener_documentos_expediente, obtener_metadata } from "../../consultaExpedientesDocumentales/thunks/ConsultaExpedientes";
 
 interface IProps {
     is_modal_active: boolean,
@@ -26,11 +25,11 @@ export const VerDocumentos: React.FC<IProps> = (props: IProps) => {
     }, []);
 
     const ver_expedientes_fc: () => void = () => {
-        // dispatch(ver_documentos()).then((response: any) => {
-        //     if(response.success){
-        //         set_documentos(response.data);
-        //     }
-        // });
+        dispatch(ver_documentos()).then((response: any) => {
+            if(response.success){
+                set_documentos(response.data);
+            }
+        });
     }
 
     const columns: GridColDef[] = [
@@ -69,21 +68,21 @@ export const VerDocumentos: React.FC<IProps> = (props: IProps) => {
         set_seleccion_documento(documentos.find((e: any) => e.id_concesion_acc === seleccion_documento[0]));
     }
 
-    // const boton_seleccionar: any = () => {
-    //     if(seleccion_documento !== null){
-    //         dispatch(obtener_metadata(seleccion_documento.id_documento_exp)).then((response: any) => {
-    //             if(response.success){
-    //                 dispatch(obtener_documentos_expediente(response.data.id_expediente_documental, seleccion_documento.id_documento_exp, '', '')).then(((response: any) => {
-    //                     response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
-    //                 }));
-    //                 dispatch(buscar_expediente_id(response.data.id_expediente_documental, '', '', '')).then(((response: any) => {
-    //                     response.data !== null ? props.set_expediente(response.data) : props.set_expediente(null);
-    //                 }));
-    //                 props.set_is_modal_active(false);
-    //             }
-    //         });
-    //     }
-    // }
+    const boton_seleccionar: any = () => {
+        if(seleccion_documento !== null){
+            dispatch(obtener_metadata(seleccion_documento.id_documento_exp)).then((response: any) => {
+                if(response.success){
+                    dispatch(obtener_documentos_expediente(response.data.id_expediente_documental, seleccion_documento.id_documento_exp, '', '')).then(((response: any) => {
+                        response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+                    }));
+                    dispatch(buscar_expediente_id(response.data.id_expediente_documental, '', '', '')).then(((response: any) => {
+                        response.data !== null ? props.set_expediente(response.data) : props.set_expediente(null);
+                    }));
+                    props.set_is_modal_active(false);
+                }
+            });
+        }
+    }
 
     return (
         <Dialog
@@ -110,9 +109,7 @@ export const VerDocumentos: React.FC<IProps> = (props: IProps) => {
                 <Button
                     color='primary'
                     variant='contained'
-                   // onClick={boton_seleccionar}
-                    
-                    >Seleccionar</Button>
+                    onClick={boton_seleccionar}>Seleccionar</Button>
                 <Button
                     color='inherit'
                     variant='contained'

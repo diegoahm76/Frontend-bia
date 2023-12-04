@@ -11,13 +11,7 @@ import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
 import { reset_state } from '../store/slice/centralDigitalizacionSlice';
 import FormStepper from '../../../../components/partials/form/FormStepper';
-import {
-  get_document_types_service,
-  get_list_applicant_types_service,
-  get_list_on_behalf_service,
-  get_person_types_service,
-  get_pqrs_status_aux_service,
-} from '../store/thunks/pqrsdfThunks';
+import {} from '../store/thunks/pqrsdfThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function SolicitudesPendientesScreen(): JSX.Element {

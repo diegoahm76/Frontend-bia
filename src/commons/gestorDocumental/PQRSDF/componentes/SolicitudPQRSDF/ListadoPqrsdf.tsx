@@ -31,10 +31,10 @@ import PqrDetailDialog from './PqrDetailDialog';
 const ListadoPqrsdf = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { pqrs } = useAppSelector((state) => state.pqrsdf_slice);
+  const { pqrs, pqr } = useAppSelector((state) => state.pqrsdf_slice);
   const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
 
-  const [selectedPqr, setSelectedPqr] = useState<any>();
+  const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
   const [expandedRows, setExpandedRows] = useState<
     DataTableExpandedRows | DataTableValueArray | undefined
@@ -46,52 +46,61 @@ const ListadoPqrsdf = () => {
     setSelectedPqr({});
     set_detail_is_active(false);
   }, [pqrs]);
+  useEffect(() => {
+    console.log(button_option);
+  }, [button_option]);
 
   useEffect(() => {
-    // if ('id' in selectedPqr) {
-    // cambiar por id_pqr
-    // setear pqr seleccionado en pqr variable
-    // dispatch(
-    //   set_pqr(
-    //     pqrs.find(
-    //       (objeto: IObjPqr) => objeto.id_pqr === selectedPqr.id_pqr
-    //     ) ?? initial_state_pqr
-    //   )
-    // );
-    // dispatch(set_pqr_request(initial_state_pqr_request));
+    console.log(selectedPqr);
+    if (selectedPqr !== null) {
+      if ('id_PQRSDF' in selectedPqr) {
+        dispatch(
+          set_pqr(
+            pqrs.find(
+              (objeto: IObjPqr) => objeto.id_PQRSDF === selectedPqr.id_PQRSDF
+            ) ?? initial_state_pqr
+          )
+        );
+        dispatch(set_pqr_request(initial_state_pqr_request));
 
-    // validar if esta radicado el pqr
-    set_button_option('component');
-    // si no lo esta
-    //set_button_option('restart')
-    // }
-    // if ('id_pqr_request' in selectedPqr) {
-    //   set_button_option('request');
-    //   const pqr = pqrs.find(
-    //     (objeto: IObjPqr) =>
-    //       objeto.id_pqr === selectedPqr.id_pqr_request.split('-')[0]
-    //   );
-    //   dispatch(set_pqr(pqr ?? initial_state_pqr));
-    //   dispatch(
-    //     set_pqr_request(
-    //       pqr.pqr_request.find(
-    //         (objeto: IObjPqrRequest) =>
-    //           objeto.id_pqr_request === selectedPqr.id_pqr_request
-    //       ) ?? initial_state_pqr_request
-    //     )
-    //   );
-    // }
+        // validar if esta radicado el pqr
+        if (selectedPqr.fecha_radicado !== null) {
+          set_button_option('complement');
+        } else {
+          set_button_option('restart');
+        }
+      }
+      if ('id_solicitud_al_usuario_sobre_pqrsdf' in selectedPqr) {
+        set_button_option('request');
+        const pqr = pqrs.find(
+          (objeto: IObjPqr) =>
+            objeto.id_PQRSDF === selectedPqr.id_pqrsdf.split('-')[0]
+        );
+        dispatch(set_pqr(pqr ?? initial_state_pqr));
+        dispatch(
+          set_pqr_request(
+            pqr?.solicitudes_pqr?.find(
+              (objeto: IObjPqrRequest) =>
+                objeto.id_solicitud_al_usuario_sobre_pqrsdf ===
+                selectedPqr.id_solicitud_al_usuario_sobre_pqrsdf
+            ) ?? initial_state_pqr_request
+          )
+        );
+      }
+    }
   }, [selectedPqr]);
 
-  const get_product_severity = (pqr: IObjPqr) => {
-    switch (pqr.pqr_status) {
-      case 'INSTOCK':
+  const get_product_severity: any = (pqr: IObjPqr) => {
+    switch (pqr.id_estado_actual_solicitud) {
+      case '6' || '7' || '8':
         return 'success';
+      case '1' || '2':
+        return 'primary';
 
-      case 'LOWSTOCK':
+      case '4':
         return 'warning';
 
-      case 'OUTOFSTOCK':
+      case '3':
         return 'danger';
 
       default:
@@ -101,33 +110,33 @@ const ListadoPqrsdf = () => {
 
   const columns_pqrs: ColumnProps[] = [
     {
-      field: 'pqr_type',
+      field: 'cod_tipo_PQRSDF',
       header: 'Tipo de tramite',
       sortable: true,
     },
     {
-      field: 'created_at',
+      field: 'fecha_registro',
       header: 'Fecha de creación',
       sortable: true,
     },
     {
-      field: 'filling_at',
+      field: 'fecha_radicado',
       header: 'Fecha de radicado',
       sortable: true,
     },
     {
-      field: 'filling_number',
+      field: 'numero_radicado',
       header: 'Número de radicado',
       sortable: true,
     },
 
     {
-      field: 'pqr_status',
+      field: 'nombre_estado_solicitud',
       header: 'Estado',
       sortable: true,
       body: (rowData) => (
         <Tag
-          value={rowData.pqr_status}
+          value={rowData.nombre_estado_solicitud}
           severity={get_product_severity(rowData)}
         ></Tag>
       ),
@@ -146,20 +155,24 @@ const ListadoPqrsdf = () => {
     },
   ];
   const columns_solicitud: ColumnProps[] = [
-    { field: 'request_type', header: 'Tipo de solicitud', sortable: true },
     {
-      field: 'request_at',
+      field: 'nombre_tipo_oficio',
+      header: 'Tipo de solicitud',
+      sortable: true,
+    },
+    {
+      field: 'fecha_radicado_salida',
       header: 'Fecha de radicado de salida',
       sortable: true,
     },
     {
-      field: 'request_number',
+      field: 'numero_radicado_salida',
       header: 'Número de radicado de salida',
       sortable: true,
     },
 
     {
-      field: 'notification_at',
+      field: 'fecha_radicado_salida',
       header: 'Fecha de notificación',
       sortable: true,
     },
@@ -185,20 +198,24 @@ const ListadoPqrsdf = () => {
   ];
   const definition_levels = [
     {
-      column_id: 'id_pqr',
+      column_id: 'id_PQRSDF',
       level: 0,
       columns: columns_pqrs,
       table_name: 'PQRSDF',
       property_name: '',
     },
     {
-      column_id: 'id_pqr_request',
+      column_id: 'id_solicitud_al_usuario_sobre_pqrsdf',
       level: 1,
       columns: columns_solicitud,
       table_name: 'Solicitudes de PQRSDF',
       property_name: 'orders',
     },
   ];
+
+  const get_x: any = (data: any) => {
+    console.log(data);
+  };
 
   return (
     <div className="card">
@@ -209,6 +226,7 @@ const ListadoPqrsdf = () => {
         setSelectedItem={setSelectedPqr}
         expandedRows={expandedRows}
         setExpandedRows={setExpandedRows}
+        onRowToggleFunction={get_x}
       />
       <Grid container direction="row" padding={2} spacing={2}>
         <Grid item xs={12} md={3}>
@@ -225,6 +243,7 @@ const ListadoPqrsdf = () => {
 
         <Grid item xs={12} md={3}>
           <FormButton
+            href={`/#/app/gestor_documental/pqrsdf/crear_pqrsdf/${pqr.id_PQRSDF}`}
             variant_button="contained"
             on_click_function={null}
             icon_class={null}

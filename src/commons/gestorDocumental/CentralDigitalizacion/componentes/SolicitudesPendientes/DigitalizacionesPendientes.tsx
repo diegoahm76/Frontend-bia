@@ -16,7 +16,6 @@ import {
   set_request_status,
   set_request_type,
 } from '../../store/slice/centralDigitalizacionSlice';
-import { get_pqrs_service } from '../../store/thunks/pqrsdfThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DigitalizacionesPendientes = () => {

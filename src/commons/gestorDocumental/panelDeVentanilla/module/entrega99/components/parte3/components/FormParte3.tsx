@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, TextField } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../../../../../fileWeight/fileWeight';
@@ -11,9 +11,17 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BuildIcon from '@mui/icons-material/Build';
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 export const FormParte3 = (): JSX.Element => {
+
+  // ? hooks
   const { controlTercerPasoEntrega99 } = usePanelVentanilla();
+
+  //* context
+  const { handleModalAgregarMetadatos } = useContext(
+    ModalAndLoadingContext
+  );
 
   return (
     <>
@@ -201,6 +209,7 @@ export const FormParte3 = (): JSX.Element => {
               onClick={() => {
                 console.log('click siuuu');
                 console.log('abriendo modal de metadatos');
+                handleModalAgregarMetadatos(true);
               }}
             >
               AGREGAR METADATOS

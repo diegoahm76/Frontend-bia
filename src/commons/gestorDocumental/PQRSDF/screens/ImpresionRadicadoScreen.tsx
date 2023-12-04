@@ -27,6 +27,7 @@ import {
 import FormStepper from '../../../../components/partials/form/FormStepper';
 import {
   get_document_types_service,
+  get_filed_types_service,
   get_list_applicant_types_service,
   get_list_on_behalf_service,
   get_person_types_service,
@@ -43,7 +44,14 @@ export function ImpresionRadicadoScreen(): JSX.Element {
 
   const initial_values = (): void => {};
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    void dispatch(get_filed_types_service());
+  }, []);
+
+  useEffect(() => {
+    console.log(filed);
+  }, [filed]);
+
   const descargarPDF = () => {
     // Puedes convertir el contenido del visor a Blob
     const byteString = atob(visor.split(',')[1]);
@@ -61,7 +69,7 @@ export function ImpresionRadicadoScreen(): JSX.Element {
     const enlaceTemporal = document.createElement('a');
     enlaceTemporal.href = URL.createObjectURL(blob);
     enlaceTemporal.download = `reporte_radicado_${
-      filed.nro_radicado ?? ''
+      filed.numero_radicado_completo ?? ''
     }.pdf`;
     enlaceTemporal.click();
   };
@@ -82,15 +90,17 @@ export function ImpresionRadicadoScreen(): JSX.Element {
           <Title title="Impresión de radicados"></Title>
         </Grid>
         <SeleccionarRadicado />
-        {/* {filed.id_radicado !== null && <ImprimirRadicado />} */}
-        <ImprimirRadicado visor={visor} set_visor={set_visor} />
+        {filed.numero_radicado_completo !== null && (
+          <ImprimirRadicado visor={visor} set_visor={set_visor} />
+        )}
+
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton
               variant_button="contained"
               on_click_function={descargarPDF}
               icon_class={<PrintIcon />}
-              // disabled={filed.id_radicado === null}
+              disabled={filed.numero_radicado_completo === null}
               label="Imprimir"
               type_button="button"
               color_button="warning"

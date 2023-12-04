@@ -18,6 +18,8 @@ import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { tipo_medida } from '../../../Indicadores/choices/selects';
 import { useFuenteFinanciacionHook } from '../../hooks/useFuenteFinanciacionHook';
 import { DataContextFuentesFinanciacion } from '../../context/context';
+import NumberFormat from 'react-number-format';
+import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarFuenteFinanciacion: React.FC = () => {
@@ -26,8 +28,8 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
     errors_fuente,
     reset_fuente,
     data_watch_fuente,
-    set_value_fuente, 
-    
+    set_value_fuente,
+
     onsubmit_fuente,
     onsubmit_editar,
     is_savingd_fuente,
@@ -174,23 +176,19 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  type="number"
-                  label="Vano 1"
+                  label="Año 1"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  // error={!!errors_fuente.vano_1}
-                  // helperText={
-                  //   errors_fuente.vano_1
-                  //     ? 'Es obligatorio ingresar un numero'
-                  //     : 'Ingrese un numero'
-                  // }
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
                 />
               )}
             />
-          </Grid>
+          </Grid>{' '}
           <Grid item xs={12} sm={6} md={3}>
             <Controller
               name="vano_2"
@@ -200,13 +198,16 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  type="number"
-                  label="Vano 2"
+                  // type="number"
+                  label="Año 2"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
                   // error={!!errors_fuente.vano_2}
                   // helperText={
                   //   errors_fuente.vano_2
@@ -226,13 +227,16 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  type="number"
-                  label="Vano 3"
+                  // type="number"
+                  label="Año 3"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
                   // error={!!errors_fuente.vano_3}
                   // helperText={
                   //   errors_fuente.vano_3
@@ -252,13 +256,16 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  type="number"
-                  label="Vano 4"
+                  // type="number"
+                  label="Año 4"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
                   onChange={onChange}
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
                   // error={!!errors_fuente.vano_4}
                   // helperText={
                   //   errors_fuente.vano_4
@@ -269,7 +276,6 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
               )}
             />
           </Grid>
-
           <Grid item xs={12} sm={6}>
             <Controller
               name="valor_total"
@@ -286,6 +292,9 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                   disabled={true}
                   required={true}
                   onChange={onChange}
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
                   error={!!errors_fuente.valor_total}
                   helperText={
                     errors_fuente.valor_total

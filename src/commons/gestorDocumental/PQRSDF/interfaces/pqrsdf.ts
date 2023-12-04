@@ -135,6 +135,8 @@ export interface IObjPqr {
   dias_para_respuesta?: number | null; // tiempo de respuesta
   cantidad_anexos?: number | null;// total de anexos
   nro_folios_totales?: number | null; // total folios en anexos
+  anexos?: IObjExhibit[];
+  denuncia: null;
 }
 
 export interface IObjPqrRequest {
@@ -154,16 +156,17 @@ export interface IObjPqrRequest {
 export interface IObjExhibit {
   id_anexo?: number | null;
   nombre_anexo?: string | null;
-  orden_anexo_en_el_doc?: number | null;
+  orden_anexo_doc?: number | null;
   medio_almacenamiento?: string | null;
   cod_medio_almacenamiento?: string | number | null;
   medio_almacenamiento_otros_cual?: string | number | null;
   numero_folios?: number | null;
   ya_digitalizado?: boolean | null;
   observacion_digitalizacion?: string | null;
-  exhibit_link?: string | null;
+  exhibit_link?: string | IObjFile | null;
   id_docu_de_arch_exp?: number | null;
-  metadata: IObjMetaData | null;
+  metadatos: IObjMetaData | null;
+  metadato?: IObjMetaData | null;
 }
 
 export interface IObjMetaData {
@@ -188,10 +191,21 @@ export interface IObjMetaData {
   medio_almacenamiento?: string | null;
   palabras_clave_doc?: string | null;
   id_archivo_en_sistema?: number | null;
+  archivo?: IObjFile | null;
 
   id_tipologia_doc?: number | null;
   tipologia_doc?: string | null;
   tipologia_no_creada_en_TRD?: string | null;
+}
+export interface IObjFile{
+  
+es_Doc_elec_archivo?: boolean | null;
+fecha_creacion_doc?:string | null;
+formato?: string | null
+id_archivo_digital?: number | null;
+nombre_de_Guardado?: string|null;
+ruta_archivo?:string|null;
+tamagno_kb?:number|null;
 }
 
 export interface IObjFiled {
@@ -201,7 +215,11 @@ export interface IObjFiled {
   prefijo_radicado?: string | number | null;
   agno_radicado?: string | number | null;
   nro_radicado?: string | number | null;
+  numero_radicado_completo?: string | number | null;
   fecha_radicado?: string | null;
   id_persona_radica?: number | null;
   id_radicado_asociado?: number | null;
+  nombre_tipo_radicado?: string | null;
+  titular?: string | number;
+  asunto?:string|null;
 }

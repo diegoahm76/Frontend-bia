@@ -7,30 +7,13 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_attorney,
-  set_attorneys,
-  set_companies,
-  set_company,
-  set_destination_offices,
-  set_document_types,
   set_file_categories,
   set_file_origin,
   set_file_origins,
   set_file_typologies,
   set_file_typology,
-  set_grantor,
-  set_grantors,
-  set_list_applicant_types,
-  set_list_on_behalf_of,
-  set_list_pqr_status,
-  set_media_types,
   set_person,
-  set_person_types,
   set_persons,
-  set_pqr_types,
-  set_pqrs,
-  set_presentation_types,
-  set_storage_mediums,
 } from '../slice/centralDigitalizacionSlice';
 import { api } from '../../../../../api/axios';
 import { IObjListType } from '../../interfaces/central_digitalizacion';
@@ -88,114 +71,6 @@ const map_list = (
   return list_aux;
 };
 
-// Obtener tipos documento
-export const get_document_types_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get('personas/tipos-documento/get-list/');
-      dispatch(set_document_types(data));
-      return data;
-    } catch (error: any) {
-      console.log('get_document_types_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// Obtener tipos pqr
-export const get_pqr_types_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get('gestor/choices/cod-tipo-pqrs/');
-      dispatch(
-        set_pqr_types(map_list(data.data, false, 'value', 'value', 'label'))
-      );
-      return data;
-    } catch (error: any) {
-      console.log('get_pqr_types_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-// Obtener formas presentacion pqr
-export const get_presentation_types_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        'gestor/choices/forma-presentacion-pqrsdf/'
-      );
-      dispatch(set_presentation_types(map_list(data, true)));
-      return data;
-    } catch (error: any) {
-      console.log('get_presentation_types_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-// Obtener formas presentacion pqr
-export const get_media_types_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        'gestor/pqr/tipos_pqr/buscar-medio-solicitud/'
-      );
-      dispatch(
-        set_media_types(
-          map_list(
-            data.data,
-            false,
-            'id_medio_solicitud',
-            'id_medio_solicitud',
-            'nombre'
-          )
-        )
-      );
-      return data;
-    } catch (error: any) {
-      console.log('get_media_types_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-// Obtener formas sucursales
-export const get_offices_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        'transversal/sucursales/sucursales-empresa-lista/1'
-      );
-      console.log(data);
-      dispatch(
-        set_destination_offices(
-          map_list(data.data, false, 'id_sucursal', 'id_sucursal', 'sucursal')
-        )
-      );
-      return data;
-    } catch (error: any) {
-      console.log('get_offices_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-// Obtener medios almacenamientos
-export const get_storage_mediums_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get('gestor/choices/medio-almacenamiento/');
-      dispatch(set_storage_mediums(map_list(data, true)));
-      return data;
-    } catch (error: any) {
-      console.log('get_storage_mediums_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
 // Obtener categorias de archivo
 export const get_file_categories_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -255,73 +130,6 @@ export const get_file_typology_service = (): any => {
   };
 };
 
-// Obtener tipos persona
-export const get_person_types_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get('choices/tipo-persona/');
-
-      dispatch(set_person_types(map_list(data, true)));
-      console.log(data);
-      return data;
-    } catch (error: any) {
-      console.log('get_person_types_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// Obtener lista en nombre de
-export const get_list_applicant_types_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get('gestor/choices/tipo-consulta-pqrsdf/');
-      dispatch(set_list_applicant_types(map_list(data, true)));
-      console.log(data);
-      return data;
-    } catch (error: any) {
-      console.log('get_list_applicant_types_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// Obtener lista en representacion de
-export const get_list_on_behalf_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        'gestor/choices/tipo-representacion-pqrsdf/'
-      );
-      dispatch(set_list_on_behalf_of(map_list(data, true)));
-      console.log(data);
-      return data;
-    } catch (error: any) {
-      console.log('get_list_on_behalf_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// Obtener lista nuevo, o existente
-export const get_pqrs_status_aux_service = (): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get('gestor/choices/estado-pqrsdf/');
-      dispatch(set_list_pqr_status(map_list(data, true)));
-      console.log(data);
-      return data;
-    } catch (error: any) {
-      console.log('get_pqrs_status_aux_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
 // obtener personas filtro
 export const get_persons_service = (
   type: string | number | null,
@@ -346,8 +154,6 @@ export const get_persons_service = (
       console.log(data);
       if (is_person) {
         dispatch(set_persons(data.data));
-      } else {
-        dispatch(set_grantors(data.data));
       }
       if (data.data.length > 0) {
         control_success('Se encontraron personas');
@@ -357,152 +163,6 @@ export const get_persons_service = (
       return data;
     } catch (error: any) {
       console.log('get_persons_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// obtener persona por documento
-export const get_person_document_service = (
-  type: string | number,
-  document: string | number,
-  is_person: boolean
-): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        `personas/get-personas-by-document/${type}/${document}/`
-      );
-      console.log(data);
-
-      if ('data' in data) {
-        if (is_person) {
-          dispatch(set_person(data.data));
-        } else {
-          dispatch(set_grantor(data.data));
-        }
-        control_success('Se selecciono la persona ');
-      } else {
-        control_error(data.detail);
-      }
-      return data;
-    } catch (error: any) {
-      console.log('get_person_document_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// obtener empresas filtro
-export const get_companies_service = (
-  type: string | number | null,
-  document: string | number | null,
-  razon_social: string | null,
-  comercial_name: string | null
-): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        `personas/get-empresas-filters/?tipo_persona=J&tipo_documento=${
-          type ?? ''
-        }&numero_documento=${document ?? ''}&razon_social=${
-          razon_social ?? ''
-        }&nombre_comercial=${comercial_name ?? ''}`
-      );
-      dispatch(set_companies(data.data));
-      console.log(data);
-      if (data.data.length > 0) {
-        control_success('Se encontraron empresas');
-      } else {
-        control_error('No se encontro empresa');
-      }
-      return data;
-    } catch (error: any) {
-      console.log('get_companies_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// obtener empresa por documento
-export const get_company_document_service = (
-  type: string | number,
-  document: string | number
-): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        `personas/get-empresa-by-document/${type}/${document}/`
-      );
-      console.log(data);
-
-      if ('data' in data) {
-        dispatch(set_company(data.data));
-
-        control_success('Se selecciono la empresa ');
-      } else {
-        control_error(data.detail);
-      }
-      return data;
-    } catch (error: any) {
-      console.log('get_company_document_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// obtener apoderados
-export const get_attorneys_service = (id: string | number): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        `personas/apoderados-personas/get-list/${id}/`
-      );
-      console.log(data);
-      dispatch(set_attorneys(data.data));
-
-      if ('data' in data) {
-        if (data.data.length > 0) {
-          control_success('Se encontraron apoderados');
-        } else {
-          control_error('No se encontro apoderado');
-        }
-      } else {
-        control_error(data.detail);
-      }
-      return data;
-    } catch (error: any) {
-      console.log('get_attorneys_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// obtener apoderados
-export const get_pqrs_service = (id: string | number): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(`gestor/pqr/get_pqrsdf/${id}/`);
-      console.log(data);
-      dispatch(set_pqrs(data.data));
-
-      if ('data' in data) {
-        if (data.data.length > 0) {
-          control_success('Se encontraron pqrs');
-        } else {
-          control_error('No se encontrarón pqrs');
-        }
-      } else {
-        control_error(data.detail);
-      }
-      return data;
-    } catch (error: any) {
-      console.log('get_pqrs_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
