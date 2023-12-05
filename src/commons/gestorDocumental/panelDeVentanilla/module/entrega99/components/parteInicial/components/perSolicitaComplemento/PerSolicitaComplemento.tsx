@@ -41,7 +41,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Nombres"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataSolicita?.data?.nombres}
+              value={infoInicialUsuario?.dataSolicita?.data?.nombres ?? 'N/A'}
               inputProps={{
                 maxLength: 50,
               }}
@@ -55,7 +55,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Apellidos"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataSolicita?.data?.apellidos}
+              value={infoInicialUsuario?.dataSolicita?.data?.apellidos ?? 'N/A'}
               inputProps={{
                 maxLength: 10,
               }}
@@ -69,7 +69,9 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               disabled
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataSolicita?.data?.tipo_documento}
+              value={
+                infoInicialUsuario?.dataSolicita?.data?.tipo_documento ?? 'N/A'
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -80,7 +82,10 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataSolicita?.data?.numero_documento}
+              value={
+                infoInicialUsuario?.dataSolicita?.data?.numero_documento ??
+                'N/A'
+              }
             />
           </Grid>
 
@@ -92,7 +97,10 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataSolicita?.data?.unidad_organizacional_actual}
+              value={
+                infoInicialUsuario?.dataSolicita?.data
+                  ?.unidad_organizacional_actual ?? 'N/A'
+              }
             />
           </Grid>
         </Grid>

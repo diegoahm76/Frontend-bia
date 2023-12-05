@@ -141,6 +141,9 @@ export const FormParte2 = (): JSX.Element => {
           >
             Siguiente
           </Button>
+
+
+          
          {/* <Button
             variant="contained"
             color="warning"

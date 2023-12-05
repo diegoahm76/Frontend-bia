@@ -24,7 +24,7 @@ export const ParteInicial: React.FC = (): JSX.Element => {
 
   //* context declaration
   const { setInfoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
-  const { generalLoading, handleGeneralLoading } = useContext(
+  const { generalLoading, handleGeneralLoading, handleSecondLoading } = useContext(
     ModalAndLoadingContext
   );
 
@@ -37,7 +37,8 @@ export const ParteInicial: React.FC = (): JSX.Element => {
     void getInitialData(
       currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
       navigate,
-      handleGeneralLoading
+      handleGeneralLoading,
+      handleSecondLoading,
     ).then((data) => {
       /*{
          dataTitular: {},
@@ -56,7 +57,7 @@ export const ParteInicial: React.FC = (): JSX.Element => {
           justifyContent: 'center',
           background: '#FAFAFA',
           borderRadius: '15px',
-          p: '1.2rem',
+          p: '2rem',
           mt: '1.2rem',
           mb: '1.2rem',
           boxShadow: '0px 3px 6px #042F4A26',

@@ -1,13 +1,43 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, TextField } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useSstepperFn } from '../../stepper/functions/useSstepperFn';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
+import { SolicitudAlUsuarioContext } from '../../../context/SolicitudUsarioContext';
+import { formatDate } from '../../../../../../../../utils/functions/formatDate';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 export const FormParte1 = (): JSX.Element => {
   // ? stepper hook
   const { handleNext } = useSstepperFn();
+
+  //* context declaration
+  const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+  const { secondLoading } = useContext(ModalAndLoadingContext);
+
+
+
+  if (secondLoading) {
+    return (
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          justifyContent: 'center',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '2rem',
+          mt: '1.2rem',
+          mb: '1.2rem',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Loader altura={280} />
+      </Grid>
+    );
+  }
 
   return (
     <form
@@ -29,10 +59,11 @@ export const FormParte1 = (): JSX.Element => {
             size="small"
             label="Tipo de PQRSDF"
             variant="outlined"
-            value={'Definición nueva pqrsdf'}
+            InputLabelProps={{ shrink: true }}
             inputProps={{
               maxLength: 50,
             }}
+            value={infoInicialUsuario?.detallePQRSDF?.data?.tipo ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -42,10 +73,13 @@ export const FormParte1 = (): JSX.Element => {
             size="small"
             label="Estado"
             variant="outlined"
-            value={'En espera de respuesta'}
+            InputLabelProps={{ shrink: true }}
             inputProps={{
               maxLength: 10,
             }}
+            value={
+              infoInicialUsuario?.detallePQRSDF?.data?.estado_actual ?? 'N/A'
+            }
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -55,7 +89,8 @@ export const FormParte1 = (): JSX.Element => {
             label="Número de radicado de entrada"
             disabled
             variant="outlined"
-            value={'#8'}
+            InputLabelProps={{ shrink: true }}
+            value={infoInicialUsuario?.detallePQRSDF?.data?.radicado ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -65,7 +100,12 @@ export const FormParte1 = (): JSX.Element => {
             label="Fecha de radicado de entrada"
             variant="outlined"
             disabled
-            value={'1006877856'}
+            InputLabelProps={{ shrink: true }}
+            value={
+              formatDate(
+                infoInicialUsuario?.detallePQRSDF?.data?.fecha_radicado_entrada
+              ) ?? 'N/A'
+            }
           />
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -77,10 +117,11 @@ export const FormParte1 = (): JSX.Element => {
             }}
             rows={2}
             size="small"
-            label="Fecha de radicado de entrada"
+            label="Asunto de la PQRSDF"
             variant="outlined"
             disabled
-            value={'1006877856'}
+            InputLabelProps={{ shrink: true }}
+            value={infoInicialUsuario?.detallePQRSDF?.data?.asunto ?? 'N/A'}
           />
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -97,13 +138,16 @@ export const FormParte1 = (): JSX.Element => {
             label="Descripción de la PQRSDF"
             variant="outlined"
             disabled
+            InputLabelProps={{ shrink: true }}
             value={
-              'Se describe una nueva pqrsdf dentro del módulo de gestor documental'
+              infoInicialUsuario?.detallePQRSDF?.data?.descripcion ?? 'N/A'
             }
           />
         </Grid>
 
         {/* tabla de elementos a mostrar */}
+
+        {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
         <RenderDataGrid
           title="Tabla de elementos a mostrar"
           columns={[]}

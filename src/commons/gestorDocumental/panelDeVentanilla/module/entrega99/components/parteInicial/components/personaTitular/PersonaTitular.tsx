@@ -35,7 +35,7 @@ export const PersonaTitular = (): JSX.Element => {
               label="Nombres"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.nombres}
+              value={infoInicialUsuario?.dataTitular?.data?.nombres ?? 'N/A'}
               inputProps={{
                 maxLength: 50,
               }}
@@ -49,7 +49,7 @@ export const PersonaTitular = (): JSX.Element => {
               label="Apellidos"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.apellidos}
+              value={infoInicialUsuario?.dataTitular?.data?.apellidos ?? 'N/A'}
               inputProps={{
                 maxLength: 10,
               }}
@@ -63,7 +63,7 @@ export const PersonaTitular = (): JSX.Element => {
               disabled
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.tipo_documento}
+              value={infoInicialUsuario?.dataTitular?.data?.tipo_documento ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -74,7 +74,7 @@ export const PersonaTitular = (): JSX.Element => {
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.numero_documento}
+              value={infoInicialUsuario?.dataTitular?.data?.numero_documento ?? 'N/A'}
             />
           </Grid>
         </Grid>

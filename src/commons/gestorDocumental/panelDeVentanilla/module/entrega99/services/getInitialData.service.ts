@@ -6,23 +6,30 @@ import Swal from 'sweetalert2';
 export const getInitialData = async (
   id_PQRSDF: number,
   navigate: any,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setLoadingSecondary: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   try {
     setLoading(true);
-
-    // gestor/panel_ventanilla/pqrsdf/detalle-solicitud/get/10/
-
+    setLoadingSecondary(true);
     const [responseSolicita, responseTitular, responseDetallePQRSDF] =
       await Promise.all([
         api.get(`gestor/panel_ventanilla/pqrsdf/solicita/get/`),
         api.get(`gestor/panel_ventanilla/pqrsdf/titular/get/${id_PQRSDF}/`),
-        api.get(`gestor/panel_ventanilla/pqrsdf/adjuntos/get/${id_PQRSDF}/`),
+        api.get(
+          `gestor/panel_ventanilla/pqrsdf/detalle-solicitud/get/${id_PQRSDF}/`
+        ),
+        //* aquí también se debe hacer la solicitud al histórico de las solicitudes para verlas en el grillado
+        // ? se llama un servicio de simulación para
       ]);
 
     const { data: dataSolicita } = responseSolicita;
     const { data: dataTitular } = responseTitular;
     const { data: detallePQRSDF } = responseDetallePQRSDF;
+
+    console.log('detallePQRSDF', detallePQRSDF);
+
+
 
     return {
       dataSolicita,
@@ -41,5 +48,6 @@ export const getInitialData = async (
     });
   } finally {
     setLoading(false);
+    setLoadingSecondary(false);
   }
 };
