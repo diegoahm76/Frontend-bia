@@ -436,7 +436,7 @@ const CrearViveroDialogForm = ({
                   name="coordenadas_lat"
                   control={control_vivero}
                   rules={{
-                    required: true
+                    required: true,
                   }}
                   render={({
                     field: { onChange, value },
@@ -455,7 +455,11 @@ const CrearViveroDialogForm = ({
                       onChange={onChange}
                       error={!(error == null)}
                       helperText={
-                        error != null ? error.type === 'required' ? 'La latitud es requerida' : '' : 'Ingrese latitud'
+                        error != null
+                          ? error.type === 'required'
+                            ? 'La latitud es requerida'
+                            : ''
+                          : 'Ingrese latitud'
                       }
                     />
                   )}
@@ -466,7 +470,7 @@ const CrearViveroDialogForm = ({
                   name="coordenadas_lon"
                   control={control_vivero}
                   rules={{
-                    required: true
+                    required: true,
                   }}
                   render={({
                     field: { onChange, value },
@@ -485,7 +489,11 @@ const CrearViveroDialogForm = ({
                       onChange={onChange}
                       error={!(error == null)}
                       helperText={
-                        error != null ? error.type === 'required' ? 'La lóngitud es requerida' : '' : 'Ingrese lóngitud'
+                        error != null
+                          ? error.type === 'required'
+                            ? 'La lóngitud es requerida'
+                            : ''
+                          : 'Ingrese lóngitud'
                       }
                     />
                   )}
@@ -696,7 +704,7 @@ const CrearViveroDialogForm = ({
             </Grid>
           </Grid>
 
-          <Grid container marginTop={3} >
+          <Grid container marginTop={3}>
             {current_nursery.id_viverista_actual !== null &&
               current_nursery.activo === true && <ViveristaActual />}
           </Grid>
@@ -851,7 +859,7 @@ const CrearViveroDialogForm = ({
             {action === 'create' ? (
               <Button
                 type="submit"
-                color='success'
+                color="success"
                 variant="contained"
                 startIcon={<SaveIcon />}
               >

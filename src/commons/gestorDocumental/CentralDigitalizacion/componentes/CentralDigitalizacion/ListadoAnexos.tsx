@@ -16,39 +16,29 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 import {
-  set_type_applicant,
-  set_on_behalf_of,
-  initial_state_person,
-  initial_state_company,
-  set_attorney,
-  set_person,
-  set_company,
-  set_grantor,
-  set_pqrs,
-  set_pqr_status,
   set_metadata,
   initial_state_metadata,
   set_exhibit,
   set_exhibits,
   initial_state_exhibit,
-} from '../../store/slice/pqrsdfSlice';
+} from '../../store/slice/centralDigitalizacionSlice';
 import MetadataFormDialog from './MetadataFormDialog';
-import { IObjExhibit } from '../../interfaces/pqrsdf';
+import { IObjExhibit } from '../../interfaces/central_digitalizacion';
 import { v4 as uuid } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { control_error } from '../../store/thunks/pqrsdfThunks';
+import { control_error } from '../../store/thunks/centralDigitalizacionThunks';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
+import { Title } from '../../../../../components/Title';
 interface IProps {
   control_form: any | null;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const StepTwo = () => {
+const ListadoAnexos = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { exhibits, metadata, exhibit, storage_mediums } = useAppSelector(
-    (state) => state.pqrsdf_slice
-  );
+  const { exhibits, metadata, exhibit, storage_mediums, digitization_request } =
+    useAppSelector((state) => state.central_digitalizacion_slice);
   const {
     control: control_form,
     handleSubmit: handle_submit_exhibit,
@@ -62,35 +52,15 @@ const StepTwo = () => {
   const [add_metadata_is_active, set_add_metadata_is_active] =
     useState<boolean>(false);
 
-  const on_submit_exhibit = (data: IObjExhibit): void => {
-    console.log(data, metadata);
-    const exhibit_aux: IObjExhibit | undefined = exhibits.find(
-      (p: IObjExhibit) => p.nombre_anexo === data.nombre_anexo
-    );
-    if (exhibit_aux === undefined) {
-      console.log(data);
-      dispatch(
-        set_exhibits([
-          ...exhibits,
-          {
-            ...data,
-            metadatos:
-              data.id_anexo === null
-                ? metadata.asunto ?? null !== null
-                  ? metadata
-                  : null
-                : metadata,
-          },
-        ])
-      );
-      dispatch(set_exhibit(initial_state_exhibit));
-      set_file(null);
-      set_file_name('');
-      set_action('agregar');
-    } else {
-      control_error(`Ya existe un archivo con nombre ${data.nombre_anexo}`);
+  useEffect(() => {
+    console.log(digitization_request);
+    if (
+      digitization_request.id_solicitud_de_digitalizacion !== null &&
+      digitization_request.anexos !== undefined
+    ) {
+      dispatch(set_exhibits(digitization_request.anexos));
     }
-  };
+  }, [digitization_request]);
 
   useEffect(() => {
     console.log(exhibit);
@@ -137,7 +107,6 @@ const StepTwo = () => {
             ...exhibit,
             nombre_anexo: get_values('nombre_anexo'),
             orden_anexo_doc: get_values('orden_anexo_doc'),
-            medio_almacenamiento: get_values('medio_almacenamiento'),
             cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
             medio_almacenamiento_otros_cual: get_values(
               'medio_almacenamiento_otros_cual'
@@ -156,64 +125,6 @@ const StepTwo = () => {
       }
     }
   }, [file]);
-
-  useEffect(() => {
-    console.log(metadata);
-    // if (metadata !== null) {
-    //   if (metadata.asunto !== null && metadata.asunto !== '') {
-    //     dispatch(
-    //       set_exhibit({
-    //         ...exhibit,
-    //         nombre_anexo: get_values('nombre_anexo'),
-    //         orden_anexo_doc: get_values('orden_anexo_doc'),
-    //         medio_almacenamiento: get_values('medio_almacenamiento'),
-    //         cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //         medio_almacenamiento_otros_cual: get_values(
-    //           'medio_almacenamiento_otros_cual'
-    //         ),
-    //         numero_folios: get_values('numero_folios'),
-    //         ya_digitalizado: true,
-    //         exhibit_link: file,
-    //         metadatos: metadata,
-    //       })
-    //     );
-    //   } else {
-    //     dispatch(
-    //       set_exhibit({
-    //         ...exhibit,
-    //         nombre_anexo: get_values('nombre_anexo'),
-    //         orden_anexo_doc: get_values('orden_anexo_doc'),
-    //         medio_almacenamiento: get_values('medio_almacenamiento'),
-    //         cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //         medio_almacenamiento_otros_cual: get_values(
-    //           'medio_almacenamiento_otros_cual'
-    //         ),
-    //         numero_folios: get_values('numero_folios'),
-    //         ya_digitalizado: false,
-    //         exhibit_link: file,
-    //         metadatos: null,
-    //       })
-    //     );
-    //   }
-    // } else {
-    //   dispatch(
-    //     set_exhibit({
-    //       ...exhibit,
-    //       nombre_anexo: get_values('nombre_anexo'),
-    //       orden_anexo_doc: get_values('orden_anexo_doc'),
-    //       medio_almacenamiento: get_values('medio_almacenamiento'),
-    //       cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //       medio_almacenamiento_otros_cual: get_values(
-    //         'medio_almacenamiento_otros_cual'
-    //       ),
-    //       numero_folios: get_values('numero_folios'),
-    //       ya_digitalizado: false,
-    //       exhibit_link: file,
-    //       metadatos: null,
-    //     })
-    //   );
-    // }
-  }, [metadata]);
 
   const add_metadata_form = (): void => {
     if (exhibit.metadatos === null) {
@@ -271,8 +182,28 @@ const StepTwo = () => {
       ),
     },
     {
-      field: 'medio_almacenamiento',
+      field: 'nombre_medio_almacenamiento',
       headerName: 'Medio de almacenamiento',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'ya_digitalizado',
+      headerName: 'Digitalizado',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value ? 'SI' : 'NO'}
+        </div>
+      ),
+    },
+    {
+      field: 'observacion_digitalizacion',
+      headerName: 'Observación',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -286,10 +217,10 @@ const StepTwo = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          <Tooltip title="Editar">
+          <Tooltip title="Digitalizar">
             <IconButton
               onClick={() => {
-                edit_exhibit(params.row);
+                select_exhibit(params.row);
               }}
             >
               <Avatar
@@ -307,70 +238,60 @@ const StepTwo = () => {
               </Avatar>
             </IconButton>
           </Tooltip>
-
-          <Tooltip title="Borrar">
-            <IconButton
-              onClick={() => {
-                delete_exhibit(params.row);
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <DeleteIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
-          </Tooltip>
         </>
       ),
     },
   ];
 
-  const edit_exhibit = (item: IObjExhibit): void => {
+  const select_exhibit = (item: IObjExhibit): void => {
     set_action('editar');
     dispatch(set_exhibit(item));
-    const aux_items: IObjExhibit[] = [];
-    exhibits.forEach((option: IObjExhibit) => {
-      if (option.nombre_anexo !== item.nombre_anexo) {
-        aux_items.push(option);
-      }
-    });
-    dispatch(set_exhibits(aux_items));
-  };
-
-  const delete_exhibit = (item: IObjExhibit): void => {
-    dispatch(set_exhibit(initial_state_exhibit));
-    const aux_items: IObjExhibit[] = [];
-    exhibits.forEach((option: IObjExhibit) => {
-      if (option.nombre_anexo !== item.nombre_anexo) {
-        aux_items.push(option);
-      }
-    });
-    console.log(aux_items);
-    dispatch(set_exhibits(aux_items));
   };
 
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
+        <Grid
+          container
+          spacing={2}
+          justifyContent="center"
+          direction="row"
+          marginTop={2}
+        >
+          <Box sx={{ width: '80%' }}>
+            <Grid item xs={12} marginY={2}>
+              <Title title="Listado de anexos"></Title>
+            </Grid>
+            <Grid item xs={12} md={12} marginTop={2}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={exhibits}
+                columns={columns_list}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) =>
+                  row.id_anexo ?? null === null
+                    ? uuid()
+                    : row.id_anexo ?? uuid()
+                }
+              />
+            </Grid>
+          </Box>
+        </Grid>
+
         <PrimaryForm
           on_submit_form={null}
           button_submit_label={action}
           button_submit_icon_class={null}
           button_submit_type={'button'}
-          button_submit_function={handle_submit_exhibit(on_submit_exhibit)}
+          button_submit_function={null}
+          show_button={false}
           form_inputs={[
             {
               datum_type: 'title',
-              title_label: 'Anexos',
+              title_label: `Anexo - ${exhibit.nombre_anexo}`,
             },
             {
               datum_type: 'input_file_controller',
@@ -399,10 +320,10 @@ const StepTwo = () => {
               control_form: control_form,
               control_name: 'nombre_anexo',
               default_value: '',
-              rules: { required_rule: { rule: false, message: 'Requerido' } },
+              rules: {},
               label: 'Nombre de archivo',
               type: 'text',
-              disabled: false,
+              disabled: true,
               helper_text: '',
             },
             {
@@ -412,11 +333,9 @@ const StepTwo = () => {
               control_form: control_form,
               control_name: 'cod_medio_almacenamiento',
               default_value: '',
-              rules: {
-                required_rule: { rule: false, message: 'Requerido' },
-              },
+              rules: {},
               label: 'Medio de almacenamiento',
-              disabled: false,
+              disabled: true,
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
@@ -429,10 +348,10 @@ const StepTwo = () => {
               control_form: control_form,
               control_name: 'medio_almacenamiento_otros_cual',
               default_value: '',
-              rules: { required_rule: { rule: false, message: 'Requerido' } },
+              rules: {},
               label: '¿Cual?',
               type: 'text',
-              disabled: false,
+              disabled: true,
               helper_text: '',
             },
             {
@@ -442,13 +361,10 @@ const StepTwo = () => {
               control_form: control_form,
               control_name: 'numero_folios',
               default_value: '',
-              rules: {
-                required_rule: { rule: false, message: 'Requerido' },
-                min_rule: { rule: 0, message: 'el valor minimo debe ser 0' },
-              },
+              rules: {},
               label: 'Número de folios',
               type: 'number',
-              disabled: false,
+              disabled: true,
               helper_text: '',
               step_number: '1',
             },
@@ -465,32 +381,7 @@ const StepTwo = () => {
             },
           ]}
         />
-        <Grid
-          container
-          spacing={2}
-          justifyContent="center"
-          direction="row"
-          marginTop={2}
-        >
-          <Box sx={{ width: '80%' }}>
-            <Grid item xs={12} md={12} marginTop={2}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={exhibits}
-                columns={columns_list}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) =>
-                  row.id_anexo ?? null === null
-                    ? uuid()
-                    : row.id_anexo ?? uuid()
-                }
-              />
-            </Grid>
-          </Box>
-        </Grid>
+
         <MetadataFormDialog
           is_modal_active={add_metadata_is_active}
           set_is_modal_active={set_add_metadata_is_active}
@@ -501,4 +392,4 @@ const StepTwo = () => {
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default StepTwo;
+export default ListadoAnexos;

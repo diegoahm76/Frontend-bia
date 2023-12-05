@@ -216,24 +216,23 @@ export function CrearPqrsdfScreen(): JSX.Element {
     void dispatch(get_file_categories_service());
     void dispatch(get_file_origin_service());
     void dispatch(get_file_typology_service());
+    set_flag_create(false);
   };
 
   useEffect(() => {
     reset_pqrsdf(pqr);
     console.log(pqr);
-    if (pqr.id_PQRSDF !== null) {
+    if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
       if ('anexos' in pqr) {
         if (pqr.anexos == undefined && pqr.anexos == null) {
-          navigate(
-            `/app/gestor_documental/pqrsdf/crear_pqrsdf/${pqr.id_PQRSDF}`
-          );
           set_step(0);
+          void dispatch(get_pqrsdf_id_service(pqr.id_PQRSDF));
         } else {
           dispatch(set_exhibits(pqr.anexos));
         }
       } else {
-        navigate(`/app/gestor_documental/pqrsdf/crear_pqrsdf/${pqr.id_PQRSDF}`);
         set_step(0);
+        void dispatch(get_pqrsdf_id_service(pqr.id_PQRSDF));
       }
       set_action('editar');
     }
@@ -265,23 +264,23 @@ export function CrearPqrsdfScreen(): JSX.Element {
             aux_items.push({
               ...elemento,
               orden_anexo_doc: index,
-              metadatos: elemento.metadato ?? null,
-              exhibit_link: elemento.metadato?.archivo?.ruta_archivo ?? null,
+              metadatos: elemento.metadatos ?? null,
+              exhibit_link: elemento.metadatos?.archivo?.ruta_archivo ?? null,
             });
           } else {
             if (typeof elemento.exhibit_link === 'string') {
               aux_items.push({
                 ...elemento,
                 orden_anexo_doc: index,
-                metadatos: elemento.metadato ?? null,
-                exhibit_link: elemento.metadato?.archivo?.ruta_archivo ?? null,
+                metadatos: elemento.metadatos ?? null,
+                exhibit_link: elemento.metadatos?.archivo?.ruta_archivo ?? null,
               });
             } else {
               console.log(elemento);
               aux_items.push({
                 ...elemento,
                 orden_anexo_doc: index,
-                metadatos: elemento.metadato ?? null,
+                metadatos: elemento.metadatos ?? null,
               });
             }
           }
@@ -348,7 +347,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
       const data_edit: IObjPqr = {
         ...data,
         fecha_registro: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
-        id_sucursal_especifica_implicada: 1,
         id_persona_titular: userinfo.id_persona,
         id_persona_interpone: userinfo.id_persona,
         cantidad_anexos: exhibits.length,
@@ -371,9 +369,9 @@ export function CrearPqrsdfScreen(): JSX.Element {
       form_data.append('isCreateForWeb', 'True');
 
       void dispatch(add_pqrsdf_service(form_data));
-      dispatch(reset_state());
-      initial_values();
     }
+    dispatch(reset_state());
+    initial_values();
   };
   const delete_pqr = (): void => {
     if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
@@ -385,6 +383,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         void dispatch(delete_pqrsdf_service(pqr.id_PQRSDF, true));
         dispatch(reset_state());
         initial_values();
+        navigate(`/app/gestor_documental/pqrsdf/crear_pqrsdf/`);
       } else {
         control_error(
           'Solo se pueden eliminar siembras hasta 30 dias despues de la fecha de creación'
@@ -454,7 +453,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
               color_button="success"
             />
           </Grid>
-          {pqr.id_PQRSDF !== null && pqr.fecha_radicado !== null && (
+          {pqr.id_PQRSDF !== null && pqr.id_radicado === null && (
             <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="outlined"
@@ -485,7 +484,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
               reset_state={reset_state}
               set_initial_values={initial_values}
               variant_button={'outlined'}
-              clean_when_leaving={false}
+              clean_when_leaving={true}
             />
           </Grid>
         </Grid>
