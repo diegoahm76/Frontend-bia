@@ -2,8 +2,13 @@
 
 import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
+import { useContext } from 'react';
+import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
 
 export const PerSolicitaComplemento = (): JSX.Element => {
+  //* context declaration
+  const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+
   return (
     <Grid
       item
@@ -34,7 +39,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               size="small"
               label="Nombres"
               variant="outlined"
-              value={'Cristiano'}
+              value={infoInicialUsuario?.dataSolicita?.data?.nombres}
               inputProps={{
                 maxLength: 50,
               }}
@@ -47,7 +52,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               size="small"
               label="Apellidos"
               variant="outlined"
-              value={'Alias el bicho'}
+              value={infoInicialUsuario?.dataSolicita?.data?.apellidos}
               inputProps={{
                 maxLength: 10,
               }}
@@ -60,7 +65,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Tipo de documento"
               disabled
               variant="outlined"
-              value={'Cédula de ciudadanía'}
+              value={infoInicialUsuario?.dataSolicita?.data?.tipo_documento}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -70,7 +75,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Número de documento"
               variant="outlined"
               disabled
-              value={'21201918'}
+              value={infoInicialUsuario?.dataSolicita?.data?.numero_documento}
             />
           </Grid>
 
@@ -81,7 +86,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Unidad organizacional solicitante"
               variant="outlined"
               disabled
-              value={'Dirección general de tecnologías de la información y las comunicaciones'}
+              value={infoInicialUsuario?.dataSolicita?.data?.unidad_organizacional_actual}
             />
           </Grid>
         </Grid>
