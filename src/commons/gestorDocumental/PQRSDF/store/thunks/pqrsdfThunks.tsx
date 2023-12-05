@@ -7,6 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
+  initial_state_pqr,
   set_attorney,
   set_attorneys,
   set_companies,
@@ -604,15 +605,17 @@ export const delete_pqrsdf_service = (
         id_PQRSDF: id,
         isCreateForWeb: is_web,
       };
-      const { data } = await api.delete(`gestor/pqr/delete-pqrsdf/`, params);
+      const { data } = await api.delete(
+        `gestor/pqr/delete-pqrsdf/?id_PQRSDF=${id}&isCreateForWeb=${
+          is_web ? 'True' : 'False'
+        }`
+      );
       console.log(data);
 
-      // if ('data' in data) {
-      //   dispatch(set_pqr(data.data));
-
-      // } else {
-      //   control_error(data.detail);
-      // }
+      if (data.success) {
+        control_success(data.detail);
+        dispatch(set_pqr(initial_state_pqr));
+      }
       return data;
     } catch (error: any) {
       console.log('delete_pqrsdf_service');
@@ -634,15 +637,11 @@ export const radicar_pqrsdf_service = (
         id_persona_guarda: id_user,
         isCreateForWeb: is_web,
       };
-      const { data } = await api.delete(`gestor/pqr/delete-pqrsdf/`, params);
-      console.log(data);
-
-      // if ('data' in data) {
-      //   dispatch(set_pqr(data.data));
-
-      // } else {
-      //   control_error(data.detail);
-      // }
+      const { data } = await api.post(`gestor/pqr/radicar-pqrsdf/`, params);
+      if (data.success) {
+        control_success(data.detail);
+        void dispatch(get_pqrsdf_id_service(id));
+      }
       return data;
     } catch (error: any) {
       console.log('delete_pqrsdf_service');

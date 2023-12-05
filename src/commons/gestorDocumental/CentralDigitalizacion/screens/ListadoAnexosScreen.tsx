@@ -15,11 +15,14 @@ import {
   get_list_request_status_service,
   get_request_types_service,
 } from '../store/thunks/centralDigitalizacionThunks';
+import SolicitudSeleccionada from '../componentes/CentralDigitalizacion/SolicitudSeleccionada';
+import ListadoAnexos from '../componentes/CentralDigitalizacion/ListadoAnexos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function SolicitudesPendientesScreen(): JSX.Element {
+export function ListadoAnexosScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const { person } = useAppSelector(
+
+  const { digitization_request } = useAppSelector(
     (state) => state.central_digitalizacion_slice
   );
   const initial_values = (): void => {};
@@ -43,9 +46,15 @@ export function SolicitudesPendientesScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Central de digitalización"></Title>
+          <Title
+            title={`Digitalización de ${digitization_request.nombre_tipo_solicitud} - N° Radicado ${digitization_request.numero_radicado}`}
+          ></Title>
         </Grid>
-        <DigitalizacionesPendientes />
+
+        {digitization_request.id_solicitud_de_digitalizacion !== null && (
+          <SolicitudSeleccionada />
+        )}
+        <ListadoAnexos />
 
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
