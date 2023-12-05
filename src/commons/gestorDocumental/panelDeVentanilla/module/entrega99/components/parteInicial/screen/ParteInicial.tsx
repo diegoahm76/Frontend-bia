@@ -8,6 +8,9 @@ import { useAppSelector } from '../../../../../../../../hooks';
 import { getInitialData } from '../../../services/getInitialData.service';
 import { SolicitudAlUsuarioContext } from '../../../context/SolicitudUsarioContext';
 import { useNavigate } from 'react-router-dom';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { Grid } from '@mui/material';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
 
 export const ParteInicial: React.FC = (): JSX.Element => {
   //* navigate declaration
@@ -21,22 +24,48 @@ export const ParteInicial: React.FC = (): JSX.Element => {
 
   //* context declaration
   const { setInfoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+  const { generalLoading, handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   useEffect(() => {
-    if (!currentElementPqrsdComplementoTramitesYotros) return;
+    if (!currentElementPqrsdComplementoTramitesYotros) {
+      navigate('/app/gestor_documental/panel_ventanilla/');
+      return;
+    }
 
     void getInitialData(
       currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
       navigate,
+      handleGeneralLoading
     ).then((data) => {
-      console.log('data', data);
-      // ? van a venir dos objetos, uno con la data de la persona titular y otro con la data de la persona que solicita el complemento
-
+      /*{
+         dataTitular: {},
+         dataSolicita: {},
+      }*/
       setInfoInicialUsuario(data);
     });
-
-    console.log('se carga la data inicial necearis para el módulo');
   }, []);
+
+  if (generalLoading) {
+    return (
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          justifyContent: 'center',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '1.2rem',
+          mt: '1.2rem',
+          mb: '1.2rem',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Loader altura={400} />
+      </Grid>
+    );
+  }
 
   return (
     <>

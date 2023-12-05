@@ -34,7 +34,8 @@ export const PersonaTitular = (): JSX.Element => {
               size="small"
               label="Nombres"
               variant="outlined"
-              value={infoInicialUsuario?.dataSolicita?.data?.nombres}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.nombres}
               inputProps={{
                 maxLength: 50,
               }}
@@ -47,7 +48,8 @@ export const PersonaTitular = (): JSX.Element => {
               size="small"
               label="Apellidos"
               variant="outlined"
-              value={infoInicialUsuario?.dataSolicita?.data?.apellidos}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.apellidos}
               inputProps={{
                 maxLength: 10,
               }}
@@ -60,7 +62,8 @@ export const PersonaTitular = (): JSX.Element => {
               label="Tipo de documento"
               disabled
               variant="outlined"
-              value={infoInicialUsuario?.dataSolicita?.data?.tipo_documento}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.tipo_documento}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -70,7 +73,8 @@ export const PersonaTitular = (): JSX.Element => {
               label="Número de documento"
               variant="outlined"
               disabled
-              value={infoInicialUsuario?.dataSolicita?.data?.numero_documento}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.numero_documento}
             />
           </Grid>
         </Grid>

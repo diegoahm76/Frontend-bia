@@ -4,6 +4,7 @@ import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
 import { useContext } from 'react';
 import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
+import { Input } from '@mui/material';
 
 export const PerSolicitaComplemento = (): JSX.Element => {
   //* context declaration
@@ -39,6 +40,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               size="small"
               label="Nombres"
               variant="outlined"
+              InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.dataSolicita?.data?.nombres}
               inputProps={{
                 maxLength: 50,
@@ -52,6 +54,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               size="small"
               label="Apellidos"
               variant="outlined"
+              InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.dataSolicita?.data?.apellidos}
               inputProps={{
                 maxLength: 10,
@@ -65,6 +68,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Tipo de documento"
               disabled
               variant="outlined"
+              InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.dataSolicita?.data?.tipo_documento}
             />
           </Grid>
@@ -75,6 +79,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Número de documento"
               variant="outlined"
               disabled
+              InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.dataSolicita?.data?.numero_documento}
             />
           </Grid>
@@ -86,6 +91,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Unidad organizacional solicitante"
               variant="outlined"
               disabled
+              InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.dataSolicita?.data?.unidad_organizacional_actual}
             />
           </Grid>

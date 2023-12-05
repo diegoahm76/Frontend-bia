@@ -3,18 +3,31 @@ import { api } from '../../../../../../api/axios';
 import Swal from 'sweetalert2';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const getInitialData = async (id_PQRSDF: number, navigate: any) => {
+export const getInitialData = async (
+  id_PQRSDF: number,
+  navigate: any,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   try {
-    const [responseSolicita /*responseTitular*/] = await Promise.all([
-      api.get(`gestor/panel_ventanilla/pqrsdf/solicita/get/`),
-      // api.get(`gestor/panel_ventanilla/pqrsdf/titular/get/${id_PQRSDF}/`),
-    ]);
+    setLoading(true);
+
+    // gestor/panel_ventanilla/pqrsdf/detalle-solicitud/get/10/
+
+    const [responseSolicita, responseTitular, responseDetallePQRSDF] =
+      await Promise.all([
+        api.get(`gestor/panel_ventanilla/pqrsdf/solicita/get/`),
+        api.get(`gestor/panel_ventanilla/pqrsdf/titular/get/${id_PQRSDF}/`),
+        api.get(`gestor/panel_ventanilla/pqrsdf/adjuntos/get/${id_PQRSDF}/`),
+      ]);
 
     const { data: dataSolicita } = responseSolicita;
-    // const { data: dataTitular } = responseTitular;
+    const { data: dataTitular } = responseTitular;
+    const { data: detallePQRSDF } = responseDetallePQRSDF;
+
     return {
       dataSolicita,
-      // dataTitular,
+      dataTitular,
+      detallePQRSDF,
     };
   } catch (error) {
     void Swal.fire({
@@ -24,8 +37,9 @@ export const getInitialData = async (id_PQRSDF: number, navigate: any) => {
       text: 'Error al obtener la información inicial',
       confirmButtonText: 'Aceptar',
     }).then(() => {
-      navigate('/app/gestor_documental/panel_ventanilla/')
+      navigate('/app/gestor_documental/panel_ventanilla/');
     });
   } finally {
+    setLoading(false);
   }
 };
