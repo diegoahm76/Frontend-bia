@@ -170,12 +170,18 @@ export const get_offices_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        'transversal/sucursales/sucursales-empresa-lista/1'
+        'transversal/sucursales/sucursales-empresa-lista/3'
       );
       console.log(data);
       dispatch(
         set_destination_offices(
-          map_list(data.data, false, 'id_sucursal', 'id_sucursal', 'sucursal')
+          map_list(
+            data.data,
+            false,
+            'id_sucursal_empresa',
+            'id_sucursal_empresa',
+            'descripcion_sucursal'
+          )
         )
       );
       return data;

@@ -347,7 +347,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
       const data_edit: IObjPqr = {
         ...data,
         fecha_registro: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
-        id_sucursal_especifica_implicada: 1,
         id_persona_titular: userinfo.id_persona,
         id_persona_interpone: userinfo.id_persona,
         cantidad_anexos: exhibits.length,
