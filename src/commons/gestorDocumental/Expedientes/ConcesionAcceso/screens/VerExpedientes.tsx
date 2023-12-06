@@ -1,12 +1,11 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip } from "@mui/material"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
 import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useAppDispatch } from "../../../../../hooks";
 import { ver_expedientes } from "../thunks/ConcesionAcceso";
 import dayjs from "dayjs";
 import { buscar_expediente_id } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
-import { obtener_documentos_expediente } from "../../consultaExpedientesDocumentales/thunks/ConsultaExpedientes";
+import { obtener_documentos_expediente } from "../../ConsultaExpedientesDocumentales/thunks/ConsultaExpedientes";
 
 interface IProps {
     is_modal_active: boolean,
