@@ -71,7 +71,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
   const handle_variable_input_change = (event: React.ChangeEvent<HTMLInputElement>, index: number, key: string): void => {
     const { value } = event.target;
     const row_detalle = rows_detalles[index];
-    const new_variables = { ...row_detalle.variables, [key]: value };
+    const new_variables = { ...row_detalle.variables, [key]: value === '' ? '0' : value };
     const new_detalle: RowDetalles = { ...row_detalle, variables: new_variables, valor_liquidado: get_calculated_variables(row_detalle.formula_aplicada, new_variables) };
     const new_detalles = rows_detalles.map((detalle, arrayIndex) => arrayIndex === index ? new_detalle : detalle);
     set_rows_detalles(new_detalles);
