@@ -77,6 +77,11 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
     set_rows_detalles(new_detalles);
   };
 
+  const handle_form_submit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    check_ciclo_and_periodo(handle_agregar_detalle);
+  };
+
   const column_detalle: GridColDef[] = [
     {
       field: 'id',
@@ -133,11 +138,11 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
       field: 'valor_liquidado',
       headerName: 'Valor Liquidado',
       width: 150,
-      valueGetter: (params) => {
+      valueFormatter: (params) => {
         if (!params.value) {
           return params.value;
         }
-        return `$ ${params.value}`;
+        return `$ ${Number(params.value).toFixed(2)}`;
       }
     },
   ]
@@ -191,49 +196,51 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
             </Grid>
           </Grid>
 
-          <Grid container justifyContent={'center'} spacing={2}>
-            <Grid item>
-              <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Parametros</InputLabel>
-              {opcion_liquidacion && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
-                <div key={index}>
-                  <InputLabel sx={{ p: '18.5px' }}>{key}</InputLabel>
-                </div>
-              ))}
+          <Box component={'form'} sx={{ width: '100%' }} onSubmit={handle_form_submit}>
+            <Grid container justifyContent={'center'} spacing={2}>
+              <Grid item>
+                <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Parametros</InputLabel>
+                {opcion_liquidacion && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
+                  <div key={index}>
+                    <InputLabel sx={{ p: '18.5px' }}>{key}</InputLabel>
+                  </div>
+                ))}
+              </Grid>
+
+              <Grid item>
+                <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
+                {opcion_liquidacion && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
+                  <div key={index}>
+                    <TextField
+                      type="number"
+                      sx={{ p: '10px' }}
+                      size="small"
+                      value={variables_datos[key] || ''}
+                      required
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handle_variables_change(event, key) }}
+                    />
+                  </div>
+                ))}
+              </Grid>
             </Grid>
 
-            <Grid item>
-              <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
-              {opcion_liquidacion && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
-                <div key={index}>
-                  <TextField
-                    type="number"
-                    sx={{ p: '10px' }}
-                    size="small"
-                    value={variables_datos[key] || ''}
-                    required
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handle_variables_change(event, key) }}
-                  />
-                </div>
-              ))}
+            <Grid container justifyContent='center' sx={{ my: '20px' }}>
+              <Grid item xs={3}>
+                {!expediente_liquidado && (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    startIcon={<AddIcon />}
+                    disabled={id_opcion_liquidacion === '' || concepto === ''}
+                  >
+                    Agregar detalle de liquidación
+                  </Button>
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-
-          <Grid container justifyContent='center' sx={{ my: '20px' }}>
-            <Grid item xs={3}>
-              {!expediente_liquidado && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  startIcon={<AddIcon />}
-                  onClick={() => check_ciclo_and_periodo(handle_agregar_detalle)}
-                  disabled={id_opcion_liquidacion === '' || concepto === ''}
-                >
-                  Agregar detalle de liquidación
-                </Button>
-              )}
-            </Grid>
-          </Grid>
+          </Box>
 
           <Box sx={{ width: '100%', mt: '20px' }}>
             <DataGrid
