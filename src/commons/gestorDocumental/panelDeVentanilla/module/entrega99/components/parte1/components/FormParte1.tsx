@@ -8,6 +8,8 @@ import { SolicitudAlUsuarioContext } from '../../../context/SolicitudUsarioConte
 import { formatDate } from '../../../../../../../../utils/functions/formatDate';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { columnsGridHistorico } from '../utils/columnsGridHistorico';
+import { rowsGridHistorico } from '../utils/rowsEjemplo';
 
 export const FormParte1 = (): JSX.Element => {
   // ? stepper hook
@@ -150,8 +152,8 @@ export const FormParte1 = (): JSX.Element => {
         {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
         <RenderDataGrid
           title="Tabla de elementos a mostrar"
-          columns={[]}
-          rows={[]}
+          columns={columnsGridHistorico ?? []}
+          rows={rowsGridHistorico ?? []}
         />
       </Grid>
 

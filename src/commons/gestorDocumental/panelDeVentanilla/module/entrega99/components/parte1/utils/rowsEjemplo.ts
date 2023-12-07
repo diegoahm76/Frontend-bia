@@ -5,28 +5,25 @@ tipo_tramite,
 fecha_radicado_entrada,
 numero_salida,
 estado,
-
 */
 
-export const columnsEjemplo = [
+export const rowsGridHistorico = [
   {
-    headerName: 'Tipo de trámite',
-    field: 'tipo_tramite',
-    width: 200,
+    tipo_tramite: 'Trámite 1',
+    fecha_radicado_entrada: '2022-01-01',
+    numero_salida: '123456',
+    estado: 'En proceso',
   },
   {
-    headerName: 'Fecha de radicado de salida',
-    field: 'fecha_radicado_entrada',
-    width: 200,
+    tipo_tramite: 'Trámite 2',
+    fecha_radicado_entrada: '2022-02-01',
+    numero_salida: '789012',
+    estado: 'Completado',
   },
   {
-    headerName: 'Número de radicado de salida',
-    field: 'numero_salida',
-    width: 200,
+    tipo_tramite: 'Trámite 3',
+    fecha_radicado_entrada: '2022-03-01',
+    numero_salida: '345678',
+    estado: 'Pendiente',
   },
-  {
-    headerName: 'Estado',
-    field: 'estado',
-    width: 200,
-  },
-]
+];
