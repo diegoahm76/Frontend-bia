@@ -264,15 +264,24 @@ export function CrearPqrsdfScreen(): JSX.Element {
             aux_items.push({
               ...elemento,
               orden_anexo_doc: index,
-              metadatos: elemento.metadatos ?? null,
-              exhibit_link: elemento.metadatos?.archivo?.ruta_archivo ?? null,
+              metadatos:
+                elemento.metadatos?.id_metadatos_anexo_tmp ?? null === null
+                  ? elemento.metadatos?.asunto ?? null === null
+                    ? null
+                    : elemento.metadatos
+                  : elemento.metadatos,
             });
           } else {
             if (typeof elemento.exhibit_link === 'string') {
               aux_items.push({
                 ...elemento,
                 orden_anexo_doc: index,
-                metadatos: elemento.metadatos ?? null,
+                metadatos:
+                  elemento.metadatos?.id_metadatos_anexo_tmp ?? null === null
+                    ? elemento.metadatos?.asunto ?? null === null
+                      ? null
+                      : elemento.metadatos
+                    : elemento.metadatos,
                 exhibit_link: elemento.metadatos?.archivo?.ruta_archivo ?? null,
               });
             } else {
@@ -280,7 +289,12 @@ export function CrearPqrsdfScreen(): JSX.Element {
               aux_items.push({
                 ...elemento,
                 orden_anexo_doc: index,
-                metadatos: elemento.metadatos ?? null,
+                metadatos:
+                  elemento.metadatos?.id_metadatos_anexo_tmp ?? null === null
+                    ? elemento.metadatos?.asunto ?? null === null
+                      ? null
+                      : elemento.metadatos
+                    : elemento.metadatos,
               });
             }
           }
@@ -370,8 +384,8 @@ export function CrearPqrsdfScreen(): JSX.Element {
 
       void dispatch(add_pqrsdf_service(form_data));
     }
-    dispatch(reset_state());
-    initial_values();
+    // dispatch(reset_state());
+    // initial_values();
   };
   const delete_pqr = (): void => {
     if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
@@ -484,7 +498,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
               reset_state={reset_state}
               set_initial_values={initial_values}
               variant_button={'outlined'}
-              clean_when_leaving={true}
+              clean_when_leaving={false}
             />
           </Grid>
         </Grid>

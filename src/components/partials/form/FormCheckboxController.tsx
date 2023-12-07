@@ -33,6 +33,8 @@ interface IProps {
   disabled: boolean;
   helper_text: string;
   hidden_text?: boolean | null;
+  set_checked?: any;
+  checked?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -49,9 +51,9 @@ const FormCheckboxController = ({
   hidden_text,
   marginTop,
   margin,
+  checked,
+  set_checked,
 }: IProps) => {
-  const [checked, set_checked] = useState(default_value ?? false);
-
   return (
     <>
       {!(hidden_text ?? false) && (
@@ -62,26 +64,52 @@ const FormCheckboxController = ({
           margin={margin ?? 0}
           marginTop={marginTop ?? 0}
         >
-          <Controller
-            name={control_name}
-            control={control_form}
-            defaultValue={default_value ?? false}
-            render={({ field }) => (
-              <FormControl fullWidth>
-                <FormControlLabel
-                  label={label}
-                  control={
-                    <Checkbox
-                      {...field}
-                      defaultChecked={default_value ?? false}
-                      color="primary" // Puedes cambiar el color si lo deseas
-                      disabled={disabled}
-                    />
-                  }
-                />
-              </FormControl>
-            )}
-          />
+          {set_checked !== null ? (
+            <Controller
+              name={control_name}
+              control={control_form}
+              defaultValue={default_value ?? false}
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <FormControlLabel
+                    label={label}
+                    control={
+                      <Checkbox
+                        {...field}
+                        defaultChecked={default_value ?? false}
+                        color="primary" // Puedes cambiar el color si lo deseas
+                        disabled={disabled}
+                        onChange={(e) => {
+                          set_checked(e.target.checked);
+                        }}
+                      />
+                    }
+                  />
+                </FormControl>
+              )}
+            />
+          ) : (
+            <Controller
+              name={control_name}
+              control={control_form}
+              defaultValue={default_value ?? false}
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <FormControlLabel
+                    label={label}
+                    control={
+                      <Checkbox
+                        {...field}
+                        defaultChecked={default_value ?? false}
+                        color="primary" // Puedes cambiar el color si lo deseas
+                        disabled={disabled}
+                      />
+                    }
+                  />
+                </FormControl>
+              )}
+            />
+          )}
         </Grid>
       )}
     </>

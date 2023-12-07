@@ -254,6 +254,8 @@ const BuscarModelo = ({
           hidden_text={form_input.hidden_text ?? null}
           margin={form_input.margin ?? null}
           marginTop={form_input.marginTop ?? null}
+          checked={form_input.checked ?? null}
+          set_checked={form_input.set_checked ?? null}
         />
       );
     } else if (form_input.datum_type === 'button') {

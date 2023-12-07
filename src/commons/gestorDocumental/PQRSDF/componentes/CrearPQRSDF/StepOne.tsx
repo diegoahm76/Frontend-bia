@@ -50,6 +50,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
   };
   useEffect(() => {
     reset(pqr);
+    console.log(pqr);
   }, []);
 
   return (
@@ -100,7 +101,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               md: 4,
               control_form: control_form,
               control_name: 'requiere_rta',
-              default_value: pqr.requiere_rta,
+              default_value: pqr.requiere_rta ?? false,
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Requiere respuesta',
               disabled: false,

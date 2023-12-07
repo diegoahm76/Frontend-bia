@@ -97,7 +97,7 @@ const FormSelectController = ({
                   onChange={(e) => {
                     onChange(e);
                     {
-                      on_change_function !== null &&
+                      (on_change_function ?? null) !== null &&
                         on_change_function(
                           select_options.find(
                             (option: any) =>

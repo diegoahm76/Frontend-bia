@@ -95,7 +95,14 @@ const ListadoAnexos = () => {
         }
       }
     }
-    dispatch(set_metadata(exhibit.metadatos ?? initial_state_metadata));
+    dispatch(
+      set_metadata(
+        {
+          ...exhibit.metadatos,
+          tiene_tipologia: exhibit.metadatos?.id_tipologia_doc !== null,
+        } ?? initial_state_metadata
+      )
+    );
   }, [exhibit]);
 
   useEffect(() => {

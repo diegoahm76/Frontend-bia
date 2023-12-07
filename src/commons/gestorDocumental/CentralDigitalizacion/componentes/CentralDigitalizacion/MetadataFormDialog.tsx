@@ -67,9 +67,13 @@ const MetadataFormDialog = ({
     handleSubmit: handle_submit,
     reset: reset_metadata,
     setValue,
+    getValues: get_values,
+    watch,
   } = useForm<IObjMetaData>();
   const [keywords_object, set_keywords_object] = useState<any[]>([]);
-
+  const [checked_tiene_tipologia, set_checked_tiene_tipologia] = useState(
+    metadata.tiene_tipologia
+  );
   const handle_close_add_bien = (): void => {
     set_is_modal_active(false);
   };
@@ -82,6 +86,7 @@ const MetadataFormDialog = ({
   }, []);
 
   useEffect(() => {
+    console.log(metadata);
     reset_metadata(metadata);
     if (
       metadata.palabras_clave_doc !== null &&
@@ -126,14 +131,44 @@ const MetadataFormDialog = ({
               button_submit_icon_class={null}
               form_inputs={[
                 {
+                  datum_type: 'date_picker_controller',
+                  xs: 12,
+                  md: 2,
+                  control_form: control_metadata,
+                  control_name: 'fecha_creacion_doc',
+                  default_value: '',
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
+                  label: 'Fecha creación',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 2,
+                  control_form: control_metadata,
+                  control_name: 'nro_folios_documento',
+                  default_value: '',
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
+                  label: 'Número de folios',
+                  type: 'number',
+                  disabled: true,
+                  helper_text: '',
+                  step_number: '1',
+                },
+                {
                   datum_type: 'select_controller',
                   xs: 12,
-                  md: 4,
+                  md: 3,
                   control_form: control_metadata,
                   control_name: 'cod_categoria_archivo',
                   default_value: '',
                   rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
+                    required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Categoria de archivo',
                   disabled: false,
@@ -143,26 +178,14 @@ const MetadataFormDialog = ({
                   option_key: 'key',
                 },
                 {
-                  datum_type: 'checkbox_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_metadata,
-                  control_name: 'tiene_replica_fisica',
-                  default_value: metadata.tiene_replica_fisica,
-                  rules: {},
-                  label: 'Tiene réplica física',
-                  disabled: false,
-                  helper_text: '',
-                },
-                {
                   datum_type: 'select_controller',
                   xs: 12,
-                  md: 4,
+                  md: 3,
                   control_form: control_metadata,
                   control_name: 'cod_origen_archivo',
                   default_value: '',
                   rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
+                    required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Origen del archivo',
                   disabled: false,
@@ -174,14 +197,46 @@ const MetadataFormDialog = ({
                 {
                   datum_type: 'checkbox_controller',
                   xs: 12,
-                  md: 4,
+                  md: 2,
+                  control_form: control_metadata,
+                  control_name: 'es_version_original',
+                  default_value: metadata.es_version_original ?? true,
+                  rules: {},
+                  label: 'Versión original',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'checkbox_controller',
+                  xs: 12,
+                  md: 3,
+                  control_form: control_metadata,
+                  control_name: 'tiene_replica_fisica',
+                  default_value: metadata.tiene_replica_fisica,
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
+                  label: 'Tiene réplica física',
+                  disabled: false,
+                  helper_text: '',
+                },
+
+                {
+                  datum_type: 'checkbox_controller',
+                  xs: 12,
+                  md: 3,
                   control_form: control_metadata,
                   control_name: 'tiene_tipologia',
-                  default_value: metadata.tiene_tipologia,
-                  rules: {},
+                  default_value: checked_tiene_tipologia,
+
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
                   label: 'Tiene tipología relacionada',
                   disabled: false,
                   helper_text: '',
+                  checked: checked_tiene_tipologia,
+                  set_checked: set_checked_tiene_tipologia,
                 },
                 {
                   datum_type: 'select_controller',
@@ -190,6 +245,7 @@ const MetadataFormDialog = ({
                   control_form: control_metadata,
                   control_name: 'id_tipologia_doc',
                   default_value: '',
+                  hidden_text: !checked_tiene_tipologia,
                   rules: {
                     required_rule: { rule: false, message: 'Requerido' },
                   },
@@ -201,11 +257,12 @@ const MetadataFormDialog = ({
                   option_key: 'key',
                 },
                 {
-                  datum_type: 'select_controller',
+                  datum_type: 'input_controller',
                   xs: 12,
-                  md: 4,
+                  md: 3,
                   control_form: control_metadata,
                   control_name: 'tipologia_no_creada_en_TRD',
+                  hidden_text: checked_tiene_tipologia,
                   default_value: '',
                   rules: {
                     required_rule: { rule: false, message: 'Requerido' },
@@ -213,9 +270,6 @@ const MetadataFormDialog = ({
                   label: '¿Cual?',
                   disabled: false,
                   helper_text: '',
-                  select_options: file_typologies,
-                  option_label: 'label',
-                  option_key: 'key',
                 },
 
                 {
@@ -255,6 +309,21 @@ const MetadataFormDialog = ({
                   character_separator: '|',
                   set_form: setValue,
                   keywords: 'palabras_clave_doc',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 12,
+                  control_form: control_metadata,
+                  control_name: 'observacion_digitalizacion',
+                  default_value: '',
+                  rules: {},
+                  multiline_text: true,
+                  rows_text: 4,
+                  label: 'Observación',
+                  type: 'text',
+                  disabled: false,
+                  helper_text: '',
                 },
               ]}
             />
