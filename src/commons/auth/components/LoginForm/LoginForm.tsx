@@ -93,7 +93,7 @@ export const LoginForm: React.FC = () => {
               label="Usuario"
               name="nombre_de_usuario"
               size="small"
-              value={nombre_de_usuario}
+              value={nombre_de_usuario ?? ''}
               onChange={on_input_change}
             />
           </Grid>
@@ -106,7 +106,7 @@ export const LoginForm: React.FC = () => {
                 required
                 id="outlined-adornment-password"
                 type={show_password ? 'text' : 'password'}
-                value={password}
+                value={password ?? ''}
                 name="password"
                 onChange={on_input_change}
                 endAdornment={
@@ -132,14 +132,15 @@ export const LoginForm: React.FC = () => {
                   set_is_error(false);
                 }}
               >
-
                 <Typography textAlign="center">
-                  {error_message} &nbsp;
+                  {typeof error_message === 'object'
+                    ? JSON.stringify(error_message)
+                    : error_message}{' '}
+                  &nbsp;
                   {is_blocked && (
                     <Link to="/auth/desbloqueo_usuario">Desbloquear</Link>
                   )}
                 </Typography>
-
               </Alert>
             </Grid>
           )}
@@ -156,6 +157,7 @@ export const LoginForm: React.FC = () => {
           >
             <ReCaptcha
               className="g-recaptcha"
+              // ? debe ser sitekey
               sitekey={process.env.REACT_APP_SITE_KEY ?? ''}
               hl="es"
               onChange={() => {

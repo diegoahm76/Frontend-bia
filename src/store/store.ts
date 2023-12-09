@@ -1,7 +1,8 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import storage from 'redux-persist/lib/storage';
+// import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import { persistReducer } from 'redux-persist';
+import storageSession from 'redux-persist/lib/storage/session';
 
 import { layout_slice } from './layoutSlice';
 import { auth_slice } from '../commons/auth/store/authSlice';
@@ -46,6 +47,7 @@ import { alerta_slice } from '../commons/recaudo/alertas/store/slice/indexAlerta
 import { PsdSlice } from '../commons/gestorDocumental/permisosSeriesDoc/toolkit/slice/PSDSlice';
 import { metadatos_slice } from '../commons/gestorDocumental/configuracionMetadatos/store/slice/indexMetadatos';
 
+
 import { bodegas_slice } from "../commons/almacen/configuracion/store/slice/BodegaSlice";
 import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
 import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
@@ -65,7 +67,7 @@ import { PanelVentanillaSlice } from '../commons/gestorDocumental/panelDeVentani
 
 const persist_config = {
   key: 'macarenia_app',
-  storage,
+  storage: storageSession,
   whitelist: ['auth', 'layout'],
 };
 
@@ -152,6 +154,7 @@ const app_reducers = combineReducers({
  // ? planes
  planes: planes_slice.reducer,
   central_digitalizacion_slice: central_digitalizacion_slice.reducer,
+
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

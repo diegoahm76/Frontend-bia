@@ -3,9 +3,15 @@ import { Button, Grid, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useSstepperFn } from '../../../hook/useSstepperFn';
 export const FormParte2 = (): JSX.Element => {
   //* hooks
   const { controlSegundoPasoEntrega99 } = usePanelVentanilla();
+
+  // ? stepper hook
+  const { handleNext, handleBack } = useSstepperFn();
 
   return (
     <>
@@ -106,28 +112,59 @@ export const FormParte2 = (): JSX.Element => {
 
         <Grid
           item
+          spacing={2}
+          container
           xs={12}
           sm={12}
           sx={{
             width: '100%',
             maxWidth: '100%',
             mt: '2rem',
+            justifyContent: 'center',
             textAlign: 'center',
-            paddingBottom: '2rem',
+            paddingBottom: '1.2rem',
           }}
         >
           <Button
             variant="contained"
-            color="warning"
+            color="primary"
+            startIcon={<ArrowForward />}
             onClick={() => {
               console.log('click siuuu');
+              //* hacer validaciones previas antes de permitir el avance a la parte 3
+
+
+              handleNext();
             }}
             sx={{
-              width: '60%',
+              width: '35%',
+              mr: '2rem',
             }}
           >
             Siguiente
           </Button>
+
+
+          
+         {/* <Button
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              console.log('click siuuu');
+
+
+              //* revisar si se deben hacer validaicones, momentanemante parece que noP
+
+              handleBack();
+            }}
+            startIcon={<ArrowBackIcon />}
+            sx={{
+              width: '35%',
+              ml: '1.2rem',
+            }}
+          >
+            Volver
+          </Button>*/}
         </Grid>
       </form>
     </>

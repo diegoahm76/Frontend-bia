@@ -64,6 +64,7 @@ export const Acciones: FC<any> = (): JSX.Element => {
         ccdOrganigramaCurrentBusqueda?.id_ccd
       ).then((res) => {
         dispatch(setListadoDeAsignaciones(res));
+        
       });
 
       //* lleva id_ccd_nuevo y setLoading

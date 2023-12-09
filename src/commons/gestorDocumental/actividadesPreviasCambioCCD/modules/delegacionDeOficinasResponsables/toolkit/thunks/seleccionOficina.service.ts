@@ -25,19 +25,22 @@ export const getOficinas = async ({
       api.get(url2),
     ]);
 
-    const data1 = parseResponse(response1, 'oficinasActuales', 'unidadActual') as any;
-    const data2 = parseResponse(response2, 'oficinasNuevas', 'unidadNueva') as any;
-
-    console.log('data1', data1);
-    console.log('data2', data2);
+    const data1 = parseResponse(
+      response1,
+      'oficinasActuales',
+      'unidadActual'
+    ) as any;
+    const data2 = parseResponse(
+      response2,
+      'oficinasNuevas',
+      'unidadNueva'
+    ) as any;
 
     if (data1.oficinasActuales.length > 0 && data2.oficinasNuevas.length > 0) {
       const newData = {
         ...data1,
         ...data2,
       };
-
-      console.log('newData', newData);
 
       control_success(
         'Se obtuvieron las oficinas de la unidad organizacional actual'
@@ -52,8 +55,11 @@ export const getOficinas = async ({
     });
 
     return [];
-  } catch (error) {
-    control_error('Ha ocurrido un error al obtener las oficinas');
+  } catch (error: any) {
+    control_error('No se pudieron obtener las oficinas, o no hay oficinas disponibles en la unidad organizacional actual');
+    /* error?.response?.data?.detail ||
+        'Ha ocurrido un error al obtener las oficinas'
+    );*/
     throw error;
   } finally {
     setLoading?.(false);

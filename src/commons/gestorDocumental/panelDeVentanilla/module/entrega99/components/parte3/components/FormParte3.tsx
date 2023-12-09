@@ -12,16 +12,16 @@ import BuildIcon from '@mui/icons-material/Build';
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { useSstepperFn } from '../../../hook/useSstepperFn';
 
 export const FormParte3 = (): JSX.Element => {
-
   // ? hooks
   const { controlTercerPasoEntrega99 } = usePanelVentanilla();
+  // ? stepper hook
+  const { handleBack } = useSstepperFn();
 
   //* context
-  const { handleModalAgregarMetadatos } = useContext(
-    ModalAndLoadingContext
-  );
+  const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
 
   return (
     <>
@@ -252,27 +252,15 @@ export const FormParte3 = (): JSX.Element => {
             color="warning"
             startIcon={<ArrowBackIcon />}
             onClick={() => {
-              console.log('click siuuu');
+              // ? se debe mirar si se debe hacer validaciones para permitir el regreso
+              handleBack();
             }}
             sx={{
-              width: '60%',
+              width: '55%',
+              mt: '2rem',
             }}
           >
             ATRÁS
-          </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            startIcon={<CleanIcon />}
-            onClick={() => {
-              console.log('click siuuu');
-            }}
-            sx={{
-              mt: '1rem',
-              width: '60%',
-            }}
-          >
-            Limpiar campos
           </Button>
         </Grid>
       </form>

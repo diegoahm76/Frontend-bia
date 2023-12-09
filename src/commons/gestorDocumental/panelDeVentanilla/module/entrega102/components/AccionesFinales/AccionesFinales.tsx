@@ -23,12 +23,14 @@ import { getAsignaciones } from '../../services/getAsignaciones.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
-  const { listaAsignaciones, liderAsignado, currentGrupo, setListaAsignaciones } = useContext(
-    AsignacionGrupoContext
-  );
-  const { secondLoading, handleSecondLoading, handleGeneralLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const {
+    listaAsignaciones,
+    liderAsignado,
+    currentGrupo,
+    setListaAsignaciones,
+  } = useContext(AsignacionGrupoContext);
+  const { secondLoading, handleSecondLoading, handleGeneralLoading } =
+    useContext(ModalAndLoadingContext);
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
@@ -40,6 +42,51 @@ export const AccionesFinales = (): JSX.Element => {
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
   );
+
+  // ? declaración de las funciones
+
+  const handleClick = async () => {
+    const item = listaAsignaciones.find(
+      (item: any) =>
+        item.estado_asignado === 'EN ESPERA' ||
+        item.estado_asignado === 'ACEPTADA'
+    );
+
+    if (item) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: `Hay asignaciones pendientes por aceptar o rechazar, por favor verifique`,
+        confirmButtonText: 'Entendido',
+      });
+      return;
+    }
+
+    const res = await postAsignacionGrupo(
+      {
+        id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+        id_persona_asignada: liderAsignado?.id_persona,
+        id_und_org_seccion_asignada: currentGrupo?.value,
+      },
+      handleSecondLoading
+    );
+
+    if (res) {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: `Se ha asignado el grupo correctamente`,
+        confirmButtonText: 'Entendido',
+      });
+
+      const asignaciones = await getAsignaciones(
+        currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+        handleGeneralLoading
+      );
+
+      setListaAsignaciones(asignaciones);
+    }
+  };
 
   return (
     <Grid container sx={containerStyles}>
@@ -64,7 +111,6 @@ export const AccionesFinales = (): JSX.Element => {
               xs={12}
               sm={12}
               sx={{
-                // zIndex: 2,
                 justifyContent: 'center',
               }}
             >
@@ -103,49 +149,7 @@ export const AccionesFinales = (): JSX.Element => {
                   color="success"
                   variant="contained"
                   startIcon={<SaveIcon />}
-                  onClick={() => {
-                    const item = listaAsignaciones.find(
-                      (item: any) =>
-                        item.estado_asignado === 'EN ESPERA' ||
-                        item.estado_asignado === 'ACEPTADA'
-                    );
-                    if (item) {
-                      void Swal.fire({
-                        icon: 'warning',
-                        title: 'Atención',
-                        text: `Hay asignaciones pendientes por aceptar o rechazar, por favor verifique`,
-                        confirmButtonText: 'Entendido',
-                      });
-                      return;
-                    }
-
-                    void postAsignacionGrupo(
-                      {
-                        id_pqrsdf:
-                          currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-                        id_persona_asignada: liderAsignado?.id_persona,
-                        id_und_org_seccion_asignada: currentGrupo?.value,
-                      },
-                      handleSecondLoading
-                    ).then(async (res) => {
-                      if (res) {
-                        void Swal.fire({
-                          icon: 'success',
-                          title: 'Éxito',
-                          text: `Se ha asignado el grupo correctamente`,
-                          confirmButtonText: 'Entendido',
-                        });
-
-                       await getAsignaciones(
-                          currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-                          handleGeneralLoading
-                        ).then((res) => {
-                          setListaAsignaciones(res);
-                        }
-                       )
-                      }
-                    });
-                  }}
+                  onClick={handleClick}
                 >
                   ASIGNAR A GRUPO
                 </LoadingButton>

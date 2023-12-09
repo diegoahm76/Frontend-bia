@@ -6,6 +6,8 @@ import { Parte1Screen } from '../components/parte1/screen/Parte1ScreenAsignacion
 import { validacionInicialCcdAsignacionUnidadesResp } from '../toolkit/thunks/busquedaOrgCcd.service';
 import { Parte2Screen } from '../components/parte2/screen/Parte2Screen';
 import { ListadoAsigScreen } from '../components/parte3/screen/ListadoAsigScreen';
+import { resetStateUniResp } from '../toolkit/slice/types/AsignacionUniResp';
+import { useAppDispatch } from '../../../../../../hooks';
 /**
  * Pantalla principal módulo asignación unidades responsables
  * @returns JSX.Element
@@ -13,6 +15,8 @@ import { ListadoAsigScreen } from '../components/parte3/screen/ListadoAsigScreen
 export const AsignacionUnidadesResponsables = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
+  //* dispatch declaration
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     /*
@@ -21,6 +25,8 @@ export const AsignacionUnidadesResponsables = (): JSX.Element => {
     2. Que haya un ccd diferente al actual que no haya salido de producción
     */
     void validacionInicialCcdAsignacionUnidadesResp(navigate);
+    // ? revisar si se debe hacer el reinicio de los estados para evitar los errores de superposición de datos
+    dispatch(resetStateUniResp());
   }, []);
 
   return (
