@@ -334,6 +334,7 @@ export const AdminUsuariosScreen: React.FC = () => {
                   <Skeleton variant="rectangular" width="100%" height={45} />
                 ) : (
                   <TextField
+                    focused
                     fullWidth
                     label="Número de documento *"
                     type="number"

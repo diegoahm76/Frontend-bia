@@ -42,7 +42,7 @@ export const FuentesIndicadoresScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Metas por indicador " />
+          <Title title="Fuentes de financiación indicadores " />
         </Grid>
       </Grid>
       <ListarFuentesFinanciacion />

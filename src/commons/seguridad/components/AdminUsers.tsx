@@ -114,7 +114,7 @@ export const AdminUsers: React.FC = () => {
               <>
                 <Grid container spacing={2} sx={{ mt: '5px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
-                    <Title title={`Datos personales ${tipo_persona}`} />
+                    <Title title={`Datos personales`} />
                   </Box>
                   {tipo_persona === 'N' ? (
                     <>
@@ -561,7 +561,7 @@ export const AdminUsers: React.FC = () => {
                           {...register_admin_user('sucursal_defecto')}
                           value={watch_exe.sucursal_defecto}
                           onChange={(selectedOption) => {
-                            console.log(selectedOption);
+                            //console.log(selectedOption);
                             set_value_admin_user(
                               'sucursal_defecto',
                               selectedOption
@@ -575,7 +575,7 @@ export const AdminUsers: React.FC = () => {
                               zIndex: 99,
                             }),
                           }}
-                          menuPlacement="top"
+                          menuPlacement="bottom"
                         />
                         <label>
                           <small
@@ -662,7 +662,7 @@ export const AdminUsers: React.FC = () => {
                 startIcon={<EditIcon />}
               >
                 {action_admin_users === 'EDIT'
-                  ? 'EDITAR'
+                  ? 'GUARDAR'
                   : action_admin_users === 'CREATE' && 'CREAR'}
               </LoadingButton>
             </Stack>

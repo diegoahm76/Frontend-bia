@@ -1,58 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { useState, createContext, type SetStateAction, ReactNode } from "react"
+import { useState, createContext } from "react"
+import { Formulario, FormularioConfiguracionTipologuiaproviderProps, Inicial_Formulario, TipodeCeaccionInterfaz, VariablesCreacionPlantilla, valores_defecto_plantilla } from "../interfaces/ConfiguracionTipologuias";
 
-
-
-interface TipodeCeaccionInterfaz {
-  Formulario_Empresa: any,
-  Set_Formulario_Empresa: React.Dispatch<SetStateAction<any>>,
-
-  Datos_Return: any,
-  Set_Datos_Return: React.Dispatch<SetStateAction<any>>,
-
-
-}
-
-export interface ConfiguracionPorUnidad {
-  valor_inicial: any;
-  cantidad_digitos: any;
-  prefijo_consecutivo: any;
-  id_unidad_organizacional: any;
-}
-
-interface FormularioConfiguracionTipologuiaproviderProps {
-  children: ReactNode;
-}
-
-
-interface Formulario {
-
-  id_tipologia_documental: number,
-  opcion_seleccionada: string,
-  valor_inicial: number,
-  cantidad_digitos: number,
-  maneja_consecutivo: boolean,
-  configuracion_por_unidad: ConfiguracionPorUnidad[],
-
-
-
-}
 
 export const TipodeCeaccionContext = createContext<TipodeCeaccionInterfaz>
-  ({ Formulario_Empresa: [], Set_Formulario_Empresa: () => { }, Set_Datos_Return: () => { }, Datos_Return: [] });
-
-
-
-
-export const Inicial_Formulario: Formulario = {
-  id_tipologia_documental: 0,
-  opcion_seleccionada: "",
-  valor_inicial: 1,
-  cantidad_digitos: 0,
-  maneja_consecutivo: false,
-  configuracion_por_unidad: [],
-}
+  ({
+    Formulario_Empresa: [],
+    Set_Formulario_Empresa: () => { },
+    Set_Datos_Return: () => { },
+    Datos_Return: [],
+    form: [],
+    set_form: () => { },
+  });
 
 
 
@@ -61,12 +21,12 @@ export const FormularioConfiguracionTipologuiaprovider
 
     const [Datos_Return, Set_Datos_Return] = useState<any>([]);
     const [Formulario_Empresa, Set_Formulario_Empresa] = useState<Formulario>(Inicial_Formulario);
+    const [form, set_form] = useState<VariablesCreacionPlantilla>(valores_defecto_plantilla);
+    console.log(form);
+    console.log(Formulario_Empresa);
 
 
-
-
-
-    const Valores_Formulario_Empresa_tipologia = { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return, Datos_Return };
+    const Valores_Formulario_Empresa_tipologia = { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return, Datos_Return, form, set_form };
 
     return (
       <TipodeCeaccionContext.Provider value={Valores_Formulario_Empresa_tipologia}>
