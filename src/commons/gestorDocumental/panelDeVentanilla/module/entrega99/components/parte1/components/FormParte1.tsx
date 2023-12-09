@@ -1,15 +1,25 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, TextField } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import React, { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useSstepperFn } from '../../stepper/functions/useSstepperFn';
+import { useSstepperFn } from '../../../hook/useSstepperFn';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import { SolicitudAlUsuarioContext } from '../../../context/SolicitudUsarioContext';
 import { formatDate } from '../../../../../../../../utils/functions/formatDate';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { columnsGridHistorico } from '../utils/columnsGridHistorico';
-import { rowsGridHistorico } from '../utils/rowsEjemplo';
+import { AccountCircle } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const FormParte1 = (): JSX.Element => {
   // ? stepper hook
@@ -19,7 +29,51 @@ export const FormParte1 = (): JSX.Element => {
   const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
   const { secondLoading } = useContext(ModalAndLoadingContext);
 
+  // ? definicion de las columnas
 
+  const columns = [
+    ...columnsGridHistorico,
+    {
+      headerName: 'Acciones',
+      field: 'accion',
+      renderCell: (params: any) => (
+        <Tooltip title="Ver solicitud realizada">
+          <IconButton
+            onClick={() => {
+              // ? se debe llamar el servicio de los elementos que
+              /*dispatch(get_trd_current(params.row));
+              closeModalModalSearchTRD();
+              dispatch(get_trds([]));
+              const ccd_current = {
+                id_ccd: params?.row?.id_ccd,
+                id_organigrama: params?.row?.id_organigrama
+              };
+              dispatch(
+                getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
+              ).then((res: any) => {
+                dispatch(get_catalogo_trd(params.row.id_trd));
+              });*/
+              console.log(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
+      ),
+    },
+  ];
 
   if (secondLoading) {
     return (
@@ -36,7 +90,7 @@ export const FormParte1 = (): JSX.Element => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Loader altura={280} />
+        <Loader altura={350} />
       </Grid>
     );
   }
@@ -52,6 +106,7 @@ export const FormParte1 = (): JSX.Element => {
         spacing={2}
         sx={{
           mb: '2rem',
+          justifyContent: 'center',
         }}
       >
         <Grid item xs={12} sm={6}>
@@ -135,6 +190,14 @@ export const FormParte1 = (): JSX.Element => {
               mt: '1.5rem',
               mb: '1.5rem',
             }}
+            //* revisar que crea esta configuración de InputProps
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircle />
+                </InputAdornment>
+              ),
+            }}
             rows={5}
             size="small"
             label="Descripción de la PQRSDF"
@@ -150,11 +213,29 @@ export const FormParte1 = (): JSX.Element => {
         {/* tabla de elementos a mostrar */}
 
         {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
-        <RenderDataGrid
-          title="Tabla de elementos a mostrar"
-          columns={columnsGridHistorico ?? []}
-          rows={rowsGridHistorico ?? []}
-        />
+
+        {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
+        0 ? (
+          <RenderDataGrid
+            title="Histórico de solicitudes de complemento al usuario"
+            columns={columns ?? []}
+            rows={
+              [
+                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
+                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
+                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
+              ] ?? []
+            }
+          />
+        ) : (
+          <Typography
+            variant="body1"
+            color="text.primary"
+            sx={{ textAlign: 'center', justifyContent: 'center', mt: '1.5rem' }}
+          >
+            No hay histórico de solicitudes para esta PQRSDF
+          </Typography>
+        )}
       </Grid>
 
       <Grid

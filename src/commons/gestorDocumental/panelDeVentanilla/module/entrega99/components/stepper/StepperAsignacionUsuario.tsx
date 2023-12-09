@@ -10,9 +10,16 @@ import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
 import { Parte1Screen } from '../parte1/screen/Parte1Screen';
 import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
-import { useSstepperFn } from './functions/useSstepperFn';
+import { useSstepperFn } from '../../hook/useSstepperFn';
+import { useSolicitudUsuario } from '../../hook/useSolicitudUsuario';
 
-export const StepperAsignacionUsuario = (): JSX.Element => {
+export const StepperAsignacionUsuario = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+}: any): JSX.Element => {
   const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
     PanelVentanillaContext
   );

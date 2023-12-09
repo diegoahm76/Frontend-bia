@@ -19,22 +19,5 @@ export const Parte1Screen = (): JSX.Element => {
     </Grid>
   );
 };
+// Compare this snippet from src/commons/gestorDocumental/panelDeVentanilla/module/entrega99/components/parte1/screen/Parte1Screen.tsx:
 
-{
-  /*
-
-             <TextField
-              id="input-with-icon-textfield"
-              label="TextField"
-              InputProps={{
-              startAdornment: (
-            <InputAdornment position="start">
-              <AccountCircle />
-            </InputAdornment>
-          ),
-        }}
-        variant="standard"
-      />
-          
-          */
-}

@@ -90,17 +90,17 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       await validacionInicialDataPendientePorPersistir(params.row.id_ccd);
 
     if (validacionSeccionesPendientes?.data.length) {
-      const array = Array.from({ length: 12 }, (_, i) => ({
+     /* const array = Array.from({ length: 12 }, (_, i) => ({
         codigo: 'CCD' + i,
         nombre: `nombre${i}`,
       }));
-
+*/
       const htmlText = `
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
           <p>asigne un responsable a ésta(s) unidad(es) de tipo de sección / subsección para continuar en este módulo.</p>
           <p><b>CCD seleccionado :</b> Nombre: ${nombre} - Versión: ${version}</p>
           <ul style = "padding:0">
-            ${[...validacionSeccionesPendientes.data, ...array]
+            ${[...validacionSeccionesPendientes.data]
               .map(
                 (el: any) =>
                   `<li style="list-style: none; margin-top:5px;">Unidad: <b>${el.codigo}</b> - ${el.nombre}</li>`

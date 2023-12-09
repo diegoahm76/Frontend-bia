@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 import { useContext } from 'react';
-import { PanelVentanillaContext } from '../../../../../context/PanelVentanillaContext';
+import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
 
 export const useSstepperFn = () => {
   const { skipped, activeStep, setSkipped, setActiveStep } = useContext(

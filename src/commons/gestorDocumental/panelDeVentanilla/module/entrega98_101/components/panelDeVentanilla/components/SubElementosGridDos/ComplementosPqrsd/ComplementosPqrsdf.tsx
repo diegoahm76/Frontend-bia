@@ -228,7 +228,14 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
 */
   return (
     <RenderDataGrid
-      rows={[...listaComplementosRequerimientosOtros] ?? []}
+      rows={
+        [
+          ...listaComplementosRequerimientosOtros,
+          ...listaComplementosRequerimientosOtros,
+          ...listaComplementosRequerimientosOtros,
+          ...listaComplementosRequerimientosOtros,
+        ] ?? []
+      }
       columns={columns ?? []}
       title="Complementos del elemento seleccionado"
       aditionalElement={

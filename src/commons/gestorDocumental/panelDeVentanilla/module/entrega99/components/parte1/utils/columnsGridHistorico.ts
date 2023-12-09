@@ -1,33 +1,34 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-/*
-id_solicitud_al_usuario_sobre_pqrsdf,
-tipo_tramite,
-fecha_radicado_entrada,
-numero_salida,
-estado,
-*/
+/*{
+  "id_solicitud_al_usuario_sobre_pqrsdf": 35,
+  "tipo_tramite": "Solicitud de Complemento de Información al Usuario",
+  "fecha_radicado_salida": null,
+  "numero_radicado": "SIN RADICAR",
+  "estado": "PENDIENTE POR RADICAR"
+},*/
 
 export const columnsGridHistorico = [
   {
     headerName: 'Tipo de trámite',
     field: 'tipo_tramite',
-    width: 200,
+    width: 400,
   },
   {
     headerName: 'Fecha de radicado de salida',
-    field: 'fecha_radicado_entrada',
-    width: 200,
+    field: 'fecha_radicado_salida',
+    width: 230,
+    renderCell: (params: any) => params.value || 'N/A',
   },
   {
     headerName: 'Número de radicado de salida',
-    field: 'numero_salida',
-    width: 200,
+    field: 'numero_radicado',
+    width: 250,
   },
   {
     headerName: 'Estado',
     field: 'estado',
-    width: 200,
+    width: 230,
   },
 ]
 

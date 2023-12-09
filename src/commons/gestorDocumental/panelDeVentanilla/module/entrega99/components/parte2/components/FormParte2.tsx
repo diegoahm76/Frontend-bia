@@ -5,7 +5,7 @@ import { control_warning } from '../../../../../../../almacen/configuracion/stor
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useSstepperFn } from '../../stepper/functions/useSstepperFn';
+import { useSstepperFn } from '../../../hook/useSstepperFn';
 export const FormParte2 = (): JSX.Element => {
   //* hooks
   const { controlSegundoPasoEntrega99 } = usePanelVentanilla();
@@ -113,12 +113,14 @@ export const FormParte2 = (): JSX.Element => {
         <Grid
           item
           spacing={2}
+          container
           xs={12}
           sm={12}
           sx={{
             width: '100%',
             maxWidth: '100%',
             mt: '2rem',
+            justifyContent: 'center',
             textAlign: 'center',
             paddingBottom: '1.2rem',
           }}

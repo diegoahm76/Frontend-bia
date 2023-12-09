@@ -12,7 +12,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
-import { useSstepperFn } from '../../stepper/functions/useSstepperFn';
+import { useSstepperFn } from '../../../hook/useSstepperFn';
 
 export const FormParte3 = (): JSX.Element => {
   // ? hooks

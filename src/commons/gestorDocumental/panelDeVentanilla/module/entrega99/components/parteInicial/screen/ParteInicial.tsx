@@ -11,8 +11,15 @@ import { useNavigate } from 'react-router-dom';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { useSstepperFn } from '../../../hook/useSstepperFn';
 
-export const ParteInicial: React.FC = (): JSX.Element => {
+export const ParteInicial: React.FC = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+}: any): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
 
@@ -22,28 +29,26 @@ export const ParteInicial: React.FC = (): JSX.Element => {
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
   );
 
+  const { handleReset } = useSstepperFn();
+
   //* context declaration
   const { setInfoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
-  const { generalLoading, handleGeneralLoading, handleSecondLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const { generalLoading, handleGeneralLoading, handleSecondLoading } =
+    useContext(ModalAndLoadingContext);
 
   useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) {
       navigate('/app/gestor_documental/panel_ventanilla/');
       return;
     }
-
+    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
+    handleReset();
     void getInitialData(
       currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
       navigate,
       handleGeneralLoading,
-      handleSecondLoading,
+      handleSecondLoading
     ).then((data) => {
-      /*{
-         dataTitular: {},
-         dataSolicita: {},
-      }*/
       setInfoInicialUsuario(data);
     });
   }, []);
