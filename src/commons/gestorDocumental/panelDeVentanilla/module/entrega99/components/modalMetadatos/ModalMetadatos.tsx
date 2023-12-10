@@ -19,29 +19,28 @@ import { Title } from '../../../../../../../components';
 import CloseIcon from '@mui/icons-material/Close';
 import { Controller } from 'react-hook-form';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { usePanelVentanilla } from '../../../../hook/usePanelVentanilla';
 import Select from 'react-select';
 import SaveIcon from '@mui/icons-material/Save';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
+import {
+  categoriaArhivo,
+  tieneReplicaFisisca,
+  tieneTipologiaRelacionada,
+} from './utils/choices';
+import { usePanelVentanilla } from '../../../../hook/usePanelVentanilla';
 
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 },
-];
 export const ModalMetadatos = (): JSX.Element => {
-  //* hooks
-  const { controlManejoMetadatosModal, watchExeManejoModalMetadatos } =
-    usePanelVentanilla();
-
   //* context
   const { modalAgregarMetadatos, handleModalAgregarMetadatos } = useContext(
     ModalAndLoadingContext
   );
+
+  //* hooks
+  const {
+    controlManejoMetadatosModal,
+    watchExeManejoModalMetadatos,
+    resetManejoMetadatosModal,
+  } = usePanelVentanilla();
 
   return (
     <>
@@ -82,8 +81,9 @@ export const ModalMetadatos = (): JSX.Element => {
                   mb: '1.2rem',
                 }}
               >
+                {/* Categoria del archivo */}
                 <Controller
-                  name="id_ccd"
+                  name="categoriaArchivoMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
                   render={({
@@ -103,8 +103,7 @@ export const ModalMetadatos = (): JSX.Element => {
                           );*/
                           onChange(selectedOption);
                         }}
-                        // isDisabled={trd_current != null}
-                        options={[]}
+                        options={categoriaArhivo ?? []}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -134,7 +133,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 }}
               >
                 <Controller
-                  name="id_ccd"
+                  name="tieneReplicaFisicaMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
                   render={({
@@ -144,7 +143,6 @@ export const ModalMetadatos = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
-                        // name="id_ccd"
                         onChange={(selectedOption) => {
                           console.log(selectedOption);
                           /* dispatch(
@@ -155,7 +153,7 @@ export const ModalMetadatos = (): JSX.Element => {
                           onChange(selectedOption);
                         }}
                         // isDisabled={trd_current != null}
-                        options={[]}
+                        options={tieneReplicaFisisca ?? []}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -185,44 +183,25 @@ export const ModalMetadatos = (): JSX.Element => {
                 }}
               >
                 <Controller
-                  name="id_ccd"
+                  name="origenArchivoMetadatos"
                   control={controlManejoMetadatosModal}
+                  defaultValue=""
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <div>
-                      <Select
-                        value={value}
-                        // name="id_ccd"
-                        onChange={(selectedOption) => {
-                          console.log(selectedOption);
-                          /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
-                          onChange(selectedOption);
-                        }}
-                        // isDisabled={trd_current != null}
-                        options={[]}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Origen del archivo
-                        </small>
-                      </label>
-                    </div>
+                    <TextField
+                      required
+                      fullWidth
+                      label="Origen del archivo"
+                      size="small"
+                      variant="outlined"
+                      value={'Electrónico'}
+                      disabled
+                      InputLabelProps={{ shrink: true }}
+                      inputProps={{ maxLength: 50 }}
+                    />
                   )}
                 />
               </Grid>
@@ -238,7 +217,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 }}
               >
                 <Controller
-                  name="id_ccd"
+                  name="tieneTipologiaRelacionadaMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
                   render={({
@@ -248,21 +227,15 @@ export const ModalMetadatos = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
-                        // name="id_ccd"
                         onChange={(selectedOption) => {
                           console.log(selectedOption);
-                          /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
                           {
                             /* si se selcciona el si se debe mostrar el select de las tipologías documentales que se van a establecer */
                           }
                           onChange(selectedOption);
                         }}
                         // isDisabled={trd_current != null}
-                        options={[]}
+                        options={tieneTipologiaRelacionada ?? []}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -283,96 +256,102 @@ export const ModalMetadatos = (): JSX.Element => {
                 />
               </Grid>
               {/* se debe revisar en que momento mostrar este combo de select */}
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
-                }}
-              >
-                <Controller
-                  name="id_ccd"
-                  control={controlManejoMetadatosModal}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <div>
-                      <Select
-                        value={value}
-                        // name="id_ccd"
-                        onChange={(selectedOption) => {
-                          console.log(selectedOption);
-                          /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
-                          onChange(selectedOption);
-                        }}
-                        // isDisabled={trd_current != null}
-                        options={[]}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
+
+              {!watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos
+                ?.value ? null : watchExeManejoModalMetadatos
+                  .tieneTipologiaRelacionadaMetadatos?.value === 'Si' ? (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  sx={{
+                    mt: '1.2rem',
+                    mb: '1.2rem',
+                  }}
+                >
+                  <Controller
+                    name="id_ccd"
+                    control={controlManejoMetadatosModal}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <div>
+                        <Select
+                          value={value}
+                          // name="id_ccd"
+                          onChange={(selectedOption) => {
+                            console.log(selectedOption);
+                            /* dispatch(
+                          getServiceSeriesSubseriesXUnidadOrganizacional(
+                            selectedOption.item
+                          )
+                        );*/
+                            onChange(selectedOption);
                           }}
-                        >
-                          Tipología documental
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
-                }}
-              >
-                <Controller
-                  name="nombre"
-                  control={controlManejoMetadatosModal}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      required
-                      // margin="dense"
-                      fullWidth
-                      // name="nombre"
-                      label="¿Cual?"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                        /*e.target.value.length === 50 &&
+                          // isDisabled={trd_current != null}
+                          options={[]}
+                          placeholder="Seleccionar"
+                        />
+                        <label>
+                          <small
+                            style={{
+                              color: 'rgba(0, 0, 0, 0.6)',
+                              fontWeight: 'thin',
+                              fontSize: '0.75rem',
+                              marginTop: '0.25rem',
+                              marginLeft: '0.25rem',
+                            }}
+                          >
+                            Tipología documental
+                          </small>
+                        </label>
+                      </div>
+                    )}
+                  />
+                </Grid>
+              ) : (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  sx={{
+                    mt: '1.2rem',
+                    mb: '1.2rem',
+                  }}
+                >
+                  <Controller
+                    name="nombre"
+                    control={controlManejoMetadatosModal}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        required
+                        // margin="dense"
+                        fullWidth
+                        // name="nombre"
+                        label="¿Cual?"
+                        size="small"
+                        variant="outlined"
+                        value={value}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                          onChange(e.target.value);
+                          /*e.target.value.length === 50 &&
                           control_warning('máximo 50 caracteres');*/
-                        // console.log(e.target.value);
-                      }}
-                      inputProps={{ maxLength: 50 }}
-                    />
-                  )}
-                />
-              </Grid>
+                          // console.log(e.target.value);
+                        }}
+                        inputProps={{ maxLength: 50 }}
+                      />
+                    )}
+                  />
+                </Grid>
+              )}
 
               <Grid
                 item
@@ -456,7 +435,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 />
               </Grid>
 
-              <Grid xs={12} sm={12} sx={{ mt: '1.2rem', mb: '1.2rem' }}>
+              <Grid item xs={12} sm={12} sx={{ mt: '1.2rem', mb: '1.2rem' }}>
                 <Controller
                   name="autocomplete"
                   control={controlManejoMetadatosModal}
@@ -518,6 +497,8 @@ export const ModalMetadatos = (): JSX.Element => {
                 variant="contained"
                 onClick={() => {
                   console.log('cerrando modal');
+
+                  resetManejoMetadatosModal();
                 }}
                 startIcon={<CloseIcon />}
               >

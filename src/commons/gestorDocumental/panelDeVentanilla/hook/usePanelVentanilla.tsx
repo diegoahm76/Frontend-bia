@@ -75,22 +75,17 @@ export const usePanelVentanilla = () => {
 
   // ? Segundo paso solicitud al usuario
   const {
-    control: controlSegundoPasoEntrega99,
-    handleSubmit: handleSubmitSegundoPasoEntrega99,
-    // formState: formStateSegundoFormulario,
-    setValue: setValueSegundoFormularioEntrega99,
-    reset: resetSegundoFormularioEntrega99,
+    control: controlFormulario,
+    handleSubmit: handleSubmitFormulario,
+    formState: { errors: errorsFormulario },
+    reset: resetFormulario,
+    watch: watchFormulario,
+    setValue: setValueFormulario,
+    getValues: getValuesFormulario,
   } = useForm();
 
-  // ? Tercer paso solicitud al usuario
-  const {
-    control: controlTercerPasoEntrega99,
-    handleSubmit: handleSubmitTercerPasoEntrega99,
-    // formState: formStateTercerFormulario,
-    setValue: setValueTercerFormularioEntrega99,
-    reset: resetTercerPasoEntrega99,
-  } = useForm();
-
+  const watchFormularioValues = watchFormulario();
+  console.log('watchFormulario', watchFormularioValues);
   // ? ----- controles para el manejo del modal de metadatos de la entrega 99 -----
 
   const {
@@ -104,6 +99,7 @@ export const usePanelVentanilla = () => {
 
   //
   const watchExeManejoModalMetadatos = watchManejoMetadatosModal();
+  console.log('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
 
   return {
     // ! DECLARACIONES PARA LA ENTREGA 98 ................//
@@ -119,17 +115,14 @@ export const usePanelVentanilla = () => {
     // ! DECLARACIONES PARA LA ENTREGA 99 ................//
     // ! DECLARACIONES PARA LA ENTREGA 99 ................//
 
-    // ? Segundo paso
-    controlSegundoPasoEntrega99,
-    handleSubmitSegundoPasoEntrega99,
-    setValueSegundoFormularioEntrega99,
-    resetSegundoFormularioEntrega99,
-
-    // ? Tercer paso
-    controlTercerPasoEntrega99,
-    handleSubmitTercerPasoEntrega99,
-    setValueTercerFormularioEntrega99,
-    resetTercerPasoEntrega99,
+    // ? Formulario de solicitud al usuario
+    controlFormulario,
+    handleSubmitFormulario,
+    errorsFormulario,
+    resetFormulario,
+    watchFormulario: watchFormularioValues,
+    setValueFormulario,
+    getValuesFormulario,
 
     // ? Manejo del modal de metadatos
     controlManejoMetadatosModal,

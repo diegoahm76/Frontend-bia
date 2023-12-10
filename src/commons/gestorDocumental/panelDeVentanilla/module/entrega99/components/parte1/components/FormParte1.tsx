@@ -21,7 +21,13 @@ import { columnsGridHistorico } from '../utils/columnsGridHistorico';
 import { AccountCircle } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-export const FormParte1 = (): JSX.Element => {
+export const FormParte1 = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+}: any): JSX.Element => {
   // ? stepper hook
   const { handleNext } = useSstepperFn();
 

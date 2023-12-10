@@ -11,7 +11,6 @@ import { steps } from './constants/constants';
 import { Parte1Screen } from '../parte1/screen/Parte1Screen';
 import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
 import { useSstepperFn } from '../../hook/useSstepperFn';
-import { useSolicitudUsuario } from '../../hook/useSolicitudUsuario';
 
 export const StepperAsignacionUsuario = ({
   controlFormulario,
@@ -101,11 +100,29 @@ export const StepperAsignacionUsuario = ({
           {(() => {
             switch (activeStep) {
               case 0:
-                return <Parte1Screen />;
+                return <Parte1Screen
+                  controlFormulario={controlFormulario}
+                  handleSubmitFormulario={handleSubmitFormulario}
+                  errorsFormulario={errorsFormulario}
+                  resetFormulario={resetFormulario}
+                  watchFormulario={watchFormulario}
+                />;
               case 1:
-                return <Parte2Screen />;
+                return <Parte2Screen
+                  controlFormulario={controlFormulario}
+                  handleSubmitFormulario={handleSubmitFormulario}
+                  errorsFormulario={errorsFormulario}
+                  resetFormulario={resetFormulario}
+                  watchFormulario={watchFormulario}
+                />;
               case 2:
-                return <Parte3Screen />;
+                return <Parte3Screen
+                  controlFormulario={controlFormulario}
+                  handleSubmitFormulario={handleSubmitFormulario}
+                  errorsFormulario={errorsFormulario}
+                  resetFormulario={resetFormulario}
+                  watchFormulario={watchFormulario}
+                />;
               default:
                 return null;
             }

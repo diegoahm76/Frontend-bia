@@ -5,23 +5,29 @@ import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../../../../../fileWeight/fileWeight';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BuildIcon from '@mui/icons-material/Build';
-import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { useSstepperFn } from '../../../hook/useSstepperFn';
+import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 
-export const FormParte3 = (): JSX.Element => {
+export const FormParte3 = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+}: any): JSX.Element => {
   // ? hooks
-  const { controlTercerPasoEntrega99 } = usePanelVentanilla();
+  // const { controlTercerPasoEntrega99 } = usePanelVentanilla();
   // ? stepper hook
   const { handleBack } = useSstepperFn();
 
   //* context
   const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
+
 
   return (
     <>
@@ -34,7 +40,7 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="ruta_soporte"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: false }}
               render={({
@@ -110,7 +116,7 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="nombre_archivo"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -139,7 +145,7 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="medio_alamacenamiento"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -163,10 +169,14 @@ export const FormParte3 = (): JSX.Element => {
 
           {/* Inicio de la segunda fila de elementos */}
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4}
+            sx={{
+              mb: '2rem',
+            }}
+            >
             <Controller
               name="numero_folios"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -235,6 +245,17 @@ export const FormParte3 = (): JSX.Element => {
           </Grid>
         </Grid>
 
+
+            {/* RenderDataGrid para los anexos que se van a ir creando */}
+
+              <RenderDataGrid
+                title="Listado de Anexos"
+                columns={[]}
+                rows={[]}
+
+              />
+
+
         <Grid
           item
           xs={12}
@@ -266,7 +287,7 @@ export const FormParte3 = (): JSX.Element => {
       </form>
 
       {/* espacio para el modal de agregar metadatos */}
-      <ModalMetadatos />
+      <ModalMetadatos/>
       {/* espacio para el modal de agregar metadatos */}
     </>
   );

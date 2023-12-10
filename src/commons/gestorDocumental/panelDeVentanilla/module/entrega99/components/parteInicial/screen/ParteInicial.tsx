@@ -13,13 +13,7 @@ import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { useSstepperFn } from '../../../hook/useSstepperFn';
 
-export const ParteInicial: React.FC = ({
-  controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
-  resetFormulario,
-  watchFormulario,
-}: any): JSX.Element => {
+export const ParteInicial: React.FC  = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
 

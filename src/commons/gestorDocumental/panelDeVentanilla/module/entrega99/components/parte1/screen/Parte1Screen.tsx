@@ -5,7 +5,13 @@ import { Title } from '../../../../../../../../components';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { FormParte1 } from '../components/FormParte1';
 
-export const Parte1Screen = (): JSX.Element => {
+export const Parte1Screen = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+}: any): JSX.Element => {
   return (
     <Grid
       item
@@ -15,7 +21,13 @@ export const Parte1Screen = (): JSX.Element => {
       }}
     >
       <Title title="Información del PQRSDF a solicitar complemento de información" />
-      <FormParte1 />
+      <FormParte1
+        controlFormulario={controlFormulario}
+        handleSubmitFormulario={handleSubmitFormulario}
+        errorsFormulario={errorsFormulario}
+        resetFormulario={resetFormulario}
+        watchFormulario={watchFormulario}
+      />
     </Grid>
   );
 };
