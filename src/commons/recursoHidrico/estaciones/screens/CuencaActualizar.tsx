@@ -62,6 +62,7 @@ interface SubZonaHidricaForm {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedMacroCuenca, selectedSubZonaHidrica, selectedSubZonaHidricaId, isActualizarModalActivo, setIsActualizarModalActivo }) => {
+    const [selectedCuenca, setSelectedCuenca] = useState<number | "">("");
 
     const initialState: SubZonaHidricaForm = {
         codigo_rio: "",
@@ -71,7 +72,6 @@ export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedM
         id_tipo_agua_zona_hidrica: 0,
     };
     const [formValues, setFormValues] = useState<SubZonaHidricaForm>(initialState);
-    const [selectedCuenca, setSelectedCuenca] = useState<number | "">("");
     useEffect(() => {
         if (selectedSubZonaHidrica) {
             setSelectedCuenca(selectedMacroCuenca)
@@ -85,12 +85,19 @@ export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedM
         }
     }, [selectedSubZonaHidrica]);
     const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
+        const { name, value } = event.target;
+    
+        let newCodigoRio = formValues.codigo_rio;
+        if (name === "id_zona_hidrica") {
+            // Actualiza codigo_rio cuando cambia id_zona_hidrica
+            newCodigoRio = `${selectedCuenca}${value}`;
+        }
         setFormValues({
             ...formValues,
-            [event.target.name]: event.target.value
+            [name]: value,
+            ...(name === "id_zona_hidrica" && { codigo_rio: newCodigoRio })
         });
     };
-
 
     const [cuencas, setCuencas] = useState<CuencaData[]>([]);
     const fetchCuencas = async (): Promise<void> => {
@@ -108,7 +115,14 @@ export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedM
     }, []);
 
     const handleChange = (event: SelectChangeEvent<number>) => {
-        setSelectedCuenca(event.target.value as number);
+        const newSelectedCuenca = event.target.value as number;
+        setSelectedCuenca(newSelectedCuenca);
+    
+        // Actualiza codigo_rio cuando cambia la cuenca seleccionada
+        setFormValues({
+            ...formValues,
+            codigo_rio: `${newSelectedCuenca}${formValues.id_zona_hidrica}`
+        });
     };
     // const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 
@@ -202,6 +216,49 @@ export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedM
                     </Grid>
                  
                     <Grid container item xs={12} spacing={2} marginTop={2}>
+
+                    <Grid item xs={12} sm={4}>
+                            {/* Select para Zona Hidrica */}
+                            <FormControl required size="small" fullWidth >
+                                <InputLabel id="id_tipo_agua_zona_hidrica"> Tipo agua zona hídrica  </InputLabel>
+                                <Select
+                                    labelId="select-zonahidrica-label"
+                                    id="id_tipo_agua_zona_hidrica"
+                                    value={formValues.id_tipo_agua_zona_hidrica}
+                                    label="  id_tipo_agua_zona_hidrica"
+                                    name="id_tipo_agua_zona_hidrica"
+                                    onChange={handleInputChange}
+                                >
+                                    {tipoAguas.map((zona) => (
+                                        <MenuItem key={zona.id_tipo_agua_zona_hidrica} value={zona.id_tipo_agua_zona_hidrica}>
+                                            {zona.nombre_tipo_agua_zona_hidrica}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={4}>
+                            {/* Select para Zona Hidrica */}
+                            <FormControl required size="small" fullWidth>
+                                <InputLabel id="select-zonahidrica-label">Tipo de zona </InputLabel>
+                                <Select
+                                    value={formValues.id_tipo_zona_hidrica}
+                                    label="Zona Hidrica"
+                                    onChange={handleInputChange}
+                                    name="id_tipo_zona_hidrica"
+                                >
+                                    {tipoRio.map((rio) => (
+                                        <MenuItem key={rio.id_tipo_zona_hidrica} value={rio.id_tipo_zona_hidrica}>
+                                            {rio.nombre_tipo_zona_hidrica}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+
+
                         <Grid item xs={12} sm={4}>
                             <FormControl required size="small" fullWidth >
                                 <InputLabel id="select-cuenca-label">Cuenca</InputLabel>
@@ -225,26 +282,7 @@ export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedM
 
 
 
-                        <Grid item xs={12} sm={4}>
-                            {/* Select para Zona Hidrica */}
-                            <FormControl required size="small" fullWidth >
-                                <InputLabel id="id_tipo_agua_zona_hidrica"> Tipo agua zona hidrica  </InputLabel>
-                                <Select
-                                    labelId="select-zonahidrica-label"
-                                    id="id_tipo_agua_zona_hidrica"
-                                    value={formValues.id_tipo_agua_zona_hidrica}
-                                    label="  id_tipo_agua_zona_hidrica"
-                                    name="id_tipo_agua_zona_hidrica"
-                                    onChange={handleInputChange}
-                                >
-                                    {tipoAguas.map((zona) => (
-                                        <MenuItem key={zona.id_tipo_agua_zona_hidrica} value={zona.id_tipo_agua_zona_hidrica}>
-                                            {zona.nombre_tipo_agua_zona_hidrica}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                     
 
 
 
@@ -254,12 +292,12 @@ export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedM
                         <Grid item xs={12} sm={4}>
                             {/* Select para Zona Hidrica */}
                             <FormControl required size="small" fullWidth >
-                                <InputLabel id="select-zonahidrica-label">Zona Hidrica</InputLabel>
+                                <InputLabel id="select-zonahidrica-label">Zona hídrica</InputLabel>
                                 <Select
                                     labelId="select-zonahidrica-label"
                                     id="id_zona_hidrica"
                                     value={formValues.id_zona_hidrica}
-                                    label="Zona Hidrica"
+                                    label="Zona hídrica"
                                     name="id_zona_hidrica"
                                     onChange={handleInputChange}
                                 >
@@ -273,44 +311,25 @@ export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedM
                         </Grid>
 
 
-                        <Grid item xs={12} sm={4}>
-                            {/* Select para Zona Hidrica */}
-                            <FormControl required size="small" fullWidth>
-                                <InputLabel id="select-zonahidrica-label">Tipo de zona </InputLabel>
-                                <Select
-                                    value={formValues.id_tipo_zona_hidrica}
-                                    label="Zona Hidrica"
-                                    onChange={handleInputChange}
-                                    name="id_tipo_zona_hidrica"
-                                >
-                                    {tipoRio.map((rio) => (
-                                        <MenuItem key={rio.id_tipo_zona_hidrica} value={rio.id_tipo_zona_hidrica}>
-                                            {rio.nombre_tipo_zona_hidrica}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
 
                         <Grid item xs={12} sm={4}>
                             <TextField
-                                variant="outlined"
-                                size="small"
-                                label="Nombre Sub Zona Hidrica"
-                                fullWidth
                                 required
-                                InputLabelProps={{ shrink: true }}
-                                name="nombre_sub_zona_hidrica"
-                                value={formValues.nombre_sub_zona_hidrica}
+                                fullWidth
+                                size="small"
+                                variant="outlined"
                                 onChange={handleInputChange}
+                                name="nombre_sub_zona_hidrica"
+                                label="Nombre subzona hídrica"
+                                InputLabelProps={{ shrink: true }}
+                                value={formValues.nombre_sub_zona_hidrica}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <TextField
                                 variant="outlined"
                                 size="small"
-                                label="Codigo rio"
+                                label="Código río"
                                 fullWidth
                                 required
                                 InputLabelProps={{ shrink: true }}

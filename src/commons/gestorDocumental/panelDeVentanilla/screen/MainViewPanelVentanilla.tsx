@@ -11,20 +11,23 @@ import {
 import { Grid } from '@mui/material';
 import { containerStyles } from '../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../components';
-import { PanelDeVentanillaScreen } from '../module/entrega98/screen/panelDeVentanilla/PanelDeVentanillaScreen';
-import { HistoricoSolicitudesScreen } from '../module/entrega98/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
+
 import { PanelVentanillaContext } from '../context/PanelVentanillaContext';
-import { getHistoricoByRadicado } from '../toolkit/thunks/Pqrsdf/getHistoByRad.service';
+import { getHistoricoByRadicado } from '../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { ModalAndLoadingContext } from '../../../../context/GeneralContext';
 import { setListaHistoricoSolicitudes } from '../toolkit/store/PanelVentanillaStore';
 import { useAppDispatch } from '../../../../hooks';
+import { PanelDeVentanillaScreen } from '../module/entrega98_101/screen/panelDeVentanilla/PanelDeVentanillaScreen';
+import { HistoricoSolicitudesScreen } from '../module/entrega98_101/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   // * dispatch declaration
   const dispatch = useAppDispatch();
 
   //* context declaration
-  const { value, handleChange, setRadicado } = useContext(PanelVentanillaContext);
+  const { value, handleChange, setRadicado } = useContext(
+    PanelVentanillaContext
+  );
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleRequestRadicado = async () => {

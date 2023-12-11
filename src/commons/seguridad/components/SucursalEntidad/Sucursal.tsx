@@ -32,22 +32,22 @@ export const Sucursal: FC = () => {
   };
   
 
-  useEffect(() => {
-    fetchand_update_data().catch((error) => {
-      console.error(error);
-    });
+  // useEffect(() => {
+  //   fetchand_update_data().catch((error) => {
+  //     console.error(error);
+  //   });
 
 
-    const interval = setInterval(() => {
-      fetch_dataget();
+  //   const interval = setInterval(() => {
+  //     fetch_dataget();
 
-      fetchand_update_data().catch((error) => {
-        console.error(error);
-      });
-    }, 5800);
+  //     fetchand_update_data().catch((error) => {
+  //       console.error(error);
+  //     });
+  //   }, 5800);
 
-    return () => { clearInterval(interval) };
-  }, []);
+  //   return () => { clearInterval(interval) };
+  // }, []);
 
   const fetch_dataget = async (): Promise<void> => {
     try {
@@ -104,10 +104,20 @@ export const Sucursal: FC = () => {
           // await fetchand_update_data()
           .then((res) => {
             void fetch_dataget();
-            fetch_dataget(); 
+            fetch_dataget();
+            fetchand_update_data();
+            setselected_id(null);
+            void fetch_dataget();
+            fetch_dataget();
           })
           .catch((error) => {
             console.error(error);
+            void fetch_dataget();
+            fetch_dataget();
+            fetchand_update_data();
+            setselected_id(null);
+            void fetch_dataget();
+            fetch_dataget();
           });
       } else if (result.isDenied) {
         void Swal.fire({

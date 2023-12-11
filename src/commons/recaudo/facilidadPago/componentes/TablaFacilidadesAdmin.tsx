@@ -14,6 +14,8 @@ import { get_filtro_fac_pago_ingresadas, get_facilidades_ingresadas } from '../s
 import { put_asignacion_funcionario, get_funcionarios } from '../requests/requests';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { PlanPago } from './PlanPago';
 
 interface RootStateFacilidades {
   facilidades: {
@@ -37,7 +39,12 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
+  const [idFacilidadSeleccionada, setIdFacilidadSeleccionada] = useState('');
 
+  const [is_modal_active, set_is_buscar] = useState<boolean>(false);
+  const handle_open_buscar = (): void => {
+      set_is_buscar(true);
+  };
   const handle_open = (): void => { set_modal(true) };
   const handle_close = (): void => { set_modal(false) };
 
@@ -114,7 +121,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
                     void dispatch(get_validacion_resolucion(params.row.id_facilidad));
                     navigate('../solicitud');
                   } catch (error: any) {
-                    throw new Error(error)
+                    // throw new Error(error)
                   }
                 }}
               >
@@ -133,8 +140,18 @@ export const TablaFacilidadesAdmin: React.FC = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+
+            {params.row.tiene_plan_pago && (
+         <IconButton  onClick={() => {
+           setIdFacilidadSeleccionada(params.row.id_facilidad);
+          handle_open_buscar();
+        }}>
+          <VisibilityIcon/>
+        </IconButton>
+        )}
           </>
         )
+        
       },
     },
     {
@@ -217,7 +234,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
     }
     set_visible_rows(filteredData);
   };
-
+  
   return (
     <Box sx={{ width: '100%' }}>
       <Stack
@@ -226,6 +243,8 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         spacing={2}
         sx={{ mb: '20px' }}
       >
+        <PlanPago  idFacilidadSeleccionada ={idFacilidadSeleccionada }is_modal_active={is_modal_active}
+                set_is_modal_active={set_is_buscar} />
         <Grid item xs={12} sm={3}>
           <TextField
             value={search}

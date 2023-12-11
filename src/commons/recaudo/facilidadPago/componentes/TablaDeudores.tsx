@@ -123,7 +123,7 @@ console.log(visible_rows)
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Title title='Listado de Deudores - Usuario Interno Cormacarena'/>
+        <Title title='Listado de deudores'/>
         <Grid item xs={12}>
           <Box
             component="form"

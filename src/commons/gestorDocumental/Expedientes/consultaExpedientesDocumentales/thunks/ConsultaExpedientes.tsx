@@ -44,11 +44,71 @@ export const expedientes_por_filtros: any = (id_trd_origen: string,id_und_seccio
   };
 };
 
-// 
+// Busqueda de Expedientes
+export const obtener_expedientes: any = (id_trd_origen: string,fecha_apertura_expediente: string,id_serie_origen: string,id_subserie_origen: string,palabras_clave_expediente: string,titulo_expediente: string,codigos_uni_serie_subserie: string, persona_id: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expedientes/?id_trd_origen=${id_trd_origen}&fecha_apertura_expediente=${fecha_apertura_expediente}&id_serie_origen=${id_serie_origen}&id_subserie_origen=${id_subserie_origen}&palabras_clave_expediente=${palabras_clave_expediente}&titulo_expediente=${titulo_expediente}&codigos_uni_serie_subserie=${codigos_uni_serie_subserie}&id_persona_titular_exp_complejo=${persona_id}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Busqueda de Documentos de Expedientes
+export const obtener_documentos: any = (identificacion: string,nombre_asignado: string,nombre_tipologia: string,fecha_incorporacion: string,asunto: string,palabras_clave: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/consulta/documentos-expedientes/get/?identificacion_doc_en_expediente=${identificacion}&nombre_asignado_documento=${nombre_asignado}&nombre_tipologia=${nombre_tipologia}&fecha_incorporacion_doc_a_Exp=${fecha_incorporacion}&asunto=${asunto}&palabras_clave_documento=${palabras_clave}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Listar documentos de expediente
+export const obtener_documentos_expediente: any = (id_expediente: number,id_documento: string,nombre_asignado: string,palabras_clave: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/consulta/documentos-expedientes/get-list/${id_expediente}/?id_documento_de_archivo_exped=${id_documento}&nombre_asignado_documento=${nombre_asignado}&palabras_clave_documento=${palabras_clave}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener metadata documento
+export const obtener_metadata: any = (id_documento: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/consulta/documentos-expedientes/metadata/get/${id_documento}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Descargar documentos expediente
 export const descargar_expediente: any = (id_expediente: number) => {
   return async () => {
     try {
       const { data } = await api.get(`gestor/expedientes-archivos/expedientes/consulta/descargar/${id_expediente}/`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Consultar permiso de acceso al módulo
+export const permiso_acceso_expediente: any = (id_expediente: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/concesion-acceso/permiso/get/${id_expediente}/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

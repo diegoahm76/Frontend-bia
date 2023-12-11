@@ -35,7 +35,7 @@ export const ExpedientesRoutes = (): ReactElement => {
           element={<FirmaCierreIndiceScreen />}
         />
         <Route
-          path="consulta_epedientes_doc/*"
+          path="consulta_expedientes_doc/*"
           element={<ConsultaExpedientesDocScreen />}
         />
         <Route path="/*" element={<Page404 />} />

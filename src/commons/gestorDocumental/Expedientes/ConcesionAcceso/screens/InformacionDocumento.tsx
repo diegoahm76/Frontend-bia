@@ -4,11 +4,12 @@ import { Title } from '../../../../../components/Title';
 
 interface IProps {
     documento: any;
+    metadata: any;
 }
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InformacionDocumento: React.FC<IProps> = (props: IProps) => {
-
     return (
         <>
             <Grid item md={12} xs={12}>
@@ -22,7 +23,7 @@ export const InformacionDocumento: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={props.documento ?? 'Texto de prueba'}
+                                value={props.documento.identificacion_doc_en_expediente ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -32,7 +33,7 @@ export const InformacionDocumento: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={props.documento ?? 'Texto de prueba'}
+                                value={props.documento.nombre_asignado_documento ?? ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -42,7 +43,7 @@ export const InformacionDocumento: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 disabled={true}
                                 fullWidth
-                                value={props.documento ?? '2023'}
+                                value={props.metadata.asunto ?? ''}
                             />
                         </Grid>
                     </Grid>

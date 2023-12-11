@@ -26,7 +26,7 @@ import {
 const SeleccionTipoPersona = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { control: control_seleccion_tipo_persona } = useForm<any>();
+  const { control: control_seleccion_tipo_persona, reset } = useForm<any>();
   const {
     list_applicant_types,
     list_on_behalf_of,
@@ -40,7 +40,7 @@ const SeleccionTipoPersona = () => {
     dispatch(set_grantor(initial_state_person));
     dispatch(set_attorney(initial_state_person));
     if (name === 'type_applicant') {
-      dispatch(set_on_behalf_of({ id: null, key: null, label: null }));
+      dispatch(set_on_behalf_of({ id: null, key: '', label: null }));
       if (value !== undefined) {
         dispatch(set_type_applicant(value));
       } else {
@@ -54,6 +54,12 @@ const SeleccionTipoPersona = () => {
       }
     }
   };
+  useEffect(() => {
+    reset({
+      type_applicant: type_applicant.key,
+      on_behalf_of: on_behalf_of.key,
+    });
+  }, [type_applicant, on_behalf_of]);
 
   return (
     <>
@@ -74,7 +80,7 @@ const SeleccionTipoPersona = () => {
               md: 4,
               control_form: control_seleccion_tipo_persona,
               control_name: 'type_applicant',
-              default_value: type_applicant.key,
+              default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'A nombre de',
               disabled: false,
@@ -103,7 +109,7 @@ const SeleccionTipoPersona = () => {
               md: 3,
               control_form: control_seleccion_tipo_persona,
               control_name: 'on_behalf_of',
-              default_value: on_behalf_of.key,
+              default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'En representación de',
               disabled: false,
@@ -111,7 +117,7 @@ const SeleccionTipoPersona = () => {
               select_options: list_on_behalf_of,
               option_label: 'label',
               option_key: 'key',
-              hidden_text: type_applicant.id !== 1,
+              hidden_text: type_applicant.id !== 'T',
               on_change_function: on_change_select,
             },
           ]}

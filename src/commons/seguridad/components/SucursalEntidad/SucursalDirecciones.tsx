@@ -425,7 +425,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
                     <TextField
                         variant="outlined"
                         size="small"
-                        label=" direccion_sucursal_georeferenciada_lat  "
+                        label=" direccion sucursal georeferenciada lat  "
                         fullWidth
                         required
                         InputLabelProps={{
@@ -440,7 +440,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
                     <TextField
                         variant="outlined"
                         size="small"
-                        label=" direccion_sucursal_georeferenciada_lon  "
+                        label=" direccion sucursal georeferenciada lon  "
                         fullWidth
                         required
                         InputLabelProps={{
@@ -557,7 +557,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
                         onChange={handleinput_change}
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                     <TextField
                         variant="outlined"
                         size="small"
@@ -572,7 +572,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
                         // value={form_values.direccion_notificacion_referencia}
                         onChange={handleinput_change}
                     />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={4}>
                     <Button
                         variant="contained"

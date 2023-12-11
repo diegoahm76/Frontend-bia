@@ -30,6 +30,7 @@ import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/ro
 import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
+import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 
@@ -173,6 +174,11 @@ const routes = [
     path: 'panel_ventanilla/',
     name: 'panel_ventanilla/',
     component: () => <PanelVentanillaRoutes />,
+  },
+  {
+    path: 'central_digitalizacion/',
+    name: 'central_digitalizacion',
+    component: () => <CentralDigitalizacionRoutes />,
   },
 ];
 

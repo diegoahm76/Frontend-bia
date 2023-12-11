@@ -251,6 +251,9 @@ const DialogBusquedaAvanzada = ({
 
   return (
     <Dialog
+    sx={{
+      zIndex: 9999,
+    }}
       fullWidth
       maxWidth="lg"
       open={is_modal_active}

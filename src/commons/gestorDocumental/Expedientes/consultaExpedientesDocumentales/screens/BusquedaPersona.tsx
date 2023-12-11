@@ -1,6 +1,5 @@
 import { LoadingButton } from '@mui/lab';
 import { Box, Grid, type SelectChangeEvent, TextField, ButtonGroup } from '@mui/material';
-import { type AxiosError } from 'axios';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import type * as React from 'react';

@@ -1,14 +1,17 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip } from "@mui/material"
 import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useAppDispatch } from "../../../../../hooks";
 import { ver_documentos } from "../thunks/ConcesionAcceso";
 import dayjs from "dayjs";
+import { buscar_expediente_id } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
+import { obtener_documentos_expediente, obtener_metadata } from "../../consultaExpedientesDocumentales/thunks/ConsultaExpedientes";
 
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
+    set_expediente: any,
+    set_documento: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -61,8 +64,24 @@ export const VerDocumentos: React.FC<IProps> = (props: IProps) => {
         }
     ];
 
+    const seleccion_documento_grid = (seleccion_documento: any): void => {
+        set_seleccion_documento(documentos.find((e: any) => e.id_concesion_acc === seleccion_documento[0]));
+    }
+
     const boton_seleccionar: any = () => {
-        props.set_is_modal_active(false);
+        if(seleccion_documento !== null){
+            dispatch(obtener_metadata(seleccion_documento.id_documento_exp)).then((response: any) => {
+                if(response.success){
+                    dispatch(obtener_documentos_expediente(response.data.id_expediente_documental, seleccion_documento.id_documento_exp, '', '')).then(((response: any) => {
+                        response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+                    }));
+                    dispatch(buscar_expediente_id(response.data.id_expediente_documental, '', '', '')).then(((response: any) => {
+                        response.data !== null ? props.set_expediente(response.data) : props.set_expediente(null);
+                    }));
+                    props.set_is_modal_active(false);
+                }
+            });
+        }
     }
 
     return (
@@ -82,7 +101,8 @@ export const VerDocumentos: React.FC<IProps> = (props: IProps) => {
                         pageSize={5}
                         rowsPerPageOptions={[5]}
                         rows={documentos}
-                        getRowId={(row) => row.id_concesion_acc} />
+                        getRowId={(row) => row.id_concesion_acc} 
+                        onSelectionModelChange={seleccion_documento_grid}/>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
