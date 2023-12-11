@@ -149,3 +149,4 @@ export const origenArchivo = [
     label: "Digital"
   }
 ]
+

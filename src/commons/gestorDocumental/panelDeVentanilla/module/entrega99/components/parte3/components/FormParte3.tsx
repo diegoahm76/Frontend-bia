@@ -6,6 +6,7 @@ import {
   IconButton,
   TextField,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -40,6 +41,8 @@ import {
   control_error,
   control_success,
 } from '../../../../../../../../helpers';
+0;
+import { origenArchivo } from './../../modalMetadatos/utils/choices';
 
 export const FormParte3 = ({
   controlFormulario,
@@ -83,6 +86,35 @@ export const FormParte3 = ({
     if (watchFormulario.ruta_soporte === '' && !metadatos) {
       control_warning(
         'Es obligatorio subir un archivo o agregar metadatos para poder crear un anexo'
+      );
+      return;
+    }
+
+    if (watchFormulario.ruta_soporte && !metadatos) {
+      control_warning(
+        'Si se sube un archivo, es obligatorio agregar metadatos para poder crear un anexo'
+      );
+      return;
+    }
+
+    if (
+      watchFormulario.ruta_soporte &&
+      metadatos?.origenArchivoMetadatos?.value === 'F'
+    ) {
+      control_warning(
+        'Si se sube un archivo, el origen del archivo no puede ser físico'
+      );
+      return;
+    }
+
+    if (
+      (!watchFormulario.ruta_soporte &&
+        metadatos?.origenArchivoMetadatos?.value === 'E') ||
+      (!watchFormulario.ruta_soporte &&
+        metadatos?.origenArchivoMetadatos?.value === 'D')
+    ) {
+      control_warning(
+        'Si el origen del archivo es electrónico o digital, es obligatorio subir un archivo'
       );
       return;
     }
@@ -144,10 +176,6 @@ export const FormParte3 = ({
     } else {
       dispatch(addAnexo(dataCreateAnexo));
     }
-
-    // The anexo is a combination between the file data and the established metadata
-
-    // It must be validated, if there are no uploaded files, metadata must necessarily go to add the anexo
   };
 
   const handleDeleteAnexo = async (id: string) => {
@@ -335,14 +363,13 @@ export const FormParte3 = ({
                       }}
                     >
                       Archivo
-                      {/*{control_create_ccd._formValues.ruta_soporte
-                            ? control_create_ccd._formValues.ruta_soporte
-                                .name ??
-                              control_create_ccd._formValues.ruta_soporte.replace(
-                                /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
-                                ''
-                              )
-                            : 'Seleccione archivo'}*/}
+                      {controlFormulario._formValues.ruta_soporte
+                        ? controlFormulario._formValues.ruta_soporte.name ??
+                          controlFormulario._formValues.ruta_soporte.replace(
+                            /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                            ''
+                          )
+                        : 'Seleccione archivo'}
                     </small>
                   </label>
                 </>
@@ -489,7 +516,13 @@ export const FormParte3 = ({
             rows={anexosCreados ?? []}
           />
         ) : (
-          <> </>
+          <Typography
+            variant="body1"
+            color="text.primary"
+            sx={{ textAlign: 'center', justifyContent: 'center', mt: '1.5rem' }}
+          >
+            No hay anexos creados
+          </Typography>
         )}
 
         <Grid
@@ -557,6 +590,7 @@ export const FormParte3 = ({
 
       {/* espacio para el modal de agregar metadatos */}
       <ModalMetadatos
+        watchFormulario={watchFormulario}
         tipologiasDocumentales={tipologiasDocumentales}
         setTipologiasDocumentales={setTipologiasDocumentales}
       />

@@ -3,6 +3,10 @@ import { useState } from 'react';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
+import { resetItems } from '../../toolkit/slice/AsignacionUsuarioSlice';
+import { useAppDispatch } from '../../../../../../../hooks';
+import { useStepperContext } from '@mui/material';
+import { useSstepperFn } from '../../hook/useSstepperFn';
 
 export const AccionesFinales = ({
   controlFormulario,
@@ -12,6 +16,13 @@ export const AccionesFinales = ({
   watchFormulario,
   setInfoReset,
 }: any): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
+  //* context
+
+  const { handleReset } = useSstepperFn();
+
   const [LoadingButton, setLoadingButton] = useState(false);
 
   //* handleSumbit
@@ -67,11 +78,17 @@ export const AccionesFinales = ({
     });
   };
 
+  const reset = () => {
+    dispatch(resetItems());
+    handleReset();
+    resetFormulario();
+  };
+
   return (
     <AccionesFinalModulo
       loadingButton={LoadingButton}
       handleSubmit={handleSubmit}
-      reset_states={() => console.log('cancel')}
+      reset_states={reset}
     />
   );
 };

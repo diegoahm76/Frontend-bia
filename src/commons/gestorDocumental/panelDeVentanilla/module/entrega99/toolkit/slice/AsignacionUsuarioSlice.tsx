@@ -71,6 +71,10 @@ export const AsignacionUsuarioSlice = createSlice({
 
     resetItems: (state) => {
       state.anexosCreados = [];
+      state.currentAnexo = null;
+      state.currentSolicitudAlUsuario = null;
+      state.metadatos = null;
+      state.viewMode = false;
     },
   },
 });

@@ -228,8 +228,6 @@ export const FormParte1 = ({
             rows={
               [
                 ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
-                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
-                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
               ] ?? []
             }
           />

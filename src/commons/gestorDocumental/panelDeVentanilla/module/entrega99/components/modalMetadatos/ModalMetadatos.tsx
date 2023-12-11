@@ -45,9 +45,11 @@ import CancelIcon from '@mui/icons-material/Cancel';
 export const ModalMetadatos = ({
   tipologiasDocumentales,
   setTipologiasDocumentales,
+  watchFormulario,
 }: {
   tipologiasDocumentales: any;
   setTipologiasDocumentales: React.Dispatch<React.SetStateAction<any>>;
+  watchFormulario: any;
 }): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -73,7 +75,6 @@ export const ModalMetadatos = ({
   } = usePanelVentanilla();
 
   //? useeffect to get tipologias documentales
-
   useEffect(() => {
     if (
       watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value ===
@@ -140,12 +141,24 @@ export const ModalMetadatos = ({
   }, [metadatos, currentAnexo]);
 
   // ? functions
-
   const handleSubmit = async () => {
+    for (let key in watchExeManejoModalMetadatos) {
+      // Si la clave es una de las excepciones, continúa con la siguiente iteración
+      if (key === 'tipologiasDocumentalesMetadatos' || key === 'cualTipologiaDocumentalMetadatos') {
+        continue;
+      }
+
+      if (watchExeManejoModalMetadatos[key as keyof typeof watchExeManejoModalMetadatos] === '') {
+        control_warning('Todos los campos son obligatorios');
+        return;
+      }
+    }
+
+
     dispatch(setMetadatos(watchExeManejoModalMetadatos as any));
     control_success('Se han establecido los metadatos');
     handleModalAgregarMetadatos(false);
-    resetManejoMetadatosModalFunction();
+    // resetManejoMetadatosModalFunction();
   };
 
   return (
@@ -310,7 +323,11 @@ export const ModalMetadatos = ({
                           onChange(selectedOption);
                         }}
                         // isDisabled={trd_current != ''}
-                        options={origenArchivo ?? []}
+                        options={
+                          watchFormulario.ruta_soporte
+                            ? origenArchivo.filter((el) => el.value !== 'F')
+                            : origenArchivo
+                        }
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -323,7 +340,7 @@ export const ModalMetadatos = ({
                             marginLeft: '0.25rem',
                           }}
                         >
-                          Tiene réplica física
+                          Origen archivo
                         </small>
                       </label>
                     </div>
