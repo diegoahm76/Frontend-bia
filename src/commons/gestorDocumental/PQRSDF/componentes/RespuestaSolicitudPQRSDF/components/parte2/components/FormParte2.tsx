@@ -4,9 +4,13 @@ import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { usePanelVentanilla } from '../../../../../../panelDeVentanilla/hook/usePanelVentanilla';
 
-export const FormParte2 = (): JSX.Element => {
-  //* hooks
-  const { controlSegundoPasoEntrega99 } = usePanelVentanilla();
+export const FormParte2 = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+}: any): JSX.Element => {
 
   return (
     <>
@@ -19,7 +23,7 @@ export const FormParte2 = (): JSX.Element => {
           <Grid item xs={12} sm={8}>
             <Controller
               name="asunto"
-              control={controlSegundoPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -48,7 +52,7 @@ export const FormParte2 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="fecha_de_solicitud"
-              control={controlSegundoPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -74,7 +78,7 @@ export const FormParte2 = (): JSX.Element => {
           <Grid item xs={12} sm={12}>
             <Controller
               name="descripcion_de_la_solicitud"
-              control={controlSegundoPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({

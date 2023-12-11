@@ -30,14 +30,14 @@ const actionsPQRSDF: any[] = [
   {
     id: 'AsigGrup',
     icon: <GroupsIcon />,
-    name: 'Asignar al grupo',
+    name: 'Asignar a unidad organizacional',
     path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
     disabled: false,
   },
   {
     id: 'ContinuarAsigGrup',
     icon: <ReduceCapacityIcon />,
-    name: 'Continuar con asignación de grupo',
+    name: 'Continuar con asignación a unidad organizacional',
     path: '',
     disabled: false,
   },

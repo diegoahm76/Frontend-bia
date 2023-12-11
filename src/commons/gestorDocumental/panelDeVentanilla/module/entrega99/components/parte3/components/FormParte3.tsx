@@ -1,27 +1,261 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, TextField } from '@mui/material';
-import React, { useContext } from 'react';
+import {
+  Avatar,
+  Button,
+  Grid,
+  IconButton,
+  TextField,
+  Tooltip,
+} from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../../../../../fileWeight/fileWeight';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BuildIcon from '@mui/icons-material/Build';
-import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { useSstepperFn } from '../../../hook/useSstepperFn';
+import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { TipologiaDocumental } from './types/FormParte3.types';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import Swal from 'sweetalert2';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import {
+  addAnexo,
+  deleteAnexo,
+  editAnexo,
+  setCurrentAnexo,
+  setMetadatos,
+} from '../../../toolkit/slice/AsignacionUsuarioSlice';
+import { columnsThirdForm } from './columns/columnsTercerFormulario';
+import EditIcon from '@mui/icons-material/Edit';
+import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import {
+  control_error,
+  control_success,
+} from '../../../../../../../../helpers';
 
-export const FormParte3 = (): JSX.Element => {
+export const FormParte3 = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+  setInfoReset,
+}: any): JSX.Element => {
+  //* dispatch de redux
+  const dispatch = useAppDispatch();
 
-  // ? hooks
-  const { controlTercerPasoEntrega99 } = usePanelVentanilla();
+  //* redux states functions
+  const { currentAnexo, anexosCreados, metadatos } = useAppSelector(
+    (state) => state.AsignacionUsuarioSlice
+  );
+
+  // ? stepper hook
+  const { handleBack, handleReset } = useSstepperFn();
 
   //* context
-  const { handleModalAgregarMetadatos } = useContext(
-    ModalAndLoadingContext
-  );
+  const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
+
+  const [tipologiasDocumentales, setTipologiasDocumentales] = useState<
+    TipologiaDocumental[]
+  >([]);
+
+  useEffect(() => {
+    if (currentAnexo) {
+      console.log('currentAnexo', currentAnexo);
+      setInfoReset({
+        ...currentAnexo,
+      });
+    }
+  }, [currentAnexo]);
+
+  // ? funciones third form
+  const handleAnexo = () => {
+    // ? se debe hacer la validacion, si no hay arhivo, pero hay metadata, se debe permitir añadir, pero si no hay archivo ni metadata, no se debe permitir añadir
+
+    if (watchFormulario.ruta_soporte === '' && !metadatos) {
+      control_warning(
+        'Es obligatorio subir un archivo o agregar metadatos para poder crear un anexo'
+      );
+      return;
+    }
+
+    if (
+      !watchFormulario.asunto ||
+      !watchFormulario.descripcion_de_la_solicitud
+    ) {
+      control_warning(
+        'Es obligatorio llenar los campos de asunto y descripción de la solicitud'
+      );
+      return;
+    }
+
+    const createAnexoData = (baseObject = {}) => ({
+      ...baseObject,
+      asunto: watchFormulario?.asunto,
+      descripcion_de_la_solicitud: watchFormulario?.descripcion_de_la_solicitud,
+      fecha_de_solicitud: watchFormulario?.fecha_de_solicitud,
+      nombre_archivo: watchFormulario?.nombre_archivo,
+      ruta_soporte: watchFormulario?.ruta_soporte,
+      medio_almacenamiento: watchFormulario?.medio_almacenamiento,
+      numero_folios: watchFormulario?.numero_folios,
+      categoriaArchivoMetadatos: {
+        value: metadatos?.categoriaArchivoMetadatos?.value,
+        label: metadatos?.categoriaArchivoMetadatos?.label,
+      },
+      tieneReplicaFisicaMetadatos: {
+        value: metadatos?.tieneReplicaFisicaMetadatos?.value,
+        label: metadatos?.tieneReplicaFisicaMetadatos?.label,
+      },
+      origenArchivoMetadatos: 'Electrónico',
+      tieneTipologiaRelacionadaMetadatos: {
+        value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value,
+        label: metadatos?.tieneTipologiaRelacionadaMetadatos?.label,
+      },
+      tipologiasDocumentalesMetadatos: {
+        value: metadatos?.tipologiasDocumentalesMetadatos?.value,
+        label: metadatos?.tipologiasDocumentalesMetadatos?.label,
+      },
+      cualTipologiaDocumentalMetadatos:
+        metadatos?.cualTipologiaDocumentalMetadatos,
+      asuntoMetadatos: metadatos?.asuntoMetadatos,
+      descripcionMetadatos: metadatos?.descripcionMetadatos,
+      palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos,
+    });
+
+    const dataCreateAnexo = createAnexoData();
+    const dataEditAnexo = createAnexoData(currentAnexo);
+
+    if (currentAnexo) {
+      //* se debe quitar el as any y validar un par de cosas que pueden estar fallando al editar el anexo
+      dispatch(editAnexo(dataEditAnexo as any));
+      control_success('Se ha editado el anexo');
+      // Assuming editAnexoFunction is the function to edit an anexo
+    } else {
+      dispatch(addAnexo(dataCreateAnexo));
+    }
+
+    // The anexo is a combination between the file data and the established metadata
+
+    // It must be validated, if there are no uploaded files, metadata must necessarily go to add the anexo
+  };
+
+  const handleDeleteAnexo = async (id: string) => {
+    const result = await Swal.fire({
+      title: '¿Estás seguro de eliminar el anexo?',
+      text: 'No podrás revertir esta acción!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar!',
+    });
+
+    if (result.isConfirmed) {
+      dispatch(deleteAnexo(id));
+    }
+  };
+
+  const handleSeleccionAnexoToEdit = (anexoSeleccionado: any) => {
+    control_success('Se ha seleccionado el anexo para editar');
+    //* volver al paso 2 ?
+    // handleBack();
+    console.log('anexoSeleccionado', anexoSeleccionado);
+
+    //* seleccionar ese elemento como currentAnexo
+    dispatch(setCurrentAnexo(anexoSeleccionado));
+
+    if (anexoSeleccionado?.asuntoMetadatos) {
+      dispatch(setMetadatos(anexoSeleccionado as any));
+    }
+  };
+
+  //* columns
+  const columns = [
+    ...columnsThirdForm,
+    {
+      headerName: 'Acciones',
+      field: 'Acciones',
+      minWidth: 300,
+      renderCell: (params: any) => {
+        return (
+          <>
+            <Tooltip title="Ver y seleccionar anexo">
+              <IconButton
+                onClick={() => {
+                  console.log(params.row);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            {/* debe estar la condicion, cuando ya se haya guardado una vez, no será posible realizar la eliminación de los anexos */}
+            <Tooltip title="Eliminar anexo">
+              <IconButton
+                onClick={() => {
+                  handleDeleteAnexo(params.row.id);
+                }}
+              >
+                <Avatar sx={AvatarStyles} variant="rounded">
+                  <DeleteIcon
+                    titleAccess="Eliminar tipología documental"
+                    sx={{
+                      color: 'red',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
+            {/* debe estar la condicion, cuando ya se haya guardado una vez, no será posible realizar la edición de los anexos */}
+            <Tooltip title="Editar anexo">
+              <IconButton
+                onClick={() => {
+                  handleSeleccionAnexoToEdit(params.row);
+                }}
+              >
+                <Avatar sx={AvatarStyles} variant="rounded">
+                  <EditIcon
+                    titleAccess="Editar asignación de líder"
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      },
+    },
+  ];
 
   return (
     <>
@@ -29,14 +263,19 @@ export const FormParte3 = (): JSX.Element => {
         style={{
           marginTop: '3rem',
         }}
+        onSubmit={(e: any) => {
+          e.preventDefault();
+          handleAnexo();
+          //* luego de la creación del anexo no se deben limpiar los campos del formualrio, ya que el usuario puede seguir creando sobre esa misma solicitud, solo el button limpiar campos puede hacer eso ya que se le advierte plenamente al usuario
+        }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
             <Controller
               name="ruta_soporte"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
-              rules={{ required: false }}
+              // rules={{ required: false }}
               render={({
                 field: { onChange, value },
                 fieldState: { error },
@@ -110,15 +349,15 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="nombre_archivo"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({
                 field: { onChange, value },
                 fieldState: { error },
               }) => (
                 <TextField
-                  required
+                  // required
                   fullWidth
                   label="Nombre del archivo"
                   helperText={error ? 'Es obligatorio subir un archivo' : ''}
@@ -139,15 +378,15 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="medio_alamacenamiento"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({
                 field: { onChange, value },
                 fieldState: { error },
               }) => (
                 <TextField
-                  required
+                  // required
                   fullWidth
                   disabled
                   label="Medio de almacenamiento"
@@ -163,18 +402,25 @@ export const FormParte3 = (): JSX.Element => {
 
           {/* Inicio de la segunda fila de elementos */}
 
-          <Grid item xs={12} sm={4}>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{
+              mb: '2rem',
+            }}
+          >
             <Controller
               name="numero_folios"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({
                 field: { onChange, value },
                 fieldState: { error },
               }) => (
                 <TextField
-                  required
+                  // required
                   fullWidth
                   type="number"
                   // name="nombre"
@@ -221,19 +467,27 @@ export const FormParte3 = (): JSX.Element => {
               sx={{
                 width: '100%',
               }}
-              variant="contained"
+              variant={currentAnexo ? 'outlined' : 'contained'}
               color="success"
               type="submit"
-              startIcon={<AddIcon />}
-              onClick={() => {
-                console.log('click siuuu');
-                console.log('soy el submit');
-              }}
+              startIcon={currentAnexo ? <RestartAltIcon /> : <AddIcon />}
             >
-              AGREGAR ANEXO
+              {currentAnexo ? 'Actualizar' : 'Agregar'} anexo
             </Button>
           </Grid>
         </Grid>
+
+        {/* RenderDataGrid para los anexos que se van a ir creando */}
+
+        {anexosCreados.length > 0 ? (
+          <RenderDataGrid
+            title="Listado de Anexos"
+            columns={columns ?? []}
+            rows={anexosCreados ?? []}
+          />
+        ) : (
+          <> </>
+        )}
 
         <Grid
           item
@@ -252,10 +506,12 @@ export const FormParte3 = (): JSX.Element => {
             color="warning"
             startIcon={<ArrowBackIcon />}
             onClick={() => {
-              console.log('click siuuu');
+              // ? se debe mirar si se debe hacer validaciones para permitir el regreso
+              handleBack();
             }}
             sx={{
-              width: '60%',
+              width: '55%',
+              mt: '2rem',
             }}
           >
             ATRÁS
@@ -265,20 +521,42 @@ export const FormParte3 = (): JSX.Element => {
             color="primary"
             startIcon={<CleanIcon />}
             onClick={() => {
-              console.log('click siuuu');
+              resetFormulario();
+              if (currentAnexo) {
+                dispatch(setCurrentAnexo(null as any));
+              }
+              if (metadatos) {
+                dispatch(setMetadatos(null as any));
+              }
+
+              /*void Swal.fire({
+                title: '¿Estas seguro?',
+                text: 'Si limpias los campos, la información que no sin guardar se perderá!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+              }).then((result: { isConfirmed: boolean }) => {
+                if (result.isConfirmed) {
+
+                }
+              });*/
             }}
             sx={{
-              mt: '1rem',
-              width: '60%',
+              width: '55%',
+              mt: '2rem',
             }}
           >
-            Limpiar campos
+            LIMPIAR CAMPOS
           </Button>
         </Grid>
       </form>
 
       {/* espacio para el modal de agregar metadatos */}
-      <ModalMetadatos />
+      <ModalMetadatos
+        tipologiasDocumentales={tipologiasDocumentales}
+        setTipologiasDocumentales={setTipologiasDocumentales}
+      />
       {/* espacio para el modal de agregar metadatos */}
     </>
   );

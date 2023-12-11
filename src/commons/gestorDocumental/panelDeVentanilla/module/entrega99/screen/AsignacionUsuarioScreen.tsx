@@ -5,6 +5,8 @@ import { StepperAsignacionUsuario } from '../components/stepper/StepperAsignacio
 import { Title } from '../../../../../../components';
 import { ParteInicial } from '../components/parteInicial/screen/ParteInicial';
 import { useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { usePanelVentanilla } from '../../../hook/usePanelVentanilla';
 
 export const AsignacionUsuarioScreen = (): JSX.Element => {
   {
@@ -16,15 +18,34 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
   }
 
   useEffect(() => {
-    console.log(
-      'se realiza solictud sobre la información de la persona titular de la PQRSDF'
-    );
-    console.log(
-      'se realiza la solictud sobre la información de la persona que solicita el complemento'
-    );
+    Swal.fire({
+      icon: 'warning',
+      title: 'Advertencia',
+      text: 'Recuerda que sí sales del módulo, la información no hayas guardado se borrará.',
+      confirmButtonText: 'Entendido',
+    });
 
     // ? tambien se entra a re iniciar el módulo de asignación de usuario || mejor cuando se de en el finish y se envie la solicitud al usuario, por tanto se hará en el componente de stepper o en submit de envío
   }, []);
+
+  //* se usa acá para que atraviese todos los componentes necesarios que se trabajan dentro de la solicitud de asignación a usuario
+  const {
+    controlFormulario,
+    handleSubmitFormulario,
+    errorsFormulario,
+    resetFormulario,
+    watchFormulario,
+    setInfoReset,
+  } = usePanelVentanilla();
+
+  const props = {
+    controlFormulario,
+    handleSubmitFormulario,
+    errorsFormulario,
+    resetFormulario,
+    watchFormulario,
+    setInfoReset,
+  };
 
   return (
     <>
@@ -42,9 +63,9 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
         <Grid item xs={12}>
           <Title title="Solicitud al usuario sobre PQRSDF" />
           {/* parte Inicial */}
-          <ParteInicial />
+          <ParteInicial/>
           {/*stepper*/}
-          <StepperAsignacionUsuario />
+          <StepperAsignacionUsuario {...props} />
         </Grid>
       </Grid>
     </>
