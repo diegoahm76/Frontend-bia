@@ -62,7 +62,7 @@ export const ModalMetadatos = ({
     ModalAndLoadingContext
   );
   //* redux states
-  const { metadatos, currentAnexo } = useAppSelector(
+  const { metadatos, currentAnexo, viewMode } = useAppSelector(
     (state) => state.AsignacionUsuarioSlice
   );
 
@@ -673,6 +673,7 @@ export const ModalMetadatos = ({
                 color="success"
                 type="submit"
                 variant="contained"
+                disabled={viewMode}
                 startIcon={<SaveIcon />}
               >
                 GUARDAR

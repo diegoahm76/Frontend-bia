@@ -65,8 +65,8 @@ export const AsignacionUsuarioSlice = createSlice({
       state.metadatos = action.payload;
     },
 
-    setViewMode: (state: any, action: any) => {
-      state.viewMode = action.payload;
+    setViewMode: (state: any, action: { payload: boolean }) => {
+      state.viewMode = action.payload as boolean;
     },
 
     resetItems: (state) => {

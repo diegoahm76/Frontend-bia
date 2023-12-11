@@ -31,6 +31,7 @@ import {
   editAnexo,
   setCurrentAnexo,
   setMetadatos,
+  setViewMode,
 } from '../../../toolkit/slice/AsignacionUsuarioSlice';
 import { columnsThirdForm } from './columns/columnsTercerFormulario';
 import EditIcon from '@mui/icons-material/Edit';
@@ -43,6 +44,7 @@ import {
 } from '../../../../../../../../helpers';
 0;
 import { origenArchivo } from './../../modalMetadatos/utils/choices';
+import { vi } from 'date-fns/locale';
 
 export const FormParte3 = ({
   controlFormulario,
@@ -56,7 +58,7 @@ export const FormParte3 = ({
   const dispatch: any = useAppDispatch();
 
   //* redux states functions
-  const { currentAnexo, anexosCreados, metadatos } = useAppSelector(
+  const { currentAnexo, anexosCreados, metadatos, viewMode } = useAppSelector(
     (state: any) => state.AsignacionUsuarioSlice
   );
 
@@ -218,10 +220,44 @@ export const FormParte3 = ({
       renderCell: (params: any) => {
         return (
           <>
+          {!viewMode && (  <><Tooltip title="Eliminar anexo">
+              <IconButton
+                onClick={() => {
+                  handleDeleteAnexo(params.row.id);
+                } }
+              >
+                <Avatar sx={AvatarStyles} variant="rounded">
+                  <DeleteIcon
+                    titleAccess="Eliminar tipología documental"
+                    sx={{
+                      color: 'red',
+                      width: '18px',
+                      height: '18px',
+                    }} />
+                </Avatar>
+              </IconButton>
+            </Tooltip><Tooltip title="Editar anexo">
+                <IconButton
+                  onClick={() => {
+                    handleSeleccionAnexoToEdit(params.row);
+                  } }
+                >
+                  <Avatar sx={AvatarStyles} variant="rounded">
+                    <EditIcon
+                      titleAccess="Editar asignación de líder"
+                      sx={{
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
+                      }} />
+                  </Avatar>
+                </IconButton>
+              </Tooltip></>)}
             <Tooltip title="Ver y seleccionar anexo">
               <IconButton
                 onClick={() => {
                   console.log(params.row);
+                  dispatch(setViewMode(true as boolean))
                 }}
               >
                 <Avatar
@@ -244,44 +280,7 @@ export const FormParte3 = ({
               </IconButton>
             </Tooltip>
             {/* debe estar la condicion, cuando ya se haya guardado una vez, no será posible realizar la eliminación de los anexos */}
-            <Tooltip title="Eliminar anexo">
-              <IconButton
-                onClick={() => {
-                  handleDeleteAnexo(params.row.id);
-                }}
-              >
-                <Avatar sx={AvatarStyles} variant="rounded">
-                  <DeleteIcon
-                    titleAccess="Eliminar tipología documental"
-                    sx={{
-                      color: 'red',
-                      width: '18px',
-                      height: '18px',
-                    }}
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-
-            {/* debe estar la condicion, cuando ya se haya guardado una vez, no será posible realizar la edición de los anexos */}
-            <Tooltip title="Editar anexo">
-              <IconButton
-                onClick={() => {
-                  handleSeleccionAnexoToEdit(params.row);
-                }}
-              >
-                <Avatar sx={AvatarStyles} variant="rounded">
-                  <EditIcon
-                    titleAccess="Editar asignación de líder"
-                    sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px',
-                    }}
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
+          
           </>
         );
       },
@@ -497,6 +496,7 @@ export const FormParte3 = ({
               sx={{
                 width: '100%',
               }}
+              disabled={viewMode}
               variant={currentAnexo ? 'outlined' : 'contained'}
               color="success"
               type="submit"
@@ -560,23 +560,12 @@ export const FormParte3 = ({
               resetFormulario();
               if (currentAnexo) {
                 dispatch(setCurrentAnexo(null as any));
+                dispatch(setViewMode(false as boolean));
               }
               if (metadatos) {
                 dispatch(setMetadatos(null as any));
+                dispatch(setViewMode(false as boolean));
               }
-
-              /*void Swal.fire({
-                title: '¿Estas seguro?',
-                text: 'Si limpias los campos, la información que no sin guardar se perderá!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-              }).then((result: { isConfirmed: boolean }) => {
-                if (result.isConfirmed) {
-
-                }
-              });*/
             }}
             sx={{
               width: '55%',
