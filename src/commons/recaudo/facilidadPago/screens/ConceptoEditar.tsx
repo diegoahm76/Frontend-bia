@@ -11,6 +11,9 @@ import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { control_error, control_success } from '../../../../helpers';
 import { control_success_fail } from '../../../recursoHidrico/requets/Request';
 
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 interface BuscarProps {
     isBuscarActivo: any;
@@ -19,25 +22,26 @@ interface BuscarProps {
     fetchConfiguraciones: any;
 }
 interface ConfiguracionBasica {
-    id: number;
-    Estado: boolean;
-    TipoRenta: string;
-    TipoCobro: string;
-    Descripcion: string;
-    Variable:any
-    Constante:boolean | null;
+    fecha_fin: any;
+    valor: any;
+    variables: any;
+    descripccion: any;
+   
+}
+interface Variable {
+    id_variables: number;
+    nombre: string;
+    tipo_cobro: number;
+    tipo_renta: number;
 }
 export const ConceptoEditar: React.FC<BuscarProps> = ({ fetchConfiguraciones, isBuscarActivo, setIsBuscarActivo, selectedConfiguracion }) => {
 
 
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
-        id: selectedConfiguracion?.id || 0,
-        Estado: selectedConfiguracion?.Estado || false,
-        TipoRenta: selectedConfiguracion?.TipoRenta || '',
-        TipoCobro: selectedConfiguracion?.TipoCobro || '',
-        Descripcion: selectedConfiguracion?.Descripcion || '',
-        Variable: selectedConfiguracion?.Variable || '',
-        Constante:selectedConfiguracion?.Constante || false,
+        valor: selectedConfiguracion?.valor || "",
+        fecha_fin: selectedConfiguracion?.fecha_fin || "",
+        variables: selectedConfiguracion?.variables || "",
+        descripccion: selectedConfiguracion?.descripccion || "",
     });
 
     useEffect(() => {
@@ -53,7 +57,7 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({ fetchConfiguraciones, is
 
     const handleSubmit = async () => {
         try {
-            const url = `/recaudo/configuracion_baisca/registrosconfiguracion/put/${formValues.id}/`;
+            const url = `/recaudo/configuracion_baisca/valoresvariables/put/${selectedConfiguracion?.id_valores_variables}/`;
             await api.put(url, formValues);
             fetchConfiguraciones();
             handle_close();
@@ -66,8 +70,25 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({ fetchConfiguraciones, is
             // Manejar el error
         }
     };
+    const [variables, setVariables] = useState<Variable[]>([]);
 
 
+    const fetchVariables = async () => {
+        try {
+            const res = await api.get("/recaudo/configuracion_baisca/variables/get/");
+            setVariables(res.data.data);
+        } catch (error) {
+            console.error("Error al obtener las variables", error);
+        }
+    };
+    useEffect(() => {
+        fetchVariables();
+    }, []);
+
+    
+
+    const [fechaFin, setFechaFin] = useState((formValues.fecha_fin));
+    const today = dayjs();
 
     const handle_close = (): void => {
         setIsBuscarActivo(false);
@@ -77,8 +98,8 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({ fetchConfiguraciones, is
         <>
             <Dialog open={isBuscarActivo} onClose={handle_close} maxWidth="xl"
             >
-                {/* <button onClick={() => console.log(tipoRio)}>Mostrar zonahidrica en la consola</button> */}
-
+                {/* <button onClick={() => console.log(formValues.fecha_fin)}>Mostrar zonahidrica en la consola</button> */}
+{/* { selectedConfiguracion?.id_valores_variables} */}
                 <Grid container
                     item xs={12} marginLeft={2} marginRight={2} marginTop={3}
                     sx={{
@@ -93,63 +114,78 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({ fetchConfiguraciones, is
                     }}
                 >
                     <Title title="Editar conceptos de pago " />
+                     <Grid container item xs={12} spacing={2} marginTop={2}>
 
-                    <Grid container item xs={12} spacing={2} marginTop={2}>
-                        <Grid item xs={12} sm={4}>
+                     <Grid item xs={12} sm={4}>
                             <TextField
-                                variant="outlined"
-                                size="small"
+                                select
                                 required
-                                label="Tipo de Renta"
-                                name="TipoRenta"
-                                value={formValues.TipoRenta}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4} >
-                            <TextField
-                                variant="outlined"
-                                size="small"
-                                required
-                                label="Tipo de Cobro"
-                                name="TipoCobro"
-                                value={formValues.TipoCobro}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-
-                        
-                        <Grid item xs={12} sm={4}>
-                            <FormControl fullWidth required size="small">
-                                <InputLabel id="estado-label">Estado</InputLabel>
-                                <Select
-                                    labelId="estado-label"
-                                    id="estado-select"
-                                    value={formValues.Estado ? 'true' : 'false'}
-                                    label="Estado"
-                                    onChange={(event) => setFormValues({ ...formValues, Estado: event.target.value === 'true' })}
-                                >
-                                    <MenuItem value={'true'}>Activo</MenuItem>
-                                    <MenuItem value={'false'}>Inactivo</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12} sm={12}>
-                            <TextField
-                                variant="outlined"
-                                size="small"
-                                required
-                                multiline
-                                rows={3}
                                 fullWidth
-                                InputLabelProps={{ shrink: true }}
-                                label="Descripción"
-                                name="Descripcion"
-                                value={formValues.Descripcion}
+                                size="small"
+                                variant="outlined"
+                                label="Variable"
+                                name="variables"
                                 onChange={handleInputChange}
+                                value={formValues.variables}
+                            >
+                                {variables.map((variable) => (
+                                    <MenuItem key={variable.id_variables} value={variable.id_variables}>
+                                        {variable.nombre}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                label="valor"
+                                name="valor"
+                                onChange={handleInputChange}
+                                value={formValues.valor}
                             />
                         </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                label="descripccion"
+                                name="descripccion"
+                                onChange={handleInputChange}
+                                value={formValues.descripccion}
+                            />
+                        </Grid>
+{/* {formValues.fecha_fin} */}
+{/* --{fechaFin} */}
+                        <Grid item xs={12} sm={4}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    label="Fecha fin"
+                                    value={formValues.fecha_fin}
+                                    onChange={(newValue) => {
+                                        
+                                        setFechaFin(newValue);
+                                        setFormValues({ ...formValues, fecha_fin: newValue?.format('YYYY-MM-DD') });
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                         />
+                                    )}
+                                    // Establecer la fecha mínima como la fecha actual
+                                    minDate={today}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+
+
 
                       
 

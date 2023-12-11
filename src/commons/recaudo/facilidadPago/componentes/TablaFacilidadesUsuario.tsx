@@ -25,11 +25,21 @@ export const TablaFacilidadesUsuario: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const capitalize = (str: string): string => {
+  // const capitalize = (str: string): string => {
+  //   const str_min = str.toLowerCase();
+  //   return str_min?.charAt(0).toUpperCase() + str_min.slice(1);
+  // };
+  
+  const capitalize = (str: string | undefined | null): string => {
+    // Verifica si str es válido antes de continuar
+    if (str === undefined || str === null) {
+      return ""; // O devuelve lo que consideres apropiado en este caso
+    }
+  
     const str_min = str.toLowerCase();
     return str_min.charAt(0).toUpperCase() + str_min.slice(1);
   };
-
+  
   useEffect(() => {
     set_visible_rows(facilidades)
   }, [facilidades])
@@ -87,7 +97,7 @@ export const TablaFacilidadesUsuario: React.FC = () => {
                   void dispatch(get_validacion_resolucion(params.row.id));
                   navigate('../seguimiento');
                 } catch (error: any) {
-                  throw new Error(error);
+                  // throw new Error(error);
                 }
               }}
             >

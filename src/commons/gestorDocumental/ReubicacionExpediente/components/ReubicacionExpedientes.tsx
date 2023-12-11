@@ -297,7 +297,7 @@ export const Expedien: React.FC = () => {
             <Grid
                 container spacing={2} marginTop={2}
                 sx={class_css} >
-                <Title title={"Selección de expedinte "} />
+                <Title title={"Selección de expediente "} />
 
 
                 {/* <Grid item xs={12} sm={3}> */}
@@ -467,7 +467,7 @@ export const Expedien: React.FC = () => {
                 container spacing={2} marginTop={2}
                 sx={class_css} >
 
-                <Title title={"Actualización de ubicación fícica   "} />
+                <Title title={"Actualización de ubicación física   "} />
                 <Grid item xs={12} sm={11}>
 
                 </Grid>
