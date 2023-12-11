@@ -13,7 +13,7 @@ export const getTipologiasDocumentalesMetadatos = async (
     console.log(data);
 
     if(data?.data.length > 0){
-      control_success('Se encontraron las tipologias documentales');
+      // control_success('Se encontraron las tipologias documentales');
       return data.data;
     }
     control_warning('No se encontraron tipologias documentales');

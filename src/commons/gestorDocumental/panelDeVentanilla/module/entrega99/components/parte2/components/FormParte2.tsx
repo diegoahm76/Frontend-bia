@@ -13,13 +13,24 @@ export const FormParte2 = ({
   resetFormulario,
   watchFormulario,
 }: any): JSX.Element => {
-
   // ? stepper hook
   const { handleNext, handleBack } = useSstepperFn();
 
   return (
     <>
       <form
+        onSubmit={(e: any) => {
+          e.preventDefault();
+          if (
+            watchFormulario.asunto.length === 0 ||
+            watchFormulario.descripcion_de_la_solicitud.length === 0
+          ) {
+            control_warning('Todos los campos son obligatorios');
+            return;
+          }
+
+          handleNext();
+        }}
         style={{
           marginTop: '3rem',
         }}
@@ -39,7 +50,7 @@ export const FormParte2 = ({
                   required
                   fullWidth
                   label="Asunto"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
@@ -58,7 +69,7 @@ export const FormParte2 = ({
             <Controller
               name="fecha_de_solicitud"
               control={controlFormulario}
-              defaultValue=""
+              // defaultValue={new Date().toISOString().slice(0, 10)}
               rules={{ required: true }}
               render={({
                 field: { onChange, value },
@@ -70,10 +81,11 @@ export const FormParte2 = ({
                   disabled
                   type="date"
                   label="Fecha de solicitud"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
-                  value={value}
+                  //* se debe poner la condicional del reset
+                  value={new Date().toISOString().slice(0, 10)}
                   InputLabelProps={{ shrink: true }}
                 />
               )}
@@ -97,7 +109,7 @@ export const FormParte2 = ({
                   rows={5}
                   // name="nombre"
                   label="Descripción de la solicitud"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
@@ -132,14 +144,8 @@ export const FormParte2 = ({
           <Button
             variant="contained"
             color="primary"
+            type="submit"
             startIcon={<ArrowForward />}
-            onClick={() => {
-              console.log('click siuuu');
-              //* hacer validaciones previas antes de permitir el avance a la parte 3
-
-
-              handleNext();
-            }}
             sx={{
               width: '35%',
               mr: '2rem',
@@ -148,9 +154,7 @@ export const FormParte2 = ({
             Siguiente
           </Button>
 
-
-          
-         {/* <Button
+          {/* <Button
             variant="contained"
             color="warning"
             onClick={() => {

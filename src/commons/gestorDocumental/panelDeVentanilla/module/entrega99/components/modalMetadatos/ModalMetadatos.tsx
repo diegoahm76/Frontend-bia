@@ -33,7 +33,13 @@ import { control_warning } from '../../../../../../almacen/configuracion/store/t
 import { getTipologiasDocumentalesMetadatos } from '../../services/getTipologiasDocumentales.service';
 import { TipologiaDocumental } from '../parte3/components/types/FormParte3.types';
 import { control_success } from '../../../../../../../helpers';
-import { handleCleanField, handleCloseModal } from './functions/modalFn.functions';
+import {
+  handleCleanField,
+  handleCloseModal,
+} from './functions/modalFn.functions';
+import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
+import { setMetadatos } from '../../toolkit/slice/AsignacionUsuarioSlice';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 export const ModalMetadatos = ({
   tipologiasDocumentales,
@@ -42,6 +48,8 @@ export const ModalMetadatos = ({
   tipologiasDocumentales: any;
   setTipologiasDocumentales: React.Dispatch<React.SetStateAction<any>>;
 }): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* context
   const { modalAgregarMetadatos, handleModalAgregarMetadatos } = useContext(
     ModalAndLoadingContext
@@ -49,6 +57,10 @@ export const ModalMetadatos = ({
 
   const { fourthLoading, handleFourthLoading } = useContext(
     ModalAndLoadingContext
+  );
+  //* redux states
+  const { metadatos, currentAnexo } = useAppSelector(
+    (state) => state.AsignacionUsuarioSlice
   );
 
   //* hooks
@@ -74,6 +86,44 @@ export const ModalMetadatos = ({
     }
   }, [watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value]);
 
+  useEffect(() => {
+    if (metadatos && currentAnexo) {
+      resetManejoMetadatosModal({
+        categoriaArchivoMetadatos: {
+          value: metadatos?.categoriaArchivoMetadatos?.value,
+          label: metadatos?.categoriaArchivoMetadatos?.label,
+        },
+        tieneReplicaFisicaMetadatos: {
+          value: metadatos?.tieneReplicaFisicaMetadatos?.value,
+          label: metadatos?.tieneReplicaFisicaMetadatos?.label,
+        },
+        origenArchivoMetadatos: 'Electrónico',
+        tieneTipologiaRelacionadaMetadatos: {
+          value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value,
+          label: metadatos?.tieneTipologiaRelacionadaMetadatos?.label,
+        },
+        tipologiasDocumentalesMetadatos: {
+          value: metadatos?.tipologiasDocumentalesMetadatos?.value,
+          label: metadatos?.tipologiasDocumentalesMetadatos?.label,
+        },
+        cualTipologiaDocumentalMetadatos:
+          metadatos?.cualTipologiaDocumentalMetadatos,
+        asuntoMetadatos: metadatos?.asuntoMetadatos,
+        descripcionMetadatos: metadatos?.descripcionMetadatos,
+        palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos,
+      });
+    }
+  }, [metadatos, currentAnexo]);
+
+  // ? functions
+
+  const handleSubmit = async () => {
+    dispatch(setMetadatos(watchExeManejoModalMetadatos as any));
+    control_success('Se han establecido los metadatos');
+    handleModalAgregarMetadatos(false);
+    resetManejoMetadatosModalFunction();
+  };
+
   return (
     <>
       <Dialog
@@ -89,12 +139,11 @@ export const ModalMetadatos = ({
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(watchExeManejoModalMetadatos);
-            //? va a ser necesario almacenar los datos de los metadatos que se establezcan
+            handleSubmit();
           }}
         >
           <DialogTitle>
-            <Title title="Metadatos del archivo seleccionado" />
+            <Title title="Metadatos" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -163,6 +212,7 @@ export const ModalMetadatos = ({
                 sx={{
                   mt: '1.2rem',
                   mb: '1.2rem',
+                  zIndex: 10,
                 }}
               >
                 <Controller
@@ -538,10 +588,13 @@ export const ModalMetadatos = ({
               <Button
                 variant="outlined"
                 color="primary"
-                onClick={() => handleCleanField(resetManejoMetadatosModal)}
+                onClick={() => {
+                  dispatch(setMetadatos(null as any));
+                  resetManejoMetadatosModalFunction();
+                }}
                 startIcon={<CleanIcon />}
               >
-                LIMPIAR CAMPOS
+                Limpiar campos
               </Button>
               {/* <Button
                 color="error"
@@ -559,9 +612,6 @@ export const ModalMetadatos = ({
                 color="success"
                 type="submit"
                 variant="contained"
-                onClick={() => {
-                  console.log('cerrando modal');
-                }}
                 startIcon={<SaveIcon />}
               >
                 GUARDAR
@@ -573,7 +623,7 @@ export const ModalMetadatos = ({
                   handleCloseModal(
                     resetManejoMetadatosModalFunction,
                     handleModalAgregarMetadatos
-                  )
+                  );
                 }}
                 startIcon={<CloseIcon />}
               >

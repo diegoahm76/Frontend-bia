@@ -82,10 +82,28 @@ export const usePanelVentanilla = () => {
     watch: watchFormulario,
     setValue: setValueFormulario,
     getValues: getValuesFormulario,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      asunto: '',
+      descripcion_de_la_solicitud: '',
+      fecha_de_solicitud: '',
+      medio_almacenamiento: '',
+      nombre_archivo: '',
+      numero_folios: '',
+      ruta_soporte: '',
+    },
+  });
 
   const watchFormularioValues = watchFormulario();
   console.log('watchFormulario', watchFormularioValues);
+
+  const resetFormularioFunction = () => {
+    setValueFormulario('medio_almacenamiento', '');
+    setValueFormulario('nombre_archivo', '');
+    setValueFormulario('numero_folios', '');
+    setValueFormulario('ruta_soporte', '');
+  };
+
   // ? ----- controles para el manejo del modal de metadatos de la entrega 99 -----
 
   const {
@@ -123,7 +141,7 @@ export const usePanelVentanilla = () => {
 
   //
   const watchExeManejoModalMetadatos = watchManejoMetadatosModal();
-  console.log('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
+  // console.log('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
 
   // ? reset de los valores del modal de metadatos
   const resetManejoMetadatosModalFunction = () =>
@@ -169,7 +187,8 @@ export const usePanelVentanilla = () => {
     controlFormulario,
     handleSubmitFormulario,
     errorsFormulario,
-    resetFormulario,
+    setInfoReset: resetFormulario,
+    resetFormulario: resetFormularioFunction,
     watchFormulario: watchFormularioValues,
     setValueFormulario,
     getValuesFormulario,

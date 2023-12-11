@@ -10,6 +10,7 @@ export const AccionesFinales = ({
   errorsFormulario,
   resetFormulario,
   watchFormulario,
+  setInfoReset,
 }: any): JSX.Element => {
   const [LoadingButton, setLoadingButton] = useState(false);
 

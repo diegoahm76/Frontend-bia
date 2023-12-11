@@ -35,6 +35,7 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     errorsFormulario,
     resetFormulario,
     watchFormulario,
+    setInfoReset,
   } = usePanelVentanilla();
 
   const props = {
@@ -43,6 +44,7 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     errorsFormulario,
     resetFormulario,
     watchFormulario,
+    setInfoReset,
   };
 
   return (

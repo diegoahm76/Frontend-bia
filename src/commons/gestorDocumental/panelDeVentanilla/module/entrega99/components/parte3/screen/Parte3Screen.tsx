@@ -10,6 +10,7 @@ export const Parte3Screen = ({
   errorsFormulario,
   resetFormulario,
   watchFormulario,
+  setInfoReset,
 }: any): JSX.Element => {
   return (
     <Grid
@@ -26,6 +27,7 @@ export const Parte3Screen = ({
         errorsFormulario={errorsFormulario}
         resetFormulario={resetFormulario}
         watchFormulario={watchFormulario}
+        setInfoReset={setInfoReset}
       />
       <AccionesFinales
         controlFormulario={controlFormulario}
@@ -33,6 +35,7 @@ export const Parte3Screen = ({
         errorsFormulario={errorsFormulario}
         resetFormulario={resetFormulario}
         watchFormulario={watchFormulario}
+        setInfoReset={setInfoReset}
       />
     </Grid>
   );

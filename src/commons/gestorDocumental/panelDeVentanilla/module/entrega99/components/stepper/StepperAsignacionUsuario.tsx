@@ -18,6 +18,8 @@ export const StepperAsignacionUsuario = ({
   errorsFormulario,
   resetFormulario,
   watchFormulario,
+  resetFormularioFunction,
+  setInfoReset,
 }: any): JSX.Element => {
   const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
     PanelVentanillaContext
@@ -106,6 +108,7 @@ export const StepperAsignacionUsuario = ({
                   errorsFormulario={errorsFormulario}
                   resetFormulario={resetFormulario}
                   watchFormulario={watchFormulario}
+                  setInfoReset={setInfoReset}
                 />;
               case 1:
                 return <Parte2Screen
@@ -114,6 +117,7 @@ export const StepperAsignacionUsuario = ({
                   errorsFormulario={errorsFormulario}
                   resetFormulario={resetFormulario}
                   watchFormulario={watchFormulario}
+                  setInfoReset={setInfoReset}
                 />;
               case 2:
                 return <Parte3Screen
@@ -122,7 +126,8 @@ export const StepperAsignacionUsuario = ({
                   errorsFormulario={errorsFormulario}
                   resetFormulario={resetFormulario}
                   watchFormulario={watchFormulario}
-                />;
+                  resetFormularioFunction={resetFormularioFunction}
+                  setInfoReset={setInfoReset}                />;
               default:
                 return null;
             }

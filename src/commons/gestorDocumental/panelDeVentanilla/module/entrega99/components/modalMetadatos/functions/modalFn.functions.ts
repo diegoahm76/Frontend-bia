@@ -17,7 +17,9 @@ export const handleCloseModal = async (
   resetFn: Function,
   closeModalFn: Function
 ): Promise<void> => {
-  await Swal.fire({
+  closeModalFn(false);
+
+ /* await Swal.fire({
     title: '¿Estas seguro?',
     text: 'Si cierras el modal se perderan los datos ingresados',
     icon: 'warning',
@@ -29,5 +31,5 @@ export const handleCloseModal = async (
       resetFn();
       closeModalFn(false);
     }
-  });
+  });*/
 };

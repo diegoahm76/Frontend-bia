@@ -47,23 +47,23 @@ import { alerta_slice } from '../commons/recaudo/alertas/store/slice/indexAlerta
 import { PsdSlice } from '../commons/gestorDocumental/permisosSeriesDoc/toolkit/slice/PSDSlice';
 import { metadatos_slice } from '../commons/gestorDocumental/configuracionMetadatos/store/slice/indexMetadatos';
 
-
-import { bodegas_slice } from "../commons/almacen/configuracion/store/slice/BodegaSlice";
-import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
-import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
-import { ctrlAccesoExpSlice } from "../commons/gestorDocumental/controlAccesExped/toolkit/slice/CtrlAccesoExpSlice";
-import { HomologacionesSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/homologacionDeSeccionesPersistentes/toolkit/slice/HomologacionesSeriesSlice";
-import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
-import { cierre_expedientes_slice } from "../commons/gestorDocumental/Expedientes/cierreExpediente/store/slice/indexCierreExpedientes";
-import { archivo_fisico_slice } from "../commons/gestorDocumental/archivoFisico/store/slice/indexArchivoFisico";
-import { configuracion_tiempo_respuesta_slice } from "../commons/gestorDocumental/confiTiemposRespuestaPlazoAccion/store/slice/indexConfiTiemposRespPlazoAccion";
-import { AsigUniRespSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/toolkit/slice/types/AsignacionUniResp";
-import { reportes_documentacion_slice } from "../commons/gestorDocumental/reportesDocumentacionPermisos/store/slice/indexReporteDocumentacion";
-import { DelOfiResSlice } from "../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/toolkit/slice/DelOfiResSlice";
-import { pqrsdf_slice } from "../commons/gestorDocumental/PQRSDF/store/slice/pqrsdfSlice";
-import { central_digitalizacion_slice } from "../commons/gestorDocumental/CentralDigitalizacion/store/slice/centralDigitalizacionSlice";
-import { planes_slice } from "../commons/seguimirntoPlanes/store/slice/indexPlanes";
+import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
+import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
+import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
+import { ctrlAccesoExpSlice } from '../commons/gestorDocumental/controlAccesExped/toolkit/slice/CtrlAccesoExpSlice';
+import { HomologacionesSlice } from '../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/homologacionDeSeccionesPersistentes/toolkit/slice/HomologacionesSeriesSlice';
+import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/ObligacionesSlice';
+import { cierre_expedientes_slice } from '../commons/gestorDocumental/Expedientes/cierreExpediente/store/slice/indexCierreExpedientes';
+import { archivo_fisico_slice } from '../commons/gestorDocumental/archivoFisico/store/slice/indexArchivoFisico';
+import { configuracion_tiempo_respuesta_slice } from '../commons/gestorDocumental/confiTiemposRespuestaPlazoAccion/store/slice/indexConfiTiemposRespPlazoAccion';
+import { AsigUniRespSlice } from '../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/toolkit/slice/types/AsignacionUniResp';
+import { reportes_documentacion_slice } from '../commons/gestorDocumental/reportesDocumentacionPermisos/store/slice/indexReporteDocumentacion';
+import { DelOfiResSlice } from '../commons/gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/toolkit/slice/DelOfiResSlice';
+import { pqrsdf_slice } from '../commons/gestorDocumental/PQRSDF/store/slice/pqrsdfSlice';
+import { central_digitalizacion_slice } from '../commons/gestorDocumental/CentralDigitalizacion/store/slice/centralDigitalizacionSlice';
+import { planes_slice } from '../commons/seguimirntoPlanes/store/slice/indexPlanes';
 import { PanelVentanillaSlice } from '../commons/gestorDocumental/panelDeVentanilla/toolkit/store/PanelVentanillaStore';
+import { AsignacionUsuarioSlice } from '../commons/gestorDocumental/panelDeVentanilla/module/entrega99/toolkit/slice/AsignacionUsuarioSlice';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -150,11 +150,13 @@ const app_reducers = combineReducers({
   PanelVentanillaSlice: PanelVentanillaSlice.reducer,
   // pqrsdf
   pqrsdf_slice: pqrsdf_slice.reducer,
- // ! SEGUIMIENTO A PLANES
- // ? planes
- planes: planes_slice.reducer,
+  // ! SEGUIMIENTO A PLANES
+  // ? planes
+  planes: planes_slice.reducer,
   central_digitalizacion_slice: central_digitalizacion_slice.reducer,
-
+  //* solicitud PQRSDF a usuario reducer
+  AsignacionUsuarioSlice: AsignacionUsuarioSlice.reducer,
+  //* solicitud PQRSDF a usuario reducer
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
