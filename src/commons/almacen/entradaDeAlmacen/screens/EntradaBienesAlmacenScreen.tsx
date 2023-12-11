@@ -558,7 +558,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   multiline
                   rows={2}
                   value={motivo}
-                  label="Motivo"
+                  label="Concepto"
                   size="small"
                   fullWidth
                   onChange={cambio_motivo} 

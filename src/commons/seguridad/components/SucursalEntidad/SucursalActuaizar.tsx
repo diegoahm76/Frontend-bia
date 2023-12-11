@@ -37,6 +37,8 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
     item_ya_usado: false,
     id_persona_empresa: 3,
     numero_sucursal: null,
+    direccion_sucursal_georeferenciada_lon:"",
+    direccion_sucursal_georeferenciada_lat:"",
   };
   const [exiting, 
     // set_exiting
@@ -120,13 +122,14 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
       })
 
       .catch((error) => {
-        console.error("Error al crear o actualizar la sucursal:", error);
-        control_error(isediting ? "Error al actualizada  " : "Error al  guardar ")
+        control_error(error.response.data.detail);
+        // console.error("Error al crear o actualizar la sucursal:", error);
+        // control_error(isediting ? "Error al actualizada  " : "Error al  guardar ")
         set_loading(false);
         setsame_address(false);
         void fetch_dataget();
         fetch_dataget();
-        setform_values(initial_state);
+        // setform_values(initial_state);
       }); 
       
   }; 

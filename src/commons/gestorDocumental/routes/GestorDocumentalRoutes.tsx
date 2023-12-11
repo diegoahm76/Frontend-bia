@@ -19,6 +19,7 @@ import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 
 import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
+import { Reubicacion_Expediantes_Routes } from '../ReubicacionExpediente/routes/Reubicacion_Routes';
 
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
@@ -122,6 +123,13 @@ const routes = [
     path: 'encuesta/',
     name: 'encuesta',
     component: () => <Encuasta_Routes />,
+  },
+  
+
+  {
+    path: 'Reubicacion_Expedientes/',
+    name: 'Reubicacion_Expedientes',
+    component: () => <Reubicacion_Expediantes_Routes />,
   },
   {
     path: 'encuesta_asignacion/',
