@@ -87,31 +87,96 @@ export const ModalMetadatos = ({
   }, [watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value]);
 
   useEffect(() => {
-    if (metadatos && currentAnexo) {
+    resetManejoMetadatosModal({
+      categoriaArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
+      tieneReplicaFisicaMetadatos: {
+        value: '',
+        label: '',
+      },
+      origenArchivoMetadatos: 'Electrónico',
+      tieneTipologiaRelacionadaMetadatos: {
+        value: '',
+        label: '',
+      },
+      tipologiasDocumentalesMetadatos: {
+        value: '',
+        label: '',
+      },
+      cualTipologiaDocumentalMetadatos: '',
+      asuntoMetadatos: '',
+      descripcionMetadatos: '',
+      palabrasClavesMetadatos: [],
+    });
+
+    if (metadatos && currentAnexo?.categoriaArchivoMetadatos?.label) {
       resetManejoMetadatosModal({
         categoriaArchivoMetadatos: {
-          value: metadatos?.categoriaArchivoMetadatos?.value,
-          label: metadatos?.categoriaArchivoMetadatos?.label,
+          value: metadatos?.categoriaArchivoMetadatos?.value
+            ? metadatos?.categoriaArchivoMetadatos?.value
+            : '',
+          label: metadatos?.categoriaArchivoMetadatos?.label
+            ? metadatos?.categoriaArchivoMetadatos?.label
+            : '',
         },
         tieneReplicaFisicaMetadatos: {
-          value: metadatos?.tieneReplicaFisicaMetadatos?.value,
-          label: metadatos?.tieneReplicaFisicaMetadatos?.label,
+          value: metadatos?.tieneReplicaFisicaMetadatos?.value
+            ? metadatos?.tieneReplicaFisicaMetadatos?.value
+            : '',
+          label: metadatos?.tieneReplicaFisicaMetadatos?.label
+            ? metadatos?.tieneReplicaFisicaMetadatos?.label
+            : '',
         },
         origenArchivoMetadatos: 'Electrónico',
         tieneTipologiaRelacionadaMetadatos: {
-          value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value,
-          label: metadatos?.tieneTipologiaRelacionadaMetadatos?.label,
+          value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value
+            ? metadatos?.tieneTipologiaRelacionadaMetadatos?.value
+            : '',
+          label: metadatos?.tieneTipologiaRelacionadaMetadatos?.label
+            ? metadatos?.tieneTipologiaRelacionadaMetadatos?.label
+            : '',
         },
         tipologiasDocumentalesMetadatos: {
-          value: metadatos?.tipologiasDocumentalesMetadatos?.value,
-          label: metadatos?.tipologiasDocumentalesMetadatos?.label,
+          value: metadatos?.tipologiasDocumentalesMetadatos?.value
+            ? metadatos?.tipologiasDocumentalesMetadatos?.value
+            : '',
+          label: metadatos?.tipologiasDocumentalesMetadatos?.label
+            ? metadatos?.tipologiasDocumentalesMetadatos?.label
+            : '',
         },
         cualTipologiaDocumentalMetadatos:
-          metadatos?.cualTipologiaDocumentalMetadatos,
-        asuntoMetadatos: metadatos?.asuntoMetadatos,
-        descripcionMetadatos: metadatos?.descripcionMetadatos,
-        palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos,
+          metadatos?.cualTipologiaDocumentalMetadatos ?? '',
+        asuntoMetadatos: metadatos?.asuntoMetadatos ?? '',
+        descripcionMetadatos: metadatos?.descripcionMetadatos ?? '',
+        palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos ?? [],
       });
+    } else {
+      resetManejoMetadatosModal({
+        categoriaArchivoMetadatos: {
+          value: '',
+          label: '',
+        },
+        tieneReplicaFisicaMetadatos: {
+          value: '',
+          label: '',
+        },
+        origenArchivoMetadatos: 'Electrónico',
+        tieneTipologiaRelacionadaMetadatos: {
+          value: '',
+          label: '',
+        },
+        tipologiasDocumentalesMetadatos: {
+          value: '',
+          label: '',
+        },
+        cualTipologiaDocumentalMetadatos: '',
+        asuntoMetadatos: '',
+        descripcionMetadatos: '',
+        palabrasClavesMetadatos: [],
+      });
+      dispatch(setMetadatos(null as any));
     }
   }, [metadatos, currentAnexo]);
 
@@ -235,7 +300,7 @@ export const ModalMetadatos = ({
                           ); */
                           onChange(selectedOption);
                         }}
-                        // isDisabled={trd_current != null}
+                        // isDisabled={trd_current != ''}
                         options={tieneReplicaFisisca ?? []}
                         placeholder="Seleccionar"
                       />
@@ -318,7 +383,7 @@ export const ModalMetadatos = ({
                           }
                           onChange(selectedOption);
                         }}
-                        // isDisabled={trd_current != null}
+                        // isDisabled={trd_current != ''}
                         options={tieneTipologiaRelacionada ?? []}
                         placeholder="Seleccionar"
                       />
@@ -342,7 +407,9 @@ export const ModalMetadatos = ({
               {/* se debe revisar en que momento mostrar este combo de select */}
 
               {!watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos
-                ?.value ? null : watchExeManejoModalMetadatos
+                ?.value ? (
+                ''
+              ) : watchExeManejoModalMetadatos
                   .tieneTipologiaRelacionadaMetadatos?.value === 'Si' ? (
                 <Grid
                   item
@@ -377,7 +444,7 @@ export const ModalMetadatos = ({
                           );*/
                               onChange(selectedOption);
                             }}
-                            // isDisabled={trd_current != null}
+                            // isDisabled={trd_current != ''}
                             options={
                               tipologiasDocumentales.map(
                                 (tipologia: TipologiaDocumental) => {
@@ -589,7 +656,7 @@ export const ModalMetadatos = ({
                 variant="outlined"
                 color="primary"
                 onClick={() => {
-                  dispatch(setMetadatos(null as any));
+                  dispatch(setMetadatos('' as any));
                   resetManejoMetadatosModalFunction();
                 }}
                 startIcon={<CleanIcon />}

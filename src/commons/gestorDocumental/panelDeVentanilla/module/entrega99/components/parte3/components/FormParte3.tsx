@@ -525,7 +525,7 @@ export const FormParte3 = ({
               if (currentAnexo) {
                 dispatch(setCurrentAnexo(null as any));
               }
-              if(metadatos){
+              if (metadatos) {
                 dispatch(setMetadatos(null as any));
               }
 
