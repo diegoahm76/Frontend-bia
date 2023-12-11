@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, TextField } from '@mui/material';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../../../../../fileWeight/fileWeight';
@@ -12,6 +12,7 @@ import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { useSstepperFn } from '../../../hook/useSstepperFn';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { TipologiaDocumental } from './types/FormParte3.types';
 
 export const FormParte3 = ({
   controlFormulario,
@@ -27,6 +28,10 @@ export const FormParte3 = ({
 
   //* context
   const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
+ 
+  
+  const [tipologiasDocumentales, setTipologiasDocumentales] = useState<TipologiaDocumental[]>([])
+
 
   return (
     <>
@@ -282,7 +287,10 @@ export const FormParte3 = ({
       </form>
 
       {/* espacio para el modal de agregar metadatos */}
-      <ModalMetadatos />
+      <ModalMetadatos 
+        tipologiasDocumentales={tipologiasDocumentales}
+        setTipologiasDocumentales={setTipologiasDocumentales}
+      />
       {/* espacio para el modal de agregar metadatos */}
     </>
   );

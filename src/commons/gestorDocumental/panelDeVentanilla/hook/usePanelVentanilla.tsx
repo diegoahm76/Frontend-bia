@@ -95,11 +95,61 @@ export const usePanelVentanilla = () => {
     setValue: setValueManejoMetadatosModal,
     reset: resetManejoMetadatosModal,
     watch: watchManejoMetadatosModal,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      categoriaArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
+      tieneReplicaFisicaMetadatos: {
+        value: '',
+        label: '',
+      },
+      origenArchivoMetadatos: 'Electrónico',
+      tieneTipologiaRelacionadaMetadatos: {
+        value: '',
+        label: '',
+      },
+      tipologiasDocumentalesMetadatos: {
+        value: '',
+        label: '',
+      },
+      cualTipologiaDocumentalMetadatos: '',
+      asuntoMetadatos: '',
+      descripcionMetadatos: '',
+      palabrasClavesMetadatos: {} as any,
+    },
+  });
 
   //
   const watchExeManejoModalMetadatos = watchManejoMetadatosModal();
   console.log('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
+
+  // ? reset de los valores del modal de metadatos
+  const resetManejoMetadatosModalFunction = () =>
+    resetManejoMetadatosModal({
+      categoriaArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
+      tieneReplicaFisicaMetadatos: {
+        value: '',
+        label: '',
+      },
+      origenArchivoMetadatos: 'Electrónico',
+      tieneTipologiaRelacionadaMetadatos: {
+        value: '',
+        label: '',
+      },
+      tipologiasDocumentalesMetadatos: {
+        value: '',
+        label: '',
+      },
+      cualTipologiaDocumentalMetadatos: '',
+      asuntoMetadatos: '',
+      descripcionMetadatos: '',
+      palabrasClavesMetadatos: {} as any,
+    });
 
   return {
     // ! DECLARACIONES PARA LA ENTREGA 98 ................//
@@ -129,6 +179,7 @@ export const usePanelVentanilla = () => {
     handleSubmitManejoMetadatosModal,
     setValueManejoMetadatosModal,
     resetManejoMetadatosModal,
+    resetManejoMetadatosModalFunction,
     watchExeManejoModalMetadatos,
   };
 };
