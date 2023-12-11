@@ -134,3 +134,18 @@ export const tieneTipologiaRelacionada = [
     value: 'No'
   }
 ];
+
+export const origenArchivo = [
+  {
+    value: "F",
+    label: "Físico"
+  },
+  {
+    value: "E",
+    label: "Electrónico"
+  },
+  {
+    value: "D",
+    label: "Digital"
+  }
+]

@@ -123,7 +123,10 @@ export const usePanelVentanilla = () => {
         value: '',
         label: '',
       },
-      origenArchivoMetadatos: 'Electrónico',
+      origenArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
       tieneTipologiaRelacionadaMetadatos: {
         value: '',
         label: '',
@@ -154,7 +157,10 @@ export const usePanelVentanilla = () => {
         value: '',
         label: '',
       },
-      origenArchivoMetadatos: 'Electrónico',
+      origenArchivoMetadatos: {
+        label: '',
+        value: '',
+      },
       tieneTipologiaRelacionadaMetadatos: {
         value: '',
         label: '',

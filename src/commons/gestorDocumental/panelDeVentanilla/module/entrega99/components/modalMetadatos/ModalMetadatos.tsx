@@ -25,6 +25,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
 import {
   categoriaArhivo,
+  origenArchivo,
   tieneReplicaFisisca,
   tieneTipologiaRelacionada,
 } from './utils/choices';
@@ -87,31 +88,7 @@ export const ModalMetadatos = ({
   }, [watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value]);
 
   useEffect(() => {
-    resetManejoMetadatosModal({
-      categoriaArchivoMetadatos: {
-        value: '',
-        label: '',
-      },
-      tieneReplicaFisicaMetadatos: {
-        value: '',
-        label: '',
-      },
-      origenArchivoMetadatos: 'Electrónico',
-      tieneTipologiaRelacionadaMetadatos: {
-        value: '',
-        label: '',
-      },
-      tipologiasDocumentalesMetadatos: {
-        value: '',
-        label: '',
-      },
-      cualTipologiaDocumentalMetadatos: '',
-      asuntoMetadatos: '',
-      descripcionMetadatos: '',
-      palabrasClavesMetadatos: [],
-    });
-
-    if (metadatos && currentAnexo?.categoriaArchivoMetadatos?.label) {
+    if (metadatos && currentAnexo) {
       resetManejoMetadatosModal({
         categoriaArchivoMetadatos: {
           value: metadatos?.categoriaArchivoMetadatos?.value
@@ -129,7 +106,14 @@ export const ModalMetadatos = ({
             ? metadatos?.tieneReplicaFisicaMetadatos?.label
             : '',
         },
-        origenArchivoMetadatos: 'Electrónico',
+        origenArchivoMetadatos: {
+          value: metadatos?.origenArchivoMetadatos?.value
+            ? metadatos?.origenArchivoMetadatos?.value
+            : '',
+          label: metadatos?.origenArchivoMetadatos?.label
+            ? metadatos?.origenArchivoMetadatos?.label
+            : '',
+        },
         tieneTipologiaRelacionadaMetadatos: {
           value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value
             ? metadatos?.tieneTipologiaRelacionadaMetadatos?.value
@@ -152,31 +136,6 @@ export const ModalMetadatos = ({
         descripcionMetadatos: metadatos?.descripcionMetadatos ?? '',
         palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos ?? [],
       });
-    } else {
-      resetManejoMetadatosModal({
-        categoriaArchivoMetadatos: {
-          value: '',
-          label: '',
-        },
-        tieneReplicaFisicaMetadatos: {
-          value: '',
-          label: '',
-        },
-        origenArchivoMetadatos: 'Electrónico',
-        tieneTipologiaRelacionadaMetadatos: {
-          value: '',
-          label: '',
-        },
-        tipologiasDocumentalesMetadatos: {
-          value: '',
-          label: '',
-        },
-        cualTipologiaDocumentalMetadatos: '',
-        asuntoMetadatos: '',
-        descripcionMetadatos: '',
-        palabrasClavesMetadatos: [],
-      });
-      dispatch(setMetadatos(null as any));
     }
   }, [metadatos, currentAnexo]);
 
@@ -333,23 +292,41 @@ export const ModalMetadatos = ({
                 <Controller
                   name="origenArchivoMetadatos"
                   control={controlManejoMetadatosModal}
-                  defaultValue=""
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <TextField
-                      required
-                      fullWidth
-                      label="Origen del archivo"
-                      size="small"
-                      variant="outlined"
-                      value={'Electrónico'}
-                      disabled
-                      InputLabelProps={{ shrink: true }}
-                      inputProps={{ maxLength: 50 }}
-                    />
+                    <div>
+                      <Select
+                        value={value}
+                        onChange={(selectedOption) => {
+                          console.log(selectedOption);
+                          /* dispatch(
+                            getServiceSeriesSubseriesXUnidadOrganizacional(
+                              selectedOption.item
+                            )
+                          ); */
+                          onChange(selectedOption);
+                        }}
+                        // isDisabled={trd_current != ''}
+                        options={origenArchivo ?? []}
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          Tiene réplica física
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
               </Grid>

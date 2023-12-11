@@ -50,11 +50,11 @@ export const FormParte3 = ({
   setInfoReset,
 }: any): JSX.Element => {
   //* dispatch de redux
-  const dispatch = useAppDispatch();
+  const dispatch: any = useAppDispatch();
 
   //* redux states functions
   const { currentAnexo, anexosCreados, metadatos } = useAppSelector(
-    (state) => state.AsignacionUsuarioSlice
+    (state: any) => state.AsignacionUsuarioSlice
   );
 
   // ? stepper hook
@@ -114,7 +114,10 @@ export const FormParte3 = ({
         value: metadatos?.tieneReplicaFisicaMetadatos?.value,
         label: metadatos?.tieneReplicaFisicaMetadatos?.label,
       },
-      origenArchivoMetadatos: 'Electrónico',
+      origenArchivoMetadatos: {
+        value: metadatos?.origenArchivoMetadatos?.value,
+        label: metadatos?.origenArchivoMetadatos?.label,
+      },
       tieneTipologiaRelacionadaMetadatos: {
         value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value,
         label: metadatos?.tieneTipologiaRelacionadaMetadatos?.label,
