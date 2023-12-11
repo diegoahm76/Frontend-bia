@@ -28,7 +28,6 @@ export const FormParte3 = ({
   //* context
   const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
 
-
   return (
     <>
       <form
@@ -169,11 +168,14 @@ export const FormParte3 = ({
 
           {/* Inicio de la segunda fila de elementos */}
 
-          <Grid item xs={12} sm={4}
+          <Grid
+            item
+            xs={12}
+            sm={4}
             sx={{
               mb: '2rem',
             }}
-            >
+          >
             <Controller
               name="numero_folios"
               control={controlFormulario}
@@ -245,16 +247,9 @@ export const FormParte3 = ({
           </Grid>
         </Grid>
 
+        {/* RenderDataGrid para los anexos que se van a ir creando */}
 
-            {/* RenderDataGrid para los anexos que se van a ir creando */}
-
-              <RenderDataGrid
-                title="Listado de Anexos"
-                columns={[]}
-                rows={[]}
-
-              />
-
+        <RenderDataGrid title="Listado de Anexos" columns={[]} rows={[]} />
 
         <Grid
           item
@@ -287,7 +282,7 @@ export const FormParte3 = ({
       </form>
 
       {/* espacio para el modal de agregar metadatos */}
-      <ModalMetadatos/>
+      <ModalMetadatos />
       {/* espacio para el modal de agregar metadatos */}
     </>
   );
