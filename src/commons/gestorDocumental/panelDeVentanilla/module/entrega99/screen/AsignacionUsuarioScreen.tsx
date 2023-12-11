@@ -6,7 +6,7 @@ import { Title } from '../../../../../../components';
 import { ParteInicial } from '../components/parteInicial/screen/ParteInicial';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { useSolicitudUsuario } from '../hook/useSolicitudUsuario';
+import { usePanelVentanilla } from '../../../hook/usePanelVentanilla';
 
 export const AsignacionUsuarioScreen = (): JSX.Element => {
   {
@@ -35,7 +35,8 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     errorsFormulario,
     resetFormulario,
     watchFormulario,
-  } = useSolicitudUsuario();
+    setInfoReset,
+  } = usePanelVentanilla();
 
   const props = {
     controlFormulario,
@@ -43,6 +44,7 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     errorsFormulario,
     resetFormulario,
     watchFormulario,
+    setInfoReset,
   };
 
   return (
@@ -61,7 +63,7 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
         <Grid item xs={12}>
           <Title title="Solicitud al usuario sobre PQRSDF" />
           {/* parte Inicial */}
-          <ParteInicial />
+          <ParteInicial/>
           {/*stepper*/}
           <StepperAsignacionUsuario {...props} />
         </Grid>

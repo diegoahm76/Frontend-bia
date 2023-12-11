@@ -13,23 +13,23 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   // type IAssignmentsObject,
   type ICCDAsingForm,
-  type ICCDForm
+  type ICCDForm,
 } from '../interfaces/ccd';
 import { get_ccd_current } from '../store/slices/ccdSlice';
 import { get_assignments_ccd_current } from '../store/slices/assignmentsSlice';
 import {
   create_ccds_service,
-  update_ccds_service
+  update_ccds_service,
 } from '../store/thunks/ccdThunks';
 import {
   get_organigrams_service,
-  get_unitys_service
+  get_unitys_service,
 } from '../../organigrama/store/thunks/organigramThunks';
 // import { get_series_service } from '../store/thunks/seriesThunks';
 // import { get_subseries_service } from '../store/thunks/subseriesThunks';
 import {
   create_or_delete_assignments_service,
-  get_assignments_service
+  get_assignments_service,
 } from '../store/thunks/assignmentsThunks';
 import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
@@ -41,11 +41,11 @@ import { AvatarStyles } from '../componentes/crearSeriesCcdDialog/utils/constant
 import { ModalContext } from '../context/ModalContext';
 import {
   get_serie_ccd_current,
-  get_series_ccd
+  get_series_ccd,
 } from '../store/slices/seriesSlice';
 import {
   get_subseries_ccd,
-  get_subseries_ccd_current
+  get_subseries_ccd_current,
 } from '../store/slices/subseriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -56,7 +56,7 @@ const use_ccd = () => {
     activateLoadingButton,
     desactivateLoadingButton,
     activateLoadingButtonGuardarRelacion,
-    desactivateLoadingButtonGuardarRelacion
+    desactivateLoadingButtonGuardarRelacion,
   } = useContext(ModalContext);
 
   const dispatch = useAppDispatch();
@@ -87,26 +87,26 @@ const use_ccd = () => {
   const [list_unitys, set_list_unitys] = useState<IList[] | any>([
     {
       label: '',
-      value: 0
-    }
+      value: 0,
+    },
   ]);
   const [list_organigrams, set_list_organigrams] = useState<IList[] | any>([
     {
       label: '',
-      value: 0
-    }
+      value: 0,
+    },
   ]);
   const [list_sries, set_list_sries] = useState<IList[] | any>([
     {
       label: '',
-      value: 0
-    }
+      value: 0,
+    },
   ]);
   const [list_subsries, set_list_subsries] = useState<any[]>([
     {
       label: '',
-      value: 0
-    }
+      value: 0,
+    },
   ]);
 
   const [list_sries_asignacion, set_list_sries_asignacion] = useState<
@@ -114,8 +114,8 @@ const use_ccd = () => {
   >([
     {
       label: '',
-      value: 0
-    }
+      value: 0,
+    },
   ]);
 
   // const [file, set_file] = useState(null);
@@ -130,7 +130,7 @@ const use_ccd = () => {
     fecha_terminado: '',
     valor_aumento_serie: '',
     valor_aumento_subserie: '',
-    ruta_soporte: ''
+    ruta_soporte: '',
   };
   // Estado Inicial de Formulario de Crear Asignación
   const initial_state_asig: ICCDAsingForm = {
@@ -139,7 +139,7 @@ const use_ccd = () => {
     sries: '',
     subserie_asignacion: [],
     subserie: '',
-    unidades_asignacion: { label: '', value: 0 }
+    unidades_asignacion: { label: '', value: 0 },
   };
   // configuración de tabla por defecto
   const default_col_def = {
@@ -151,7 +151,7 @@ const use_ccd = () => {
     resizable: true,
     initialWidth: 200,
     autoHeaderHeight: true,
-    suppressMovable: true
+    suppressMovable: true,
   };
 
   // useForm Asignar CCD
@@ -161,7 +161,7 @@ const use_ccd = () => {
     control,
     watch,
     reset,
-    formState: { errors }
+    formState: { errors },
   } = useForm({ defaultValues: initial_state_asig });
   const data_asing = watch();
 
@@ -172,7 +172,7 @@ const use_ccd = () => {
     control: control_create_ccd,
     reset: reset_create_ccd,
     watch: watch_create_ccd,
-    formState: { errors: errors_create_ccd }
+    formState: { errors: errors_create_ccd },
   } = useForm<ICCDForm>({ defaultValues: initial_state });
   const data_create_ccd = watch_create_ccd();
   // console.log(data_create_ccd, 'data_create_ccd');
@@ -198,18 +198,18 @@ const use_ccd = () => {
         organigrama: {
           label:
             result_name && result_name.length > 0 ? result_name[0].nombre : '',
-          value: ccd_current.id_organigrama
+          value: ccd_current.id_organigrama,
         },
         unidades_organigrama: {
           label:
-            ' -- ' /* result_unity && result_unity.length > 0 ? result_unity[0].nombre : '' */
+            ' -- ' /* result_unity && result_unity.length > 0 ? result_unity[0].nombre : '' */,
           // value: result_unity && result_unity.length > 0 ? result_unity[0].id_unidad_organizacional : 0
         },
         version: ccd_current.version,
         fecha_terminado: ccd_current.fecha_terminado,
         valor_aumento_serie: ccd_current.valor_aumento_serie,
         valor_aumento_subserie: ccd_current.valor_aumento_subserie,
-        ruta_soporte: ccd_current.ruta_soporte
+        ruta_soporte: ccd_current.ruta_soporte,
       };
       reset_create_ccd(obj);
       set_save_ccd(true);
@@ -222,22 +222,22 @@ const use_ccd = () => {
       const obj = {
         sries_asignacion: {
           label: assignments_ccd_current.nombre_serie,
-          value: assignments_ccd_current.id_serie_doc
+          value: assignments_ccd_current.id_serie_doc,
         },
         sries: '',
         subserie_asignacion: assignments_ccd_current.subseries?.map(
           (item: { label: string; value: any }) => {
             return {
               label: item.label,
-              value: item.value
+              value: item.value,
             };
           }
         ),
         subserie: '',
         unidades_asignacion: {
           label: assignments_ccd_current.seccion,
-          value: assignments_ccd_current.id_unidad_organizacional
-        }
+          value: assignments_ccd_current.id_unidad_organizacional,
+        },
       };
       // console.log(obj, 'obj');
       reset(obj);
@@ -283,7 +283,7 @@ const use_ccd = () => {
     const filter = filteredUnityOrganigram.map((item: any) => ({
       item,
       label: item?.nombre,
-      value: item.id_unidad_organizacional!
+      value: item.id_unidad_organizacional!,
     }));
 
     console.log(filter, 'filter');
@@ -293,7 +293,7 @@ const use_ccd = () => {
         .filter((item: any) => item.activo)
         .map((item: any) => ({
           label: item?.nombre,
-          value: item.id_unidad_organizacional!
+          value: item.id_unidad_organizacional!,
         }))
     );
   }, [unity_organigram]);
@@ -309,7 +309,7 @@ const use_ccd = () => {
     set_list_organigrams(
       filteredOrganigramas.map((item: any) => ({
         label: item?.nombre,
-        value: item.id_organigrama!
+        value: item.id_organigrama!,
       }))
     );
   }, [organigram]);
@@ -318,7 +318,7 @@ const use_ccd = () => {
     set_list_sries(
       series_ccd.map((item) => ({
         label: item.nombre,
-        value: item.id_serie_doc!
+        value: item.id_serie_doc!,
       }))
     );
   }, [series_ccd]);
@@ -327,7 +327,7 @@ const use_ccd = () => {
     set_list_subsries(
       subseries_ccd.map((item: { nombre: any; id_subserie_doc: any }) => ({
         label: item?.nombre,
-        value: item?.id_subserie_doc
+        value: item?.id_subserie_doc,
       }))
     );
   }, [subseries_ccd]);
@@ -341,7 +341,7 @@ const use_ccd = () => {
         } - ${
           item.nombre_subserie ? item.nombre_subserie : '(serie independiente)'
         } - ${item.codigo_subserie ? item.codigo_subserie : ''}`,
-        value: item.id_serie_doc
+        value: `${item.id_serie_doc} - ${item.id_catalogo_serie}`,
       }))
     );
   }, [seriesAndSubseries]);
@@ -366,7 +366,7 @@ const use_ccd = () => {
       nombre: data_create_ccd.nombre_ccd,
       valor_aumento_serie: data_create_ccd.valor_aumento_serie,
       valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
-      ruta_soporte: data_create_ccd.ruta_soporte
+      ruta_soporte: data_create_ccd.ruta_soporte,
     };
 
     // Convertir el objeto new_ccd en un objeto FormData
@@ -399,7 +399,7 @@ const use_ccd = () => {
       valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
       ruta_soporte: data_create_ccd.ruta_soporte
         ? data_create_ccd.ruta_soporte
-        : data_create_ccd.ruta_soporte
+        : data_create_ccd.ruta_soporte,
     };
     // console.log(data_create_ccd.ruta_soporte, 'data_create_ccd.ruta_soporte')
 
@@ -503,7 +503,7 @@ const use_ccd = () => {
           codigo_serie: item.item.codigo_serie,
           id_subserie_doc: item.item.id_subserie_doc,
           nombre_subserie: item.item.nombre_subserie,
-          codigo_subserie: item.item.codigo_subserie
+          codigo_subserie: item.item.codigo_subserie,
         };
       }
     );
@@ -547,36 +547,36 @@ const use_ccd = () => {
       field: 'id_unidad_organizacional',
       minWidth: 90,
       maxWidth: 100,
-      hide: true
+      hide: true,
     },
     {
       headerName: 'Unidad Organizacional',
       field: 'nombreUnidad',
       minWidth: 210,
-      maxWidth: 220
+      maxWidth: 220,
     },
     {
       headerName: 'Cód. Serie',
       field: 'codigo_serie',
       minWidth: 95,
-      maxWidth: 100
+      maxWidth: 100,
     },
     {
       headerName: 'Serie',
       field: 'nombre_serie',
       minWidth: 150,
-      maxWidth: 200
+      maxWidth: 200,
     },
     {
       headerName: 'Cód. Subserie',
       field: 'codigo_subserie',
       minWidth: 95,
-      maxWidth: 100
+      maxWidth: 100,
     },
     {
       headerName: 'Subserie',
       field: 'nombre_subserie',
-      minWidth: 150
+      minWidth: 150,
     },
     {
       headerName: 'Acciones',
@@ -602,8 +602,8 @@ const use_ccd = () => {
             </IconButton>
           </>
         );
-      }
-    }
+      },
+    },
   ];
 
   const get_row_class = (params: { data: { price: number } }): string => {
@@ -649,7 +649,7 @@ const use_ccd = () => {
     create_sub_serie_active,
     set_create_sub_serie_active,
     create_or_delete_relation_unidad,
-    reset
+    reset,
     // file,
     // set_file,
   };

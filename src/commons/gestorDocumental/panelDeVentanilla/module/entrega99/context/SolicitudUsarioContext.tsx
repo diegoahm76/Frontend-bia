@@ -11,10 +11,16 @@ export const SolicitudAlUsuarioProvider = ({ children }: any): JSX.Element => {
   const [infoInicialUsuario, setInfoInicialUsuario] =
     useState<any>([]);
 
+
+  
+
+
   const value = {
     infoInicialUsuario,
     setInfoInicialUsuario,
   };
+
+
 
   return (
     <SolicitudAlUsuarioContext.Provider value={value}>

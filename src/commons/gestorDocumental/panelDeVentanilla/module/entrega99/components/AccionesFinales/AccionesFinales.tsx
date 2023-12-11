@@ -4,7 +4,14 @@ import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalMod
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 
-export const AccionesFinales = (): JSX.Element => {
+export const AccionesFinales = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+  setInfoReset,
+}: any): JSX.Element => {
   const [LoadingButton, setLoadingButton] = useState(false);
 
   //* handleSumbit
