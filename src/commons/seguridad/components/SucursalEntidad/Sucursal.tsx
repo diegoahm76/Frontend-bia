@@ -30,6 +30,7 @@ export const Sucursal: FC = () => {
       // console.error(error);
     }
   };
+  
 
   useEffect(() => {
     fetchand_update_data().catch((error) => {
