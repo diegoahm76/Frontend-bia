@@ -38,8 +38,6 @@ interface IProps {
 const FormStepper = ({
   configuration_steps,
   message_success,
-  handle_submit,
-  validate,
   set_success,
   step,
 }: IProps) => {
@@ -63,7 +61,7 @@ const FormStepper = ({
   };
 
   const handleNext = (data: any): void => {
-    validate(data);
+    configuration_steps[activeStep].validate(data, activeStep);
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -132,7 +130,11 @@ const FormStepper = ({
                 Saltar
               </Button>
             )}
-            <Button onClick={handle_submit(handleNext)}>
+            <Button
+              onClick={configuration_steps[activeStep].handle_submit(
+                handleNext
+              )}
+            >
               {activeStep === configuration_steps.length - 1
                 ? 'Finalizar'
                 : 'Siguiente'}

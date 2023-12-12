@@ -65,17 +65,18 @@ const ListadoAnexos = () => {
   useEffect(() => {
     console.log(exhibit);
     reset(exhibit);
-    if ((exhibit.id_anexo ?? null) !== null) {
-      if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
-        if (typeof exhibit.exhibit_link === 'string') {
-          const name = exhibit.exhibit_link?.split('/').pop() ?? '';
-          set_file_name(name);
-        } else {
-          if ('name' in exhibit.exhibit_link) {
-            set_file_name(String(exhibit.exhibit_link.name ?? ''));
-          }
-        }
+
+    if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
+      if (typeof exhibit.exhibit_link === 'string') {
+        const name = exhibit.exhibit_link?.split('/').pop() ?? '';
+        set_file_name(name);
       } else {
+        if ('name' in exhibit.exhibit_link) {
+          set_file_name(String(exhibit.exhibit_link.name ?? ''));
+        }
+      }
+    } else {
+      if ((exhibit.metadatos?.archivo ?? null) !== null) {
         dispatch(
           set_exhibit({
             ...exhibit,
@@ -83,19 +84,17 @@ const ListadoAnexos = () => {
           })
         );
       }
-    } else {
-      if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
-        if (typeof exhibit.exhibit_link === 'string') {
-          const name = exhibit.exhibit_link?.split('/').pop() ?? '';
-          set_file_name(name);
-        } else {
-          if ('name' in exhibit.exhibit_link) {
-            set_file_name(String(exhibit.exhibit_link.name ?? ''));
-          }
-        }
-      }
     }
-    dispatch(set_metadata(exhibit.metadatos ?? initial_state_metadata));
+
+    dispatch(
+      set_metadata(
+        {
+          ...exhibit.metadatos,
+          tiene_tipologia: exhibit.metadatos?.id_tipologia_doc !== null,
+          observacion_digitalizacion: exhibit.observacion_digitalizacion,
+        } ?? initial_state_metadata
+      )
+    );
   }, [exhibit]);
 
   useEffect(() => {
@@ -127,11 +126,6 @@ const ListadoAnexos = () => {
   }, [file]);
 
   const add_metadata_form = (): void => {
-    if (exhibit.metadatos === null) {
-      dispatch(set_metadata(initial_state_metadata));
-    } else {
-      dispatch(set_metadata(exhibit.metadatos));
-    }
     set_add_metadata_is_active(true);
   };
 

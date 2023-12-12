@@ -200,3 +200,46 @@ export const get_file_origin_service = (): any => {
     }
   };
 };
+
+// crear metadata
+export const add_metadata_service = (metadata: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(metadata);
+      const { data } = await api.post(
+        `gestor/central-digitalizacion/crear-digitalizacion/`,
+        metadata
+      );
+      console.log(data);
+
+      control_success(data.detail);
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('add_metadata_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar metadata
+export const edit_metadata_service = (metadata: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `gestor/central-digitalizacion/actualizar-digitalizacion/`,
+        metadata
+      );
+      console.log(data);
+
+      control_success(data.detail);
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('edit_metadata_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};

@@ -96,6 +96,21 @@ const SolicitudSeleccionada = () => {
               disabled: true,
               helper_text: '',
             },
+            {
+              datum_type: 'input_controller',
+              xs: 12,
+              md: 12,
+              control_form: control_solicitud,
+              control_name: 'observacion_digitalización',
+              default_value: '',
+              rules: {},
+              multiline_text: true,
+              rows_text: 4,
+              label: 'Observación de digitalización',
+              type: 'text',
+              disabled: false,
+              helper_text: '',
+            },
           ]}
         />
       </Grid>

@@ -8,10 +8,12 @@ import {
 // Slices
 import {
   initial_state_pqr,
+  set_areas,
   set_attorney,
   set_attorneys,
   set_companies,
   set_company,
+  set_departments,
   set_destination_offices,
   set_document_types,
   set_file_categories,
@@ -27,6 +29,7 @@ import {
   set_list_on_behalf_of,
   set_list_pqr_status,
   set_media_types,
+  set_municipalities,
   set_person,
   set_person_types,
   set_persons,
@@ -38,6 +41,11 @@ import {
 } from '../slice/pqrsdfSlice';
 import { api } from '../../../../../api/axios';
 import { IObjListType } from '../../interfaces/pqrsdf';
+import { NavigateFunction } from 'react-router-dom';
+import {
+  get_ciudades,
+  get_departamentos,
+} from '../../../../../request/getRequest';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -291,6 +299,61 @@ export const get_person_types_service = (): any => {
       return data;
     } catch (error: any) {
       console.log('get_person_types_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener zonas
+export const get_areas_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('gestor/choices/tipo-zona/');
+
+      dispatch(set_areas(map_list(data, true)));
+      console.log(data);
+      return data;
+    } catch (error: any) {
+      console.log('get_areas_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener departamentos
+export const get_departments_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await get_departamentos('CO');
+      console.log(data);
+      dispatch(
+        set_departments(map_list(data.data, false, 'value', 'value', 'label'))
+      );
+      return data;
+    } catch (error: any) {
+      console.log('get_departments_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener departamentos
+export const get_municipalities_service = (department: string): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await get_ciudades(department);
+      console.log(data);
+      dispatch(
+        set_municipalities(
+          map_list(data.data, false, 'value', 'value', 'label')
+        )
+      );
+      return data;
+    } catch (error: any) {
+      console.log('get_municipalities_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -557,7 +620,10 @@ export const get_pqrsdf_id_service = (id: string | number): any => {
 };
 
 // crear pqrsdf
-export const add_pqrsdf_service = (pqrsdf: any): any => {
+export const add_pqrsdf_service = (
+  pqrsdf: any,
+  navigate: NavigateFunction
+): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(pqrsdf);
@@ -565,6 +631,10 @@ export const add_pqrsdf_service = (pqrsdf: any): any => {
       console.log(data);
 
       control_success(data.detail);
+      navigate(
+        `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      );
+
       dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
@@ -576,13 +646,19 @@ export const add_pqrsdf_service = (pqrsdf: any): any => {
 };
 
 // editar pqrsdf
-export const edit_pqrsdf_service = (pqrsdf: any): any => {
+export const edit_pqrsdf_service = (
+  pqrsdf: any,
+  navigate: NavigateFunction
+): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(`gestor/pqr/update-pqrsdf/`, pqrsdf);
       console.log(data);
 
       control_success(data.detail);
+      navigate(
+        `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      );
       dispatch(set_pqr(data.data));
 
       // if ('data' in data) {
