@@ -16,7 +16,6 @@ import { Rating } from 'primereact/rating';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 import TableRowExpansion from '../../../../../components/partials/form/TableRowExpansion';
-import Grid from '@mui/material/Grid';
 import FormButton from '../../../../../components/partials/form/FormButton';
 import {
   initial_state_pqr,
@@ -26,7 +25,8 @@ import {
 } from '../../store/slice/pqrsdfSlice';
 import { IObjPqr, IObjPqrRequest } from '../../interfaces/pqrsdf';
 import PqrDetailDialog from './PqrDetailDialog';
-
+import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoPqrsdf = () => {
   const dispatch = useAppDispatch();
@@ -110,30 +110,41 @@ const ListadoPqrsdf = () => {
 
   const columns_pqrs: ColumnProps[] = [
     {
+      headerStyle: { width: '4rem' },
       field: 'cod_tipo_PQRSDF',
       header: 'Tipo de tramite',
-      sortable: true,
+      sortable: false,
     },
     {
+      headerStyle: { width: '4rem' },
       field: 'fecha_registro',
       header: 'Fecha de creación',
-      sortable: true,
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {new Date(rowData.fecha_registro).toDateString()}
+        </div>
+      ),
+      style: { width: 150 },
     },
     {
+      headerStyle: { width: '4rem' },
       field: 'fecha_radicado',
       header: 'Fecha de radicado',
-      sortable: true,
+      sortable: false,
     },
     {
+      headerStyle: { width: '4rem' },
       field: 'numero_radicado',
       header: 'Número de radicado',
-      sortable: true,
+      sortable: false,
     },
 
     {
       field: 'nombre_estado_solicitud',
+      headerStyle: { width: '4rem' },
       header: 'Estado',
-      sortable: true,
+      sortable: false,
       body: (rowData) => (
         <Tag
           value={rowData.nombre_estado_solicitud}
@@ -142,15 +153,31 @@ const ListadoPqrsdf = () => {
       ),
     },
     {
+      header: 'Acciones',
       headerStyle: { width: '4rem' },
       body: (rowData) => (
-        <Button
-          icon="pi pi-view"
-          onClick={() => {
-            set_detail_is_active(true);
-            setSelectedPqr(rowData);
-          }}
-        />
+        <Tooltip title="Detalle">
+          <IconButton
+            onClick={() => {
+              set_detail_is_active(true);
+              setSelectedPqr(rowData);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];
@@ -158,41 +185,57 @@ const ListadoPqrsdf = () => {
     {
       field: 'nombre_tipo_oficio',
       header: 'Tipo de solicitud',
-      sortable: true,
+      sortable: false,
     },
     {
       field: 'fecha_radicado_salida',
       header: 'Fecha de radicado de salida',
-      sortable: true,
+      sortable: false,
     },
     {
       field: 'numero_radicado_salida',
       header: 'Número de radicado de salida',
-      sortable: true,
+      sortable: false,
     },
 
     {
       field: 'fecha_radicado_salida',
       header: 'Fecha de notificación',
-      sortable: true,
+      sortable: false,
     },
 
     {
       field: 'organizational_unit',
       header: 'Unidad organizacional solicitante',
-      sortable: true,
+      sortable: false,
     },
 
     {
+      header: 'Acciones',
       headerStyle: { width: '4rem' },
       body: (rowData) => (
-        <Button
-          icon="pi pi-view"
-          onClick={() => {
-            set_detail_is_active(true);
-            setSelectedPqr(rowData);
-          }}
-        />
+        <Tooltip title="Detalle">
+          <IconButton
+            onClick={() => {
+              set_detail_is_active(true);
+              setSelectedPqr(rowData);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];
@@ -228,6 +271,7 @@ const ListadoPqrsdf = () => {
         setExpandedRows={setExpandedRows}
         onRowToggleFunction={get_x}
       />
+
       <Grid container direction="row" padding={2} spacing={2}>
         <Grid item xs={12} md={3}>
           <FormButton

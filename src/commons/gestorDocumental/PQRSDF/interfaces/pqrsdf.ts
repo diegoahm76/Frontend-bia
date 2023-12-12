@@ -43,6 +43,16 @@ export interface IPqrsdf {
   file_typologies: IObjListType[];
   file_typology: IObjListType;
   metadata: IObjMetaData;
+  denuncia: IObjPqrDenuncia | null;
+  areas: IObjListType[];
+  area: IObjListType;
+  municipalities: IObjListType[];
+  municipality: IObjListType;
+  departments: IObjListType[];
+  department: IObjListType;
+  resources: IObjListType[];
+  resource: IObjListType[];
+
 
   //Radicados pqr
   filings: IObjFiled[];
@@ -65,6 +75,8 @@ export interface IObjStepConfiguration {
   skipped: boolean | null;
   step_title: string | null;
   body?: React.ReactNode | null; 
+  handle_submit?:any;
+  validate?:any;
 }
 
 export interface IObjDocumentType {
@@ -108,7 +120,7 @@ export interface IObjPqr {
 
   
   tipo_PQRSDF?: string | null; // tipó de pqr
-  cod_tipo_PQRSDF?: number | null;// id de tipo de pqr
+  cod_tipo_PQRSDF?: number | string | null;// id de tipo de pqr
   nombre_completo_titular?: string | null; // persona titular
   asunto?: string | null; // asunto de pqr
   descripcion?: string | null; // descripcion pqr
@@ -136,7 +148,23 @@ export interface IObjPqr {
   cantidad_anexos?: number | null;// total de anexos
   nro_folios_totales?: number | null; // total folios en anexos
   anexos?: IObjExhibit[];
-  denuncia: null;
+  denuncia?: IObjPqrDenuncia | null;
+}
+
+export interface IObjPqrDenuncia {
+  Cod_zona_localizacion?: string | null;
+  cod_municipio_cocalizacion_hecho?: string | null;
+  barrio_vereda_localizacion?: string | null;
+  direccion_localizacion?: string | null;
+  cod_recursos_fectados_presuntos?: string[] | string | null;
+  otro_recurso_Afectado_cual?: string | null;
+  evidencias_soportan_hecho?: string | null;
+  nombre_completo_presunto_infractor?: string | null;
+  telefono_presunto_infractor?: number | string | null;
+  direccion_presunto_infractor?: string | null;
+  ya_habia_puesto_en_conocimiento?: boolean | null;
+  ante_que_autoridad_había_interpuesto?: string | null;
+  cod_departamento?: string | null;
 }
 
 export interface IObjPqrRequest {

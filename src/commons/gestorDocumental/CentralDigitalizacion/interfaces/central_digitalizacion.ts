@@ -102,7 +102,7 @@ export interface IObjExhibit {
 export interface IObjMetaData {
   id_metadatos_anexo_tmp?: number | null;
   id_anexo?: number | null;
-  fecha_creacion_doc?: string | null;
+  fecha_creacion_doc?: string | null | Date;
   descripcion?: number | null;
   asunto?: string | null;
   categoria_archivo?: string | null;
@@ -126,7 +126,10 @@ export interface IObjMetaData {
   id_tipologia_doc?: number | null;
   tipologia_doc?: string | null;
   tipologia_no_creada_en_TRD?: string | null;
+  tipologia_no_creada_TRD?: string | null;
   observacion_digitalizacion?: string | null;
+  id_persona_digitalizo?: number | null;
+  id_solicitud_de_digitalizacion?: number | null;
 }
 
 export interface IObjFile{

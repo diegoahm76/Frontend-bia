@@ -75,71 +75,134 @@ const FormSelectController = ({
           margin={margin ?? 0}
           marginTop={marginTop ?? 0}
         >
-          <Controller
-            name={control_name}
-            control={control_form}
-            defaultValue={default_value}
-            rules={{ required: rules.required_rule?.rule }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <FormControl fullWidth>
-                <InputLabel id={id_select}>{label ?? ''}</InputLabel>
-                <Select
-                  name={control_name}
-                  labelId={id_select}
-                  multiple={multiple ?? false}
-                  margin="dense"
-                  fullWidth
-                  size="small"
-                  label={label ?? ''}
-                  variant="outlined"
-                  disabled={disabled}
-                  value={value === null ? (multiple ?? false ? [] : '') : value}
-                  onChange={(e) => {
-                    onChange(e);
-                    {
-                      (on_change_function ?? null) !== null &&
-                        on_change_function(
-                          select_options.find(
-                            (option: any) =>
-                              option[option_key] === e.target.value
-                          ),
-                          e.target.name
-                        );
+          {multiple ?? false ? (
+            <Controller
+              name={control_name}
+              control={control_form}
+              defaultValue={default_value}
+              rules={{ required: rules.required_rule?.rule }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <FormControl fullWidth>
+                  <InputLabel id={id_select}>{label ?? ''}</InputLabel>
+                  <Select
+                    name={control_name}
+                    labelId={id_select}
+                    multiple={multiple ?? false}
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label={label ?? ''}
+                    variant="outlined"
+                    disabled={disabled}
+                    value={value === null ? [] : value}
+                    onChange={onChange}
+                    error={
+                      !(error == null) ||
+                      ((auto_focus ?? false) &&
+                        (value === null || value === ''))
                     }
-                  }}
-                  error={
-                    !(error == null) ||
+                  >
+                    {select_options.map((option: any) => (
+                      <MenuItem
+                        key={option[option_key]}
+                        value={option[option_key]}
+                      >
+                        {option[option_label]}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText
+                    error={
+                      !(error == null) ||
+                      ((auto_focus ?? false) &&
+                        (value === null || value === ''))
+                    }
+                  >
+                    {!(error == null) ||
                     ((auto_focus ?? false) && (value === null || value === ''))
-                  }
-                >
-                  {(!(multiple ?? false) || (none_option ?? true)) && (
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                  )}
-                  {select_options.map((option: any) => (
-                    <MenuItem
-                      key={option[option_key]}
-                      value={option[option_key]}
-                    >
-                      {option[option_label]}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText
-                  error={
-                    !(error == null) ||
+                      ? rules.required_rule?.message
+                      : value === '' && helper_text}
+                  </FormHelperText>
+                </FormControl>
+              )}
+            />
+          ) : (
+            <Controller
+              name={control_name}
+              control={control_form}
+              defaultValue={default_value}
+              rules={{ required: rules.required_rule?.rule }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <FormControl fullWidth>
+                  <InputLabel id={id_select}>{label ?? ''}</InputLabel>
+                  <Select
+                    name={control_name}
+                    labelId={id_select}
+                    multiple={multiple ?? false}
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label={label ?? ''}
+                    variant="outlined"
+                    disabled={disabled}
+                    value={
+                      value === null ? (multiple ?? false ? [] : '') : value
+                    }
+                    onChange={(e) => {
+                      onChange(e);
+                      {
+                        (on_change_function ?? null) !== null &&
+                          on_change_function(
+                            select_options.find(
+                              (option: any) =>
+                                option[option_key] === e.target.value
+                            ),
+                            e.target.name
+                          );
+                      }
+                    }}
+                    error={
+                      !(error == null) ||
+                      ((auto_focus ?? false) &&
+                        (value === null || value === ''))
+                    }
+                  >
+                    {(!(multiple ?? false) || (none_option ?? true)) && (
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                    )}
+                    {select_options.map((option: any) => (
+                      <MenuItem
+                        key={option[option_key]}
+                        value={option[option_key]}
+                      >
+                        {option[option_label]}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText
+                    error={
+                      !(error == null) ||
+                      ((auto_focus ?? false) &&
+                        (value === null || value === ''))
+                    }
+                  >
+                    {!(error == null) ||
                     ((auto_focus ?? false) && (value === null || value === ''))
-                  }
-                >
-                  {!(error == null) ||
-                  ((auto_focus ?? false) && (value === null || value === ''))
-                    ? rules.required_rule?.message
-                    : value === '' && helper_text}
-                </FormHelperText>
-              </FormControl>
-            )}
-          />
+                      ? rules.required_rule?.message
+                      : value === '' && helper_text}
+                  </FormHelperText>
+                </FormControl>
+              )}
+            />
+          )}
         </Grid>
       )}
     </>

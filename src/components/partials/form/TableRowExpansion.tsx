@@ -9,6 +9,7 @@ import {
   DataTableExpandedRows,
   DataTableValueArray,
 } from 'primereact/datatable';
+import { Grid, TableContainer } from '@mui/material';
 interface Level {
   level: number;
   column_id: string;
@@ -58,6 +59,7 @@ const TableRowExpansion = ({
             <div className="p-3">
               <h5>{definition_level.table_name}</h5>
               <DataTable
+                size="small"
                 metaKeySelection={true}
                 selectionMode={'single'}
                 selection={selectedItem}
@@ -67,6 +69,7 @@ const TableRowExpansion = ({
                 onRowToggle={(e) => setExpandedRows(e.data)}
                 rowExpansionTemplate={rowExpansionTemplate}
                 dataKey={definition_level.column_id}
+                tableStyle={{ minWidth: '50rem', overflowX: 'visible' }}
               >
                 <Column expander={allow_expansion} style={{ width: '5rem' }} />
 
@@ -91,6 +94,9 @@ const TableRowExpansion = ({
   return (
     <div className="card">
       <DataTable
+        scrollable={true}
+        scrollHeight="10"
+        size="small"
         metaKeySelection={true}
         selectionMode={'single'}
         selection={selectedItem}
@@ -103,7 +109,7 @@ const TableRowExpansion = ({
         }}
         rowExpansionTemplate={rowExpansionTemplate}
         dataKey={definition_levels[0].column_id}
-        tableStyle={{ minWidth: '60rem' }}
+        tableStyle={{ minWidth: '50rem', overflowX: 'visible' }}
       >
         <Column
           expander={(initial_allow_expansion ?? false) || allow_expansion}

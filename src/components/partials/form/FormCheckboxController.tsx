@@ -68,18 +68,20 @@ const FormCheckboxController = ({
             <Controller
               name={control_name}
               control={control_form}
-              defaultValue={default_value ?? false}
-              render={({ field }) => (
+              defaultValue={checked ?? false}
+              render={({ field: { onChange, value } }) => (
                 <FormControl fullWidth>
                   <FormControlLabel
                     label={label}
                     control={
                       <Checkbox
-                        {...field}
-                        defaultChecked={default_value ?? false}
+                        defaultChecked={checked ?? false}
+                        checked={checked}
+                        value={checked}
                         color="primary" // Puedes cambiar el color si lo deseas
                         disabled={disabled}
                         onChange={(e) => {
+                          onChange(e.target.checked);
                           set_checked(e.target.checked);
                         }}
                       />
