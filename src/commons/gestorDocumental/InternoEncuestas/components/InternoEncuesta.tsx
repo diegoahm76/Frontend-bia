@@ -135,8 +135,13 @@ export const EncuestaInterno: React.FC = () => {
         if (!validateFormData()) {
             return; // Si la validación falla, no continuamos con el envío
         }
+        if (selectedEncuestaId == null) {
+            console.error("No se ha seleccionado ninguna encuesta.");
+            return;
+        }
         const dataToSend = {
             ...formData,
+            id_encuesta: selectedEncuestaId, // Aquí asignamos el valor de selectedEncuestaId a id_encuesta
             ids_opciones_preguntas_encuesta: selectedOptions.map(optionId => ({
                 id_opcion_pregunta_encuesta: optionId
             }))

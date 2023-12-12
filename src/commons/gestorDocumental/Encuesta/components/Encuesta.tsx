@@ -292,7 +292,8 @@ export const Encuesta: React.FC = () => {
                     <Grid container
                         spacing={2} m={2} p={2}
                         sx={miEstilo}
-                    >{selectedEncuestaId}
+                    >
+                        {/* {selectedEncuestaId} */}
                         {/* <img style={{ width: 45 }} src="../image/botones/logoCormaca.png" alt="XLS Button" /> */}
                         <Title title="Encuesta satisfacción al usuario" />
                         <Grid item xs={12} marginTop={1} sm={12}>

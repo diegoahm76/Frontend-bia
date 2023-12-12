@@ -16,7 +16,7 @@ export const initialFormData = {
     cod_sexo: "",
     rango_edad: "",
     _id_persona: 0,
-    id_encuesta: 104,
+    id_encuesta: "",
     tipo_usuario: "R",
     nombre_completo: "",
     nro_documento_id: "",
