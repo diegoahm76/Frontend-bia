@@ -86,6 +86,48 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
           )}
         />
       </Grid>
+      <Grid item xs={12} sm={4}>
+        <Controller
+          name="fecha_inicio"
+          control={control_busqueda_panel_ventanilla}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              fullWidth
+              label="Fecha inicio"
+              type="date"
+              size="small"
+              variant="outlined"
+              value={value}
+              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                onChange(e.target.value);
+              }}
+            />
+          )}
+        />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Controller
+          name="fecha_fin"
+          control={control_busqueda_panel_ventanilla}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              fullWidth
+              label="Fecha final"
+              type="date"
+              size="small"
+              variant="outlined"
+              value={value}
+              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                onChange(e.target.value);
+              }}
+            />
+          )}
+        />
+      </Grid>
     </>
   );
 };

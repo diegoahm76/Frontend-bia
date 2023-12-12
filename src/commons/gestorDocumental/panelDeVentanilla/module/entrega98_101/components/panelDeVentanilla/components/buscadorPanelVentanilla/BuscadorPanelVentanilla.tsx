@@ -40,12 +40,15 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
 
   // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA-----
   const searchSubmitPqrsdf = () => {
-    const { tipo_de_solicitud, radicado, estado_actual_solicitud } =
+    const { tipo_de_solicitud, radicado, estado_actual_solicitud, fecha_inicio, fecha_fin } =
       watch_busqueda_panel_ventanilla;
     void getGrilladoPqrsdfPanelVentanilla(
       estado_actual_solicitud?.label,
       radicado,
       '' /*tipo_de_solicitud?.label,*/,
+      fecha_inicio,
+      fecha_fin,
+
       handleSecondLoading
     ).then((res) => {
       dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));

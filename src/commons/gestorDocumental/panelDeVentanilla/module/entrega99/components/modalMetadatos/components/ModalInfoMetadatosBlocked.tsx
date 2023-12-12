@@ -11,20 +11,13 @@ import {
   DialogTitle,
   Divider,
   Grid,
-  Skeleton,
   Stack,
   TextField,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Controller } from 'react-hook-form';
-import CleanIcon from '@mui/icons-material/CleaningServices';
-import Select from 'react-select';
-import SaveIcon from '@mui/icons-material/Save';
 import { Title } from '../../../../../../../../components';
 
 export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
-
-
   //* se debe manejar un loader ya que a través de ello se consultatá un servicio para los metadatos que están asociados a un archivo
 
   return (
@@ -32,15 +25,13 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
       <Dialog
         fullWidth
         maxWidth="md"
-        open={true}
+        open={false}
         onClose={() => {
           // handleModalAgregarMetadatos(false);
           //* tambien se deben limpiar los datos que se recojan en el modal
         }}
       >
-        <Box
-          component="form"
-        >
+        <Box component="form">
           <DialogTitle>
             <Title title="Información metadatos" />
           </DialogTitle>
@@ -63,6 +54,7 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
                 }}
               >
                 <TextField
+                  disabled
                   fullWidth
                   label="Categoría del archivo"
                   size="small"
@@ -83,6 +75,7 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
                 }}
               >
                 <TextField
+                  disabled
                   fullWidth
                   label="Réplica física"
                   size="small"
@@ -102,6 +95,7 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
                 }}
               >
                 <TextField
+                  disabled
                   fullWidth
                   label="Origen del archivo"
                   size="small"
@@ -123,7 +117,9 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
                   zIndex: 5,
                 }}
               >
+                {/* aqui se dispne a unir los campos en los que está si o no (la tipología relacionada y la que no (cuando es cual)) */}
                 <TextField
+                  disabled
                   fullWidth
                   label="Tipología relacionada"
                   size="small"
@@ -143,7 +139,7 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
                 }}
               >
                 <TextField
-                  required
+                  disabled
                   fullWidth
                   label="Asunto"
                   size="small"
@@ -164,7 +160,7 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
                 }}
               >
                 <TextField
-                  required
+                  disabled
                   multiline
                   rows={4}
                   fullWidth
@@ -180,6 +176,7 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
               <Grid item xs={12} sm={12} sx={{ mt: '1.2rem', mb: '1.2rem' }}>
                 <Autocomplete
                   value={['jeje siuu', 'jeje siuusdds', 'jeje ssdsdfsdiuu']}
+                  disabled
                   multiple
                   id="tags-filled"
                   options={[]}

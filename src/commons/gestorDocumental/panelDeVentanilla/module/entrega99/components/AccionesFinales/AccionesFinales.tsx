@@ -4,7 +4,7 @@ import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalMod
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 import { resetItems } from '../../toolkit/slice/AsignacionUsuarioSlice';
-import { useAppDispatch } from '../../../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { useStepperContext } from '@mui/material';
 import { useSstepperFn } from '../../hook/useSstepperFn';
 
@@ -25,7 +25,24 @@ export const AccionesFinales = ({
 
   const [LoadingButton, setLoadingButton] = useState(false);
 
+  const { anexosCreados } = useAppSelector(
+    (state) => state.AsignacionUsuarioSlice
+  );
+
   //* handleSumbit
+
+  /*   const sendDataByFormData = async () => {
+      try{
+        const formData = new FormData();
+        formData.append('solicitud_usu_PQRSDF', 'asunto,descripcion,id_pqrsdf');
+        anexosCreados.map((anexo: any) => {
+          formData.append('archivo', anexo?.ruta_soporte);
+        });
+        anexosCreados.map((anexo: any) => {
+          formData.append('anexo', {valores: 'x'});
+        });
+      }catch(err){}
+    }*/
 
   const handleSubmit = async () => {
     setLoadingButton(true);
@@ -48,6 +65,7 @@ export const AccionesFinales = ({
         });
 
         if (secondResult.isConfirmed) {
+          console.log(anexosCreados);
           //* se debe activar el envío de la solicitud al usuario y luego el swal y el mensaje de success
           setLoadingButton(false);
           Swal.fire({

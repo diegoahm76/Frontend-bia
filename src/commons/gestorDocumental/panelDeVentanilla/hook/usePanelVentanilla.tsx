@@ -17,6 +17,8 @@ export const usePanelVentanilla = () => {
     // ? pendiente el tipado, ya que por base de datos quizá cambie la información que se necesita
     defaultValues: {
       // ? para pqrsdf
+      fecha_inicio: '',
+      fecha_fin: '',
       tipo_de_solicitud: {
         value: '',
         label: '',
