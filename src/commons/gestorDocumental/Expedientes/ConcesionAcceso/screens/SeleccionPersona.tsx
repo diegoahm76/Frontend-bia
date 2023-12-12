@@ -217,7 +217,7 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={3}>
+                            {/* <Grid item xs={12} sm={3}>
                                 <Button
                                     color='primary'
                                     variant='contained'
@@ -226,14 +226,14 @@ export const SeleccionPersona: React.FC<IProps> = (props: IProps) => {
                                 >
                                     Buscar persona
                                 </Button>
-                                {abrir_modal_persona && (
-                                    <BuscadorPersonaExpDoc
-                                        is_modal_active={abrir_modal_persona}
-                                        set_is_modal_active={set_abrir_modal_persona}
-                                        title={"Busqueda de persona titular"}
-                                        set_persona={set_persona} />
-                                )}
-                            </Grid>
+                             {abrir_modal_persona && (
+                                  //  <BuscadorPersonaExpDoc
+                                   //     is_modal_active={abrir_modal_persona}
+                                   //     set_is_modal_active={set_abrir_modal_persona}
+                                   //     title={"Busqueda de persona titular"}
+                                   //     set_persona={set_persona} />
+                               )}
+                            </Grid> */}
                             <Grid item xs={12} sm={6}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker

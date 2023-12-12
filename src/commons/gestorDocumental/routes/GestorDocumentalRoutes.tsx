@@ -167,8 +167,6 @@ const routes = [
     path: 'Pqrsdf/',
     name: 'Pqrsdf',
     component: () => <PqrsdfRoutes />,
-    
-  
   },
   {
     path: 'panel_ventanilla/',

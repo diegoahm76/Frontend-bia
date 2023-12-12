@@ -166,7 +166,6 @@ export interface IObjExhibit {
   exhibit_link?: string | IObjFile | null;
   id_docu_de_arch_exp?: number | null;
   metadatos: IObjMetaData | null;
-  metadato?: IObjMetaData | null;
 }
 
 export interface IObjMetaData {
