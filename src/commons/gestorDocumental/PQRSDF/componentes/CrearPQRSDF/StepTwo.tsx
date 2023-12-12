@@ -46,9 +46,8 @@ interface IProps {
 const StepTwo = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { exhibits, metadata, exhibit, storage_mediums } = useAppSelector(
-    (state) => state.pqrsdf_slice
-  );
+  const { exhibits, metadata, exhibit, storage_mediums, type_applicant } =
+    useAppSelector((state) => state.pqrsdf_slice);
   const {
     control: control_form,
     handleSubmit: handle_submit_exhibit,
@@ -61,6 +60,7 @@ const StepTwo = () => {
   const [file_name, set_file_name] = useState<string>('');
   const [add_metadata_is_active, set_add_metadata_is_active] =
     useState<boolean>(false);
+  const [cual_medio_view, set_cual_medio_view] = useState<boolean>(false);
 
   const on_submit_exhibit = (data: IObjExhibit): void => {
     console.log(data, metadata);
@@ -94,7 +94,13 @@ const StepTwo = () => {
 
   useEffect(() => {
     console.log(exhibit);
-    reset(exhibit);
+    reset({
+      ...exhibit,
+      cod_medio_almacenamiento:
+        (type_applicant.key ?? null) === null
+          ? 'Na'
+          : exhibit.cod_medio_almacenamiento,
+    });
     if ((exhibit.id_anexo ?? null) !== null) {
       if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
         if (typeof exhibit.exhibit_link === 'string') {
@@ -216,11 +222,6 @@ const StepTwo = () => {
   }, [metadata]);
 
   const add_metadata_form = (): void => {
-    if (exhibit.metadatos === null) {
-      dispatch(set_metadata(initial_state_metadata));
-    } else {
-      dispatch(set_metadata(exhibit.metadatos));
-    }
     set_add_metadata_is_active(true);
   };
 
@@ -231,14 +232,12 @@ const StepTwo = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          {params.row.exhibit_link !== null &&
-            params.row.exhibit_link !== undefined &&
-            typeof exhibit.exhibit_link === 'string' &&
-            params.row.metadatos.archivo.ruta_archivo !== '' &&
-            params.row.metadatos.archivo.ruta_archivo !== null &&
-            typeof params.row.metadatos.archivo.ruta_archivo === 'string' && (
+          {(params.row.metadatos?.archivo?.ruta_archivo ?? null) !== '' &&
+            (params.row.metadatos?.archivo?.ruta_archivo ?? null) !== null &&
+            typeof (params.row.metadatos?.archivo?.ruta_archivo ?? null) ===
+              'string' && (
               <Tooltip title="Ver archivo">
-                <Grid item xs={1} md={1} spacing={1}>
+                <Grid item xs={0.5} md={0.5}>
                   <DownloadButton
                     fileUrl={params.row.metadatos.archivo.ruta_archivo}
                     fileName={'exhibit_link'}
@@ -271,12 +270,12 @@ const StepTwo = () => {
       ),
     },
     {
-      field: 'medio_almacenamiento',
+      field: 'cod_medio_almacenamiento',
       headerName: 'Medio de almacenamiento',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {storage_mediums.find((p) => p.key === params.value)?.label ?? ''}
         </div>
       ),
     },
@@ -358,6 +357,18 @@ const StepTwo = () => {
     dispatch(set_exhibits(aux_items));
   };
 
+  const on_change_select = (value: any, name: string): void => {
+    if (name === 'cod_medio_almacenamiento') {
+      if (value !== undefined) {
+        if (value.key === 'Ot') {
+          set_cual_medio_view(true);
+        } else {
+          set_cual_medio_view(false);
+        }
+      }
+    }
+  };
+
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
@@ -416,11 +427,12 @@ const StepTwo = () => {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: false,
+              disabled: (type_applicant.key ?? null) === null,
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
               option_key: 'key',
+              on_change_function: on_change_select,
             },
             {
               datum_type: 'input_controller',
@@ -434,6 +446,10 @@ const StepTwo = () => {
               type: 'text',
               disabled: false,
               helper_text: '',
+              hidden_text: !(
+                cual_medio_view ||
+                (exhibit.cod_medio_almacenamiento ?? null) === 'Ot'
+              ),
             },
             {
               datum_type: 'input_controller',

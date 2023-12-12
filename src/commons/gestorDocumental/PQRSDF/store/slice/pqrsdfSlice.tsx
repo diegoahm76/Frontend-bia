@@ -10,6 +10,7 @@ import type {
   IObjExhibit,
   IObjMetaData,
   IObjFiled,
+  IObjPqrDenuncia,
 } from '../../interfaces/pqrsdf';
 // import { type Persona } from '../../../../../interfaces/globalModels';
 
@@ -89,7 +90,7 @@ export const initial_state_pqr: IObjPqr = {
   nombre_completo_titular: null,
   asunto: null,
   descripcion: null,
-  requiere_rta: null,
+  requiere_rta: true,
   es_anonima: null,
   id_persona_interpone: null,
   id_persona_titular: null,
@@ -201,6 +202,20 @@ export const initial_state_filed: IObjFiled = {
   id_radicado_asociado: null,
   numero_radicado_completo: null,
 };
+export const initial_state_denuncia: IObjPqrDenuncia = {
+  Cod_zona_localizacion: null,
+  cod_municipio_cocalizacion_hecho: null,
+  barrio_vereda_localizacion: null,
+  direccion_localizacion: null,
+  cod_recursos_fectados_presuntos: [],
+  otro_recurso_Afectado_cual: null,
+  evidencias_soportan_hecho: null,
+  nombre_completo_presunto_infractor: null,
+  telefono_presunto_infractor: null,
+  direccion_presunto_infractor: null,
+  ya_habia_puesto_en_conocimiento: false,
+  ante_que_autoridad_había_interpuesto: null,
+};
 
 const initial_state: IPqrsdf = {
   list_applicant_types: [],
@@ -246,11 +261,27 @@ const initial_state: IPqrsdf = {
   file_typologies: [],
   file_typology: initial_state_list,
   metadata: initial_state_metadata,
+  areas: [],
+  area: initial_state_list,
+  municipalities: [],
+  municipality: initial_state_list,
+  departments: [],
+  department: initial_state_list,
+  resources: [
+    { id: 1, key: 'Su', label: 'Suelo' },
+    { id: 2, key: 'Ag', label: 'Agua' },
+    { id: 3, key: 'Fs', label: 'Fauna silvestre' },
+    { id: 4, key: 'Ai', label: 'Aire' },
+    { id: 5, key: 'Fl', label: 'Flora' },
+    { id: 6, key: 'Ot', label: 'Otro' },
+  ],
+  resource: [],
 
   filings: [],
   filed: initial_state_filed,
   filed_types: [],
   filed_type: initial_state_list,
+  denuncia: initial_state_denuncia,
 };
 
 export const pqrsdf_slice = createSlice({
@@ -467,9 +498,56 @@ export const pqrsdf_slice = createSlice({
     set_filed_type: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
       state.filed_type = action.payload;
     },
+
+    set_denuncia: (state: IPqrsdf, action: PayloadAction<IObjPqrDenuncia>) => {
+      state.denuncia = action.payload;
+    },
+
+    set_areas: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
+      state.areas = action.payload;
+    },
+    set_area: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.area = action.payload;
+    },
+
+    set_municipalities: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.municipalities = action.payload;
+    },
+    set_municipality: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.municipality = action.payload;
+    },
+
+    set_departments: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.departments = action.payload;
+    },
+    set_department: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.department = action.payload;
+    },
+
+    set_resources: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
+      state.resources = action.payload;
+    },
+    set_resource: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
+      state.resource = action.payload;
+    },
   },
 });
 export const {
+  set_area,
+  set_areas,
+  set_department,
+  set_departments,
+  set_municipalities,
+  set_municipality,
+  set_resource,
+  set_resources,
+  set_denuncia,
   set_list_applicant_types,
   set_type_applicant,
   set_list_on_behalf_of,

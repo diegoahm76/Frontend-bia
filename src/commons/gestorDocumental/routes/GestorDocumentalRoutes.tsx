@@ -33,6 +33,7 @@ import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
 import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
+import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
 
 const routes = [
   {
@@ -178,6 +179,13 @@ const routes = [
     name: 'central_digitalizacion',
     component: () => <CentralDigitalizacionRoutes />,
   },
+
+  {
+    path: 'solicitudes_otros/',
+    name: 'solicitudes_otros',
+    component: () => <SolicitudesOtrosRoutes />,
+  },
+
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
