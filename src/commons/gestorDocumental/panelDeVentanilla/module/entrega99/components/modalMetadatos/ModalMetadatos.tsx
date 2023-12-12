@@ -41,15 +41,24 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { setMetadatos } from '../../toolkit/slice/AsignacionUsuarioSlice';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { control } from 'leaflet';
 
 export const ModalMetadatos = ({
   tipologiasDocumentales,
   setTipologiasDocumentales,
   watchFormulario,
+  resetManejoMetadatosModalFunction,
+  controlManejoMetadatosModal,
+  watchExeManejoModalMetadatos,
+  resetManejoMetadatosModal,
 }: {
   tipologiasDocumentales: any;
   setTipologiasDocumentales: React.Dispatch<React.SetStateAction<any>>;
   watchFormulario: any;
+  resetManejoMetadatosModalFunction: any;
+  controlManejoMetadatosModal: any;
+  watchExeManejoModalMetadatos: any;
+  resetManejoMetadatosModal: any;
 }): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -67,12 +76,9 @@ export const ModalMetadatos = ({
   );
 
   //* hooks
-  const {
-    controlManejoMetadatosModal,
-    watchExeManejoModalMetadatos,
-    resetManejoMetadatosModal,
-    resetManejoMetadatosModalFunction,
-  } = usePanelVentanilla();
+/*  const {
+  
+  } = usePanelVentanilla();*/
 
   //? useeffect to get tipologias documentales
   useEffect(() => {

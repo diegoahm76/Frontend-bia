@@ -45,6 +45,8 @@ import {
 0;
 import { origenArchivo } from './../../modalMetadatos/utils/choices';
 import { vi } from 'date-fns/locale';
+import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
+import { ModalInfoMetadatosBlocked } from '../../modalMetadatos/components/ModalInfoMetadatosBlocked';
 
 export const FormParte3 = ({
   controlFormulario,
@@ -71,6 +73,13 @@ export const FormParte3 = ({
   const [tipologiasDocumentales, setTipologiasDocumentales] = useState<
     TipologiaDocumental[]
   >([]);
+
+  const {
+    resetManejoMetadatosModalFunction,
+    controlManejoMetadatosModal,
+    watchExeManejoModalMetadatos,
+    resetManejoMetadatosModal,
+  } = usePanelVentanilla();
 
   useEffect(() => {
     if (currentAnexo) {
@@ -169,6 +178,9 @@ export const FormParte3 = ({
 
     const dataCreateAnexo = createAnexoData();
     const dataEditAnexo = createAnexoData(currentAnexo);
+    // Reset functions that are common to both cases
+    resetFormulario();
+    resetManejoMetadatosModalFunction();
 
     if (currentAnexo) {
       //* se debe quitar el as any y validar un par de cosas que pueden estar fallando al editar el anexo
@@ -220,44 +232,51 @@ export const FormParte3 = ({
       renderCell: (params: any) => {
         return (
           <>
-          {!viewMode && (  <><Tooltip title="Eliminar anexo">
-              <IconButton
-                onClick={() => {
-                  handleDeleteAnexo(params.row.id);
-                } }
-              >
-                <Avatar sx={AvatarStyles} variant="rounded">
-                  <DeleteIcon
-                    titleAccess="Eliminar tipología documental"
-                    sx={{
-                      color: 'red',
-                      width: '18px',
-                      height: '18px',
-                    }} />
-                </Avatar>
-              </IconButton>
-            </Tooltip><Tooltip title="Editar anexo">
-                <IconButton
-                  onClick={() => {
-                    handleSeleccionAnexoToEdit(params.row);
-                  } }
-                >
-                  <Avatar sx={AvatarStyles} variant="rounded">
-                    <EditIcon
-                      titleAccess="Editar asignación de líder"
-                      sx={{
-                        color: 'primary.main',
-                        width: '18px',
-                        height: '18px',
-                      }} />
-                  </Avatar>
-                </IconButton>
-              </Tooltip></>)}
+            {!viewMode && (
+              <>
+                <Tooltip title="Eliminar anexo">
+                  <IconButton
+                    onClick={() => {
+                      handleDeleteAnexo(params.row.id);
+                    }}
+                  >
+                    <Avatar sx={AvatarStyles} variant="rounded">
+                      <DeleteIcon
+                        titleAccess="Eliminar tipología documental"
+                        sx={{
+                          color: 'red',
+                          width: '18px',
+                          height: '18px',
+                        }}
+                      />
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Editar anexo">
+                  <IconButton
+                    onClick={() => {
+                      handleSeleccionAnexoToEdit(params.row);
+                    }}
+                  >
+                    <Avatar sx={AvatarStyles} variant="rounded">
+                      <EditIcon
+                        titleAccess="Editar asignación de líder"
+                        sx={{
+                          color: 'primary.main',
+                          width: '18px',
+                          height: '18px',
+                        }}
+                      />
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
             <Tooltip title="Ver y seleccionar anexo">
               <IconButton
                 onClick={() => {
                   console.log(params.row);
-                  dispatch(setViewMode(true as boolean))
+                  dispatch(setViewMode(true as boolean));
                 }}
               >
                 <Avatar
@@ -280,7 +299,6 @@ export const FormParte3 = ({
               </IconButton>
             </Tooltip>
             {/* debe estar la condicion, cuando ya se haya guardado una vez, no será posible realizar la eliminación de los anexos */}
-          
           </>
         );
       },
@@ -558,6 +576,7 @@ export const FormParte3 = ({
             startIcon={<CleanIcon />}
             onClick={() => {
               resetFormulario();
+              resetManejoMetadatosModalFunction();
               if (currentAnexo) {
                 dispatch(setCurrentAnexo(null as any));
                 dispatch(setViewMode(false as boolean));
@@ -572,7 +591,7 @@ export const FormParte3 = ({
               mt: '2rem',
             }}
           >
-            LIMPIAR CAMPOS
+            LIMPIAR CAMPOS (METADATOS Y ARCHIVO)
           </Button>
         </Grid>
       </form>
@@ -582,8 +601,16 @@ export const FormParte3 = ({
         watchFormulario={watchFormulario}
         tipologiasDocumentales={tipologiasDocumentales}
         setTipologiasDocumentales={setTipologiasDocumentales}
+        resetManejoMetadatosModalFunction={resetManejoMetadatosModalFunction}
+        controlManejoMetadatosModal={controlManejoMetadatosModal}
+        watchExeManejoModalMetadatos={watchExeManejoModalMetadatos}
+        resetManejoMetadatosModal={resetManejoMetadatosModal}
       />
       {/* espacio para el modal de agregar metadatos */}
+
+      {/* modal información de metadatos de manera bloqueda, solo cuando ya se han establecido los valores correspondientes */}
+      <ModalInfoMetadatosBlocked />
+      {/* modal información de metadatos de manera bloqueda, solo cuando ya se han establecido los valores correspondientes */}
     </>
   );
 };
