@@ -14,6 +14,8 @@ export const PanelVentanillaContext =
     setExpanded: () => {},
     anexos: [],
     setAnexos: () => {},
+    archivoAnexos: null,
+    setArchivoAnexos: () => {},
     metadatos: [],
     setMetadatos: () => {},
     skipped: new Set<number>(),
@@ -31,6 +33,8 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
 
   //* almacenar informacion de los anexos
   const [anexos, setAnexos] = useState<any>([]);
+  //* archivo anexos
+  const [archivoAnexos, setArchivoAnexos] = useState<any>(null);
   //* almacenar informacion de los metadatos
   const [metadatos, setMetadatos] = useState<any>([]);
 
@@ -56,6 +60,8 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
     setExpanded,
     anexos,
     setAnexos,
+    archivoAnexos,
+    setArchivoAnexos,
     metadatos,
     setMetadatos,
     // ? entrega 99

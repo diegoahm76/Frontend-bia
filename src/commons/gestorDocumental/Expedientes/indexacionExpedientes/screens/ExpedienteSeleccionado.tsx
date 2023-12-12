@@ -21,7 +21,7 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
 
     useEffect(() => {
         if (props.expediente !== null) {
-            if(props.expediente.carpetas_caja.length > 0)
+            if (props.expediente.carpetas_caja.length > 0)
                 crear_obj_carpetas(props.expediente);
         }
     }, [props.expediente]);
@@ -56,38 +56,38 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                 <Title title="Expediente seleccionado" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
-                    <Grid item xs={12} sm={12}>
+                        <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
                                 spacing={2}
                             >
-                        <Grid item xs={12} sm={props.configuracion.cod_tipo_expediente === 'C' ? 6 : 8}>
-                            <TextField
-                                label="Titulo"
-                                type={'text'}
-                                size="small"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                value={props.expediente?.titulo_expediente ?? ''}
-                            />
-                        </Grid>
-                        {props.configuracion.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Consecutivo"
-                                type={'text'}
-                                size="small"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                fullWidth
-                                value={props.expediente?.codigo_exp_consec_por_agno}
-                            />
-                        </Grid>}
+                                <Grid item xs={12} sm={props.configuracion.cod_tipo_expediente === 'C' ? 6 : 8}>
+                                    <TextField
+                                        label="Titulo"
+                                        type={'text'}
+                                        size="small"
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        fullWidth
+                                        value={props.expediente?.titulo_expediente ?? ''}
+                                    />
+                                </Grid>
+                                {props.configuracion.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        label="Consecutivo"
+                                        type={'text'}
+                                        size="small"
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        fullWidth
+                                        value={props.expediente?.codigo_exp_consec_por_agno}
+                                    />
+                                </Grid>}
                             </Stack>
-                            </Grid>
+                        </Grid>
 
                         <Grid item xs={12} sm={12}>
                             <Stack
@@ -122,6 +122,7 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                                         <DatePicker
                                             label="Fecha creación expediente"
                                             value={dayjs(props.expediente?.fecha_apertura_expediente)}
+                                            inputFormat='DD/MM/YYYY'
                                             onChange={(newValue) => { }}
                                             readOnly={true}
                                             renderInput={(params) => (
@@ -138,37 +139,37 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                             </Stack>
                         </Grid>
                         {carpetas.map((c: any, index: number) => (
-                                <Grid item xs={12} sm={12} key={index}>
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="center"
-                                        spacing={2}
-                                    >
-                                        <Grid item xs={12} sm={6}>
-                                            <Accordion expanded={expanded === 'panel' + index} onChange={handle_change('panel' + index)} sx={{ padding: '0px' }}>
-                                                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1d-content" id="panel1d-header">
-                                                    <FolderOutlinedIcon sx={{ marginTop: '5px', marginRight: '10px' }} />
-                                                    <Typography sx={{ fontSize: '16px', fontWeight: '420', display: 'inline-flex', flexDirection: 'row', marginTop: '7px' }}>
-                                                        {c.ruta}
-                                                    </Typography>
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                    {c.carpetas.map((carp: any, sub_index: number) => (
-                                                        <Grid item xs={12} sm={12} key={sub_index}>
-                                                            <Grid item xs={12} sm={6}>
-                                                                <Typography sx={{ fontSize: '16px', fontWeight: '410', color: 'gray', display: 'inline-flex', flexDirection: 'row' }}>
-                                                                    <FolderIcon sx={{ marginRight: '10px', color: 'gray' }} />
-                                                                    {carp.carpeta}
-                                                                </Typography>
-                                                            </Grid>
+                            <Grid item xs={12} sm={12} key={index}>
+                                <Stack
+                                    direction="row"
+                                    justifyContent="center"
+                                    spacing={2}
+                                >
+                                    <Grid item xs={12} sm={6}>
+                                        <Accordion expanded={expanded === 'panel' + index} onChange={handle_change('panel' + index)} sx={{ padding: '0px' }}>
+                                            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1d-content" id="panel1d-header">
+                                                <FolderOutlinedIcon sx={{ marginTop: '5px', marginRight: '10px' }} />
+                                                <Typography sx={{ fontSize: '16px', fontWeight: '420', display: 'inline-flex', flexDirection: 'row', marginTop: '7px' }}>
+                                                    {c.ruta}
+                                                </Typography>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                {c.carpetas.map((carp: any, sub_index: number) => (
+                                                    <Grid item xs={12} sm={12} key={sub_index}>
+                                                        <Grid item xs={12} sm={6}>
+                                                            <Typography sx={{ fontSize: '16px', fontWeight: '410', color: 'gray', display: 'inline-flex', flexDirection: 'row' }}>
+                                                                <FolderIcon sx={{ marginRight: '10px', color: 'gray' }} />
+                                                                {carp.carpeta}
+                                                            </Typography>
                                                         </Grid>
+                                                    </Grid>
 
-                                                    ))}
-                                                </AccordionDetails>
-                                            </Accordion>
-                                        </Grid>
-                                    </Stack>
-                                </Grid>))}
+                                                ))}
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    </Grid>
+                                </Stack>
+                            </Grid>))}
                     </Grid>
                 </Box>
             </Grid>}

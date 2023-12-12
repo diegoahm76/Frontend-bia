@@ -20,6 +20,8 @@ import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 import FormCheckboxController from '../form/FormCheckboxController';
 import FormButtonGrid from '../form/FormButtonGrid';
+import { Subtitle } from '../../Subtitle';
+import { SubtitleOtros } from '../../SubtitleOtros';
 
 interface IProps {
   form_inputs: any[];
@@ -154,7 +156,9 @@ const BuscarModelo = ({
       );
     } else if (form_input.datum_type === 'title') {
       return <Title title={form_input.title_label}></Title>;
-    } else if (form_input.datum_type === 'input_file_controller') {
+    } else if (form_input.datum_type === 'subtitleotros') {
+      return <SubtitleOtros title={form_input.title_label}></SubtitleOtros>;
+    }  else if (form_input.datum_type === 'input_file_controller') {
       return (
         <FormInputFileController
           xs={form_input.xs}

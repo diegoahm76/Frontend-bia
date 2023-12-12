@@ -48,6 +48,8 @@ export const AccionesFinal = (): JSX.Element => {
             oficinaActual.idComparacion === oficinaNueva.idComparacion
         );
 
+        if (!oficinaNueva?.id_unidad_nueva) return null;
+
         return oficinaActual
           ? {
               id_unidad_actual: oficinaActual.id_unidad_actual,
@@ -64,16 +66,13 @@ export const AccionesFinal = (): JSX.Element => {
         const unidadNueva = grilladoDeOficinas?.unidadNueva[index];
 
         return {
-          id_unidad_actual: unidadActual.id_unidad_organizacional,
+          id_unidad_actual: unidadActual?.id_unidad_organizacional,
           id_unidad_nueva: unidadNueva?.id_unidad_organizacional,
         };
       }
     );
 
-    /*   console.log('unidadesPadreUnidasasasasas', [
-      ...unidadesPadreUnidas,
-      ...oficinasDelegadas,
-    ]); */
+    console.log('envío de unidades', oficinasDelegadas);
 
     postDelegaciones({
       delegaciones: {

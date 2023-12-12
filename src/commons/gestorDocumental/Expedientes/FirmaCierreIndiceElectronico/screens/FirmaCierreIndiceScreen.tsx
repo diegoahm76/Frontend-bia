@@ -24,12 +24,19 @@ const class_css = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FirmaCierreIndiceScreen: React.FC = () => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
     const [indice, set_indice] = useState<any>(null);
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (limpiar) {
+            set_expediente(null);
+            set_indice(null);
+            set_limpiar(false);
+        }
+    }, [limpiar]);
 
     const salir_expediente: () => void = () => {
         navigate('/home');
@@ -96,7 +103,7 @@ export const FirmaCierreIndiceScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <CierreIndiceElectronico indice={indice} limpiar={limpiar} expediente={expediente}></CierreIndiceElectronico>
+                <CierreIndiceElectronico indice={indice} limpiar={limpiar} expediente={expediente} set_limpiar={set_limpiar}></CierreIndiceElectronico>
             </Grid>}
             {indice !== null && !indice?.abierto && <Grid
                 container
