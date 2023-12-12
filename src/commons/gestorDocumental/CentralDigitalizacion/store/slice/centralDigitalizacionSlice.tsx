@@ -96,12 +96,12 @@ export const initial_state_exhibit: IObjExhibit = {
   id_anexo: null,
   nombre_anexo: null,
   orden_anexo_doc: null,
-  medio_almacenamiento: null,
+  nombre_medio_almacenamiento: null,
   cod_medio_almacenamiento: null,
   medio_almacenamiento_otros_cual: null,
   numero_folios: null,
   ya_digitalizado: null,
-  metadata: null,
+  metadatos: null,
 };
 
 export const initial_state_metadata: IObjMetaData = {
@@ -115,7 +115,7 @@ export const initial_state_metadata: IObjMetaData = {
   es_version_original: null,
   tiene_replica_fisica: null,
   tiene_tipologia: null,
-  numero_folios_documento: null,
+  nro_folios_documento: null,
   origen_archivo: null,
   cod_origen_archivo: null,
   nombre_anexo: null,
@@ -128,6 +128,7 @@ export const initial_state_metadata: IObjMetaData = {
 };
 
 export const initial_state_digitization_request: IObjDigitizationRequest = {
+  anexos: [],
   id_solicitud_de_digitalizacion: null,
   id_PQRSDF: null,
   id_complemento_usu_PQR: null,
@@ -137,6 +138,7 @@ export const initial_state_digitization_request: IObjDigitizationRequest = {
   digitalizacion_completada: null,
   devuelta_sin_completar: null,
   id_persona_digitalizo: null,
+  asunto: null,
 };
 
 const initial_state: ICentralDigitization = {
@@ -144,6 +146,7 @@ const initial_state: ICentralDigitization = {
   request_type: initial_state_list,
   list_request_status: [],
   request_status: initial_state_list,
+  storage_mediums: [],
   persons: [],
   person: initial_state_person,
   pqr: initial_state_pqr,
@@ -192,27 +195,27 @@ export const central_digitalizacion_slice = createSlice({
       state.request_status = action.payload;
     },
 
-    set_persons: (
+    set_digitization_requests: (
       state: ICentralDigitization,
-      action: PayloadAction<IObjPerson[]>
+      action: PayloadAction<IObjDigitizationRequest[]>
     ) => {
-      state.persons = action.payload;
+      state.digitization_requests = action.payload;
     },
-    set_person: (
+    set_digitization_request: (
       state: ICentralDigitization,
-      action: PayloadAction<IObjPerson>
+      action: PayloadAction<IObjDigitizationRequest>
     ) => {
-      state.person = action.payload;
+      state.digitization_request = action.payload;
     },
 
     set_pqr: (state: ICentralDigitization, action: PayloadAction<IObjPqr>) => {
       state.pqr = action.payload;
     },
-    set_pqr_request: (
+    set_storage_mediums: (
       state: ICentralDigitization,
-      action: PayloadAction<IObjPqrRequest>
+      action: PayloadAction<IObjListType[]>
     ) => {
-      state.pqr_request = action.payload;
+      state.storage_mediums = action.payload;
     },
 
     set_exhibits: (
@@ -280,10 +283,10 @@ export const {
   set_request_status,
   set_request_type,
   set_request_types,
-  set_persons,
-  set_person,
+  set_digitization_requests,
+  set_digitization_request,
   set_pqr,
-  set_pqr_request,
+  set_storage_mediums,
   set_exhibits,
   set_exhibit,
   set_file_categories,

@@ -7,13 +7,15 @@ import {
 } from 'axios';
 // Slices
 import {
+  set_digitization_requests,
   set_file_categories,
   set_file_origin,
   set_file_origins,
   set_file_typologies,
   set_file_typology,
-  set_person,
-  set_persons,
+  set_list_request_status,
+  set_request_types,
+  set_storage_mediums,
 } from '../slice/centralDigitalizacionSlice';
 import { api } from '../../../../../api/axios';
 import { IObjListType } from '../../interfaces/central_digitalizacion';
@@ -71,36 +73,37 @@ const map_list = (
   return list_aux;
 };
 
-// Obtener categorias de archivo
-export const get_file_categories_service = (): any => {
+// Obtener tipos de solictud
+export const get_request_types_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('gestor/choices/tipo-archivo/');
-      dispatch(set_file_categories(map_list(data, true)));
+      const { data } = await api.get('gestor/choices/tipo-solicitud/');
+      dispatch(set_request_types(map_list(data, true)));
       console.log(data);
       return data;
     } catch (error: any) {
-      console.log('get_file_categories_service');
+      console.log('get_request_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
-// Obtener origenes de archivo
-export const get_file_origin_service = (): any => {
+// Obtener estados de solicitud
+export const get_list_request_status_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('gestor/choices/origen-archivo/');
+      const { data } = await api.get('gestor/choices/estado-solicitud/');
       console.log(data);
-      dispatch(set_file_origins(map_list(data, true)));
+      dispatch(set_list_request_status(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_file_origin_service');
+      console.log('get_list_request_status_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
+
 // Obtener tipologias de archivo
 export const get_file_typology_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -131,38 +134,67 @@ export const get_file_typology_service = (): any => {
 };
 
 // obtener personas filtro
-export const get_persons_service = (
-  type: string | number | null,
-  document: string | number | null,
-  primer_nombre: string | null,
-  primer_apellido: string | null,
-  razon_social: string | null,
-  comercial_name: string | null,
-  is_person: boolean
-): any => {
+export const get_digitalization_requests_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `personas/get-personas-filters/?tipo_documento=${
-          type ?? ''
-        }&numero_documento=${document ?? ''}&primer_nombre=${
-          primer_nombre ?? ''
-        }&primer_apellido=${primer_apellido ?? ''}&razon_social=${
-          razon_social ?? ''
-        }&nombre_comercial=${comercial_name ?? ''}`
+        `gestor/central-digitalizacion/get-solicitudes-pendientes/`,
+        { params }
       );
       console.log(data);
-      if (is_person) {
-        dispatch(set_persons(data.data));
-      }
-      if (data.data.length > 0) {
-        control_success('Se encontraron personas');
-      } else {
-        control_error('No se encontro persona');
+      if (data.success) {
+        dispatch(set_digitization_requests(data.data));
+        control_success(data.detail);
       }
       return data;
     } catch (error: any) {
-      console.log('get_persons_service');
+      console.log('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener medios almacenamientos
+export const get_storage_mediums_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('gestor/choices/medio-almacenamiento/');
+      dispatch(set_storage_mediums(map_list(data, true)));
+      return data;
+    } catch (error: any) {
+      console.log('get_storage_mediums_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener categorias de archivo
+export const get_file_categories_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('gestor/choices/tipo-archivo/');
+      dispatch(set_file_categories(map_list(data, true)));
+      console.log(data);
+      return data;
+    } catch (error: any) {
+      console.log('get_file_categories_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener origenes de archivo
+export const get_file_origin_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('gestor/choices/origen-archivo/');
+      console.log(data);
+      dispatch(set_file_origins(map_list(data, true)));
+      return data;
+    } catch (error: any) {
+      console.log('get_file_origin_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
