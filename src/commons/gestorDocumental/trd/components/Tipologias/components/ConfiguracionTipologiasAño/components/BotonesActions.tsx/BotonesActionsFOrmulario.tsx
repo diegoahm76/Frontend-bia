@@ -52,7 +52,7 @@ export const BotonesActionsFormulario = () => {
         ;
       const res = await api.post(url, postData);
       const numeroConsulta = res.data.data;
-      Set_Datos_Return(numeroConsulta);
+      Set_Datos_Return(numeroConsulta[0]);
       control_success("se creo correctamente  la configuracion de Sub-Seccion");
     } catch (error: any) {
       control_error(error.response.data.detail);

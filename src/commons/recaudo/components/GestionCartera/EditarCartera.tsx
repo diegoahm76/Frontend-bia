@@ -12,10 +12,11 @@ import {
   InputLabel
 } from "@mui/material"
 import type { FlujoProceso } from "../../interfaces/flujoProceso";
-import { type Dispatch, type SetStateAction } from "react";
+import {  type Dispatch, type SetStateAction } from "react";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import SaveIcon from '@mui/icons-material/Save';
 import type { AtributoEtapa } from "../../interfaces/proceso";
+
 
 interface IProps {
   id_flujo_destino: string;
@@ -28,6 +29,7 @@ interface IProps {
     valor_intereses: string;
     valor_sancion: string;
     etapa: string;
+  
   },
   flujos_destino: FlujoProceso[];
   id_proceso: string;
@@ -54,6 +56,9 @@ export const EditarCartera: React.FC<IProps> = ({
   set_open_create_proceso_modal,
   mover_subetapa_actual
 }: IProps) => {
+
+
+
   return (
     <>
       <Grid container spacing={2}>
@@ -397,6 +402,7 @@ export const EditarCartera: React.FC<IProps> = ({
           </Grid>
         </Stack>
       </Grid>
+
     </>
   )
 }

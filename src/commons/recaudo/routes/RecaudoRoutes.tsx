@@ -13,12 +13,14 @@ import { FacilidadPagoRoutes } from '../facilidadPago/routes/FacilidadPagoRoutes
 import { ReportesRoutes } from '../reportes/routes/ReportesRoutes';
 import { LiquidacionScreen } from '../screens/LiquidacionScreen';
 import ConfiguracionAlertasScreen from '../alertas/screens/ConfiguracionAlertaScreen';
+import { EtapaProcesoProvider } from '../components/GestionCartera/Context/EtapaProcesoContext';
 
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecaudoRoutes: React.FC = () => {
   return (
+    <EtapaProcesoProvider >
     <Routes>
       <Route path="datos/*" element={<RecaudoScreen />} />
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />
@@ -35,5 +37,6 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="alertas/*" element={<ConfiguracionAlertasScreen />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
+    </EtapaProcesoProvider>
   );
 };
