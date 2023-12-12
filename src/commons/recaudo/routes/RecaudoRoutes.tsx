@@ -20,7 +20,7 @@ import ConfiguracionAlertasScreen from '../alertas/screens/ConfiguracionAlertaSc
 export const RecaudoRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="datos/*" element={<RecaudoScreen />} />
+      {/* <Route path="datos/*" element={<RecaudoScreen />} /> */}
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />
       <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
       <Route path="constructor_liquidacion/*" element={<ConstructorLiquidacionScreen />} />

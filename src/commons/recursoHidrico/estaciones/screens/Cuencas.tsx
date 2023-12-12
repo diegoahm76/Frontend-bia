@@ -170,7 +170,8 @@ export const Cuencas: React.FC = () => {
       <div key={index}>
         <Grid container item xs={12}  sx={custom} spacing={2} marginLeft={3} marginTop={2}>
           <Grid container item xs={6} spacing={2} marginTop={2} >
-            {zonaHidrica.nombre_sub_zona_hidrica}
+            {zonaHidrica.nombre_sub_zona_hidrica}           
+
           </Grid>
           <Grid container item xs={5} spacing={2} marginTop={2} justifyContent="flex-end">
             {zonaHidrica.id_tipo_agua_zona_hidrica === 1 && (
@@ -187,6 +188,8 @@ export const Cuencas: React.FC = () => {
             <IconButton color="error" onClick={() => handleEliminarSubZonaHidrica(zonaHidrica.id_sub_zona_hidrica)}>
               <DeleteForeverIcon />
             </IconButton>
+            {zonaHidrica.codigo_rio}
+
           </Grid>
         </Grid>
         {index !== zonasHidricas.length - 1 && (

@@ -87,6 +87,7 @@ export const Sucursal: FC = () => {
       return;
     }
 
+
     void Swal.fire({
       title: '¿Está seguro de eliminar esta sucursal?',
       showDenyButton: true,

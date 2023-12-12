@@ -25,7 +25,7 @@ export const Encuesta: React.FC = () => {
         telefono: "",
         _id_persona: 0,
         rango_edad: "",
-        id_encuesta: 104,
+        id_encuesta: "",
         tipo_usuario: "",
         nombre_completo: "",
         nro_documento_id: "",
@@ -142,8 +142,13 @@ export const Encuesta: React.FC = () => {
         if (!validateFormData()) {
             return; // Si la validación falla, no continuamos con el envío
         }
+        if (selectedEncuestaId == null) {
+            console.error("No se ha seleccionado ninguna encuesta.");
+            return;
+        }
         const dataToSend = {
             ...formData,
+            id_encuesta: selectedEncuestaId, // Aquí asignamos el valor de selectedEncuestaId a id_encuesta
             ids_opciones_preguntas_encuesta: selectedOptions.map(optionId => ({
                 id_opcion_pregunta_encuesta: optionId
             }))
@@ -226,6 +231,7 @@ export const Encuesta: React.FC = () => {
 
         fetchUsuarioRegistrado();
     }, []);
+
     useEffect(() => {
         if (usuarioData) {
             setFormData({
@@ -271,6 +277,8 @@ export const Encuesta: React.FC = () => {
             setFormData({ ...initialFormData, tipo_usuario: value });
         }
     };
+// ... (resto de tu código)
+
 
     return (
         <>
@@ -285,6 +293,7 @@ export const Encuesta: React.FC = () => {
                         spacing={2} m={2} p={2}
                         sx={miEstilo}
                     >
+                        {/* {selectedEncuestaId} */}
                         {/* <img style={{ width: 45 }} src="../image/botones/logoCormaca.png" alt="XLS Button" /> */}
                         <Title title="Encuesta satisfacción al usuario" />
                         <Grid item xs={12} marginTop={1} sm={12}>
