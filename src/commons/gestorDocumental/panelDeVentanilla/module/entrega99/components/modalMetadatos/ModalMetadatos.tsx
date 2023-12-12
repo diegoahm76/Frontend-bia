@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Autocomplete,
   Box,
@@ -12,6 +12,7 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  Skeleton,
   Stack,
   TextField,
 } from '@mui/material';
@@ -19,29 +20,174 @@ import { Title } from '../../../../../../../components';
 import CloseIcon from '@mui/icons-material/Close';
 import { Controller } from 'react-hook-form';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { usePanelVentanilla } from '../../../../hook/usePanelVentanilla';
 import Select from 'react-select';
 import SaveIcon from '@mui/icons-material/Save';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
+import {
+  categoriaArhivo,
+  tieneReplicaFisisca,
+  tieneTipologiaRelacionada,
+} from './utils/choices';
+import { usePanelVentanilla } from '../../../../hook/usePanelVentanilla';
+import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { getTipologiasDocumentalesMetadatos } from '../../services/getTipologiasDocumentales.service';
+import { TipologiaDocumental } from '../parte3/components/types/FormParte3.types';
+import { control_success } from '../../../../../../../helpers';
+import {
+  handleCleanField,
+  handleCloseModal,
+} from './functions/modalFn.functions';
+import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
+import { setMetadatos } from '../../toolkit/slice/AsignacionUsuarioSlice';
+import CancelIcon from '@mui/icons-material/Cancel';
 
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 },
-];
-export const ModalMetadatos = (): JSX.Element => {
-  //* hooks
-  const { controlManejoMetadatosModal, watchExeManejoModalMetadatos } =
-    usePanelVentanilla();
-
+export const ModalMetadatos = ({
+  tipologiasDocumentales,
+  setTipologiasDocumentales,
+}: {
+  tipologiasDocumentales: any;
+  setTipologiasDocumentales: React.Dispatch<React.SetStateAction<any>>;
+}): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   //* context
   const { modalAgregarMetadatos, handleModalAgregarMetadatos } = useContext(
     ModalAndLoadingContext
   );
+
+  const { fourthLoading, handleFourthLoading } = useContext(
+    ModalAndLoadingContext
+  );
+  //* redux states
+  const { metadatos, currentAnexo } = useAppSelector(
+    (state) => state.AsignacionUsuarioSlice
+  );
+
+  //* hooks
+  const {
+    controlManejoMetadatosModal,
+    watchExeManejoModalMetadatos,
+    resetManejoMetadatosModal,
+    resetManejoMetadatosModalFunction,
+  } = usePanelVentanilla();
+
+  //? useeffect to get tipologias documentales
+
+  useEffect(() => {
+    if (
+      watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value ===
+      'Si'
+    ) {
+      void getTipologiasDocumentalesMetadatos(handleFourthLoading).then(
+        (tipologias) => {
+          setTipologiasDocumentales(tipologias);
+        }
+      );
+    }
+  }, [watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value]);
+
+  useEffect(() => {
+    resetManejoMetadatosModal({
+      categoriaArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
+      tieneReplicaFisicaMetadatos: {
+        value: '',
+        label: '',
+      },
+      origenArchivoMetadatos: 'Electrónico',
+      tieneTipologiaRelacionadaMetadatos: {
+        value: '',
+        label: '',
+      },
+      tipologiasDocumentalesMetadatos: {
+        value: '',
+        label: '',
+      },
+      cualTipologiaDocumentalMetadatos: '',
+      asuntoMetadatos: '',
+      descripcionMetadatos: '',
+      palabrasClavesMetadatos: [],
+    });
+
+    if (metadatos && currentAnexo?.categoriaArchivoMetadatos?.label) {
+      resetManejoMetadatosModal({
+        categoriaArchivoMetadatos: {
+          value: metadatos?.categoriaArchivoMetadatos?.value
+            ? metadatos?.categoriaArchivoMetadatos?.value
+            : '',
+          label: metadatos?.categoriaArchivoMetadatos?.label
+            ? metadatos?.categoriaArchivoMetadatos?.label
+            : '',
+        },
+        tieneReplicaFisicaMetadatos: {
+          value: metadatos?.tieneReplicaFisicaMetadatos?.value
+            ? metadatos?.tieneReplicaFisicaMetadatos?.value
+            : '',
+          label: metadatos?.tieneReplicaFisicaMetadatos?.label
+            ? metadatos?.tieneReplicaFisicaMetadatos?.label
+            : '',
+        },
+        origenArchivoMetadatos: 'Electrónico',
+        tieneTipologiaRelacionadaMetadatos: {
+          value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value
+            ? metadatos?.tieneTipologiaRelacionadaMetadatos?.value
+            : '',
+          label: metadatos?.tieneTipologiaRelacionadaMetadatos?.label
+            ? metadatos?.tieneTipologiaRelacionadaMetadatos?.label
+            : '',
+        },
+        tipologiasDocumentalesMetadatos: {
+          value: metadatos?.tipologiasDocumentalesMetadatos?.value
+            ? metadatos?.tipologiasDocumentalesMetadatos?.value
+            : '',
+          label: metadatos?.tipologiasDocumentalesMetadatos?.label
+            ? metadatos?.tipologiasDocumentalesMetadatos?.label
+            : '',
+        },
+        cualTipologiaDocumentalMetadatos:
+          metadatos?.cualTipologiaDocumentalMetadatos ?? '',
+        asuntoMetadatos: metadatos?.asuntoMetadatos ?? '',
+        descripcionMetadatos: metadatos?.descripcionMetadatos ?? '',
+        palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos ?? [],
+      });
+    } else {
+      resetManejoMetadatosModal({
+        categoriaArchivoMetadatos: {
+          value: '',
+          label: '',
+        },
+        tieneReplicaFisicaMetadatos: {
+          value: '',
+          label: '',
+        },
+        origenArchivoMetadatos: 'Electrónico',
+        tieneTipologiaRelacionadaMetadatos: {
+          value: '',
+          label: '',
+        },
+        tipologiasDocumentalesMetadatos: {
+          value: '',
+          label: '',
+        },
+        cualTipologiaDocumentalMetadatos: '',
+        asuntoMetadatos: '',
+        descripcionMetadatos: '',
+        palabrasClavesMetadatos: [],
+      });
+      dispatch(setMetadatos(null as any));
+    }
+  }, [metadatos, currentAnexo]);
+
+  // ? functions
+
+  const handleSubmit = async () => {
+    dispatch(setMetadatos(watchExeManejoModalMetadatos as any));
+    control_success('Se han establecido los metadatos');
+    handleModalAgregarMetadatos(false);
+    resetManejoMetadatosModalFunction();
+  };
 
   return (
     <>
@@ -50,7 +196,7 @@ export const ModalMetadatos = (): JSX.Element => {
         maxWidth="md"
         open={modalAgregarMetadatos}
         onClose={() => {
-          handleModalAgregarMetadatos(false);
+          // handleModalAgregarMetadatos(false);
           //* tambien se deben limpiar los datos que se recojan en el modal
         }}
       >
@@ -58,12 +204,11 @@ export const ModalMetadatos = (): JSX.Element => {
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(watchExeManejoModalMetadatos);
-            //? va a ser necesario almacenar los datos de los metadatos que se establezcan
+            handleSubmit();
           }}
         >
           <DialogTitle>
-            <Title title="Metadatos del archivo seleccionado" />
+            <Title title="Metadatos" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -80,10 +225,12 @@ export const ModalMetadatos = (): JSX.Element => {
                 sx={{
                   mt: '1.2rem',
                   mb: '1.2rem',
+                  zIndex: 10,
                 }}
               >
+                {/* Categoria del archivo */}
                 <Controller
-                  name="id_ccd"
+                  name="categoriaArchivoMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
                   render={({
@@ -103,8 +250,7 @@ export const ModalMetadatos = (): JSX.Element => {
                           );*/
                           onChange(selectedOption);
                         }}
-                        // isDisabled={trd_current != null}
-                        options={[]}
+                        options={categoriaArhivo ?? []}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -131,10 +277,11 @@ export const ModalMetadatos = (): JSX.Element => {
                 sx={{
                   mt: '1.2rem',
                   mb: '1.2rem',
+                  zIndex: 10,
                 }}
               >
                 <Controller
-                  name="id_ccd"
+                  name="tieneReplicaFisicaMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
                   render={({
@@ -144,7 +291,6 @@ export const ModalMetadatos = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
-                        // name="id_ccd"
                         onChange={(selectedOption) => {
                           console.log(selectedOption);
                           /* dispatch(
@@ -154,8 +300,8 @@ export const ModalMetadatos = (): JSX.Element => {
                           ); */
                           onChange(selectedOption);
                         }}
-                        // isDisabled={trd_current != null}
-                        options={[]}
+                        // isDisabled={trd_current != ''}
+                        options={tieneReplicaFisisca ?? []}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -185,44 +331,25 @@ export const ModalMetadatos = (): JSX.Element => {
                 }}
               >
                 <Controller
-                  name="id_ccd"
+                  name="origenArchivoMetadatos"
                   control={controlManejoMetadatosModal}
+                  defaultValue=""
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <div>
-                      <Select
-                        value={value}
-                        // name="id_ccd"
-                        onChange={(selectedOption) => {
-                          console.log(selectedOption);
-                          /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
-                          onChange(selectedOption);
-                        }}
-                        // isDisabled={trd_current != null}
-                        options={[]}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Origen del archivo
-                        </small>
-                      </label>
-                    </div>
+                    <TextField
+                      required
+                      fullWidth
+                      label="Origen del archivo"
+                      size="small"
+                      variant="outlined"
+                      value={'Electrónico'}
+                      disabled
+                      InputLabelProps={{ shrink: true }}
+                      inputProps={{ maxLength: 50 }}
+                    />
                   )}
                 />
               </Grid>
@@ -235,10 +362,11 @@ export const ModalMetadatos = (): JSX.Element => {
                 sx={{
                   mt: '1.2rem',
                   mb: '1.2rem',
+                  zIndex: 5,
                 }}
               >
                 <Controller
-                  name="id_ccd"
+                  name="tieneTipologiaRelacionadaMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
                   render={({
@@ -248,21 +376,15 @@ export const ModalMetadatos = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
-                        // name="id_ccd"
                         onChange={(selectedOption) => {
                           console.log(selectedOption);
-                          /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
                           {
                             /* si se selcciona el si se debe mostrar el select de las tipologías documentales que se van a establecer */
                           }
                           onChange(selectedOption);
                         }}
-                        // isDisabled={trd_current != null}
-                        options={[]}
+                        // isDisabled={trd_current != ''}
+                        options={tieneTipologiaRelacionada ?? []}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -283,96 +405,116 @@ export const ModalMetadatos = (): JSX.Element => {
                 />
               </Grid>
               {/* se debe revisar en que momento mostrar este combo de select */}
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
-                }}
-              >
-                <Controller
-                  name="id_ccd"
-                  control={controlManejoMetadatosModal}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <div>
-                      <Select
-                        value={value}
-                        // name="id_ccd"
-                        onChange={(selectedOption) => {
-                          console.log(selectedOption);
-                          /* dispatch(
+
+              {!watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos
+                ?.value ? (
+                ''
+              ) : watchExeManejoModalMetadatos
+                  .tieneTipologiaRelacionadaMetadatos?.value === 'Si' ? (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  sx={{
+                    mt: '1.2rem',
+                    mb: '1.2rem',
+                    zIndex: 5,
+                  }}
+                >
+                  <Controller
+                    name="tipologiasDocumentalesMetadatos"
+                    control={controlManejoMetadatosModal}
+                    // rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <div>
+                        {fourthLoading ? (
+                          <Skeleton variant="text" height={35} /> // Reemplaza esto con tu componente de Skeleton
+                        ) : (
+                          <Select
+                            value={value}
+                            onChange={(selectedOption) => {
+                              console.log(selectedOption);
+                              /* dispatch(
                             getServiceSeriesSubseriesXUnidadOrganizacional(
                               selectedOption.item
                             )
                           );*/
-                          onChange(selectedOption);
+                              onChange(selectedOption);
+                            }}
+                            // isDisabled={trd_current != ''}
+                            options={
+                              tipologiasDocumentales.map(
+                                (tipologia: TipologiaDocumental) => {
+                                  return {
+                                    value: tipologia?.id_tipologia_documental,
+                                    label: tipologia?.nombre,
+                                  };
+                                }
+                              ) ?? []
+                            }
+                            placeholder="Seleccionar"
+                          />
+                        )}
+                        <label>
+                          <small
+                            style={{
+                              color: 'rgba(0, 0, 0, 0.6)',
+                              fontWeight: 'thin',
+                              fontSize: '0.75rem',
+                              marginTop: '0.25rem',
+                              marginLeft: '0.25rem',
+                            }}
+                          >
+                            Tipología documental
+                          </small>
+                        </label>
+                      </div>
+                    )}
+                  />
+                </Grid>
+              ) : (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  sx={{
+                    mt: '1.2rem',
+                    mb: '1.2rem',
+                  }}
+                >
+                  <Controller
+                    name="cualTipologiaDocumentalMetadatos"
+                    control={controlManejoMetadatosModal}
+                    defaultValue=""
+                    // rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        required
+                        fullWidth
+                        label="¿Cual?"
+                        size="small"
+                        variant="outlined"
+                        value={value}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                          onChange(e.target.value);
+                          e.target.value.length === 50 &&
+                            control_warning(
+                              'máximo 50 caracteres para definir la tipología documental'
+                            );
                         }}
-                        // isDisabled={trd_current != null}
-                        options={[]}
-                        placeholder="Seleccionar"
+                        inputProps={{ maxLength: 50 }}
                       />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Tipología documental
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
-                }}
-              >
-                <Controller
-                  name="nombre"
-                  control={controlManejoMetadatosModal}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      required
-                      // margin="dense"
-                      fullWidth
-                      // name="nombre"
-                      label="¿Cual?"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                        /*e.target.value.length === 50 &&
-                          control_warning('máximo 50 caracteres');*/
-                        // console.log(e.target.value);
-                      }}
-                      inputProps={{ maxLength: 50 }}
-                    />
-                  )}
-                />
-              </Grid>
+                    )}
+                  />
+                </Grid>
+              )}
 
               <Grid
                 item
@@ -384,7 +526,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 }}
               >
                 <Controller
-                  name="nombre"
+                  name="asuntoMetadatos"
                   control={controlManejoMetadatosModal}
                   defaultValue=""
                   rules={{ required: true }}
@@ -394,9 +536,7 @@ export const ModalMetadatos = (): JSX.Element => {
                   }) => (
                     <TextField
                       required
-                      // margin="dense"
                       fullWidth
-                      // name="nombre"
                       label="Asunto"
                       size="small"
                       variant="outlined"
@@ -404,8 +544,10 @@ export const ModalMetadatos = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        /*e.target.value.length === 50 &&
-                          control_warning('máximo 50 caracteres');*/
+                        e.target.value.length === 50 &&
+                          control_warning(
+                            'máximo 50 caracteres para el asunto'
+                          );
                         // console.log(e.target.value);
                       }}
                       inputProps={{ maxLength: 50 }}
@@ -424,7 +566,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 }}
               >
                 <Controller
-                  name="nombre"
+                  name="descripcionMetadatos"
                   control={controlManejoMetadatosModal}
                   defaultValue=""
                   rules={{ required: true }}
@@ -436,9 +578,7 @@ export const ModalMetadatos = (): JSX.Element => {
                       required
                       multiline
                       rows={4}
-                      // margin="dense"
                       fullWidth
-                      // name="nombre"
                       label="Descripción"
                       size="small"
                       variant="outlined"
@@ -446,28 +586,37 @@ export const ModalMetadatos = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        /*e.target.value.length === 50 &&
-                          control_warning('máximo 50 caracteres');*/
-                        // console.log(e.target.value);
+                        e.target.value.length === 255 &&
+                          control_warning(
+                            'máximo 255 caracteres para la descripción'
+                          );
                       }}
-                      inputProps={{ maxLength: 50 }}
+                      inputProps={{ maxLength: 255 }}
                     />
                   )}
                 />
               </Grid>
 
-              <Grid xs={12} sm={12} sx={{ mt: '1.2rem', mb: '1.2rem' }}>
+              <Grid item xs={12} sm={12} sx={{ mt: '1.2rem', mb: '1.2rem' }}>
                 <Controller
-                  name="autocomplete"
+                  name="palabrasClavesMetadatos"
                   control={controlManejoMetadatosModal}
-                  // defaultValue={[top100Films[13].title]}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
                     <Autocomplete
                       onChange={(event, newValue) => {
+                        if (newValue.length <= 5) {
+                          onChange(newValue);
+                          return;
+                        }
+
+                        newValue.pop();
                         onChange(newValue);
+                        control_warning(
+                          'Solo puedes establecer un máximo de 5 palabras clave'
+                        );
                       }}
                       value={value}
                       multiple
@@ -507,29 +656,29 @@ export const ModalMetadatos = (): JSX.Element => {
                 variant="outlined"
                 color="primary"
                 onClick={() => {
-                  console.log('limpiando campos del modal de metadatos');
+                  dispatch(setMetadatos('' as any));
+                  resetManejoMetadatosModalFunction();
                 }}
                 startIcon={<CleanIcon />}
               >
-                DESCARTAR
+                Limpiar campos
               </Button>
-              <Button
+              {/* <Button
                 color="error"
                 variant="contained"
                 onClick={() => {
                   console.log('cerrando modal');
+
+                  resetManejoMetadatosModal();
                 }}
                 startIcon={<CloseIcon />}
               >
                 CANCELAR
-              </Button>
+              </Button>*/}
               <Button
                 color="success"
                 type="submit"
                 variant="contained"
-                onClick={() => {
-                  console.log('cerrando modal');
-                }}
                 startIcon={<SaveIcon />}
               >
                 GUARDAR
@@ -538,9 +687,10 @@ export const ModalMetadatos = (): JSX.Element => {
                 color="error"
                 variant="outlined"
                 onClick={() => {
-                  //* en la cerrada tambien se deben limpiar los campos para que no se tienda a producir errrores
-                  console.log('cerrando modal');
-                  handleModalAgregarMetadatos(false);
+                  handleCloseModal(
+                    resetManejoMetadatosModalFunction,
+                    handleModalAgregarMetadatos
+                  );
                 }}
                 startIcon={<CloseIcon />}
               >

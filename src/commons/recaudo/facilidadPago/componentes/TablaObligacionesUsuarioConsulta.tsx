@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -12,15 +13,20 @@ import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfa
 import { DialogoInformativo } from './DialogoInformativo';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
+import { Divider,  Dialog,   } from '@mui/material';
+import { Title } from '../../../../components';
 
 interface RootState {
   obligaciones: {
     obligaciones: ObligacionesUsuario;
   }
 }
-
+interface BuscarProps {
+  is_modal_active: any;
+  set_is_modal_active: any;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuarioConsulta: React.FC = () => {
+export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_modal_active,set_is_modal_active }) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
@@ -212,9 +218,15 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
       ),
     },
   ];
-
+  const handle_closee = (): void => {
+    set_is_modal_active(false);
+};
   return (
     <>
+     <Dialog open={is_modal_active} onClose={handle_closee} maxWidth="xl"
+            >
+
+
       <Grid
         container
         sx={{
@@ -226,6 +238,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+          <Title title='Listado de pagos pendientes'/>
         {
           lista_obligaciones.length !== 0 ? (
             <Grid item xs={12}>
@@ -281,6 +294,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
               direction="row"
               justifyContent="right"
               spacing={2}
+              marginTop={2}
               sx={{ mb: '20px' }}
             >
               <Button
@@ -319,6 +333,8 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
         abrir_modal={modal}
         abrir_dialog={handle_close}
       />
+      
+      </Dialog>
     </>
   );
 }

@@ -1,9 +1,9 @@
 import { Grid, TextField, Box, Button, Stack, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent } from "@mui/material";
 import { Title } from "../../../../../components/Title";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../../hooks";
 import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
-import { buscar_expediente_id, obtener_config_expediente, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
+import { buscar_expediente_id, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 import dayjs, { Dayjs } from "dayjs";
 import SearchIcon from '@mui/icons-material/Search';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";

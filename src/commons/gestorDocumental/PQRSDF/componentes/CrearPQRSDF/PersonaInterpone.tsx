@@ -36,20 +36,20 @@ const PersonaInterpone = () => {
 
   useEffect(() => {
     switch (on_behalf_of.key) {
-      case 1:
+      case 'P':
         reset(initial_state_person);
         break;
-      case 2:
+      case 'E':
         reset(company);
         break;
-      case 3:
+      case 'A':
         reset(attorney);
         break;
       default:
         reset(initial_state_person);
         break;
     }
-  }, [attorney, company]);
+  }, [attorney, company, person]);
 
   return (
     <>
@@ -60,7 +60,7 @@ const PersonaInterpone = () => {
           button_submit_icon_class={null}
           show_button={false}
           form_inputs={
-            on_behalf_of.key === 2
+            on_behalf_of.key === 'E'
               ? [
                   {
                     datum_type: 'title',
@@ -71,7 +71,7 @@ const PersonaInterpone = () => {
                     xs: 12,
                     md: 6,
                     control_form: control_persona_interpone,
-                    control_name: ' representatives_document_type',
+                    control_name: 'persona_representante.tipo_documento_id',
                     default_value: '',
                     rules: {},
                     label: 'Tipo de documento',
@@ -84,7 +84,7 @@ const PersonaInterpone = () => {
                     xs: 12,
                     md: 6,
                     control_form: control_persona_interpone,
-                    control_name: 'representatives_document',
+                    control_name: 'persona_representante.numero_documento',
                     default_value: '',
                     rules: {
                       required_rule: { rule: true, message: 'Requerido' },
@@ -99,7 +99,7 @@ const PersonaInterpone = () => {
                     xs: 12,
                     md: 6,
                     control_form: control_persona_interpone,
-                    control_name: 'representatives_full_name',
+                    control_name: 'persona_representante.nombre_completo',
                     default_value: '',
                     rules: {},
                     label: 'Nombre completo',
@@ -121,7 +121,7 @@ const PersonaInterpone = () => {
                     helper_text: '',
                   },
                 ]
-              : on_behalf_of.key === 3
+              : on_behalf_of.key === 'A'
               ? [
                   {
                     datum_type: 'title',
@@ -132,7 +132,7 @@ const PersonaInterpone = () => {
                     xs: 12,
                     md: 6,
                     control_form: control_persona_interpone,
-                    control_name: 'document_type',
+                    control_name: 'tipo_documento',
                     default_value: '',
                     rules: {},
                     label: 'Tipo de documento',
@@ -145,7 +145,7 @@ const PersonaInterpone = () => {
                     xs: 12,
                     md: 6,
                     control_form: control_persona_interpone,
-                    control_name: 'document',
+                    control_name: 'numero_documento',
                     default_value: '',
                     rules: {
                       required_rule: { rule: true, message: 'Requerido' },
@@ -160,7 +160,7 @@ const PersonaInterpone = () => {
                     xs: 12,
                     md: 6,
                     control_form: control_persona_interpone,
-                    control_name: 'full_name',
+                    control_name: 'nombre_completo',
                     default_value: '',
                     rules: {},
                     label: 'Nombre completo',

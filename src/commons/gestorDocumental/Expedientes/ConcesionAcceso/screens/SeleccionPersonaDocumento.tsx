@@ -14,7 +14,7 @@ import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import { obtener_persona_cc_nro } from '../thunks/ConcesionAcceso';
 import { v4 as uuidv4 } from 'uuid';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-//  import { BuscadorPersonaExpDoc } from '../../ConsultaExpedientesDocumentales/screens/BuscadorPersonaExpDoc';
+import { BuscadorPersonaExpDoc } from '../../consultaExpedientesDocumentales/screens/BuscadorPersonaExpDoc';
 
 interface IProps {
     documento: any,
@@ -232,6 +232,7 @@ export const SeleccionPersonaDocumento: React.FC<IProps> = (props: IProps) => {
                                     <DatePicker
                                         label="Conceder acceso desde"
                                         value={acceso_desde}
+                                        inputFormat='DD/MM/YYYY'
                                         onChange={(newValue) => { cambio_acceso_desde(newValue); }}
                                         renderInput={(params) => (
                                             <TextField
@@ -253,6 +254,7 @@ export const SeleccionPersonaDocumento: React.FC<IProps> = (props: IProps) => {
                                     <DatePicker
                                         label="Conceder acceso hasta"
                                         value={acceso_hasta}
+                                        inputFormat='DD/MM/YYYY'
                                         onChange={(newValue) => { cambio_acceso_hasta(newValue); }}
                                         renderInput={(params) => (
                                             <TextField

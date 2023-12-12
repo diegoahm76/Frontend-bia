@@ -1,11 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
+import { useContext } from 'react';
+import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
 
 export const PersonaTitular = (): JSX.Element => {
 
   {/*datos deben salir de una mixtura del objeto de autenticación y */}
 
+    //* context declaration
+    const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+  
 
   return (
     <Grid
@@ -22,32 +27,34 @@ export const PersonaTitular = (): JSX.Element => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               disabled
               size="small"
               label="Nombres"
               variant="outlined"
-              value={'cristiano'}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.nombres ?? 'N/A'}
               inputProps={{
                 maxLength: 50,
               }}
             />
           </Grid>
-          {/*<Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               disabled
               size="small"
               label="Apellidos"
               variant="outlined"
-              value={'Perez'}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.apellidos ?? 'N/A'}
               inputProps={{
                 maxLength: 10,
               }}
             />
-          </Grid>*/}
+          </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
@@ -55,7 +62,8 @@ export const PersonaTitular = (): JSX.Element => {
               label="Tipo de documento"
               disabled
               variant="outlined"
-              value={'Cédula de ciudadanía'}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.tipo_documento ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -65,7 +73,8 @@ export const PersonaTitular = (): JSX.Element => {
               label="Número de documento"
               variant="outlined"
               disabled
-              value={'1006877856'}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.numero_documento ?? 'N/A'}
             />
           </Grid>
         </Grid>

@@ -1,14 +1,11 @@
 import { Grid, Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
-import dayOfYear from 'dayjs/plugin/dayOfYear';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { BusquedaExpediente } from "./BusquedaExpediente";
 import { InformacionExpediente } from "./InformacionExpediente";
 import { DocumentosExpediente } from "./DocumentosExpediente";
-dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
