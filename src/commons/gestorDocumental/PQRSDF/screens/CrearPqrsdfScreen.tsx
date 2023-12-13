@@ -36,6 +36,7 @@ import StepTwo from '../componentes/CrearPQRSDF/StepTwo';
 import {
   IObjExhibit,
   IObjPqr,
+  IObjPqrDenuncia,
   IObjStepConfiguration,
 } from '../interfaces/pqrsdf';
 import PersonaTitular from '../componentes/CrearPQRSDF/PersonaTitular';
@@ -59,6 +60,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { useParams } from 'react-router-dom';
+import StepDenuncia from '../componentes/CrearPQRSDF/StepDenuncia';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearPqrsdfScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -77,17 +79,20 @@ export function CrearPqrsdfScreen(): JSX.Element {
     pqr,
     exhibits,
   } = useAppSelector((state) => state.pqrsdf_slice);
-  const {
-    control: control_estado,
-    handleSubmit: handle_submit_estado,
-    reset,
-  } = useForm<any>();
 
   const {
     control: control_pqrsdf,
     handleSubmit: handle_submit_pqrsdf,
     reset: reset_pqrsdf,
+    watch,
   } = useForm<any>();
+
+  const {
+    control: control_denuncia,
+    handleSubmit: handle_submit_denuncia,
+    reset: reset_denuncia,
+    watch: watch_denuncia,
+  } = useForm<IObjPqrDenuncia>();
   const { id } = useParams();
 
   useEffect(() => {
@@ -142,6 +147,14 @@ export function CrearPqrsdfScreen(): JSX.Element {
 
       case 2:
         return <StepTwo />;
+      case 3:
+        return (
+          <StepDenuncia
+            control_form={control_denuncia}
+            reset={reset_denuncia}
+            watch={watch_denuncia}
+          />
+        );
 
       default:
         return null;
@@ -182,7 +195,15 @@ export function CrearPqrsdfScreen(): JSX.Element {
   const [flag_create, set_flag_create] = useState(false);
   const [action, set_action] = useState('crear');
   const [step, set_step] = useState<number | null>(null);
+  const validate = (data: any, step: number) => {
+    console.log('validate_pqr', data);
 
+    dispatch(set_pqr({ ...pqr, ...data, anexos: exhibits }));
+  };
+  const validate_denuncia = (data: any, step: number) => {
+    console.log('validate_denuncia', data, pqr);
+    dispatch(set_pqr({ ...pqr, denuncia: data, anexos: exhibits }));
+  };
   const [configuration_steps, set_configuration_steps] = useState<
     IObjStepConfiguration[]
   >([
@@ -192,6 +213,8 @@ export function CrearPqrsdfScreen(): JSX.Element {
       skipped: false,
       step_title: 'Información de PQRSDF',
       body: StepComponent(1),
+      handle_submit: handle_submit_pqrsdf,
+      validate: validate,
     },
     {
       step_number: 2,
@@ -199,13 +222,66 @@ export function CrearPqrsdfScreen(): JSX.Element {
       skipped: false,
       step_title: 'Anexos',
       body: StepComponent(2),
+      handle_submit: handle_submit_pqrsdf,
+      validate: validate,
     },
   ]);
 
-  const validate = (data: any) => {
-    console.log(data);
-    dispatch(set_pqr({ ...pqr, ...data }));
-  };
+  useEffect(() => {
+    if (watch('cod_tipo_PQRSDF') === 'D') {
+      set_configuration_steps([
+        {
+          step_number: 1,
+          optional: false,
+          skipped: false,
+          step_title: 'Información de PQRSDF',
+          body: StepComponent(1),
+          handle_submit: handle_submit_pqrsdf,
+          validate: validate,
+        },
+        {
+          step_number: 2,
+          optional: false,
+          skipped: false,
+          step_title: 'Información denuncia',
+          body: StepComponent(3),
+          handle_submit: handle_submit_denuncia,
+          validate: validate_denuncia,
+        },
+        {
+          step_number: 3,
+          optional: true,
+          skipped: false,
+          step_title: 'Anexos',
+          body: StepComponent(2),
+          handle_submit: handle_submit_pqrsdf,
+          validate: validate,
+        },
+      ]);
+    } else {
+      dispatch(set_pqr({ ...pqr, denuncia: null }));
+      set_configuration_steps([
+        {
+          step_number: 1,
+          optional: false,
+          skipped: false,
+          step_title: 'Información de PQRSDF',
+          body: StepComponent(1),
+          handle_submit: handle_submit_pqrsdf,
+          validate: validate,
+        },
+        {
+          step_number: 2,
+          optional: true,
+          skipped: false,
+          step_title: 'Anexos',
+          body: StepComponent(2),
+          handle_submit: handle_submit_pqrsdf,
+          validate: validate,
+        },
+      ]);
+    }
+  }, [watch('cod_tipo_PQRSDF')]);
 
   const initial_values = (): void => {
     void dispatch(get_pqr_types_service());
@@ -216,31 +292,91 @@ export function CrearPqrsdfScreen(): JSX.Element {
     void dispatch(get_file_categories_service());
     void dispatch(get_file_origin_service());
     void dispatch(get_file_typology_service());
+    set_flag_create(false);
+    set_step(0);
   };
 
   useEffect(() => {
-    reset_pqrsdf(pqr);
+    reset_pqrsdf({
+      ...pqr,
+      cod_forma_presentacion:
+        (type_applicant.key ?? null) === null
+          ? 'E'
+          : pqr.cod_forma_presentacion,
+      id_medio_solicitud:
+        (type_applicant.key ?? null) === null ? 2 : pqr.id_medio_solicitud,
+    });
     console.log(pqr);
-    if (pqr.id_PQRSDF !== null) {
+    if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
       if ('anexos' in pqr) {
-        if (pqr.anexos == undefined && pqr.anexos == null) {
-          navigate(
-            `/app/gestor_documental/pqrsdf/crear_pqrsdf/${pqr.id_PQRSDF}`
-          );
+        if (pqr.anexos === undefined && pqr.anexos === null) {
           set_step(0);
+          void dispatch(get_pqrsdf_id_service(pqr.id_PQRSDF));
         } else {
-          dispatch(set_exhibits(pqr.anexos));
+          dispatch(set_exhibits(pqr.anexos ?? []));
         }
       } else {
-        navigate(`/app/gestor_documental/pqrsdf/crear_pqrsdf/${pqr.id_PQRSDF}`);
         set_step(0);
+        void dispatch(get_pqrsdf_id_service(pqr.id_PQRSDF));
+      }
+      if (pqr.cod_tipo_PQRSDF === 'D') {
+        set_configuration_steps([
+          {
+            step_number: 1,
+            optional: false,
+            skipped: false,
+            step_title: 'Información de PQRSDF',
+            body: StepComponent(1),
+            handle_submit: handle_submit_pqrsdf,
+            validate: validate,
+          },
+          {
+            step_number: 2,
+            optional: false,
+            skipped: false,
+            step_title: 'Información denuncia',
+            body: StepComponent(3),
+            handle_submit: handle_submit_denuncia,
+            validate: validate_denuncia,
+          },
+          {
+            step_number: 3,
+            optional: true,
+            skipped: false,
+            step_title: 'Anexos',
+            body: StepComponent(2),
+            handle_submit: handle_submit_pqrsdf,
+            validate: validate,
+          },
+        ]);
+      } else {
+        set_configuration_steps([
+          {
+            step_number: 1,
+            optional: false,
+            skipped: false,
+            step_title: 'Información de PQRSDF',
+            body: StepComponent(1),
+            handle_submit: handle_submit_pqrsdf,
+            validate: validate,
+          },
+          {
+            step_number: 2,
+            optional: true,
+            skipped: false,
+            step_title: 'Anexos',
+            body: StepComponent(2),
+            handle_submit: handle_submit_pqrsdf,
+            validate: validate,
+          },
+        ]);
       }
       set_action('editar');
     }
   }, [pqr]);
 
   useEffect(() => {
-    console.log(exhibits);
+    console.log(exhibits, pqr);
     if (exhibits.length > 0) {
       dispatch(set_pqr({ ...pqr, anexos: exhibits }));
     }
@@ -258,44 +394,42 @@ export function CrearPqrsdfScreen(): JSX.Element {
         let folios: number = 0;
         const aux_items: IObjExhibit[] = [];
         console.log(exhibits);
+        let ya_digitalizado: boolean = true;
+
         exhibits.forEach((elemento: IObjExhibit, index: number) => {
-          console.log(elemento);
           folios = folios + Number(elemento.numero_folios ?? 0);
-          if (elemento.exhibit_link === null) {
-            aux_items.push({
-              ...elemento,
-              orden_anexo_doc: index,
-              metadatos: elemento.metadato ?? null,
-              exhibit_link: elemento.metadato?.archivo?.ruta_archivo ?? null,
-            });
-          } else {
-            if (typeof elemento.exhibit_link === 'string') {
-              aux_items.push({
-                ...elemento,
-                orden_anexo_doc: index,
-                metadatos: elemento.metadato ?? null,
-                exhibit_link: elemento.metadato?.archivo?.ruta_archivo ?? null,
-              });
-            } else {
-              console.log(elemento);
-              aux_items.push({
-                ...elemento,
-                orden_anexo_doc: index,
-                metadatos: elemento.metadato ?? null,
-              });
-            }
-          }
+          aux_items.push({
+            ...elemento,
+            orden_anexo_doc: index,
+            ya_digitalizado: elemento.metadatos === null ? false : true,
+          });
+          ya_digitalizado = elemento.metadatos === null ? false : true;
         });
         console.log(aux_items);
-        const data_edit: IObjPqr = {
+
+        const data_edit: any = {
           ...data,
           cantidad_anexos: exhibits.length,
           nro_folios_totales: folios,
           cod_relacion_con_el_titular: 'MP',
           es_anonima: false,
           anexos: aux_items,
-          requiere_digitalizacion: true,
-          denuncia: null,
+          requiere_digitalizacion: !ya_digitalizado,
+          denuncia:
+            data.denuncia === null
+              ? null
+              : {
+                  ...(data.denuncia || {}),
+                  cod_recursos_fectados_presuntos:
+                    typeof data.denuncia?.cod_recursos_fectados_presuntos ===
+                    'string'
+                      ? data.denuncia?.cod_recursos_fectados_presuntos
+                      : Array.isArray(
+                          data.denuncia?.cod_recursos_fectados_presuntos
+                        )
+                      ? data.denuncia?.cod_recursos_fectados_presuntos.join('|')
+                      : '',
+                },
         };
         console.log(data_edit);
         form_data.append('pqrsdf', JSON.stringify(data_edit));
@@ -325,7 +459,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         });
         form_data.append('isCreateForWeb', 'True');
 
-        void dispatch(edit_pqrsdf_service(form_data));
+        void dispatch(edit_pqrsdf_service(form_data, navigate));
       } else {
         control_error(
           'Solo se pueden editar pqrsdf hasta 30 dias despues de la fecha de creación'
@@ -336,6 +470,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
       set_action('crear');
       const fecha = new Date(data.fecha_registro ?? '').toISOString();
       let folios: number = 0;
+      let ya_digitalizado: boolean = true;
       const aux_items: IObjExhibit[] = [];
       exhibits.forEach((elemento: IObjExhibit, index: number) => {
         folios = folios + Number(elemento.numero_folios ?? 0);
@@ -344,11 +479,11 @@ export function CrearPqrsdfScreen(): JSX.Element {
           orden_anexo_doc: index,
           ya_digitalizado: elemento.metadatos === null ? false : true,
         });
+        ya_digitalizado = elemento.metadatos === null ? false : true;
       });
-      const data_edit: IObjPqr = {
+      const data_edit: any = {
         ...data,
         fecha_registro: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
-        id_sucursal_especifica_implicada: 1,
         id_persona_titular: userinfo.id_persona,
         id_persona_interpone: userinfo.id_persona,
         cantidad_anexos: exhibits.length,
@@ -356,7 +491,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         cod_relacion_con_el_titular: 'MP',
         es_anonima: false,
         anexos: aux_items,
-        requiere_digitalizacion: true,
+        requiere_digitalizacion: !ya_digitalizado,
       };
       console.log(data_edit);
 
@@ -370,10 +505,10 @@ export function CrearPqrsdfScreen(): JSX.Element {
       form_data.append('id_persona_guarda', userinfo.id_persona);
       form_data.append('isCreateForWeb', 'True');
 
-      void dispatch(add_pqrsdf_service(form_data));
-      dispatch(reset_state());
-      initial_values();
+      void dispatch(add_pqrsdf_service(form_data, navigate));
     }
+    dispatch(reset_state());
+    initial_values();
   };
   const delete_pqr = (): void => {
     if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
@@ -385,6 +520,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         void dispatch(delete_pqrsdf_service(pqr.id_PQRSDF, true));
         dispatch(reset_state());
         initial_values();
+        navigate(`/app/gestor_documental/pqrsdf/crear_pqrsdf/`);
       } else {
         control_error(
           'Solo se pueden eliminar siembras hasta 30 dias despues de la fecha de creación'
@@ -437,8 +573,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
         <FormStepper
           configuration_steps={configuration_steps}
           message_success={`Formulario diligenciado correctamente, puede ${action} el PQRSDF`}
-          handle_submit={handle_submit_pqrsdf}
-          validate={validate}
           set_success={set_flag_create}
           step={step}
         />
@@ -454,29 +588,30 @@ export function CrearPqrsdfScreen(): JSX.Element {
               color_button="success"
             />
           </Grid>
-          {pqr.id_PQRSDF !== null && pqr.fecha_radicado !== null && (
-            <Grid item xs={12} md={3}>
-              <FormButton
-                variant_button="outlined"
-                on_click_function={radicate_pqr}
-                icon_class={<AssignmentTurnedInIcon />}
-                label={'Radicar'}
-                type_button="button"
-                color_button="primary"
-              />
-            </Grid>
-          )}
-          {pqr.id_PQRSDF !== null && (
-            <Grid item xs={12} md={3}>
-              <FormButton
-                variant_button="outlined"
-                on_click_function={delete_pqr}
-                icon_class={<DeleteIcon />}
-                label={'Eliminar'}
-                type_button="button"
-                color_button="error"
-              />
-            </Grid>
+          {pqr.id_PQRSDF !== null && pqr.id_radicado === null && (
+            <>
+              <Grid item xs={12} md={3}>
+                <FormButton
+                  variant_button="outlined"
+                  on_click_function={radicate_pqr}
+                  icon_class={<AssignmentTurnedInIcon />}
+                  label={'Radicar'}
+                  type_button="button"
+                  color_button="primary"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                <FormButton
+                  variant_button="outlined"
+                  on_click_function={delete_pqr}
+                  icon_class={<DeleteIcon />}
+                  label={'Eliminar'}
+                  type_button="button"
+                  color_button="error"
+                />
+              </Grid>
+            </>
           )}
 
           <Grid item xs={12} md={3}>

@@ -53,6 +53,8 @@ export interface ISucursalForm {
   item_ya_usado: boolean;
   id_persona_empresa: number;
   numero_sucursal: number | null; 
+  direccion_sucursal_georeferenciada_lat:any;
+  direccion_sucursal_georeferenciada_lon:any;
   
  }
 

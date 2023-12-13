@@ -232,12 +232,13 @@ export const Datos: React.FC = () => {
           <Grid item xs={12} marginTop={2} sm={6}>
             <ReactApexChart options={chartDataTiposUsuario} series={seriesTiposUsuario} type="bar" height={330} />
           </Grid>
-          <Grid item xs={12} marginTop={2} sm={6}>
-            <GraficaBar selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica barras */}
-          </Grid>
           <Grid item xs={12} marginTop={4} sm={6}>
             <Graficapie selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica torta */}
           </Grid>
+          <Grid item xs={12} marginTop={2} sm={6}>
+            <GraficaBar selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica barras */}
+          </Grid>
+          
           <Grid item xs={12} marginTop={4} sm={6}>
             <GraficaArea selectedEncuestaId={selectedEncuestaId} />           {/* Renderiza la gráfica area */}
           </Grid>
