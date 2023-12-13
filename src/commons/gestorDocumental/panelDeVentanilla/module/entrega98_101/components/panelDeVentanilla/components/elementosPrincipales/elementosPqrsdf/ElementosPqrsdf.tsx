@@ -106,7 +106,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const shouldDisable = (actionId: string) => {
+    /*    const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrup';
       const isDigOrAsigGrup = ['Dig', 'AsigGrup'].includes(actionId);
       const hasAnexos = pqrsdf.cantidad_anexos > 0;
@@ -126,6 +126,51 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         (isEnVentanilla && requiresDigitalization && isAsigGrup) ||
         (actionId === 'Dig' && !requiresDigitalization) // Deshabilitar el botón de digitalización si no se requiere digitalización
       );
+    };*/
+
+    const shouldDisable = (actionId: string) => {
+      const isAsigGrup = actionId === 'AsigGrup';
+      const isDig = actionId === 'Dig';
+      const hasAnexos = pqrsdf.cantidad_anexos > 0;
+      const requiresDigitalization = pqrsdf.requiere_digitalizacion;
+      const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
+      const isEnVentanillaSinPendientes =
+        pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+      const isEnVentanillaConPendientes =
+        pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+
+      // Primer caso
+      if (isRadicado && !hasAnexos && isDig) {
+        return true;
+      }
+
+      // Segundo caso
+      if (isRadicado && hasAnexos && !requiresDigitalization) {
+        return false;
+      }
+
+      // Tercer caso
+      if (isRadicado && hasAnexos && requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      // Cuarto caso
+      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+        return false;
+      }
+
+      // Quinto caso
+      if (isEnVentanillaSinPendientes && requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      // Sexto caso
+      if (isEnVentanillaConPendientes) {
+        return isAsigGrup;
+      }
+
+      // Caso por defecto
+      return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
     };
 
     const actionsPQRSDF = actions.map((action: any) => ({
@@ -433,7 +478,11 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   return (
     <>
       <RenderDataGrid
-        rows={[...listaElementosPqrsfTramitesUotros] ?? []}
+        rows={
+          listaElementosPqrsfTramitesUotros.filter(
+            (el: { radicado: string }) => el.radicado
+          ) ?? []
+        }
         columns={columns ?? []}
         title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
         aditionalElement={

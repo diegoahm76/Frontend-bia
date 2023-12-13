@@ -181,12 +181,11 @@ export const FormParte3 = ({
     // Reset functions that are common to both cases
     resetFormulario();
     resetManejoMetadatosModalFunction();
+    dispatch(setMetadatos(null as any));
 
     if (currentAnexo) {
       //* se debe quitar el as any y validar un par de cosas que pueden estar fallando al editar el anexo
       dispatch(editAnexo(dataEditAnexo as any));
-      control_success('Se ha editado el anexo');
-      // Assuming editAnexoFunction is the function to edit an anexo
     } else {
       dispatch(addAnexo(dataCreateAnexo));
     }
@@ -379,7 +378,6 @@ export const FormParte3 = ({
                         fontSize: '0.75rem',
                       }}
                     >
-                      Archivo
                       {controlFormulario._formValues.ruta_soporte
                         ? controlFormulario._formValues.ruta_soporte.name ??
                           controlFormulario._formValues.ruta_soporte.replace(
@@ -531,7 +529,18 @@ export const FormParte3 = ({
           <RenderDataGrid
             title="Listado de Anexos"
             columns={columns ?? []}
-            rows={anexosCreados ?? []}
+            rows={[...anexosCreados]?.sort((a: { nombre_archivo?: string }, b: { nombre_archivo?: string }) => {
+              if (a?.nombre_archivo && !b?.nombre_archivo) {
+                return -1;
+              }
+              if (!a?.nombre_archivo && b?.nombre_archivo) {
+                return 1;
+              }
+              if (a.nombre_archivo && b.nombre_archivo) {
+                return a.nombre_archivo.localeCompare(b.nombre_archivo);
+              }
+              return 0;
+            }) ?? []}
           />
         ) : (
           <Typography

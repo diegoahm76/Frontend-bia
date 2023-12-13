@@ -37,28 +37,36 @@ export const FormParte1 = ({
 
   // ? definicion de las columnas
 
+
+
+      /*{
+        "nombre_anexo": "anexo 2",
+        "numero_folios": "5",
+        "cod_medio_almacenamiento": "Na",
+        "orden_anexo_doc": "1",
+        "meta_data":{
+          "tiene_replica_fisica": false,
+          "cod_origen_archivo": "F",
+          "nombre_original_archivo": "Archivo",
+          "descripcion":"des",
+          "asunto": "as",
+          "cod_categoria_archivo": "Tx",
+          "nro_folios_documento": 0,
+          "id_tipologia_doc": null,
+          "tipologia_no_creada_TRD":'tipologia creada',
+          "palabras_clave_doc":'dato|prueba|clave'
+        }
+      }*/
+
   const columns = [
     ...columnsGridHistorico,
-    {
+/*    {
       headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
         <Tooltip title="Ver solicitud realizada">
           <IconButton
             onClick={() => {
-              // ? se debe llamar el servicio de los elementos que
-              /*dispatch(get_trd_current(params.row));
-              closeModalModalSearchTRD();
-              dispatch(get_trds([]));
-              const ccd_current = {
-                id_ccd: params?.row?.id_ccd,
-                id_organigrama: params?.row?.id_organigrama
-              };
-              dispatch(
-                getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
-              ).then((res: any) => {
-                dispatch(get_catalogo_trd(params.row.id_trd));
-              });*/
               console.log(params.row);
             }}
           >
@@ -78,7 +86,7 @@ export const FormParte1 = ({
           </IconButton>
         </Tooltip>
       ),
-    },
+    },*/
   ];
 
   if (secondLoading) {

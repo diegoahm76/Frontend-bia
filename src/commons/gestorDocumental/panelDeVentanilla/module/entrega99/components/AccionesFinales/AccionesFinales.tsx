@@ -31,18 +31,73 @@ export const AccionesFinales = ({
 
   //* handleSumbit
 
-  /*   const sendDataByFormData = async () => {
-      try{
-        const formData = new FormData();
-        formData.append('solicitud_usu_PQRSDF', 'asunto,descripcion,id_pqrsdf');
-        anexosCreados.map((anexo: any) => {
-          formData.append('archivo', anexo?.ruta_soporte);
+  const sendDataByFormData = async () => {
+    try {
+      console.log('anexosCreados', anexosCreados);
+      console.log('anexosCreados', anexosCreados);
+      const formData = {}; // Use a normal object instead of FormData
+  
+      formData.solicitud_usu_PQRSDF = JSON.stringify({"asunto":"hola","descripcion":"prueba dado","id_pqrsdf":9});
+  
+      anexosCreados.map((anexo: any, index: number) => {
+        if (anexo?.ruta_soporte) {
+          formData['archivo' + index] = anexo.ruta_soporte;
+        }
+  
+        formData['anexo' + index] = JSON.stringify({
+          nombre_anexo: anexo?.nombre_archivo,
+          numero_folios: anexo?.numero_folios,
+          cod_medio_almacenamiento: anexo?.cod_medio_almacenamiento,
+          orden_anexo_doc: index + 1,
+          meta_data: {
+            tiene_replica_fisica: anexo?.tiene_replica_fisica?.value,
+            cod_origen_archivo: anexo?.cod_origen_archivo?.value,
+            nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
+            descripcion: anexo?.descripcionMetadatos,
+            asunto: anexo?.asuntoMetadatos,
+            cod_categoria_archivo: anexo?.cod_categoria_archivo?.value,
+            nro_folios_documento: anexo?.numero_folios,
+            id_tipologia_doc: anexo?.tipologiasDocumentalesMetadatos?.value,
+            tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos,
+            palabras_clave_doc: anexo?.meta_data?.palabras_clave_doc.join('|'),
+          },
         });
-        anexosCreados.map((anexo: any) => {
-          formData.append('anexo', {valores: 'x'});
-        });
-      }catch(err){}
-    }*/
+      });
+  
+      console.log('formData', formData);
+     /* const formData = new FormData();
+      formData.append('solicitud_usu_PQRSDF', JSON.stringify({"asunto":"hola","descripcion":"prueba dado","id_pqrsdf":9}));
+
+      
+      anexosCreados.map((anexo: any) => {
+        if (anexo?.ruta_soporte) {
+          formData.append('archivo', anexo.ruta_soporte);
+        }
+      });
+        anexosCreados.map((anexo: any, index: number) => {
+          formData.append('anexo', JSON.stringify({
+            nombre_anexo: anexo?.nombre_archivo,
+            numero_folios: anexo?.numero_folios,
+            cod_medio_almacenamiento: anexo?.cod_medio_almacenamiento,
+            orden_anexo_doc: index + 1,
+            meta_data: {
+              tiene_replica_fisica: anexo?.tiene_replica_fisica?.value,
+              cod_origen_archivo: anexo?.cod_origen_archivo?.value,
+              nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
+              descripcion: anexo?.descripcionMetadatos,
+              asunto: anexo?.asuntoMetadatos,
+              cod_categoria_archivo: anexo?.cod_categoria_archivo?.value,
+              nro_folios_documento: anexo?.numero_folios,
+              id_tipologia_doc: anexo?.tipologiasDocumentalesMetadatos?.value,
+              tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos,
+              palabras_clave_doc: anexo?.meta_data?.palabras_clave_doc.join('|'),
+            },
+          }));
+
+          console.log('formData', formData);
+        });*/
+    } catch (err) {}
+  };
 
   const handleSubmit = async () => {
     setLoadingButton(true);
@@ -65,7 +120,6 @@ export const AccionesFinales = ({
         });
 
         if (secondResult.isConfirmed) {
-          console.log(anexosCreados);
           //* se debe activar el envío de la solicitud al usuario y luego el swal y el mensaje de success
           setLoadingButton(false);
           Swal.fire({
@@ -105,7 +159,7 @@ export const AccionesFinales = ({
   return (
     <AccionesFinalModulo
       loadingButton={LoadingButton}
-      handleSubmit={handleSubmit}
+      handleSubmit={sendDataByFormData}
       reset_states={reset}
     />
   );
