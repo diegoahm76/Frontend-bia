@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { control } from 'leaflet';
 
 interface Anexo {
+  asunto: string;
+  descripcion_de_la_solicitud: string;
   id: string;
   nombre_archivo: string;
   // other properties...

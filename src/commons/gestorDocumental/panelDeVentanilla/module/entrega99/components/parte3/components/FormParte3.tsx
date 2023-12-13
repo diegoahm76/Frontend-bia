@@ -4,11 +4,14 @@ import {
   Button,
   Grid,
   IconButton,
+  MenuItem,
+  Select,
   TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import { Carousel } from 'react-responsive-carousel';
+import { useContext, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../../../../../fileWeight/fileWeight';
@@ -38,16 +41,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {
-  control_error,
-  control_success,
-} from '../../../../../../../../helpers';
+import { control_success } from '../../../../../../../../helpers';
 0;
-import { origenArchivo } from './../../modalMetadatos/utils/choices';
-import { vi } from 'date-fns/locale';
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import { ModalInfoMetadatosBlocked } from '../../modalMetadatos/components/ModalInfoMetadatosBlocked';
-
+import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import './style.css';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -64,8 +66,10 @@ export const FormParte3 = ({
     (state: any) => state.AsignacionUsuarioSlice
   );
 
+
+
   // ? stepper hook
-  const { handleBack, handleReset } = useSstepperFn();
+  const { handleBack } = useSstepperFn();
 
   //* context
   const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
@@ -91,19 +95,26 @@ export const FormParte3 = ({
   }, [currentAnexo]);
 
   // ? funciones third form
+
+
+
   const handleAnexo = () => {
     // ? se debe hacer la validacion, si no hay arhivo, pero hay metadata, se debe permitir añadir, pero si no hay archivo ni metadata, no se debe permitir añadir
 
     if (watchFormulario.ruta_soporte === '' && !metadatos) {
-      control_warning(
-        'Es obligatorio subir un archivo o agregar metadatos para poder crear un anexo'
+      showAlert(
+        'Advertencia',
+        'Es obligatorio subir un archivo o agregar metadatos para poder crear un anexo',
+        'warning'
       );
       return;
     }
 
     if (watchFormulario.ruta_soporte && !metadatos) {
-      control_warning(
-        'Si se sube un archivo, es obligatorio agregar metadatos para poder crear un anexo'
+      showAlert(
+        'Advertencia',
+        'Si se sube un archivo, es obligatorio agregar metadatos un anexo',
+        'warning'
       );
       return;
     }
@@ -112,8 +123,10 @@ export const FormParte3 = ({
       watchFormulario.ruta_soporte &&
       metadatos?.origenArchivoMetadatos?.value === 'F'
     ) {
-      control_warning(
-        'Si se sube un archivo, el origen del archivo no puede ser físico'
+      showAlert(
+        'Advertencia',
+        'No se puede subir un archivo, ya que el origen del archivo es físico',
+        'warning'
       );
       return;
     }
@@ -124,8 +137,10 @@ export const FormParte3 = ({
       (!watchFormulario.ruta_soporte &&
         metadatos?.origenArchivoMetadatos?.value === 'D')
     ) {
-      control_warning(
-        'Si el origen del archivo es electrónico o digital, es obligatorio subir un archivo'
+      showAlert(
+        'Advertencia',
+        'Es obligatorio subir un archivo para un anexo',
+        'warning'
       );
       return;
     }
@@ -134,8 +149,19 @@ export const FormParte3 = ({
       !watchFormulario.asunto ||
       !watchFormulario.descripcion_de_la_solicitud
     ) {
-      control_warning(
-        'Es obligatorio llenar los campos de asunto y descripción de la solicitud'
+      showAlert(
+        'Advertencia',
+        'Es obligatorio llenar los campos de asunto y descripción de la solicitud',
+        'warning'
+      );
+      return;
+    }
+
+    if (!watchFormulario.nombre_archivo || !watchFormulario.numero_folios) {
+      showAlert(
+        'Advertencia',
+        'Es obligatorio llenar los campos de nombre del archivo y número de folios',
+        'warning'
       );
       return;
     }
@@ -271,7 +297,7 @@ export const FormParte3 = ({
                 </Tooltip>
               </>
             )}
-            <Tooltip title="Ver y seleccionar anexo">
+            {/*<Tooltip title="Ver y seleccionar anexo">
               <IconButton
                 onClick={() => {
                   console.log(params.row);
@@ -296,7 +322,7 @@ export const FormParte3 = ({
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>
+            </Tooltip>*/}
             {/* debe estar la condicion, cuando ya se haya guardado una vez, no será posible realizar la eliminación de los anexos */}
           </>
         );
@@ -529,18 +555,25 @@ export const FormParte3 = ({
           <RenderDataGrid
             title="Listado de Anexos"
             columns={columns ?? []}
-            rows={[...anexosCreados]?.sort((a: { nombre_archivo?: string }, b: { nombre_archivo?: string }) => {
-              if (a?.nombre_archivo && !b?.nombre_archivo) {
-                return -1;
-              }
-              if (!a?.nombre_archivo && b?.nombre_archivo) {
-                return 1;
-              }
-              if (a.nombre_archivo && b.nombre_archivo) {
-                return a.nombre_archivo.localeCompare(b.nombre_archivo);
-              }
-              return 0;
-            }) ?? []}
+            rows={
+              [...anexosCreados]?.sort(
+                (
+                  a: { ruta_soporte?: string; nombre_archivo: string },
+                  b: { ruta_soporte?: string; nombre_archivo: string }
+                ) => {
+                  if (a?.ruta_soporte && !b?.ruta_soporte) {
+                    return -1;
+                  }
+                  if (!a?.ruta_soporte && b?.ruta_soporte) {
+                    return 1;
+                  }
+                  if (a.ruta_soporte && b.ruta_soporte) {
+                    return a.nombre_archivo.localeCompare(b.nombre_archivo);
+                  }
+                  return 0;
+                }
+              ) ?? []
+            }
           />
         ) : (
           <Typography
@@ -574,34 +607,115 @@ export const FormParte3 = ({
             }}
             sx={{
               width: '55%',
-              mt: '2rem',
+              mt: '1rem',
             }}
           >
             ATRÁS
           </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            startIcon={<CleanIcon />}
-            onClick={() => {
-              resetFormulario();
-              resetManejoMetadatosModalFunction();
-              if (currentAnexo) {
-                dispatch(setCurrentAnexo(null as any));
-                dispatch(setViewMode(false as boolean));
-              }
-              if (metadatos) {
-                dispatch(setMetadatos(null as any));
-                dispatch(setViewMode(false as boolean));
-              }
-            }}
-            sx={{
-              width: '55%',
-              mt: '2rem',
-            }}
+          <Carousel
+            className="carousel"
+            showIndicators={false}
+            showArrows={true}
+            showStatus={false}
+            showThumbs={false}
+            infiniteLoop={true}
+            renderArrowPrev={(onClickHandler, hasPrev, label) =>
+              hasPrev && (
+                <ArrowBackIosIcon
+                  onClick={onClickHandler}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: 15,
+                    zIndex: 2,
+                    cursor: 'pointer',
+                  }}
+                />
+              )
+            }
+            renderArrowNext={(onClickHandler, hasNext, label) =>
+              hasNext && (
+                <ArrowForwardIosIcon
+                  onClick={onClickHandler}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: 15,
+                    zIndex: 2,
+                    cursor: 'pointer',
+                  }}
+                />
+              )
+            }
+            width={'75%'}
+            autoPlay={true}
           >
-            LIMPIAR CAMPOS (METADATOS Y ARCHIVO)
-          </Button>
+            <div>
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<CleanIcon />}
+                onClick={() => {
+                  resetFormulario();
+                  resetManejoMetadatosModalFunction();
+                  if (currentAnexo) {
+                    dispatch(setCurrentAnexo(null as any));
+                    dispatch(setViewMode(false as boolean));
+                  }
+                  if (metadatos) {
+                    dispatch(setMetadatos(null as any));
+                    dispatch(setViewMode(false as boolean));
+                  }
+                }}
+                sx={{
+                  width: '55%',
+                  mt: '2rem',
+                }}
+              >
+                Reiniciar formularios
+              </Button>
+            </div>
+            <div>
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<CleanIcon />}
+                onClick={() => {
+                  resetManejoMetadatosModalFunction();
+                  if (metadatos) {
+                    dispatch(setMetadatos(null as any));
+                    dispatch(setViewMode(false as boolean));
+                  }
+                }}
+                sx={{
+                  width: '55%',
+                  mt: '2rem',
+                }}
+              >
+                LIMPIAR CAMPOS METADATOS
+              </Button>
+            </div>
+            <div>
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<CleanIcon />}
+                onClick={() => {
+                  resetFormulario();
+                  if (currentAnexo) {
+                    dispatch(setCurrentAnexo(null as any));
+                    dispatch(setViewMode(false as boolean));
+                  }
+                }}
+                sx={{
+                  width: '55%',
+                  mt: '2rem',
+                }}
+              >
+                LIMPIAR CAMPOS ARCHIVO
+              </Button>
+            </div>
+          </Carousel>
         </Grid>
       </form>
 

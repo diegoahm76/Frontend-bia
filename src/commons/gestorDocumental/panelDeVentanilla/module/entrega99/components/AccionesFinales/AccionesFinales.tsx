@@ -7,6 +7,7 @@ import { resetItems } from '../../toolkit/slice/AsignacionUsuarioSlice';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { useStepperContext } from '@mui/material';
 import { useSstepperFn } from '../../hook/useSstepperFn';
+import { postAsignacionUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
 
 export const AccionesFinales = ({
   controlFormulario,
@@ -28,79 +29,87 @@ export const AccionesFinales = ({
   const { anexosCreados } = useAppSelector(
     (state) => state.AsignacionUsuarioSlice
   );
+  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
+    (state: any) => state.PanelVentanillaSlice
+  );
 
   //* handleSumbit
 
-  const sendDataByFormData = async () => {
-    try {
-      console.log('anexosCreados', anexosCreados);
-      console.log('anexosCreados', anexosCreados);
-      const formData = {}; // Use a normal object instead of FormData
-  
-      formData.solicitud_usu_PQRSDF = JSON.stringify({"asunto":"hola","descripcion":"prueba dado","id_pqrsdf":9});
-  
-      anexosCreados.map((anexo: any, index: number) => {
-        if (anexo?.ruta_soporte) {
-          formData['archivo' + index] = anexo.ruta_soporte;
-        }
-  
-        formData['anexo' + index] = JSON.stringify({
+  const sendDataByFormData = () => {
+    const formData = new FormData(); // Use FormData instead of a normal object
+    console.log(anexosCreados);
+    formData.append(
+      'solicitud_usu_PQRSDF',
+      JSON.stringify({
+        asunto: anexosCreados[0]?.asunto,
+        descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
+        id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+      })
+    );
+
+    anexosCreados.forEach((anexo: any, index: number) => {
+      if (anexo?.ruta_soporte) {
+        formData.append('archivo', anexo.ruta_soporte); // Use append method to add multiple values with the same field name
+      }
+      formData.append(
+        'anexo',
+        JSON.stringify({
           nombre_anexo: anexo?.nombre_archivo,
           numero_folios: anexo?.numero_folios,
-          cod_medio_almacenamiento: anexo?.cod_medio_almacenamiento,
+          cod_medio_almacenamiento: 'Na',
           orden_anexo_doc: index + 1,
           meta_data: {
-            tiene_replica_fisica: anexo?.tiene_replica_fisica?.value,
-            cod_origen_archivo: anexo?.cod_origen_archivo?.value,
+            tiene_replica_fisica:
+              anexo?.tieneReplicaFisicaMetadatos?.value === 'Si' ? true : false,
+            cod_origen_archivo: anexo?.origenArchivoMetadatos?.value,
             nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
             descripcion: anexo?.descripcionMetadatos,
             asunto: anexo?.asuntoMetadatos,
-            cod_categoria_archivo: anexo?.cod_categoria_archivo?.value,
+            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
             nro_folios_documento: anexo?.numero_folios,
-            id_tipologia_doc: anexo?.tipologiasDocumentalesMetadatos?.value,
-            tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos,
+            id_tipologia_doc: anexo?.tipologiasDocumentalesMetadatos?.value
+              ? anexo?.tipologiasDocumentalesMetadatos?.value
+              : null,
+            tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos
+              ? anexo?.cualTipologiaDocumentalMetadatos
+              : null,
             palabras_clave_doc: anexo?.meta_data?.palabras_clave_doc.join('|'),
           },
-        });
-      });
-  
-      console.log('formData', formData);
-     /* const formData = new FormData();
-      formData.append('solicitud_usu_PQRSDF', JSON.stringify({"asunto":"hola","descripcion":"prueba dado","id_pqrsdf":9}));
+        })
+      );
+    });
 
-      
-      anexosCreados.map((anexo: any) => {
-        if (anexo?.ruta_soporte) {
-          formData.append('archivo', anexo.ruta_soporte);
-        }
-      });
-        anexosCreados.map((anexo: any, index: number) => {
-          formData.append('anexo', JSON.stringify({
-            nombre_anexo: anexo?.nombre_archivo,
-            numero_folios: anexo?.numero_folios,
-            cod_medio_almacenamiento: anexo?.cod_medio_almacenamiento,
-            orden_anexo_doc: index + 1,
-            meta_data: {
-              tiene_replica_fisica: anexo?.tiene_replica_fisica?.value,
-              cod_origen_archivo: anexo?.cod_origen_archivo?.value,
-              nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
-              descripcion: anexo?.descripcionMetadatos,
-              asunto: anexo?.asuntoMetadatos,
-              cod_categoria_archivo: anexo?.cod_categoria_archivo?.value,
-              nro_folios_documento: anexo?.numero_folios,
-              id_tipologia_doc: anexo?.tipologiasDocumentalesMetadatos?.value,
-              tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos,
-              palabras_clave_doc: anexo?.meta_data?.palabras_clave_doc.join('|'),
-            },
-          }));
+    postAsignacionUsuario(formData, setLoadingButton).then((data) => {
+      console.log('holaaaaaaa post enviando');
+      handleReset();
+      resetFormulario({});
+      setInfoReset({});
+      dispatch(resetItems());
 
-          console.log('formData', formData);
-        });*/
-    } catch (err) {}
+
+      Swal.fire({
+        title: 'Solicitud enviada',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    });
   };
 
   const handleSubmit = async () => {
-    setLoadingButton(true);
+
+    if(anexosCreados.length === 0){
+      Swal.fire({
+        title: 'No se ha creado ningún anexo',
+        text: 'Por favor cree al menos un anexo para poder enviar la solicitud al usuario',
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
+
+
     await Swal.fire({
       title: '¿Está seguro de enviar la solicitud al usuario?',
       text: 'Una vez enviada la solicitud no podrá realizar cambios',
@@ -110,35 +119,9 @@ export const AccionesFinales = ({
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const secondResult = await Swal.fire({
-          title: 'Advertencia',
-          text: 'Una vez enviada la solicitud no podrá realizar cambios',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Enviar',
-          cancelButtonText: 'Cancelar',
-        });
-
-        if (secondResult.isConfirmed) {
-          //* se debe activar el envío de la solicitud al usuario y luego el swal y el mensaje de success
-          setLoadingButton(false);
-          Swal.fire({
-            title: 'Solicitud enviada',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else {
-          setLoadingButton(false);
-          Swal.fire({
-            title: 'Solicitud cancelada',
-            icon: 'error',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
+        //* se debe activar el envío de la solicitud al usuario y luego el swal y el mensaje de success
+        sendDataByFormData()
       } else {
-        setLoadingButton(false);
         Swal.fire({
           title: 'Solicitud cancelada',
           icon: 'error',
@@ -146,10 +129,8 @@ export const AccionesFinales = ({
           timer: 1500,
         });
       }
-      setLoadingButton(false);
     });
   };
-
   const reset = () => {
     dispatch(resetItems());
     handleReset();
@@ -159,7 +140,7 @@ export const AccionesFinales = ({
   return (
     <AccionesFinalModulo
       loadingButton={LoadingButton}
-      handleSubmit={sendDataByFormData}
+      handleSubmit={handleSubmit}
       reset_states={reset}
     />
   );

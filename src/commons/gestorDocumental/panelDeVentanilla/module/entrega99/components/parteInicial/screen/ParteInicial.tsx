@@ -26,17 +26,22 @@ export const ParteInicial: React.FC  = (): JSX.Element => {
   const { handleReset } = useSstepperFn();
 
   //* context declaration
-  const { setInfoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
   const { generalLoading, handleGeneralLoading, handleSecondLoading } =
     useContext(ModalAndLoadingContext);
 
-  useEffect(() => {
+ /* useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) {
+      console.log('noo curentttt')
       navigate('/app/gestor_documental/panel_ventanilla/');
       return;
     }
     //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
     handleReset();
+
+
+console.log('hiii perrassasasasas')
+
     void getInitialData(
       currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
       navigate,
@@ -46,7 +51,7 @@ export const ParteInicial: React.FC  = (): JSX.Element => {
       setInfoInicialUsuario(data);
     });
   }, []);
-
+*/
   if (generalLoading) {
     return (
       <Grid

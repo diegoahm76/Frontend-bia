@@ -4,11 +4,33 @@ import { Grid } from '@mui/material';
 import { StepperAsignacionUsuario } from '../components/stepper/StepperAsignacionUsuario';
 import { Title } from '../../../../../../components';
 import { ParteInicial } from '../components/parteInicial/screen/ParteInicial';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { usePanelVentanilla } from '../../../hook/usePanelVentanilla';
+import { useAppSelector } from '../../../../../../hooks';
+import { useSstepperFn } from '../hook/useSstepperFn';
+import { SolicitudAlUsuarioContext } from '../context/SolicitudUsarioContext';
+import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
+import { useNavigate } from 'react-router-dom';
+import { getInitialData } from '../services/getInitialData.service';
 
 export const AsignacionUsuarioScreen = (): JSX.Element => {
+
+
+  const navigate = useNavigate();
+
+  //* redux state
+  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+    (state) =>
+      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  );
+
+  const { handleReset } = useSstepperFn();
+
+  //* context declaration
+  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+  const { generalLoading, handleGeneralLoading, handleSecondLoading } =
+    useContext(ModalAndLoadingContext);
   {
     /*de entrada al módulo se van a tener que realizar ciertas solictudes para llenar infomación dentro de los campos de la entrega*/
   }
@@ -46,6 +68,29 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     watchFormulario,
     setInfoReset,
   };
+
+  useEffect(() => {
+    if (!currentElementPqrsdComplementoTramitesYotros) {
+      console.log('noo curentttt')
+      navigate('/app/gestor_documental/panel_ventanilla/');
+      return;
+    }
+    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
+    handleReset();
+
+
+console.log('hiii perrassasasasas')
+
+    void getInitialData(
+      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+      navigate,
+      handleGeneralLoading,
+      handleSecondLoading
+    ).then((data: any) => {
+      setInfoInicialUsuario(data);
+    });
+  }, []);
+
 
   return (
     <>
