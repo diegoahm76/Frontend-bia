@@ -32,6 +32,7 @@ import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
 import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
+import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 
 const routes = [
   {
@@ -169,6 +170,11 @@ const routes = [
     path: 'central_digitalizacion/',
     name: 'central_digitalizacion',
     component: () => <CentralDigitalizacionRoutes />,
+  },
+  {
+    path: 'Pqrsdf/complementos/',
+    name: 'complementos_pqrsdf',
+    component: () => <ComplementoPqrsdfRoutes />,
   },
 ];
 

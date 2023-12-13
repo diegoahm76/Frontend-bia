@@ -34,6 +34,7 @@ import {
 import {
   add_metadata_service,
   control_error,
+  delete_metadata_service,
   edit_metadata_service,
   get_file_categories_service,
   get_file_origin_service,
@@ -98,7 +99,9 @@ const MetadataFormDialog = ({
     reset_metadata({
       ...metadata,
       fecha_creacion_doc:
-        (metadata.fecha_creacion_doc ?? null) === null ? new Date() : '',
+        (metadata.fecha_creacion_doc ?? null) === null
+          ? new Date()
+          : metadata.fecha_creacion_doc,
     });
     if (
       metadata.palabras_clave_doc !== null &&
@@ -117,8 +120,12 @@ const MetadataFormDialog = ({
   }, [metadata]);
 
   const on_submit = (data: IObjMetaData): void => {
+    console.log(data.fecha_creacion_doc ?? '');
+    const fecha = new Date(data.fecha_creacion_doc ?? '').toISOString();
+
     const data_edit: IObjMetaData = {
       ...data,
+      fecha_creacion_doc: fecha.slice(0, 10),
       id_anexo: exhibit.id_anexo,
       id_persona_digitalizo: userinfo.id_persona,
       id_solicitud_de_digitalizacion:
@@ -153,7 +160,12 @@ const MetadataFormDialog = ({
             form_data.append(`archivo`, exhibit.exhibit_link);
           }
         }
-        void dispatch(edit_metadata_service(form_data));
+        void dispatch(
+          edit_metadata_service(
+            form_data,
+            digitization_request.id_solicitud_de_digitalizacion ?? 0
+          )
+        );
       } else {
         control_error(
           'Solo se pueden editar metadatos hasta 30 dias despues de la fecha de creación'
@@ -171,9 +183,27 @@ const MetadataFormDialog = ({
         }
       }
 
-      void dispatch(add_metadata_service(form_data));
+      void dispatch(
+        add_metadata_service(
+          form_data,
+          digitization_request.id_solicitud_de_digitalizacion ?? 0
+        )
+      );
     }
     set_is_modal_active(false);
+  };
+
+  const delete_metadata = (): void => {
+    if (exhibit.id_anexo !== null && exhibit.id_anexo !== undefined) {
+      const params = {
+        id_anexo: exhibit.id_anexo,
+        id_persona_digitalizo: userinfo.id_persona,
+        id_solicitud_de_digitalizacion:
+          digitization_request.id_solicitud_de_digitalizacion,
+      };
+
+      void dispatch(delete_metadata_service(params));
+    }
   };
 
   return (
@@ -202,11 +232,13 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 2,
                   control_form: control_metadata,
-                  control_name: 'fecha_creacion_doc',
+                  control_name: 'fecha_creacion_doc_',
                   default_value:
                     metadata.fecha_creacion_doc ?? null === null
                       ? new Date()
-                      : '',
+                      : metadata.fecha_creacion_doc ?? '' === ''
+                      ? new Date()
+                      : '2023-12-12',
                   rules: {
                     required_rule: { rule: true, message: 'Requerido' },
                   },
@@ -416,6 +448,16 @@ const MetadataFormDialog = ({
             >
               Agregar
             </Button>
+            {metadata.id_metadatos_anexo_tmp !== null && (
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={delete_metadata}
+                startIcon={<SaveIcon />}
+              >
+                Eliminar
+              </Button>
+            )}
             <Button
               color="error"
               variant="contained"

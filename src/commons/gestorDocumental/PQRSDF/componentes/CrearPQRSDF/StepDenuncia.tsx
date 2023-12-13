@@ -24,6 +24,7 @@ import {
   set_pqr_status,
   initial_state_denuncia,
   set_denuncia,
+  set_pqr,
 } from '../../store/slice/pqrsdfSlice';
 import type { IObjPqrDenuncia } from '../../interfaces/pqrsdf';
 import {
@@ -68,6 +69,7 @@ const StepDenuncia = ({ control_form, reset, watch }: IProps) => {
   useEffect(() => {
     void dispatch(get_areas_service());
     void dispatch(get_departments_service());
+    console.log(pqr);
     if (denuncia !== null) {
       if (typeof denuncia?.cod_recursos_fectados_presuntos === 'string') {
         reset({
@@ -245,7 +247,7 @@ const StepDenuncia = ({ control_form, reset, watch }: IProps) => {
               control_form: control_form,
               control_name: 'cod_recursos_fectados_presuntos',
               default_value: [],
-              rules: { required_rule: { rule: true, message: 'requerido' } },
+              rules: { required_rule: { rule: false, message: 'requerido' } },
               label: 'Recursos afectados',
               disabled: false,
               helper_text: 'Debe seleccionar campo',

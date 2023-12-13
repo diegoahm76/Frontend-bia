@@ -62,6 +62,8 @@ import { pqrsdf_slice } from "../commons/gestorDocumental/PQRSDF/store/slice/pqr
 import { central_digitalizacion_slice } from "../commons/gestorDocumental/CentralDigitalizacion/store/slice/centralDigitalizacionSlice";
 import { planes_slice } from "../commons/seguimirntoPlanes/store/slice/indexPlanes";
 import { PanelVentanillaSlice } from '../commons/gestorDocumental/panelDeVentanilla/toolkit/store/PanelVentanillaStore';
+import { complemento_pqrsdf_slice } from "../commons/gestorDocumental/complementoPQRSDF/store/slice/complementoPqrsdfSlice";
+
 
 const persist_config = {
   key: 'macarenia_app',
@@ -152,6 +154,7 @@ const app_reducers = combineReducers({
  // ? planes
  planes: planes_slice.reducer,
   central_digitalizacion_slice: central_digitalizacion_slice.reducer,
+  complemento_pqrsdf_slice: complemento_pqrsdf_slice.reducer
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
