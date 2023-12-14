@@ -87,7 +87,7 @@ const PqrDetailDialog = ({
                         xs: 12,
                         md: 4,
                         control_form: control_detail,
-                        control_name: 'request_type',
+                        control_name: 'cod_tipo_PQRSDF',
                         default_value: '',
                         rules: {},
                         label: 'Tipo de solicitud',
@@ -180,9 +180,9 @@ const PqrDetailDialog = ({
                       {
                         datum_type: 'input_controller',
                         xs: 12,
-                        md: 4,
+                        md: 3,
                         control_form: control_detail,
-                        control_name: 'type',
+                        control_name: 'cod_tipo_PQRSDF',
                         default_value: '',
                         rules: {},
                         label: 'Tipo de tramite',
@@ -193,7 +193,7 @@ const PqrDetailDialog = ({
                       {
                         datum_type: 'input_controller',
                         xs: 12,
-                        md: 4,
+                        md: 3,
                         control_form: control_detail,
                         control_name: 'nombre_estado_solicitud',
                         default_value: '',
@@ -232,7 +232,7 @@ const PqrDetailDialog = ({
                       {
                         datum_type: 'input_controller',
                         xs: 12,
-                        md: 12,
+                        md: 6,
                         control_form: control_detail,
                         control_name: 'descripcion',
                         default_value: '',
@@ -252,7 +252,10 @@ const PqrDetailDialog = ({
                         control_name: 'numero_radicado',
                         default_value: '',
                         rules: {},
-                        label: 'Número de radicado',
+                        label:
+                          pqr.id_radicado === null
+                            ? 'NO RADICADA AÚN'
+                            : 'Número de radicado',
                         type: 'text',
                         disabled: true,
                         helper_text: '',
@@ -262,10 +265,16 @@ const PqrDetailDialog = ({
                         xs: 12,
                         md: 6,
                         control_form: control_detail,
-                        control_name: 'fecha_radicado',
+                        control_name:
+                          pqr.fecha_radicado === null
+                            ? 'fecha_registro'
+                            : 'fecha_radicado',
                         default_value: '',
                         rules: {},
-                        label: 'Fecha de radicado',
+                        label:
+                          pqr.fecha_radicado === null
+                            ? 'Fecha de registro'
+                            : 'Fecha de radicado',
                         disabled: true,
                         helper_text: '',
                         format: 'YYYY-MM-DD',

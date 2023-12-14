@@ -5,13 +5,16 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import DigitalizacionesPendientes from '../componentes/SolicitudesPendientes/DigitalizacionesPendientes';
+import DigitalizacionesPendientes from '../componentes/CentralDigitalizacion/DigitalizacionesPendientes';
 import FormButton from '../../../../components/partials/form/FormButton';
 import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
 import { reset_state } from '../store/slice/centralDigitalizacionSlice';
 import FormStepper from '../../../../components/partials/form/FormStepper';
-import {} from '../store/thunks/pqrsdfThunks';
+import {
+  get_list_request_status_service,
+  get_request_types_service,
+} from '../store/thunks/centralDigitalizacionThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function SolicitudesPendientesScreen(): JSX.Element {
@@ -21,7 +24,10 @@ export function SolicitudesPendientesScreen(): JSX.Element {
   );
   const initial_values = (): void => {};
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    void dispatch(get_request_types_service());
+    void dispatch(get_list_request_status_service());
+  }, []);
 
   return (
     <>

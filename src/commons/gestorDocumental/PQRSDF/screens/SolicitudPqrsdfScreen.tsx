@@ -94,7 +94,12 @@ export function SolicitudPqrsdfScreen(): JSX.Element {
           : on_behalf_of.id === 'A' &&
             grantor.id_persona !== null &&
             attorney.id_persona !== null && <EstadoPqrsdf />}
-        {pqr_status.key === 'ESR' && <ListadoPqrsdf />}
+
+        {pqr_status.key === 'ESR' && (
+          <Grid item xs={12} marginY={2}>
+            <ListadoPqrsdf />
+          </Grid>
+        )}
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton

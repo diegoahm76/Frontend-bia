@@ -2,8 +2,14 @@
 
 import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
+import { useContext } from 'react';
+import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
+import { Input } from '@mui/material';
 
 export const PerSolicitaComplemento = (): JSX.Element => {
+  //* context declaration
+  const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+
   return (
     <Grid
       item
@@ -34,7 +40,8 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               size="small"
               label="Nombres"
               variant="outlined"
-              value={'Cristiano'}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataSolicita?.data?.nombres ?? 'N/A'}
               inputProps={{
                 maxLength: 50,
               }}
@@ -47,7 +54,8 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               size="small"
               label="Apellidos"
               variant="outlined"
-              value={'Alias el bicho'}
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataSolicita?.data?.apellidos ?? 'N/A'}
               inputProps={{
                 maxLength: 10,
               }}
@@ -60,7 +68,10 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Tipo de documento"
               disabled
               variant="outlined"
-              value={'Cédula de ciudadanía'}
+              InputLabelProps={{ shrink: true }}
+              value={
+                infoInicialUsuario?.dataSolicita?.data?.tipo_documento ?? 'N/A'
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -70,7 +81,11 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Número de documento"
               variant="outlined"
               disabled
-              value={'21201918'}
+              InputLabelProps={{ shrink: true }}
+              value={
+                infoInicialUsuario?.dataSolicita?.data?.numero_documento ??
+                'N/A'
+              }
             />
           </Grid>
 
@@ -81,7 +96,11 @@ export const PerSolicitaComplemento = (): JSX.Element => {
               label="Unidad organizacional solicitante"
               variant="outlined"
               disabled
-              value={'Dirección general de tecnologías de la información y las comunicaciones'}
+              InputLabelProps={{ shrink: true }}
+              value={
+                infoInicialUsuario?.dataSolicita?.data
+                  ?.unidad_organizacional_actual ?? 'N/A'
+              }
             />
           </Grid>
         </Grid>
