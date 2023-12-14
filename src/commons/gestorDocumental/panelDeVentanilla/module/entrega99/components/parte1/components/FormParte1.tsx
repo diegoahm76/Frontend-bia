@@ -24,6 +24,7 @@ import { getInitialData } from '../../../services/getInitialData.service';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { useNavigate } from 'react-router-dom';
 import { getDetalleSolicitud } from '../../../services/afterCreatedUserRequest.service';
+import { ModalInfoSolicitud } from './ModalInfoSolicitud/ModalInfoSolicitud';
 
 export const FormParte1 = ({
   controlFormulario,
@@ -135,6 +136,7 @@ export const FormParte1 = ({
   }
 
   return (
+    <>
     <form
       style={{
         marginTop: '3rem',
@@ -303,5 +305,9 @@ export const FormParte1 = ({
         </Button>
       </Grid>
     </form>
+
+        <ModalInfoSolicitud/> 
+
+    </>
   );
 };

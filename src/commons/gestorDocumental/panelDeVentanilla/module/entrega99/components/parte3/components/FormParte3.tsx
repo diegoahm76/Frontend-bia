@@ -40,11 +40,9 @@ import { columnsThirdForm } from './columns/columnsTercerFormulario';
 import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { control_success } from '../../../../../../../../helpers';
 0;
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
-import { ModalInfoMetadatosBlocked } from '../../modalMetadatos/components/ModalInfoMetadatosBlocked';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import './style.css';
@@ -702,11 +700,6 @@ export const FormParte3 = ({
         watchExeManejoModalMetadatos={watchExeManejoModalMetadatos}
         resetManejoMetadatosModal={resetManejoMetadatosModal}
       />
-      {/* espacio para el modal de agregar metadatos */}
-
-      {/* modal información de metadatos de manera bloqueda, solo cuando ya se han establecido los valores correspondientes */}
-      <ModalInfoMetadatosBlocked />
-      {/* modal información de metadatos de manera bloqueda, solo cuando ya se han establecido los valores correspondientes */}
     </>
   );
 };

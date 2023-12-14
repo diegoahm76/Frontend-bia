@@ -131,6 +131,10 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
           <Title title={infoTitle || 'Información'} />
+
+          {/* condicional sobre esto para añadir campos diferentes para el complemento o para la pqrsdf */}
+
+
           <Grid
             container
             spacing={2}
@@ -196,6 +200,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
             </Grid>
           </Grid>
         </Grid>
+
+        {/*arriba*/}
+        {/* condicional sobre esto para añadir campos diferentes para el complemento o para la pqrsdf */}
 
         <RenderDataGrid
           rows={anexos || []}

@@ -15,9 +15,9 @@ import {
   TextField,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Title } from '../../../../../../../../components';
+import { Title } from '../../../../../../../../../components';
 
-export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
+export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
   //* se debe manejar un loader ya que a través de ello se consultatá un servicio para los metadatos que están asociados a un archivo
 
   return (
@@ -25,7 +25,7 @@ export const ModalInfoMetadatosBlocked: React.FC = (): JSX.Element => {
       <Dialog
         fullWidth
         maxWidth="md"
-        open={false}
+        open={true}
         onClose={() => {
           // handleModalAgregarMetadatos(false);
           //* tambien se deben limpiar los datos que se recojan en el modal
