@@ -24,8 +24,8 @@ export const InformacionExpediente: React.FC<IProps> = (props: IProps) => {
 
     const validar_permiso_acceso: () => void = () => {
         dispatch(permiso_acceso_expediente(props.expediente?.id_expediente_documental)).then((response: any) => {
-            if(response.success)
-                set_abrir_modal_conceder(true);
+            set_abrir_modal_conceder(true);
+            // if(response.success)
         })
     }
 

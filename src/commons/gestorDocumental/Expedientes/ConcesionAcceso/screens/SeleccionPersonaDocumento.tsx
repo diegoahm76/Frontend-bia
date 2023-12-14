@@ -14,7 +14,7 @@ import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import { obtener_persona_cc_nro } from '../thunks/ConcesionAcceso';
 import { v4 as uuidv4 } from 'uuid';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { BuscadorPersonaExpDoc } from '../../consultaExpedientesDocumentales/screens/BuscadorPersonaExpDoc';
+import { BuscadorPersonaExpDoc } from '../../ConsultaExpedientesDocumentales/screens/BuscadorPersonaExpDoc';
 
 interface IProps {
     documento: any,
@@ -210,7 +210,7 @@ export const SeleccionPersonaDocumento: React.FC<IProps> = (props: IProps) => {
                                     }}
                                 />
                             </Grid>
-                            {/* <Grid item xs={12} sm={3}>
+                            <Grid item xs={12} sm={3}>
                                 <Button
                                     color='primary'
                                     variant='contained'
@@ -226,7 +226,7 @@ export const SeleccionPersonaDocumento: React.FC<IProps> = (props: IProps) => {
                                         title={"Busqueda de persona titular"}
                                         set_persona={set_persona} />
                                 )}
-                            </Grid> */}
+                            </Grid>
                             <Grid item xs={12} sm={6}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
