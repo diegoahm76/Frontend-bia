@@ -23,6 +23,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getInitialData } from '../../../services/getInitialData.service';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { useNavigate } from 'react-router-dom';
+import { getDetalleSolicitud } from '../../../services/afterCreatedUserRequest.service';
 
 export const FormParte1 = ({
   controlFormulario,
@@ -36,54 +37,50 @@ export const FormParte1 = ({
 
   //* context declaration
   const { secondLoading } = useContext(ModalAndLoadingContext);
-  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(
+    SolicitudAlUsuarioContext
+  );
 
+  //* navigate declaration
+  const navigate = useNavigate();
 
-    //* navigate declaration
-    const navigate = useNavigate();
+  //* redux state
+  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+    (state) =>
+      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  );
 
-    //* redux state
-    const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-      (state) =>
-        state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  const { handleReset } = useSstepperFn();
+
+  //* context declaration
+  const { handleGeneralLoading, handleSecondLoading } = useContext(
+    ModalAndLoadingContext
+  );
+
+  useEffect(() => {
+    if (!currentElementPqrsdComplementoTramitesYotros) {
+      navigate('/app/gestor_documental/panel_ventanilla/');
+      return;
+    }
+    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
+    handleReset();
+    void getInitialData(
+      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+      navigate,
+      handleGeneralLoading,
+      handleSecondLoading
+    ).then((data) => {
+      setInfoInicialUsuario(data);
+    });
+  }, []);
+
+  const getInfoSolicitud = async (params: any) => {
+    const data = await getDetalleSolicitud(
+      params?.row?.id_solicitud_al_usuario_sobre_pqrsdf
     );
-  
-    const { handleReset } = useSstepperFn();
-  
-    //* context declaration
-    const { generalLoading, handleGeneralLoading, handleSecondLoading } =
-      useContext(ModalAndLoadingContext);
-  
-   useEffect(() => {
-      if (!currentElementPqrsdComplementoTramitesYotros) {
-        console.log('noo curentttt')
-        navigate('/app/gestor_documental/panel_ventanilla/');
-        return;
-      }
-      //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
-      handleReset();
-  
-  
-  console.log('hiii perrassasasasas')
-  
-      void getInitialData(
-        currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-        navigate,
-        handleGeneralLoading,
-        handleSecondLoading
-      ).then((data) => {
-        setInfoInicialUsuario(data);
-      });
-    }, []);
-  
 
-
-
-
-
-
-
-
+    console.log(data);
+  };
 
   // ? definicion de las columnas
   const columns = [
@@ -94,8 +91,8 @@ export const FormParte1 = ({
       renderCell: (params: any) => (
         <Tooltip title="Ver solicitud realizada">
           <IconButton
-            onClick={() => {
-              console.log(params.row);
+            onClick={async () => {
+              await getInfoSolicitud(params)
             }}
           >
             <Avatar
@@ -262,9 +259,8 @@ export const FormParte1 = ({
             title="Histórico de solicitudes de complemento al usuario"
             columns={columns ?? []}
             rows={
-              [
-                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
-              ] ?? []
+              [...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data] ??
+              []
             }
           />
         ) : (
