@@ -15,9 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import { getInitialData } from '../services/getInitialData.service';
 
 export const AsignacionUsuarioScreen = (): JSX.Element => {
-
-
-  const navigate = useNavigate();
+  const { handleReset } = useSstepperFn();
+  /*  const navigate = useNavigate();
 
   //* redux state
   const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
@@ -25,12 +24,11 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
   );
 
-  const { handleReset } = useSstepperFn();
 
   //* context declaration
   const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
   const { generalLoading, handleGeneralLoading, handleSecondLoading } =
-    useContext(ModalAndLoadingContext);
+    useContext(ModalAndLoadingContext);*/
   {
     /*de entrada al módulo se van a tener que realizar ciertas solictudes para llenar infomación dentro de los campos de la entrega*/
   }
@@ -43,11 +41,12 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     Swal.fire({
       icon: 'warning',
       title: 'Advertencia',
-      text: 'Recuerda que sí sales del módulo, la información no hayas guardado se borrará.',
+      text: 'Recuerda que sí sales del módulo, la información que no hayas guardado se borrará.',
       confirmButtonText: 'Entendido',
     });
 
     // ? tambien se entra a re iniciar el módulo de asignación de usuario || mejor cuando se de en el finish y se envie la solicitud al usuario, por tanto se hará en el componente de stepper o en submit de envío
+    handleReset();
   }, []);
 
   //* se usa acá para que atraviese todos los componentes necesarios que se trabajan dentro de la solicitud de asignación a usuario
@@ -69,29 +68,6 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     setInfoReset,
   };
 
-  useEffect(() => {
-    if (!currentElementPqrsdComplementoTramitesYotros) {
-      console.log('noo curentttt')
-      navigate('/app/gestor_documental/panel_ventanilla/');
-      return;
-    }
-    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
-    handleReset();
-
-
-console.log('hiii perrassasasasas')
-
-    void getInitialData(
-      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-      navigate,
-      handleGeneralLoading,
-      handleSecondLoading
-    ).then((data: any) => {
-      setInfoInicialUsuario(data);
-    });
-  }, []);
-
-
   return (
     <>
       <Grid
@@ -108,7 +84,7 @@ console.log('hiii perrassasasasas')
         <Grid item xs={12}>
           <Title title="Solicitud al usuario sobre PQRSDF" />
           {/* parte Inicial */}
-          <ParteInicial/>
+          <ParteInicial />
           {/*stepper*/}
           <StepperAsignacionUsuario {...props} />
         </Grid>

@@ -14,7 +14,13 @@ import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { useSstepperFn } from '../../../hook/useSstepperFn';
 
 export const ParteInicial: React.FC  = (): JSX.Element => {
-  //* navigate declaration
+ 
+  const { generalLoading } =
+  useContext(ModalAndLoadingContext);
+
+
+
+/*  //* navigate declaration
   const navigate = useNavigate();
 
   //* redux state
@@ -30,7 +36,7 @@ export const ParteInicial: React.FC  = (): JSX.Element => {
   const { generalLoading, handleGeneralLoading, handleSecondLoading } =
     useContext(ModalAndLoadingContext);
 
- /* useEffect(() => {
+ useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) {
       console.log('noo curentttt')
       navigate('/app/gestor_documental/panel_ventanilla/');

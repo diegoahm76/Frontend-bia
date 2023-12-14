@@ -4,20 +4,36 @@ import { Button, Grid, Stack, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { usePanelVentanilla } from '../../../../../../../hook/usePanelVentanilla';
-import { getRequestStates } from '../services/getRequestStates.service';
+import {
+  getRequestStates,
+  getUnidadesOrgActual,
+} from '../services/getRequestStates.service';
+import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
 
 export const BuscadorPqrsdf = (props: any): JSX.Element => {
   const { control_busqueda_panel_ventanilla } = props;
 
   // ? useState Necesario
-  const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
+  const [request, setRequest] = useState<any>({
+    requestStatuses: [],
+    unidadesOrganizacionales: [],
+  });
+
+  const getDataToSelect = async (): Promise<any> => {
+    const [requestStatuses, unidadesOrganizacionales] = await Promise.all([
+      getRequestStates(),
+      getUnidadesOrgActual(),
+    ]);
+
+    setRequest({
+      requestStatuses,
+      unidadesOrganizacionales,
+    });
+  };
 
   //* se debe establecer un useEffect ya que cada vez que se recargeue el elemento se deben filtrar de diferente manera los elementos
   useEffect(() => {
-    void getRequestStates().then((res: any) => {
-      console.log(res);
-      setRequestStatuses(res);
-    });
+    void getDataToSelect();
   }, []);
 
   // ?
@@ -66,7 +82,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
                   console.log(selectedOption);
                   onChange(selectedOption);
                 }}
-                options={requestStatuses as any[]}
+                options={request?.requestStatuses as any[]}
                 placeholder="Seleccionar"
               />
               <label>
@@ -125,6 +141,46 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
                 onChange(e.target.value);
               }}
             />
+          )}
+        />
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={4}
+        sx={{
+          zIndex: 2,
+        }}
+      >
+        <Controller
+          //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
+          name="unidad_organizacional"
+          control={control_busqueda_panel_ventanilla}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <div>
+              <Select
+                value={value}
+                onChange={(selectedOption) => {
+                  console.log(selectedOption);
+                  onChange(selectedOption);
+                }}
+                options={request?.unidadesOrganizacionales as any[]}
+                placeholder="Seleccionar"
+              />
+              <label>
+                <small
+                  style={{
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    fontWeight: 'thin',
+                    fontSize: '0.75rem',
+                    marginTop: '0.25rem',
+                    marginLeft: '0.25rem',
+                  }}
+                >
+                  Unidad organizacional
+                </small>
+              </label>
+            </div>
           )}
         />
       </Grid>

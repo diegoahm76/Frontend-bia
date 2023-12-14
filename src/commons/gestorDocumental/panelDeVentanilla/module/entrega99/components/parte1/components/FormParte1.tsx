@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useSstepperFn } from '../../../hook/useSstepperFn';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
@@ -20,6 +20,9 @@ import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralC
 import { columnsGridHistorico } from '../utils/columnsGridHistorico';
 import { AccountCircle } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { getInitialData } from '../../../services/getInitialData.service';
+import { useAppSelector } from '../../../../../../../../hooks';
+import { useNavigate } from 'react-router-dom';
 
 export const FormParte1 = ({
   controlFormulario,
@@ -32,35 +35,60 @@ export const FormParte1 = ({
   const { handleNext } = useSstepperFn();
 
   //* context declaration
-  const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
   const { secondLoading } = useContext(ModalAndLoadingContext);
+  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+
+
+    //* navigate declaration
+    const navigate = useNavigate();
+
+    //* redux state
+    const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+      (state) =>
+        state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+    );
+  
+    const { handleReset } = useSstepperFn();
+  
+    //* context declaration
+    const { generalLoading, handleGeneralLoading, handleSecondLoading } =
+      useContext(ModalAndLoadingContext);
+  
+   useEffect(() => {
+      if (!currentElementPqrsdComplementoTramitesYotros) {
+        console.log('noo curentttt')
+        navigate('/app/gestor_documental/panel_ventanilla/');
+        return;
+      }
+      //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
+      handleReset();
+  
+  
+  console.log('hiii perrassasasasas')
+  
+      void getInitialData(
+        currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+        navigate,
+        handleGeneralLoading,
+        handleSecondLoading
+      ).then((data) => {
+        setInfoInicialUsuario(data);
+      });
+    }, []);
+  
+
+
+
+
+
+
+
+
 
   // ? definicion de las columnas
-
-
-
-      /*{
-        "nombre_anexo": "anexo 2",
-        "numero_folios": "5",
-        "cod_medio_almacenamiento": "Na",
-        "orden_anexo_doc": "1",
-        "meta_data":{
-          "tiene_replica_fisica": false,
-          "cod_origen_archivo": "F",
-          "nombre_original_archivo": "Archivo",
-          "descripcion":"des",
-          "asunto": "as",
-          "cod_categoria_archivo": "Tx",
-          "nro_folios_documento": 0,
-          "id_tipologia_doc": null,
-          "tipologia_no_creada_TRD":'tipologia creada',
-          "palabras_clave_doc":'dato|prueba|clave'
-        }
-      }*/
-
   const columns = [
     ...columnsGridHistorico,
-/*    {
+    {
       headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
@@ -86,7 +114,7 @@ export const FormParte1 = ({
           </IconButton>
         </Tooltip>
       ),
-    },*/
+    },
   ];
 
   if (secondLoading) {

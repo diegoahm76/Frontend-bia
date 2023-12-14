@@ -107,6 +107,27 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   const columns = [
     ...columnsComplementoPqrsdf,
     {
+      headerName: 'Requiere digitalización',
+      field: 'requiere_digitalizacion',
+      minWidth: 200,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            label={params.value ? 'Si' : 'No'}
+            color={params.value ? 'success' : 'error'}
+            clickable
+            onClick={() => {
+              control_info(
+                `Este complemento ${
+                  params.value ? 'requiere' : 'no requiere'
+                } digitalización`
+              );
+            }}
+          />
+        );
+      },
+    },
+    {
       headerName: 'Número de solicitudes de digitalización',
       field: 'numero_solicitudes',
       minWidth: 300,
@@ -209,20 +230,10 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
     },
   ];
 
-  /* [
-    ...listaComplementosRequerimientosOtros,
-    ...listaComplementosRequerimientosOtros,
-    ...listaComplementosRequerimientosOtros,
-    ...listaComplementosRequerimientosOtros,
-  ];
-*/
   return (
     <RenderDataGrid
       rows={
         [
-         /* ...listaComplementosRequerimientosOtros,
-          ...listaComplementosRequerimientosOtros,
-          ...listaComplementosRequerimientosOtros,*/
           ...listaComplementosRequerimientosOtros,
         ] ?? []
       }

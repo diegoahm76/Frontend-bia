@@ -19,6 +19,10 @@ export const usePanelVentanilla = () => {
       // ? para pqrsdf
       fecha_inicio: '',
       fecha_fin: '',
+      unidad_organizacional: {
+        value: '',
+        label: '',
+      },
       tipo_de_solicitud: {
         value: '',
         label: '',
@@ -48,7 +52,12 @@ export const usePanelVentanilla = () => {
   const reset_search_form = () =>
     reset_busqueda_panel_ventanilla({
       // ? para pqrsdf
-
+      fecha_inicio: '',
+      fecha_fin: '',
+      unidad_organizacional: {
+        value: '',
+        label: '',
+      },
       //* se debe evaluar el borrado de los valores del selector llamado tipo de solicitud
       tipo_de_solicitud: {
         value: '',

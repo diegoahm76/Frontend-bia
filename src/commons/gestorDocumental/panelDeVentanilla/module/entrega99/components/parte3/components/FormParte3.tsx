@@ -113,7 +113,7 @@ export const FormParte3 = ({
     if (watchFormulario.ruta_soporte && !metadatos) {
       showAlert(
         'Advertencia',
-        'Si se sube un archivo, es obligatorio agregar metadatos un anexo',
+        'Si se sube un archivo, es obligatorio agregar metadatos a un anexo',
         'warning'
       );
       return;
@@ -297,33 +297,6 @@ export const FormParte3 = ({
                 </Tooltip>
               </>
             )}
-            {/*<Tooltip title="Ver y seleccionar anexo">
-              <IconButton
-                onClick={() => {
-                  console.log(params.row);
-                  dispatch(setViewMode(true as boolean));
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <VisibilityIcon
-                    sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px',
-                    }}
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>*/}
-            {/* debe estar la condicion, cuando ya se haya guardado una vez, no será posible realizar la eliminación de los anexos */}
           </>
         );
       },

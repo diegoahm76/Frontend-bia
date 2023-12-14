@@ -39,6 +39,7 @@ export const AcordeonPqrsdf = () => {
   const accordionRef = useRef<any>(null);
 
   useEffect(() => {
+    console.log(listaHistoricoSolicitudes)
     if (expanded && accordionRef.current) {
       accordionRef.current.scrollIntoView({
         behavior: 'smooth',
@@ -92,33 +93,29 @@ export const AcordeonPqrsdf = () => {
       </Grid>
     );
 
-  /*  if (!listaHistoricoSolicitudes?.length) return <></>;*/
-
   return (
     <>
-      {/* Search input component */}
       <BuscadorSolicitudes
         setRadicado={setRadicado}
         radicado={radicado}
         onChange={onChange}
         onSubmit={onSubmit}
       />
+      {listaHistoricoSolicitudes && listaHistoricoSolicitudes.length > 0 ? (
+        [...listaHistoricoSolicitudes].map((item: any) => {
+          if (!item?.cabecera?.radicado) {
+            return null;
+          }
 
-      {/*[
-        ...listaHistoricoSolicitudes,
-        ...listaHistoricoSolicitudes,
-        ...listaHistoricoSolicitudes,
-      ]*/}
-
-      {[...listaHistoricoSolicitudes]?.map((item: any) => (
-        <Accordion
-          ref={expanded === item?.cabecera?.radicado ? accordionRef : null}
-          style={{ marginBottom: '1rem' }}
-          key={item?.cabecera?.id_PQRSDF}
-          expanded={expanded === item?.cabecera?.radicado}
-          onChange={handleChange(item?.cabecera?.radicado)}
-        >
-          <AccordionSummary
+          return (
+            <Accordion
+              ref={expanded === item?.cabecera?.radicado ? accordionRef : null}
+              style={{ marginBottom: '1rem' }}
+              key={item?.cabecera?.id_PQRSDF}
+              expanded={expanded === item?.cabecera?.radicado}
+              onChange={handleChange(item?.cabecera?.radicado)}
+            >
+               <AccordionSummary
             expandIcon={
               <ExpandCircleDownIcon
                 sx={{
@@ -199,8 +196,18 @@ export const AcordeonPqrsdf = () => {
               />
             )}
           </AccordionDetails>
-        </Accordion>
-      ))}
+            </Accordion>
+          );
+        })
+      ) : (
+        <Typography
+            variant="body1"
+            color="text.primary"
+            sx={{ textAlign: 'center', justifyContent: 'center', mt: '2rem', fontSize: '1.25rem' }}
+          >
+            No hay solicitudes para mostrar
+          </Typography>
+      )}
     </>
   );
 };

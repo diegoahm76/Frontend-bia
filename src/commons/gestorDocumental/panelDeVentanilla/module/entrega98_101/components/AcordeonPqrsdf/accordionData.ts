@@ -48,7 +48,7 @@ export const consultaColumns = [
   {
     headerName: 'Acción - Estado',
     field: 'accion',
-    minWidth: 240,
+    minWidth: 300,
   },
   {
     headerName: 'Fecha respuesta de la solicitud',

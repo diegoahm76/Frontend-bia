@@ -26,6 +26,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
+import { render } from '@testing-library/react';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -186,6 +187,20 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   const columns = [
     ...columnsPqrsdf,
     {
+      headerName: 'Requiere digitalización',
+      field: 'requiere_digitalizacion',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ? 'Sí' : 'No'}
+            color={params.value ? 'success' : 'error'}
+          />
+        );
+      }
+    },
+    {
       headerName: 'Días para respuesta',
       field: 'dias_respuesta',
       minWidth: 250,
@@ -315,6 +330,24 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
           </>
         );
       },
+    },
+    {
+      headerName: 'Estado de asignación de grupo',
+      field: 'estado_asignacion_grupo',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value}
+            color={
+              params.row?.estado_asignacion_grupo === 'Pendiente' ? 'warning' :
+              params.row?.estado_asignacion_grupo === 'Aceptado' ? 'success' :
+              params.row?.estado_asignacion_grupo === 'Rechazado' ? 'error' : 'default'
+            }
+          />
+        );
+      }
     },
     {
       headerName: 'Acciones',
