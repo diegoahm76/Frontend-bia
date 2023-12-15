@@ -132,7 +132,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                   {...params}
                 />
               )}
-              maxDate={dayjs()}
+              minDate={dayjs(new Date().setFullYear(new Date().getFullYear() - 1))}
+              maxDate={dayjs(new Date().setFullYear(new Date().getFullYear() + 1))}
             />
           </LocalizationProvider>
         </Grid>

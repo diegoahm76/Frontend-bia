@@ -155,7 +155,7 @@ export const EncabezadoCrear: React.FC = () => {
       return newFormData;
     }); setGridRows((prevRows) => [
       ...prevRows,
-      
+
       { opciones: tempOption, acciones: <IconButton><DeleteIcon /></IconButton> }
     ]);
     setTempOption("");
@@ -254,7 +254,7 @@ export const EncabezadoCrear: React.FC = () => {
 
     const newQuestion = formData.preguntas[0]
     if (editMode) {
-    //   setTempQuestions([...tempQuestions, newQuestion]); // Actualiza la lista temporal de preguntas
+      //   setTempQuestions([...tempQuestions, newQuestion]); // Actualiza la lista temporal de preguntas
       setEditMode(false); // Sal del modo de edición
       setTempQuestions([...tempQuestions, newQuestion]);
       setQuestionGridRows([...questionGridRows, { id: newQuestion.redaccion_pregunta, pregunta: newQuestion.redaccion_pregunta }]);
@@ -343,7 +343,7 @@ export const EncabezadoCrear: React.FC = () => {
           preguntas: tempQuestions
         });
 
-        
+
 
         console.log('Encuesta actualizada exitosamente:', response.data);
         control_success("Encuesta actualizada con éxito");
@@ -443,7 +443,7 @@ export const EncabezadoCrear: React.FC = () => {
     setSelectedOption(null);
     setTempOption("");
   };
-  
+
 
   const [valorSeleccionado, setValorSeleccionado] = useState('');
 
@@ -454,265 +454,265 @@ export const EncabezadoCrear: React.FC = () => {
   return (
     <>
       <>
-       
-           <>
-            <Grid container
-              spacing={2} m={2} p={2}
-              sx={miEstilo}
-            >
-              <Title title="Encabezado" />
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  disabled={itemYaUsado || selectedEncuestaId !== null}
-                  required fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  label="Nombre de encuesta"
-                  name="nombre_encuesta"
-                  value={formData.nombre_encuesta}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <FormControl fullWidth size="small">
-                  <InputLabel shrink>Activo</InputLabel>
-                  <Select
-                    labelId="activo-label"
-                    required name="activo"
-                    disabled={itemYaUsado}
-                    value={formData.activo.toString()} // Convierte el valor booleano a cadena
-                    onChange={handleInputChange}
-                  >
-                    <MenuItem value="true">Sí</MenuItem>
-                    <MenuItem value="false">No</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  required rows={3}
+
+        <>
+          <Grid container
+            spacing={2} m={2} p={2}
+            sx={miEstilo}
+          >
+            <Title title="Encabezado" />
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant="outlined"
+                size="small"
+                disabled={itemYaUsado || selectedEncuestaId !== null}
+                required fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                label="Nombre de encuesta"
+                name="nombre_encuesta"
+                value={formData.nombre_encuesta}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel shrink>Activo</InputLabel>
+                <Select
+                  labelId="activo-label"
+                  required name="activo"
                   disabled={itemYaUsado}
-                  label="Descripción"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  fullWidth multiline
-                  name="descripcion"
-                  value={formData.descripcion}
+                  value={formData.activo.toString()} // Convierte el valor booleano a cadena
                   onChange={handleInputChange}
-                />
-              </Grid>
+                >
+                  <MenuItem value="true">Sí</MenuItem>
+                  <MenuItem value="false">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                size="small"
+                required rows={3}
+                disabled={itemYaUsado}
+                label="Descripción"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth multiline
+                name="descripcion"
+                value={formData.descripcion}
+                onChange={handleInputChange}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container
+            spacing={2} m={2} p={2}
+            sx={miEstilo}
+          >
+
+            <Title title="Detalle - Pregunta" />
+            <Grid item xs={12} >
+              {formData.preguntas.map((pregunta, index) => (
+                <div key={index}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    label={`Texto de pregunta`}
+                    fullWidth
+                    disabled={itemYaUsado}
+                    name={`preguntas[${index}].redaccion_pregunta`}
+                    value={pregunta.redaccion_pregunta}
+                    onChange={(event) =>
+                      handleInputChange({
+                        target: {
+                          name: `preguntas[${index}].redaccion_pregunta`,
+                          value: event.target.value,
+                        },
+                      })} /> </div>
+              ))}
             </Grid>
 
-            <Grid container
-              spacing={2} m={2} p={2}
-              sx={miEstilo}
-            >
-
-              <Title title="Detalle - Pregunta" />
-              <Grid item xs={12} >
+            <Grid item spacing={2} container>
+              <Grid item xs={12} sm={3}>
                 {formData.preguntas.map((pregunta, index) => (
                   <div key={index}>
                     <TextField
                       variant="outlined"
-                      size="small"
+                      size="small" fullWidth
+                      disabled={itemYaUsado}
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      label={`Texto de pregunta`}
-                      fullWidth
-                      disabled={itemYaUsado}
-                      name={`preguntas[${index}].redaccion_pregunta`}
-                      value={pregunta.redaccion_pregunta}
-                      onChange={(event) =>
-                        handleInputChange({
-                          target: {
-                            name: `preguntas[${index}].redaccion_pregunta`,
-                            value: event.target.value,
-                          },
-                        })} /> </div>
+                      label={`Nueva opción`}
+                      value={tempOption}
+                      onChange={(event) => {
+                        const inputValue = event.target.value;
+                        if (inputValue.length <= 10) {
+                          setTempOption(inputValue);
+                          setHasError(false); // Si la longitud es válida, elimina el error
+                        } else {
+                          setHasError(true); // Si la longitud es superior a 10, muestra un error
+                        }
+                      }}
+                      error={hasError}
+                      helperText={hasError ? "Máximo 10 caracteres" : ""}
+                    />
+                  </div>
                 ))}
               </Grid>
+              <Grid item xs={12} sm={1.2}>
+                {formData.preguntas.map((pregunta, index) => (
+                  <div key={index}>
 
-              <Grid item spacing={2} container>
-                <Grid item xs={12} sm={3}>
-                  {formData.preguntas.map((pregunta, index) => (
-                    <div key={index}>
-                      <TextField
-                        variant="outlined"
-                        size="small" fullWidth
-                        disabled={itemYaUsado}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        label={`Nueva opción`}
-                        value={tempOption}
-                        onChange={(event) => {
-                          const inputValue = event.target.value;
-                          if (inputValue.length <= 10) {
-                            setTempOption(inputValue);
-                            setHasError(false); // Si la longitud es válida, elimina el error
-                          } else {
-                            setHasError(true); // Si la longitud es superior a 10, muestra un error
-                          }
-                        }}
-                        error={hasError}
-                        helperText={hasError ? "Máximo 10 caracteres" : ""}
-                      />
-                    </div>
-                  ))}
-                </Grid>
-                <Grid item xs={12} sm={1.2}>
-                  {formData.preguntas.map((pregunta, index) => (
-                    <div key={index}>
+                    <Button
+                      onClick={() => {
+                        if (selectedOption) {
+                          // Código para actualizar el ítem
+                          handleUpdateOption(selectedOption, tempOption);
+                        } else {
+                          addNewOption(index, tempOption);
+                        }
+                      }}
+                      startIcon={<SaveIcon />}
+                      color='success'
+                      disabled={itemYaUsado}
+                      variant="contained"
+                    >
+                      {selectedOption ? "Actualizar" : "Adicionar"}
+                    </Button>
 
-                      <Button
-                        onClick={() => {
-                          if (selectedOption) {
-                            // Código para actualizar el ítem
-                            handleUpdateOption(selectedOption, tempOption);
-                          } else {
-                            addNewOption(index, tempOption);
-                          }
-                        }}
-                        startIcon={<SaveIcon />}
-                        color='success'
-                        disabled={itemYaUsado}
-                        variant="contained"
-                      >
-                        {selectedOption ? "Actualizar" : "Adicionar"}
-                      </Button>
-
-                    </div>
-                  ))}
-                </Grid>
+                  </div>
+                ))}
               </Grid>
-              <Grid item xs={12} sm={2.4}>
-                <Button
-                  onClick={addNewQuestion}
-                  startIcon={<SaveIcon />}
-                  color='success'
-                  disabled={itemYaUsado}
-                  variant="contained"
-                >
-                  {editMode ? 'Actualizar Pregunta' : 'Crear Pregunta'}
-                </Button>
-
-              </Grid>
-              {/* <h1> {selectedEncuestaId}</h1> */}
-              <Grid item xs={12}>
-                <DataGrid
-                  autoHeight
-                  pageSize={5}
-                  rows={gridRows}
-                  density="compact"
-                  columns={columns}
-                  disableSelectionOnClick
-                  rowsPerPageOptions={[5]}
-                  getRowId={(row) => row.opciones}
-                />
-              </Grid>
+            </Grid>
+            <Grid item xs={12} sm={2.4}>
+              <Button
+                onClick={addNewQuestion}
+                startIcon={<SaveIcon />}
+                color='success'
+                disabled={itemYaUsado}
+                variant="contained"
+              >
+                {editMode ? 'Actualizar Pregunta' : 'Crear Pregunta'}
+              </Button>
 
             </Grid>
-            <Grid container
-              spacing={2} m={2} p={2} sx={miEstilo} >
-              <Grid item xs={12}>
-                <Title title={` Opciones`} />
-              </Grid>
-              <Dialog open={isVerModalAbierto} onClose={cerrarVerModal} maxWidth="xl" >
-                <Grid container sx={miEstilo}  >
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={-1}>
-                            <Title title={` Opciones de respuesta `} />
-                          </Grid>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <RadioGroup
-                          aria-label="Opciones de respuesta"
-                          name="opciones-respuesta"
-                          value={valorSeleccionado}
-                          onChange={handleSeleccion}
-                        >
-                          {opcionesActuales.map((opcion, index) => (
-                            <TableRow key={index}>
-                              <TableCell> <FormControlLabel value={opcion.opcion_rta} control={<Radio />} label={opcion.opcion_rta} /> </TableCell>
-                            </TableRow>
-                          ))}
-                        </RadioGroup>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <Grid container spacing={2} justifyContent="flex-end" >
-                    <Grid marginTop={4} >
-                      <Button onClick={cerrarVerModal} color='error' variant="contained" fullWidth startIcon={<ClearIcon />}  >
-                        Salir
-                      </Button>
-                    </Grid>
+            {/* <h1> {selectedEncuestaId}</h1> */}
+            <Grid item xs={12}>
+              <DataGrid
+                autoHeight
+                pageSize={5}
+                rows={gridRows}
+                density="compact"
+                columns={columns}
+                disableSelectionOnClick
+                rowsPerPageOptions={[5]}
+                getRowId={(row) => row.opciones}
+              />
+            </Grid>
+
+          </Grid>
+          <Grid container
+            spacing={2} m={2} p={2} sx={miEstilo} >
+            <Grid item xs={12}>
+              <Title title={` Opciones`} />
+            </Grid>
+            <Dialog open={isVerModalAbierto} onClose={cerrarVerModal} maxWidth="xl" >
+              <Grid container sx={miEstilo}  >
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={-1}>
+                          <Title title={` Opciones de respuesta `} />
+                        </Grid>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <RadioGroup
+                        aria-label="Opciones de respuesta"
+                        name="opciones-respuesta"
+                        value={valorSeleccionado}
+                        onChange={handleSeleccion}
+                      >
+                        {opcionesActuales.map((opcion, index) => (
+                          <TableRow key={index}>
+                            <TableCell> <FormControlLabel value={opcion.opcion_rta} control={<Radio />} label={opcion.opcion_rta} /> </TableCell>
+                          </TableRow>
+                        ))}
+                      </RadioGroup>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <Grid container spacing={2} justifyContent="flex-end" >
+                  <Grid marginTop={4} >
+                    <Button onClick={cerrarVerModal} color='error' variant="contained" fullWidth startIcon={<ClearIcon />}  >
+                      Salir
+                    </Button>
                   </Grid>
                 </Grid>
-              </Dialog>
-              <Grid item xs={12}>
-                <DataGrid
-                  density="compact"
-                  autoHeight
-                  rows={questionGridRows}
-                  columns={questionColumns}
-                  rowsPerPageOptions={[5]}
-                  pageSize={5}
-                  disableSelectionOnClick
-                  getRowId={(row) => row.id}
-                />
               </Grid>
+            </Dialog>
+            <Grid item xs={12}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={questionGridRows}
+                columns={questionColumns}
+                rowsPerPageOptions={[5]}
+                pageSize={5}
+                disableSelectionOnClick
+                getRowId={(row) => row.id}
+              />
             </Grid>
-            <Grid container
-              spacing={2} m={2} p={2} sx={miEstilo} >
-              <Grid item xs={12} sm={1.4}>
-                <Button startIcon={<BarChartIcon />} onClick={() => { navigate("/app/gestor_documental/encuesta_datos/datos") }} fullWidth variant="outlined"    >
-                  informe
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={1.4}>
-                <Button disabled={itemYaUsado} onClick={handleSubmit} startIcon={<SaveIcon />} color='success' fullWidth variant="contained">
-                  {selectedEncuestaId ? "Actualizar" : "Guardar"}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={1.4}>
-                <Button disabled={itemYaUsado} startIcon={<DeleteForeverIcon />} color='error' onClick={deleteEncuesta} fullWidth variant="outlined"    >
-                  eliminar
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={1.4}>
-                <Button startIcon={<SearchIcon />} onClick={handle_open_buscar} fullWidth variant="contained"    >
-                  buscar
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={1.4}>
-                <Button disabled={itemYaUsado}
-                  onClick={handleClear} color='primary' variant="outlined" fullWidth startIcon={<CleanIcon />}
-                >
-                  Limpiar
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={1.4}>
-                
-              </Grid>
+          </Grid>
+          <Grid container
+            spacing={2} m={2} p={2} sx={miEstilo} >
+            <Grid item xs={12} sm={1.4}>
+              <Button startIcon={<BarChartIcon />} onClick={() => { navigate("/app/gestor_documental/encuesta_datos/datos") }} fullWidth variant="outlined"    >
+                informe
+              </Button>
             </Grid>
-            <Buscar handleClear={handleClear} setSelectedEncuestaId={setSelectedEncuestaId} is_modal_active={is_buscar} set_is_modal_active={set_is_buscar} />
-          </>
-     
-          <>
-         
-            </>
-      
+            <Grid item xs={12} sm={1.4}>
+              <Button disabled={itemYaUsado} onClick={handleSubmit} startIcon={<SaveIcon />} color='success' fullWidth variant="contained">
+                {selectedEncuestaId ? "Actualizar" : "Guardar"}
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={1.4}>
+              <Button disabled={itemYaUsado} startIcon={<DeleteForeverIcon />} color='error' onClick={deleteEncuesta} fullWidth variant="outlined"    >
+                eliminar
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={1.4}>
+              <Button startIcon={<SearchIcon />} onClick={handle_open_buscar} fullWidth variant="contained"    >
+                buscar
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={1.4}>
+              <Button disabled={itemYaUsado}
+                onClick={handleClear} color='primary' variant="outlined" fullWidth startIcon={<CleanIcon />}
+              >
+                Limpiar
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={1.4}>
+
+            </Grid>
+          </Grid>
+          <Buscar handleClear={handleClear} setSelectedEncuestaId={setSelectedEncuestaId} is_modal_active={is_buscar} set_is_modal_active={set_is_buscar} />
+        </>
+
+        <>
+
+        </>
+
       </>
     </>
   );

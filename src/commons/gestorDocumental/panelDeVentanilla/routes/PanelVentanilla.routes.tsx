@@ -8,6 +8,7 @@ import { VistaPqr } from '../module/entrega98_101/components/vistaPqr/VistaPqr';
 import { VistaComplemento } from '../module/entrega98_101/components/vistaComplemento/VistaComplemento';
 import { MainAsigGrupoScreen } from '../module/entrega102/screen/MainAsigGrupoScreen';
 import { AsignacionGrupoProvider } from '../module/entrega102/context/AsignacionGrupoContext';
+import { SolicitudAlUsuarioProvider } from '../module/entrega99/context/SolicitudUsarioContext';
 
 const routes = [
   {
@@ -17,7 +18,13 @@ const routes = [
   },
   {
     path: 'asignar_a_usario/',
-    component: () => <AsignacionUsuarioScreen />,
+    component: () => (
+      <>
+        <SolicitudAlUsuarioProvider>
+          <AsignacionUsuarioScreen />
+        </SolicitudAlUsuarioProvider>
+      </>
+    ),
   },
   {
     path: 'asignar_a_grupo/',

@@ -10,46 +10,24 @@ import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
 import { Parte1Screen } from '../parte1/screen/Parte1Screen';
 import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
+import { useSstepperFn } from '../../hook/useSstepperFn';
 
-export const StepperAsignacionUsuario = (): JSX.Element => {
+export const StepperAsignacionUsuario = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+  resetFormularioFunction,
+  setInfoReset,
+}: any): JSX.Element => {
   const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
     PanelVentanillaContext
   );
 
-  const isStepSkipped = (step: number) => skipped.has(step);
-
-  const handleNext = () => {
-    /*    if ('hola'.length > 0) {
-      alert('no se puede avanzar');
-      return;
-    }
-*/
-    {
-      /* dentro de ésta función se deben poner condicionales para que dependiendo si los campos de uno de los pasos está vacío no permite avanzar al próximo paso */
-    }
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
-
-  const handleBack = () =>
-    setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
-
-  const handleSkip = () => {
-    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
-    setSkipped((prevSkipped: Set<number>) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
-  const handleReset = () => setActiveStep(0);
+  // ? stepper hook
+  const { isStepSkipped, handleNext, handleBack, handleReset } =
+    useSstepperFn();
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -91,16 +69,22 @@ export const StepperAsignacionUsuario = (): JSX.Element => {
           );
         })}
       </Stepper>
+
+      {/*
+      
+        este stepper se va a tener que separar, haciendo las validaciones correpondientes
+      */}
+
       {activeStep === steps.length ? (
         <>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Reset</Button>
-          </Box>
+          </Box>*/}
         </>
       ) : (
         <>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+          {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"
               disabled={activeStep === 0}
@@ -110,18 +94,40 @@ export const StepperAsignacionUsuario = (): JSX.Element => {
               Back
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
+
             <Button onClick={handleNext}>
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
-          </Box>
+          </Box>*/}
           {(() => {
             switch (activeStep) {
               case 0:
-                return <Parte1Screen />;
+                return <Parte1Screen
+                  controlFormulario={controlFormulario}
+                  handleSubmitFormulario={handleSubmitFormulario}
+                  errorsFormulario={errorsFormulario}
+                  resetFormulario={resetFormulario}
+                  watchFormulario={watchFormulario}
+                  setInfoReset={setInfoReset}
+                />;
               case 1:
-                return <Parte2Screen />;
+                return <Parte2Screen
+                  controlFormulario={controlFormulario}
+                  handleSubmitFormulario={handleSubmitFormulario}
+                  errorsFormulario={errorsFormulario}
+                  resetFormulario={resetFormulario}
+                  watchFormulario={watchFormulario}
+                  setInfoReset={setInfoReset}
+                />;
               case 2:
-                return <Parte3Screen />;
+                return <Parte3Screen
+                  controlFormulario={controlFormulario}
+                  handleSubmitFormulario={handleSubmitFormulario}
+                  errorsFormulario={errorsFormulario}
+                  resetFormulario={resetFormulario}
+                  watchFormulario={watchFormulario}
+                  resetFormularioFunction={resetFormularioFunction}
+                  setInfoReset={setInfoReset}                />;
               default:
                 return null;
             }

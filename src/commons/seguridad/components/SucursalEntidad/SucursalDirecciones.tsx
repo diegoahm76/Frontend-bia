@@ -19,22 +19,22 @@ import { Departamento, DepartamentoResponse, Municipios, MunicipiosResponse, Pai
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_address, same_address, form_values, handleinput_change }) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention  
-    const [selected_pais, setselected_pais] = useState('');
-    const [paises, setpaises] = useState<Paises[]>([]);
-    const [departamentos, set_departamentos] = useState<Departamento[]>([]);
-    const [selected_departamento, setselected_departamento] = useState('');
     const [link, set_link] = useState('');
+    const [, setselected_municipio] = useState('');
+    const [paises, setpaises] = useState<Paises[]>([]);
+    const [, setselected_municipionoti] = useState('');
+    const [selected_pais, setselected_pais] = useState('');
+    const [pais_retur, set_pais_retur] = useState<Paises[]>([]);
+    const [municipios, setmunicipios] = useState<Municipios[]>([]);
+    const [selected_departamento, setselected_departamento] = useState('');
+    const [departamentos, set_departamentos] = useState<Departamento[]>([]);
+    const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
+    const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
     const [selected_departamento_noti, setselected_departamento_noti] = useState('');
     const [departamentos_noti, set_departamentos_noti] = useState<Departamento[]>([]);
-    const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
-    const [departamentos_noti_retur, set_departamentos_noti_retur] = useState<Departamento[]>([]);
-    const [pais_retur, set_pais_retur] = useState<Paises[]>([]);
-    const [, setselected_municipionoti] = useState('');
-    const [municipios, setmunicipios] = useState<Municipios[]>([]);
-    const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
     const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
-    const [, setselected_municipio] = useState('');
     const [departamentos_retur, set_departamentos_retur] = useState<Departamento[]>([]);
+    const [departamentos_noti_retur, set_departamentos_noti_retur] = useState<Departamento[]>([]);
 
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
@@ -109,7 +109,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
         void fetch_data();
     }, [form_values.municipio]);
 
-    
+
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
@@ -126,7 +126,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
         };
         void fetch_data();
     }, [link]);
-    
+
     useEffect(() => {
         const fetch_data = async (): Promise<any> => {
             try {
@@ -140,7 +140,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
             } catch (error) {
                 console.log('Error fetching municipios:', error);
             }
-        }; 
+        };
         void fetch_data();
     }, [selected_departamento]);
     useEffect(() => {
@@ -206,17 +206,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
         };
         void fetch_data();
     }, [selected_departamento_noti]);
-    // const set_value_direction = (_value: string, type: string): void => {
 
-    //     switch (type) {
-    //         case 'residencia':
-    //             break;
-    //         case 'notificacion':
-    //             break;
-    //         case 'laboral':
-    //             break;
-    //     }
-    // };
     const [error] = useState<any>('');
     const is_error = error !== '';
     const [type_direction,
@@ -375,7 +365,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
                             onChange={(event) => {
                                 setselected_departamento(event.target.value);
                             }}
-                             disabled={form_values.pais_sucursal_exterior === null && departamentos_retur.length !== 1}
+                            disabled={form_values.pais_sucursal_exterior === null && departamentos_retur.length !== 1}
                         >
                             {departamentos_retur.length === 1 && (
                                 <MenuItem value="departametoo">
@@ -435,17 +425,33 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
                     <TextField
                         variant="outlined"
                         size="small"
-                        label="dirección geograficá  "
+                        label=" direccion sucursal georeferenciada lat  "
                         fullWidth
                         required
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        name="direccion_sucursal_georeferenciada"
-                        value={form_values.direccion_sucursal_georeferenciada}
+                        name="direccion_sucursal_georeferenciada_lat"
+                        value={form_values.direccion_sucursal_georeferenciada_lat}
                         onChange={handleinput_change}
                     />
                 </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        variant="outlined"
+                        size="small"
+                        label=" direccion sucursal georeferenciada lon  "
+                        fullWidth
+                        required
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        name="direccion_sucursal_georeferenciada_lon"
+                        value={form_values.direccion_sucursal_georeferenciada_lon}
+                        onChange={handleinput_change}
+                    />
+                </Grid>
+
                 <Grid item xs={4}>
                     <Button
                         variant="contained"
@@ -551,7 +557,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
                         onChange={handleinput_change}
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                     <TextField
                         variant="outlined"
                         size="small"
@@ -566,7 +572,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
                         // value={form_values.direccion_notificacion_referencia}
                         onChange={handleinput_change}
                     />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={4}>
                     <Button
                         variant="contained"

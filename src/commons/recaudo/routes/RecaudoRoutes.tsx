@@ -22,13 +22,13 @@ export const RecaudoRoutes: React.FC = () => {
   return (
     <EtapaProcesoProvider >
     <Routes>
-      <Route path="datos/*" element={<RecaudoScreen />} />
+      {/* <Route path="datos/*" element={<RecaudoScreen />} /> */}
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />
       <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
       <Route path="constructor_liquidacion/*" element={<ConstructorLiquidacionScreen />} />
       <Route path="proceso_liquidacion/*" element={<ProcesoLiquidacionScreen />} />
       <Route path="estados_proceso/*" element={<EstadosProcesoScreen />} />
-      <Route path="flujo_proceso/*" element={<FlujoProcesosScreen />} />
+      {/* <Route path="flujo_proceso/*" element={<FlujoProcesosScreen />} /> */}
       <Route path="gestion_cartera/*" element={<GestionCarteraScreen />} />
       <Route path="visor_procesos/*" element={<VisorProcesosScreen />} />
       <Route path="historial_proceso/*" element={<HistorialProceso />} />

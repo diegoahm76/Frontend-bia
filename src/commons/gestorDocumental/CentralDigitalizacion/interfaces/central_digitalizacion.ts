@@ -8,6 +8,9 @@ export interface ICentralDigitization {
   request_status: IObjListType;
   digitization_requests: IObjDigitizationRequest[];
   digitization_request: IObjDigitizationRequest;
+  storage_mediums: IObjListType[];
+
+
   exhibits: IObjExhibit[];
   exhibit: IObjExhibit;
   file_categories: IObjListType[];
@@ -33,19 +36,23 @@ export interface IObjListType {
 }
 
 export interface IObjDigitizationRequest{
-  id_solicitud_de_digitalizacion?: number | null;
+  id_solicitud_de_digitalizacion: number | null;
   id_PQRSDF?: number | null;
   id_complemento_usu_PQR?: number | null;
   fecha_solicitud?: string | null;
   fecha_rta_solicitud?: string | null;
+  nombre_tipo_solicitud?: string | null;
+  asunto: string | null;
   observacion_digitalizacion?: string | null;
   digitalizacion_completada?: boolean | null;
   devuelta_sin_completar?: boolean | null;
   id_persona_digitalizo?: number | null;
   tipo_solicitud?: string | null;
-  estado_solicitud?: string | null;
+  estado_digitalizacion?: string | null;
   numero_radicado?: string | null;
   titular?: string | null;
+  numero_anexos?: number | null;
+  anexos?: IObjExhibit[];
   pqr?: IObjPqr;
   complemento_pqr?: IObjPqrRequest;
 }
@@ -81,21 +88,21 @@ export interface IObjExhibit {
   id_anexo?: number | null;
   nombre_anexo?: string | null;
   orden_anexo_doc?: number | null;
-  medio_almacenamiento?: string | null;
+  nombre_medio_almacenamiento?: string | null;
   cod_medio_almacenamiento?: string | number | null;
   medio_almacenamiento_otros_cual?: string | number | null;
   numero_folios?: number | null;
   ya_digitalizado?: boolean | null;
   observacion_digitalizacion?: string | null;
-  exhibit_link?: string | null;
+  exhibit_link?: string | IObjFile | null;
   id_docu_de_arch_exp?: number | null;
-  metadata: IObjMetaData | null;
+  metadatos: IObjMetaData | null;
 }
 
 export interface IObjMetaData {
   id_metadatos_anexo_tmp?: number | null;
   id_anexo?: number | null;
-  fecha_creacion_doc?: string | null;
+  fecha_creacion_doc?: string | null | Date;
   descripcion?: number | null;
   asunto?: string | null;
   categoria_archivo?: string | null;
@@ -105,7 +112,7 @@ export interface IObjMetaData {
 
   tiene_tipologia?: boolean | null;
 
-  numero_folios_documento?: number | null;
+  nro_folios_documento?: number | null;
   origen_archivo?: string | null;
   cod_origen_archivo?: string | number | null;
   nombre_anexo?: string | null;
@@ -114,11 +121,27 @@ export interface IObjMetaData {
   medio_almacenamiento?: string | null;
   palabras_clave_doc?: string | null;
   id_archivo_en_sistema?: number | null;
+  archivo?: IObjFile | null;
 
   id_tipologia_doc?: number | null;
   tipologia_doc?: string | null;
   tipologia_no_creada_en_TRD?: string | null;
+  tipologia_no_creada_TRD?: string | null;
+  observacion_digitalizacion?: string | null;
+  id_persona_digitalizo?: number | null;
+  id_solicitud_de_digitalizacion?: number | null;
 }
+
+export interface IObjFile{
+  
+  es_Doc_elec_archivo?: boolean | null;
+  fecha_creacion_doc?:string | null;
+  formato?: string | null
+  id_archivo_digital?: number | null;
+  nombre_de_Guardado?: string|null;
+  ruta_archivo?:string|null;
+  tamagno_kb?:number|null;
+  }
 
 export interface IObjPqr {
   id_PQRSDF?: number | null; // id de pqr

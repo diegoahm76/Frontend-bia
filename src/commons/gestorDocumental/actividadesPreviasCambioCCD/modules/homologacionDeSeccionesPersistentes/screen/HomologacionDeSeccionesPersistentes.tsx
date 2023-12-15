@@ -6,6 +6,8 @@ import { validacionInicialCCD } from '../toolkit/thunks/ccdOrganigrama.service';
 import { useNavigate } from 'react-router-dom';
 import { SelSeccionesPerScreen } from '../components/parte2/screen/SelSeccionesPerScreen';
 import { SelSerDocPersistentesScreen } from '../components/parte3/screen/SelSerDocPersistentesScreen';
+import { useAppDispatch } from '../../../../../../hooks';
+import { reset_states } from '../toolkit/slice/HomologacionesSeriesSlice';
 /**
  * Componente principal módulo de homologación de secciones persistentes
  * @returns JSX.Element,
@@ -24,9 +26,14 @@ import { SelSerDocPersistentesScreen } from '../components/parte3/screen/SelSerD
 export const HomologacionDeSeccionesPersistentes = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     void validacionInicialCCD(navigate);
+
+    // ? revisar si se debe hacer el reinicio de los estados para evitar los errores de superposición de datos
+    dispatch(reset_states());
   }, []);
 
   return (

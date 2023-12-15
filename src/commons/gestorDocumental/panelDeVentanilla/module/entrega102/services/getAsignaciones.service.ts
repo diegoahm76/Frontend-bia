@@ -13,13 +13,14 @@ export const getAsignaciones = async (
     const { data } = await api.get(url);
 
     if (data?.data?.length === 0) {
-      control_warning('No se encontraron asignaciones para este consecutivo');
+      control_warning('No se encontraron asignaciones');
       return [];
+    } else {
+      control_success('Asignaciones obtenidas');
+      return data?.data;
     }
-    control_success('Asignaciones obtenidas');
-    return data?.data;
   } catch (error) {
-    control_error('Error al obtener las asignaciones, no existen asignaciones');
+    control_error('No existen asignaciones actualmente');
     return [];
   } finally {
     setLoading(false);
