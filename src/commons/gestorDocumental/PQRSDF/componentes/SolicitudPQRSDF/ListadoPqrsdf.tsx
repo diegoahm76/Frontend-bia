@@ -252,7 +252,7 @@ const ListadoPqrsdf = () => {
       level: 1,
       columns: columns_solicitud,
       table_name: 'Solicitudes de PQRSDF',
-      property_name: 'orders',
+      property_name: 'solicitudes_pqr',
     },
   ];
 
