@@ -89,7 +89,7 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
             if(service.success){
                 props.set_configuracion(service.data);
                 set_tipo_expediente(service.data.tipo_expediente);
-                service.data.cod_tipo_expediente === 'S' ? props.set_expediente(service.data) : props.set_expediente(null);
+                service.data.cod_tipo_expediente === 'S' ? props.set_expediente(service.data) : props.set_expediente({expediente: []});
             }else{
                 generar_notificación_reporte('Notificación', 'info', service.response.data.detail, true);
                 set_tipo_expediente('');
