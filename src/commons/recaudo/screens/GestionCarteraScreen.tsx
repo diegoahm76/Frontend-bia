@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useState, useEffect, useContext } from 'react';
-import { Avatar, Box, Grid, IconButton, type SelectChangeEvent, Tab, Tooltip, Chip, Pagination, Stack } from "@mui/material"
+import { Avatar, Box, Grid, IconButton, type SelectChangeEvent, Tab, Tooltip, Chip, Pagination, Stack, TextField, Button } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Title } from "../../../components"
 import { EditarCartera } from '../components/GestionCartera/EditarCartera';
@@ -8,6 +8,8 @@ import { CobroCoactivo } from '../components/GestionCartera/CobroCoactivo';
 import { DataGrid, GridToolbar, type GridColDef } from '@mui/x-data-grid';
 import type { AtributoEtapa, CategoriaAtributo, Proceso, ValoresProceso } from '../interfaces/proceso';
 import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 import type { FlujoProceso } from '../interfaces/flujoProceso';
 import { api } from '../../../api/axios';
 import { RequisitosModal } from '../components/GestionCartera/modal/RequisitosModal';
@@ -16,6 +18,7 @@ import type { Cartera } from '../interfaces/cobro';
 import { CreateProcesoModal } from '../components/GestionCartera/modal/CreateProcesoModal';
 import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/SeccionEnvio_MSM_CORREO';
 import { EtapaProcesoConext } from '../components/GestionCartera/Context/EtapaProcesoContext';
+import { toast } from 'react-toastify';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -58,6 +61,8 @@ export const GestionCarteraScreen: React.FC = () => {
   const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
   const { etapa_proceso, set_etapa_proceso } = useContext(EtapaProcesoConext);
 
+  const [filtered_nombres, set_filtered_nombres] = useState<string>('');
+  const [filtered_apellidos, set_filtered_apellidos] = useState<string>('');
 
   const columns_carteras: GridColDef[] = [
     {
@@ -539,6 +544,37 @@ export const GestionCarteraScreen: React.FC = () => {
     return <></>;
   };
 
+  const filter_by_name = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    if (filtered_nombres === '' && filtered_apellidos === '') {
+      toast.info('Escriba por lo menos los nombres o apellidos del deudor', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else {
+      api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}`)
+        .then((response) => {
+          if ((response.data.data as Cartera[]).length > 0) {
+            set_carteras(response.data.data);
+          } else {
+            toast.warning(`No existe el deudor ${filtered_nombres} ${filtered_apellidos}`, {
+              position: toast.POSITION.BOTTOM_RIGHT,
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const clear_filter = (): void => {
+    if (filtered_nombres !== '' || filtered_apellidos !== '') {
+      set_filtered_nombres('');
+      set_filtered_apellidos('');
+      update_carteras();
+    }
+  };
+
   const handle_post_valores_sin_archivo = (id_atributo: string, value: string): void => {
     api.post('recaudo/procesos/valores-proceso/', {
       id_proceso: Number(id_proceso),
@@ -603,10 +639,7 @@ export const GestionCarteraScreen: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Proceso de Liquidación"></Title>
           <Box
-            component='form'
             sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
           >
             <TabContext value={position_tab}>
 
@@ -618,6 +651,47 @@ export const GestionCarteraScreen: React.FC = () => {
               </Box>
 
               <TabPanel value="1" sx={{ p: '20px 0' }}>
+                <Box
+                  component={'form'}
+                  onSubmit={filter_by_name}
+                  display={'flex'}
+                  gap={2}
+                  sx={{ mb: '20px' }}
+                >
+                  <TextField
+                    label='Nombres'
+                    size='small'
+                    value={filtered_nombres}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      set_filtered_nombres(event.target.value);
+                    }}
+                  />
+                  <TextField
+                    label='Apellidos'
+                    size='small'
+                    value={filtered_apellidos}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      set_filtered_apellidos(event.target.value);
+                    }}
+                  />
+                  <Button
+                    type='submit'
+                    variant='contained'
+                    color='primary'
+                    startIcon={<SearchIcon />}
+                  >
+                    Buscar
+                  </Button>
+                  <Button
+                    type='button'
+                    variant='outlined'
+                    color='primary'
+                    startIcon={<ClearIcon />}
+                    onClick={clear_filter}
+                  >
+                    Limpiar
+                  </Button>
+                </Box>
                 <DataGrid
                   density='standard'
                   autoHeight
