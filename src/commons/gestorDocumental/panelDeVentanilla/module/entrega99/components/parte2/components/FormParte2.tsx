@@ -172,26 +172,6 @@ export const FormParte2 = ({
           >
             Siguiente
           </Button>
-
-          {/* <Button
-            variant="contained"
-            color="warning"
-            onClick={() => {
-              console.log('click siuuu');
-
-
-              //* revisar si se deben hacer validaicones, momentanemante parece que noP
-
-              handleBack();
-            }}
-            startIcon={<ArrowBackIcon />}
-            sx={{
-              width: '35%',
-              ml: '1.2rem',
-            }}
-          >
-            Volver
-          </Button>*/}
         </Grid>
       </form>
     </>

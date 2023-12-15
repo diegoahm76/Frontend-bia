@@ -16,75 +16,130 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Title } from '../../../../../../../../../components';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { useContext } from 'react';
+import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
+import { formatDate } from '../../../../../../../../../utils/functions/formatDate';
+import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { row } from './../../../../../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
+import { columnsAnexos } from './columnsAnexos/columnsAnexos';
+import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
 
 export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
   //* se debe manejar un loader ya que a través de ello se consultatá un servicio para los metadatos que están asociados a un archivo
+
+  const { openModalOne, handleOpenModalOne } = useContext(
+    ModalAndLoadingContext
+  );
+  const { currentSolicitudUsuario } = useContext(SolicitudAlUsuarioContext);
+
+  const colums = [
+    ...columnsAnexos,
+    {
+      headerName: 'Acciones',
+      field: 'acciones',
+      width: 200,
+      renderCell: (params: any) => (
+        <DownloadButton
+          fileUrl={params.row.archivo}
+          fileName={params.row.nombre_archivo}
+          condition={false}
+        />
+      ),
+    },
+  ];
 
   return (
     <>
       <Dialog
         fullWidth
-        maxWidth="md"
-        open={true}
+        maxWidth="lg"
+        open={openModalOne}
         onClose={() => {
-          // handleModalAgregarMetadatos(false);
-          //* tambien se deben limpiar los datos que se recojan en el modal
+          handleOpenModalOne(false);
         }}
       >
         <Box component="form">
           <DialogTitle>
-            <Title title="Información metadatos" />
+            <Title title="Información de la solicitud" />
           </DialogTitle>
           <Divider />
           <DialogContent
             sx={{
-              mb: '0px',
+              mt: '1.2rem',
+              mb: '1.2rem',
               justifyContent: 'center',
             }}
           >
             <Grid container spacing={2}>
+              <Grid item xs={12} sm={8}>
+                <TextField
+                  fullWidth
+                  label="Asunto"
+                  disabled
+                  size="small"
+                  variant="outlined"
+                  value={
+                    currentSolicitudUsuario?.detalleSolicitud?.asunto ?? 'N/A'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ maxLength: 50 }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  disabled
+                  type="text"
+                  label="Fecha de solicitud"
+                  size="small"
+                  variant="outlined"
+                  //* se debe poner la condicional del reset
+                  value={
+                    formatDate(
+                      currentSolicitudUsuario?.detalleSolicitud?.fecha_solicitud
+                    ) ?? 'N/A'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+
               <Grid
                 item
                 xs={12}
-                sm={4}
+                sm={12}
                 sx={{
                   mt: '1.2rem',
                   mb: '1.2rem',
-                  zIndex: 10,
                 }}
               >
                 <TextField
-                  disabled
                   fullWidth
-                  label="Categoría del archivo"
+                  disabled
+                  multiline
+                  rows={5}
+                  label="Descripción de la solicitud"
                   size="small"
                   variant="outlined"
-                  value={'jeje siuu'}
+                  value={
+                    currentSolicitudUsuario?.detalleSolicitud?.descripcion ??
+                    'N/A'
+                  }
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
               </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
-                  zIndex: 10,
-                }}
-              >
-                <TextField
-                  disabled
-                  fullWidth
-                  label="Réplica física"
-                  size="small"
-                  variant="outlined"
-                  value={'jeje siuu'}
-                  InputLabelProps={{ shrink: true }}
-                  inputProps={{ maxLength: 255 }}
-                />
-              </Grid>
+
+              {/*segund parte - anexos que sse han puesto en la solicitud */}
+
+              <RenderDataGrid
+                title="Anexos de la solicitud"
+                rows={[...currentSolicitudUsuario?.anexos]?? []}
+                columns={colums ?? []}
+              />
+
+              {/*tercera parte, anexos de cada metadato*/}
+
               <Grid
                 item
                 xs={12}
@@ -212,11 +267,7 @@ export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
                 color="error"
                 variant="outlined"
                 onClick={() => {
-                  console.log('closing modal');
-                  /*handleCloseModal(
-                    resetManejoMetadatosModalFunction,
-                    handleModalAgregarMetadatos
-                  );*/
+                  handleOpenModalOne(false);
                 }}
                 startIcon={<CloseIcon />}
               >

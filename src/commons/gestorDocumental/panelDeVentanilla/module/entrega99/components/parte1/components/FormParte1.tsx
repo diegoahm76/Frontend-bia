@@ -23,7 +23,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getInitialData } from '../../../services/getInitialData.service';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { useNavigate } from 'react-router-dom';
-import { getDetalleSolicitud } from '../../../services/afterCreatedUserRequest.service';
+import { getAnexosSolicitud, getDetalleSolicitud } from '../../../services/afterCreatedUserRequest.service';
 import { ModalInfoSolicitud } from './ModalInfoSolicitud/ModalInfoSolicitud';
 
 export const FormParte1 = ({
@@ -37,8 +37,8 @@ export const FormParte1 = ({
   const { handleNext } = useSstepperFn();
 
   //* context declaration
-  const { secondLoading } = useContext(ModalAndLoadingContext);
-  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(
+  const { secondLoading, fifthLoading , handleFifthLoading, handleOpenModalOne} = useContext(ModalAndLoadingContext);
+  const { setInfoInicialUsuario, infoInicialUsuario, currentSolicitudUsuario, setCurrentSolicitudUsuario } = useContext(
     SolicitudAlUsuarioContext
   );
 
@@ -76,11 +76,19 @@ export const FormParte1 = ({
   }, []);
 
   const getInfoSolicitud = async (params: any) => {
-    const data = await getDetalleSolicitud(
-      params?.row?.id_solicitud_al_usuario_sobre_pqrsdf
-    );
+    const [detalleSolicitud, anexos] = await Promise.all([
+      getDetalleSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf),
+      getAnexosSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf)
+    ]);
 
-    console.log(data);
+
+      const data ={
+        detalleSolicitud,
+        anexos
+      }
+
+
+    setCurrentSolicitudUsuario(data);
   };
 
   // ? definicion de las columnas
@@ -93,6 +101,7 @@ export const FormParte1 = ({
         <Tooltip title="Ver solicitud realizada">
           <IconButton
             onClick={async () => {
+              handleOpenModalOne(true) //* open modal
               await getInfoSolicitud(params)
             }}
           >

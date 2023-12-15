@@ -1,24 +1,28 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { api } from "../../../../../../api/axios";
+import { api } from '../../../../../../api/axios';
 
 const baseUrl = `gestor/panel_ventanilla/pqrsdf/solicitud/`;
 export const getDetalleSolicitud = async (idSolicitud: number) => {
-  try{ 
+  try {
     const url = `${baseUrl}get/id/${idSolicitud}/`;
-    const {data} = await api.get(url);
-    console.log(data);
-   }
-  catch(error){}
-}
-
+    const { data } = await api.get(url);
+    return data?.data;
+  } catch (error) {}
+};
 
 export const getAnexosSolicitud = async (idSolicitud: number) => {
-  try{}
-  catch(error){}
-}
+  try {
+    const url = `${baseUrl}anexos/get/${idSolicitud}/`;
+
+    const { data } = await api.get(url);
+    console.log(data?.data);
+    return data?.data;
+
+  } catch (error) {}
+};
 
 export const getMetadatosByAnexo = async (idAnexo: number) => {
-  try{}
-  catch(error){}
-}
+  try {
+  } catch (error) {}
+};
