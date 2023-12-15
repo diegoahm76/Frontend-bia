@@ -58,7 +58,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
   const { etapa_proceso, set_etapa_proceso } = useContext(EtapaProcesoConext);
 
-  
+
   const columns_carteras: GridColDef[] = [
     {
       field: 'id',
@@ -182,13 +182,13 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_id_cartera(params.row.id);
                   set_position_tab('2');
                   set_data_complemet(params.row);
-                
+
 
 
                   set_etapa_proceso((prevEtapa: any) => ({
                     ...prevEtapa,
-                    mostrar_modal:true,
-                }));
+                    mostrar_modal: true,
+                  }));
 
 
                 }}
@@ -406,6 +406,7 @@ export const GestionCarteraScreen: React.FC = () => {
     }
   };
 
+  
   const mover_subetapa_actual = (): void => {
     if (id_subetapa_destino) {
       api.post(`recaudo/procesos/actualizar-categoria-proceso/${id_proceso}/`, {
@@ -417,13 +418,15 @@ export const GestionCarteraScreen: React.FC = () => {
           update_procesos_sin_finalizar();
           update_carteras();
 
+
           if (response.status === 200) {
-        
+
             set_etapa_proceso((prevEtapa: any) => ({
               ...prevEtapa,
-              disable:false,
-          }));
-          }          
+              disable: false,
+              tipo_cambio: id_subetapa_destino,
+            }));
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -517,6 +520,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_position_tab('1');
         set_notification_info({ type: 'success', message: 'Se ha creado correctamente el proceso.' });
         set_open_notification_modal(true);
+        console.log("data retur  crear-proceso", response)
       })
       .catch((error) => {
         console.log(error);

@@ -10,6 +10,7 @@ interface Etapa {
   disable:boolean;
   apellidos:string;
   identificacion:string;
+  tipo_cambio:string
 }
 
 interface EtapaContext {
@@ -25,7 +26,9 @@ export const initial_Etapa_valores: Etapa = {
   mostrar_modal:false,
   disable:true,
   apellidos:"",
-  identificacion:"" };
+  identificacion:"",
+tipo_cambio:""
+};
 
 export const EtapaProcesoConext = createContext<EtapaContext>({
   etapa_proceso: initial_Etapa_valores,

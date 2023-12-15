@@ -55,7 +55,7 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
     const data: any = selected_proceso.data_complement;
 
 
-    const CrearNuevaSubSeccionEmpresa = async () => {
+    const EnviarSolicitudMSM = async () => {
         try {
             const url = '/hidrico/zonas-hidricas/enviar_sms/';
             const postData = {
@@ -73,6 +73,30 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
         } catch (error: any) {
             control_error(error.response.data.detail);
         }
+
+        CrearNuevaSubSeccionEmpresa()
+    };
+
+
+    const CrearNuevaSubSeccionEmpresa = async () => {
+        try {
+            const url = '/hidrico/zonas-hidricas/enviar_correo/';
+            const postData = {
+                "correo": "vigoyahector90@gmail.com",
+                "nombre": "Héctor",
+                "asunto":"Prueba 2",
+                "mensaje":"este es el mensaje dos dos dos tres"
+              };
+            const res = await api.post(url, postData);
+            if (res.status === 200) {
+                
+                control_success("Se Notificó a la persona correo correctamente");  // Mensaje de éxito
+            } else {
+                control_error("Hubo un problema al procesar la solicitud.");
+            }
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+        }
     };
 
 
@@ -80,7 +104,7 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
     useEffect(() => {
         set_etapa_proceso((prevEtapa: any) => ({
             ...prevEtapa,
-            data_complement: datos_desestructurados.id_deudor || [],
+            data_complement: datos_desestructurados || [],
             telefono: datos_desestructurados.id_deudor?.telefono || "",
             nombres: datos_desestructurados.id_deudor?.nombres || "",
             email: datos_desestructurados.id_deudor?.email || "",
@@ -139,7 +163,7 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
                                 startIcon={<PermPhoneMsgIcon />}
                                 style={{ width: 150, margin: 7 }}
                                 disabled={etapa_proceso.disable}
-                                onClick={CrearNuevaSubSeccionEmpresa}
+                                onClick={EnviarSolicitudMSM}
                             >
                                 Contactar
                             </Button>
