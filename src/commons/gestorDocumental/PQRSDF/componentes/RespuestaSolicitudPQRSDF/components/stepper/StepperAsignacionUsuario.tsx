@@ -19,14 +19,8 @@ export const StepperAsignacionUsuario = (): JSX.Element => {
   const isStepSkipped = (step: number) => skipped.has(step);
 
   const handleNext = () => {
-    /*    if ('hola'.length > 0) {
-      alert('no se puede avanzar');
-      return;
-    }
-*/
-    {
-      /* dentro de ésta función se deben poner condicionales para que dependiendo si los campos de uno de los pasos está vacío no permite avanzar al próximo paso */
-    }
+  
+    
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -40,14 +34,7 @@ export const StepperAsignacionUsuario = (): JSX.Element => {
   const handleBack = () =>
     setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
 
-  const handleSkip = () => {
-    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
-    setSkipped((prevSkipped: Set<number>) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+
 
   const handleReset = () => setActiveStep(0);
 

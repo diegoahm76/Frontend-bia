@@ -27,7 +27,7 @@ export const ConfiguracionUnidadOrganizacional = () => {
         T247consecutivoInicial,
         T247consecutivoActualAMostrar
     } = Datos_Return;
-
+console.log(Datos_Return)
     const columna_numero_1 = [
         { attribute: "Consecutivo inicial", value: T247consecutivoInicial || "" },
         { attribute: "Consecutivo Actual", value: T247consecutivoActualAMostrar || "" },
