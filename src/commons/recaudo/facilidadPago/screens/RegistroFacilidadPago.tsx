@@ -17,6 +17,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+import { control_error } from '../../../../helpers';
 
 interface RootStateDeudor {
   deudores: {
@@ -394,6 +395,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                         value={''.concat(solicitud_facilidad.direccion_notificaciones)}
                         size="small"
                         fullWidth
+                        disabled
                         name='direccion'
                       />
                     </Grid>
@@ -403,6 +405,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                         value={''.concat(solicitud_facilidad.ciudad)}
                         size="small"
                         fullWidth
+                        disabled
                         name='ciudad'
                       />
                     </Grid>
@@ -412,6 +415,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                         value={''.concat(solicitud_facilidad.telefono_celular)}
                         size="small"
                         fullWidth
+                        disabled
                         name='telefono'
                       />
                     </Grid>
@@ -1135,7 +1139,9 @@ export const RegistroFacilidadPago: React.FC = () => {
                           })
                           set_respuesta_registro(res_registro ?? {});
                         } catch (error: any) {
-                          throw new Error(error);
+                          // throw new Error(error);
+                          control_error(error.response.data.detail);
+
                         }
                       }
                       void post_registro();

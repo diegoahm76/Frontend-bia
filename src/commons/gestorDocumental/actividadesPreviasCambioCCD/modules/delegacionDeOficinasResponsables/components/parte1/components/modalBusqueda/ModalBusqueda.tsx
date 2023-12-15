@@ -46,19 +46,8 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { getUnidadesResponsablesActual } from '../../../../toolkit/thunks/unidadesActualResponsable.service';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { Params } from './types/modalBusqueda.types';
 
-interface Row {
-  id: number;
-  nombre: string;
-  version: string;
-  nombre_organigrama: string;
-  version_organigrama: string;
-  id_ccd: number;
-}
-
-interface Params {
-  row: Row;
-}
 //* services (redux (slice and thunks))
 // ! modal seleccion y busqueda de ccd - para inicio del proceso de permisos sobre series documentales
 export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
@@ -74,23 +63,44 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   const { handleSecondLoading } = useContext(ModalAndLoadingContext);
 
   const handleSeleccionCcdOficinasResponsables = async (params: Params) => {
-    const { id, nombre, version } = params.row;
+    const { nombre, version, mismo_organigrama } = params.row;
+
+    if (mismo_organigrama) {
+      const swalOptions = {
+        title: 'No puede seleccionar este CCD',
+        html: 'El CCD seleccionado no pertenece al mismo organigrama que el CCD actual',
+        icon: 'warning',
+        // showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#3085d6',
+      } as any;
+
+      await Swal.fire(swalOptions).then(async (result) => {
+        if (result.isConfirmed) {
+          dispatch(reset_states_asi_ofi_resp());
+          return;
+        }
+      });
+      
+      return;
+    }
 
     const validacionSeccionesPendientes =
       await validacionInicialDataPendientePorPersistir(params.row.id_ccd);
 
     if (validacionSeccionesPendientes?.data.length) {
-      const array = Array.from({ length: 12 }, (_, i) => ({
+     /* const array = Array.from({ length: 12 }, (_, i) => ({
         codigo: 'CCD' + i,
         nombre: `nombre${i}`,
       }));
-
+*/
       const htmlText = `
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
           <p>asigne un responsable a ésta(s) unidad(es) de tipo de sección / subsección para continuar en este módulo.</p>
           <p><b>CCD seleccionado :</b> Nombre: ${nombre} - Versión: ${version}</p>
           <ul style = "padding:0">
-            ${[...validacionSeccionesPendientes.data, ...array]
+            ${[...validacionSeccionesPendientes.data]
               .map(
                 (el: any) =>
                   `<li style="list-style: none; margin-top:5px;">Unidad: <b>${el.codigo}</b> - ${el.nombre}</li>`
@@ -127,7 +137,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     const unidadesResponsablesCcdSeleccionado =
       await getUnidadesResponsablesActual({
         idCcdSeleccionado: params.row.id_ccd,
-       // idUnidadActual: params.row.unidad_nueva,
+        // idUnidadActual: params.row.unidad_nueva,
         setLoading: handleSecondLoading,
       });
     // ! en consecuencia asignar ese valor a un elemento del store para manejar la interacción posterior
@@ -182,6 +192,10 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
+                if (params.row.usado) {
+                  console.log('esta vaina esta usada yuck');
+                }
+
                 handleSeleccionCcdOficinasResponsables(params);
                 handleSeleccionCCD_PSD(false);
               }}

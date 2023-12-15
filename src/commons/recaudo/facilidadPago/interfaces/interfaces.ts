@@ -125,6 +125,7 @@ export interface RespuestaFacilidadPago {
 export interface Contribuyente {
   identificacion: string;
   nombre_contribuyente: string;
+  obligaciones:any;
 }
 
 export interface RegistroFacilidadPago {

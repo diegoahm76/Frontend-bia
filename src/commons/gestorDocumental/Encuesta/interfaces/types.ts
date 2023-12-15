@@ -60,25 +60,25 @@ export interface Sexo {
   label: string;
 };
 export interface UsuarioRegistrado {
-  id_persona: number;
-  id_tipo_documento_usuario: string;
-  nro_documento_id: string;
-  nombre_completo: string;
-  cod_sexo: string;
-  rango_edad: string;
-  tipo_persona: string;
   email: string;
   telefono: string;
+  cod_sexo: string;
+  rango_edad: string;
+  id_persona: number;
+  tipo_persona: string;
+  nombre_completo: string;
+  nro_documento_id: string;
   id_pais_para_extranjero: string;
+  id_tipo_documento_usuario: string;
   id_municipio_para_nacional: string;
 };
 
 export interface TipoDocumento {
-  cod_tipo_documento: string;
   nombre: string;
-  precargado: boolean;
   activo: boolean;
+  precargado: boolean;
   item_ya_usado: boolean;
+  cod_tipo_documento: string;
 };
 export interface RangoEdad {
   value: string;
@@ -86,11 +86,11 @@ export interface RangoEdad {
 };
 
 export const miEstilo = {
-  position: 'relative',
-  background: '#FAFAFA',
-  borderRadius: '15px',
   p: '20px',
-  m: '10px 0 20px 0',
   mb: '20px',
+  m: '10px 0 20px 0',
+  position: 'relative',
+  borderRadius: '15px',
+  background: '#FAFAFA',
   boxShadow: '0px 3px 6px #042F4A26',
 };

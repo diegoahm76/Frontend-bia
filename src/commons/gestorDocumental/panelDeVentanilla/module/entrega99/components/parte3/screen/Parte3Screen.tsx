@@ -4,7 +4,14 @@ import { Title } from '../../../../../../../../components';
 import { AccionesFinales } from '../../AccionesFinales/AccionesFinales';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const Parte3Screen = (): JSX.Element => {
+export const Parte3Screen = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+  setInfoReset,
+}: any): JSX.Element => {
   return (
     <Grid
       item
@@ -14,8 +21,22 @@ export const Parte3Screen = (): JSX.Element => {
       }}
     >
       <Title title="Anexos" />
-      <FormParte3 />
-      <AccionesFinales />
+      <FormParte3
+        controlFormulario={controlFormulario}
+        handleSubmitFormulario={handleSubmitFormulario}
+        errorsFormulario={errorsFormulario}
+        resetFormulario={resetFormulario}
+        watchFormulario={watchFormulario}
+        setInfoReset={setInfoReset}
+      />
+      <AccionesFinales
+        controlFormulario={controlFormulario}
+        handleSubmitFormulario={handleSubmitFormulario}
+        errorsFormulario={errorsFormulario}
+        resetFormulario={resetFormulario}
+        watchFormulario={watchFormulario}
+        setInfoReset={setInfoReset}
+      />
     </Grid>
   );
 };

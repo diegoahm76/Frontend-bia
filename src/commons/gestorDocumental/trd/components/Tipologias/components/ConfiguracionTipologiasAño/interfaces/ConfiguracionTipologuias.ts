@@ -10,6 +10,11 @@ export interface TipodeCeaccionInterfaz {
   
     Datos_Return: any,
     Set_Datos_Return: React.Dispatch<SetStateAction<any>>,
+
+
+    form: any,
+    set_form: React.Dispatch<SetStateAction<any>>,
+
   }
   
   export interface ConfiguracionPorUnidad {
