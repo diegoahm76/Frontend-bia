@@ -22,25 +22,28 @@ import {
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import type { CategoriaAtributo, TipoAtributo } from '../../interfaces/proceso';
+import type { CategoriaAtributo, FormDataAtributo, TipoAtributo } from '../../interfaces/proceso';
 import { api } from "../../../../api/axios";
 import { Title } from "../../../../components";
 
 interface IProps {
+  form_data_atributo: FormDataAtributo;
+  actualizar_atributo: boolean;
   is_modal_active: boolean;
+  set_form_data_atributo: Dispatch<SetStateAction<FormDataAtributo>>;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  submit_new_atributo: (descripcion: string, obligatorio: number, id_tipo: number, id_categoria: number) => void;
-  set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
+  submit_create_update_atributo: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, submit_new_atributo, set_position_tab_organigrama }: IProps) => {
-  const [form_data, set_form_data] = useState({
-    descripcion: '',
-    obligatorio: false,
-    id_tipo: '',
-    id_categoria: '',
-  });
+export const CrearAtributoModal: React.FC<IProps> = ({
+  form_data_atributo,
+  actualizar_atributo,
+  is_modal_active,
+  set_form_data_atributo,
+  set_is_modal_active,
+  submit_create_update_atributo
+}: IProps) => {
   const [tipos_atributos, set_tipos_atributos] = useState<TipoAtributo[]>([]);
   const [categorias_atributos, set_categorias_atributos] = useState<CategoriaAtributo[]>([]);
 
@@ -56,12 +59,12 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
 
   useEffect(() => {
     api.get('recaudo/procesos/categoria-atributos')
-    .then((response) => {
-      set_categorias_atributos(response.data.data);
-    })
-    .catch((error) => {
-      //  console.log('')(error);
-    });
+      .then((response) => {
+        set_categorias_atributos(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   const handle_close = (): void => {
@@ -70,31 +73,23 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
 
   const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
     const { name, value } = event.target;
-    set_form_data((prevState) => ({ ...prevState, [name]: value }));
+    set_form_data_atributo((prevState) => ({ ...prevState, [name]: value }));
   }
 
   const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
-    set_form_data((prevState) => ({ ...prevState, [name]: value }));
+    set_form_data_atributo((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handle_checkbox_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, checked } = event.target;
-    set_form_data((prevState) => ({ ...prevState, [name]: checked }));
+    set_form_data_atributo((prevState) => ({ ...prevState, [name]: checked }));
   };
 
   const handle_submit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const { descripcion, obligatorio, id_tipo, id_categoria } = form_data;
-    submit_new_atributo(descripcion, obligatorio ? 1 : 0, Number(id_tipo), Number(id_categoria));
-    set_form_data({
-      descripcion: '',
-      obligatorio: false,
-      id_tipo: '',
-      id_categoria: '',
-    });
+    submit_create_update_atributo();
     handle_close();
-    set_position_tab_organigrama('1');
   };
 
   return (
@@ -110,9 +105,9 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
           width: '500px'
         }}
       >
-         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-                    <Title title={`Crear Nuevo Atributo `} />
-                </Grid>
+        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+          <Title title={actualizar_atributo ? 'Editar Atributo' : 'Crear Nuevo Atributo'} />
+        </Grid>
         <DialogTitle></DialogTitle>
         <Divider />
 
@@ -124,7 +119,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
                 <Select
                   name="id_categoria"
                   label='Categoría del atributo'
-                  value={form_data.id_categoria}
+                  value={form_data_atributo.id_categoria}
                   MenuProps={{
                     style: {
                       maxHeight: 224,
@@ -147,7 +142,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
                 <Select
                   name="id_tipo"
                   label='Tipo de atributo'
-                  value={form_data.id_tipo}
+                  value={form_data_atributo.id_tipo}
                   onChange={handle_select_change}
                 >
                   {tipos_atributos.map(({ id, tipo }) => (
@@ -163,7 +158,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
               <TextField
                 name="descripcion"
                 label='Descipción'
-                value={form_data.descripcion}
+                value={form_data_atributo.descripcion}
                 helperText="Ingrese la descripción del atributo"
                 margin="dense"
                 fullWidth
@@ -178,7 +173,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
                   control={
                     <Checkbox
                       name="obligatorio"
-                      checked={form_data.obligatorio}
+                      checked={form_data_atributo.obligatorio}
                       onChange={handle_checkbox_change}
                     />
                   }
@@ -212,9 +207,9 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
               color="success"
               variant="contained"
               startIcon={<SaveIcon />}
-              // disabled={form_data.descripcion === '' || form_data.id_tipo === ''}
+            // disabled={form_data_atributo.descripcion === '' || form_data_atributo.id_tipo === ''}
             >
-              Crear
+              {actualizar_atributo ? 'Editar' : 'Crear'}
             </Button>
           </Stack>
         </DialogActions>
