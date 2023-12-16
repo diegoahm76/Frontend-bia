@@ -57,7 +57,7 @@ export const HistoricoTraslados: FC<IHistoricoTraslados> = ({
     if (modalHistoricoTraslados) {
       void getHistoricoTrasladosU_U().then((res) => {
         setDataHistorico(res);
-        console.log(res);
+        //  console.log('')(res);
       });
     }
 

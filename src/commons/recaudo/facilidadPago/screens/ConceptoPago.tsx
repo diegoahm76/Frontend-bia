@@ -62,7 +62,7 @@ export const ConceptoPago: React.FC = () => {
         try {
             const url = `/recaudo/configuracion_baisca/valoresvariables/delete/${id_valores_variables}/`;
             const response = await api.delete(url);
-            console.log("Configuración eliminada con éxito", response.data);
+            //  console.log('')("Configuración eliminada con éxito", response.data);
             // Actualizar la lista de configuraciones después de eliminar
             fetchConfiguraciones();
             control_error("eliminado exitosamente ");
@@ -156,7 +156,7 @@ export const ConceptoPago: React.FC = () => {
                 set_is_modal_active={set_is_buscar}
                 fetchConfiguraciones={fetchConfiguraciones}
             />
-            {/* <button onClick={() => console.log(tipoRio)}>Mostrar zonahidrica en la consola</button> */}
+            {/* <button onClick={() => //  console.log('')(tipoRio)}>Mostrar zonahidrica en la consola</button> */}
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} marginTop={3}
                 sx={{

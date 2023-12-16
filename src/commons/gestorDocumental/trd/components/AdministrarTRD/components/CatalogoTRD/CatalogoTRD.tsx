@@ -72,7 +72,7 @@ export const CatalogoTRD = (): JSX.Element => {
                     dispatch(get_catalogo_trd(trd_current.id_trd));
                   }
                 );
-                console.log(params.row);
+                //  console.log('')(params.row);
               }}
             >
               <DeleteIcon />

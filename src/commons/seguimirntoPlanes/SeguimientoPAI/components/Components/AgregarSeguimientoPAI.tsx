@@ -114,7 +114,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
     set_value_seguimiento_pai('fecha_registro_avance', value);
   };
 
-  console.log(currentDate); // Imprime la fecha actual en formato 'YYYY-MM-DD'
+  //  console.log('')(currentDate); // Imprime la fecha actual en formato 'YYYY-MM-DD'
 
   useEffect(() => {
     if (mode.crear) {

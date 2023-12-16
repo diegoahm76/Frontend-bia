@@ -15,7 +15,7 @@ export const DenegacionPerScreen: FC<any> = (): JSX.Element | null => {
   // ! va a ser necesario el uso del useEffect para realizar algunas consultas que permitan traer cierta información
 
   useEffect(() => {
-    console.log(
+    //  console.log('')(
       'se renderiza los la denagación sobre los permisos sobre expedientes propios'
     );
   }, []);

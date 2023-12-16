@@ -217,7 +217,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_rows_etapas(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
   }, []); // rows_etapas
 
@@ -227,7 +227,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         group_categorias(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
   }, []); // rows_categorias_atributos
 
@@ -238,7 +238,7 @@ export const EstadosProcesoScreen: React.FC = () => {
           group_atributos(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   }, [id_etapa]);
@@ -292,7 +292,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_rows_etapas(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   };
 
@@ -302,7 +302,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         group_categorias(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
   };
 
@@ -313,7 +313,7 @@ export const EstadosProcesoScreen: React.FC = () => {
           group_atributos(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   };
@@ -330,7 +330,7 @@ export const EstadosProcesoScreen: React.FC = () => {
           set_open_notification_modal(true);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
           set_notification_info({ type: 'error', message: 'Hubo un error.' });
           set_open_notification_modal(true);
         });
@@ -348,7 +348,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });
@@ -365,7 +365,7 @@ export const EstadosProcesoScreen: React.FC = () => {
           set_open_notification_modal(true);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   };
@@ -381,7 +381,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });
@@ -400,7 +400,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       })
@@ -418,7 +418,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });
@@ -433,7 +433,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });

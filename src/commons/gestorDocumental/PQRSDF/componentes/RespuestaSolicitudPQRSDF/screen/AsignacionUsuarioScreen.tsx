@@ -14,10 +14,10 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
   {/* esa información debe pasaar derecho a los frames predispuestos */}
 
   useEffect(() => {
-    console.log(
+    //  console.log('')(
       'se realiza solictud sobre la información de la persona titular de la PQRSDF'
     );
-    console.log(
+    //  console.log('')(
       'se realiza la solictud sobre la información de la persona que solicita el complemento'
     );
   }, []);

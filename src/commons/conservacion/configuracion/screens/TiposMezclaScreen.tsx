@@ -246,7 +246,7 @@ export function TiposMezclaScreen(): JSX.Element {
   // }, []);
   useEffect(() => {
     void dispatch(get_mixtures_service()).then((response: any) => {
-      console.log(response);
+      //  console.log('')(response);
       setfilterednurseries(response.data);
     });
   }, [dispatch]);

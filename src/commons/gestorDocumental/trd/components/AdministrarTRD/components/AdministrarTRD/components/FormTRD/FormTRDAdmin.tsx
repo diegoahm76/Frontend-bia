@@ -87,7 +87,7 @@ export const FormTRDAdmin = (): JSX.Element => {
 
   // ? use effect acceso datos desde button edit para editar administrar trd
   useEffect(() => {
-    console.log(
+    //  console.log('')(
       'selected_item_from_catalogo_trd',
       selected_item_from_catalogo_trd
     );
@@ -653,7 +653,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                   startIcon={<VisibilityIcon />}
                   // disabled={ccd_current?.actual}
                   onClick={() => {
-                    console.log('viendo historial de cambios');
+                    //  console.log('')('viendo historial de cambios');
                     dispatch(get_historical_trd(trd_current.id_trd));
                     openModalHistorialCambios();
                   }}
@@ -670,7 +670,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                     buttonSpecialEditionActualTRD
                       ? setButtonSpecialEditionActualTRD(false)
                       : setButtonSpecialEditionActualTRD(true);
-                    console.log('viendo historial de cambios');
+                    //  console.log('')('viendo historial de cambios');
                   }}
                 >
                   {buttonSpecialEditionActualTRD

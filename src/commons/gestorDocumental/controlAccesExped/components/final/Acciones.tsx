@@ -48,7 +48,7 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
 
   const handleSubmit = () => {
     controlAccesoExpedientesList.length > 0
-      ? console.log(
+      ? //  console.log('')(
           controlAccesoExpedientesList.map((el: any) => {
             if (
               el?.id_ctrl_acceso_clasif_exp_ccd ===
@@ -66,7 +66,7 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
             };
           })[0]
         )
-      : console.log(
+      : //  console.log('')(
           rowsControlInicial.map((el: any) => ({
             ...el,
             id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und,
@@ -103,7 +103,7 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
           rowsControlInicial[0]?.cod_clasificacion_exp,
         idCatSerieUnidad: currentSerieSubserie?.id_cat_serie_und,
       }).then((res) => {
-        console.log(res);
+        //  console.log('')(res);
         if (res?.length > 0) {
           dispatch(setControlAccesoExpedientesList(res));
           dispatch(setVerModuloAutorizacioneGenerales(false));

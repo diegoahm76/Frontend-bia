@@ -28,7 +28,7 @@ export const ListarCarpetas: React.FC = () => {
   const { rows_carpetas, id_caja, fetch_data_caja_carpeta } =
     useContext(DataContext);
 
-    console.log(rows_carpetas, 'rows_carpetas')
+    //  console.log('')(rows_carpetas, 'rows_carpetas')
 
   useEffect(() => {
     if (id_caja) {

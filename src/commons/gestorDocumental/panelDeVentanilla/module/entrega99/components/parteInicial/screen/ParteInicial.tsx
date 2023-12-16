@@ -38,7 +38,7 @@ export const ParteInicial: React.FC  = (): JSX.Element => {
 
  useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) {
-      console.log('noo curentttt')
+      //  console.log('')('noo curentttt')
       navigate('/app/gestor_documental/panel_ventanilla/');
       return;
     }
@@ -46,7 +46,7 @@ export const ParteInicial: React.FC  = (): JSX.Element => {
     handleReset();
 
 
-console.log('hiii perrassasasasas')
+//  console.log('')('hiii perrassasasasas')
 
     void getInitialData(
       currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,

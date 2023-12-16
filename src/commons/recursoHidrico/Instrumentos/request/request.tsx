@@ -310,7 +310,7 @@ export const put_resultado_aforo_select = async (
   archivos: any
 ): Promise<any> => {
   const id_cartera_aforos = form.id_cartera_aforos;
-  console.log(archivos, 'archivos');
+  //  console.log('')(archivos, 'archivos');
   const new_array = [
     ...rows_registro_aforo,
 
@@ -365,8 +365,8 @@ export const put_resultado_aforo_select = async (
 
   if (archivos.length > 0 && archivos[0] !== null && id_cartera_aforos) {
     // const id_cartera_aforos = form.id_cartera_aforos;
-    console.log(archivos, 'archivos');
-    console.log(id_cartera_aforos, 'id_cartera_aforos');
+    //  console.log('')(archivos, 'archivos');
+    //  console.log('')(id_cartera_aforos, 'id_cartera_aforos');
 
     // Append id_cartera_aforos to datos
     datos.append('id_cartera_aforo', id_cartera_aforos);
@@ -501,7 +501,7 @@ export const put_general_bombeo = async (
   id_prueba_bombeo: number,
   datos: any
 ): Promise<any> => {
-  console.log(datos, 'datos');
+  //  console.log('')(datos, 'datos');
   const dataGeneral = {
     ...datos,
   };

@@ -28,7 +28,6 @@ import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext'
 import { useAppSelector } from '../../../../../../hooks';
 import { getArchivoAnexoPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
 import { getArchivoAnexoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
-import { ar } from 'date-fns/locale';
 import { getMetadatosPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
 import { getMetadatoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
 
@@ -247,13 +246,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
               <Grid item xs={12} sm={12}>
                 <DownloadButton
                   fileName={`archivo anexo ${archivoAnexos?.anexoActual?.nombre_anexo}`}
-                  fileUrl={
-                    `${
-                      process.env.NODE_ENV === 'development'
-                        ? process.env.REACT_APP_BETA_URL
-                        : process.env.REACT_APP_PROD_URL
-                    }${archivoAnexos?.archivo}` ?? ''
-                  }
+                  fileUrl={archivoAnexos?.archivo}
                   condition={false}
                 />
               </Grid>
@@ -293,7 +286,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                       );
                     }
                     setMetadatos(metadatos);
-                    console.log(infoMetadatos);
+                    //  console.log('')(infoMetadatos);
                     // handleOpenInfoMetadatos(true);
                   }}
                   startIcon={<InfoIcon />}

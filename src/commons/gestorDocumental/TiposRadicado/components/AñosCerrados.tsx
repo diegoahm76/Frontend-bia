@@ -65,7 +65,7 @@ export const AñosCerrados: React.FC<IProps> = ({
           size="small"
           onClick={() => {
             set_info_radicado(params.row);
-            console.log(params.row);
+            //  console.log('')(params.row);
           }}
         >
           <Avatar

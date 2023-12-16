@@ -302,7 +302,7 @@ export const use_register_bombeo_hook = () => {
         archivos_bombeo,
         archivos
       ).then(async (response) => {
-        console.log(response, 'response');
+        //  console.log('')(response, 'response');
         // set_id_sesion_prueba_bombeo(
         //   response?.reponse_general?.data?.prueba_bombeo?.id_prueba_bombeo
         // );
@@ -320,7 +320,7 @@ export const use_register_bombeo_hook = () => {
         error.response?.data?.detail ||
           'Ha ocurrido un error, vuelva a intentarlo más tarde'
       );
-      console.log(error, 'error');
+      //  console.log('')(error, 'error');
     } finally {
       set_is_saving(false);
     }
@@ -356,7 +356,7 @@ export const use_register_bombeo_hook = () => {
         error.response?.data?.detail ||
           'Ha ocurrido un error, vuelva a intentarlo más tarde'
       );
-      console.log(error, 'error');
+      //  console.log('')(error, 'error');
     } finally {
       set_is_saving(false);
     }
@@ -382,7 +382,7 @@ export const use_register_bombeo_hook = () => {
         error.response?.data?.detail ||
           'Ha ocurrido un error, vuelva a intentarlo más tarde'
       );
-      console.log(error, 'error');
+      //  console.log('')(error, 'error');
     } finally {
       set_is_saving_general(false);
     }
@@ -406,7 +406,7 @@ export const use_register_bombeo_hook = () => {
         error.response?.data?.detail ||
           'Ha ocurrido un error, vuelva a intentarlo más tarde'
       );
-      console.log(error, 'error');
+      //  console.log('')(error, 'error');
     } finally {
       set_is_saving_sesion(false);
     }
@@ -435,7 +435,7 @@ export const use_register_bombeo_hook = () => {
         error.response?.data?.detail ||
           'Ha ocurrido un error, vuelva a intentarlo más tarde'
       );
-      console.log(error, 'error');
+      //  console.log('')(error, 'error');
     } finally {
       set_is_saving_datoprueba(false);
     }

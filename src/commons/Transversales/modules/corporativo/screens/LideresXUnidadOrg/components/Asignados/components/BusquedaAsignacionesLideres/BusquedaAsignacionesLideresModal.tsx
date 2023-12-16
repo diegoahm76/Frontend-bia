@@ -76,7 +76,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
   } = useContext(ModalContextLideres);
 
   const resetFunction = (): void => {
-    console.log('resetFunction');
+    //  console.log('')('resetFunction');
     reset_buscar_asignaciones_lideres_por_unidad({
       nombre_organigrama: '',
       version_organigrama: '',
@@ -95,7 +95,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
     closeModalBusquedaAvanzadaLideres();
     dispatch(get_list_busqueda_avanzada_personas([]));
     resetFunction();
-    console.log('Im the close function');
+    //  console.log('')('Im the close function');
   };
 
   //* -------- columns declaration -------- *//
@@ -108,7 +108,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              console.log(params.row);
+              //  console.log('')(params.row);
               //* REVISAR LO DEL ID ORGANIGRAMA
 
               // ! ACTUALIZA EL ORGANIGRAMA
@@ -131,7 +131,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
                     void getAsignacionesLideresByIdOrganigrama(
                       organigrama_lideres_current?.id_organigrama
                     ).then((res: any) => {
-                      console.log(res);
+                      //  console.log('')(res);
                       dispatch(get_list_asignaciones_lideres(res));
                     });
               */
@@ -180,7 +180,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(
+            //  console.log('')(
               'buscando asiganciones de lideres de las unidades organizacionales'
             );
             void getAsignacionesLideresByFilter(

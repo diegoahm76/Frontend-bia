@@ -192,7 +192,7 @@ export const CuencaActualizar: React.FC<pros> = ({ fetchZonasHidricas, selectedM
             const url = `/hidrico/zonas-hidricas/sub_zona_hidrica/update/${selectedSubZonaHidricaId}/`;
             const payload = { ...formValues }; // Asegúrate de que formValues contenga los datos que deseas enviar
             const response = await api.put(url, payload);
-            console.log("Sub-zona hídrica actualizada con éxito", response.data);
+            //  console.log('')("Sub-zona hídrica actualizada con éxito", response.data);
             control_success("Actulizado ecitozamente");
             fetchZonasHidricas()
             setIsActualizarModalActivo(false);

@@ -125,7 +125,7 @@ export const FormParte2 = ({
             variant="contained"
             color="warning"
             onClick={() => {
-              console.log('click siuuu');
+              //  console.log('')('click siuuu');
             }}
             sx={{
               width: '60%',

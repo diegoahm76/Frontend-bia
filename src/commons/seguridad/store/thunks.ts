@@ -65,7 +65,7 @@ export const get_persons: (
 export const get_data_user: (id: number) => any = (id: number) => {
   return async (dispatch: Dispatch<any>) => {
     const { data } = await get_user_by_id(id);
-    console.log(data.data);
+    //  console.log('')(data.data);
     dispatch(set_user_info(data.data));
   };
 };
@@ -74,6 +74,6 @@ export const get_data_legal_person = (id_person: number) => {
   return async (dispatch: Dispatch<any>) => {
     const resp = await consultar_datos_persona(id_person);
     dispatch(set_data_legal_person(resp));
-    console.log(resp);
+    //  console.log('')(resp);
   };
 };

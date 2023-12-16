@@ -10,12 +10,12 @@ export const AccionesFinales = (): JSX.Element => {
     <AccionesFinalModulo
       loadingButton={LoadingButton}
       handleSubmit={async () => {
-        console.log('submit solicitud al usuario');
+        //  console.log('')('submit solicitud al usuario');
         setLoadingButton(true);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         setLoadingButton(false);
       }}
-      reset_states={() => console.log('cancel')}
+      reset_states={() => //  console.log('')('cancel')}
     />
   );
 };

@@ -61,7 +61,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
         (item: any) => item?.id_unidad_org_actual !== idUnidadActual
       );
 
-    console.log(nuevasUnidadesPersistentes);
+    //  console.log('')(nuevasUnidadesPersistentes);
 
     dispatch(
       setHomologacionAgrupacionesSerieSubserie(nuevasUnidadesPersistentes)
@@ -92,7 +92,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
       setLoading: handleGeneralLoading,
     })
       .then((resAgrupacionesPersistentes: any) => {
-        console.log(resAgrupacionesPersistentes);
+        //  console.log('')(resAgrupacionesPersistentes);
 
         if (resAgrupacionesPersistentes?.length > 0) {
           void Swal.fire({
@@ -120,7 +120,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
         //* asignar esas persistencias al estado si ya existen
       })
       .catch((err: any) => {
-        console.log(err);
+        //  console.log('')(err);
       });
   };
 
@@ -197,7 +197,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
               size="large"
               disabled={currentPersistenciaSeccionSubseccion}
               onClick={() => {
-                console.log(params?.row);
+                //  console.log('')(params?.row);
                 void getAllElements(unidadesPersistentes, handleGeneralLoading).then((res) => {
                   dispatch(setAllElements(res))
                 })
@@ -242,7 +242,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   id_unidad_nueva,
                   setLoading: handleGeneralLoading,
                 }).then((resCoincidenciasAgrupacionesDocumentales: any) => {
-                  console.log(resCoincidenciasAgrupacionesDocumentales);
+                  //  console.log('')(resCoincidenciasAgrupacionesDocumentales);
 
                   //* se asigna las agrupaciones coincidentes en el estado de las agrupaciones coincidentes
                   dispatch(
@@ -262,7 +262,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                   setLoading: handleGeneralLoading,
                 })
                   .then((resAgrupacionesPersistentes: any) => {
-                    console.log(resAgrupacionesPersistentes);
+                    //  console.log('')(resAgrupacionesPersistentes);
                     dispatch(
                       setAgrupacionesPersistentesSerieSubserie(
                         [...resAgrupacionesPersistentes,/*{
@@ -289,7 +289,7 @@ export const PersistenciaConfirmadaCCD = (): JSX.Element => {
                     //* asignar esas persistencias al estado si ya existen
                   })
                   .catch((err: any) => {
-                    console.log(err);
+                    //  console.log('')(err);
                   });
               }}
             >

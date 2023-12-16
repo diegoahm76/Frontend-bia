@@ -119,7 +119,7 @@ export const ParametrosReferencia: React.FC = () => {
                 onClick={() => {
                   set_parametro_editado(params.row);
                   set_editar_parametros_is_active(!editar_parametros_is_active);
-                  console.log(
+                  //  console.log('')(
                     'se enviaron los siguientes parametros',
                     params.row
                   );

@@ -47,7 +47,7 @@ const AprobarSolicitudModal = ({
 
     useEffect(() => {
         //  reset_aprobacion(aprobacion_solicitud);
-        console.log(aprobacion_solicitud);
+        //  console.log('')(aprobacion_solicitud);
     }, [aprobacion_solicitud]);
 
 

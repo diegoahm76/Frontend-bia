@@ -129,7 +129,7 @@ export const AgregarBombeo: React.FC = () => {
     //           size="small"
     //           startIcon={<EditIcon />}
     //           onClick={() => {
-    //             console.log(params.row, 'params.row');
+    //             //  console.log('')(params.row, 'params.row');
     //             // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
     //             // set_info_sesion_bombeo(params.row);
     //           }}
@@ -151,7 +151,7 @@ export const AgregarBombeo: React.FC = () => {
     //             />
     //           }
     //           onClick={() => {
-    //             console.log(params.row, 'params.row');
+    //             //  console.log('')(params.row, 'params.row');
     //             // set_id_sesion_bombeo(params.row.id_sesion_prueba_bombeo);
     //             // set_info_sesion_bombeo(params.row);
     //           }}
@@ -303,7 +303,7 @@ export const AgregarBombeo: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
-                    console.log(e.target.value);
+                    //  console.log('')(e.target.value);
                   }}
                   error={!!error}
                 />

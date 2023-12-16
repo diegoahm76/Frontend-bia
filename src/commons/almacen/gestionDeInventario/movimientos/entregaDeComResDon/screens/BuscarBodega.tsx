@@ -23,7 +23,7 @@ const BuscarBodegaComponent = (props: IProps) => {
       const data_bodegas = response.filter((dr: any) => dr.activo);
       set_grid_filtrada([...data_bodegas]);
     });
-    console.log(grid_filtrada);
+    //  console.log('')(grid_filtrada);
   }, []);
 
   const selected_bodega_grid: any = () => {

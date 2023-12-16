@@ -66,10 +66,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         if (data.success) {
           setpaises(data.data);
         } else {
-          console.log(data.detail);
+          //  console.log('')(data.detail);
         }
       } catch (error) {
-        console.log('Error fetching paises:', error);
+        //  console.log('')('Error fetching paises:', error);
       }
     };
     void fetch_data();
@@ -83,7 +83,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
     /*const fetch_data = async (): Promise<any> => {
             try {
                 if (form_values.municipio === null || form_values.municipio === undefined) {
-                    console.log('municipio is null or undefined');
+                    //  console.log('')('municipio is null or undefined');
                     return;
                 }
                 const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/paises/?cod_municipio=${form_values.municipio}`);
@@ -91,10 +91,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
                 if (data.success) {
                     set_pais_retur(data.data);
                 } else {
-                    console.log(data.detail);
+                    //  console.log('')(data.detail);
                 }
             } catch (error) {
-                console.log('Error fetching departamentos de notificación:', error);
+                //  console.log('')('Error fetching departamentos de notificación:', error);
             }
         };*/
 
@@ -104,7 +104,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           form_values.municipio === null ||
           form_values.municipio === undefined
         ) {
-          console.log('municipio is null or undefined');
+          //  console.log('')('municipio is null or undefined');
           return;
         }
         const response = await api.get(
@@ -114,10 +114,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         if (data.success) {
           set_pais_retur(data.data);
         } else {
-          console.log(data.detail);
+          //  console.log('')(data.detail);
         }
       } catch (error) {
-        console.log('Error fetching departamentos de notificación:', error);
+        //  console.log('')('Error fetching departamentos de notificación:', error);
       }
     };
     void fetch_data();
@@ -141,13 +141,13 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
                     if (data.success) {
                         set_departamentos_retur(data.data);
                     } else {
-                        console.log(data.detail);
+                        //  console.log('')(data.detail);
                     }
                 } else {
-                    console.log('form_values.municipio es null.');
+                    //  console.log('')('form_values.municipio es null.');
                 }
             } catch (error) {
-                console.log('Error fetching departamentos de notificación:', error);
+                //  console.log('')('Error fetching departamentos de notificación:', error);
             }
         };*/
 
@@ -161,7 +161,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           if (data.success) {
             set_departamentos_retur(data.data);
           } else {
-            console.log(data.detail);
+            //  console.log('')(data.detail);
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
@@ -169,7 +169,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
             });
           }
         } else {
-          console.log('form_values.municipio es null.');
+          //  console.log('')('form_values.municipio es null.');
           Swal.fire({
             icon: 'info',
             title: 'Oops...',
@@ -177,7 +177,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           });
         }
       } catch (error) {
-        console.log('Error fetching departamentos de notificación:', error);
+        //  console.log('')('Error fetching departamentos de notificación:', error);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -197,10 +197,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         if (data.success) {
           set_departamentos(data.data);
         } else {
-          console.log(data.detail);
+          //  console.log('')(data.detail);
         }
       } catch (error) {
-        console.log('Error fetching departamentos:', error);
+        //  console.log('')('Error fetching departamentos:', error);
       }
     };
     void fetch_data();
@@ -216,10 +216,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         if (data.success) {
           setmunicipios(data.data);
         } else {
-          console.log(data.detail);
+          //  console.log('')(data.detail);
         }
       } catch (error) {
-        console.log('Error fetching municipios:', error);
+        //  console.log('')('Error fetching municipios:', error);
       }
     };
     void fetch_data();
@@ -232,10 +232,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
                 if (data.success) {
                     set_departamentos_noti(data.data);
                 } else {
-                    console.log(data.detail);
+                    //  console.log('')(data.detail);
                 }
             } catch (error) {
-                console.log('Error fetching departamentos de notificación:', error);
+                //  console.log('')('Error fetching departamentos de notificación:', error);
             }
         };*/
     const fetch_data = async (): Promise<any> => {
@@ -245,7 +245,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         if (data.success) {
           set_departamentos_noti(data.data);
         } else {
-          console.log(data.detail);
+          //  console.log('')(data.detail);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -253,7 +253,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           });
         }
       } catch (error) {
-        console.log('Error fetching departamentos de notificación:', error);
+        //  console.log('')('Error fetching departamentos de notificación:', error);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -273,7 +273,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
     /*  const fetch_data = async (): Promise<any> => {
             try {
                 if (form_values.municipio_notificacion === null || form_values.municipio_notificacion === undefined) {
-                    console.log('municipio_notificacion is null or undefined');
+                    //  console.log('')('municipio_notificacion is null or undefined');
                     return;
                 }
                 const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO&municipio=${form_values.municipio_notificacion}`);
@@ -282,10 +282,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
                 if (data.success) {
                     set_departamentos_noti_retur(data.data);
                 } else {
-                    console.log(data.detail);
+                    //  console.log('')(data.detail);
                 }
             } catch (error) {
-                console.log('Error fetching departamentos de notificación:', error);
+                //  console.log('')('Error fetching departamentos de notificación:', error);
             }
         };*/
 
@@ -295,7 +295,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           form_values.municipio_notificacion === null ||
           form_values.municipio_notificacion === undefined
         ) {
-          console.log('municipio_notificacion is null or undefined');
+          //  console.log('')('municipio_notificacion is null or undefined');
           return;
         }
         const response = await api.get(
@@ -306,7 +306,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         if (data.success) {
           set_departamentos_noti_retur(data.data);
         } else {
-          console.log(data.detail);
+          //  console.log('')(data.detail);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -314,7 +314,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           });
         }
       } catch (error) {
-        console.log('Error fetching departamentos de notificación:', error);
+        //  console.log('')('Error fetching departamentos de notificación:', error);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -335,10 +335,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
                 if (data.success) {
                     set_municipios_noti(data.data);
                 } else {
-                    console.log(data.detail);
+                    //  console.log('')(data.detail);
                 }
             } catch (error) {
-                console.log('Error fetching municipios de notificación:', error);
+                //  console.log('')('Error fetching municipios de notificación:', error);
             }
         };*/
     const fetch_data = async (): Promise<any> => {
@@ -350,7 +350,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         if (data.success) {
           set_municipios_noti(data.data);
         } else {
-          console.log(data.detail);
+          //  console.log('')(data.detail);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -358,7 +358,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           });
         }
       } catch (error) {
-        console.log('Error fetching municipios de notificación:', error);
+        //  console.log('')('Error fetching municipios de notificación:', error);
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
@@ -376,12 +376,12 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
     type_direction,
     // set_type_direction
   ] = useState('');
-  console.log(is_error);
+  //  console.log('')(is_error);
   const [
     type_directionn,
     // set_type_direction
   ] = useState('');
-  console.log(is_error);
+  //  console.log('')(is_error);
 
   // const [same_address, setsame_address] = useState(false);
 

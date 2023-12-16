@@ -56,7 +56,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   const handleRequestRadicado = async (radicado: string) => {
     try {
     } catch (error) {
-      console.log(error);
+      //  console.log('')(error);
     } finally {
     }
     const historico = await getHistoricoByRadicado('', handleGeneralLoading);
@@ -66,7 +66,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     );
 
     dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
-    console.log(historico);
+    //  console.log('')(historico);
   };
 
   //* loader button simulacion
@@ -87,7 +87,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   // ? functions
   const setActionsPQRSDF = (pqrsdf: any) => {
-    console.log(pqrsdf);
+    //  console.log('')(pqrsdf);
 
     if (pqrsdf.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
@@ -179,7 +179,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       disabled: shouldDisable(action.id),
     }));
 
-    console.log(actionsPQRSDF);
+    //  console.log('')(actionsPQRSDF);
     dispatch(setActionssToManagePermissions(actionsPQRSDF));
   };
 
@@ -360,7 +360,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               <IconButton
                 onClick={() => {
                   void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    console.log(res);
+                    //  console.log('')(res);
 
                     if (res.length > 0) {
                       setAnexos(res);

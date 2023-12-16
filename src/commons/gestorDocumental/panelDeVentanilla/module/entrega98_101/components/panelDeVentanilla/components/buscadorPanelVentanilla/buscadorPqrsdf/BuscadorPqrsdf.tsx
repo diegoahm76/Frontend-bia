@@ -79,7 +79,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
-                  console.log(selectedOption);
+                  //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
                 options={request?.requestStatuses as any[]}
@@ -161,7 +161,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
-                  console.log(selectedOption);
+                  //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
                 options={request?.unidadesOrganizacionales as any[]}

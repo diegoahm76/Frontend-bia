@@ -107,7 +107,7 @@ export const AgregarEditarOpciones = ({
   };
 
   const generateCode = () => {
-    // console.log("primaryWorkspace.current:", primaryWorkspace.current)
+    // //  console.log('')("primaryWorkspace.current:", primaryWorkspace.current)
     // const code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
     // const code = javascriptGenerator.statementToCode(primaryWorkspace.current, 'DO');
     // setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
@@ -246,7 +246,7 @@ export const AgregarEditarOpciones = ({
           set_refresh_page(true);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
           set_notification_info({ type: 'error', message: `Hubo un error.` });
           set_open_notification_modal(true);
         });
@@ -266,7 +266,7 @@ export const AgregarEditarOpciones = ({
           set_refresh_page(true);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
           set_notification_info({ type: 'error', message: `Hubo un error.` });
           set_open_notification_modal(true);
         });

@@ -15,12 +15,12 @@ export const postPersistenciasConfirmadas = async ({
 }): Promise<any> => {
   try {
     setLoading(true);
-    console.log(dataToPost);
+    //  console.log('')(dataToPost);
     const response = await api.post(PERSISTENCIA_CONFIRMADA_URL, dataToPost);
-    console.log(response);
+    //  console.log('')(response);
     return response;
   } catch (err) {
-    console.log(err);
+    //  console.log('')(err);
     control_error(ERROR_MESSAGE);
   } finally {
     setLoading(false);

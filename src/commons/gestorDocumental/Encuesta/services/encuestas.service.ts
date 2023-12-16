@@ -14,10 +14,10 @@ const fetch_data_dptos_encuestas = async ({
         if (data.success) {
             callbackState(data.data);
         } else {
-            console.log(data.detail);
+            //  console.log('')(data.detail);
         }
     } catch (error) {
-        console.log('Error fetching departamentos:', error);
+        //  console.log('')('Error fetching departamentos:', error);
     }
 };
 
@@ -38,10 +38,10 @@ const fetch_data_municipio_encuestas = async ({
         if (data.success) {
             setmunicipios(data.data);
         } else {
-            console.log(data.detail);
+            //  console.log('')(data.detail);
         }
     } catch (error) {
-        console.log('Error fetching municipios:', error);
+        //  console.log('')('Error fetching municipios:', error);
     }
 };
 
@@ -61,10 +61,10 @@ const fetch_data_pais_encuestas = async ({
             setpaises(data.data);
 
         } else {
-            console.log(data.detail);
+            //  console.log('')(data.detail);
         }
     } catch (error) {
-        console.log('Error fetching paises:', error);
+        //  console.log('')('Error fetching paises:', error);
     }
 };
 

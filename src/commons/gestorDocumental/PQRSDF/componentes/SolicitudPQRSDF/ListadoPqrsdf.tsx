@@ -47,11 +47,11 @@ const ListadoPqrsdf = () => {
     set_detail_is_active(false);
   }, [pqrs]);
   useEffect(() => {
-    console.log(button_option);
+    //  console.log('')(button_option);
   }, [button_option]);
 
   useEffect(() => {
-    console.log(selectedPqr);
+    //  console.log('')(selectedPqr);
     if (selectedPqr !== null) {
       if ('id_PQRSDF' in selectedPqr) {
         dispatch(
@@ -257,7 +257,7 @@ const ListadoPqrsdf = () => {
   ];
 
   const get_x: any = (data: any) => {
-    console.log(data);
+    //  console.log('')(data);
   };
 
   return (

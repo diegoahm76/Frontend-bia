@@ -21,7 +21,6 @@ import { useContext } from 'react';
 import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
 import { formatDate } from '../../../../../../../../../utils/functions/formatDate';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { row } from './../../../../../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
 import { columnsAnexos } from './columnsAnexos/columnsAnexos';
 import { DownloadButton } from '../../../../../../../../../utils/DownloadButton/DownLoadButton';
 
@@ -134,7 +133,7 @@ export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
 
               <RenderDataGrid
                 title="Anexos de la solicitud"
-                rows={[...currentSolicitudUsuario?.anexos]?? []}
+                rows={currentSolicitudUsuario?.anexos ?? []}
                 columns={colums ?? []}
               />
 

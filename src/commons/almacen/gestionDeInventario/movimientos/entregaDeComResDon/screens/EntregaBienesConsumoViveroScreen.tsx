@@ -70,7 +70,7 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
         if (entrega !== null) {
             set_fecha_despacho(dayjs(entrega.fecha_despacho).format("DD/MM/YYYY"))
             set_actualizar_entrega(true);
-            console.log(entrega);
+            //  console.log('')(entrega);
         }
     }, [entrega]);
 

@@ -32,7 +32,7 @@ export const handleCheckboxChange = (
       return elementos;
     }
   });
-  console.log(DATOS_ACTUALIZADOS);
+  //  console.log('')(DATOS_ACTUALIZADOS);
   dispatch(callback(DATOS_ACTUALIZADOS));
 };
 
@@ -64,7 +64,7 @@ export const handleCheckboxChange = (
       return elementos;
     }
   });
-  console.log(DATOS_ACTUALIZADOS);
+  //  console.log('')(DATOS_ACTUALIZADOS);
   dispatch(callback(DATOS_ACTUALIZADOS));
 }; */
 

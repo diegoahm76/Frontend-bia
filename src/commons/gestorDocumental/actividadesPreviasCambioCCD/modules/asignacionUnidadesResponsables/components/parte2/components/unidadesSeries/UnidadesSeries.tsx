@@ -46,7 +46,7 @@ export const UnidadesSeries = (): JSX.Element => {
   const handleRequest = async (paramsRow: any) => {
     dispatch(setCurrentUnidadAsociada(null));
     try {
-      console.log(paramsRow);
+      //  console.log('')(paramsRow);
       const { id_unidad_organizacional } = paramsRow;
       const { id_ccd_actual, id_ccd_nuevo } = seccionesSinResponsable;
 

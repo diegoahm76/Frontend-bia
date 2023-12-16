@@ -55,7 +55,7 @@ const map_list = (
   key?: number | string,
   label?: number | string
 ): any => {
-  console.log(list);
+  //  console.log('')(list);
   let list_aux: IObjListType[] = [];
   if (is_choice) {
     list.forEach((objeto) => {
@@ -79,10 +79,10 @@ export const get_request_types_service = (): any => {
     try {
       const { data } = await api.get('gestor/choices/tipo-solicitud/');
       dispatch(set_request_types(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_request_types_service');
+      //  console.log('')('get_request_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -93,11 +93,11 @@ export const get_list_request_status_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/choices/estado-solicitud/');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_list_request_status(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_list_request_status_service');
+      //  console.log('')('get_list_request_status_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -111,7 +111,7 @@ export const get_file_typology_service = (): any => {
       const { data } = await api.get(
         'gestor/expedientes-archivos/expedientes/listar-tipologias/'
       );
-      console.log(data);
+      //  console.log('')(data);
 
       dispatch(
         set_file_typologies(
@@ -126,7 +126,7 @@ export const get_file_typology_service = (): any => {
       );
       return data;
     } catch (error: any) {
-      console.log('get_file_typology_service');
+      //  console.log('')('get_file_typology_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -141,14 +141,14 @@ export const get_digitalization_requests_service = (params: any): any => {
         `gestor/central-digitalizacion/get-solicitudes-pendientes/`,
         { params }
       );
-      console.log(data);
+      //  console.log('')(data);
       if (data.success) {
         dispatch(set_digitization_requests(data.data));
         control_success(data.detail);
       }
       return data;
     } catch (error: any) {
-      console.log('get_digitalization_requests_service');
+      //  console.log('')('get_digitalization_requests_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -163,7 +163,7 @@ export const get_storage_mediums_service = (): any => {
       dispatch(set_storage_mediums(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_storage_mediums_service');
+      //  console.log('')('get_storage_mediums_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -176,10 +176,10 @@ export const get_file_categories_service = (): any => {
     try {
       const { data } = await api.get('gestor/choices/tipo-archivo/');
       dispatch(set_file_categories(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_file_categories_service');
+      //  console.log('')('get_file_categories_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -190,11 +190,11 @@ export const get_file_origin_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/choices/origen-archivo/');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_file_origins(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_file_origin_service');
+      //  console.log('')('get_file_origin_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -205,18 +205,18 @@ export const get_file_origin_service = (): any => {
 export const add_metadata_service = (metadata: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(metadata);
+      //  console.log('')(metadata);
       const { data } = await api.post(
         `gestor/central-digitalizacion/crear-digitalizacion/`,
         metadata
       );
-      console.log(data);
+      //  console.log('')(data);
 
       control_success(data.detail);
       // dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
-      console.log('add_metadata_service');
+      //  console.log('')('add_metadata_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -231,13 +231,13 @@ export const edit_metadata_service = (metadata: any): any => {
         `gestor/central-digitalizacion/actualizar-digitalizacion/`,
         metadata
       );
-      console.log(data);
+      //  console.log('')(data);
 
       control_success(data.detail);
       // dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
-      console.log('edit_metadata_service');
+      //  console.log('')('edit_metadata_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

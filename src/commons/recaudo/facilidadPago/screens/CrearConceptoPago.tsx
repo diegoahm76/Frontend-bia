@@ -66,11 +66,11 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
         try {
             const url = "/recaudo/configuracion_baisca/valoresvariables/post/";
             const response = await api.post(url, formValues);
-            console.log("Configuración básica creada con éxito", response.data);
+            //  console.log('')("Configuración básica creada con éxito", response.data);
             fetchConfiguraciones()
             control_success("Guardado exitosamente");
         } catch (error: any) {
-            console.log(error.response.data.detail.detail);
+            //  console.log('')(error.response.data.detail.detail);
             control_error(error.response.data.detail?.error);
         }
     };
@@ -104,7 +104,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
         <>
             <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl"
             >
-                {/* <button onClick={() => console.log(tiposCobro)}>Mostrar zonahidrica en la consola</button> */}
+                {/* <button onClick={() => //  console.log('')(tiposCobro)}>Mostrar zonahidrica en la consola</button> */}
                 <Grid container
                     item xs={12} marginLeft={2} marginRight={2} marginTop={3}
                     sx={{

@@ -164,7 +164,7 @@ export const EditarSesionPrueba: React.FC = () => {
               size="small"
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
-                console.log(params.row, 'params.row');
+                //  console.log('')(params.row, 'params.row');
                 set_info_data_sesion_bombeo(params.row);
                 set_id_data_sesion_bombeo(
                   params.row.id_dato_sesion_prueba_bombeo

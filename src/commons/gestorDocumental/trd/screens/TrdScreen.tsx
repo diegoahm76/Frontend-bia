@@ -78,7 +78,7 @@ export const TrdScreen: FC = (): JSX.Element => {
         trd_current?.fecha_terminado !== '' &&
         trd_current?.fecha_terminado !== undefined
     );
-    console.log(
+    //  console.log('')(
       '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ trd_current?.fecha_terminado',
       trd_current?.fecha_terminado
     );
@@ -215,7 +215,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                         onChange(e.target.value);
                         e.target.value.length === 50 &&
                           control_warning('máximo 50 caracteres');
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       inputProps={{ maxLength: 50 }}
                       // error={!!error}
@@ -256,7 +256,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                         onChange(e.target.value);
                         e.target.value.length === 10 &&
                           control_warning('máximo 10 carácteres');
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       inputProps={{ maxLength: 10 }}
                     />
@@ -304,7 +304,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 onClick={() => {
                   reset_all_trd();
                   // dispatch(set_selected_item_from_catalogo_trd_action(null));
-                  // console.log('reset_create_trd_modal');
+                  // //  console.log('')('reset_create_trd_modal');
                   // setTrdCurrent(null);
                 }}
               >

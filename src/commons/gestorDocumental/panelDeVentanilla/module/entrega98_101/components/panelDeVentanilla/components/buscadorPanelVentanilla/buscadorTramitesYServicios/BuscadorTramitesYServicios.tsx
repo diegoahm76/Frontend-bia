@@ -18,7 +18,7 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
   //* se debe establecer un useEffect ya que cada vez que se recargeue el elemento se deben filtrar de diferente manera los elementos
   /* useEffect(() => {
     void getRequestStates().then((res: any) => {
-      console.log(res);
+      //  console.log('')(res);
       setRequestStatuses(res);
     });
   }, []);*/
@@ -110,7 +110,7 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
-                  console.log(selectedOption);
+                  //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
                 options={[] as any[]}

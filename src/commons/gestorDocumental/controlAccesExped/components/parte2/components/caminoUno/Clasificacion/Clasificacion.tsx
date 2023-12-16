@@ -24,7 +24,7 @@ export const Clasificacion = (params: any): JSX.Element | null => {
 
 
   const handleChange = (selectedOption: any) => {
-    console.log(selectedOption)
+    //  console.log('')(selectedOption)
     dispatch(setTipoDeClasificacion(selectedOption));
     setRowsControlInicial(rowsDataGrid.map((row: any) => ({
       ...row,
@@ -45,7 +45,7 @@ export const Clasificacion = (params: any): JSX.Element | null => {
       idCcd: currentCcdCtrlAccesoExp?.id_ccd,
       codClasificacionExp: selectedOption?.value,
     }).then((res) => {
-      console.log(res);
+      //  console.log('')(res);
       if(res?.length > 0){
         dispatch(setVerModuloAutorizacioneGenerales(false));
         dispatch(setControlAccesoExpedientesList(res));
@@ -92,7 +92,7 @@ export const Clasificacion = (params: any): JSX.Element | null => {
                   ccd_current_busqueda?.id_ccd,
                   setloadingSeriesSubseries
                 ).then((res) => {
-                  console.log(res);
+                  //  console.log('')(res);
                   dispatch(setListaSeriesSubseries(res));
                 }); */
                 handleChange(selectedOption);

@@ -33,7 +33,7 @@ const SeleccionBienAprobacion = () => {
     }, [aux_bienes_solicitud]);
 
     useEffect(() => {
-        console.log(current_bien)
+        //  console.log('')(current_bien)
         reset_bien(current_bien)
     }, [current_bien]);
 
@@ -241,7 +241,7 @@ const SeleccionBienAprobacion = () => {
 
 
     const get_bienes_filtro: any = (async () => {
-        console.log(current_nursery)
+        //  console.log('')(current_nursery)
         const id_vivero = current_nursery.id_vivero
         if (id_vivero !== null && id_vivero !== undefined) {
 

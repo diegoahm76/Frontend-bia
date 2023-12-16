@@ -61,7 +61,7 @@ export const Crear: React.FC = () => {
     api
       .post("/transversal/sucursales/sucursal-empresa-crear/", form_values)
       .then((response) => {
-        console.log("Sucursal creada exitosamente");
+        //  console.log('')("Sucursal creada exitosamente");
         setform_values(initial_state);
       })
       .catch((error) => {

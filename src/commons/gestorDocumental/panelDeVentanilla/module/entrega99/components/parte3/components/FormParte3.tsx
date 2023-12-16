@@ -85,7 +85,7 @@ export const FormParte3 = ({
 
   useEffect(() => {
     if (currentAnexo) {
-      console.log('currentAnexo', currentAnexo);
+      //  console.log('')('currentAnexo', currentAnexo);
       setInfoReset({
         ...currentAnexo,
       });
@@ -235,7 +235,7 @@ export const FormParte3 = ({
     control_success('Se ha seleccionado el anexo para editar');
     //* volver al paso 2 ?
     // handleBack();
-    console.log('anexoSeleccionado', anexoSeleccionado);
+    //  console.log('')('anexoSeleccionado', anexoSeleccionado);
 
     //* seleccionar ese elemento como currentAnexo
     dispatch(setCurrentAnexo(anexoSeleccionado));
@@ -495,8 +495,8 @@ export const FormParte3 = ({
               color="primary"
               startIcon={<BuildIcon />}
               onClick={() => {
-                console.log('click siuuu');
-                console.log('abriendo modal de metadatos');
+                //  console.log('')('click siuuu');
+                //  console.log('')('abriendo modal de metadatos');
                 handleModalAgregarMetadatos(true);
               }}
             >

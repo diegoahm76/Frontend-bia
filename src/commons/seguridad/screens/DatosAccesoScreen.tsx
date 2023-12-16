@@ -138,7 +138,7 @@ export const DatosAccesoScreen: React.FC = () => {
       if (data.profile_img.length > 0) {
         datos_persona.append('profile_img', data.profile_img[0]);
       }
-      console.log(datos_persona);
+      //  console.log('')(datos_persona);
       await editar_datos_acceso(datos_persona);
       reset_file_state();
       set_loading_natural(false);
@@ -153,7 +153,7 @@ export const DatosAccesoScreen: React.FC = () => {
 
   useEffect(() => {
     if (datos) {
-      console.log(datos, 'datos');
+      //  console.log('')(datos, 'datos');
       if (datos.profile_img) {
         set_image_url(datos.profile_img);
       } else {

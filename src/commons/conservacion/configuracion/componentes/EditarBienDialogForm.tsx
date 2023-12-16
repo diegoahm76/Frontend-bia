@@ -89,7 +89,7 @@ const EditarBienDialogForm = ({
         );
         set_tipo_elemento(tipo_elemento_format);
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();

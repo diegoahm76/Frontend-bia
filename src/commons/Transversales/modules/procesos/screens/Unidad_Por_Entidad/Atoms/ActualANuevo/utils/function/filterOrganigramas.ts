@@ -7,9 +7,9 @@ export const filtrarOrganigramas = (
   organigramas: any[],
 ): any[] => {
   const organigramaActual = organigramas.find((org: any) => org.actual);
-  console.log('organigramaActualllllllllllllllll', organigramaActual);
+  //  console.log('')('organigramaActualllllllllllllllll', organigramaActual);
 
- // console.log('organigramasssssssssss', organigramas);
+ // //  console.log('')('organigramasssssssssss', organigramas);
 
   const organigramasDisponiblesParaRetornar = organigramas
     .filter(
@@ -23,7 +23,7 @@ export const filtrarOrganigramas = (
       value: item?.id_organigrama
     }));
 
-    console.log('organigramasDisponiblesParaRetornarrrrrrrrrrrrrrrrr', organigramasDisponiblesParaRetornar);
+    //  console.log('')('organigramasDisponiblesParaRetornarrrrrrrrrrrrrrrrr', organigramasDisponiblesParaRetornar);
 
   if (organigramasDisponiblesParaRetornar.length === 0) {
     control_warning(

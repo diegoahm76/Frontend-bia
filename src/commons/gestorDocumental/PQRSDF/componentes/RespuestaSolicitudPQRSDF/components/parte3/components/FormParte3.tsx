@@ -211,8 +211,8 @@ export const FormParte3 = ({
               color="primary"
               startIcon={<BuildIcon />}
               onClick={() => {
-                console.log('click siuuu');
-                console.log('abriendo modal de metadatos');
+                //  console.log('')('click siuuu');
+                //  console.log('')('abriendo modal de metadatos');
                 handleModalAgregarMetadatos(true);
               }}
             >
@@ -230,8 +230,8 @@ export const FormParte3 = ({
               type="submit"
               startIcon={<AddIcon />}
               onClick={() => {
-                console.log('click siuuu');
-                console.log('soy el submit');
+                //  console.log('')('click siuuu');
+                //  console.log('')('soy el submit');
               }}
             >
               AGREGAR ANEXO
@@ -256,7 +256,7 @@ export const FormParte3 = ({
             color="warning"
             startIcon={<ArrowBackIcon />}
             onClick={() => {
-              console.log('click siuuu');
+              //  console.log('')('click siuuu');
             }}
             sx={{
               width: '60%',
@@ -269,7 +269,7 @@ export const FormParte3 = ({
             color="primary"
             startIcon={<CleanIcon />}
             onClick={() => {
-              console.log('click siuuu');
+              //  console.log('')('click siuuu');
             }}
             sx={{
               mt: '1rem',

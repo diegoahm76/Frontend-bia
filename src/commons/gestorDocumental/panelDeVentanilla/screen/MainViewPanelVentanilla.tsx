@@ -33,13 +33,13 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   const handleRequestRadicado = async () => {
     try {
     } catch (error) {
-      console.log(error);
+      //  console.log('')(error);
     } finally {
     }
     const historico = await getHistoricoByRadicado('', handleGeneralLoading);
 
     dispatch(setListaHistoricoSolicitudes(historico));
-    console.log(historico);
+    //  console.log('')(historico);
   };
 
   return (

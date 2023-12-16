@@ -97,7 +97,7 @@ export const AuditoriaScreen = (): JSX.Element => {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `auditorias/get-by-query-params/?rango-inicial-fecha=${new_date_ini}&rango-final-fecha=${new_date_fin}&tipo-documento=${tipo_documento.value}&numero-documento=${numero_documento}&modulo=${modulo.value}&subsistema=${subsistema.value}`
       );
-      console.log(numero_documento);
+      //  console.log('')(numero_documento);
       if (
         tipo_documento_filter &&
         !subsistema_modulo_filter &&

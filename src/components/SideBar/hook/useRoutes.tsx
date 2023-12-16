@@ -18,9 +18,6 @@ export const useRoutes = (): any => {
   const handle_autorizacion_notificacion = () =>
     navigate('/app/usuario/autorizacion_notificacion');
 
-  const handle_indices_electronicos = () =>
-    navigate('/app/usuario/indices_electronicos');
-
   const handleBiaGpt = () => navigate('/app/usuario/chat/bia_gpt');
 
 
@@ -29,7 +26,6 @@ export const useRoutes = (): any => {
     handle_datos_acceso,
     handle_datos_personales,
     handle_autorizacion_notificacion,
-    handle_indices_electronicos, //* quitar
     handleBiaGpt,
   };
 };

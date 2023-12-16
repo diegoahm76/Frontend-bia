@@ -58,7 +58,7 @@ const CierreExpedientesScreen = () => {
     };
 
     useEffect(() => {
-        console.log(selected_expediente)
+        //  console.log('')(selected_expediente)
         reset_cierre_expediente(selected_expediente);
     }, [selected_expediente]);
 
@@ -77,7 +77,7 @@ const CierreExpedientesScreen = () => {
 
     useEffect(() => {
         if (selected_expediente && typeof selected_expediente.id_expediente_documental === 'number') {
-            console.log(selected_expediente);
+            //  console.log('')(selected_expediente);
             reset_cierre_expediente(selected_expediente);
             void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental));
         }

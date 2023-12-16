@@ -39,7 +39,7 @@ const SeleccionarBienConsumoVivero = () => {
     }, [aux_bienes_solicitud]);
 
     useEffect(() => {
-        console.log(current_bien_vivero)
+        //  console.log('')(current_bien_vivero)
         reset_bien(current_bien_vivero)
     }, [current_bien_vivero]);
 
@@ -217,7 +217,7 @@ const SeleccionarBienConsumoVivero = () => {
 
 
     const get_bienes_filtro: any = (async () => {
-        console.log("buscar...")
+        //  console.log('')("buscar...")
         const codigo_bien = get_values_bien("codigo_bien") ?? ""
         const nombre = get_values_bien("nombre") ?? ""
         const nombre_cientifico = get_values_bien("nombre_cientifico") ?? ""
@@ -250,9 +250,9 @@ const SeleccionarBienConsumoVivero = () => {
     };
     const delete_bien_solicitud = (item: IObjBienesSolicitud): void => {
         const bien: IObjBienViveroConsumo | undefined = bienes_vivero.find((p: IObjBienViveroConsumo) => p.id_bien === item.id_bien)
-        console.log("bien", bien)
+        //  console.log('')("bien", bien)
         if (bien !== undefined) {
-            console.log(bien)
+            //  console.log('')(bien)
             dispatch(set_current_bien_vivero(bien))
         }
         const aux_items: IObjBienesSolicitud[] = []

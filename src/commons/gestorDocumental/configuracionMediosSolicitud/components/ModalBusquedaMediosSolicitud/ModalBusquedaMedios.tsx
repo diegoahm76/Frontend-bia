@@ -86,7 +86,7 @@ export const MostrarModalBuscarMediosSolicitud: React.FC = () => {
     const fetch_delete_registro = async (idRegistro: number): Promise<void> => {
         try {
 
-            console.log(idRegistro)
+            //  console.log('')(idRegistro)
             // Define la URL del servidor junto con el ID del registro que deseas eliminar
             const url = `/gestor/pqr/tipos_pqr/eliminar-medio-solicitud/${idRegistro}/`;
 

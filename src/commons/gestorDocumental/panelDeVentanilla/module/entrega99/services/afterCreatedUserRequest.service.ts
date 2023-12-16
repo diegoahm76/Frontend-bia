@@ -16,7 +16,7 @@ export const getAnexosSolicitud = async (idSolicitud: number) => {
     const url = `${baseUrl}anexos/get/${idSolicitud}/`;
 
     const { data } = await api.get(url);
-    console.log(data?.data);
+    //  console.log('')(data?.data);
     return data?.data;
 
   } catch (error) {}

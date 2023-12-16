@@ -33,7 +33,7 @@ export const LiquidacionScreen = (): JSX.Element => {
         set_opciones_liquidaciones(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
       .finally(() => {
         set_refresh_page(false);
@@ -50,7 +50,7 @@ export const LiquidacionScreen = (): JSX.Element => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       });
@@ -64,7 +64,7 @@ export const LiquidacionScreen = (): JSX.Element => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
 

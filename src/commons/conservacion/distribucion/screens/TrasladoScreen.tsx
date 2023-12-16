@@ -174,7 +174,7 @@ export function TrasladoScreen(): JSX.Element {
         );
       }
     } else {
-      console.log('crear');
+      //  console.log('')('crear');
       set_action('crear');
       const fecha = new Date(data.fecha_traslado ?? '').toISOString();
 

@@ -106,7 +106,7 @@ const SeleccionarPersona = ({
           nombre_completo: String(persona_data.data.primer_nombre) + " " + String(persona_data.data.primer_apellido)})
        
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();
@@ -133,7 +133,7 @@ const SeleccionarPersona = ({
         control_error(persona_data.detail)
       }
     } catch (err) {
-      console.log(err);
+      //  console.log('')(err);
     }
   })
  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -184,7 +184,7 @@ const get_personas: any = (async () => {
       }
     }
   } catch (err) {
-    console.log(err);
+    //  console.log('')(err);
   }
 })
 

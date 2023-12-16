@@ -28,7 +28,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import {
   open_drawer_desktop,
@@ -37,7 +36,7 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import ListIcon from '@mui/icons-material/List';
 import type { AuthSlice } from '../../commons/auth/interfaces';
-import { logout /* set_permissions */ } from '../../commons/auth/store';
+import { logout } from '../../commons/auth/store';
 import { SuperUserScreen } from '../../commons/seguridad/screens/SuperUserScreen';
 import { FooterGov } from '../goviernoEnLinea/FooterGov';
 import { HeaderGov } from '../goviernoEnLinea/HeaderGov';
@@ -63,7 +62,6 @@ export const SideBar: FC<SideBarProps> = ({
     handle_datos_acceso,
     handle_datos_personales,
     handle_autorizacion_notificacion,
-    handle_indices_electronicos, //* quitar también
     handleBiaGpt,
   } = useRoutes();
 
@@ -74,8 +72,7 @@ export const SideBar: FC<SideBarProps> = ({
   const { userinfo, permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
   );
-  // console.log(userinfo);
-  // console.log(permisos_store);
+
   const [permisos, set_permisos] = useState<any[]>([]);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
@@ -237,22 +234,6 @@ export const SideBar: FC<SideBarProps> = ({
                 onClick={handle_autorizacion_notificacion}
               />
             </ListItemButton>
-            {/* ------------ índices electrónicos ------------  */}
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <ListIcon
-                  sx={{
-                    color: mod_dark ? '#fafafa' : '#141415',
-                    height: '20px',
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText
-                primary="Índices electrónicos"
-                onClick={handle_indices_electronicos}
-              />
-            </ListItemButton>
-
             {/* --------- Validamos si es superusuario para delegacion de superUsuario ------------- */}
             {userinfo?.is_superuser && (
               <ListItemButton

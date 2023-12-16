@@ -15,8 +15,8 @@ export const get_info = async (
         api.get('choices/tipo-documento/')
       ]);
 
-    console.log(data_subsistemas.data);
-    console.log(data_modulos.data);
+    //  console.log('')(data_subsistemas.data);
+    //  console.log('')(data_modulos.data);
 
     const subsistemas_adapted = adapter_subsistemas_choices(
       data_subsistemas.data
@@ -30,6 +30,6 @@ export const get_info = async (
     set_modulos_options(modulos_adapted);
     set_tipo_documento_options(documentos_format);
   } catch (err) {
-    console.log(err);
+    //  console.log('')(err);
   }
 };

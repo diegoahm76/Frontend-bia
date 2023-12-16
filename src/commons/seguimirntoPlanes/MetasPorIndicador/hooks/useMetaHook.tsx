@@ -55,7 +55,7 @@ export const useMetaHook = (): any => {
 
   const onsubmit_meta = handleSubmit_meta(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_indicador = id_indicador;
       set_is_saving_meta(true);
       await post_meta(data as IMetaIndicador);
@@ -76,7 +76,7 @@ export const useMetaHook = (): any => {
 
   const onsubmit_editar = handleSubmit_meta(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_meta(true);
       data.id_indicador = id_indicador;
       await put_meta((id_meta as number) ?? 0, data as IMetaIndicador);

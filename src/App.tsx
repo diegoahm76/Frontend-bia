@@ -14,9 +14,11 @@ export const App = () => {
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      console.log('Estamos en desarrollo, siuuuu!');
+      // ? se accede desde el servidor local
+      // //  console.log('')('Estamos en desarrollo');
     } else if (process.env.NODE_ENV === 'production') {
-      console.log('Estamos en producción!');
+      // ? se accede desde el servidor de producción (luego de hacer build) del proyecto
+      // //  console.log('')('Estamos en producción!');
     }
   })
 

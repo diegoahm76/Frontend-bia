@@ -39,7 +39,7 @@ export const AcordeonPqrsdf = () => {
   const accordionRef = useRef<any>(null);
 
   useEffect(() => {
-    console.log(listaHistoricoSolicitudes)
+    //  console.log('')(listaHistoricoSolicitudes)
     if (expanded && accordionRef.current) {
       accordionRef.current.scrollIntoView({
         behavior: 'smooth',

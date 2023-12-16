@@ -52,7 +52,7 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
           }
         : elemento
     );
-    console.log(DATOS_ACTUALIZADOS);
+    //  console.log('')(DATOS_ACTUALIZADOS);
     dispatch(callback(DATOS_ACTUALIZADOS));
   };
 
@@ -79,7 +79,7 @@ export const UnidadExterSecResp: FC<any> = (): JSX.Element => {
           }
         : elemento
     );
-    console.log(DATOS_ACTUALIZADOS);
+    //  console.log('')(DATOS_ACTUALIZADOS);
     dispatch(callback(DATOS_ACTUALIZADOS));
   };
 

@@ -44,7 +44,7 @@ export const EditarPrograma: React.FC = () => {
 
   useEffect(() => {
     if (data_programa) {
-      console.log(data_programa, 'data_programa');
+      //  console.log('')(data_programa, 'data_programa');
       set_start_date(dayjs(data_programa.fecha_inicio));
       set_value('fecha_fin', data_programa.fecha_fin);
       set_value('fecha_inicio', data_programa.fecha_inicio);

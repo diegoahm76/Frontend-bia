@@ -108,7 +108,7 @@ export const SeccionSubseccionMain: React.FC = () => {
   return (
     <form
       onSubmit={(e) => {
-        console.log(errors);
+        //  console.log('')(errors);
         if (is_register_seccion || is_register_subseccion)
           return void on_submit(e);
         if (is_editar_subseccion || is_seleccionar_seccion)

@@ -17,7 +17,7 @@ export const get_organigrama_actual_lideres_screen_service: any = async () => {
     const { data } = await api.get(url);
     return data.data;
   } catch (error: any) {
-    console.log(error.response.data, 'error');
+    //  console.log('')(error.response.data, 'error');
     control_error(error.response.data.detail);
     return error as AxiosError;
   }
@@ -29,10 +29,10 @@ export const get_asignaciones_lideres_organigrama_actual_service: any =
     try {
       const url = 'transversal/lideres/get-list-actual/';
       const { data } = await api.get(url);
-     console.log(data.data, 'data asignaciones lideres organigrama actual');
+     //  console.log('')(data.data, 'data asignaciones lideres organigrama actual');
       return data.data;
     } catch (error: any) {
-      console.log(error.response.data, 'error');
+      //  console.log('')(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -76,10 +76,10 @@ export const get_asignaciones_lideres_by_id_organigrama_service: any = async (
   try {
     const url = `transversal/lideres/get-list/${idOrganigrama}/`;
     const { data } = await api.get(url);
-    console.log(data.data, 'data asignaciones lideres by organigrama');
+    //  console.log('')(data.data, 'data asignaciones lideres by organigrama');
     return data.data;
   } catch (error: any) {
-    console.log(error.response.data, 'error');
+    //  console.log('')(error.response.data, 'error');
     control_error(error.response.data.detail);
     return error as AxiosError;
   }
@@ -92,10 +92,10 @@ export const get_unidades_organizacionales_by_id_organigrama_service: any = asyn
   try {
     const url = `transversal/organigrama/unidades/get-by-organigrama/${idOrganigrama}/`;
     const { data } = await api.get(url);
-    console.log(data.data, 'data unidades organizacionales by organigrama');
+    //  console.log('')(data.data, 'data unidades organizacionales by organigrama');
     return data.data;
   } catch (error: any) {
-    console.log(error.response.data, 'error');
+    //  console.log('')(error.response.data, 'error');
     control_error(error.response.data.detail);
     return error as AxiosError;
   }

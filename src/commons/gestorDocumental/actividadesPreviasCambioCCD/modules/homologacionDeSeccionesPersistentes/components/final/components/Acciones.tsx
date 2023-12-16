@@ -71,7 +71,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
                   t.id_unidad_org_nueva === el.id_unidad_nueva
               )
             : el?.tiene_agrupaciones ?? false,
-            console.log('soy el tiene agrupaciones', tieneAgrupaciones);
+            //  console.log('')('soy el tiene agrupaciones', tieneAgrupaciones);
         }
         return {
           id_unidad_actual: el.id_unidad_actual,

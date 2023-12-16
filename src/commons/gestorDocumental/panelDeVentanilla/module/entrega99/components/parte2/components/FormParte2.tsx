@@ -28,7 +28,7 @@ export const FormParte2 = ({
 
   useEffect(() => {
     if (currentAnexo) {
-      console.log('currentAnexo', currentAnexo);
+      //  console.log('')('currentAnexo', currentAnexo);
       setInfoReset({
         ...currentAnexo,
       });

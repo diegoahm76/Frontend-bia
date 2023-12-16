@@ -55,8 +55,8 @@ export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
     dispatch: React.Dispatch<any>,
     callback: Function
   ): void => {
-    console.log(arrayComparacion)
-    console.log(callback)
+    //  console.log('')(arrayComparacion)
+    //  console.log('')(callback)
     const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
       elemento.hasOwnProperty(compararPor) &&
       elemento[compararPor] === valorComparar
@@ -73,7 +73,7 @@ export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
           }
         : elemento
     );
-    // console.log(DATOS_ACTUALIZADOS);
+    // //  console.log('')(DATOS_ACTUALIZADOS);
     controlAccesoExpedientesList.length > 0
       ? dispatch(callback(DATOS_ACTUALIZADOS))
       : callback(DATOS_ACTUALIZADOS);
@@ -90,8 +90,8 @@ export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
     callback: Function
   ): void => {
 
-    console.log(arrayComparacion)
-    console.log(callback)
+    //  console.log('')(arrayComparacion)
+    //  console.log('')(callback)
 
     const DATOS_ACTUALIZADOS = arrayComparacion.map((elemento: any) =>
       elemento.hasOwnProperty(compararPor) &&
@@ -107,7 +107,7 @@ export const AutorizacionesGenerales: FC<any> = (params: any): JSX.Element => {
           }
         : elemento
     );
-    // console.log(DATOS_ACTUALIZADOS);
+    // //  console.log('')(DATOS_ACTUALIZADOS);
     controlAccesoExpedientesList.length > 0
       ? dispatch(callback(DATOS_ACTUALIZADOS))
       : callback(DATOS_ACTUALIZADOS);

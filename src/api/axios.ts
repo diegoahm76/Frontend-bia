@@ -11,8 +11,8 @@ import {
 
 export const baseURL =
   process.env.NODE_ENV === 'development'
-    ? process.env.REACT_APP_BETA_URL || ''
-    : process.env.REACT_APP_PROD_URL || '';
+    ? process.env.REACT_APP_BETA_URL || 'https://back-end-bia-beta.up.railway.app/api/'
+    : process.env.REACT_APP_PROD_URL || 'http://70.30.6.237';
 
 export const api = axios.create({
   baseURL,

@@ -83,7 +83,7 @@ export const Actual: React.FC = () => {
   useEffect(() => {
     if (data_consecutivo?.id_config_tipo_radicado_agno) {
       set_id_radicado(data_consecutivo?.id_config_tipo_radicado_agno);
-      console.log('data_consecutivo', data_consecutivo);
+      //  console.log('')('data_consecutivo', data_consecutivo);
       reset_radicados({
         agno_radicado: currentYear,
         implementar: data_consecutivo?.implementar,

@@ -86,7 +86,7 @@ export const GET_UNIDADES_NO_RESPONSABLE_PERSISTENTE = async (
     };
   } catch (error: any) {
     if (error?.response?.status === 403) {
-      console.log('error', error?.response?.status);
+      //  console.log('')('error', error?.response?.status);
       await Swal.fire({
         icon: 'warning',
         title: '¡CUIDADO!',
@@ -136,7 +136,7 @@ export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
 
     return returnedData;
   } catch (error: any) {
-    console.log(error?.response?.status);
+    //  console.log('')(error?.response?.status);
 
     if (error?.response?.status === 500) {
       void Swal.fire({
@@ -174,7 +174,7 @@ export const GET_UNIDADES_ORGNAIZACIONALES_UNIDADES_RESP = async ({
 
     return [];
   } catch (error: any) {
-    console.log(error?.response?.status);
+    //  console.log('')(error?.response?.status);
 
     if (error?.response?.status === 500) {
       void Swal.fire({

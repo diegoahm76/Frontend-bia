@@ -56,7 +56,7 @@ export const useProyectoHook = (): any => {
 
   const onsubmit_proyecto = handleSubmit_proyecto(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_programa = id_programa;
       set_is_saving_proyecto(true);
       await post_proyecto(data as IProyectos);
@@ -77,7 +77,7 @@ export const useProyectoHook = (): any => {
 
   const onsubmit_editar = handleSubmit_proyecto(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_proyecto(true);
       await put_proyecto((id_proyecto as number) ?? 0, data as IProyectos);
       control_success('Se actualizó correctamente');

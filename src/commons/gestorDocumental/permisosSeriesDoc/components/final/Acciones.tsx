@@ -95,7 +95,7 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
       objetoToSend,
       setLoadingButton,
      ).then((res) => {
-      console.log(res);
+      //  console.log('')(res);
       void get_restricciones_series_documentales(
         currentSeriesSubseries.id_cat_serie_und,
         setLoadingRestricciones
@@ -137,10 +137,10 @@ export const Acciones: FC<any> = (): JSX.Element | null => {
 
       });
 
-      console.log('objetoToSend', objetoToSend);
-      console.log(restricciones);
+      //  console.log('')('objetoToSend', objetoToSend);
+      //  console.log('')(restricciones);
     } catch (error) {
-      console.log(error);
+      //  console.log('')(error);
     }
   };
   return (

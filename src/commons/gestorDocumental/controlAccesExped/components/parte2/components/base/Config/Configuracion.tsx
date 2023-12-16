@@ -23,7 +23,7 @@ export const ConfiguracionInicial = (params: any): JSX.Element | null => {
     const { handleModalSecSub } = useContext(ModalAndLoadingContext);
 
   const handleChange = (selectedOption: any) => {
-    console.log(selectedOption)
+    //  console.log('')(selectedOption)
     dispatch(setVerModuloAutorizacioneGenerales(false));
     dispatch(setControlAccesoExpedientesList([]));
     dispatch(setCurrentControlAccesoExpedientes(null));
@@ -43,7 +43,7 @@ export const ConfiguracionInicial = (params: any): JSX.Element | null => {
     
     //* if selected option . value = 2, se debe hacer la petición http al servidor para obtener las unidades organizacionales asociadas a ese organigrama y en consecuencia las series documentales asociadas a esa unidad organizacional luego de seleccionar la respectiva unidad organizacional
     if(selectedOption?.value === 1){
-      console.log('getting directly control de acceso de expedientes')
+      //  console.log('')('getting directly control de acceso de expedientes')
       dispatch(setUnidadesOrganizacionales([]));
       dispatch(setCurrentUnidadOrganizacional(null));
       dispatch(setSeriesSubseriesList([]));
@@ -59,7 +59,7 @@ export const ConfiguracionInicial = (params: any): JSX.Element | null => {
       dispatch(setCurrentSerieSubserie(null));
 
 
-      console.log('getting unidades organizacionales, then get series documentales, then get control de acceso de expedientes')
+      //  console.log('')('getting unidades organizacionales, then get series documentales, then get control de acceso de expedientes')
       void getUnidadesOrganizacionalesSeccionSubseccion({
         idOrganigrama: currentCcdCtrlAccesoExp.id_organigrama,
         setLoadingUnidadesOrg: handleModalSecSub,

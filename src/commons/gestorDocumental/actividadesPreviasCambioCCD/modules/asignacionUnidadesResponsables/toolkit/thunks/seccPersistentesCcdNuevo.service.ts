@@ -14,7 +14,7 @@ export const getSeccionesPersistentesCcdNuevo = async (
     const url = `gestor/ccd/persistencia-unidades-ccd/get/${id_ccd_nuevo}`;
     const { data } = await api.get(url);
 
-    console.log('data', data);
+    //  console.log('')('data', data);
 
     if (data?.data?.unidades_persistentes.length > 0) {
       control_success(

@@ -193,7 +193,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
             <IconButton
               onClick={() => {
                 if (params.row.usado) {
-                  console.log('esta vaina esta usada yuck');
+                  //  console.log('')('esta vaina esta usada yuck');
                 }
 
                 handleSeleccionCcdOficinasResponsables(params);

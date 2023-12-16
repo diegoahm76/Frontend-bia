@@ -86,7 +86,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   };
 
   const setActionsComplementos = (complemento: any) => {
-    console.log(complemento);
+    //  console.log('')(complemento);
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(complemento));
     void Swal.fire({
       icon: 'success',
@@ -99,7 +99,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       ...action,
       disabled: shouldDisable(action.id, complemento),
     }));
-    console.log(actionsComplementosPermissions);
+    //  console.log('')(actionsComplementosPermissions);
     dispatch(setActionssToManagePermissionsComplementos(actionsComplementosPermissions));
   };
 
@@ -162,7 +162,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                   void getAnexosComplemento(
                     params?.row?.idComplementoUsu_PQR
                   ).then((res) => {
-                    console.log(res);
+                    //  console.log('')(res);
 
                     if (res.length > 0) {
                       setAnexos(res);
