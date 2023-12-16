@@ -26,7 +26,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
-import { render } from '@testing-library/react';
+import { ModalDenuncia } from '../../../../../Atom/components/ModalDenuncia';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -198,7 +198,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
             color={params.value ? 'success' : 'error'}
           />
         );
-      }
+      },
     },
     {
       headerName: 'Días para respuesta',
@@ -341,13 +341,17 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
             size="small"
             label={params.value}
             color={
-              params.row?.estado_asignacion_grupo === 'Pendiente' ? 'warning' :
-              params.row?.estado_asignacion_grupo === 'Aceptado' ? 'success' :
-              params.row?.estado_asignacion_grupo === 'Rechazado' ? 'error' : 'default'
+              params.row?.estado_asignacion_grupo === 'Pendiente'
+                ? 'warning'
+                : params.row?.estado_asignacion_grupo === 'Aceptado'
+                ? 'success'
+                : params.row?.estado_asignacion_grupo === 'Rechazado'
+                ? 'error'
+                : 'default'
             }
           />
         );
-      }
+      },
     },
     {
       headerName: 'Acciones',
@@ -361,15 +365,14 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 onClick={() => {
                   void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     //  console.log('')(res);
-
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
                     if (res.length > 0) {
-                      setAnexos(res);
                       handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                       handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      setActionsPQRSDF(params?.row);
-                      navigate(
-                        `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                      );
                       return;
                     }
 
@@ -499,14 +502,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       },
     },
   ];
-
-  /*rows={
-    [
-      ...listaElementosPqrsfTramitesUotros,
-      ...listaElementosPqrsfTramitesUotros,
-      ...listaElementosPqrsfTramitesUotros,
-    ] ?? []
-  }*/
 
   return (
     <>
