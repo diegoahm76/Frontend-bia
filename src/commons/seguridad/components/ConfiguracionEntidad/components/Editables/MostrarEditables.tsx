@@ -163,7 +163,7 @@ export const MostrarEditables: React.FC = () => {
                             fullWidth
                             label="Director"
                             value={director}
-                            onClick={(): void => { fetch_data(id_persona_director_actual).then(//  console.log('')).catch(console.error) }}
+                            onClick={(): void => { fetch_data(id_persona_director_actual) }}
                         />
 
                         <Box style={{ display: 'flex' }}>
@@ -192,7 +192,7 @@ export const MostrarEditables: React.FC = () => {
                             fullWidth
                             label="Coordinador de Almacen"
                             value={Coordinadoalmacen}
-                            onClick={(): void => { fetch_data(id_persona_coord_almacen_actual).then(//  console.log('')).catch(console.error) }}
+                            onClick={(): void => { fetch_data(id_persona_coord_almacen_actual)}}
                         />
 
                         <Box style={{ display: 'flex' }}>
@@ -223,7 +223,7 @@ export const MostrarEditables: React.FC = () => {
                             fullWidth
                             label="Coordinador de Transporte"
                             value={Coordinadorviveros}
-                            onClick={(): void => { fetch_data(id_persona_coord_viveros_actual).then(//  console.log('')).catch(console.error) }}
+                            onClick={(): void => { fetch_data(id_persona_coord_viveros_actual) }}
                         />
 
 
@@ -255,7 +255,7 @@ export const MostrarEditables: React.FC = () => {
                             fullWidth
                             label="Coordinador de Viveros"
                             value={Coordinadortransporte}
-                            onClick={(): void => { fetch_data(id_persona_respon_transporte_actual).then(//  console.log('')).catch(console.error) }} />
+                            onClick={(): void => { fetch_data(id_persona_respon_transporte_actual)}} />
 
 
                         <Box style={{ display: 'flex' }}>
@@ -287,7 +287,7 @@ export const MostrarEditables: React.FC = () => {
                             fullWidth
                             label="Almacenista"
                             value={almacenista}
-                            onClick={(): void => { fetch_data(id_persona_almacenista).then(//  console.log('')).catch(console.error) }} />
+                            onClick={(): void => { fetch_data(id_persona_almacenista)/*.then(console.log('')).catch(console.error)*/ }} />
 
                         <Box style={{ display: 'flex' }}>
                             <ModalEditarCargo name={data_nombre[4]} fecha={fecha_inicio_almacenista} titlee={"Almacenista"} cod={5} onClick={handleButtonClick} />

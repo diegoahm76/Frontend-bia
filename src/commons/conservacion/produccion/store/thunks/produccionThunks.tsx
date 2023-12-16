@@ -507,10 +507,6 @@ export const get_bienes_incidencia_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      //  console.log('')(
-        `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${tipo ?? 'IN'
-        }=&codigo_bien=${codigo_bien ?? ''}&nombre=${nombre ?? ''}`
-      );
       // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
       const { data } = await api.get(
         `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${tipo ?? 'IN'

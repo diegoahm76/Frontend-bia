@@ -42,14 +42,12 @@ export const FormParte1 = ({
   //* context declaration
   const {
     secondLoading,
-    fifthLoading,
     handleFifthLoading,
     handleOpenModalOne,
   } = useContext(ModalAndLoadingContext);
   const {
     setInfoInicialUsuario,
     infoInicialUsuario,
-    currentSolicitudUsuario,
     setCurrentSolicitudUsuario,
   } = useContext(SolicitudAlUsuarioContext);
 
@@ -88,8 +86,8 @@ export const FormParte1 = ({
 
   const getInfoSolicitud = async (params: any) => {
     const [detalleSolicitud, anexos] = await Promise.all([
-      getDetalleSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf),
-      getAnexosSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf),
+      getDetalleSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf, handleFifthLoading),
+      getAnexosSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf, handleFifthLoading),
     ]);
 
     const data = {
@@ -107,6 +105,7 @@ export const FormParte1 = ({
       headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
+        <>
         <Tooltip title="Ver solicitud realizada">
           <IconButton
             onClick={async () => {
@@ -129,6 +128,7 @@ export const FormParte1 = ({
             </Avatar>
           </IconButton>
         </Tooltip>
+        </>
       ),
     },
   ];

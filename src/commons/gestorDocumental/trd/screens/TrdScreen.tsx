@@ -78,10 +78,6 @@ export const TrdScreen: FC = (): JSX.Element => {
         trd_current?.fecha_terminado !== '' &&
         trd_current?.fecha_terminado !== undefined
     );
-    //  console.log('')(
-      '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ trd_current?.fecha_terminado',
-      trd_current?.fecha_terminado
-    );
   }, [trd_current?.fecha_terminado]);
 
   // ? modal context

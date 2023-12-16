@@ -203,10 +203,6 @@ export const get_tipo_entrada = (): any => {
 export const get_bienes_entrada = (id_entrada_almacen: number | null): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            //  console.log('')(
-                `almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ''
-                }`
-            );
             const { data } = await api.get(
                 `almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ''
                 }/`

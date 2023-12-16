@@ -180,9 +180,6 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            //  console.log('')(
-              'buscando asiganciones de lideres de las unidades organizacionales'
-            );
             void getAsignacionesLideresByFilter(
               watch_asignaciones_lider_by_unidad_value?.nombre_organigrama,
               watch_asignaciones_lider_by_unidad_value?.version_organigrama,

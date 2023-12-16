@@ -100,10 +100,6 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 onClick={() => {
                   set_estacion_editado(params.row);
                   set_editar_estacion_is_active(!editar_estacion_is_active);
-                  //  console.log('')(
-                    'se enviaron los siguientes parametros',
-                    params.row
-                  );
                 }}
               />
             </Avatar>

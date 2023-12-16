@@ -27,9 +27,6 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
     event: any,
     id_restriccion: number
   ): void => {
-    //  console.log('')(
-      restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
-    );
     const RESTRICCIONES_ACTUALIZADAS =
       restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable.map(
         (restriccion: any) =>
