@@ -6,16 +6,35 @@ import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useSstepperFn } from '../../../hook/useSstepperFn';
+import { useAppSelector } from '../../../../../../../../hooks';
+import { useEffect } from 'react';
 export const FormParte2 = ({
   controlFormulario,
   handleSubmitFormulario,
   errorsFormulario,
   resetFormulario,
   watchFormulario,
+  // setInfoReset,
 }: any): JSX.Element => {
   // ? stepper hook
   const { handleNext, handleBack } = useSstepperFn();
 
+    //* redux states functions
+/*    const { currentAnexo } = useAppSelector(
+      (state: any) => state.AsignacionUsuarioSlice
+    );
+  
+
+
+  useEffect(() => {
+    if (currentAnexo) {
+      console.log('currentAnexo', currentAnexo);
+      setInfoReset({
+        ...currentAnexo,
+      });
+    }
+  }, [currentAnexo]);
+*/
   return (
     <>
       <form
@@ -153,26 +172,6 @@ export const FormParte2 = ({
           >
             Siguiente
           </Button>
-
-          {/* <Button
-            variant="contained"
-            color="warning"
-            onClick={() => {
-              console.log('click siuuu');
-
-
-              //* revisar si se deben hacer validaicones, momentanemante parece que noP
-
-              handleBack();
-            }}
-            startIcon={<ArrowBackIcon />}
-            sx={{
-              width: '35%',
-              ml: '1.2rem',
-            }}
-          >
-            Volver
-          </Button>*/}
         </Grid>
       </form>
     </>

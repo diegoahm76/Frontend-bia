@@ -131,6 +131,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
           <Title title={infoTitle || 'Información'} />
+
+          {/* condicional sobre esto para añadir campos diferentes para el complemento o para la pqrsdf */}
+
           <Grid
             container
             spacing={2}
@@ -197,6 +200,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
           </Grid>
         </Grid>
 
+        {/*arriba*/}
+        {/* condicional sobre esto para añadir campos diferentes para el complemento o para la pqrsdf */}
+
         <RenderDataGrid
           rows={anexos || []}
           columns={colums || []}
@@ -238,14 +244,15 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
-              {/* se debe revisar si la URL se debe cambiar al punto master */}
-              {/* https://back-end-bia-beta.up.railway.app/media/Reporte%20(84).xlsx  */}
               <Grid item xs={12} sm={12}>
                 <DownloadButton
                   fileName={`archivo anexo ${archivoAnexos?.anexoActual?.nombre_anexo}`}
                   fileUrl={
-                    `https://back-end-bia-beta.up.railway.app${archivoAnexos?.archivo}` ??
-                    ''
+                    `${
+                      process.env.NODE_ENV === 'development'
+                        ? process.env.REACT_APP_BETA_URL
+                        : process.env.REACT_APP_PROD_URL
+                    }${archivoAnexos?.archivo}` ?? ''
                   }
                   condition={false}
                 />

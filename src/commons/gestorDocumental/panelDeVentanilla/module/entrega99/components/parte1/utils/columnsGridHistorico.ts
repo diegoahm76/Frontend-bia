@@ -17,18 +17,18 @@ export const columnsGridHistorico = [
   {
     headerName: 'Fecha de radicado de salida',
     field: 'fecha_radicado_salida',
-    width: 230,
+    width: 220,
     renderCell: (params: any) => params.value || 'N/A',
   },
   {
     headerName: 'Número de radicado de salida',
     field: 'numero_radicado',
-    width: 250,
+    width: 230,
   },
   {
     headerName: 'Estado',
     field: 'estado',
-    width: 230,
+    width: 170,
   },
 ]
 

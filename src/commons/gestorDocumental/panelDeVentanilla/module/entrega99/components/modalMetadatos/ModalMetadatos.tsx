@@ -25,6 +25,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
 import {
   categoriaArhivo,
+  origenArchivo,
   tieneReplicaFisisca,
   tieneTipologiaRelacionada,
 } from './utils/choices';
@@ -40,13 +41,24 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { setMetadatos } from '../../toolkit/slice/AsignacionUsuarioSlice';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { control } from 'leaflet';
 
 export const ModalMetadatos = ({
   tipologiasDocumentales,
   setTipologiasDocumentales,
+  watchFormulario,
+  resetManejoMetadatosModalFunction,
+  controlManejoMetadatosModal,
+  watchExeManejoModalMetadatos,
+  resetManejoMetadatosModal,
 }: {
   tipologiasDocumentales: any;
   setTipologiasDocumentales: React.Dispatch<React.SetStateAction<any>>;
+  watchFormulario: any;
+  resetManejoMetadatosModalFunction: any;
+  controlManejoMetadatosModal: any;
+  watchExeManejoModalMetadatos: any;
+  resetManejoMetadatosModal: any;
 }): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -59,20 +71,16 @@ export const ModalMetadatos = ({
     ModalAndLoadingContext
   );
   //* redux states
-  const { metadatos, currentAnexo } = useAppSelector(
+  const { metadatos, currentAnexo, viewMode } = useAppSelector(
     (state) => state.AsignacionUsuarioSlice
   );
 
   //* hooks
-  const {
-    controlManejoMetadatosModal,
-    watchExeManejoModalMetadatos,
-    resetManejoMetadatosModal,
-    resetManejoMetadatosModalFunction,
-  } = usePanelVentanilla();
+/*  const {
+  
+  } = usePanelVentanilla();*/
 
   //? useeffect to get tipologias documentales
-
   useEffect(() => {
     if (
       watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value ===
@@ -87,31 +95,7 @@ export const ModalMetadatos = ({
   }, [watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value]);
 
   useEffect(() => {
-    resetManejoMetadatosModal({
-      categoriaArchivoMetadatos: {
-        value: '',
-        label: '',
-      },
-      tieneReplicaFisicaMetadatos: {
-        value: '',
-        label: '',
-      },
-      origenArchivoMetadatos: 'Electrónico',
-      tieneTipologiaRelacionadaMetadatos: {
-        value: '',
-        label: '',
-      },
-      tipologiasDocumentalesMetadatos: {
-        value: '',
-        label: '',
-      },
-      cualTipologiaDocumentalMetadatos: '',
-      asuntoMetadatos: '',
-      descripcionMetadatos: '',
-      palabrasClavesMetadatos: [],
-    });
-
-    if (metadatos && currentAnexo?.categoriaArchivoMetadatos?.label) {
+    if (metadatos && currentAnexo) {
       resetManejoMetadatosModal({
         categoriaArchivoMetadatos: {
           value: metadatos?.categoriaArchivoMetadatos?.value
@@ -129,7 +113,14 @@ export const ModalMetadatos = ({
             ? metadatos?.tieneReplicaFisicaMetadatos?.label
             : '',
         },
-        origenArchivoMetadatos: 'Electrónico',
+        origenArchivoMetadatos: {
+          value: metadatos?.origenArchivoMetadatos?.value
+            ? metadatos?.origenArchivoMetadatos?.value
+            : '',
+          label: metadatos?.origenArchivoMetadatos?.label
+            ? metadatos?.origenArchivoMetadatos?.label
+            : '',
+        },
         tieneTipologiaRelacionadaMetadatos: {
           value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value
             ? metadatos?.tieneTipologiaRelacionadaMetadatos?.value
@@ -152,41 +143,28 @@ export const ModalMetadatos = ({
         descripcionMetadatos: metadatos?.descripcionMetadatos ?? '',
         palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos ?? [],
       });
-    } else {
-      resetManejoMetadatosModal({
-        categoriaArchivoMetadatos: {
-          value: '',
-          label: '',
-        },
-        tieneReplicaFisicaMetadatos: {
-          value: '',
-          label: '',
-        },
-        origenArchivoMetadatos: 'Electrónico',
-        tieneTipologiaRelacionadaMetadatos: {
-          value: '',
-          label: '',
-        },
-        tipologiasDocumentalesMetadatos: {
-          value: '',
-          label: '',
-        },
-        cualTipologiaDocumentalMetadatos: '',
-        asuntoMetadatos: '',
-        descripcionMetadatos: '',
-        palabrasClavesMetadatos: [],
-      });
-      dispatch(setMetadatos(null as any));
     }
   }, [metadatos, currentAnexo]);
 
   // ? functions
-
   const handleSubmit = async () => {
+    for (let key in watchExeManejoModalMetadatos) {
+      // Si la clave es una de las excepciones, continúa con la siguiente iteración
+      if (key === 'tipologiasDocumentalesMetadatos' || key === 'cualTipologiaDocumentalMetadatos') {
+        continue;
+      }
+
+      if (watchExeManejoModalMetadatos[key as keyof typeof watchExeManejoModalMetadatos] === '') {
+        control_warning('Todos los campos son obligatorios');
+        return;
+      }
+    }
+
+
     dispatch(setMetadatos(watchExeManejoModalMetadatos as any));
     control_success('Se han establecido los metadatos');
     handleModalAgregarMetadatos(false);
-    resetManejoMetadatosModalFunction();
+    // resetManejoMetadatosModalFunction();
   };
 
   return (
@@ -333,23 +311,45 @@ export const ModalMetadatos = ({
                 <Controller
                   name="origenArchivoMetadatos"
                   control={controlManejoMetadatosModal}
-                  defaultValue=""
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <TextField
-                      required
-                      fullWidth
-                      label="Origen del archivo"
-                      size="small"
-                      variant="outlined"
-                      value={'Electrónico'}
-                      disabled
-                      InputLabelProps={{ shrink: true }}
-                      inputProps={{ maxLength: 50 }}
-                    />
+                    <div>
+                      <Select
+                        value={value}
+                        onChange={(selectedOption) => {
+                          console.log(selectedOption);
+                          /* dispatch(
+                            getServiceSeriesSubseriesXUnidadOrganizacional(
+                              selectedOption.item
+                            )
+                          ); */
+                          onChange(selectedOption);
+                        }}
+                        // isDisabled={trd_current != ''}
+                        options={
+                          watchFormulario.ruta_soporte
+                            ? origenArchivo.filter((el) => el.value !== 'F')
+                            : origenArchivo
+                        }
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          Origen archivo
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
               </Grid>
@@ -679,6 +679,7 @@ export const ModalMetadatos = ({
                 color="success"
                 type="submit"
                 variant="contained"
+                disabled={viewMode}
                 startIcon={<SaveIcon />}
               >
                 GUARDAR

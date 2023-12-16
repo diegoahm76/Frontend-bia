@@ -342,7 +342,7 @@ export const get_carpeta_id = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`gestor/depositos-archivos/carpetaCaja/listar-carpetas-por-caja/${id ?? ''}/`);
+            const { data } = await api.get(`gestor/depositos-archivos/carpetaCaja/listar-carpetas-por-caja/${id ?? ''}`);
 
             if (data.success === true) {
                 dispatch(set_carpetas(data.data));

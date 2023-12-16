@@ -26,6 +26,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
+import { render } from '@testing-library/react';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -106,7 +107,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const shouldDisable = (actionId: string) => {
+    /*    const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrup';
       const isDigOrAsigGrup = ['Dig', 'AsigGrup'].includes(actionId);
       const hasAnexos = pqrsdf.cantidad_anexos > 0;
@@ -126,6 +127,51 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         (isEnVentanilla && requiresDigitalization && isAsigGrup) ||
         (actionId === 'Dig' && !requiresDigitalization) // Deshabilitar el botón de digitalización si no se requiere digitalización
       );
+    };*/
+
+    const shouldDisable = (actionId: string) => {
+      const isAsigGrup = actionId === 'AsigGrup';
+      const isDig = actionId === 'Dig';
+      const hasAnexos = pqrsdf.cantidad_anexos > 0;
+      const requiresDigitalization = pqrsdf.requiere_digitalizacion;
+      const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
+      const isEnVentanillaSinPendientes =
+        pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+      const isEnVentanillaConPendientes =
+        pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+
+      // Primer caso
+      if (isRadicado && !hasAnexos && isDig) {
+        return true;
+      }
+
+      // Segundo caso
+      if (isRadicado && hasAnexos && !requiresDigitalization) {
+        return false;
+      }
+
+      // Tercer caso
+      if (isRadicado && hasAnexos && requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      // Cuarto caso
+      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+        return false;
+      }
+
+      // Quinto caso
+      if (isEnVentanillaSinPendientes && requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      // Sexto caso
+      if (isEnVentanillaConPendientes) {
+        return isAsigGrup;
+      }
+
+      // Caso por defecto
+      return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
     };
 
     const actionsPQRSDF = actions.map((action: any) => ({
@@ -140,6 +186,20 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   //* espacio para la definición de las columnas
   const columns = [
     ...columnsPqrsdf,
+    {
+      headerName: 'Requiere digitalización',
+      field: 'requiere_digitalizacion',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ? 'Sí' : 'No'}
+            color={params.value ? 'success' : 'error'}
+          />
+        );
+      }
+    },
     {
       headerName: 'Días para respuesta',
       field: 'dias_respuesta',
@@ -270,6 +330,24 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
           </>
         );
       },
+    },
+    {
+      headerName: 'Estado de asignación de grupo',
+      field: 'estado_asignacion_grupo',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value}
+            color={
+              params.row?.estado_asignacion_grupo === 'Pendiente' ? 'warning' :
+              params.row?.estado_asignacion_grupo === 'Aceptado' ? 'success' :
+              params.row?.estado_asignacion_grupo === 'Rechazado' ? 'error' : 'default'
+            }
+          />
+        );
+      }
     },
     {
       headerName: 'Acciones',
@@ -433,7 +511,11 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   return (
     <>
       <RenderDataGrid
-        rows={[...listaElementosPqrsfTramitesUotros] ?? []}
+        rows={
+          listaElementosPqrsfTramitesUotros.filter(
+            (el: { radicado: string }) => el.radicado
+          ) ?? []
+        }
         columns={columns ?? []}
         title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
         aditionalElement={

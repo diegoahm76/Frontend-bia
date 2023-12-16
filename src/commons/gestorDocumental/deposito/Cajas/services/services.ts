@@ -39,7 +39,7 @@ export const get_caja_carpetas = async (
   const response: AxiosResponse<ResponseServer<ICarpetas[]>> = await api.get<
     ResponseServer<ICarpetas[]>
   >(
-    `gestor/depositos-archivos/carpetaCaja/listar-carpetas-por-caja/${id_caja}/`
+    `gestor/depositos-archivos/carpetaCaja/listar-carpetas-por-caja/${id_caja}`
   );
   return response.data.data;
 };

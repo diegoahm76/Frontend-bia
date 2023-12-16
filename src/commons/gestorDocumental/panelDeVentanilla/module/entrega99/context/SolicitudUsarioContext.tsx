@@ -8,9 +8,11 @@ export const SolicitudAlUsuarioContext = createContext<any>({
 
 export const SolicitudAlUsuarioProvider = ({ children }: any): JSX.Element => {
   // ? state declaration
+
   const [infoInicialUsuario, setInfoInicialUsuario] =
     useState<any>([]);
 
+    const [currentSolicitudUsuario, setCurrentSolicitudUsuario] = useState<any>({})
 
   
 
@@ -18,6 +20,9 @@ export const SolicitudAlUsuarioProvider = ({ children }: any): JSX.Element => {
   const value = {
     infoInicialUsuario,
     setInfoInicialUsuario,
+
+    currentSolicitudUsuario,
+    setCurrentSolicitudUsuario
   };
 
 

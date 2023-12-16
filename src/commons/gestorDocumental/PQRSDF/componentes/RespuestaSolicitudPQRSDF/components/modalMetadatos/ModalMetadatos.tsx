@@ -196,10 +196,12 @@ export const ModalMetadatos = (): JSX.Element => {
                   mb: '1.2rem',
                 }}
               >
+                {/*
+                  se debe cambiar por un select
+                
                 <Controller
                   name="origenArchivoMetadatos"
                   control={controlManejoMetadatosModal}
-                  defaultValue=""
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
@@ -217,7 +219,7 @@ export const ModalMetadatos = (): JSX.Element => {
                       inputProps={{ maxLength: 50 }}
                     />
                   )}
-                />
+                />*/}
               </Grid>
 
               {/*Inicio de segunda fila*/}

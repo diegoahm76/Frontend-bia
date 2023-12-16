@@ -1,24 +1,44 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, ButtonGroup } from '@mui/material';
-import { SearchOutlined, FilterAltOffOutlined, FileDownloadOutlined } from '@mui/icons-material';
+import {
+  Grid,
+  Box,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
+  Stack,
+  Button,
+  TextField,
+  ButtonGroup,
+} from '@mui/material';
+import {
+  SearchOutlined,
+  FilterAltOffOutlined,
+  FileDownloadOutlined,
+} from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { type event } from '../../facilidadPago/interfaces/interfaces';
 import { type CarteraDetallada } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { get_filtro_cartera_detallada, get_cartera_detallada } from '../slices/ReportesSlice';
+import {
+  get_filtro_cartera_detallada,
+  get_cartera_detallada,
+} from '../slices/ReportesSlice';
 import { faker } from '@faker-js/faker';
 import JsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import Swal from 'sweetalert2';
+import { api } from '../../../../api/axios';
 
 interface RootState {
   reportes_recaudo: {
     reportes_recaudo: CarteraDetallada[];
-  }
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -28,7 +48,9 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [search, set_search] = useState('');
   const [total, set_total] = useState(0);
   const [values, set_values] = useState([]);
-  const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
+  const { reportes_recaudo } = useSelector(
+    (state: RootState) => state.reportes_recaudo
+  );
   const [data, set_data] = useState<CarteraDetallada[]>([]);
   const [page, set_page] = useState(0);
   const [pages, set_pages] = useState<number[]>([]);
@@ -36,7 +58,7 @@ export const TablaCarteraDetallada: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const fetchData = (page_number: number) => {
+  /*  const fetchData = (page_number: number) => {
     // Realiza la solicitud HTTP utilizando la página especificada
     fetch(`https://back-end-bia-beta.up.railway.app/api/recaudo/reportes/reporte-general-detallado/?page=${page_number + 1}`)
       .then((response) => response.json())
@@ -65,6 +87,38 @@ export const TablaCarteraDetallada: React.FC = () => {
         console.error('Error al obtener los datos:', error);
       });
 
+  };*/
+
+  const fetchData = async (page_number: number) => {
+    try {
+      const response = await api.get(
+        `recaudo/reportes/reporte-general-detallado/?page=${page_number + 1}`
+      );
+      const responseData = response.data;
+      const data = responseData.results.data;
+      const total_pages = Math.ceil(responseData.count / 10); // Supongo 10 elementos por página
+      const number = page_number + 1;
+      console.log(number, pages);
+      if (pages.length === 0) {
+        set_pages([...pages, number]);
+        set_data(data);
+        set_total_pages(total_pages);
+      } else {
+        if (pages.indexOf(number) === -1) {
+          set_pages([...pages, number]);
+          set_data((prevRows) => [...prevRows, ...data]);
+          set_total_pages(total_pages);
+        }
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Error al obtener los datos:',
+        footer: `<p>${error}</p>`,
+      });
+    }
   };
   useEffect(() => {
     if (visible_rows && visible_rows.length !== undefined) {
@@ -88,10 +142,10 @@ export const TablaCarteraDetallada: React.FC = () => {
   //   }
   // }, [visible_rows])
 
-  const total_cop = new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "COP",
-  }).format(total)
+  const total_cop = new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'COP',
+  }).format(total);
 
   const handle_export_excel = async (): Promise<void> => {
     try {
@@ -100,9 +154,12 @@ export const TablaCarteraDetallada: React.FC = () => {
       const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
       const excel_buffer = xlsx.write(workbook, {
         bookType: 'xlsx',
-        type: 'array'
+        type: 'array',
       });
-      save_as_excel_file(excel_buffer, 'Reporte General de Cartera con Detalle');
+      save_as_excel_file(
+        excel_buffer,
+        'Reporte General de Cartera con Detalle'
+      );
     } catch (error: any) {
       throw new Error(error);
     }
@@ -116,7 +173,7 @@ export const TablaCarteraDetallada: React.FC = () => {
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const excel_extension = '.xlsx';
         const data = new Blob([buffer], {
-          type: excel_type
+          type: excel_type,
         });
         save_as_fn(data, fileName + excel_extension);
       })
@@ -127,16 +184,27 @@ export const TablaCarteraDetallada: React.FC = () => {
 
   const handle_export_pdf = (): void => {
     const report = new JsPDF('l', 'pt', 'letter');
-    report.text("Reporte General de Cartera con Detalle", 40, 30);
+    report.text('Reporte General de Cartera con Detalle', 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     autoTable(report, {
       theme: 'grid',
-      head: [['Código Contable', 'Concepto Deuda', 'Nombre Deudor', 'NIT', 'Expediente', 'Resolución', '#Factura', 'Total']],
+      head: [
+        [
+          'Código Contable',
+          'Concepto Deuda',
+          'Nombre Deudor',
+          'NIT',
+          'Expediente',
+          'Resolución',
+          '#Factura',
+          'Total',
+        ],
+      ],
       body: values,
       foot: [['Total General', '', '', '', '', '', '', `${total_cop}`]],
-    })
+    });
     report.save('Reporte General de Cartera con Detalle.pdf');
-  }
+  };
 
   const columns: GridColDef[] = [
     // {
@@ -224,29 +292,26 @@ export const TablaCarteraDetallada: React.FC = () => {
       headerName: 'Total',
       width: 170,
       renderCell: (params) => {
-        const precio_cop = new Intl.NumberFormat("es-ES", {
-          style: "currency",
-          currency: "COP",
-        }).format(params.value)
+        const precio_cop = new Intl.NumberFormat('es-ES', {
+          style: 'currency',
+          currency: 'COP',
+        }).format(params.value);
         return (
           <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
             {precio_cop}
           </div>
-        )
-      }
+        );
+      },
     },
   ];
 
-
   useEffect(() => {
-    set_visible_rows(reportes_recaudo)
-  }, [reportes_recaudo])
+    set_visible_rows(reportes_recaudo);
+  }, [reportes_recaudo]);
 
   useEffect(() => {
     if (visible_rows && visible_rows.length !== undefined) {
-      set_values(
-        visible_rows.map((obj) => Object.values(obj)) as any
-      );
+      set_values(visible_rows.map((obj) => Object.values(obj)) as any);
     }
   }, [visible_rows]);
 
@@ -256,33 +321,37 @@ export const TablaCarteraDetallada: React.FC = () => {
   //   }
   // }, [visible_rows])
   useEffect(() => {
-    set_visible_rows(reportes_recaudo)
-  }, [reportes_recaudo])
+    set_visible_rows(reportes_recaudo);
+  }, [reportes_recaudo]);
   const [searchId, setSearchId] = useState('');
 
   const handleSearch = () => {
     let filteredData = [...reportes_recaudo];
     if (search) {
-      filteredData = filteredData.filter(facilidad => facilidad.nombre_deudor.toLowerCase().includes(search.toLowerCase()));
+      filteredData = filteredData.filter((facilidad) =>
+        facilidad.nombre_deudor.toLowerCase().includes(search.toLowerCase())
+      );
     }
     if (searchId) {
-      filteredData = filteredData.filter(facilidad => facilidad.identificacion.toLowerCase().includes(searchId.toLowerCase()));
+      filteredData = filteredData.filter((facilidad) =>
+        facilidad.identificacion.toLowerCase().includes(searchId.toLowerCase())
+      );
     }
     set_visible_rows(filteredData);
   };
   return (
     <Box sx={{ width: '100%' }}>
       <Stack
-      direction="row"
-      justifyContent="left"
-      spacing={2}
-      sx={{ mb: '20px' }}
+        direction="row"
+        justifyContent="left"
+        spacing={2}
+        sx={{ mb: '20px' }}
       >
         <Grid item xs={12} sm={3}>
           <TextField
             style={{ marginTop: '10px' }}
             value={search}
-            onChange={e => set_search(e.target.value)}
+            onChange={(e) => set_search(e.target.value)}
             label="Buscar por nombre de deudor"
             variant="outlined"
             fullWidth
@@ -293,7 +362,7 @@ export const TablaCarteraDetallada: React.FC = () => {
           <TextField
             value={searchId}
             style={{ marginTop: '10px' }}
-            onChange={e => setSearchId(e.target.value)}
+            onChange={(e) => setSearchId(e.target.value)}
             label="Buscar por identificación"
             variant="outlined"
             fullWidth
@@ -301,7 +370,14 @@ export const TablaCarteraDetallada: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12} sm={2}>
-          <Button variant="contained" style={{ marginTop: '10px' }} color="primary" fullWidth startIcon={<SearchOutlined />} onClick={handleSearch}>
+          <Button
+            variant="contained"
+            style={{ marginTop: '10px' }}
+            color="primary"
+            fullWidth
+            startIcon={<SearchOutlined />}
+            onClick={handleSearch}
+          >
             Buscar
           </Button>
         </Grid>
@@ -384,9 +460,9 @@ export const TablaCarteraDetallada: React.FC = () => {
             Exportar PDF
           </Button>
         </Stack> */}
-        <Grid item xs={12}  sm={2} ></Grid>
-        <Grid item xs={12}  sm={1} >
-          <ButtonGroup fullWidth >
+        <Grid item xs={12} sm={2}></Grid>
+        <Grid item xs={12} sm={1}>
+          <ButtonGroup fullWidth>
             {download_xls({ nurseries: visible_rows, columns })}
             {download_pdf({
               nurseries: visible_rows,
@@ -424,15 +500,10 @@ export const TablaCarteraDetallada: React.FC = () => {
               onPageChange={(params) => set_page(params)}
             />
 
-
             {/* </Box> */}
           </Grid>
-          <Stack
-            direction="row"
-            display='flex'
-            justifyContent='flex-end'
-          >
-            <Grid item xs={12} sm={2.5} mt='30px'>
+          <Stack direction="row" display="flex" justifyContent="flex-end">
+            <Grid item xs={12} sm={2.5} mt="30px">
               <TextField
                 label={<strong>Total General</strong>}
                 size="small"
@@ -442,9 +513,8 @@ export const TablaCarteraDetallada: React.FC = () => {
             </Grid>
           </Stack>
         </Grid>
-        // </Grid>
-      ) : null
-      }
+      ) : // </Grid>
+      null}
     </Box>
   );
-}
+};

@@ -14,7 +14,9 @@ import 'primeicons/primeicons.css';
 import { Loader } from './utils/Loader/Loader';
 import setupLocatorUI from '@locator/runtime';
 
-setupLocatorUI();
+if (process.env.NODE_ENV === 'development') {
+  setupLocatorUI();
+}
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

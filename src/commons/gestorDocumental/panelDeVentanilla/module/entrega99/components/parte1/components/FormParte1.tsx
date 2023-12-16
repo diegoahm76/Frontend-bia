@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useSstepperFn } from '../../../hook/useSstepperFn';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
@@ -20,6 +20,14 @@ import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralC
 import { columnsGridHistorico } from '../utils/columnsGridHistorico';
 import { AccountCircle } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { getInitialData } from '../../../services/getInitialData.service';
+import { useAppSelector } from '../../../../../../../../hooks';
+import { useNavigate } from 'react-router-dom';
+import {
+  getAnexosSolicitud,
+  getDetalleSolicitud,
+} from '../../../services/afterCreatedUserRequest.service';
+import { ModalInfoSolicitud } from './ModalInfoSolicitud/ModalInfoSolicitud';
 
 export const FormParte1 = ({
   controlFormulario,
@@ -32,11 +40,67 @@ export const FormParte1 = ({
   const { handleNext } = useSstepperFn();
 
   //* context declaration
-  const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
-  const { secondLoading } = useContext(ModalAndLoadingContext);
+  const {
+    secondLoading,
+    fifthLoading,
+    handleFifthLoading,
+    handleOpenModalOne,
+  } = useContext(ModalAndLoadingContext);
+  const {
+    setInfoInicialUsuario,
+    infoInicialUsuario,
+    currentSolicitudUsuario,
+    setCurrentSolicitudUsuario,
+  } = useContext(SolicitudAlUsuarioContext);
+
+  //* navigate declaration
+  const navigate = useNavigate();
+
+  //* redux state
+  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+    (state) =>
+      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  );
+
+  const { handleReset } = useSstepperFn();
+
+  //* context declaration
+  const { handleGeneralLoading, handleSecondLoading } = useContext(
+    ModalAndLoadingContext
+  );
+
+  useEffect(() => {
+    if (!currentElementPqrsdComplementoTramitesYotros) {
+      navigate('/app/gestor_documental/panel_ventanilla/');
+      return;
+    }
+    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
+    handleReset();
+    void getInitialData(
+      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+      navigate,
+      handleGeneralLoading,
+      handleSecondLoading
+    ).then((data) => {
+      setInfoInicialUsuario(data);
+    });
+  }, []);
+
+  const getInfoSolicitud = async (params: any) => {
+    const [detalleSolicitud, anexos] = await Promise.all([
+      getDetalleSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf),
+      getAnexosSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf),
+    ]);
+
+    const data = {
+      detalleSolicitud,
+      anexos,
+    };
+
+    setCurrentSolicitudUsuario(data);
+  };
 
   // ? definicion de las columnas
-
   const columns = [
     ...columnsGridHistorico,
     {
@@ -45,21 +109,9 @@ export const FormParte1 = ({
       renderCell: (params: any) => (
         <Tooltip title="Ver solicitud realizada">
           <IconButton
-            onClick={() => {
-              // ? se debe llamar el servicio de los elementos que
-              /*dispatch(get_trd_current(params.row));
-              closeModalModalSearchTRD();
-              dispatch(get_trds([]));
-              const ccd_current = {
-                id_ccd: params?.row?.id_ccd,
-                id_organigrama: params?.row?.id_organigrama
-              };
-              dispatch(
-                getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
-              ).then((res: any) => {
-                dispatch(get_catalogo_trd(params.row.id_trd));
-              });*/
-              console.log(params.row);
+            onClick={async () => {
+              handleOpenModalOne(true); //* open modal
+              await getInfoSolicitud(params);
             }}
           >
             <Avatar
@@ -102,176 +154,182 @@ export const FormParte1 = ({
   }
 
   return (
-    <form
-      style={{
-        marginTop: '3rem',
-      }}
-    >
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          mb: '2rem',
-          justifyContent: 'center',
+    <>
+      <form
+        style={{
+          marginTop: '3rem',
         }}
       >
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            disabled
-            size="small"
-            label="Tipo de PQRSDF"
-            variant="outlined"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              maxLength: 50,
-            }}
-            value={infoInicialUsuario?.detallePQRSDF?.data?.tipo ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            disabled
-            size="small"
-            label="Estado"
-            variant="outlined"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              maxLength: 10,
-            }}
-            value={
-              infoInicialUsuario?.detallePQRSDF?.data?.estado_actual ?? 'N/A'
-            }
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Número de radicado de entrada"
-            disabled
-            variant="outlined"
-            InputLabelProps={{ shrink: true }}
-            value={infoInicialUsuario?.detallePQRSDF?.data?.radicado ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Fecha de radicado de entrada"
-            variant="outlined"
-            disabled
-            InputLabelProps={{ shrink: true }}
-            value={
-              formatDate(
-                infoInicialUsuario?.detallePQRSDF?.data?.fecha_radicado_entrada
-              ) ?? 'N/A'
-            }
-          />
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <TextField
-            fullWidth
-            multiline
-            sx={{
-              textAlign: 'center',
-            }}
-            rows={2}
-            size="small"
-            label="Asunto de la PQRSDF"
-            variant="outlined"
-            disabled
-            InputLabelProps={{ shrink: true }}
-            value={infoInicialUsuario?.detallePQRSDF?.data?.asunto ?? 'N/A'}
-          />
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <TextField
-            fullWidth
-            multiline
-            sx={{
-              textAlign: 'center',
-              mt: '1.5rem',
-              mb: '1.5rem',
-            }}
-            //* revisar que crea esta configuración de InputProps
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountCircle />
-                </InputAdornment>
-              ),
-            }}
-            rows={5}
-            size="small"
-            label="Descripción de la PQRSDF"
-            variant="outlined"
-            disabled
-            InputLabelProps={{ shrink: true }}
-            value={
-              infoInicialUsuario?.detallePQRSDF?.data?.descripcion ?? 'N/A'
-            }
-          />
-        </Grid>
-
-        {/* tabla de elementos a mostrar */}
-
-        {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
-
-        {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
-        0 ? (
-          <RenderDataGrid
-            title="Histórico de solicitudes de complemento al usuario"
-            columns={columns ?? []}
-            rows={
-              [
-                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
-                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
-                ...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data,
-              ] ?? []
-            }
-          />
-        ) : (
-          <Typography
-            variant="body1"
-            color="text.primary"
-            sx={{ textAlign: 'center', justifyContent: 'center', mt: '1.5rem' }}
-          >
-            No hay histórico de solicitudes para esta PQRSDF
-          </Typography>
-        )}
-      </Grid>
-
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        sx={{
-          width: '100%',
-          maxWidth: '100%',
-          mt: '2rem',
-          textAlign: 'center',
-          paddingBottom: '2rem',
-        }}
-      >
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<SaveAsIcon />}
-          onClick={() => {
-            //* hacer validaciones previas antes de permitir el next, para el paso 2
-
-            handleNext();
-          }}
+        <Grid
+          container
+          spacing={2}
           sx={{
-            width: '60%',
+            mb: '2rem',
+            justifyContent: 'center',
           }}
         >
-          Crear solicitud
-        </Button>
-      </Grid>
-    </form>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              disabled
+              size="small"
+              label="Tipo de PQRSDF"
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                maxLength: 50,
+              }}
+              value={infoInicialUsuario?.detallePQRSDF?.data?.tipo ?? 'N/A'}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              disabled
+              size="small"
+              label="Estado"
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                maxLength: 10,
+              }}
+              value={
+                infoInicialUsuario?.detallePQRSDF?.data?.estado_actual ?? 'N/A'
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Número de radicado de entrada"
+              disabled
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.detallePQRSDF?.data?.radicado ?? 'N/A'}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Fecha de radicado de entrada"
+              variant="outlined"
+              disabled
+              InputLabelProps={{ shrink: true }}
+              value={
+                formatDate(
+                  infoInicialUsuario?.detallePQRSDF?.data
+                    ?.fecha_radicado_entrada
+                ) ?? 'N/A'
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <TextField
+              fullWidth
+              multiline
+              sx={{
+                textAlign: 'center',
+              }}
+              rows={2}
+              size="small"
+              label="Asunto de la PQRSDF"
+              variant="outlined"
+              disabled
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.detallePQRSDF?.data?.asunto ?? 'N/A'}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <TextField
+              fullWidth
+              multiline
+              sx={{
+                textAlign: 'center',
+                mt: '1.5rem',
+                mb: '1.5rem',
+              }}
+              //* revisar que crea esta configuración de InputProps
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircle />
+                  </InputAdornment>
+                ),
+              }}
+              rows={5}
+              size="small"
+              label="Descripción de la PQRSDF"
+              variant="outlined"
+              disabled
+              InputLabelProps={{ shrink: true }}
+              value={
+                infoInicialUsuario?.detallePQRSDF?.data?.descripcion ?? 'N/A'
+              }
+            />
+          </Grid>
+
+          {/* tabla de elementos a mostrar */}
+
+          {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
+
+          {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
+          0 ? (
+            <RenderDataGrid
+              title="Histórico de solicitudes de complemento al usuario"
+              columns={columns ?? []}
+              rows={
+                [...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data] ??
+                []
+              }
+            />
+          ) : (
+            <Typography
+              variant="body1"
+              color="text.primary"
+              sx={{
+                textAlign: 'center',
+                justifyContent: 'center',
+                mt: '1.5rem',
+              }}
+            >
+              No hay histórico de solicitudes para esta PQRSDF
+            </Typography>
+          )}
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          sx={{
+            width: '100%',
+            maxWidth: '100%',
+            mt: '2rem',
+            textAlign: 'center',
+            paddingBottom: '2rem',
+          }}
+        >
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<SaveAsIcon />}
+            onClick={() => {
+              //* hacer validaciones previas antes de permitir el next, para el paso 2
+
+              handleNext();
+            }}
+            sx={{
+              width: '60%',
+            }}
+          >
+            Crear solicitud
+          </Button>
+        </Grid>
+      </form>
+
+      <ModalInfoSolicitud />
+    </>
   );
 };
