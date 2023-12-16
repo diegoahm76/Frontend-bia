@@ -180,7 +180,7 @@ export const use_admin_users = () => {
   };
 
   const on_submit = handle_submit_admin_user(async (data_user) => {
-    console.log(data_user);
+    //  console.log('')(data_user);
     try {
       set_loading_create_or_update(true);
       if (action_admin_users === 'CREATE') {
@@ -369,7 +369,7 @@ export const use_admin_users = () => {
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (data_person_search.id_persona !== 0) {
-      console.log('data_person_search', data_person_search);
+      //  console.log('')('data_person_search', data_person_search);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -440,7 +440,7 @@ export const use_admin_users = () => {
 
   // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {
-    console.log('user_info', user_info);
+    //  console.log('')('user_info', user_info);
 
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);

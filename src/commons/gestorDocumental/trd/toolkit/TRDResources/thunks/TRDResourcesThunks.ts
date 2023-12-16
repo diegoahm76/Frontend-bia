@@ -37,7 +37,7 @@ export const get_searched_trd = (
       setCreateTRDLoadingButton(true);
       const url = `gestor/trd/buscar/trd/nombre-version/?nombre=${nombre}&version=${version}`;
       const { data } = await api.get(url);
-      /* console.log(
+      /* //  console.log('')(
         '🚀 ~ file: modalBusquedaTRDThunks.ts ~ line 41 ~ return ~ data',
         data
       ); */
@@ -48,7 +48,7 @@ export const get_searched_trd = (
         : control_success(data.detail);
       return data.data;
     } catch (error: AxiosError | any) {
-      // console.log(error);
+      // //  console.log('')(error);
       control_error(error.response?.data?.detail);
       // dispatch(get_assignments_service(ccd_current));
 
@@ -67,7 +67,7 @@ export const create_trd_service: any = (
   return async (dispatch: Dispatch<any>) => {
     try {
       setCreateTRDLoadingButton(true);
-      // console.log(bodyPost, 'bodyPost');
+      // //  console.log('')(bodyPost, 'bodyPost');
       const { data } = await api.post('gestor/trd/create/', {
         id_ccd: bodyPost.id_ccd.item.id_ccd,
         nombre: bodyPost.nombre,
@@ -79,7 +79,7 @@ export const create_trd_service: any = (
       openModalBusquedaCreacionCCD(); */
       return data.data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
+      // //  console.log('')(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     } finally {
@@ -115,7 +115,7 @@ export const update_trd_service = (
       control_success(updatedData.detail);
       return updatedData;
     } catch (error: any) {
-      // console.log(error);
+      // //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     } finally {
@@ -162,7 +162,7 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
         control_error('No se encontró data relacionada');
       }
 
-    console.log(
+    //  console.log('')(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
         new_data
       );
@@ -215,7 +215,7 @@ export const create_formato_by_tipo_medio_service = (bodyPost: any): any => {
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
+      // //  console.log('')(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -234,8 +234,8 @@ export const edit_formato_by_tipo_medio_service = ({
 }: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      // console.log(id_formato_tipo_medio, 'id_formato_tipo_medio');
-      // console.log(nombre, 'nombre');
+      // //  console.log('')(id_formato_tipo_medio, 'id_formato_tipo_medio');
+      // //  console.log('')(nombre, 'nombre');
       const url = `gestor/trd/formatos/update/${id_formato_tipo_medio}/`;
       const { data } = await api.put(url, {
         nombre,
@@ -247,7 +247,7 @@ export const edit_formato_by_tipo_medio_service = ({
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
+      // //  console.log('')(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -265,7 +265,7 @@ export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
       control_success(data.detail || 'Formato eliminado correctamente');
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
+      // //  console.log('')(error.response.data, 'error');
       control_error(
         error.response.data.detail ||
           'Error, no se ha podido eliminar el formato'
@@ -394,7 +394,7 @@ export const get_formatos_documentales_by_id_tipologia = (
             data.detail || 'proceso exitoso, se encontró la siguiente data'
           )
         : control_error('No se encontró data relacionada');
-      console.log(data.data, 'data.data');
+      //  console.log('')(data.data, 'data.data');
       return data.data;
     } catch (error: any) {
       control_error('Ha ocurrido un error, no se han encontrado data');
@@ -428,7 +428,7 @@ export const create_tipologia_documental_service = (
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
+      // //  console.log('')(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     } finally {
@@ -465,7 +465,7 @@ export const update_tipologia_documental_service = (
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
+      // //  console.log('')(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     } finally {
@@ -484,7 +484,7 @@ export const delete_tipologia_documental_service = (id: any): any => {
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
+      // //  console.log('')(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -536,7 +536,7 @@ export const create_item_catalogo_trd = (
         tipologias: tipologiasPost
       };
 
-      console.log(obj, 'obj');
+      //  console.log('')(obj, 'obj');
       const { data } = await api.post(
         `gestor/trd/catalogo-trd/add/${id_trd}/`,
         obj
@@ -553,7 +553,7 @@ export const create_item_catalogo_trd = (
       control_success(data.detail);
       return data;
     } catch (error: any) {
-      // console.log(error.response.data, 'error');
+      // //  console.log('')(error.response.data, 'error');
       control_error(error.response.data.detail);
       dispatch(set_selected_item_from_catalogo_trd_action(null));
       return error as AxiosError;

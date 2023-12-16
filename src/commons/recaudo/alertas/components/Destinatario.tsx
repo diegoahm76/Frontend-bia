@@ -77,7 +77,7 @@ const Destinatario = () => {
                         <IconButton
                             onClick={() => {
                                 dispatch(eliminar_persona_alerta(params.row.id_persona_alertar, current_configuracion.cod_clase_alerta ?? ''))
-                                console.log(params.row)
+                                //  console.log('')(params.row)
                             }}
                         >
                             <Avatar
@@ -107,11 +107,11 @@ const Destinatario = () => {
 
     const handle_busqueda = (destinatario_busqueda: IObjDestinatario) => {
         reset_destinario(destinatario_busqueda)
-        console.log(destinatario_busqueda)
+        //  console.log('')(destinatario_busqueda)
 
     };
-    console.log(destinatario)
-    console.log(current_destinatario)
+    //  console.log('')(destinatario)
+    //  console.log('')(current_destinatario)
 
     const handle_lider = () => {
         set_lider(true);
@@ -157,7 +157,7 @@ const Destinatario = () => {
 
 
     const on_submit_mostrar_busqueda = (data: IObjDestinatario): void => {
-        console.log(data)
+        //  console.log('')(data)
         void dispatch(get_busqueda_persona(data.tipo_documento ?? '', data.numero_documento ?? ''));
 
 
@@ -170,7 +170,7 @@ const Destinatario = () => {
 
 
     const on_submit_programar = (data: IObjDestinatario): void => {
-        console.log(data)
+        //  console.log('')(data)
         const data_programar = {
             ...data,
             cod_clase_alerta: current_configuracion.cod_clase_alerta,

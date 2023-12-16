@@ -28,13 +28,13 @@ export const ProtectedRoutes: React.FC = () => {
   );
 
   useEffect(() => {
-    // console.log('permisos_store', permisos_store);
+    // //  console.log('')('permisos_store', permisos_store);
   }, [permisos_store]);
 
   const allowed_routes = permisos_store.map(
     (permission) => permission.subsistema
   );
-  // console.log('allowedRoutes', allowed_routes);
+  // //  console.log('')('allowedRoutes', allowed_routes);
 
   //* changes
 

@@ -37,7 +37,7 @@ export const AccionesFinales = ({
 
   const sendDataByFormData = () => {
     const formData = new FormData(); // Use FormData instead of a normal object
-    console.log(anexosCreados);
+    //  console.log('')(anexosCreados);
     formData.append(
       'solicitud_usu_PQRSDF',
       JSON.stringify({
@@ -80,7 +80,7 @@ export const AccionesFinales = ({
     });
 
     postAsignacionUsuario(formData, setLoadingButton).then((data) => {
-      console.log('holaaaaaaa post enviando');
+      //  console.log('')('holaaaaaaa post enviando');
       handleReset();
       resetFormulario({});
       setInfoReset({});

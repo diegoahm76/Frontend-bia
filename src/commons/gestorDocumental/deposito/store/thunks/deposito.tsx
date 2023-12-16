@@ -107,10 +107,10 @@ export const crear_deposito: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(deposito)
+            //  console.log('')(deposito)
             const { data } = await api.post('gestor/depositos-archivos/deposito/crear/', deposito);
 
-            console.log(data)
+            //  console.log('')(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
@@ -120,7 +120,7 @@ export const crear_deposito: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response);
 
             return error as AxiosError;
@@ -137,9 +137,9 @@ export const editar_deposito: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // console.log(despacho);
+            // //  console.log('')(despacho);
             const { data } = await api.patch(`gestor/depositos-archivos/deposito/actualizar/${id}/`, deposito);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
@@ -147,7 +147,7 @@ export const editar_deposito: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -165,7 +165,7 @@ export const eliminar_deposito = (
             const { data } = await api.delete(`gestor/depositos-archivos/deposito/eliminar/${id}/`
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
@@ -193,7 +193,7 @@ export const get_bandejas_id = (
                 dispatch(set_bandejas(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -213,7 +213,7 @@ export const crear_bandeja: any = (
 
             const { data } = await api.post('gestor/depositos-archivos/bandejaEstante/crear/', bandeja);
 
-            console.log(data)
+            //  console.log('')(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 //  control_success(data.detail)
@@ -223,7 +223,7 @@ export const crear_bandeja: any = (
             control_success('Se creo correctamente la bandeja');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response);
 
             return error as AxiosError;
@@ -241,9 +241,9 @@ export const editar_bandeja: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // console.log(despacho);
+            // //  console.log('')(despacho);
             const { data } = await api.put(`gestor/depositos-archivos/bandejaEstante/actualizar-bandeja/${id}/`, bandeja);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success('Se actualizó correctamente la bandeja');
@@ -251,7 +251,7 @@ export const editar_bandeja: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -274,7 +274,7 @@ export const get_estantes_deposito = (
                 dispatch(set_estantes(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -293,14 +293,14 @@ export const mover_bandeja_seleccionada: any = (
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.put(`gestor/depositos-archivos/bandejaEstante/mover-bandeja/${id}/`, bandeja);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success('Se traslado correctamente la bandeja');
             }
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -317,7 +317,7 @@ export const eliminar_bandeja = (
             const { data } = await api.delete(`gestor/depositos-archivos/bandejaEstante/eliminar/${id}/`
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success('Se eliminó la bandeja correctamente');
@@ -348,7 +348,7 @@ export const get_carpeta_id = (
                 dispatch(set_carpetas(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -372,7 +372,7 @@ export const get_caja_id = (
                 //   dispatch(set_carpetas(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -393,7 +393,7 @@ export const crear_carpeta: any = (
 
             const { data } = await api.post('gestor/depositos-archivos/carpetaCaja/crear/', carpeta);
 
-            console.log(data)
+            //  console.log('')(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 //  control_success(data.detail)
@@ -401,7 +401,7 @@ export const crear_carpeta: any = (
             control_success('Se creo correctamente la carpeta');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response);
 
             return error as AxiosError;
@@ -419,9 +419,9 @@ export const editar_carpeta: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // console.log(despacho);
+            // //  console.log('')(despacho);
             const { data } = await api.put(`gestor/depositos-archivos/carpetaCaja/actualizar-carpeta/${id}/`, carpeta);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 //   control_success(data.detail);
@@ -429,7 +429,7 @@ export const editar_carpeta: any = (
             control_success('Se actualizó correctamente');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -448,7 +448,7 @@ export const eliminar_carpeta = (
             const { data } = await api.delete(`gestor/depositos-archivos/deposito/eliminar/${id}/`
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 // control_success(data.detail);
@@ -481,7 +481,7 @@ export const get_busqueda_avanzada = (
                 dispatch(set_cajas(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -500,14 +500,14 @@ export const mover_carpeta_seleccionada: any = (
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.put(`gestor/depositos-archivos/carpetaCaja/mover-carpeta/${id}/`, carpeta);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success('Se traslado correctamente la carpeta');
             }
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;

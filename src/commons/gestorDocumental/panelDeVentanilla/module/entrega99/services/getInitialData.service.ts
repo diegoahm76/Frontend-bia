@@ -40,7 +40,7 @@ export const getInitialData = async (
       dataHistoricoSolicitudesPQRSDF: responseHistoricoSolicitudesPQRSDF.data,
     };
 
-    console.log('data Informaciones', data);
+    //  console.log('')('data Informaciones', data);
     return data;
   } catch (error) {
     handleError(navigate, '/app/gestor_documental/panel_ventanilla/');

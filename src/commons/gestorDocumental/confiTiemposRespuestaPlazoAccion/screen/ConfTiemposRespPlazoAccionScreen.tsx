@@ -49,10 +49,10 @@ const ConfiguracionTiemposRespScreen = () => {
     void dispatch(get_configuraciones());
   }, []);
 
-  console.log(selected_option);
+  //  console.log('')(selected_option);
 
   const on_submit = (data: IObjConfiTiemposPlazoAccion): void => {
-    console.log(data);
+    //  console.log('')(data);
     const data_programar = {
       ...data,
     };

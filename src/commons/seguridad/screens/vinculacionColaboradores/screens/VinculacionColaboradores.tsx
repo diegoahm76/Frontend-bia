@@ -121,7 +121,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
                 set_persona_vinculacion_tkx(response);
                 set_update_vinculo(true);
             } catch (error) {
-                console.log(error);
+                //  console.log('')(error);
             }
 
         }
@@ -150,7 +150,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
             const data_auth = JSON.parse(data_json.auth);
             set_user_info(data_auth.userinfo);
         }
-        console.log(user_info);
+        //  console.log('')(user_info);
     }
 
     const get_list_tipo_doc = async (): Promise<void> => {

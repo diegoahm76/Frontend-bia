@@ -257,7 +257,7 @@ const SeleccionarBienDespacho = () => {
     try {
       const id_vivero = origin_nursery.id_vivero;
       if (id_vivero !== null && id_vivero !== undefined) {
-        console.log(bien_selected);
+        //  console.log('')(bien_selected);
         const data = await dispatch(
           get_bien_code_service(
             id_vivero,
@@ -298,7 +298,7 @@ const SeleccionarBienDespacho = () => {
 
   useEffect(() => {
     if (bien_selected.id_bien !== null) {
-      console.log(bien_selected);
+      //  console.log('')(bien_selected);
       dispatch(set_current_bien(initial_state_current_bien));
       search_bien();
     }
@@ -440,7 +440,7 @@ const SeleccionarBienDespacho = () => {
   //             aux_items.push(option)
   //         }
   //     })
-  //     console.log(bien)
+  //     //  console.log('')(bien)
   //     if(bien !== undefined){
   //         dispatch(set_current_bien(bien))
   //     }

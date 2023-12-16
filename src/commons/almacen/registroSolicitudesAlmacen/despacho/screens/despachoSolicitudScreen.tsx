@@ -133,15 +133,15 @@ const DespachoBienesConsumoScreen = () => {
               current_solicitud.id_funcionario_responsable_unidad
             )
           );
-          console.log('ok');
+          //  console.log('')('ok');
         }
       }
     }
   }, [current_solicitud]);
 
   useEffect(() => {
-    // console.log(current_solicitud)
-    console.log(current_despacho);
+    // //  console.log('')(current_solicitud)
+    //  console.log('')(current_despacho);
     reset_despacho(current_despacho);
     if ('persona_crea' in current_despacho) {
       reset_despacho(current_despacho);
@@ -245,7 +245,7 @@ const DespachoBienesConsumoScreen = () => {
         ruta_archivo_doc_con_recibido: data.ruta_archivo_doc_con_recibido,
         items_despacho: aux_items,
       };
-      console.log(aux);
+      //  console.log('')(aux);
       form_data.append('info_despacho', JSON.stringify({ ...data_edit }));
       form_data.append(
         'ruta_archivo_doc_con_recibido',
@@ -265,7 +265,7 @@ const DespachoBienesConsumoScreen = () => {
     const data_annul = {
       justificacion_anulacion: data.justificacion_anulacion,
     };
-    console.log(data_annul);
+    //  console.log('')(data_annul);
     if (
       current_despacho.id_despacho_consumo !== null &&
       current_despacho.id_despacho_consumo !== undefined
@@ -284,7 +284,7 @@ const DespachoBienesConsumoScreen = () => {
     const data_closed = {
       observacion_cierre_no_dispo_alm: data.observacion_cierre_no_dispo_alm,
     };
-    console.log(data_closed);
+    //  console.log('')(data_closed);
     if (
       current_solicitud.id_solicitud_consumibles !== null &&
       current_solicitud.id_solicitud_consumibles !== undefined

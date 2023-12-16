@@ -60,7 +60,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitTramitesYservicios = () => {
-    console.log('searchSubmitTramitesYservicios');
+    //  console.log('')('searchSubmitTramitesYservicios');
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -68,7 +68,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitOtros = () => {
-    console.log('submit , buscando coincidencias de otros');
+    //  console.log('')('submit , buscando coincidencias de otros');
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -156,7 +156,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                       required
                       value={value}
                       onChange={(selectedOption) => {
-                        console.log(selectedOption);
+                        //  console.log('')(selectedOption);
                         onChange(selectedOption);
                       }}
                       options={choicesTipoDeSolicitud as any[]}

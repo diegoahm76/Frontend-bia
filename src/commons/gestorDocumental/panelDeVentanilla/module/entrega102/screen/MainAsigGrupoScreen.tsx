@@ -51,7 +51,7 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
     if (!currentElementPqrsdComplementoTramitesYotros) return;
 
     void getSecSubAsiGrupo(handleGeneralLoading, navigate).then((res) => {
-      console.log(res);
+      //  console.log('')(res);
       setListaSeccionesSubsecciones(res);
     });
 

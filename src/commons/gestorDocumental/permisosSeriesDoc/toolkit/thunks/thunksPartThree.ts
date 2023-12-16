@@ -63,7 +63,7 @@ export const get_restricciones_series_documentales = async (
       error?.response?.data?.detail ||
         'Hubo un error al obtener las restricciones'
     );
-    console.log(error);
+    //  console.log('')(error);
   } finally {
     setLoadingRestricciones(false);
   }
@@ -90,7 +90,7 @@ export const putPSD = async (
       error?.response?.data?.detail ||
         'Hubo un error al actualizar las restricciones'
     );
-    console.log(error);
+    //  console.log('')(error);
     return false;
   } finally {
     setLoadingRestricciones(false);

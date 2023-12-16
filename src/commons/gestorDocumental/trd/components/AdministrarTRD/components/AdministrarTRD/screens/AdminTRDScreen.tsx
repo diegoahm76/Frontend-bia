@@ -81,7 +81,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                   )
                 );
                 openModalAdministracionTRD();
-                console.log(params.row);
+                //  console.log('')(params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -128,7 +128,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                       });
                     });
 
-                  console.log(params.row);
+                  //  console.log('')(params.row);
                 }}
               >
                 <Avatar sx={AvatarStyles} variant="rounded">
@@ -180,11 +180,11 @@ export const AdminTRDScreen = (): JSX.Element | null => {
               title="Administrar TRD en base a relación"
               onClick={() => {
                 setButtonSpecialEditionActualTRD(false);
-                console.log(buttonSpecialEditionActualTRD);
+                //  console.log('')(buttonSpecialEditionActualTRD);
                 // ? this is the function to get data asociated to trd
                 // dispatch(get_tipologia_doc_asociadas_trd(params.row.id_cat_serie_und));
                 openModalAdministracionTRD();
-                console.log(params.row);
+                //  console.log('')(params.row);
                 dispatch(
                   set_selected_item_from_catalogo_trd_action(params.row)
                 );
@@ -311,7 +311,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                   onClick={() => {
                     // setButton(true);
                     setButtonAddNewTRDRelationActual(true);
-                    console.log('agregar nueva relacion ccd');
+                    //  console.log('')('agregar nueva relacion ccd');
                   }}
                 >
                   AGREGAR NUEVA RELACION CCD
@@ -358,7 +358,7 @@ export const AdminTRDScreen = (): JSX.Element | null => {
                     color="primary"
                     onClick={() => {
                       setButtonAddNewTRDRelationActual(false);
-                      console.log('agregar nueva relacion ccd');
+                      //  console.log('')('agregar nueva relacion ccd');
                     }}
                   >
                     CANCELAR AGREGAR NUEVA RELACION CCD

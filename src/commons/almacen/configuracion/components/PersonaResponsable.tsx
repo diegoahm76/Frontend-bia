@@ -109,7 +109,7 @@ const PersonaResponsable = ({
 
 
             } catch (err) {
-                console.log(err);
+                ////  console.log('')(err);
             }
         };
         void get_selects_options();
@@ -129,7 +129,7 @@ const PersonaResponsable = ({
 
 
         } catch (err) {
-            console.log(err);
+            // //  console.log('')(err);
         }
     };
     useEffect(() => {
@@ -156,7 +156,7 @@ const PersonaResponsable = ({
                 control_error(persona_data.detail)
             }
         } catch (err) {
-            console.log(err);
+            // //  console.log('')(err);
         }
     })
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -211,7 +211,7 @@ const PersonaResponsable = ({
                 }
             }
         } catch (err) {
-            console.log(err);
+            // //  console.log('')(err);
         }
     })
 

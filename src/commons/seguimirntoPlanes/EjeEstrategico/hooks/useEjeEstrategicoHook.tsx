@@ -57,7 +57,7 @@ export const useEjeEstrategicoHook = (): any => {
   const onsubmit_eje_estrategico = handleSubmit_eje_estrategico(
     async (data) => {
       try {
-        console.log(data, 'data');
+        //  console.log('')(data, 'data');
         data.id_plan = id_plan;
         set_is_saving_eje_estrategico(true);
         await post_eje_estrategico(data as IEjeEstrategico);
@@ -79,7 +79,7 @@ export const useEjeEstrategicoHook = (): any => {
 
   const onsubmit_editar = handleSubmit_eje_estrategico(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_eje_estrategico(true);
       await put_eje_estrategico(
         (id_eje_estrategico as number) ?? 0,

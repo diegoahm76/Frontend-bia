@@ -228,7 +228,7 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
         <>
             <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl"
             >
-                {/* <button onClick={() => console.log(tipoRio)}>Mostrar zonahidrica en la consola</button> */}
+                {/* <button onClick={() => //  console.log('')(tipoRio)}>Mostrar zonahidrica en la consola</button> */}
 
                 <Grid container
                     item xs={12} marginLeft={2} marginRight={2} marginTop={3}

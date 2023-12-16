@@ -399,11 +399,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     if(entradas !== undefined)
     if(entrada_update){
       dispatch(actualizar_entrada_bien(buscar_articulo.info_entrada.id_entrada_almacen,entradas)).then((response: any) =>{
-        console.log("Se actualizó una entrada: ",response);
+        //  console.log('')("Se actualizó una entrada: ",response);
       });
     }else{
       dispatch(crear_entrada_bien(entradas)).then((response: any) =>{
-        console.log("Se creo una entrada: ",response);
+        //  console.log('')("Se creo una entrada: ",response);
       });
     }
   }, [entradas]);

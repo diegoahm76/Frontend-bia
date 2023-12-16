@@ -60,7 +60,7 @@ export const DelegacionSuperuserScreen: React.FC = () => {
     get_person_by_document(tipo_documento, numero_documento)
       .then(({ data: { data } }) => {
         if (data !== null && data !== undefined) {
-          // console.log(data);
+          // //  console.log('')(data);
           setSuperUsuarioActual(userinfo.nombre_de_usuario);
           setNuevoSuperUsuario({
             tipoDocumento: tipo_documento,
@@ -105,7 +105,7 @@ export const DelegacionSuperuserScreen: React.FC = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        //  console.log('')(err);
       });
   };
 

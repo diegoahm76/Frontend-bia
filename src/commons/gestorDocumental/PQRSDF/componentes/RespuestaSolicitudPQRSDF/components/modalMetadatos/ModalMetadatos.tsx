@@ -70,7 +70,7 @@ export const ModalMetadatos = (): JSX.Element => {
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(watchExeManejoModalMetadatos);
+            //  console.log('')(watchExeManejoModalMetadatos);
             //? va a ser necesario almacenar los datos de los metadatos que se establezcan
           }}
         >
@@ -109,7 +109,7 @@ export const ModalMetadatos = (): JSX.Element => {
                         value={value}
                         // name="id_ccd"
                         onChange={(selectedOption) => {
-                          console.log(selectedOption);
+                          //  console.log('')(selectedOption);
                           /*dispatch(
                             getServiceSeriesSubseriesXUnidadOrganizacional(
                               selectedOption.item
@@ -158,7 +158,7 @@ export const ModalMetadatos = (): JSX.Element => {
                       <Select
                         value={value}
                         onChange={(selectedOption) => {
-                          console.log(selectedOption);
+                          //  console.log('')(selectedOption);
                           /* dispatch(
                             getServiceSeriesSubseriesXUnidadOrganizacional(
                               selectedOption.item
@@ -245,7 +245,7 @@ export const ModalMetadatos = (): JSX.Element => {
                       <Select
                         value={value}
                         onChange={(selectedOption) => {
-                          console.log(selectedOption);
+                          //  console.log('')(selectedOption);
                           {
                             /* si se selcciona el si se debe mostrar el select de las tipologías documentales que se van a establecer */
                           }
@@ -302,7 +302,7 @@ export const ModalMetadatos = (): JSX.Element => {
                           <Select
                             value={value}
                             onChange={(selectedOption) => {
-                              console.log(selectedOption);
+                              //  console.log('')(selectedOption);
                               /* dispatch(
                             getServiceSeriesSubseriesXUnidadOrganizacional(
                               selectedOption.item
@@ -405,7 +405,7 @@ export const ModalMetadatos = (): JSX.Element => {
                           control_warning(
                             'máximo 50 caracteres para el asunto'
                           );
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       inputProps={{ maxLength: 50 }}
                     />
@@ -523,7 +523,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 color="error"
                 variant="contained"
                 onClick={() => {
-                  console.log('cerrando modal');
+                  //  console.log('')('cerrando modal');
 
                   resetManejoMetadatosModal();
                 }}
@@ -536,7 +536,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 type="submit"
                 variant="contained"
                 onClick={() => {
-                  console.log('cerrando modal');
+                  //  console.log('')('cerrando modal');
                 }}
                 startIcon={<SaveIcon />}
               >
@@ -547,7 +547,7 @@ export const ModalMetadatos = (): JSX.Element => {
                 variant="outlined"
                 onClick={() => {
                   //* en la cerrada tambien se deben limpiar los campos para que no se tienda a producir errrores
-                  console.log('cerrando modal');
+                  //  console.log('')('cerrando modal');
                   handleModalAgregarMetadatos(false);
                 }}
                 startIcon={<CloseIcon />}

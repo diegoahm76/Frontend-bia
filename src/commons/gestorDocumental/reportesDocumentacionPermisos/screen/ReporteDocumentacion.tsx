@@ -64,7 +64,7 @@ const ReportesDocumentacionScreen = () => {
 
     useEffect(() => {
         if (selected_trd && typeof selected_trd.id_trd === 'number') {
-            console.log(selected_trd)
+            //  console.log('')(selected_trd)
             reset_trd(selected_trd);
 
             if (selected_trd.id_trd) {
@@ -80,7 +80,7 @@ const ReportesDocumentacionScreen = () => {
     }, [selected_serie_subserie]);
 
     useEffect(() => {
-        console.log(permisos_no_propios)
+        //  console.log('')(permisos_no_propios)
     }, [permisos_no_propios]);
     useEffect(() => {
         if (permisos_generales !== null) {
@@ -131,14 +131,14 @@ const ReportesDocumentacionScreen = () => {
                     }
                 }
             });
-            console.log(table_data)
+            //  console.log('')(table_data)
             set_data(table_data)
         }
     }, [permisos_generales]);
 
     useEffect(() => {
         if (selected_trd && typeof selected_trd.id_ccd === 'number' && selected_serie_subserie && typeof selected_serie_subserie.id_unidad_organizacional === 'number') { void dispatch(get_permisos_generales(selected_trd.id_ccd, selected_serie_subserie.id_unidad_organizacional)) }
-        console.log(permisos_generales)
+        //  console.log('')(permisos_generales)
         set_data([]);
 
     }, [selected_serie_subserie])
@@ -428,7 +428,7 @@ const ReportesDocumentacionScreen = () => {
             },
         ];
 
-        console.log(permiso_index)
+        //  console.log('')(permiso_index)
         return (
 
             <React.Fragment key={index}>
@@ -854,8 +854,8 @@ const ReportesDocumentacionScreen = () => {
 
                                     onChange(selectedOption);
 
-                                    console.log(serie_subserie);
-                                    console.log('selected_serie_subserie:', selected_serie_subserie);
+                                    //  console.log('')(serie_subserie);
+                                    //  console.log('')('selected_serie_subserie:', selected_serie_subserie);
                                 }}
                                 error={!!error}
                                 sx={{

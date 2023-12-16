@@ -51,7 +51,7 @@ export const CreateProcesoModal = ({
         set_etapas(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
   }, []);
 
@@ -61,7 +61,7 @@ export const CreateProcesoModal = ({
         filter_subetapas(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 

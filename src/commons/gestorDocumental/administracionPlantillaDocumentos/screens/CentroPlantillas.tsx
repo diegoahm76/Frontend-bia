@@ -24,7 +24,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
-  console.log("data_busqueda_Avanazda", data_busqueda_Avanazda);
+  //  console.log('')("data_busqueda_Avanazda", data_busqueda_Avanazda);
   const [activador, set_activaador] = useState<boolean>(false);
 
   const [id_visualizar, set_id_visualizar] = useState(0);
@@ -135,7 +135,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
           if (queryURL.endsWith('&')) { queryURL = queryURL.slice(0, -1); }
         }
       }
-      console.log("queryURL", queryURL);
+      //  console.log('')("queryURL", queryURL);
       const res: any = await api.get(queryURL);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);
@@ -151,7 +151,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
       const res: any = await api.get(url);
       let numero_consulta: any = res.data.data;
       set_data_choise(numero_consulta);
-      // console.log(numero_consulta); 
+      // //  console.log('')(numero_consulta); 
     } catch (error) {
       console.error(error);
     }
@@ -163,7 +163,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
       const res: any = await api.get(url);
       let numero_consulta_Disponivilidad: any = res.data;
       set_data_choise_disponivilidad(numero_consulta_Disponivilidad);
-      // console.log(numreo_consulta_Disponivilidad);
+      // //  console.log('')(numreo_consulta_Disponivilidad);
     } catch (error) {
       console.error(error);
     }

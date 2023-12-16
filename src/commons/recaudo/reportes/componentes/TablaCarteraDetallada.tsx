@@ -67,7 +67,7 @@ export const TablaCarteraDetallada: React.FC = () => {
         const data = responseData.results.data;
         const total_pages = Math.ceil(responseData.count / 10); // Supongo 10 elementos por página
         const number = page_number + 1
-        console.log(number, pages)
+        //  console.log('')(number, pages)
         if (pages.length === 0) {
           set_pages([...pages, number])
           set_data(data);
@@ -98,7 +98,7 @@ export const TablaCarteraDetallada: React.FC = () => {
       const data = responseData.results.data;
       const total_pages = Math.ceil(responseData.count / 10); // Supongo 10 elementos por página
       const number = page_number + 1;
-      console.log(number, pages);
+      //  console.log('')(number, pages);
       if (pages.length === 0) {
         set_pages([...pages, number]);
         set_data(data);

@@ -196,12 +196,12 @@ export function CrearPqrsdfScreen(): JSX.Element {
   const [action, set_action] = useState('crear');
   const [step, set_step] = useState<number | null>(null);
   const validate = (data: any, step: number) => {
-    console.log('validate_pqr', data);
+    //  console.log('')('validate_pqr', data);
 
     dispatch(set_pqr({ ...pqr, ...data, anexos: exhibits }));
   };
   const validate_denuncia = (data: any, step: number) => {
-    console.log('validate_denuncia', data, pqr);
+    //  console.log('')('validate_denuncia', data, pqr);
     dispatch(set_pqr({ ...pqr, denuncia: data, anexos: exhibits }));
   };
   const [configuration_steps, set_configuration_steps] = useState<
@@ -306,7 +306,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
       id_medio_solicitud:
         (type_applicant.key ?? null) === null ? 2 : pqr.id_medio_solicitud,
     });
-    console.log(pqr);
+    //  console.log('')(pqr);
     if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
       if ('anexos' in pqr) {
         if (pqr.anexos === undefined && pqr.anexos === null) {
@@ -376,7 +376,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
   }, [pqr]);
 
   useEffect(() => {
-    console.log(exhibits, pqr);
+    //  console.log('')(exhibits, pqr);
     if (exhibits.length > 0) {
       dispatch(set_pqr({ ...pqr, anexos: exhibits }));
     }
@@ -393,7 +393,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         set_action('editar');
         let folios: number = 0;
         const aux_items: IObjExhibit[] = [];
-        console.log(exhibits);
+        //  console.log('')(exhibits);
         let ya_digitalizado: boolean = true;
 
         exhibits.forEach((elemento: IObjExhibit, index: number) => {
@@ -405,7 +405,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
           });
           ya_digitalizado = elemento.metadatos === null ? false : true;
         });
-        console.log(aux_items);
+        //  console.log('')(aux_items);
 
         const data_edit: any = {
           ...data,
@@ -431,10 +431,10 @@ export function CrearPqrsdfScreen(): JSX.Element {
                       : '',
                 },
         };
-        console.log(data_edit);
+        //  console.log('')(data_edit);
         form_data.append('pqrsdf', JSON.stringify(data_edit));
         aux_items.forEach((elemento) => {
-          console.log(elemento);
+          //  console.log('')(elemento);
           if (elemento.id_anexo === null) {
             form_data.append(
               `archivo-create-${elemento.nombre_anexo}`,
@@ -466,7 +466,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         );
       }
     } else {
-      console.log(data, exhibits);
+      //  console.log('')(data, exhibits);
       set_action('crear');
       const fecha = new Date(data.fecha_registro ?? '').toISOString();
       let folios: number = 0;
@@ -493,7 +493,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         anexos: aux_items,
         requiere_digitalizacion: !ya_digitalizado,
       };
-      console.log(data_edit);
+      //  console.log('')(data_edit);
 
       form_data.append('pqrsdf', JSON.stringify(data_edit));
       exhibits.forEach((elemento) => {

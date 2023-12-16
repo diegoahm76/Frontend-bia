@@ -359,7 +359,7 @@ const SeleccionarBienSiembra = () => {
         ? p.id_mezcla === item.id_mezcla_consumida
         : p.id_bien === item.id_bien_consumido
     );
-    console.log(bien, item);
+    //  console.log('')(bien, item);
 
     reset_siembra(item);
     const aux_items: IObjPlantingGoods[] = [];
@@ -369,7 +369,7 @@ const SeleccionarBienSiembra = () => {
       }
     });
     if (bien !== undefined) {
-      console.log(item);
+      //  console.log('')(item);
       const restante =
         (bien.cantidad_disponible_bien ?? 0) + (item?.cantidad ?? 0);
       if (item.id_consumo_siembra !== null) {

@@ -121,7 +121,7 @@ export const ListarProyecto: React.FC = () => {
     programa: { id_programa },
   } = useAppSelector((state) => state.planes);
 
-  console.log('id_programa', id_programa);
+  //  console.log('')('id_programa', id_programa);
 
   const dispatch = useAppDispatch();
 

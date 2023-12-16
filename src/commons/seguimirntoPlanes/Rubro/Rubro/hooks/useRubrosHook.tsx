@@ -44,7 +44,7 @@ export const useRubrosHook = (): any => {
 
   const onsubmit_rubro = handleSubmit_rubro(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_rubro(true);
       await post_rubro(data as IRubro);
       control_success('Se creó correctamente');
@@ -68,7 +68,7 @@ export const useRubrosHook = (): any => {
 
   const onsubmit_editar = handleSubmit_rubro(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_rubro(true);
       await put_rubro((id_rubro as number) ?? 0, data as IRubro);
       control_success('Se actualizó correctamente');

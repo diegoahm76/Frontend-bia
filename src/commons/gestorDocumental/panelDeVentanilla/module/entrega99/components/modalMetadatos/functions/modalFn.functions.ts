@@ -8,7 +8,7 @@ export const handleCleanField = (resetFn: Function): void => {
 };
 
 /*export const handleSave = (data: any, resetFn: Function) => {
-  console.log(data);
+  //  console.log('')(data);
   resetFn();
   control_success('Se guardaron los datos');
 }*/

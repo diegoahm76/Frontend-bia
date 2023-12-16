@@ -27,18 +27,18 @@ export const DownloadButton = ({
         target="_blank"
         rel="noopener noreferrer"
         href={
-          (fileUrl || '') &&
-          (fileUrl || '').includes(
+          fileUrl &&
+          fileUrl.includes(
             process.env.NODE_ENV === 'development'
-              ? process.env.REACT_APP_BETA_URL || ''
-              : process.env.REACT_APP_PROD_URL || ''
+              ? process.env.REACT_APP_DOWNLOAD_FILES_BETA || 'https://back-end-bia-beta.up.railway.app'
+              : process.env.REACT_APP_DOWNLOAD_FILES_PROD || 'http://70.30.6.237'
           )
             ? fileUrl
             : `${
                 process.env.NODE_ENV === 'development'
-                  ? process.env.REACT_APP_BETA_URL
-                  : process.env.REACT_APP_PROD_URL
-              }${fileUrl || ''}`
+                  ? process.env.REACT_APP_DOWNLOAD_FILES_BETA || 'https://back-end-bia-beta.up.railway.app'
+                  : process.env.REACT_APP_DOWNLOAD_FILES_PROD || 'http://70.30.6.237'
+              }${fileUrl}`
         }
         ref={linkRef}
         style={{ display: 'none' }}

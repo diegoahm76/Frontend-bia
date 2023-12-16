@@ -44,7 +44,7 @@ interface IProps {
 
 const MoverBandeja = ({ control_bandeja_destino, open, handle_close_buscar, get_values, handle_mover_bandeja }: IProps) => {
     const { deposito, estantes } = useAppSelector((state) => state.deposito);
-    console.log(deposito)
+    //  console.log('')(deposito)
     const dispatch = useAppDispatch();
 
     const columns: GridColDef[] = [
@@ -89,7 +89,7 @@ const MoverBandeja = ({ control_bandeja_destino, open, handle_close_buscar, get_
 
     const mostrar_estante: any = async () => {
         const nombre_deposito = get_values('nombre_deposito') ?? '';
-        console.log(nombre_deposito)
+        //  console.log('')(nombre_deposito)
         const identificacion_estante = get_values('identificacion_por_deposito') ?? '';
         const orden_estante = get_values('orden_estante') ?? '';
         void dispatch(get_estantes_deposito(nombre_deposito, identificacion_estante, orden_estante))

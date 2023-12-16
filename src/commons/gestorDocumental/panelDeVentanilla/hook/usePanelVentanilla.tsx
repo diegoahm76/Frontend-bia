@@ -106,7 +106,7 @@ export const usePanelVentanilla = () => {
   });
 
   const watchFormularioValues = watchFormulario();
-  console.log('watchFormulario', watchFormularioValues);
+  //  console.log('')('watchFormulario', watchFormularioValues);
 
   const resetFormularioFunction = () => {
     setValueFormulario('medio_almacenamiento', '');
@@ -155,7 +155,7 @@ export const usePanelVentanilla = () => {
 
   //
   const watchExeManejoModalMetadatos = watchManejoMetadatosModal();
-  // console.log('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
+  // //  console.log('')('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
 
   // ? reset de los valores del modal de metadatos
   const resetManejoMetadatosModalFunction = () =>

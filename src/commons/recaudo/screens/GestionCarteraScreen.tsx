@@ -207,7 +207,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 
@@ -217,7 +217,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_categorias(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
   }, []);
 
@@ -228,7 +228,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
       .finally(() => {
         set_loading(false);
@@ -241,7 +241,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_flujos_proceso(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 
@@ -261,7 +261,7 @@ export const GestionCarteraScreen: React.FC = () => {
           group_valores_proceso(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   }, [id_proceso]);
@@ -282,7 +282,7 @@ export const GestionCarteraScreen: React.FC = () => {
           delete_duplicated_atributos(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   }, [id_etapa]);
@@ -293,7 +293,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   };
 
@@ -305,7 +305,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
       .finally(() => {
         set_loading(false);
@@ -318,7 +318,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_flujos_proceso(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   };
 
@@ -376,7 +376,7 @@ export const GestionCarteraScreen: React.FC = () => {
           set_open_notification_modal(true);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
       api.get(`recaudo/procesos/atributos/${id_etapa_destino}`)
         .then((response) => {
@@ -384,7 +384,7 @@ export const GestionCarteraScreen: React.FC = () => {
           group_atributos(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   };
@@ -395,13 +395,13 @@ export const GestionCarteraScreen: React.FC = () => {
         id_categoria: id_subetapa_destino,
       })
         .then((response) => {
-          console.log(response);
+          //  console.log('')(response);
           update_flujos();
           update_procesos_sin_finalizar();
           update_carteras();
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   };
@@ -494,7 +494,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       })
@@ -521,7 +521,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       });
@@ -538,7 +538,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       });

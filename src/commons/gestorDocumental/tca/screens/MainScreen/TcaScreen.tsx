@@ -48,7 +48,7 @@ export const TcaScreen: FC = (): JSX.Element => {
         tca_current?.fecha_terminado !== '' &&
         tca_current?.fecha_terminado !== undefined
     );
-    console.log(
+    //  console.log('')(
       '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ trd_current?.fecha_terminado',
       tca_current?.fecha_terminado
     );

@@ -51,7 +51,7 @@ const SucursalDirecciones = ({ control_deposito, }: IProps) => {
 
                 set_municipalities(municipalities_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
         };
 
@@ -68,11 +68,11 @@ const SucursalDirecciones = ({ control_deposito, }: IProps) => {
                 const paises_format: IList[] = text_choise_adapter(
                     paises_no_format
                 );
-                console.log(paises_format)
+                //  console.log('')(paises_format)
 
                 set_paises(paises_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
 
         };
@@ -93,7 +93,7 @@ const SucursalDirecciones = ({ control_deposito, }: IProps) => {
 
                 set_departamento(departamento_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
         };
 

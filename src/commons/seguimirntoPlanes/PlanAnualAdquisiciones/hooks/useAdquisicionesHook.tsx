@@ -156,7 +156,7 @@ export const useAdquisicionesHook = (): any => {
   );
 
   useEffect(() => {
-    console.log('is_limpiar_formulario', is_limpiar_formulario);
+    //  console.log('')('is_limpiar_formulario', is_limpiar_formulario);
     limipiar_formulario_personas();
     set_is_limpiar_formulario(false);
   }, [is_limpiar_formulario]);
@@ -179,7 +179,7 @@ export const useAdquisicionesHook = (): any => {
 
   const onsubmit_adquisiciones = handleSubmit_adquisiciones(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_persona_responsable = id_persona;
       if (!data.id_persona_responsable || data.id_persona_responsable === 0) {
         control_error('No se ha seleccionado una persona responsable');
@@ -217,7 +217,7 @@ export const useAdquisicionesHook = (): any => {
         data.id_persona_responsable = id_persona;
       }
 
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_adquisiciones(true);
       // data.id_indicador = id_indicador;
       await put_plan_adiquisiciones(

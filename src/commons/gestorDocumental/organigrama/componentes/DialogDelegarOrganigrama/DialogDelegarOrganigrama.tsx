@@ -372,7 +372,7 @@ const DialogDelegarOrganigrama = ({
               variant="outlined"
               onClick={() => {
                 // void handle_submit_delegacion_organigrama();
-                console.log('limpiando formulario de datos de asignación de usuario')
+                //  console.log('')('limpiando formulario de datos de asignación de usuario')
                 cleaningForm()
               }}
               startIcon={<CleanIcon />}

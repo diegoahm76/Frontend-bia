@@ -93,7 +93,7 @@ export const SecSubSeleccionada = (): JSX.Element => {
             startIcon={<CleanIcon />}
             onClick={() => {
               // reset_all_trd();
-              console.log('homa a resetear');
+              //  console.log('')('homa a resetear');
               cleanSeleccion();
             }}
           >

@@ -12,7 +12,7 @@ interface DownloadPDFProps {
 export const download_pdf_props : React.FC<DownloadPDFProps> = (props: DownloadPDFProps) => {
 
     const titulo:any = props.title;
-    // console.log(titulo);
+    // //  console.log('')(titulo);
     const button_style = {
         color: 'white',
         backgroundColor: 'red',

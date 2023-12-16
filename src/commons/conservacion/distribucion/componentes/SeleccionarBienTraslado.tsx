@@ -343,7 +343,7 @@ const SeleccionarBienTraslado = () => {
   }, [origin_nursery]);
 
   useEffect(() => {
-    console.log(transfer_goods);
+    //  console.log('')(transfer_goods);
     set_aux_transfer_goods(transfer_goods);
   }, [transfer_goods]);
 

@@ -58,11 +58,11 @@ export const BusquedaPorh: React.FC = () => {
                 if (params.row !== undefined) {
                   set_is_general(true);
                   set_is_consulta(false);
-                  console.log(
+                  //  console.log('')(
                     params.row.id_instrumento,
                     'params.row.id_instrumento'
                   );
-                  console.log(params.row, 'params.row');
+                  //  console.log('')(params.row, 'params.row');
                   set_id_instrumento(params.row.id_instrumento);
                   set_info_instrumento(params.row);
                   handle_close();

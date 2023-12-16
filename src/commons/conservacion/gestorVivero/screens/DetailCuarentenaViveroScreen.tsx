@@ -32,7 +32,7 @@ export function DetailCuarentenaViveroScreen(): JSX.Element {
 
   useEffect(() => {
     void dispatch(get_nurseries_closing_service());
-    console.log(id);
+    //  console.log('')(id);
     if (id !== null && id !== undefined) {
       void dispatch(get_nursery_service(id));
     } else {

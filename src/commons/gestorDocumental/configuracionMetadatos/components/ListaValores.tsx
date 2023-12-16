@@ -70,7 +70,7 @@ const ValoresMetadatos = () => {
 
     // asignar metadatos de la tabla al formulario
     useEffect(() => {
-        console.log(selected_metadato)
+        //  console.log('')(selected_metadato)
         reset(selected_metadato);
     }, [selected_metadato]);
 
@@ -92,7 +92,7 @@ const ValoresMetadatos = () => {
 
     useEffect(() => {
 
-        console.log(valores_metadatos)
+        //  console.log('')(valores_metadatos)
 
     }, [])
 
@@ -110,7 +110,7 @@ const ValoresMetadatos = () => {
 
                 set_tipos_datos(tipos_datos_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
         };
 
@@ -167,7 +167,7 @@ const ValoresMetadatos = () => {
                 ...selected_metadato,
                 ...data,
             }
-            console.log(data_edit)
+            //  console.log('')(data_edit)
             void dispatch(editar_metadato(selected_metadato.id_metadato_personalizado, data_edit))
 
         } else {
@@ -201,7 +201,7 @@ const ValoresMetadatos = () => {
             void dispatch(get_metadatos());
         }
 
-        console.log(selected_metadato)
+        //  console.log('')(selected_metadato)
 
     }
     const on_submit_agregar_valor = (data: IObjValoresMetadatos): void => {

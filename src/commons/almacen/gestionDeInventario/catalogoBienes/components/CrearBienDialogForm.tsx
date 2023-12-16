@@ -94,7 +94,7 @@ const CrearBienDialogForm = ({
     data.maneja_hoja_vida = data.maneja_hoja_vida === 'true';
     data.solicitable_vivero = data.solicitable_vivero === 'true';
     data.visible_solicitudes = data.visible_solicitudes === 'true';
-    console.log(data);
+    //  console.log('')(data);
     void dispatch(add_bien_service(data));
     handle_close_add_bien();
   };
@@ -129,7 +129,7 @@ const CrearBienDialogForm = ({
         );
         set_depreciacion_types(depreciacion_types_format);
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();
@@ -140,7 +140,7 @@ const CrearBienDialogForm = ({
   useEffect(() => {
     if (action === 'create_sub') {
       if (current_nodo.data.bien?.nivel_jerarquico !== 5) {
-        console.log(current_nodo.data.bien?.nivel_jerarquico)
+        //  console.log('')(current_nodo.data.bien?.nivel_jerarquico)
         void dispatch(
           get_code_bien_service(
             current_nodo.data.bien?.id_bien,
@@ -183,12 +183,12 @@ const CrearBienDialogForm = ({
             : 'false',
       });
     }
-    console.log(current_nodo)
+    //  console.log('')(current_nodo)
   }, [current_nodo]);
 
   useEffect(() => {
     reset_bien({ ...current_nodo.data.bien, codigo_bien: code_bien });
-    console.log(code_bien)
+    //  console.log('')(code_bien)
   }, [code_bien]);
 
   return (

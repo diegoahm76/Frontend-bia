@@ -23,8 +23,9 @@ import axios from 'axios';
 export const alertas = axios.create({
   baseURL:
     process.env.NODE_ENV === 'development'
-      ? process.env.REACT_APP_BETA_URL
-      : process.env.REACT_APP_PROD_URL,
+      ? process.env.REACT_APP_BETA_URL ||
+        'https://back-end-bia-beta.up.railway.app/api/'
+      : process.env.REACT_APP_PROD_URL || 'http://70.30.6.237',
 });
 export const control_success = (message: ToastContent): any =>
   toast.success(message, {
@@ -55,7 +56,7 @@ export const control_success_fail = (message: ToastContent): any =>
 export const llamar_alertas = async () => {
   try {
     const response = await alertas.get('estaciones/prueba/');
-    console.log(response.data);
+    //  console.log('')(response.data);
   } catch (error) {
     console.error(error);
   }

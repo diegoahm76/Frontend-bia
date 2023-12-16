@@ -54,8 +54,8 @@ const EntregaScreen = () => {
     }
 
     useEffect(() => {
-        // console.log(current_solicitud)
-        console.log(current_entrega);
+        // //  console.log('')(current_solicitud)
+        //  console.log('')(current_entrega);
         reset_entrega(current_entrega);
         if ('persona_crea' in current_entrega) {
             reset_entrega(current_entrega);
@@ -119,7 +119,7 @@ const EntregaScreen = () => {
     useEffect(() => {
         if (current_entrada.id_entrada_almacen !== null && current_entrada.id_entrada_almacen !== undefined) {
             void dispatch(get_bienes_entrada(current_entrada.id_entrada_almacen));
-            console.log(current_entrada)
+            //  console.log('')(current_entrada)
         }
 
         reset_entrada_entrega(current_entrada)
@@ -175,7 +175,7 @@ const EntregaScreen = () => {
                 data_items_entrega: aux_items,
 
             };
-            console.log(aux)
+            //  console.log('')(aux)
             form_data.append('data_entrega', JSON.stringify({ ...data_edit }));
             form_data.append('data_items_entrega', JSON.stringify(aux_items));
             form_data.append('ruta_archivo_doc_con_recibido', data.ruta_archivo_doc_con_recibido);
@@ -189,7 +189,7 @@ const EntregaScreen = () => {
         const data_annul = {
             descripcion_anulacion: data.justificacion_anulacion,
         };
-        console.log(data_annul);
+        //  console.log('')(data_annul);
         if (
             current_entrega.id_despacho_consumo !== null &&
             current_entrega.id_despacho_consumo !== undefined

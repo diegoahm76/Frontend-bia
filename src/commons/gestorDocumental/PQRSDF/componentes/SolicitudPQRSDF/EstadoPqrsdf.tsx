@@ -43,7 +43,7 @@ const EstadoPqrsdf = () => {
     if (name === 'pqr_status') {
       if (value !== undefined) {
         dispatch(set_pqr_status(value));
-        console.log(value);
+        //  console.log('')(value);
         if (value.key === 'ESR') {
           if (on_behalf_of.key === 'P') {
             if (person.id_persona !== null && person.id_persona !== undefined) {

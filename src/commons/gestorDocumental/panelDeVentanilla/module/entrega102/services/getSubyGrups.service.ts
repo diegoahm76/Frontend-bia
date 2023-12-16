@@ -23,14 +23,14 @@ export const getSubGrupoAsiGrupo = async (
           };
         }
       );
-      console.log(dataToReturn);
+      //  console.log('')(dataToReturn);
       control_success('Unidades para asignar cargadas');
       return dataToReturn;
     }
     control_warning('No hay datos para mostrar');
     return [];
   } catch (error: any) {
-    console.log(error);
+    //  console.log('')(error);
     control_error(error?.response?.data?.detail ?? 'Error desconocido');
     return [];
   } finally {

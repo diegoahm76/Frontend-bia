@@ -32,7 +32,7 @@ const SeleccionarBienAprobado = () => {
     }, [aux_bienes_solicitud]);
 
     useEffect(() => {
-        console.log(current_bien)
+        //  console.log('')(current_bien)
         reset_bien(current_bien)
     }, [current_bien]);
 
@@ -219,7 +219,7 @@ const SeleccionarBienAprobado = () => {
 
 
     const get_bienes_filtro: any = (async () => {
-        console.log("buscar...")
+        //  console.log('')("buscar...")
         const codigo_bien = get_values_bien("codigo_bien")
         const nombre = get_values_bien("nombre")
         if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined) {

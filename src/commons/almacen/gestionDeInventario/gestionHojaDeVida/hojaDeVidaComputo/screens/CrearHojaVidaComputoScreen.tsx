@@ -85,7 +85,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
 
   useEffect(() => {
     reset_cv_computer(current_cv_computer);
-    console.log(current_cv_computer)
+    //  console.log('')(current_cv_computer)
   }, [current_cv_computer]);
 
   return (

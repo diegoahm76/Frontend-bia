@@ -135,7 +135,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
 
 
   const on_submit_crear_hijo= (data: any): void => {
-   console.log(data) 
+   //  console.log('')(data) 
   void dispatch(get_code_bien_service(data.bien?.id_bien, data.bien?.nivel_jerarquico + 1)) 
   }
 

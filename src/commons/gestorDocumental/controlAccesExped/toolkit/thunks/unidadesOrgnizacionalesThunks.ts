@@ -18,11 +18,11 @@ export const getUnidadesOrganizacionalesSeccionSubseccion = async ({
       control_success(
         `Se encontró la siguiente información de seccion / subseccion`
       );
-      console.log(data?.data);
+      //  console.log('')(data?.data);
       return data?.data;
     } else {
       control_warning('No se encontraron unidades organizacionales');
-      console.log('no se encontraron unidades organizacionales')
+      //  console.log('')('no se encontraron unidades organizacionales')
       return [];
     }
   } catch (error: any) {

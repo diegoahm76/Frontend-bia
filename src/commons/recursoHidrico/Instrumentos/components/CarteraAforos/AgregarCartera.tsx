@@ -220,7 +220,7 @@ export const AgregarCartera: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
-                    console.log(e.target.value);
+                    //  console.log('')(e.target.value);
                   }}
                   error={!!error}
                   /* helperText={

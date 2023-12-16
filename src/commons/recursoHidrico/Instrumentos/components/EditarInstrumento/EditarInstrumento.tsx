@@ -594,7 +594,7 @@ export const EditarInstrumento: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     if (info_busqueda_instrumentos) {
-      console.log('info_busqueda_instrumentos', info_busqueda_instrumentos);
+      //  console.log('')('info_busqueda_instrumentos', info_busqueda_instrumentos);
       reset_instrumento({
         nombre: info_busqueda_instrumentos.nombre,
         fecha_creacion_instrumento:

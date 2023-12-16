@@ -76,7 +76,7 @@ const datatatata = array_edit !== undefined ? [] : array_edit;
             const res: any = await api.get(url);
             const numero_consulta: any = res.data.data;
             set_tipologia_documental(numero_consulta);
-            // console.log(numero_consulta);
+            // //  console.log('')(numero_consulta);
 
         } catch (error) {
             console.error(error);
@@ -152,7 +152,7 @@ const datatatata = array_edit !== undefined ? [] : array_edit;
             break;
         default:
             // Acciones por defecto si el valor no coincide con ninguno de los casos anteriores
-            console.log("Realizar acciones por defecto");
+            //  console.log('')("Realizar acciones por defecto");
     }
 
 

@@ -27,7 +27,7 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
     event: any,
     id_restriccion: number
   ): void => {
-    console.log(
+    //  console.log('')(
       restriccionesParaUnidadesDiferentesAlaSeccionOsubseccionActualResponsable
     );
     const RESTRICCIONES_ACTUALIZADAS =
@@ -52,8 +52,8 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <div
           onClick={() => {
-            console.log('se hace click');
-            console.log(params.row);
+            //  console.log('')('se hace click');
+            //  console.log('')(params.row);
           }}
         >
           {params.row.id === 'denegar_conceder_acceso_doc_na_resp_series'
@@ -87,7 +87,7 @@ export const ResUniDifSecSubAct: FC<any> = (): JSX.Element => {
             checked={params.row.checked}
             onChange={(event) => {
               handleCheckboxChange(event, params.row.id);
-              console.log(event);
+              //  console.log('')(event);
             }}
             inputProps={{ 'aria-label': 'Seleccionar item' }}
           />

@@ -20,7 +20,7 @@ export const VisorProcesosScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 

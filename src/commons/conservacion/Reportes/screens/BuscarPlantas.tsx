@@ -46,7 +46,7 @@ const BuscarPlantas = (props: IProps) => {
   const [tamaño_col, set_tamaño_col] = useState<number>(12);
 
   useEffect(() => {
-    console.log(props);
+    //  console.log('')(props);
     if (props.reporte === 'EL') {
       set_tamaño_col(3);
       dispatch(obtiene_plantas_por_vivero(props.vivero)).then(

@@ -17,7 +17,7 @@ export const get_finished_ccd_service = (): ((
           offset: 0
         }
       });
-      /* console.log(
+      /* //  console.log('')(
         '🚀 ~ file: getFinishedCcdThunks.ts ~ line 31 ~ return ~ data ccd terminados',
         data
       ); */

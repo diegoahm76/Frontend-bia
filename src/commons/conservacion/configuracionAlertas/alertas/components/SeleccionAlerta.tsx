@@ -59,7 +59,7 @@ export const SeleccionAlerta: React.FC = () => {
                 options={alertas_selected as any}
                 placeholder="Seleccione alerta"
                 onChange={(selectedoption) => {
-                  // console.log(selectedoption)
+                  // //  console.log('')(selectedoption)
                   setSelectValueFromSelect(selectedoption);
                   onChange(selectedoption);
                 }}

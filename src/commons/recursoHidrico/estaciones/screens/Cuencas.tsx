@@ -156,7 +156,7 @@ export const Cuencas: React.FC = () => {
     try {
       const url = `/hidrico/zonas-hidricas/sub_zona_hidrica/delete/${idSubZonaHidrica}/`;
       const response = await api.delete(url);
-      console.log("Sub-zona hídrica eliminada con éxito", response.data);
+      //  console.log('')("Sub-zona hídrica eliminada con éxito", response.data);
       control_success("Eliminado axitosamente ");
       // Agregar aquí cualquier lógica adicional post-eliminación, como actualizar la lista
       fetchZonasHidricas();

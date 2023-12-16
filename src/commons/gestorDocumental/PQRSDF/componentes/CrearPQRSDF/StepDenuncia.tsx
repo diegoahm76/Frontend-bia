@@ -101,7 +101,7 @@ const StepDenuncia = ({ control_form, reset, watch }: IProps) => {
   }, [watch('cod_recursos_fectados_presuntos')]);
 
   useEffect(() => {
-    console.log(denuncia);
+    //  console.log('')(denuncia);
     if (denuncia !== null) {
       if (typeof denuncia?.cod_recursos_fectados_presuntos === 'string') {
         reset({
@@ -145,7 +145,7 @@ const StepDenuncia = ({ control_form, reset, watch }: IProps) => {
   }, [denuncia]);
 
   useEffect(() => {
-    console.log(pqr);
+    //  console.log('')(pqr);
     if (pqr.denuncia !== null && pqr.denuncia !== undefined) {
       dispatch(set_denuncia(pqr.denuncia));
     } else {

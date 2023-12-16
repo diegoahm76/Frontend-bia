@@ -197,7 +197,7 @@ export const SeleccionLider = (): JSX.Element => {
                   watch_seleccionar_lideres_value?.observaciones_asignacion
               };
 
-              console.log(data);
+              //  console.log('')(data);
 
               const updateDataFunction = {
                 id_lider_unidad_org:
@@ -216,7 +216,7 @@ export const SeleccionLider = (): JSX.Element => {
                     void getAsignacionesLideresByIdOrganigrama(
                       organigrama_lideres_current?.id_organigrama
                     ).then((res: any) => {
-                      console.log(res);
+                      //  console.log('')(res);
                       dispatch(get_list_asignaciones_lideres(res));
                     });
                   })
@@ -228,7 +228,7 @@ export const SeleccionLider = (): JSX.Element => {
                     void getAsignacionesLideresByIdOrganigrama(
                       organigrama_lideres_current?.id_organigrama
                     ).then((res: any) => {
-                      console.log(res);
+                      //  console.log('')(res);
                       dispatch(get_list_asignaciones_lideres(res));
                     });
                   });
@@ -257,11 +257,11 @@ export const SeleccionLider = (): JSX.Element => {
                           /* void get_catalogo_TRD_service(
                             selectedOption.value
                           ).then((res) => {
-                            console.log(res);
+                            //  console.log('')(res);
                             dispatch(set_catalog_trd_action(res));
                           }); */
                           dispatch(set_unidad_current(selectedOption));
-                          console.log(selectedOption);
+                          //  console.log('')(selectedOption);
                           onChange(selectedOption);
                         }}
                         options={unidadesOrganizacionales}
@@ -310,7 +310,7 @@ export const SeleccionLider = (): JSX.Element => {
                           /*  void get_catalogo_TRD_service(
                             selectedOption.value
                           ).then((res) => {
-                            console.log(res);
+                            //  console.log('')(res);
                             dispatch(set_catalog_trd_action(res));
                           });
 */

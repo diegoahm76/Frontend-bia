@@ -83,7 +83,7 @@ const SolicitudConsumoViveroScreen = () => {
 
 
   useEffect(() => {
-    console.log(current_solicitud_vivero);
+    //  console.log('')(current_solicitud_vivero);
     reset_solicitud(current_solicitud_vivero);
     if ('persona_solicita' in current_solicitud_vivero) {
       reset_solicitud(current_solicitud_vivero);
@@ -151,7 +151,7 @@ const SolicitudConsumoViveroScreen = () => {
       );
     }
   }, [coordinador_vivero]);
-  console.log(coordinador_vivero)
+  //  console.log('')(coordinador_vivero)
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
   const on_submit = (data: IObjSolicitudVivero) => {

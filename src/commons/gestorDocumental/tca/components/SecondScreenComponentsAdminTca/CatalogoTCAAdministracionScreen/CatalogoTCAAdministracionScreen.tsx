@@ -95,7 +95,7 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
               size="large"
               title="Editar relación catalogo TCA"
               onClick={() => {
-                console.log(params.row);
+                //  console.log('')(params.row);
                 void get_tipologias_relacion(
                   params.row.id_cat_serie_und_ccd_trd,
                   setLoadTipologias
@@ -108,8 +108,8 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
                     (item: any) => !item.reservada
                   );
 
-                  console.log('tipologias_reservadas,', tipologias_reservadas);
-                  console.log(
+                  //  console.log('')('tipologias_reservadas,', tipologias_reservadas);
+                  //  console.log('')(
                     'tipologias_NO_reservadas,',
                     tipologias_NO_reservadas
                   );
@@ -140,7 +140,7 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
                 size="large"
                 title="Eliminar relación catalogo TRD"
                 onClick={() => {
-                  // console.log(params.row);
+                  // //  console.log('')(params.row);
                   handleClickDeleteIcon(params);
                 }}
               >

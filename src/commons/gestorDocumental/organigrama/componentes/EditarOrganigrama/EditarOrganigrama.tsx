@@ -120,7 +120,7 @@ export const EditarOrganigrama = ({
   };
 
   useEffect(() => {
-    // console.log(organigram_current.fecha_terminado);
+    // //  console.log('')(organigram_current.fecha_terminado);
     if (organigram_current?.id_organigrama === null) {
       set_position_tab_organigrama('1');
     }
@@ -181,7 +181,7 @@ export const EditarOrganigrama = ({
                         control_warning('máximo 50 caracteres');
 
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     helperText={
@@ -219,7 +219,7 @@ export const EditarOrganigrama = ({
                         control_warning('máximo 10 caracteres');
 
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     helperText={
@@ -257,7 +257,7 @@ export const EditarOrganigrama = ({
                         control_warning('máximo 255 caracteres');
 
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     helperText={
@@ -466,8 +466,8 @@ export const EditarOrganigrama = ({
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={(e) => {
                 e.preventDefault();
-                console.log(e);
-                console.log('hola sjeje');
+                //  console.log('')(e);
+                //  console.log('')('hola sjeje');
                 title_unidades === 'Agregar'
                   ? void handle_submit_unidades(create_unidad)(e)
                   : void handle_submit_unidades(edit_unidad)(e);
@@ -549,8 +549,8 @@ export const EditarOrganigrama = ({
                         {...field}
                         value={field.value}
                         onChange={(option: SingleValue<any>) => {
-                          console.log(option);
-                          console.log('value', field.value);
+                          //  console.log('')(option);
+                          //  console.log('')('value', field.value);
                           set_value_unidades('tipo_unidad', option);
                         }}
                         options={options_tipo_unidad.map((item) =>
@@ -676,7 +676,7 @@ export const EditarOrganigrama = ({
                 <Button
                   onClick={() => {
                     // void dispatch(set_special_edit(false));
-                    console.log('editando unidades propiedad activo');
+                    //  console.log('')('editando unidades propiedad activo');
                     edit_prop_activo_unidad_org(unity_organigram);
                   }}
                   color="success"
@@ -697,7 +697,7 @@ export const EditarOrganigrama = ({
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={(e) => {
               e.preventDefault();
-              console.log('jejej siuuuu');
+              //  console.log('')('jejej siuuuu');
               void handle_submit_unidades(create_unidad_org_actual)(e);
             }}
           >
@@ -773,8 +773,8 @@ export const EditarOrganigrama = ({
                       {...field}
                       value={field.value}
                       onChange={(option: SingleValue<any>) => {
-                        console.log(option);
-                        console.log('value', field.value);
+                        //  console.log('')(option);
+                        //  console.log('')('value', field.value);
                         set_value_unidades('tipo_unidad', option);
                       }}
                       options={options_tipo_unidad.map((item) =>
@@ -836,7 +836,7 @@ export const EditarOrganigrama = ({
                       {...field}
                       value={field.value}
                       onChange={(option: SingleValue<any>) => {
-                        // console.log(option);
+                        // //  console.log('')(option);
                         set_value_unidades('agrupacion_documental', option);
                       }}
                       options={options_agrupacion_d}
@@ -893,7 +893,7 @@ export const EditarOrganigrama = ({
               <Button
                 onClick={() => {
                   // void dispatch(set_special_edit(false));
-                  console.log('editando unidades propiedad activo');
+                  //  console.log('')('editando unidades propiedad activo');
                   edit_prop_activo_unidad_org(unity_organigram);
                 }}
                 color="success"
@@ -910,7 +910,7 @@ export const EditarOrganigrama = ({
           <Button
             onClick={() => {
               // void dispatch(set_special_edit(false));
-              console.log('editando unidades propiedad activo');
+              //  console.log('')('editando unidades propiedad activo');
               edit_prop_activo_unidad_org(unity_organigram);
             }}
             color="success"

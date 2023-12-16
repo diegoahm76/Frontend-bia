@@ -31,7 +31,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
         set_opciones_liquidacion(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 

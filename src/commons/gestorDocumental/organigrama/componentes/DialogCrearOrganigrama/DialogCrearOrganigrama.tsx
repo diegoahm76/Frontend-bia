@@ -51,7 +51,7 @@ const DialogCrearOrganigrama = ({
   };
 
   const on_submit = (data: FormValues): void => {
-    console.log(creacion_organigrama_values);
+    //  console.log('')(creacion_organigrama_values);
 
     // Convertir el objeto new_ccd en un objeto FormData
     const formData: any = new FormData();
@@ -116,7 +116,7 @@ const DialogCrearOrganigrama = ({
                     control_warning('máximo 50 caracteres');
 
                   onChange(e.target.value);
-                  // console.log(e.target.value);
+                  // //  console.log('')(e.target.value);
                 }}
                 error={!(error == null)}
                 helperText={
@@ -147,7 +147,7 @@ const DialogCrearOrganigrama = ({
                     control_warning('máximo 10 caracteres');
 
                   onChange(e.target.value);
-                  // console.log(e.target.value);
+                  // //  console.log('')(e.target.value);
                 }}
                 error={!(error == null)}
                 helperText={
@@ -179,7 +179,7 @@ const DialogCrearOrganigrama = ({
                     control_warning('máximo 255 caracteres');
 
                   onChange(e.target.value);
-                  // console.log(e.target.value);
+                  // //  console.log('')(e.target.value);
                 }}
                 error={!(error == null)}
                 helperText={

@@ -152,7 +152,7 @@ export const ReportesScreen: React.FC = () => {
         `estaciones/datos/consultar-datos-diario/${selectdashboards.opc_dashboards}/${fecha_1}/`
       );
 
-      console.log(response, 'response');
+      //  console.log('')(response, 'response');
       if (!response) {
         control_error('No se encontraron datos');
         set_loading_dia(false);
@@ -791,10 +791,10 @@ export const ReportesScreen: React.FC = () => {
     const temps = data.data.map((item: any) =>
       parseFloat(item.temperatura_ambiente)
     );
-    console.log('temps', temps);
+    //  console.log('')('temps', temps);
     const temp_avg =
       temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
-    console.log('promedio', temp_avg);
+    //  console.log('')('promedio', temp_avg);
     const temp_min = Math.min(...temps);
     const temp_max = Math.max(...temps);
     // Calcular la humedad promedio, mínima y máxima
@@ -1078,10 +1078,10 @@ export const ReportesScreen: React.FC = () => {
     const temps = data.data.map((item: any) =>
       parseFloat(item.temperatura_ambiente)
     );
-    console.log('temps', temps);
+    //  console.log('')('temps', temps);
     const temp_avg =
       temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
-    console.log('promedio', temp_avg);
+    //  console.log('')('promedio', temp_avg);
     const temp_min = Math.min(...temps);
     const temp_max = Math.max(...temps);
     // Calcular la humedad promedio, mínima y máxima
@@ -1367,10 +1367,10 @@ export const ReportesScreen: React.FC = () => {
     const temps = data.data.map((item: any) =>
       parseFloat(item.temperatura_ambiente)
     );
-    console.log('temps', temps);
+    //  console.log('')('temps', temps);
     const temp_avg =
       temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
-    console.log('promedio', temp_avg);
+    //  console.log('')('promedio', temp_avg);
     const temp_min = Math.min(...temps);
     const temp_max = Math.max(...temps);
     // Calcular la humedad promedio, mínima y máxima
@@ -1953,7 +1953,7 @@ export const ReportesScreen: React.FC = () => {
   const handle_download_pdf_rango = async (): Promise<void> => {
     try {
       const data = await get_datos_estaciones();
-      console.log('data', data);
+      //  console.log('')('data', data);
       if (!data) {
         return;
       }
@@ -1962,10 +1962,10 @@ export const ReportesScreen: React.FC = () => {
         generate_pdf_rango(data);
       }
     } catch (error: any) {
-      console.log(error, 'error');
-      console.log(error.response, 'error.response');
-      console.log(error.response?.data, 'error.response.data'); // Utilizar el operador de encadenamiento opcional para controlar el error
-      console.log(error.response?.data?.detail, 'error.response.data.detail'); // Utilizar el operador de encadenamiento opcional para controlar el error
+      //  console.log('')(error, 'error');
+      //  console.log('')(error.response, 'error.response');
+      //  console.log('')(error.response?.data, 'error.response.data'); // Utilizar el operador de encadenamiento opcional para controlar el error
+      //  console.log('')(error.response?.data?.detail, 'error.response.data.detail'); // Utilizar el operador de encadenamiento opcional para controlar el error
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo' // Utilizar el operador de encadenamiento opcional para controlar el error
       );

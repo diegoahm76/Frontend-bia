@@ -95,13 +95,13 @@ const AdministrarCarpetasScreen = () => {
     const handle_mover_carpeta = (carpeta_mover: IObjCarpeta) => {
         set_mover_carpeta(true);
         reset_carpeta_destino(carpeta_mover)
-        console.log(carpeta_mover)
+        //  console.log('')(carpeta_mover)
 
     };
 
 
     useEffect(() => {
-        console.log(selected_carpeta)
+        //  console.log('')(selected_carpeta)
         reset(selected_carpeta);
     }, [selected_carpeta]);
 
@@ -113,7 +113,7 @@ const AdministrarCarpetasScreen = () => {
                 ...data,
 
             };
-            console.log(data_edit)
+            //  console.log('')(data_edit)
             void dispatch(
                 editar_carpeta(selected_carpeta.id_carpeta_caja, data_edit)
             );
@@ -123,7 +123,7 @@ const AdministrarCarpetasScreen = () => {
                 id_caja_bandeja: cajas.id_caja
 
             };
-            console.log(cajas)
+            //  console.log('')(cajas)
             void dispatch(crear_carpeta(data_aux));
         }
 
@@ -149,7 +149,7 @@ const AdministrarCarpetasScreen = () => {
 
 
     const on_submit_mover_carpeta = (data: IObjCarpeta): void => {
-        console.log(data)
+        //  console.log('')(data)
         const data_mover = {
             identificacion_caja_destino: data.identificacion_caja,
             identificacion_bandeja_destino: data.identificacion_bandeja,
@@ -161,7 +161,7 @@ const AdministrarCarpetasScreen = () => {
         };
 
         void dispatch(mover_carpeta_seleccionada(selected_carpeta.id_carpeta_caja, data_mover));
-        console.log(selected_carpeta);
+        //  console.log('')(selected_carpeta);
 
     }
 

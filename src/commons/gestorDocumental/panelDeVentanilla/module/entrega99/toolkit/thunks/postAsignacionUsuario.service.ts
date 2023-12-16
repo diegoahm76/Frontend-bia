@@ -10,7 +10,7 @@ export const postAsignacionUsuario = async (
   try {
     setLoadingButton(true);
     const response = await api.post(url, formData);
-    console.log('response', response);
+    //  console.log('')('response', response);
     return Promise.resolve(response);
   } catch (error) {
     Swal.fire({

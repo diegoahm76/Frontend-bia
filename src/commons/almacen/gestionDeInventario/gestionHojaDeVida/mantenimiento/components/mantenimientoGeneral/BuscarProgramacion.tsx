@@ -97,7 +97,7 @@ const BuscarProgramacionComponent = ({
         set_grid_busqueda_before([...response.detail]);
       });
     }
-    console.log(grid_busqueda_before);
+    //  console.log('')(grid_busqueda_before);
   };
 
   const selected_product_grid: any = () => {

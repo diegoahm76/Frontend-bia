@@ -45,7 +45,7 @@ interface IProps {
 
 const MoverCarpeta = ({ control_carpeta_destino, open, handle_close_buscar, get_values, handle_mover_carpeta }: IProps) => {
     const { deposito, cajas_lista } = useAppSelector((state) => state.deposito);
-    console.log(cajas_lista)
+    //  console.log('')(cajas_lista)
     const dispatch = useAppDispatch();
 
     const columns: GridColDef[] = [

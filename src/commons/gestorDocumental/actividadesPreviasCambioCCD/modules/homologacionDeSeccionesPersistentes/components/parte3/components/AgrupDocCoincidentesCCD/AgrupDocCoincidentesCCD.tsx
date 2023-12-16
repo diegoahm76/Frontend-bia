@@ -31,7 +31,7 @@ export const AgrupDocCoincidentesCCD = (): JSX.Element | null => {
 
   // ? ----- ESPACIO PARA FUNCIONES OPEN ------
   const handleConfirmarPersistencia = (params: GridValueGetterParams) => {
-    console.log(params?.row);
+    //  console.log('')(params?.row);
     const nuevasAgrupacionesPersistentes = [
       ...agrupacionesPersistentesSerieSubserie,
       {

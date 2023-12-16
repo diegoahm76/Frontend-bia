@@ -82,7 +82,7 @@ const map_list = (
   key?: number | string,
   label?: number | string
 ): any => {
-  console.log(list);
+  //  console.log('')(list);
   let list_aux: IObjListType[] = [];
   if (is_choice) {
     list.forEach((objeto) => {
@@ -108,7 +108,7 @@ export const get_document_types_service = (): any => {
       dispatch(set_document_types(data));
       return data;
     } catch (error: any) {
-      console.log('get_document_types_service');
+      //  console.log('')('get_document_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -125,7 +125,7 @@ export const get_pqr_types_service = (): any => {
       );
       return data;
     } catch (error: any) {
-      console.log('get_pqr_types_service');
+      //  console.log('')('get_pqr_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -141,7 +141,7 @@ export const get_presentation_types_service = (): any => {
       dispatch(set_presentation_types(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_presentation_types_service');
+      //  console.log('')('get_presentation_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -167,7 +167,7 @@ export const get_media_types_service = (): any => {
       );
       return data;
     } catch (error: any) {
-      console.log('get_media_types_service');
+      //  console.log('')('get_media_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -180,7 +180,7 @@ export const get_offices_service = (): any => {
       const { data } = await api.get(
         'transversal/sucursales/sucursales-empresa-lista/3'
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(
         set_destination_offices(
           map_list(
@@ -194,7 +194,7 @@ export const get_offices_service = (): any => {
       );
       return data;
     } catch (error: any) {
-      console.log('get_offices_service');
+      //  console.log('')('get_offices_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -208,7 +208,7 @@ export const get_storage_mediums_service = (): any => {
       dispatch(set_storage_mediums(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_storage_mediums_service');
+      //  console.log('')('get_storage_mediums_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -219,11 +219,11 @@ export const get_filed_types_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/choices/tipo-radicado/');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_filed_types(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_filed_types_service');
+      //  console.log('')('get_filed_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -235,10 +235,10 @@ export const get_file_categories_service = (): any => {
     try {
       const { data } = await api.get('gestor/choices/tipo-archivo/');
       dispatch(set_file_categories(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_file_categories_service');
+      //  console.log('')('get_file_categories_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -249,11 +249,11 @@ export const get_file_origin_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/choices/origen-archivo/');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_file_origins(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_file_origin_service');
+      //  console.log('')('get_file_origin_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -266,7 +266,7 @@ export const get_file_typology_service = (): any => {
       const { data } = await api.get(
         'gestor/expedientes-archivos/expedientes/listar-tipologias/'
       );
-      console.log(data);
+      //  console.log('')(data);
 
       dispatch(
         set_file_typologies(
@@ -281,7 +281,7 @@ export const get_file_typology_service = (): any => {
       );
       return data;
     } catch (error: any) {
-      console.log('get_file_typology_service');
+      //  console.log('')('get_file_typology_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -295,10 +295,10 @@ export const get_person_types_service = (): any => {
       const { data } = await api.get('choices/tipo-persona/');
 
       dispatch(set_person_types(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_person_types_service');
+      //  console.log('')('get_person_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -312,10 +312,10 @@ export const get_areas_service = (): any => {
       const { data } = await api.get('gestor/choices/tipo-zona/');
 
       dispatch(set_areas(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_areas_service');
+      //  console.log('')('get_areas_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -327,13 +327,13 @@ export const get_departments_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await get_departamentos('CO');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(
         set_departments(map_list(data.data, false, 'value', 'value', 'label'))
       );
       return data;
     } catch (error: any) {
-      console.log('get_departments_service');
+      //  console.log('')('get_departments_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -345,7 +345,7 @@ export const get_municipalities_service = (department: string): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await get_ciudades(department);
-      console.log(data);
+      //  console.log('')(data);
       dispatch(
         set_municipalities(
           map_list(data.data, false, 'value', 'value', 'label')
@@ -353,7 +353,7 @@ export const get_municipalities_service = (department: string): any => {
       );
       return data;
     } catch (error: any) {
-      console.log('get_municipalities_service');
+      //  console.log('')('get_municipalities_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -366,10 +366,10 @@ export const get_list_applicant_types_service = (): any => {
     try {
       const { data } = await api.get('gestor/choices/tipo-consulta-pqrsdf/');
       dispatch(set_list_applicant_types(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_list_applicant_types_service');
+      //  console.log('')('get_list_applicant_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -384,10 +384,10 @@ export const get_list_on_behalf_service = (): any => {
         'gestor/choices/tipo-representacion-pqrsdf/'
       );
       dispatch(set_list_on_behalf_of(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_list_on_behalf_service');
+      //  console.log('')('get_list_on_behalf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -400,10 +400,10 @@ export const get_pqrs_status_aux_service = (): any => {
     try {
       const { data } = await api.get('gestor/choices/estado-pqrsdf/');
       dispatch(set_list_pqr_status(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_pqrs_status_aux_service');
+      //  console.log('')('get_pqrs_status_aux_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -431,7 +431,7 @@ export const get_persons_service = (
           razon_social ?? ''
         }&nombre_comercial=${comercial_name ?? ''}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if (is_person) {
         dispatch(set_persons(data.data));
       } else {
@@ -444,7 +444,7 @@ export const get_persons_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_persons_service');
+      //  console.log('')('get_persons_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -462,7 +462,7 @@ export const get_person_document_service = (
       const { data } = await api.get(
         `personas/get-personas-by-document/${type}/${document}/`
       );
-      console.log(data);
+      //  console.log('')(data);
 
       if ('data' in data) {
         if (is_person) {
@@ -476,7 +476,7 @@ export const get_person_document_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -500,7 +500,7 @@ export const get_companies_service = (
         }&nombre_comercial=${comercial_name ?? ''}`
       );
       dispatch(set_companies(data.data));
-      console.log(data);
+      //  console.log('')(data);
       if (data.data.length > 0) {
         control_success('Se encontraron empresas');
       } else {
@@ -508,7 +508,7 @@ export const get_companies_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_companies_service');
+      //  console.log('')('get_companies_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -525,7 +525,7 @@ export const get_company_document_service = (
       const { data } = await api.get(
         `personas/get-empresa-by-document/${type}/${document}/`
       );
-      console.log(data);
+      //  console.log('')(data);
 
       if ('data' in data) {
         dispatch(set_company(data.data));
@@ -536,7 +536,7 @@ export const get_company_document_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_company_document_service');
+      //  console.log('')('get_company_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -550,7 +550,7 @@ export const get_attorneys_service = (id: string | number): any => {
       const { data } = await api.get(
         `personas/apoderados-personas/get-list/${id}/`
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_attorneys(data.data));
 
       if ('data' in data) {
@@ -564,7 +564,7 @@ export const get_attorneys_service = (id: string | number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_attorneys_service');
+      //  console.log('')('get_attorneys_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -576,7 +576,7 @@ export const get_pqrs_service = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`gestor/pqr/get_pqrsdf/${id}/`);
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_pqrs(data.data));
 
       if ('data' in data) {
@@ -590,7 +590,7 @@ export const get_pqrs_service = (id: string | number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_pqrs_service');
+      //  console.log('')('get_pqrs_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -602,7 +602,7 @@ export const get_pqrsdf_id_service = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`gestor/pqr/get_pqrsdf-panel/${id}`);
-      console.log(data);
+      //  console.log('')(data);
 
       if ('data' in data) {
         dispatch(set_pqr(data.data));
@@ -612,7 +612,7 @@ export const get_pqrsdf_id_service = (id: string | number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_pqrsdf_id_service');
+      //  console.log('')('get_pqrsdf_id_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -626,9 +626,9 @@ export const add_pqrsdf_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(pqrsdf);
+      //  console.log('')(pqrsdf);
       const { data } = await api.post(`gestor/pqr/crear-pqrsdf/`, pqrsdf);
-      console.log(data);
+      //  console.log('')(data);
 
       control_success(data.detail);
       navigate(
@@ -638,7 +638,7 @@ export const add_pqrsdf_service = (
       dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
-      console.log('add_pqrsdf_service');
+      //  console.log('')('add_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -653,7 +653,7 @@ export const edit_pqrsdf_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(`gestor/pqr/update-pqrsdf/`, pqrsdf);
-      console.log(data);
+      //  console.log('')(data);
 
       control_success(data.detail);
       navigate(
@@ -669,7 +669,7 @@ export const edit_pqrsdf_service = (
       // }
       return data;
     } catch (error: any) {
-      console.log('edit_pqrsdf_service');
+      //  console.log('')('edit_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -692,7 +692,7 @@ export const delete_pqrsdf_service = (
           is_web ? 'True' : 'False'
         }`
       );
-      console.log(data);
+      //  console.log('')(data);
 
       if (data.success) {
         control_success(data.detail);
@@ -700,7 +700,7 @@ export const delete_pqrsdf_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('delete_pqrsdf_service');
+      //  console.log('')('delete_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -726,7 +726,7 @@ export const radicar_pqrsdf_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('delete_pqrsdf_service');
+      //  console.log('')('delete_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -737,11 +737,11 @@ export const radicar_pqrsdf_service = (
 export const get_filings_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(params);
+      //  console.log('')(params);
       const { data } = await api.get(
         `gestor/radicados/imprimir-radicado/?cod_tipo_radicado=${params.cod_tipo_radicado}&prefijo_radicado=${params.prefijo_radicado}&agno_radicado=${params.agno_radicado}&nro_radicado=${params.nro_radicado}&fecha_radicado=${params.fecha_radicado}`
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_filings(data.data));
 
       // if ('data' in data) {
@@ -752,7 +752,7 @@ export const get_filings_service = (params: any): any => {
       // }
       return data;
     } catch (error: any) {
-      console.log('delete_pqrsdf_service');
+      //  console.log('')('delete_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

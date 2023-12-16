@@ -88,7 +88,7 @@ export const SeccSubCcdActual = (): JSX.Element => {
       dispatch(setGrilladoOficinas(getGrilladoOficinas));
     } catch (error) {
       //* manejar el error de mejor manera
-      console.log(error);
+      //  console.log('')(error);
       control_error('Error al traer las oficinas de la unidad actual');
     }
   };
@@ -108,7 +108,7 @@ export const SeccSubCcdActual = (): JSX.Element => {
                 aria-label="select"
                 size="large"
                 onClick={() => {
-                  // console.log(params.row);
+                  // //  console.log('')(params.row);
                   // * aqui se debe realizar la petición para traer las oficinas correspondientes
                   handleRequest(params.row);
                 }}

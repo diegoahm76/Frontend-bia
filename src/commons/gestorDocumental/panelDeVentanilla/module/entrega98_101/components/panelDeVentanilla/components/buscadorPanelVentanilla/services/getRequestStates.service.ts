@@ -14,10 +14,10 @@ export const getRequestStates = async (): Promise<any> => {
         label,
       })
     );
-    console.log(x);
+    //  console.log('')(x);
     return x; //
   } catch (err) {
-    console.log(err);
+    //  console.log('')(err);
   }
 };
 
@@ -40,9 +40,9 @@ export const getUnidadesOrgActual = async (): Promise<any> => {
         label,
       })
     );
-    console.log(x);
+    //  console.log('')(x);
     return x; //
   } catch (err) {
-    console.log(err);
+    //  console.log('')(err);
   }
 };
