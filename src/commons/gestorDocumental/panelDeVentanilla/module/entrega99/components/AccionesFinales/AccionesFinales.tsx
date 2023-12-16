@@ -48,6 +48,8 @@ export const AccionesFinales = ({
     );
 
     anexosCreados.forEach((anexo: any, index: number) => {
+      console.log('anexo', anexo);
+
       if (anexo?.ruta_soporte) {
         formData.append('archivo', anexo.ruta_soporte); // Use append method to add multiple values with the same field name
       }
@@ -73,19 +75,17 @@ export const AccionesFinales = ({
             tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos
               ? anexo?.cualTipologiaDocumentalMetadatos
               : null,
-            palabras_clave_doc: anexo?.meta_data?.palabras_clave_doc.join('|'),
+            palabras_clave_doc: anexo?.palabrasClavesMetadatos.join('|'),
           },
         })
       );
     });
 
-    postAsignacionUsuario(formData, setLoadingButton).then((data) => {
-      //  console.log('')('holaaaaaaa post enviando');
+    postAsignacionUsuario(formData, setLoadingButton).then(() => {
       handleReset();
       resetFormulario({});
       setInfoReset({});
       dispatch(resetItems());
-
 
       Swal.fire({
         title: 'Solicitud enviada',
@@ -97,8 +97,7 @@ export const AccionesFinales = ({
   };
 
   const handleSubmit = async () => {
-
-    if(anexosCreados.length === 0){
+    if (anexosCreados.length === 0) {
       Swal.fire({
         title: 'No se ha creado ningún anexo',
         text: 'Por favor cree al menos un anexo para poder enviar la solicitud al usuario',
@@ -108,7 +107,6 @@ export const AccionesFinales = ({
       });
       return;
     }
-
 
     await Swal.fire({
       title: '¿Está seguro de enviar la solicitud al usuario?',
@@ -120,7 +118,7 @@ export const AccionesFinales = ({
     }).then(async (result) => {
       if (result.isConfirmed) {
         //* se debe activar el envío de la solicitud al usuario y luego el swal y el mensaje de success
-        sendDataByFormData()
+        sendDataByFormData();
       } else {
         Swal.fire({
           title: 'Solicitud cancelada',

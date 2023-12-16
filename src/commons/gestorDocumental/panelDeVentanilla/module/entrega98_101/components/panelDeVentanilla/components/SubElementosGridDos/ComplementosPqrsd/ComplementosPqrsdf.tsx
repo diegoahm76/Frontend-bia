@@ -71,17 +71,18 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   const shouldDisable = (actionId: string, complemento: any) => {
     const isDig = actionId === 'Dig';
     const isContinuarAsigGrup = actionId === 'ContinuarAsigGrup';
-    const hasAnexos = complemento.cantidad_anexos > 0;
+    const isEnviarSolicitudUsuario = actionId === 'EnviarSolicitudUsuario';
+    const isAsignarGrupo = actionId === 'AsignarGrupo';
     const requiresDigitalization = complemento.requiere_digitalizacion;
 
     // Primer caso: Complemento requiere digitalización
     if (requiresDigitalization) {
-      return isContinuarAsigGrup || !isDig;
+      return isContinuarAsigGrup || isEnviarSolicitudUsuario || isAsignarGrupo || !isDig;
     }
 
     // Segundo caso: Complemento NO requiere digitalización
     if (!requiresDigitalization) {
-      return;
+      return isEnviarSolicitudUsuario;
     }
   };
 
