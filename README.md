@@ -30,3 +30,9 @@ git clone (link del repositorio)
 ## Contacto
 
 Si tienes alguna pregunta o sugerencia relacionada con este proyecto, no dudes en ponerte en contacto con nosotros.
+
+
+###
+
+Entorno de desarrollo , yarn run dev
+Entorno de producción (app construída con yarn run build)

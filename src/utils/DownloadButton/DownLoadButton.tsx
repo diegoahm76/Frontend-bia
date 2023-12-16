@@ -27,10 +27,18 @@ export const DownloadButton = ({
         target="_blank"
         rel="noopener noreferrer"
         href={
-          fileUrl &&
-          fileUrl.includes('https://back-end-bia-beta.up.railway.app')
+          (fileUrl || '') &&
+          (fileUrl || '').includes(
+            process.env.NODE_ENV === 'development'
+              ? process.env.REACT_APP_BETA_URL || ''
+              : process.env.REACT_APP_PROD_URL || ''
+          )
             ? fileUrl
-            : `https://back-end-bia-beta.up.railway.app${fileUrl}`
+            : `${
+                process.env.NODE_ENV === 'development'
+                  ? process.env.REACT_APP_BETA_URL
+                  : process.env.REACT_APP_PROD_URL
+              }${fileUrl || ''}`
         }
         ref={linkRef}
         style={{ display: 'none' }}
