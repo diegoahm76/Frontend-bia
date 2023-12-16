@@ -22,7 +22,9 @@ const Seccion = ({ control_entrega, get_values, open_modal, set_open_modal }: IP
     const [file, set_file] = useState<any>(null);
     const [file_name, set_file_name] = useState<string>('');
 
-    useEffect(() => { //  console.log('')(entregas) }, [entregas])
+    useEffect(() => {
+        // console.log(entregas);
+    }, [entregas]);
 
     useEffect(() => {
         if (file !== null) {

@@ -102,10 +102,6 @@ export const get_solicitud_by_id = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      //  console.log('')(
-        `almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ''
-        }`
-      );
       const { data } = await api.get(
         `almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ''
         }/`

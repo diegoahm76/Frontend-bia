@@ -108,12 +108,6 @@ export const CatalogoTCAAdministracionScreen: FC<dataGridTypes> = ({
                     (item: any) => !item.reservada
                   );
 
-                  //  console.log('')('tipologias_reservadas,', tipologias_reservadas);
-                  //  console.log('')(
-                    'tipologias_NO_reservadas,',
-                    tipologias_NO_reservadas
-                  );
-
                   dispatch(set_mixed_tipologias(res))
                   dispatch(set_tipologias_reservadas(tipologias_reservadas));
                   dispatch(

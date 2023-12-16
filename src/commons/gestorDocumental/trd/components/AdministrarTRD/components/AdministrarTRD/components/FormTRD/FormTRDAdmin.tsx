@@ -79,18 +79,11 @@ export const FormTRDAdmin = (): JSX.Element => {
   const {
     control_administrar_trd,
     form_data_administrar_trd,
-    // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
-    // formState: { errors },
     reset_administrar_trd
-    // watch_administrar_trd
   } = use_trd();
 
   // ? use effect acceso datos desde button edit para editar administrar trd
   useEffect(() => {
-    //  console.log('')(
-      'selected_item_from_catalogo_trd',
-      selected_item_from_catalogo_trd
-    );
     reset_administrar_trd({
       cod_disposicion_final: {
         value: selected_item_from_catalogo_trd?.cod_disposicion_final,

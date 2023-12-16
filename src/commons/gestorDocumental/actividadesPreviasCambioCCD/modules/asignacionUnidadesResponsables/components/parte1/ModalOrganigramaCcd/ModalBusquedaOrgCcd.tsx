@@ -120,10 +120,6 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           () => resetStateUniResp()
         )
 
-      //  console.log('')(
-        'estas son las unidades sin responsable',
-        unidadesSinResponsable
-      );
       dispatch(setSeccionesSinResponsable(unidadesSinResponsable));
 
       //* 5

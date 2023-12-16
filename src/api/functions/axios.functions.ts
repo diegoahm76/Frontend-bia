@@ -13,7 +13,7 @@ const handleRequest = async (request: any) => {
     const token = localStorage.getItem('token');
     if (token) {
       request.headers.Authorization = `Bearer ${token}`;
-      //  console.log('')(
+       console.log(
         `%c ${request?.method?.toUpperCase()} ${request.url}`,
         'color: blue; font-weight: bold;'
       );

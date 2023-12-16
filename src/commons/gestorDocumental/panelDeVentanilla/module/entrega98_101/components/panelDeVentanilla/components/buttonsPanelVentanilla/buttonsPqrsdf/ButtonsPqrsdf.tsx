@@ -57,15 +57,15 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   });
 
   const handleAsignacionPersonal = withValidation(() =>
-    //  console.log('')('Enviar solicitud al usuario')
+    console.log('Enviar solicitud al usuario')
   );
 
   const handleAsignacionGrupo = withValidation(() =>
-    //  console.log('')('Asignar al grupo')
+    console.log('Asignar al grupo')
   );
 
   const handleContinuarAsignacionAGrupo = withValidation(() =>
-    //  console.log('')('Continuar con asignación de grupo')
+    console.log('Continuar con asignación de grupo')
   );
 
   interface action {

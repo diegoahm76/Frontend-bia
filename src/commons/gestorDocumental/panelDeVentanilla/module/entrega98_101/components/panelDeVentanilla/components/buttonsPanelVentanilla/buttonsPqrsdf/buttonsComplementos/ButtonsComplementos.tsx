@@ -57,7 +57,7 @@ export const ButtonsComplementos = (): JSX.Element => {
   });
 
   const handleContinuarAsignacionAGrupo = withValidation(() =>
-    //  console.log('')('Continuar con asignación de grupo')
+    console.log('Continuar con asignación de grupo')
   );
 
   const handleClickActionsGeneral = (action: any) => {

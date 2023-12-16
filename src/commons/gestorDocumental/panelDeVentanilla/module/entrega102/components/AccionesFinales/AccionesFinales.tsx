@@ -126,7 +126,7 @@ export const AccionesFinales = (): JSX.Element => {
                   startIcon={<CloseIcon />}
                   onClick={() => {
                     getOutModule(navigate, [
-                      () => //  console.log('')('haz salido del módulo'),
+                      () =>  console.log('haz salido del módulo'),
                     ]);
                   }}
                 >

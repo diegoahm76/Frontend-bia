@@ -109,11 +109,6 @@ export const get_goods_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      //  console.log('')(
-        `conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${
-          codigo_bien ?? ''
-        }&nombre=${nombre ?? ''}&cod_tipo_elemento_vivero=${cod_elemento ?? ''}`
-      );
       const { data } = await api.get(
         `conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${
           codigo_bien ?? ''
@@ -132,7 +127,6 @@ export const get_goods_service = (
       }
       return data;
     } catch (error: any) {
-      //  console.log('')('get_planting_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -149,7 +143,6 @@ export const get_goods_aux_service = (id_vivero: string | number): any => {
 
       return data;
     } catch (error: any) {
-      //  console.log('')('get_goods_aux_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

@@ -68,7 +68,7 @@ export const SalidaModulo: React.FC = (): JSX.Element => {
                     startIcon={<CloseIcon />}
                     onClick={() => {
                       getOutModule(navigate, [
-                        () => //  console.log('')('haz salido del módulo'),
+                        () => dispatch(resetPanelVentanillaFull()),
                       ]);
                     }}
                   >
