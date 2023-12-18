@@ -8,6 +8,7 @@ import { Title } from "../../../../components";
 import type { OpcionLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import AddIcon from '@mui/icons-material/Add';
 import { api } from "../../../../api/axios";
+import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
 interface IProps {
   rows_detalles: RowDetalles[];
   expediente_liquidado: boolean;
@@ -142,7 +143,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
         if (!params.value) {
           return params.value;
         }
-        return `$ ${Number(params.value).toFixed(2)}`;
+        return currency_formatter(Number(params.value));
       }
     },
   ]

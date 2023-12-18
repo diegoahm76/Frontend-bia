@@ -9,13 +9,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { CrearAtributoModal } from "../components/estadosProceso/CrearAtributoModal";
-import type { AtributoEtapa, CategoriaAtributo, EtapaProceso, FormDataCategoria } from "../interfaces/proceso";
+import type { AtributoEtapa, CategoriaAtributo, EtapaProceso, FormDataAtributo, FormDataCategoria } from "../interfaces/proceso";
 import { DataGrid, GridToolbar, type GridColDef } from "@mui/x-data-grid";
 import { api } from "../../../api/axios";
 import { CrearEtapaModal } from "../components/estadosProceso/CrearEtapaModal";
 import { NotificationModal } from "../components/NotificationModal";
 import { CrearCategoriaModal } from "../components/estadosProceso/CrearCategoriaModal";
 import { CollapsibleButton } from "../components/CollapsibleButton";
+import { toast } from "react-toastify";
 // import type { GridRenderCellParams } from "@mui/x-data-grid";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -35,8 +36,16 @@ export const EstadosProcesoScreen: React.FC = () => {
     categoria: '',
     orden: '',
   });
+  const [form_data_atributo, set_form_data_atributo] = useState<FormDataAtributo>({
+    descripcion: '',
+    obligatorio: false,
+    id_tipo: '',
+    id_categoria: '',
+  });
   const [id_update_categoria, set_id_update_categoria] = useState('');
+  const [id_update_atributo, set_id_update_atributo] = useState('');
   const [actualizar_categoria, set_actualizar_categoria] = useState<boolean>(false);
+  const [actualizar_atributo, set_actualizar_atributo] = useState<boolean>(false);
 
   const columns_etapas: GridColDef[] = [
     {
@@ -92,6 +101,31 @@ export const EstadosProcesoScreen: React.FC = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+            <Tooltip title="Eliminar">
+              <IconButton
+                onClick={() => {
+                  delete_etapa_proceso(params.row.id, params.row.etapa);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <DeleteIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           </>
         );
       }
@@ -137,7 +171,7 @@ export const EstadosProcesoScreen: React.FC = () => {
     },
     {
       field: 'id_categoria',
-      headerName: 'Categoría',
+      headerName: 'Subetapa',
       minWidth: 100,
       flex: 1,
       valueGetter: (params) => {
@@ -147,6 +181,72 @@ export const EstadosProcesoScreen: React.FC = () => {
         return params.value.categoria;
       }
     },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      minWidth: 100,
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <>
+            <Tooltip title='Editar'>
+              <IconButton
+                onClick={() => {
+                  const { id, descripcion, obligatorio, id_tipo, id_categoria } = params.row;
+                  set_id_update_atributo(id);
+                  set_form_data_atributo({ descripcion, obligatorio, id_tipo: id_tipo.id, id_categoria: id_categoria.id });
+                  set_actualizar_atributo(true);
+                  set_open_atributo_modal(true);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <EditIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Eliminar">
+              <IconButton
+                onClick={() => {
+                  delete_atributo_etapa(params.row.id, params.row.descripcion);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <DeleteIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      }
+    }
   ];
 
   const columns_categorias_atributos: GridColDef[] = [
@@ -196,6 +296,31 @@ export const EstadosProcesoScreen: React.FC = () => {
                   variant="rounded"
                 >
                   <EditIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px'
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Eliminar">
+              <IconButton
+                onClick={() => {
+                  // delete_opcion_liquidacion(params.row.id);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <DeleteIcon
                     sx={{
                       color: 'primary.main',
                       width: '18px',
@@ -326,13 +451,15 @@ export const EstadosProcesoScreen: React.FC = () => {
         .then((response) => {
           update_atributos_etapa();
           update_categorias();
-          set_notification_info({ type: 'success', message: `Se actualizó el orden de la subetapa "${response.data.categoria as string}".` });
-          set_open_notification_modal(true);
+          toast.success(`Se actualizó el orden de la subetapa "${response.data.categoria as string}".`, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
         })
         .catch((error) => {
-          //  console.log('')(error);
-          set_notification_info({ type: 'error', message: 'Hubo un error.' });
-          set_open_notification_modal(true);
+          console.log(error);
+          toast.error('Hubo un error', {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
         });
     }
   };
@@ -344,14 +471,30 @@ export const EstadosProcesoScreen: React.FC = () => {
       .then((response) => {
         update_atributos_etapa();
         update_categorias();
-        set_notification_info({ type: 'success', message: `Se actualizó el orden de la subetapa "${response.data.categoria as string}".` });
+        toast.success(`Se actualizó el orden de la subetapa "${response.data.categoria as string}".`, {
+          position: toast.POSITION.BOTTOM_RIGHT
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error('Hubo un error', {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+      });
+  };
+
+  const delete_etapa_proceso = (id_etapa: number, etapa: string): void => {
+    api.get(`recaudo/procesos/eliminar-etapa/${id_etapa}/`)
+      .then((response) => {
+        update_etapas();
+        set_notification_info({ type: 'success', message: `Se eliminó correctamente la etapa "${etapa}".` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
         //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
-      });
+      })
   };
 
   const delete_categoria_atributos = (categoria: CategoriaAtributo): void => {
@@ -365,9 +508,25 @@ export const EstadosProcesoScreen: React.FC = () => {
           set_open_notification_modal(true);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
+          set_notification_info({ type: 'error', message: 'Hubo un error.' });
+          set_open_notification_modal(true);
         });
     }
+  };
+
+  const delete_atributo_etapa = (id_atributo: number, atributo: string): void => {
+    api.get(`recaudo/procesos/eliminar-atributo/${id_atributo}/`)
+      .then((response) => {
+        update_atributos_etapa();
+        set_notification_info({ type: 'success', message: `Se eliminó correctamente el atributo "${atributo}".` });
+        set_open_notification_modal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        set_notification_info({ type: 'error', message: 'Hubo un error.' });
+        set_open_notification_modal(true);
+      });
   };
 
   const submit_new_etapa = (etapa: string, descripcion: string): void => {
@@ -387,16 +546,23 @@ export const EstadosProcesoScreen: React.FC = () => {
       });
   };
 
-  const submit_new_atributo = (descripcion: string, obligatorio: number, id_tipo: number, id_categoria: number): void => {
+  const submit_new_atributo = (): void => {
     api.post('recaudo/procesos/atributos/', {
-      descripcion,
-      obligatorio,
-      id_tipo,
+      ...form_data_atributo,
+      obligatorio: form_data_atributo.obligatorio ? 1 : 0,
+      id_tipo: Number(form_data_atributo.id_tipo),
+      id_categoria: Number(form_data_atributo.id_categoria),
       id_etapa,
-      id_categoria
     })
       .then((response) => {
-        set_notification_info({ type: 'success', message: `Se creó correctamente el atributo "${descripcion}" para la etapa "${descripcion_etapa}".` });
+        update_atributos_etapa();
+        set_form_data_atributo({
+          descripcion: '',
+          obligatorio: false,
+          id_tipo: '',
+          id_categoria: '',
+        });
+        set_notification_info({ type: 'success', message: `Se creó correctamente el atributo "${response.data.descripcion as string}" para la etapa "${descripcion_etapa}".` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
@@ -407,6 +573,39 @@ export const EstadosProcesoScreen: React.FC = () => {
       .finally(() => {
         set_id_etapa(null);
       });
+  };
+
+  const submit_updated_atributo = (): void => {
+    api.put(`recaudo/procesos/atributos/${id_update_atributo}/`, {
+      ...form_data_atributo,
+      obligatorio: form_data_atributo.obligatorio ? 1 : 0,
+      id_tipo: Number(form_data_atributo.id_tipo),
+      id_categoria: Number(form_data_atributo.id_categoria),
+    })
+      .then((response) => {
+        update_atributos_etapa();
+        set_form_data_atributo({
+          descripcion: '',
+          obligatorio: false,
+          id_tipo: '',
+          id_categoria: '',
+        });
+        set_notification_info({ type: 'success', message: `Se actualizó correctamente el atributo "${response.data.descripcion as string}" para la etapa "${descripcion_etapa}".` });
+        set_open_notification_modal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        set_notification_info({ type: 'error', message: 'Hubo un error.' });
+        set_open_notification_modal(true);
+      });
+  };
+
+  const submit_create_update_atributo = (): void => {
+    if (actualizar_atributo) {
+      submit_updated_atributo();
+    } else {
+      submit_new_atributo();
+    }
   };
 
   const submit_new_categoria = (): void => {
@@ -437,6 +636,14 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });
+  };
+
+  const submit_create_update_categoria = (): void => {
+    if (actualizar_categoria) {
+      submit_updated_categoria();
+    } else {
+      submit_new_categoria();
+    }
   };
 
   return (
@@ -514,6 +721,13 @@ export const EstadosProcesoScreen: React.FC = () => {
                       startIcon={<AddIcon />}
                       fullWidth
                       onClick={() => {
+                        set_form_data_atributo({
+                          descripcion: '',
+                          obligatorio: false,
+                          id_tipo: '',
+                          id_categoria: '',
+                        });
+                        set_actualizar_atributo(false);
                         set_open_atributo_modal(true)
                       }}
                     >
@@ -606,10 +820,12 @@ export const EstadosProcesoScreen: React.FC = () => {
         </Grid>
       </Grid>
       <CrearAtributoModal
+        form_data_atributo={form_data_atributo}
+        actualizar_atributo={actualizar_atributo}
         is_modal_active={open_atributo_modal}
+        set_form_data_atributo={set_form_data_atributo}
         set_is_modal_active={set_open_atributo_modal}
-        submit_new_atributo={submit_new_atributo}
-        set_position_tab_organigrama={set_position_tab_organigrama}
+        submit_create_update_atributo={submit_create_update_atributo}
       />
       <CrearEtapaModal
         open_etapa_modal={open_etapa_modal}
@@ -622,8 +838,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         actualizar_categoria={actualizar_categoria}
         set_form_data_categoria={set_form_data_categoria}
         set_open_categoria_modal={set_open_categoria_modal}
-        submit_new_categoria={submit_new_categoria}
-        submit_updated_categoria={submit_updated_categoria}
+        submit_create_update_categoria={submit_create_update_categoria}
       />
       <NotificationModal
         open_notification_modal={open_notification_modal}
