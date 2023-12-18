@@ -27,7 +27,7 @@ const ProgramacionRepeticiones = () => {
     const dispatch = useAppDispatch();
 
     const on_submit_programar = (data: IObjConfiguracionAlerta): void => {
-        console.log(data)
+        //  console.log('')(data)
         const data_programar = {
             ...data
         };

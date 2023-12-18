@@ -50,7 +50,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
         set_tipos_atributos(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 
@@ -60,7 +60,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({ is_modal_active, set_is_m
       set_categorias_atributos(response.data.data);
     })
     .catch((error) => {
-      console.log(error);
+      //  console.log('')(error);
     });
   }, []);
 

@@ -19,6 +19,7 @@ import { FuentesRoutes } from '../FuenteFinanciacion/router/FuentesFinanciacionR
 import { BancosRoutes } from '../BancoProyecto/router/BancosRoutes';
 import { PlanAdquisicionesRoutes } from '../PlanAnualAdquisiciones/router/PlanAdquisicionesRoutes';
 import { SeguimientoPAIRoutes } from '../SeguimientoPAI/router/SeguimientoPAIRoutes';
+import { ConsultarPlanesRoutes } from '../Consultas/router/ConsultarPlanesRoutes';
 
 const routes = [
   {
@@ -125,6 +126,12 @@ const routes = [
     path: 'seguimiento/',
     name: 'seguimiento',
     component: () => <SeguimientoPAIRoutes />,
+  },
+  // consulta planes
+  {
+    path: 'consulta_planes/',
+    name: 'consulta_planes',
+    component: () => <ConsultarPlanesRoutes />,
   },
   {
     path: '/*',

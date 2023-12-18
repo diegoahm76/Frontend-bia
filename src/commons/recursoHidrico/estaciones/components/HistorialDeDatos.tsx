@@ -130,10 +130,10 @@ export const HistorialDeDatos: React.FC = () => {
       set_loading(false);
     } catch (err: any) {
       const temp_error = err as AxiosError;
-      console.log('Error', temp_error.response?.status);
+      //  console.log('')('Error', temp_error.response?.status);
       if (temp_error.response?.status === 404) {
         control_error('No se encontraron estaciones');
-        console.log('No hay datos');
+        //  console.log('')('No hay datos');
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
@@ -192,7 +192,7 @@ export const HistorialDeDatos: React.FC = () => {
       set_loading(true);
       const estacion_id = data.estacion.value;
       const fecha = dayjs(selected_date).format('YYYY-MM');
-      console.log('fecha', fecha);
+      //  console.log('')('fecha', fecha);
       const estacion = await consultar_datos_mes_migracion(estacion_id, fecha);
       const datos_mapeados = estacion.map((dato) => ({
         id_migracion_estacion: dato.id_migracion_estacion,
@@ -215,16 +215,16 @@ export const HistorialDeDatos: React.FC = () => {
         caudal: dato.caudal,
         voltaje: dato.voltaje,
       }));
-      console.log('datos', datos_mapeados);
+      //  console.log('')('datos', datos_mapeados);
       set_dato_migracion(datos_mapeados); // guardar el valor en el estado
       set_loading(false);
     } catch (err: unknown) {
       set_loading(false);
       const temp_error = err as AxiosError;
-      console.log('Error', temp_error.response?.status);
+      //  console.log('')('Error', temp_error.response?.status);
       if (temp_error.response?.status === 404) {
         control_error('No se encontraron datos para esta fecha');
-        console.log('No hay datos');
+        //  console.log('')('No hay datos');
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
@@ -239,7 +239,7 @@ export const HistorialDeDatos: React.FC = () => {
     const {
       estacion: { value },
     } = data;
-    console.log(value);
+    //  console.log('')(value);
     set_dato([]);
     set_dato_migracion([]);
     if (value === 1 || value === 2 || value === 3 || value === 4) {

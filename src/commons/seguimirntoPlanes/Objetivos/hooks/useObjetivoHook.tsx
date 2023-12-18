@@ -48,7 +48,7 @@ export const useObjetivoHook = (): any => {
 
   const onsubmit_objetivo = handleSubmit_objetivo(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_plan = id_plan;
       set_is_saving_objetivo(true);
       await post_objetivo(data as IObjetivo);
@@ -69,7 +69,7 @@ export const useObjetivoHook = (): any => {
 
   const onsubmit_editar = handleSubmit_objetivo(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_objetivo(true);
       await put_objetivo((id_objetivo as number) ?? 0, data as IObjetivo);
       control_success('Se actualizó correctamente');

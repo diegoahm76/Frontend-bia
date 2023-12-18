@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { control_error, control_success } from '../../../../../../../helpers';
+import { control_success } from '../../../../../../../helpers';
+import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import Swal from 'sweetalert2';
+import { control } from 'leaflet';
 
 interface Anexo {
+  asunto: string;
+  descripcion_de_la_solicitud: string;
   id: string;
   nombre_archivo: string;
   // other properties...
@@ -27,15 +32,23 @@ export const AsignacionUsuarioSlice = createSlice({
   initialState,
   reducers: {
     addAnexo: (state, action: PayloadAction<Omit<Anexo, 'id'>>) => {
-      const existingAnexo = state.anexosCreados.find(
-        (anexo) =>
+      const existingAnexo = state.anexosCreados.find((anexo) => {
+        // Si 'nombre_archivo' está vacío, no realiza la comparación y devuelve 'false'
+        if (!anexo.nombre_archivo) return false;
+
+        // Si 'nombre_archivo' no está vacío, realiza la comparación
+        return (
           anexo.nombre_archivo.toLowerCase() ===
           action.payload.nombre_archivo.toLowerCase()
-      );
-      if (existingAnexo) {
-        control_error(
-          'Ya hay un nombre de archivo igual, no es posible agregarlo'
         );
+      });
+      if (existingAnexo) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'Un archivo con ese nombre ya existe, por favor cambie el nombre del archivo para poder agregar el anexo',
+          confirmButtonText: 'Entendido',
+        });
         return;
       } else {
         state.anexosCreados.push({ ...action.payload, id: uuidv4() });
@@ -53,7 +66,15 @@ export const AsignacionUsuarioSlice = createSlice({
         (anexo) => anexo.id === action.payload.id
       );
       if (index !== -1) {
-        state.anexosCreados[index] = action.payload;
+        const isDuplicateName = state.anexosCreados.some(
+          (anexo, i) => i !== index && anexo.nombre_archivo === action.payload.nombre_archivo
+        );
+        if (!isDuplicateName) {
+          state.anexosCreados[index] = action.payload;
+          control_success('Se ha editado el anexo');
+        } else {
+          control_warning('No se ha podido editar el anexo, el nombre del archivo no puede repetirse');
+        }
       }
     },
 
@@ -65,12 +86,16 @@ export const AsignacionUsuarioSlice = createSlice({
       state.metadatos = action.payload;
     },
 
-    setViewMode: (state: any, action: any) => {
-      state.viewMode = action.payload;
+    setViewMode: (state: any, action: { payload: boolean }) => {
+      state.viewMode = action.payload as boolean;
     },
 
     resetItems: (state) => {
       state.anexosCreados = [];
+      state.currentAnexo = null;
+      state.currentSolicitudAlUsuario = null;
+      state.metadatos = null;
+      state.viewMode = false;
     },
   },
 });

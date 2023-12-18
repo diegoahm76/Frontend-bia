@@ -102,7 +102,7 @@ export const ModalConfirmacionArchivar: React.FC<InterfazMostarAlerta2> = ({ dat
             const url = '/transversal/alertas/alertas_bandeja_Alerta_persona/get-alerta_bandeja-by-bandeja/8/';
             const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
             const facilidad_pago_data = res.data.data;
-            // console.log(facilidad_pago_data)
+            // //  console.log('')(facilidad_pago_data)
             set_data_entidad(facilidad_pago_data);
             //  control_success('Datos actualizados correctamente');
         } catch (error) {

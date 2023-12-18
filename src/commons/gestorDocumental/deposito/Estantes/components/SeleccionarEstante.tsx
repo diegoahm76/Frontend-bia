@@ -125,7 +125,7 @@ export const SeleccionarEstante: React.FC = () => {
                   }}
                   value={value}
                   onChange={(value) => {
-                    console.log(value);
+                    //  console.log('')(value);
                     onChange(value);
                   }}
                   options={nuevo_orden_estantes_selected}

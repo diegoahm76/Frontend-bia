@@ -25,13 +25,16 @@ export const useIndicadorHook = (): any => {
       nombre_actividad: '',
       nombre_plan: '',
       nombre_indicador: '',
+      nombre_proyecto: '',
       linea_base: '',
       medida: '',
+      tipo_indicador: '',
       id_medicion: 0,
       id_tipo: 0,
       id_producto: 0,
       id_actividad: 0,
       id_plan: 0,
+      id_proyecto: 0,
     },
   });
 
@@ -47,13 +50,16 @@ export const useIndicadorHook = (): any => {
       nombre_actividad: '',
       nombre_plan: '',
       nombre_indicador: '',
+      nombre_proyecto: '',
       linea_base: '',
       medida: '',
+      tipo_indicador: '',
       id_medicion: 0,
       id_tipo: 0,
       id_producto: 0,
       id_actividad: 0,
       id_plan: 0,
+      id_proyecto: 0,
     });
   };
 
@@ -71,7 +77,7 @@ export const useIndicadorHook = (): any => {
 
   const onsubmit_indicador = handleSubmit_indicador(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_indicador(true);
       await post_indicador(data as Indicadores);
       control_success('Se creó correctamente');
@@ -91,7 +97,7 @@ export const useIndicadorHook = (): any => {
 
   const onsubmit_editar = handleSubmit_indicador(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_indicador(true);
       await put_indicador((id_indicador as number) ?? 0, data as Indicadores);
       control_success('Se actualizó correctamente');

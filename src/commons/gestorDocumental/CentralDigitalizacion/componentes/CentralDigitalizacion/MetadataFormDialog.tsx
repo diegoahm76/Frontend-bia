@@ -95,7 +95,7 @@ const MetadataFormDialog = ({
   }, []);
 
   useEffect(() => {
-    console.log(metadata);
+    //  console.log('')(metadata);
     reset_metadata({
       ...metadata,
       fecha_creacion_doc:
@@ -138,7 +138,7 @@ const MetadataFormDialog = ({
       tiene_replica_fisica: checked_tiene_replica_fisica ?? null,
       nro_folios_documento: Number(data.nro_folios_documento),
     };
-    console.log(data_edit);
+    //  console.log('')(data_edit);
 
     const form_data: any = new FormData();
     if (

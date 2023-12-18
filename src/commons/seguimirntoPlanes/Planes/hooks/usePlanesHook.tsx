@@ -29,7 +29,7 @@ export const usePlanesHook = (): any => {
 
   const data_watch_planes = watch_planes();
 
-  // console.log(data_watch_planes, 'data_watch_planes');
+  // //  console.log('')(data_watch_planes, 'data_watch_planes');
 
   const [agno_ini, set_agno_ini] = useState<number>(0);
   const [agno_fin, set_agno_fin] = useState<number>(0);
@@ -54,7 +54,7 @@ export const usePlanesHook = (): any => {
 
   const onsubmit_planes = handleSubmit_planes(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.agno_inicio = agno_ini;
       data.agno_fin = agno_fin;
       set_is_saving_planes(true);
@@ -80,7 +80,7 @@ export const usePlanesHook = (): any => {
 
   const onsubmit_editar = handleSubmit_planes(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.agno_inicio = agno_ini;
       data.agno_fin = agno_fin;
       set_is_saving_planes(true);

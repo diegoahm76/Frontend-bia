@@ -47,7 +47,7 @@ export const avanzada_deposito = (): any => {
       const { data } = await api.get(
         'gestor/depositos-archivos/archivoFisico/busqueda-avanzada-deposito/?tipo_elemento=Depósito de Archivo'
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_depositos_avanzada(data.data));
@@ -70,7 +70,7 @@ export const tabla_arbol_deposito = (id:number | string |null): any => {
       const { data } = await api.get(
         `gestor/depositos-archivos/archivoFisico/informacion-arbol/${id ?? ''}` 
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_deposito_arbol({deposito: data.deposito, estantes:data.estantes}));
@@ -98,7 +98,7 @@ export const avanzada_estante = (
           deposito_archivo ?? ''
         }`
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_estantes_avanzada(data.data));
@@ -124,7 +124,7 @@ export const avanzada_bandeja = (
           identificacion_estante ?? ''
         }`
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_bandejas_avanzadas(data.data));
@@ -148,7 +148,7 @@ export const avanzada_caja = (
       const { data } = await api.get(
         `gestor/expedientes-archivos/expedientes/editar-archivos-soporte/${id ?? ''}/`)
       ;
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_cajas_avanzadas(data.data));
@@ -174,7 +174,7 @@ export const avanzada_carpeta = (
           identificacion_caja ?? ''
         }`
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_carpetas_avanzadas(data.data));

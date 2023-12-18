@@ -47,7 +47,7 @@ const SeleccionarRadicado = () => {
 
   // useEffect(() => {
   //   // void dispatch(get_document_types_service());
-  //   console.log(watch('document_type'));
+  //   //  console.log('')(watch('document_type'));
   // }, [watch('document_type')]);
 
   useEffect(() => {

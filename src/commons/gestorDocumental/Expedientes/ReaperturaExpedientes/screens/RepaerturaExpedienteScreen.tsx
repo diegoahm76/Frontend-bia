@@ -63,7 +63,7 @@ const ReaperturaExpedienteScreen = () => {
     };
 
     useEffect(() => {
-        console.log(selected_expediente)
+        //  console.log('')(selected_expediente)
         reset_reapertura_expediente(selected_expediente);
     }, [selected_expediente]);
 
@@ -79,7 +79,7 @@ const ReaperturaExpedienteScreen = () => {
 
 
     useEffect(() => {
-        console.log(selected_archivo_soporte)
+        //  console.log('')(selected_archivo_soporte)
         reset_archivo_expediente(selected_archivo_soporte);
     }, [selected_archivo_soporte]);
 
@@ -90,7 +90,7 @@ const ReaperturaExpedienteScreen = () => {
 
     useEffect(() => {
         if (selected_expediente && typeof selected_expediente.id_expediente_documental === 'number') {
-            console.log(selected_expediente);
+            //  console.log('')(selected_expediente);
             reset_reapertura_expediente(selected_expediente);
             void dispatch(get_archivos_id_expediente(selected_expediente.id_expediente_documental)
             );

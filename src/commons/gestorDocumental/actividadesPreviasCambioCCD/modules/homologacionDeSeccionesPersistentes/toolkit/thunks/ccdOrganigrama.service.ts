@@ -103,7 +103,7 @@ export const validacionInicialCCD = async (navigate: any): Promise<any> => {
         }
       });
     }
-    // console.log(datos);
+    // //  console.log('')(datos);
     return datos;
   } catch (err) {
     control_error('Ha ocurrido un error al cargar los datos');

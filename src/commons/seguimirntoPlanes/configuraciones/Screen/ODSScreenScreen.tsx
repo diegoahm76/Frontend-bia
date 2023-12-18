@@ -141,7 +141,7 @@ export const ODSScreen: React.FC = () => {
         })
       );
       set_rows(datos_ods);
-      console.log(datos_ods, 'datos_ods');
+      //  console.log('')(datos_ods, 'datos_ods');
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'

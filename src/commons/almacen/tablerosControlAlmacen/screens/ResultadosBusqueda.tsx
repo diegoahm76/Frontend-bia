@@ -84,7 +84,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                                 if (params.row.dias_kilometros_vencidos === null || params.row.kilometraje_programado !== 'N/A') {
                                     return '';
                                 }
-                                console.log('fecha_programada: ', params.row.dias_kilometros_vencidos);
+                                //  console.log('')('fecha_programada: ', params.row.dias_kilometros_vencidos);
                                 if(params.row.dias_kilometros_vencidos >= 1 && params.row.dias_kilometros_vencidos <= 5)
                                     return clsx("super-app",{positive: true});
                                 if(params.row.dias_kilometros_vencidos >= 6 && params.row.dias_kilometros_vencidos <= 30)
@@ -103,7 +103,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                                 if (params.row.dias_kilometros_vencidos == null || params.row.fecha_programada !== 'N/A') {
                                     return '';
                                 }
-                                console.log('kilometraje_programado: ', params.row.dias_kilometros_vencidos);
+                                //  console.log('')('kilometraje_programado: ', params.row.dias_kilometros_vencidos);
                                 if(params.row.dias_kilometros_vencidos > 0)
                                     return clsx("super-app",{danger: true});
                                 return '';

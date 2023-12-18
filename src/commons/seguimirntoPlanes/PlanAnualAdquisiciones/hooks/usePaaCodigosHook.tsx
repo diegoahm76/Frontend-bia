@@ -54,7 +54,7 @@ export const usePaaCodigosHook = (): any => {
 
   const onsubmit_paa_codidos = handleSubmit_paa_codidos(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_plan = id_plan_anual;
       set_is_saving_paa_codidos(true);
       await post_paa_codigos(data as IUnspsc);
@@ -75,7 +75,7 @@ export const usePaaCodigosHook = (): any => {
 
   const onsubmit_editar = handleSubmit_paa_codidos(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_paa_codidos(true);
       await put_paa_codigos((id_paacodigo as number) ?? 0, data as IUnspsc);
       control_success('Se actualizó correctamente');

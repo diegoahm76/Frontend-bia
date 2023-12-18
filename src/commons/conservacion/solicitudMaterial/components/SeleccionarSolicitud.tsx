@@ -63,7 +63,7 @@ const SeleccionarSolicitud = ({
   useEffect(() => {
     if (file !== null) {
       if ('name' in file) {
-        console.log(file.name);
+        //  console.log('')(file.name);
         set_file_name(file.name);
         dispatch(
           set_current_solicitud({

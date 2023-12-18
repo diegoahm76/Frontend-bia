@@ -34,7 +34,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
   const [data_choise_disponivilidad, set_data_choise_disponivilidad] = useState<any>(null);
   const [choise_seleccionado_disponivilidad, set_choise_seleccionado_disponivilidad] = useState<string>('');
   const [data_busqueda_Avanazda, set_data_busqueda_Avanazda] = useState<any>([]);
-  // console.log(data_busqueda_Avanazda);
+  // //  console.log('')(data_busqueda_Avanazda);
   const [activador, set_activaador] = useState<boolean>(false);
 
 
@@ -89,7 +89,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       const res: any = await api.get(queryURL);
       let numero_consulta: any = res.data.data;
       set_data_busqueda_Avanazda(numero_consulta);
-      // console.log(numero_consulta);
+      // //  console.log('')(numero_consulta);
 
     } catch (error) {
       console.error(error);
@@ -104,7 +104,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       const res: any = await api.get(url);
       let numero_consulta: any = res.data.data;
       set_data_choise(numero_consulta);
-      // console.log(numero_consulta); 
+      // //  console.log('')(numero_consulta); 
     } catch (error) {
       console.error(error);
     }
@@ -116,7 +116,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       const res: any = await api.get(url);
       let numero_consulta_Disponivilidad: any = res.data;
       set_data_choise_disponivilidad(numero_consulta_Disponivilidad);
-      // console.log(numreo_consulta_Disponivilidad);
+      // //  console.log('')(numreo_consulta_Disponivilidad);
     } catch (error) {
       console.error(error);
     }
@@ -149,7 +149,7 @@ export const MostrarModalBuscarPlantilla: React.FC = () => {
       const url = `/gestor/plantillas/plantilla_documento/get_detalle_id/${data}/`;
       const res: any = await api.get(url);
       let numero_consulta: any = res.data.data;
-      // console.log(numero_consulta);
+      // //  console.log('')(numero_consulta);
       set_form({
         ...form,
         id_actualizar: numero_consulta.id_plantilla_doc,

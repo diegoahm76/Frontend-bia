@@ -294,7 +294,7 @@ export const DialogBusquedaCcdControlAccesoExp = (): JSX.Element => {
             variant="outlined"
             color="error"
             onClick={() => {
-              console.log('cerrando modal');
+              //  console.log('')('cerrando modal');
               handleSeleccionCCD_PSD(false);
               reset_busqueda_ccd({ nombre: '', version: '' });
             }}

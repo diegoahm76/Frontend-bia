@@ -6,6 +6,7 @@ import type {
   IActividades,
   IPlanes,
   IProductos,
+  IProyectos,
   Indicadores,
 } from '../../types/types';
 import { control_error } from '../../../../helpers';
@@ -18,9 +19,9 @@ import {
   get_planes,
   get_productos,
   get_tipos,
+  get_proyectos,
 } from '../services/services';
 import { IMedicion, ITipos } from '../../configuraciones/interfaces/interfaces';
-import { set_current_indicador } from '../../store/slice/indexPlanes';
 
 interface UserContext {
   // * id
@@ -38,6 +39,8 @@ interface UserContext {
   set_productos_selected: (value: ValueProps[]) => void;
   indicadores_selected: ValueProps[];
   set_indicadores_selected: (value: ValueProps[]) => void;
+  proyectos_selected: ValueProps[];
+  set_proyectos_selected: (value: ValueProps[]) => void;
   // configutariones basicas selected
   medidor_selected: ValueProps[];
   set_medidor_selected: (value: ValueProps[]) => void;
@@ -51,7 +54,7 @@ interface UserContext {
   fetch_data_actividad_selected: () => Promise<void>;
   fetch_data_producto_selected: () => Promise<void>;
   fetch_data_planes_selected: () => Promise<void>;
-
+  fetch_data_proyectos_selected: () => Promise<void>;
   fetch_data_indicadores: () => Promise<void>;
 
   fetch_data_medidor_selected: () => Promise<void>;
@@ -70,6 +73,8 @@ export const DataContextIndicador = createContext<UserContext>({
   set_productos_selected: () => {},
   indicadores_selected: [],
   set_indicadores_selected: () => {},
+  proyectos_selected: [],
+  set_proyectos_selected: () => {},
   // configutariones basicas selected
   medidor_selected: [],
   set_medidor_selected: () => {},
@@ -79,7 +84,7 @@ export const DataContextIndicador = createContext<UserContext>({
   fetch_data_actividad_selected: async () => {},
   fetch_data_producto_selected: async () => {},
   fetch_data_planes_selected: async () => {},
-
+  fetch_data_proyectos_selected: async () => {},
   fetch_data_indicadores: async () => {},
 
   fetch_data_medidor_selected: async () => {},
@@ -104,6 +109,9 @@ export const UserProviderIndicador = ({
     ValueProps[]
   >([]);
   const [indicadores_selected, set_indicadores_selected] = React.useState<
+    ValueProps[]
+  >([]);
+  const [proyectos_selected, set_proyectos_selected] = React.useState<
     ValueProps[]
   >([]);
   // configutariones basicas selected
@@ -260,6 +268,25 @@ export const UserProviderIndicador = ({
     }
   };
 
+  const fetch_data_proyectos_selected = async (): Promise<void> => {
+    try {
+      const response = await get_proyectos();
+      if (response?.length > 0) {
+        const data_plan: ValueProps[] | any = response.map(
+          (item: IProyectos) => ({
+            value: item.id_proyecto,
+            label: item.nombre_proyecto,
+          })
+        );
+        set_proyectos_selected(data_plan);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
   const value: UserContext = {
     // * id
 
@@ -270,6 +297,8 @@ export const UserProviderIndicador = ({
     set_productos_selected,
     actividad_selected,
     set_actividad_selected,
+    proyectos_selected,
+    set_proyectos_selected,
     // configutariones basicas selected
     medidor_selected,
     set_medidor_selected,
@@ -288,7 +317,7 @@ export const UserProviderIndicador = ({
     fetch_data_actividad_selected,
     fetch_data_producto_selected,
     fetch_data_planes_selected,
-
+    fetch_data_proyectos_selected,
     fetch_data_indicadores,
 
     fetch_data_medidor_selected,

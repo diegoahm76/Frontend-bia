@@ -11,7 +11,7 @@ import { type InfoPersona } from "../../../interfaces/globalModels";
 export function AdminEmpleados(): JSX.Element {
 
   const on_result = (data: InfoPersona): void => {
-    console.log(data);
+    //  console.log('')(data);
   };
 
   return (

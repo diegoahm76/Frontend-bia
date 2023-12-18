@@ -333,7 +333,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
 
         set_tipo_elemnto(tipo_elemento_format);
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
 
@@ -364,7 +364,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
       deposito_seleccionado.id_deposito !== undefined
     ) {
       void dispatch(avanzada_estante(deposito_seleccionado.id_deposito));
-      console.log(deposito_seleccionado);
+      //  console.log('')(deposito_seleccionado);
     }
   }, [deposito_seleccionado]);
 
@@ -377,7 +377,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
         void dispatch(
           avanzada_bandeja(estante_seleccionado.identificacion_por_deposito)
         );
-      console.log(estante_seleccionado);
+      //  console.log('')(estante_seleccionado);
     }
   }, [estante_seleccionado]);
 
@@ -390,7 +390,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
         void dispatch(
           avanzada_caja(bandeja_seleccionado.identificacion_por_estante)
         );
-      console.log(bandeja_seleccionado);
+      //  console.log('')(bandeja_seleccionado);
     }
   }, [bandeja_seleccionado]);
 
@@ -403,7 +403,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
         void dispatch(
           avanzada_carpeta(caja_seleccionado.identificacion_por_bandeja)
         );
-      console.log(caja_seleccionado);
+      //  console.log('')(caja_seleccionado);
     }
   }, [caja_seleccionado]);
 

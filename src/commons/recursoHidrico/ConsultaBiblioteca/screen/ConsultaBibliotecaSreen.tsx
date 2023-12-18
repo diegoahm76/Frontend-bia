@@ -227,7 +227,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     if (info_instrumentos) {
-      console.log(info_instrumentos);
+      //  console.log('')(info_instrumentos);
     }
   }, [info_instrumentos]);
 

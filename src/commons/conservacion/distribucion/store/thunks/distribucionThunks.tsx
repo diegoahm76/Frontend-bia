@@ -74,7 +74,7 @@ export const get_nurseries_service = (): any => {
       dispatch(set_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nursery_service');
+      //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -89,10 +89,10 @@ export const get_transfer_goods_service = (id: string | number): any => {
         `conservacion/traslados/get-items-traslado/${id}/`
       );
       dispatch(set_transfer_goods(data.data));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_transfer_goods_service');
+      //  console.log('')('get_transfer_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -109,11 +109,6 @@ export const get_goods_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(
-        `conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${
-          codigo_bien ?? ''
-        }&nombre=${nombre ?? ''}&cod_tipo_elemento_vivero=${cod_elemento ?? ''}`
-      );
       const { data } = await api.get(
         `conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${
           codigo_bien ?? ''
@@ -124,7 +119,7 @@ export const get_goods_service = (
         }`
       );
       dispatch(set_goods(data.data));
-      console.log(data);
+      //  console.log('')(data);
       if (data.data.length > 0) {
         control_success('Se encontrarón bienes');
       } else {
@@ -132,7 +127,6 @@ export const get_goods_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_planting_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -149,7 +143,6 @@ export const get_goods_aux_service = (id_vivero: string | number): any => {
 
       return data;
     } catch (error: any) {
-      console.log('get_goods_aux_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -180,7 +173,7 @@ export const get_good_code_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_current_planting_service');
+      //  console.log('')('get_current_planting_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -203,7 +196,7 @@ export const get_transfers_service = (
           fecha_hasta ?? ''
         }&id_vivero_destino=${id_vivero_destino ?? ''}`
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_transfers_nurseries(data.data));
       if (data.data.length > 0) {
         control_success('Se encontrarón traslados');
@@ -212,7 +205,7 @@ export const get_transfers_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_plantings_service');
+      //  console.log('')('get_plantings_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -235,7 +228,7 @@ export const get_current_trasnfer_service = (id: string | number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_current_planting_service');
+      //  console.log('')('get_current_planting_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -265,7 +258,7 @@ export const get_person_id_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -311,8 +304,8 @@ export const add_transfer_service = (traslado: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_trasladoa_service');
-      console.log(error);
+      //  console.log('')('add_trasladoa_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -336,7 +329,7 @@ export const edit_traslado_service = (traslado: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('edit_traslado_service');
+      //  console.log('')('edit_traslado_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -351,7 +344,7 @@ export const annul_transfer_service = (id: number, transfer: any): any => {
         `conservacion/traslados/anular-traslados/${id}/`,
         transfer
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -361,8 +354,8 @@ export const annul_transfer_service = (id: number, transfer: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
-      console.log(error);
+      //  console.log('')('add_siembra_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -382,7 +375,7 @@ export const get_bienes_despacho = (
         }/`
       );
       dispatch(set_bienes_despacho(data.data));
-      console.log(data);
+      //  console.log('')(data);
       if (data.data.length > 0) {
         // control_success("Se encontrarón bienes")
       } else {
@@ -390,7 +383,7 @@ export const get_bienes_despacho = (
       }
       return data;
     } catch (error: any) {
-      // console.log('get_planting_goods_service');
+      // //  console.log('')('get_planting_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -406,7 +399,7 @@ export const get_bien_code_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(code, tipo);
+      //  console.log('')(code, tipo);
       const { data } = await api.get(
         tipo === 'MV'
           ? `conservacion/despachos/get-planta/?id_vivero=${id_vivero}&codigo_bien=${
@@ -414,7 +407,7 @@ export const get_bien_code_service = (
             }&nombre=${name ?? ''}&agno_lote&nro_lote`
           : `conservacion/despachos/get-insumo/${id_vivero}/${code ?? ''}/`
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (tipo === 'MV') {
         if (data.data.length > 0) {
@@ -438,7 +431,7 @@ export const get_bien_code_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_bien_code_service');
+      //  console.log('')('get_bien_code_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -461,7 +454,7 @@ export const get_bienes_service = (
         }&nombre=${name ?? ''}&agno_lote=${agno ?? ''}&nro_lote=${nro ?? ''}`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_bienes(data.data));
         control_success(data.detail);
@@ -470,7 +463,7 @@ export const get_bienes_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -481,13 +474,13 @@ export const get_bienes_service = (
 export const crear_despacho: any = (despacho: any) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(despacho);
+      //  console.log('')(despacho);
       const { data } = await api.put(
         'conservacion/despachos/registrar-despacho-viveros/',
         despacho
       );
       //  dispatch(get_solicitud_consumo_id());
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -505,7 +498,7 @@ export const crear_despacho: any = (despacho: any) => {
       // control_success(' se agrego correctamente');
       return data;
     } catch (error: any) {
-      console.log(error);
+      //  console.log('')(error);
       control_error(error.response.data.detail);
 
       return error as AxiosError;
@@ -520,14 +513,14 @@ export const editar_despacho: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(despacho);
+      //  console.log('')(despacho);
       const { data } = await api.put(
         'conservacion/despachos/update-despacho-viveros/',
         despacho
       );
       // await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, bienes);
       //  dispatch(get_solicitud_consumo_id());
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         dispatch(set_despachos([]));
@@ -538,7 +531,7 @@ export const editar_despacho: any = (
       // control_success(' se agrego correctamente');
       return data;
     } catch (error: any) {
-      console.log(error);
+      //  console.log('')(error);
       control_error(error.response.data.detail);
 
       return error as AxiosError;
@@ -554,7 +547,7 @@ export const annul_despacho_service = (id: number, despacho: any): any => {
         `conservacion/despachos/anular-despacho-viveros/${id}/`,
         despacho
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -563,7 +556,7 @@ export const annul_despacho_service = (id: number, despacho: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('annul_despacho_service');
+      //  console.log('')('annul_despacho_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -577,7 +570,7 @@ export const closed_solicitud_service = (id: number, solicitud: any): any => {
         `conservacion/solicitudes/cerrar-solicitud/${id}/`,
         solicitud
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -586,7 +579,7 @@ export const closed_solicitud_service = (id: number, solicitud: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('closed_solicitud_service');
+      //  console.log('')('closed_solicitud_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -608,7 +601,7 @@ export const get_despachos_service = (
       );
       // const { data } = await api.get(`conservacion/despachos/get-despachos/?fecha_desde=${fecha_desde}&fecha_hasta=${fecha_hasta}&id_vivero=${id_vivero}&nro_despachos_viveros=${nro}`);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_despachos(data.data));
         control_success(data.detail);
@@ -617,7 +610,7 @@ export const get_despachos_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

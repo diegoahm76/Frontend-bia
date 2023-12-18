@@ -74,7 +74,7 @@ export const HistorialAlertas: React.FC = () => {
       set_loading(false);
     } catch (err: any) {
       const temp_error = err as AxiosError;
-      console.log('Error', temp_error.response?.status);
+      //  console.log('')('Error', temp_error.response?.status);
       if (temp_error.response?.status === 404) {
         control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
         set_dato([]);
@@ -117,7 +117,7 @@ export const HistorialAlertas: React.FC = () => {
     } catch (err: any) {
       set_loading(false);
       const temp_error = err as AxiosError;
-      console.log('Error', temp_error.response?.status);
+      //  console.log('')('Error', temp_error.response?.status);
       if (temp_error.response?.status === 404) {
         control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
         set_dato([]);

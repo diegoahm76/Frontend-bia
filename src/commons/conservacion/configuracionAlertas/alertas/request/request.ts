@@ -29,7 +29,7 @@ export const get_unidades_organizacionales_by_id_organigrama_service: any = asyn
         const { data } = await api.get(url);
         return data.data;
     } catch (error: any) {
-        console.log(error.response.data, 'error');
+        //  console.log('')(error.response.data, 'error');
         control_error(error.response.data.detail);
         return error as AxiosError;
     }

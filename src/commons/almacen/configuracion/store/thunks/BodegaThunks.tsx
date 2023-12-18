@@ -50,11 +50,11 @@ export const get_bodega_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('almacen/bodega/get-list/');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(get_bodega(data));
       return data;
     } catch (error: any) {
-      console.log('get_bodega_service');
+      //  console.log('')('get_bodega_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -74,7 +74,7 @@ export const add_bodega_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log('add_bodega_service');
+      //  console.log('')('add_bodega_service');
 
       return error as AxiosError;
     }
@@ -97,7 +97,7 @@ export const edit_bodega_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error.response.data);
+      //  console.log('')(error.response.data);
 
       return error as AxiosError;
     }
@@ -115,7 +115,7 @@ export const delete_bodega_service: any = (id: string | number) => {
 
       return data;
     } catch (error: any) {
-      console.log('delete service');
+      //  console.log('')('delete service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

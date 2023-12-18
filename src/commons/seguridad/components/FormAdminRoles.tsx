@@ -72,7 +72,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
 
       // Obtiene permisos asignados al Rol al editar
       if (rol_edit?.id_rol !== 0) {
-        console.log('first');
+        //  console.log('')('first');
         await get_permisos_rol(data);
       } else {
         data.map((e) => {
@@ -98,7 +98,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
       const temp_permisos: PermisosRolEdit[] = permisos_rol.map((e) => {
         return { id_permisos_modulo: e.id_permiso_modulo };
       });
-      // console.log('temp_permisos', permisos_rol);
+      // //  console.log('')('temp_permisos', permisos_rol);
 
       // Validación de permisos
       const permisos_ids = permisos_rol.map((e) => e.id_permiso_modulo);
@@ -111,7 +111,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         return;
       }
 
-      /* console.log('dataform modified', {
+      /* //  console.log('')('dataform modified', {
         nombre_rol:
           permisos_ids.includes(100) || permisos_ids.includes(95)
             ? `zCamunda - ${data_form.nombre_rol}`
@@ -187,7 +187,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     if (event.target.checked) {
-      console.log(event.target.value);
+      //  console.log('')(event.target.value);
       set_permisos_rol([
         ...permisos_rol,
         {

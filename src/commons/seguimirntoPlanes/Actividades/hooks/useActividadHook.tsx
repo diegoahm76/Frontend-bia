@@ -54,7 +54,7 @@ export const useActividadHook = (): any => {
 
   const onsubmit_actividad = handleSubmit_actividad(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_producto = id_producto;
       set_is_saving_actividad(true);
       await post_actividad(data as IActividades);
@@ -75,7 +75,7 @@ export const useActividadHook = (): any => {
 
   const onsubmit_editar = handleSubmit_actividad(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_actividad(true);
       data.id_producto = id_producto;
       await put_actividad((id_actividad as number) ?? 0, data as IActividades);

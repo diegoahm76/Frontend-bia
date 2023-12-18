@@ -98,7 +98,7 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({ fetchConfiguraciones, is
         <>
             <Dialog open={isBuscarActivo} onClose={handle_close} maxWidth="xl"
             >
-                {/* <button onClick={() => console.log(formValues.fecha_fin)}>Mostrar zonahidrica en la consola</button> */}
+                {/* <button onClick={() => //  console.log('')(formValues.fecha_fin)}>Mostrar zonahidrica en la consola</button> */}
 {/* { selectedConfiguracion?.id_valores_variables} */}
                 <Grid container
                     item xs={12} marginLeft={2} marginRight={2} marginTop={3}

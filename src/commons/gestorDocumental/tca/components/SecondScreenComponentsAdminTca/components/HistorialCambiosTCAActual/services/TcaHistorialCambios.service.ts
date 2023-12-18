@@ -21,7 +21,7 @@ export const get_historial_cambios_tca_service = async (
     const url = `gestor/tca/historico/?id_tca=${id_tca}`;
     const { data } = await api.get(url);
     control_success(`Se encontró el siguiente historial de cambios TCA`);
-    console.log('data TCA historial', data.data);
+    //  console.log('')('data TCA historial', data.data);
     return data.data;
   } catch (error: any) {
     control_warning(`Error: No se encontró historial de cambios TCA`);

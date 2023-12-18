@@ -63,7 +63,7 @@ const ProgramacionFechas = () => {
               size="small"
               onClick={() => {
                 dispatch(eliminar_fecha_alerta(params.row.id_fecha, current_configuracion.cod_clase_alerta ?? ''))
-                console.log(params.row)
+                //  console.log('')(params.row)
               }}
             >
               <DeleteIcon
@@ -108,9 +108,9 @@ const ProgramacionFechas = () => {
 
   const dispatch = useAppDispatch();
 
-  console.log(fecha_alerta)
+  //  console.log('')(fecha_alerta)
   const on_submit_programar = (data: IObjConfiguracionAlerta): void => {
-    console.log(data);
+    //  console.log('')(data);
     const data_programar = {
       ...data,
       cod_clase_alerta: current_configuracion.cod_clase_alerta

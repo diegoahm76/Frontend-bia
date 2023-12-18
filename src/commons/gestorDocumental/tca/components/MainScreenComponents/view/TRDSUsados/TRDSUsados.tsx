@@ -32,8 +32,8 @@ export const TRDSUsados: FC<any> = (): JSX.Element => {
       void getTRDsUsados().then((res) => {
         const filterRes = res.filter((el: TrdsUsados) => el.usado);
         setrowsTrdsUsados(filterRes);
-        // console.log('getTRDsUsados');
-        // console.log(res);
+        // //  console.log('')('getTRDsUsados');
+        // //  console.log('')(res);
       });
     }
     return () => {

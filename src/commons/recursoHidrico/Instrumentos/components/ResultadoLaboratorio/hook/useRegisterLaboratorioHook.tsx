@@ -260,7 +260,7 @@ export const use_register_laboratorio_hook = () => {
             const unidad_medida = matchingParam?.unidad_de_medida ?? '';
             set_undidad_medida_select(unidad_medida);
 
-            console.log('unidad_medida', unidad_medida);
+            //  console.log('')('unidad_medida', unidad_medida);
           }
           // setOriginalCuencaValues(data_cuenca); // Store the fetched data in the original state
         }
@@ -359,8 +359,8 @@ export const use_register_laboratorio_hook = () => {
       data.fecha_resultados_lab = dayjs(fecha_resultado).format('YYYY-MM-DD');
       data.fecha_envio_lab = dayjs(fecha_envio).format('YYYY-MM-DD');
 
-      console.log(archivos, 'archivos');
-      console.log(nombres_archivos, 'nombres_archivos');
+      //  console.log('')(archivos, 'archivos');
+      //  console.log('')(nombres_archivos, 'nombres_archivos');
 
       const nombre_archivos_set = new Set(nombres_archivos);
       if (nombre_archivos_set.size !== nombres_archivos.length) {

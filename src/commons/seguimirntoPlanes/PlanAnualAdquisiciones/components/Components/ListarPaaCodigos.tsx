@@ -62,7 +62,7 @@ export const ListarPaaCodigos: React.FC = () => {
                   editar: true,
                 })
               );
-              console.log(params.row, 'params.row');
+              //  console.log('')(params.row, 'params.row');
               dispatch(set_current_paa_codigos(params.row));
             }}
           >

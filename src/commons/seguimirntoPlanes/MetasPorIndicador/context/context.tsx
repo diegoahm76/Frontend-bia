@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import React, { createContext } from 'react';
-import type { IMetaIndicador, } from '../../types/types';
+import type { IMetaIndicador } from '../../types/types';
 import { control_error } from '../../../../helpers';
 import { useAppSelector } from '../../../../hooks';
-import { get_metas_id, } from '../services/services';
+import { get_metas_id } from '../services/services';
 
 interface UserContext {
   // * id
@@ -21,13 +21,11 @@ interface UserContext {
   // * fetch
 
   fetch_data_mata_indicador: () => Promise<void>;
-
 }
 
 export const DataContextMetas = createContext<UserContext>({
   rows_metas: [],
   set_rows_metas: () => {},
-
 
   fetch_data_mata_indicador: async () => {},
 });
@@ -53,7 +51,6 @@ export const UserProviderMetas = ({
     indicador: { id_indicador },
   } = useAppSelector((state) => state.planes);
 
-
   const fetch_data_mata_indicador = async (): Promise<void> => {
     try {
       set_rows_metas([]);
@@ -67,6 +64,15 @@ export const UserProviderMetas = ({
             unidad_meta: item.unidad_meta,
             porcentaje_meta: item.porcentaje_meta,
             valor_meta: item.valor_meta,
+            cumplio: item.cumplio,
+            fecha_creacion_meta: item.fecha_creacion_meta,
+            agno_1: item.agno_1,
+            agno_2: item.agno_2,
+            agno_3: item.agno_3,
+            agno_4: item.agno_4,
+            valor_ejecutado_compromiso: item.valor_ejecutado_compromiso,
+            valor_ejecutado_obligado: item.valor_ejecutado_obligado,
+            avance_fisico: item.avance_fisico,
             id_indicador: item.id_indicador,
           })
         );
@@ -79,8 +85,6 @@ export const UserProviderMetas = ({
       );
     }
   };
-
-  
 
   const value: UserContext = {
     // * id

@@ -72,7 +72,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
     use_u_x_entidad();
 
   const guardarRegistrosT026 = (): void => {
-    // console.log(unidadesSeleccionadas);
+    // //  console.log('')(unidadesSeleccionadas);
 
     const unidadesSeleccionadasArray =
       unidadesSeleccionadas &&
@@ -87,8 +87,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
           id_nueva_unidad_organizacional: value?.value
         }));
 
-    // console.log('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
-    // console.log(organigrama_current, 'organigrama_current');
+    // //  console.log('')('unidadesSeleccionadasArray', unidadesSeleccionadasArray);
+    // //  console.log('')(organigrama_current, 'organigrama_current');
 
     void putCrearRegistrosTemporalesT026(
       organigrama_current,
@@ -96,7 +96,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
       setLoadingButton
     ).then(() => {
       void consultarTablaTemporal().then((asignacionConsultaTablaTemporal) => {
-        // console.log('asignacionTemporal', asignacionConsultaTablaTemporal)
+        // //  console.log('')('asignacionTemporal', asignacionConsultaTablaTemporal)
         const obtenerOrganigramas = async (): Promise<any> => {
           const organigramasActuales = await get_organigrama_acual(navigate);
           setOrganigramaActual(
@@ -105,7 +105,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
               value: item?.id_organigrama
             }))
           );
-          // console.log('organigramasActuales', organigramasActuales);
+          // //  console.log('')('organigramasActuales', organigramasActuales);
           if (
             asignacionConsultaTablaTemporal?.totalData?.id_organigrama_nuevo
           ) {
@@ -119,7 +119,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                     ?.id_organigrama_nuevo
               );
 
-              // console.log(organigramaNecesario);
+              // //  console.log('')(organigramaNecesario);
 
               setOrganigramasDisponibles(
                 organigramaNecesario?.map((item: any) => ({
@@ -248,7 +248,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
       };
     });
 
-    // console.log('newArray', arraysComparados);
+    // //  console.log('')('newArray', arraysComparados);
 
     // ? el servicio el cual se manda a llamar cuando se ejecuta la función está fallando en el backend, se debe revisar
     void putTrasladoMasivoUnidadesPorEntidad(
@@ -301,8 +301,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   -success - booleano que me indica si la consulta fue exitosa o no
                   -detail - mensaje de error en caso de que la consulta no haya sido exitosa
                 */
-                  // console.log('data tabla temporal', informacionTablaTemporal);
-                  /*cconsole.log(
+                  // //  console.log('')('data tabla temporal', informacionTablaTemporal);
+                  /*c//  console.log('')(
                     'personas sin actualizar organigrama anterior',
                     personasSinActualizar
                   ); */
@@ -310,7 +310,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                   // ? se deben hacer un merge de los datos de la tabla temporal y de la lista de personas sin actualizar, eliminando los elemenetos repetidos (deben prevalecer los de la tabla temporal) en el caso de que se repitan los datosen ambas listas
                   void getUnidadesOrganizacionalesOrganigramaActual()
                     .then((unidadesOrganizacionalesOrgActual) => {
-                      // console.log(unidadesOrganizacionalesOrgActual);
+                      // //  console.log('')(unidadesOrganizacionalesOrgActual);
                       const arraySinRepetidos = [
                         ...informacionTablaTemporal?.data,
                         ...personasSinActualizar?.data
@@ -352,7 +352,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                             };
                           }
                         );
-                        // console.log(dataMixed);
+                        // //  console.log('')(dataMixed);
 
                         dispatch(setGridAnteriorAActual(dataMixed));
                       }
@@ -366,8 +366,8 @@ export const CleanData: FC<any> = (): JSX.Element => {
                 }
               );
             });
-            // console.log('info organigrama anterior', infoOrganigramaAnterior);
-            // console.log('INFO ORGANIGRAMA ACTUAL', infoOrganigramaActual);
+            // //  console.log('')('info organigrama anterior', infoOrganigramaAnterior);
+            // //  console.log('')('INFO ORGANIGRAMA ACTUAL', infoOrganigramaActual);
           });
         }
       );
@@ -441,7 +441,7 @@ export const CleanData: FC<any> = (): JSX.Element => {
                       variant="outlined"
                       startIcon={<CleanIcon />}
                       onClick={() => {
-                        console.log('cleaning fields');
+                        //  console.log('')('cleaning fields');
                         dispatch(setUnidadesSeleccionadas(null));
                       }}
                     >

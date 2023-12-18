@@ -37,7 +37,7 @@ export const PersistenciaSerConfir = (): JSX.Element | null => {
 
   // ? handleEliminarPersistencia
   const handleEliminarPersistencia = (params: any) => {
-    console.log(params.row);
+    //  console.log('')(params.row);
 
     const nuevasAgrupacionesPersistentes = [
       ...homologacionAgrupacionesSerieSubserie,

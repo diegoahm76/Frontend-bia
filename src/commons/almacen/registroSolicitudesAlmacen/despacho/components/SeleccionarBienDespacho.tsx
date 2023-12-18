@@ -246,7 +246,7 @@ const SeleccionarBienDespacho = () => {
           current_solicitud.es_solicitud_de_conservacion
         )
       );
-      console.log(data);
+      //  console.log('')(data);
       set_bienes_aux(data);
     } catch (error) {
       console.error(error);
@@ -267,7 +267,7 @@ const SeleccionarBienDespacho = () => {
 
 
         ));
-      console.log(data);
+      //  console.log('')(data);
       set_bienes_aux(data);
     } catch (error) {
       console.error(error);
@@ -301,7 +301,7 @@ const SeleccionarBienDespacho = () => {
 
   useEffect(() => {
     if (bien_selected.id_bien !== null) {
-      console.log(bien_selected);
+      //  console.log('')(bien_selected);
       dispatch(set_current_bien(initial_state_current_bien));
       search_bien();
     }
@@ -337,7 +337,7 @@ const SeleccionarBienDespacho = () => {
           (current_bien.cantidad_disponible ?? 0)
         ) {
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          console.log(asignada, bien_selected.cantidad);
+          //  console.log('')(asignada, bien_selected.cantidad);
           if (asignada <= (bien_selected.cantidad ?? 0)) {
             const new_bien: IObjBienDespacho = {
               id_inventario: current_bien.id_inventario ?? null,
@@ -356,7 +356,7 @@ const SeleccionarBienDespacho = () => {
               bodega: current_bien.bodega ?? null,
               id_entrada_almacen_bien: current_bien.id_entrada_almacen_bien ?? null,
             };
-            console.log(new_bien);
+            //  console.log('')(new_bien);
             if (bien === undefined) {
               set_aux_insumos([...aux_insumos, new_bien]);
               const restante =
@@ -424,9 +424,9 @@ const SeleccionarBienDespacho = () => {
   };
   const delete_bien_despacho = (item: IObjBienesSolicitud): void => {
     const bien: IObjBienConsumo | undefined = bienes.find((p: IObjBienConsumo) => p.id_bien === item.id_bien)
-    console.log("bien", bien)
+    //  console.log('')("bien", bien)
     if (bien !== undefined) {
-      console.log(bien)
+      //  console.log('')(bien)
       dispatch(set_current_bien(bien))
     }
     const aux_items: IObjBienesSolicitud[] = []

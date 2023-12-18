@@ -96,7 +96,7 @@ export const ListarActividades: React.FC = () => {
     producto: { id_producto }, 
   } = useAppSelector((state) => state.planes);
 
-  console.log('id_producto', id_producto);
+  //  console.log('')('id_producto', id_producto);
 
   const dispatch = useAppDispatch();
 

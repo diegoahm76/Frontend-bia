@@ -217,7 +217,7 @@ export function RegistroIncidenciaScreen(): JSX.Element {
         data_incidencia: { ...data_edit },
         items_detalle: aux_items,
       };
-      console.log(aux);
+      //  console.log('')(aux);
 
       form_data.append('data_incidencia', JSON.stringify({ ...data_edit }));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);

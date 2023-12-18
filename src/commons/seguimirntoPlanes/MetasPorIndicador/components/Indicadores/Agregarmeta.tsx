@@ -2,9 +2,13 @@
 import {
   Alert,
   Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
   Grid,
   MenuItem,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { Title } from '../../../../../components/Title';
@@ -13,11 +17,16 @@ import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useMetaHook } from '../../hooks/useMetaHook';
 import { tipo_medida } from '../../../Indicadores/choices/selects';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
+import InfoIcon from '@mui/icons-material/Info';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Agregarmeta: React.FC = () => {
@@ -26,6 +35,8 @@ export const Agregarmeta: React.FC = () => {
     errors_meta,
     reset_meta,
     data_watch_meta,
+    register_meta,
+    set_value_meta,
 
     onsubmit_meta,
     onsubmit_editar,
@@ -38,11 +49,39 @@ export const Agregarmeta: React.FC = () => {
 
   const { mode, meta } = useAppSelector((state) => state.planes);
 
+  const [fecha_creacion_meta, set_fecha_creacion_meta] = useState<Dayjs | null>(
+    null
+  );
+
+  const handle_date_creacion_change = (
+    fieldName: string,
+    value: Dayjs | null
+  ): void => {
+    if (value !== null) {
+      switch (fieldName) {
+        case 'fecha_crea':
+          set_fecha_creacion_meta(value);
+          set_value_meta('fecha_creacion_meta', value.format('YYYY-MM-DD'));
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
   useEffect(() => {
     if (mode.crear) {
+      set_value_meta(
+        'fecha_creacion_meta',
+        fecha_creacion_meta?.format('YYYY-MM-DD')
+      );
       limpiar_formulario_meta();
     }
     if (mode.editar) {
+      if (meta.fecha_creacion_meta) {
+        set_fecha_creacion_meta(dayjs(meta.fecha_creacion_meta));
+        set_value_meta('fecha_creacion_meta', meta.fecha_creacion_meta);
+      }
       reset_meta({
         id_meta: meta.id_meta,
         nombre_indicador: meta.nombre_indicador,
@@ -50,6 +89,15 @@ export const Agregarmeta: React.FC = () => {
         unidad_meta: meta.unidad_meta,
         porcentaje_meta: meta.porcentaje_meta,
         valor_meta: meta.valor_meta,
+        cumplio: meta.cumplio,
+        fecha_creacion_meta: meta.fecha_creacion_meta,
+        agno_1: meta.agno_1,
+        agno_2: meta.agno_2,
+        agno_3: meta.agno_3,
+        agno_4: meta.agno_4,
+        valor_ejecutado_compromiso: meta.valor_ejecutado_compromiso,
+        valor_ejecutado_obligado: meta.valor_ejecutado_obligado,
+        avance_fisico: meta.avance_fisico,
         id_indicador: meta.id_indicador,
       });
     }
@@ -197,7 +245,32 @@ export const Agregarmeta: React.FC = () => {
               )}
             />
           </Grid>
-
+          <Grid item xs={12} sm={6} md={3}>
+            <Controller
+              name="avance_fisico"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  // type="number"
+                  label="Avance fisico"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  // error={!!errors_meta.avance_fisico}
+                  // helperText={
+                  //   errors_meta.avance_fisico
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
+                />
+              )}
+            />
+          </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
               name="valor_meta"
@@ -227,6 +300,168 @@ export const Agregarmeta: React.FC = () => {
               )}
             />
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_ejecutado_compromiso"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor ejecutado compromiso"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  error={!!errors_meta.valor_ejecutado_compromiso}
+                  helperText={
+                    errors_meta.valor_ejecutado_compromiso
+                      ? 'Es obligatorio ingresar un valor de la cuenta'
+                      : 'Ingrese un valor de la cuenta'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_ejecutado_obligado"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor ejecutado compromiso"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  error={!!errors_meta.valor_ejecutado_obligado}
+                  helperText={
+                    errors_meta.valor_ejecutado_obligado
+                      ? 'Es obligatorio ingresar un valor de la cuenta'
+                      : 'Ingrese un valor de la cuenta'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Controller
+              name="agno_1"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="number"
+                  label="Año 1"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  // error={!!errors_meta.agno_1}
+                  // helperText={
+                  //   errors_meta.agno_1
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Controller
+              name="agno_2"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="number"
+                  label="Año 2"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  // error={!!errors_meta.agno_2}
+                  // helperText={
+                  //   errors_meta.agno_2
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Controller
+              name="agno_3"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="number"
+                  label="Año 3"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  // error={!!errors_meta.agno_3}
+                  // helperText={
+                  //   errors_meta.agno_3
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Controller
+              name="agno_4"
+              control={control_meta}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="number"
+                  label="Año 4"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  // error={!!errors_meta.agno_4}
+                  // helperText={
+                  //   errors_meta.agno_4
+                  //     ? 'Es obligatorio ingresar un numero'
+                  //     : 'Ingrese un numero'
+                  // }
+                />
+              )}
+            />
+          </Grid>
           {isGuardarDisabled ? (
             <Grid item xs={12}>
               <Grid container justifyContent="center" textAlign="center">
@@ -238,6 +473,103 @@ export const Agregarmeta: React.FC = () => {
               </Grid>
             </Grid>
           ) : null}
+          <Grid
+            sx={{
+              marginBottom: '10px',
+              width: 'auto',
+            }}
+            item
+            xs={12}
+            sm={6}
+          >
+            <Controller
+              name="cumplio"
+              control={control_meta}
+              // defaultValue=""
+              rules={{
+                required: data_watch_meta.cumplio
+                  ? 'Este campo es requerido'
+                  : false,
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={value}
+                        onChange={(e) => {
+                          onChange(e.target.checked);
+                        }}
+                        // name="checkedB"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      value ? (
+                        <Typography variant="body2">
+                          <strong>Meta cumplida</strong>
+                          <Tooltip title="SI" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'green',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2">
+                          <strong>Meta no cumplida</strong>
+                          <Tooltip title="No" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'orange',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      )
+                    }
+                  />
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de creación de la meta"
+                value={fecha_creacion_meta}
+                onChange={(value) => {
+                  handle_date_creacion_change('fecha_crea', value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_meta('fecha_creacion_meta', {
+                      required: true,
+                    })}
+                    error={!!errors_meta.fecha_creacion}
+                    helperText={
+                      errors_meta.fecha_creacion
+                        ? 'Es obligatorio la fecha de creación de la meta'
+                        : 'Ingrese la fecha de creación de la meta'
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
 
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>

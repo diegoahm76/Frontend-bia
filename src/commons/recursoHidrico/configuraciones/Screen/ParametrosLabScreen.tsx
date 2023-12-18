@@ -80,7 +80,7 @@ export const ParametrosLabScreen: React.FC = () => {
             onClick={() => {
               handle_open_editar();
               set_parametros(params.row);
-              console.log(params.row);
+              //  console.log('')(params.row);
             }}
           >
             <Avatar

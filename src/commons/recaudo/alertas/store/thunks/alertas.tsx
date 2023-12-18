@@ -55,9 +55,9 @@ export const programar_repeticion: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // console.log(despacho);
+            // //  console.log('')(despacho);
             const { data } = await api.put(`transversal/alertas/configuracion_clase_alerta/update/${cod}/`, programacion);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
@@ -65,7 +65,7 @@ export const programar_repeticion: any = (
 
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -85,7 +85,7 @@ export const get_persona_alerta = (
                 //   control_success(data.detail);
                 dispatch(set_destinatario(data.data));
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             //    control_error(error.response.data.detail);
@@ -157,7 +157,7 @@ export const eliminar_persona_alerta = (
             const { data } = await api.delete(`transversal/alertas/personas_alertar/delete/${id}/`
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
@@ -185,7 +185,7 @@ export const eliminar_fecha_alerta = (
             const { data } = await api.delete(`transversal/alertas/fecha_clase_alert/delete/${id}/`
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
@@ -217,7 +217,7 @@ export const get_busqueda_persona = (
                 //   control_success(data.detail);
                 dispatch(set_current_destinatario(data.data));
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             //    control_error(error.response.data.detail);
@@ -242,7 +242,7 @@ export const get_busqueda_avanzada_persona = (
                 dispatch(set_persona(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -259,9 +259,9 @@ export const crear_persona: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // console.log(despacho);
+            // //  console.log('')(despacho);
             const { data } = await api.post('transversal/alertas/personas_alertar/create/', programacion);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
@@ -269,7 +269,7 @@ export const crear_persona: any = (
 
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -290,7 +290,7 @@ export const get_fecha = (
                 //   control_success(data.detail);
                 dispatch(set_fecha_programada(data.data));
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             //    control_error(error.response.data.detail);
@@ -306,9 +306,9 @@ export const programar_fecha: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // console.log(despacho);
+            // //  console.log('')(despacho);
             const { data } = await api.post('transversal/alertas/fecha_clase_alert/create/', programacion);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
@@ -316,7 +316,7 @@ export const programar_fecha: any = (
 
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;

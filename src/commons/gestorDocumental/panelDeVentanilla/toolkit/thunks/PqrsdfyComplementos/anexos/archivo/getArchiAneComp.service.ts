@@ -15,7 +15,7 @@ export const getArchivoAnexoComplemento = async (
     const url = `gestor/panel_ventanilla/complemento-pqrsdf/anexo-documento/get/${id_anexo}/`;
     const { data } = await api.get(url);
     control_success('Archivo obtenido con éxito');
-    console.log(data.data);
+    //  console.log('')(data.data);
     return data?.data;
   } catch (err: any) {
     handleOpenArchivoAnexo!(false);

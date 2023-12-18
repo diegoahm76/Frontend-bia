@@ -71,7 +71,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
     }
 
     const guardar_mantenimiento: () => void = () => {
-        console.log('Estado actual del guardar: ',accion_guardar);
+        //  console.log('')('Estado actual del guardar: ',accion_guardar);
         set_accion_guardar(true);
         validar_formulario();
         setTimeout(() => { set_accion_guardar(false); }, 500);

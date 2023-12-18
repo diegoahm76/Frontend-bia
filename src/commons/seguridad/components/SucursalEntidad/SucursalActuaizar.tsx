@@ -106,7 +106,7 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
       })
       
       .then(async (response) => {
-        console.log(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
+        //  console.log('')(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         control_success(isediting ? "Sucursal actualizada exitosamente" : "Sucursal creada exitosamente");
         setform_values(initial_state);
         setselected_id(null);

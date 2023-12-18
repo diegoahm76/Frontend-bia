@@ -28,7 +28,7 @@ export const OrgAnteriorScreen = (): JSX.Element => {
 */
   //* ----- Onsubmit function -----
   const onSubmit = (data?: any): void => {
-    console.log(data);
+    //  console.log('')(data);
   };
 
   if (!organigrama_anterior?.descripcion) {

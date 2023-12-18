@@ -23,7 +23,7 @@ export function CierreSolicitudScreen(): JSX.Element {
     reset_traslado(current_transfer);
   }, []);
   const on_submit = (data: IObjTransfer): void => {
-    console.log(data.fecha_test);
+    //  console.log('')(data.fecha_test);
     if (data.fecha_test !== null && data.fecha_test !== undefined) {
       const fecha_start = new Date(data.fecha_test[0] ?? ''); // Obtén el valor de fecha_start del objeto enviado por el formulario
       const year_start = fecha_start.getFullYear(); // Obtén el año
@@ -70,7 +70,7 @@ export function CierreSolicitudScreen(): JSX.Element {
         .padStart(2, '0')} ${hours.toString().padStart(2, '0')}:${minutes
         .toString()
         .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      console.log(formatted_date_range, formatted_date);
+      //  console.log('')(formatted_date_range, formatted_date);
     }
   };
   return (

@@ -345,7 +345,7 @@ export const EncabezadoCrear: React.FC = () => {
 
 
 
-        console.log('Encuesta actualizada exitosamente:', response.data);
+        //  console.log('')('Encuesta actualizada exitosamente:', response.data);
         control_success("Encuesta actualizada con éxito");
         setItemYaUsado(false);
         handleClear();
@@ -356,7 +356,7 @@ export const EncabezadoCrear: React.FC = () => {
           ...formData,
           preguntas: tempQuestions
         });
-        console.log('Encuesta creada exitosamente:', response.data);
+        //  console.log('')('Encuesta creada exitosamente:', response.data);
         control_success("Encuesta creada con éxito");
         setItemYaUsado(false)
         handleClear();

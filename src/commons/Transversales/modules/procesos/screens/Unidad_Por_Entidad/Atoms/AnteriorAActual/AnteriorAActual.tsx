@@ -108,8 +108,8 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                 -success - booleano que me indica si la consulta fue exitosa o no
                 -detail - mensaje de error en caso de que la consulta no haya sido exitosa
               */
-              // console.log('data tabla temporal', informacionTablaTemporal);
-              /* console.log(
+              // //  console.log('')('data tabla temporal', informacionTablaTemporal);
+              /* //  console.log('')(
                 'personas sin actualizar organigrama anterior',
                 personasSinActualizar
               ); */
@@ -117,7 +117,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
               // ? se deben hacer un merge de los datos de la tabla temporal y de la lista de personas sin actualizar, eliminando los elemenetos repetidos (deben prevalecer los de la tabla temporal) en el caso de que se repitan los datosen ambas listas
               void getUnidadesOrganizacionalesOrganigramaActual().then(
                 (unidadesOrganizacionalesOrgActual) => {
-                  // console.log(unidadesOrganizacionalesOrgActual);
+                  // //  console.log('')(unidadesOrganizacionalesOrgActual);
                   const arraySinRepetidos = [
                     ...informacionTablaTemporal?.data,
                     ...personasSinActualizar?.data
@@ -125,7 +125,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                   const elementosNoRepetidos =
                     eliminarObjetosDuplicadosPorId(arraySinRepetidos || []);
 
-                  // console.log('noooo repetidossss0', elementosNoRepetidos)
+                  // //  console.log('')('noooo repetidossss0', elementosNoRepetidos)
 
                   if (elementosNoRepetidos.length === 0) {
                     void Swal.fire({
@@ -156,7 +156,7 @@ export const AnteriorAActual: FC = (): JSX.Element => {
                           unidadesOrganizacionalesOrgActual?.data
                       };
                     }) || [];
-                    // console.log(dataMixed);
+                    // //  console.log('')(dataMixed);
 
                     dispatch(setGridAnteriorAActual(dataMixed));
                   }
@@ -165,8 +165,8 @@ export const AnteriorAActual: FC = (): JSX.Element => {
             }
           );
         });
-        // console.log('info organigrama anterior', infoOrganigramaAnterior);
-        // console.log('INFO ORGANIGRAMA ACTUAL', infoOrganigramaActual);
+        // //  console.log('')('info organigrama anterior', infoOrganigramaAnterior);
+        // //  console.log('')('INFO ORGANIGRAMA ACTUAL', infoOrganigramaActual);
       });
     });
   }, []);

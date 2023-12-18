@@ -57,7 +57,7 @@ export const useprogramaHook = (): any => {
 
   const onsubmit_programa = handleSubmit_programa(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_plan = id_plan;
       set_is_saving_programa(true);
       await post_programa(data as IProgramas);
@@ -78,7 +78,7 @@ export const useprogramaHook = (): any => {
 
   const onsubmit_editar = handleSubmit_programa(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_programa(true);
       await put_programa((id_programa as number) ?? 0, data as IProgramas);
       control_success('Se actualizó correctamente');

@@ -202,7 +202,7 @@ const use_editar_organigrama = () => {
     id_unidad_organizacional: number,
     params: any
   ): void => {
-    console.log(params.row, 'params.row');
+    //  console.log('')(params.row, 'params.row');
     const newUnidadesActualizaciónActivo = unity_organigram.map((unidad: any) =>
       unidad.id_unidad_organizacional === id_unidad_organizacional
         ? { ...unidad, activo: event.target.checked }
@@ -520,7 +520,7 @@ const use_editar_organigrama = () => {
                     : 'Eliminar ítem'
                 }
                 onClick={() => {
-                  console.log(params.row);
+                  //  console.log('')(params.row);
 
                   params.row.item_usado
                     ? control_warning(
@@ -713,7 +713,7 @@ const use_editar_organigrama = () => {
           }))
         );
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();
@@ -758,7 +758,7 @@ const use_editar_organigrama = () => {
 
   // Vuelve a los valores iniciales
   const clean_unitys = (): void => {
-    // console.log('datos unidades' , datos_unidades);
+    // //  console.log('')('datos unidades' , datos_unidades);
     reset_unidades({
       codigoExtra: '',
       activo: true,
@@ -791,7 +791,7 @@ const use_editar_organigrama = () => {
         isDisabled: false
       }
     });
-    // console.log('clean_unitys');
+    // //  console.log('')('clean_unitys');
     set_title_unidades('Agregar');
   };
 
@@ -823,7 +823,7 @@ const use_editar_organigrama = () => {
       id_unidad_organizacional
     };
 
-    console.log(codigoExtra, 'codigoExtra');
+    //  console.log('')(codigoExtra, 'codigoExtra');
 
     /* const newUnidades = unity_organigram.map((unidad: any) =>
       unidad.id_unidad_organizacional === id_unidad_organizacional
@@ -883,7 +883,7 @@ const use_editar_organigrama = () => {
       cod_unidad_org_padre: nivel_padre?.value ?? null,
       activo: true
     };
-    console.log(newUnidad, 'newUnidad');
+    //  console.log('')(newUnidad, 'newUnidad');
 
     const newUnidades = [...unity_organigram, newUnidad];
 
@@ -924,7 +924,7 @@ const use_editar_organigrama = () => {
       cod_unidad_org_padre: nivel_padre?.value ?? null,
       activo: true
     };
-    console.log(newUnidad, 'newUnidad');
+    //  console.log('')(newUnidad, 'newUnidad');
 
     const newUnidades = [...unity_organigram, newUnidad];
 
@@ -943,7 +943,7 @@ const use_editar_organigrama = () => {
   //! EDITAR UNIDAD - PROPIEDAD ACTIVO - ORGANIGRAMA ACTUAL (UNIDADES ORGANIZACIONALES SIN AGRUPACION DOCUMENTAL)
 
   const edit_prop_activo_unidad_org = (newObject: any) => {
-    console.log(newObject, 'newObject');
+    //  console.log('')(newObject, 'newObject');
 
     dispatch(
       update_unitys_service(
@@ -957,7 +957,7 @@ const use_editar_organigrama = () => {
   };
 
   const on_grid_ready = (params: any): void => {
-    // console.log(params, 'params');
+    // //  console.log('')(params, 'params');
   };
 
   // Funcion para eliminar un nivel

@@ -105,7 +105,7 @@ export const AdminUsers: React.FC = () => {
         <>
           <form
             onSubmit={(e) => {
-              console.log(watch_admin_user());
+              //  console.log('')(watch_admin_user());
               void on_submit(e);
             }}
           >
@@ -561,7 +561,7 @@ export const AdminUsers: React.FC = () => {
                           {...register_admin_user('sucursal_defecto')}
                           value={watch_exe.sucursal_defecto}
                           onChange={(selectedOption) => {
-                            //console.log(selectedOption);
+                            ////  console.log('')(selectedOption);
                             set_value_admin_user(
                               'sucursal_defecto',
                               selectedOption

@@ -68,11 +68,11 @@ export const get_nurseries_service = (): any => {
       const { data } = await api.get(
         'conservacion/viveros/get-by-nombre-municipio'
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nursery_service');
+      //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -93,7 +93,7 @@ export const add_nursery_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error.response.data);
+      //  console.log('')(error.response.data);
       return error as AxiosError;
     }
   };
@@ -118,7 +118,7 @@ export const edit_nursery_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error.response.data);
+      //  console.log('')(error.response.data);
       return error as AxiosError;
     }
   };
@@ -134,7 +134,7 @@ export const delete_nursery_service: any = (id: string | number) => {
 
       return data;
     } catch (error: any) {
-      console.log('delete nursery service');
+      //  console.log('')('delete nursery service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -153,7 +153,7 @@ export const activate_deactivate_nursery_service: any = (
 
       return data;
     } catch (error: any) {
-      console.log('activate-deactivate nursery service');
+      //  console.log('')('activate-deactivate nursery service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -170,7 +170,7 @@ export const get_nursery_service: any = (id: string | number) => {
         return data;
       }
     } catch (error: any) {
-      console.log('get_nursery_service');
+      //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -192,7 +192,7 @@ export const get_historico_viverista_service: any = (id: string | number) => {
         return data;
       }
     } catch (error: any) {
-      console.log('get_historico_viverista_service');
+      //  console.log('')('get_historico_viverista_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -209,7 +209,7 @@ export const get_nurseries_closing_service = (): any => {
       dispatch(get_nurseries_closing(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nursery_service');
+      //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -227,7 +227,7 @@ export const get_nurseries_quarantine_service = (): any => {
       dispatch(get_nurseries_quarantine(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nursery_service');
+      //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -243,7 +243,7 @@ export const closing_nursery_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(nursery);
+      //  console.log('')(nursery);
       const { data } = await api.put(
         `conservacion/viveros/abrir-cerrar/${id}/`,
         nursery
@@ -259,7 +259,7 @@ export const closing_nursery_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error);
+      //  console.log('')(error);
       return error as AxiosError;
     }
   };
@@ -289,7 +289,7 @@ export const quarantine_nursery_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error);
+      //  console.log('')(error);
       return error as AxiosError;
     }
   };
@@ -302,7 +302,7 @@ export const get_items_despacho_service = (id: string | number): any => {
       const { data } = await api.get(
         `conservacion/despachos/items-despacho/get-by-id/${id ?? ''}/`
       );
-      // console.log(data);
+      // //  console.log('')(data);
       if (data.data.length > 0) {
         dispatch(get_items_despacho(data.data));
       } else {
@@ -310,7 +310,7 @@ export const get_items_despacho_service = (id: string | number): any => {
       }
       return data;
     } catch (error: any) {
-      // console.log('get_items_despacho_service');
+      // //  console.log('')('get_items_despacho_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -332,7 +332,7 @@ export const get_items_distribuidos_service = (id: string | number): any => {
 
       return data;
     } catch (error: any) {
-      // console.log('get_items_despacho_service');
+      // //  console.log('')('get_items_despacho_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -361,8 +361,8 @@ export const save_items_distribuidos_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('save_items_despacho_service');
-      console.log(error);
+      //  console.log('')('save_items_despacho_service');
+      //  console.log('')(error);
       control_error(error);
       return error as AxiosError;
     }
@@ -392,8 +392,8 @@ export const confirmar_items_distribuidos_service = (
       }
       return data;
     } catch (error: any) {
-      // console.log('save_items_despacho_service');
-      console.log(error);
+      // //  console.log('')('save_items_despacho_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -428,7 +428,7 @@ export const get_nuevos_viveristas_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_nuevos_viveristas_service');
+      //  console.log('')('get_nuevos_viveristas_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -445,7 +445,7 @@ export const get_viverista_document_service = (
       const { data } = await api.get(
         `conservacion/viveros/get-persona-viverista-nuevo-by-numero-documento/?tipo_documento=${type}&numero_documento=${document}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         if (data.data.length > 0) {
           dispatch(set_current_nuevo_viverista(data.data[0]));
@@ -458,7 +458,7 @@ export const get_viverista_document_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -472,7 +472,7 @@ export const get_viverista_id_service = (id: number): any => {
       const { data } = await api.get(
         `conservacion/viveros/viverista-actual-by-id-vivero/${id}/`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_current_viverista(data.data));
       } else {
@@ -481,7 +481,7 @@ export const get_viverista_id_service = (id: number): any => {
       return data;
     } catch (error: any) {
       dispatch(set_current_viverista(initial_state_current_viverista_actual));
-      console.log('get_viverista_id_service');
+      //  console.log('')('get_viverista_id_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -497,7 +497,7 @@ export const get_viveros_viverista_service = (): any => {
       dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_viveros_viverista_service');
+      //  console.log('')('get_viveros_viverista_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -513,7 +513,7 @@ export const asignar_viverista_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(datos);
+      //  console.log('')(datos);
       const { data } = await api.post(
         `conservacion/viveros/asignacion-viverista/${id_vivero}/`,
         datos
@@ -560,7 +560,7 @@ export const get_nurseries_baja_service = (): any => {
       dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nurseries_baja_service');
+      //  console.log('')('get_nurseries_baja_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -574,7 +574,7 @@ export const get_bajas_service = (nro: number): any => {
       const { data } = await api.get(
         `conservacion/bajas/get-bajas-by-filter/?nro_baja=${nro ?? ''}`
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_genera_bajas(data.data));
       if ('data' in data) {
         if (data.data.length > 0) {
@@ -585,7 +585,7 @@ export const get_bajas_service = (nro: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_bajas_service');
+      //  console.log('')('get_bajas_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -599,7 +599,7 @@ export const get_bajas_nro_service = (nro: number): any => {
       const { data } = await api.get(
         `conservacion/bajas/get-baja-by-numero-baja/${nro}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_current_genera_baja(data.data));
         control_success('Se selecciono baja');
@@ -608,7 +608,7 @@ export const get_bajas_nro_service = (nro: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_bajas_nro_service');
+      //  console.log('')('get_bajas_nro_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -623,7 +623,7 @@ export const add_baja_service = (baja: any): any => {
         'conservacion/bajas/crear-bajas-vivero/',
         baja
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.succes) {
         control_success(data.detail);
@@ -632,8 +632,8 @@ export const add_baja_service = (baja: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_baja_service');
-      console.log(error);
+      //  console.log('')('add_baja_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -648,7 +648,7 @@ export const edit_baja_service = (baja: any): any => {
         'conservacion/bajas/actualizar-bajas-vivero/',
         baja
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.succes) {
         control_success(data.detail);
@@ -657,8 +657,8 @@ export const edit_baja_service = (baja: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('edit_baja_service');
-      console.log(error);
+      //  console.log('')('edit_baja_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -681,7 +681,7 @@ export const annul_baja_service = (id: number, baja: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('annul_baja_service');
+      //  console.log('')('annul_baja_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -706,7 +706,7 @@ export const get_bienes_service = (
           tipo_elemento ?? ''
         }`
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_insumos(data.data));
       if (data.data.length > 0) {
         control_success('Se encontrarón bienes');
@@ -715,7 +715,7 @@ export const get_bienes_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -738,7 +738,7 @@ export const get_bienes_aux_service = (id_vivero: string | number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_bienes_aux_service');
+      //  console.log('')('get_bienes_aux_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -752,7 +752,7 @@ export const get_bien_code_service = (id_vivero: number, code: string): any => {
       const { data } = await api.get(
         `conservacion/bajas/get-bienes-bajas/${code}/${id_vivero}/`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_current_insumo(data.data));
       } else {
@@ -760,7 +760,7 @@ export const get_bien_code_service = (id_vivero: number, code: string): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_bien_code_service');
+      //  console.log('')('get_bien_code_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -774,7 +774,7 @@ export const get_bien_baja_id_service = (id: number): any => {
       const { data } = await api.get(
         `conservacion/bajas/get-items-by-baja/${id}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_bienes_bajas(data.data));
       } else {
@@ -782,7 +782,7 @@ export const get_bien_baja_id_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_bien_baja_id_service');
+      //  console.log('')('get_bien_baja_id_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -812,7 +812,7 @@ export const get_person_id_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -830,7 +830,7 @@ export const get_good_code_baja_service = (
         `conservacion/bajas/get-bienes-bajas/${code}/${id_vivero}/`
       );
 
-      // console.log(data);
+      // //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_current_insumo(data.data));
         control_success('Se selecciono el bien');
@@ -840,7 +840,7 @@ export const get_good_code_baja_service = (
 
       return data;
     } catch (error: any) {
-      console.log('get_good_code_baja_service');
+      //  console.log('')('get_good_code_baja_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

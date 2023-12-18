@@ -69,7 +69,7 @@ export const useBancosHook = (): any => {
 
   const onsubmit_banco = handleSubmit_banco(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       // data.id_indicador = id_indicador;
       set_is_saving_banco(true);
       await post_banco(data as IBanco);
@@ -90,7 +90,7 @@ export const useBancosHook = (): any => {
 
   const onsubmit_editar = handleSubmit_banco(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_banco(true);
       // data.id_indicador = id_indicador;
       await put_banco((id_banco as number) ?? 0, data as IBanco);

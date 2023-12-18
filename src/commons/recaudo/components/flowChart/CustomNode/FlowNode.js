@@ -11,7 +11,7 @@ import './styles.css';
 export const FlowNode = ({ data, isConnectable }) => {
   const [subetapas, setSubetapas] = useState([]);
   // const onChange = useCallback((evt) => {
-  //   console.log(evt.target.value);
+  //   //  console.log('')(evt.target.value);
   // }, []);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const FlowNode = ({ data, isConnectable }) => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 

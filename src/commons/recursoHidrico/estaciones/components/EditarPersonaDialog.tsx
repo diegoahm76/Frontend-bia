@@ -68,7 +68,7 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       control_success('La persona se actualizó correctamente')
       persona(estaciones_options.map((estacion: { value: number; }) => estacion.value))
       reset();
-      // console.log("Id estacion", estaciones_options.map((estacion: { value: number; }) => estacion.value))
+      // //  console.log('')("Id estacion", estaciones_options.map((estacion: { value: number; }) => estacion.value))
     } catch (error: any) {
       control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }

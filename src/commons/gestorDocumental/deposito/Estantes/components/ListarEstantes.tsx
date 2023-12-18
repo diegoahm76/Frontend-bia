@@ -59,7 +59,7 @@ export const ListarEstantes: React.FC = () => {
                 })
               );
               set_id_estante(params.row.id_estante_deposito);
-              console.log(params.row, 'params.row');
+              //  console.log('')(params.row, 'params.row');
               dispatch(set_current_estantes(params.row));
             }}
           >

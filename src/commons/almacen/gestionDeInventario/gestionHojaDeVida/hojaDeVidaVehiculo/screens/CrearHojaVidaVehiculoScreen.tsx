@@ -32,7 +32,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
 
   useEffect(() => {
     reset_vehicle(current_cv_vehicle);
-    console.log(current_cv_vehicle)
+    //  console.log('')(current_cv_vehicle)
   }, [current_cv_vehicle]);
 
   useEffect(() => {

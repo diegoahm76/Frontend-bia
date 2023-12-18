@@ -33,7 +33,7 @@ export const FileDocs = ({ multiple }: Iprops) => {
   };
 
   useEffect(() => {
-    console.log(archivos, 'archivos');
+    //  console.log('')(archivos, 'archivos');
   }, [archivos]);
 
   return (
