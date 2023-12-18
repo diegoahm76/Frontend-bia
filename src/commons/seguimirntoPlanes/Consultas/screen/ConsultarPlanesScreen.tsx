@@ -8,25 +8,6 @@ import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 export const ConsultarPlanesScreen: React.FC = () => {
   return (
     <>
-      <Grid
-        container
-        spacing={2}
-        m={2}
-        p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Title title="Consultar Planes" />
-        </Grid>
-      </Grid>
       <ListarPlanes />
       <Grid
         container

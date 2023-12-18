@@ -3,27 +3,55 @@
 
 import React, { createContext } from 'react';
 import { control_error } from '../../../../helpers';
-import { get_consulta_plan } from '../services/services';
+import { get_consulta_plan, get_planes } from '../services/services';
 import { IPlan } from '../types/types';
+import type { IPlanes } from '../../types/types';
+import { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
 
+  // selected
+  planes_selected: ValueProps[];
+  set_planes_selected: (value: ValueProps[]) => void;
   // * rows
   rows_planes: IPlan[];
   set_rows_planes: (value: IPlan[]) => void;
 
   // * info
 
+  // loader
+  loading: boolean;
+  set_loading: (value: boolean) => void;
+
   // * fetch
 
   fetch_data_planes: () => Promise<void>;
+  fetch_data_planes_selected: () => Promise<void>;
 }
 
 export const DataContextConsularPlanes = createContext<UserContext>({
+  // * id
+  id_plan: null,
+  set_id_plan: () => {},
+  // selected
+  planes_selected: [],
+  set_planes_selected: () => {},
+  // * rows
   rows_planes: [],
   set_rows_planes: () => {},
+
+  // loader
+  loading: false,
+  set_loading: () => {},
+
+  // * info
+
+  // * fetch
   fetch_data_planes: async () => {},
+  fetch_data_planes_selected: async () => {},
 });
 
 export const UserProviderConsultarPlanes = ({
@@ -36,7 +64,13 @@ export const UserProviderConsultarPlanes = ({
 
   // * id
 
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+
   // * select
+
+  const [planes_selected, set_planes_selected] = React.useState<ValueProps[]>(
+    []
+  );
 
   // * rows
 
@@ -44,11 +78,16 @@ export const UserProviderConsultarPlanes = ({
 
   // * info
 
+  // loader
+
+  const [loading, set_loading] = React.useState<boolean>(false);
+
   // * fetch
   const fetch_data_planes = async (): Promise<void> => {
     try {
+      set_rows_planes([]);
       console.log('fetch_data_planes');
-      const response = await get_consulta_plan();
+      const response = await get_consulta_plan((id_plan as number) ?? 0);
       if (response?.length > 0) {
         const data_planes: IPlan[] | any = response.map((item: IPlan) => ({
           id_plan: item.id_plan,
@@ -72,10 +111,36 @@ export const UserProviderConsultarPlanes = ({
       );
     }
   };
+
+  const fetch_data_planes_selected = async (): Promise<void> => {
+    try {
+      set_loading(true);
+      const response = await get_planes();
+      if (response?.length > 0) {
+        const data_plan: ValueProps[] | any = response.map((item: IPlanes) => ({
+          value: item.id_plan,
+          label: item.nombre_plan,
+        }));
+        set_planes_selected(data_plan);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    } finally {
+      set_loading(false);
+    }
+  };
+
   const value: UserContext = {
     // * id
+    id_plan,
+    set_id_plan,
 
     // * select
+
+    planes_selected,
+    set_planes_selected,
 
     // * rows
     rows_planes,
@@ -83,8 +148,14 @@ export const UserProviderConsultarPlanes = ({
 
     // * info
 
+    // loader
+
+    loading,
+    set_loading,
+
     // * fetch
     fetch_data_planes,
+    fetch_data_planes_selected,
   };
 
   return (
