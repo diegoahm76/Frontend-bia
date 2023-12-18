@@ -78,4 +78,16 @@ export const get_municipios: any = (departamento: number) => {
     }
   };
 };
+// Obtener información de persona titular
+export const get_info_persona: any = (persona_id: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`tramites/opa/tramites/persona-titular/get-info/${persona_id}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 

@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { SeccionGeneral } from "./SeccionGeneral";
+import { obtener_usuario_logueado } from "../../Expedientes/aperturaExpedientes/thunks/aperturaExpedientes";
+import { useAppDispatch } from "../../../../hooks";
+import { get_info_persona } from "../thunks/TramitesOServicios";
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
@@ -14,11 +17,22 @@ const class_css = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TramitesOServiciosScreen: React.FC = () => {
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const [expediente, set_expediente] = useState<any>(null);
-    const [documento, set_documento] = useState<any>(null);
+    const [usuario, set_usuario] = useState<any>(null);
     const [limpiar, set_limpiar] = useState<boolean>(false);
 
+    useEffect(() => {
+        obtener_usuario_logueado_fc();
+    }, []);
+
+    const obtener_usuario_logueado_fc: () => void = () => {
+        dispatch(obtener_usuario_logueado()).then((response: any) => {
+            dispatch(get_info_persona(response.id_persona)).then((user: any) => {
+                set_usuario(user.data);
+            })
+        })
+    }
     useEffect(() => {
         if (limpiar) {
         }
@@ -38,7 +52,7 @@ export const TramitesOServiciosScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <SeccionGeneral></SeccionGeneral>
+                <SeccionGeneral usuario={usuario}></SeccionGeneral>
             </Grid>
             <Grid container>
                 <Grid item xs={12} sm={12}>

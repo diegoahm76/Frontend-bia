@@ -16,10 +16,12 @@ const class_css = {
     mb: '20px',
     boxShadow: '0px 3px 6px #042F4A26',
 }
-const steps = ['Tipo de trámite', 'Documentos anexos del trámite - OPAS', 'Resumen del trámite'];
+interface IProps {
+    usuario: any,
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DocumentosAnexos: React.FC = () => {
+export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
     const [descripcion, set_descripcion] = useState<any>("");
     const [error_descripcion, set_error_descripcion] = useState<any>("");
     const [error_file_name, set_error_file_name] = useState<any>("");

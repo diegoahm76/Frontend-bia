@@ -17,13 +17,13 @@ const class_css = {
     mb: '20px',
     boxShadow: '0px 3px 6px #042F4A26',
 }
+interface IProps {
+    usuario: any,
+}
 const steps = ['Tipo de trámite', 'Documentos anexos del trámite - OPAS', 'Resumen del trámite','Radicación del trámite'];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SeccionGeneral: React.FC = () => {
-    const navigate = useNavigate();
-    const [expediente, set_expediente] = useState<any>(null);
-    const [documento, set_documento] = useState<any>(null);
+export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     const [limpiar, set_limpiar] = useState<boolean>(false);
     // Inicia Configuración Stepper
     const [activeStep, setActiveStep] = React.useState(0);
@@ -68,10 +68,6 @@ export const SeccionGeneral: React.FC = () => {
 
     const limpiar_formulario = (): void => {
         set_limpiar(true);
-    }
-
-    const salir_expediente: () => void = () => {
-        navigate('/home');
     }
 
     return (
@@ -143,17 +139,22 @@ export const SeccionGeneral: React.FC = () => {
                                     <React.Fragment>
                                         {activeStep === 0 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <TipoTramite></TipoTramite>
+                                            <TipoTramite usuario={props.usuario}></TipoTramite>
                                             </Grid>
                                         </Box>}
                                         {activeStep === 1 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <DocumentosAnexos></DocumentosAnexos>
+                                            <DocumentosAnexos usuario={props.usuario}></DocumentosAnexos>
                                             </Grid>
                                         </Box>}
                                         {activeStep === 2 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <ResumenTramite></ResumenTramite>
+                                            <ResumenTramite usuario={props.usuario}></ResumenTramite>
+                                            </Grid>
+                                        </Box>}
+                                        {activeStep === 3 && <Box>
+                                            <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                            <ResumenTramite usuario={props.usuario}></ResumenTramite>
                                             </Grid>
                                         </Box>}
                                         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>

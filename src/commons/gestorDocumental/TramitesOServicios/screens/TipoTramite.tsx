@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, IconButton, Tooltip } from "@mui/material";
+import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, IconButton, Tooltip, Checkbox } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
@@ -8,9 +8,11 @@ import { useAppDispatch } from "../../../../hooks";
 import { DialogGeneradorDeDirecciones } from "../../../../components/DialogGeneradorDeDirecciones";
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { Geolocalizacion } from "./geolocalizacionScreen";
-
+interface IProps {
+    usuario: any,
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TipoTramite: React.FC = () => {
+export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -28,6 +30,7 @@ export const TipoTramite: React.FC = () => {
     const [coordenada_x, set_coordenada_x] = useState<any>("");
     const [coordenada_y, set_coordenada_y] = useState<any>("");
     const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
+    const [usar_direccion, set_usar_direccion] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
 
     useEffect(() => {
@@ -58,6 +61,31 @@ export const TipoTramite: React.FC = () => {
             set_lt_tramites_servicios(response.data);
         })
     }
+
+    const cambio_usar_direccion = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        set_usar_direccion(e.target.checked);
+    };
+
+    useEffect(() => {
+        if (usar_direccion) {
+            set_departamento(props.usuario.cod_departamento_notificacion);
+            get_municipios_fc(parseInt(props.usuario.cod_departamento_notificacion));
+            set_municipio(props.usuario.cod_municipio_notificacion_nal);
+            set_direccion(props.usuario.direccion_notificaciones);
+            set_descripcion(props.usuario.direccion_notificacion_referencia);
+            if(props.usuario.ubicacion_georeferenciada !== null)
+                set_coordenada_x(props.usuario.ubicacion_georeferenciada);
+            if(props.usuario.ubicacion_georeferenciada_lon !== null)
+                set_coordenada_y(props.usuario.ubicacion_georeferenciada_lon);
+        }else{
+            set_departamento("");
+            set_municipio("");
+            set_direccion("");
+            set_descripcion("");
+            set_coordenada_x("");
+            set_coordenada_y(""); 
+        }
+    }, [usar_direccion]);
 
     const cambio_departamento: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_departamento(e.target.value);
@@ -130,6 +158,10 @@ export const TipoTramite: React.FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
+                <Grid item xs={12} sm={12}>
+                                    <span style={{marginTop: '9px'}} >{"Usar la misma dirección del titular "}</span>
+                                    <Checkbox checked={usar_direccion} onChange={cambio_usar_direccion} inputProps={{ 'aria-label': 'controlled' }}/>
+                            </Grid>
                 <Grid item xs={12} sm={6}>
                     <FormControl size='small' fullWidth>
                         <InputLabel>Departamento</InputLabel>
