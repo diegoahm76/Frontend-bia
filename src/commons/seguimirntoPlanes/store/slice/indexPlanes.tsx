@@ -23,6 +23,7 @@ import type {
   IUnspsc,
   ISeguimientoPAI,
 } from '../../types/types';
+import { IPlan } from '../../Consultas/types/types';
 
 export const initial_state_planes: IPlanes = {
   id_plan: null,
@@ -105,13 +106,16 @@ export const initial_state_indicadores: Indicadores = {
   nombre_actividad: '',
   nombre_plan: '',
   nombre_indicador: '',
+  nombre_proyecto: '',
   linea_base: '',
   medida: '',
+  tipo_indicador: '',
   id_medicion: null,
   id_tipo: null,
   id_producto: null,
   id_actividad: null,
   id_plan: null,
+  id_proyecto: null,
 };
 
 export const initial_state_meta: IMetaIndicador = {
@@ -121,6 +125,15 @@ export const initial_state_meta: IMetaIndicador = {
   unidad_meta: '',
   porcentaje_meta: null,
   valor_meta: '',
+  cumplio: false,
+  fecha_creacion_meta: '',
+  agno_1: null,
+  agno_2: null,
+  agno_3: null,
+  agno_4: null,
+  valor_ejecutado_compromiso: null,
+  valor_ejecutado_obligado: null,
+  avance_fisico: null,
   id_indicador: null,
 };
 
@@ -129,6 +142,16 @@ export const initial_state_rubro: IRubro = {
   cuenta: '',
   cod_pre: '',
   valcuenta: '',
+  nombre_programa: '',
+  nombre_proyecto: '',
+  nombre_producto: '',
+  nombre_actividad: '',
+  nombre_indicador: '',
+  id_programa: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+  id_indicador: null,
 };
 
 export const initial_state_subprogramas: ISubprogramas = {
@@ -143,6 +166,9 @@ export const initial_state_fuentes_fianciacion: IFuentesFinanciacion = {
   nombre_fuente: '',
   nombre_indicador: '',
   nombre_cuenca: '',
+  nombre_proyecto: '',
+  nombre_actividad: '',
+  nombre_producto: '',
   vano_1: null,
   vano_2: null,
   vano_3: null,
@@ -150,6 +176,9 @@ export const initial_state_fuentes_fianciacion: IFuentesFinanciacion = {
   valor_total: null,
   id_indicador: null,
   id_cuenca: null,
+  id_proyecto: null,
+  id_actividad: null,
+  id_producto: null,
 };
 
 export const initial_state_detalle_inversion: IDetalleCuentas = {
@@ -275,6 +304,7 @@ export const mode_paa_codigos: IMode = {
 
 export const initial_state_segui_pai: ISeguimientoPAI = {
   id_seguimiento_pai: null,
+  nombre_programa: '',
   nombre_proyecto: '',
   nombre_producto: '',
   nombre_actividad: '',
@@ -291,6 +321,7 @@ export const initial_state_segui_pai: ISeguimientoPAI = {
   donde: '',
   resultado: '',
   participacion: '',
+  adelanto: '',
   beneficiarios: '',
   compromisos: '',
   contratros: '',
@@ -300,6 +331,21 @@ export const initial_state_segui_pai: ISeguimientoPAI = {
   id_actividad: null,
   id_indicador: null,
   id_meta: null,
+  fecha_creacion: '',
+  id_programa: null,
+};
+
+export const initial_state_consulta_plan: IPlan = {
+  id_plan: null,
+  objetivos: [],
+  ejes_estractegicos: [],
+  programas: [],
+  nombre_plan: '',
+  sigla_plan: '',
+  tipo_plan: '',
+  agno_inicio: null,
+  agno_fin: null,
+  estado_vigencia: false,
 };
 
 export const initial_state: IPlanesIndex = {
@@ -325,6 +371,7 @@ export const initial_state: IPlanesIndex = {
   paa_codigos: initial_state_paa_codigos,
   mode_paa_codigos: mode_paa_codigos,
   seguimiento_pai: initial_state_segui_pai,
+  consulta_plan: initial_state_consulta_plan,
 };
 
 export const planes_slice = createSlice({
@@ -459,6 +506,12 @@ export const planes_slice = createSlice({
     ) => {
       state.seguimiento_pai = action.payload;
     },
+    set_current_consulta_plan: (
+      state: IPlanesIndex,
+      action: PayloadAction<IPlan>
+    ) => {
+      state.consulta_plan = action.payload;
+    },
   },
 });
 
@@ -486,4 +539,5 @@ export const {
   set_current_paa_codigos,
   set_current_mode_paa_codigos,
   set_current_seguimiento_pai,
+  set_current_consulta_plan,
 } = planes_slice.actions;

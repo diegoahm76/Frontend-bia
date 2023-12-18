@@ -21,11 +21,20 @@ export const useRubrosHook = (): any => {
       cod_pre: '',
       cuenta: '',
       valcuenta: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
+      nombre_indicador: '',
+      id_programa: 0,
+      id_proyecto: 0,
+      id_producto: 0,
+      id_actividad: 0,
+      id_indicador: 0,
     },
   });
 
   const data_watch_rubro = watch_rubro();
-
 
   // limpiar formulario
   const limpiar_formulario_rubro = async () => {
@@ -33,6 +42,16 @@ export const useRubrosHook = (): any => {
       cod_pre: '',
       cuenta: '',
       valcuenta: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
+      nombre_indicador: '',
+      id_programa: 0,
+      id_proyecto: 0,
+      id_producto: 0,
+      id_actividad: 0,
+      id_indicador: 0,
     });
   };
 
