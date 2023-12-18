@@ -19,7 +19,7 @@ import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGr
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { columnsAtom } from './columnsAtom/columnsAtom';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
 import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
@@ -32,6 +32,7 @@ import { getMetadatosPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/
 import { getMetadatoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
 import { formatDate } from '../../../../../../utils/functions/formatDate';
 import { ModalDenuncia } from './components/ModalDenuncia';
+import { getInfoDenuncia } from '../../../toolkit/thunks/PqrsdfyComplementos/denuncia/getInfoDenuncia.service';
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
@@ -62,6 +63,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
     archivoAnexos,
     setArchivoAnexos,
   } = useContext(PanelVentanillaContext);
+
+  // ? useState declaration
+  const [infoDenuncia, setInfoDenuncia] = useState<any>(null);
 
   const colums = [
     ...columnsAtom,
@@ -234,12 +238,14 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                       }}
                       color="primary"
                       variant="outlined"
-                      onClick={() => {
+                      onClick={async () => {
                         handleGeneralLoading(true);
-                        /* navigate(
-                          '/app/gestor_documental/panel_ventanilla/denuncia/'
-                        );*/
-                        // ? deberá abrir el modal de la información de la denuncia, llamado el respectivo servicio,pero aún no se encuentra realizado
+                        const GET_DENUNCIA_INFO = await getInfoDenuncia(
+                          currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+                          handleGeneralLoading
+                        );
+                        console.log(GET_DENUNCIA_INFO);
+                        setInfoDenuncia(GET_DENUNCIA_INFO);
                       }}
                       startIcon={<InfoIcon />}
                     >
@@ -760,7 +766,10 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
       </Grid>
 
       {/* modal de la denuncia */}
-      <ModalDenuncia />
+      <ModalDenuncia
+        setInfoDenuncia={setInfoDenuncia}
+        infoDenuncia={infoDenuncia}
+      />
       {/* modal de la denuncia */}
     </>
   );

@@ -17,19 +17,8 @@ import { Title } from '../../../../../../../components';
 import { useContext, useEffect, useState } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
 
-export const ModalDenuncia = (): JSX.Element => {
-  const [infoDenuncia, setInfoDenuncia] = useState<any>(null);
-
-  useEffect(() => {
-    console.log('infoDenuncia', infoDenuncia);
-
-
-    return () => {
-      console.log('cleaned up');
-      setInfoDenuncia(null);
-    }
-  
-  });
+export const ModalDenuncia = (props: any): JSX.Element => {
+  const { infoDenuncia, setInfoDenuncia } = props;
 
   const { generalLoading, handleGeneralLoading } = useContext(
     ModalAndLoadingContext
@@ -67,7 +56,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   disabled
                   size="small"
                   variant="outlined"
-                  value={'Villavicencio' ?? 'N/A'}
+                  value={infoDenuncia?.municipio_localizacion_hecho ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 50 }}
                 />
@@ -81,7 +70,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   size="small"
                   variant="outlined"
                   //* se debe poner la condicional del reset
-                  value={'Urbana' ?? 'N/A'}
+                  value={infoDenuncia?.nombre_zona_localizacion ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -93,7 +82,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="Vereda o barrio de localización del hecho"
                   size="small"
                   variant="outlined"
-                  value={'Ciudad' ?? 'N/A'}
+                  value={infoDenuncia?.barrio_vereda_localizacion ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
@@ -105,7 +94,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="Dirección de localización del hecho"
                   size="small"
                   variant="outlined"
-                  value={'CRA 26 A # 4B - 67' ?? 'N/A'}
+                  value={infoDenuncia?.direccion_localizacion ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
@@ -129,7 +118,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="Recurso afectado"
                   size="small"
                   variant="outlined"
-                  value={'Suelo' ?? 'N/A'}
+                  value={infoDenuncia?.cod_recursos_fectados_presuntos ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
@@ -149,7 +138,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="¿Es otro recurso afectado? ¿Cuál?"
                   size="small"
                   variant="outlined"
-                  value={'NO' ?? 'N/A'}
+                  value={infoDenuncia?.otro_recurso_Afectado_cual ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 50 }}
                 />
@@ -170,7 +159,9 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="Nombre del presunto infractor"
                   size="small"
                   variant="outlined"
-                  value={'Pepe rojas' ?? 'N/A'}
+                  value={
+                    infoDenuncia?.nombre_completo_presunto_infractor ?? 'N/A'
+                  }
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
@@ -191,7 +182,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="Teléfono del presunto infractor"
                   size="small"
                   variant="outlined"
-                  value={'Pepe rojas' ?? 'N/A'}
+                  value={infoDenuncia?.telefono_presunto_infractor ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
@@ -214,7 +205,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="Dirección del presunto infractor"
                   size="small"
                   variant="outlined"
-                  value={'Urb x y z' ?? 'N/A'}
+                  value={infoDenuncia?.direccion_presunto_infractor ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
@@ -235,7 +226,9 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="Ya se ha presentado denuncia ante la autoridad competente"
                   size="small"
                   variant="outlined"
-                  value={'SI' ?? 'N/A'}
+                  value={
+                    infoDenuncia?.ya_habia_puesto_en_conocimiento ? 'SI' : 'NO'
+                  }
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
@@ -256,7 +249,7 @@ export const ModalDenuncia = (): JSX.Element => {
                   label="Ante qué autoridad"
                   size="small"
                   variant="outlined"
-                  value={'Polica NAL' ?? 'N/A'}
+                  value={infoDenuncia?.ante_que_autoridad_había_interpuesto ?? 'N/A'}
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
