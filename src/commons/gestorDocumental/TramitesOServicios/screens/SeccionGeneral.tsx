@@ -27,6 +27,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     const [limpiar, set_limpiar] = useState<boolean>(false);
     // Inicia Configuración Stepper
     const [activeStep, setActiveStep] = React.useState(0);
+    const [crear_tramite, set_crear_tramite] = React.useState<boolean>(false);
     const [completed, setCompleted] = React.useState<{ [k: number]: boolean; }>({});
     const totalSteps = () => {
         return steps.length;
@@ -54,6 +55,10 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
         const newCompleted = completed;
         newCompleted[activeStep] = true;
         setCompleted(newCompleted);
+        debugger
+        if(activeStep === 0){
+            set_crear_tramite(true);
+        }
         handleNext();
     };
     const handleReset = () => {
@@ -62,9 +67,10 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     };
     // Finaliza Configuración Stepper
     useEffect(() => {
-        if (limpiar) {
+        if (crear_tramite) {
+            console.log('Crear tramite');
         }
-    }, [limpiar]);
+    }, [crear_tramite]);
 
     const limpiar_formulario = (): void => {
         set_limpiar(true);
@@ -139,7 +145,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                                     <React.Fragment>
                                         {activeStep === 0 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <TipoTramite usuario={props.usuario}></TipoTramite>
+                                            <TipoTramite usuario={props.usuario} crear_tramite={crear_tramite}></TipoTramite>
                                             </Grid>
                                         </Box>}
                                         {activeStep === 1 && <Box>

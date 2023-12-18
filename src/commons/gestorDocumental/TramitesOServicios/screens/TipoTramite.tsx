@@ -3,18 +3,18 @@ import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextFi
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import { get_departamentos, get_municipios, tipos_tramites, tramites_servicios } from "../thunks/TramitesOServicios";
+import { create_tramite_servicio, get_departamentos, get_municipios, tipos_tramites, tramites_servicios } from "../thunks/TramitesOServicios";
 import { useAppDispatch } from "../../../../hooks";
 import { DialogGeneradorDeDirecciones } from "../../../../components/DialogGeneradorDeDirecciones";
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { Geolocalizacion } from "./geolocalizacionScreen";
 interface IProps {
     usuario: any,
+    crear_tramite: any,
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
     const [type_direction, set_type_direction] = useState('');
     const [lt_tipos_tramites, set_lt_tipos_tramites] = useState<any[]>([]);
@@ -22,6 +22,11 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     const [lt_departamentos, set_lt_departamentos] = useState<any[]>([]);
     const [lt_municipios, set_lt_municipios] = useState<any[]>([]);
     const [departamento, set_departamento] = useState<any>("");
+    const [error_departamento, set_error_departamento] = useState<boolean>(false);
+    const [error_municipio, set_error_municipio] = useState<boolean>(false);
+    const [error_tipo_tramite, set_error_tipo_tramite] = useState<boolean>(false);
+    const [error_tramite_servicio, set_error_tramite_servicio] = useState<boolean>(false);
+    const [error_direccion, set_error_direccion] = useState<boolean>(false);
     const [municipio, set_municipio] = useState<any>("");
     const [tipo_tramite, set_tipo_tramite] = useState<any>("");
     const [tramite_servicio, set_tramite_servicio] = useState<any>("");
@@ -117,6 +122,35 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     };
 
     useEffect(() => {
+        if (props.crear_tramite) {
+            const obj_create = {
+                "id_persona_titular": props.usuario.id_persona,
+                "id_persona_interpone": props.usuario.id_persona,
+                "id_permiso_ambiental": tipo_tramite,
+                "id_medio_solicitud": tramite_servicio,
+                "cod_municipio": municipio,
+                "direccion": direccion,
+                "descripcion_direccion": descripcion,
+                "coordenada_x": coordenada_x,
+                "coordenada_y": coordenada_y
+            }
+            if(validar_paso_uno())
+            dispatch(create_tramite_servicio(obj_create)).then((response: any) => {
+                set_lt_tramites_servicios(response.data);
+            }) 
+        }
+    }, [props.crear_tramite]);
+
+    const validar_paso_uno = (): boolean => {
+        set_error_departamento(departamento === '');
+        set_error_municipio(municipio === '');
+        set_error_tipo_tramite(tipo_tramite === '');
+        set_error_tramite_servicio(tramite_servicio === '');
+        set_error_direccion(direccion === '');
+        return !(departamento === '' || municipio === '' || tipo_tramite === '' || tramite_servicio === '' || direccion === '');
+    }
+
+    useEffect(() => {
         if (limpiar) {
         }
     }, [limpiar]);
@@ -125,7 +159,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
         <>
             <Grid item container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                    <FormControl size='small' fullWidth>
+                    <FormControl required size='small' fullWidth>
                         <InputLabel>Tipo de trámite</InputLabel>
                         <Select
                             label="Tipo de trámite"
@@ -142,7 +176,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <FormControl size='small' fullWidth>
+                    <FormControl required size='small' fullWidth>
                         <InputLabel>Trámites o servicios</InputLabel>
                         <Select
                             label="Trámites o servicios"
@@ -163,7 +197,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                                     <Checkbox checked={usar_direccion} onChange={cambio_usar_direccion} inputProps={{ 'aria-label': 'controlled' }}/>
                             </Grid>
                 <Grid item xs={12} sm={6}>
-                    <FormControl size='small' fullWidth>
+                    <FormControl required size='small' fullWidth>
                         <InputLabel>Departamento</InputLabel>
                         <Select
                             label="Departamento"
@@ -180,7 +214,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <FormControl size='small' fullWidth>
+                    <FormControl required size='small' fullWidth>
                         <InputLabel>Municipios</InputLabel>
                         <Select
                             label="Municipios"
