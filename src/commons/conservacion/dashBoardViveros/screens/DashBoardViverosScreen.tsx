@@ -67,7 +67,7 @@ export const DashBoardViverosScreen: React.FC = () => {
   const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
 
   const cambio_seleccion_vivero: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
-    console.log(e.target);
+    //  console.log('')(e.target);
     const name_selected = (e.target.value !== 'Todos' &&  e.target.value !== '' ) ?  lista_viveros.find((vn: any) => vn.id_vivero === e.target.value).nombre : "todos los viveros";
     set_subtitle_resumen(name_selected);
     set_seleccion_vivero(e.target.value);

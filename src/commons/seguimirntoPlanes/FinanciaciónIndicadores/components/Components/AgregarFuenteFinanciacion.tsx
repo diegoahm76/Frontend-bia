@@ -18,7 +18,7 @@ import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { tipo_medida } from '../../../Indicadores/choices/selects';
 import { useFuenteFinanciacionHook } from '../../hooks/useFuenteFinanciacionHook';
 import { DataContextFuentesFinanciacion } from '../../context/context';
-import NumberFormat from 'react-number-format';
+// import NumberFormat from 'react-number-format';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

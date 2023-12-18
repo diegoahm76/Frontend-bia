@@ -72,7 +72,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
   } = useContext(ModalContextLideres);
 
   const resetFunction = (): void => {
-    console.log('resetFunction');
+    //  console.log('')('resetFunction');
     reset_organigrama_lideres_por_unidad({
       nombre: '',
       version: '',
@@ -102,9 +102,9 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
         dataToSearch
       );
       dispatch(get_list_busqueda_organigramas(dataSearch));
-      // * console.log(dataSearch);
+      // * //  console.log('')(dataSearch);
     } catch (error) {
-      console.log(error);
+      //  console.log('')(error);
     }
   };
   //* -------- columns declaration -------- *//
@@ -213,7 +213,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              console.log(params.row);
+              //  console.log('')(params.row);
               dispatch(set_organigrama_lideres_current(params.row));
               void get_asignaciones_lideres_by_id_organigrama_service(
                 params.row.id_organigrama
@@ -397,7 +397,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 color="primary"
                 onClick={() => {
                   resetFunction();
-                  console.log('cerrando');
+                  //  console.log('')('cerrando');
                   // reset_searched_trd_modal();
                 }}
                 startIcon={<CleanIcon />}

@@ -51,7 +51,6 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
               size="large"
               title="Administrar TRD en base a relación"
               onClick={() => {
-                console.log(params.row);
                 openModalAdministracionTca();
                 dispatch(set_selected_item_from_catalogo_action(params.row));
                 void get_tipologias_relacion(
@@ -64,12 +63,6 @@ export const CatalogoTRDAdministracionScreen: FC<dataGridTypes> = ({
 
                   const tipologias_NO_reservadas = res.filter(
                     (item: any) => !item.reservada
-                  );
-
-                  console.log('tipologias_reservadas,', tipologias_reservadas);
-                  console.log(
-                    'tipologias_NO_reservadas,',
-                    tipologias_NO_reservadas
                   );
 
                   dispatch(set_tipologias_reservadas(tipologias_reservadas));

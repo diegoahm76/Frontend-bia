@@ -47,54 +47,30 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
   } = useAppSelector((state) => state.ctrlAccesoExpSlice);
 
   const handleSubmit = () => {
-    controlAccesoExpedientesList.length > 0
-      ? console.log(
-          controlAccesoExpedientesList.map((el: any) => {
-            if (
-              el?.id_ctrl_acceso_clasif_exp_ccd ===
-              currentControlAccesoExpedientes?.id_ctrl_acceso_clasif_exp_ccd
-            ) {
-              return {
-                ...el,
-                id_cat_serie_und_org_ccd:
-                  currentSerieSubserie?.id_cat_serie_und,
-              };
-            }
+    const dataToSubmit = controlAccesoExpedientesList.length > 0
+      ? controlAccesoExpedientesList.map((el: any) => {
+          if (
+            el?.id_ctrl_acceso_clasif_exp_ccd ===
+            currentControlAccesoExpedientes?.id_ctrl_acceso_clasif_exp_ccd
+          ) {
             return {
               ...el,
-              id_cat_serie_und_org_ccd: null,
+              id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und,
             };
-          })[0]
-        )
-      : console.log(
-          rowsControlInicial.map((el: any) => ({
+          }
+          return {
             ...el,
-            id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und,
-          }))[0]
-        );
+            id_cat_serie_und_org_ccd: null,
+          };
+        })[0]
+      : rowsControlInicial.map((el: any) => ({
+          ...el,
+          id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und,
+        }))[0];
 
     void putControlAccesoExpedientes(
       setLoadingButton,
-      controlAccesoExpedientesList.length > 0
-        ? controlAccesoExpedientesList.map((el: any) => {
-            if (
-              el?.id_ctrl_acceso_clasif_exp_ccd ===
-              currentControlAccesoExpedientes?.id_ctrl_acceso_clasif_exp_ccd
-            ) {
-              return {
-                ...el,
-                id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und ? currentSerieSubserie?.id_cat_serie_und : null
-              };
-            }
-            return {
-              ...el,
-              id_cat_serie_und_org_ccd: null,
-            };
-          })[0]
-        : rowsControlInicial.map((el: any) => ({
-            ...el,
-            id_cat_serie_und_org_ccd: currentSerieSubserie?.id_cat_serie_und ? currentSerieSubserie?.id_cat_serie_und : null
-          }))[0]
+      dataToSubmit
     ).then(() => {
       getControlAccesoExpedientes({
         setLoading: setLoadingButton,
@@ -103,7 +79,6 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
           rowsControlInicial[0]?.cod_clasificacion_exp,
         idCatSerieUnidad: currentSerieSubserie?.id_cat_serie_und,
       }).then((res) => {
-        console.log(res);
         if (res?.length > 0) {
           dispatch(setControlAccesoExpedientesList(res));
           dispatch(setVerModuloAutorizacioneGenerales(false));
@@ -114,7 +89,6 @@ export const Acciones: FC<any> = (params: any): JSX.Element | null => {
       });
     });
   };
-
   if (!currentCcdCtrlAccesoExp) return null;
 
   return (

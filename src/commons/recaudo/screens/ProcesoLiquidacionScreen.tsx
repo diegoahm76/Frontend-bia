@@ -77,7 +77,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [fecha_liquidacion, set_fecha_liquidacion] = useState<Dayjs>(dayjs());
   const [fecha_vencimiento, set_fecha_vencimiento] = useState<Dayjs>(dayjs());
   const [rows_detalles, set_rows_detalles] = useState<RowDetalles[]>([]);
-  const [id_row_detalles, set_id_row_detalles] = useState(0);
   const [id_liquidacion_pdf, set_id_liquidacion_pdf] = useState('');
   const [periodo_actual, set_periodo_actual] = useState<DetallePeriodo>({
     tamano: 0,
@@ -92,7 +91,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         set_deudores(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       }).finally(() => {
         set_loading(false);
       });
@@ -105,7 +104,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           set_expedientes_deudor(response.data.data);
         })
         .catch((error) => {
-          console.log(error.response.data.detail);
+          //  console.log('')(error.response.data.detail);
         });
     }
   }, [form_liquidacion.id_deudor]);
@@ -118,7 +117,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           get_liquidacion_por_expediente(response.data.data.liquidado);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         })
     }
   }, [form_liquidacion.id_expediente]);
@@ -162,7 +161,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           agregar_datos_inputs(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     } else {
       set_periodos([]);
@@ -189,7 +188,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   };
 
   const agregar_detalles = (detalles: DetallesLiquidacion[]): void => {
-    set_id_row_detalles(0);
     const new_detalles: RowDetalles[] = detalles.map((detalle) => ({
       id: detalle.id,
       nombre_opcion: detalle.id_opcion_liq.nombre,
@@ -227,6 +225,28 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     }
   };
 
+  const save_calculos = (id_liquidacion: number): void => {
+    api.post('recaudo/liquidaciones/calculos/', {
+      id_liquidacion,
+      calculos: {
+        nombre_fuente: 'pozo profundo',
+        predio: 'estadio macal municipio de villavicencio',
+        municipio: 'villavicencio meta',
+        caudal_consecionado: 2.62,
+        uso: 'domestico',
+        factor_regional: 0.08,
+        tarifa_tasa: 1.1,
+        factor_costo_oportunidad: 1,
+      }
+    })
+    .then((response) => {
+      //  console.log('')(response);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  };
+
   const handle_position_tab_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab(newValue);
     if (newValue === '1') {
@@ -253,10 +273,11 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         ...form,
         id_opcion_liq: Number(form.id_opcion_liq),
         id_liquidacion,
+        valor: Math.round(form.valor),
       };
       api.post('recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
         .then((response) => {
-          console.log(response);
+          //  console.log('')(response);
           set_form_liquidacion({
             id_deudor: '',
             id_expediente: '',
@@ -268,10 +289,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           set_fecha_vencimiento(dayjs(new Date()));
           set_form_detalle_liquidacion([]);
           set_rows_detalles([]);
-          set_id_row_detalles(0);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     });
   };
@@ -286,13 +306,14 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       valor: Math.round(form_liquidacion.valor ?? 0),
     })
       .then((response) => {
-        console.log(response);
+        //  console.log('')(response);
         handle_submit_detalles_liquidacion(response.data.id);
+        save_calculos(response.data.id);
         set_notification_info({ type: 'success', message: `Se ha guardado correctamente la liquidacion.` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });

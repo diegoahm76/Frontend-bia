@@ -60,7 +60,7 @@ const ListadoMetadatos = ({
     useEffect(() => {
 
         void dispatch(get_metadatos());
-        console.log(metadatos)
+        //  console.log('')(metadatos)
 
 
     }, [])

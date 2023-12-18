@@ -45,7 +45,7 @@ export const get_configuraciones = (): any => {
         try {
             const { data } = await api.get('gestor/configuracion-tiempos-respuesta-accion/configuracion_tiempos_respuesta/get/'
             );
-            console.log(data)
+            //  console.log('')(data)
             if (data.succes === true) {
                 return dispatch(set_configuraciones(data.data));
             }
@@ -65,9 +65,9 @@ export const actualizar: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // console.log(despacho);
+            // //  console.log('')(despacho);
             const { data } = await api.put(`gestor/configuracion-tiempos-respuesta-accion/configuracion_tiempos_respuesta/update/${id}/`, configurar);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);
@@ -75,7 +75,7 @@ export const actualizar: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;

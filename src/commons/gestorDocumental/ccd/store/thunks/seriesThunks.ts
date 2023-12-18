@@ -23,7 +23,7 @@ export const get_series_service: any = (id_ccd: string) => {
       const { data } = await api.get(
         `gestor/ccd/series/get-by-id-ccd/${id_ccd}/`
       );
-      // console.log('🚀 file: seriesThunks.ts ~ get_series_service', data);
+      // //  console.log('')('🚀 file: seriesThunks.ts ~ get_series_service', data);
       dispatch(get_series_ccd(data.data));
       //  ? control_success(data.detail);
       return data;
@@ -43,7 +43,7 @@ export const create_series_service: any = (body: any, clean: () => void) => {
       const { data } = await api.post(`gestor/ccd/series/create/`, body);
       dispatch(get_series_service(body.id_ccd));
       clean();
-      // console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+      // //  console.log('')('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
       control_success(data.detail);
       return data;
     } catch (error: any) {
@@ -67,7 +67,7 @@ export const delete_series_service: any = (
       );
       dispatch(get_series_service(params_ccd_info.row.id_ccd));
       clean();
-    /*  console.log(
+    /*  //  console.log('')(
         '🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data',
         response.data
       ); */
@@ -98,7 +98,7 @@ export const update_series_data = (
       );
       dispatch(get_series_service(ccd_current?.id_ccd));
       clean();
-      // console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+      // //  console.log('')('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
       control_success(data.detail);
       return data;
     } catch (error: any) {
@@ -116,7 +116,7 @@ export const create_indepent_series_service: any = (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
-      // console.log(body)
+      // //  console.log('')(body)
       const { data } = await api.post(
         `gestor/ccd/catalogo/serie-subserie/create/`,
         {
@@ -125,7 +125,7 @@ export const create_indepent_series_service: any = (
       );
       // dispatch(get_series_service(body.id_ccd));
       // clean();
-      // console.log('🚀 ~', data);
+      // //  console.log('')('🚀 ~', data);
       control_success(data.detail);
       return data;
     } catch (error: any) {

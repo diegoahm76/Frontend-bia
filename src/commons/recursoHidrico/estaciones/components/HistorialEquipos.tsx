@@ -94,7 +94,7 @@ export const HistorialEquipos: React.FC = () => {
       set_loading(true);
       const estacion_id = data.estacion.value;
       const fecha = dayjs(selected_date).format('YYYY-MM');
-      console.log('fecha', fecha);
+      //  console.log('')('fecha', fecha);
       const estacion = await consultar_historial_equipo(estacion_id, fecha);
       const datos_mapeados = estacion.map((dato) => ({
         id_alerta_equipo_estacion: dato.id_alerta_equipo_estacion,
@@ -103,16 +103,16 @@ export const HistorialEquipos: React.FC = () => {
         nombre_variable: dato.nombre_variable,
         fecha_generacion: dato.fecha_generacion,
       }));
-      console.log('Datos encontrados', datos_mapeados);
+      //  console.log('')('Datos encontrados', datos_mapeados);
       set_dato(datos_mapeados); // guardar el valor en el estado
       set_loading(false);
     } catch (err: any) {
       set_loading(false);
       const temp_error = err as AxiosError;
-      console.log('Error', temp_error.response?.status);
+      //  console.log('')('Error', temp_error.response?.status);
       if (temp_error.response?.status === 404) {
         control_error(err.response.data.detail || 'Algo paso, intente de nuevo');
-        console.log('No hay datos');
+        //  console.log('')('No hay datos');
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico

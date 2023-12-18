@@ -78,7 +78,7 @@ export const ConfiguracionGeneral: FC<any> = ({ title }: any): JSX.Element => {
                       }}
                       value={value}
                       onChange={(value) => {
-                        console.log(value);
+                        //  console.log('')(value);
                         onChange(value);
                       }}
                       // isDisabled={!control_format_documental_type._formValues.item.value}

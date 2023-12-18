@@ -25,7 +25,7 @@ export const get_busqueda_ccds_psd = async (
     }
   } catch (error: any) {
     control_error(error?.response?.data?.detail);
-    console.log(error);
+    //  console.log('')(error);
   } finally {
     setLoadingButtonPSD(false);
   }
@@ -47,7 +47,7 @@ export const get_unidad_organizacional_ccd_psd = async (
       control_success(
         `Se encontró la siguiente información de seccion / subseccion`
       );
-      console.log(data?.data);
+      //  console.log('')(data?.data);
       return data?.data;
     } else {
       control_warning('No se encontraron unidades organizacionales');
@@ -55,7 +55,7 @@ export const get_unidad_organizacional_ccd_psd = async (
     }
   } catch (error: any) {
     control_error(error?.response?.data?.detail);
-    console.log(error);
+    //  console.log('')(error);
   } finally {
     setLoadingButtonPSD(false);
   }
@@ -74,16 +74,16 @@ export const get_series_documentales_unidad_organizacional_psd = async (
     const { data } = await api.get(url);
     if (data?.data?.length > 0) {
       control_success('Se encontraron series/subseries documentales');
-      console.log(data?.data);
+      //  console.log('')(data?.data);
       return data?.data;
     } else {
       control_warning('No se encontraron series/subseries documentales');
-      console.log('no se encontraron series documentales');
+      //  console.log('')('no se encontraron series documentales');
       return [];
     }
   } catch (error: any) {
     control_error(error?.response?.data?.detail);
-    console.log(error);
+    //  console.log('')(error);
   } finally {
     setLoadingSeriesSubseries(false);
   }
@@ -99,7 +99,7 @@ export const GET_PERMISOS_UNIDADES_ORGANIZACIONALES_ACTUALES_SECCION_RESPONSABLE
       const { data } = await api.get(url);
       if (data?.data?.length > 0) {
         control_success(data?.detail);
-        console.log(data?.data);
+        //  console.log('')(data?.data);
         return data?.data;
       } else {
         control_warning(
@@ -125,7 +125,7 @@ export const GET_PERMISOS_UNIDADES_EXTERNAS_SECCION_RESPONSABLE = async (
     const { data } = await api.get(url);
     if (data?.data?.length > 0) {
       control_success(data?.detail);
-      console.log(data?.data);
+      //  console.log('')(data?.data);
       return data?.data;
     } else {
       control_warning(

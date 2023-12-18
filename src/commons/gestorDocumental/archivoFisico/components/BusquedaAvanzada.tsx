@@ -16,12 +16,18 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import {  useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Title } from '../../../../components';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { IArchivoFisico, IObjDepositos } from '../interface/archivoFisico';
+import {
+  IArchivoFisico,
+  IObjBandejas,
+  IObjDepositos,
+  IObjEstantes,
+  IObjcajas,
+} from '../interface/archivoFisico';
 import { IList } from '../../configuracionMetadatos/interfaces/Metadatos';
 import { api } from '../../../../api/axios';
 import {
@@ -47,13 +53,24 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
     useState('');
   const [deposito_seleccionado, set_deposito_seleccionado] =
     useState<IObjDepositos | null>(null);
-  const { depositos, estantes, bandejas, cajas, carpetas } = useAppSelector(
-    (state) => state.archivo_fisico
+  const [estante_seleccionado, set_estante_seleccionado] =
+    useState<IObjEstantes | null>(null);
+  const [bandeja_seleccionado, set_bandeja_seleccionado] =
+    useState<IObjBandejas | null>(null);
+  const [caja_seleccionado, set_caja_seleccionado] = useState<IObjcajas | null>(
+    null
   );
-  useEffect(() => {
-    //  void dispatch(get_trd())
-    //   void dispatch(get_tipologias())
-  }, []);
+
+  const [selected_items, set_selected_items] = useState({
+    tipoElemento: '',
+    deposito: null,
+    estante: null,
+    bandeja: null,
+    caja: null,
+    carpeta: null,
+  });
+  const { depositos, estantes, bandejas, cajas, carpetas, depositos_tabla } =
+    useAppSelector((state) => state.archivo_fisico);
 
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -62,12 +79,24 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
     }));
     return data_new_format;
   };
+
   const columns: GridColDef[] = [
+    {
+      field: '',
+      headerName: '',
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          // onClick={() => handle_selected_expediente(params.row)}
+          startIcon={<PlaylistAddCheckIcon />}
+        ></Button>
+      ),
+    },
     {
       field: 'orden_ubicacion_por_caja',
       headerName: 'Órden de carpeta',
       sortable: true,
-      width: 200,
+      width: 100,
     },
     {
       field: 'identificacion_por_caja',
@@ -100,10 +129,13 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
       headerName: 'Nombre del Depósito',
       width: 200,
     },
+  ];
+
+  const columns_estantes: GridColDef[] = [
     {
-      field: 'acciones',
-      headerName: 'ACCIONES',
-      width: 200,
+      field: '',
+      headerName: '',
+      width: 50,
       renderCell: (params) => (
         <Button
           // onClick={() => handle_selected_expediente(params.row)}
@@ -111,8 +143,183 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
         ></Button>
       ),
     },
+    {
+      field: 'orden_ubicacion_por_deposito',
+      headerName: 'Orden Estante',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'identificacion_por_deposito',
+      headerName: 'Estante',
+      sortable: true,
+      width: 200,
+    },
+
+    {
+      field: 'nombre_deposito',
+      headerName: 'Nombre Depósito',
+      sortable: true,
+      width: 200,
+    },
   ];
-  console.log(depositos);
+
+  const columns_depositos: GridColDef[] = [
+    {
+      field: '',
+      headerName: '',
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          // onClick={() => handle_selected_expediente(params.row)}
+          startIcon={<PlaylistAddCheckIcon />}
+        ></Button>
+      ),
+    },
+    {
+      field: 'nombre_deposito',
+      headerName: 'Nombre Depósito',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'identificacion_por_entidad',
+      headerName: 'Identificación Depósito',
+      sortable: true,
+      width: 200,
+    },
+  ];
+
+  const columns_bandejas: GridColDef[] = [
+    {
+      field: '',
+      headerName: '',
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          // onClick={() => handle_selected_expediente(params.row)}
+          startIcon={<PlaylistAddCheckIcon />}
+        ></Button>
+      ),
+    },
+    {
+      field: 'orden_ubicacion_por_estante',
+      headerName: 'Orden',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'identificacion_por_estante',
+      headerName: 'Bandeja',
+      sortable: true,
+      width: 200,
+    },
+
+    {
+      field: 'identificacion_estante',
+      headerName: 'Estante',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'nombre_deposito',
+      headerName: 'Deposito',
+      sortable: true,
+      width: 200,
+    },
+  ];
+
+  const columns_cajas: GridColDef[] = [
+    {
+      field: '',
+      headerName: '',
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          // onClick={() => handle_selected_expediente(params.row)}
+          startIcon={<PlaylistAddCheckIcon />}
+        ></Button>
+      ),
+    },
+    {
+      field: 'orden_ubicacion_por_bandeja',
+      headerName: 'Orden',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'identificacion_por_bandeja',
+      headerName: 'Caja',
+      sortable: true,
+      width: 200,
+    },
+
+    {
+      field: 'identificacion_bandeja',
+      headerName: 'Bandeja',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'identificacion_estante',
+      headerName: 'Estante',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'nombre_deposito',
+      headerName: 'Deposito',
+      sortable: true,
+      width: 200,
+    },
+  ];
+
+  const columns_carpetas: GridColDef[] = [
+    {
+      field: 'orden_ubicacion_por_caja',
+      headerName: 'Orden',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'identificacion_por_caja',
+      headerName: 'Carpeta',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'numero_expediente',
+      headerName: 'Num. Expediente',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'identificacion_caja',
+      headerName: 'Caja',
+      sortable: true,
+      width: 200,
+    },
+
+    {
+      field: 'identificacion_bandeja',
+      headerName: 'Bandeja',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'identificacion_estante',
+      headerName: 'Estante',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'nombre_deposito',
+      headerName: 'Deposito',
+      sortable: true,
+      width: 200,
+    },
+  ];
+
   useEffect(() => {
     const get_selects_options: any = async () => {
       try {
@@ -126,7 +333,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
 
         set_tipo_elemnto(tipo_elemento_format);
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
 
@@ -157,9 +364,55 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
       deposito_seleccionado.id_deposito !== undefined
     ) {
       void dispatch(avanzada_estante(deposito_seleccionado.id_deposito));
-      console.log(estantes);
+      //  console.log('')(deposito_seleccionado);
     }
   }, [deposito_seleccionado]);
+
+  useEffect(() => {
+    if (
+      estante_seleccionado !== null &&
+      estante_seleccionado.identificacion_por_deposito !== undefined
+    ) {
+      estante_seleccionado !== null &&
+        void dispatch(
+          avanzada_bandeja(estante_seleccionado.identificacion_por_deposito)
+        );
+      //  console.log('')(estante_seleccionado);
+    }
+  }, [estante_seleccionado]);
+
+  useEffect(() => {
+    if (
+      bandeja_seleccionado !== null &&
+      bandeja_seleccionado.identificacion_por_estante !== undefined
+    ) {
+      estante_seleccionado !== null &&
+        void dispatch(
+          avanzada_caja(bandeja_seleccionado.identificacion_por_estante)
+        );
+      //  console.log('')(bandeja_seleccionado);
+    }
+  }, [bandeja_seleccionado]);
+
+  useEffect(() => {
+    if (
+      caja_seleccionado !== null &&
+      caja_seleccionado.identificacion_por_bandeja !== undefined
+    ) {
+      estante_seleccionado !== null &&
+        void dispatch(
+          avanzada_carpeta(caja_seleccionado.identificacion_por_bandeja)
+        );
+      //  console.log('')(caja_seleccionado);
+    }
+  }, [caja_seleccionado]);
+
+  const handleBuscarClick = () => {
+    set_selected_items((prevItems: any) => ({
+      ...prevItems,
+      tipoElemento: tipo_elemento_seleccionado,
+    }));
+  };
 
   return (
     <>
@@ -185,11 +438,8 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
           >
             <Title title="BÚSQUEDA AVANZADA" />
             <Grid container sx={{ mt: '10px', mb: '20px' }}>
-
-
               <Grid container justifyContent="center">
-                <Grid item xs={12} sm={3.5} margin={2}  marginTop={1.2}>
-                  
+                <Grid item xs={12} sm={3.5} margin={2} marginTop={1.2}>
                   <TextField
                     autoFocus
                     margin="dense"
@@ -215,6 +465,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
                     ))}
                   </TextField>
                 </Grid>
+
                 <Grid item xs={12} sm={3.5} margin={2}>
                   <Autocomplete
                     fullWidth
@@ -267,7 +518,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
                           : null)
                     )}
                     onChange={(event, newValue) => {
-                      set_deposito_seleccionado(newValue || null);
+                      set_estante_seleccionado(newValue || null);
                     }}
                     getOptionLabel={(option) =>
                       option.identificacion_por_deposito ?? ''
@@ -306,7 +557,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
                           : null)
                     )}
                     onChange={(event, newValue) => {
-                      set_deposito_seleccionado(newValue || null);
+                      set_bandeja_seleccionado(newValue || null);
                     }}
                     getOptionLabel={(option) =>
                       option.identificacion_por_estante ?? ''
@@ -343,7 +594,7 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
                           : null)
                     )}
                     onChange={(event, newValue) => {
-                      set_deposito_seleccionado(newValue || null);
+                      set_caja_seleccionado(newValue || null);
                     }}
                     getOptionLabel={(option) =>
                       option.identificacion_por_bandeja ?? ''
@@ -365,8 +616,8 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={3.5}  margin={2}>
-                <Autocomplete
+                <Grid item xs={12} sm={3.5} margin={2}>
+                  <Autocomplete
                     fullWidth
                     size="small"
                     disablePortal
@@ -400,60 +651,103 @@ const BusquedaAvanzadaFisico = ({ open, handle_close_buscar }: IProps) => {
                       />
                     )}
                   />
-                  
+                </Grid>
+
+                <Grid container spacing={2} justifyContent="flex-end">
+                  <Grid item marginRight={4}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleBuscarClick}
+                    >
+                      Buscar
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
 
-              <>
-                {expedientes.length > 0 && (
-                  <Grid item xs={12}>
-                    <Title title="Resultados de la búsqueda" />
-                    {/* <Typography>Resultados de la búsqueda</Typography> */}
-                  </Grid>
-                )}
-                {expedientes.length > 0 && (
-                  <Grid item xs={12}>
-                    <Box sx={{ width: '100%' }}>
+              <Grid container justifyContent="center">
+                <>
+                  {selected_items.tipoElemento === 'Depósito de Archivo' && (
+                    <Box sx={{ width: '50%' }}>
                       <>
                         <DataGrid
                           density="compact"
                           autoHeight
-                          columns={columns}
+                          columns={columns_depositos}
                           pageSize={10}
                           rowsPerPageOptions={[10]}
-                          rows={expedientes}
-                          getRowId={(row) => row.id_expediente_documental}
+                          rows={depositos}
+                          getRowId={(row) => row.id_deposito}
                         />
                       </>
                     </Box>
-                  </Grid>
-                )}
-              </>
-              <Grid
-                container
-                spacing={2}
-                marginTop={2}
-                justifyContent="flex-end"
-              >
-                <Grid item margin={2}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    // onClick={mostrar_busqueda_expediente}
-                  >
-                    Buscar
-                  </Button>
-                </Grid>
-
-                <Grid item margin={2}>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    // onClick={handle_close_buscar}
-                  >
-                    Salir
-                  </Button>
-                </Grid>
+                  )}
+                  {selected_items.tipoElemento === 'Estante' && (
+                    <Box sx={{ width: '60%' }}>
+                      <>
+                        <DataGrid
+                          density="compact"
+                          autoHeight
+                          columns={columns_estantes}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
+                          rows={estantes}
+                          getRowId={(row) => row.id_estante_deposito}
+                        />
+                      </>
+                    </Box>
+                  )}
+                  {selected_items.tipoElemento === 'Bandeja' && (
+                    <Box sx={{ width: '75%' }}>
+                      <>
+                        <DataGrid
+                          density="compact"
+                          autoHeight
+                          columns={columns_bandejas}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
+                          rows={bandejas}
+                          getRowId={(row) => row.id_bandeja_estante}
+                        />
+                      </>
+                    </Box>
+                  )}
+                  {selected_items.tipoElemento === 'Caja' && (
+                    <Grid item xs={12}>
+                      <Box sx={{ width: '100%' }}>
+                        <>
+                          <DataGrid
+                            density="compact"
+                            autoHeight
+                            columns={columns_cajas}
+                            pageSize={10}
+                            rowsPerPageOptions={[10]}
+                            rows={cajas}
+                            getRowId={(row) => row.id_caja_bandeja}
+                          />
+                        </>
+                      </Box>
+                    </Grid>
+                  )}
+                  {selected_items.tipoElemento === 'Carpeta' && (
+                    <Grid item xs={12}>
+                      <Box sx={{ width: '100%' }}>
+                        <>
+                          <DataGrid
+                            density="compact"
+                            autoHeight
+                            columns={columns}
+                            pageSize={10}
+                            rowsPerPageOptions={[10]}
+                            rows={carpetas}
+                            getRowId={(row) => row.id_carpeta_caja}
+                          />
+                        </>
+                      </Box>
+                    </Grid>
+                  )}
+                </>
               </Grid>
             </Grid>
           </Grid>

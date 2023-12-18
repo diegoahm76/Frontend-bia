@@ -51,7 +51,7 @@ const DestinoSolicitud = ({
 
                 set_municipalities(municipalities_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
         };
 

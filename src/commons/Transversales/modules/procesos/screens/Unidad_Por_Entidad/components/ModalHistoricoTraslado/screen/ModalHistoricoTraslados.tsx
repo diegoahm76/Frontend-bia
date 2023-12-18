@@ -34,7 +34,7 @@ export const ModalHistoricoTraslados: FC<any> = (): JSX.Element => {
 
   //* ----------  USE EFFECT NECESARIOS PARA EL CODIGO -------------- */
   const getHistoricoTrasladosMasivos = async (): Promise<any> => {
-    console.log('getHistoricoTrasladosMasivos');
+    //  console.log('')('getHistoricoTrasladosMasivos');
     const res = await getHistoricosTraslados();
     sethistoricoTrasladosMasivos(res);
   };

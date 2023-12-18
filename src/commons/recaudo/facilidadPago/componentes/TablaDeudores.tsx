@@ -9,6 +9,7 @@ import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_obligaciones_id } from '../slices/ObligacionesSlice';
 import { get_filtro_deudores, get_deudores } from '../slices/DeudoresSlice';
 import { Title } from '../../../../components';
+import { control_error } from '../../../../helpers';
 
 interface RootStateDeudores {
   deudores: {
@@ -58,6 +59,13 @@ export const TablaDeudores: React.FC = () => {
       headerName: 'Acción',
       width: 150,
       renderCell: (params) => {
+        // Verificar si 'obligaciones' es false
+        if (!params.row.obligaciones) {
+          // No renderizar IconButton si 'obligaciones' es false
+          return null;
+        }
+    
+        // Renderizar IconButton si 'obligaciones' no es false
         return (
           <>
             <Tooltip title="Ver">
@@ -66,8 +74,10 @@ export const TablaDeudores: React.FC = () => {
                   try {
                     void dispatch(get_obligaciones_id(params.row.identificacion));
                     set_obligaciones_module(true);
+                    set_is_buscar(true);
                   } catch (error: any) {
-                    throw new Error(error);
+                    // Manejo del error
+                    control_error(error.response.data.detail);
                   }
                 }}
               >
@@ -90,11 +100,14 @@ export const TablaDeudores: React.FC = () => {
         )
       },
     },
+    
   ];
-console.log(visible_rows)
+//  console.log('')(visible_rows)
   useEffect(() => {
     set_visible_rows(deudores)
   }, [deudores])
+
+  const [is_modal_active, set_is_buscar] = useState<boolean>(false);
 
   return (
     <>
@@ -110,7 +123,7 @@ console.log(visible_rows)
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Title title='Listado de Deudores - Usuario Interno Cormacarena'/>
+        <Title title='Listado de deudores'/>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -217,12 +230,12 @@ console.log(visible_rows)
           container
           sx={{
             position: 'relative',
-            background: '#FAFAFA',
+            // background: '#FAFAFA',
             borderRadius: '15px',
             mb: '20px',
             mt: '20px',
             p: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
+            // boxShadow: '0px 3px 6px #042F4A26',
           }}
         >
           <Grid item xs={12}>
@@ -235,9 +248,9 @@ console.log(visible_rows)
                 obligaciones.length !== 0 ? (
                   <>
 
-                    <TablaObligacionesUsuarioConsulta />
+                    <TablaObligacionesUsuarioConsulta  is_modal_active={is_modal_active}  set_is_modal_active={set_is_buscar}/>
                   </>
-                ): <p>El usuario no tiene obligaciones pendientes por pago.</p>
+                ): <p>.</p>
               }
             </Box>
           </Grid>

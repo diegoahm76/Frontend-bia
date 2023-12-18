@@ -2,44 +2,23 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { IProps, AsignacionEncuestaUsuario, miEstilo } from '../interfaces/types';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Button, ButtonGroup, Divider, Grid, } from '@mui/material';
-import type React from 'react';
+import { AuthSlice } from '../../../auth/interfaces';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
+import { Title } from '../../../../components';
+import { TextField } from '@material-ui/core';
 import { api } from '../../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import IconButton from '@mui/material/IconButton';
-import { Title } from '../../../../components';
 import { useSelector } from 'react-redux';
-import { AuthSlice } from '../../../auth/interfaces';
-import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
-import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { TextField } from '@material-ui/core';
-import SearchIcon from '@mui/icons-material/Search';
+import type React from 'react';
 
-export const miEstilo = {
-    position: 'relative',
-    background: '#FAFAFA',
-    borderRadius: '15px',
-    p: '20px',
-    m: '10px 0 20px 0',
-    mb: '20px',
-    boxShadow: '0px 3px 6px #042F4A26',
-  };
-interface AsignacionEncuestaUsuario {
-    id_asignar_encuesta: number;
-    nombre_completo: string;
-    nombre_encuesta: string;
-    id_encuesta: number;
-    id_persona: number;
-    id_alerta_generada: number;
-}
-export interface IProps {
 
-    selectedEncuestaId: any;
-    setSelectedEncuestaId: any;
-
-}
 export const TablaEncuestaInterno: React.FC<IProps> = ({ selectedEncuestaId, setSelectedEncuestaId }) => {
 
     const [asignaciones, setAsignaciones] = useState<AsignacionEncuestaUsuario[]>([]);
@@ -113,10 +92,10 @@ export const TablaEncuestaInterno: React.FC<IProps> = ({ selectedEncuestaId, set
 
             <Grid item xs={12} marginTop={2} sm={3}>
                 <TextField
-                    variant="outlined"
+                    fullWidth
                     size="small"
                     label="Buscar"
-                    fullWidth
+                    variant="outlined"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -148,11 +127,11 @@ export const TablaEncuestaInterno: React.FC<IProps> = ({ selectedEncuestaId, set
             />
             <Grid container item xs={12} marginTop={-1} >
                 <DataGrid
-                    rows={asignaciones || []}
-                    columns={columns}
-                    pageSize={10}
                     autoHeight
+                    pageSize={10}
                     density="compact"
+                    columns={columns}
+                    rows={asignaciones || []}
                     rowsPerPageOptions={[10]}
                     getRowId={(row) => row.id_asignar_encuesta}
                 />

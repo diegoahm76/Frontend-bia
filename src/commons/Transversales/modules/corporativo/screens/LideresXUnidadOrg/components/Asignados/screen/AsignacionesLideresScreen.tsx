@@ -37,7 +37,7 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
           <>
             <IconButton
               onClick={() => {
-                console.log(params.row);
+                //  console.log('')(params.row);
                 dispatch(set_asignacion_lideres_current(params.row));
                 // closeModal();
               }}

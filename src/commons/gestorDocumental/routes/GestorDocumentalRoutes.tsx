@@ -19,6 +19,7 @@ import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
 
 import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
+import { Reubicacion_Expediantes_Routes } from '../ReubicacionExpediente/routes/Reubicacion_Routes';
 
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
@@ -29,8 +30,10 @@ import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/ro
 import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
+import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
+import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
 
 const routes = [
   {
@@ -122,6 +125,13 @@ const routes = [
     name: 'encuesta',
     component: () => <Encuasta_Routes />,
   },
+  
+
+  {
+    path: 'Reubicacion_Expedientes/',
+    name: 'Reubicacion_Expedientes',
+    component: () => <Reubicacion_Expediantes_Routes />,
+  },
   {
     path: 'encuesta_asignacion/',
     name: 'encuesta_asignacion',
@@ -158,14 +168,24 @@ const routes = [
     path: 'Pqrsdf/',
     name: 'Pqrsdf',
     component: () => <PqrsdfRoutes />,
-    
-  
   },
   {
     path: 'panel_ventanilla/',
     name: 'panel_ventanilla/',
     component: () => <PanelVentanillaRoutes />,
   },
+  {
+    path: 'central_digitalizacion/',
+    name: 'central_digitalizacion',
+    component: () => <CentralDigitalizacionRoutes />,
+  },
+
+  {
+    path: 'solicitudes_otros/',
+    name: 'solicitudes_otros',
+    component: () => <SolicitudesOtrosRoutes />,
+  },
+
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

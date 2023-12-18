@@ -48,7 +48,7 @@ export const CatalogoSeriesYSubseries = () => {
     useContext(ModalContext);
 
   const delete_independente_series = (id_serie_doc: number) => {
-    // console.log('delete_independente_series', id_serie_doc);
+    // //  console.log('')('delete_independente_series', id_serie_doc);
     void dispatch(
       delete_independiente_serie_service(id_serie_doc, ccd_current)
     );
@@ -104,7 +104,7 @@ export const CatalogoSeriesYSubseries = () => {
                 return;
               }
 
-              // console.log('params', params);
+              // //  console.log('')('params', params);
               delete_independente_series(params.row.id_catalogo_serie);
             }}
           >

@@ -161,8 +161,9 @@ export function TipificacionBienesScreen(): JSX.Element {
 
   useEffect(() => {
     void dispatch(get_bienes_service()).then((response: any) => {
-      console.log(response);
+      //  console.log('')(response);
       setfilterednurseries(response.data);
+      
     });
   }, [dispatch]);
 
@@ -231,8 +232,8 @@ export function TipificacionBienesScreen(): JSX.Element {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={filterednurseries}
-                columns={columns}
+                rows={filterednurseries || [] }
+                columns={columns || []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
@@ -246,6 +247,9 @@ export function TipificacionBienesScreen(): JSX.Element {
             action={action}
           />
         </Grid>
+
+
+
         <Grid item xs={12} md={3}>
           <Limpiar
             dispatch={dispatch}

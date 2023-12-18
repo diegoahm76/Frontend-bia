@@ -32,8 +32,8 @@ export const ArriendoVehiculosScreen: React.FC = () => {
   const [descripcion, set_descripcion] = useState<string>("");
   const [msj_error_descripcion, set_msj_error_descripcion] = useState<string>("");
   const [fecha_inicio, set_fecha_inicio] = useState<Dayjs>(dayjs());
-  const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
   const [fecha_fin, set_fecha_fin] = useState<Dayjs>(dayjs());
+  const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
   const [msj_error_fecha_fin, set_msj_error_fecha_fin] = useState<string>("");
   const [abrir_hdv, set_abrir_hdv] = useState<boolean>(false);
   const [es_agendable, set_es_agendable] = useState<boolean>(false);
@@ -171,7 +171,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
       if (response.success) {
         limpiar_formulario();
         if (formulario.asignar_hoja_de_vida) {
-          console.log('Redirecciona a hoja de vida');
+          // //  console.log('')('Redirecciona a hoja de vida');
         }
       }
     })
@@ -339,6 +339,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                 </LocalizationProvider>
                 {(msj_error_fecha_inicio !== "") && (<FormHelperText error >{msj_error_fecha_inicio}</FormHelperText>)}
               </Grid>
+
               <Grid item xs={12} sm={3}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
@@ -359,6 +360,9 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                 </LocalizationProvider>
                 {(msj_error_fecha_fin !== "") && (<FormHelperText error >{msj_error_fecha_fin}</FormHelperText>)}
               </Grid>
+
+
+              
               <Grid item xs={12} sm={3}>
                 <Stack
                   direction="row"

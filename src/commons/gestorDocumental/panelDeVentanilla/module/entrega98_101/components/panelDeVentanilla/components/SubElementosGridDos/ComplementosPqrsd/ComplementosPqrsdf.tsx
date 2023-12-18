@@ -6,16 +6,14 @@ import {
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { columnsComplementoPqrsdf } from './columnsComplementoPqrsd/colComplePqrsdf';
-import { LoadingButton } from '@mui/lab';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import Swal from 'sweetalert2';
 import {
-  setActionssToManagePermissions,
+  setActionssToManagePermissionsComplementos,
   setCurrentElementPqrsdComplementoTramitesYotros,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
@@ -30,27 +28,16 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* states from redux store
   const {
     listaComplementosRequerimientosOtros,
-    actions,
+    actionsComplementos,
     currentElementPqrsdComplementoTramitesYotros,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
   //* context declaration
   const {
-    setRadicado,
-    setValue,
-
-    anexos,
-    metadatos,
     setAnexos,
-    setMetadatos,
   } = useContext(PanelVentanillaContext);
 
   const {
-    handleGeneralLoading,
-    handleThirdLoading,
-
-    openModalOne: infoAnexos,
-    openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
   } = useContext(ModalAndLoadingContext);
@@ -62,26 +49,45 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   );
 
   //* se va a tener que revisar luego está funciónP
-  const shouldDisable = (actionId: string, complemento: any) => {
-    const isEnviarSolicitud = actionId === 'EnviarSolicitud';
-    const isAsigGrup = actionId === 'AsigGrup';
-    const isAsigUser = actionId === 'AsigUser';
+  /*  const shouldDisable = (actionId: string, complemento: any) => {
+    const isDig = actionId === 'Dig';
+    const isContinuarAsigGrup = actionId === 'ContinuarAsigGrup';
     const hasAnexos = complemento.cantidad_anexos > 0;
     const requiresDigitalization = complemento.requiere_digitalizacion;
 
     // Primer caso: Complemento requiere digitalización
     if (requiresDigitalization) {
-      return !(isEnviarSolicitud && hasAnexos) || isAsigGrup || isAsigUser;
+      return !(isDig && hasAnexos) || isContinuarAsigGrup;
     }
 
     // Segundo caso: Complemento NO requiere digitalización
     if (!requiresDigitalization) {
-      return isAsigUser;
+      return isContinuarAsigGrup;
+    }
+  };*/
+
+
+  // ? se va a tener que modificar esta función con la nueva propiedad que se agrega. si la pqr ya fue asignada a grupo, no se puede volver a asignar (constinuar asig grup)
+  const shouldDisable = (actionId: string, complemento: any) => {
+    const isDig = actionId === 'Dig';
+    const isContinuarAsigGrup = actionId === 'ContinuarAsigGrup';
+    const isEnviarSolicitudUsuario = actionId === 'EnviarSolicitudUsuario';
+    const isAsignarGrupo = actionId === 'AsignarGrupo';
+    const requiresDigitalization = complemento.requiere_digitalizacion;
+
+    // Primer caso: Complemento requiere digitalización
+    if (requiresDigitalization) {
+      return isContinuarAsigGrup || isEnviarSolicitudUsuario || isAsignarGrupo || !isDig;
+    }
+
+    // Segundo caso: Complemento NO requiere digitalización
+    if (!requiresDigitalization) {
+      return isEnviarSolicitudUsuario;
     }
   };
 
-  const setActionsPQRSDF = (complemento: any) => {
-    console.log(complemento);
+  const setActionsComplementos = (complemento: any) => {
+    //  console.log('')(complemento);
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(complemento));
     void Swal.fire({
       icon: 'success',
@@ -90,18 +96,38 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const actionsPQRSDF = actions.map((action: any) => ({
+    const actionsComplementosPermissions = actionsComplementos.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id, complemento),
     }));
-
-    console.log(actionsPQRSDF);
-    dispatch(setActionssToManagePermissions(actionsPQRSDF));
+    //  console.log('')(actionsComplementosPermissions);
+    dispatch(setActionssToManagePermissionsComplementos(actionsComplementosPermissions));
   };
 
   //* columns definition
   const columns = [
     ...columnsComplementoPqrsdf,
+    {
+      headerName: 'Requiere digitalización',
+      field: 'requiere_digitalizacion',
+      minWidth: 200,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            label={params.value ? 'Si' : 'No'}
+            color={params.value ? 'success' : 'error'}
+            clickable
+            onClick={() => {
+              control_info(
+                `Este complemento ${
+                  params.value ? 'requiere' : 'no requiere'
+                } digitalización`
+              );
+            }}
+          />
+        );
+      },
+    },
     {
       headerName: 'Número de solicitudes de digitalización',
       field: 'numero_solicitudes',
@@ -137,13 +163,13 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                   void getAnexosComplemento(
                     params?.row?.idComplementoUsu_PQR
                   ).then((res) => {
-                    console.log(res);
+                    //  console.log('')(res);
 
                     if (res.length > 0) {
                       setAnexos(res);
                       handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                       handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      setActionsPQRSDF(params?.row);
+                      setActionsComplementos(params?.row);
                       navigate(
                         `/app/gestor_documental/panel_ventanilla/complemento_info/${params.row.idComplementoUsu_PQR}`
                       );
@@ -177,21 +203,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
             <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {
-                  //* se debe actualizar el array de acciones ya que de esa manera se va a determinar a que módulos va a tener acceso el elemento selccionado
-
-                  // ? en consecuencia se debe manejar segun los estados que se deban ejecutar por cada pqr se´gún los documentos de modelado
-                  /*dispatch(setActionssToManagePermissions())*/
-                  setActionsPQRSDF(params.row);
-                  /* dispatch(
-                    setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
-                  );
-                  void Swal.fire({
-                    icon: 'success',
-                    title: 'Elemento seleccionado',
-                    text: 'Has seleccionado un complemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
-                    showConfirmButton: true,
-                    // timer: 1500,
-                  });*/
+                  setActionsComplementos(params?.row);
                 }}
               >
                 <Avatar
@@ -219,16 +231,13 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
     },
   ];
 
-  /* [
-    ...listaComplementosRequerimientosOtros,
-    ...listaComplementosRequerimientosOtros,
-    ...listaComplementosRequerimientosOtros,
-    ...listaComplementosRequerimientosOtros,
-  ];
-*/
   return (
     <RenderDataGrid
-      rows={[...listaComplementosRequerimientosOtros] ?? []}
+      rows={
+        [
+          ...listaComplementosRequerimientosOtros,
+        ] ?? []
+      }
       columns={columns ?? []}
       title="Complementos del elemento seleccionado"
       aditionalElement={

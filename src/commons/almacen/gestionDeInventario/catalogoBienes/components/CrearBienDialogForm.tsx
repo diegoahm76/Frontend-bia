@@ -22,11 +22,13 @@ import {
   get_porcentaje_service,
 } from '../store/thunks/catalogoBienesThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
-import { type IList, type IObjBien as FormValues } from "../interfaces/catalogodebienes";
-import { api } from "../../../../../api/axios";
-import { initial_state_current_nodo } from "../store/slices/indexCatalogodeBienes";
+import {
+  type IList,
+  type IObjBien as FormValues,
+} from '../interfaces/catalogodebienes';
+import { api } from '../../../../../api/axios';
+import { initial_state_current_nodo } from '../store/slices/indexCatalogodeBienes';
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
-import { Title } from '../../../../../components';
 
 interface IProps {
   action: string;
@@ -54,15 +56,15 @@ const CrearBienDialogForm = ({
     useState<IList[]>(initial_options);
   const [depreciacion_types, set_depreciacion_types] =
     useState<IList[]>(initial_options);
-  const { marca, unidad_medida, porcentaje_iva, current_nodo, code_bien } =
-    useAppSelector((state) => state.bien);
-
+  const { marca, unidad_medida, porcentaje_iva, current_nodo, code_bien } = useAppSelector(
+    (state) => state.bien
+  );
 
   const {
     control: control_bien,
     handleSubmit: handle_submit,
     reset: reset_bien,
-    watch
+    watch,
   } = useForm<FormValues>();
   const handle_close_add_bien = (): void => {
     set_is_modal_active(false);
@@ -81,17 +83,18 @@ const CrearBienDialogForm = ({
 
   const on_submit = (data: FormValues): void => {
     if (action === 'create_sub') {
-      data.id_bien = null
-      data.nivel_jerarquico = Number(current_nodo.data.bien?.nivel_jerarquico ?? 0) + 1
-      data.id_bien_padre = current_nodo.data.bien?.id_bien
-      data.nombre_padre = current_nodo.data.bien?.nombre
+      data.id_bien = null;
+      data.nivel_jerarquico =
+        Number(current_nodo.data.bien?.nivel_jerarquico ?? 0) + 1;
+      data.id_bien_padre = current_nodo.data.bien?.id_bien;
+      data.nombre_padre = current_nodo.data.bien?.nombre;
     } else if (action === 'create') {
       data.nivel_jerarquico = 1;
     }
-    data.maneja_hoja_vida = data.maneja_hoja_vida === "true"
-    data.solicitable_vivero = data.solicitable_vivero === "true"
-    data.visible_solicitudes = data.visible_solicitudes === "true"
-    console.log(data);
+    data.maneja_hoja_vida = data.maneja_hoja_vida === 'true';
+    data.solicitable_vivero = data.solicitable_vivero === 'true';
+    data.visible_solicitudes = data.visible_solicitudes === 'true';
+    //  console.log('')(data);
     void dispatch(add_bien_service(data));
     handle_close_add_bien();
   };
@@ -126,7 +129,7 @@ const CrearBienDialogForm = ({
         );
         set_depreciacion_types(depreciacion_types_format);
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();
@@ -137,35 +140,55 @@ const CrearBienDialogForm = ({
   useEffect(() => {
     if (action === 'create_sub') {
       if (current_nodo.data.bien?.nivel_jerarquico !== 5) {
-        void dispatch(get_code_bien_service(current_nodo.data.bien?.codigo_bien));
+        //  console.log('')(current_nodo.data.bien?.nivel_jerarquico)
+        void dispatch(
+          get_code_bien_service(
+            current_nodo.data.bien?.id_bien,
+            (current_nodo.data.bien?.nivel_jerarquico ?? 0 )+ 1
+          )
+        );
       }
       reset_bien({
         ...current_nodo.data.bien,
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        maneja_hoja_vida: (current_nodo.data.bien?.maneja_hoja_vida ?? false) ? "true" : "false",
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        solicitable_vivero: (current_nodo.data.bien?.solicitable_vivero ?? false) ? "true" : "false",
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        visible_solicitudes: (current_nodo.data.bien?.visible_solicitudes ?? false) ? "true" : "false"
+       
+        maneja_hoja_vida:
+          current_nodo.data.bien?.maneja_hoja_vida ?? false ? 'true' : 'false',
+        solicitable_vivero:
+          current_nodo.data.bien?.solicitable_vivero ?? false
+            ? 'true'
+            : 'false',
+        visible_solicitudes:
+          current_nodo.data.bien?.visible_solicitudes ?? false
+            ? 'true'
+            : 'false',
       });
     } else if (action === 'create') {
-      void dispatch(get_code_bien_service(null));
-      reset_bien(initial_state_current_nodo.data.bien)
+      void dispatch(get_code_bien_service(null, 1));
+      reset_bien(initial_state_current_nodo.data.bien);
     } else {
       reset_bien({
         ...current_nodo.data.bien,
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        maneja_hoja_vida: (current_nodo.data.bien?.maneja_hoja_vida ?? false) ? "true" : "false",
+        maneja_hoja_vida:
+          current_nodo.data.bien?.maneja_hoja_vida ?? false ? 'true' : 'false',
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        solicitable_vivero: (current_nodo.data.bien?.solicitable_vivero ?? false) ? "true" : "false",
+        solicitable_vivero:
+          current_nodo.data.bien?.solicitable_vivero ?? false
+            ? 'true'
+            : 'false',
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        visible_solicitudes: (current_nodo.data.bien?.visible_solicitudes ?? false) ? "true" : "false"
+        visible_solicitudes:
+          current_nodo.data.bien?.visible_solicitudes ?? false
+            ? 'true'
+            : 'false',
       });
     }
+    //  console.log('')(current_nodo)
   }, [current_nodo]);
 
   useEffect(() => {
     reset_bien({ ...current_nodo.data.bien, codigo_bien: code_bien });
+    //  console.log('')(code_bien)
   }, [code_bien]);
 
   return (
@@ -180,9 +203,6 @@ const CrearBienDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
-        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title={`Crear bien `} />
-        </Grid>
         <DialogTitle></DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
@@ -190,422 +210,580 @@ const CrearBienDialogForm = ({
             <PrimaryForm
               show_button={false}
               on_submit_form={handle_submit(on_submit)}
-              button_submit_label='Guardar'
+              button_submit_label="Guardar"
               button_submit_icon_class={<SaveIcon />}
-              form_inputs={watch("cod_tipo_bien") === 'A' ?
-                [
-                  {
-                    datum_type: "title",
-                    title_label: "Tipo de bien"
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 12,
-                    control_form: control_bien,
-                    control_name: "cod_tipo_bien",
-                    default_value: "A",
-                    rules: { required_rule: { rule: true, message: "Tipo de bien requerido" } },
-                    label: "Tipo de bien",
-                    disabled: false,
-                    helper_text: "Seleccione Tipo de bien",
-                    select_options: tipo_bien,
-                    option_label: "label",
-                    option_key: "value",
-                  },
-                  {
-                    datum_type: "title",
-                    title_label: "Información del bien"
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "codigo_bien",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "requerida" } },
-                    label: "Codigo",
-                    type: "number",
-                    disabled: false,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "nombre",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Nombre requerido" } },
-                    label: "Nombre",
-                    type: "text",
-                    disabled: false,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "cod_tipo_activo",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Tipo de activo requerido" } },
-                    label: "Tipo de bien",
-                    disabled: false,
-                    helper_text: "Tipo de activo",
-                    select_options: activo_types,
-                    option_label: "label",
-                    option_key: "value",
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "nombre_padre",
-                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
-                    rules: { required_rule: { rule: false, message: "Nombre requerido" } },
-                    label: "Carpeta padre",
-                    type: "text",
-                    disabled: true,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "id_unidad_medida",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Unidad de medida requerida" } },
-                    label: "Unidad de medida",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: unidad_medida,
-                    option_label: "nombre",
-                    option_key: "id_unidad_medida",
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "id_porcentaje_iva",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Porcentaje IVA requerido" } },
-                    label: "Porcentaje IVA",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: porcentaje_iva,
-                    option_label: "porcentaje",
-                    option_key: "id_porcentaje_iva",
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "cod_tipo_depreciacion",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Tipo de depreciación requerido" } },
-                    label: "Tipo de depreciación",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: depreciacion_types,
-                    option_label: "label",
-                    option_key: "value",
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "id_unidad_medida_vida_util",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Unidad de medida vida util requerida" } },
-                    label: "Unidad de medida vida util",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: unidad_medida,
-                    option_label: "nombre",
-                    option_key: "id_unidad_medida",
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "cantidad_vida_util",
-                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
-                    rules: { required_rule: { rule: true, message: "Cantidad de vida util requerido" } },
-                    label: "Cantidad de vida util",
-                    type: "number",
-                    disabled: false,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "valor_residual",
-                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
-                    rules: { required_rule: { rule: true, message: "Valor residual requerido" } },
-                    label: "Valor residual",
-                    type: "number",
-                    disabled: false,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "id_marca",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Marca requerida" } },
-                    label: "Marca",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: marca,
-                    option_label: "nombre",
-                    option_key: "id_marca",
-                  },
+              form_inputs={
+                watch('cod_tipo_bien') === 'A'
+                  ? [
+                      {
+                        datum_type: 'title',
+                        title_label: 'Tipo de bien',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 12,
+                        control_form: control_bien,
+                        control_name: 'cod_tipo_bien',
+                        default_value: 'A',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Tipo de bien requerido',
+                          },
+                        },
+                        label: 'Tipo de bien',
+                        disabled: false,
+                        helper_text: 'Seleccione Tipo de bien',
+                        select_options: tipo_bien,
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
+                      {
+                        datum_type: 'title',
+                        title_label: 'Información del bien',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'codigo_bien',
+                        default_value: '',
+                        rules: {},
+                        label: 'Codigo',
+                        type: 'number',
+                        disabled: false,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'nombre',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Nombre requerido',
+                          },
+                        },
+                        label: 'Nombre',
+                        type: 'text',
+                        disabled: false,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'cod_tipo_activo',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Tipo de activo requerido',
+                          },
+                        },
+                        label: 'Tipo de bien',
+                        disabled: false,
+                        helper_text: 'Tipo de activo',
+                        select_options: activo_types,
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'nombre_padre',
+                        default_value:
+                          action === 'create_sub'
+                            ? current_nodo.data.bien?.nombre
+                            : '',
+                        rules: {
+                          required_rule: {
+                            rule: false,
+                            message: 'Nombre requerido',
+                          },
+                        },
+                        label: 'Carpeta padre',
+                        type: 'text',
+                        disabled: true,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'id_unidad_medida',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Unidad de medida requerida',
+                          },
+                        },
+                        label: 'Unidad de medida',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: unidad_medida,
+                        option_label: 'nombre',
+                        option_key: 'id_unidad_medida',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'id_porcentaje_iva',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Porcentaje IVA requerido',
+                          },
+                        },
+                        label: 'Porcentaje IVA',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: porcentaje_iva,
+                        option_label: 'porcentaje',
+                        option_key: 'id_porcentaje_iva',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'cod_tipo_depreciacion',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Tipo de depreciación requerido',
+                          },
+                        },
+                        label: 'Tipo de depreciación',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: depreciacion_types,
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'id_unidad_medida_vida_util',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Unidad de medida vida util requerida',
+                          },
+                        },
+                        label: 'Unidad de medida vida util',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: unidad_medida,
+                        option_label: 'nombre',
+                        option_key: 'id_unidad_medida',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'cantidad_vida_util',
+                        default_value:
+                          action === 'create_sub'
+                            ? current_nodo.data.bien?.nombre
+                            : '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Cantidad de vida util requerido',
+                          },
+                        },
+                        label: 'Cantidad de vida util',
+                        type: 'number',
+                        disabled: false,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'valor_residual',
+                        default_value:
+                          action === 'create_sub'
+                            ? current_nodo.data.bien?.nombre
+                            : '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Valor residual requerido',
+                          },
+                        },
+                        label: 'Valor residual',
+                        type: 'number',
+                        disabled: false,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'id_marca',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Marca requerida',
+                          },
+                        },
+                        label: 'Marca',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: marca,
+                        option_label: 'nombre',
+                        option_key: 'id_marca',
+                      },
 
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "visible_solicitudes",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Visible en solicitudes por vivero requerida" } },
-                    label: "¿Visible en solicitudes?",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
-                    option_label: "label",
-                    option_key: "value",
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "maneja_hoja_vida",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Seleccionar una opción" } },
-                    label: "¿Maneja hoja de vida?",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
-                    option_label: "label",
-                    option_key: "value",
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 12,
-                    control_form: control_bien,
-                    control_name: "descripcion",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Descripción requerida" } },
-                    label: "Descripción",
-                    type: "text",
-                    multiline_text: true,
-                    rows_text: 4,
-                    disabled: false,
-                    helper_text: ""
-                  }
-                ] :
-                [
-                  {
-                    datum_type: "title",
-                    title_label: "Tipo de bien"
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 12,
-                    control_form: control_bien,
-                    control_name: "cod_tipo_bien",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Tipo de bien requerido" } },
-                    label: "Tipo de bien",
-                    disabled: false,
-                    helper_text: "Seleccione Tipo de bien",
-                    select_options: tipo_bien,
-                    option_label: "label",
-                    option_key: "value",
-                  },
-                  {
-                    datum_type: "title",
-                    title_label: "Información del bien"
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "codigo_bien",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "requerida" } },
-                    label: "Codigo",
-                    type: "number",
-                    disabled: false,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "nombre",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Nombre requerido" } },
-                    label: "Nombre",
-                    type: "text",
-                    disabled: false,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "cod_metodo_valoracion",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Tipo de activo requerido" } },
-                    label: "Metodo de valoración",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: metodo_valoracion,
-                    option_label: "label",
-                    option_key: "value",
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "nombre_padre",
-                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
-                    rules: { required_rule: { rule: false, message: "Nombre requerido" } },
-                    label: "Carpeta padre",
-                    type: "text",
-                    disabled: true,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "id_unidad_medida",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Unidad de medida requerida" } },
-                    label: "Unidad de medida",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: unidad_medida,
-                    option_label: "nombre",
-                    option_key: "id_unidad_medida",
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "id_porcentaje_iva",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Porcentaje IVA requerido" } },
-                    label: "Porcentaje IVA",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: porcentaje_iva,
-                    option_label: "porcentaje",
-                    option_key: "id_porcentaje_iva",
-                  },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'visible_solicitudes',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message:
+                              'Visible en solicitudes por vivero requerida',
+                          },
+                        },
+                        label: '¿Visible en solicitudes?',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: [
+                          { label: 'SI', value: 'true' },
+                          { label: 'NO', value: 'false' },
+                        ],
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'maneja_hoja_vida',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Seleccionar una opción',
+                          },
+                        },
+                        label: '¿Maneja hoja de vida?',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: [
+                          { label: 'SI', value: 'true' },
+                          { label: 'NO', value: 'false' },
+                        ],
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 12,
+                        control_form: control_bien,
+                        control_name: 'descripcion',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Descripción requerida',
+                          },
+                        },
+                        label: 'Descripción',
+                        type: 'text',
+                        multiline_text: true,
+                        rows_text: 4,
+                        disabled: false,
+                        helper_text: '',
+                      },
+                    ]
+                  : [
+                      {
+                        datum_type: 'title',
+                        title_label: 'Tipo de bien',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 12,
+                        control_form: control_bien,
+                        control_name: 'cod_tipo_bien',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Tipo de bien requerido',
+                          },
+                        },
+                        label: 'Tipo de bien',
+                        disabled: false,
+                        helper_text: 'Seleccione Tipo de bien',
+                        select_options: tipo_bien,
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
+                      {
+                        datum_type: 'title',
+                        title_label: 'Información del bien',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'codigo_bien',
+                        default_value: '',
+                        rules: {
+                          required_rule: { rule: true, message: 'requerida' },
+                        },
+                        label: 'Codigo',
+                        type: 'number',
+                        disabled: false,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'nombre',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Nombre requerido',
+                          },
+                        },
+                        label: 'Nombre',
+                        type: 'text',
+                        disabled: false,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'cod_metodo_valoracion',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Tipo de activo requerido',
+                          },
+                        },
+                        label: 'Metodo de valoración',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: metodo_valoracion,
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'nombre_padre',
+                        default_value:
+                          action === 'create_sub'
+                            ? current_nodo.data.bien?.nombre
+                            : '',
+                        rules: {
+                          required_rule: {
+                            rule: false,
+                            message: 'Nombre requerido',
+                          },
+                        },
+                        label: 'Carpeta padre',
+                        type: 'text',
+                        disabled: true,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'id_unidad_medida',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Unidad de medida requerida',
+                          },
+                        },
+                        label: 'Unidad de medida',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: unidad_medida,
+                        option_label: 'nombre',
+                        option_key: 'id_unidad_medida',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'id_porcentaje_iva',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Porcentaje IVA requerido',
+                          },
+                        },
+                        label: 'Porcentaje IVA',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: porcentaje_iva,
+                        option_label: 'porcentaje',
+                        option_key: 'id_porcentaje_iva',
+                      },
 
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "stock_minimo",
-                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
-                    rules: { required_rule: { rule: true, message: "Stock minimo requerido" } },
-                    label: "Stock minimo",
-                    type: "number",
-                    disabled: false,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "stock_maximo",
-                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
-                    rules: { required_rule: { rule: true, message: "Stock maximo requerido" } },
-                    label: "Stock maximo",
-                    type: "number",
-                    disabled: false,
-                    helper_text: ""
-                  },
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "solicitable_vivero",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Solicitable por vivero requerida" } },
-                    label: "Solicitable por vivero",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
-                    option_label: "label",
-                    option_key: "value",
-                  },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'stock_minimo',
+                        default_value:
+                          action === 'create_sub'
+                            ? current_nodo.data.bien?.nombre
+                            : '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Stock minimo requerido',
+                          },
+                        },
+                        label: 'Stock minimo',
+                        type: 'number',
+                        disabled: false,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'stock_maximo',
+                        default_value:
+                          action === 'create_sub'
+                            ? current_nodo.data.bien?.nombre
+                            : '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Stock maximo requerido',
+                          },
+                        },
+                        label: 'Stock maximo',
+                        type: 'number',
+                        disabled: false,
+                        helper_text: '',
+                      },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'solicitable_vivero',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Solicitable por vivero requerida',
+                          },
+                        },
+                        label: 'Solicitable por vivero',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: [
+                          { label: 'SI', value: 'true' },
+                          { label: 'NO', value: 'false' },
+                        ],
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
 
-                  {
-                    datum_type: "select_controller",
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: "visible_solicitudes",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Visible en solicitudes por vivero requerida" } },
-                    label: "¿Visible en solicitudes?",
-                    disabled: false,
-                    helper_text: "",
-                    select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
-                    option_label: "label",
-                    option_key: "value",
-                  },
+                      {
+                        datum_type: 'select_controller',
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: 'visible_solicitudes',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message:
+                              'Visible en solicitudes por vivero requerida',
+                          },
+                        },
+                        label: '¿Visible en solicitudes?',
+                        disabled: false,
+                        helper_text: '',
+                        select_options: [
+                          { label: 'SI', value: 'true' },
+                          { label: 'NO', value: 'false' },
+                        ],
+                        option_label: 'label',
+                        option_key: 'value',
+                      },
 
-                  {
-                    datum_type: "input_controller",
-                    xs: 12,
-                    md: 12,
-                    control_form: control_bien,
-                    control_name: "descripcion",
-                    default_value: "",
-                    rules: { required_rule: { rule: true, message: "Descripción requerida" } },
-                    label: "Descripción",
-                    type: "text",
-                    multiline_text: true,
-                    rows_text: 4,
-                    disabled: false,
-                    helper_text: ""
-                  }
-                ]
+                      {
+                        datum_type: 'input_controller',
+                        xs: 12,
+                        md: 12,
+                        control_form: control_bien,
+                        control_name: 'descripcion',
+                        default_value: '',
+                        rules: {
+                          required_rule: {
+                            rule: true,
+                            message: 'Descripción requerida',
+                          },
+                        },
+                        label: 'Descripción',
+                        type: 'text',
+                        multiline_text: true,
+                        rows_text: 4,
+                        disabled: false,
+                        helper_text: '',
+                      },
+                    ]
               }
             />
-
-
           </Grid>
         </DialogContent>
         <Divider />
@@ -616,14 +794,19 @@ const CrearBienDialogForm = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
-              color='error'
+              color="error"
               variant="contained"
               onClick={handle_close_add_bien}
               startIcon={<CloseIcon />}
             >
               CERRAR
             </Button>
-            <Button type="submit" color='success' variant="contained" startIcon={<SaveIcon />}>
+            <Button
+              type="submit"
+              color="success"
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
               GUARDAR
             </Button>
           </Stack>

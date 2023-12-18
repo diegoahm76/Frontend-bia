@@ -42,7 +42,7 @@ const ConfiguracionAlertasScreen = () => {
 
     useEffect(() => {
         reset(current_configuracion);
-        console.log(current_configuracion)
+        //  console.log('')(current_configuracion)
     }, [current_configuracion]);
 
     return (

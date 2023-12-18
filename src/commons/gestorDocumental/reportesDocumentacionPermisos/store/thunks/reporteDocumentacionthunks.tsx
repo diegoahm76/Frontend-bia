@@ -91,7 +91,7 @@ export const get_permisos = (
         try {
             const { data } = await api.get(`gestor/resportes-permisos-doc/reporte-permisos-no-propios/get/${id ?? ''}/`);
             // const { data } = await api.get('gestor/resportes-permisos-doc/reporte-permisos-no-propios/get/5383/');
-            console.log(data.data)
+            //  console.log('')(data.data)
             if (data.succes === true) {
                 dispatch(set_permisos_no_propios(data.data));
 
@@ -113,7 +113,7 @@ export const get_permisos_generales = (
         try {
             const { data } = await api.get(`gestor/resportes-permisos-doc/reporte-permisos-generales/get/${id_ccd ?? ''}/${id_unidad_organizacional ?? ''}/`);
             // const { data } = await api.get('gestor/resportes-permisos-doc/reporte-permisos-no-propios/get/5383/');
-            console.log(data.data)
+            //  console.log('')(data.data)
             if (data.succes === true) {
                 dispatch(set_permisos_generales(data.data));
 

@@ -120,7 +120,7 @@ const SeleccionarDespacho = ({
       const { data } = await api.get(
         `conservacion/despachos/get-list/?numero_despacho=${numero ?? ''}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         if (data.data.length > 0) {
           dispatch(set_current_despacho(data.data[0]));
@@ -133,7 +133,7 @@ const SeleccionarDespacho = ({
         control_error(data.detail);
       }
     } catch (err) {
-      console.log(err);
+      //  console.log('')(err);
     }
   };
 
@@ -143,7 +143,7 @@ const SeleccionarDespacho = ({
       const { data } = await api.get(
         `conservacion/despachos/get-list/?numero_despacho=${despacho ?? ''}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         if (data.data.length > 0) {
           set_despachos(data.data);
@@ -154,7 +154,7 @@ const SeleccionarDespacho = ({
         }
       }
     } catch (err) {
-      console.log(err);
+      //  console.log('')(err);
     }
   };
 

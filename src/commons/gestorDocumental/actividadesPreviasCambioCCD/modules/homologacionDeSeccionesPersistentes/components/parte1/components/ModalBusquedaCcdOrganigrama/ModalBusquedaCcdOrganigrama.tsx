@@ -129,7 +129,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       } else {
         dispatch(setHomologacionUnidades(infoToReturn));
 
-        console.log(resUnidadesPersistentes);
+        //  console.log('')(resUnidadesPersistentes);
         //* se le asigna el valor de las UNIDADES A HOMOLOGAR al estado de unidades persistentes
         /*
           - tiene prop id_ccd_nuevo
@@ -197,7 +197,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
-                console.log(params.row);
+                //  console.log('')(params.row);
                 //* si limpia el estado local que almacenaba valores
                 dispatch(setHomologacionUnidades([]));
                 dispatch(setUnidadesPersistentes([]));

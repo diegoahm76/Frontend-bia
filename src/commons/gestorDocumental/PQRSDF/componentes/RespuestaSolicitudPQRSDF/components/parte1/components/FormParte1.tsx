@@ -122,7 +122,7 @@ export const FormParte1 = (): JSX.Element => {
           variant="contained"
           color="success"
           onClick={() => {
-            console.log('click siuuu');
+            //  console.log('')('click siuuu');
           }}
           sx={{
             width: '60%',

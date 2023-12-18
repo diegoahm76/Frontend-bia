@@ -19,7 +19,11 @@ import {
   set_document_types,
   set_document_type,
 } from '../../store/slice/pqrsdfSlice';
-import { get_document_types_service } from '../../store/thunks/pqrsdfThunks';
+import {
+  get_document_types_service,
+  get_person_document_service,
+  get_persons_service,
+} from '../../store/thunks/pqrsdfThunks';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TipoPersona = () => {
   const dispatch = useAppDispatch();
@@ -46,7 +50,7 @@ const TipoPersona = () => {
 
   // useEffect(() => {
   //   // void dispatch(get_document_types_service());
-  //   console.log(watch('document_type'));
+  //   //  console.log('')(watch('document_type'));
   // }, [watch('document_type')]);
 
   useEffect(() => {
@@ -59,8 +63,8 @@ const TipoPersona = () => {
   useEffect(() => {
     reset_persona({
       ...person,
-      person_type: person_type.key,
-      document_type: document_type.cod_tipo_documento,
+      tipo_persona: person_type.key,
+      tipo_documento: document_type.cod_tipo_documento,
     });
   }, [document_type, person_type]);
 
@@ -70,7 +74,7 @@ const TipoPersona = () => {
 
   const columns_personas: GridColDef[] = [
     {
-      field: 'document_type',
+      field: 'tipo_documento',
       headerName: 'Tipo de documento',
       width: 250,
       renderCell: (params) => (
@@ -80,7 +84,7 @@ const TipoPersona = () => {
       ),
     },
     {
-      field: 'document',
+      field: 'numero_documento',
       headerName: 'Número de documento',
       width: 200,
       renderCell: (params) => (
@@ -90,7 +94,7 @@ const TipoPersona = () => {
       ),
     },
     {
-      field: 'full_name',
+      field: 'nombre_completo',
       headerName: 'Nombre completo',
       width: 300,
       renderCell: (params) => (
@@ -101,7 +105,7 @@ const TipoPersona = () => {
     },
 
     {
-      field: 'person_type',
+      field: 'tipo_persona',
       headerName: 'Tipo de persona',
       width: 250,
       renderCell: (params) => (
@@ -113,13 +117,13 @@ const TipoPersona = () => {
   ];
 
   const on_change_select = (value: any, name: string): void => {
-    if (name === 'person_type') {
+    if (name === 'tipo_persona') {
       dispatch(set_document_type({ cod_tipo_documento: null, nombre: null }));
       if (value !== undefined) {
         dispatch(set_person_type(value));
         set_aux_document_types(
           document_types.filter((objeto: IObjDocumentType) =>
-            value.id === 1
+            value.id === 'N'
               ? objeto.cod_tipo_documento !== 'NT'
               : objeto.cod_tipo_documento === 'NT'
           )
@@ -128,7 +132,7 @@ const TipoPersona = () => {
         dispatch(set_person_type({ id: null, key: null, label: null }));
         set_aux_document_types(document_types);
       }
-    } else if (name === 'document_type') {
+    } else if (name === 'tipo_documento') {
       if (value !== undefined) {
         dispatch(set_document_type(value));
       } else {
@@ -138,36 +142,27 @@ const TipoPersona = () => {
   };
 
   const get_personas: any = async () => {
-    const document = get_values('document') ?? '';
-    const type = get_values('document_type') ?? '';
-    const name = get_values('name') ?? '';
-    const last_name = get_values('last_name') ?? '';
-    const person_type = get_values('person_type') ?? '';
-    console.log(document, type, name, last_name, person_type);
-    // void dispatch(
-    //   get_persons_service(
-    //     type,
-    //     document,
-    //     primer_nombre,
-    //     primer_apellido,
-    //     razon_social,
-    //     comercial_name
-    //   )
-    // );
+    const document = get_values('numero_documento') ?? '';
+    const type = get_values('tipo_documento') ?? '';
+    const name = get_values('primer_nombre') ?? '';
+    const last_name = get_values('primer_apellido') ?? '';
+    //  console.log('')(document, type, name, last_name, person_type);
+    void dispatch(
+      get_persons_service(type, document, name, last_name, '', '', true)
+    );
   };
 
   const search_person: any = async () => {
-    const document = get_values('document') ?? '';
-    const type = get_values('document_type') ?? '';
-    console.log(document, type);
-    // void dispatch(get_person_document_service(type, document));
+    const document = get_values('numero_documento') ?? '';
+    const type = get_values('tipo_documento') ?? '';
+    void dispatch(get_person_document_service(type, document, true));
   };
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
           set_current_model={set_person}
-          row_id={'id_person'}
+          row_id={'id_persona'}
           columns_model={columns_personas}
           models={persons}
           get_filters_models={get_personas}
@@ -184,7 +179,7 @@ const TipoPersona = () => {
               xs: 12,
               md: 3,
               control_form: control_tipo_persona,
-              control_name: 'document_type',
+              control_name: 'tipo_documento',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
@@ -200,7 +195,7 @@ const TipoPersona = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_persona,
-              control_name: 'document',
+              control_name: 'numero_documento',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento',
@@ -214,13 +209,16 @@ const TipoPersona = () => {
               xs: 12,
               md: 4,
               control_form: control_tipo_persona,
-              control_name: 'full_name',
+              control_name: 'nombre_completo',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Nombre completo',
               type: 'text',
               disabled: true,
-              helper_text: 'No se ha seleccionado persona',
+              helper_text:
+                person.id_persona === null
+                  ? 'No se ha seleccionado empresa'
+                  : '',
             },
           ]}
           modal_select_model_title="Buscar persona"
@@ -230,7 +228,7 @@ const TipoPersona = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_persona,
-              control_name: 'person_type',
+              control_name: 'tipo_persona',
               default_value: '',
               rules: {},
               label: 'Tipo de persona',
@@ -246,7 +244,7 @@ const TipoPersona = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_persona,
-              control_name: 'document_type',
+              control_name: 'tipo_documento',
               default_value: '',
               rules: {},
               label: 'Tipo de documento',
@@ -262,7 +260,7 @@ const TipoPersona = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_persona,
-              control_name: 'document',
+              control_name: 'numero_documento',
               default_value: '',
               rules: {},
               label: 'Número de documento',
@@ -275,7 +273,7 @@ const TipoPersona = () => {
               xs: 12,
               md: 4,
               control_form: control_tipo_persona,
-              control_name: 'name',
+              control_name: 'primer_nombre',
               default_value: '',
               rules: {},
               label: 'Nombre',
@@ -288,7 +286,7 @@ const TipoPersona = () => {
               xs: 12,
               md: 4,
               control_form: control_tipo_persona,
-              control_name: 'last_name',
+              control_name: 'primer_apellido',
               default_value: '',
               rules: {},
               label: 'Apellido',

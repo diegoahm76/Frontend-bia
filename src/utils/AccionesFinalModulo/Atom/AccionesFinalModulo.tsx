@@ -63,7 +63,15 @@ export const AccionesFinalModulo = (
                     variant="outlined"
                     startIcon={<CleanIcon />}
                     onClick={() => {
-                      reset_all([() => dispatch(reset_states())]);
+                      reset_all([
+                        () => {
+                          try {
+                            dispatch(reset_states());
+                          } catch (error) {
+                            reset_states();
+                          }
+                        },
+                      ]);
                     }}
                   >
                     LIMPIAR CAMPOS
@@ -84,7 +92,13 @@ export const AccionesFinalModulo = (
                     variant="contained"
                     startIcon={<CloseIcon />}
                     onClick={() => {
-                      getOutModule(navigate, [() => dispatch(reset_states())]);
+                      getOutModule(navigate, [() => {
+                        try {
+                          dispatch(reset_states());
+                        } catch (error) {
+                          reset_states();
+                        }
+                      }]);
                     }}
                   >
                     SALIR DEL MÓDULO

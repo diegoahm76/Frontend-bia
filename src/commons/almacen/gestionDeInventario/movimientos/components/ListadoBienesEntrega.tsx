@@ -23,7 +23,7 @@ const ListadoBienesEntrega = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(bienes_entrada, bienes_entrega);
+    //  console.log('')(bienes_entrada, bienes_entrega);
     if (bienes_entrada.length > 0) {
       if (bienes_entrega.length > 0) {
         const aux_items: IObjBienesEntrada[] = [];
@@ -45,7 +45,7 @@ const ListadoBienesEntrega = () => {
             cantidad_faltante: ((option.cantidad_disponible ?? option.cantidad ?? 0) - despachada) < 0 ? (option.cantidad_disponible ?? option.cantidad ?? 0) : (option.cantidad_disponible ?? option.cantidad ?? 0) - despachada,
           });
         });
-        console.log(aux_items);
+        //  console.log('')(aux_items);
         dispatch(set_bienes_entrada_aux(aux_items));
       } else {
         dispatch(set_bienes_entrada_aux(bienes_entrada));
@@ -55,15 +55,15 @@ const ListadoBienesEntrega = () => {
 
 
   useEffect(() => {
-    console.log(bienes_entrada_aux);
+    //  console.log('')(bienes_entrada_aux);
   }, [bienes_entrada_aux]);
 
 
   useEffect(() => {
 
-    console.log(bienes_entrada, bienes_entrega);
+    //  console.log('')(bienes_entrada, bienes_entrega);
     if (bienes_entrada.length > 0) {
-      console.log("Bienes entrega")
+      //  console.log('')("Bienes entrega")
       if (bienes_entrega.length > 0) {
         const aux_items: IObjBienesEntrada[] = [];
         // let bien: IObjBienDespacho | undefined;
@@ -163,7 +163,7 @@ const ListadoBienesEntrega = () => {
     const model: IObjBienesEntrada | undefined = bienes_entrada_aux.find(
       (p) => p.id_bien === selected_row[0]
     );
-    console.log(model);
+    //  console.log('')(model);
     if (model !== undefined) {
       dispatch(set_bien_selected(model));
     }

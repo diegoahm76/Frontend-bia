@@ -3,7 +3,13 @@ import { Grid } from '@mui/material';
 import { Title } from '../../../../../../../../components';
 import { FormParte2 } from '../components/FormParte2';
 
-export const Parte2Screen = (): JSX.Element => {
+export const Parte2Screen = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+}: any): JSX.Element => {
   return (
     <Grid
       item
@@ -13,7 +19,13 @@ export const Parte2Screen = (): JSX.Element => {
       }}
     >
       <Title title="Solicitud de complemento de información al usuario" />
-      <FormParte2 />
+      <FormParte2
+        controlFormulario={controlFormulario}
+        handleSubmitFormulario={handleSubmitFormulario}
+        errorsFormulario={errorsFormulario}
+        resetFormulario={resetFormulario}
+        watchFormulario={watchFormulario}
+      />
     </Grid>
   );
 };

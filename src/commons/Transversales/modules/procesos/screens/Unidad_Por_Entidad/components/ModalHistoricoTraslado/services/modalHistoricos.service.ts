@@ -29,7 +29,7 @@ export const getHistoricosTraslados = async (): Promise<any> => {
   } catch (error) {
     const errorMessage = `${ERROR_DEFAULT}`;
     control_error(errorMessage);
-    console.log(error);
+    //  console.log('')(error);
     throw new Error(errorMessage);
   }
 };

@@ -53,7 +53,7 @@ export const useContextoPoaiHook = (): any => {
 
   const onsubmit_concepto = handleSubmit_concepto(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       // data.id_indicador = id_indicador;
       set_is_saving_concepto(true);
       await post_concepto_poai(data as IConceptoPOAI);
@@ -74,7 +74,7 @@ export const useContextoPoaiHook = (): any => {
 
   const onsubmit_editar = handleSubmit_concepto(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_concepto(true);
       // data.id_indicador = id_indicador;
       await put_concepto_poai(

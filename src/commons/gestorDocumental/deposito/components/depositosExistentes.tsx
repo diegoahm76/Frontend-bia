@@ -69,7 +69,7 @@ const ListadoDeposito = ({ handle_edit_click }: IProps) => {
     ];
 
     // const get_depositos: any = async () => {
-    //     console.log("buscar...");
+    //     //  console.log('')("buscar...");
     //     const nombre_deposito = get_values('nombre_deposito') ?? '';
     //     const identificacion_por_entidad = get_values('identificacion_por_entidad') ?? '';
     //     // eslint-disable-next-line @typescript-eslint/await-thenable

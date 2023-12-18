@@ -1,7 +1,6 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip } from "@mui/material"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
 import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useAppDispatch } from "../../../../../hooks";
 import { ver_expedientes } from "../thunks/ConcesionAcceso";
 import dayjs from "dayjs";
@@ -116,7 +115,9 @@ export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
                 <Button
                     color='primary'
                     variant='contained'
-                    onClick={boton_seleccionar}>Seleccionar</Button>
+                   onClick={boton_seleccionar}
+                    >Seleccionar
+                    </Button>
                 <Button
                     color='inherit'
                     variant='contained'

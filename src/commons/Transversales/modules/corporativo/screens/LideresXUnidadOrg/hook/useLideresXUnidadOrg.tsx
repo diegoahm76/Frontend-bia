@@ -37,7 +37,7 @@ export const useLideresXUnidadOrganizacional = ():
   });
   const watch_organigrama_lideres_por_unidad_value =
     watch_organigrama_lideres_por_unidad();
-  //  console.log(watch_organigrama_lideres_por_unidad_value);
+  //  //  console.log('')(watch_organigrama_lideres_por_unidad_value);
 
   // * -------------- USE FORM SELECCIONAR LIDERES PART -------------- * //
 
@@ -60,7 +60,7 @@ export const useLideresXUnidadOrganizacional = ():
   });
 
   const watch_seleccionar_lideres_value = watch_seleccionar_lideres();
-  // console.log(watch_seleccionar_lideres_value);
+  // //  console.log('')(watch_seleccionar_lideres_value);
 
   // ? use Form to search leader asignations by organizational unit
 
@@ -82,7 +82,7 @@ export const useLideresXUnidadOrganizacional = ():
   });
   const watch_asignaciones_lider_by_unidad_value =
     watch_buscar_asignaciones_lideres_por_unidad();
- // console.log(watch_asignaciones_lider_by_unidad_value);
+ // //  console.log('')(watch_asignaciones_lider_by_unidad_value);
 
   // ! ----------- USE EFFECTS THAT I'LL USE IN COMPONENTS ----------- ! //
 

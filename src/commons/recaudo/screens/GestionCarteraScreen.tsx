@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { type SyntheticEvent, useState, useEffect } from 'react';
+import { type SyntheticEvent, useState, useEffect, useContext } from 'react';
 import { Avatar, Box, Grid, IconButton, type SelectChangeEvent, Tab, Tooltip, Chip, Pagination, Stack } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Title } from "../../../components"
@@ -14,6 +14,8 @@ import { RequisitosModal } from '../components/GestionCartera/modal/RequisitosMo
 import { NotificationModal } from '../components/NotificationModal';
 import type { Cartera } from '../interfaces/cobro';
 import { CreateProcesoModal } from '../components/GestionCartera/modal/CreateProcesoModal';
+import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/SeccionEnvio_MSM_CORREO';
+import { EtapaProcesoConext } from '../components/GestionCartera/Context/EtapaProcesoContext';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -24,6 +26,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [procesos, set_procesos] = useState<Proceso[]>([]);
   const [categorias, set_categorias] = useState<CategoriaAtributo[]>([]);
   const [position_tab, set_position_tab] = useState('1');
+  const [data_complemet, set_data_complemet] = useState<any[]>([]);
   const [selected_proceso, set_selected_proceso] = useState({
     fecha_facturacion: '',
     numero_factura: '',
@@ -32,6 +35,7 @@ export const GestionCarteraScreen: React.FC = () => {
     dias_mora: '',
     valor_intereses: '',
     valor_sancion: '',
+    data_complement: "",
     etapa: '',
   });
   const [id_proceso, set_id_proceso] = useState('');
@@ -52,6 +56,8 @@ export const GestionCarteraScreen: React.FC = () => {
   const [open_create_proceso_modal, set_open_create_proceso_modal] = useState(false);
   const [valores_proceso, set_valores_proceso] = useState<ValoresProceso[][]>([]);
   const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
+  const { etapa_proceso, set_etapa_proceso } = useContext(EtapaProcesoConext);
+
 
   const columns_carteras: GridColDef[] = [
     {
@@ -167,6 +173,7 @@ export const GestionCarteraScreen: React.FC = () => {
                     dias_mora: params.row.dias_mora.toString() ?? '',
                     valor_intereses: params.row.valor_intereses ?? '',
                     valor_sancion: params.row.valor_sancion ?? '',
+                    data_complement: params.row ?? "",
                     etapa: procesos.find(proceso => proceso.id === params.row.proceso_cartera[0]?.id)?.id_etapa.etapa ?? 'Sin proceso activo',
                   });
                   set_atributos_etapa([]);
@@ -174,6 +181,16 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_id_etapa(params.row.proceso_cartera[0]?.id_etapa ?? '');
                   set_id_cartera(params.row.id);
                   set_position_tab('2');
+                  set_data_complemet(params.row);
+
+
+
+                  set_etapa_proceso((prevEtapa: any) => ({
+                    ...prevEtapa,
+                    mostrar_modal: true,
+                  }));
+
+
                 }}
               >
                 <Avatar
@@ -207,7 +224,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 
@@ -217,7 +234,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_categorias(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
   }, []);
 
@@ -228,7 +245,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
       .finally(() => {
         set_loading(false);
@@ -241,7 +258,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_flujos_proceso(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 
@@ -261,7 +278,7 @@ export const GestionCarteraScreen: React.FC = () => {
           group_valores_proceso(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   }, [id_proceso]);
@@ -282,7 +299,7 @@ export const GestionCarteraScreen: React.FC = () => {
           delete_duplicated_atributos(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   }, [id_etapa]);
@@ -293,7 +310,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   };
 
@@ -305,7 +322,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       })
       .finally(() => {
         set_loading(false);
@@ -318,7 +335,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_flujos_proceso(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   };
 
@@ -376,7 +393,7 @@ export const GestionCarteraScreen: React.FC = () => {
           set_open_notification_modal(true);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
       api.get(`recaudo/procesos/atributos/${id_etapa_destino}`)
         .then((response) => {
@@ -384,24 +401,35 @@ export const GestionCarteraScreen: React.FC = () => {
           group_atributos(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   };
 
+  
   const mover_subetapa_actual = (): void => {
     if (id_subetapa_destino) {
       api.post(`recaudo/procesos/actualizar-categoria-proceso/${id_proceso}/`, {
         id_categoria: id_subetapa_destino,
       })
         .then((response) => {
-          console.log(response);
+          //  console.log('')(response);
           update_flujos();
           update_procesos_sin_finalizar();
           update_carteras();
+
+
+          if (response.status === 200) {
+
+            set_etapa_proceso((prevEtapa: any) => ({
+              ...prevEtapa,
+              disable: false,
+              tipo_cambio: id_subetapa_destino,
+            }));
+          }
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     }
   };
@@ -492,9 +520,10 @@ export const GestionCarteraScreen: React.FC = () => {
         set_position_tab('1');
         set_notification_info({ type: 'success', message: 'Se ha creado correctamente el proceso.' });
         set_open_notification_modal(true);
+        console.log("data retur  crear-proceso", response)
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       })
@@ -521,7 +550,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       });
@@ -538,7 +567,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       });
@@ -635,11 +664,23 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_open_create_proceso_modal={set_open_create_proceso_modal}
                   mover_subetapa_actual={mover_subetapa_actual}
                 />
+
               </TabPanel>
             </TabContext>
           </Box>
         </Grid>
       </Grid>
+
+
+
+
+      <SeccionEnvio_MSM_CORREO_F
+        selected_proceso={selected_proceso}
+
+      />
+
+
+
 
       <TabContext value={position_tab}>
         <TabPanel value="2" sx={{ p: '20px 0' }}>

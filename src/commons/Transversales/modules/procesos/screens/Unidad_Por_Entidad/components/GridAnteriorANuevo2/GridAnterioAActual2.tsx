@@ -104,7 +104,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
               }}
               startIcon={<CleaningServicesIcon />}
               onClick={() => {
-                // console.log('limpiando select');
+                // //  console.log('')('limpiando select');
                 handleLimpiarSelect(params.row.id_persona);
               }}
             />
@@ -117,14 +117,14 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
   // ? cambios para realizar el proceder de traslado de unidades organizacionales
   useEffect(() => {
     if (asignacionConsultaTablaTemporal) {
-     /* console.log(
+     /* //  console.log('')(
         'resultados consulta tabla temporal',
         asignacionConsultaTablaTemporal
       ); */
     }
 
     if (gridAnteriorAActual) {
-      // console.log('gridActualANuevo', gridAnteriorAActual);
+      // //  console.log('')('gridActualANuevo', gridAnteriorAActual);
 
       const unidadesSeleccionadasTemp = gridAnteriorAActual
         ?.filter((persona: any) => {
@@ -147,7 +147,7 @@ export const GridAnteriorAActual2: FC<any> = (): JSX.Element => {
         setUnidadesSeleccionadasAnteriorAActual(unidadesSeleccionadasTemp)
       );
 
-      // console.log('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
+      // //  console.log('')('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
     }
   }, [gridAnteriorAActual, dispatch]);
 

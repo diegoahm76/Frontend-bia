@@ -145,7 +145,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
             void calcular_fechas_auto(i_cada, f_desde, f_hasta, fecha, [], check_isd, check_if).then(response => {
                 set_selected_date(response);
                 set_fechas_array(response);
-                console.log(fechas_array)
+                //  console.log('')(fechas_array)
             });
         }
     }

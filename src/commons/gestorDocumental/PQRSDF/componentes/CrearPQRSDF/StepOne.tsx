@@ -37,19 +37,32 @@ const StepOne = ({ control_form, reset }: IProps) => {
     pqr,
     media_types,
     destination_offices,
+    type_applicant,
   } = useAppSelector((state) => state.pqrsdf_slice);
+  const [requiere_rta_view, set_requiere_rta_view] = useState<boolean>(false);
 
   const on_change_select = (value: any, name: string): void => {
-    if (name === 'pqr_status') {
+    if (name === 'cod_tipo_PQRSDF') {
       if (value !== undefined) {
-        dispatch(set_pqr_status(value));
-      } else {
-        dispatch(set_pqr_status({ id: null, key: null, label: null }));
+        if (value.key === 'F') {
+          set_requiere_rta_view(true);
+        } else {
+          set_requiere_rta_view(false);
+        }
       }
     }
   };
   useEffect(() => {
-    reset(pqr);
+    reset({
+      ...pqr,
+      cod_forma_presentacion:
+        (type_applicant.key ?? null) === null
+          ? 'E'
+          : pqr.cod_forma_presentacion,
+      id_medio_solicitud:
+        (type_applicant.key ?? null) === null ? 2 : pqr.id_medio_solicitud,
+    });
+    //  console.log('')(pqr, type_applicant);
   }, []);
 
   return (
@@ -70,23 +83,23 @@ const StepOne = ({ control_form, reset }: IProps) => {
               xs: 12,
               md: 4,
               control_form: control_form,
-              control_name: 'pqr_type_id',
+              control_name: 'cod_tipo_PQRSDF',
               default_value: '',
-              // rules: { required_rule: { rule: true, message: 'Requerido' } },
-              rules: {},
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de PQRSDF',
               disabled: false,
               helper_text: 'Debe seleccionar campo',
               select_options: pqr_types,
               option_label: 'label',
               option_key: 'key',
+              on_change_function: on_change_select,
             },
             {
               datum_type: 'date_picker_controller',
               xs: 12,
               md: 4,
               control_form: control_form,
-              control_name: 'created_at',
+              control_name: 'fecha_registro',
               default_value: new Date(),
               rules: {},
               label: 'Fecha de elaboración',
@@ -99,12 +112,15 @@ const StepOne = ({ control_form, reset }: IProps) => {
               xs: 12,
               md: 4,
               control_form: control_form,
-              control_name: 'requires_response',
-              default_value: pqr.requires_response,
+              control_name: 'requiere_rta',
+              default_value: pqr.requiere_rta ?? true,
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Requiere respuesta',
               disabled: false,
               helper_text: '',
+              hidden_text: !(
+                requiere_rta_view || (pqr.cod_tipo_PQRSDF ?? null) === 'F'
+              ),
             },
             {
               datum_type: 'title',
@@ -115,7 +131,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               xs: 12,
               md: 12,
               control_form: control_form,
-              control_name: 'subject',
+              control_name: 'asunto',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Asunto',
@@ -128,12 +144,11 @@ const StepOne = ({ control_form, reset }: IProps) => {
               xs: 12,
               md: 4,
               control_form: control_form,
-              control_name: 'code_presentation_type',
+              control_name: 'cod_forma_presentacion',
               default_value: '',
-              // rules: { required_rule: { rule: true, message: 'Requerido' } },
-              rules: {},
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Forma de presentación',
-              disabled: false,
+              disabled: (type_applicant.key ?? null) === null,
               helper_text: 'Debe seleccionar campo',
               select_options: presentation_types,
               option_label: 'label',
@@ -144,12 +159,11 @@ const StepOne = ({ control_form, reset }: IProps) => {
               xs: 12,
               md: 4,
               control_form: control_form,
-              control_name: 'media_type_id',
+              control_name: 'id_medio_solicitud',
               default_value: '',
-              // rules: { required_rule: { rule: true, message: 'Requerido' } },
-              rules: {},
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Medio de solicitud',
-              disabled: false,
+              disabled: (type_applicant.key ?? null) === null,
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',
@@ -160,10 +174,9 @@ const StepOne = ({ control_form, reset }: IProps) => {
               xs: 12,
               md: 4,
               control_form: control_form,
-              control_name: 'destination_office_id',
+              control_name: 'id_sucursal_especifica_implicada',
               default_value: '',
-              // rules: { required_rule: { rule: true, message: 'Requerido' } },
-              rules: {},
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Dirigida a la sucursal',
               disabled: false,
               helper_text: 'Debe seleccionar campo',
@@ -176,7 +189,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               xs: 12,
               md: 12,
               control_form: control_form,
-              control_name: 'description',
+              control_name: 'descripcion',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Descripción',

@@ -24,7 +24,7 @@ const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =
 export const reporte_mortalidad: any = (filtros: { seleccion_vivero: number | string, seleccion_planta: any, fecha_desde: string, fecha_hasta: string, reporte_consolidado: boolean }) => {
   return async () => {
     try {
-      console.log(filtros.seleccion_planta)
+      //  console.log('')(filtros.seleccion_planta)
       const { data } = await api.get(`conservacion/analitica/reporte-mortalidad/get/?id_vivero=${filtros.seleccion_vivero === 'Todos' ? '' : filtros.seleccion_vivero}&id_bien=${filtros.seleccion_planta.id_bien.toString()}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&reporte_consolidado=${filtros.reporte_consolidado}`);
       return data;
     } catch (error: any) {

@@ -32,7 +32,7 @@ export function BodegaScreen(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const on_submit = (data: IBodega) => {
     if (bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined) {
-      console.log("editar")
+      //  console.log('')("editar")
       void dispatch(edit_bodega_service(data, bodega_seleccionada.id_bodega))
     } else {
       void dispatch(add_bodega_service(data));
@@ -43,7 +43,7 @@ export function BodegaScreen(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const on_submit_delete = (data: IBodega) => {
     if (bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined) {
-      console.log("eliminar")
+      //  console.log('')("eliminar")
       void dispatch(delete_bodega_service(bodega_seleccionada.id_bodega))
     } else {
       void dispatch(add_bodega_service(data));

@@ -13,20 +13,22 @@ import { FacilidadPagoRoutes } from '../facilidadPago/routes/FacilidadPagoRoutes
 import { ReportesRoutes } from '../reportes/routes/ReportesRoutes';
 import { LiquidacionScreen } from '../screens/LiquidacionScreen';
 import ConfiguracionAlertasScreen from '../alertas/screens/ConfiguracionAlertaScreen';
+import { EtapaProcesoProvider } from '../components/GestionCartera/Context/EtapaProcesoContext';
 
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecaudoRoutes: React.FC = () => {
   return (
+    <EtapaProcesoProvider >
     <Routes>
-      <Route path="datos/*" element={<RecaudoScreen />} />
+      {/* <Route path="datos/*" element={<RecaudoScreen />} /> */}
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />
       <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
       <Route path="constructor_liquidacion/*" element={<ConstructorLiquidacionScreen />} />
       <Route path="proceso_liquidacion/*" element={<ProcesoLiquidacionScreen />} />
       <Route path="estados_proceso/*" element={<EstadosProcesoScreen />} />
-      <Route path="flujo_proceso/*" element={<FlujoProcesosScreen />} />
+      {/* <Route path="flujo_proceso/*" element={<FlujoProcesosScreen />} /> */}
       <Route path="gestion_cartera/*" element={<GestionCarteraScreen />} />
       <Route path="visor_procesos/*" element={<VisorProcesosScreen />} />
       <Route path="historial_proceso/*" element={<HistorialProceso />} />
@@ -35,5 +37,6 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="alertas/*" element={<ConfiguracionAlertasScreen />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
+    </EtapaProcesoProvider>
   );
 };

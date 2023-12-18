@@ -12,7 +12,7 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { getLiderByUnidadOrganizacional } from '../../services/getLiderUnidadOrganizacional.service';
 
 export const SeleccionGrupo = (): JSX.Element => {
-  const { listaSubGrupos, liderAsignado, setLiderAsignado } = useContext(
+  const { listaSubGrupos, liderAsignado, setLiderAsignado, setCurrentGrupo } = useContext(
     AsignacionGrupoContext
   );
 
@@ -103,12 +103,13 @@ export const SeleccionGrupo = (): JSX.Element => {
                     onChange={(selectedOption) => {
                       const { value } = selectedOption;
                       //* se va a tener que hacer la consulta de si la unidad tiene lider actual o si no no se deben permite asignala la pqrsdf a dicha unidad}
+                      setCurrentGrupo(selectedOption);
                       void getLiderByUnidadOrganizacional(
                         value,
                         setLiderAsignado
                       )
                         .then((res) => {
-                          console.log(res);
+                          //  console.log('')(res);
 
                           if (Array.isArray(res)) {
                             setLiderAsignado(undefined);

@@ -239,8 +239,8 @@ export const SeleccionarSeccion: React.FC = () => {
   // };
 
   useEffect(() => {
-    console.log(rows_to_delete_subseecion, 'rows_to_delete_subseecion');
-    console.log(rows_subseccion, 'rows_subseccion');
+    //  console.log('')(rows_to_delete_subseecion, 'rows_to_delete_subseecion');
+    //  console.log('')(rows_subseccion, 'rows_subseccion');
   }, [rows_to_delete_subseecion]);
 
   const handle_eliminar = async (row: any): Promise<void> => {

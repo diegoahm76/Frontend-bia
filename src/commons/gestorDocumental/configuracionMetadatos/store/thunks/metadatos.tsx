@@ -42,9 +42,9 @@ export const crear_metadato: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            // console.log(despacho);
+            // //  console.log('')(despacho);
             const { data } = await api.post('gestor/metadatos/metadatos-personalizados/crear/', metadato);
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data) {
                 //  dispatch(set_metadatos(data.data));
@@ -53,7 +53,7 @@ export const crear_metadato: any = (
 
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -95,7 +95,7 @@ export const get_valores_metadato = (): any => {
                 dispatch(set_valores_metadatos(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             //   control_error(error.response.data.detail);
@@ -116,7 +116,7 @@ export const get_metadatos = (): any => {
                 dispatch(set_metadatos(data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -137,7 +137,7 @@ export const eliminar_metadato = (
             const { data } = await api.delete(`gestor/metadatos/metadatos-personalizados/eliminar/${id}/`
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success === true) {
                 control_success(data.detail);
@@ -167,7 +167,7 @@ export const editar_metadato: any = (
             const { data } = await api.put(`gestor/metadatos/metadatos-personalizados/editar/${id}/`, metadato
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success === true) {
                 control_success(data.detail);
@@ -192,7 +192,7 @@ export const crear_valor_metadato: any = (
             const { data } = await api.post('gestor/metadatos/valores-metadatos/crear/', valor
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success === true) {
                 control_success(data.detail);
@@ -219,7 +219,7 @@ export const get_valores_metadatos = (): any => {
                 dispatch(set_valores_metadatos(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);

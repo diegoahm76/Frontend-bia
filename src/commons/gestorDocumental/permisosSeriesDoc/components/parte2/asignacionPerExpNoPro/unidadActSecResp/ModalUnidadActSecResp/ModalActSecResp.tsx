@@ -51,7 +51,7 @@ export const ModalActSecResp = (params: any): JSX.Element => {
             }
           : elemento
       );
-      console.log(DATOS_ACTUALIZADOS);
+      //  console.log('')(DATOS_ACTUALIZADOS);
       dispatch(callback(DATOS_ACTUALIZADOS));
     };
     const handleCheckboxChangeConsulta = (
@@ -76,7 +76,7 @@ export const ModalActSecResp = (params: any): JSX.Element => {
             }
           : elemento
       );
-      console.log(DATOS_ACTUALIZADOS);
+      //  console.log('')(DATOS_ACTUALIZADOS);
       dispatch(callback(DATOS_ACTUALIZADOS));
     };
   
@@ -272,7 +272,7 @@ export const ModalActSecResp = (params: any): JSX.Element => {
       maxWidth="md"
       open={modalUniProp}
       onClose={() => {
-        console.log('cerrando modal');
+        //  console.log('')('cerrando modal');
         setmodalUniProp(false);
       }}
     >
@@ -296,7 +296,7 @@ export const ModalActSecResp = (params: any): JSX.Element => {
             variant="contained"
             color="error"
             onClick={() => {
-              console.log('cerrando modal');
+              //  console.log('')('cerrando modal');
               setmodalUniProp(false);
             }}
             startIcon={<CloseIcon />}

@@ -15,6 +15,7 @@ import { post_respuesta_fac_pago } from '../requests/requests';
 import { deudores, get_datos_deudor_amortizacion } from '../slices/DeudoresSlice';
 import { datos_facilidad } from '../slices/FacilidadesSlice';
 import { get_datos_amortizacion } from '../slices/PlanPagosSlice';
+import { control_error } from '../../../../helpers';
 
 interface RootState {
   solicitud_facilidad: {
@@ -436,7 +437,8 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                             })
                             set_respuesta_registro(res_registro ?? {});
                           } catch (error: any) {
-                            throw new Error(error);
+                            // throw new Error(error);
+                            control_error(error.response.data.detail);
                           }
                         }
                         void post_registro();

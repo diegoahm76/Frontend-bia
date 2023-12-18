@@ -196,7 +196,7 @@ export function PreparacionMezclaScreen(): JSX.Element {
           info_preparacion: data_edit,
           items_preparacion: aux_items,
         };
-        console.log(data_update);
+        //  console.log('')(data_update);
         void dispatch(edit_preparacion_service(data_update));
       } else {
         control_error(
@@ -222,7 +222,7 @@ export function PreparacionMezclaScreen(): JSX.Element {
         info_preparacion: data_edit,
         items_preparacion: aux_items,
       };
-      console.log(data_update);
+      //  console.log('')(data_update);
       void dispatch(add_preparacion_service(data_update));
     }
   };

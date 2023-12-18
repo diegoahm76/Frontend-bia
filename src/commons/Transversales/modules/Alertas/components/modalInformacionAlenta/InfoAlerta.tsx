@@ -107,7 +107,7 @@ export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador,
     const handle_suspender_alerta_clickk: () => Promise<void> = async () => {
         try {
             await handle_change_leido(); // Llamar a la función sin argumentos
-            // console.log(`ID de alerta suspendida: ${dat.dat}`);
+            // //  console.log('')(`ID de alerta suspendida: ${dat.dat}`);
             set_alerta_idTo_findd(dat);
             set_contador_icono(marcador);
         } catch (error) {

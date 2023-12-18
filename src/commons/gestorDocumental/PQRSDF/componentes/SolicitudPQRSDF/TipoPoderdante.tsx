@@ -18,8 +18,17 @@ import {
   set_person_type,
   set_document_types,
   set_document_type,
+  set_grantor,
+  set_attorney,
+  set_attorneys,
+  initial_state_person,
 } from '../../store/slice/pqrsdfSlice';
-import { get_document_types_service } from '../../store/thunks/pqrsdfThunks';
+import {
+  get_attorneys_service,
+  get_document_types_service,
+  get_person_document_service,
+  get_persons_service,
+} from '../../store/thunks/pqrsdfThunks';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TipoPoderdante = () => {
   const dispatch = useAppDispatch();
@@ -49,10 +58,12 @@ const TipoPoderdante = () => {
   const [aux_document_types, set_aux_document_types] = useState<
     IObjDocumentType[]
   >([]);
+  const [active_dialog_attroneys, set_active_dialog_attroneys] =
+    useState(false);
 
   // useEffect(() => {
   //   // void dispatch(get_document_types_service());
-  //   console.log(watch('document_type'));
+  //   //  console.log('')(watch('document_type'));
   // }, [watch('document_type')]);
 
   useEffect(() => {
@@ -60,19 +71,22 @@ const TipoPoderdante = () => {
   }, []);
   useEffect(() => {
     reset_poderdante(grantor);
-    //dispatch(buscar_apoderadoscon poderdanteid)
+    dispatch(set_attorney(initial_state_person));
+
+    if (grantor.id_persona !== null && grantor.id_persona !== undefined) {
+      dispatch(get_attorneys_service(grantor.id_persona));
+    }
   }, [grantor]);
+
   useEffect(() => {
     reset_apoderado(attorney);
   }, [attorney]);
 
   useEffect(() => {
-    reset_poderdante({
-      ...grantor,
-      person_type: person_type.key,
-      document_type: document_type.cod_tipo_documento,
-    });
-  }, [document_type, person_type]);
+    if (attorneys.length > 0) {
+      set_active_dialog_attroneys(true);
+    }
+  }, [attorneys]);
 
   useEffect(() => {
     set_aux_document_types(document_types);
@@ -80,7 +94,7 @@ const TipoPoderdante = () => {
 
   const columns_personas: GridColDef[] = [
     {
-      field: 'document_type',
+      field: 'tipo_documento',
       headerName: 'Tipo de documento',
       width: 250,
       renderCell: (params) => (
@@ -90,7 +104,7 @@ const TipoPoderdante = () => {
       ),
     },
     {
-      field: 'document',
+      field: 'numero_documento',
       headerName: 'Número de documento',
       width: 200,
       renderCell: (params) => (
@@ -100,7 +114,7 @@ const TipoPoderdante = () => {
       ),
     },
     {
-      field: 'full_name',
+      field: 'nombre_completo',
       headerName: 'Nombre completo',
       width: 300,
       renderCell: (params) => (
@@ -111,7 +125,7 @@ const TipoPoderdante = () => {
     },
 
     {
-      field: 'person_type',
+      field: 'tipo_persona',
       headerName: 'Tipo de persona',
       width: 250,
       renderCell: (params) => (
@@ -123,13 +137,13 @@ const TipoPoderdante = () => {
   ];
 
   const on_change_select = (value: any, name: string): void => {
-    if (name === 'person_type') {
+    if (name === 'tipo_persona') {
       dispatch(set_document_type({ cod_tipo_documento: null, nombre: null }));
       if (value !== undefined) {
         dispatch(set_person_type(value));
         set_aux_document_types(
           document_types.filter((objeto: IObjDocumentType) =>
-            value.id === 1
+            value.id === 'N'
               ? objeto.cod_tipo_documento !== 'NT'
               : objeto.cod_tipo_documento === 'NT'
           )
@@ -138,7 +152,7 @@ const TipoPoderdante = () => {
         dispatch(set_person_type({ id: null, key: null, label: null }));
         set_aux_document_types(document_types);
       }
-    } else if (name === 'document_type') {
+    } else if (name === 'tipo_documento') {
       if (value !== undefined) {
         dispatch(set_document_type(value));
       } else {
@@ -147,40 +161,31 @@ const TipoPoderdante = () => {
     }
   };
 
-  const get_grantors: any = async () => {
-    const document = get_values('document') ?? '';
-    const type = get_values('document_type') ?? '';
-    const name = get_values('name') ?? '';
-    const last_name = get_values('last_name') ?? '';
-    const person_type = get_values('person_type') ?? '';
-    console.log(document, type, name, last_name, person_type);
-    // void dispatch(
-    //   get_grantors_service(
-    //     type,
-    //     document,
-    //     primer_nombre,
-    //     primer_apellido,
-    //     razon_social,
-    //     comercial_name
-    //   )
-    // );
+  const get_personas: any = async () => {
+    const document = get_values('numero_documento') ?? '';
+    const type = get_values('tipo_documento') ?? '';
+    const name = get_values('primer_nombre') ?? '';
+    const last_name = get_values('primer_apellido') ?? '';
+    //  console.log('')(document, type, name, last_name, person_type);
+    void dispatch(
+      get_persons_service(type, document, name, last_name, '', '', false)
+    );
   };
 
-  const search_grantor: any = async () => {
-    const document = get_values('document') ?? '';
-    const type = get_values('document_type') ?? '';
-    console.log(document, type);
-    // void dispatch(get_person_document_service(type, document));
+  const search_person: any = async () => {
+    const document = get_values('numero_documento') ?? '';
+    const type = get_values('tipo_documento') ?? '';
+    void dispatch(get_person_document_service(type, document, false));
   };
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
-          set_current_model={set_person}
-          row_id={'id_person'}
+          set_current_model={set_grantor}
+          row_id={'id_persona'}
           columns_model={columns_personas}
           models={grantors}
-          get_filters_models={get_grantors}
+          get_filters_models={get_personas}
           set_models={set_grantors}
           reset_values={reset_poderdante}
           button_submit_label="BUSCAR"
@@ -194,7 +199,7 @@ const TipoPoderdante = () => {
               xs: 12,
               md: 3,
               control_form: control_tipo_poderdante,
-              control_name: 'document_type',
+              control_name: 'tipo_documento',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
@@ -210,27 +215,30 @@ const TipoPoderdante = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_poderdante,
-              control_name: 'document',
+              control_name: 'numero_documento',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento',
               type: 'number',
               disabled: (document_type.cod_tipo_documento ?? null) === null,
               helper_text: 'Digite para buscar',
-              on_blur_function: search_grantor,
+              on_blur_function: search_person,
             },
             {
               datum_type: 'input_controller',
               xs: 12,
               md: 4,
               control_form: control_tipo_poderdante,
-              control_name: 'full_name',
+              control_name: 'nombre_completo',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Nombre completo',
               type: 'text',
               disabled: true,
-              helper_text: 'No se ha seleccionado persona',
+              helper_text:
+                grantor.id_persona === null
+                  ? 'No se ha seleccionado poderdante'
+                  : '',
             },
           ]}
           modal_select_model_title="Buscar poderdante"
@@ -240,7 +248,7 @@ const TipoPoderdante = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_poderdante,
-              control_name: 'person_type',
+              control_name: 'tipo_persona',
               default_value: '',
               rules: {},
               label: 'Tipo de persona',
@@ -256,7 +264,7 @@ const TipoPoderdante = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_poderdante,
-              control_name: 'document_type',
+              control_name: 'tipo_documento',
               default_value: '',
               rules: {},
               label: 'Tipo de documento',
@@ -272,7 +280,7 @@ const TipoPoderdante = () => {
               xs: 12,
               md: 2,
               control_form: control_tipo_poderdante,
-              control_name: 'document',
+              control_name: 'numero_documento',
               default_value: '',
               rules: {},
               label: 'Número de documento',
@@ -285,7 +293,7 @@ const TipoPoderdante = () => {
               xs: 12,
               md: 4,
               control_form: control_tipo_poderdante,
-              control_name: 'name',
+              control_name: 'primer_nombre',
               default_value: '',
               rules: {},
               label: 'Nombre',
@@ -298,7 +306,7 @@ const TipoPoderdante = () => {
               xs: 12,
               md: 4,
               control_form: control_tipo_poderdante,
-              control_name: 'last_name',
+              control_name: 'primer_apellido',
               default_value: '',
               rules: {},
               label: 'Apellido',
@@ -309,59 +317,67 @@ const TipoPoderdante = () => {
           ]}
         />
         <BuscarModelo
-          set_current_model={set_person}
-          row_id={'id_person'}
+          modal_active_init={active_dialog_attroneys}
+          set_current_model={set_attorney}
+          row_id={'id_persona'}
           columns_model={columns_personas}
-          models={grantors}
-          get_filters_models={get_grantors}
-          set_models={set_grantors}
+          models={attorneys}
+          get_filters_models={null}
+          set_models={set_attorneys}
           reset_values={reset_poderdante}
           button_submit_label="Seleccionar apoderado"
           button_icon_class={<AdminPanelSettingsIcon />}
-          button_submit_disabled={grantor.id_person === null}
+          button_submit_disabled={grantor.id_persona === null}
           form_inputs={[
             {
               datum_type: 'select_controller',
               xs: 12,
               md: 3,
               control_form: control_apoderado,
-              control_name: 'document_type',
+              control_name: 'tipo_documento',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento apoderado',
               disabled: true,
-              helper_text: 'Debe seleccionar campo',
+              helper_text:
+                attorney.id_persona === null
+                  ? 'No se ha seleccionado apoderado'
+                  : '',
               select_options: aux_document_types,
               option_label: 'nombre',
               option_key: 'cod_tipo_documento',
-              on_change_function: on_change_select,
             },
             {
               datum_type: 'input_controller',
               xs: 12,
               md: 2,
               control_form: control_apoderado,
-              control_name: 'document',
+              control_name: 'numero_documento',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento apoderado',
               type: 'number',
               disabled: true,
-              helper_text: 'Digite para buscar',
-              on_blur_function: search_grantor,
+              helper_text:
+                attorney.id_persona === null
+                  ? 'No se ha seleccionado apoderado'
+                  : '',
             },
             {
               datum_type: 'input_controller',
               xs: 12,
               md: 4,
               control_form: control_apoderado,
-              control_name: 'full_name',
+              control_name: 'nombre_completo',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Nombre apoderado',
               type: 'text',
               disabled: true,
-              helper_text: 'No se ha seleccionado persona',
+              helper_text:
+                attorney.id_persona === null
+                  ? 'No se ha seleccionado apoderado'
+                  : '',
             },
           ]}
           title_table_modal="Listado de apoderados"

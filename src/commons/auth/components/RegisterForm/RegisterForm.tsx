@@ -18,7 +18,7 @@ import { CreateUser } from '../CreateUser/CreateUser';
 import { use_register } from '../../hooks/registerHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterForm: React.FC = () => { 
+export const RegisterForm: React.FC = () => {
   const {
     errors,
     message_error,
@@ -126,7 +126,6 @@ export const RegisterForm: React.FC = () => {
           </Grid>
 
           <Grid item spacing={2} justifyContent="end" container>
-
             <Grid item xs={6} container justifyContent="end">
               <LoadingButton
                 type="submit"
@@ -152,7 +151,6 @@ export const RegisterForm: React.FC = () => {
                 <Typography sx={{ color: 'white' }}>Inicio</Typography>
               </Button>
             </Grid>
-
           </Grid>
 
           {/* Muestra loading cuando esta buscando datos de la persona */}
@@ -170,7 +168,11 @@ export const RegisterForm: React.FC = () => {
             <Grid item xs={12}>
               <Grid container justifyContent="center" textAlign="center">
                 <Alert icon={false} severity="error">
-                  <Typography>{message_error}</Typography>
+                  <Typography>
+                    {typeof message_error === 'object'
+                      ? JSON.stringify(message_error)
+                      : message_error}
+                  </Typography>
                 </Alert>
               </Grid>
             </Grid>

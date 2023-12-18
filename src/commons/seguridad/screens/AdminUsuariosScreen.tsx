@@ -152,7 +152,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     if (numero_documento !== undefined && numero_documento !== '') {
       set_numero_documento(numero_documento);
       set_value_ini('numero_documento', numero_documento);
-      console.log('numero_documento', numero_documento);
+      //  console.log('')('numero_documento', numero_documento);
     }
   }, [numero_documento]);
 
@@ -230,7 +230,7 @@ export const AdminUsuariosScreen: React.FC = () => {
 
   // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    console.log(e.target.value);
+    //  console.log('')(e.target.value);
     set_value_form(e.target.name, e.target.value);
   };
 

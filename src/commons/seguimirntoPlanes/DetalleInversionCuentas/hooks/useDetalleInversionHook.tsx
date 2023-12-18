@@ -80,7 +80,7 @@ export const useDetalleInversionHook = (): any => {
 
   const onsubmit_detalle = handleSubmit_detalle(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       // data.id_indicador = id_indicador;
       set_is_saving_detalle(true);
       await post_detalle_inversion(data as IDetalleCuentas);
@@ -101,7 +101,7 @@ export const useDetalleInversionHook = (): any => {
 
   const onsubmit_editar = handleSubmit_detalle(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_detalle(true);
       // data.id_indicador = id_indicador;
       await put_detalle_inversion(

@@ -5,7 +5,7 @@ import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar
 export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element => {
 
     const titulo:any = title;
-    // console.log(titulo);
+    // //  console.log('')(titulo);
     const button_style = {
         color: 'white',
         backgroundColor: 'red',
@@ -97,7 +97,7 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
 export const download_pdf_dos = ({ nurseries, columns, title }: any): JSX.Element => {
 
     const titulo:any = title;
-    // console.log(titulo);
+    // //  console.log('')(titulo);
     const button_style = {
         color: 'white',
         backgroundColor: 'red',

@@ -58,7 +58,7 @@ const SeleccionarSolicitudAprobada = ({
     ];
 
     const get_solicitudes_filtro: any = (async () => {
-        console.log("ggggg")
+        //  console.log('')("ggggg")
         void dispatch(get_solicitud_documento_service())
     })
 

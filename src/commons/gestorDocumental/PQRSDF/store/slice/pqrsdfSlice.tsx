@@ -9,6 +9,8 @@ import type {
   IObjPqrRequest,
   IObjExhibit,
   IObjMetaData,
+  IObjFiled,
+  IObjPqrDenuncia,
 } from '../../interfaces/pqrsdf';
 // import { type Persona } from '../../../../../interfaces/globalModels';
 
@@ -50,79 +52,80 @@ export const on_behalf_of: IObjListType[] = [
 ];
 
 export const initial_state_person: IObjPerson = {
-  id_person: null,
-  document_type_id: null,
-  document_type: null,
-  person_type_id: null,
-  person_type: null,
-  document: null,
-  name: null,
-  last_name: null,
-  full_name: null,
+  id_persona: null,
+  tipo_documento_id: null,
+  tipo_documento: null,
+  tipo_persona: null,
+  tipo_persona_desc: null,
+  numero_documento: null,
+  primer_apellido: null,
+  primer_nombre: null,
+  nombre_completo: null,
 };
 
 export const initial_state_company: IObjCompany = {
-  id_company: null,
-  document_type_id: null,
-  document_type: null,
-  tradename: null,
-  business_name: null,
-  document: null,
-  person_type_id: null,
-  person_type: null,
-  representatives_document_type_id: null,
-  representatives_document_type: null,
-  representatives_document: null,
-  representatives_name: null,
-  representatives_last_name: null,
+  id_persona: null,
+  tipo_documento_id: null,
+  tipo_documento: null,
+  tipo_persona: null,
+  tipo_persona_desc: null,
+  numero_documento: null,
+
+  nombre_comercial: null,
+  razon_social: null,
+  persona_representante: initial_state_person,
 };
 
 export const initial_state_pqr: IObjPqr = {
-  id_pqr: null,
-  created_at: new Date(),
-  filing_at: null,
-  filing_number: null,
-  pqr_status: null,
-  pqr_status_id: null,
-  pqr_request: [],
-  pqr_type: null,
-  headline: null,
-  subject: null,
-  description: null,
-  requires_response: null,
-  is_anonymous: null,
-  person_interposes_id: null,
-  titular_person_id: null,
-  code_owner_relationship: null,
-  owner_relationship: null,
-  media_type: null,
-  media_type_id: null,
-  presentation_type: null,
-  code_presentation_type: null,
-  destination_office: null,
-  destination_office_id: null,
-  person_create: null,
-  person_create_id: null,
-  reception_office: null,
-  reception_office_id: null,
-  filling_id: null,
-  filling_at: null,
-  requires_digitization: null,
-  response_time: null,
-  total_number_exhibit: null,
-  total_number_pages: null,
+  id_PQRSDF: null,
+  fecha_registro: new Date(),
+  fecha_radicado: null,
+  numero_radicado: null,
+  nombre_estado_solicitud: null,
+  id_estado_actual_solicitud: null,
+  solicitudes_pqr: [],
+
+  tipo_PQRSDF: null,
+  cod_tipo_PQRSDF: null,
+  nombre_completo_titular: null,
+  asunto: null,
+  descripcion: null,
+  requiere_rta: true,
+  es_anonima: null,
+  id_persona_interpone: null,
+  id_persona_titular: null,
+  cod_relacion_con_el_titular: null,
+  relacion_con_el_titular: null,
+  medio_solicitud: null,
+  id_medio_solicitud: null,
+  forma_presentacion: null,
+  cod_forma_presentacion: null,
+  sucursal_especifica_implicada: null,
+  id_sucursal_especifica_implicada: null,
+  persona_recibe: null,
+  sucursal_recepcion_fisica: null,
+  id_sucursal_recepcion_fisica: null,
+  id_radicado: null,
+  requiere_digitalizacion: null,
+  dias_para_respuesta: null,
+  cantidad_anexos: null,
+  nro_folios_totales: null,
+  anexos: [],
+  denuncia: null,
 };
 
 export const initial_state_pqr_request: IObjPqrRequest = {
-  id_pqr_request: null,
-  pqr_id: null,
-  request_type_id: null,
-  request_type: null,
-  request_at: null,
-  request_number: null,
-  notification_at: null,
-  organizational_unit_id: null,
-  organizational_unit: null,
+  id_pqrsdf: null,
+  id_solicitud_al_usuario_sobre_pqrsdf: null,
+  cod_tipo_oficio: null,
+  nombre_tipo_oficio: null,
+  fecha_solicitud: null,
+  numero_radicado_salida: null,
+  fecha_radicado_salida: null,
+  id_und_org_oficina_solicita: null,
+  nombre_und_org_oficina_solicita: null,
+  asunto: null,
+  descripcion: null,
 };
 
 export const pqr_types: IObjListType[] = [
@@ -152,43 +155,72 @@ export const person_types: IObjListType[] = [
 ];
 
 export const initial_state_exhibit: IObjExhibit = {
-  id_exhibit: null,
-  exhibit_name: null,
-  exhibit_order: null,
-  storage_medium: null,
-  code_storage_medium: null,
-  other_storage_medium: null,
-  pages_number: null,
-  is_digitized: null,
-  metadata: null,
+  id_anexo: null,
+  nombre_anexo: null,
+  orden_anexo_doc: null,
+  medio_almacenamiento: null,
+  cod_medio_almacenamiento: null,
+  medio_almacenamiento_otros_cual: null,
+  numero_folios: null,
+  ya_digitalizado: null,
+  exhibit_link: null,
+  metadatos: null,
 };
 
 export const initial_state_metadata: IObjMetaData = {
-  id_metadata: null,
-  exhibit_id: null,
-  created_at: null,
-  description: null,
-  subject: null,
-  file_category: null,
-  code_file_category: null,
-  is_original: null,
-  has_physical_replica: null,
-  has_typology: null,
-  pages_number: null,
-  file_origin: null,
-  code_file_origin: null,
-  exhibit_name: null,
-  storage_medium: null,
-  key_words: null,
-  file_system_id: null,
-  file_typology_id: null,
-  file_typology: null,
+  id_metadatos_anexo_tmp: null,
+  id_anexo: null,
+  fecha_creacion_doc: null,
+  descripcion: null,
+  asunto: null,
+  categoria_archivo: null,
+  cod_categoria_archivo: null,
+  es_version_original: null,
+  tiene_replica_fisica: null,
+  tiene_tipologia: null,
+  numero_folios_documento: null,
+  origen_archivo: null,
+  cod_origen_archivo: null,
+  nombre_anexo: null,
+  medio_almacenamiento: null,
+  cod_medio_almacenamiento: null,
+  palabras_clave_doc: null,
+  id_archivo_en_sistema: null,
+  id_tipologia_doc: null,
+  tipologia_doc: null,
+};
+
+export const initial_state_filed: IObjFiled = {
+  id_radicado: null,
+  cod_tipo_radicado: null,
+  tipo_radicado: null,
+  prefijo_radicado: null,
+  agno_radicado: null,
+  nro_radicado: null,
+  fecha_radicado: null,
+  id_persona_radica: null,
+  id_radicado_asociado: null,
+  numero_radicado_completo: null,
+};
+export const initial_state_denuncia: IObjPqrDenuncia = {
+  Cod_zona_localizacion: null,
+  cod_municipio_cocalizacion_hecho: null,
+  barrio_vereda_localizacion: null,
+  direccion_localizacion: null,
+  cod_recursos_fectados_presuntos: [],
+  otro_recurso_Afectado_cual: null,
+  evidencias_soportan_hecho: null,
+  nombre_completo_presunto_infractor: null,
+  telefono_presunto_infractor: null,
+  direccion_presunto_infractor: null,
+  ya_habia_puesto_en_conocimiento: false,
+  ante_que_autoridad_había_interpuesto: null,
 };
 
 const initial_state: IPqrsdf = {
-  list_applicant_types: type_applicant,
+  list_applicant_types: [],
   type_applicant: initial_state_list,
-  list_on_behalf_of: on_behalf_of,
+  list_on_behalf_of: [],
   on_behalf_of: initial_state_list,
   persons: [],
   person: initial_state_person,
@@ -198,12 +230,12 @@ const initial_state: IPqrsdf = {
   grantor: initial_state_person,
   attorneys: [],
   attorney: initial_state_person,
-  list_pqr_status: pqr_types,
-  pqr_status: pqr_types[0],
+  list_pqr_status: [],
+  pqr_status: initial_state_list,
   pqrs: [],
   pqr: initial_state_pqr,
   pqr_request: initial_state_pqr_request,
-  person_types: person_types,
+  person_types: [],
   person_type: { id: null, key: null, label: null },
   document_types: [],
   document_type: {
@@ -229,6 +261,27 @@ const initial_state: IPqrsdf = {
   file_typologies: [],
   file_typology: initial_state_list,
   metadata: initial_state_metadata,
+  areas: [],
+  area: initial_state_list,
+  municipalities: [],
+  municipality: initial_state_list,
+  departments: [],
+  department: initial_state_list,
+  resources: [
+    { id: 1, key: 'Su', label: 'Suelo' },
+    { id: 2, key: 'Ag', label: 'Agua' },
+    { id: 3, key: 'Fs', label: 'Fauna silvestre' },
+    { id: 4, key: 'Ai', label: 'Aire' },
+    { id: 5, key: 'Fl', label: 'Flora' },
+    { id: 6, key: 'Ot', label: 'Otro' },
+  ],
+  resource: [],
+
+  filings: [],
+  filed: initial_state_filed,
+  filed_types: [],
+  filed_type: initial_state_list,
+  denuncia: initial_state_denuncia,
 };
 
 export const pqrsdf_slice = createSlice({
@@ -376,6 +429,12 @@ export const pqrsdf_slice = createSlice({
       state.destination_office = action.payload;
     },
 
+    set_storage_mediums: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.storage_mediums = action.payload;
+    },
     set_exhibits: (state: IPqrsdf, action: PayloadAction<IObjExhibit[]>) => {
       state.exhibits = action.payload;
     },
@@ -422,9 +481,73 @@ export const pqrsdf_slice = createSlice({
     set_metadata: (state: IPqrsdf, action: PayloadAction<IObjMetaData>) => {
       state.metadata = action.payload;
     },
+
+    set_filings: (state: IPqrsdf, action: PayloadAction<IObjFiled[]>) => {
+      state.filings = action.payload;
+    },
+    set_filed: (state: IPqrsdf, action: PayloadAction<IObjFiled>) => {
+      state.filed = action.payload;
+    },
+
+    set_filed_types: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.filed_types = action.payload;
+    },
+    set_filed_type: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.filed_type = action.payload;
+    },
+
+    set_denuncia: (state: IPqrsdf, action: PayloadAction<IObjPqrDenuncia>) => {
+      state.denuncia = action.payload;
+    },
+
+    set_areas: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
+      state.areas = action.payload;
+    },
+    set_area: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.area = action.payload;
+    },
+
+    set_municipalities: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.municipalities = action.payload;
+    },
+    set_municipality: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.municipality = action.payload;
+    },
+
+    set_departments: (
+      state: IPqrsdf,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.departments = action.payload;
+    },
+    set_department: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
+      state.department = action.payload;
+    },
+
+    set_resources: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
+      state.resources = action.payload;
+    },
+    set_resource: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
+      state.resource = action.payload;
+    },
   },
 });
 export const {
+  set_area,
+  set_areas,
+  set_department,
+  set_departments,
+  set_municipalities,
+  set_municipality,
+  set_resource,
+  set_resources,
+  set_denuncia,
   set_list_applicant_types,
   set_type_applicant,
   set_list_on_behalf_of,
@@ -454,6 +577,7 @@ export const {
   set_media_type,
   set_destination_offices,
   set_destination_office,
+  set_storage_mediums,
   set_exhibits,
   set_exhibit,
   set_file_categories,
@@ -464,4 +588,8 @@ export const {
   set_file_typology,
   set_metadata,
   reset_state,
+  set_filed,
+  set_filed_type,
+  set_filed_types,
+  set_filings,
 } = pqrsdf_slice.actions;

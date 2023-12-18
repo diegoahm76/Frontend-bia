@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useState, useEffect } from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   Dialog,
   DialogActions,
@@ -48,7 +48,11 @@ const MetadataFormDialog = ({
     file_typologies,
     exhibit,
   } = useAppSelector((state) => state.pqrsdf_slice);
-
+  const [checked_tiene_tipologia, set_checked_tiene_tipologia] = useState(
+    metadata.id_tipologia_doc !== null
+  );
+  const [checked_tiene_replica_fisica, set_checked_tiene_replica_fisica] =
+    useState(metadata.tiene_replica_fisica);
   const {
     control: control_metadata,
     handleSubmit: handle_submit,
@@ -62,13 +66,17 @@ const MetadataFormDialog = ({
   };
 
   useEffect(() => {
-    reset_metadata(metadata);
+    reset_metadata({
+      ...metadata,
+      tiene_tipologia: (metadata.id_tipologia_doc ?? null) !== null,
+    });
+    set_checked_tiene_tipologia(metadata.id_tipologia_doc !== null);
     if (
-      metadata.key_words !== null &&
-      metadata.key_words !== '' &&
-      metadata.key_words !== undefined
+      metadata.palabras_clave_doc !== null &&
+      metadata.palabras_clave_doc !== '' &&
+      metadata.palabras_clave_doc !== undefined
     ) {
-      const labelsArray = metadata.key_words.split(',');
+      const labelsArray = metadata.palabras_clave_doc.split(',');
       const labelObjects = labelsArray.map((label: string, index: number) => ({
         key: index,
         label: label,
@@ -79,7 +87,8 @@ const MetadataFormDialog = ({
     }
   }, [metadata]);
 
-  const on_submit = (data: IObjMetaData): void => {
+  const on_submit: SubmitHandler<IObjMetaData> = (data: IObjMetaData): void => {
+    //  console.log('')(data);
     dispatch(set_metadata(data));
     set_is_modal_active(false);
   };
@@ -110,10 +119,10 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'code_file_category',
+                  control_name: 'cod_categoria_archivo',
                   default_value: '',
                   rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
+                    required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Categoria de archivo',
                   disabled: false,
@@ -127,9 +136,11 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'has_physical_replica',
-                  default_value: metadata.has_physical_replica,
-                  rules: {},
+                  control_name: 'tiene_replica_fisica',
+                  default_value: metadata.tiene_replica_fisica,
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
                   label: 'Tiene réplica física',
                   disabled: false,
                   helper_text: '',
@@ -139,10 +150,10 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'code_file_origin',
+                  control_name: 'cod_origen_archivo',
                   default_value: '',
                   rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
+                    required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Origen del archivo',
                   disabled: false,
@@ -156,22 +167,26 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'has_typology',
-                  default_value: metadata.has_typology,
-                  rules: {},
+                  control_name: 'tiene_tipologia',
+                  default_value: checked_tiene_tipologia,
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
                   label: 'Tiene tipología relacionada',
                   disabled: false,
                   helper_text: '',
+                  checked: checked_tiene_tipologia,
+                  set_checked: set_checked_tiene_tipologia,
                 },
                 {
                   datum_type: 'select_controller',
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'file_typology_id',
+                  control_name: 'id_tipologia_doc',
                   default_value: '',
                   rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
+                    required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Tipología relacionada',
                   disabled: false,
@@ -179,23 +194,22 @@ const MetadataFormDialog = ({
                   select_options: file_typologies,
                   option_label: 'label',
                   option_key: 'key',
+                  hidden_text: !checked_tiene_tipologia,
                 },
                 {
-                  datum_type: 'select_controller',
+                  datum_type: 'input_controller',
                   xs: 12,
                   md: 4,
                   control_form: control_metadata,
-                  control_name: 'other_file_typology',
+                  control_name: 'tipologia_no_creada_en_TRD',
                   default_value: '',
                   rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
+                    required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: '¿Cual?',
                   disabled: false,
                   helper_text: '',
-                  select_options: file_typologies,
-                  option_label: 'label',
-                  option_key: 'key',
+                  hidden_text: checked_tiene_tipologia,
                 },
 
                 {
@@ -203,12 +217,14 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 12,
                   control_form: control_metadata,
-                  control_name: 'subject',
+                  control_name: 'asunto',
                   default_value: '',
-                  rules: {},
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
                   label: 'Asunto',
                   type: 'text',
-                  disabled: true,
+                  disabled: false,
                   helper_text: '',
                 },
                 {
@@ -216,14 +232,16 @@ const MetadataFormDialog = ({
                   xs: 12,
                   md: 12,
                   control_form: control_metadata,
-                  control_name: 'description',
+                  control_name: 'descripcion',
                   default_value: '',
-                  rules: {},
-                  multiline: true,
-                  rows: 4,
+                  rules: {
+                    required_rule: { rule: true, message: 'Requerido' },
+                  },
+                  multiline_text: true,
+                  rows_text: 4,
                   label: 'Descripción',
                   type: 'text',
-                  disabled: true,
+                  disabled: false,
                   helper_text: '',
                 },
                 {
@@ -232,7 +250,7 @@ const MetadataFormDialog = ({
                   hidden_text: false,
                   character_separator: ',',
                   set_form: setValue,
-                  keywords: 'key_words',
+                  keywords: 'palabras_clave_doc',
                 },
               ]}
             />
@@ -246,6 +264,7 @@ const MetadataFormDialog = ({
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
             <Button
+              type="button"
               color="primary"
               variant="contained"
               onClick={handle_submit(on_submit)}

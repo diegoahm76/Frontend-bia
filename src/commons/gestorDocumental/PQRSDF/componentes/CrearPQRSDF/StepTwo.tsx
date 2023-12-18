@@ -46,9 +46,8 @@ interface IProps {
 const StepTwo = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { exhibits, metadata, exhibit, storage_mediums } = useAppSelector(
-    (state) => state.pqrsdf_slice
-  );
+  const { exhibits, metadata, exhibit, storage_mediums, type_applicant } =
+    useAppSelector((state) => state.pqrsdf_slice);
   const {
     control: control_form,
     handleSubmit: handle_submit_exhibit,
@@ -61,29 +60,78 @@ const StepTwo = () => {
   const [file_name, set_file_name] = useState<string>('');
   const [add_metadata_is_active, set_add_metadata_is_active] =
     useState<boolean>(false);
+  const [cual_medio_view, set_cual_medio_view] = useState<boolean>(false);
 
   const on_submit_exhibit = (data: IObjExhibit): void => {
+    //  console.log('')(data, metadata);
     const exhibit_aux: IObjExhibit | undefined = exhibits.find(
-      (p: IObjExhibit) => p.exhibit_name === data.exhibit_name
+      (p: IObjExhibit) => p.nombre_anexo === data.nombre_anexo
     );
     if (exhibit_aux === undefined) {
-      dispatch(set_exhibits([...exhibits, data]));
+      //  console.log('')(data);
+      dispatch(
+        set_exhibits([
+          ...exhibits,
+          {
+            ...data,
+            metadatos:
+              data.id_anexo === null
+                ? metadata.asunto ?? null !== null
+                  ? metadata
+                  : null
+                : metadata,
+          },
+        ])
+      );
       dispatch(set_exhibit(initial_state_exhibit));
+      set_file(null);
+      set_file_name('');
+      set_action('agregar');
     } else {
-      control_error(`Ya existe un archivo con nombre ${data.exhibit_name}`);
+      control_error(`Ya existe un archivo con nombre ${data.nombre_anexo}`);
     }
   };
 
   useEffect(() => {
-    reset(exhibit);
-    if (exhibit.exhibit_link !== null) {
-      if (typeof exhibit.exhibit_link === 'string') {
-        const name = exhibit.exhibit_link?.split('/').pop() ?? '';
-        set_file_name(name);
+    //  console.log('')(exhibit);
+    reset({
+      ...exhibit,
+      cod_medio_almacenamiento:
+        (type_applicant.key ?? null) === null
+          ? 'Na'
+          : exhibit.cod_medio_almacenamiento,
+    });
+    if ((exhibit.id_anexo ?? null) !== null) {
+      if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
+        if (typeof exhibit.exhibit_link === 'string') {
+          const name = exhibit.exhibit_link?.split('/').pop() ?? '';
+          set_file_name(name);
+        } else {
+          if ('name' in exhibit.exhibit_link) {
+            set_file_name(String(exhibit.exhibit_link.name ?? ''));
+          }
+        }
+      } else {
+        dispatch(
+          set_exhibit({
+            ...exhibit,
+            exhibit_link: exhibit.metadatos?.archivo?.ruta_archivo ?? null,
+          })
+        );
       }
     } else {
-      set_file_name('');
+      if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
+        if (typeof exhibit.exhibit_link === 'string') {
+          const name = exhibit.exhibit_link?.split('/').pop() ?? '';
+          set_file_name(name);
+        } else {
+          if ('name' in exhibit.exhibit_link) {
+            set_file_name(String(exhibit.exhibit_link.name ?? ''));
+          }
+        }
+      }
     }
+    dispatch(set_metadata(exhibit.metadatos ?? initial_state_metadata));
   }, [exhibit]);
 
   useEffect(() => {
@@ -93,16 +141,22 @@ const StepTwo = () => {
         dispatch(
           set_exhibit({
             ...exhibit,
-            id_exhibit: get_values('id_exhibit'),
-            exhibit_name: get_values('exhibit_name'),
-            exhibit_order: get_values('exhibit_order'),
-            storage_medium: get_values('storage_medium'),
-            code_storage_medium: get_values('code_storage_medium'),
-            other_storage_medium: get_values('other_storage_medium'),
-            pages_number: get_values('pages_number'),
-            is_digitized: get_values('is_digitized'),
+            nombre_anexo: get_values('nombre_anexo'),
+            orden_anexo_doc: get_values('orden_anexo_doc'),
+            medio_almacenamiento: get_values('medio_almacenamiento'),
+            cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+            medio_almacenamiento_otros_cual: get_values(
+              'medio_almacenamiento_otros_cual'
+            ),
+            numero_folios: get_values('numero_folios'),
+            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
             exhibit_link: file,
-            metadata: metadata,
+            metadatos:
+              exhibit.id_anexo === null
+                ? metadata.asunto ?? null !== null
+                  ? metadata
+                  : null
+                : metadata,
           })
         );
       }
@@ -110,37 +164,93 @@ const StepTwo = () => {
   }, [file]);
 
   useEffect(() => {
-    if (metadata !== null) {
-      dispatch(
-        set_exhibit({
-          ...exhibit,
-          id_exhibit: get_values('id_exhibit'),
-          exhibit_name: get_values('exhibit_name'),
-          exhibit_order: get_values('exhibit_order'),
-          storage_medium: get_values('storage_medium'),
-          code_storage_medium: get_values('code_storage_medium'),
-          other_storage_medium: get_values('other_storage_medium'),
-          pages_number: get_values('pages_number'),
-          is_digitized: get_values('is_digitized'),
-          exhibit_link: file,
-          metadata: metadata,
-        })
-      );
-    }
+    //  console.log('')(metadata);
+    // if (metadata !== null) {
+    //   if (metadata.asunto !== null && metadata.asunto !== '') {
+    //     dispatch(
+    //       set_exhibit({
+    //         ...exhibit,
+    //         nombre_anexo: get_values('nombre_anexo'),
+    //         orden_anexo_doc: get_values('orden_anexo_doc'),
+    //         medio_almacenamiento: get_values('medio_almacenamiento'),
+    //         cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+    //         medio_almacenamiento_otros_cual: get_values(
+    //           'medio_almacenamiento_otros_cual'
+    //         ),
+    //         numero_folios: get_values('numero_folios'),
+    //         ya_digitalizado: true,
+    //         exhibit_link: file,
+    //         metadatos: metadata,
+    //       })
+    //     );
+    //   } else {
+    //     dispatch(
+    //       set_exhibit({
+    //         ...exhibit,
+    //         nombre_anexo: get_values('nombre_anexo'),
+    //         orden_anexo_doc: get_values('orden_anexo_doc'),
+    //         medio_almacenamiento: get_values('medio_almacenamiento'),
+    //         cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+    //         medio_almacenamiento_otros_cual: get_values(
+    //           'medio_almacenamiento_otros_cual'
+    //         ),
+    //         numero_folios: get_values('numero_folios'),
+    //         ya_digitalizado: false,
+    //         exhibit_link: file,
+    //         metadatos: null,
+    //       })
+    //     );
+    //   }
+    // } else {
+    //   dispatch(
+    //     set_exhibit({
+    //       ...exhibit,
+    //       nombre_anexo: get_values('nombre_anexo'),
+    //       orden_anexo_doc: get_values('orden_anexo_doc'),
+    //       medio_almacenamiento: get_values('medio_almacenamiento'),
+    //       cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+    //       medio_almacenamiento_otros_cual: get_values(
+    //         'medio_almacenamiento_otros_cual'
+    //       ),
+    //       numero_folios: get_values('numero_folios'),
+    //       ya_digitalizado: false,
+    //       exhibit_link: file,
+    //       metadatos: null,
+    //     })
+    //   );
+    // }
   }, [metadata]);
 
   const add_metadata_form = (): void => {
-    if (exhibit.metadata === null) {
-      dispatch(set_metadata(initial_state_metadata));
-    } else {
-      dispatch(set_metadata(exhibit.metadata));
-    }
     set_add_metadata_is_active(true);
   };
 
   const columns_list: GridColDef[] = [
     {
-      field: 'exhibit_name',
+      field: 'descargar',
+      headerName: 'Ver',
+      width: 90,
+      renderCell: (params) => (
+        <>
+          {(params.row.metadatos?.archivo?.ruta_archivo ?? null) !== '' &&
+            (params.row.metadatos?.archivo?.ruta_archivo ?? null) !== null &&
+            typeof (params.row.metadatos?.archivo?.ruta_archivo ?? null) ===
+              'string' && (
+              <Tooltip title="Ver archivo">
+                <Grid item xs={0.5} md={0.5}>
+                  <DownloadButton
+                    fileUrl={params.row.metadatos.archivo.ruta_archivo}
+                    fileName={'exhibit_link'}
+                    condition={false}
+                  />
+                </Grid>
+              </Tooltip>
+            )}
+        </>
+      ),
+    },
+    {
+      field: 'nombre_anexo',
       headerName: 'Nombre',
       width: 250,
       renderCell: (params) => (
@@ -150,7 +260,7 @@ const StepTwo = () => {
       ),
     },
     {
-      field: 'pages_number',
+      field: 'numero_folios',
       headerName: 'Cantidad de folios',
       width: 200,
       renderCell: (params) => (
@@ -160,12 +270,12 @@ const StepTwo = () => {
       ),
     },
     {
-      field: 'storage_medium',
+      field: 'cod_medio_almacenamiento',
       headerName: 'Medio de almacenamiento',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {storage_mediums.find((p) => p.key === params.value)?.label ?? ''}
         </div>
       ),
     },
@@ -175,20 +285,6 @@ const StepTwo = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          {params.row.exhibit_link !== '' &&
-            params.row.exhibit_link !== null &&
-            typeof params.row.exhibit_link === 'string' && (
-              <Tooltip title="Ver archivo">
-                <Grid item xs={1} md={1} spacing={1}>
-                  <DownloadButton
-                    fileUrl={params.row.exhibit_link}
-                    fileName={'exhibit_link'}
-                    condition={false}
-                  />
-                </Grid>
-              </Tooltip>
-            )}
-
           <Tooltip title="Editar">
             <IconButton
               onClick={() => {
@@ -242,7 +338,7 @@ const StepTwo = () => {
     dispatch(set_exhibit(item));
     const aux_items: IObjExhibit[] = [];
     exhibits.forEach((option: IObjExhibit) => {
-      if (option.exhibit_name !== item.exhibit_name) {
+      if (option.nombre_anexo !== item.nombre_anexo) {
         aux_items.push(option);
       }
     });
@@ -253,11 +349,24 @@ const StepTwo = () => {
     dispatch(set_exhibit(initial_state_exhibit));
     const aux_items: IObjExhibit[] = [];
     exhibits.forEach((option: IObjExhibit) => {
-      if (option.exhibit_name !== item.exhibit_name) {
+      if (option.nombre_anexo !== item.nombre_anexo) {
         aux_items.push(option);
       }
     });
+    //  console.log('')(aux_items);
     dispatch(set_exhibits(aux_items));
+  };
+
+  const on_change_select = (value: any, name: string): void => {
+    if (name === 'cod_medio_almacenamiento') {
+      if (value !== undefined) {
+        if (value.key === 'Ot') {
+          set_cual_medio_view(true);
+        } else {
+          set_cual_medio_view(false);
+        }
+      }
+    }
   };
 
   return (
@@ -290,7 +399,7 @@ const StepTwo = () => {
               set_value: set_file,
               file_name,
               value_file:
-                exhibit.id_exhibit !== null
+                (exhibit.id_anexo ?? null) !== null
                   ? exhibit.exhibit_link ?? null
                   : null,
             },
@@ -299,7 +408,7 @@ const StepTwo = () => {
               xs: 12,
               md: 6,
               control_form: control_form,
-              control_name: 'exhibit_name',
+              control_name: 'nombre_anexo',
               default_value: '',
               rules: { required_rule: { rule: false, message: 'Requerido' } },
               label: 'Nombre de archivo',
@@ -312,37 +421,42 @@ const StepTwo = () => {
               xs: 12,
               md: 3,
               control_form: control_form,
-              control_name: 'code_storage_medium',
+              control_name: 'cod_medio_almacenamiento',
               default_value: '',
               rules: {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: false,
+              disabled: (type_applicant.key ?? null) === null,
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
               option_key: 'key',
+              on_change_function: on_change_select,
             },
             {
               datum_type: 'input_controller',
               xs: 12,
               md: 3,
               control_form: control_form,
-              control_name: 'other_storage_medium',
+              control_name: 'medio_almacenamiento_otros_cual',
               default_value: '',
               rules: { required_rule: { rule: false, message: 'Requerido' } },
               label: '¿Cual?',
               type: 'text',
               disabled: false,
               helper_text: '',
+              hidden_text: !(
+                cual_medio_view ||
+                (exhibit.cod_medio_almacenamiento ?? null) === 'Ot'
+              ),
             },
             {
               datum_type: 'input_controller',
               xs: 12,
               md: 3,
               control_form: control_form,
-              control_name: 'pages_number',
+              control_name: 'numero_folios',
               default_value: '',
               rules: {
                 required_rule: { rule: false, message: 'Requerido' },
@@ -385,9 +499,9 @@ const StepTwo = () => {
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowId={(row) =>
-                  row.id_exhibit ?? null === null
+                  row.id_anexo ?? null === null
                     ? uuid()
-                    : row.id_exhibit ?? uuid()
+                    : row.id_anexo ?? uuid()
                 }
               />
             </Grid>

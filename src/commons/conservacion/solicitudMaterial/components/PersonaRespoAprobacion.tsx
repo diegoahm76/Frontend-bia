@@ -103,7 +103,7 @@ const PersonaResponsableAprobacion = ({
         );
         set_document_type(document_type_format);
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();
@@ -126,7 +126,7 @@ const PersonaResponsableAprobacion = ({
     );
   };
   const get_funcionarios: any = async () => {
-    console.log(get_values_solicitud('numero_documento'));
+    //  console.log('')(get_values_solicitud('numero_documento'));
     const document = get_values('numero_documento') ?? '';
     const type = get_values('tipo_documento') ?? '';
     const primer_nombre = get_values('primer_nombre') ?? '';

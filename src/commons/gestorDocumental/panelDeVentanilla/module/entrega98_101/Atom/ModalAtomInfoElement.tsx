@@ -18,12 +18,8 @@ import { Title } from '../../../../../../components';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {
-  columnsAtom,
-  rowsEJEMPLO,
-  rowsEjemploAnexosDePqrsdf,
-} from './columnsAtom/columnsAtom';
-import { useContext } from 'react';
+import { columnsAtom } from './columnsAtom/columnsAtom';
+import { useContext, useEffect } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
 import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
@@ -32,6 +28,10 @@ import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext'
 import { useAppSelector } from '../../../../../../hooks';
 import { getArchivoAnexoPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
 import { getArchivoAnexoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
+import { getMetadatosPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
+import { getMetadatoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
+import { formatDate } from '../../../../../../utils/functions/formatDate';
+import { ModalDenuncia } from './components/ModalDenuncia';
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
@@ -46,6 +46,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
 
   //* se debe traer de un context el estado de los anexos y de los metadatos
   const {
+    handleGeneralLoading,
     openModalOne: infoAnexos,
     openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
@@ -126,6 +127,9 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
           <Title title={infoTitle || 'Información'} />
+
+          {/* condicional sobre esto para añadir campos diferentes para el complemento o para la pqrsdf */}
+
           <Grid
             container
             spacing={2}
@@ -180,6 +184,8 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
               <TextField
                 fullWidth
                 disabled
+                multiline
+                rows={2}
                 label="Asunto"
                 size="small"
                 variant="outlined"
@@ -189,15 +195,299 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
+            {/*se procede a añadir los nuevos campos para el renderizado de los elementos*/}
+            {currentElementPqrsdComplementoTramitesYotros?.es_pqrsdf && (
+              <>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Tipo de PQRSDF"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.tipo_PQRSDF ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                  {(currentElementPqrsdComplementoTramitesYotros?.tipo_PQRSDF ===
+                    'Denuncia' ||
+                    currentElementPqrsdComplementoTramitesYotros?.cod_tipo_PQRSDF ===
+                      'D') && (
+                    <Button
+                      sx={{
+                        mt: '.8rem',
+                      }}
+                      color="primary"
+                      variant="outlined"
+                      onClick={() => {
+                        handleGeneralLoading(true);
+                        /* navigate(
+                          '/app/gestor_documental/panel_ventanilla/denuncia/'
+                        );*/
+                        // ? deberá abrir el modal de la información de la denuncia, llamado el respectivo servicio,pero aún no se encuentra realizado
+                      }}
+                      startIcon={<InfoIcon />}
+                    >
+                      ver información de denuncia
+                    </Button>
+                  )}
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Fecha de registro"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      formatDate(
+                        currentElementPqrsdComplementoTramitesYotros?.fecha_registro
+                      ) ?? 'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Medio de solicitud"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.medio_solicitud ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Forma de presentación"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.forma_presentacion ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Número de folios totales"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.numero_folios ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="persona que recibe la solicitud"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.persona_recibe ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Sucursal implicada"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.nombre_sucursal_implicada ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Sucursal de recepción física"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.nombre_sucursal_recepcion_fisica ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Cantidad de anexos"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.cantidad_anexos ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Fecha de radicado"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.fecha_radicado &&
+                      !isNaN(
+                        new Date(
+                          currentElementPqrsdComplementoTramitesYotros.fecha_radicado
+                        ).getTime()
+                      )
+                        ? formatDate(
+                            currentElementPqrsdComplementoTramitesYotros.fecha_radicado
+                          )
+                        : 'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
 
-        <RenderDataGrid
-          rows={anexos || []}
-          columns={colums || []}
-          title={titleOpcion}
-          // ? se debe reemplazar ese button por el ojito que aparecere dentro de las columnas de la tabla para así ver los anexos
-        />
+        {/*arriba*/}
+        {/* condicional sobre esto para añadir campos diferentes para el complemento o para la pqrsdf */}
+
+        {anexos.length > 0 && (
+          <RenderDataGrid
+            rows={anexos || []}
+            columns={colums || []}
+            title={titleOpcion}
+            // ? se debe reemplazar ese button por el ojito que aparecere dentro de las columnas de la tabla para así ver los anexos
+          />
+        )}
 
         {/* ------------------------------------------------------------------------- */}
         {/* ------------------------------------------------------------------------- */}
@@ -233,15 +523,10 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
-              {/* se debe revisar si la URL se debe cambiar al punto master */}
-              {/* https://back-end-bia-beta.up.railway.app/media/Reporte%20(84).xlsx  */}
               <Grid item xs={12} sm={12}>
                 <DownloadButton
                   fileName={`archivo anexo ${archivoAnexos?.anexoActual?.nombre_anexo}`}
-                  fileUrl={
-                    `https://back-end-bia-beta.up.railway.app${archivoAnexos?.archivo}` ??
-                    ''
-                  }
+                  fileUrl={archivoAnexos?.archivo}
                   condition={false}
                 />
               </Grid>
@@ -267,15 +552,22 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 <Button
                   color="primary"
                   variant="outlined"
-                  onClick={() => {
-                    // ? al cerrar la infromación del anexo se debe cerrar el elemento del anexo y del metadato si estuviera abierto
-                   
-                    
-                    //* se debe hacer la petición del anexo así mostrarlo
-                    setMetadatos([]); //* seguramente será un objeto
-
-                    // infoArchivo?.id_anexo
-                    handleOpenInfoMetadatos(true);
+                  onClick={async () => {
+                    let metadatos;
+                    if (archivoAnexos?.anexoActual?.pqrsdf) {
+                      metadatos = await getMetadatosPqrsdf(
+                        archivoAnexos?.anexoActual?.id_anexo,
+                        handleOpenInfoMetadatos
+                      );
+                    } else {
+                      metadatos = await getMetadatoComplemento(
+                        archivoAnexos?.anexoActual?.id_anexo,
+                        handleOpenInfoMetadatos
+                      );
+                    }
+                    setMetadatos(metadatos);
+                    //  console.log('')(infoMetadatos);
+                    // handleOpenInfoMetadatos(true);
                   }}
                   startIcon={<InfoIcon />}
                 >
@@ -317,7 +609,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'5'}
+                  value={metadatos?.numero_folios ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -328,7 +620,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Metadatos asunto'}
+                  value={metadatos?.asunto ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -339,7 +631,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'11/05/2023'}
+                  value={metadatos?.fecha_creacion_archivo ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -353,7 +645,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Cédula de ciudadanía'}
+                  value={metadatos?.archivo_origen_sistema ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -364,7 +656,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Origen de archivo'}
+                  value={metadatos?.origen_archivo ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -375,7 +667,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Digital'}
+                  value={metadatos?.categoria_archivo ?? ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -386,7 +678,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'SI'}
+                  value={metadatos?.tiene_replica_fisica ? 'SI' : 'NO'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -401,7 +693,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   size="small"
                   disabled
                   variant="outlined"
-                  value={'Clave1, Clave2. Clave3'}
+                  value={/*metadatos?.tiene_replica_fisica?.join(', ') ??*/ ''}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -429,8 +721,7 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                   variant="contained"
                   onClick={() => {
                     handleOpenInfoMetadatos(false);
-                    handleOpenInfoAnexos(false);
-                    console.log('cerrando información de METADATO');
+                    // handleOpenInfoAnexos(false);
                   }}
                   startIcon={<CloseIcon />}
                 >
@@ -467,6 +758,10 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
           </Button>
         </Stack>
       </Grid>
+
+      {/* modal de la denuncia */}
+      <ModalDenuncia />
+      {/* modal de la denuncia */}
     </>
   );
 };

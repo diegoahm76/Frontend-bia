@@ -3,13 +3,53 @@ import { Button, Grid, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
-export const FormParte2 = (): JSX.Element => {
-  //* hooks
-  const { controlSegundoPasoEntrega99 } = usePanelVentanilla();
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useSstepperFn } from '../../../hook/useSstepperFn';
+import { useAppSelector } from '../../../../../../../../hooks';
+import { useEffect } from 'react';
+export const FormParte2 = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+  // setInfoReset,
+}: any): JSX.Element => {
+  // ? stepper hook
+  const { handleNext, handleBack } = useSstepperFn();
 
+    //* redux states functions
+/*    const { currentAnexo } = useAppSelector(
+      (state: any) => state.AsignacionUsuarioSlice
+    );
+  
+
+
+  useEffect(() => {
+    if (currentAnexo) {
+      //  console.log('')('currentAnexo', currentAnexo);
+      setInfoReset({
+        ...currentAnexo,
+      });
+    }
+  }, [currentAnexo]);
+*/
   return (
     <>
       <form
+        onSubmit={(e: any) => {
+          e.preventDefault();
+          if (
+            watchFormulario.asunto.length === 0 ||
+            watchFormulario.descripcion_de_la_solicitud.length === 0
+          ) {
+            control_warning('Todos los campos son obligatorios');
+            return;
+          }
+
+          handleNext();
+        }}
         style={{
           marginTop: '3rem',
         }}
@@ -18,7 +58,7 @@ export const FormParte2 = (): JSX.Element => {
           <Grid item xs={12} sm={8}>
             <Controller
               name="asunto"
-              control={controlSegundoPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -29,7 +69,7 @@ export const FormParte2 = (): JSX.Element => {
                   required
                   fullWidth
                   label="Asunto"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
@@ -47,8 +87,8 @@ export const FormParte2 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="fecha_de_solicitud"
-              control={controlSegundoPasoEntrega99}
-              defaultValue=""
+              control={controlFormulario}
+              // defaultValue={new Date().toISOString().slice(0, 10)}
               rules={{ required: true }}
               render={({
                 field: { onChange, value },
@@ -60,10 +100,11 @@ export const FormParte2 = (): JSX.Element => {
                   disabled
                   type="date"
                   label="Fecha de solicitud"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
-                  value={value}
+                  //* se debe poner la condicional del reset
+                  value={new Date().toISOString().slice(0, 10)}
                   InputLabelProps={{ shrink: true }}
                 />
               )}
@@ -73,7 +114,7 @@ export const FormParte2 = (): JSX.Element => {
           <Grid item xs={12} sm={12}>
             <Controller
               name="descripcion_de_la_solicitud"
-              control={controlSegundoPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -87,7 +128,7 @@ export const FormParte2 = (): JSX.Element => {
                   rows={5}
                   // name="nombre"
                   label="Descripción de la solicitud"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
@@ -106,24 +147,27 @@ export const FormParte2 = (): JSX.Element => {
 
         <Grid
           item
+          spacing={2}
+          container
           xs={12}
           sm={12}
           sx={{
             width: '100%',
             maxWidth: '100%',
             mt: '2rem',
+            justifyContent: 'center',
             textAlign: 'center',
-            paddingBottom: '2rem',
+            paddingBottom: '1.2rem',
           }}
         >
           <Button
             variant="contained"
-            color="warning"
-            onClick={() => {
-              console.log('click siuuu');
-            }}
+            color="primary"
+            type="submit"
+            startIcon={<ArrowForward />}
             sx={{
-              width: '60%',
+              width: '35%',
+              mr: '2rem',
             }}
           >
             Siguiente

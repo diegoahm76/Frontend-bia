@@ -109,7 +109,9 @@ export const VerDocumentos: React.FC<IProps> = (props: IProps) => {
                 <Button
                     color='primary'
                     variant='contained'
-                    onClick={boton_seleccionar}>Seleccionar</Button>
+                   onClick={boton_seleccionar}
+                    
+                    >Seleccionar</Button>
                 <Button
                     color='inherit'
                     variant='contained'

@@ -31,7 +31,7 @@ export const FacilidadesPagoUsuario: React.FC = () => {
       void dispatch(get_obligaciones());
       void dispatch(get_fac_pago_autorizadas());
     } catch (error: any) {
-      throw new Error(error);
+      // throw new Error(error);
     }
   }, [])
 
