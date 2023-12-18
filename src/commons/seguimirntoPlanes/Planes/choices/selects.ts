@@ -16,4 +16,8 @@ export const tipo_plan = [
     value: 'PES',
     label: 'Plan de desarrollo economico y social',
   },
+  {
+    value: 'POA',
+    label: 'Plan Operativo Anual de Inversiones',
+  },
 ];

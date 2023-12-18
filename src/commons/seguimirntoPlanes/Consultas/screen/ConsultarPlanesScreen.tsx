@@ -1,29 +1,11 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { AgregarIndicacdor } from '../components/Programas/AgregarIndicacdor';
-import { useEffect } from 'react';
-import { set_current_mode_planes } from '../../store/slice/indexPlanes';
-import { ListarIndicador } from '../components/Programas/ListarIndicador';
+import { ListarPlanes } from '../components/Planes/ListarConsultaPLan';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const IndicadoresScreen: React.FC = () => {
-  const { mode } = useAppSelector((state) => state.planes);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(
-      set_current_mode_planes({
-        ver: false,
-        crear: false,
-        editar: false,
-      })
-    );
-  }, []);
-
+export const ConsultarPlanesScreen: React.FC = () => {
   return (
     <>
       <Grid
@@ -42,11 +24,10 @@ export const IndicadoresScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Indicadores " />
+          <Title title="Consultar Planes" />
         </Grid>
       </Grid>
-      <ListarIndicador />
-      {mode.crear || mode.editar ? <AgregarIndicacdor /> : null}
+      <ListarPlanes />
       <Grid
         container
         spacing={2}

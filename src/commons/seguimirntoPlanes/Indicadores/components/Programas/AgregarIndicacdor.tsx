@@ -10,7 +10,7 @@ import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useIndicadorHook } from '../../hooks/useIndicadorHook';
 import { DataContextIndicador } from '../../context/context';
-import { tipo_medida } from '../../choices/selects';
+import { tipo_medida, tipo_indicador } from '../../choices/selects';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarIndicacdor: React.FC = () => {
@@ -32,6 +32,8 @@ export const AgregarIndicacdor: React.FC = () => {
     actividad_selected,
     medidor_selected,
     tipos_selected,
+    proyectos_selected,
+    fetch_data_proyectos_selected,
     fetch_data_planes_selected,
     fetch_data_producto_selected,
     fetch_data_actividad_selected,
@@ -56,13 +58,16 @@ export const AgregarIndicacdor: React.FC = () => {
         nombre_actividad: indicador.nombre_actividad,
         nombre_plan: indicador.nombre_plan,
         nombre_indicador: indicador.nombre_indicador,
+        nombre_proyecto: indicador.nombre_proyecto,
         linea_base: indicador.linea_base,
         medida: indicador.medida,
+        tipo_indicador: indicador.tipo_indicador,
         id_medicion: indicador.id_medicion,
         id_tipo: indicador.id_tipo,
         id_producto: indicador.id_producto,
         id_actividad: indicador.id_actividad,
         id_plan: indicador.id_plan,
+        id_proyecto: indicador.id_proyecto,
       });
     }
   }, [mode, indicador]);
@@ -73,6 +78,7 @@ export const AgregarIndicacdor: React.FC = () => {
     fetch_data_actividad_selected();
     fetch_data_medidor_selected();
     fetch_data_tipos_selected();
+    fetch_data_proyectos_selected();
   }, []);
 
   return (
@@ -119,6 +125,26 @@ export const AgregarIndicacdor: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Nombre del plan"
+                      variant="outlined"
+                      multiline
+                      value={value}
+                      disabled={true}
+                      required={true}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="nombre_proyecto"
+                  control={control_indicador}
+                  rules={{ required: false }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Nombre del proyecto"
                       variant="outlined"
                       multiline
                       value={value}
@@ -257,6 +283,37 @@ export const AgregarIndicacdor: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
+              name="id_proyecto"
+              control={control_indicador}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={false}
+                  fullWidth
+                  required
+                  error={!!errors_indicador.id_proyecto}
+                  helperText={
+                    errors_indicador?.id_proyecto?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : 'ingrese el proyecto'
+                  }
+                >
+                  {proyectos_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
               name="id_producto"
               control={control_indicador}
               defaultValue=""
@@ -371,6 +428,68 @@ export const AgregarIndicacdor: React.FC = () => {
                   }
                 >
                   {tipos_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="medida"
+              control={control_indicador}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Tipo de medida"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_indicador.medida}
+                  helperText={
+                    errors_indicador.medida
+                      ? 'Es obligatorio ingresar un tipo de medida'
+                      : 'Ingrese un tipo de medida'
+                  }
+                >
+                  {tipo_medida.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="tipo_indicador"
+              control={control_indicador}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Tipo de indicador"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_indicador.tipo_indicador}
+                  helperText={
+                    errors_indicador.tipo_indicador
+                      ? 'Es obligatorio ingresar un tipo de indicador'
+                      : 'Ingrese un tipo de indicador'
+                  }
+                >
+                  {tipo_indicador.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>

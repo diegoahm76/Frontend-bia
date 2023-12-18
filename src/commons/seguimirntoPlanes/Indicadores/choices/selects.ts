@@ -9,3 +9,14 @@ export const tipo_medida = [
     label: 'Porcentaje',
   },
 ];
+
+export const tipo_indicador = [
+  {
+    value: 'MAN',
+    label: 'Mantenimiento',
+  },
+  {
+    value: 'INC',
+    label: 'Incremento',
+  },
+];

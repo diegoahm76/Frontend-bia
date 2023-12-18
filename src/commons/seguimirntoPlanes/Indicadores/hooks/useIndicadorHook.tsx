@@ -25,13 +25,16 @@ export const useIndicadorHook = (): any => {
       nombre_actividad: '',
       nombre_plan: '',
       nombre_indicador: '',
+      nombre_proyecto: '',
       linea_base: '',
       medida: '',
+      tipo_indicador: '',
       id_medicion: 0,
       id_tipo: 0,
       id_producto: 0,
       id_actividad: 0,
       id_plan: 0,
+      id_proyecto: 0,
     },
   });
 
@@ -47,13 +50,16 @@ export const useIndicadorHook = (): any => {
       nombre_actividad: '',
       nombre_plan: '',
       nombre_indicador: '',
+      nombre_proyecto: '',
       linea_base: '',
       medida: '',
+      tipo_indicador: '',
       id_medicion: 0,
       id_tipo: 0,
       id_producto: 0,
       id_actividad: 0,
       id_plan: 0,
+      id_proyecto: 0,
     });
   };
 
