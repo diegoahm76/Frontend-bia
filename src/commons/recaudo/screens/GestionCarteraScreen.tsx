@@ -56,7 +56,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [open_create_proceso_modal, set_open_create_proceso_modal] = useState(false);
   const [valores_proceso, set_valores_proceso] = useState<ValoresProceso[][]>([]);
   const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
-  const { etapa_proceso, set_etapa_proceso } = useContext(EtapaProcesoConext);
+  const { set_etapa_proceso } = useContext(EtapaProcesoConext);
 
 
   const columns_carteras: GridColDef[] = [
@@ -182,8 +182,6 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_id_cartera(params.row.id);
                   set_position_tab('2');
                   set_data_complemet(params.row);
-
-
 
                   set_etapa_proceso((prevEtapa: any) => ({
                     ...prevEtapa,
@@ -520,7 +518,12 @@ export const GestionCarteraScreen: React.FC = () => {
         set_position_tab('1');
         set_notification_info({ type: 'success', message: 'Se ha creado correctamente el proceso.' });
         set_open_notification_modal(true);
-        console.log("data retur  crear-proceso", response)
+        // console.log("data retur  crear-proceso", response.data?.id_categoria)
+        set_etapa_proceso((prevEtapa: any) => ({
+          ...prevEtapa,
+          disable: false,
+          nuevo_proceso: response.data?.id_categoria,
+        }));
       })
       .catch((error) => {
         console.log(error);
