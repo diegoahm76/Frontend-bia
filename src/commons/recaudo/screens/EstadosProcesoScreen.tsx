@@ -518,7 +518,6 @@ export const EstadosProcesoScreen: React.FC = () => {
   const delete_atributo_etapa = (id_atributo: number, atributo: string): void => {
     api.get(`recaudo/procesos/eliminar-atributo/${id_atributo}/`)
       .then((response) => {
-        console.log(response);
         update_atributos_etapa();
         set_notification_info({ type: 'success', message: `Se eliminó correctamente el atributo "${atributo}".` });
         set_open_notification_modal(true);
