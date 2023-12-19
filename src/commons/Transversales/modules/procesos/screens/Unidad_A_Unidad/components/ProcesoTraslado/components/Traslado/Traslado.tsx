@@ -67,17 +67,17 @@ export const Traslado: FC<any> = (): JSX.Element => {
   const handleCheckboxChange = (event: any, item: any): void => {
     if (event.target.checked) {
       setSelectedItems([...selectedItems, item]);
-      console.log(selectedItems);
+      //  console.log('')(selectedItems);
     } else {
       setSelectedItems(
         selectedItems.filter((selectedItem: any) => selectedItem !== item)
       );
-      console.log(selectedItems);
+      //  console.log('')(selectedItems);
     }
   };
 
   const cleanFormAndGrid = (): void => {
-    console.log('clean');
+    //  console.log('')('clean');
     reset_traslado_unidad_a_unidad({
       id_antigua_unidad_organizacional: '',
       id_nueva_unidad_organizacional: ''
@@ -123,14 +123,14 @@ export const Traslado: FC<any> = (): JSX.Element => {
             setSelectedItems([]);
             setshowSecondPart(false);
             cleanFormAndGrid();
-            // console.log(res);
+            // //  console.log('')(res);
             // ? pendiente
             // dispatch(setListadoPersonasUnidades(res));
             // * from this event I have to manage the modal show and hide of the grid
           });
         });
       } catch (error: any) {
-        console.log(error);
+        //  console.log('')(error);
       }
     }
   };
@@ -188,7 +188,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                       className="basic-single"
                       value={value}
                       onChange={(selectedOption) => {
-                        console.log(selectedOption);
+                        //  console.log('')(selectedOption);
                         setshowSecondPart(true);
                         dispatch(
                           setUnidadAnteriorCurrent(selectedOption.value)
@@ -197,7 +197,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                           selectedOption.value,
                           setviweGridDataPersons
                         ).then((res) => {
-                          console.log(res);
+                          //  console.log('')(res);
                           dispatch(setListadoPersonasUnidades(res?.dataFilter));
                           dispatch(
                             setListadoPersonasTotalesUnidades(res?.dataTotal)
@@ -257,7 +257,7 @@ export const Traslado: FC<any> = (): JSX.Element => {
                             className="basic-single"
                             value={value}
                             onChange={(selectedOption) => {
-                              console.log(selectedOption);
+                              //  console.log('')(selectedOption);
                               dispatch(
                                 setUnidadActualCurrent(selectedOption.value)
                               );

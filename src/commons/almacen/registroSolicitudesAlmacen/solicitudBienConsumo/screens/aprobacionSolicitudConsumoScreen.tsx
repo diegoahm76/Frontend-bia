@@ -37,7 +37,7 @@ const AprobacionSolicitudConsumoScreen = () => {
 
 
     useEffect(() => {
-        // console.log(current_solicitud)
+        // //  console.log('')(current_solicitud)
         reset_solicitud_aprobacion(current_solicitud)
         if ('persona_solicita' in current_solicitud) {
             reset_solicitud_aprobacion(current_solicitud)
@@ -82,7 +82,7 @@ const AprobacionSolicitudConsumoScreen = () => {
         }
 
         void dispatch(aprobacion_solicitud_pendiente(form_data, data.id_solicitud_consumibles))
-        console.log(form_data)
+        //  console.log('')(form_data)
     }
 
 

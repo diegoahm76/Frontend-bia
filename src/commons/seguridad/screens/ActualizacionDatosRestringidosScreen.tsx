@@ -110,7 +110,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
         'ruta_archivo_soporte',
         data.ruta_archivo_soporte[0]
       );
-      console.log('file', data.ruta_archivo_soporte[0]);
+      //  console.log('')('file', data.ruta_archivo_soporte[0]);
       datos_persona.append('justificacion', data.justificacion);
 
       const id_persona: number | undefined = persona?.id_persona;

@@ -88,7 +88,7 @@ const MetadataFormDialog = ({
   }, [metadata]);
 
   const on_submit: SubmitHandler<IObjMetaData> = (data: IObjMetaData): void => {
-    console.log(data);
+    //  console.log('')(data);
     dispatch(set_metadata(data));
     set_is_modal_active(false);
   };

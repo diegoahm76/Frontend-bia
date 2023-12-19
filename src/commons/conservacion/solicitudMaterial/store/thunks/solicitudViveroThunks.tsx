@@ -40,10 +40,10 @@ export const crear_solicitud: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(solicitud)
+            //  console.log('')(solicitud)
             const { data } = await api.post('conservacion/solicitudes/create/', solicitud);
             //  dispatch(get_solicitud_consumo_id());
-            console.log(data)
+            //  console.log('')(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
@@ -53,7 +53,7 @@ export const crear_solicitud: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -69,11 +69,11 @@ export const editar_solicitud: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(solicitud)
+            //  console.log('')(solicitud)
             const { data } = await api.put(`conservacion/solicitudes/update-solicitud/${id}/`, solicitud);
             // await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, bienes);
             //  dispatch(get_solicitud_consumo_id());
-            console.log(data)
+            //  console.log('')(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
@@ -83,7 +83,7 @@ export const editar_solicitud: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -98,10 +98,10 @@ export const delete_item_solicitud_service: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(item)
+            //  console.log('')(item)
             const { data } = await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, item);
             //  dispatch(get_solicitud_consumo_id());
-            console.log(data)
+            //  console.log('')(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
@@ -111,7 +111,7 @@ export const delete_item_solicitud_service: any = (
             // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
 
             return error as AxiosError;
@@ -143,7 +143,7 @@ export const get_funcionario_document_service = (
             }
             return data;
         } catch (error: any) {
-            console.log('get_person_document_service');
+            //  console.log('')('get_person_document_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -157,7 +157,7 @@ export const get_person_id_service = (id: number,): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`personas/get-by-id/${id}/`);
-            console.log(data)
+            //  console.log('')(data)
             if ("data" in data) {
                 dispatch(set_persona_solicita({ id_persona: data.data.id_persona, unidad_organizacional: data.data.nombre_unidad_organizacional_actual, id_unidad_organizacional_actual: data.data.id_unidad_organizacional_actual, nombre: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
 
@@ -166,7 +166,7 @@ export const get_person_id_service = (id: number,): any => {
             }
             return data;
         } catch (error: any) {
-            console.log('get_person_document_service');
+            //  console.log('')('get_person_document_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -192,7 +192,7 @@ export const get_funcionario_service = (
                 `almacen/solicitudes/search-funcionario-filtros/?tipo_documento=${document ?? ""}&primer_nombre=${primer_nombre ?? ""}&primer_apellido=${primer_apellido ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ""}`
 
             );
-            console.log(data)
+            //  console.log('')(data)
             dispatch(set_funcionarios(data.data));
             if (data.data.length > 0) {
                 control_success("Se econtrarón funcionarios")
@@ -201,7 +201,7 @@ export const get_funcionario_service = (
             }
             return data;
         } catch (error: any) {
-            console.log(error);
+            //  console.log('')(error);
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -216,7 +216,7 @@ export const get_funcionario_id_service = (id: number | null,): any => {
         try {
             const { data } = await api.get(`personas/get-by-id/${id ?? ""}/`);
             if ("data" in data) {
-                // console.log(data)
+                // //  console.log('')(data)
 
                 dispatch(set_current_funcionario({ id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, nombre_unidad_organizacional_actual: data.data.nombre_unidad_organizacional_actual, nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
 
@@ -225,7 +225,7 @@ export const get_funcionario_id_service = (id: number | null,): any => {
             }
             return data;
         } catch (error: any) {
-            console.log('get_fiuncionario_service');
+            //  console.log('')('get_fiuncionario_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -237,7 +237,7 @@ export const get_num_solicitud = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get('conservacion/solicitudes/get-numero-consecutivo/');
-            console.log(data)
+            //  console.log('')(data)
 
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
@@ -256,7 +256,7 @@ export const get_uni_organizacional = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get('transversal/organigrama/unidades/get-list/organigrama-actual/');
-            console.log(data.data, "data")
+            //  console.log('')(data.data, "data")
             dispatch(get_unidad_organizacional(data.data));
             return data;
         } catch (error: any) {
@@ -270,13 +270,13 @@ export const get_solicitud_service = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`conservacion/solicitudes/get-listar-solicitudes/`);
-            console.log('Solicitudes recuperadas:', data);
+            //  console.log('')('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data));
 
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            console.log('get_solicitud_service');
+            //  console.log('')('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -289,13 +289,13 @@ export const get_solicitud_aprobacion = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`conservacion/funcionario/list-solicitudes/`);
-            console.log('Solicitudes recuperadas:', data);
+            //  console.log('')('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data));
 
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            console.log('get_solicitud_service');
+            //  console.log('')('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -307,13 +307,13 @@ export const get_solicitud_aprobacion_coordinador = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`conservacion/funcionario/coordinador/list-solicitudes/`);
-            console.log('Solicitudes recuperadas:', data);
+            //  console.log('')('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data));
 
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            console.log('get_solicitud_service');
+            //  console.log('')('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -329,15 +329,15 @@ export const get_solicitudes_despacho = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(fecha, solicitud, id_vivero)
+            //  console.log('')(fecha, solicitud, id_vivero)
             const { data } = await api.get(`conservacion/despachos/get-solicitudes-por-nro-despacho-y-id-vivero/?id_vivero=${id_vivero}&nro_solicitud=${solicitud}&fecha_aprobado=${fecha}`);
-            console.log('Solicitudes recuperadas:', data);
+            //  console.log('')('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data));
 
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            console.log('get_solicitud_service');
+            //  console.log('')('get_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -350,13 +350,13 @@ export const get_nurcery = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`conservacion/bajas/get-viveros/`);
-            console.log('Viveros Recuperados:', data);
+            //  console.log('')('Viveros Recuperados:', data);
             dispatch(set_nurseries(data.data));
 
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            console.log('get_nurcery');
+            //  console.log('')('get_nurcery');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -368,13 +368,13 @@ export const get_municipios = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`choices/municipios/`);
-            console.log('Municipios Recuperados:', data);
+            //  console.log('')('Municipios Recuperados:', data);
             dispatch(set_nurseries(data));
 
             // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
-            console.log('get_municipios');
+            //  console.log('')('get_municipios');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -390,10 +390,10 @@ export const get_bienes_service_codigo = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`)
+            //  console.log('')(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`)
             const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`);
             dispatch(set_current_bien(data.data));
-            console.log(data)
+            //  console.log('')(data)
             if (data.data.length > 0) {
                 control_success("Se encontrarón bienes")
             } else {
@@ -401,7 +401,7 @@ export const get_bienes_service_codigo = (
             }
             return data;
         } catch (error: any) {
-            // console.log('get_planting_goods_service');
+            // //  console.log('')('get_planting_goods_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -421,7 +421,7 @@ export const get_bienes_service = (
         try {
             const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=${tipo_bien ?? ""}&codigo_bien=${codigo_bien ?? ""}&nombre=${nombre_bien ?? ""}`);
             dispatch(set_bienes(data.data));
-            console.log(data)
+            //  console.log('')(data)
             if (data.data.length > 0) {
                 control_success("Se encontrarón bienes")
             } else {
@@ -429,7 +429,7 @@ export const get_bienes_service = (
             }
             return data;
         } catch (error: any) {
-            // console.log('get_planting_goods_service');
+            // //  console.log('')('get_planting_goods_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -442,10 +442,10 @@ export const get_bienes_solicitud = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(`conservacion/solicitudes/get-listar-solicitudes-by-id/${id_solicitud_viveros ?? ""}`)
+            //  console.log('')(`conservacion/solicitudes/get-listar-solicitudes-by-id/${id_solicitud_viveros ?? ""}`)
             const { data } = await api.get(`conservacion/solicitudes/get-listar-solicitudes-by-id/${id_solicitud_viveros ?? ""}/`);
             dispatch(set_bienes_solicitud(data.data));
-            console.log(data)
+            //  console.log('')(data)
             if (data.data.length > 0) {
                 // control_success("Se encontrarón bienes")
             } else {
@@ -453,7 +453,7 @@ export const get_bienes_solicitud = (
             }
             return data;
         } catch (error: any) {
-            // console.log('get_planting_goods_service');
+            // //  console.log('')('get_planting_goods_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -468,11 +468,11 @@ export const get_solicitud_id_service = (
         try {
             const { data } = await api.get(`conservacion/funcionario/get-solicitud/${id_solicitud_viveros ?? ""}/`);
             dispatch(set_current_solicitud(data.data_maestro));
-            console.log(data)
+            //  console.log('')(data)
             
             return data;
         } catch (error: any) {
-            // console.log('get_planting_goods_service');
+            // //  console.log('')('get_planting_goods_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -486,7 +486,7 @@ export const annul_solicitud_service = (
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.put(`conservacion/solicitudes/anular-solicitud/${id}/`, solicitud);
-            console.log(data)
+            //  console.log('')(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
@@ -496,7 +496,7 @@ export const annul_solicitud_service = (
             }
             return data;
         } catch (error: any) {
-            console.log('annul_solicitud_service');
+            //  console.log('')('annul_solicitud_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -515,13 +515,13 @@ export const aprobacion_solicitud_funcionario: any = (
                 `conservacion/funcionario/procesar-solicitud-responsable/${id}/`,
                 solicitud
             );
-            console.log(data)
+            //  console.log('')(data)
             dispatch(get_solicitud_service());
             control_success('Se aprobo la solicitud');
 
             return data;
         } catch (error: any) {
-            console.log('aprobar solicitud');
+            //  console.log('')('aprobar solicitud');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -539,13 +539,13 @@ export const aprobacion_solicitud_coordinador: any = (
                 `conservacion/funcionario/coordinador/procesar-solicitud/${id}/`,
                 solicitud
             );
-            console.log(data)
+            //  console.log('')(data)
             dispatch(get_solicitud_aprobacion_coordinador());
             control_success('Se aprobo la solicitud');
 
             return data;
         } catch (error: any) {
-            console.log('aprobar solicitud');
+            //  console.log('')('aprobar solicitud');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }

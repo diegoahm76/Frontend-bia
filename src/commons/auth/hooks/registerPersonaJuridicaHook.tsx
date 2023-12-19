@@ -237,7 +237,7 @@ export const use_register_persona_j = ({
 
   const on_submit = async (values: FieldValues): Promise<void> => {
     set_is_saving(true);
-    console.log('first');
+    //  console.log('')('first');
     try {
       values.redirect_url = 
         `${auth_url}/auth/activacion_cuenta`;

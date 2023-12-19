@@ -48,7 +48,7 @@ const BienRechazado = () => {
   }, [aux_bienes_solicitud]);
 
   useEffect(() => {
-    console.log(current_bien);
+    //  console.log('')(current_bien);
     reset_bien(current_bien);
   }, [current_bien]);
 
@@ -231,7 +231,7 @@ const BienRechazado = () => {
   };
 
   const get_bienes_filtro: any = async () => {
-    console.log('buscar...');
+    //  console.log('')('buscar...');
     const codigo_bien = get_values_bien('codigo_bien');
     const nombre = get_values_bien('nombre');
     if (

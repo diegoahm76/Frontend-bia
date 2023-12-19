@@ -437,7 +437,7 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
             loading={is_search}
             disabled={is_search || documento_representante === ''}
             onClick={() => {
-              console.log('click');
+              //  console.log('')('click');
               search_representante();
             }}
           >
@@ -672,7 +672,7 @@ const DatosAcceso: (props: PropsElement) => JSX.Element = ({
     handle_click_show_password,
   } = use_register_persona_j({ watch, setValue: set_value, getValues });
   useEffect(() => {
-    console.log(is_saving);
+    //  console.log('')(is_saving);
   }, [is_saving]);
   return (
     <>

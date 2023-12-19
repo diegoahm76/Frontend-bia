@@ -25,6 +25,12 @@ export const ModalAndLoadingProvider: FC<any> = ({
   const { isLoading: fourthLoading, handleLoading: handleFourthLoading } =
     useModalAndLoading('', 'isLoading');
 
+  const { isLoading: fifthLoading, handleLoading: handleFifthLoading } =
+    useModalAndLoading('', 'isLoading');
+
+  const { isLoading: sixthLoading, handleLoading: handleSixthLoading } =
+    useModalAndLoading('', 'isLoading');
+
   const { isLoading: openModalOne, handleLoading: handleOpenModalOne } =
     useModalAndLoading('', 'isLoading');
 
@@ -60,6 +66,14 @@ export const ModalAndLoadingProvider: FC<any> = ({
     //* fourth loading
     fourthLoading,
     handleFourthLoading,
+    //* fifth loading
+    fifthLoading,
+    handleFifthLoading,
+    //* sixth loading
+
+    sixthLoading,
+    handleSixthLoading,
+
     //* open modal one
     openModalOne,
     handleOpenModalOne,
@@ -71,7 +85,6 @@ export const ModalAndLoadingProvider: FC<any> = ({
     //* modal agregar metadatos
     modalAgregarMetadatos,
     handleModalAgregarMetadatos,
-
   };
   return (
     <ModalAndLoadingContext.Provider value={value}>

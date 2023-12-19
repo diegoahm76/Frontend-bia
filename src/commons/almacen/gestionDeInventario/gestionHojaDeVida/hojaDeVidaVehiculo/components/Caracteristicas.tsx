@@ -33,7 +33,7 @@ const EspecificacionesVehicle = ({
             };
             reader.readAsDataURL(file);
             if ('name' in file) {
-                console.log(file.name)
+                //  console.log('')(file.name)
                 set_file_name(file.name)
                 dispatch(set_current_cv_vehicle({
                     ...current_cv_vehicle,
@@ -79,7 +79,7 @@ const EspecificacionesVehicle = ({
             !== null) {
             if (current_cv_vehicle.ruta_imagen_foto !== null) {
                 const file = current_cv_vehicle.ruta_imagen_foto
-                console.log(file)
+                //  console.log('')(file)
                 if (!(typeof file === "string")) {
                     if ('name' in file) {
                         set_file_name(String(file.name))

@@ -191,7 +191,7 @@ export const persons_request = async (
 export const user_historico_cambios_estado = async (
   id_usuario: number
 ): Promise<ResponseThunks<HistoricoCambioEstadosUser[]>> => {
-  console.log(id_usuario);
+  //  console.log('')(id_usuario);
   try {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const {

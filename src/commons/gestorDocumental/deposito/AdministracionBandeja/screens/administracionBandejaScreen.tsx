@@ -72,7 +72,7 @@ const AdministrarBandejaScreen = () => {
 
     // editar desde la tabla
     const handle_edit_click = (bandeja: IObjBandeja) => {
-        console.log(bandeja)
+        //  console.log('')(bandeja)
         set_selected_bandeja(bandeja);
         set_bandeja(true);
         set_action("Editar");
@@ -81,13 +81,13 @@ const AdministrarBandejaScreen = () => {
     const handle_mover_bandeja = (bandeja_mover: IObjBandeja) => {
         set_mover_bandeja(true);
         reset_bandeja_destino(bandeja_mover)
-        console.log(get_values_bandeja_destino('id_deposito'))
+        //  console.log('')(get_values_bandeja_destino('id_deposito'))
 
     };
 
 
     useEffect(() => {
-        console.log(selected_bandeja)
+        //  console.log('')(selected_bandeja)
         reset(selected_bandeja);
     }, [selected_bandeja]);
 
@@ -113,7 +113,7 @@ const AdministrarBandejaScreen = () => {
                 ...data,
 
             };
-            console.log(data_edit)
+            //  console.log('')(data_edit)
             void dispatch(
                 editar_bandeja(selected_bandeja.id_bandeja_estante, data_edit)
             );
@@ -128,7 +128,7 @@ const AdministrarBandejaScreen = () => {
 
         set_selected_bandeja(initial_state_bandeja);
         set_action("Guardar");
-        console.log(deposito_estante)
+        //  console.log('')(deposito_estante)
 
     };
     void dispatch(get_bandejas_id(deposito_estante.id_estante_deposito))
@@ -149,7 +149,7 @@ const AdministrarBandejaScreen = () => {
 
 
     const on_submit_mover_bandeja = (data: IObjBandeja): void => {
-        console.log(data)
+        //  console.log('')(data)
         const data_mover = {
             id_deposito_destino: data.id_deposito,
             id_estante_destino: data.id_estante_deposito

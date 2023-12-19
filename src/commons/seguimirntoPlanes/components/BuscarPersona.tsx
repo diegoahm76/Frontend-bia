@@ -215,7 +215,7 @@ export const BuscarPersona: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log('is_limpiar_formulario', is_limpiar_formulario);
+    //  console.log('')('is_limpiar_formulario', is_limpiar_formulario);
     limipiar_formulario_personas();
     set_is_limpiar_formulario(false);
   }, [is_limpiar_formulario]);
@@ -260,7 +260,7 @@ export const BuscarPersona: React.FC = () => {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
       if (data !== undefined) {
-        console.log('data PERSONAAAAAAAAAAAA', data);
+        //  console.log('')('data PERSONAAAAAAAAAAAA', data);
         dispatch(
           set_current_persona_planes({
             id_persona: data.id_persona,

@@ -285,8 +285,8 @@ export function ListOrganigramas({
                 //! revisar esto detalladamente con el ing de backend
                 //  disabled={params.row.id_persona_cargo !== userinfo.id_persona}
                 onClick={() => {
-                  console.log('params.row.id_persona_cargo', params.row);
-                  console.log('userinfo.id_persona', userinfo);
+                  //  console.log('')('params.row.id_persona_cargo', params.row);
+                  //  console.log('')('userinfo.id_persona', userinfo);
                   dispatch(set_special_edit(true));
                   dispatch(current_organigram(params.row));
                   set_position_tab_organigrama('2');

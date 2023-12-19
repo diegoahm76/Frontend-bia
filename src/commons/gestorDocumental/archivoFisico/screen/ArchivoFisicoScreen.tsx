@@ -69,7 +69,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
     reset_estante(selected_arbol);
     reset_bandeja(selected_arbol);
     reset_caja(selected_arbol);
-    console.log(selected_arbol);
+    //  console.log('')(selected_arbol);
   }, [selected_arbol]);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -240,7 +240,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
   useEffect(() => {
     void dispatch(avanzada_deposito());
   }, []);
-  console.log(selected_arbol);
+  //  console.log('')(selected_arbol);
   useEffect(() => {
     const deposito_actual: IObjDepositos | undefined = depositos_tabla.find(
       (objeto) => objeto.id_deposito === arbol_deposito.deposito.id_deposito
@@ -331,7 +331,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -362,7 +362,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -393,7 +393,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -425,7 +425,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -472,7 +472,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -502,7 +502,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -551,7 +551,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -581,7 +581,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -629,7 +629,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{
@@ -659,7 +659,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       onChange(e.target.value);
-                      // console.log(e.target.value);
+                      // //  console.log('')(e.target.value);
                     }}
                     error={!(error == null)}
                     sx={{

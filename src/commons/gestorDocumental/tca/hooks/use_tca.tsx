@@ -41,7 +41,7 @@ export const use_tca = () => {
   });
 
   const watch_create_update_tca_value = watch_create_update_tca();
-  // console.log('watch_create_update_tca_value', watch_create_update_tca_value);
+  // //  console.log('')('watch_create_update_tca_value', watch_create_update_tca_value);
 
   // ! search tca --------------------------------------->
   const {
@@ -56,7 +56,7 @@ export const use_tca = () => {
     reValidateMode: 'onChange'
   });
   const watch_search_tca_value = watch_search_tca();
-  // console.log('watch_search_tca_value', watch_search_tca_value);
+  // //  console.log('')('watch_search_tca_value', watch_search_tca_value);
 
   const {
     control: control_administrar_tca,
@@ -114,7 +114,7 @@ export const use_tca = () => {
   // ? get list of finished ccd to list--------------------->
   useEffect(() => {
     void getTRDsUsados().then((res: any[]) => {
-      // * console.log('res', res);
+      // * //  console.log('')('res', res);
       set_list_non_used_trds(
         res
           .filter((trd) => trd.usado === false)
@@ -141,8 +141,8 @@ export const use_tca = () => {
 
   // ? try to edit tca --------------------->
   useEffect(() => {
-    // console.log(data_create_trd_modal, 'data_create_trd');
-    // console.log(trd_current, 'trd_current');
+    // //  console.log('')(data_create_trd_modal, 'data_create_trd');
+    // //  console.log('')(trd_current, 'trd_current');
     if (tca_current !== null) {
       /* const result_name = list_trds.filter((item: any) => {
         return item.id_trd === tca_current.id_trd;
@@ -150,7 +150,7 @@ export const use_tca = () => {
       const result_name = list_trds.filter((item: any) => {
         return item.value === tca_current?.id_trd;
       });
-      console.log('result_name', result_name);
+      //  console.log('')('result_name', result_name);
       const obj: any = {
         id_trd: {
           label: result_name[0]?.item?.nombre || tca_current?.nombre,
@@ -162,8 +162,8 @@ export const use_tca = () => {
         id_tca: tca_current?.id_tca
         // id_organigrama: tca_current?.id_organigrama,
       };
-      // console.log(obj, 'obj');
-      // console.log('tca_current', tca_current);
+      // //  console.log('')(obj, 'obj');
+      // //  console.log('')('tca_current', tca_current);
       reset_create_update_tca(obj);
     }
   }, [tca_current]);

@@ -28,7 +28,7 @@ export const get_searched_tcas_service: any = (
         : control_success(data.detail);
       return data.data;
     } catch (error: AxiosError | any) {
-      // // console.log(error);
+      // // //  console.log('')(error);
       control_error(error.response?.data?.detail);
       return error;
     } finally {
@@ -57,7 +57,7 @@ export const create_tca_services = (
       const { data } = await api.post(url, bodyPost);
       control_success(data.detail);
       dispatch(set_current_tca_action(data.data));
-      // console.log('data', data);
+      // //  console.log('')('data', data);
       return data;
     } catch (error: AxiosError | any) {
       control_error(error.response?.data?.detail || error.message);
@@ -75,7 +75,7 @@ export const update_tca_services = (
   setLoadingButton: any
 ): any => {
   return async (dispatch: Dispatch<any>): Promise<any> => {
-    // console.log(bodyPost);
+    // //  console.log('')(bodyPost);
     const { id_trd, nombre, version, id_tca } = bodyPost;
     setLoadingButton(true);
 
@@ -99,7 +99,7 @@ export const update_tca_services = (
       );
 
       if (!updatedTCA) {
-        // console.log('Updated TCA', updatedData);
+        // //  console.log('')('Updated TCA', updatedData);
 
         control_error(errorMessage);
         return;
@@ -108,7 +108,7 @@ export const update_tca_services = (
       dispatch(set_current_tca_action(updatedTCA));
 
       control_success(updatedData.detail || successMessage);
-      // console.log('data', updatedData);
+      // //  console.log('')('data', updatedData);
       return updatedData;
     } catch (error: AxiosError | any) {
       control_error(error.response?.data?.detail || error.message);
@@ -137,7 +137,7 @@ export const get_catalogo_TRD_service = async (
       'Se encontró el siguiente registro de catálogo TRD' || data.detail
     ); */
 
-    // console.log('data TRD catalogo', data);
+    // //  console.log('')('data TRD catalogo', data);
 
     return data.data;
   } catch (error: AxiosError | any) {
@@ -161,7 +161,7 @@ export const get_catalogo_TCA_service = async (
       'Se encontró el siguiente registro de catálogo TCA' || data.detail
     ); */
 
-    // console.log('data TCA catalogo', data);
+    // //  console.log('')('data TCA catalogo', data);
 
     return data.data;
   } catch (error: AxiosError | any) {
@@ -188,7 +188,7 @@ export const create_item_catalogo_tca_service: any = async (
       return;
     }
 
-    // console.log('bodyPost', bodyPost);
+    // //  console.log('')('bodyPost', bodyPost);
 
     const postData: any = {
       id_cat_serie_und_ccd_trd,
@@ -203,7 +203,7 @@ export const create_item_catalogo_tca_service: any = async (
     const url = `gestor/tca/catalogo-tca/clasificar/${id_tca}/`;
     const { data } = await api.post(url, postData);
     control_success(data.detail);
-    // console.log('data TCA catalogo', data);
+    // //  console.log('')('data TCA catalogo', data);
     return data;
   } catch (error: AxiosError | any) {
     control_error(
@@ -228,11 +228,11 @@ export const update_item_catalogo_tca_service = async (
       control_error('Todos los campos son obligatorios');
       return;
     }
-    // console.log('bodyPost', formData);
+    // //  console.log('')('bodyPost', formData);
     const url = `gestor/tca/catalogo-tca/update-clasif/${id_cat_serie_unidad_org_ccd_trd_tca}/`;
     const { data } = await api.put(url, formData);
     control_success(data.detail);
-    // console.log('data TCA catalogo', data);
+    // //  console.log('')('data TCA catalogo', data);
     return data;
   } catch (error: AxiosError | any) {
     control_error(
@@ -258,7 +258,7 @@ export const delete_item_catalogo_tca_service = async (
     const { data } = await api.delete(url);
     control_success(data.detail);
 
-    // console.log('data TCA catalogo', data);
+    // //  console.log('')('data TCA catalogo', data);
 
     return data.data;
   } catch (error: AxiosError | any) {
@@ -284,7 +284,7 @@ export const finish_tca_service = async (
     const { data } = await api.put(url);
     control_warning('No olvides limpiar los campos antes de salir del módulo');
     control_success(data.detail);
-    // console.log('TCA finalizado');
+    // //  console.log('')('TCA finalizado');
     setFlag(true);
     // return data;
   } catch (error: AxiosError | any) {
@@ -305,7 +305,7 @@ export const resume_tca_service = async (
     const url = `gestor/tca/resume/${id_tca}/`;
     const { data } = await api.put(url);
     control_success(data.detail);
-    // console.log('TCA reanudado');
+    // //  console.log('')('TCA reanudado');
     setFlag(false);
     // return data;
   } catch (error: AxiosError | any) {

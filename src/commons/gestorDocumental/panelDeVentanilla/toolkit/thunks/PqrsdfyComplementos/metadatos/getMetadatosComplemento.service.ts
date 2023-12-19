@@ -12,7 +12,7 @@ export const getMetadatoComplemento = async (
     const url = `gestor/panel_ventanilla/pqrsdf/anexo-documento/meta-data/get/${id_anexo}/`;
     const { data } = await api.get(url);
     control_success('Metadatos del archivo obtenidos con éxito');
-    console.log(data?.data);
+    //  console.log('')(data?.data);
     return data?.data;
   } catch (err) {
     handleOpenInfoMetadatos!(false);

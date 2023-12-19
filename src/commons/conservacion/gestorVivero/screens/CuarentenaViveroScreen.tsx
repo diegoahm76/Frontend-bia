@@ -57,7 +57,7 @@ export function CuarentenaViveroScreen(): JSX.Element {
 
   useEffect(() => {
     void dispatch(get_nurseries_closing_service());
-    console.log(id);
+    //  console.log('')(id);
     if (id !== null && id !== undefined) {
       void dispatch(get_nursery_service(id));
     } else {
@@ -75,7 +75,7 @@ export function CuarentenaViveroScreen(): JSX.Element {
       justificacion_cuarentena: '',
       persona: userinfo.nombre,
     });
-    console.log(current_nursery);
+    //  console.log('')(current_nursery);
   }, [current_nursery]);
 
   useEffect(() => {

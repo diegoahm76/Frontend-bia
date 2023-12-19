@@ -17,7 +17,7 @@ export const consultarTablaTemporal =
     try {
       const url = `transversal/organigrama/listado-registro-temporal/`;
       const { data } = await api.get(url);
-      // console.log(data);
+      // //  console.log('')(data);
       //* revisar ese data.data luego, ya que cuando si existen registros retorna una lista y otros valores muy útiles, pero cuando no, retorna un objeto con un mensaje
       return {
         data: data?.data,
@@ -71,7 +71,7 @@ export const get_organigrama_acual = async (navigate: any): Promise<any> => {
 
     return dataToReturn;
   } catch (error: any) {
-    console.log(error);
+    //  console.log('')(error);
   }
 };
 
@@ -80,13 +80,13 @@ export const getOrganigramasDispobibles = async (): Promise<any> => {
   try {
     const url = `transversal/organigrama/get-terminados/`;
     const { data } = await api.get(url);
-    console.log('dataaaaaaaaa', data);
+    //  console.log('')('dataaaaaaaaa', data);
     const dataToReturn = data?.filter(
       (el: any) => el.fecha_terminado && !el.fecha_retiro_produccion
     );
     return dataToReturn;
   } catch (error: any) {
-    console.log(error);
+    //  console.log('')(error);
   }
 };
 
@@ -104,7 +104,7 @@ export const get_organigrama_anterior = async (navigate: any): Promise<any> => {
     const dataToReturn = data2?.Organigramas?.filter(
       (el: any) => el.id_organigrama === data?.data[0]?.id_organigrama
     );
-    console.log('dataToReturn', dataToReturn);
+    //  console.log('')('dataToReturn', dataToReturn);
 
     if (dataToReturn.length === 0) {
       void Swal.fire({
@@ -131,7 +131,7 @@ export const get_organigrama_anterior = async (navigate: any): Promise<any> => {
 
     return dataToReturn;
   } catch (error: any) {
-    console.log(error);
+    //  console.log('')(error);
   }
 };
 
@@ -143,7 +143,7 @@ export const getListadoPersonasOrganigramaActual = async (): Promise<any> => {
     const { data } = await api.get(url);
     return data;
   } catch (error: any) {
-    console.log(error);
+    //  console.log('')(error);
   }
 };
 
@@ -155,7 +155,7 @@ export const getListaUnidadesOrganigramaSeleccionado = async (
     const { data } = await api.get(url);
     return data;
   } catch (error: any) {
-    console.log(error);
+    //  console.log('')(error);
   }
 };
 
@@ -171,7 +171,7 @@ export const getPersonasSinActualizarOrganigramaAnteriorAlActual =
         detail: data?.detail
       };
     } catch (error: any) {
-      console.log(error);
+      //  console.log('')(error);
       return {
         data: [],
         success: false,
@@ -191,11 +191,11 @@ export const putCrearRegistrosTemporalesT026 = async (
     setLoadingButton(true);
     const url = `transversal/organigrama/guardar-actualizacion-unidad/${id_organigrama_posible_cambio}/`;
     const { data } = await api.put(url, data_almacenar_tabla_temporal);
-    console.log('data retorno creación de tabla temporal', data);
+    //  console.log('')('data retorno creación de tabla temporal', data);
     control_success('Traslado masivo de unidad guardado con éxito');
     return data;
   } catch (error: any) {
-    console.log(error);
+    //  console.log('')(error);
     control_error('Error al guardar traslado masivo de unidades');
   } finally {
     setLoadingButton(false);
@@ -208,10 +208,10 @@ export const getUnidadesOrganizacionalesOrganigramaActual =
     try {
       const url = `transversal/organigrama/unidades/get-list/organigrama-actual/`;
       const { data } = await api.get(url);
-      console.log('unidades organizacionales de organigrama actual', data);
+      //  console.log('')('unidades organizacionales de organigrama actual', data);
       return data;
     } catch (error: any) {
-      console.log(error);
+      //  console.log('')(error);
     }
   };
 
@@ -227,11 +227,11 @@ export const putTrasladoMasivoUnidadesPorEntidad = async (
     setLoadingButton(true);
     const url = `transversal/organigrama/finalizar-actualizacion-unidad/`;
     const { data } = await api.put(url, data_traslado_masivo);
-    console.log('data retorno creación de tabla temporal', data);
+    //  console.log('')('data retorno creación de tabla temporal', data);
     control_success('Traslado masivo realizado con éxito');
     return data;
   } catch (error: any) {
-    console.log(error);
+    //  console.log('')(error);
     control_error('Error al realizar el traslado masivo');
   } finally {
     setLoadingButton(false);

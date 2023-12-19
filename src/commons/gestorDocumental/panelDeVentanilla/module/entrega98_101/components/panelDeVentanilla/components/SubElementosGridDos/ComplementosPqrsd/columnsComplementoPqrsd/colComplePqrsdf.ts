@@ -53,12 +53,4 @@ export const columnsComplementoPqrsdf = [
       return params.value ? params.value : 'N/A';
     },
   },
-  {
-    headerName: 'Requiere digitalización',
-    field: 'requiere_digitalizacion',
-    minWidth: 200,
-    renderCell: (params: any) => {
-      return params.value ? 'Si' : 'No';
-    },
-  },
 ];

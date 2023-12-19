@@ -21,6 +21,7 @@ import {
   set_file_origins,
   set_file_typologies,
   set_file_typology,
+  set_filed,
   set_filed_types,
   set_filings,
   set_grantor,
@@ -723,6 +724,12 @@ export const radicar_pqrsdf_service = (
       if (data.success) {
         control_success(data.detail);
         void dispatch(get_pqrsdf_id_service(id));
+        dispatch(
+          set_filed({
+            ...data.data,
+            numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
+          })
+        );
       }
       return data;
     } catch (error: any) {
@@ -738,9 +745,9 @@ export const get_filings_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(params);
-      const { data } = await api.get(
-        `gestor/radicados/imprimir-radicado/?cod_tipo_radicado=${params.cod_tipo_radicado}&prefijo_radicado=${params.prefijo_radicado}&agno_radicado=${params.agno_radicado}&nro_radicado=${params.nro_radicado}&fecha_radicado=${params.fecha_radicado}`
-      );
+      const { data } = await api.get(`gestor/radicados/imprimir-radicado/`, {
+        params,
+      });
       console.log(data);
       dispatch(set_filings(data.data));
 
@@ -752,7 +759,7 @@ export const get_filings_service = (params: any): any => {
       // }
       return data;
     } catch (error: any) {
-      console.log('delete_pqrsdf_service');
+      console.log('get_filings_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

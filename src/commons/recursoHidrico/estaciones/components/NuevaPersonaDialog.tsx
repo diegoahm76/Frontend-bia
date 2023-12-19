@@ -72,7 +72,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
   useEffect(() => {
     void get_data_initial();
     // const datos = get_data_initial();
-    // console.log('data inical', datos);
+    // //  console.log('')('data inical', datos);
   }, []);
 
   const on_sumbit_persona: SubmitHandler<FieldValues> = (data): void => {

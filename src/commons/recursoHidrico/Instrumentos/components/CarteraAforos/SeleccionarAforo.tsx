@@ -171,7 +171,7 @@ export const SeleccionarAforo: React.FC = () => {
   }, [instrumentos]);
 
   useEffect(() => {
-    console.log(id_cartera_aforos, 'id_cartera_aforos');
+    //  console.log('')(id_cartera_aforos, 'id_cartera_aforos');
     reset_cartera_aforo({
       id_cuenca: info_cartera.id_cuenca as any,
       ubicacion_aforo: info_cartera.ubicacion_aforo,
@@ -285,7 +285,7 @@ export const SeleccionarAforo: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
-                    console.log(e.target.value);
+                    //  console.log('')(e.target.value);
                   }}
                   error={!!error}
                 />

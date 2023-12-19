@@ -28,10 +28,15 @@ export const IconButtonDownLoad = ({
         target="_blank"
         rel="noopener noreferrer"
         href={
-          fileUrl &&
-          fileUrl.includes(baseURL)
+          fileUrl && fileUrl.includes(baseURL)
             ? fileUrl
-            : `https://back-end-bia-beta.up.railway.app${fileUrl}`
+            : `${
+                process.env.NODE_ENV === 'development'
+                  ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+                    'https://back-end-bia-beta.up.railway.app'
+                  : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+                    'http://70.30.6.237'
+              }${fileUrl}`
         }
         ref={linkRef}
         style={{ display: 'none' }}
@@ -60,28 +65,3 @@ export const IconButtonDownLoad = ({
     </>
   );
 };
-
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-/* eslint-disable @typescript-eslint/naming-convention */
-/*  import { render, screen, fireEvent } from '@testing-library/react';
-  import { DownloadButton } from '../DownLoadButton';
-  
-  
-  describe('DownloadButton', () => {
-    test('renders button and triggers download', () => {
-      const fileUrl = 'https://example.com/file.pdf';
-      const fileName = 'example.pdf';
-      const condition = false;
-  
-      render(
-        <DownloadButton fileUrl={fileUrl} fileName={fileName} condition={condition} />
-      );
-  
-      const button = screen.getByRole('button');
-      fireEvent.click(button);
-  
-      const downloadLink = screen.getByRole('link', { hidden: true }) as HTMLAnchorElement;
-      expect(downloadLink.href).toBe(fileUrl);
-      expect(downloadLink.download).toBe(fileName);
-    });
-  }); */

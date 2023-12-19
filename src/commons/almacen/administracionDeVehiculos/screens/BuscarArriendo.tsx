@@ -54,7 +54,7 @@ const BuscarArriendoComponent = (props: IProps) => {
       set_data_arriendos(response.data);
       set_data_filtrada([...response.data]);
     });
-    console.log(data_filtrada);
+    // //  console.log('')(data_filtrada);
   }, []);
 
   const cambio_nombre: any = (e: React.ChangeEvent<HTMLInputElement>) => {

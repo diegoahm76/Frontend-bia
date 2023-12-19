@@ -40,12 +40,15 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
 
   // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA-----
   const searchSubmitPqrsdf = () => {
-    const { tipo_de_solicitud, radicado, estado_actual_solicitud } =
+    const { tipo_de_solicitud, radicado, estado_actual_solicitud, fecha_inicio, fecha_fin } =
       watch_busqueda_panel_ventanilla;
     void getGrilladoPqrsdfPanelVentanilla(
       estado_actual_solicitud?.label,
       radicado,
       '' /*tipo_de_solicitud?.label,*/,
+      fecha_inicio,
+      fecha_fin,
+
       handleSecondLoading
     ).then((res) => {
       dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
@@ -57,7 +60,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitTramitesYservicios = () => {
-    console.log('searchSubmitTramitesYservicios');
+    //  console.log('')('searchSubmitTramitesYservicios');
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -65,7 +68,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitOtros = () => {
-    console.log('submit , buscando coincidencias de otros');
+    //  console.log('')('submit , buscando coincidencias de otros');
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -153,7 +156,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                       required
                       value={value}
                       onChange={(selectedOption) => {
-                        console.log(selectedOption);
+                        //  console.log('')(selectedOption);
                         onChange(selectedOption);
                       }}
                       options={choicesTipoDeSolicitud as any[]}

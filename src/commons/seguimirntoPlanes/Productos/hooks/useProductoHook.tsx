@@ -49,7 +49,7 @@ export const useProductoHook = (): any => {
 
   const onsubmit_producto = handleSubmit_producto(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_proyecto = id_proyecto;
       set_is_saving_producto(true);
       await post_producto(data as IProductos);
@@ -70,7 +70,7 @@ export const useProductoHook = (): any => {
 
   const onsubmit_editar = handleSubmit_producto(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_producto(true);
       data.id_proyecto = id_proyecto;
       await put_producto((id_producto as number) ?? 0, data as IProductos);

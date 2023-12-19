@@ -105,7 +105,7 @@ export const validacionInicialCcdAsignacionUnidadesResp = async (
         }
       });
     }
-    // console.log(datos);
+    // //  console.log('')(datos);
     return datos;
   } catch (err) {
     return [];
@@ -121,8 +121,8 @@ export const getCcdActual = async (
     const { data } = await api.get(url);
     const ccdActual = data?.data?.find((element: any) => element?.actual);
 
-    /*    console.log(ccdActual?.id_organigrama);
-    console.log(params.row.id_organigrama); */
+    /*    //  console.log('')(ccdActual?.id_organigrama);
+    //  console.log('')(params.row.id_organigrama); */
 
     if (params.row.id_organigrama === ccdActual?.id_organigrama) {
       void Swal.fire({

@@ -69,7 +69,7 @@ export const get_nurseries_service = (): any => {
       dispatch(set_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nursery_service');
+      //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -86,7 +86,7 @@ export const get_vegetal_materials_service = (): any => {
       dispatch(set_vegetal_materials(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_vegetal_materials_service');
+      //  console.log('')('get_vegetal_materials_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -109,7 +109,7 @@ export const get_germination_beds_service = (id: string | number): any => {
 
       return data;
     } catch (error: any) {
-      console.log('get_germination_beds_service');
+      //  console.log('')('get_germination_beds_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -128,8 +128,8 @@ export const get_germination_beds_id_service = (camas: number[]): any => {
       dispatch(set_current_germination_beds(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_germination_beds_id_service');
-      console.log(error);
+      //  console.log('')('get_germination_beds_id_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -146,7 +146,7 @@ export const get_planting_goods_service = (id: string | number): any => {
       dispatch(set_planting_goods(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_planting_goods_service');
+      //  console.log('')('get_planting_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -171,7 +171,7 @@ export const get_goods_service = (
       dispatch(set_goods(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_planting_goods_service');
+      //  console.log('')('get_planting_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -185,11 +185,11 @@ export const get_goods_aux_service = (id_vivero: string | number): any => {
         `conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/`
       );
       // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/`);
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_goods_aux(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_planting_goods_service');
+      //  console.log('')('get_planting_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -215,7 +215,7 @@ export const get_good_code_siembra_service = (
 
       return data;
     } catch (error: any) {
-      console.log('get_good_code_baja_service');
+      //  console.log('')('get_good_code_baja_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -229,11 +229,11 @@ export const get_plantings_service = (): any => {
       const { data } = await api.get(
         'conservacion/camas-siembras/siembra/get/'
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_plantings(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_plantings_service');
+      //  console.log('')('get_plantings_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -250,7 +250,7 @@ export const get_current_planting_service = (id: string | number): any => {
       dispatch(set_current_planting(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_current_planting_service');
+      //  console.log('')('get_current_planting_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -285,7 +285,7 @@ export const get_persons_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_persons_service');
+      //  console.log('')('get_persons_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -314,7 +314,7 @@ export const get_person_document_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -344,7 +344,7 @@ export const get_person_id_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -367,8 +367,8 @@ export const add_siembra_service = (siembra: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
-      console.log(error);
+      //  console.log('')('add_siembra_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -391,7 +391,7 @@ export const edit_siembra_service = (siembra: any, id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      //  console.log('')('add_siembra_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -415,7 +415,7 @@ export const delete_siembra_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      //  console.log('')('add_siembra_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -432,7 +432,7 @@ export const get_nurseries_quarantine_service = (): any => {
       dispatch(set_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nurseries_service');
+      //  console.log('')('get_nurseries_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -449,7 +449,7 @@ export const get_lots_code_service = (
       const { data } = await api.get(
         `conservacion/ingreso-cuarentena/get-lotes-etapa/${id_vivero}/${code}/`
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.data.length > 0) {
         if (data.data.length === 1) {
@@ -464,7 +464,7 @@ export const get_lots_code_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      //  console.log('')('add_siembra_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -489,7 +489,7 @@ export const get_lots_service = (
         }`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_plant_seed_lots(data.data));
         control_success(data.detail);
@@ -498,7 +498,7 @@ export const get_lots_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_MV_service');
+      //  console.log('')('get_MV_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -523,7 +523,7 @@ export const get_plant_quarantines_service = (
       );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_plant_quarantines(data.data));
         control_success(data.detail);
@@ -532,7 +532,7 @@ export const get_plant_quarantines_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      //  console.log('')('add_siembra_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -549,7 +549,7 @@ export const get_mortalities_service = (id_cuarentena: number | null): any => {
         }/`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_plant_quarantine_mortalities(data.data));
         // control_success(data.detail)
@@ -558,7 +558,7 @@ export const get_mortalities_service = (id_cuarentena: number | null): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      //  console.log('')('add_siembra_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -589,8 +589,8 @@ export const add_plant_quarantine_service = (quarantine: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_quarantine_service');
-      console.log(error);
+      //  console.log('')('add_quarantine_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -617,7 +617,7 @@ export const edit_plant_quarantine_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('edit_quarantine_service');
+      //  console.log('')('edit_quarantine_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -635,7 +635,7 @@ export const annul_plant_quarantine_service = (
         `conservacion/ingreso-cuarentena/anular/${id}/`,
         quarantine
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -644,7 +644,7 @@ export const annul_plant_quarantine_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('anular_quarantine_service');
+      //  console.log('')('anular_quarantine_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -661,7 +661,7 @@ export const get_quareantines_code_service = (
       const { data } = await api.get(
         `conservacion/levantamiento-cuarentena/get-registro-cuarentena-by-codigo-bien/${id_vivero}/?codigo_bien=${code}`
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.data.length > 0) {
         if (data.data.length === 1) {
@@ -676,7 +676,7 @@ export const get_quareantines_code_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      //  console.log('')('add_siembra_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -701,7 +701,7 @@ export const get_lifting_quarantines_service = (
         }&cod_etapa_lote=${cod_etapa ?? ''}`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         if (data.data.length > 0) {
           dispatch(set_plant_quarantines(data.data));
@@ -714,7 +714,7 @@ export const get_lifting_quarantines_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      //  console.log('')('add_siembra_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -731,7 +731,7 @@ export const get_liftings_service = (id_cuarentena: number | null): any => {
         }/`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         if ('data' in data) {
           dispatch(set_plant_quarantine_lifting(data.data));
@@ -744,7 +744,7 @@ export const get_liftings_service = (id_cuarentena: number | null): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      //  console.log('')('add_siembra_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -767,8 +767,8 @@ export const add_lifting_quarantine_service = (quarantine: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_quarantine_service');
-      console.log(error);
+      //  console.log('')('add_quarantine_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -794,7 +794,7 @@ export const edit_lifting_quarantine_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('edit_quarantine_service');
+      //  console.log('')('edit_quarantine_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -812,7 +812,7 @@ export const annul_lifting_quarantine_service = (
         `conservacion/levantamiento-cuarentena/anular-levantamiento-cuarentena/${id}/`,
         quarantine
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -821,7 +821,7 @@ export const annul_lifting_quarantine_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('anular_quarantine_service');
+      //  console.log('')('anular_quarantine_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

@@ -57,7 +57,7 @@ const CrearPorcentajeModal = ({
   
  useEffect(() => {
   reset_porcentaje(porcentaje_seleccionado);
-  console.log(porcentaje_seleccionado);
+  //  //  console.log('')(porcentaje_seleccionado);
 }, [porcentaje_seleccionado] );
 
   const on_submit = (data: FormValues): void => {

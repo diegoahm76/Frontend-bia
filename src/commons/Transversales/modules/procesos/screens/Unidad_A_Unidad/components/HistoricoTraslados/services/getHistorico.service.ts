@@ -25,6 +25,6 @@ export const getHistoricoTrasladosU_U = async (): Promise<any> => {
       `${error?.response?.data?.detail}` ||
         'Ha ocurrido un error, no se han encontrado data'
     );
-    console.log(error);
+    //  console.log('')(error);
   }
 };

@@ -14,13 +14,7 @@ export const getAnexosPqrsdf = async (id_pqrsdf: any) => {
       );
       return data.data;
     } else {
-      void Swal.fire({
-        icon: 'info',
-        title: 'Opps...',
-        text: 'No hay anexos para esta PQRSDF',
-        confirmButtonText: 'Aceptar',
-        confirmButtonColor: '#0096d2',
-      });
+      control_error('No se encontraron anexos para la PQRSDF.');
       return [];
     }
   } catch (err: any) {

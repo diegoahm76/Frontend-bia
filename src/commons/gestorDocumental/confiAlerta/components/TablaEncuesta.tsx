@@ -73,7 +73,7 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
                         aria-label="Ver"
                         onClick={() => {
                             handleClear();
-                            console.log(params.row)
+                            //  console.log('')(params.row)
                             const id = params.row.id_encabezado_encuesta; // Obtener el ID de la fila seleccionada
                             setSelectedEncuestaId(id); // Almacenar el ID en el estado
                         }}

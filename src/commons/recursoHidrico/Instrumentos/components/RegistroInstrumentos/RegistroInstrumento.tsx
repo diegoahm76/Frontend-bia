@@ -265,7 +265,7 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   });
 
   useEffect(() => {
-    console.log(tipo_agua_selected, 'tipo_agua_selected');
+    //  console.log('')(tipo_agua_selected, 'tipo_agua_selected');
   }, [tipo_agua_selected]);
 
   useEffect(() => {

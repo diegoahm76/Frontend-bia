@@ -90,7 +90,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
               (catalog_TCA.length > 0 &&
                 catalog_trd?.filter((item: any) => {
                   if (catalog_TCA.length === 0) {
-                    console.log('catalog_TCA.length === 0');
+                    //  console.log('')('catalog_TCA.length === 0');
                     return true;
 
                   }
@@ -131,7 +131,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
                 onClick={() => {
                   // setButton(true);
                   openModalTrdRelacionTcaActual();
-                  console.log('agregar nueva relacion trd');
+                  //  console.log('')('agregar nueva relacion trd');
                 }}
               >
                 AGREGAR NUEVA RELACION TRD
@@ -156,7 +156,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
                   (catalog_TCA?.length > 0 &&
                     catalog_trd?.filter((item: any) => {
                       if (catalog_TCA.length === 0) {
-                        console.log('catalog_TCA.length === 0');
+                        //  console.log('')('catalog_TCA.length === 0');
                         return true;
                       }
                       return !catalog_TCA?.some(
@@ -178,7 +178,7 @@ export const AdminTcaScreen: FC<any> = (): JSX.Element => {
                   color="primary"
                   onClick={() => {
                     closeModalTrdRelacionTcaActual();
-                    console.log('agregar nueva relacion trd');
+                    //  console.log('')('agregar nueva relacion trd');
                   }}
                 >
                   CANCELAR AGREGAR NUEVA RELACION TRD

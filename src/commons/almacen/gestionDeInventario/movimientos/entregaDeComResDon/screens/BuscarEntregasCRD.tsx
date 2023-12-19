@@ -38,7 +38,7 @@ const BuscarEntregasCRDComponent = (props: IProps) => {
       set_grid_busqueda(response.data);
       set_grid_filtrada([...response.data]);
     });
-    console.log(grid_filtrada);
+    //  console.log('')(grid_filtrada);
   }, []);
 
   const accionar_busqueda: any = () => {

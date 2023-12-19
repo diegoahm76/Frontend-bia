@@ -150,7 +150,7 @@ export const SeleccionOfiResp = (): JSX.Element => {
                   ]
                 }
                 onChange={(selectedOption) => {
-                  console.log(selectedOption);
+                  //  console.log('')(selectedOption);
                   onChange(params.row.id_unidad_organizacional, selectedOption);
                 }}
                 menuPortalTarget={document.body}

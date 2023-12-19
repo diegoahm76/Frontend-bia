@@ -30,7 +30,7 @@ export const ConsultaAñosAnteriores = () => {
     const [value_año, set_Value_año] = useState(year);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
- 
+ console.log(consulta_año_configuracion);
 
     const cantidadDigitos = (consulta_año_configuracion[0]?.cantidad_digitos !== undefined) ? consulta_año_configuracion[0]?.cantidad_digitos : 0;
     const valorInicial = (consulta_año_configuracion[0]?.consecutivo_inicial !== undefined) ? consulta_año_configuracion[0]?.consecutivo_inicial : 1;
@@ -47,7 +47,7 @@ export const ConsultaAñosAnteriores = () => {
         })) : null;
 
 
-const datatatata = array_edit !== undefined ? [] : array_edit;
+// const datatatata = array_edit !== undefined ? [] : array_edit;
 
 
     const HandleCompletarDatos = (e: any) => {
@@ -63,7 +63,7 @@ const datatatata = array_edit !== undefined ? [] : array_edit;
             },
             maneja_consecutivo: consulta_año_configuracion[0].maneja_consecutivo,
             variables_iniciales_dos: tipoConfiguracion_selec.toString(),
-             configuracion_por_unidad: datatatata
+             configuracion_por_unidad: array_edit
         });
         setIsModalOpen(false);
     };
@@ -76,7 +76,7 @@ const datatatata = array_edit !== undefined ? [] : array_edit;
             const res: any = await api.get(url);
             const numero_consulta: any = res.data.data;
             set_tipologia_documental(numero_consulta);
-            // console.log(numero_consulta);
+            // //  console.log('')(numero_consulta);
 
         } catch (error) {
             console.error(error);
@@ -152,7 +152,7 @@ const datatatata = array_edit !== undefined ? [] : array_edit;
             break;
         default:
             // Acciones por defecto si el valor no coincide con ninguno de los casos anteriores
-            console.log("Realizar acciones por defecto");
+            //  console.log('')("Realizar acciones por defecto");
     }
 
 

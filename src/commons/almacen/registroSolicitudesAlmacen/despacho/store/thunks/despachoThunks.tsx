@@ -67,7 +67,7 @@ export const get_despachos_service = (
 
       if (data.success === true) {
         dispatch(set_despachos(data.data));
-        console.log(data);
+        //  console.log('')(data);
         control_success(data.detail);
       } else {
         control_error(data.detail);
@@ -86,11 +86,11 @@ export const get_bodega_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('almacen/bodega/get-list/');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(get_bodega(data));
       return data;
     } catch (error: any) {
-      console.log('get_bodega_service');
+      //  console.log('')('get_bodega_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -102,17 +102,13 @@ export const get_solicitud_by_id = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(
-        `almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ''
-        }`
-      );
       const { data } = await api.get(
         `almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ''
         }/`
       );
       dispatch(set_current_solicitud(data.detail.info_solicitud));
       dispatch(set_bienes_solicitud(data.detail.info_items));
-      console.log(data);
+      //  console.log('')(data);
       if (data.data.length > 0) {
         // control_success("Se encontrarón bienes")
       } else {
@@ -149,7 +145,7 @@ export const get_person_id_despacho = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -166,7 +162,7 @@ export const get_bienes_despacho = (nro_despacho: number | null): any => {
         }`
       );
       dispatch(set_bienes_despacho(data.data.items_despacho_consumo));
-      console.log(data);
+      //  console.log('')(data);
       if (data.data.length > 0) {
         // control_success("Se encontrarón bienes")
       } else {
@@ -174,7 +170,7 @@ export const get_bienes_despacho = (nro_despacho: number | null): any => {
       }
       return data;
     } catch (error: any) {
-      // console.log('get_planting_goods_service');
+      // //  console.log('')('get_planting_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -188,7 +184,7 @@ export const get_num_despacho = (): any => {
       const { data } = await api.get(
         'almacen/despachos/obtener-numero-despacho/'
       );
-      console.log(data);
+      //  console.log('')(data);
 
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
@@ -213,7 +209,7 @@ export const get_bien_code_service = (
           ? `almacen/despachos/agregar-bienes-consumo-conservacion-by-lupa/?codigo_bien_solicitado=${code}&fecha_despacho=${fecha}`
           : `almacen/despachos/search-bienes-inventario/?codigo_bien_solicitado=${code}&fecha_despacho=${fecha}`
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 
       if (data.data.length > 0) {
@@ -230,7 +226,7 @@ export const get_bien_code_service = (
 
       return data;
     } catch (error: any) {
-      console.log('get_bien_code_service');
+      //  console.log('')('get_bien_code_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -247,7 +243,7 @@ export const get_bien_code_service_origin = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`almacen/despachos/get-items-otros-origenes/${id}/?fecha_despacho=${fecha}`);
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 
       if (data.data.length > 0) {
@@ -264,7 +260,7 @@ export const get_bien_code_service_origin = (
 
       return data;
     } catch (error: any) {
-      console.log('get_bien_code_service');
+      //  console.log('')('get_bien_code_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -286,7 +282,7 @@ export const get_bienes_service = (
         }&nombre=${name ?? ''}&agno_lote=${agno ?? ''}&nro_lote=${nro ?? ''}`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_bienes(data.data));
         control_success(data.detail);
@@ -295,7 +291,7 @@ export const get_bienes_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -309,7 +305,7 @@ export const crear_despacho: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(despacho);
+      //  console.log('')(despacho);
       const { data } = await api.put(
         es_conservacion === true
           ? 'almacen/despachos-vivero/crear-despacho-bienes-de-consumo/'
@@ -317,7 +313,7 @@ export const crear_despacho: any = (
         despacho
       );
       //  dispatch(get_solicitud_consumo_id());
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -327,7 +323,7 @@ export const crear_despacho: any = (
       // control_success(' se agrego correctamente');
       return data;
     } catch (error: any) {
-      console.log(error);
+      //  console.log('')(error);
       control_error(error.response.data.detail);
 
       return error as AxiosError;
@@ -342,7 +338,7 @@ export const editar_despacho: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(despacho);
+      //  console.log('')(despacho);
       const { data } = await api.put(
         es_conservacion === true
           ? 'almacen/despachos-vivero/actualizar-despacho-bienes-de-consumo/'
@@ -351,7 +347,7 @@ export const editar_despacho: any = (
       );
       // await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, bienes);
       //  dispatch(get_solicitud_consumo_id());
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -361,7 +357,7 @@ export const editar_despacho: any = (
       // control_success(' se agrego correctamente');
       return data;
     } catch (error: any) {
-      console.log(error);
+      //  console.log('')(error);
       control_error(error.response.data.detail);
 
       return error as AxiosError;
@@ -383,7 +379,7 @@ export const annul_despacho_service = (
           : `almacen/despachos/anular-despacho-bienes-de-consumo/${id}/`,
         despacho
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -392,7 +388,7 @@ export const annul_despacho_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('annul_despacho_service');
+      //  console.log('')('annul_despacho_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -407,7 +403,7 @@ export const closed_solicitud_service = (id: number, solicitud: any): any => {
         `almacen/despachos/cerrar-solicitud-debido-inexistencia/${id}/`,
         solicitud
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -416,7 +412,7 @@ export const closed_solicitud_service = (id: number, solicitud: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('closed_solicitud_service');
+      //  console.log('')('closed_solicitud_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

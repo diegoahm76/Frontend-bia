@@ -102,7 +102,7 @@ export const AgregarProyecto: React.FC = () => {
                     <TextField
                       fullWidth
                       size="small"
-                      label="Nombre del Plan"
+                      label="Nombre del programa"
                       variant="outlined"
                       value={value}
                       disabled={true}

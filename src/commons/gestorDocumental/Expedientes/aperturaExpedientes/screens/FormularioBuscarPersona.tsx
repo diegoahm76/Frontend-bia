@@ -16,7 +16,7 @@ interface IProps {
 export const FormularioBuscarPersona: React.FC<IProps> = (props: IProps) => {
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
     useEffect(() => {
-        console.log(props.expediente?.expediente);
+        //  console.log('')(props.expediente?.expediente);
     }, [props.expediente]);
     return (
         <>

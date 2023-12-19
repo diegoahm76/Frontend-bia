@@ -15,7 +15,7 @@ export const series_slice = createSlice({
       state: ISeries,
       action: PayloadAction<ISeriesObject[]>
     ) => {
-      // console.log('action.payload', action.payload);
+      // //  console.log('')('action.payload', action.payload);
       state.series_ccd = action.payload;
     },
     get_serie_ccd_current: (

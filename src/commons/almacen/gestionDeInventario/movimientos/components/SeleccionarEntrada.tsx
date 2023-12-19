@@ -43,7 +43,7 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
     ];
 
     const get_entradas: any = async () => {
-        console.log("buscar...");
+        //  console.log('')("buscar...");
         const numero_entrada = get_values('numero_entrada_almacen') ?? '';
         const id_tipo_entrada = get_values('id_tipo_entrada') ?? '';
         void dispatch(get_entradas_disponible(numero_entrada, id_tipo_entrada));

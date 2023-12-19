@@ -50,11 +50,11 @@ export const get_nurseries_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
-      // console.log(data)
+      // //  console.log('')(data)
       dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
-      // console.log('get_nursery_service');
+      // //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -66,11 +66,11 @@ export const get_nursery_service: any = (id: string | number)  => {
     try {
       if(id !== undefined)
       {const { data } = await api.get(`conservacion/viveros/get-by-id/${id}/`);
-      console.log(data)
+      //  console.log('')(data)
       dispatch(current_nursery(data));
       return data;}
     } catch (error: any) {
-      console.log('get_nursery_service');
+      //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -87,7 +87,7 @@ export const get_nursery_service: any = (id: string | number)  => {
       dispatch(get_germination_beds(data.data));
       return data;}
     } catch (error: any) {
-      console.log('get_germination_beds_service');
+      //  console.log('')('get_germination_beds_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -99,14 +99,14 @@ export const update_germination_beds_service: any = (id: string | number, beds: 
   return async (dispatch: Dispatch<any>) => {
     try {
       if(id !== undefined)
-      console.log(beds)
+      //  console.log('')(beds)
       {const { data } = await api.put(`conservacion/camas-siembras/camas-germinacion/${id}/`, beds);
       dispatch(get_germination_beds_service(id));
       control_success(data.detail);
 
       return data;}
     } catch (error: any) {
-      console.log('update_germination_beds_service');
+      //  console.log('')('update_germination_beds_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -118,11 +118,11 @@ export const get_bienes_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('conservacion/viveros/get-bienes-consumo-filtro/');
-      console.log(data.data)
+      //  console.log('')(data.data)
       dispatch(get_bienes(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -146,7 +146,7 @@ export const edit_bien_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error.response.data);
+      //  console.log('')(error.response.data);
       return error as AxiosError;
     }
   };
@@ -157,7 +157,7 @@ export const get_mixtures_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('conservacion/mezclas/get-list-mezclas/');
-      console.log(data)
+      //  console.log('')(data)
       dispatch(get_mixtures(data.data));
       return data;
     } catch (error: any) {
@@ -182,7 +182,7 @@ export const add_mixture_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error.response.data);
+      //  console.log('')(error.response.data);
       return error as AxiosError;
     }
   };
@@ -205,7 +205,7 @@ export const edit_mixture_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error.response.data);
+      //  console.log('')(error.response.data);
       return error as AxiosError;
     }
   };
@@ -223,7 +223,7 @@ export const delete_mixture_service: any = (id: string | number) => {
 
       return data;
     } catch (error: any) {
-      console.log('delete mixture service');
+      //  console.log('')('delete mixture service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -244,7 +244,7 @@ export const activate_deactivate_mixture_service: any = (
   }
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(form_data)
+      //  console.log('')(form_data)
       const { data } = await api.put(
         `conservacion/mezclas/actualizar-mezcla/${id}/`,
         form_data
@@ -256,7 +256,7 @@ export const activate_deactivate_mixture_service: any = (
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      console.log(error.response.data);
+      //  console.log('')(error.response.data);
       return error as AxiosError;
     }
   };

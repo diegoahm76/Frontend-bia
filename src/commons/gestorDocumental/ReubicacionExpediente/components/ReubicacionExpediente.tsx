@@ -36,7 +36,7 @@ export const ReubicacionExpediente: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(selected_expediente)
+    //  console.log('')(selected_expediente)
     reset_cierre_expediente(selected_expediente);
   }, [selected_expediente]);
 

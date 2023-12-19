@@ -136,7 +136,7 @@ export function BajaHerramientaScreen(): JSX.Element {
           info_baja: { ...data },
           items_baja: aux_items,
         };
-        console.log(aux);
+        //  console.log('')(aux);
         form_data.append('info_baja', JSON.stringify({ ...data }));
         form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
         form_data.append('items_baja', JSON.stringify(aux_items));

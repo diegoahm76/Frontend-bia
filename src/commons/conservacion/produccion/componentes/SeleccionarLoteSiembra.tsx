@@ -414,7 +414,7 @@ const SeleccionarLoteSiembra = () => {
         aux_items.push(option);
       }
     });
-    console.log(bien);
+    //  console.log('')(bien);
     if (bien !== undefined) {
       dispatch(set_current_siembra_material_vegetal(bien));
     }
@@ -425,7 +425,7 @@ const SeleccionarLoteSiembra = () => {
     const bien: IObjSiembraMV | undefined = siembras_material_vegetal.find(
       (p: IObjSiembraMV) => p.id_bien === item.id_bien
     );
-    console.log(bien);
+    //  console.log('')(bien);
 
     if (bien !== undefined) {
       dispatch(set_current_siembra_material_vegetal(bien));

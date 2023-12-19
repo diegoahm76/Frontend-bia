@@ -10,7 +10,7 @@ export const getTipologiasDocumentalesMetadatos = async (
     setLoading(true);
     const url = `gestor/plantillas/tipos_tipologia/get/`;
     const { data } = await api.get(url);
-    console.log(data);
+    //  console.log('')(data);
 
     if(data?.data.length > 0){
       // control_success('Se encontraron las tipologias documentales');

@@ -12,7 +12,7 @@ export const getHistoricoByRadicado = async (
     const encodedRadicado = encodeURIComponent(radicado);
     const url = `gestor/panel_ventanilla/historico/get/?radicado=${encodedRadicado}`;
     const { data } = await api.get(url);
-    console.log(data);
+    //  console.log('')(data);
     if (data?.data?.length === 0) {
       control_error('No sé encontró histórico de solicitudes');
       return [];

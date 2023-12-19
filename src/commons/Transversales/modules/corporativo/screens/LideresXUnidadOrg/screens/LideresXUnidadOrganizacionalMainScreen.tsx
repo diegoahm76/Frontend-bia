@@ -65,7 +65,7 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
           allowEscapeKey: false
         }).then((result) => {
           if (result.isConfirmed) {
-            console.log('ir a crear organigrama');
+            //  console.log('')('ir a crear organigrama');
             navigate('/app/gestor_documental/organigrama/crear');
           }
         });

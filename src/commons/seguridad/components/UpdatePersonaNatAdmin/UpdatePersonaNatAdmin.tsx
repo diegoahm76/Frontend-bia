@@ -123,10 +123,10 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
     reason: any,
     details?: any
   ): void => {
-    console.log(reason);
+    //  console.log('')(reason);
     if (reason === 'selectOption') {
       const newValue = details?.option;
-      console.log(newValue);
+      //  console.log('')(newValue);
 
       if (newValue) {
         set_value('datos_clasificacion_persona', newValue);
@@ -274,7 +274,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
         ...datos,
         datos_clasificacion_persona: clase_tercero_persona.map((item) => (item.value)),
       };
-      console.log(dataToSend);
+      //  console.log('')(dataToSend);
       set_loading(true);
       delete datos.dpto_notifiacion;
       datos.ubicacion_georeferenciada = '';

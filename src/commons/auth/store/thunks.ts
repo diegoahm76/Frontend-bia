@@ -85,7 +85,7 @@ export const get_persmisions_user: (
       return;
     }
 
-  /*  console.log(
+  /*  //  console.log('')(
       '🚀 ~ file: thunks.ts ~ line 86 ~ return ~ resp.data',
       resp.data
     ); */
