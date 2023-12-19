@@ -35,6 +35,7 @@ import Select from 'react-select';
 import { getExpedientesByFiltro } from '../services/getExpedientes.service';
 import { row } from './../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
 import { getSeriesByCcd } from '../services/busqueda/getSeriesByCcd.service';
+import { getSubseriesBySeriesId } from '../services/busqueda/getSubseriesBySeriesId.service';
 
 export const BuscarExpedienteIndicesElectronicos = (
   props: any
@@ -220,11 +221,23 @@ export const BuscarExpedienteIndicesElectronicos = (
                         value={value}
                         // name="id_ccd"
                         onChange={(selectedOption) => {
-
                           //* llamar las series
                           void getSeriesByCcd(
-                            selectedOption?.value as string,
-                          );
+                            selectedOption?.value as string
+                          ).then((res) => {
+                            console.log(res);
+
+                            setdataInicialSelects({
+                              ...dataInicialSelects,
+                              dataSeries: res.map((el: any) => {
+                                return {
+                                  ...el,
+                                  value: el.id_serie_doc,
+                                  label: el.nombre_serie,
+                                };
+                              }),
+                            });
+                          });
                           onChange(selectedOption);
                         }}
                         options={
@@ -280,17 +293,26 @@ export const BuscarExpedienteIndicesElectronicos = (
                         <Select
                           value={value}
                           onChange={(selectedOption) => {
+                            void getSubseriesBySeriesId(
+                              selectedOption?.value as string
+                            ).then((res) => {
+                              console.log(res);
 
+                              setdataInicialSelects({
+                                ...dataInicialSelects,
+                                dataSubseries: res.map((el: any) => {
+                                  return {
+                                    ...el,
+                                    value: el.id_subserie_doc,
+                                    label: el.nombre,
+                                  };
+                                }),
+                              });
 
-
-                            /* dispatch(
-                                      getServiceSeriesSubseriesXUnidadOrganizacional(
-                                        selectedOption.item
-                                      )
-                                    );*/
-                            onChange(selectedOption);
+                              onChange(selectedOption);
+                            });
                           }}
-                          options={[]}
+                          options={dataInicialSelects?.dataSeries ?? []}
                           placeholder="Seleccionar"
                         />
                         <label>
@@ -345,7 +367,9 @@ export const BuscarExpedienteIndicesElectronicos = (
                         );*/
                               onChange(selectedOption);
                             }}
-                            options={[]}
+                            options={
+                              dataInicialSelects?.dataSubseries ?? []
+                            }
                             placeholder="Seleccionar"
                           />
                           <label>
