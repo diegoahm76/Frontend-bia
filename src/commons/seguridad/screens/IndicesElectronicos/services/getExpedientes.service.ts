@@ -29,7 +29,7 @@ export const getExpedientesByFiltro = async (
   } catch (error) {
     showAlert(
       'Ops...',
-      'Error al obtener los expedientes',
+      'Error al obtener los expedientes o no se han encontrado expedientes que coincidan con los filtros seleccionados',
       'error'
     )
     return [];

@@ -28,7 +28,5 @@ export const getIndiceElectronicoByExp = async (idExpediente: number) => {
   } catch (error) {
     showAlert('Opps..', 'No se pudo cargar el índice eletrónico', 'error');
     return [];
-  } finally {
-    // return [];
   }
 };

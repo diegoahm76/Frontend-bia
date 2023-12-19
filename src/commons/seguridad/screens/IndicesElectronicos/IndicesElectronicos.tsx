@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FC, useState } from 'react';
+import { type FC, useState, useEffect } from 'react';
 import { api } from '../../../../api/axios';
 import { v4 as uuidv4 } from 'uuid';
 import { type GridColDef } from '@mui/x-data-grid';
@@ -29,6 +29,7 @@ import { getOutModule } from '../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
 import { getIndiceElectronicoByExp } from './services/getIndiceElectronicoByExp.service';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+import { getTrdExp } from './services/busqueda/getTrd.service';
 
 export const IndicesElectronicos: FC = (): JSX.Element => {
   //* navigate de react router dom
@@ -44,6 +45,23 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
+
+  const [dataInicialSelects, setdataInicialSelects] = useState({
+    dataTrd: [],
+    dataSeries: [],
+    dataSubSeries: [],
+  });
+
+  // ? useeffect para la busqueda de expedientes
+
+  useEffect(() => {
+    void getTrdExp().then((res: any) => setdataInicialSelects({
+      dataTrd: res,
+      dataSeries: [],
+      dataSubSeries: [],
+    }))
+
+  }, []);
 
   // ? colums for the DataGrid
   const columnsIndicesElectronicos: GridColDef[] = [
@@ -80,11 +98,10 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
-                {loadingStates[params.row.id_expediente_documental]? (
+                {loadingStates[params.row.id_expediente_documental] ? (
                   <CircularProgress size={18} />
                 ) : (
                   <NoteAddIcon
-                    titleAccess="Crear XML de índice electrónico"
                     sx={{
                       color: 'primary.main',
                       width: '18px',
@@ -107,6 +124,9 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         data={data}
         setData={setData}
         setDataIndice={setDataIndice}
+        dataInicialSelects={dataInicialSelects}
+        setdataInicialSelects={setdataInicialSelects}
+        setXmlToJsonisTrue={setXmlToJsonisTrue}
       />
 
       {
@@ -115,7 +135,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         data.length > 0 && (
           <RenderDataGrid
             columns={columnsIndicesElectronicos ?? []}
-            rows={data ?? []}
+            rows={[...data, ...data] ?? []}
             title="Listado de expedientes encontrados"
           />
         )

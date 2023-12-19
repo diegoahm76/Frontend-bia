@@ -33,36 +33,58 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Select from 'react-select';
 import { getExpedientesByFiltro } from '../services/getExpedientes.service';
+import { row } from './../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
+import { getSeriesByCcd } from '../services/busqueda/getSeriesByCcd.service';
 
 export const BuscarExpedienteIndicesElectronicos = (
   props: any
 ): JSX.Element => {
-  const { setData, setXmlToJsonisTrue, setDataIndice } = props;
+  const {
+    setData,
+    setXmlToJsonisTrue,
+    setDataIndice,
+    dataInicialSelects,
+    setdataInicialSelects,
+  } = props;
 
-
-  const [loading, setLoadingButton] = useState<boolean>(false)
-  // const { expedientes } = useAppSelector((state) => state.cierre_expedientes);
-  // const dispatch = useAppDispatch();
-
-  /*
-    useEffect(() => {
-        void dispatch(get_trd())
-        void dispatch(get_tipologias())
-    }, [])*/
-
+  const [loading, setLoadingButton] = useState<boolean>(false);
 
   // ! use form declaration
   const {
     control: controlBusquedaExpediente,
     reset: resetBusquedaExpediente,
     watch: watchBusquedaExpediente,
-  } = useForm({});
+  } = useForm({
+    defaultValues: {
+      titulo_expediente: '',
+      fecha_apertura_expediente: '',
+      id_trd_origen: {
+        value: '',
+        label: '',
+      },
+      id_serie_origen: {
+        value: '',
+        label: '',
+      },
+      id_subserie_origen: {
+        value: '',
+        label: '',
+      },
+    },
+  });
 
   const exeWatch = watchBusquedaExpediente();
 
   const onSubmitElectronicIndex: any = async (): Promise<any> => {
     try {
-      const getExpedientes = await getExpedientesByFiltro(setLoadingButton);
+      const getExpedientes = await getExpedientesByFiltro(
+        setLoadingButton,
+        exeWatch.id_trd_origen?.label, // nombre trd
+        exeWatch.fecha_apertura_expediente, // año de apertura
+        exeWatch.id_serie_origen?.label, // nombre serie
+        exeWatch.id_subserie_origen?.label, // nombre subserie
+        exeWatch.titulo_expediente // titulo expediente
+      );
       setData(getExpedientes);
       console.log('getExpedientes', getExpedientes);
     } catch (error) {
@@ -198,14 +220,22 @@ export const BuscarExpedienteIndicesElectronicos = (
                         value={value}
                         // name="id_ccd"
                         onChange={(selectedOption) => {
-                          /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
+
+                          //* llamar las series
+                          void getSeriesByCcd(
+                            selectedOption?.value as string,
+                          );
                           onChange(selectedOption);
                         }}
-                        options={[]}
+                        options={
+                          dataInicialSelects?.dataTrd?.map((el: any) => {
+                            return {
+                              ...el,
+                              value: el.id_ccd,
+                              label: el.nombre,
+                            };
+                          }) ?? []
+                        }
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -226,109 +256,116 @@ export const BuscarExpedienteIndicesElectronicos = (
                 />
               </Grid>
 
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  zIndex: 2,
-                  mt: '.7rem',
-                  mb: '.7rem',
-                }}
-              >
-                {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
-                <Controller
-                  name="id_serie_origen"
-                  control={controlBusquedaExpediente}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <div>
-                      <Select
-                        value={value}
-                        // name="id_ccd"
-                        onChange={(selectedOption) => {
-                          /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
-                          onChange(selectedOption);
-                        }}
-                        options={[]}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Serie origen
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid>
+              {exeWatch.id_trd_origen?.label && (
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  sx={{
+                    zIndex: 2,
+                    mt: '.7rem',
+                    mb: '.7rem',
+                  }}
+                >
+                  {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
+                  <Controller
+                    name="id_serie_origen"
+                    control={controlBusquedaExpediente}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <div>
+                        <Select
+                          value={value}
+                          onChange={(selectedOption) => {
 
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  zIndex: 2,
-                  mt: '.7rem',
-                  mb: '.7rem',
-                }}
-              >
-                {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
-                <Controller
-                  name="id_subserie_origen"
-                  control={controlBusquedaExpediente}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <div>
-                      <Select
-                        value={value}
-                        // name="id_ccd"
-                        onChange={(selectedOption) => {
-                          /* dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
-                          onChange(selectedOption);
-                        }}
-                        options={[]}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
+
+
+                            /* dispatch(
+                                      getServiceSeriesSubseriesXUnidadOrganizacional(
+                                        selectedOption.item
+                                      )
+                                    );*/
+                            onChange(selectedOption);
                           }}
-                        >
-                          Subserie origen
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid>
+                          options={[]}
+                          placeholder="Seleccionar"
+                        />
+                        <label>
+                          <small
+                            style={{
+                              color: 'rgba(0, 0, 0, 0.6)',
+                              fontWeight: 'thin',
+                              fontSize: '0.75rem',
+                              marginTop: '0.25rem',
+                              marginLeft: '0.25rem',
+                            }}
+                          >
+                            Serie origen
+                          </small>
+                        </label>
+                      </div>
+                    )}
+                  />
+                </Grid>
+              )}
+
+              {exeWatch.id_trd_origen?.label &&
+                exeWatch.id_serie_origen?.label && (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={4}
+                    sx={{
+                      zIndex: 2,
+                      mt: '.7rem',
+                      mb: '.7rem',
+                    }}
+                  >
+                    {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
+                    <Controller
+                      name="id_subserie_origen"
+                      control={controlBusquedaExpediente}
+                      rules={{ required: true }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <div>
+                          <Select
+                            value={value}
+                            // name="id_ccd"
+                            onChange={(selectedOption) => {
+                              /* dispatch(
+                          getServiceSeriesSubseriesXUnidadOrganizacional(
+                            selectedOption.item
+                          )
+                        );*/
+                              onChange(selectedOption);
+                            }}
+                            options={[]}
+                            placeholder="Seleccionar"
+                          />
+                          <label>
+                            <small
+                              style={{
+                                color: 'rgba(0, 0, 0, 0.6)',
+                                fontWeight: 'thin',
+                                fontSize: '0.75rem',
+                                marginTop: '0.25rem',
+                                marginLeft: '0.25rem',
+                              }}
+                            >
+                              Subserie origen
+                            </small>
+                          </label>
+                        </div>
+                      )}
+                    />
+                  </Grid>
+                )}
             </Grid>
 
             <Stack
@@ -343,7 +380,7 @@ export const BuscarExpedienteIndicesElectronicos = (
                 variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  onSubmitElectronicIndex()
+                  onSubmitElectronicIndex();
                 }}
               >
                 BUSCAR EXPEDIENTE
@@ -354,7 +391,22 @@ export const BuscarExpedienteIndicesElectronicos = (
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  resetBusquedaExpediente({});
+                  resetBusquedaExpediente({
+                    titulo_expediente: '',
+                    fecha_apertura_expediente: '',
+                    id_trd_origen: {
+                      value: '',
+                      label: '',
+                    },
+                    id_serie_origen: {
+                      value: '',
+                      label: '',
+                    },
+                    id_subserie_origen: {
+                      value: '',
+                      label: '',
+                    },
+                  });
                   setData([]);
                   setDataIndice([]);
                   setXmlToJsonisTrue({});
