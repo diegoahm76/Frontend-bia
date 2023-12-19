@@ -94,7 +94,7 @@ export const get_info_persona: any = (persona_id: number) => {
 export const create_tramite_servicio: any = (tramite: any) => {
   return async () => {
     try {
-      const { data } = await api.get(`tramites/opa/tramites/inicio-tramite/create/`,tramite);
+      const { data } = await api.post(`tramites/opa/tramites/inicio-tramite/create/`,tramite);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

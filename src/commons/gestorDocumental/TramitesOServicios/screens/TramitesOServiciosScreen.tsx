@@ -63,14 +63,6 @@ export const TramitesOServiciosScreen: React.FC = () => {
                         sx={{ mt: '10px' }}
                     >
                         <Button
-                            // color='inherit'
-                            variant="outlined"
-                            startIcon={<CleanIcon />}
-                            onClick={() => { limpiar_formulario() }}
-                        >
-                            Limpiar
-                        </Button>
-                        <Button
                             color="error"
                             variant='contained'
                             startIcon={<ClearIcon />}
