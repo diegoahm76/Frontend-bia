@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { formatDate } from '../../../../../../../../../../../utils/functions/formatDate';
 
 /*
 
@@ -67,6 +66,38 @@ export const columnsPqrsdf = [
     headerName: 'Nombre de sucursal',
     field: 'nombre_sucursal',
     minWidth: 230,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
+  },
+  {
+    headerName: 'Nombre de sucursal implicada',
+    field: 'nombre_sucursal_implicada',
+    minWidth: 230,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
+  },
+  {
+    headerName: 'Medio de solicitud',
+    field: 'medio_solicitud',
+    minWidth: 250,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
+  },
+  {
+    headerName: 'Persona asignada',
+    field: 'persona_asignada',
+    minWidth: 280,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
+  },
+  {
+    headerName: 'Unidad asignada',
+    field: 'unidad_asignada',
+    minWidth: 280,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     },

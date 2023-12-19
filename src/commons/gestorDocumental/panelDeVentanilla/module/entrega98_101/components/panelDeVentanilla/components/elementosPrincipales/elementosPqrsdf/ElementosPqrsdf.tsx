@@ -55,18 +55,17 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   const handleRequestRadicado = async (radicado: string) => {
     try {
+      const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+
+      const historicoFiltrado = historico.filter(
+        (element: any) => element?.cabecera?.radicado === radicado
+      );
+
+      dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
     } catch (error) {
-      //  console.log('')(error);
-    } finally {
+      console.error('Error handling request radicado: ', error);
+      // Handle or throw error as needed
     }
-    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
-
-    const historicoFiltrado = historico.filter(
-      (element: any) => element?.cabecera?.radicado === radicado
-    );
-
-    dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
-    //  console.log('')(historico);
   };
 
   //* loader button simulacion
@@ -106,28 +105,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
-
-    /*    const shouldDisable = (actionId: string) => {
-      const isAsigGrup = actionId === 'AsigGrup';
-      const isDigOrAsigGrup = ['Dig', 'AsigGrup'].includes(actionId);
-      const hasAnexos = pqrsdf.cantidad_anexos > 0;
-      const requiresDigitalization = pqrsdf.requiere_digitalizacion;
-      const isPQRSDF = pqrsdf.tipo_solicitud === 'PQRSDF';
-      const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
-      const isEnVentanilla = [
-        'EN VENTANILLA SIN PENDIENTES',
-        'EN VENTANILLA CON PENDIENTES',
-      ].includes(pqrsdf.estado_solicitud);
-
-      return (
-        (isPQRSDF && actionId === 'ContinuarAsigGrup') ||
-        (isRadicado && !hasAnexos && actionId === 'Dig') ||
-        (isRadicado && hasAnexos && isDigOrAsigGrup) ||
-        (isRadicado && hasAnexos && requiresDigitalization && isAsigGrup) ||
-        (isEnVentanilla && requiresDigitalization && isAsigGrup) ||
-        (actionId === 'Dig' && !requiresDigitalization) // Deshabilitar el botón de digitalización si no se requiere digitalización
-      );
-    };*/
 
     const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrup';
@@ -339,7 +316,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         return (
           <Chip
             size="small"
-            label={params.value}
+            label={params.value ?? 'Sin asignar'}
             color={
               params.row?.estado_asignacion_grupo === 'Pendiente'
                 ? 'warning'
@@ -347,6 +324,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 ? 'success'
                 : params.row?.estado_asignacion_grupo === 'Rechazado'
                 ? 'error'
+                : params.row?.estado_asignacion_grupo === null
+                ? 'warning' // Cambia 'default' al color que desees para el caso null
                 : 'default'
             }
           />
