@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useContext, useEffect } from 'react';
-import { PerSolicitaComplemento } from '../components/perSolicitaComplemento/PerSolicitaComplemento';
+import { PerSolicitaRequerimiento } from '../components/perSolicitaRequerimiento/PerSolicitaRequerimiento';
 import { PersonaTitular } from '../components/personaTitular/PersonaTitular';
-import { PanelDeVentanillaScreen } from './../../../../entrega98_101/screen/panelDeVentanilla/PanelDeVentanillaScreen';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { getInitialData } from '../../../services/getInitialData.service';
-import { SolicitudAlUsuarioContext } from '../../../context/SolicitudUsarioContext';
+import { RequerimientoAlUsuarioContext } from '../../../context/RequerimientoUsarioContext';
 import { useNavigate } from 'react-router-dom';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
-import { useSstepperFn } from '../../../hook/useSstepperFn';
+import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
 
 export const ParteInicial: React.FC  = (): JSX.Element => {
  
@@ -81,7 +80,7 @@ export const ParteInicial: React.FC  = (): JSX.Element => {
   return (
     <>
       <PersonaTitular />
-      <PerSolicitaComplemento />
+      <PerSolicitaRequerimiento />
     </>
   );
 };

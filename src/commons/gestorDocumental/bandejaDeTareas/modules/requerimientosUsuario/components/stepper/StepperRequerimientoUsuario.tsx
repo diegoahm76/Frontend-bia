@@ -9,10 +9,10 @@ import { Parte2Screen } from '../parte2/screen/Parte2Screen';
 import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
 import { Parte1Screen } from '../parte1/screen/Parte1Screen';
-import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
-import { useSstepperFn } from '../../hook/useSstepperFn';
+import { useStepperRequerimiento } from '../../hook/useStepperRequerimiento';
+import { BandejaTareasContext } from '../../../../mainModule/context/BandejaTareasContext';
 
-export const StepperAsignacionUsuario = ({
+export const StepperRequerimientoAlUsuario = ({
   controlFormulario,
   handleSubmitFormulario,
   errorsFormulario,
@@ -22,12 +22,12 @@ export const StepperAsignacionUsuario = ({
   setInfoReset,
 }: any): JSX.Element => {
   const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
-    PanelVentanillaContext
+    BandejaTareasContext
   );
 
   // ? stepper hook
   const { isStepSkipped, handleNext, handleBack, handleReset } =
-    useSstepperFn();
+  useStepperRequerimiento();
 
   return (
     <Box sx={{ width: '100%' }}>

@@ -21,7 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Title } from '../../../../../../../../../components';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { useContext, useState } from 'react';
-import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
+import { RequerimientoAlUsuarioContext } from '../../../../context/RequerimientoUsarioContext';
 import { formatDate } from '../../../../../../../../../utils/functions/formatDate';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsAnexos } from './columnsAnexos/columnsAnexos';
@@ -40,7 +40,7 @@ export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
     handleOpenModalTwo,
     fifthLoading,
   } = useContext(ModalAndLoadingContext);
-  const { currentSolicitudUsuario } = useContext(SolicitudAlUsuarioContext);
+  const { currentSolicitudUsuario } = useContext(RequerimientoAlUsuarioContext);
 
   const [infoMetadatos, setInfoMetadatos] = useState<any>({});
 

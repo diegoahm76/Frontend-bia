@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
 import { ModalAndLoadingProvider } from '../../../../context/GeneralContext';
 import { MainViewBandejaTareas } from '../screen/MainViewBandejaTareas';
+import { RequerimientoUsuarioScreen } from '../modules/requerimientosUsuario/screen/RequerimientoUsuarioScreen';
+import { BandejaTareasProvider } from '../mainModule/context/BandejaTareasContext';
 /*import { AsignacionUsuarioScreen } from '../module/entrega99/screen/AsignacionUsuarioScreen';
 import { PanelVentanillaProvider } from '../context/PanelVentanillaContext';
 import { VistaPqr } from '../module/entrega98_101/components/vistaPqr/VistaPqr';
@@ -16,16 +18,17 @@ const routes = [
     name: '',
     component: () => <MainViewBandejaTareas />,
   },
- /* {
-    path: 'asignar_a_usario/',
+  {
+    path: 'requerimiento_a_usario/',
     component: () => (
       <>
-        <SolicitudAlUsuarioProvider>
-          <AsignacionUsuarioScreen />
-        </SolicitudAlUsuarioProvider>
+        <BandejaTareasProvider>
+          <RequerimientoUsuarioScreen />
+        </BandejaTareasProvider>
       </>
     ),
   },
+  /*
   {
     path: 'asignar_a_grupo/',
     component: () => (
@@ -53,18 +56,18 @@ const routes = [
 export const BandejaTareasRoutes: React.FC = () => {
   return (
     <ModalAndLoadingProvider>
-     {/* <PanelVentanillaProvider>*/}
-        <Routes>
-          {routes.map((route) => (
-            <Route
-              key={route.path}
-              path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-              element={route.component()}
-            />
-          ))}
-          <Route path="/*" element={<Page404 />} />
-        </Routes>
-    {/*  </PanelVentanillaProvider>*/}
+      {/* <PanelVentanillaProvider>*/}
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+            element={route.component()}
+          />
+        ))}
+        <Route path="/*" element={<Page404 />} />
+      </Routes>
+      {/*  </PanelVentanillaProvider>*/}
     </ModalAndLoadingProvider>
   );
 };

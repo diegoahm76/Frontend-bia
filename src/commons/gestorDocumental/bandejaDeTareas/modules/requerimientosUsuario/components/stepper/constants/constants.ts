@@ -1,1 +1,1 @@
-export const steps = ['Información inicial', 'Segundo paso', 'Tercer paso'];
+export const steps = ['Información inicial', 'Asunto / Descripción', 'Anexos'];

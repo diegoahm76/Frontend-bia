@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 import { useAppDispatch } from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
-import { useBandejaTareas } from '../../../../../hook/useBandejaTareas';
+import { useBandejaTareas } from '../../../../../../hook/useBandejaTareas';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* dispatch declaration

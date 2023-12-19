@@ -3,12 +3,11 @@
 import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
 import { useContext } from 'react';
-import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
-import { Input } from '@mui/material';
+import { RequerimientoAlUsuarioContext } from '../../../../context/RequerimientoUsarioContext';
 
-export const PerSolicitaComplemento = (): JSX.Element => {
+export const PerSolicitaRequerimiento = (): JSX.Element => {
   //* context declaration
-  const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+  const { infoInicialUsuario } = useContext(RequerimientoAlUsuarioContext);
 
   return (
     <Grid
@@ -19,7 +18,7 @@ export const PerSolicitaComplemento = (): JSX.Element => {
         justifyContent: 'center',
       }}
     >
-      <Title title="Persona que solicita el complemento de información" />
+      <Title title="Persona que realiza el requerimiento" />
       <form
         style={{
           marginTop: '3rem',

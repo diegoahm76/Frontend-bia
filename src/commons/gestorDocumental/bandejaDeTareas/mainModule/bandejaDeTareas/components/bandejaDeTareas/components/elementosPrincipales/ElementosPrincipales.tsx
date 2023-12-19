@@ -50,7 +50,10 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
     <>
       {/*  se va a manejar el grillado con guia en el primer elemento del array con base al tipo de solicitud, tal vez de la misma manera se podra manejar la lógica y actualización de los botones sin necesidad de esperar a darle click a alguno de los elementos de la lista   */}
 
-    Listado de elemntos principales, ya se definirá la estructura inicial
+Listado de elemntos principales, ya se definirá la estructura inicial,
+
+
+
 
       {/*{Componente || <></>}*/}
     </>

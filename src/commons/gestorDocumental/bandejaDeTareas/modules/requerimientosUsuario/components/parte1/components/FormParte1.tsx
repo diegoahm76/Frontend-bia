@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useSstepperFn } from '../../../hook/useSstepperFn';
+import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
-import { SolicitudAlUsuarioContext } from '../../../context/SolicitudUsarioContext';
+import { RequerimientoAlUsuarioContext } from '../../../context/RequerimientoUsarioContext';
 import { formatDate } from '../../../../../../../../utils/functions/formatDate';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
@@ -37,7 +37,7 @@ export const FormParte1 = ({
   watchFormulario,
 }: any): JSX.Element => {
   // ? stepper hook
-  const { handleNext } = useSstepperFn();
+  const { handleNext, handleReset } = useStepperRequerimiento();
 
   //* context declaration
   const {
@@ -49,7 +49,7 @@ export const FormParte1 = ({
     setInfoInicialUsuario,
     infoInicialUsuario,
     setCurrentSolicitudUsuario,
-  } = useContext(SolicitudAlUsuarioContext);
+  } = useContext(RequerimientoAlUsuarioContext);
 
   //* navigate declaration
   const navigate = useNavigate();
@@ -60,13 +60,11 @@ export const FormParte1 = ({
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
   );
 
-  const { handleReset } = useSstepperFn();
-
   //* context declaration
   const { handleGeneralLoading, handleSecondLoading } = useContext(
     ModalAndLoadingContext
   );
-
+/*
   useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) {
       navigate('/app/gestor_documental/panel_ventanilla/');
@@ -96,7 +94,7 @@ export const FormParte1 = ({
     };
 
     setCurrentSolicitudUsuario(data);
-  };
+  };*/
 
   // ? definicion de las columnas
   const columns = [
@@ -110,7 +108,7 @@ export const FormParte1 = ({
           <IconButton
             onClick={async () => {
               handleOpenModalOne(true); //* open modal
-              await getInfoSolicitud(params);
+              // await getInfoSolicitud(params);
             }}
           >
             <Avatar
@@ -294,7 +292,7 @@ export const FormParte1 = ({
                 mt: '1.5rem',
               }}
             >
-              No hay histórico de solicitudes para esta PQRSDF
+              No hay histórico de requerimientos para este elemento
             </Typography>
           )}
         </Grid>
@@ -317,19 +315,19 @@ export const FormParte1 = ({
             startIcon={<SaveAsIcon />}
             onClick={() => {
               //* hacer validaciones previas antes de permitir el next, para el paso 2
-
+              console.log('jeje next')
               handleNext();
             }}
             sx={{
               width: '60%',
             }}
           >
-            Crear solicitud
+            Crear solicitud de requerimiento
           </Button>
         </Grid>
       </form>
 
-      <ModalInfoSolicitud />
+      {/*<ModalInfoSolicitud />*/}
     </>
   );
 };

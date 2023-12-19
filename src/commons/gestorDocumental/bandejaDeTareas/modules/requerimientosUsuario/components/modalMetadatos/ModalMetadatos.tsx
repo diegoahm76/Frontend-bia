@@ -29,7 +29,6 @@ import {
   tieneReplicaFisisca,
   tieneTipologiaRelacionada,
 } from './utils/choices';
-import { usePanelVentanilla } from '../../../../hook/usePanelVentanilla';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { getTipologiasDocumentalesMetadatos } from '../../services/getTipologiasDocumentales.service';
 import { TipologiaDocumental } from '../parte3/components/types/FormParte3.types';
@@ -39,7 +38,7 @@ import {
   handleCloseModal,
 } from './functions/modalFn.functions';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { setMetadatos } from '../../toolkit/slice/AsignacionUsuarioSlice';
+import { setMetadatos } from '../../toolkit/slice/RequerimientoUsarioSlice';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { control } from 'leaflet';
 

@@ -3,8 +3,8 @@
 import React, { ReactNode, createContext, useState } from 'react';
 import { PanelVentanillaContextProps } from './types/contextVentanilla.types';
 
-export const PanelVentanillaContext =
-  createContext<PanelVentanillaContextProps>({
+export const BandejaTareasContext =
+  createContext<any>({
     radicado: '',
     setRadicado: () => {},
     value: 0,
@@ -24,7 +24,7 @@ export const PanelVentanillaContext =
     setActiveStep: () => {},
   });
 
-export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
+export const BandejaTareasProvider = ({ children }: ReactNode | any) => {
   const [radicado, setRadicado] = useState('');
   //* value de los paneles
   const [value, setValue] = useState(0);
@@ -72,8 +72,8 @@ export const PanelVentanillaProvider = ({ children }: ReactNode | any) => {
   };
 
   return (
-    <PanelVentanillaContext.Provider value={valuesToUse}>
+    <BandejaTareasContext.Provider value={valuesToUse}>
       {children}
-    </PanelVentanillaContext.Provider>
+    </BandejaTareasContext.Provider>
   );
 };

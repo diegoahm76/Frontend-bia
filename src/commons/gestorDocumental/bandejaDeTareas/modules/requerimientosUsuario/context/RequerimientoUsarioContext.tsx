@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createContext, useState } from 'react';
 
-export const SolicitudAlUsuarioContext = createContext<any>({
+export const RequerimientoAlUsuarioContext = createContext<any>({
   infoInicialUsuario: {},
   setInfoInicialUsuario: () => {},
 });
 
-export const SolicitudAlUsuarioProvider = ({ children }: any): JSX.Element => {
+export const RequerimientoAlUsuarioProvider = ({ children }: any): JSX.Element => {
   // ? state declaration
 
   const [infoInicialUsuario, setInfoInicialUsuario] =
@@ -14,22 +14,16 @@ export const SolicitudAlUsuarioProvider = ({ children }: any): JSX.Element => {
 
     const [currentSolicitudUsuario, setCurrentSolicitudUsuario] = useState<any>({})
 
-  
-
-
   const value = {
     infoInicialUsuario,
     setInfoInicialUsuario,
-
     currentSolicitudUsuario,
     setCurrentSolicitudUsuario
   };
 
-
-
   return (
-    <SolicitudAlUsuarioContext.Provider value={value}>
+    <RequerimientoAlUsuarioContext.Provider value={value}>
       {children}
-    </SolicitudAlUsuarioContext.Provider>
+    </RequerimientoAlUsuarioContext.Provider>
   );
 };

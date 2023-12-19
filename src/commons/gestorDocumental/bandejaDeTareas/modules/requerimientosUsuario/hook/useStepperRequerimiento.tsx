@@ -2,11 +2,11 @@
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 import { useContext } from 'react';
-import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
+import { BandejaTareasContext } from '../../../mainModule/context/BandejaTareasContext';
 
-export const useSstepperFn = () => {
+export const useStepperRequerimiento = () => {
   const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
-    PanelVentanillaContext
+    BandejaTareasContext
   );
 
   const isStepSkipped = (step: number) => skipped.has(step);

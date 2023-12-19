@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Grid } from '@mui/material';
-import { StepperAsignacionUsuario } from '../components/stepper/StepperAsignacionUsuario';
+import { StepperRequerimientoAlUsuario } from '../components/stepper/StepperRequerimientoUsuario';
 import { Title } from '../../../../../../components';
 import { ParteInicial } from '../components/parteInicial/screen/ParteInicial';
 import { useContext, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { usePanelVentanilla } from '../../../hook/usePanelVentanilla';
 import { useAppSelector } from '../../../../../../hooks';
-import { useSstepperFn } from '../hook/useSstepperFn';
-import { SolicitudAlUsuarioContext } from '../context/SolicitudUsarioContext';
+import { useStepperRequerimiento } from '../hook/useStepperRequerimiento';
+import { RequerimientoAlUsuarioContext } from '../context/RequerimientoUsarioContext';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { useNavigate } from 'react-router-dom';
 import { getInitialData } from '../services/getInitialData.service';
+import { useBandejaTareas } from '../../../hook/useBandejaTareas';
 
-export const AsignacionUsuarioScreen = (): JSX.Element => {
-  const { handleReset } = useSstepperFn();
+export const RequerimientoUsuarioScreen = (): JSX.Element => {
+  const { handleReset } = useStepperRequerimiento();
   /*  const navigate = useNavigate();
 
   //* redux state
@@ -26,7 +26,7 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
 
 
   //* context declaration
-  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(RequerimientoUsarioContext.);
   const { generalLoading, handleGeneralLoading, handleSecondLoading } =
     useContext(ModalAndLoadingContext);*/
   {
@@ -57,7 +57,7 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
     resetFormulario,
     watchFormulario,
     setInfoReset,
-  } = usePanelVentanilla();
+  } = useBandejaTareas();
 
   const props = {
     controlFormulario,
@@ -82,11 +82,11 @@ export const AsignacionUsuarioScreen = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Solicitud al usuario sobre PQRSDF" />
+          <Title title="Requerimiento sobre una solicitud" />
           {/* parte Inicial */}
           <ParteInicial />
           {/*stepper*/}
-          <StepperAsignacionUsuario {...props} />
+          <StepperRequerimientoAlUsuario {...props} />
         </Grid>
       </Grid>
     </>

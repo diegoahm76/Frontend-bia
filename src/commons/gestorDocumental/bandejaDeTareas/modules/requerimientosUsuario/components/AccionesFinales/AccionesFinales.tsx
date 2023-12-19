@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
-import { resetItems } from '../../toolkit/slice/AsignacionUsuarioSlice';
+import { resetItems } from '../../toolkit/slice/RequerimientoUsarioSlice';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { useStepperContext } from '@mui/material';
-import { useSstepperFn } from '../../hook/useSstepperFn';
+import { useStepperRequerimiento } from '../../hook/useStepperRequerimiento';
 import { postAsignacionUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
 
 export const AccionesFinales = ({
@@ -22,7 +22,7 @@ export const AccionesFinales = ({
 
   //* context
 
-  const { handleReset } = useSstepperFn();
+  const { handleReset } = useStepperRequerimiento();
 
   const [LoadingButton, setLoadingButton] = useState(false);
 

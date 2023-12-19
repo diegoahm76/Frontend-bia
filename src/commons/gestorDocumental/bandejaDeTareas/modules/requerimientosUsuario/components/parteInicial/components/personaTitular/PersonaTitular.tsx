@@ -2,14 +2,14 @@
 import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
 import { useContext } from 'react';
-import { SolicitudAlUsuarioContext } from '../../../../context/SolicitudUsarioContext';
+import { RequerimientoAlUsuarioContext } from '../../../../context/RequerimientoUsarioContext';
 
 export const PersonaTitular = (): JSX.Element => {
 
   {/*datos deben salir de una mixtura del objeto de autenticación y */}
 
     //* context declaration
-    const { infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
+    const { infoInicialUsuario } = useContext(RequerimientoAlUsuarioContext);
   
 
   return (
@@ -20,7 +20,7 @@ export const PersonaTitular = (): JSX.Element => {
         mt: '2rem',
       }}
     >
-      <Title title="Persona titular de la PQRSDF" />
+      <Title title="Persona titular del PQRSDF" />
       <form
         style={{
           marginTop: '3rem',

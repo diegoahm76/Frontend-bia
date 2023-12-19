@@ -2,10 +2,9 @@
 import { Button, Grid, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useSstepperFn } from '../../../hook/useSstepperFn';
+import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { useEffect } from 'react';
 export const FormParte2 = ({
@@ -17,7 +16,7 @@ export const FormParte2 = ({
   // setInfoReset,
 }: any): JSX.Element => {
   // ? stepper hook
-  const { handleNext, handleBack } = useSstepperFn();
+  const { handleNext, handleBack } = useStepperRequerimiento();
 
     //* redux states functions
 /*    const { currentAnexo } = useAppSelector(
@@ -164,13 +163,13 @@ export const FormParte2 = ({
             variant="contained"
             color="primary"
             type="submit"
-            startIcon={<ArrowForward />}
+            endIcon={<ArrowForward />}
             sx={{
               width: '35%',
               mr: '2rem',
             }}
           >
-            Siguiente
+             Siguiente paso
           </Button>
         </Grid>
       </form>

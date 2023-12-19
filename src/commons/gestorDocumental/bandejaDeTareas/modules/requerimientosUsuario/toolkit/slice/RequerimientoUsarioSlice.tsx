@@ -27,8 +27,8 @@ const initialState: {
   viewMode: false,
 };
 
-export const AsignacionUsuarioSlice = createSlice({
-  name: 'AsignacionUsuarioSlice',
+export const RequerimientoUsarioSlice = createSlice({
+  name: 'RequerimientoUsarioSlice',
   initialState,
   reducers: {
     addAnexo: (state, action: PayloadAction<Omit<Anexo, 'id'>>) => {
@@ -108,4 +108,4 @@ export const {
   setMetadatos,
   setViewMode,
   resetItems,
-} = AsignacionUsuarioSlice.actions;
+} = RequerimientoUsarioSlice.actions;

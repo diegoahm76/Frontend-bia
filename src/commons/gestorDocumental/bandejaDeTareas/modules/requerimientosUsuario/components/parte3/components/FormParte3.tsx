@@ -16,12 +16,12 @@ import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../../../../../fileWeight/fileWeight';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import AddIcon from '@mui/icons-material/Add';
+import AddTaskIcon from '@mui/icons-material/AddTask';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import BuildIcon from '@mui/icons-material/Build';
+import FilePresentIcon from '@mui/icons-material/FilePresent';
 import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
-import { useSstepperFn } from '../../../hook/useSstepperFn';
+import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { TipologiaDocumental } from './types/FormParte3.types';
 import CleanIcon from '@mui/icons-material/CleaningServices';
@@ -35,19 +35,20 @@ import {
   setCurrentAnexo,
   setMetadatos,
   setViewMode,
-} from '../../../toolkit/slice/AsignacionUsuarioSlice';
+} from '../../../toolkit/slice/RequerimientoUsarioSlice';
 import { columnsThirdForm } from './columns/columnsTercerFormulario';
 import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { control_success } from '../../../../../../../../helpers';
 0;
-import { usePanelVentanilla } from '../../../../../hook/usePanelVentanilla';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import './style.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useBandejaTareas } from '../../../../../hook/useBandejaTareas';
+import  AttachFileIcon  from '@mui/icons-material/AttachFile';
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -67,7 +68,7 @@ export const FormParte3 = ({
 
 
   // ? stepper hook
-  const { handleBack } = useSstepperFn();
+  const { handleBack } = useStepperRequerimiento();
 
   //* context
   const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
@@ -81,7 +82,7 @@ export const FormParte3 = ({
     controlManejoMetadatosModal,
     watchExeManejoModalMetadatos,
     resetManejoMetadatosModal,
-  } = usePanelVentanilla();
+  } = useBandejaTareas();
 
   useEffect(() => {
     if (currentAnexo) {
@@ -334,7 +335,7 @@ export const FormParte3 = ({
                       marginTop: '.15rem',
                       width: '100%',
                     }}
-                    startIcon={<CloudUploadIcon />}
+                    startIcon={<FilePresentIcon />}
                   >
                     {value === '' || value === null
                       ? 'Subir archivo'
@@ -493,7 +494,7 @@ export const FormParte3 = ({
               }}
               variant="contained"
               color="primary"
-              startIcon={<BuildIcon />}
+              startIcon={<AttachFileIcon/>}
               onClick={() => {
                 //  console.log('')('click siuuu');
                 //  console.log('')('abriendo modal de metadatos');
@@ -513,7 +514,7 @@ export const FormParte3 = ({
               variant={currentAnexo ? 'outlined' : 'contained'}
               color="success"
               type="submit"
-              startIcon={currentAnexo ? <RestartAltIcon /> : <AddIcon />}
+              startIcon={currentAnexo ? <RestartAltIcon /> : <AddTaskIcon />}
             >
               {currentAnexo ? 'Actualizar' : 'Agregar'} anexo
             </Button>
@@ -552,7 +553,7 @@ export const FormParte3 = ({
             color="text.primary"
             sx={{ textAlign: 'center', justifyContent: 'center', mt: '1.5rem' }}
           >
-            No hay anexos creados
+            Sin anexos creados para esta solicitud de requerimiento
           </Typography>
         )}
 
@@ -581,7 +582,7 @@ export const FormParte3 = ({
               mt: '1rem',
             }}
           >
-            ATRÁS
+            VOLVER A : ASUNTO / DESCRIPCION
           </Button>
           <Carousel
             className="carousel"
