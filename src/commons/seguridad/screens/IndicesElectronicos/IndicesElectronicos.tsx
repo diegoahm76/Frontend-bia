@@ -144,7 +144,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         sx={{
           margin: '10vh auto',
           position: 'relative',
-          width: '80%',
+          // width: '80%',
           background: '#FAFAFA',
           borderRadius: '15px',
           p: '20px',

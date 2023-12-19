@@ -55,7 +55,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       '' /*tipo_de_solicitud?.label,*/,
       fecha_inicio,
       fecha_fin,
-      tipo_pqrsdf?.label,
+      tipo_pqrsdf?.value,
       //* se debe poner la busqueda por unidad organizacional
       // * se debe poner la bsqueda por tipo de pqrs
       handleSecondLoading
