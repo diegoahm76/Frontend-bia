@@ -22,8 +22,8 @@ import {
   initial_state_pqr_request,
   set_pqr,
   set_pqr_request,
-} from '../../store/slice/pqrsdfSlice';
-import { IObjPqr, IObjPqrRequest } from '../../interfaces/pqrsdf';
+} from '../../store/slice/complementoPqrsdfSlice';
+import { IObjPqr, IObjPqrRequest } from '../../interfaces/complemento_pqrsdf';
 import PqrDetailDialog from './PqrDetailDialog';
 import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -47,11 +47,11 @@ const ListadoPqrsdf = () => {
     set_detail_is_active(false);
   }, [pqrs]);
   useEffect(() => {
-    //  console.log('')(button_option);
+    console.log(button_option);
   }, [button_option]);
 
   useEffect(() => {
-    //  console.log('')(selectedPqr);
+    console.log(selectedPqr);
     if (selectedPqr !== null) {
       if ('id_PQRSDF' in selectedPqr) {
         dispatch(
@@ -252,12 +252,12 @@ const ListadoPqrsdf = () => {
       level: 1,
       columns: columns_solicitud,
       table_name: 'Solicitudes de PQRSDF',
-      property_name: 'solicitudes_pqr',
+      property_name: 'orders',
     },
   ];
 
   const get_x: any = (data: any) => {
-    //  console.log('')(data);
+    console.log(data);
   };
 
   return (
@@ -275,7 +275,6 @@ const ListadoPqrsdf = () => {
       <Grid container direction="row" padding={2} spacing={2}>
         <Grid item xs={12} md={3}>
           <FormButton
-            href={`/#/app/gestor_documental/pqrsdf/complementos/crear_complemento/${pqr.id_PQRSDF}`}
             variant_button="contained"
             on_click_function={null}
             icon_class={null}

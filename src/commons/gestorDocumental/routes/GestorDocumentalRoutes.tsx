@@ -34,6 +34,7 @@ import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/Cen
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
+import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 
 const routes = [
   {
@@ -125,7 +126,6 @@ const routes = [
     name: 'encuesta',
     component: () => <Encuasta_Routes />,
   },
-  
 
   {
     path: 'Reubicacion_Expedientes/',
@@ -186,6 +186,11 @@ const routes = [
     component: () => <SolicitudesOtrosRoutes />,
   },
 
+  {
+    path: 'Pqrsdf/complementos/',
+    name: 'complementos_pqrsdf',
+    component: () => <ComplementoPqrsdfRoutes />,
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

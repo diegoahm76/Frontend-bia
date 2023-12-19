@@ -76,7 +76,6 @@ const FormCheckboxController = ({
                     control={
                       <Checkbox
                         defaultChecked={checked ?? false}
-                        checked={checked}
                         value={checked}
                         color="primary" // Puedes cambiar el color si lo deseas
                         disabled={disabled}

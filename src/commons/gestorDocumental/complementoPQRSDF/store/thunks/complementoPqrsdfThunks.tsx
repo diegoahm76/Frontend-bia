@@ -13,6 +13,7 @@ import {
   set_attorneys,
   set_companies,
   set_company,
+  set_complement_pqrs,
   set_departments,
   set_destination_offices,
   set_document_types,
@@ -21,7 +22,6 @@ import {
   set_file_origins,
   set_file_typologies,
   set_file_typology,
-  set_filed,
   set_filed_types,
   set_filings,
   set_grantor,
@@ -39,9 +39,9 @@ import {
   set_pqrs,
   set_presentation_types,
   set_storage_mediums,
-} from '../slice/pqrsdfSlice';
+} from '../slice/complementoPqrsdfSlice';
 import { api } from '../../../../../api/axios';
-import { IObjListType } from '../../interfaces/pqrsdf';
+import { IObjListType } from '../../interfaces/complemento_pqrsdf';
 import { NavigateFunction } from 'react-router-dom';
 import {
   get_ciudades,
@@ -599,14 +599,19 @@ export const get_pqrs_service = (id: string | number): any => {
 };
 
 // obtener pqrsdf por id
-export const get_pqrsdf_id_service = (id: string | number): any => {
+export const get_pqrsdf_id_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`gestor/pqr/get_pqrsdf-panel/${id}`);
+      const { data } = await api.get(
+        `gestor/complementos-pqr/get-complementos-pqrsdf/`,
+        { params }
+      );
       console.log(data);
 
       if ('data' in data) {
-        dispatch(set_pqr(data.data));
+        dispatch(set_pqr(data.data.pqrsdf));
+        dispatch(set_complement_pqrs(data.data.complementos_PQRSDF));
+
         // control_success('Se selecciono el pqrsdf ');
       } else {
         control_error(data.detail);
@@ -620,26 +625,56 @@ export const get_pqrsdf_id_service = (id: string | number): any => {
   };
 };
 
+// obtener pqrsdf por id
+export const get_complemento_pqrsdf_id_service = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/complementos-pqr/get-complementos-pqrsdf/`,
+        { params }
+      );
+      console.log(data);
+
+      if ('data' in data) {
+        dispatch(set_pqr(data.data.pqrsdf));
+        dispatch(set_complement_pqrs(data.data.complementos_PQRSDF));
+
+        // control_success('Se selecciono el pqrsdf ');
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_complemento_pqrsdf_id_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // crear pqrsdf
-export const add_pqrsdf_service = (
+export const add_complemento_pqrsdf_service = (
   pqrsdf: any,
   navigate: NavigateFunction
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(pqrsdf);
-      const { data } = await api.post(`gestor/pqr/crear-pqrsdf/`, pqrsdf);
+      const { data } = await api.post(
+        `gestor/complementos-pqr/create-complemento-pqrsdf/`,
+        pqrsdf
+      );
       console.log(data);
 
       control_success(data.detail);
-      navigate(
-        `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
-      );
+      // navigate(
+      //   `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      // );
 
-      dispatch(set_pqr(data.data));
+      // dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
-      console.log('add_pqrsdf_service');
+      console.log('add_complemento_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -647,20 +682,23 @@ export const add_pqrsdf_service = (
 };
 
 // editar pqrsdf
-export const edit_pqrsdf_service = (
+export const edit_complemento_pqrsdf_service = (
   pqrsdf: any,
   navigate: NavigateFunction
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`gestor/pqr/update-pqrsdf/`, pqrsdf);
+      const { data } = await api.put(
+        `gestor/complementos-pqr/update-complemento-pqrsdf/`,
+        pqrsdf
+      );
       console.log(data);
 
       control_success(data.detail);
-      navigate(
-        `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
-      );
-      dispatch(set_pqr(data.data));
+      // navigate(
+      //   `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      // );
+      // dispatch(set_pqr(data.data));
 
       // if ('data' in data) {
       //   dispatch(set_pqr(data.data));
@@ -670,7 +708,7 @@ export const edit_pqrsdf_service = (
       // }
       return data;
     } catch (error: any) {
-      console.log('edit_pqrsdf_service');
+      console.log('edit_complemento_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -678,7 +716,7 @@ export const edit_pqrsdf_service = (
 };
 
 // borrar pqrsdf
-export const delete_pqrsdf_service = (
+export const delete_complemento_pqrsdf_service = (
   id: number | string,
   is_web: boolean
 ): any => {
@@ -689,7 +727,7 @@ export const delete_pqrsdf_service = (
         isCreateForWeb: is_web,
       };
       const { data } = await api.delete(
-        `gestor/pqr/delete-pqrsdf/?id_PQRSDF=${id}&isCreateForWeb=${
+        `gestor/complementos-pqr/delete-complemento-pqrsdf/?idComplementoUsu_PQR=${id}&isCreateForWeb=${
           is_web ? 'True' : 'False'
         }`
       );
@@ -701,14 +739,14 @@ export const delete_pqrsdf_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('delete_pqrsdf_service');
+      console.log('delete_complemento_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
 // radicar pqrsdf
-export const radicar_pqrsdf_service = (
+export const radicar_complemento_pqrsdf_service = (
   id: number | string,
   id_user: number,
   is_web: boolean
@@ -716,24 +754,21 @@ export const radicar_pqrsdf_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const params: any = {
-        id_PQRSDF: id,
+        id_complemento_PQRSDF: id,
         id_persona_guarda: id_user,
         isCreateForWeb: is_web,
       };
-      const { data } = await api.post(`gestor/pqr/radicar-pqrsdf/`, params);
+      const { data } = await api.post(
+        `gestor/complementos-pqr/radicar-complemento-pqrsdf/`,
+        params
+      );
       if (data.success) {
         control_success(data.detail);
-        void dispatch(get_pqrsdf_id_service(id));
-        dispatch(
-          set_filed({
-            ...data.data,
-            numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
-          })
-        );
+        // void dispatch(get_complemento_pqrsdf_id_service(id));
       }
       return data;
     } catch (error: any) {
-      console.log('delete_pqrsdf_service');
+      console.log('radicar_complemento_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -745,9 +780,9 @@ export const get_filings_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(params);
-      const { data } = await api.get(`gestor/radicados/imprimir-radicado/`, {
-        params,
-      });
+      const { data } = await api.get(
+        `gestor/radicados/imprimir-radicado/?cod_tipo_radicado=${params.cod_tipo_radicado}&prefijo_radicado=${params.prefijo_radicado}&agno_radicado=${params.agno_radicado}&nro_radicado=${params.nro_radicado}&fecha_radicado=${params.fecha_radicado}`
+      );
       console.log(data);
       dispatch(set_filings(data.data));
 
@@ -759,7 +794,7 @@ export const get_filings_service = (params: any): any => {
       // }
       return data;
     } catch (error: any) {
-      console.log('get_filings_service');
+      console.log('delete_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
