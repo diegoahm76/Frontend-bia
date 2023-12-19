@@ -15,7 +15,7 @@ import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasC
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
-import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
+import { Encuasta_Routes as Encuesta } from '../Encuesta/routes/Encuasta_Routes';
 
 import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
@@ -27,7 +27,7 @@ import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute'
 import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
 import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/routes/ReportesDocumentosRoutes';
-import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
+import { Encuasta_Routess as EncuestaRoutes } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
 import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
@@ -125,7 +125,7 @@ const routes = [
   {
     path: 'encuesta/',
     name: 'encuesta',
-    component: () => <Encuasta_Routes />,
+    component: () => <Encuesta />,
   },
 
   {
@@ -136,7 +136,7 @@ const routes = [
   {
     path: 'encuesta_asignacion/',
     name: 'encuesta_asignacion',
-    component: () => <Encuasta_Routess />,
+    component: () => <EncuestaRoutes />,
   },
   {
     path: 'Interno_encuesta/',
@@ -148,7 +148,6 @@ const routes = [
     path: 'expedientes/',
     name: 'expedientes',
     component: () => <ExpedientesRoutes />,
-    // component: () => <CierreExpedientesRoutes />,
   },
   {
     path: 'archivo_fisico/',

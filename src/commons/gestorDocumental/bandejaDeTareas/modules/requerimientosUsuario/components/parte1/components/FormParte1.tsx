@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
+import { useStepperRequerimiento } from '../../../../../hook/useStepperRequerimiento';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import { RequerimientoAlUsuarioContext } from '../../../context/RequerimientoUsarioContext';
 import { formatDate } from '../../../../../../../../utils/functions/formatDate';

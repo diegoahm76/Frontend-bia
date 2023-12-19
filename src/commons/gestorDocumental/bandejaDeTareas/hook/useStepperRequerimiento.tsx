@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 import { useContext } from 'react';
-import { BandejaTareasContext } from '../../../mainModule/context/BandejaTareasContext';
+import { BandejaTareasContext } from '../mainModule/context/BandejaTareasContext';
 
 export const useStepperRequerimiento = () => {
   const { skipped, activeStep, setSkipped, setActiveStep } = useContext(

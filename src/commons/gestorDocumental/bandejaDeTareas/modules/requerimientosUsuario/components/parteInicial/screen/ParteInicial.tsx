@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
-import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
+import { useStepperRequerimiento } from '../../../../../hook/useStepperRequerimiento';
 
 export const ParteInicial: React.FC  = (): JSX.Element => {
  

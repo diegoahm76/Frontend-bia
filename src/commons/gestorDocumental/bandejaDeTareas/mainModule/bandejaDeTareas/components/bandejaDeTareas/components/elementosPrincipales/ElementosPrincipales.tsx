@@ -9,7 +9,7 @@ import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ElementosOtros } from './elementosOtros/ElementosOtros';
 
 export const ElementosPrincipales: React.FC = (): JSX.Element => {
-/*  //* states from redux store
+  /*  //* states from redux store
   const { listaElementosPqrsfTramitesUotros } = useAppSelector(
     (state) => state.PanelVentanillaSlice
   );
@@ -19,7 +19,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
     ModalAndLoadingContext
   );
   */
- /* if (secondLoading)
+  /* if (secondLoading)
     return (
       <Grid
         container
@@ -36,7 +36,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
 
   if (!listaElementosPqrsfTramitesUotros?.length) return <></>;*/
 
-/*  const tipoTarea: any = {
+  /*  const tipoTarea: any = {
     PQRSDF: <ListaElementosPqrsdf />,
     'Tramites y Servicios': <>hola trámites y servicios</>,
     Otros: <ElementosOtros/>,
@@ -49,12 +49,8 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
   return (
     <>
       {/*  se va a manejar el grillado con guia en el primer elemento del array con base al tipo de solicitud, tal vez de la misma manera se podra manejar la lógica y actualización de los botones sin necesidad de esperar a darle click a alguno de los elementos de la lista   */}
-
-Listado de elemntos principales, ya se definirá la estructura inicial,
-
-
-
-
+      Listado de elemntos principales, ya se definirá la estructura inicial,
+      pero se va a manejar un grid por cada elemento (PQRSDF, tramite, otros y opas)
       {/*{Componente || <></>}*/}
     </>
   );

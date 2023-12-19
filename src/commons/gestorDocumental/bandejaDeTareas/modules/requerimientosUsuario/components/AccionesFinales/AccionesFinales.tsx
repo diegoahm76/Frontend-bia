@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { resetItems } from '../../toolkit/slice/RequerimientoUsarioSlice';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { useStepperContext } from '@mui/material';
-import { useStepperRequerimiento } from '../../hook/useStepperRequerimiento';
+import { useStepperRequerimiento } from '../../../../hook/useStepperRequerimiento';
 import { postAsignacionUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
 
 export const AccionesFinales = ({

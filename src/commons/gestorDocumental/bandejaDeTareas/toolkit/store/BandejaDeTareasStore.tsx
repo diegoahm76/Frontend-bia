@@ -1,87 +1,77 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-//? icons necesario para los botones de acciones de pqrsdf
-import DevicesIcon from '@mui/icons-material/Devices';
-// import PersonAddIcon from '@mui/icons-material/PersonAdd';
-// import GroupsIcon from '@mui/icons-material/Groups';
-import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
-
-// ? icons necesarios para los botones de acciones de tramites y servicios
-// import BalanceIcon from '@mui/icons-material/Balance';
-
+// ? neccesary icon for the pqrsdf actions
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import ReplyAllIcon from '@mui/icons-material/ReplyAll';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import SendIcon from '@mui/icons-material/Send';
+import PreviewIcon from '@mui/icons-material/Preview';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import { Action } from '../types/toolkit.types';
+// Update import paths in ParteInicial, AccionesFinales, StepperRequerimientoUsuario, FormParte2, RequerimientoUsuarioScreen, FormParte1, ElementosPqrsdf, and FormParte3
 //* todos inicialmente deben tener el disabled en true ya que sobre todos los elementos no se puede permitir ciertas acciones dependiendo lo que incluye el elemento
-/*const actionsPQRSDF: any[] = [
-  {
-    id: 'Dig',
-    icon: <DevicesIcon />,
-    name: 'Enviar solicitud de digitalización',
-    path: '',
-    disabled: false,
-  },
-  {
-    id: 'AsigPer',
-    icon: <PersonAddIcon />,
-    name: 'Enviar solicitud al usuario',
-    path: '/app/gestor_documental/panel_ventanilla/asignar_a_usario',
-    disabled: false,
-  },
-  {
-    id: 'AsigGrup',
-    icon: <GroupsIcon />,
-    name: 'Asignar a unidad organizacional',
-    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
-    disabled: false,
-  },
-];*/
 
-/*const actionsTramitesYServicios: any[] = [
+const actionsPQRSDF: Action[] = [
   {
-    id: 'Jurídica',
-    icon: <BalanceIcon />,
-    name: 'Revisión jurídica',
+    id: 'InfoSolictud',
+    icon: <ContactPageIcon />,
+    name: 'Ver información de la solicitud',
     path: '',
     disabled: false,
   },
   {
-    id: 'AsigGrup',
-    icon: <GroupsIcon />,
-    name: 'Asignar al grupo y generación de expediente',
+    id: 'RespondeSolicitud',
+    icon: <ReplyAllIcon />,
+    name: 'Responder solicitud',
     path: '',
     disabled: false,
   },
   {
-    id: 'Dig',
-    icon: <DevicesIcon />,
-    name: 'Enviar solicitud de digitalización',
-    path: '',
-    disabled: false,
-  },
-];*/
-
-/*const actionsComplements: any[] = [
-  {
-    id: 'Dig',
-    icon: <DevicesIcon />,
-    name: 'Enviar solicitud de digitalización',
+    id: 'Reasignar',
+    icon: <PersonAddAlt1Icon />,
+    name: 'Reasignar',
     path: '',
     disabled: false,
   },
   {
-    id: 'ContinuarAsigGrup',
-    icon: <ReduceCapacityIcon />,
-    name: 'Continuar con asignación de grupo',
+    id: 'RequerimientoUsuario',
+    icon: <SendIcon />,
+    name: 'Enviar requerimiento al usuario',
+    path: '',
+    disabled: false,
+  },
+  {
+    id: 'VerRespuestasRequerimientosOSolicitudesAlUsuario',
+    icon: <PreviewIcon />,
+    name: 'Ver respuestas a requerimientos o solicitudes al usuario',
+    path: '',
+    disabled: false,
+  },
+  {
+    id: 'SeguimientoARespuesta',
+    icon: <QueryStatsIcon />,
+    name: 'Seguimiento a respuesta de la tarea',
     path: '',
     disabled: false,
   },
 ];
-*/
+
+const actionsTramitesYServicios: Action[] = [
+  {
+    id: '--',
+    icon: <></>,
+    name: '---',
+    path: '',
+    disabled: false,
+  },
+];
+
 const initialState: any = {
   // ? valores para los botones (acciones) que se ejercen dentro de panel de ventanilla
   //* acciones de los botones (tambien se deberán configurar los botones para pqrsdf, trámites y servicios y otros)
-  // actions: actionsPQRSDF,
-  // actionsTramitesYServicios,
-  // actionsComplementos: actionsComplements,
+  actionsPQRSDF,
+  actionsTramitesYServicios,
 
   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas: null,
   listaTareasPqrsdfTramitesUotrosUopas: [],
@@ -93,17 +83,14 @@ export const BandejaTareasSlice = createSlice({
   reducers: {
     // ! ------ STATES PARA PANEL DE VENTANILLA EN EL USO DE PQRSDF, TRÁMITES Y SERVICIOS Y OTROS, NO DE LOS MÓDULOS QUE DEPENDEN DE ESO ------
     //* este es editor de actions inicial de los botones, se deberá también definir los de tramites y servicios y otros
-    /*setActionssTareasPQRSDF: (state, action: PayloadAction<any>) => {
+    setActionssTareasPQRSDF: (state, action: PayloadAction<any>) => {
       state.actionsPQRSDF = action.payload;
-    },*/
+    },
 
-   /* setActionsTareasTramites: (
-      state,
-      action: PayloadAction<any>
-    ) => {
+    setActionsTareasTramites: (state, action: PayloadAction<any>) => {
       state.Tramites = action.payload;
     },
-*/
+
     //* realizar en su momento las funciones para los otros y para las OPAS
 
     // ? ------------------------
@@ -126,13 +113,12 @@ export const BandejaTareasSlice = createSlice({
         action.payload;
     },
 
-
-
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetBandejaDeTareasFull: (state) => {
+      state.actionsPQRSDF = [];
       // state.actions = [];
-     // state.actionsTramitesYServicios = [];
-     // state.actionsComplementos = [];
+      // state.actionsTramitesYServicios = [];
+      // state.actionsComplementos = [];
       state.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = null;
       state.listaTareasPqrsdfTramitesUotrosUopas = [];
     },
@@ -140,7 +126,7 @@ export const BandejaTareasSlice = createSlice({
 });
 
 export const {
-  // setActionssTareasPQRSDF,
+  setActionssTareasPQRSDF,
   // setActionsTareasTramites,
 
   // ? lista de las tareas tras la busqueda

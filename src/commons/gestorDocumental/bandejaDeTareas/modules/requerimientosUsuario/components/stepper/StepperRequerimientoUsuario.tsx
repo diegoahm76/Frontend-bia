@@ -9,7 +9,7 @@ import { Parte2Screen } from '../parte2/screen/Parte2Screen';
 import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
 import { Parte1Screen } from '../parte1/screen/Parte1Screen';
-import { useStepperRequerimiento } from '../../hook/useStepperRequerimiento';
+import { useStepperRequerimiento } from '../../../../hook/useStepperRequerimiento';
 import { BandejaTareasContext } from '../../../../mainModule/context/BandejaTareasContext';
 
 export const StepperRequerimientoAlUsuario = ({

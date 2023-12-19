@@ -7,7 +7,7 @@ import { ParteInicial } from '../components/parteInicial/screen/ParteInicial';
 import { useContext, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { useAppSelector } from '../../../../../../hooks';
-import { useStepperRequerimiento } from '../hook/useStepperRequerimiento';
+import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
 import { RequerimientoAlUsuarioContext } from '../context/RequerimientoUsarioContext';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { useNavigate } from 'react-router-dom';

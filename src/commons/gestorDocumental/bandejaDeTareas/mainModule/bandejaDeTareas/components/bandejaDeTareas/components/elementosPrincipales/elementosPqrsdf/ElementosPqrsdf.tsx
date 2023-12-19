@@ -143,9 +143,9 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   return (
     <>
       <RenderDataGrid
-        rows={[]}
+        rows={[] ?? []}
         columns={[] ?? []}
-        title={`Listado de tareas asignadas`}
+        title={`Listado de tareas asignadas en PQRSDF`}
         /* aditionalElement={
           currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ? (
             <Button

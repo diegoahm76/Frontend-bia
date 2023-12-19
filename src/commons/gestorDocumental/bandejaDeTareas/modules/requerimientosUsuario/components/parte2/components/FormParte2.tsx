@@ -4,7 +4,7 @@ import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
+import { useStepperRequerimiento } from '../../../../../hook/useStepperRequerimiento';
 import { useAppSelector } from '../../../../../../../../hooks';
 import { useEffect } from 'react';
 export const FormParte2 = ({

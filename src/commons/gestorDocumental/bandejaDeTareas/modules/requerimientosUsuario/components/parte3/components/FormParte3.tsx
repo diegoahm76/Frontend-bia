@@ -21,7 +21,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
-import { useStepperRequerimiento } from '../../../hook/useStepperRequerimiento';
+import { useStepperRequerimiento } from '../../../../../hook/useStepperRequerimiento';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { TipologiaDocumental } from './types/FormParte3.types';
 import CleanIcon from '@mui/icons-material/CleaningServices';
