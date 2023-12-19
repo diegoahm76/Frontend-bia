@@ -93,19 +93,19 @@ export const FirmaCierreIndiceScreen: React.FC = () => {
             >
                 <ExpedienteSeleccionado expediente={expediente}></ExpedienteSeleccionado>
             </Grid>}
-            {indice !== null && <Grid
+            {indice !== null && expediente?.estado === 'C' && <Grid
                 container
                 sx={class_css}
             >
                 <IndiceSeleccionado indice={indice}></IndiceSeleccionado>
             </Grid>}
-            {indice !== null && indice?.abierto && <Grid
+            {indice !== null && indice?.abierto && expediente?.estado === 'C' && <Grid
                 container
                 sx={class_css}
             >
                 <CierreIndiceElectronico indice={indice} limpiar={limpiar} expediente={expediente} set_limpiar={set_limpiar}></CierreIndiceElectronico>
             </Grid>}
-            {indice !== null && !indice?.abierto && <Grid
+            {indice !== null && !indice?.abierto && expediente?.estado === 'C' && <Grid
                 container
                 sx={class_css}
             >
