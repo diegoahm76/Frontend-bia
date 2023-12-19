@@ -34,6 +34,7 @@ import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/Cen
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
+import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 
 const routes = [
@@ -184,6 +185,11 @@ const routes = [
     path: 'solicitudes_otros/',
     name: 'solicitudes_otros',
     component: () => <SolicitudesOtrosRoutes />,
+  },
+  {
+    path: 'tramites/',
+    name: 'tramites',
+    component: () => <TramitesServiciosRouter />,
   },
 
   {
