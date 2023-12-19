@@ -42,7 +42,7 @@ export const IndicadoresScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Metas por Indicador " />
+          <Title title="Indicadores " />
         </Grid>
       </Grid>
       <ListarIndicador />

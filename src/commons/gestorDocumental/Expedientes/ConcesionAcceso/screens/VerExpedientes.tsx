@@ -1,7 +1,6 @@
-import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip } from "@mui/material"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
 import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { useAppDispatch } from "../../../../../hooks";
 import { ver_expedientes } from "../thunks/ConcesionAcceso";
 import dayjs from "dayjs";
@@ -76,20 +75,20 @@ export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
         set_seleccion_expediente(expedientes.find((e: any) => e.id_concesion_acc === seleccion_expediente[0]));
     }
 
-    // const boton_seleccionar: any = () => {
-    //     if(seleccion_expediente !== null){
-    //         dispatch(buscar_expediente_id(seleccion_expediente.id_expediente)).then((response: any) => {
-    //             if(response.success){
-    //                 response.data !== null ? props.set_expediente(response.data) : props.set_expediente(null);
-    //                 dispatch(obtener_documentos_expediente(response.data.id_expediente_documental, '', '', '')).then(((response: any) => {
-    //                     response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
-    //                     props.set_is_modal_active(false);
-    //                 }));
-    //                 props.set_is_modal_active(false);
-    //             }
-    //         });
-    //     }
-    // }
+    const boton_seleccionar: any = () => {
+        if(seleccion_expediente !== null){
+            dispatch(buscar_expediente_id(seleccion_expediente.id_expediente)).then((response: any) => {
+                if(response.success){
+                    response.data !== null ? props.set_expediente(response.data) : props.set_expediente(null);
+                    dispatch(obtener_documentos_expediente(response.data.id_expediente_documental, '', '', '')).then(((response: any) => {
+                        response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+                        props.set_is_modal_active(false);
+                    }));
+                    props.set_is_modal_active(false);
+                }
+            });
+        }
+    }
 
     return (
         <Dialog
@@ -116,7 +115,7 @@ export const VerExpedientes: React.FC<IProps> = (props: IProps) => {
                 <Button
                     color='primary'
                     variant='contained'
-                  //  onClick={boton_seleccionar}
+                   onClick={boton_seleccionar}
                     >Seleccionar
                     </Button>
                 <Button

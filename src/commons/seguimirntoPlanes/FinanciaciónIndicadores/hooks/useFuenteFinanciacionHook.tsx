@@ -24,6 +24,8 @@ export const useFuenteFinanciacionHook = (): any => {
       nombre_indicador: '',
       nombre_fuente: '',
       nombre_cuenca: '',
+      nombre_proyecto: '',
+      nombre_actividad: '',
       vano_1: 0,
       vano_2: 0,
       vano_3: 0,
@@ -31,7 +33,8 @@ export const useFuenteFinanciacionHook = (): any => {
       valor_total: 0,
       id_indicador: 0,
       id_cuenca: 0,
-
+      id_proyecto: 0,
+      id_actividad: 0,
     },
   });
 
@@ -43,6 +46,8 @@ export const useFuenteFinanciacionHook = (): any => {
       nombre_indicador: '',
       nombre_fuente: '',
       nombre_cuenca: '',
+      nombre_proyecto: '',
+      nombre_actividad: '',
       vano_1: 0,
       vano_2: 0,
       vano_3: 0,
@@ -50,6 +55,8 @@ export const useFuenteFinanciacionHook = (): any => {
       valor_total: 0,
       id_indicador: 0,
       id_cuenca: 0,
+      id_proyecto: 0,
+      id_actividad: 0,
     });
   };
 

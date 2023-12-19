@@ -252,7 +252,7 @@ const ListadoPqrsdf = () => {
       level: 1,
       columns: columns_solicitud,
       table_name: 'Solicitudes de PQRSDF',
-      property_name: 'orders',
+      property_name: 'solicitudes_pqr',
     },
   ];
 
@@ -275,6 +275,7 @@ const ListadoPqrsdf = () => {
       <Grid container direction="row" padding={2} spacing={2}>
         <Grid item xs={12} md={3}>
           <FormButton
+            href={`/#/app/gestor_documental/pqrsdf/complementos/crear_complemento/${pqr.id_PQRSDF}`}
             variant_button="contained"
             on_click_function={null}
             icon_class={null}

@@ -1,11 +1,17 @@
 import { api } from '../../../../api/axios';
 import type { Cuenca } from '../../configuraciones/interfaces/interfaces';
-import type { IFuentesFinanciacion } from '../../types/types';
+import type {
+  IActividades,
+  IFuentesFinanciacion,
+  IProductos,
+  IProyectos,
+} from '../../types/types';
 
 // ! Fuentes de financiacion
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
-export const get_fuente_financiancion = async (
-): Promise<IFuentesFinanciacion[]> => {
+export const get_fuente_financiancion = async (): Promise<
+  IFuentesFinanciacion[]
+> => {
   const response = await api.get(
     `seguimiento-planes/consultar-fuentes-financiacion-indicadores/`
   );
@@ -15,8 +21,30 @@ export const get_fuente_financiancion = async (
 export const get_cuencas = async (): Promise<Cuenca[]> => {
   const response = await api.get(`hidrico/bibliotecas/cuencas/get/`);
   return response.data.data;
-}
+};
 
+export const get_proyectos = async (): Promise<IProyectos[]> => {
+  const response = await api.get(`seguimiento/planes/consultar-proyectos/`);
+  return response.data.data;
+};
+
+export const get_producto_id_proyecto = async (
+  id_proyecto: number
+): Promise<IProductos[]> => {
+  const response = await api.get(
+    `seguimiento/planes/consultar-productos-id-proyectos/${id_proyecto}/`
+  );
+  return response.data.data;
+};
+
+export const get_actividades_id_producto = async (
+  id_producto: number
+): Promise<IActividades[]> => {
+  const response = await api.get(
+    `seguimiento/planes/consultar-actividades-id-productos/${id_producto}/`
+  );
+  return response.data.data;
+};
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
 export const post_fuentes_fiananciacion = async (
   data: IFuentesFinanciacion
@@ -29,7 +57,7 @@ export const post_fuentes_fiananciacion = async (
 };
 
 // ? ----------------------------------------------- [ PUT ] -----------------------------------------------
-export const put_fuentes_fiananciacion  = async (
+export const put_fuentes_fiananciacion = async (
   id_fuente: number,
   data: IFuentesFinanciacion
 ): Promise<IFuentesFinanciacion> => {
