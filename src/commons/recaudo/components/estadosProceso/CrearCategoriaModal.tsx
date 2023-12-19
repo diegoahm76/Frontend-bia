@@ -13,8 +13,7 @@ interface IProps {
   actualizar_categoria: boolean;
   set_form_data_categoria: Dispatch<SetStateAction<FormDataCategoria>>;
   set_open_categoria_modal: Dispatch<SetStateAction<boolean>>;
-  submit_new_categoria: () => void;
-  submit_updated_categoria: () => void;
+  submit_create_update_categoria: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -24,8 +23,7 @@ export const CrearCategoriaModal = ({
   actualizar_categoria,
   set_form_data_categoria,
   set_open_categoria_modal,
-  submit_new_categoria,
-  submit_updated_categoria
+  submit_create_update_categoria,
 }: IProps): JSX.Element => {
   const handle_close = (): void => {
     set_open_categoria_modal(false);
@@ -38,11 +36,7 @@ export const CrearCategoriaModal = ({
 
   const handle_submit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    if (actualizar_categoria) {
-      submit_updated_categoria();
-    } else {
-      submit_new_categoria();
-    }
+    submit_create_update_categoria();
     handle_close();
   };
 

@@ -107,7 +107,7 @@ export const initial_state_exhibit: IObjExhibit = {
 export const initial_state_metadata: IObjMetaData = {
   id_metadatos_anexo_tmp: null,
   id_anexo: null,
-  fecha_creacion_doc: null,
+  fecha_creacion_doc: new Date(),
   descripcion: null,
   asunto: null,
   categoria_archivo: null,
