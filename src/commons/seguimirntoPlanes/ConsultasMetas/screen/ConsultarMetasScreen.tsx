@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { ListarPlanes } from '../components/Planes/ListarConsultaPLan';
+import { ConsultaMeta } from '../components/Planes/ConsultaMeta';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ConsultarPlanesScreen: React.FC = () => {
+export const ConsultarMetasScreen: React.FC = () => {
   return (
     <>
-      <ListarPlanes />
+      <ConsultaMeta />
       <Grid
         container
         spacing={2}
