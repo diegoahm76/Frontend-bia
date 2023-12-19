@@ -280,6 +280,163 @@ export const ListarPlanes: React.FC = () => {
     },
   ];
 
+  const colums_indicadores: GridColDef[] = [
+    // {
+    //   field: 'nombre_plan',
+    //   headerName: 'NOMBRE PLAN',
+    //   sortable: true,
+    //   width: 350,
+    // },
+    // {
+    //   field: 'nombre_programa',
+    //   headerName: 'NOMBRE PROGRAMA',
+    //   sortable: true,
+    //   width: 350,
+    // },
+    // {
+    //   field: 'nombre_proyecto',
+    //   headerName: 'NOMBRE PROYECTO',
+    //   sortable: true,
+    //   width: 350,
+    // },
+    // {
+    //   field: 'nombre_producto',
+    //   headerName: 'NOMBRE PRODUCTO',
+    //   sortable: true,
+    //   width: 350,
+    // },
+    // {
+    //   field: 'nombre_actividad',
+    //   headerName: 'NOMBRE ACTIVIDAD',
+    //   sortable: true,
+    //   width: 350,
+    // },
+    {
+      field: 'nombre_indicador',
+      headerName: 'NUMERO INDICADOR',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'linea_base',
+      headerName: 'LINEA BASE',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'medida',
+      headerName: 'MEDIDA',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'tipo_indicador',
+      headerName: 'TIPO INDICADOR',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'nombre_tipo',
+      headerName: 'NOMBRE TIPO',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'nombre_medicion',
+      headerName: 'NOMBRE MEDICION',
+      sortable: true,
+      width: 100,
+    },
+    // {
+    //   field: 'metas',
+    //   headerName: 'METAS',
+    //   sortable: true,
+    //   width: 100,
+    // },
+  ];
+
+  const columns_metas: GridColDef[] = [
+    {
+      field: 'nombre_indicador',
+      headerName: 'NOMBRE INDICADOR',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'nombre_meta',
+      headerName: 'NOMBRE META',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'porcentaje_meta',
+      headerName: 'PORCENTAJE META',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'valor_meta',
+      headerName: 'VALOR META',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'agno_1',
+      headerName: 'AÑO 1',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'agno_2',
+      headerName: 'AÑO 2',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'agno_3',
+      headerName: 'AÑO 3',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'agno_4',
+      headerName: 'AÑO 4',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'valor_ejecutado_compromiso',
+      headerName: 'VALOR EJECUTADO COMPROMISO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'valor_ejecutado_obligado',
+      headerName: 'VALOR EJECUTADO OBLIGADO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'avance_fisico',
+      headerName: 'AVANCE FISICO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'cumplio',
+      headerName: 'CUMPLIO',
+      sortable: true,
+      width: 200,
+      renderCell: (params) => {
+        return params.row.cumplio === true ? (
+          <Chip size="small" label="Si" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
+    },
+  ];
+
   const colums_all: GridColDef[] = [
     {
       field: 'nombre_plan',
@@ -436,6 +593,123 @@ export const ListarPlanes: React.FC = () => {
       sortable: true,
       width: 100,
     },
+    // indicadores
+    {
+      field: 'nombre_indicador',
+      headerName: 'NUMERO INDICADOR',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'linea_base',
+      headerName: 'LINEA BASE',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'medida',
+      headerName: 'MEDIDA',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'tipo_indicador',
+      headerName: 'TIPO INDICADOR',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'nombre_tipo',
+      headerName: 'NOMBRE TIPO',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'nombre_medicion',
+      headerName: 'NOMBRE MEDICION',
+      sortable: true,
+      width: 100,
+    },
+    // {
+    //   field: 'metas',
+    //   headerName: 'METAS',
+    //   sortable: true,
+    //   width: 100,
+    // },
+    // metas
+    {
+      field: 'nombre_meta',
+      headerName: 'NOMBRE META',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'porcentaje_meta',
+      headerName: 'PORCENTAJE META',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'valor_meta',
+      headerName: 'VALOR META',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'agno_1',
+      headerName: 'AÑO 1',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'agno_2',
+      headerName: 'AÑO 2',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'agno_3',
+      headerName: 'AÑO 3',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'agno_4',
+      headerName: 'AÑO 4',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'valor_ejecutado_compromiso',
+      headerName: 'VALOR EJECUTADO COMPROMISO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'valor_ejecutado_obligado',
+      headerName: 'VALOR EJECUTADO OBLIGADO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'avance_fisico',
+      headerName: 'AVANCE FISICO',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'cumplio',
+      headerName: 'CUMPLIO',
+      sortable: true,
+      width: 200,
+      renderCell: (params) => {
+        return params.row.cumplio === true ? (
+          <Chip size="small" label="Si" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
+    },
   ];
 
   // use form
@@ -557,6 +831,37 @@ export const ListarPlanes: React.FC = () => {
                       // nombre_plan: plan.nombre_plan,
                       // Add any additional properties based on colums_actividades
                     });
+
+                    // Rows for colums_indicadores
+                    if (actividad.indicadores) {
+                      actividad.indicadores.forEach((indicador) => {
+                        rows.push({
+                          ...indicador,
+                          // nombre_actividad: actividad.nombre_actividad,
+                          // nombre_producto: producto.nombre_producto,
+                          // nombre_proyecto: proyecto.nombre_proyecto,
+                          // nombre_programa: programa.nombre_programa,
+                          // nombre_plan: plan.nombre_plan,
+                          // Add any additional properties based on colums_indicadores
+                        });
+
+                        // Rows for colums_metas
+                        if (indicador.metas) {
+                          indicador.metas.forEach((meta) => {
+                            rows.push({
+                              ...meta,
+                              // nombre_indicador: indicador.nombre_indicador,
+                              // nombre_actividad: actividad.nombre_actividad,
+                              // nombre_producto: producto.nombre_producto,
+                              // nombre_proyecto: proyecto.nombre_proyecto,
+                              // nombre_programa: programa.nombre_programa,
+                              // nombre_plan: plan.nombre_plan,
+                              // Add any additional properties based on colums_metas
+                            });
+                          });
+                        }
+                      });
+                    }
                   });
                 }
               });
@@ -994,6 +1299,178 @@ export const ListarPlanes: React.FC = () => {
                                                 rowsPerPageOptions={[10]}
                                                 getRowId={(row) => uuidv4()}
                                               />
+                                              {/* Indicadores por actividad, una actividad tiene varios indicadored*/}
+                                              <Accordion
+                                                key={
+                                                  producto.id_producto +
+                                                  'indicadores'
+                                                }
+                                                style={{
+                                                  marginBottom: '1rem',
+                                                }}
+                                              >
+                                                <AccordionSummary
+                                                  expandIcon={
+                                                    <ExpandCircleDownIcon
+                                                      sx={{
+                                                        color: 'primary.main',
+                                                      }}
+                                                    />
+                                                  }
+                                                >
+                                                  <Typography>
+                                                    <b>
+                                                      Indicadores actividad
+                                                      {producto.nombre_producto}
+                                                    </b>
+                                                  </Typography>
+                                                </AccordionSummary>
+                                                <AccordionDetails>
+                                                  <DataGrid
+                                                    density="compact"
+                                                    autoHeight
+                                                    rows={rows_planes.flatMap(
+                                                      (plan) =>
+                                                        plan.programas.flatMap(
+                                                          (programa) =>
+                                                            programa.proyectos.flatMap(
+                                                              (proyecto) =>
+                                                                proyecto.productos.flatMap(
+                                                                  (producto) =>
+                                                                    producto.actividades.flatMap(
+                                                                      (
+                                                                        actividad
+                                                                      ) =>
+                                                                        actividad.indicadores.map(
+                                                                          (
+                                                                            indicador
+                                                                          ) => ({
+                                                                            nombre_indicador:
+                                                                              indicador.nombre_indicador,
+                                                                            linea_base:
+                                                                              indicador.linea_base,
+                                                                            medida:
+                                                                              indicador.medida,
+                                                                            tipo_indicador:
+                                                                              indicador.tipo_indicador,
+                                                                            nombre_tipo:
+                                                                              indicador.nombre_tipo,
+                                                                            nombre_medicion:
+                                                                              indicador.nombre_medicion,
+                                                                            metas:
+                                                                              indicador.metas,
+                                                                          })
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                    )}
+                                                    columns={colums_indicadores}
+                                                    pageSize={10}
+                                                    rowsPerPageOptions={[10]}
+                                                    getRowId={(row) => uuidv4()}
+                                                  />
+                                                  {/* Metas por indicador */}
+                                                  <Accordion
+                                                    key={
+                                                      producto.id_producto +
+                                                      'metas'
+                                                    }
+                                                    style={{
+                                                      marginBottom: '1rem',
+                                                    }}
+                                                  >
+                                                    <AccordionSummary
+                                                      expandIcon={
+                                                        <ExpandCircleDownIcon
+                                                          sx={{
+                                                            color:
+                                                              'primary.main',
+                                                          }}
+                                                        />
+                                                      }
+                                                    >
+                                                      <Typography>
+                                                        <b>
+                                                          Metas indicador
+                                                          {
+                                                            producto.nombre_producto
+                                                          }
+                                                        </b>
+                                                      </Typography>
+                                                    </AccordionSummary>
+                                                    <AccordionDetails>
+                                                      <DataGrid
+                                                        density="compact"
+                                                        autoHeight
+                                                        rows={rows_planes.flatMap(
+                                                          (plan) =>
+                                                            plan.programas.flatMap(
+                                                              (programa) =>
+                                                                programa.proyectos.flatMap(
+                                                                  (proyecto) =>
+                                                                    proyecto.productos.flatMap(
+                                                                      (
+                                                                        producto
+                                                                      ) =>
+                                                                        producto.actividades.flatMap(
+                                                                          (
+                                                                            actividad
+                                                                          ) =>
+                                                                            actividad.indicadores.flatMap(
+                                                                              (
+                                                                                indicador
+                                                                              ) =>
+                                                                                indicador.metas.map(
+                                                                                  (
+                                                                                    meta
+                                                                                  ) => ({
+                                                                                    nombre_indicador:
+                                                                                      indicador.nombre_indicador,
+                                                                                    nombre_meta:
+                                                                                      meta.nombre_meta,
+                                                                                    porcentaje_meta:
+                                                                                      meta.porcentaje_meta,
+                                                                                    valor_meta:
+                                                                                      meta.valor_meta,
+                                                                                    agno_1:
+                                                                                      meta.agno_1,
+                                                                                    agno_2:
+                                                                                      meta.agno_2,
+                                                                                    agno_3:
+                                                                                      meta.agno_3,
+                                                                                    agno_4:
+                                                                                      meta.agno_4,
+                                                                                    valor_ejecutado_compromiso:
+                                                                                      meta.valor_ejecutado_compromiso,
+                                                                                    valor_ejecutado_obligado:
+                                                                                      meta.valor_ejecutado_obligado,
+                                                                                    avance_fisico:
+                                                                                      meta.avance_fisico,
+                                                                                    cumplio:
+                                                                                      meta.cumplio,
+                                                                                  })
+                                                                                )
+                                                                            )
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )}
+                                                        columns={columns_metas}
+                                                        pageSize={10}
+                                                        rowsPerPageOptions={[
+                                                          10,
+                                                        ]}
+                                                        getRowId={(row) =>
+                                                          uuidv4()
+                                                        }
+                                                      />
+                                                    </AccordionDetails>
+                                                  </Accordion>
+                                                </AccordionDetails>
+                                              </Accordion>
                                             </AccordionDetails>
                                           </Accordion>
                                         </React.Fragment>
@@ -1013,7 +1490,8 @@ export const ListarPlanes: React.FC = () => {
             </Box>
           </Grid>
         ) : (
-          <Loader altura={800} />
+          // <Loader />
+          <></>
         )}
       </Grid>
     </>
