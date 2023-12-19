@@ -35,6 +35,7 @@ import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/Cen
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
+import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
 
 const routes = [
   {
@@ -173,6 +174,11 @@ const routes = [
     path: 'panel_ventanilla/',
     name: 'panel_ventanilla/',
     component: () => <PanelVentanillaRoutes />,
+  },
+  {
+    path: 'bandeja_tareas/',
+    name: 'bandeja_tareas/',
+    component: () => <BandejaTareasRoutes />,
   },
   {
     path: 'central_digitalizacion/',
