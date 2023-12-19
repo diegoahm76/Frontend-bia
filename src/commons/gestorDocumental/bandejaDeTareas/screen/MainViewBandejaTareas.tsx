@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import { Grid } from '@mui/material';
 import { containerStyles } from '../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../components';
+import { BandejaDeTareasScreen } from '../mainModule/bandejaDeTareas/screen/bandejaDeTareas/BandejaDeTareasScren';
 
 // import { PanelVentanillaContext } from '../context/PanelVentanillaContext';
 // import { getHistoricoByRadicado } from '../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
@@ -18,12 +19,12 @@ export const MainViewBandejaTareas = (): JSX.Element => {
   // const dispatch = useAppDispatch();
 
   //* context declaration
-/*  const { value, handleChange, setRadicado } = useContext(
+  /*  const { value, handleChange, setRadicado } = useContext(
     PanelVentanillaContext
   );*/
   // const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
-/*  const handleRequestRadicado = async () => {
+  /*  const handleRequestRadicado = async () => {
     try {
     } catch (error) {
     } finally {
@@ -36,37 +37,8 @@ export const MainViewBandejaTareas = (): JSX.Element => {
 
   return (
     <Grid container sx={containerStyles}>
-      <Title title="Panel de ventanilla" />
-      <>Punto de entrada bandeja de tareas</>
-     {/* <PanelDeVentanillaScreen />*/}
-      {/* <Box sx={{ width: '100%', mt: '1.5rem' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-          >
-            <Tab
-              onClick={() => {
-                dispatch(setListaHistoricoSolicitudes([]));
-                setRadicado('');
-              }}
-              label="Panel de ventanilla"
-              {...a11yProps(0)}
-            />
-            <Tab
-              onClick={handleRequestRadicado}
-              label="Histórico de solicitudes"
-              {...a11yProps(1)}
-            />
-          </Tabs>
-        </Box>
-        <CustomTabPanel value={value} index={0}>*/}
-      {/* </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <HistoricoSolicitudesScreen />
-        </CustomTabPanel>
-      </Box>*/}
+      <Title title="Bandeja de tareas" />
+      <BandejaDeTareasScreen />
     </Grid>
   );
 };
