@@ -132,7 +132,7 @@ const DigitalizacionesPendientes = () => {
           <Tooltip title="Desarrollar">
             <IconButton
               onClick={() => {
-                console.log(params);
+                //  console.log('')(params);
                 dispatch(set_digitization_request(params.row));
               }}
               href={`/#/app/gestor_documental/central_digitalizacion/anexos`}

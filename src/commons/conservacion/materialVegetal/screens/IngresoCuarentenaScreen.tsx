@@ -237,7 +237,7 @@ export function IngresoCuarentenaScreen(): JSX.Element {
 
   const on_submit = (data: IObjQuarantine): void => {
     const form_data: any = new FormData();
-    console.log('submit');
+    //  console.log('')('submit');
     if (
       current_plant_quarantine.id_cuarentena_mat_vegetal !== null &&
       current_plant_quarantine.id_cuarentena_mat_vegetal !== undefined
@@ -278,7 +278,7 @@ export function IngresoCuarentenaScreen(): JSX.Element {
         data_ingreso_cuarentena: { ...data_edit },
         ruta_archivo_soporte: data.ruta_archivo_soporte,
       };
-      console.log(aux);
+      //  console.log('')(aux);
       form_data.append(
         'data_ingreso_cuarentena',
         JSON.stringify({ ...data_edit })

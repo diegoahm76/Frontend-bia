@@ -158,7 +158,7 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
   }, [watch('accion_realizar')]);
 
   useEffect(() => {
-    console.log(nursery);
+    //  console.log('')(nursery);
     dispatch(set_current_nursery(nursery));
   }, [nursery]);
 

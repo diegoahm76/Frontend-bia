@@ -73,7 +73,7 @@ export const get_vehicles_all_service: any = () => {
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=Veh`);
-      console.log(data)
+      //  console.log('')(data)
       dispatch(set_vehicles(data.Elementos));
       return data;
     } catch (error: any) {
@@ -120,7 +120,7 @@ export const get_cv_vehicle_id = (id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`almacen/hoja-de-vida/vehiculos/get-by-id-bien/${id}/`);
-      console.log(data)
+      //  console.log('')(data)
       if (data.success === true) {
         dispatch(set_current_cv_vehicle(data.data));
 

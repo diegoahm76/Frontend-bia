@@ -67,7 +67,7 @@ export const TipoEjeScreen: React.FC = () => {
             onClick={() => {
               handle_open_editar();
               set_tipo_eje(params.row);
-              console.log(params.row);
+              //  console.log('')(params.row);
             }}
           >
             <Avatar

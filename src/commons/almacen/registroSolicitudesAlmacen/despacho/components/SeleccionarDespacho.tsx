@@ -70,7 +70,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
         );
         set_document_type(document_type_format);
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();
@@ -151,7 +151,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
   }, [current_despacho]);
 
   const get_despachos: any = async () => {
-    console.log("buscar...");
+    //  console.log('')("buscar...");
     const nro = get_values('numero_solicitud_por_tipo') ?? '';
     const id_unidad = get_values('id_unidad_para_la_que_solicita') ?? '';
     const fecha_despacho = get_values('fecha_despacho') ?? '';

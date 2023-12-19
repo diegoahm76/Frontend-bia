@@ -98,7 +98,7 @@ export const SeleccionSeccion: FC<any> = (): JSX.Element => {
                     ccd_current_busqueda?.id_ccd,
                     setloadingSeriesSubseries
                   ).then((res) => {
-                    console.log(res);
+                    //  console.log('')(res);
                     dispatch(setListaSeriesSubseries(res));
                   });
 

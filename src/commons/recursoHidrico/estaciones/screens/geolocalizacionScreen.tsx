@@ -54,7 +54,7 @@ export const GeolocalizacionScreen: React.FC = () => {
       set_info(pos_maped);
     } catch (err: any) {
       const temp_error = err as AxiosError
-      console.log("Error", temp_error)
+      //  console.log('')("Error", temp_error)
       if (temp_error.response?.status === 404) {
         control_error("No se encontraron estaciones");
         set_dato([]);
@@ -92,10 +92,10 @@ export const GeolocalizacionScreen: React.FC = () => {
       set_dato([datos])
     } catch (err: any) {
       const temp_error = err as AxiosError
-      console.log("Error", temp_error.response?.status)
+      //  console.log('')("Error", temp_error.response?.status)
       if (temp_error.response?.status === 404) {
         control_error("No se encontraron datos para esta estación");
-        console.log("No hay datos");
+        //  console.log('')("No hay datos");
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
@@ -131,15 +131,15 @@ export const GeolocalizacionScreen: React.FC = () => {
         caudal: ultimo_dato.caudal,
         voltaje: ultimo_dato.voltaje
       };
-      console.log("Paso");
-      console.log("Datos", [datos]);
+      //  console.log('')("Paso");
+      //  console.log('')("Datos", [datos]);
       set_dato_migracion([datos]);
     } catch (err: any) {
       const temp_error = err as AxiosError
-      console.log("Error", temp_error.response?.status)
+      //  console.log('')("Error", temp_error.response?.status)
       if (temp_error.response?.status === 404) {
         control_error("No se encontraron datos para esta estación");
-        console.log("No hay datos");
+        //  console.log('')("No hay datos");
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
@@ -160,14 +160,14 @@ export const GeolocalizacionScreen: React.FC = () => {
           set_dato([]);
           set_dato_migracion([]);
           const id_estacion_saleccionada = { estacion: { value: estacion.id_estacion } }
-          console.log("Id Estacion", id_estacion_saleccionada.estacion.value)
+          //  console.log('')("Id Estacion", id_estacion_saleccionada.estacion.value)
           if (id_estacion_saleccionada.estacion.value === 1 || id_estacion_saleccionada.estacion.value === 2 || id_estacion_saleccionada.estacion.value === 3 || id_estacion_saleccionada.estacion.value === 4) {
             void traer_dato({ estacion: { value: estacion.id_estacion } });
             return
           }
           void traer_dato_migracion({ estacion: { value: estacion.id_estacion } });
 
-          console.log('marker clicked');
+          //  console.log('')('marker clicked');
         },
       }}
     >

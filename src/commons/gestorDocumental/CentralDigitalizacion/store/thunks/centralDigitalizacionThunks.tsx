@@ -7,6 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
+  set_digitization_request,
   set_digitization_requests,
   set_file_categories,
   set_file_origin,
@@ -55,7 +56,7 @@ const map_list = (
   key?: number | string,
   label?: number | string
 ): any => {
-  console.log(list);
+  //  console.log('')(list);
   let list_aux: IObjListType[] = [];
   if (is_choice) {
     list.forEach((objeto) => {
@@ -79,10 +80,10 @@ export const get_request_types_service = (): any => {
     try {
       const { data } = await api.get('gestor/choices/tipo-solicitud/');
       dispatch(set_request_types(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_request_types_service');
+      //  console.log('')('get_request_types_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -93,11 +94,11 @@ export const get_list_request_status_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/choices/estado-solicitud/');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_list_request_status(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_list_request_status_service');
+      //  console.log('')('get_list_request_status_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -111,7 +112,7 @@ export const get_file_typology_service = (): any => {
       const { data } = await api.get(
         'gestor/expedientes-archivos/expedientes/listar-tipologias/'
       );
-      console.log(data);
+      //  console.log('')(data);
 
       dispatch(
         set_file_typologies(
@@ -126,7 +127,7 @@ export const get_file_typology_service = (): any => {
       );
       return data;
     } catch (error: any) {
-      console.log('get_file_typology_service');
+      //  console.log('')('get_file_typology_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -141,10 +142,31 @@ export const get_digitalization_requests_service = (params: any): any => {
         `gestor/central-digitalizacion/get-solicitudes-pendientes/`,
         { params }
       );
-      console.log(data);
+      //  console.log('')(data);
       if (data.success) {
         dispatch(set_digitization_requests(data.data));
         control_success(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      //  console.log('')('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener personas filtro
+export const get_digitalization_request_id_service = (id: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `/gestor/central-digitalizacion/get-solicitudes-by-id/${id}`
+      );
+      console.log(data);
+      if (data.success) {
+        dispatch(set_digitization_request(data.data));
+        // control_success(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -163,7 +185,7 @@ export const get_storage_mediums_service = (): any => {
       dispatch(set_storage_mediums(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_storage_mediums_service');
+      //  console.log('')('get_storage_mediums_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -176,10 +198,10 @@ export const get_file_categories_service = (): any => {
     try {
       const { data } = await api.get('gestor/choices/tipo-archivo/');
       dispatch(set_file_categories(map_list(data, true)));
-      console.log(data);
+      //  console.log('')(data);
       return data;
     } catch (error: any) {
-      console.log('get_file_categories_service');
+      //  console.log('')('get_file_categories_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -190,11 +212,11 @@ export const get_file_origin_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/choices/origen-archivo/');
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_file_origins(map_list(data, true)));
       return data;
     } catch (error: any) {
-      console.log('get_file_origin_service');
+      //  console.log('')('get_file_origin_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -202,21 +224,22 @@ export const get_file_origin_service = (): any => {
 };
 
 // crear metadata
-export const add_metadata_service = (metadata: any): any => {
+export const add_metadata_service = (metadata: any, id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(metadata);
+      //  console.log('')(metadata);
       const { data } = await api.post(
         `gestor/central-digitalizacion/crear-digitalizacion/`,
         metadata
       );
-      console.log(data);
+      //  console.log('')(data);
 
       control_success(data.detail);
+      dispatch(get_digitalization_request_id_service(id));
       // dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
-      console.log('add_metadata_service');
+      //  console.log('')('add_metadata_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -224,20 +247,76 @@ export const add_metadata_service = (metadata: any): any => {
 };
 
 // editar metadata
-export const edit_metadata_service = (metadata: any): any => {
+export const edit_metadata_service = (metadata: any, id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(
         `gestor/central-digitalizacion/actualizar-digitalizacion/`,
         metadata
       );
-      console.log(data);
+      //  console.log('')(data);
 
       control_success(data.detail);
+      dispatch(get_digitalization_request_id_service(id));
+
       // dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
-      console.log('edit_metadata_service');
+      //  console.log('')('edit_metadata_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar metadata
+export const delete_metadata_service = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/central-digitalizacion/eliminar-digitalizacion/`,
+        { params }
+      );
+      console.log(data);
+
+      control_success(data.detail);
+      dispatch(
+        get_digitalization_request_id_service(
+          params.id_solicitud_de_digitalizacion
+        )
+      );
+
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('delete_metadata_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar metadata
+export const response_request_service = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `gestor/central-digitalizacion/responder-digitalizacion/`,
+        params
+      );
+      console.log(data);
+
+      control_success(data.detail);
+      dispatch(
+        get_digitalization_request_id_service(
+          params.id_solicitud_de_digitalizacion
+        )
+      );
+
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('delete_metadata_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

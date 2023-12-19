@@ -109,7 +109,7 @@ const SeleccionarBajasHerramientas = ({
   }, []);
 
   useEffect(() => {
-    console.log(file);
+    //  console.log('')(file);
     if (file !== null) {
       if ('name' in file) {
         set_file_name(file.name);

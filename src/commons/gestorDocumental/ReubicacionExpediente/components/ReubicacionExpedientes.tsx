@@ -45,7 +45,7 @@ export const Expedien: React.FC = () => {
     const [error_fecha_creacion, set_msj_error_fecha_creacion] = useState<boolean>(false);
     const { control: control_carpeta_destino, reset: reset_carpeta_destino, getValues: get_values_carpeta_destino, handleSubmit: handle_submit_carpeta_destino } = useForm<IObjCarpeta>();
 
-    // console.log(expediente);
+    // //  console.log('')(expediente);
     const [serie_e, set_serie_e] = useState<any>();
     const [titulo, set_titulo] = useState<string>("");
     const [usuario, set_usuario] = useState<any>(null);
@@ -96,9 +96,9 @@ export const Expedien: React.FC = () => {
 
     const [select_expediente, set_select_expediente] = useState<any>(null);
     const estado = select_expediente?.nombre_unidad_org;
-    // console.log("aqui", select_expediente);
+    // //  console.log('')("aqui", select_expediente);
 
-    // console.log("nooo", expediente);
+    // //  console.log('')("nooo", expediente);
 
     useEffect(() => {
         if (expediente !== null && expediente.expediente.length !== 0) {
@@ -252,8 +252,8 @@ export const Expedien: React.FC = () => {
 
         // Imprimir el resultado para verificar
         fetchCuencas(idCarpetaCajaArray);
-        // console.log("0000000");
-        // console.log(idCarpetaCajaArray);
+        // //  console.log('')("0000000");
+        // //  console.log('')(idCarpetaCajaArray);
 
     };
 
@@ -270,7 +270,7 @@ export const Expedien: React.FC = () => {
             const putUrl = `/gestor/expedientes-archivos/expedientes/agregar-eliminar-expediente-carpeta/update/${idExpediente}/`;
 
             const putRes = await api.put(putUrl, putData);
-            console.log('Respuesta de la solicitud PUT:', putRes.data);
+            //  console.log('')('Respuesta de la solicitud PUT:', putRes.data);
             control_success("Expediente reubicado exitosamente");
 
             limpiar_formulario();

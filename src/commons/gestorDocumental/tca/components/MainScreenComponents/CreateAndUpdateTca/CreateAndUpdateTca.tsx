@@ -114,7 +114,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                           void get_catalogo_TRD_service(
                             selectedOption.value
                           ).then((res) => {
-                            console.log(res);
+                            //  console.log('')(res);
                             dispatch(set_catalog_trd_action(res));
                           });
 
@@ -248,7 +248,7 @@ export const CreateAndUpdateTca: FC<any> = (): JSX.Element => {
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  console.log('cleaning');
+                  //  console.log('')('cleaning');
                   cleaning_function();
                 }}
               >

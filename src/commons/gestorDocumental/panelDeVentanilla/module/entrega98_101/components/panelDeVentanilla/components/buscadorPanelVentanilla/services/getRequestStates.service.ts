@@ -14,9 +14,35 @@ export const getRequestStates = async (): Promise<any> => {
         label,
       })
     );
-    console.log(x);
+    //  console.log('')(x);
     return x; //
   } catch (err) {
-    console.log(err);
+    //  console.log('')(err);
+  }
+};
+
+export const getUnidadesOrgActual = async (): Promise<any> => {
+  try {
+    const url = `transversal/organigrama/unidades/get-list/organigrama-actual/`;
+    const {
+      data: { data = {} },
+    } = await api.get(url);
+
+    const x = data.map(
+      ({
+        id_unidad_organizacional: value,
+        nombre: label,
+      }: {
+        id_unidad_organizacional: number;
+        nombre: string;
+      }) => ({
+        value,
+        label,
+      })
+    );
+    //  console.log('')(x);
+    return x; //
+  } catch (err) {
+    //  console.log('')(err);
   }
 };

@@ -64,7 +64,7 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
                 set_id_instrumento(params.row.id_instrumento);
-                console.log(params.row, 'params.row');
+                //  console.log('')(params.row, 'params.row');
                 handle_close();
               }}
             />

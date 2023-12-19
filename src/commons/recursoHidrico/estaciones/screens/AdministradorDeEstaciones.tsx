@@ -100,10 +100,6 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 onClick={() => {
                   set_estacion_editado(params.row);
                   set_editar_estacion_is_active(!editar_estacion_is_active);
-                  console.log(
-                    'se enviaron los siguientes parametros',
-                    params.row
-                  );
                 }}
               />
             </Avatar>
@@ -170,7 +166,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
       const estacion_id = data.estacion?.value;
       const estacion = await consultar_datos_id(estacion_id)
         .then((res: Datos[]) => {
-          console.log('DATOS', res[res.length - 1]);
+          //  console.log('')('DATOS', res[res.length - 1]);
           return res[res.length - 1];
         })
         .catch((err: AxiosError) => {
@@ -196,7 +192,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
       set_dato(estacion); // guardar el valor en el estado
     } catch (err: any) {
       const temp_error = err as AxiosError;
-      console.log('Error', temp_error.response?.status);
+      //  console.log('')('Error', temp_error.response?.status);
       if (temp_error.response?.status === 404) {
         control_error('No se encontraron datos para esta estación');
         set_dato([]);

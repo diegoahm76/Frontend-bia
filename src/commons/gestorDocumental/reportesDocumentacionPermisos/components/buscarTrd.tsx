@@ -49,7 +49,7 @@ const BuscarTrd = ({ control_trd, open, handle_close_buscar, get_values, handle_
 
     useEffect(() => {
         void dispatch(get_trd_reporte_documentacion())
-        console.log(trd)
+        //  console.log('')(trd)
 
     }, [])
 

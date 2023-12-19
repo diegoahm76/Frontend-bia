@@ -109,7 +109,7 @@ export const SeleccionGrupo = (): JSX.Element => {
                         setLiderAsignado
                       )
                         .then((res) => {
-                          console.log(res);
+                          //  console.log('')(res);
 
                           if (Array.isArray(res)) {
                             setLiderAsignado(undefined);

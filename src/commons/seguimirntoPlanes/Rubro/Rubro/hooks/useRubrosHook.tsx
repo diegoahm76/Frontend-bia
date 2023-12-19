@@ -21,11 +21,20 @@ export const useRubrosHook = (): any => {
       cod_pre: '',
       cuenta: '',
       valcuenta: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
+      nombre_indicador: '',
+      id_programa: 0,
+      id_proyecto: 0,
+      id_producto: 0,
+      id_actividad: 0,
+      id_indicador: 0,
     },
   });
 
   const data_watch_rubro = watch_rubro();
-
 
   // limpiar formulario
   const limpiar_formulario_rubro = async () => {
@@ -33,6 +42,16 @@ export const useRubrosHook = (): any => {
       cod_pre: '',
       cuenta: '',
       valcuenta: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
+      nombre_indicador: '',
+      id_programa: 0,
+      id_proyecto: 0,
+      id_producto: 0,
+      id_actividad: 0,
+      id_indicador: 0,
     });
   };
 
@@ -44,7 +63,7 @@ export const useRubrosHook = (): any => {
 
   const onsubmit_rubro = handleSubmit_rubro(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_rubro(true);
       await post_rubro(data as IRubro);
       control_success('Se creó correctamente');
@@ -68,7 +87,7 @@ export const useRubrosHook = (): any => {
 
   const onsubmit_editar = handleSubmit_rubro(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_rubro(true);
       await put_rubro((id_rubro as number) ?? 0, data as IRubro);
       control_success('Se actualizó correctamente');

@@ -56,7 +56,7 @@ const RechazoSolicitudScreen = () => {
             if (current_solicitud.id_solicitud_consumibles !== null) {
                 if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
                     void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad));
-                    console.log("ok");
+                    //  console.log('')("ok");
                 }
             }
         }
@@ -76,7 +76,7 @@ const RechazoSolicitudScreen = () => {
             fecha_rechazo_almacen: new Date().toString(),
         };
         void dispatch(rechazar_solicitud_service(form_data, data.id_solicitud_consumibles));
-        console.log(form_data);
+        //  console.log('')(form_data);
     };
 
     return (

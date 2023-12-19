@@ -49,13 +49,13 @@ export const getListPersonasUnidades = async (
     setviweGridDataPersons(true);
     const url = `transversal/organigrama/get-unidad-organizacional-desactualizada/`;
     const { data } = await api.get(url);
-    console.log(data.data);
+    //  console.log('')(data.data);
 
     const dataToReturn = data?.data?.filter(
       (data: any) => data?.id_unidad_organizacional_actual === id_unidad
     );
     if (dataToReturn?.length > 0) {
-      console.log('dataToReturn', dataToReturn);
+      //  console.log('')('dataToReturn', dataToReturn);
       control_success(
         `Se han encontrado ${dataToReturn.length} personas para la unidad seleccionada`
       );

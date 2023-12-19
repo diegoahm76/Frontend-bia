@@ -34,13 +34,6 @@ const actionsPQRSDF: any[] = [
     path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
     disabled: false,
   },
-  {
-    id: 'ContinuarAsigGrup',
-    icon: <ReduceCapacityIcon />,
-    name: 'Continuar con asignación a unidad organizacional',
-    path: '',
-    disabled: false,
-  },
 ];
 
 const actionsTramitesYServicios: any[] = [
@@ -67,7 +60,7 @@ const actionsTramitesYServicios: any[] = [
   },
 ];
 
-const actionsComplementos: any[] = [
+const actionsComplements: any[] = [
   {
     id: 'Dig',
     icon: <DevicesIcon />,
@@ -89,7 +82,7 @@ const initialState: any = {
   //* acciones de los botones (tambien se deberán configurar los botones para pqrsdf, trámites y servicios y otros)
   actions: actionsPQRSDF,
   actionsTramitesYServicios,
-  actionsComplementos,
+  actionsComplementos: actionsComplements,
 
   currentElementPqrsdComplementoTramitesYotros: null,
   listaElementosPqrsfTramitesUotros: [],
@@ -108,12 +101,12 @@ export const PanelVentanillaSlice = createSlice({
       state.actions = action.payload;
     },
 
-    setActionssToManagePermissionsTramitesYServicios: (
+   /* setActionssToManagePermissionsTramitesYServicios: (
       state,
       action: PayloadAction<any>
     ) => {
       state.actionsTramitesYServicios = action.payload;
-    },
+    },*/
     setActionssToManagePermissionsComplementos: (
       state,
       action: PayloadAction<any>
@@ -162,6 +155,8 @@ export const PanelVentanillaSlice = createSlice({
 export const {
   // ? acciones sobre lo botones del panel de ventanilla
   setActionssToManagePermissions,
+  // ? acciones sobre lo botones del panel de ventanilla
+  setActionssToManagePermissionsComplementos,
   // ? acciones sobre lista de elementos de pqrsdf, trámites y servicios y otros
   setListaElementosPqrsfTramitesUotrosBusqueda,
   // ? acciones sobre lista de complementos, derequerimientos y otros

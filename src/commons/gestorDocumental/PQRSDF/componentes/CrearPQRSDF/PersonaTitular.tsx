@@ -36,7 +36,7 @@ const PersonaTitular = () => {
   >();
 
   useEffect(() => {
-    console.log(person, grantor, company);
+    //  console.log('')(person, grantor, company);
     switch (on_behalf_of.key) {
       case 'P':
         reset(person);

@@ -231,7 +231,7 @@ export const PorhMainScreen: React.FC = () => {
     }
   });
   const on_submit_actividades = handle_submit(async (form: any) => {
-    console.log('hi, from onSubmit actividades');
+    //  console.log('')('hi, from onSubmit actividades');
     try {
       set_is_saving(true);
       form.id_instrumento = id_instrumento;
@@ -251,11 +251,11 @@ export const PorhMainScreen: React.FC = () => {
   });
 
   const on_submit_editar = handle_submit(async (form: any) => {
-    console.log('hi, from onSubmit edit');
+    //  console.log('')('hi, from onSubmit edit');
     try {
       set_is_saving(true);
       form.id_instrumento = id_instrumento; 
-      console.log(id_instrumento, 'id_instrumento');
+      //  console.log('')(id_instrumento, 'id_instrumento');
       await editar_programa(id_programa as number, form);
       control_success('Se editó correctamente');
       set_is_saving(false);
@@ -335,7 +335,7 @@ export const PorhMainScreen: React.FC = () => {
       <form
         onSubmit={(form) => {
           form.preventDefault();
-          console.log(errors, 'errors');
+          //  console.log('')(errors, 'errors');
           if (is_seleccionar_proyecto && is_agregar_actividad) {
             return on_submit_actividades(form);
           }

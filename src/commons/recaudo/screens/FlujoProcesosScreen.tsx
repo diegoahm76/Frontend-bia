@@ -34,7 +34,7 @@ export const FlujoProcesosScreen: React.FC = () => {
         set_dataflow(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 
@@ -44,7 +44,7 @@ export const FlujoProcesosScreen: React.FC = () => {
   //       set_etapas_proceso(response.data.data);
   //     })
   //     .catch((error) => {
-  //       console.log(error);
+  //       //  console.log('')(error);
   //     });
   // }, []);
 
@@ -92,11 +92,11 @@ export const FlujoProcesosScreen: React.FC = () => {
   //     ...form_data_flujo
   //   })
   //     .then((response) => {
-  //       console.log(response);
+  //       //  console.log('')(response);
   //       set_is_submit(true);
   //     })
   //     .catch((error) => {
-  //       console.log(error);
+  //       //  console.log('')(error);
   //     })
   //     .finally(() => {
   //       set_is_submit(false);

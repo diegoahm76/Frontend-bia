@@ -82,7 +82,7 @@ export const AsigancionEncuesta: React.FC = () => {
         try {
             const response = await api.delete(`/gestor/encuestas/asignacion_encuesta/delete/${params.row.id_asignar_encuesta}/`);
             if (response.data.success) {
-                console.log('Asignación eliminada exitosamente.');
+                //  console.log('')('Asignación eliminada exitosamente.');
                 control_success("Encuesta asignada eliminada exitosamente");
                 cargarAsignaciones();
             }
@@ -133,7 +133,7 @@ export const AsigancionEncuesta: React.FC = () => {
         try {
             const response = await api.post('/gestor/encuestas/asignacion_encuesta/create/', dataToSend);
             if (response.data.success) {
-                console.log('Asignación creada exitosamente.');
+                //  console.log('')('Asignación creada exitosamente.');
                 cargarAsignaciones();
                 control_success("Encuesta asignada exitosamente ");
 

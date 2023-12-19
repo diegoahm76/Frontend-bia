@@ -79,7 +79,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
     try {
       const resHomologacionesUnidades = await getCcdActual(params, navigate);
       if (resHomologacionesUnidades) {
-        console.log(' no se puede continuar con la ejecución del módulo');
+        //  console.log('')(' no se puede continuar con la ejecución del módulo');
         dispatch(resetStateUniResp());
         return;
       }
@@ -120,10 +120,6 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           () => resetStateUniResp()
         )
 
-      console.log(
-        'estas son las unidades sin responsable',
-        unidadesSinResponsable
-      );
       dispatch(setSeccionesSinResponsable(unidadesSinResponsable));
 
       //* 5
@@ -133,7 +129,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
       );
 
       dispatch(setListadoDeAsignaciones(listadoDeAsignaciones));
-      console.log('busqueda inicial de asignaciones', listadoDeAsignaciones);
+      //  console.log('')('busqueda inicial de asignaciones', listadoDeAsignaciones);
     } catch (error) {
       console.error(error);
     }
@@ -182,7 +178,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
           <Tooltip title="Seleccionar ccd" arrow>
             <IconButton
               onClick={() => {
-                // console.log(params.row);
+                // //  console.log('')(params.row);
                 handleSeleccionCCD_PSD(false);
                 handleCcdConincidenteConIdOrganigrama(params).then(() => {
                   // ? se limpian las opciones del modal y se cierra el modal

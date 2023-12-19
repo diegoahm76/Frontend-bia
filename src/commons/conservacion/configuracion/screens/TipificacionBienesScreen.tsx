@@ -161,7 +161,7 @@ export function TipificacionBienesScreen(): JSX.Element {
 
   useEffect(() => {
     void dispatch(get_bienes_service()).then((response: any) => {
-      console.log(response);
+      //  console.log('')(response);
       setfilterednurseries(response.data);
       
     });

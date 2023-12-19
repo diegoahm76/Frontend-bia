@@ -58,7 +58,7 @@ const CrearMarcaModal = ({
   };
   useEffect(() => {
     reset_marca(marca_seleccionada);
-    console.log(marca_seleccionada);
+    // //  console.log('')(marca_seleccionada);
   }, [marca_seleccionada]);
 
   const on_submit = (data: FormValues): void => {

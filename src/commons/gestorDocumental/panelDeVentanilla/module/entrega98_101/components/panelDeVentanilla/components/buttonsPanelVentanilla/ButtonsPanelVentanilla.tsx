@@ -24,6 +24,40 @@ import { ButtonsComplementos } from './buttonsPqrsdf/buttonsComplementos/Buttons
 */
 }
 
+const renderPQRSDF = () => <ButtonsPqrsdf />;
+
+const renderTramitesYServicios = (actionsTramitesYServicios: any[]) => (
+  <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
+    <SpeedDial
+      ariaLabel="SpeedDial basic example"
+      sx={{ position: 'absolute', top: 0, left: 0 }}
+      icon={<MultipleStopIcon />}
+      direction="right"
+    >
+      {actionsTramitesYServicios.map((action: any) =>
+        action.disabled ? null : (
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            onClick={() => {
+              //  console.log('')(action);
+            }}
+          />
+        )
+      )}
+    </SpeedDial>
+  </Box>
+);
+
+const renderOtros = () => (
+  <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
+    <>Botones de Otros </>
+  </Box>
+);
+
+const renderComplementoPQRSDF = () => <ButtonsComplementos />;
+
 export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
@@ -124,65 +158,24 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
 
   return (
     <>
-      {/* se debe revisar ya que no si no hay un elemento seleccionado (pqrsdf, tramites y servicios, otros) es inncesario mostrar este elemento dial  */}
       {(() => {
-        switch (
+        const tipo =
           currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
-          currentElementPqrsdComplementoTramitesYotros?.tipo
-        ) {
+          currentElementPqrsdComplementoTramitesYotros?.tipo;
+
+        switch (tipo) {
           case 'PQRSDF':
-            return <ButtonsPqrsdf />;
+            return renderPQRSDF();
           case 'Tramites y Servicios':
-            // Caso para 'Tramites y Servicios'
-            return (
-              <Box
-                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
-              >
-                <SpeedDial
-                  ariaLabel="SpeedDial basic example"
-                  sx={{ position: 'absolute', top: 0, left: 0 }}
-                  icon={<MultipleStopIcon />}
-                  direction="right"
-                >
-                  {actionsTramitesYServicios.map(
-                    (action: {
-                      id: string;
-                      icon: any;
-                      name: string;
-                      path: string;
-                      disabled: boolean;
-                    }) =>
-                      action.disabled ? null : (
-                        <SpeedDialAction
-                          key={action.name}
-                          icon={action.icon}
-                          tooltipTitle={action.name}
-                          onClick={() => {
-                            console.log(action);
-                          }}
-                        />
-                      )
-                  )}
-                </SpeedDial>
-              </Box>
+            return renderTramitesYServicios(
+              actionsTramitesYServicios /*|| actionsComplementos*/
             );
           case 'Otros':
-            // Caso para 'Otros'
-            return (
-              <Box
-                sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}
-              >
-                <>Botones de Otros </>
-              </Box>
-            );
-
-          case 'Complemento de PQRSDF':
-            return (
-             <ButtonsComplementos/>
-            );
+            return renderOtros();
+          case 'Complemento de PQRSDF' || 'Complemento de PQRSDF - Respuesta a solicitud' || 'Complemento de PQRSDF - Respuesta a requerimiento':
+            return renderComplementoPQRSDF();
           default:
-            // Caso para null o cualquier otro valor
-            return <></>;
+            return null;
         }
       })()}
     </>

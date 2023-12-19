@@ -137,7 +137,7 @@ export const useCajaHook = (): any => {
   const onsubmit_cajas = handleSubmit_cajas(async (data) => {
     try {
       set_is_saving_cajas(true);
-      console.log(identificacion_caja, 'identificacion_caja');
+      //  console.log('')(identificacion_caja, 'identificacion_caja');
       const id_bandeja: number = cajas?.id_bandeja as number;
       if (id_bandeja) {
         const data_caja: PostCajas = {
@@ -172,9 +172,9 @@ export const useCajaHook = (): any => {
 
   const onsubmit_update_cajas = handleSubmit_cajas(async (data) => {
     try {
-      console.log(identificacion_caja, 'identificacion_caja');
-      console.log(orden, 'orden');
-      console.log(nuevo_orden, 'nuevo_orden');
+      //  console.log('')(identificacion_caja, 'identificacion_caja');
+      //  console.log('')(orden, 'orden');
+      //  console.log('')(nuevo_orden, 'nuevo_orden');
       set_is_saving_cajas(true);
 
       if (!nuevo_orden && !orden) {
@@ -263,9 +263,9 @@ export const useCajaHook = (): any => {
 
   const onsubmit_mover_cajas = handleSubmit_mover_cajas(async (data) => {
     try {
-      console.log(data.bandeja_destino, 'bandeja_destino');
-      console.log(data.estante_destino, 'estante_destino');
-      console.log(data.deposito_destino, 'deposito_destino');
+      //  console.log('')(data.bandeja_destino, 'bandeja_destino');
+      //  console.log('')(data.estante_destino, 'estante_destino');
+      //  console.log('')(data.deposito_destino, 'deposito_destino');
 
       const data_mover_caja: any = {
         identificacion_bandeja_destino: data.bandeja_destino,

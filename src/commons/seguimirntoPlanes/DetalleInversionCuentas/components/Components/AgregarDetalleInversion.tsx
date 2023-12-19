@@ -34,18 +34,21 @@ export const AgregarDetalleInversion: React.FC = () => {
   const { mode, detalle_inversion } = useAppSelector((state) => state.planes);
 
   const {
+    id_programa,
+    id_proyecto,
+    id_producto,
+    actividades_selected,
     productos_selected,
-    actividad_selected,
-    fetch_data_actividad_selected,
-    fetch_data_producto_selected,
-  } = useContext(DataContextIndicador);
-
-  const {
     rubros_selected,
     sector_selected,
     programas_selected,
     subprogramas_selected,
     proyectos_selected,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    fetch_data_productos,
+    fetch_data_actividades,
     fetch_data_rubros,
     fetch_data_sectores,
     fetch_data_programas,
@@ -54,12 +57,9 @@ export const AgregarDetalleInversion: React.FC = () => {
   } = useContext(DataContextDetalleInversion);
 
   useEffect(() => {
-    fetch_data_actividad_selected();
-    fetch_data_producto_selected();
     fetch_data_rubros();
     fetch_data_sectores();
     fetch_data_programas();
-    fetch_data_proyectos();
     fetch_data_subprogramas();
   }, []);
 
@@ -89,6 +89,24 @@ export const AgregarDetalleInversion: React.FC = () => {
       });
     }
   }, [mode, detalle_inversion]);
+
+  useEffect(() => {
+    if (id_programa) {
+      fetch_data_proyectos();
+    }
+  }, [id_programa]);
+
+  useEffect(() => {
+    if (id_proyecto) {
+      fetch_data_productos();
+    }
+  }, [id_proyecto]);
+
+  useEffect(() => {
+    if (id_producto) {
+      fetch_data_actividades();
+    }
+  }, [id_producto]);
 
   return (
     <>
@@ -284,6 +302,10 @@ export const AgregarDetalleInversion: React.FC = () => {
                       ? 'Este campo es obligatorio'
                       : 'ingrese el programa'
                   }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_programa(Number(event.target.value));
+                  }}
                 >
                   {programas_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -293,7 +315,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
+          </Grid>{' '}
           <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_subprograma"
@@ -337,7 +359,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={id_programa ? false : true}
                   fullWidth
                   required
                   error={!!errors_detalle.id_proyecto}
@@ -346,6 +368,10 @@ export const AgregarDetalleInversion: React.FC = () => {
                       ? 'Este campo es obligatorio'
                       : 'ingrese el proyecto'
                   }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_proyecto(Number(event.target.value));
+                  }}
                 >
                   {proyectos_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -368,7 +394,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={id_proyecto ? false : true}
                   fullWidth
                   required
                   error={!!errors_detalle.id_producto}
@@ -377,6 +403,10 @@ export const AgregarDetalleInversion: React.FC = () => {
                       ? 'Este campo es obligatorio'
                       : 'ingrese el producto'
                   }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_producto(Number(event.target.value));
+                  }}
                 >
                   {productos_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -387,7 +417,7 @@ export const AgregarDetalleInversion: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <Controller
               name="id_actividad"
               control={control_detalle}
@@ -399,7 +429,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={id_producto ? false : true}
                   fullWidth
                   required
                   error={!!errors_detalle.id_actividad}
@@ -409,7 +439,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                       : 'ingrese la actividad'
                   }
                 >
-                  {actividad_selected.map((option) => (
+                  {actividades_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>

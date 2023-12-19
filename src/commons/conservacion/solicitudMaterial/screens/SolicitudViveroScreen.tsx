@@ -93,7 +93,7 @@ const SolicitudViveroScreen = () => {
   }, []);
 
   useEffect(() => {
-    console.log(watch('id_vivero_solicitud'));
+    //  console.log('')(watch('id_vivero_solicitud'));
     if (watch('id_vivero_solicitud') !== null) {
       const vivero: IObjNursery | undefined = nurseries.find(
         (p: IObjNursery) => p.id_vivero === watch('id_vivero_solicitud')
@@ -117,7 +117,7 @@ const SolicitudViveroScreen = () => {
   }, [nro_solicitud]);
 
   useEffect(() => {
-    // console.log(current_solicitud)
+    // //  console.log('')(current_solicitud)
     reset_solicitud(current_solicitud);
     if ('persona_solicita' in current_solicitud) {
       reset_solicitud(current_solicitud);
@@ -162,7 +162,7 @@ const SolicitudViveroScreen = () => {
           persona_solicita.id_unidad_organizacional_actual,
       })
     );
-    console.log(persona_solicita);
+    //  console.log('')(persona_solicita);
   }, [persona_solicita]);
 
   useEffect(() => {
@@ -245,7 +245,7 @@ const SolicitudViveroScreen = () => {
       form_data.append('data_solicitud', JSON.stringify({ ...data_edit }));
       form_data.append('ruta_archivo_tecnico', data.ruta_archivo_info_tecnico);
       form_data.append('data_items_solicitados', JSON.stringify(aux_items));
-      console.log(data);
+      //  console.log('')(data);
       void dispatch(crear_solicitud(form_data));
     }
   };

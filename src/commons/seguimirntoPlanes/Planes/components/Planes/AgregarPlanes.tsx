@@ -47,7 +47,7 @@ export const AgregarPlanes: React.FC = () => {
 
   const { mode, plan } = useAppSelector((state) => state.planes);
 
-  console.log(plan, 'plan');
+  //  console.log('')(plan, 'plan');
 
   useEffect(() => {
     if (mode.crear) {

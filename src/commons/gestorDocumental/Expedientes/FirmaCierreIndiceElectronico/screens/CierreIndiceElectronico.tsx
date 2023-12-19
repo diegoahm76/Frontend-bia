@@ -64,7 +64,7 @@ export const CierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
             if (countdown <= 0) {
                 clearInterval(interval);
                 set_deshabilitar(false);
-                console.log('¡El tiempo ha terminado!');
+                //  console.log('')('¡El tiempo ha terminado!');
             }
         }, 1000);
     }

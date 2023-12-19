@@ -47,7 +47,7 @@ export const useSubprogramaHook = (): any => {
 
   const onsubmit_subprograma = handleSubmit_subprograma(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_programa = id_programa;
       set_is_saving_subprograma(true);
       await post_subprograma(data as ISubprogramas);
@@ -68,7 +68,7 @@ export const useSubprogramaHook = (): any => {
 
   const onsubmit_editar = handleSubmit_subprograma(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_subprograma(true);
       await put_subprograma(
         (id_subprograma as number) ?? 0,

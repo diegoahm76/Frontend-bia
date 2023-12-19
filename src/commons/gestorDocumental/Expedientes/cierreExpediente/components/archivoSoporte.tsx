@@ -74,7 +74,7 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
 
             if ('name' in file) {
                 set_file_name(file.name);
-                console.log(file)
+                //  console.log('')(file)
 
                 dispatch(
                     set_current_archivo_expediente({
@@ -120,7 +120,7 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
         } else {
             set_file_name('');
         }
-        console.log(current_archivo_expediente)
+        //  console.log('')(current_archivo_expediente)
     }, [current_archivo_expediente]);
 
 
@@ -138,7 +138,7 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
 
                 set_tipo_origen(tipo_origen_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
         };
 
@@ -160,7 +160,7 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
 
                 set_tipo_archivo(tipo_archivo_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
         };
 
@@ -195,8 +195,8 @@ const ArchivoSoporte = ({ control_archivo_expediente, open, handle_close_adjunta
         form_data.append('palabras_clave_documento', data.palabras_clave_documento);
         form_data.append('file', file === null ? '' : file);
         form_data.append('id_expediente_documental', selected_expediente.id_expediente_documental);
-        console.log(data)
-        console.log('Data antes de la acción:', data);
+        //  console.log('')(data)
+        //  console.log('')('Data antes de la acción:', data);
 
         if (data.id_documento_de_archivo_exped === null) {
             {

@@ -49,7 +49,7 @@ export function ImpresionRadicadoScreen(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    console.log(filed);
+    //  console.log('')(filed);
   }, [filed]);
 
   const descargarPDF = () => {

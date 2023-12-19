@@ -62,7 +62,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
       id_medio_solicitud:
         (type_applicant.key ?? null) === null ? 2 : pqr.id_medio_solicitud,
     });
-    console.log(pqr, type_applicant);
+    //  console.log('')(pqr, type_applicant);
   }, []);
 
   return (

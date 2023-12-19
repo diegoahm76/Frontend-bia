@@ -70,7 +70,7 @@ const ListadoBienesDespacho = () => {
   }, [items_despacho]);
 
   useEffect(() => {
-    console.log(items_distribuidos);
+    //  console.log('')(items_distribuidos);
     if (items_despacho.length > 0) {
       if (items_distribuidos.length > 0) {
         const aux_items: IObjItem[] = [];

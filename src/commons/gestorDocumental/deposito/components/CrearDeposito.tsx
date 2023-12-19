@@ -49,7 +49,7 @@ const DepositoInfo = ({ control_deposito, get_values, open_modal, set_open_modal
                                 InputLabelProps={{ shrink: true }}
                                 onChange={(e) => {
                                     onChange(e.target.value);
-                                    // console.log(e.target.value);
+                                    // //  console.log('')(e.target.value);
                                 }}
                                 error={!(error == null)}
 
@@ -78,7 +78,7 @@ const DepositoInfo = ({ control_deposito, get_values, open_modal, set_open_modal
                                 InputLabelProps={{ shrink: true }}
                                 onChange={(e) => {
                                     onChange(e.target.value);
-                                    // console.log(e.target.value);
+                                    // //  console.log('')(e.target.value);
                                 }}
                                 error={!(error == null)}
 

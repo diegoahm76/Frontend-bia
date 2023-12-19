@@ -179,7 +179,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
-            // console.log(form_data_searched_trd_modal);
+            // //  console.log('')(form_data_searched_trd_modal);
             dispatch(
               get_searched_trd(
                 form_data_searched_trd_modal.nombre,
@@ -243,7 +243,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       error={!!error}
                     />
@@ -291,7 +291,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                 variant="outlined"
                 color="primary"
                 onClick={() => {
-                  // console.log('cerrando');
+                  // //  console.log('')('cerrando');
                   reset_searched_trd_modal();
                 }}
                 startIcon={<CleanIcon />}

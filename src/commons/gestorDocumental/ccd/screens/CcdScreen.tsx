@@ -82,7 +82,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
   const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
-  // console.log(series_ccd);
+  // //  console.log('')(series_ccd);
   useEffect(() => {
     set_flag_btn_finish(
       ccd_current?.fecha_terminado !== null &&
@@ -224,7 +224,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           control_warning('máximo 50 caracteres');
 
                         onChange(e.target.value);
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       error={!(error == null)}
                       inputProps={{
@@ -266,7 +266,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           control_warning('máximo 10 caracteres');
 
                         onChange(e.target.value);
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       helperText={
                         error != null
@@ -591,7 +591,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                               // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
 
                               //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
-                              // console.log('Valor seleccionado:', selectedOption);
+                              // //  console.log('')('Valor seleccionado:', selectedOption);
                             }}
                             // isClearable
                             // isSearchable
@@ -659,7 +659,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                       variant="outlined"
                       disabled={ccd_current === null}
                       onClick={() => {
-                        // console.log('ver catalogo de series y subseries');
+                        // //  console.log('')('ver catalogo de series y subseries');
                         openModalModalSeriesAndSubseries();
                         dispatch(
                           getCatalogoSeriesYSubseries(ccd_current.id_ccd)
@@ -768,7 +768,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           closeMenuOnSelect={false}
                           isMulti
                           onChange={(selectedOption) => {
-                            console.log('selectedOption', selectedOption);
+                            //  console.log('')('selectedOption', selectedOption);
                             onChange(selectedOption);
                           }}
                           options={list_sries_asignacion}

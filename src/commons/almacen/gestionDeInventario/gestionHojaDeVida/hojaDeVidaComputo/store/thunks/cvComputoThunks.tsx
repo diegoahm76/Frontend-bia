@@ -40,7 +40,7 @@ export const get_marca_service = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get('almacen/marcas/get-list');
-            console.log(data)
+            //  console.log('')(data)
             dispatch(get_marks(data));
             return data;
         } catch (error: any) {
@@ -58,7 +58,7 @@ export const get_computers_all_service: any = () => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=Com`);
-            console.log(data)
+            //  console.log('')(data)
             dispatch(set_computers(data.Elementos));
             return data;
         } catch (error: any) {
@@ -74,7 +74,7 @@ export const get_cv_computer_id = (id: number): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/hoja-de-vida/computadores/get-by-id-bien/${id}/`);
-            console.log(data)
+            //  console.log('')(data)
             if (data.success === true) {
                 dispatch(set_current_cv_computer(data.data));
 
@@ -112,7 +112,7 @@ export const get_cv_computer_service: (id: any) => any = (id: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/hoja-de-vida/computadores/get-by-id-bien/${id}/`);
-            console.log(data)
+            //  console.log('')(data)
 
             if (data.success === true) {
                 dispatch(set_current_cv_computer(data.data));
@@ -142,7 +142,7 @@ export const create_cv_computers_service: any = (
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-            console.log(error.response.data);
+            //  console.log('')(error.response.data);
             return error as AxiosError;
         }
     };

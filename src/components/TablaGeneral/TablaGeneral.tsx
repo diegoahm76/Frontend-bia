@@ -26,9 +26,9 @@ export const TablaGeneral = ({
   staticscroll,
   stylescroll
 }: GeneralTableProps): JSX.Element => {
-// console.log(columns);
-// console.log("____________________");
-// console.log(rowsData);
+// //  console.log('')(columns);
+// //  console.log('')("____________________");
+// //  console.log('')(rowsData);
   // Estado para almacenar los valores de los filtros aplicados
   const [filters] = useState<Record<string, any>>({});
 

@@ -66,7 +66,7 @@ export const get_nurseries_service = (): any => {
       dispatch(set_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nursery_service');
+      //  console.log('')('get_nursery_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -88,7 +88,7 @@ export const get_vegetal_materials_service = (
         }&agno_lote=${anio ?? ''}`
       );
       dispatch(set_vegetal_materials(data.data));
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         if (data.data.length > 0) {
           control_success('Se encontraron materiales vegetales');
@@ -98,7 +98,7 @@ export const get_vegetal_materials_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_vegetal_materials_service');
+      //  console.log('')('get_vegetal_materials_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -119,7 +119,7 @@ export const get_stage_changes_service = (
         `conservacion/etapas/filtro-cambio-etapa/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote_origen=${cod_etapa ?? ''
         }&agno_lote=${anio ?? ''}`
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_stage_changes(data.data));
       if (data.data.length > 0) {
         control_success('Se encontraron cambios de etapa');
@@ -128,7 +128,7 @@ export const get_stage_changes_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('set_stage_changes_service');
+      //  console.log('')('set_stage_changes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -160,7 +160,7 @@ export const get_persons_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_persons_service');
+      //  console.log('')('get_persons_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -177,7 +177,7 @@ export const get_person_document_service = (
       const { data } = await api.get(
         `personas/get-personas-by-document/${type}/${document}/`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_changing_person(data.data));
         control_success('Se selecciono la persona ');
@@ -186,7 +186,7 @@ export const get_person_document_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -198,7 +198,7 @@ export const get_person_id_service = (id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`personas/get-by-id/${id}/`);
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(
           set_changing_person({
@@ -216,7 +216,7 @@ export const get_person_id_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -246,7 +246,7 @@ export const get_person_anula_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -259,11 +259,11 @@ export const get_mezclas_service = (name: string): any => {
       const { data } = await api.get(
         `conservacion/mezclas/get-list-mezclas/?nombre=${name ?? ''}`
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_mezclas(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_mezcla_service');
+      //  console.log('')('get_mezcla_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -277,7 +277,7 @@ export const add_stage_change_service = (cambio: any): any => {
         'conservacion/etapas/guardar-cambio-etapa/',
         cambio
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -286,8 +286,8 @@ export const add_stage_change_service = (cambio: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
-      console.log(error);
+      //  console.log('')('add_siembra_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -302,7 +302,7 @@ export const annul_stage_change_service = (id: number, cambio: any): any => {
         `conservacion/etapas/anular-cambio-etapa/${id}/`,
         cambio
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -311,8 +311,8 @@ export const annul_stage_change_service = (id: number, cambio: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
-      console.log(error);
+      //  console.log('')('add_siembra_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -327,7 +327,7 @@ export const edit_stage_change_service = (cambio: any, id: number): any => {
         `conservacion/etapas/actualizar-cambio-etapa/${id}/`,
         cambio
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -336,8 +336,8 @@ export const edit_stage_change_service = (cambio: any, id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('edit_stage_change_service');
-      console.log(error);
+      //  console.log('')('edit_stage_change_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -348,12 +348,12 @@ export const edit_stage_change_service = (cambio: any, id: number): any => {
 export const edit_siembra_service = (siembra: any, id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(siembra, id);
+      //  console.log('')(siembra, id);
       const { data } = await api.put(
         `conservacion/camas-siembras/siembra/update/${id}/`,
         siembra
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -362,8 +362,8 @@ export const edit_siembra_service = (siembra: any, id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
-      console.log(error);
+      //  console.log('')('add_siembra_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -377,7 +377,7 @@ export const get_bien_preparacion_id_service = (id: number): any => {
       const { data } = await api.get(
         `conservacion/mezclas/get-items-preparacion-mezclas/?id_preparacion_mezcla=${id}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_preparacion_bienes(data.data));
       } else {
@@ -385,7 +385,7 @@ export const get_bien_preparacion_id_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_bien_preparacion_id_service');
+      //  console.log('')('get_bien_preparacion_id_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -405,7 +405,7 @@ export const get_preparaciones_service = (
         }&id_vivero=${vivero ?? ''}&nombre_mezcla=${name ?? ''}`
       );
       dispatch(set_preparaciones(data.data));
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         if (data.data.length > 0) {
           control_success('Se encontraron preparaciones');
@@ -415,7 +415,7 @@ export const get_preparaciones_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_vegetal_materials_service');
+      //  console.log('')('get_vegetal_materials_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -430,7 +430,7 @@ export const add_preparacion_service = (preparacion: any): any => {
         'conservacion/mezclas/crear-preparacion-mezclas/',
         preparacion
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -439,8 +439,8 @@ export const add_preparacion_service = (preparacion: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
-      console.log(error);
+      //  console.log('')('add_siembra_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -455,7 +455,7 @@ export const edit_preparacion_service = (preparacion: any): any => {
         'conservacion/mezclas/actualizar-preparacion-mezclas/',
         preparacion
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -464,8 +464,8 @@ export const edit_preparacion_service = (preparacion: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('edit_preparacion_service');
-      console.log(error);
+      //  console.log('')('edit_preparacion_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -491,7 +491,7 @@ export const annul_preparacion_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      //  console.log('')('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -507,20 +507,16 @@ export const get_bienes_incidencia_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(
-        `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${tipo ?? 'IN'
-        }=&codigo_bien=${codigo_bien ?? ''}&nombre=${nombre ?? ''}`
-      );
       // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
       const { data } = await api.get(
         `conservacion/incidencias/get-bienes-mezclas-by-lupa/${id_vivero}/?tipo_bien=${tipo ?? 'IN'
         }&codigo_bien=${codigo_bien ?? ''}&nombre=${nombre ?? ''}`
       );
-      console.log(data);
+      //  console.log('')(data);
       dispatch(set_bienes(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -542,7 +538,7 @@ export const get_bienes_service = (
       dispatch(set_bienes(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -560,7 +556,7 @@ export const get_bienes_aux_service = (id_vivero: string | number): any => {
       dispatch(set_bienes_aux(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -577,7 +573,7 @@ export const get_lots_code_service = (
       const { data } = await api.get(
         `conservacion/mortalidad/material-vegetal/get-by-codigo/${id_vivero}/?codigo_bien=${code}/`
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.data.length > 0) {
         if (data.data.length === 1) {
@@ -592,7 +588,7 @@ export const get_lots_code_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_lots_code_service');
+      //  console.log('')('get_lots_code_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -613,7 +609,7 @@ export const get_lots_service = (
         }&nombre=${name ?? ''}&cod_etapa_lote=${cod_etapa ?? ''}`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_siembras_material_vegetal(data.data));
         control_success(data.detail);
@@ -622,7 +618,7 @@ export const get_lots_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_lots_service');
+      //  console.log('')('get_lots_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -639,7 +635,7 @@ export const get_nurseries_mortalidad_service = (): any => {
       dispatch(set_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nurseries_motalidad_service');
+      //  console.log('')('get_nurseries_motalidad_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -656,7 +652,7 @@ export const get_mortalidades_service = (nro: number | null): any => {
       );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_mortalidades(data?.data?.items_mortalidad));
         control_success(data.detail);
@@ -665,7 +661,7 @@ export const get_mortalidades_service = (nro: number | null): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_mortalidades_service');
+      //  console.log('')('get_mortalidades_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -682,7 +678,7 @@ export const get_mortalidad_nro_service = (nro: number | null): any => {
       );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_current_mortalidad(data.data));
         control_success('sé selecciono la mortalidad');
@@ -691,7 +687,7 @@ export const get_mortalidad_nro_service = (nro: number | null): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_mortalidad_nro_service');
+      //  console.log('')('get_mortalidad_nro_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -714,8 +710,8 @@ export const add_mortalidad_service = (mortalidad: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('add_mortalidad_service');
-      console.log(error);
+      //  console.log('')('add_mortalidad_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -738,7 +734,7 @@ export const edit_mortalidad_service = (id: number, mortalidad: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('edit_quarantine_service');
+      //  console.log('')('edit_quarantine_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -753,7 +749,7 @@ export const annul_mortalidad_service = (id: number, mortalidad: any): any => {
         `conservacion/mortalidad/anular/${id}/`,
         mortalidad
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -762,7 +758,7 @@ export const annul_mortalidad_service = (id: number, mortalidad: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('annul_mortalidad_service');
+      //  console.log('')('annul_mortalidad_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -776,7 +772,7 @@ export const get_bien_mortalidad_id_service = (id: number): any => {
       const { data } = await api.get(
         `conservacion/mortalidad/get-items-mortalidad-by-id/${id}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_items_mortalidad(data.data));
       } else {
@@ -784,7 +780,7 @@ export const get_bien_mortalidad_id_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_bien_mortalidad_id_service');
+      //  console.log('')('get_bien_mortalidad_id_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -799,7 +795,7 @@ export const get_nro_mortalidad_service = (): any => {
       dispatch(set_nro_mortalidad(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_nro_mortalidad_service');
+      //  console.log('')('get_nro_mortalidad_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -815,14 +811,14 @@ export const get_incidencias_service = (nro: number | null): any => {
       );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+      //  console.log('')(data);
       if (data.success === true) {
         dispatch(set_incidencias(data.data));
         // control_success(data.detail);
       }
       return data;
     } catch (error: any) {
-      console.log('get_incidenciaes_service');
+      //  console.log('')('get_incidenciaes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -848,8 +844,8 @@ export const add_incidencia_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('add_incidencia_service');
-      console.log(error);
+      //  console.log('')('add_incidencia_service');
+      //  console.log('')(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -872,7 +868,7 @@ export const edit_incidencia_service = (id: number, incidencia: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('edit_incidencia_service');
+      //  console.log('')('edit_incidencia_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -887,7 +883,7 @@ export const annul_incidencia_service = (id: number, incidencia: any): any => {
         `conservacion/incidencias/anulacion-incidencias/${id}/`,
         incidencia
       );
-      console.log(data);
+      //  console.log('')(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail);
@@ -896,7 +892,7 @@ export const annul_incidencia_service = (id: number, incidencia: any): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('annul_incidencia_service');
+      //  console.log('')('annul_incidencia_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -910,7 +906,7 @@ export const get_bien_incidencia_id_service = (id: number): any => {
       const { data } = await api.get(
         `conservacion/incidencias/get-consumo-by-incidencia/${id}`
       );
-      console.log(data);
+      //  console.log('')(data);
       if ('data' in data) {
         dispatch(set_preparacion_bienes(data.data));
       } else {
@@ -918,7 +914,7 @@ export const get_bien_incidencia_id_service = (id: number): any => {
       }
       return data;
     } catch (error: any) {
-      console.log('get_bien_incidencia_id_service');
+      //  console.log('')('get_bien_incidencia_id_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

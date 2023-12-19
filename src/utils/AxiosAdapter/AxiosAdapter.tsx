@@ -23,7 +23,7 @@ export const get_adapter_axios = async (
     return response;
     //! mirar si debe ser response.data.data;
   } catch (error) {
-    console.log(error);
+    //  console.log('')(error);
   }
 };
 

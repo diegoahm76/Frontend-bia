@@ -47,7 +47,7 @@ const SeleccionarRadicado = () => {
 
   // useEffect(() => {
   //   // void dispatch(get_document_types_service());
-  //   console.log(watch('document_type'));
+  //   //  console.log('')(watch('document_type'));
   // }, [watch('document_type')]);
 
   useEffect(() => {
@@ -117,13 +117,27 @@ const SeleccionarRadicado = () => {
     const agno_radicado = get_values('agno_radicado') ?? '';
     const nro_radicado = get_values('nro_radicado') ?? '';
     const fecha_radicado = get_values('fecha_radicado') ?? '';
-    const params: any = {
-      cod_tipo_radicado,
-      prefijo_radicado,
-      agno_radicado,
-      nro_radicado,
-      fecha_radicado,
-    };
+    const params: any = {};
+
+    if (cod_tipo_radicado !== '') {
+      params.cod_tipo_radicado = cod_tipo_radicado;
+    }
+
+    if (prefijo_radicado !== '') {
+      params.prefijo_radicado = prefijo_radicado;
+    }
+
+    if (agno_radicado !== '') {
+      params.agno_radicado = agno_radicado;
+    }
+
+    if (nro_radicado !== '') {
+      params.nro_radicado = nro_radicado;
+    }
+
+    if (fecha_radicado !== '') {
+      params.fecha_radicado = fecha_radicado;
+    }
 
     void dispatch(get_filings_service(params));
   };

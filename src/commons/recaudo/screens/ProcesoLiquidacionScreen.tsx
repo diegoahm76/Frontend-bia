@@ -91,7 +91,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         set_deudores(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       }).finally(() => {
         set_loading(false);
       });
@@ -104,7 +104,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           set_expedientes_deudor(response.data.data);
         })
         .catch((error) => {
-          console.log(error.response.data.detail);
+          //  console.log('')(error.response.data.detail);
         });
     }
   }, [form_liquidacion.id_deudor]);
@@ -117,7 +117,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           get_liquidacion_por_expediente(response.data.data.liquidado);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         })
     }
   }, [form_liquidacion.id_expediente]);
@@ -161,7 +161,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           agregar_datos_inputs(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     } else {
       set_periodos([]);
@@ -240,7 +240,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       }
     })
     .then((response) => {
-      console.log(response);
+      //  console.log('')(response);
     })
     .catch((error) => {
       console.error(error);
@@ -277,7 +277,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       };
       api.post('recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
         .then((response) => {
-          console.log(response);
+          //  console.log('')(response);
           set_form_liquidacion({
             id_deudor: '',
             id_expediente: '',
@@ -291,7 +291,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           set_rows_detalles([]);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     });
   };
@@ -306,14 +306,14 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       valor: Math.round(form_liquidacion.valor ?? 0),
     })
       .then((response) => {
-        console.log(response);
+        //  console.log('')(response);
         handle_submit_detalles_liquidacion(response.data.id);
         save_calculos(response.data.id);
         set_notification_info({ type: 'success', message: `Se ha guardado correctamente la liquidacion.` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });

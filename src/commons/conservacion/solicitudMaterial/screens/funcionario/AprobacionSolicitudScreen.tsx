@@ -65,7 +65,7 @@ const AprobacionSolicitudScreen = () => {
     void dispatch(get_solicitud_aprobacion());
   }, []);
   useEffect(() => {
-    console.log(watch('id_vivero_solicitud'));
+    //  console.log('')(watch('id_vivero_solicitud'));
     if (watch('id_vivero_solicitud') !== null) {
       const vivero: IObjNursery | undefined = nurseries.find(
         (p: IObjNursery) => p.id_vivero === watch('id_vivero_solicitud')
@@ -77,7 +77,7 @@ const AprobacionSolicitudScreen = () => {
   }, [watch('id_vivero_solicitud')]);
 
   useEffect(() => {
-    // console.log(current_solicitud)
+    // //  console.log('')(current_solicitud)
     reset_solicitud(current_solicitud);
     if ('persona_solicita' in current_solicitud) {
       reset_solicitud(current_solicitud);
@@ -155,7 +155,7 @@ const AprobacionSolicitudScreen = () => {
   };
 
   const on_submit_aprobacion = (data: IObjSolicitudVivero): void => {
-    console.log('aprobacion...');
+    //  console.log('')('aprobacion...');
     const form_data = {
       estado_aprobacion_responsable: data.estado_aprobacion_responsable,
       justificacion_aprobacion_responsable:

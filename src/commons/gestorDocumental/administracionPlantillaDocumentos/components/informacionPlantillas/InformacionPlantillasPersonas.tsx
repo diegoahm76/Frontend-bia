@@ -44,7 +44,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
       const res: any = await api.get(url);
       const [numero_consulta]: any = res.data.data;
       set_info_por_id(numero_consulta);
-       console.log(numero_consulta);
+       //  console.log('')(numero_consulta);
     } catch (error) {
       console.error(error);
     }
@@ -89,7 +89,7 @@ export const InformacionPlantillasPersonas: React.FC<InformacionPlantillasPerson
     id_tipologia_doc_trd,
     id_persona_crea_plantilla,
   } = info_por_id;
-  // console.log(info_por_id);
+  // //  console.log('')(info_por_id);
   const fechaFormateada = new Date(fecha_creacion).toLocaleDateString();
   useEffect(() => {
     if (typeof buscador_varaiable !== 'undefined' && buscador_varaiable !== 0) {

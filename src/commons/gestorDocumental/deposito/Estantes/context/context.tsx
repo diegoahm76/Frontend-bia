@@ -396,7 +396,7 @@ export const UserProvider = ({
     try {
       const response = await listar_orden_estantes();
       set_orden_siguiente(response);
-      // console.log('response', response);
+      // //  console.log('')('response', response);
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'
@@ -407,7 +407,7 @@ export const UserProvider = ({
     try {
       const response = await listar_orden_cajas();
       set_orden_siguiente(response);
-      // console.log('response', response);
+      // //  console.log('')('response', response);
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'

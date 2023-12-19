@@ -171,7 +171,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
       if (response.success) {
         limpiar_formulario();
         if (formulario.asignar_hoja_de_vida) {
-          console.log('Redirecciona a hoja de vida');
+          // //  console.log('')('Redirecciona a hoja de vida');
         }
       }
     })

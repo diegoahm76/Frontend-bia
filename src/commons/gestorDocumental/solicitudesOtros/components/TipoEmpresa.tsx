@@ -51,7 +51,7 @@ const TipoEmpresaOtros = () => {
 
   // useEffect(() => {
   //   // void dispatch(get_document_types_service());
-  //   console.log(watch('document_type'));
+  //   //  console.log('')(watch('document_type'));
   // }, [watch('document_type')]);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const TipoEmpresaOtros = () => {
     );
   }, [document_types, person_types]);
   useEffect(() => {
-    console.log(company);
+    //  console.log('')(company);
   }, [company]);
 
   const columns_personas: GridColDef[] = [
@@ -150,7 +150,7 @@ const TipoEmpresaOtros = () => {
     const nombre_comercial = get_values('nombre_comercial') ?? '';
     const razon_social = get_values('razon_social') ?? '';
     const person_type = get_values('tipo_persona') ?? '';
-    console.log(document, type, name, person_type);
+    //  console.log('')(document, type, name, person_type);
     void dispatch(
       get_companies_service(type, document, razon_social, nombre_comercial)
     );

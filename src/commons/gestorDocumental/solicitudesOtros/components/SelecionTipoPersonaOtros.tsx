@@ -58,7 +58,7 @@ const SeleccionTipoPersonaOtros = () => {
       type_applicant: type_applicant.key,
       on_behalf_of: on_behalf_of.key,
     });
-    console.log(on_behalf_of);
+    //  console.log('')(on_behalf_of);
   }, [type_applicant, on_behalf_of]);
 
   return (

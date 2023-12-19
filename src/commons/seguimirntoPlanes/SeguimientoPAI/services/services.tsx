@@ -52,7 +52,7 @@ export const get_documentos_seguimiento_pai = async (
   // Extract the archivo property from each item in the array
   const archivos = response.data.data.map((item: any) => item.archivo);
 
-  console.log(archivos, 'archivos');
+  //  console.log('')(archivos, 'archivos');
 
   return archivos;
 };

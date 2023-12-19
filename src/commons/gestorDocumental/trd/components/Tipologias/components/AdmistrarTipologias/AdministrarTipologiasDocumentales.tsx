@@ -214,7 +214,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
         // Handle success response
       })
       .catch((error: any) => {
-        console.log(error);
+        //  console.log('')(error);
         // Handle error response
       });
   };
@@ -249,7 +249,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
         // Handle success response
       })
       .catch((error: any) => {
-        console.log(error);
+        //  console.log('')(error);
         // Handle error response
       });
   };
@@ -317,7 +317,7 @@ export const AdministrarTipologiasDocumentales = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       error={!!error}
                     />

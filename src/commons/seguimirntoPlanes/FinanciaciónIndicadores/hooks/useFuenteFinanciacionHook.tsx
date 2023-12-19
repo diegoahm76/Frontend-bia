@@ -24,6 +24,8 @@ export const useFuenteFinanciacionHook = (): any => {
       nombre_indicador: '',
       nombre_fuente: '',
       nombre_cuenca: '',
+      nombre_proyecto: '',
+      nombre_actividad: '',
       vano_1: 0,
       vano_2: 0,
       vano_3: 0,
@@ -31,7 +33,8 @@ export const useFuenteFinanciacionHook = (): any => {
       valor_total: 0,
       id_indicador: 0,
       id_cuenca: 0,
-
+      id_proyecto: 0,
+      id_actividad: 0,
     },
   });
 
@@ -43,6 +46,8 @@ export const useFuenteFinanciacionHook = (): any => {
       nombre_indicador: '',
       nombre_fuente: '',
       nombre_cuenca: '',
+      nombre_proyecto: '',
+      nombre_actividad: '',
       vano_1: 0,
       vano_2: 0,
       vano_3: 0,
@@ -50,6 +55,8 @@ export const useFuenteFinanciacionHook = (): any => {
       valor_total: 0,
       id_indicador: 0,
       id_cuenca: 0,
+      id_proyecto: 0,
+      id_actividad: 0,
     });
   };
 
@@ -69,7 +76,7 @@ export const useFuenteFinanciacionHook = (): any => {
 
   const onsubmit_fuente = handleSubmit_fuente(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       // data.id_indicador = id_indicador;
       set_is_saving_fuente(true);
       await post_fuentes_fiananciacion(data as IFuentesFinanciacion);
@@ -90,7 +97,7 @@ export const useFuenteFinanciacionHook = (): any => {
 
   const onsubmit_editar = handleSubmit_fuente(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_fuente(true);
       // data.id_indicador = id_indicador;
       await put_fuentes_fiananciacion(
