@@ -25,6 +25,10 @@ const opas = ['Documentos anexos del trámite - OPAS', 'Resumen del trámite', '
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     const [formulario_paso_uno, set_formulario_paso_uno] = useState<any>(null);
+    const [response_paso_1, set_response_paso_1] = useState<any>(null);
+    const [formulario_paso_dos, set_formulario_paso_dos] = useState<any>(null);
+    const [cargar_anexos, set_cargar_anexos] = useState<boolean>(false);
+    const [anexar_error, set_anexar_error] = React.useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     // Inicia Configuración Stepper
     const [steps, set_steps] = React.useState<any[]>(['Tipo de trámite']);
@@ -53,7 +57,10 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
         if (activeStep === 0) {
             set_crear_tramite(true);
         }
-        if (activeStep !== 0) {
+        if (activeStep === 1) {
+            set_cargar_anexos(true);
+        }
+        if (activeStep > 1) {
             const newCompleted = completed;
             newCompleted[activeStep] = true;
             setCompleted(newCompleted);
@@ -67,14 +74,15 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     };
     // Finaliza Configuración Stepper
     useEffect(() => {
-        if (crear_tramite_error) {
+        if (crear_tramite_error || anexar_error) {
             const newCompleted = completed;
             newCompleted[activeStep] = true;
             setCompleted(newCompleted);
             const newActiveStep = isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
             setActiveStep(newActiveStep);
         }
-    }, [crear_tramite_error]);
+    }, [crear_tramite_error,anexar_error]);
+
     useEffect(() => {
         if (eliminar_tramite) {
             handleReset();
@@ -201,12 +209,12 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                                     <React.Fragment>
                                         {activeStep === 0 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                                <TipoTramite usuario={props.usuario} crear_tramite={crear_tramite} set_formulario_paso_uno={set_formulario_paso_uno} set_crear_tramite={set_crear_tramite} set_crear_tramite_error={set_crear_tramite_error} limpiar={limpiar} set_tramite_servicio={set_tramite_servicio}></TipoTramite>
+                                                <TipoTramite usuario={props.usuario} crear_tramite={crear_tramite} set_formulario_paso_uno={set_formulario_paso_uno} set_crear_tramite={set_crear_tramite} set_crear_tramite_error={set_crear_tramite_error} limpiar={limpiar} set_tramite_servicio={set_tramite_servicio} set_response_paso_1={set_response_paso_1}></TipoTramite>
                                             </Grid>
                                         </Box>}
                                         {activeStep === 1 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                                <DocumentosAnexos usuario={props.usuario}></DocumentosAnexos>
+                                                <DocumentosAnexos usuario={props.usuario} cargar_anexos={cargar_anexos} set_cargar_anexos={set_cargar_anexos} set_formulario_paso_dos={set_formulario_paso_dos} response_paso_1={response_paso_1} set_anexar_error={set_anexar_error}></DocumentosAnexos>
                                             </Grid>
                                         </Box>}
                                         {activeStep === 2 && <Box>

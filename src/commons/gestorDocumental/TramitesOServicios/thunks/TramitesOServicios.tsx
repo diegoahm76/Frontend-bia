@@ -102,4 +102,16 @@ export const create_tramite_servicio: any = (tramite: any) => {
     }
   };
 };
+// Paso 1. Inicio Trámite
+export const cargar_anexos_opas: any = (id_tramite: any, documentos: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`tramites/opa/tramites/anexos/update/${id_tramite}/`,documentos);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
