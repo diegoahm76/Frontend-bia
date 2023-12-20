@@ -21,6 +21,9 @@ export const useProductoHook = (): any => {
       nombre_producto: '',
       numero_producto: 0,
       nombre_proyecto: '',
+      id_plan: null,
+      id_programa: null,
+      id_producto: null,
     },
   });
 
@@ -32,6 +35,9 @@ export const useProductoHook = (): any => {
       nombre_producto: '',
       numero_producto: 0,
       nombre_proyecto: '',
+      id_plan: null,
+      id_programa: null,
+      id_producto: null,
     });
   };
 
@@ -39,8 +45,8 @@ export const useProductoHook = (): any => {
   const [is_saving_producto, set_is_saving_producto] = useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_producto } = useContext(DataContextProductos);
-
+  const { id_plan, id_programa, fetch_data_producto } =
+    useContext(DataContextProductos);
   // declaracion redux
   const {
     producto: { id_producto },
@@ -49,7 +55,11 @@ export const useProductoHook = (): any => {
 
   const onsubmit_producto = handleSubmit_producto(async (data) => {
     try {
-      //  console.log('')(data, 'data');
+      console.log(id_plan, 'id_plan');
+      console.log(id_programa, 'id_programa');  
+      console.log(data, 'data');
+      data.id_plan = id_plan;
+      data.id_programa = id_programa;
       data.id_proyecto = id_proyecto;
       set_is_saving_producto(true);
       await post_producto(data as IProductos);
@@ -70,7 +80,12 @@ export const useProductoHook = (): any => {
 
   const onsubmit_editar = handleSubmit_producto(async (data) => {
     try {
-      //  console.log('')(data, 'data');
+      console.log(data, 'data');
+      console.log(id_plan, 'id_plan');
+      console.log(id_programa, 'id_programa');  
+      data.id_plan = id_plan;
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
       set_is_saving_producto(true);
       data.id_proyecto = id_proyecto;
       await put_producto((id_producto as number) ?? 0, data as IProductos);

@@ -287,7 +287,7 @@ export const ConsultaMeta: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Controller
-            name="id_programa"
+            name="id_plan"
             control={control_consulta_metas}
             defaultValue=""
             rules={{ required: true }}
@@ -317,7 +317,7 @@ export const ConsultaMeta: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Controller
-            name="id_proyecto"
+            name="id_programa"
             control={control_consulta_metas}
             defaultValue=""
             rules={{ required: true }}
@@ -347,7 +347,7 @@ export const ConsultaMeta: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Controller
-            name="id_producto"
+            name="id_proyecto"
             control={control_consulta_metas}
             defaultValue=""
             rules={{ required: true }}
@@ -363,10 +363,40 @@ export const ConsultaMeta: React.FC = () => {
                 required
                 onChange={(event) => {
                   field.onChange(event);
-                  set_id_producto(Number(event.target.value));
+                  set_id_proyecto(Number(event.target.value));
                 }}
               >
                 {proyectos_selected.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <Controller
+            name="id_producto"
+            control={control_consulta_metas}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                select
+                label="Seleccione un producto"
+                size="small"
+                margin="dense"
+                disabled={false}
+                fullWidth
+                required
+                onChange={(event) => {
+                  field.onChange(event);
+                  set_id_producto(Number(event.target.value));
+                }}
+              >
+                {productos_selected.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -385,36 +415,6 @@ export const ConsultaMeta: React.FC = () => {
               <TextField
                 {...field}
                 select
-                label="Seleccione un producto"
-                size="small"
-                margin="dense"
-                disabled={false}
-                fullWidth
-                required
-                onChange={(event) => {
-                  field.onChange(event);
-                  set_id_actividad(Number(event.target.value));
-                }}
-              >
-                {productos_selected.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Controller
-            name="id_indicador"
-            control={control_consulta_metas}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                select
                 label="Seleccione una actividad"
                 size="small"
                 margin="dense"
@@ -423,7 +423,7 @@ export const ConsultaMeta: React.FC = () => {
                 required
                 onChange={(event) => {
                   field.onChange(event);
-                  set_id_inidicador(Number(event.target.value));
+                  set_id_actividad(Number(event.target.value));
                 }}
               >
                 {actividades_selected.map((option) => (

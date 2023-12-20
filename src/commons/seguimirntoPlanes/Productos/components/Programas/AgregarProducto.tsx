@@ -6,9 +6,10 @@ import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useProductoHook } from '../../hooks/useProductoHook';
+import { DataContextProductos } from '../../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarProducto: React.FC = () => {
@@ -25,6 +26,9 @@ export const AgregarProducto: React.FC = () => {
   } = useProductoHook();
 
   const dispatch = useAppDispatch();
+  // * declaracion de context
+
+  const { set_id_plan, set_id_programa } = useContext(DataContextProductos);
 
   const { mode, producto } = useAppSelector((state) => state.planes);
 
@@ -33,7 +37,12 @@ export const AgregarProducto: React.FC = () => {
       limpiar_formulario_producto();
     }
     if (mode.editar) {
+      console.log(producto, 'producto');
+      set_id_plan(producto.id_plan);
+      set_id_programa(producto.id_programa);
       reset_producto({
+        id_plan: producto.id_plan,
+        set_id_programa: producto.id_programa,
         id_producto: producto.id_producto,
         nombre_producto: producto.nombre_producto,
         numero_producto: producto.numero_producto,

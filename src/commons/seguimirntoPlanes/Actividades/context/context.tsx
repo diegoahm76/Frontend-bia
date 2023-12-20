@@ -10,6 +10,10 @@ import type{ ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/
 
 interface UserContext {
   // * id
+  id_programa: number | null;
+  set_id_programa: (value: number | null) => void;
+  id_proyecto: number | null;
+  set_id_proyecto: (value: number | null) => void;
 
   // * rows
   rows_actividad: IActividades[];
@@ -33,6 +37,12 @@ interface UserContext {
 }
 
 export const DataContextActividades = createContext<UserContext>({
+  // * id
+  id_programa: null,
+  set_id_programa: () => {},
+  id_proyecto: null,
+  set_id_proyecto: () => {},
+  // * rows
   rows_actividad: [],
   set_rows_actividad: () => {},
   rows_productos: [],
@@ -53,6 +63,8 @@ export const UserProviderActividades = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
+  const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
 
   // * select
   const [planes_selected, set_planes_selected] = React.useState<
@@ -88,6 +100,8 @@ export const UserProviderActividades = ({
             nombre_producto: item.nombre_producto,
             id_plan: item.id_plan,
             nombre_plan: item.nombre_plan,
+            id_programa: item.id_programa,
+            id_proyecto: item.id_proyecto,
           })
         );
 
@@ -114,6 +128,8 @@ export const UserProviderActividades = ({
             nombre_producto: item.nombre_producto,
             id_plan: item.id_plan,
             nombre_plan: item.nombre_plan,
+            id_programa: item.id_programa,
+            id_proyecto: item.id_proyecto,
           })
         );
 
@@ -138,6 +154,8 @@ export const UserProviderActividades = ({
             nombre_producto: item.nombre_producto,
             id_proyecto: item.id_proyecto,
             nombre_proyecto: item.nombre_proyecto,
+            id_plan: item.id_plan,
+            id_programa: item.id_programa,
           })
         );
 
@@ -171,6 +189,10 @@ export const UserProviderActividades = ({
 
   const value: UserContext = {
     // * id
+    id_programa,
+    set_id_programa,
+    id_proyecto,
+    set_id_proyecto,
 
     // * select
     planes_selected,

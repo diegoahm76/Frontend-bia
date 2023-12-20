@@ -19,12 +19,18 @@ import {
   get_indicadores,
   get_metas,
   get_documentos_seguimiento_pai,
+  get_metas_id,
 } from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import { get_unidades_organizacionales } from '../../ConceptoPOAI/services/services';
 import { useAppSelector } from '../../../../hooks';
 import { AxiosError } from 'axios';
-import { get_actividades_id_producto, get_producto_id_proyecto, get_programas, get_proyectos_id_programa } from '../../Rubro/Rubro/services/services';
+import {
+  get_actividades_id_producto,
+  get_producto_id_proyecto,
+  get_programas,
+  get_proyectos_id_programa,
+} from '../../Rubro/Rubro/services/services';
 
 interface UserContext {
   // * id
@@ -36,6 +42,8 @@ interface UserContext {
   set_id_producto: (value: number | null) => void;
   id_indicador: number | null;
   set_id_indicador: (value: number | null) => void;
+  id_meta: number | null;
+  set_id_meta: (value: number | null) => void;
   // * rows
   rows_seguimiento_pai: ISeguimientoPAI[];
   set_rows_seguimiento_pai: (value: ISeguimientoPAI[]) => void;
@@ -63,6 +71,18 @@ interface UserContext {
   archivos: any;
   set_archivos: (archivos: any) => void;
   // * info
+  info_meta: IMetaIndicador;
+  set_info_meta: (value: IMetaIndicador) => void;
+  // * metas
+  // New variables
+  valor_meta: string;
+  set_valor_meta: (value: string) => void;
+
+  porcentaje_meta: string;
+  set_porcentaje_meta: (value: string) => void;
+
+  avance_fisico: string;
+  set_avance_fisico: (value: string) => void;
 
   // * fetch
 
@@ -75,6 +95,7 @@ interface UserContext {
   fetch_data_unidad_organizacional: () => Promise<void>;
   fetch_data_anexos: () => Promise<void>;
   fetch_data_programas: () => Promise<void>;
+  fetch_data_metas_id: () => Promise<void>;
 }
 
 export const DataContextSeguimientoPAI = createContext<UserContext>({
@@ -87,6 +108,8 @@ export const DataContextSeguimientoPAI = createContext<UserContext>({
   set_id_producto: () => {},
   id_indicador: null,
   set_id_indicador: () => {},
+  id_meta: null,
+  set_id_meta: () => {},
 
   // * rows
 
@@ -110,8 +133,38 @@ export const DataContextSeguimientoPAI = createContext<UserContext>({
   programas_selected: [],
   set_programas_selected: () => {},
 
+  
   archivos: [null],
   set_archivos: () => {},
+
+  info_meta: {
+    id_meta: null,
+    nombre_indicador: '',
+    nombre_meta: '',
+    unidad_meta: '',
+    porcentaje_meta: null,
+    valor_meta: '',
+    cumplio: false,
+    fecha_creacion_meta: '',
+    agno_1: null,
+    agno_2: null,
+    agno_3: null,
+    agno_4: null,
+    valor_ejecutado_compromiso: null,
+    valor_ejecutado_obligado: null,
+    avance_fisico: null,
+    id_indicador: null,
+  },
+  set_info_meta: () => {},
+
+  valor_meta: '',
+  set_valor_meta: () => {},
+
+  porcentaje_meta: '',
+  set_porcentaje_meta: () => {},
+
+  avance_fisico: '',
+  set_avance_fisico: () => {},
 
   fetch_data_seguimiento_pai: async () => {},
   fetch_data_productos: async () => {},
@@ -122,6 +175,7 @@ export const DataContextSeguimientoPAI = createContext<UserContext>({
   fetch_data_unidad_organizacional: async () => {},
   fetch_data_anexos: async () => {},
   fetch_data_programas: async () => {},
+  fetch_data_metas_id: async () => {},
 });
 
 export const UserProviderSeguimientoPAI = ({
@@ -135,6 +189,7 @@ export const UserProviderSeguimientoPAI = ({
   const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
   const [id_producto, set_id_producto] = React.useState<number | null>(null);
   const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
+  const [id_meta, set_id_meta] = React.useState<number | null>(null);
 
   // * select
   const [productos_selected, set_productos_selected] = React.useState<
@@ -167,6 +222,30 @@ export const UserProviderSeguimientoPAI = ({
   const [rows_anexos, set_rows_anexos] = React.useState<any[]>([]);
 
   // * info
+
+  const [info_meta, set_info_meta] = React.useState<IMetaIndicador>({
+    id_meta: null,
+    nombre_indicador: '',
+    nombre_meta: '',
+    unidad_meta: '',
+    porcentaje_meta: null,
+    valor_meta: '',
+    cumplio: false,
+    fecha_creacion_meta: '',
+    agno_1: null,
+    agno_2: null,
+    agno_3: null,
+    agno_4: null,
+    valor_ejecutado_compromiso: null,
+    valor_ejecutado_obligado: null,
+    avance_fisico: null,
+    id_indicador: null,
+  });
+
+  // * Metas
+  const [valor_meta, set_valor_meta] = React.useState<string>('');
+  const [porcentaje_meta, set_porcentaje_meta] = React.useState<string>('');
+  const [avance_fisico, set_avance_fisico] = React.useState<string>('');
 
   // * fetch
   // //* declaracion context
@@ -335,6 +414,23 @@ export const UserProviderSeguimientoPAI = ({
     }
   };
 
+  const fetch_data_metas_id = async (): Promise<void> => {
+    try {
+      const response = await get_metas_id(id_meta as number ?? 0);
+      if (response?.length > 0) {
+        // Assuming you want to set info_meta with the first item in the response
+        const firstMeta: IMetaIndicador = response[0];
+  
+        set_info_meta(firstMeta);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+  
+
   const fetch_data_unidad_organizacional = async (): Promise<void> => {
     try {
       const response = await get_unidades_organizacionales();
@@ -388,6 +484,8 @@ export const UserProviderSeguimientoPAI = ({
     set_id_producto,
     id_indicador,
     set_id_indicador,
+    id_meta,
+    set_id_meta,
 
     // * select
     productos_selected,
@@ -417,6 +515,20 @@ export const UserProviderSeguimientoPAI = ({
 
     // * info
 
+    info_meta,
+    set_info_meta,
+
+    // * Metas
+
+    valor_meta,
+    set_valor_meta,
+
+    porcentaje_meta,
+    set_porcentaje_meta,
+
+    avance_fisico,
+    set_avance_fisico,
+
     // * fetch
     fetch_data_seguimiento_pai,
     fetch_data_productos,
@@ -427,6 +539,7 @@ export const UserProviderSeguimientoPAI = ({
     fetch_data_unidad_organizacional,
     fetch_data_anexos,
     fetch_data_programas,
+    fetch_data_metas_id,
   };
 
   return (

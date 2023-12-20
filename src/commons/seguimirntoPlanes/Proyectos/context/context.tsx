@@ -10,6 +10,8 @@ import { get_programas, get_proyecto_id } from '../services/services';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
 
   // * rows
   rows_proyecto: IProyectos[];
@@ -30,6 +32,9 @@ interface UserContext {
 }
 
 export const DataContextProyectos = createContext<UserContext>({
+  // * id
+  id_plan: null,
+  set_id_plan: () => {},
   rows_proyecto: [],
   set_rows_proyecto: () => {},
   rows_programa: [],
@@ -48,6 +53,7 @@ export const UserProviderProyectos = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
 
   // * select
   const [tipo_eje_selected, set_tipo_eje_selected] = React.useState<
@@ -83,6 +89,9 @@ export const UserProviderProyectos = ({
             pondera_4: item.pondera_4,
             id_programa: item.id_programa,
             nombre_programa: item.nombre_programa,
+            id_plan: item.id_plan,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
 
@@ -110,6 +119,8 @@ export const UserProviderProyectos = ({
             porcentaje_3: item.porcentaje_3,
             porcentaje_4: item.porcentaje_4,
             id_plan: item.id_plan,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
 
@@ -124,6 +135,8 @@ export const UserProviderProyectos = ({
 
   const value: UserContext = {
     // * id
+    id_plan,
+    set_id_plan,
 
     // * select
     tipo_eje_selected,
