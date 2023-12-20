@@ -15,6 +15,7 @@ interface IProps {
     set_formulario_paso_uno: any,
     set_crear_tramite: any
     set_crear_tramite_error: any,
+    set_tramite_servicio: any,
     limpiar: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -110,6 +111,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
 
     const cambio_tipo_tramite: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipo_tramite(e.target.value);
+        props.set_tramite_servicio(e.target.value);
         set_error_tipo_tramite(false);
     }
 
@@ -138,8 +140,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 const obj_create = {
                     "id_persona_titular": props.usuario.id_persona,
                     "id_persona_interpone": props.usuario.id_persona,
-                    "id_medio_solicitud": 1,
-                    "desc_medio_solicitud": lt_tipos_tramites.find((lt: any) => lt[0] === tipo_tramite)[1],
+                    "id_medio_solicitud": 2,
                     "id_permiso_ambiental": tramite_servicio,
                     "desc_permiso_ambiental": lt_tramites_servicios.find((lt: any) => lt.id_permiso_ambiental === tramite_servicio).nombre,
                     "cod_municipio": municipio,
@@ -290,7 +291,6 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 </Grid>
                 <Grid item xs={12} sm={2}>
                     <TextField
-                        autoFocus
                         margin="dense"
                         fullWidth
                         size="small"
@@ -303,7 +303,6 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 </Grid>
                 <Grid item xs={12} sm={2}>
                     <TextField
-                        autoFocus
                         margin="dense"
                         fullWidth
                         size="small"
@@ -316,7 +315,6 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 </Grid>
                 <Grid item xs={12} sm={2}>
                     <TextField
-                        autoFocus
                         margin="dense"
                         fullWidth
                         size="small"
