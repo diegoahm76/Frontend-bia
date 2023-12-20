@@ -50,68 +50,61 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
     }
 
     const generar_reporte_indice: () => void = () => {
-        doc
         crear_encabezado();
         const page = doc.internal.pageSize.getHeight();
         let coordendas = 0;
         let page_position = 1;
         let coordenada_y = 30;
-        doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
-        doc.text('Fecha', 16, 34);
-        doc.text('Vivero', doc.internal.pageSize.width / 2 - 15, 34);
-        doc.text('Número de baja', doc.internal.pageSize.width - 60, 34);
+        // seccion informacion de expedientes
+        doc.line((doc.getTextWidth('Información del expediente') + 19.5), 40, doc.internal.pageSize.width - 20, 40);
+        doc.line(18, 55, doc.internal.pageSize.width - 20, 55);
+        doc.line(18, 40 , 18, 55); // Linea vertical
+        doc.line(18, 40, 19, 40);
+        doc.line(doc.internal.pageSize.width - 20, 40 , doc.internal.pageSize.width - 20, 55); // Linea vertical final
+        doc.text('Información del expediente', 19, 41);
+        doc.text('Título: ', 21, 46);
+        doc.text('EXP04 expediente', 35, 46);
+        doc.text('TRD asociada: ', 100, 46);
+        doc.text('esto es una trd', 127, 46);
+        doc.text('Serie documental: ', 170, 46);
+        doc.text('esto es una serie docuemental', 202, 46);
+        doc.text('Estado del expediente: ', 21, 52);
+        doc.text('Cerrado', 62, 52);
+        doc.text('Fecha de cierre de expediente: ', 100, 52);
+        doc.text(dayjs().format('DD/MM/YYYY'), 154, 52);
+        // seccion informacion de indice
+        doc.text('Información del índice electrónico del expediente', 19, 61);
+        doc.line((doc.getTextWidth('Información del índice electrónico del expediente') + 19.5), 60, doc.internal.pageSize.width - 20, 60);
+        doc.line(18, 70, doc.internal.pageSize.width - 20, 70);
+        doc.line(18, 60 , 18, 70); // Linea vertical
+        doc.line(18, 60, 19, 60);
+        doc.line(doc.internal.pageSize.width - 20, 60 , doc.internal.pageSize.width - 20, 70); // Linea vertical final
+        doc.text('Estado de índice electrónico del expediente: ', 21, 67);
+        doc.text('Abierto', 97, 67);
+        doc.text('Fecha de apertura de índice: ', 110, 46);
+        doc.text('Serie documental: ', 125, 46);
+        doc.text('Fecha de cierre de índice', 145, 46);
+        doc.text('Fecha de cierre de índice', 110, 46);
+
         indice?.docs_indice_electronico_exp.forEach((report: any) => {
           
         });
-        doc.save('prueba.pdf');
+        // doc.save('prueba.pdf');
+        set_visor(doc.output('datauristring'));
+
       };
       const crear_encabezado: () => void = () => {
         const reporte_seleccionado = 'Índice electrónico de expediente';
         const title = 'Índice electrónico de expediente';
         doc.setFont('Arial', 'normal');
         doc.setFontSize(12);
-        doc.addImage(logo_cormacarena_h, 160, 10, 40, 15);
+        doc.addImage(logo_cormacarena_h, doc.internal.pageSize.width - 45, 8, 40, 15);
         doc.setFont('Arial', 'bold'); // establece la fuente en Arial
-        doc.text(
-          'Reporte',
-          (doc.internal.pageSize.width - doc.getTextWidth('Reporte')) / 2,
-          10
-        );
-        doc.text(
-          title,
-          (doc.internal.pageSize.width - doc.getTextWidth(title)) / 2,
-          15
-        );
-        const planta = null ?? '';
-        const fechas = `${dayjs().format('DD/MM/YYYY')} - ${dayjs().format('DD/MM/YYYY')}`;
-        if (planta !== '') {
-          doc.text(
-            planta,
-            (doc.internal.pageSize.width - doc.getTextWidth(planta)) / 2,
-            20
-          );
-          doc.text(
-            fechas,
-            (doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2,
-            25
-          );
-        } else
-          doc.text(
-            fechas,
-            (doc.internal.pageSize.width - doc.getTextWidth(fechas)) / 2,
-            20
-          );
+        doc.text('Reporte',(doc.internal.pageSize.width - doc.getTextWidth('Reporte')) / 2,10);
+        doc.text(title,(doc.internal.pageSize.width - doc.getTextWidth(title)) / 2,15);
         doc.setFont('Arial', 'normal'); // establece la fuente en Arial
-        const fecha_generacion = `Fecha de generación de reporte ${dayjs().format(
-          'DD/MM/YYYY'
-        )}`;
-        doc.text(
-          fecha_generacion,
-          doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion) - 5,
-          5
-        );
-        doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
-        doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
+        const fecha_generacion = `Fecha de generación de reporte ${dayjs().format('DD/MM/YYYY')}`;
+        doc.text(fecha_generacion, doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion) - 5,  5);
         set_titulo_reporte({ reporte_seleccionado, title });
         return { reporte_seleccionado, title };
       };
@@ -178,6 +171,14 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
             >
                 <VerCierreIndiceElectronico indice={indice}></VerCierreIndiceElectronico>
             </Grid>}
+            <Box component="form" noValidate autoComplete="off">
+                <embed
+                  src={visor}
+                  type="application/pdf"
+                  width="100%"
+                  height="500px"
+                />
+              </Box>
             <Grid container>
                 <Grid item xs={12} sm={12}>
                     <Stack

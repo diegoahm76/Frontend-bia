@@ -498,7 +498,7 @@ export const AgregarIndicacdor: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          {/* <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="medida"
               control={control_indicador}
@@ -528,7 +528,7 @@ export const AgregarIndicacdor: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
               <Button
