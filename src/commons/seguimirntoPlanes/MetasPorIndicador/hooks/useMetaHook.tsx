@@ -76,7 +76,7 @@ export const useMetaHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       data.id_indicador = id_indicador;
-      dayjs(data.fecha_creacion_meta).format('YYYY-MM-DD');
+      data.fecha_creacion_meta = dayjs(data.fecha_creacion_meta).format('YYYY-MM-DD');
       set_is_saving_meta(true);
       await post_meta(data as IMetaIndicador);
       control_success('Se creó correctamente');
@@ -98,7 +98,7 @@ export const useMetaHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_meta(true);
-      dayjs(data.fecha_creacion_meta).format('YYYY-MM-DD');
+      data.fecha_creacion_meta = dayjs(data.fecha_creacion_meta).format('YYYY-MM-DD');
       data.id_indicador = id_indicador;
       await put_meta((id_meta as number) ?? 0, data as IMetaIndicador);
       control_success('Se actualizó correctamente');
