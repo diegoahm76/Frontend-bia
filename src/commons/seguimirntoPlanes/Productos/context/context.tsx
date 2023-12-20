@@ -9,6 +9,10 @@ import { get_proyectos, get_producto_id } from '../services/services';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
+  id_programa: number | null;
+  set_id_programa: (value: number | null) => void;
 
   // * rows
   rows_producto: IProductos[];
@@ -27,6 +31,12 @@ interface UserContext {
 }
 
 export const DataContextProductos = createContext<UserContext>({
+  // * id
+  id_plan: null,
+  set_id_plan: () => {},
+  id_programa: null,
+  set_id_programa: () => {},
+  // * select
   rows_producto: [],
   set_rows_producto: () => {},
   rows_proyectos: [],
@@ -42,6 +52,9 @@ export const UserProviderProductos = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
 
   // * select
 
@@ -70,9 +83,10 @@ export const UserProviderProductos = ({
             nombre_producto: item.nombre_producto,
             id_proyecto: item.id_proyecto,
             nombre_proyecto: item.nombre_proyecto,
+            id_programa: item.id_programa,
+            id_plan: item.id_plan,
           })
         );
-
         set_rows_producto(data_producto);
       }
     } catch (error: any) {
@@ -98,6 +112,9 @@ export const UserProviderProductos = ({
             pondera_2: item.pondera_2,
             pondera_3: item.pondera_3,
             pondera_4: item.pondera_4,
+            fecha_creacion: item.fecha_creacion,
+            id_plan: item.id_plan,
+            cumplio: item.cumplio,
           })
         );
 
@@ -112,6 +129,10 @@ export const UserProviderProductos = ({
 
   const value: UserContext = {
     // * id
+    id_plan, // use the state variable here
+    set_id_plan, // use the state setter function here
+    id_programa, // use the state variable here
+    set_id_programa, // use the state setter function here
 
     // * select
 

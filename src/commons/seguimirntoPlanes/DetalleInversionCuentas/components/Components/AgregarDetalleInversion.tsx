@@ -68,6 +68,9 @@ export const AgregarDetalleInversion: React.FC = () => {
       limpiar_formulario_detalle();
     }
     if (mode.editar) {
+      set_id_programa(detalle_inversion.id_programa ?? null);
+      set_id_proyecto(detalle_inversion.id_proyecto ?? null);
+      set_id_producto(detalle_inversion.id_producto ?? null);
       reset_detalle({
         id_detalle_inversion: detalle_inversion.id_detalle_inversion,
         nombre_sector: detalle_inversion.nombre_sector,
@@ -359,7 +362,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={id_programa ? false : true}
+                  disabled={false}
                   fullWidth
                   required
                   error={!!errors_detalle.id_proyecto}
@@ -394,7 +397,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={id_proyecto ? false : true}
+                  disabled={false}
                   fullWidth
                   required
                   error={!!errors_detalle.id_producto}
@@ -429,7 +432,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={id_producto ? false : true}
+                  disabled={false}
                   fullWidth
                   required
                   error={!!errors_detalle.id_actividad}
