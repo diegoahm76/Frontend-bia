@@ -68,6 +68,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
             headerName: 'CÓDIGO',
             sortable: true,
             width: 150,
+            valueGetter: (params) => params.row.codigo_exp_und_serie_subserie + '.' +  params.row.codigo_exp_Agno + (params.row.codigo_exp_consec_por_agno !== null ? '.' +  params.row.codigo_exp_consec_por_agno : ""),
         },
         {
             field: 'nombre_trd_origen',
