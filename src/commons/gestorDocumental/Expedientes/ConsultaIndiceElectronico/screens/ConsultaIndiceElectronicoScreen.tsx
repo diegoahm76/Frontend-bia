@@ -221,13 +221,13 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
             >
                 <ExpedienteSeleccionado expediente={expediente}></ExpedienteSeleccionado>
             </Grid>}
-            {indice !== null && expediente?.estado === 'A' && <Grid
+            {indice !== null && expediente?.estado === 'C' && <Grid
                 container
                 sx={class_css}
             >
                 <IndiceSeleccionado indice={indice} set_columns={set_columns}></IndiceSeleccionado>
             </Grid>}
-            {indice !== null && !indice?.abierto && expediente?.estado === 'A' && <Grid
+            {indice !== null && !indice?.abierto && expediente?.estado === 'C' && <Grid
                 container
                 sx={class_css}
             >
@@ -241,12 +241,14 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
                         spacing={2}
                         sx={{ mt: '10px' }}
                     >
+                        {indice !== null && !indice?.abierto && expediente?.estado === 'C' && <>
                         <Button variant="outlined" sx={class_button_purple} onClick={() => { generar_reporte_indice() }}>Exportar PDF</Button>
                         {download_xls_props({
                             nurseries: indice?.docs_indice_electronico_exp, columns: columns, expediente: [expediente], nombre_archivo: 'índice electrónico documental',
                             indice: [indice],
                             info_cierre: [indice_cierre]
                         })}
+                        </>}
                         <Button
                             color="error"
                             variant='contained'
