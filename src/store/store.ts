@@ -65,6 +65,8 @@ import { planes_slice } from '../commons/seguimirntoPlanes/store/slice/indexPlan
 import { PanelVentanillaSlice } from '../commons/gestorDocumental/panelDeVentanilla/toolkit/store/PanelVentanillaStore';
 import { AsignacionUsuarioSlice } from '../commons/gestorDocumental/panelDeVentanilla/module/entrega99/toolkit/slice/AsignacionUsuarioSlice';
 import { complemento_pqrsdf_slice } from "../commons/gestorDocumental/complementoPQRSDF/store/slice/complementoPqrsdfSlice";
+import { BandejaTareasSlice } from '../commons/gestorDocumental/bandejaDeTareas/toolkit/store/BandejaDeTareasStore';
+import { RequerimientoUsarioSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/requerimientosUsuario/toolkit/slice/RequerimientoUsarioSlice';
 
 
 const persist_config = {
@@ -159,7 +161,13 @@ const app_reducers = combineReducers({
   //* solicitud PQRSDF a usuario reducer
   AsignacionUsuarioSlice: AsignacionUsuarioSlice.reducer,
   //* solicitud PQRSDF a usuario reducer
-  complemento_pqrsdf_slice: complemento_pqrsdf_slice.reducer
+  complemento_pqrsdf_slice: complemento_pqrsdf_slice.reducer,
+  //* bandeja de tareas slice
+  BandejaTareasSlice: BandejaTareasSlice.reducer,
+  // * cierre bandeja de tareas slice
+  // ? requerimiento al usuario slice
+  RequerimientoUsarioSlice: RequerimientoUsarioSlice.reducer,
+  // ? requerimiento al usuario slice
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

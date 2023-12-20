@@ -219,7 +219,7 @@ export const ExpedientesScreen: React.FC = () => {
                 "id_persona_responsable_actual": persona_resp?.id_persona,
                 "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
                 "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
-                "cod_tipo_expediente": expediente?.cod_tipo_expediente,
+                "cod_tipo_expediente": configuracion.cod_tipo_expediente,
                 "carpetas_caja": carpetas.length === 0 ? [] : carpetas_union,
                 "id_cat_serie_und_org_ccd_trd_prop": serie.id_catserie_unidadorg,//tripeta serie
                 "id_trd_origen": tdr.id_trd,

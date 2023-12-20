@@ -31,6 +31,10 @@ export const usePanelVentanilla = () => {
         value: '',
         label: '',
       },
+      tipo_pqrsdf: {
+        value: '',
+        label: '',
+      },
       radicado: '', //* sirve para pqrsdf y tramites y servicios
       // ? para trámite y servicios
       nombre_titular: '',

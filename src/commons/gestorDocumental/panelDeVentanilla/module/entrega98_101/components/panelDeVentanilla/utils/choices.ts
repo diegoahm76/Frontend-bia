@@ -10,4 +10,5 @@ export const choicesTipoDeSolicitud = [
     idTipoSolicitud: 2,
   },
   { value: 'Otros', label: 'Otros', idTipoSolicitud: 3 },
+  { value:  'OPAS', label: 'OPAS', idTipoSolicitud: 4 },
 ];
