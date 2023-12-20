@@ -146,7 +146,7 @@ export const Expedien: React.FC = () => {
     const obtener_usuario_logueado_fc: () => void = () => {
         dispatch(obtener_usuario_logueado()).then((response: any) => {
             set_usuario(response);
-            set_und_organizacional(response.id_unidad_organizacional_actual)
+            set_und_organizacional(response?.id_unidad_organizacional_actual)
         })
     }
 

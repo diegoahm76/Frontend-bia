@@ -35,7 +35,7 @@ const custom = {
   m: '10px 0 20px 0',
   borderRadius: '15px',
   position: 'relative',
-  background: '#ECECEC',  boxShadow: '0px 3px 6px #042F4A26',
+  background: '#ECECEC', boxShadow: '0px 3px 6px #042F4A26',
 };
 
 interface CuencaData {
@@ -168,19 +168,35 @@ export const Cuencas: React.FC = () => {
   const renderZonasHidricas = () => {
     return zonasHidricas.map((zonaHidrica, index) => (
       <div key={index}>
-        <Grid container item xs={12}  sx={custom} spacing={2} marginLeft={3} marginTop={2}>
+        <Grid container item xs={12} sx={custom} spacing={2} marginLeft={3} marginTop={2}>
           <Grid container item xs={6} spacing={2} marginTop={2} >
-            {zonaHidrica.nombre_sub_zona_hidrica}           
+
+
+             
+                        <h3>  {zonaHidrica.codigo_rio}:</h3>{zonaHidrica.nombre_sub_zona_hidrica}
+                        <ul>
+                            <li> {zonaHidrica.nombre_sub_zona_hidrica}</li>
+                            
+                        </ul>
+                   
+          
+
+           
 
           </Grid>
-          <Grid container item xs={5} spacing={2} marginTop={2} justifyContent="flex-end">
+          <Grid container item xs={5} spacing={2} marginTop={0} justifyContent="flex-end">
             {zonaHidrica.id_tipo_agua_zona_hidrica === 1 && (
-              <Chip size="small" label="Subterránea" color="success" variant="outlined" />
+              <Grid item xs={12} sm={2} marginTop={-1}>
+
+                <Chip size="small" label="Subterránea" color="success" variant="outlined" />
+              </Grid>
+
 
             )}
             {zonaHidrica.id_tipo_agua_zona_hidrica === 2 && (
-              <Chip size="small" label="Superficial" color="warning" variant="outlined" />
-
+              <Grid item xs={12} sm={2} marginTop={-1}>
+                <Chip size="small" label="Superficial" color="warning" variant="outlined" />
+              </Grid>
             )}
             <IconButton onClick={() => handleSelectSubZonaHidrica(zonaHidrica)}>
               <EditIcon />
@@ -188,7 +204,7 @@ export const Cuencas: React.FC = () => {
             <IconButton color="error" onClick={() => handleEliminarSubZonaHidrica(zonaHidrica.id_sub_zona_hidrica)}>
               <DeleteForeverIcon />
             </IconButton>
-            {zonaHidrica.codigo_rio}
+            {/* {zonaHidrica.codigo_rio} */}
 
           </Grid>
         </Grid>

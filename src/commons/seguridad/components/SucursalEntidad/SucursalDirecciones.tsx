@@ -143,6 +143,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({ setsame_addr
         };
         void fetch_data();
     }, [selected_departamento]);
+    
     useEffect(() => {
 
         const fetch_data = async (): Promise<any> => {
