@@ -67,7 +67,9 @@ export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
           <IconButton
             onClick={async () => {
               handleOpenModalTwo(true);
-              await getMetadatosByAnexo(params.row.id_anexo_PQR, handleOpenModalTwo).then((res) => {
+              await getMetadatosByAnexo(params.row.id_anexo, handleOpenModalTwo).then((res) => {
+                console.log(params.row)
+
                 setInfoMetadatos(res);
               }).catch((err) => {
                 console.log(err);
