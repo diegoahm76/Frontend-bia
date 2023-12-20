@@ -20,6 +20,14 @@ interface IProps {
     open: any;
 
 }
+
+const styles = {
+    modalContainer: {
+      width: '100%', // Ajusta el ancho del modal
+      height: '80%', // Ajusta la altura del modal
+      margin: 'auto', // Centra el modal horizontalmente
+    },
+  };
 function EditableTable() {
     const [data, setData] = useState([
         { id: 1, col1: '', col2: '', col3: '', col4: '', col5: '', col6: '', col7: '' },
@@ -52,7 +60,8 @@ function EditableTable() {
     const { cajas, } = useAppSelector((state: { deposito: any }) => state.deposito);
     console.log(cajas)
     return (
-        <table style={{ borderCollapse: 'collapse', width: '80%' }}>
+        
+        <table style={{ borderCollapse: 'collapse', width: '100%' }}>
             <thead>
                 <tr>
                     <th style={{ border: '1px solid #ddd', padding: '8px' }} colSpan={4} rowSpan={4} >
@@ -70,41 +79,41 @@ function EditableTable() {
             <thead>
                 <tr>
                     <th style={{ border: '1px solid #ddd', padding: '3px', fontSize: '10px' }} colSpan={4} rowSpan={4} >RÓTULO DE CAJAS</th>
-                    <th style={{ border: '1px solid #ddd', padding: '5px', borderTop: '1px solid #ddd', fontSize: '10px' }} colSpan={3} >{currentDate}</th>
+                    <th style={{ border: '1px solid #ddd', padding: '5px', borderTop: '1px solid #ddd', fontSize: '8px' }} colSpan={3} >{currentDate}</th>
                 </tr>
 
             </thead>
             <thead>
                 <tr>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left' }} >Unidad Administrativa</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '9px', textAlign: 'left' }} >Unidad Administrativa</th>
                     <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={2} ></th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left' }}  >Código:</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '9px', textAlign: 'left' }}  >Código:</th>
                     <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={3}  ></th>
                 </tr>
 
             </thead>
             <thead>
                 <tr>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left' }}  >Oficina Productora:</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '9px', textAlign: 'left' }}  >Oficina Productora:</th>
                     <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={2} ></th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left' }}  >Código:</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '9px', textAlign: 'left' }}  >Código:</th>
                     <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={3}  ></th>
                 </tr>
 
             </thead>
             <thead>
                 <tr>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left' }} >Serie:</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '9px', textAlign: 'left' }} >Serie:</th>
                     <th style={{ border: '1px solid #ddd', padding: '2px' }} colSpan={2} ></th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', }}  >Código:</th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', width: '60px' }} colSpan={3} ></th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '9px', textAlign: 'left', }}  >Código:</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', width: '9px' }} colSpan={3} ></th>
                 </tr>
 
             </thead>
             <thead>
                 <tr>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'center' }} colSpan={3}  >Caja Número:</th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '12px', textAlign: 'center' }} colSpan={4} >{cajas.id_caja}</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '8px', textAlign: 'center' }} colSpan={3}  >Caja Número:</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '9px', textAlign: 'center' }} colSpan={4} >{cajas.id_caja}</th>
 
                 </tr>
 
@@ -112,22 +121,22 @@ function EditableTable() {
 
             <thead>
                 <tr>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'left', width: '5%' }} >Número de orden </th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'center' }} >Código de serie </th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'center' }} >Identificación CC-Nit-N</th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', textAlign: 'center' }} > Nombre de las series Subseries o Asuntos</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '8px', textAlign: 'left', width: '5%' }} >Número de orden </th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '8px', textAlign: 'center' }} >Código de serie </th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '8px', textAlign: 'center' }} >Identificación CC-Nit-N</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '8px', textAlign: 'center' }} > Nombre de las series Subseries o Asuntos</th>
 
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', borderTop: '1px solid #ddd' }} colSpan={2} >Fechas Externas</th>
-                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '10px', }}  >Número de folios</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '8px', borderTop: '1px solid #ddd' }} colSpan={2} >Fechas Externas</th>
+                    <th style={{ border: '1px solid #ddd', padding: '2px', fontSize: '8px', }}  >Número de folios</th>
                 </tr>
             </thead>
 
             <thead>
                 <tr>
-                    <th style={{ border: '1px solid #ddd', padding: '1px', fontSize: '10px', textAlign: 'center' }} colSpan={4}></th>
-                    <th style={{ border: '1px solid #ddd', padding: '1px', fontSize: '10px', textAlign: 'center' }} >Inicial</th>
-                    <th style={{ border: '1px solid #ddd', padding: '1x', fontSize: '10px', textAlign: 'center' }} >Final</th>
-                    <th style={{ border: '1px solid #ddd', padding: '1px', fontSize: '10px', textAlign: 'center' }} ></th>
+                    <th style={{ border: '1px solid #ddd', padding: '1px', fontSize: '8px', textAlign: 'center' }} colSpan={4}></th>
+                    <th style={{ border: '1px solid #ddd', padding: '1px', fontSize: '8px', textAlign: 'center' }} >Inicial</th>
+                    <th style={{ border: '1px solid #ddd', padding: '1x', fontSize: '8px', textAlign: 'center' }} >Final</th>
+                    <th style={{ border: '1px solid #ddd', padding: '1px', fontSize: '8px', textAlign: 'center' }} ></th>
 
 
                 </tr>
@@ -142,7 +151,7 @@ function EditableTable() {
                                 type="text"
                                 value={row.col1}
                                 onChange={(e) => handleCellEdit(row.id, 'col1', e.target.value)}
-                                style={{ width: '100%', border: 'none', padding: '5px' }}
+                                style={{ width: '100%', border: 'none', padding: '5px', fontSize: '6px'  }}
                             />
                         </td>
                         <td style={{ border: '1px solid #ddd', padding: '8px' }}>
@@ -150,7 +159,7 @@ function EditableTable() {
                                 type="text"
                                 value={row.col2}
                                 onChange={(e) => handleCellEdit(row.id, 'col2', e.target.value)}
-                                style={{ width: '100%', border: 'none', padding: '5px' }}
+                                style={{ width: '100%', border: 'none', padding: '5px', fontSize: '6px'  }}
                             />
                         </td>
                         <td style={{ border: '1px solid #ddd', padding: '8px' }}>
@@ -158,7 +167,7 @@ function EditableTable() {
                                 type="text"
                                 value={row.col3}
                                 onChange={(e) => handleCellEdit(row.id, 'col3', e.target.value)}
-                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' }}
+                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' , fontSize: '6px' }}
                             />
                         </td>
                         <td style={{ border: '1px solid #ddd', padding: '8px' }}>
@@ -166,7 +175,7 @@ function EditableTable() {
                                 type="text"
                                 value={row.col4}
                                 onChange={(e) => handleCellEdit(row.id, 'col4', e.target.value)}
-                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' }}
+                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px', fontSize: '6px' }}
                             />
                         </td>
                         <td style={{ border: '1px solid #ddd', padding: '8px' }}>
@@ -174,7 +183,7 @@ function EditableTable() {
                                 type="text"
                                 value={row.col5}
                                 onChange={(e) => handleCellEdit(row.id, 'col5', e.target.value)}
-                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' }}
+                                style={{ width: '100%', border: 'none', padding: '5px', fontSize: '6px', textAlign: 'left' }}
                             />
                         </td>
                         <td style={{ border: '1px solid #ddd', padding: '8px' }}>
@@ -182,7 +191,7 @@ function EditableTable() {
                                 type="text"
                                 value={row.col6}
                                 onChange={(e) => handleCellEdit(row.id, 'col6', e.target.value)}
-                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' }}
+                                style={{ width: '100%', border: 'none', padding: '5px', fontSize: '6px' , textAlign: 'left'}}
                             />
                         </td>
                         <td style={{ border: '1px solid #ddd', padding: '8px' }}>
@@ -190,13 +199,13 @@ function EditableTable() {
                                 type="text"
                                 value={row.col7}
                                 onChange={(e) => handleCellEdit(row.id, 'col7', e.target.value)}
-                                style={{ width: '100%', border: 'none', padding: '5px', maxWidth: '200px' }}
+                                style={{ width: '70%', border: 'none', padding: '5px', fontSize: '6px',  }}
                             />
                         </td>
                     </tr>
                 ))}
             </tbody>
-            <Grid item xs={12} md={1.5}>
+            <Grid item xs={12} md={1.5} marginTop={2}>
                 <FormButton
 
                     variant_button='outlined'
@@ -217,8 +226,9 @@ const Rotulo = ({ control_rotulo, open, }: IProps) => {
 
     return (
 
+        <div style={styles.modalContainer}>
         <EditableTable />
-
+        </div>
 
     );
 

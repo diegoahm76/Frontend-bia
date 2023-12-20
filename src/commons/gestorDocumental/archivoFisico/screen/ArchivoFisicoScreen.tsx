@@ -9,18 +9,25 @@ import { Title } from '../../../../components';
 import { LoadingButton } from '@mui/lab';
 import BusquedaAvanzadaFisico from '../components/BusquedaAvanzada';
 import {
+  avanzada_bandeja,
+  avanzada_caja,
+  avanzada_carpeta,
   avanzada_deposito,
+  avanzada_deposito_mostrar,
+  avanzada_estante,
   tabla_arbol_deposito,
 } from '../store/thunks/thunksArchivoFisico';
 import {
   IObjBandejaArbol,
   IObjCajaArbol,
+  IObjCarpetaArbol,
   IObjDepositos,
   IObjEstanteArbol,
   IObjEstantes,
 } from '../interface/archivoFisico';
 import {
   initial_state_deposito,
+  reset_state,
   set_listado_depositos,
 } from '../store/slice/indexArchivoFisico';
 import StoreIcon from '@mui/icons-material/Store';
@@ -34,6 +41,9 @@ import {
 } from 'primereact/datatable';
 import TableRowExpansion from '../../../../components/partials/form/TableRowExpansion';
 import { Controller, useForm } from 'react-hook-form';
+import { ButtonAdminCarpetas } from '../components/BotonCarpetas';
+import { ButtonAdminCajas } from '../components/BotonCajas';
+import Limpiar from '../../../conservacion/componentes/Limpiar';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const ArchivoFisicoScreen: React.FC = () => {
   const { control: control_deposito, reset } = useForm<IObjDepositos>();
@@ -42,6 +52,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
   const { control: control_bandeja, reset: reset_bandeja } =
     useForm<IObjBandejaArbol>();
   const { control: control_caja, reset: reset_caja } = useForm<IObjCajaArbol>();
+  const { control: control_carpeta, reset: reset_carpeta } = useForm<IObjCarpetaArbol>();
   const { arbol_deposito, depositos_tabla } = useAppSelector(
     (state) => state.archivo_fisico
   );
@@ -56,6 +67,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [open_modal_avanzada, set_open_modal_avanzada] = useState(false);
 
+
   const [selected_row, set_selected_row] = useState<any | null>(null);
   const handle_buscar = () => {
     set_open_modal_avanzada(true);
@@ -63,7 +75,10 @@ export const ArchivoFisicoScreen: React.FC = () => {
   const handle_close_buscar = () => {
     set_open_modal_avanzada(false);
   };
-
+  const initial_values = (): void => {
+    dispatch(avanzada_deposito_mostrar(null));
+   
+  };
   useEffect(() => {
     reset(selected_arbol);
     reset_estante(selected_arbol);
@@ -229,7 +244,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
       property_name: 'cajas',
     },
     {
-      column_id: 'identificacion_por_carpetas',
+      column_id: 'identificacion_por_carpeta',
       level: 4,
       columns: columns_arbol_carpetas,
       table_name: 'Carpetas',
@@ -240,6 +255,10 @@ export const ArchivoFisicoScreen: React.FC = () => {
   useEffect(() => {
     void dispatch(avanzada_deposito());
   }, []);
+  
+  useEffect(() => {
+    console.log(expanded_rows);
+  }, [expanded_rows]);
   console.log(selected_arbol);
   useEffect(() => {
     const deposito_actual: IObjDepositos | undefined = depositos_tabla.find(
@@ -594,7 +613,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
             </Grid>
           </Grid>
         )}
-         {selected_arbol && selected_arbol.id_cajaa && ( 
+         {selected_arbol && selected_arbol.id_caja && ( 
           <Grid container justifyContent={'center'}>
             <Typography
               variant="h6"
@@ -607,7 +626,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
           </Grid>
        
           )}
-            {selected_arbol && selected_arbol.id_cajaa && ( 
+            {selected_arbol && selected_arbol.id_caja && ( 
           <Grid container justifyContent={'center'}>
             <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
               <Controller
@@ -670,10 +689,134 @@ export const ArchivoFisicoScreen: React.FC = () => {
                 )}
               />
             </Grid>
+            <Grid item marginTop={2.5}>
+                      <ButtonAdminCajas />
+                    </Grid>
+                  
           </Grid>
       
      
       )}
+
+
+{selected_arbol && selected_arbol.id_carpeta && ( 
+          <Grid container justifyContent={'center'}>
+            <Typography
+              variant="h6"
+              align="center"
+              marginTop={2}
+              style={{ fontSize: '0.9rem' }}
+            >
+              TIPO DE ELEMENTO - CARPETA
+            </Typography>
+          </Grid>
+       
+          )}
+            {selected_arbol && selected_arbol.id_carpeta && ( 
+          <Grid container justifyContent={'center'}>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="identificacion_por_carpeta"
+                control={control_carpeta}
+                defaultValue=""
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Identificación"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="orden_carpeta"
+                control={control_carpeta}
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Órden"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
+              <Controller
+                name="numero_expediente"
+                control={control_carpeta}
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    // margin="dense"
+                    fullWidth
+                    label="Número de Expediente"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      // console.log(e.target.value);
+                    }}
+                    error={!(error == null)}
+                    sx={{
+                      backgroundColor: 'white',
+                    }}
+                    disabled={true}
+                  />
+                )}
+              />
+            </Grid>
+          
+                    <Grid item marginTop={2.5}>
+                      <ButtonAdminCarpetas />
+                    </Grid>
+            
+          </Grid>
+      
+     
+      )}
+
+
+
 
 
         <Grid container justifyContent={'center'}>
@@ -693,19 +836,33 @@ export const ArchivoFisicoScreen: React.FC = () => {
             <BusquedaAvanzadaFisico
               open={open_modal_avanzada}
               handle_close_buscar={handle_close_buscar}
+              set_tipo={set_expanded_rows}
             />
           </Grid>
         )}
 
-        <Grid container justifyContent="flex-end" marginTop={2}>
+        <Grid container justifyContent="center" marginTop={2}>
           <LoadingButton
             variant="contained"
             onClick={handle_buscar}
             disabled={false}
           >
-            Buscar
+            Busqueda Avanzada
           </LoadingButton>
+
+
+          <Grid item xs={12} md={3}>
+            <Limpiar
+              dispatch={dispatch}
+              reset_state={reset_state}
+              set_initial_values={initial_values}
+              variant_button={'outlined'}
+              clean_when_leaving={false}
+            />
+          </Grid>
         </Grid>
+
+
       </Grid>
     </>
   );

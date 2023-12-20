@@ -11,20 +11,23 @@ import { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import FormButton from '../../../../../components/partials/form/FormButton';
 import PrintIcon from '@mui/icons-material/Print';
+import { IObjCarpeta } from '../../interfaces/deposito';
+import { get_rotulo_carpeta } from '../../store/thunks/deposito';
 
 interface IProps {
 
     control_rotulo: any;
     open: any;
+    selected_carpeta:any
 
 }
-function EditableTable() {
+function EditableTable({ selected_carpeta }: { selected_carpeta: IObjCarpeta }) {
     const [data, setData] = useState([
         { id: 1, col1: '', col2: '', col3: '', col4: '', col5: '' },
 
 
     ]);
-
+    const dispatch = useAppDispatch();
     const [currentDate, setCurrentDate] = useState(new Date().toLocaleDateString());
 
     const handleCellEdit = (id: number, field: string, value: string) => {
@@ -45,8 +48,17 @@ function EditableTable() {
         return () => clearInterval(interval);
     }, []);
 
-    const { cajas, } = useAppSelector((state: { deposito: any }) => state.deposito);
+    const { cajas, rotulo_carpeta} = useAppSelector((state: { deposito: any }) => state.deposito);
+    console.log(cajas)
+    console.log(rotulo_carpeta)
 
+    useEffect(() => {
+        // Asegúrate de que selected_carpeta.id_carpeta no es undefined
+        if (cajas.id_carpeta !== undefined) {
+          void dispatch(get_rotulo_carpeta(cajas.id_carpeta));
+        }
+      }, [cajas.id_carpeta]); // Agrega selected_carpeta.id_carpeta como dependencia
+      
     return (
         <table style={{ borderCollapse: 'collapse', width: '80%' }}>
             <thead>
@@ -260,13 +272,13 @@ function EditableTable() {
     );
 }
 
-const Rotulo = ({ control_rotulo, open, }: IProps) => {
-    const { deposito, cajas_lista } = useAppSelector((state) => state.deposito);
+const Rotulo = ({ control_rotulo, open, selected_carpeta}: IProps) => {
+    const { deposito, cajas_lista, rotulo_carpeta } = useAppSelector((state) => state.deposito);
     const dispatch = useAppDispatch();
 
     return (
 
-        <EditableTable />
+        <EditableTable  selected_carpeta={selected_carpeta}/>
 
 
     );

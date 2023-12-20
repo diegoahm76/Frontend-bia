@@ -30,6 +30,7 @@ import {
   set_list_pqr_status,
   set_media_types,
   set_municipalities,
+  set_others,
   set_person,
   set_person_types,
   set_persons,
@@ -753,6 +754,64 @@ export const get_filings_service = (params: any): any => {
       return data;
     } catch (error: any) {
       console.log('delete_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+// OTROS //
+
+
+// obtener otros
+export const get_others_service = (id: string | number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`gestor/radicados/otros/get_otros/${id}/`);
+      console.log(data);
+      dispatch(set_others(data.data));
+
+      if ('data' in data) {
+        if (data.data.length > 0) {
+          control_success('Se encontraron pqrs');
+        } else {
+          control_error('No se encontrarón pqrs');
+        }
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_pqrs_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// CREAR OTRO
+
+
+export const add_other_service = (
+  otro: any,
+  navigate: NavigateFunction
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(otro);
+      const { data } = await api.post(`gestor/radicados/otros/crear-otros/`, otro);
+      console.log(data);
+
+      control_success(data.detail);
+      // navigate(
+      //   `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      // );
+
+      dispatch(set_others(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('add_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

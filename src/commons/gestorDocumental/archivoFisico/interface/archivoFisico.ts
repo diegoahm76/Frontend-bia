@@ -6,6 +6,12 @@ export interface IArchivoFisico {
   carpetas: IObjcarpetas[];
  arbol_deposito: IObjarbol;
  depositos_tabla: IObjDepositos[];
+ deposito:IObjDepositos,
+ estante:IObjEstantes,
+ bandeja: IObjBandejas,
+ caja:IObjcajas,
+ carpeta:IObjcarpetas,
+
 }
 
 // busqueda avanzada
@@ -109,5 +115,6 @@ export interface IObjCarpetaArbol{
   id_carpeta: number | null;
   identificacion_por_carpeta?: string | null;
   orden_carpeta?: number | null;
+  numero_expediente?: string | null;
   Informacion_Mostrar?: string | null;
 }
