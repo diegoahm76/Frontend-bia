@@ -27,7 +27,7 @@ export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
         set_opciones_liquidacion(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
       });
   }, []);
 

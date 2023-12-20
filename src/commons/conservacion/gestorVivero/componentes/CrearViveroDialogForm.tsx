@@ -104,7 +104,7 @@ const CrearViveroDialogForm = ({
   useEffect(() => {
     if (file !== null) {
       if ('name' in file) {
-        console.log(file.name);
+        //  console.log('')(file.name);
         set_file_name(file.name);
         dispatch(
           set_current_nursery({
@@ -130,7 +130,7 @@ const CrearViveroDialogForm = ({
   }, [file]);
 
   const on_submit = (data: FormValues): void => {
-    console.log(file);
+    //  console.log('')(file);
     data.ruta_archivo_creacion = file;
     const form_data: any = new FormData();
     form_data.append('nombre', data.nombre);
@@ -220,7 +220,7 @@ const CrearViveroDialogForm = ({
         // });
         void get_numicipalities();
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();

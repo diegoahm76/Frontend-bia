@@ -52,11 +52,18 @@ export const get_documentos_seguimiento_pai = async (
   // Extract the archivo property from each item in the array
   const archivos = response.data.data.map((item: any) => item.archivo);
 
-  console.log(archivos, 'archivos');
+  //  console.log('')(archivos, 'archivos');
 
   return archivos;
 };
-
+export const get_metas_id = async (
+  id_indicador: number
+): Promise<IMetaIndicador[]> => {
+  const response = await api.get(
+    `seguimiento/planes/consultar-metas-id-indicador/${id_indicador}/`
+  );
+  return response.data.data;
+};
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
 export const post_seguimiento_pai = async (
   data: ISeguimientoPAI,

@@ -66,7 +66,7 @@ export const get_trd = (): any => {
 export const get_tipologias = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get('gestor/expedientes-archivos/expedientes/listar-topologias/');
+            const { data } = await api.get('gestor/expedientes-archivos/expedientes/listar-tipologias/');
 
             if (data.success === true) {
                 dispatch(set_tipologias(data.data));
@@ -102,7 +102,7 @@ export const get_busqueda_avanzada_expediente = (
                 dispatch(set_expedientes(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -123,7 +123,7 @@ export const crear_archivo_soporte: any = (
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-            console.log(error.response.data);
+            //  console.log('')(error.response.data);
             return error as AxiosError;
         }
     };
@@ -143,7 +143,7 @@ export const get_archivos_id_expediente = (
                 control_success(data.detail)
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -166,7 +166,7 @@ export const update_file = (
                 //  dispatch(set_archivos_por_expediente(data.data));
                 control_success(data.detail)
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.respuesta.data.detail);
@@ -188,7 +188,7 @@ export const cerrar_expediente: any = (
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-            console.log(error.response.data);
+            //  console.log('')(error.response.data);
             return error as AxiosError;
         }
     };
@@ -215,7 +215,7 @@ export const get_busqueda_avanzada_expediente_cerrado = (
                 dispatch(set_expedientes(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -238,7 +238,7 @@ export const get_informacion_reapertura = (
                 dispatch(set_informacion_reapertura(data.data));
 
             }
-            console.log(data)
+            //  console.log('')(data)
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -260,7 +260,7 @@ export const reapertura_expediente: any = (
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-            console.log(error.response.data);
+            //  console.log('')(error.response.data);
             return error as AxiosError;
         }
     };
@@ -277,7 +277,7 @@ export const delete_file = (
             const { data } = await api.delete(`gestor/expedientes-archivos/expedientes/eliminar-archivo-soporte/${id}/`
 
             );
-            console.log(data);
+            //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail);

@@ -19,16 +19,16 @@ export const getSeriesSubseries = async (
     const { data } = await api.get(url);
     if (data?.data?.length > 0) {
       control_success('Se encontraron las siguientes series/subseries documentales');
-      console.log(data?.data);
+      //  console.log('')(data?.data);
       return data?.data;
     } else {
       control_warning('No se encontraron series/subseries documentales');
-      console.log('no se encontraron series documentales');
+      //  console.log('')('no se encontraron series documentales');
       return [];
     }
   } catch (error: any) {
     control_error(error?.response?.data?.detail);
-    console.log(error);
+    //  console.log('')(error);
   } finally {
     setLoadingSeriesSubseries(false);
   }

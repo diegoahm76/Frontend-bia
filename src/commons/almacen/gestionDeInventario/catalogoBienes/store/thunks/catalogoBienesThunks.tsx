@@ -51,7 +51,7 @@ export const get_bienes_service = (): any => {
       dispatch(get_bienes(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_bienes_service');
+      //  console.log('')('get_bienes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -71,20 +71,20 @@ export const add_bien_service: any = (bien: any) => {
         maneja_hoja_vida: hv,
         visible_solicitudes: visible_solicitudes_const,
       };
-      console.log(new_obj)
+      //  console.log('')(new_obj)
       const { data } = await api.post(
         'almacen/bienes/catalogo-bienes/post/',
         new_obj,
       );
       dispatch(get_bienes_service());
-      // console.log(bien)
-      // console.log(data)
+      // //  console.log('')(bien)
+      // //  console.log('')(data)
       control_success('El bien se agrego correctamente');
       return data;
     } catch (error: any) {
-      console.log('add_bien_service', bien);
+      //  console.log('')('add_bien_service', bien);
       control_error(error.response.data.detail);
-      console.log(error);
+      //  console.log('')(error);
       return error as AxiosError;
     }
   };
@@ -141,9 +141,9 @@ export const delete_nodo_service: any = (id: number) => {
       control_success('Se elimino correctamente');
       return data;
     } catch (error: any) {
-      console.log('eliminar_nodo_service');
+      //  console.log('')('eliminar_nodo_service');
       control_error(error.response.data.detail);
-      console.log(error);
+      //  console.log('')(error);
       return error as AxiosError;
     }
   };

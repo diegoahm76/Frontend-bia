@@ -22,8 +22,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 import {
+  initial_state_pqr,
   reset_state,
   set_attorney,
+  set_denuncia,
   set_exhibits,
   set_grantor,
   set_on_behalf_of,
@@ -61,6 +63,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useParams } from 'react-router-dom';
 import StepDenuncia from '../componentes/CrearPQRSDF/StepDenuncia';
+import ImprimirRadicado from '../componentes/ImpresionRadicado/ImprimirRadicado';
+import { ImpresionRadicadoScreen } from './ImpresionRadicadoScreen';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearPqrsdfScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -78,6 +82,8 @@ export function CrearPqrsdfScreen(): JSX.Element {
     pqr_status,
     pqr,
     exhibits,
+    denuncia,
+    filed,
   } = useAppSelector((state) => state.pqrsdf_slice);
 
   const {
@@ -96,8 +102,11 @@ export function CrearPqrsdfScreen(): JSX.Element {
   const { id } = useParams();
 
   useEffect(() => {
+    dispatch(set_pqr(initial_state_pqr));
+    set_action('crear');
     if (id !== null && id !== undefined) {
       void dispatch(get_pqrsdf_id_service(id));
+    } else {
     }
     // if (type_applicant.key === null) {
     //       // no viene de ventanilla
@@ -202,7 +211,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
   };
   const validate_denuncia = (data: any, step: number) => {
     console.log('validate_denuncia', data, pqr);
-    dispatch(set_pqr({ ...pqr, denuncia: data, anexos: exhibits }));
+    dispatch(set_denuncia(data));
   };
   const [configuration_steps, set_configuration_steps] = useState<
     IObjStepConfiguration[]
@@ -259,7 +268,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
         },
       ]);
     } else {
-      dispatch(set_pqr({ ...pqr, denuncia: null }));
       set_configuration_steps([
         {
           step_number: 1,
@@ -311,12 +319,14 @@ export function CrearPqrsdfScreen(): JSX.Element {
       if ('anexos' in pqr) {
         if (pqr.anexos === undefined && pqr.anexos === null) {
           set_step(0);
+          console.log(pqr);
           void dispatch(get_pqrsdf_id_service(pqr.id_PQRSDF));
         } else {
           dispatch(set_exhibits(pqr.anexos ?? []));
         }
       } else {
         set_step(0);
+        console.log(pqr);
         void dispatch(get_pqrsdf_id_service(pqr.id_PQRSDF));
       }
       if (pqr.cod_tipo_PQRSDF === 'D') {
@@ -372,6 +382,8 @@ export function CrearPqrsdfScreen(): JSX.Element {
         ]);
       }
       set_action('editar');
+    } else {
+      set_action('crear');
     }
   }, [pqr]);
 
@@ -383,6 +395,8 @@ export function CrearPqrsdfScreen(): JSX.Element {
   }, [exhibits]);
 
   const on_submit = (data: IObjPqr): void => {
+    console.log(person, attorney, company);
+
     const form_data: any = new FormData();
     if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
       const fecha_actual = new Date();
@@ -405,31 +419,30 @@ export function CrearPqrsdfScreen(): JSX.Element {
           });
           ya_digitalizado = elemento.metadatos === null ? false : true;
         });
-        console.log(aux_items);
 
         const data_edit: any = {
           ...data,
           cantidad_anexos: exhibits.length,
           nro_folios_totales: folios,
-          cod_relacion_con_el_titular: 'MP',
-          es_anonima: false,
           anexos: aux_items,
           requiere_digitalizacion: !ya_digitalizado,
           denuncia:
-            data.denuncia === null
-              ? null
-              : {
-                  ...(data.denuncia || {}),
-                  cod_recursos_fectados_presuntos:
-                    typeof data.denuncia?.cod_recursos_fectados_presuntos ===
-                    'string'
-                      ? data.denuncia?.cod_recursos_fectados_presuntos
-                      : Array.isArray(
-                          data.denuncia?.cod_recursos_fectados_presuntos
-                        )
-                      ? data.denuncia?.cod_recursos_fectados_presuntos.join('|')
-                      : '',
-                },
+            denuncia !== null
+              ? denuncia.Cod_zona_localizacion === null
+                ? null
+                : {
+                    ...(denuncia || {}),
+                    cod_recursos_fectados_presuntos:
+                      typeof denuncia?.cod_recursos_fectados_presuntos ===
+                      'string'
+                        ? denuncia?.cod_recursos_fectados_presuntos
+                        : Array.isArray(
+                            denuncia?.cod_recursos_fectados_presuntos
+                          )
+                        ? denuncia?.cod_recursos_fectados_presuntos.join('|')
+                        : '',
+                  }
+              : null,
         };
         console.log(data_edit);
         form_data.append('pqrsdf', JSON.stringify(data_edit));
@@ -457,7 +470,10 @@ export function CrearPqrsdfScreen(): JSX.Element {
             }
           }
         });
-        form_data.append('isCreateForWeb', 'True');
+        form_data.append(
+          'isCreateForWeb',
+          userinfo.tipo_usuario === 'E' ? 'True' : 'False'
+        );
 
         void dispatch(edit_pqrsdf_service(form_data, navigate));
       } else {
@@ -484,14 +500,63 @@ export function CrearPqrsdfScreen(): JSX.Element {
       const data_edit: any = {
         ...data,
         fecha_registro: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
-        id_persona_titular: userinfo.id_persona,
-        id_persona_interpone: userinfo.id_persona,
+        id_persona_titular:
+          userinfo.tipo_usuario === 'E'
+            ? userinfo.id_persona
+            : person.id_persona !== null
+            ? person.id_persona
+            : grantor.id_persona !== null
+            ? grantor.id_persona
+            : company.id_persona !== null
+            ? company.id_persona
+            : 0,
+        id_persona_interpone:
+          userinfo.tipo_usuario === 'E'
+            ? userinfo.id_persona
+            : person.id_persona !== null
+            ? person.id_persona
+            : attorney.id_persona !== null
+            ? attorney.id_persona
+            : company.id_persona !== null
+            ? company.persona_representante?.id_persona
+            : 0,
         cantidad_anexos: exhibits.length,
         nro_folios_totales: folios,
-        cod_relacion_con_el_titular: 'MP',
-        es_anonima: false,
+        cod_relacion_con_el_titular:
+          userinfo.tipo_usuario === 'E'
+            ? 'MP'
+            : person.id_persona !== null
+            ? 'MP'
+            : grantor.id_persona !== null
+            ? 'AP'
+            : company.id_persona !== null
+            ? 'RL'
+            : 'MP',
+        es_anonima:
+          userinfo.tipo_usuario === 'E'
+            ? false
+            : person.id_persona === null &&
+              grantor.id_persona === null &&
+              company.id_persona === null
+            ? true
+            : false,
         anexos: aux_items,
         requiere_digitalizacion: !ya_digitalizado,
+        denuncia:
+          denuncia !== null
+            ? denuncia.Cod_zona_localizacion === null
+              ? null
+              : {
+                  ...(denuncia || {}),
+                  cod_recursos_fectados_presuntos:
+                    typeof denuncia?.cod_recursos_fectados_presuntos ===
+                    'string'
+                      ? denuncia?.cod_recursos_fectados_presuntos
+                      : Array.isArray(denuncia?.cod_recursos_fectados_presuntos)
+                      ? denuncia?.cod_recursos_fectados_presuntos.join('|')
+                      : '',
+                }
+            : null,
       };
       console.log(data_edit);
 
@@ -502,8 +567,20 @@ export function CrearPqrsdfScreen(): JSX.Element {
           elemento.exhibit_link
         );
       });
-      form_data.append('id_persona_guarda', userinfo.id_persona);
-      form_data.append('isCreateForWeb', 'True');
+      form_data.append(
+        'id_persona_guarda',
+        userinfo.tipo_usuario === 'E'
+          ? userinfo.id_persona
+          : person.id_persona === null &&
+            grantor.id_persona === null &&
+            company.id_persona === null
+          ? 0
+          : userinfo.id_persona
+      );
+      form_data.append(
+        'isCreateForWeb',
+        userinfo.tipo_usuario === 'E' ? 'True' : 'False'
+      );
 
       void dispatch(add_pqrsdf_service(form_data, navigate));
     }
@@ -576,6 +653,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
           set_success={set_flag_create}
           step={step}
         />
+        {filed.numero_radicado_completo !== null && <ImpresionRadicadoScreen />}
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton

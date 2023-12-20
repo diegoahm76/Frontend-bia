@@ -22,6 +22,7 @@ export const useSeguimientoPAIHook = (): any => {
     formState: { errors: errors_seguimiento_pai },
   } = useForm<ISeguimientoPAI>({
     defaultValues: {
+      nombre_programa: '',
       nombre_proyecto: '',
       nombre_producto: '',
       nombre_actividad: '',
@@ -41,7 +42,10 @@ export const useSeguimientoPAIHook = (): any => {
       beneficiarios: '',
       compromisos: '',
       contratros: '',
+      adelanto: '',
+      fecha_creacion: '',
       id_unidad_organizacional: 0,
+      id_programa: 0,
       id_proyecto: 0,
       id_producto: 0,
       id_actividad: 0,
@@ -82,6 +86,8 @@ export const useSeguimientoPAIHook = (): any => {
       beneficiarios: '',
       compromisos: '',
       contratros: '',
+      adelanto: '',
+      fecha_creacion: '',
       id_unidad_organizacional: 0,
       id_proyecto: 0,
       id_producto: 0,
@@ -106,6 +112,9 @@ export const useSeguimientoPAIHook = (): any => {
   const onsubmit_seguimiento_pai = handleSubmit_seguimiento_pai(
     async (data) => {
       try {
+        data.fecha_creacion = dayjs(data.fecha_creacion).format('YYYY-MM-DD');
+
+        console.log('data', data);
         const datos_documentos = new FormData();
 
         archivos.forEach((archivo: any) => {
@@ -139,8 +148,11 @@ export const useSeguimientoPAIHook = (): any => {
 
   const onsubmit_editar = handleSubmit_seguimiento_pai(async (data) => {
     try {
+      console.log('data', data);
+
       set_is_saving_seguimiento_pai(true);
       data.fecha_registro_avance = fecha_registro_avance;
+      data.fecha_creacion = dayjs(data.fecha_creacion).format('YYYY-MM-DD');
       const datos_documentos = new FormData();
 
       archivos.forEach((archivo: any) => {

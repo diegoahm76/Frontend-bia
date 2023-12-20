@@ -74,7 +74,7 @@ const SeleccionarMortalidad = ({
     if (file !== null) {
       if ('name' in file) {
         set_file_name(file.name);
-        console.log(file.name);
+        //  console.log('')(file.name);
         dispatch(
           set_current_mortalidad({
             ...current_mortalidad,

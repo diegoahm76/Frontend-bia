@@ -36,7 +36,7 @@ const AprobacionSolicitudViveroScreen = () => {
     }, [nro_solicitud]);
 
     useEffect(() => {
-        // console.log(current_solicitud)
+        // //  console.log('')(current_solicitud)
         reset_solicitud_aprobacion(current_solicitud)
         if ('persona_solicita' in current_solicitud) {
             reset_solicitud_aprobacion(current_solicitud)
@@ -50,7 +50,7 @@ const AprobacionSolicitudViveroScreen = () => {
 
             if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
                 void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
-                console.log("ok")
+                //  console.log('')("ok")
             }
         }
 
@@ -70,7 +70,7 @@ const AprobacionSolicitudViveroScreen = () => {
         }
 
         void dispatch(aprobacion_solicitud_pendiente_vivero(form_data, data.id_solicitud_consumibles))
-        console.log(form_data)
+        //  console.log('')(form_data)
     }
 
 

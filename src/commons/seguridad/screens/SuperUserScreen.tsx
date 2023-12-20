@@ -92,7 +92,7 @@ export const SuperUserScreen = ({
   };
 
   const handleClose = (): void => {
-    console.log('onClose called');
+    //  console.log('')('onClose called');
     onClose();
   };
 

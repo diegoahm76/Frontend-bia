@@ -16,7 +16,7 @@ export const getComplementosAsociadosPqrsdf = async (
     )}`;
     const { data } = await api.get(url);
     if (data?.data?.length) {
-      console.log(data.data);
+      //  console.log('')(data.data);
       control_success(`${data?.detail} de complementos`);
       return data?.data;
     }

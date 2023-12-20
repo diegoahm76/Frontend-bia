@@ -166,7 +166,7 @@ export function LevantamientoCuarentenaScreen(): JSX.Element {
   useEffect(() => {
     if (current_lifting.id_item_levanta_cuarentena !== null) {
       set_action('editar');
-      console.log(current_plant_quarantine);
+      //  console.log('')(current_plant_quarantine);
       reset_levantamiento({
         ...current_lifting,
         id_cuarentena_mat_vegetal:
@@ -240,7 +240,7 @@ export function LevantamientoCuarentenaScreen(): JSX.Element {
         cantidad_a_levantar: Number(data.cantidad_a_levantar),
         observaciones: data.observaciones,
       };
-      console.log(aux);
+      //  console.log('')(aux);
       void dispatch(add_lifting_quarantine_service(form_data));
     }
   };

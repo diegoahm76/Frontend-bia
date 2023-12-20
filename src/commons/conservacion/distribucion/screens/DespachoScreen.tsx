@@ -122,7 +122,7 @@ const DespachoScreen = () => {
   };
 
   useEffect(() => {
-    // console.log(watch_despacho('id_vivero'));
+    // //  console.log('')(watch_despacho('id_vivero'));
 
     if (watch_despacho('id_vivero') !== null) {
       const vivero: IObjNursery | undefined = nurseries.find(
@@ -150,7 +150,7 @@ const DespachoScreen = () => {
   }, [nro_despacho]);
 
   useEffect(() => {
-    // console.log(current_solicitud)
+    // //  console.log('')(current_solicitud)
     reset_solicitud(current_solicitud);
     if ('persona_solicita' in current_solicitud) {
       reset_solicitud(current_solicitud);
@@ -184,8 +184,8 @@ const DespachoScreen = () => {
   }, [current_solicitud]);
 
   useEffect(() => {
-    // console.log(current_solicitud)
-    // console.log(current_despacho);
+    // //  console.log('')(current_solicitud)
+    // //  console.log('')(current_despacho);
     reset_despacho(current_despacho);
     if ('persona_crea' in current_despacho) {
       reset_despacho(current_despacho);
@@ -224,7 +224,7 @@ const DespachoScreen = () => {
   }, [persona_solicita]);
 
   useEffect(() => {
-    // console.log(transfer_person);
+    // //  console.log('')(transfer_person);
     dispatch(
       set_current_despacho({
         ...current_despacho,
@@ -240,7 +240,7 @@ const DespachoScreen = () => {
     const format_date = new Date(fecha_despacho ?? '').toISOString();
 
     if (origin_nursery.id_vivero !== null) {
-      // console.log(nro_solicitud, format_date);
+      // //  console.log('')(nro_solicitud, format_date);
       void dispatch(
         get_solicitudes_despacho(
           origin_nursery.id_vivero,
@@ -315,7 +315,7 @@ const DespachoScreen = () => {
         ruta_archivo_con_recibido: data.ruta_archivo_con_recibido,
         items_despacho: aux_items,
       };
-      console.log(aux);
+      //  console.log('')(aux);
       form_data.append('info_despacho', JSON.stringify({ ...data_edit }));
       form_data.append(
         'ruta_archivo_con_recibido',
@@ -330,7 +330,7 @@ const DespachoScreen = () => {
     const data_annul = {
       justificacion: data.justificacion_anulacion,
     };
-    console.log(data_annul);
+    //  console.log('')(data_annul);
     if (
       current_despacho.id_despacho_viveros !== null &&
       current_despacho.id_despacho_viveros !== undefined
@@ -364,7 +364,7 @@ const DespachoScreen = () => {
       fecha_cierra_solicitud: null,
       gestionada_viveros: null,
     };
-    console.log(data_closed);
+    //  console.log('')(data_closed);
     if (
       current_solicitud.id_solicitud_vivero !== null &&
       current_solicitud.id_solicitud_vivero !== undefined

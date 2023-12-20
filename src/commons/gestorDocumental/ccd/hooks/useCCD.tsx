@@ -175,12 +175,12 @@ const use_ccd = () => {
     formState: { errors: errors_create_ccd },
   } = useForm<ICCDForm>({ defaultValues: initial_state });
   const data_create_ccd = watch_create_ccd();
-  // console.log(data_create_ccd, 'data_create_ccd');
+  // //  console.log('')(data_create_ccd, 'data_create_ccd');
 
   //  UseEffect para obtener organigramas
   useEffect(() => {
-    // console.log(data_create_ccd, 'data_create_ccd');
-    // console.log(ccd_current, 'ccd_current');
+    // //  console.log('')(data_create_ccd, 'data_create_ccd');
+    // //  console.log('')(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
       const result_name = organigram.filter((item: any) => {
         return item.id_organigrama === ccd_current.id_organigrama;
@@ -190,8 +190,8 @@ const use_ccd = () => {
         (item) => item.id_organigrama === ccd_current.id_organigrama
       ); */
 
-      // console.log('result_name', result_name);
-      // console.log('result_unity', result_unity);
+      // //  console.log('')('result_name', result_name);
+      // //  console.log('')('result_unity', result_unity);
       const obj: ICCDForm = {
         id_ccd: ccd_current.id_ccd ? ccd_current.id_ccd : 0,
         nombre_ccd: ccd_current.nombre ? ccd_current.nombre : '',
@@ -239,7 +239,7 @@ const use_ccd = () => {
           value: assignments_ccd_current.id_unidad_organizacional,
         },
       };
-      // console.log(obj, 'obj');
+      // //  console.log('')(obj, 'obj');
       reset(obj);
       set_title_button_asing('Editar relación');
     }
@@ -275,7 +275,7 @@ const use_ccd = () => {
   }, [data_create_ccd.organigrama.value]);
 
   useEffect(() => {
-    console.log('uniry_organigram', unity_organigram);
+    //  console.log('')('uniry_organigram', unity_organigram);
     const filteredUnityOrganigram = unity_organigram.filter(
       (item: any) => item.cod_agrupacion_documental !== null && item.activo
     );
@@ -286,7 +286,7 @@ const use_ccd = () => {
       value: item.id_unidad_organizacional!,
     }));
 
-    console.log(filter, 'filter');
+    //  console.log('')(filter, 'filter');
 
     set_list_unitys(
       filteredUnityOrganigram
@@ -349,8 +349,8 @@ const use_ccd = () => {
   // submit Crear CCD
   const on_submit_create_ccd = (e: any): void => {
     e.preventDefault();
-    // console.log(data_create_ccd, 'data_create_ccd');
-    // console.log('epa la patria', ccd_current);
+    // //  console.log('')(data_create_ccd, 'data_create_ccd');
+    // //  console.log('')('epa la patria', ccd_current);
     if (ccd_current !== null) {
       update_ccd(data_create_ccd);
     } else {
@@ -377,7 +377,7 @@ const use_ccd = () => {
       }
     }
 
-    // console.log('new_ccd', new_ccd);
+    // //  console.log('')('new_ccd', new_ccd);
     void dispatch(
       create_ccds_service(
         formData,
@@ -401,7 +401,7 @@ const use_ccd = () => {
         ? data_create_ccd.ruta_soporte
         : data_create_ccd.ruta_soporte,
     };
-    // console.log(data_create_ccd.ruta_soporte, 'data_create_ccd.ruta_soporte')
+    // //  console.log('')(data_create_ccd.ruta_soporte, 'data_create_ccd.ruta_soporte')
 
     // Convertir el objeto new_ccd en un objeto FormData
     const formData: any = new FormData();
@@ -478,8 +478,8 @@ const use_ccd = () => {
     activateLoadingButtonGuardarRelacion: any,
     desactivateLoadingButtonGuardarRelacion: any
   ): any => {
-    console.log(data_asing, 'data_asing');
-    console.log('epa la patria', ccd_current);
+    //  console.log('')(data_asing, 'data_asing');
+    //  console.log('')('epa la patria', ccd_current);
     const itemSend = data_asing.catalogo_asignacion.map(
       (item: {
         item: {
@@ -510,7 +510,7 @@ const use_ccd = () => {
 
     const itemSendDef = [...assignments_ccd, ...itemSend];
 
-    // console.log(itemSendDef, 'itemSendDef');
+    // //  console.log('')(itemSendDef, 'itemSendDef');
 
     void dispatch(
       create_or_delete_assignments_service(
@@ -588,9 +588,9 @@ const use_ccd = () => {
           <>
             <IconButton
               onClick={() => {
-                // console.log('elimaniando relación');
+                // //  console.log('')('elimaniando relación');
                 delete_asing(params.row.id);
-                // console.log(params.row);
+                // //  console.log('')(params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

@@ -115,7 +115,7 @@ export const BusquedaSeccionSubseccion: React.FC = (): JSX.Element => {
 
         if (data?.length > 0) {
           set_rows(data);
-          console.log(data, 'data busqueda');
+          //  console.log('')(data, 'data busqueda');
         }
       } catch (error) {
         const temp_error = error as AxiosError;

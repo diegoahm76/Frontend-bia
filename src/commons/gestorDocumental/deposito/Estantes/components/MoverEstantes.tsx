@@ -59,8 +59,8 @@ export const MoverEstantes: React.FC = () => {
     //   'deposito_actual',
     //   data_depositos?.nombre_deposito
     // );
-    console.log('entro');
-    console.log('data_depositos', data_depositos);
+    //  console.log('')('entro');
+    //  console.log('')('data_depositos', data_depositos);
     reset_mover_estantes({
       identificacion_estante: data_estantes?.identificacion_por_deposito,
       deposito_actual: data_depositos?.nombre_deposito,
@@ -79,7 +79,7 @@ export const MoverEstantes: React.FC = () => {
       'deposito_actual',
       data_depositos?.nombre_deposito
     );
-    console.log('entro primero');
+    //  console.log('')('entro primero');
     // reset_mover_estantes({
     //   identificacion_estante: data_estantes?.identificacion_por_deposito,
     //   deposito_actual: data_depositos?.nombre_deposito,

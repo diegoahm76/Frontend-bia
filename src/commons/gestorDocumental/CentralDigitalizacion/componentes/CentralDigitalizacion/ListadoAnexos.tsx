@@ -53,7 +53,7 @@ const ListadoAnexos = () => {
     useState<boolean>(false);
 
   useEffect(() => {
-    console.log(digitization_request);
+    //  console.log('')(digitization_request);
     if (
       digitization_request.id_solicitud_de_digitalizacion !== null &&
       digitization_request.anexos !== undefined
@@ -63,7 +63,7 @@ const ListadoAnexos = () => {
   }, [digitization_request]);
 
   useEffect(() => {
-    console.log(exhibit);
+    //  console.log('')(exhibit);
     reset(exhibit);
 
     if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {

@@ -157,12 +157,12 @@ export const Encuesta: React.FC = () => {
         try {
             const response = await api.post("/gestor/encuestas/datos_encuestas_resueltas/create/", dataToSend);
             if (response.data.success) {
-                console.log("Encuesta enviada exitosamente.");
+                //  console.log('')("Encuesta enviada exitosamente.");
                 control_success("Encuesta diligenciada exitosamente ");
                 setSelectedEncuestaId(null);
 
             } else {
-                console.log(response.data.detail);
+                //  console.log('')(response.data.detail);
             }
         } catch (error: any) {
             console.error("Error al enviar la encuesta:", error);
@@ -250,7 +250,7 @@ export const Encuesta: React.FC = () => {
         }
     }, [usuarioData]);
     const handleTipoUsuarioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.value)
+        //  console.log('')(event.target.value)
         const value = event.target.value;
         if (value === "A") {
             setFormData({

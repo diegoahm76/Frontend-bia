@@ -51,7 +51,7 @@ export const ModalUniExterSecResp = (params: any): JSX.Element => {
           }
         : elemento
     );
-    console.log(DATOS_ACTUALIZADOS);
+    //  console.log('')(DATOS_ACTUALIZADOS);
     dispatch(callback(DATOS_ACTUALIZADOS));
   };
 
@@ -78,7 +78,7 @@ export const ModalUniExterSecResp = (params: any): JSX.Element => {
           }
         : elemento
     );
-    console.log(DATOS_ACTUALIZADOS);
+    //  console.log('')(DATOS_ACTUALIZADOS);
     dispatch(callback(DATOS_ACTUALIZADOS));
   };
 
@@ -275,7 +275,7 @@ export const ModalUniExterSecResp = (params: any): JSX.Element => {
       maxWidth="md"
       open={modalUniExt}
       onClose={() => {
-        console.log('cerrando modal');
+        //  console.log('')('cerrando modal');
         setmodalUniExt(false);
       }}
     >
@@ -303,7 +303,7 @@ export const ModalUniExterSecResp = (params: any): JSX.Element => {
             variant="contained"
             color="error"
             onClick={() => {
-              console.log('cerrando modal');
+              //  console.log('')('cerrando modal');
               setmodalUniExt(false);
             }}
             startIcon={<CloseIcon />}

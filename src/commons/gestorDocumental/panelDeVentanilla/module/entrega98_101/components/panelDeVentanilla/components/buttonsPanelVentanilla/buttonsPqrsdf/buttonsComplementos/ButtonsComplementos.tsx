@@ -9,8 +9,9 @@ import { withValidation } from '../../functions/validationAction';
 import { showAlert } from '../../../../../../../../../../../utils/showAlert/ShowAlert';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { resetPanelVentanillaFull } from '../../../../../../../../toolkit/store/PanelVentanillaStore';
+import { resetPanelVentanillaFull, setActionssToManagePermissions } from '../../../../../../../../toolkit/store/PanelVentanillaStore';
 import { postDigitalizacionComplementos } from '../../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service';
+import { useEffect } from 'react';
 
 export const ButtonsComplementos = (): JSX.Element => {
   //* dispatch declaration
@@ -55,14 +56,6 @@ export const ButtonsComplementos = (): JSX.Element => {
     });
   });
 
-  /*  const handleAsignacionPersonal = withValidation(() =>
-    console.log('Enviar solicitud al usuario')
-  );
-
-  const handleAsignacionGrupo = withValidation(() =>
-    console.log('Asignar al grupo')
-  );
-*/
   const handleContinuarAsignacionAGrupo = withValidation(() =>
     console.log('Continuar con asignación de grupo')
   );
@@ -73,12 +66,6 @@ export const ButtonsComplementos = (): JSX.Element => {
       case 'Dig':
         handleDigitalizacion(action, navigate);
         break;
-      /*case 'AsigPer':
-        handleAsignacionPersonal(action, navigate);
-        break;
-      case 'AsigGrup':
-        handleAsignacionGrupo(action, navigate);
-        break;*/
       case 'ContinuarAsigGrup':
         handleContinuarAsignacionAGrupo(action, navigate);
         break;
@@ -86,6 +73,7 @@ export const ButtonsComplementos = (): JSX.Element => {
         break;
     }
   };
+
 
   return (
     <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
@@ -103,7 +91,7 @@ export const ButtonsComplementos = (): JSX.Element => {
             path: string;
             disabled: boolean;
           }) =>
-            action.disabled ? null : (
+            action.disabled ? <></> : (
               <SpeedDialAction
                 key={action.name}
                 icon={action.icon}

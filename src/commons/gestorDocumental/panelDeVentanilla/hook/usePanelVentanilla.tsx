@@ -17,11 +17,21 @@ export const usePanelVentanilla = () => {
     // ? pendiente el tipado, ya que por base de datos quizá cambie la información que se necesita
     defaultValues: {
       // ? para pqrsdf
+      fecha_inicio: '',
+      fecha_fin: '',
+      unidad_organizacional: {
+        value: '',
+        label: '',
+      },
       tipo_de_solicitud: {
         value: '',
         label: '',
       },
       estado_actual_solicitud: {
+        value: '',
+        label: '',
+      },
+      tipo_pqrsdf: {
         value: '',
         label: '',
       },
@@ -46,7 +56,12 @@ export const usePanelVentanilla = () => {
   const reset_search_form = () =>
     reset_busqueda_panel_ventanilla({
       // ? para pqrsdf
-
+      fecha_inicio: '',
+      fecha_fin: '',
+      unidad_organizacional: {
+        value: '',
+        label: '',
+      },
       //* se debe evaluar el borrado de los valores del selector llamado tipo de solicitud
       tipo_de_solicitud: {
         value: '',
@@ -95,7 +110,7 @@ export const usePanelVentanilla = () => {
   });
 
   const watchFormularioValues = watchFormulario();
-  console.log('watchFormulario', watchFormularioValues);
+  //  console.log('')('watchFormulario', watchFormularioValues);
 
   const resetFormularioFunction = () => {
     setValueFormulario('medio_almacenamiento', '');
@@ -123,7 +138,10 @@ export const usePanelVentanilla = () => {
         value: '',
         label: '',
       },
-      origenArchivoMetadatos: 'Electrónico',
+      origenArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
       tieneTipologiaRelacionadaMetadatos: {
         value: '',
         label: '',
@@ -141,7 +159,7 @@ export const usePanelVentanilla = () => {
 
   //
   const watchExeManejoModalMetadatos = watchManejoMetadatosModal();
-  // console.log('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
+  // //  console.log('')('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
 
   // ? reset de los valores del modal de metadatos
   const resetManejoMetadatosModalFunction = () =>
@@ -154,7 +172,10 @@ export const usePanelVentanilla = () => {
         value: '',
         label: '',
       },
-      origenArchivoMetadatos: 'Electrónico',
+      origenArchivoMetadatos: {
+        label: '',
+        value: '',
+      },
       tieneTipologiaRelacionadaMetadatos: {
         value: '',
         label: '',

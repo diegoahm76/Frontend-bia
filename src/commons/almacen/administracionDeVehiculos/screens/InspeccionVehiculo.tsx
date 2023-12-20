@@ -92,7 +92,7 @@ export const InspeccionVehiculoScreen: React.FC = () => {
 
   const guardar_formulario = (): void => {
     if (validar_formulario()) {
-      console.log('ok', user_info);
+      // //  console.log('')('ok', user_info);
     }
   }
 

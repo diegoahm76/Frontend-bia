@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Button,
-  FormControl,
   FormControlLabel,
   Grid,
-  MenuItem,
-  Select,
   Switch,
   TextField,
 } from '@mui/material';

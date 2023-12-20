@@ -63,7 +63,7 @@ const TipoPoderdante = () => {
 
   // useEffect(() => {
   //   // void dispatch(get_document_types_service());
-  //   console.log(watch('document_type'));
+  //   //  console.log('')(watch('document_type'));
   // }, [watch('document_type')]);
 
   useEffect(() => {
@@ -166,7 +166,7 @@ const TipoPoderdante = () => {
     const type = get_values('tipo_documento') ?? '';
     const name = get_values('primer_nombre') ?? '';
     const last_name = get_values('primer_apellido') ?? '';
-    console.log(document, type, name, last_name, person_type);
+    //  console.log('')(document, type, name, last_name, person_type);
     void dispatch(
       get_persons_service(type, document, name, last_name, '', '', false)
     );

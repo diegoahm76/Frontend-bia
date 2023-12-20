@@ -22,9 +22,9 @@ export const ConfirmarCuentaScreen: React.FC = () => {
   //   try {
   //     const { data } = await verify_account(token as string);
 
-  //     console.log(data);
+  //     //  console.log('')(data);
   //     set_cuenta_confirmada(true);
-  //     console.log(cuenta_confirmada);
+  //     //  console.log('')(cuenta_confirmada);
   //   } catch (error) {
   //     control_error(error);
   //   }

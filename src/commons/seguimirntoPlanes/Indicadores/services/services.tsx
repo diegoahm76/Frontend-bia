@@ -1,10 +1,14 @@
 import { api } from '../../../../api/axios';
-import type { IMedicion, ITipos } from '../../configuraciones/interfaces/interfaces';
+import type {
+  IMedicion,
+  ITipos,
+} from '../../configuraciones/interfaces/interfaces';
 import type {
   IProductos,
   Indicadores,
   IPlanes,
   IActividades,
+  IProyectos,
 } from '../../types/types';
 
 // ! Indicadores
@@ -35,6 +39,11 @@ export const get_medidor = async (): Promise<IMedicion[]> => {
 
 export const get_tipos = async (): Promise<ITipos[]> => {
   const response = await api.get(`seguimiento/planes/consultar-tipos/`);
+  return response.data.data;
+};
+
+export const get_proyectos = async (): Promise<IProyectos[]> => {
+  const response = await api.get(`seguimiento/planes/consultar-proyectos/`);
   return response.data.data;
 };
 

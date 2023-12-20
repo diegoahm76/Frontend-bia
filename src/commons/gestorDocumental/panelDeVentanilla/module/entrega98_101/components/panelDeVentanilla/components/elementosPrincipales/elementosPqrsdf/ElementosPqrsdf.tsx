@@ -26,6 +26,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
+import { ModalDenuncia } from '../../../../../Atom/components/ModalDenuncia';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -54,18 +55,17 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   const handleRequestRadicado = async (radicado: string) => {
     try {
+      const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+
+      const historicoFiltrado = historico.filter(
+        (element: any) => element?.cabecera?.radicado === radicado
+      );
+
+      dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
     } catch (error) {
-      console.log(error);
-    } finally {
+      console.error('Error handling request radicado: ', error);
+      // Handle or throw error as needed
     }
-    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
-
-    const historicoFiltrado = historico.filter(
-      (element: any) => element?.cabecera?.radicado === radicado
-    );
-
-    dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
-    console.log(historico);
   };
 
   //* loader button simulacion
@@ -86,7 +86,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   // ? functions
   const setActionsPQRSDF = (pqrsdf: any) => {
-    console.log(pqrsdf);
+    //  console.log('')(pqrsdf);
 
     if (pqrsdf.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
@@ -108,24 +108,47 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
     const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrup';
-      const isDigOrAsigGrup = ['Dig', 'AsigGrup'].includes(actionId);
+      const isDig = actionId === 'Dig';
       const hasAnexos = pqrsdf.cantidad_anexos > 0;
       const requiresDigitalization = pqrsdf.requiere_digitalizacion;
-      const isPQRSDF = pqrsdf.tipo_solicitud === 'PQRSDF';
       const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
-      const isEnVentanilla = [
-        'EN VENTANILLA SIN PENDIENTES',
-        'EN VENTANILLA CON PENDIENTES',
-      ].includes(pqrsdf.estado_solicitud);
+      const isEnVentanillaSinPendientes =
+        pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+      const isEnVentanillaConPendientes =
+        pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
 
-      return (
-        (isPQRSDF && actionId === 'ContinuarAsigGrup') ||
-        (isRadicado && !hasAnexos && actionId === 'Dig') ||
-        (isRadicado && hasAnexos && isDigOrAsigGrup) ||
-        (isRadicado && hasAnexos && requiresDigitalization && isAsigGrup) ||
-        (isEnVentanilla && requiresDigitalization && isAsigGrup) ||
-        (actionId === 'Dig' && !requiresDigitalization) // Deshabilitar el botón de digitalización si no se requiere digitalización
-      );
+      // Primer caso
+      if (isRadicado && !hasAnexos && isDig) {
+        return true;
+      }
+
+      // Segundo caso
+      if (isRadicado && hasAnexos && !requiresDigitalization) {
+        return false;
+      }
+
+      // Tercer caso
+      if (isRadicado && hasAnexos && requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      // Cuarto caso
+      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+        return false;
+      }
+
+      // Quinto caso
+      if (isEnVentanillaSinPendientes && requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      // Sexto caso
+      if (isEnVentanillaConPendientes) {
+        return isAsigGrup;
+      }
+
+      // Caso por defecto
+      return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
     };
 
     const actionsPQRSDF = actions.map((action: any) => ({
@@ -133,13 +156,27 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       disabled: shouldDisable(action.id),
     }));
 
-    console.log(actionsPQRSDF);
+    //  console.log('')(actionsPQRSDF);
     dispatch(setActionssToManagePermissions(actionsPQRSDF));
   };
 
   //* espacio para la definición de las columnas
   const columns = [
     ...columnsPqrsdf,
+    {
+      headerName: 'Requiere digitalización',
+      field: 'requiere_digitalizacion',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ? 'Sí' : 'No'}
+            color={params.value ? 'success' : 'error'}
+          />
+        );
+      },
+    },
     {
       headerName: 'Días para respuesta',
       field: 'dias_respuesta',
@@ -272,6 +309,30 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       },
     },
     {
+      headerName: 'Estado de asignación de grupo',
+      field: 'estado_asignacion_grupo',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ?? 'Sin asignar'}
+            color={
+              params.row?.estado_asignacion_grupo === 'Pendiente'
+                ? 'warning'
+                : params.row?.estado_asignacion_grupo === 'Aceptado'
+                ? 'success'
+                : params.row?.estado_asignacion_grupo === 'Rechazado'
+                ? 'error'
+                : params.row?.estado_asignacion_grupo === null
+                ? 'warning' // Cambia 'default' al color que desees para el caso null
+                : 'default'
+            }
+          />
+        );
+      },
+    },
+    {
       headerName: 'Acciones',
       field: 'Acciones',
       minWidth: 250,
@@ -282,16 +343,15 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               <IconButton
                 onClick={() => {
                   void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    console.log(res);
-
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
                     if (res.length > 0) {
-                      setAnexos(res);
                       handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                       handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      setActionsPQRSDF(params?.row);
-                      navigate(
-                        `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                      );
                       return;
                     }
 
@@ -422,18 +482,14 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     },
   ];
 
-  /*rows={
-    [
-      ...listaElementosPqrsfTramitesUotros,
-      ...listaElementosPqrsfTramitesUotros,
-      ...listaElementosPqrsfTramitesUotros,
-    ] ?? []
-  }*/
-
   return (
     <>
       <RenderDataGrid
-        rows={[...listaElementosPqrsfTramitesUotros] ?? []}
+        rows={
+          listaElementosPqrsfTramitesUotros.filter(
+            (el: { radicado: string }) => el.radicado
+          ) ?? []
+        }
         columns={columns ?? []}
         title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
         aditionalElement={

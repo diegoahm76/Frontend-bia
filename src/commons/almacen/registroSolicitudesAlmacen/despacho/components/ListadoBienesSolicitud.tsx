@@ -29,7 +29,7 @@ const ListadoBienesSolicitud = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(bienes_solicitud, bienes_despacho.length);
+    //  console.log('')(bienes_solicitud, bienes_despacho.length);
     if (bienes_solicitud.length > 0) {
       if (bienes_despacho.length > 0) {
         const aux_items: IObjBienesSolicitud[] = [];
@@ -51,10 +51,10 @@ const ListadoBienesSolicitud = () => {
             } else {
               aux_items.push({ ...option });
             }
-            console.log(option, despachada, aux_items);
+            //  console.log('')(option, despachada, aux_items);
           });
         });
-        console.log(aux_items);
+        //  console.log('')(aux_items);
         dispatch(set_bienes_solicitud_aux(aux_items));
       } else {
         dispatch(set_bienes_solicitud_aux(bienes_solicitud));
@@ -63,7 +63,7 @@ const ListadoBienesSolicitud = () => {
   }, [bienes_solicitud]);
 
   useEffect(() => {
-    console.log(bienes_solicitud_aux);
+    //  console.log('')(bienes_solicitud_aux);
   }, [bienes_solicitud_aux]);
 
   useEffect(() => {

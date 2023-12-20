@@ -14,7 +14,7 @@ export const postDelegaciones = async ({
     const url = `gestor/ccd/oficinas-delegadas-ccd/create/`;
     const response = await api.post(url, delegaciones);
 
-    // console.log('response', response);
+    // //  console.log('')('response', response);
 
     //* revisar estos errores con el backend
     control_success('Se delegaron las oficinas correctamente');

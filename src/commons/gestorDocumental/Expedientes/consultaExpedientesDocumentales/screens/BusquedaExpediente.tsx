@@ -11,11 +11,10 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { VerExpedientes } from "../../ConcesionAcceso/screens/VerExpedientes";
 import { VerDocumentos } from "../../ConcesionAcceso/screens/VerDocumentos";
 import { obtener_trd_actual_retirados } from "../../indexacionExpedientes/thunks/indexacionExpedientes";
-// import { expedientes_por_filtros, obtener_documentos_expediente } from "../thunks/ConsultaExpedientes";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import BuscarExpediente from "./BuscarExpediente";
-// import { expedientes_por_filtros } from "../thunks/ConsultaExpedientes";
+import { expedientes_por_filtros, obtener_documentos_expediente } from "../thunks/ConsultaExpedientes";
 
 interface IProps {
     set_expediente: any,
@@ -145,9 +144,9 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     }
     const expedientes_por_filtros_fc: () => void = () => {
         const año_local =  año !== null ? año.format('YYYY') : '';
-        // dispatch(expedientes_por_filtros(tdr?.id_trd ?? '', seccion, serie, año_local)).then((response: any) => {
-        //     set_expedientes(response.data);
-        // })
+        dispatch(expedientes_por_filtros(tdr?.id_trd ?? '', seccion, serie, año_local)).then((response: any) => {
+            set_expedientes(response.data);
+        })
     }
     const cambio_tdr: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_serie('');
@@ -177,9 +176,9 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             dispatch(buscar_expediente_id(expediente_local.id_expediente_documental)).then((response: any) => {
                 response.success ? set_expediente(response.data) : set_expediente(null);     
             });
-            // dispatch(obtener_documentos_expediente(expediente_local.id_expediente_documental, '', '', '')).then(((response: any) => {
-            //     response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
-            // }));
+            dispatch(obtener_documentos_expediente(expediente_local.id_expediente_documental, '', '', '')).then(((response: any) => {
+                response.data !== null ? props.set_documento(response.data) : props.set_documento(null);
+            }));
         }
     }
 

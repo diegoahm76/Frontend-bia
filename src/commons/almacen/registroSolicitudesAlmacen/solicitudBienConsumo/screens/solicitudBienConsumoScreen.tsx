@@ -54,7 +54,7 @@ const SolicitudConsumoScreen = () => {
     }, [nro_solicitud]);
 
     useEffect(() => {
-        // console.log(current_solicitud)
+        // //  console.log('')(current_solicitud)
         reset_solicitud(current_solicitud)
         if ('persona_solicita' in current_solicitud) {
             reset_solicitud(current_solicitud)
@@ -68,7 +68,7 @@ const SolicitudConsumoScreen = () => {
             void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
             if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
                 void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
-                console.log("ok")
+                //  console.log('')("ok")
             }
         }
 
@@ -100,7 +100,7 @@ const SolicitudConsumoScreen = () => {
                     nro_posicion: index,
                 })),
             }
-            console.log(data_aux)
+            //  console.log('')(data_aux)
             void dispatch(editar_solicitud(data_aux))
 
         } else {

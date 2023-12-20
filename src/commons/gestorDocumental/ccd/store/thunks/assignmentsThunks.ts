@@ -97,7 +97,7 @@ export const create_or_delete_assignments_service: any = (
       activateLoadingButtonGuardarRelacion();
       const id_ccd: number = ccd_current.id_ccd;
 
-      console.log(new_items);
+      //  console.log('')(new_items);
 
       const requests = new_items.map((item: any) => {
         return {
@@ -127,7 +127,7 @@ export const create_or_delete_assignments_service: any = (
 
       return data;
     } catch (error: any) {
-      // console.log(error);
+      // //  console.log('')(error);
       dispatch(get_assignments_service(ccd_current));
       control_warning(error.response?.data?.detail);
 

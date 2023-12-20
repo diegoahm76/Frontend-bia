@@ -6,6 +6,7 @@ import { IMetaIndicador } from '../../types/types';
 import { useAppSelector } from '../../../../hooks';
 import { post_meta, put_meta } from '../services/services';
 import { DataContextMetas } from '../context/context';
+import dayjs from 'dayjs';
 
 export const useMetaHook = (): any => {
   const {
@@ -23,6 +24,15 @@ export const useMetaHook = (): any => {
       unidad_meta: '',
       porcentaje_meta: 0,
       valor_meta: '',
+      cumplio: false,
+      fecha_creacion_meta: '',
+      agno_1: 0,
+      agno_2: 0,
+      agno_3: 0,
+      agno_4: 0,
+      valor_ejecutado_compromiso: 0,
+      valor_ejecutado_obligado: 0,
+      avance_fisico: 0,
       id_indicador: 0,
     },
   });
@@ -37,6 +47,15 @@ export const useMetaHook = (): any => {
       unidad_meta: '',
       porcentaje_meta: 0,
       valor_meta: '',
+      cumplio: false,
+      fecha_creacion_meta: '',
+      agno_1: 0,
+      agno_2: 0,
+      agno_3: 0,
+      agno_4: 0,
+      valor_ejecutado_compromiso: 0,
+      valor_ejecutado_obligado: 0,
+      avance_fisico: 0,
       id_indicador: 0,
     });
   };
@@ -55,8 +74,9 @@ export const useMetaHook = (): any => {
 
   const onsubmit_meta = handleSubmit_meta(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       data.id_indicador = id_indicador;
+      data.fecha_creacion_meta = dayjs(data.fecha_creacion_meta).format('YYYY-MM-DD');
       set_is_saving_meta(true);
       await post_meta(data as IMetaIndicador);
       control_success('Se creó correctamente');
@@ -76,8 +96,9 @@ export const useMetaHook = (): any => {
 
   const onsubmit_editar = handleSubmit_meta(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_meta(true);
+      data.fecha_creacion_meta = dayjs(data.fecha_creacion_meta).format('YYYY-MM-DD');
       data.id_indicador = id_indicador;
       await put_meta((id_meta as number) ?? 0, data as IMetaIndicador);
       control_success('Se actualizó correctamente');

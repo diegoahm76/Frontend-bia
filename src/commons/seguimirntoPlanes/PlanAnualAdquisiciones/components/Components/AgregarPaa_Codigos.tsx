@@ -44,7 +44,7 @@ export const AgregarPaa_Codigos: React.FC = () => {
       limpiar_formulario_paa_codidos();
     }
     if (mode_paa_codigos.editar) {
-      console.log(paa_codigos, 'paa_codigos');
+      //  console.log('')(paa_codigos, 'paa_codigos');
       reset_paa_codidos({
         nombre_paa: paa_codigos.nombre_paa,
         nombre_producto_unsp: paa_codigos.nombre_producto_unsp,

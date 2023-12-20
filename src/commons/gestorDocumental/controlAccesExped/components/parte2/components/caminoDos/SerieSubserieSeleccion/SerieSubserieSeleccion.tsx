@@ -76,7 +76,7 @@ export const SeleccionSerieSubserie: FC<any> = (params: any): JSX.Element => {
                 value={value}
                 onChange={(selectedOption) => {
                   //* se debe modificar el nombre del estado, ya que se debe almacenar la series o subserie que se haya seleccionado
-                  console.log(selectedOption);
+                  //  console.log('')(selectedOption);
                   dispatch(setCurrentSerieSubserie(selectedOption?.item));
 
                   //
@@ -101,7 +101,7 @@ export const SeleccionSerieSubserie: FC<any> = (params: any): JSX.Element => {
                     codClasificacionExp: '',
                     idCatSerieUnidad: selectedOption?.value,
                   }).then((res) => {
-                    console.log(res);
+                    //  console.log('')(res);
                     if(res?.length > 0){
                       dispatch(setVerModuloAutorizacioneGenerales(false));
                       dispatch(setControlAccesoExpedientesList(res));

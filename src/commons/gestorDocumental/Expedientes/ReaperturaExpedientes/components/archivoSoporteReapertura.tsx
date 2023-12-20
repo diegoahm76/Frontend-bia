@@ -75,7 +75,7 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
 
             if ('name' in file) {
                 set_file_name(file.name);
-                console.log(file)
+                //  console.log('')(file)
 
                 dispatch(
                     set_current_archivo_expediente({
@@ -137,7 +137,7 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
 
                 set_tipo_origen(tipo_origen_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
         };
 
@@ -159,7 +159,7 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
 
                 set_tipo_archivo(tipo_archivo_format);
             } catch (err) {
-                console.log(err);
+                //  console.log('')(err);
             }
         };
 
@@ -173,7 +173,7 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
     }, [])
 
     const on_submit = (data: FormValues): void => {
-        console.log(data.fecha_creacion_doc)
+        //  console.log('')(data.fecha_creacion_doc)
         const form_data: any = new FormData();
         form_data.append('nombre_asignado_documento', data.nombre_asignado_documento);
         form_data.append('nro_folios_del_doc', data.nro_folios_del_doc);

@@ -28,16 +28,15 @@ import PersonIcon from '@mui/icons-material/Person';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+import PsychologyIcon from '@mui/icons-material/Psychology';
 import {
   open_drawer_desktop,
   open_drawer_mobile,
 } from '../../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ListIcon from '@mui/icons-material/List';
-import type {
-  AuthSlice,
-} from '../../commons/auth/interfaces';
-import { logout /* set_permissions */ } from '../../commons/auth/store';
+import type { AuthSlice } from '../../commons/auth/interfaces';
+import { logout } from '../../commons/auth/store';
 import { SuperUserScreen } from '../../commons/seguridad/screens/SuperUserScreen';
 import { FooterGov } from '../goviernoEnLinea/FooterGov';
 import { HeaderGov } from '../goviernoEnLinea/HeaderGov';
@@ -63,9 +62,7 @@ export const SideBar: FC<SideBarProps> = ({
     handle_datos_acceso,
     handle_datos_personales,
     handle_autorizacion_notificacion,
-    handle_indices_electronicos,
-    //* se deja de manera temporal
-    handle_homologacion_series_documentales,
+    handleBiaGpt,
   } = useRoutes();
 
   const dispatch = useDispatch();
@@ -75,8 +72,7 @@ export const SideBar: FC<SideBarProps> = ({
   const { userinfo, permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
   );
-  // console.log(userinfo);
-  // console.log(permisos_store);
+
   const [permisos, set_permisos] = useState<any[]>([]);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
@@ -99,13 +95,19 @@ export const SideBar: FC<SideBarProps> = ({
     window !== undefined ? () => window().document.body : undefined;
 
   useEffect(() => {
-    setTimeout(() => {
-      set_permisos(permisos_store);
+    const delay = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
 
-      console.log('permisos', permisos_store);
+    const updateState = async () => {
+      await delay(800);
+      set_permisos(permisos_store);
+      await delay(1500);
       set_is_loading(false);
-    }, 800);
+    };
+
+    updateState();
   }, [permisos_store]);
+
 
   // ? ------- static side bar content, except super user delegation screen ------
   const conten_drawer = (
@@ -166,6 +168,25 @@ export const SideBar: FC<SideBarProps> = ({
           }}
         >
           <List component="div" disablePadding>
+            {/* item de chatbot con IA para cormacarena */}
+
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <PsychologyIcon
+                  sx={{
+                    color: mod_dark ? '#fafafa' : '#141415',
+                    height: '20px',
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primary="BIA GPT"
+                onClick={handleBiaGpt}
+              />
+            </ListItemButton>
+
+
+
             {/* -------------- Datos de acceso del usuario ------------------- */}
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
@@ -213,24 +234,8 @@ export const SideBar: FC<SideBarProps> = ({
                 onClick={handle_autorizacion_notificacion}
               />
             </ListItemButton>
-            {/* ------------ índices electrónicos ------------  */}
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <ListIcon
-                  sx={{
-                    color: mod_dark ? '#fafafa' : '#141415',
-                    height: '20px',
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText
-                primary="Índices electrónicos"
-                onClick={handle_indices_electronicos}
-              />
-            </ListItemButton>
-
             {/* --------- Validamos si es superusuario para delegacion de superUsuario ------------- */}
-            {userinfo.is_superuser && (
+            {userinfo?.is_superuser && (
               <ListItemButton
                 sx={{ pl: 4 }}
                 onClick={handle_click_delegar_super}
@@ -293,7 +298,7 @@ export const SideBar: FC<SideBarProps> = ({
       {/* -------------- Close List main elements ------------------- */}
 
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      {!is_loading ? (
+      {!is_loading && permisos.length  ? (
         permisos.map((elementStore, indexStore) => {
           return (
             <List
@@ -407,7 +412,7 @@ export const SideBar: FC<SideBarProps> = ({
                                                     indexMenu,
                                                     indexSubmenuMenu,
                                                     indexElement,
-                                                    set_permisos,
+                                                    set_permisos
                                                   );
                                                 }}
                                               >
@@ -520,11 +525,20 @@ export const SideBar: FC<SideBarProps> = ({
             }}
           >
             <Grid item xs={12} container justifyContent="center" padding={5}>
-              <CircularProgress />
+              <CircularProgress
+                sx={{
+                  color: mod_dark ? '#fafafa' : '#141415',
+                }}
+              />
             </Grid>
             <Grid item xs={12} padding={5}>
-              <Typography textAlign="center">
-                Cargando Menú, porfavor espere...
+              <Typography
+                textAlign="center"
+                sx={{
+                  color: mod_dark ? '#fafafa' : '#141415',
+                }}
+              >
+                Cargando opciones del menú, por favor espere un momento...
               </Typography>
             </Grid>
           </Grid>

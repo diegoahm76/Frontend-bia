@@ -36,7 +36,7 @@ export const HistorialProceso: React.FC = () => {
           group_valores_proceso(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+          //  console.log('')(error);
         });
     } else {
       navigate('../visor_procesos');
@@ -203,7 +203,7 @@ export const HistorialProceso: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       });
@@ -218,7 +218,7 @@ export const HistorialProceso: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        console.log(error);
+        //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       });

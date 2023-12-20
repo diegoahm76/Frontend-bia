@@ -16,12 +16,14 @@ import ConfiguracionAlertasScreen from '../alertas/screens/ConfiguracionAlertaSc
 import { Facturacion } from '../screens/Facturacion';
 import { SupEtapasProceso } from '../screens/SupEtapasProceso';
 import { AutodeclaracionFormulario } from '../screens/AutodeclaracionFormulario';
+import { EtapaProcesoProvider } from '../components/GestionCartera/Context/EtapaProcesoContext';
 
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecaudoRoutes: React.FC = () => {
   return (
+    <EtapaProcesoProvider >
     <Routes>
       {/* <Route path="datos/*" element={<RecaudoScreen />} /> */}
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />
@@ -43,5 +45,6 @@ export const RecaudoRoutes: React.FC = () => {
       
       <Route path="/*" element={<Page404 />} />
     </Routes>
+    </EtapaProcesoProvider>
   );
 };

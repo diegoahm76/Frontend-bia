@@ -66,7 +66,7 @@ export const use_trd = (): any => {
     formState: { errors: errors_format_documental_type }
   } = useForm({ defaultValues: initial_state_format_documental_type });
   const data_format_documental_type_watch_form = watch_format_documental_type();
-  // console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
+  // //  console.log('')(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
 
   // ? tipologias documentales ---------------------> (search), (administrar)
   const {
@@ -88,7 +88,7 @@ export const use_trd = (): any => {
   });
   const form_data_searched_tipologia_documental =
     watchBusquedaTipologiasDocumentales();
-  /* console.log(
+  /* //  console.log('')(
     form_data_searched_tipologia_documental,
     'form_data_searched_tipologia_documental'
   ); */
@@ -116,7 +116,7 @@ export const use_trd = (): any => {
     reValidateMode: 'onChange'
   });
   const form_data_administrar_trd = watch_administrar_trd();
-  // console.log(form_data_administrar_trd, 'form_data_administrar_trd');
+  // //  console.log('')(form_data_administrar_trd, 'form_data_administrar_trd');
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
@@ -172,13 +172,13 @@ export const use_trd = (): any => {
 
   // ? try to edit trd --------------------->
   useEffect(() => {
-    // console.log(data_create_trd_modal, 'data_create_trd');
-    // console.log(trd_current, 'trd_current');
+    // //  console.log('')(data_create_trd_modal, 'data_create_trd');
+    // //  console.log('')(trd_current, 'trd_current');
     if (trd_current !== null) {
       const result_name = ccd_finished.filter((item: any) => {
         return item.id_ccd === trd_current.id_ccd;
       });
-      // console.log('result_name', result_name);
+      // //  console.log('')('result_name', result_name);
       const obj: any = {
         id_ccd: {
           label: result_name[0].nombre,
@@ -188,7 +188,7 @@ export const use_trd = (): any => {
         version: trd_current.version,
         id_trd: trd_current.id_trd
       };
-      // console.log(obj, 'obj');
+      // //  console.log('')(obj, 'obj');
       reset_create_trd_modal(obj);
     }
   }, [trd_current]);

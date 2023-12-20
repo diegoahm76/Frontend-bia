@@ -190,7 +190,7 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
     const search_bien: any = async () => {
         try {
             const fecha = new Date(get_values('fecha_despacho') ?? '').toISOString();
-            console.log(fecha.slice(0, 10) + ' ' + fecha.slice(11, 19));
+            //  console.log('')(fecha.slice(0, 10) + ' ' + fecha.slice(11, 19));
             const data = await dispatch(
                 get_bien_code_service(
                     bien_selected?.codigo_bien ?? '',
@@ -205,7 +205,7 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
     };
 
     useEffect(() => {
-        console.log(bienes_aux);
+        //  console.log('')(bienes_aux);
         if ('success' in bienes_aux) {
             if (bienes_aux.success === true) {
                 if ('data' in bienes_aux) {
@@ -231,14 +231,14 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
     useEffect(() => {
         if (bien_selected.id_bien !== null) {
             set_aux_bien_selected(bien_selected);
-            console.log(bien_selected);
+            //  console.log('')(bien_selected);
             dispatch(set_current_bien(initial_state_current_bien));
             search_bien();
         }
     }, [bien_selected]);
     useEffect(() => {
         if (aux_bien_selected?.id_bien !== null) {
-            console.log(aux_bien_selected);
+            //  console.log('')(aux_bien_selected);
         }
     }, [aux_bien_selected]);
 
@@ -288,7 +288,7 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
                             unidad_medida: current_bien.unidad_medida ?? null,
                             bodega: current_bien.bodega ?? null,
                         };
-                        console.log(new_bien);
+                        //  console.log('')(new_bien);
                         if (bien === undefined) {
                             set_aux_insumos([...aux_insumos, new_bien]);
                             const restante =

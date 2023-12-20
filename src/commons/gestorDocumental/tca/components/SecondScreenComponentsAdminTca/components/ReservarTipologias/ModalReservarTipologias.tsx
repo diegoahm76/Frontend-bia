@@ -113,7 +113,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                 );
 
                 control_success('Ítem añadido como tipología restringida');
-                console.log(params.row);
+                //  console.log('')(params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -171,7 +171,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
                   )
                 );
                 control_success('Ítem eliminado de tipologías restringidas');
-                console.log(params.row);
+                //  console.log('')(params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -341,7 +341,7 @@ export const ModalReservarTipologias = (): JSX.Element => {
 
                     dispatch(set_mixed_tipologias(tipologiasToSend));
 
-                    console.log(tipologiasToSend);
+                    //  console.log('')(tipologiasToSend);
                   }}
                 >
                   ESTABLECER TIPOLOGIAS RESTRINGIDAS

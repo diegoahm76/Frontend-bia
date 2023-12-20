@@ -24,7 +24,7 @@ const FormInputNoController = ({
     disabled,
 }: IProps) => {
     const handle_file_input_change:any = (e: any) => {
-        console.log(e.target.files[0].name)
+        //  console.log('')(e.target.files[0].name)
         on_change_function(e.target.files!=null?e.target.files[0].name:"");
       };
 

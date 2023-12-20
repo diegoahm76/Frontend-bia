@@ -22,8 +22,8 @@ export const FormularioConfiguracionTipologuiaprovider
     const [Datos_Return, Set_Datos_Return] = useState<any>([]);
     const [Formulario_Empresa, Set_Formulario_Empresa] = useState<Formulario>(Inicial_Formulario);
     const [form, set_form] = useState<VariablesCreacionPlantilla>(valores_defecto_plantilla);
-    console.log(form);
-    console.log(Formulario_Empresa);
+    //  console.log('')(form);
+    //  console.log('')(Formulario_Empresa);
 
 
     const Valores_Formulario_Empresa_tipologia = { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return, Datos_Return, form, set_form };

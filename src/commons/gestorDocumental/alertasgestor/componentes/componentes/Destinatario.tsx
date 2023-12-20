@@ -34,7 +34,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
             const res = await api.get(url);
             const sucursales_data = res.data.data;
             setdata_entidad(sucursales_data);
-            console.log(sucursales_data)
+            //  console.log('')(sucursales_data)
         } catch (error) {
             console.error(error);
         }
@@ -134,9 +134,9 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
                 const res_lider = await api.get(url);
                 const alertas_lider = res_lider.data.data;
                 set_lider(alertas_lider);
-                console.log("222222222222");
-                console.log(alertas_lider);
-                console.log("111111111111");
+                //  console.log('')("222222222222");
+                //  console.log('')(alertas_lider);
+                //  console.log('')("111111111111");
             } catch (error) {
                 console.error(error);
             }
@@ -182,7 +182,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
         set_loading(true);
         try {
             const response = await api.post('/transversal/alertas/personas_alertar/create/', formData);
-            console.log('Alerta de persona creada exitosamente:', response.data);
+            //  console.log('')('Alerta de persona creada exitosamente:', response.data);
             control_success("Alerta creada exitosamente");
             set_persona(undefined);
             // Reset form data after successful submission

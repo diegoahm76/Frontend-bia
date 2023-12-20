@@ -47,7 +47,7 @@ export const TipoRenta: React.FC = () => {
         try {
             const url = `/recaudo/configuracion_baisca/tiporenta/delete/${id_tipo_renta}/`;
             const response = await api.delete(url);
-            console.log("Configuración eliminada con éxito", response.data);
+            //  console.log('')("Configuración eliminada con éxito", response.data);
             // Actualizar la lista de Renta después de eliminar
             fetchRenta();
             control_error("eliminado exitosamente ");
@@ -132,7 +132,7 @@ export const TipoRenta: React.FC = () => {
         try {
             const url = "recaudo/configuracion_baisca/tiporenta/post/";
             const response = await api.post(url, formValues);
-            console.log("Configuración básica creada con éxito", response.data);
+            //  console.log('')("Configuración básica creada con éxito", response.data);
             fetchRenta()
             control_success("Guardado exitosamente");
             setFormValues({
@@ -142,7 +142,7 @@ export const TipoRenta: React.FC = () => {
             });
         } catch (error: any) {
             // console.error("Error al crear la configuración básica", error);
-            console.log(error.response.data.detail.detail);
+            //  console.log('')(error.response.data.detail.detail);
             control_error(error.response.data.detail?.error);
         }
     };
