@@ -50,7 +50,6 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
     }
 
     const generar_reporte_indice: () => void = () => {
-        doc
         crear_encabezado();
         const page = doc.internal.pageSize.getHeight();
         let coordendas = 0;
