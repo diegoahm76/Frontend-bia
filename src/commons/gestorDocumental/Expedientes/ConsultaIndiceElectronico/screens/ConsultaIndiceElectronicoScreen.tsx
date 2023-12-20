@@ -15,6 +15,7 @@ import BuscarExpediente from "../../FirmaCierreIndiceElectronico/screens/BuscarE
 import jsPDF from "jspdf";
 import { logo_cormacarena_h } from "../../../../conservacion/Reportes/logos/logos";
 import autoTable from "jspdf-autotable";
+import { download_xls_props } from "./XLS_descargar_props";
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -25,372 +26,6 @@ const class_css = {
     boxShadow: '0px 3px 6px #042F4A26',
 }
 
-const mock = {
-    "id_indice_electronico_exp": 1,
-    "abierto": false,
-    "fecha_indice_electronico": "2023-09-07T00:00:00",
-    "fecha_cierre": "2023-11-17T14:55:41.955491",
-    "docs_indice_electronico_exp": [
-        {
-            "id_doc_indice_electronico_exp": 1,
-            "id_doc_archivo_exp": 9,
-            "identificación_doc_exped": "2023S0000000009",
-            "nombre_documento": "ArchivoFinal22",
-            "id_tipologia_documental": 43,
-            "nombre_tipologia": "Actas",
-            "fecha_creacion_doc": "2023-11-01T00:00:00",
-            "fecha_incorporacion_exp": "2023-10-09T22:59:19.672645",
-            "valor_huella": "92d3fe1e36e4188155afa31e797c098f",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 9,
-            "pagina_inicio": 1,
-            "pagina_fin": 10,
-            "formato": "pdf",
-            "tamagno_kb": 784,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 2,
-            "id_doc_archivo_exp": 10,
-            "identificación_doc_exped": "2021C3120000010",
-            "nombre_documento": "ArchivoFinal2ee",
-            "id_tipologia_documental": 43,
-            "nombre_tipologia": "Actas",
-            "fecha_creacion_doc": "2023-11-01T00:00:00",
-            "fecha_incorporacion_exp": "2023-10-11T15:20:39.952830",
-            "valor_huella": "b94ede7618d11472f05cae9e049ea77a",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 10,
-            "pagina_inicio": 11,
-            "pagina_fin": 20,
-            "formato": "pdf",
-            "tamagno_kb": 30,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 3,
-            "id_doc_archivo_exp": 11,
-            "identificación_doc_exped": "2020S0000000011",
-            "nombre_documento": "ArchivoFinal22",
-            "id_tipologia_documental": 43,
-            "nombre_tipologia": "Actas",
-            "fecha_creacion_doc": "2023-11-01T00:00:00",
-            "fecha_incorporacion_exp": "2023-10-11T16:33:55.776239",
-            "valor_huella": "92d3fe1e36e4188155afa31e797c098f",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 11,
-            "pagina_inicio": 21,
-            "pagina_fin": 30,
-            "formato": "pdf",
-            "tamagno_kb": 784,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 4,
-            "id_doc_archivo_exp": 12,
-            "identificación_doc_exped": "2020S0000000012",
-            "nombre_documento": "Nuevo",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-11T00:00:00",
-            "fecha_incorporacion_exp": "2023-10-11T21:37:18.509611",
-            "valor_huella": "816be98a002af277024f449e703a2ff2",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 12,
-            "pagina_inicio": 31,
-            "pagina_fin": 31,
-            "formato": "pdf",
-            "tamagno_kb": 59,
-            "cod_origen_archivo": "E",
-            "origen_archivo": "Electronico",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 5,
-            "id_doc_archivo_exp": 13,
-            "identificación_doc_exped": "2020S0000000013",
-            "nombre_documento": "ArchivoFinal22",
-            "id_tipologia_documental": 43,
-            "nombre_tipologia": "Actas",
-            "fecha_creacion_doc": "2023-11-01T00:00:00",
-            "fecha_incorporacion_exp": "2023-10-11T21:40:02.258405",
-            "valor_huella": "92d3fe1e36e4188155afa31e797c098f",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 13,
-            "pagina_inicio": 32,
-            "pagina_fin": 41,
-            "formato": "pdf",
-            "tamagno_kb": 784,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 6,
-            "id_doc_archivo_exp": 14,
-            "identificación_doc_exped": "2023S0000000014",
-            "nombre_documento": "Nuevo",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-11T00:00:00",
-            "fecha_incorporacion_exp": "2023-10-11T21:54:09.056354",
-            "valor_huella": "816be98a002af277024f449e703a2ff2",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 14,
-            "pagina_inicio": 42,
-            "pagina_fin": 42,
-            "formato": "pdf",
-            "tamagno_kb": 59,
-            "cod_origen_archivo": "E",
-            "origen_archivo": "Electronico",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 8,
-            "id_doc_archivo_exp": 16,
-            "identificación_doc_exped": "2021C3120000016",
-            "nombre_documento": "NA",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-24T14:54:24",
-            "fecha_incorporacion_exp": "2023-10-24T19:54:25.184395",
-            "valor_huella": "816be98a002af277024f449e703a2ff2",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 16,
-            "pagina_inicio": 53,
-            "pagina_fin": 53,
-            "formato": "pdf",
-            "tamagno_kb": 59,
-            "cod_origen_archivo": "F",
-            "origen_archivo": "Fisico",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 10,
-            "id_doc_archivo_exp": 18,
-            "identificación_doc_exped": "2023S0000000018",
-            "nombre_documento": "ArchivoFinal Z",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-27T20:33:26",
-            "fecha_incorporacion_exp": "2023-10-28T01:33:27.954605",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 18,
-            "pagina_inicio": 64,
-            "pagina_fin": 73,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 12,
-            "id_doc_archivo_exp": 20,
-            "identificación_doc_exped": "2023S0000000020",
-            "nombre_documento": "ArchivoFinal o",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-27T20:35:03",
-            "fecha_incorporacion_exp": "2023-10-28T01:35:04.550983",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 20,
-            "pagina_inicio": 84,
-            "pagina_fin": 93,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 13,
-            "id_doc_archivo_exp": 21,
-            "identificación_doc_exped": "2023S0000000021",
-            "nombre_documento": "ArchivoFinal22",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-27T20:57:42",
-            "fecha_incorporacion_exp": "2023-10-28T01:57:43.939744",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 21,
-            "pagina_inicio": 94,
-            "pagina_fin": 103,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 14,
-            "id_doc_archivo_exp": 22,
-            "identificación_doc_exped": "2023S0000000022",
-            "nombre_documento": "Ny",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-28T08:30:42",
-            "fecha_incorporacion_exp": "2023-10-28T13:30:43.387924",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 22,
-            "pagina_inicio": 104,
-            "pagina_fin": 104,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 15,
-            "id_doc_archivo_exp": 23,
-            "identificación_doc_exped": "2021C3120000023",
-            "nombre_documento": "NuevoT",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-28T14:28:55",
-            "fecha_incorporacion_exp": "2023-10-28T19:28:56.148406",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 23,
-            "pagina_inicio": 105,
-            "pagina_fin": 105,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "F",
-            "origen_archivo": "Fisico",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 16,
-            "id_doc_archivo_exp": 24,
-            "identificación_doc_exped": "2023S0000000024",
-            "nombre_documento": "ArchivoOct",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-30T08:37:18",
-            "fecha_incorporacion_exp": "2023-10-30T13:37:19.165441",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 24,
-            "pagina_inicio": 106,
-            "pagina_fin": 106,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "D",
-            "origen_archivo": "Digitalizado",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 17,
-            "id_doc_archivo_exp": 25,
-            "identificación_doc_exped": "2023S0000000025",
-            "nombre_documento": "Ne",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-30T08:39:20",
-            "fecha_incorporacion_exp": "2023-10-30T13:39:20.655402",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 25,
-            "pagina_inicio": 107,
-            "pagina_fin": 107,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "E",
-            "origen_archivo": "Electronico",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 18,
-            "id_doc_archivo_exp": 26,
-            "identificación_doc_exped": "2023S0000000026",
-            "nombre_documento": "MP",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-30T09:23:42",
-            "fecha_incorporacion_exp": "2023-10-30T14:23:42.767596",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 26,
-            "pagina_inicio": 108,
-            "pagina_fin": 108,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "F",
-            "origen_archivo": "Fisico",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        },
-        {
-            "id_doc_indice_electronico_exp": 20,
-            "id_doc_archivo_exp": 28,
-            "identificación_doc_exped": "2021C3120000028",
-            "nombre_documento": "New",
-            "id_tipologia_documental": null,
-            "fecha_creacion_doc": "2023-10-30T11:12:23",
-            "fecha_incorporacion_exp": "2023-10-30T16:12:25.365692",
-            "valor_huella": "bdff62ec705a7f8c7a2d10bfaf72f9ee",
-            "funcion_resumen": "MD5",
-            "orden_doc_expediente": 28,
-            "pagina_inicio": 110,
-            "pagina_fin": 110,
-            "formato": "pdf",
-            "tamagno_kb": 268,
-            "cod_origen_archivo": "F",
-            "origen_archivo": "Fisico",
-            "es_un_archivo_anexo": false,
-            "id_doc_indice_Anexo": null,
-            "documento_principal": null,
-            "tipologia_no_creada_trd": null
-        }
-    ]
-}
-
-
 const class_button_purple = { borderColor: "#7d2181", color: '#7d2181' };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -398,6 +33,7 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
     const navigate = useNavigate();
     const [expediente, set_expediente] = useState<any>(null);
     const [indice, set_indice] = useState<any>(null);
+    const [columns, set_columns] = useState<any>(null);
     const [indice_cierre, set_indice_cierre] = useState<any>(null);
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
@@ -419,10 +55,6 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
     }
 
     const generar_reporte_indice: () => void = () => {
-        debugger
-        indice
-        expediente
-        indice_cierre
         crear_encabezado();
         let page_position = 1;
         doc.setFontSize(11);
@@ -520,8 +152,8 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
             doc.text("Observaciones de la firma del cierre del índice: ", 20, 70);
             doc.text(indice_cierre.observacion_firme_cierre, (doc.getTextWidth('Observaciones de la firma del cierre del índice') + 25), 70);
         }
-        // doc.save('prueba.pdf');
-        set_visor(doc.output('datauristring'));
+        doc.save('índice electrónico documental.pdf');
+        // set_visor(doc.output('datauristring'));
     };
     const crear_encabezado: () => void = () => {
         const reporte_seleccionado = 'Índice electrónico de expediente';
@@ -593,7 +225,7 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <IndiceSeleccionado indice={indice}></IndiceSeleccionado>
+                <IndiceSeleccionado indice={indice} set_columns={set_columns}></IndiceSeleccionado>
             </Grid>}
             {indice !== null && !indice?.abierto && expediente?.estado === 'A' && <Grid
                 container
@@ -601,14 +233,6 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
             >
                 <VerCierreIndiceElectronico indice={indice} set_indice_cierre={set_indice_cierre}></VerCierreIndiceElectronico>
             </Grid>}
-            <Box component="form" noValidate autoComplete="off">
-                <embed
-                    src={visor}
-                    type="application/pdf"
-                    width="100%"
-                    height="500px"
-                />
-            </Box>
             <Grid container>
                 <Grid item xs={12} sm={12}>
                     <Stack
@@ -618,7 +242,11 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
                         sx={{ mt: '10px' }}
                     >
                         <Button variant="outlined" sx={class_button_purple} onClick={() => { generar_reporte_indice() }}>Exportar PDF</Button>
-                        <Button variant="outlined" sx={class_button_purple}>Exportar XLS</Button>
+                        {download_xls_props({
+                            nurseries: indice?.docs_indice_electronico_exp, columns: columns, expediente: [expediente], nombre_archivo: 'índice electrónico documental',
+                            indice: [indice],
+                            info_cierre: [indice_cierre]
+                        })}
                         <Button
                             color="error"
                             variant='contained'
