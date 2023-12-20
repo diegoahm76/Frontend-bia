@@ -22,6 +22,7 @@ import { SeguimientoPAIRoutes } from '../SeguimientoPAI/router/SeguimientoPAIRou
 import { ConsultarPlanesRoutes } from '../Consultas/router/ConsultarPlanesRoutes';
 import { ConsultarMetasRoutes } from '../ConsultasMetas/router/ConsultarPlanesRoutes';
 import { ConsultarSeguiminetoPAIRoutes } from '../ConsultaPAI/router/ConsultarPlanesRoutes';
+import { ConsultasRoutes } from '../Tableros/router/ConsultasRoutes';
 
 const routes = [
   {
@@ -146,6 +147,12 @@ const routes = [
     path: 'consulta_pai/',
     name: 'consulta_pai',
     component: () => <ConsultarSeguiminetoPAIRoutes />,
+  },
+  // consultas_pp
+  {
+    path: 'consultas_pp/',
+    name: 'consultas_pp',
+    component: () => <ConsultasRoutes />,
   },
   {
     path: '/*',
