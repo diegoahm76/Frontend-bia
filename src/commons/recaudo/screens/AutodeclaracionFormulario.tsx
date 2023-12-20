@@ -99,6 +99,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
         categoria: selectedConfiguracion?.categoria || "",
         orden:selectedConfiguracion?.orden|| "",
         id: selectedConfiguracion?.id || "",
+        
     });
 
     useEffect(() => {
