@@ -218,6 +218,7 @@ export const initial_state_denuncia: IObjPqrDenuncia = {
 };
 
 const initial_state: IPqrsdf = {
+  file_fisico: null,
   list_applicant_types: [],
   type_applicant: initial_state_list,
   list_on_behalf_of: [],
@@ -294,6 +295,9 @@ export const pqrsdf_slice = createSlice({
       action: PayloadAction<IObjListType[]>
     ) => {
       state.list_applicant_types = action.payload;
+    },
+    set_file_fisico: (state: IPqrsdf, action: PayloadAction<any>) => {
+      state.file_fisico = action.payload;
     },
     set_type_applicant: (
       state: IPqrsdf,
@@ -539,6 +543,7 @@ export const pqrsdf_slice = createSlice({
   },
 });
 export const {
+  set_file_fisico,
   set_area,
   set_areas,
   set_department,

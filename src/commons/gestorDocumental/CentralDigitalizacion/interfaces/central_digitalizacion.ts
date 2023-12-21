@@ -24,6 +24,7 @@ export interface ICentralDigitization {
   person: IObjPerson;
   pqr: IObjPqr;
   pqr_request: IObjPqrRequest;
+  file_fisico: any | null;
 
 }
 

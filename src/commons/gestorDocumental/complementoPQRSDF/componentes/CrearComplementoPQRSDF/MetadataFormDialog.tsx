@@ -31,6 +31,9 @@ import {
   set_exhibit,
   set_metadata,
 } from '../../store/slice/complementoPqrsdfSlice';
+import { jsPDF } from 'jspdf';
+import logo_cormacarena_h from '../images/26_logocorma2_200x200.png';
+import dayjs from 'dayjs';
 
 interface IProps {
   action?: string;
@@ -54,6 +57,7 @@ const MetadataFormDialog = ({
     file_origins,
     file_typologies,
     exhibit,
+    filed,
   } = useAppSelector((state) => state.pqrsdf_slice);
   const [checked_tiene_tipologia, set_checked_tiene_tipologia] = useState(
     metadata.id_tipologia_doc !== null
@@ -67,7 +71,8 @@ const MetadataFormDialog = ({
     setValue,
   } = useForm<IObjMetaData>();
   const [keywords_object, set_keywords_object] = useState<any[]>([]);
-
+  const [doc, set_doc] = useState<jsPDF>(new jsPDF());
+  const [doc_height, set_doc_height] = useState<number>(0);
   const handle_close_add_bien = (): void => {
     set_is_modal_active(false);
   };
@@ -96,10 +101,77 @@ const MetadataFormDialog = ({
 
   const on_submit: SubmitHandler<IObjMetaData> = (data: IObjMetaData): void => {
     console.log(data);
+    if (data.cod_origen_archivo === 'F') {
+      set_doc(new jsPDF());
+      set_doc_height(doc.internal.pageSize.getHeight());
+      crear_encabezado();
+    }
     dispatch(set_metadata(data));
+
     set_is_modal_active(false);
   };
+  const crear_encabezado: () => {
+    title: string;
+  } = () => {
+    const title = `Resumen de radicado número ${
+      filed.numero_radicado_completo ?? ''
+    }`;
+    doc.setFont('Arial', 'normal');
+    doc.setFontSize(12);
+    doc.addImage(logo_cormacarena_h, 'PNG', 160, 10, 40, 15);
+    doc.setFont('Arial', 'bold'); // establece la fuente en Arial
+    doc.text(
+      'Reporte',
+      (doc.internal.pageSize.width - doc.getTextWidth('Reporte')) / 2,
+      10
+    );
+    doc.text(
+      title,
+      (doc.internal.pageSize.width - doc.getTextWidth(title)) / 2,
+      15
+    );
+    doc.setFont('Arial', 'normal'); // establece la fuente en Arial
+    const fecha_generacion = `Fecha de generación de reporte ${dayjs().format(
+      'DD/MM/YYYY'
+    )}`;
+    doc.text(
+      fecha_generacion,
+      doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion) - 5,
+      5
+    );
+    doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
+    doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
+    const linea_uno = `Tipo de radicado: ${
+      filed.nombre_tipo_radicado ?? 'Entrante'
+    }               Fecha: ${filed.fecha_radicado ?? '2023/10/15 18:00:00'}`;
+    const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
+    const x_linea_uno =
+      (doc.internal.pageSize.width - ancho_texto_linea_uno) / 2;
+    doc.text(linea_uno, x_linea_uno, 45);
 
+    const linea_dos = `Número de radicado: ${
+      filed.numero_radicado_completo ?? '654664646546'
+    }               Asunto: ${filed.asunto}`;
+    const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
+    const x_linea_dos =
+      (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
+    doc.text(linea_dos, x_linea_dos, 55);
+
+    const linea_tres = `Titular: ${
+      filed.titular ?? 'Edgar Sneider Fuentes Agudelo'
+    }`;
+    const ancho_texto_linea_tres = doc.getTextWidth(linea_tres);
+    const x_linea_tres =
+      (doc.internal.pageSize.width - ancho_texto_linea_tres) / 2;
+    doc.text(linea_tres, x_linea_tres, 65);
+
+    const pdfBlob = doc.output('blob');
+    const pdfFile = new File([pdfBlob], 'generated.pdf', {
+      type: 'application/pdf',
+    });
+    console.log(pdfFile);
+    return { title };
+  };
   return (
     <Dialog
       maxWidth="xl"

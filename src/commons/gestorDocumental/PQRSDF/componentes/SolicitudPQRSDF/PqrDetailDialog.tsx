@@ -34,7 +34,9 @@ const PqrDetailDialog = ({
 }: IProps) => {
   const dispatch = useAppDispatch();
 
-  const { pqr, pqr_request } = useAppSelector((state) => state.pqrsdf_slice);
+  const { pqr, pqr_request, pqr_types } = useAppSelector(
+    (state) => state.pqrsdf_slice
+  );
 
   const {
     control: control_detail,
@@ -87,7 +89,7 @@ const PqrDetailDialog = ({
                         xs: 12,
                         md: 4,
                         control_form: control_detail,
-                        control_name: 'cod_tipo_PQRSDF',
+                        control_name: 'nombre_tipo_oficio',
                         default_value: '',
                         rules: {},
                         label: 'Tipo de solicitud',
@@ -100,7 +102,7 @@ const PqrDetailDialog = ({
                         xs: 12,
                         md: 4,
                         control_form: control_detail,
-                        control_name: 'notification_at',
+                        control_name: 'fecha_solicitud',
                         default_value: '',
                         rules: {},
                         label: 'Fecha de notificación',
@@ -113,7 +115,7 @@ const PqrDetailDialog = ({
                         xs: 12,
                         md: 6,
                         control_form: control_detail,
-                        control_name: 'organizational_unit',
+                        control_name: 'nombre_und_org_oficina_solicita',
                         default_value: '',
                         rules: {},
                         label: 'Grupo solicitante',
@@ -154,10 +156,13 @@ const PqrDetailDialog = ({
                         xs: 12,
                         md: 6,
                         control_form: control_detail,
-                        control_name: 'request_number',
+                        control_name: 'numero_radicado_salida',
                         default_value: '',
                         rules: {},
-                        label: 'Número de radicado de salida',
+                        label:
+                          pqr_request.numero_radicado_salida === ''
+                            ? 'NO RADICADA AÚN'
+                            : 'Número de radicado de salida',
                         type: 'text',
                         disabled: true,
                         helper_text: '',
@@ -167,10 +172,13 @@ const PqrDetailDialog = ({
                         xs: 12,
                         md: 6,
                         control_form: control_detail,
-                        control_name: 'request_at',
+                        control_name: 'fecha_radicado_salida',
                         default_value: '',
                         rules: {},
-                        label: 'Fecha de radicado de salida',
+                        label:
+                          pqr_request.fecha_radicado_salida === null
+                            ? 'NO RADICADA AÚN'
+                            : 'Fecha de radicado de salida',
                         disabled: true,
                         helper_text: '',
                         format: 'YYYY-MM-DD',
@@ -178,15 +186,18 @@ const PqrDetailDialog = ({
                     ]
                   : [
                       {
-                        datum_type: 'input_controller',
+                        datum_type: 'select_controller',
                         xs: 12,
-                        md: 3,
+                        md: 4,
                         control_form: control_detail,
                         control_name: 'cod_tipo_PQRSDF',
                         default_value: '',
                         rules: {},
-                        label: 'Tipo de tramite',
+                        label: 'Tipo de solicitud',
                         type: 'text',
+                        select_options: pqr_types,
+                        option_label: 'label',
+                        option_key: 'key',
                         disabled: true,
                         helper_text: '',
                       },
@@ -249,7 +260,7 @@ const PqrDetailDialog = ({
                         xs: 12,
                         md: 6,
                         control_form: control_detail,
-                        control_name: 'numero_radicado',
+                        control_name: 'numero_radicado_entrada',
                         default_value: '',
                         rules: {},
                         label:
