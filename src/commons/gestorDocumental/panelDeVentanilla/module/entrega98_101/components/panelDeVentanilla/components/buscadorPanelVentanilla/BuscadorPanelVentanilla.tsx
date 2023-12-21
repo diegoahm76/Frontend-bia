@@ -24,6 +24,7 @@ import {
 import { useAppDispatch } from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
+import { getOpasPanVen } from '../../../../../../toolkit/thunks/opas/getOpasPanVen.service';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* dispatch declaration
@@ -40,34 +41,30 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   } = usePanelVentanilla();
 
   // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA-----
-  const searchSubmitPqrsdf = () => {
+  const searchSubmitPqrsdf = async () => {
     const {
-      tipo_de_solicitud,
       radicado,
       estado_actual_solicitud,
       fecha_inicio,
       fecha_fin,
       tipo_pqrsdf,
     } = watch_busqueda_panel_ventanilla;
-    void getGrilladoPqrsdfPanelVentanilla(
+    const res = await getGrilladoPqrsdfPanelVentanilla(
       estado_actual_solicitud?.label,
       radicado,
-      '' /*tipo_de_solicitud?.label,*/,
+      '', //* va marcado manualmente como PQRSDF (tipo_de_solicitud)
       fecha_inicio,
       fecha_fin,
       tipo_pqrsdf?.value,
-      //* se debe poner la busqueda por unidad organizacional
-      // * se debe poner la bsqueda por tipo de pqrs
       handleSecondLoading
-    ).then((res) => {
-      dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
+    );
 
-      //* se limpian los otros controles para no crear conflictos
-      dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-      dispatch(setListaElementosComplementosRequerimientosOtros([]));
-    });
+    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
+
+    //* se limpian los otros controles para no crear conflictos
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+    dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
-
   const searchSubmitTramitesYservicios = () => {
     //  console.log('')('searchSubmitTramitesYservicios');
 
@@ -76,7 +73,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
 
-  const searchSubmitOtros = () => {
+  const searchSubmitOtros = async () => {
     //  console.log('')('submit , buscando coincidencias de otros');
 
     //* se limpian los otros controles para no crear conflictos
@@ -84,8 +81,26 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
 
-  const searchSubmitopas = () => {
-    //  console.log('')('searchSubmitopas');
+  const searchSubmitopas = async () => {
+    const {
+      nombre_titular,
+      radicado,
+      nombre_proyecto,
+      estado_actual_solicitud,
+      fecha_inicio,
+      fecha_fin,
+    } = watch_busqueda_panel_ventanilla;
+    const res = await getOpasPanVen(
+      handleSecondLoading,
+      '', //fecha_inicio,
+      '', // fecha_fin,
+      '', // nombre_proyecto
+      '', // estado_actual_solicitud?.label,
+      '', //radicado,
+      '', // nombre_titular,
+    );
+
+    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));

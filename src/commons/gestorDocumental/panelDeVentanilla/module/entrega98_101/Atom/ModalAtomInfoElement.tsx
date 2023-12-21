@@ -480,6 +480,109 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
                 </Grid>
               </>
             )}
+
+            {/*definicion de elemento cuando es complemento*/}
+
+            {currentElementPqrsdComplementoTramitesYotros?.es_complemento && (
+              <>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Fecha complemento"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      formatDate(
+                        currentElementPqrsdComplementoTramitesYotros?.fecha_complemento
+                      ) ?? 'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Número de folios totales"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.nro_folios_totales ??
+                      '0'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Descripción del complemento"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.descripcion ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.5rem',
+                    mb: '.5rem',
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    disabled
+                    label="Nombre completo de quien recibe"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      currentElementPqrsdComplementoTramitesYotros?.nombre_completo_recibe ??
+                      'N/A'
+                    }
+                    InputLabelProps={{ shrink: true }}
+                    style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
 

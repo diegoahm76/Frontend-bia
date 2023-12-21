@@ -99,7 +99,7 @@ export const BiaGpt = (): JSX.Element => {
         <div // Este es el nuevo elemento que se superpone
           style={{
             position: 'absolute',
-            bottom: '3%',
+            bottom: '2.5%',
             height: '30px',
             width: '60%',
             backgroundColor: '#fff', // Cambia esto al color que prefieras

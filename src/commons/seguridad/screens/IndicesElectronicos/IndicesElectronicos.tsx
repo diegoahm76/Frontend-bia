@@ -55,12 +55,13 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
   // ? useeffect para la busqueda de expedientes
 
   useEffect(() => {
-    void getTrdExp().then((res: any) => setdataInicialSelects({
-      dataTrd: res,
-      dataSeries: [],
-      dataSubSeries: [],
-    }))
-
+    void getTrdExp().then((res: any) =>
+      setdataInicialSelects({
+        dataTrd: res,
+        dataSeries: [],
+        dataSubSeries: [],
+      })
+    );
   }, []);
 
   // ? colums for the DataGrid
@@ -219,18 +220,21 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                   >
                     SALIR DEL MÓDULO
                   </Button>
-                  <Button
-                    color="primary"
-                    variant="outlined"
-                    startIcon={<CleanIcon />}
-                    onClick={() => {
-                      setData([]);
-                      setDataIndice([]);
-                      setXmlToJsonisTrue({});
-                    }}
-                  >
-                    REINICIAR MÓDULO
-                  </Button>
+
+                  {data?.length > 0 && (
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      startIcon={<CleanIcon />}
+                      onClick={() => {
+                        setData([]);
+                        setDataIndice([]);
+                        setXmlToJsonisTrue({});
+                      }}
+                    >
+                      REINICIAR MÓDULO
+                    </Button>
+                  )}
                 </Stack>
               </Grid>
             </Grid>
