@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Box, SpeedDial, SpeedDialAction } from '@mui/material';
+import { Box, SpeedDial, SpeedDialAction, Typography } from '@mui/material';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
 import {
   useAppDispatch,
@@ -9,7 +9,10 @@ import { withValidation } from '../../functions/validationAction';
 import { showAlert } from '../../../../../../../../../../../utils/showAlert/ShowAlert';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { resetPanelVentanillaFull, setActionssToManagePermissions } from '../../../../../../../../toolkit/store/PanelVentanillaStore';
+import {
+  resetPanelVentanillaFull,
+  setActionssToManagePermissions,
+} from '../../../../../../../../toolkit/store/PanelVentanillaStore';
 import { postDigitalizacionComplementos } from '../../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service';
 import { useEffect } from 'react';
 
@@ -31,7 +34,7 @@ export const ButtonsComplementos = (): JSX.Element => {
     const { idComplementoUsu_PQR } =
       currentElementPqrsdComplementoTramitesYotros;
     await postDigitalizacionComplementos(idComplementoUsu_PQR);
-    dispatch(resetPanelVentanillaFull());
+    // dispatch(resetPanelVentanillaFull());
   };
 
   const handleDigitalizacion = withValidation(async () => {
@@ -74,7 +77,6 @@ export const ButtonsComplementos = (): JSX.Element => {
     }
   };
 
-
   return (
     <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
       <SpeedDial
@@ -83,22 +85,32 @@ export const ButtonsComplementos = (): JSX.Element => {
         icon={<MultipleStopIcon />}
         direction="right"
       >
-        {actionsComplementos.map(
-          (action: {
-            id: string;
-            icon: any;
-            name: string;
-            path: string;
-            disabled: boolean;
-          }) =>
-            action.disabled ? <></> : (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-                onClick={() => handleClickActionsGeneral(action)}
-              />
-            )
+        {actionsComplementos.every(
+          (action: { disabled: boolean }) => action.disabled
+        ) ? (
+          <Typography variant="body1" color="text.secondary">
+            No hay acciones disponibles para el elemento seleccionado
+          </Typography>
+        ) : (
+          actionsComplementos.map(
+            (action: {
+              id: string;
+              icon: any;
+              name: string;
+              path: string;
+              disabled: boolean;
+            }) =>
+              action.disabled ? (
+                <></>
+              ) : (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                  onClick={() => handleClickActionsGeneral(action)}
+                />
+              )
+          )
         )}
       </SpeedDial>
     </Box>

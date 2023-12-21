@@ -1,4 +1,4 @@
-import { Box, SpeedDial, SpeedDialAction } from '@mui/material';
+import { Box, SpeedDial, SpeedDialAction, Typography } from '@mui/material';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
 import {
   useAppDispatch,
@@ -31,7 +31,7 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   const sendDigitalizationRequest = async () => {
     const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
     await postDigitalizacionPqrsdf(id_PQRSDF);
-    dispatch(resetPanelVentanillaFull());
+    // dispatch(resetPanelVentanillaFull());
   };
 
   const handleDigitalizacion = withValidation(async () => {
@@ -94,22 +94,30 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
         icon={<MultipleStopIcon />}
         direction="right"
       >
-        {actions.map(
-          (action: {
-            id: string;
-            icon: any;
-            name: string;
-            path: string;
-            disabled: boolean;
-          }) =>
-            action.disabled ? null : (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-                onClick={() => handleClickActionsGeneral(action)}
-              />
-            )
+        {actions.every((action: { disabled: boolean }) => action.disabled) ? (
+          <Typography variant="body1" color="text.secondary">
+            No hay acciones disponibles para el elemento seleccionado
+          </Typography>
+        ) : (
+          actions.map(
+            (action: {
+              id: string;
+              icon: any;
+              name: string;
+              path: string;
+              disabled: boolean;
+            }) =>
+              action.disabled ? (
+                <></>
+              ) : (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                  onClick={() => handleClickActionsGeneral(action)}
+                />
+              )
+          )
         )}
       </SpeedDial>
     </Box>

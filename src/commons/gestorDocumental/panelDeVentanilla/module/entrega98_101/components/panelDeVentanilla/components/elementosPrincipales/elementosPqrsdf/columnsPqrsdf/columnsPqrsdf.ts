@@ -56,6 +56,9 @@ export const columnsPqrsdf = [
     headerName: 'Fecha de radicado',
     field: 'fecha_radicado',
     minWidth: 230,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
   },
   {
     headerName: 'Estado de solicitud',
