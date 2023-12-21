@@ -13,6 +13,9 @@ import { FacilidadPagoRoutes } from '../facilidadPago/routes/FacilidadPagoRoutes
 import { ReportesRoutes } from '../reportes/routes/ReportesRoutes';
 import { LiquidacionScreen } from '../screens/LiquidacionScreen';
 import ConfiguracionAlertasScreen from '../alertas/screens/ConfiguracionAlertaScreen';
+import { Facturacion } from '../screens/Facturacion';
+import { SupEtapasProceso } from '../screens/SupEtapasProceso';
+import { AutodeclaracionFormulario } from '../screens/AutodeclaracionFormulario';
 import { EtapaProcesoProvider } from '../components/GestionCartera/Context/EtapaProcesoContext';
 
 
@@ -35,6 +38,11 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="facilidades_pago/*" element={<FacilidadPagoRoutes />} />
       <Route path="reportes/*" element={<ReportesRoutes />} />
       <Route path="alertas/*" element={<ConfiguracionAlertasScreen />} />
+      <Route path="facturacion/*" element={<Facturacion/>} />
+      <Route path="Sup_Etapas/*" element={<SupEtapasProceso />} />
+      <Route path="Autodeclaracion_formulatio/*" element={<AutodeclaracionFormulario/>} />
+
+      
       <Route path="/*" element={<Page404 />} />
     </Routes>
     </EtapaProcesoProvider>

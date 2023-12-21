@@ -172,7 +172,9 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
             );
           case 'Otros':
             return renderOtros();
-          case 'Complemento de PQRSDF' || 'Complemento de PQRSDF - Respuesta a solicitud' || 'Complemento de PQRSDF - Respuesta a requerimiento':
+          case 'Complemento de PQRSDF':
+          case 'Complemento de PQRSDF - Respuesta a solicitud':
+          case 'Complemento de PQRSDF - Respuesta a requerimiento':
             return renderComplementoPQRSDF();
           default:
             return null;
