@@ -9,12 +9,7 @@ import { withValidation } from '../../functions/validationAction';
 import { showAlert } from '../../../../../../../../../../../utils/showAlert/ShowAlert';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import {
-  resetPanelVentanillaFull,
-  setActionssToManagePermissions,
-} from '../../../../../../../../toolkit/store/PanelVentanillaStore';
 import { postDigitalizacionComplementos } from '../../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service';
-import { useEffect } from 'react';
 
 export const ButtonsComplementos = (): JSX.Element => {
   //* dispatch declaration
@@ -63,17 +58,19 @@ export const ButtonsComplementos = (): JSX.Element => {
     console.log('Continuar con asignación de grupo')
   );
 
+  const actionHandlers: any = {
+    'Dig': handleDigitalizacion,
+    'ContinuarAsigGrup': handleContinuarAsignacionAGrupo,
+    // puedes agregar más manejadores de acción aquí
+  };
+
   const handleClickActionsGeneral = (action: any) => {
-    //* por cada nombre se ejecutaran acciones diferentes, se debe analizar por si vienen cambios desde el backend que se plantee
-    switch (action.id) {
-      case 'Dig':
-        handleDigitalizacion(action, navigate);
-        break;
-      case 'ContinuarAsigGrup':
-        handleContinuarAsignacionAGrupo(action, navigate);
-        break;
-      default:
-        break;
+    const handleAction = actionHandlers[action.id];
+    if (handleAction) {
+      handleAction(action, navigate);
+    } else {
+      // puedes manejar el caso en que no se encuentra un manejador de acción aquí
+      console.warn(`No se encontró un manejador de acción para ${action.id}`);
     }
   };
 
