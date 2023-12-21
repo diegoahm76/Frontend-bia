@@ -96,6 +96,9 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     useEffect(() => {
         if (tramite_servicio === 'O') {
             set_steps([...steps, ...opas]);
+        }else{
+            if(tramite_servicio !== '')
+                window.location.href = 'http://localhost:3000/#/app/gestor_documental/expedientes/indexacion_expedientes';
         }
     }, [tramite_servicio]);
 
@@ -134,16 +137,16 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                                     <Typography noWrap>{props.usuario_cache.nombre}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={12}>
-                                    <Typography noWrap>{'Representante legal de'}</Typography>
+                                    <Typography noWrap>{'Representante legal de '}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={12}>
-                                    <Typography noWrap>{props.usuario_cache.nombre}</Typography>
+                                    <Typography noWrap>{props.usuario_cache.nombre_unidad_organizacional}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={12}>
-                                    <Typography noWrap>{props.usuario_cache.nombre}</Typography>
+                                    <Typography noWrap>{props.usuario_cache.email}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={12}>
-                                    <Typography noWrap>{props.usuario_cache.nombre}</Typography>
+                                    <Typography noWrap>{props.usuario_cache.telefono_celular}</Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
