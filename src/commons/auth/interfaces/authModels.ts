@@ -55,6 +55,7 @@ export interface UserData {
   id_persona: number;
   tipo_persona: string;
   nombre?: string;
+  telefono_celular?:any;
 }
 
 export interface Tokens {

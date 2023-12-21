@@ -64,6 +64,7 @@ export const Encuesta: React.FC = () => {
     ///////////////// Departamentos de encuestas 
     const [departamentos, set_departamentos] = useState<Departamento[]>([]);
     const [selected_departamento, setselected_departamento] = useState('');
+    
     useEffect(() => {
         void fetch_data_dptos_encuestas({
             url: link,

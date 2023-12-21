@@ -672,7 +672,7 @@ export const EstadosProcesoScreen: React.FC = () => {
                 <TabList onChange={handle_change}>
                   <Tab label="Etapas de Proceso" value="1" />
                   <Tab label="Atributos de Etapa" value="2" />
-                  <Tab label="Subetapas de Proceso" value="3" />
+                  {/* <Tab label="Subetapas de Proceso" value="3" /> */}
                 </TabList>
               </Box>
 
@@ -820,6 +820,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         </Grid>
       </Grid>
       <CrearAtributoModal
+      id_etapa={id_etapa}
         form_data_atributo={form_data_atributo}
         actualizar_atributo={actualizar_atributo}
         is_modal_active={open_atributo_modal}

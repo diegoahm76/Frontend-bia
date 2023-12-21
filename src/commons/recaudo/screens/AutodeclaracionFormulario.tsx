@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
-import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
-import { Divider, Button, Grid, TextField, } from '@mui/material';
+import { Grid, TextField, } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
 import { api } from '../../../api/axios';
 import { control_error, control_success } from '../../../helpers';
 import { Title } from '../../../components/Title';
+import { useSelector } from 'react-redux';
+import { AuthSlice } from '../../auth/interfaces';
 
 
 interface ConfiguracionBasica {
     id: any;
-    orden:any
+    orden: any
     categoria: any;
 }
 
@@ -25,6 +24,7 @@ interface ConfiguracionBasica {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AutodeclaracionFormulario: React.FC = () => {
     const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
+    const { userinfo: { nombre_de_usuario, telefono_celular, email, nombre_unidad_organizacional } } = useSelector((state: AuthSlice) => state.auth);
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
     const fetchConfiguraciones = async (): Promise<void> => {
         try {
@@ -97,9 +97,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
     //// editar tipos de cobro 
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         categoria: selectedConfiguracion?.categoria || "",
-        orden:selectedConfiguracion?.orden|| "",
+        orden: selectedConfiguracion?.orden || "",
         id: selectedConfiguracion?.id || "",
-        
+
     });
 
     useEffect(() => {
@@ -118,7 +118,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
             const url = `/recaudo/procesos/categoria-atributos/${formValues.id}/`;
             const dataToUpdate = {
                 categoria: formValues.categoria,
-                orden :  formValues.orden,
+                orden: formValues.orden,
             };
             await api.put(url, dataToUpdate);
             fetchConfiguraciones();
@@ -126,7 +126,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 ...formValues,
                 id: "",
                 categoria: "",
-                orden:"",
+                orden: "",
             });
             control_success("Editado  exitosamente");
         } catch (error: any) {
@@ -146,7 +146,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 ...formValues,
                 // id: "",
                 categoria: "",
-                orden:"",
+                orden: "",
             });
         } catch (error: any) {
             // console.error("Error al crear la configuración básica", error);
@@ -177,12 +177,61 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     <Grid item xs={12} sm={4}>
                         <TextField
                             required
+                            disabled
                             fullWidth
                             size="small"
                             variant="standard"
-                            label="Tipo de cobro"
-                            name="categoria"
-                       
+                            label=" Nombre de usuario    "
+                            name="Nombre de usuario "
+                            value={nombre_de_usuario}
+
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            required
+                            disabled
+                            fullWidth
+                            size="small"
+                            variant="standard"
+                            label="telefono_celular"
+                            name="telefono_celular"
+                            value={telefono_celular}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            required
+                            disabled
+                            fullWidth
+                            size="small"
+                            variant="standard"
+                            label="email"
+                            name="email"
+                            value={email}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            required
+                            disabled
+                            fullWidth
+                            size="small"
+                            variant="standard"
+                            label="nombre_unidad_organizacional"
+                            name="nombre_unidad_organizacional"
+                            value={nombre_unidad_organizacional}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            required
+
+                            fullWidth
+                            size="small"
+                            variant="standard"
+                            label="Reprecentante legal"
+                            name="Reprecentante legal"
                         />
                     </Grid>
                     <Grid item xs={12} sm={4}>
@@ -191,16 +240,91 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             fullWidth
                             size="small"
                             variant="standard"
-                            label="orden"
-                            name="orden"
-                   
+                            label="Dilegenciado por "
+                            name="Dilegenciado por "
                         />
                     </Grid>
-                    
-                  
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            required
+                            fullWidth
+                            size="small"
+                            variant="standard"
+                            label="Cargo"
+                            name="Cargo"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                    </Grid>
                 </Grid>
 
+
+
+
+
             </Grid>
+            <Grid container
+                item xs={12} marginLeft={2} marginRight={2} marginTop={3}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', m: '10px 0 20px 0', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                <Grid item xs={12} sm={7}>
+                    <TextField
+                        required
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Cuerpo de agua en la que hace la capacitacion"
+                        name="Cuerpo de agua en la que hace la capacitacion"
+                    />
+                </Grid>
+
+                <Grid item xs={12} marginLeft={3}  sm={3}>
+                    <TextField
+                        required
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Municipio"
+                        name="Municipio"
+                    />
+                </Grid>
+
+
+
+                <Grid item xs={12} sm={7}>
+                    <TextField
+                        required
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Cuerpo de agua en la que hace el vertimiento "
+                        name="Cuerpo de agua en la que hace el vertimiento "
+                    />
+                </Grid>
+
+                <Grid item xs={12} marginLeft={3}  sm={3}>
+                    <TextField
+                        required
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Municipio"
+                        name="Municipio"
+                    />
+                </Grid>
+
+
+
+
+            </Grid>
+
+
         </>
     );
 };

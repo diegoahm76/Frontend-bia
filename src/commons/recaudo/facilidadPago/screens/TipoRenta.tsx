@@ -150,8 +150,6 @@ export const TipoRenta: React.FC = () => {
 
     return (
         <>
-
-
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} marginTop={3}
                 sx={{
@@ -164,9 +162,6 @@ export const TipoRenta: React.FC = () => {
             >
                 <Title title="Tipos  de renta " />
                 <Grid container item xs={12} spacing={2} marginTop={2}>
-
-
-
                     <Grid item xs={12} sm={4}>
                         <TextField
                             required

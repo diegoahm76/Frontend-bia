@@ -44,10 +44,6 @@ import { Persona } from '../../../interfaces/globalModels';
 import { UnidadOrganizacional } from '../../conservacion/solicitudMaterial/interfaces/solicitudVivero';
 import { Alertas } from '../../gestorDocumental/alertasgestor/interfaces/types';
 
-interface UnidadOrganizaciona {
-  id_unidad_organizacional: number;
-  nombre: string;
-}
 interface SerieSubserie {
   id_catserie_unidadorg: number;
   id_serie_doc: number;
@@ -55,9 +51,86 @@ interface SerieSubserie {
   id_subserie_doc: number | null;
   nombre_subserie_doc: string | null;
 }
+interface UnidadOrganizaciona {
+  id_unidad_organizacional: number;
+  nombre: string;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Facturacion: React.FC = () => {
   const { userinfo: { nombre_unidad_organizacional, nombre, id_persona } } = useSelector((state: AuthSlice) => state.auth);
+  const [visor, setVisor] = useState('');
+
+
+  const generarHistoricoBajas = () => {
+    const doc = new jsPDF();
+    const anchoPagina = doc.internal.pageSize.width;
+
+    // Añadir título, fecha y logo
+    const agregarEncabezado = () => {
+      doc.setFontSize(22);
+      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
+      doc.setFontSize(12);
+      doc.text(dayjs().format('DD/MM/YYYY'), anchoPagina - 40, 10);
+      doc.addImage(logo_cormacarena_h, 160, 10, 40, 10); // Asegúrate de tener esta imagen
+    };
+    agregarEncabezado();
+
+    // Añadir información del usuario   
+    doc.setFontSize(12);
+    let y = 30; // posición inicial para el texto
+    doc.text(`${consecutivoActual}`, 10, y);
+    y += 6;
+    doc.text(`${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}`, 10, y);
+    y += 6;
+    doc.text(`Identificación: ${identificacion}`, 10, y);
+    y += 6;
+    doc.text(`Email: ${email}`, 10, y);
+    y += 6;
+    doc.text(`Tel.: ${telefono}`, 10, y);
+    y += 6;
+    doc.text(`Ciudad: ${ciudad}`, 10, y);
+    y += 6; // Espacio antes del asunto
+
+    // Añadir asunto
+    const lineas = doc.splitTextToSize(asunto, anchoPagina - 20);
+    for (let i = 0; i < lineas.length; i++) {
+      if (y > 280) {
+        doc.addPage();
+        agregarEncabezado();
+        y = 30;
+      }
+      doc.text(lineas[i], 10, y);
+      y += 6;
+    }
+
+    let yFinal = doc.internal.pageSize.getHeight() - 30; // Ajusta esto según sea necesario
+    doc.setFontSize(12);
+    doc.text(`Nombre: ${nombre}`, 10, yFinal);
+    yFinal += 10;
+    doc.text(`Contratista Grupo: ${nombre_unidad_organizacional}`, 10, yFinal);
+
+    setVisor(doc.output('datauristring'));
+  };
+
+  const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
+  const realizarActualizacion = async () => {
+    try {
+      const url = "/gestor/adminitrador_radicados/config_tipos_radicado_agno/generar_n/";
+      const payload = {
+        cod_tipo_radicado: "U",
+        id_persona: id_persona, // Asumiendo que id_persona viene del estado de Redux
+        fecha_actual: new Date().toISOString() // O la fecha que necesites enviar
+      };
+
+      const res = await api.put(url, payload);
+      const data = res.data.data;
+      setConsecutivoActual(data.radicado_nuevo);
+      generarHistoricoBajas();
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const [idUnidadSeleccionada, setIdUnidadSeleccionada] = useState('');
   const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
   const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
@@ -122,63 +195,13 @@ export const Facturacion: React.FC = () => {
       setNombreSubserieSeleccionada('');
     }
   };
-  const [visor, setVisor] = useState('');
   const [asunto, setAsunto] = useState('');
   const [identificacion, setIdentificacion] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
   const [ciudad, setCiudad] = useState('');
 
-  const generarHistoricoBajas = () => {
-    const doc = new jsPDF();
-    const anchoPagina = doc.internal.pageSize.width;
 
-    // Añadir título, fecha y logo
-    const agregarEncabezado = () => {
-      doc.setFontSize(22);
-      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
-      doc.setFontSize(12);
-      doc.text(dayjs().format('DD/MM/YYYY'), anchoPagina - 40, 10);
-      doc.addImage(logo_cormacarena_h, 160, 10, 40, 10); // Asegúrate de tener esta imagen
-    };
-    agregarEncabezado();
-
-    // Añadir información del usuario   
-    doc.setFontSize(12);
-    let y = 30; // posición inicial para el texto
-    doc.text(`${consecutivoActual}`, 10, y);
-    y += 6;
-    doc.text(`${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}`, 10, y);
-    y += 6;
-    doc.text(`Identificación: ${identificacion}`, 10, y);
-    y += 6;
-    doc.text(`Email: ${email}`, 10, y);
-    y += 6;
-    doc.text(`Tel.: ${telefono}`, 10, y);
-    y += 6;
-    doc.text(`Ciudad: ${ciudad}`, 10, y);
-    y += 6; // Espacio antes del asunto
-
-    // Añadir asunto
-    const lineas = doc.splitTextToSize(asunto, anchoPagina - 20);
-    for (let i = 0; i < lineas.length; i++) {
-      if (y > 280) {
-        doc.addPage();
-        agregarEncabezado();
-        y = 30;
-      }
-      doc.text(lineas[i], 10, y);
-      y += 6;
-    }
-
-    let yFinal = doc.internal.pageSize.getHeight() - 30; // Ajusta esto según sea necesario
-    doc.setFontSize(12);
-    doc.text(`Nombre: ${nombre}`, 10, yFinal);
-    yFinal += 10;
-    doc.text(`Contratista Grupo: ${nombre_unidad_organizacional}`, 10, yFinal);
-
-    setVisor(doc.output('datauristring'));
-  };
 
 
 
@@ -199,6 +222,15 @@ export const Facturacion: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    generarHistoricoBajas();
+  }, [consecutivoActual]);
+
+  useEffect(() => {
+    if (consecutivoActual !== null) {
+      enviarDocumento();
+    }
+  }, [consecutivoActual]);
 
   useEffect(() => {
     fetch_dataget().catch((error) => {
@@ -364,21 +396,41 @@ export const Facturacion: React.FC = () => {
   }, [formData.id_unidad_org_lider]);
 
 
-  const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
-  const realizarActualizacion = async () => {
-    try {
-      const url = "/gestor/adminitrador_radicados/config_tipos_radicado_agno/generar_n/";
-      const payload = {
-        cod_tipo_radicado: "U",
-        id_persona: id_persona, // Asumiendo que id_persona viene del estado de Redux
-        fecha_actual: new Date().toISOString() // O la fecha que necesites enviar
-      };
+  const dataURItoBlob = (dataURI: string) => {
+    const byteString = atob(dataURI.split(',')[1]);
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
+  };
 
-      const res = await api.put(url, payload);
-      const data = res.data.data;
-      setConsecutivoActual(data.radicado_nuevo);
+  const generarArchivo = () => {
+    const blob = dataURItoBlob(visor);
+    return new File([blob], "documento.pdf", { type: "application/pdf" });
+  };
+
+  const enviarDocumento = async () => {
+    try {
+      // await realizarActualizacion();
+      // await generarHistoricoBajas(); 
+      const formData = new FormData();
+      formData.append("radicado", `${consecutivoActual}`); // Reemplaza con el valor adecuado
+      formData.append("id_persona", id_persona.toString());
+
+      const archivo = generarArchivo();
+      formData.append("archivo", archivo);
+      const url = "/recaudo/formulario/documento_formulario_recuado/";
+      const response = await api.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log("Documento enviado con éxito", response.data);
     } catch (error) {
-      console.error(error);
+      console.error("Error al enviar el documento", error);
     }
   };
 
@@ -398,10 +450,13 @@ export const Facturacion: React.FC = () => {
         }}
       >
         <Title title="Generación de documento" />
+        {consecutivoActual}
         <>
           {/* ... (resto de tu JSX) */}
-          <button onClick={realizarActualizacion}>Actualizar Consecutivo</button>
-        
+        </>
+        <>
+          {/* ... (resto de tu JSX) */}
+
         </>
         {/* miguel
         {id_persona} */}
@@ -508,9 +563,12 @@ export const Facturacion: React.FC = () => {
           />
         </Grid>
 
-        <Button onClick={generarHistoricoBajas}>Generar Informe</Button>
+        {/* <Button onClick={generarHistoricoBajas}>Generar Informe</Button> */}
         <Grid item xs={12} sm={12}>
           <div>
+            {/* <Button onClick={enviarDocumento}>Enviar Documento</Button> */}
+            <Button variant="outlined" onClick={realizarActualizacion}>Actualizar Consecutivo</Button>
+
             <embed src={visor} type="application/pdf" width="100%" height="1080px" />
           </div>
         </Grid>
