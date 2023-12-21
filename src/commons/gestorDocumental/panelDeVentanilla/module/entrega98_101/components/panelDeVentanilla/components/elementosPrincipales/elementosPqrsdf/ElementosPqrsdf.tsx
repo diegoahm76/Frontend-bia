@@ -26,7 +26,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
-import { ModalDenuncia } from '../../../../../Atom/components/ModalDenuncia';
+import  RemoveDoneIcon  from '@mui/icons-material/RemoveDone';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -500,6 +500,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               }}
               variant="contained"
               color="primary"
+              endIcon={<RemoveDoneIcon />}
             >
               Quitar selección de PQRSDF
             </Button>

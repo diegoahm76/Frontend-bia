@@ -7,7 +7,9 @@ export const indexColumns: GridColDef[] = [
     field: 'codigo_exp_und_serie_subserie',
     headerName: 'CÓDIGO',
     sortable: true,
-    width: 160,
+    width: 180,
+    renderCell: (params) =>
+      `${params.row.codigo_exp_und_serie_subserie ?? ''}.${params.row.codigo_exp_Agno ?? ''}.${params.row.codigo_exp_consec_por_agno ?? ''}`,
   },
   {
     field: 'nombre_trd_origen',

@@ -16,8 +16,8 @@ export const postDigitalizacionPqrsdf = async (data: any) => {
 
     if (response.data.succes) {
       showAlert(
-        'Digitalización exitosa',
-        'Se ha digitalizado correctamente la solicitud',
+        'Solicitud de digitalización exitosa',
+        'Se ha enviado correctamente la solicitud de digitalización',
         'success'
       );
     }
@@ -42,8 +42,8 @@ export const postDigitalizacionComplementos = async (data: any) => {
 
     if (response.data.succes) {
       showAlert(
-        'Digitalización exitosa',
-        'Se ha digitalizado correctamente la solicitud',
+        'Solicitud de digitalización exitosa',
+        'Se ha enviado correctamente la solicitud de digitalización',
         'success'
       );
     }

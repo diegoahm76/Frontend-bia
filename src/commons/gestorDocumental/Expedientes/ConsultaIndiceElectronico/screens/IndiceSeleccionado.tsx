@@ -4,10 +4,15 @@ import dayjs from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { xmlFromJson } from "../../../../seguridad/screens/IndicesElectronicos/utils/xmlFromJson";
+import { saveAs } from 'file-saver';
+import { v4 as uuidv4 } from 'uuid';
+import { useEffect } from "react";
 
 const class_button_purple = {borderColor:"#7d2181", color:'#7d2181'};
 interface IProps {
-    indice: any
+    indice: any,
+    set_columns: any,
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -97,7 +102,9 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
         }
 
     ];
-
+    useEffect(() => {
+        props.set_columns(columns);
+    },[])
     return (
         <>
             <Grid item md={12} xs={12}>
@@ -180,7 +187,18 @@ export const IndiceSeleccionado: React.FC<IProps> = (props: IProps) => {
                                     </Box>
                                 </Grid>
                                 <Grid item xs={12} sm={12} textAlign={'end'}>
-                                    <Button variant="outlined" sx={class_button_purple}>Generar XML</Button>
+                                    <Button variant="outlined" sx={class_button_purple} 
+                                                    onClick={() => {
+                                                        const xml = xmlFromJson(props.indice);
+                                                        console.log('xml', xml);
+                                      
+                                                        const blob = new Blob([xml], {
+                                                          type: 'text/xml;charset=utf-8',
+                                                        });
+                                                        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                                                        saveAs(blob, `archivo_${uuidv4().slice(0, 8)}.xml`);
+                                                      }}
+                                    >Generar XML</Button>
                                 </Grid>
                             </>
                         }

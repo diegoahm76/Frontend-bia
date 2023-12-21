@@ -18,7 +18,7 @@ export const ElementosOtros = (): JSX.Element => {
             variant="contained"
             color="primary"
           >
-            Quitar selección de PQRSDF
+            Quitar selección de Otros
           </Button>
         ) : null
       }*/

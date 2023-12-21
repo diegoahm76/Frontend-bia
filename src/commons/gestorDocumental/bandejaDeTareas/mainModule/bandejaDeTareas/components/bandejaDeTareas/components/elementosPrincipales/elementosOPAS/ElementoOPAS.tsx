@@ -18,7 +18,7 @@ export const ElementoOPAS = (): JSX.Element => {
           variant="contained"
           color="primary"
         >
-          Quitar selección de PQRSDF
+          Quitar selección de OPAS
         </Button>
       ) : null
     }*/

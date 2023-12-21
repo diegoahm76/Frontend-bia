@@ -221,7 +221,7 @@ export const EstadosProcesoScreen: React.FC = () => {
             <Tooltip title="Eliminar">
               <IconButton
                 onClick={() => {
-                  delete_atributo_etapa(params.row.id, params.row.descripcion);
+                  delete_atributo_etapa_by_id(params.row.id, params.row.descripcion);
                 }}
               >
                 <Avatar
@@ -308,7 +308,7 @@ export const EstadosProcesoScreen: React.FC = () => {
             <Tooltip title="Eliminar">
               <IconButton
                 onClick={() => {
-                  // delete_opcion_liquidacion(params.row.id);
+                  delete_categoria_by_id(params.row.id, params.row.categoria);
                 }}
               >
                 <Avatar
@@ -497,7 +497,7 @@ export const EstadosProcesoScreen: React.FC = () => {
       })
   };
 
-  const delete_categoria_atributos = (categoria: CategoriaAtributo): void => {
+  const delete_atributos_etapa_by_categoria = (categoria: CategoriaAtributo): void => {
     if (id_etapa !== null) {
       const id_etapa_actual: number = id_etapa;
       api.get(`recaudo/procesos/eliminar-atributos-etapa/${id_etapa}/${categoria.id}/`)
@@ -515,11 +515,26 @@ export const EstadosProcesoScreen: React.FC = () => {
     }
   };
 
-  const delete_atributo_etapa = (id_atributo: number, atributo: string): void => {
+  const delete_atributo_etapa_by_id = (id_atributo: number, atributo: string): void => {
     api.get(`recaudo/procesos/eliminar-atributo/${id_atributo}/`)
       .then((response) => {
         update_atributos_etapa();
         set_notification_info({ type: 'success', message: `Se eliminó correctamente el atributo "${atributo}".` });
+        set_open_notification_modal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        set_notification_info({ type: 'error', message: 'Hubo un error.' });
+        set_open_notification_modal(true);
+      });
+  };
+
+  const delete_categoria_by_id = (id_categoria: number, categoria: string): void => {
+    api.get(`recaudo/procesos/eliminar-categoria/${id_categoria}/`)
+      .then((response) => {
+        console.log(response);
+        update_categorias();
+        set_notification_info({ type: 'success', message: `Se eliminó correctamente la categoría "${categoria}".` });
         set_open_notification_modal(true);
       })
       .catch((error) => {
@@ -540,8 +555,7 @@ export const EstadosProcesoScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        //  console.log('')(error);
-        set_notification_info({ type: 'error', message: 'Hubo un error.' });
+        set_notification_info({ type: 'error', message: error.response.data?.etapa[0] ?? 'Hubo un error' });
         set_open_notification_modal(true);
       });
   };
@@ -776,7 +790,7 @@ export const EstadosProcesoScreen: React.FC = () => {
                       <Tooltip title='Eliminar' sx={{ mt: '18px' }}>
                         <IconButton
                           onClick={() => {
-                            delete_categoria_atributos(arreglo_atributos[0].id_categoria);
+                            delete_atributos_etapa_by_categoria(arreglo_atributos[0].id_categoria);
                           }}
                         >
                           <DeleteIcon />
