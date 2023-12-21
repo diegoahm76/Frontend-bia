@@ -62,7 +62,7 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
             />
             <Tab
               onClick={handleRequestRadicado}
-              label="Histórico de solicitudes"
+              label="Histórico de solicitudes PQRSDF"
               {...a11yProps(1)}
             />
           </Tabs>

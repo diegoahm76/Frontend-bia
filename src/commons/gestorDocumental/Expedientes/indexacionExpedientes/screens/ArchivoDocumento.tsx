@@ -224,7 +224,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         obtener_tipos_recurso_fc();
     }, []);
     
-    useEffect(() => {
+    useEffect(() => {        
+        console.log(props.configuracion?.expediente);
         if(props.configuracion !== null)
             props.configuracion?.expediente.length > 0 ? set_anulado(props.configuracion?.expediente[0]?.anulado) : set_anulado(false);
     }, [props.configuracion]);

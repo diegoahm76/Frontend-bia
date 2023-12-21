@@ -56,6 +56,9 @@ const BuscarExpedienteReapertura = ({ control_reapertura_expediente, open, handl
             headerName: 'CÓDIGO',
             sortable: true,
             width: 200,
+            renderCell: (params) => (
+                <span>{`${params.row.codigo_exp_und_serie_subserie} . ${params.row.codigo_exp_Agno} ${params.row.codigo_exp_consec_por_agno !== null ? `. ${params.row.codigo_exp_consec_por_agno}` : ''}`}</span>
+              ),
         },
         {
             field: 'nombre_trd_origen',

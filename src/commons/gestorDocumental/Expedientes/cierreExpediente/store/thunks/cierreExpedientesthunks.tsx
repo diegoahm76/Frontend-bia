@@ -66,7 +66,7 @@ export const get_trd = (): any => {
 export const get_tipologias = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get('gestor/expedientes-archivos/expedientes/listar-topologias/');
+            const { data } = await api.get('gestor/expedientes-archivos/expedientes/listar-tipologias/');
 
             if (data.success === true) {
                 dispatch(set_tipologias(data.data));

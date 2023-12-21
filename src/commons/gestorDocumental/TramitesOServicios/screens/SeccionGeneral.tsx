@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography } from "@mui/material";
+import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, Avatar } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import ClearIcon from '@mui/icons-material/Clear';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from "../../../../components/Title";
 import React from "react";
 import { TipoTramite } from "./TipoTramite";
 import { DocumentosAnexos } from "./DocumentosAnexos";
 import { ResumenTramite } from "./ResumenTramite";
+import { Radicado } from "./Radicado";
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
@@ -19,15 +17,25 @@ const class_css = {
 }
 interface IProps {
     usuario: any,
+    usuario_cache: any,
 }
-const steps = ['Tipo de trámite', 'Documentos anexos del trámite - OPAS', 'Resumen del trámite','Radicación del trámite'];
+
+const opas = ['Documentos anexos del trámite - OPAS', 'Resumen del trámite', 'Radicación del trámite'];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
+    const [formulario_paso_uno, set_formulario_paso_uno] = useState<any>(null);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     // Inicia Configuración Stepper
+    const [steps, set_steps] = React.useState<any[]>(['Tipo de trámite']);
     const [activeStep, setActiveStep] = React.useState(0);
+    const [tramite_servicio, set_tramite_servicio] = React.useState<any>('');
+    const [nuevo_tramite, set_nuevo_tramite] = React.useState<boolean>(false);
+    const [proceso_tramite, set_proceso_tramite] = React.useState<boolean>(false);
+    const [resumen_tramite, set_resumen_tramite] = React.useState<boolean>(false);
     const [crear_tramite, set_crear_tramite] = React.useState<boolean>(false);
+    const [crear_tramite_error, set_crear_tramite_error] = React.useState<boolean>(false);
+    const [eliminar_tramite, set_eliminar_tramite] = React.useState<boolean>(false);
     const [completed, setCompleted] = React.useState<{ [k: number]: boolean; }>({});
     const totalSteps = () => {
         return steps.length;
@@ -41,25 +49,17 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     const allStepsCompleted = () => {
         return completedSteps() === totalSteps();
     };
-    const handleNext = () => {
-        const newActiveStep = isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
-        setActiveStep(newActiveStep);
-    };
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-    const handleStep = (step: number) => () => {
-        setActiveStep(step);
-    };
     const handleComplete = () => {
-        const newCompleted = completed;
-        newCompleted[activeStep] = true;
-        setCompleted(newCompleted);
-        debugger
-        if(activeStep === 0){
+        if (activeStep === 0) {
             set_crear_tramite(true);
         }
-        handleNext();
+        if (activeStep !== 0) {
+            const newCompleted = completed;
+            newCompleted[activeStep] = true;
+            setCompleted(newCompleted);
+            const newActiveStep = isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
+            setActiveStep(newActiveStep);;
+        }
     };
     const handleReset = () => {
         setActiveStep(0);
@@ -67,14 +67,46 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     };
     // Finaliza Configuración Stepper
     useEffect(() => {
-        if (crear_tramite) {
-            console.log('Crear tramite');
+        if (crear_tramite_error) {
+            const newCompleted = completed;
+            newCompleted[activeStep] = true;
+            setCompleted(newCompleted);
+            const newActiveStep = isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1;
+            setActiveStep(newActiveStep);
         }
-    }, [crear_tramite]);
+    }, [crear_tramite_error]);
+    useEffect(() => {
+        if (eliminar_tramite) {
+            handleReset();
+            set_crear_tramite(false);
+            set_crear_tramite_error(false);
+            set_eliminar_tramite(false);
+            limpiar_formulario();
+        }
+    }, [eliminar_tramite]);
+
+    useEffect(() => {
+        if (tramite_servicio === 'O') {
+            set_steps([...steps, ...opas]);
+        }
+    }, [tramite_servicio]);
+
+    useEffect(() => {
+        if (limpiar) {
+            set_limpiar(false);
+        }
+    }, [limpiar]);
 
     const limpiar_formulario = (): void => {
         set_limpiar(true);
     }
+
+    const tramites = (nuevo: boolean, proceso: boolean, resumen: boolean): void => {
+        set_nuevo_tramite(nuevo);
+        set_proceso_tramite(proceso);
+        set_resumen_tramite(resumen);
+    }
+
 
     return (
         <>
@@ -84,11 +116,35 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
             >
                 <Title title="Trámite o servicio" />
                 <Grid container spacing={2} sx={{ mt: '10px' }}>
+                    {props.usuario !== null &&
+                        <Grid container xs={12} sm={12}>
+                            <Grid item xs={12} sm={1.5}>
+                                <Avatar sx={{ bgcolor: 'gray', padding: '50px' }}>N</Avatar>
+                            </Grid>
+                            <Grid container xs={12} sm={10.5}>
+                                <Grid item xs={12} sm={12}>
+                                    <Typography noWrap>{props.usuario_cache.nombre}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={12}>
+                                    <Typography noWrap>{'Representante legal de'}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={12}>
+                                    <Typography noWrap>{props.usuario_cache.nombre}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={12}>
+                                    <Typography noWrap>{props.usuario_cache.nombre}</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={12}>
+                                    <Typography noWrap>{props.usuario_cache.nombre}</Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    }
                     <Grid item xs={12} sm={4} textAlign={'center'}>
                         <Button
                             color="success"
                             variant="contained"
-                            onClick={() => { limpiar_formulario() }}
+                            onClick={() => { tramites(true, false, false) }}
                         >
                             Nuevo trámite
                         </Button>
@@ -97,7 +153,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                         <Button
                             color='success'
                             variant="outlined"
-                            onClick={() => { limpiar_formulario() }}
+                            onClick={() => { tramites(false, true, false) }}
                         >
                             Trámites en proceso
                         </Button>
@@ -106,14 +162,14 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                         <Button
                             color="warning"
                             variant="outlined"
-                            onClick={() => { limpiar_formulario() }}
+                            onClick={() => { tramites(false, false, true) }}
                         >
                             Trámites otorgados / negados
                         </Button>
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid
+            {nuevo_tramite && <Grid
                 container
                 sx={class_css}
             >
@@ -124,7 +180,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                             <Stepper nonLinear activeStep={activeStep}>
                                 {steps.map((label, index) => (
                                     <Step key={label} completed={completed[index]}>
-                                        <StepButton color="inherit" onClick={handleStep(index)}>
+                                        <StepButton color="inherit">
                                             {label}
                                         </StepButton>
                                     </Step>
@@ -145,47 +201,34 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                                     <React.Fragment>
                                         {activeStep === 0 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <TipoTramite usuario={props.usuario} crear_tramite={crear_tramite}></TipoTramite>
+                                                <TipoTramite usuario={props.usuario} crear_tramite={crear_tramite} set_formulario_paso_uno={set_formulario_paso_uno} set_crear_tramite={set_crear_tramite} set_crear_tramite_error={set_crear_tramite_error} limpiar={limpiar} set_tramite_servicio={set_tramite_servicio}></TipoTramite>
                                             </Grid>
                                         </Box>}
                                         {activeStep === 1 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <DocumentosAnexos usuario={props.usuario}></DocumentosAnexos>
+                                                <DocumentosAnexos usuario={props.usuario}></DocumentosAnexos>
                                             </Grid>
                                         </Box>}
                                         {activeStep === 2 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <ResumenTramite usuario={props.usuario}></ResumenTramite>
+                                                <ResumenTramite usuario={props.usuario} formulario_paso_uno={formulario_paso_uno} set_eliminar_tramite={set_eliminar_tramite}></ResumenTramite>
                                             </Grid>
                                         </Box>}
                                         {activeStep === 3 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <ResumenTramite usuario={props.usuario}></ResumenTramite>
+                                                <Radicado usuario={props.usuario} formulario_paso_uno={formulario_paso_uno}></Radicado>
                                             </Grid>
                                         </Box>}
                                         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <Button
-                                                color="inherit"
-                                                disabled={activeStep === 0}
-                                                onClick={handleBack}
-                                                sx={{ mr: 1 }}
-                                            >
-                                                anterior
-                                            </Button>
                                             <Box sx={{ flex: '1 1 auto' }} />
-                                            {activeStep !== (steps.length - 1) && <Button onClick={handleNext} sx={{ mr: 1 }}>
-                                                Siguiente
-                                            </Button>}
                                             {activeStep !== steps.length &&
                                                 (completed[activeStep] ? (
                                                     <Typography variant="subtitle2" sx={{ display: 'inline-block', mt: '7px' }}>
                                                         {steps[activeStep]} fue completado.
                                                     </Typography>
                                                 ) : (
-                                                    <Button onClick={handleComplete}>
-                                                        {completedSteps() === totalSteps() - 1
-                                                            ? 'Finalizar'
-                                                            : 'Guardar'}
+                                                    activeStep !== 3 && <Button onClick={handleComplete}>
+                                                        {completedSteps() === totalSteps() - 2 ? 'Radicar' : 'Siguiente'}
                                                     </Button>
                                                 ))}
                                         </Box>
@@ -195,7 +238,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                         </Box>
                     </Grid>
                 </Grid>
-            </Grid>
+            </Grid>}
         </>
     )
 }

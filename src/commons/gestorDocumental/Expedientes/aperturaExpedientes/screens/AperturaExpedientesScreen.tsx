@@ -64,11 +64,15 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
 
     const obtener_trd_actual_fc: () => void = () => {
         dispatch(obtener_trd_actual()).then((response: any) => {
-            set_tdr(response.data);
-            props.set_tdr(response.data);
-            dispatch(obtener_unidades_marcadas(response.data.id_organigrama)).then((response: any) => {
-                set_lt_seccion(response.data);
-            })
+            if(response.data !== null && response.data !== undefined){
+                set_tdr(response.data);
+                props.set_tdr(response.data);
+                dispatch(obtener_unidades_marcadas(response.data.id_organigrama)).then((response: any) => {
+                    set_lt_seccion(response.data);
+                })
+            }else{
+                generar_notificación_reporte('Notificación', 'info', 'No existe un TRD actual, para continuar la apertura de expedientes se debe configurar un TRD', true);
+            }
         })
     }
     const obtener_serie_subserie_fc: () => void = () => {
@@ -133,7 +137,7 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
                                             readOnly: true,
                                         }}
                                         fullWidth
-                                        value={tdr.nombre ?? ""}
+                                        value={tdr?.nombre ?? ""}
                                     />
                                 </Grid>
                             </Stack>
