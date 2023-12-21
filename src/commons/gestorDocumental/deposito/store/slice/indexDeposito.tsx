@@ -8,6 +8,7 @@ import type {
   IObjCaja,
   IObjCarpeta,
   IObjDeposito,
+  IObjRotuloCarpeta,
   IObjSucursales,
 } from '../../interfaces/deposito';
 import type { GetEstantes, InfoDepositos } from '../../Estantes/types/types';
@@ -81,6 +82,24 @@ export const cajas: IBuscarCaja = {
   nombre_deposito: '',
 };
 
+export const initial_state_rotulo:IObjRotuloCarpeta ={
+  id_carpeta_caja:null,
+  identificacion_por_caja:null,
+  id_caja_bandeja:null,
+  identificacion_caja:null,
+  id_serie_origen:null,
+  nombre_serie_origen:null,
+  id_subserie_origen:null,
+  nombre_subserie_origen:null,
+  titulo_expediente:null,
+  codigo_exp_und_serie_subserie:null,
+  codigo_exp_Agno:null,
+  codigo_exp_consec_por_agno: null,
+  numero_expediente:null,
+  fecha_folio_inicial:null,
+}
+
+
 export const initial_state: IDeposito = {
   deposito: [],
   current_deposito: initial_state_deposito,
@@ -95,6 +114,7 @@ export const initial_state: IDeposito = {
   estantes: [],
   cajas_lista: [],
   cajas,
+  rotulo_carpeta:initial_state_rotulo,
 
 };
 
@@ -165,6 +185,9 @@ export const deposito_slice = createSlice({
     set_carpetas: (state: IDeposito, action: PayloadAction<IObjCarpeta[]>) => {
       state.carpetas = action.payload;
     },
+    set_rotulo_crpetas: (state: IDeposito, action: PayloadAction<IObjRotuloCarpeta>) => {
+      state.rotulo_carpeta = action.payload;
+    },
   },
 });
 
@@ -182,5 +205,6 @@ export const {
   set_current_cajas,
   set_carpetas,
   set_cajas,
+  set_rotulo_crpetas,
 
 } = deposito_slice.actions;

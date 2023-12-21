@@ -16,11 +16,12 @@ import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
 
 import SeleccionTipoPersonaOtros from '../components/SelecionTipoPersonaOtros';
-import { get_list_on_behalf_service } from '../../PQRSDF/store/thunks/pqrsdfThunks';
+import { get_document_types_service, get_list_applicant_types_service, get_list_on_behalf_service, get_person_types_service } from '../../PQRSDF/store/thunks/pqrsdfThunks';
 import EstadOtros from '../components/EstadOtros';
 import TipoEmpresaOtros from '../components/TipoEmpresa';
 import TipoPoderdanteOtros from '../components/TipoPoderdante';
 import TipoPersonaOtros from '../components/TipoPersona';
+import { reset_state, set_others, set_pqr_status } from '../../PQRSDF/store/slice/pqrsdfSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function SolicitudesOtroScreen(): JSX.Element {
@@ -34,26 +35,26 @@ export function SolicitudesOtroScreen(): JSX.Element {
     attorney,
     pqr_status,
   } = useAppSelector((state) => state.pqrsdf_slice);
-  // const initial_values = (): void => {
-  //   dispatch(get_document_types_service());
-  //   dispatch(get_person_types_service());
-  //   dispatch(get_list_applicant_types_service());
-  //   dispatch(get_list_on_behalf_service());
-  //   dispatch(get_pqrs_status_aux_service());
-  // };
+  const initial_values = (): void => {
+    dispatch(get_document_types_service());
+    dispatch(get_person_types_service());
+    dispatch(get_list_applicant_types_service());
+    dispatch(get_list_on_behalf_service());
+    // dispatch(get_pqrs_status_aux_service());
+  };
 
    useEffect(() => {
-  //   dispatch(get_document_types_service());
-  //   dispatch(get_person_types_service());
-  //   dispatch(get_list_applicant_types_service());
+    dispatch(get_document_types_service());
+    dispatch(get_person_types_service());
+   dispatch(get_list_applicant_types_service());
      dispatch(get_list_on_behalf_service());
   //   dispatch(get_pqrs_status_aux_service());
    }, []);
 
-  // useEffect(() => {
-  //   dispatch(set_pqr_status({ id: null, key: null, label: null }));
-  //   dispatch(set_pqrs([]));
-  // }, [person, grantor, company]);
+  useEffect(() => {
+    dispatch(set_pqr_status({ id: null, key: null, label: null }));
+    dispatch(set_others([]));
+  }, [person, grantor, company]);
   return (
     <>
       <Grid
@@ -91,17 +92,17 @@ export function SolicitudesOtroScreen(): JSX.Element {
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}  alignItems={'center'}>
             <FormButton
-              href={`/#/app/gestor_documental/pqrsdf/crear_pqrsdf/`}
+              href={`/#/app/gestor_documental/solicitudes_otros/crear/`}
               variant_button="contained"
               on_click_function={null}
               icon_class={<SaveIcon />}
-              disabled={!(pqr_status.key === 'N' || type_applicant.key === 'A')}
+              disabled={false}
               label="Crear Solicitud Otros"
               type_button="button"
               color_button="success"
             />
           </Grid>
-{/* 
+
           <Grid item xs={12} md={3}>
             <Limpiar
               dispatch={dispatch}
@@ -110,7 +111,7 @@ export function SolicitudesOtroScreen(): JSX.Element {
               variant_button={'outlined'}
               clean_when_leaving={false}
             />
-          </Grid> */}
+          </Grid>
         </Grid>
       </Grid>
     </>

@@ -11,6 +11,7 @@ import {
   set_deposito_arbol,
   set_depositos_avanzada,
   set_estantes_avanzada,
+  set_expediente,
   set_listado_depositos,
 } from '../slice/indexArchivoFisico';
 
@@ -47,7 +48,7 @@ export const avanzada_deposito = (): any => {
       const { data } = await api.get(
         'gestor/depositos-archivos/archivoFisico/busqueda-avanzada-deposito/?tipo_elemento=Depósito de Archivo'
       );
-      //  console.log('')(data);
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_depositos_avanzada(data.data));
@@ -64,16 +65,47 @@ export const avanzada_deposito = (): any => {
   };
 };
 
-export const tabla_arbol_deposito = (id:number | string |null): any => {
+export const tabla_arbol_deposito = (id: number | string | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `gestor/depositos-archivos/archivoFisico/informacion-arbol/${id ?? ''}` 
+        `gestor/depositos-archivos/archivoFisico/informacion-arbol/${id ?? ''}`
       );
-      //  console.log('')(data);
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
-        dispatch(set_deposito_arbol({deposito: data.deposito, estantes:data.estantes}));
+        dispatch(
+          set_deposito_arbol({
+            deposito: data.deposito,
+            estantes: data.estantes,
+          })
+        );
+        control_success(data.detail);
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const avanzada_deposito_mostrar = (
+  identificacion_deposito: string | number | null
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-deposito/?tipo_elemento=Depósito de Archivo&identificacion_deposito=${
+          identificacion_deposito ?? ''
+        }`
+      );
+      console.log(data);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success === true) {
+        dispatch(set_depositos_avanzada(data.data));
         control_success(data.detail);
       } else {
         control_error(data.detail);
@@ -87,8 +119,8 @@ export const tabla_arbol_deposito = (id:number | string |null): any => {
 };
 
 export const avanzada_estante = (
-  //   identificacion_estante: string | null,
-  deposito_archivo: number | null
+  identificacion_por_deposito: string | number | null,
+  deposito_archivo: string | number | null
   //   &identificacion_estante=${ identificacion_estante ?? '' }
 ): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -96,9 +128,9 @@ export const avanzada_estante = (
       const { data } = await api.get(
         `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-estante/?tipo_elemento=Estante&deposito_archivo=${
           deposito_archivo ?? ''
-        }`
+        }&identificacion_estante=${identificacion_por_deposito ?? ''}`
       );
-      //  console.log('')(data);
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_estantes_avanzada(data.data));
@@ -115,16 +147,20 @@ export const avanzada_estante = (
 };
 
 export const avanzada_bandeja = (
-  identificacion_estante: string | null
+  identificacion_estante: string | null,
+  deposito_archivo: string | null,
+  identificacion_bandeja: string | null
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
         `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-bandeja/?tipo_elemento=Bandeja&identificacion_estante=${
           identificacion_estante ?? ''
+        }&deposito_archivo=${deposito_archivo ?? ''}&identificacion_bandeja=${
+          identificacion_bandeja ?? ''
         }`
       );
-      //  console.log('')(data);
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_bandejas_avanzadas(data.data));
@@ -141,14 +177,23 @@ export const avanzada_bandeja = (
 };
 
 export const avanzada_caja = (
-  id: string | null
+  identificacion_estante: string | null,
+  deposito_archivo: string | null,
+  identificacion_bandeja: string | null,
+  identificacion_caja: string | null,
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `gestor/expedientes-archivos/expedientes/editar-archivos-soporte/${id ?? ''}/`)
-      ;
-      //  console.log('')(data);
+        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-caja/?tipo_elemento=Caja&deposito_archivo=${deposito_archivo ?? ''}&identificacion_estante=${
+          identificacion_estante ?? ''
+        }&identificacion_bandeja=${
+          identificacion_bandeja ?? ''
+        }&identificacion_caja=${
+          identificacion_caja ?? ''
+        }`
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_cajas_avanzadas(data.data));
@@ -165,19 +210,89 @@ export const avanzada_caja = (
 };
 
 export const avanzada_carpeta = (
-  identificacion_caja: string | null
+    identificacion_caja: string | null,
+    identificacion_estante: string | null,
+    deposito_archivo: string | null,
+    identificacion_bandeja: string | null,
+    identificacion_carpeta: string | null,
+    numero_expediente: string | null,
+
+    ): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-carpeta/?tipo_elemento=Carpeta&deposito_archivo=${deposito_archivo ?? ''}&identificacion_estante=${
+          identificacion_estante ?? ''}&identificacion_bandeja=${
+            identificacion_bandeja ?? ''
+          }&identificacion_caja=${
+            identificacion_caja ?? ''
+          }&identificacion_carpeta=${
+            identificacion_carpeta ?? ''
+          }&numero_expediente=${
+            numero_expediente ?? ''
+          }`
+      );
+      console.log(data);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success === true) {
+        dispatch(set_carpetas_avanzadas(data.data));
+        control_success(data.detail);
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+export const get_expedientes = (
+  identificacion_estante: string | null,
+  deposito_archivo: string | null,
+  identificacion_bandeja: string | null
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-carpeta/?tipo_elemento=Carpeta&identificacion_caja=${
-          identificacion_caja ?? ''
+        `gestor/depositos-archivos/archivoFisico/busqueda-avanzada-bandeja/?tipo_elemento=Bandeja&identificacion_estante=${
+          identificacion_estante ?? ''
+        }&deposito_archivo=${deposito_archivo ?? ''}&identificacion_bandeja=${
+          identificacion_bandeja ?? ''
         }`
       );
-      //  console.log('')(data);
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
-        dispatch(set_carpetas_avanzadas(data.data));
+        dispatch(set_bandejas_avanzadas(data.data));
+        control_success(data.detail);
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+export const get_expediente= (id: number | string | null): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/depositos-archivos/archivoFisico/ver-expediente/${id ?? ''}`
+      );
+      console.log(data);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success === true) {
+        dispatch(
+          set_expediente(data.data)
+        );
         control_success(data.detail);
       } else {
         control_error(data.detail);

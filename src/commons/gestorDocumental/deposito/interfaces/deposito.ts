@@ -1,5 +1,5 @@
-import type { IBuscarCaja } from "../Cajas/types/types";
-import type { GetEstantes, InfoDepositos } from "../Estantes/types/types";
+import type { IBuscarCaja } from '../Cajas/types/types';
+import type { GetEstantes, InfoDepositos } from '../Estantes/types/types';
 
 export interface IDeposito {
   deposito: IObjDeposito[];
@@ -15,6 +15,7 @@ export interface IDeposito {
   cajas_lista: IObjCaja[];
   cajas: IBuscarCaja;
   carpetas: IObjCarpeta[];
+  rotulo_carpeta:IObjRotuloCarpeta;
 }
 export interface IMode {
   ver: boolean;
@@ -97,7 +98,23 @@ export interface IObjCarpeta {
   identificacion_caja?: string | number | null;
   identificacion_estante?: string | number | null;
   identificacion_deposito?: string | number | null;
+  numero_expediente?: string | number | null;
 }
 
-export interface IObjRotuloCarpeta {}
+export interface IObjRotuloCarpeta {
+  id_carpeta_caja?: number | null;
+  identificacion_por_caja?: string | number | null;
+  id_caja_bandeja?: number | null;
+  identificacion_caja?: string | number | null;
+  id_serie_origen?: number | null;
+  nombre_serie_origen?: string | number | null;
+  id_subserie_origen?: number | null;
+  nombre_subserie_origen?: string | number | null;
+  titulo_expediente?: string | number | null;
+  codigo_exp_und_serie_subserie?: string | number | null;
+  codigo_exp_Agno?: string | number | null;
+  codigo_exp_consec_por_agno: null;
+  numero_expediente?: string | number | null;
+  fecha_folio_inicial?: string | number | null;
+}
 export interface IObjRotuloCaja {}
