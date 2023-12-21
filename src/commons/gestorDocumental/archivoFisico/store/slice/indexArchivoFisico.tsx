@@ -7,6 +7,7 @@ import {
   IObjcarpetas,
   IObjDepositos,
   IObjEstantes,
+  IObjExpediente,
 } from '../../interface/archivoFisico';
 
 const initial_state_arbol: IObjarbol = {
@@ -84,6 +85,23 @@ export const initial_state_carpetas: IObjcarpetas  =  {
   nombre_deposito: null,
 }
 
+const initial_state_expediente: IObjExpediente ={
+  id_expediente:null,
+  id_carpeta_caja:null,
+  titulo_expediente:null,
+  descripcion_expediente:null,
+  tipo_expediente:null,
+  tipo_expediente_cod:null,
+  nombre_serie:null,
+  nombre_subserie:null,
+  id_persona_titular_exp_complejo:null,
+  Nombre_Persona_titular:null,
+  estado_expediente:null,
+  fecha_folio_inicial:null,
+  fecha_folio_final:null,
+  etapa_de_archivo:null,
+}
+
 const initial_state: IArchivoFisico = {
   depositos: [],
   estantes: [],
@@ -97,6 +115,7 @@ const initial_state: IArchivoFisico = {
   bandeja: initial_state_bandeja,
   caja: initial_state_caja,
   carpeta: initial_state_carpetas,
+  expediente:initial_state_expediente,
 
 };
 
@@ -177,6 +196,12 @@ export const archivo_fisico_slice = createSlice({
       ) => {
         state.depositos_tabla= action.payload;
       },
+      set_expediente: (
+        state: IArchivoFisico,
+        action: PayloadAction<IObjExpediente>
+      ) => {
+        state.expediente= action.payload;
+      },
   },
 });
 export const {
@@ -192,6 +217,7 @@ export const {
   set_carpeta_avanzadas,
   set_caja_avanzadas,
   set_bandeja_avanzadas,
-  set_estante_avanzada
+  set_estante_avanzada, 
+  set_expediente
 
 } = archivo_fisico_slice.actions;

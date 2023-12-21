@@ -10,7 +10,8 @@ export interface IArchivoFisico {
  estante:IObjEstantes,
  bandeja: IObjBandejas,
  caja:IObjcajas,
- carpeta:IObjcarpetas,
+ carpeta:IObjcarpetas;
+ expediente: IObjExpediente;
 
 }
 
@@ -117,4 +118,21 @@ export interface IObjCarpetaArbol{
   orden_carpeta?: number | null;
   numero_expediente?: string | null;
   Informacion_Mostrar?: string | null;
+}
+
+export interface IObjExpediente{
+  id_expediente?: number | null;
+  id_carpeta_caja?: number | null;
+  titulo_expediente?: string | null;
+  descripcion_expediente?: string | null;
+  tipo_expediente?: string | null;
+  tipo_expediente_cod?: string | null;
+  nombre_serie?: string | null;
+  nombre_subserie?: string | null;
+  id_persona_titular_exp_complejo?: number | null;
+  Nombre_Persona_titular?: string | null;
+  estado_expediente?: string | null;
+  fecha_folio_inicial?: string | null;
+  fecha_folio_final?: string | null;
+  etapa_de_archivo?: string | null;
 }

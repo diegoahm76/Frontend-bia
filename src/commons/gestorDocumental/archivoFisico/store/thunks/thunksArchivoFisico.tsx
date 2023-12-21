@@ -11,6 +11,7 @@ import {
   set_deposito_arbol,
   set_depositos_avanzada,
   set_estantes_avanzada,
+  set_expediente,
   set_listado_depositos,
 } from '../slice/indexArchivoFisico';
 
@@ -266,6 +267,32 @@ export const get_expedientes = (
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success === true) {
         dispatch(set_bandejas_avanzadas(data.data));
+        control_success(data.detail);
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+export const get_expediente= (id: number | string | null): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/depositos-archivos/archivoFisico/ver-expediente/${id ?? ''}`
+      );
+      console.log(data);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success === true) {
+        dispatch(
+          set_expediente(data.data)
+        );
         control_success(data.detail);
       } else {
         control_error(data.detail);

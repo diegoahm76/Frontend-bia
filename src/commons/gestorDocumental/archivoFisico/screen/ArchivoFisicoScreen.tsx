@@ -3,18 +3,14 @@ import { useState, useEffect } from 'react';
 import { ColumnProps } from 'primereact/column';
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
-import { Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { Title } from '../../../../components';
 import { LoadingButton } from '@mui/lab';
 import BusquedaAvanzadaFisico from '../components/BusquedaAvanzada';
 import {
-  avanzada_bandeja,
-  avanzada_caja,
-  avanzada_carpeta,
   avanzada_deposito,
-  avanzada_deposito_mostrar,
-  avanzada_estante,
+  get_expediente,
   tabla_arbol_deposito,
 } from '../store/thunks/thunksArchivoFisico';
 import {
@@ -23,7 +19,6 @@ import {
   IObjCarpetaArbol,
   IObjDepositos,
   IObjEstanteArbol,
-  IObjEstantes,
 } from '../interface/archivoFisico';
 import {
   initial_state_deposito,
@@ -44,6 +39,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { ButtonAdminCarpetas } from '../components/BotonCarpetas';
 import { ButtonAdminCajas } from '../components/BotonCajas';
 import Limpiar from '../../../conservacion/componentes/Limpiar';
+import VerExpediente from '../components/Expediente';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const ArchivoFisicoScreen: React.FC = () => {
   const { control: control_deposito, reset } = useForm<IObjDepositos>();
@@ -52,7 +48,8 @@ export const ArchivoFisicoScreen: React.FC = () => {
   const { control: control_bandeja, reset: reset_bandeja } =
     useForm<IObjBandejaArbol>();
   const { control: control_caja, reset: reset_caja } = useForm<IObjCajaArbol>();
-  const { control: control_carpeta, reset: reset_carpeta } = useForm<IObjCarpetaArbol>();
+  const { control: control_carpeta, reset: reset_carpeta } =
+    useForm<IObjCarpetaArbol>();
   const { arbol_deposito, depositos_tabla } = useAppSelector(
     (state) => state.archivo_fisico
   );
@@ -67,25 +64,37 @@ export const ArchivoFisicoScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [open_modal_avanzada, set_open_modal_avanzada] = useState(false);
 
-
-  const [selected_row, set_selected_row] = useState<any | null>(null);
+  const [open_modal_exp, set_open_modal_exp] = useState(false);
   const handle_buscar = () => {
     set_open_modal_avanzada(true);
   };
+  const handle_exp = () => {
+    set_open_modal_exp(true);
+  };
+  const handle_close_exp = () => {
+    set_open_modal_exp(false);
+  };
+
+
   const handle_close_buscar = () => {
     set_open_modal_avanzada(false);
   };
-  const initial_values = (): void => {
-    dispatch(avanzada_deposito_mostrar(null));
-   
+  const reiniciar = (): void => {
+    void dispatch(avanzada_deposito());
+    set_selected_arbol(null)
+    set_expanded_rows({})
   };
   useEffect(() => {
     reset(selected_arbol);
     reset_estante(selected_arbol);
     reset_bandeja(selected_arbol);
     reset_caja(selected_arbol);
+    reset_carpeta(selected_arbol);
     console.log(selected_arbol);
   }, [selected_arbol]);
+
+
+
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 
@@ -255,7 +264,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
   useEffect(() => {
     void dispatch(avanzada_deposito());
   }, []);
-  
+
   useEffect(() => {
     console.log(expanded_rows);
   }, [expanded_rows]);
@@ -327,8 +336,8 @@ export const ArchivoFisicoScreen: React.FC = () => {
               TIPO DE ELEMENTO - DEPOSITOS
             </Typography>
           </Grid>
-       )}
-      {selected_arbol && selected_arbol.id_deposito && (
+        )}
+        {selected_arbol && selected_arbol.id_deposito && (
           <Grid container justifyContent={'center'}>
             <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
               <Controller
@@ -456,8 +465,8 @@ export const ArchivoFisicoScreen: React.FC = () => {
               />
             </Grid>
           </Grid>
-         )}
-        {selected_arbol && selected_arbol.id_estante && ( 
+        )}
+        {selected_arbol && selected_arbol.id_estante && (
           <Grid container justifyContent={'center'}>
             <Typography
               variant="h6"
@@ -468,8 +477,8 @@ export const ArchivoFisicoScreen: React.FC = () => {
               TIPO DE ELEMENTO - ESTANTE
             </Typography>
           </Grid>
-         )}
-          {selected_arbol && selected_arbol.id_estante && ( 
+        )}
+        {selected_arbol && selected_arbol.id_estante && (
           <Grid container justifyContent={'center'}>
             <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
               <Controller
@@ -533,9 +542,8 @@ export const ArchivoFisicoScreen: React.FC = () => {
               />
             </Grid>
           </Grid>
-      
-      )}
-      {selected_arbol && selected_arbol.id_bandeja && ( 
+        )}
+        {selected_arbol && selected_arbol.id_bandeja && (
           <Grid container justifyContent={'center'}>
             <Typography
               variant="h6"
@@ -546,9 +554,8 @@ export const ArchivoFisicoScreen: React.FC = () => {
               TIPO DE ELEMENTO - BANDEJA
             </Typography>
           </Grid>
-       
-       )}
-       {selected_arbol && selected_arbol.id_bandeja && ( 
+        )}
+        {selected_arbol && selected_arbol.id_bandeja && (
           <Grid container justifyContent={'center'}>
             <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
               <Controller
@@ -613,7 +620,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
             </Grid>
           </Grid>
         )}
-         {selected_arbol && selected_arbol.id_caja && ( 
+        {selected_arbol && selected_arbol.id_caja && (
           <Grid container justifyContent={'center'}>
             <Typography
               variant="h6"
@@ -624,9 +631,8 @@ export const ArchivoFisicoScreen: React.FC = () => {
               TIPO DE ELEMENTO - CAJA
             </Typography>
           </Grid>
-       
-          )}
-            {selected_arbol && selected_arbol.id_caja && ( 
+        )}
+        {selected_arbol && selected_arbol.id_caja && (
           <Grid container justifyContent={'center'}>
             <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
               <Controller
@@ -690,16 +696,12 @@ export const ArchivoFisicoScreen: React.FC = () => {
               />
             </Grid>
             <Grid item marginTop={2.5}>
-                      <ButtonAdminCajas />
-                    </Grid>
-                  
+              <ButtonAdminCajas />
+            </Grid>
           </Grid>
-      
-     
-      )}
+        )}
 
-
-{selected_arbol && selected_arbol.id_carpeta && ( 
+        {selected_arbol && selected_arbol.id_carpeta && (
           <Grid container justifyContent={'center'}>
             <Typography
               variant="h6"
@@ -710,9 +712,8 @@ export const ArchivoFisicoScreen: React.FC = () => {
               TIPO DE ELEMENTO - CARPETA
             </Typography>
           </Grid>
-       
-          )}
-            {selected_arbol && selected_arbol.id_carpeta && ( 
+        )}
+        {selected_arbol && selected_arbol.id_carpeta && (
           <Grid container justifyContent={'center'}>
             <Grid item xs={12} sm={2} margin={2} marginTop={2.5}>
               <Controller
@@ -805,19 +806,26 @@ export const ArchivoFisicoScreen: React.FC = () => {
                 )}
               />
             </Grid>
-          
-                    <Grid item marginTop={2.5}>
-                      <ButtonAdminCarpetas />
-                    </Grid>
-            
+
+            <Grid item marginTop={2.6}>
+              <ButtonAdminCarpetas />
+            </Grid>
+            {selected_arbol && selected_arbol.id_expediente && (
+            <Grid container justifyContent={'center'}>
+              <Grid item marginTop={2.5} marginLeft={2}>
+                <Button
+                 variant="outlined"
+                 color="warning"
+                  onClick={handle_exp}
+                  disabled={false}
+                >
+                  Ver expediente
+                </Button>
+              </Grid>{' '}
+            </Grid>
+              )}
           </Grid>
-      
-     
-      )}
-
-
-
-
+        )}
 
         <Grid container justifyContent={'center'}>
           <TableRowExpansion
@@ -841,28 +849,37 @@ export const ArchivoFisicoScreen: React.FC = () => {
           </Grid>
         )}
 
-        <Grid container justifyContent="center" marginTop={2}>
-          <LoadingButton
-            variant="contained"
-            onClick={handle_buscar}
-            disabled={false}
-          >
-            Busqueda Avanzada
-          </LoadingButton>
+        <Grid container justifyContent="center" marginTop={2} spacing={2}>
+          <Grid item>
+            <LoadingButton
+              variant="contained"
+              onClick={handle_buscar}
+              disabled={false}
+            >
+              Busqueda Avanzada
+            </LoadingButton>
+          </Grid>
 
-
-          <Grid item xs={12} md={3}>
+          <Grid item>
             <Limpiar
               dispatch={dispatch}
               reset_state={reset_state}
-              set_initial_values={initial_values}
+              set_initial_values={reiniciar}
               variant_button={'outlined'}
               clean_when_leaving={false}
             />
           </Grid>
         </Grid>
 
+        
+        {open_modal_exp && (
+          <VerExpediente
+            open={open_modal_exp}
+            handle_close_exp={handle_close_exp}
+            selected_arbol={selected_arbol}
 
+          />
+        )}
       </Grid>
     </>
   );
