@@ -52,7 +52,7 @@ export const BloqueAutorizacionCCD: FC<any> = (): JSX.Element => {
           <Tooltip title="Actualizar control de acceso" placement="top" arrow>
             <IconButton
               onClick={() => {
-                console.log(params?.row);
+                //  console.log('')(params?.row);
                 dispatch(setCurrentControlAccesoExpedientes(params.row));
                 dispatch(setVerModuloAutorizacioneGenerales(true));
                 /* dispatch(get_trd_current(params.row));

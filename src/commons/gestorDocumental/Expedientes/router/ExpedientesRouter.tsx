@@ -8,6 +8,8 @@ import { ExpedientesScreen } from '../aperturaExpedientes/screens/ExpedientesScr
 import { IndexacionScreen } from '../indexacionExpedientes/screens/IndexacionScreen';
 import { FirmaCierreIndiceScreen } from '../FirmaCierreIndiceElectronico/screens/FirmaCierreIndiceScreen';
 import { ConsultaExpedientesDocScreen } from '../consultaExpedientesDocumentales/screens/ConsultaExpedientesDocScreen';
+import { IndicesElectronicos } from '../../../seguridad/screens/IndicesElectronicos/IndicesElectronicos';
+import { ConsultaIndiceElectronicoScreen } from '../ConsultaIndiceElectronico/screens/ConsultaIndiceElectronicoScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ExpedientesRoutes = (): ReactElement => {
@@ -37,6 +39,14 @@ export const ExpedientesRoutes = (): ReactElement => {
         <Route
           path="consulta_expedientes_doc/*"
           element={<ConsultaExpedientesDocScreen />}
+        />
+         <Route
+          path="consulta_indices_electronicos/*"
+          element={<IndicesElectronicos />}
+        />
+         <Route
+          path="consulta_indice_electronico/*"
+          element={<ConsultaIndiceElectronicoScreen />}
         />
         <Route path="/*" element={<Page404 />} />
       </Routes>

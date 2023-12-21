@@ -87,20 +87,20 @@ const DialogCcdActual = () => {
     set_loading(true);
     try {
       const { data } = await dispatch(get_organigrama_actual());
-      // console.log(typeof data.id_organigrama, 'organigramaActualData');
+      // //  console.log('')(typeof data.id_organigrama, 'organigramaActualData');
 
       const response_ccds = await dispatch(
         get_ccds_posibles(data.id_organigrama /* 54   */)
       );
       //* se realiza prueba con el organigrama 54 ya que el organigrama con id 58 no tiene CCD's disponibles
-      // console.log('response_ccds', response_ccds);
+      // //  console.log('')('response_ccds', response_ccds);
 
       if (Array.isArray(response_ccds.data) && response_ccds.data.length > 0) {
         set_data_ccds_posibles(response_ccds.data);
         const res_ccds_adapter: IList[] = await ccds_choise_adapter(
           response_ccds.data
         );
-        // console.log('res_ccds_adapter', res_ccds_adapter);
+        // //  console.log('')('res_ccds_adapter', res_ccds_adapter);
         set_list_ccds(res_ccds_adapter);
       } else {
         control_error(

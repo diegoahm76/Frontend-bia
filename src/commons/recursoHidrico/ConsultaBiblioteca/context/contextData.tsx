@@ -452,7 +452,7 @@ export const UserProvider = ({
       set_rows_cuencas_instrumentos([]);
       if (id_instrumento) {
         const response = await get_data_cuenca_instrumentos(id_instrumento);
-        console.log(response);
+        //  console.log('')(response);
         set_rows_cuencas_instrumentos(response);
       }
     } catch (err: any) {

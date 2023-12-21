@@ -66,7 +66,7 @@ function Liquidator(props) {
     localVariables.forEach((v) => {
       endCode = modifyVariableInitValue(endCode, v, initilState[v]);
     });
-    console.log(endCode);
+    //  console.log('')(endCode);
 
     try {
       // eslint-disable-next-line no-eval
@@ -78,7 +78,7 @@ function Liquidator(props) {
           type: 'error',
         });
       }
-      console.log('code executed: ', result);
+      //  console.log('')('code executed: ', result);
       return result;
     } catch (error) {
       props.setNotifications({

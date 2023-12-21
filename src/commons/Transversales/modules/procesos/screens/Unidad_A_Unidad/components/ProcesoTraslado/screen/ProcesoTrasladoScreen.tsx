@@ -13,7 +13,7 @@ export const ProcesoTrasladoScreen: FC<ProcesoTypes> = ({
   setModalTotalPersonas
 }: ProcesoTypes): JSX.Element => {
   const { userinfo } = useAppSelector((state: AuthSlice) => state.auth);
-  console.log(userinfo);
+  //  console.log('')(userinfo);
 
   // ? use state to set the currentDate
   const [_currentDate, setCurrentDate] = useState(dayjs().format('DD-MM-YYYY'));

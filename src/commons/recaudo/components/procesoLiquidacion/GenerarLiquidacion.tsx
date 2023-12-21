@@ -10,6 +10,7 @@ import dayjs, { type Dayjs } from "dayjs";
 import PrintIcon from '@mui/icons-material/Print';
 import { api } from "../../../../api/axios";
 import type { DetallePeriodo, DetallesPeriodos } from "../../interfaces/proceso";
+import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
 
 interface IProps {
   form_liquidacion: FormLiquidacion;
@@ -132,7 +133,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                   {...params}
                 />
               )}
-              maxDate={dayjs()}
+              minDate={dayjs(new Date().setFullYear(new Date().getFullYear() - 1))}
+              maxDate={dayjs(new Date().setFullYear(new Date().getFullYear() + 1))}
             />
           </LocalizationProvider>
         </Grid>
@@ -193,7 +195,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         }}
       >
         <Typography color='black' variant="h4">Total de la obligacion</Typography>
-        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>${form_liquidacion.valor}</Typography>
+        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>{currency_formatter(form_liquidacion.valor ?? 0)}</Typography>
       </Grid>
 
       <Grid container justifyContent={'center'}>

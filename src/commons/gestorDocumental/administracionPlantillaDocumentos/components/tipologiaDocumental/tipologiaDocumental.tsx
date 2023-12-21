@@ -43,7 +43,7 @@ export const TipologiaDocumental: React.FC = () => {
       const res: any = await api.get(url);
       const numero_consulta: any = res.data.data;
       set_tipologia_documental_otro(numero_consulta);
-      // console.log(numero_consulta);
+      // //  console.log('')(numero_consulta);
 
     } catch (error) {
       console.error(error);

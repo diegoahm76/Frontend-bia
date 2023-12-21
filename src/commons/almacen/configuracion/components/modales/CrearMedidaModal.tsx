@@ -72,7 +72,7 @@ const CrearMedidaModal = ({
 
   useEffect(() => {
     reset_medida(medida_seleccionada);
-    console.log(medida_seleccionada);
+    /// //  console.log('')(medida_seleccionada);
   }, [medida_seleccionada]);
 
   const on_submit = (data: FormValues): void => {
@@ -115,7 +115,7 @@ const CrearMedidaModal = ({
         const magnitud_format = text_choise_adapter(magnitud_no_format);
         set_magnitudes(magnitud_format);
       } catch (err) {
-        console.log(err);
+        // //  console.log('')(err);
       }
     };
     void get_selects_options();

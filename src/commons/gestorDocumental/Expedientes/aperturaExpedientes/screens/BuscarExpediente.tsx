@@ -7,12 +7,16 @@ import { useAppDispatch } from '../../../../../hooks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { buscar_expediente, buscar_expediente_id } from '../thunks/aperturaExpedientes';
 import dayjs from 'dayjs';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+
 
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
     set_expediente: any;
     serie: any;
+    set_select_expediente:any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -123,7 +127,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                 props.set_expediente({expediente: [response.data]});
             else
                 props.set_expediente(null);
-        
+                props.set_select_expediente(expediente)
             props.set_is_modal_active(false);
         }));
     }
@@ -302,6 +306,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                 <Grid item margin={2}>
                                     <Button
                                         variant="contained"
+                                        startIcon={<SearchIcon />}
                                         color="primary"
                                         onClick={mostrar_busqueda_expediente}
                                     >
@@ -312,6 +317,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                 <Grid item margin={2}>
                                     <Button variant="outlined"
                                         color="error"
+                                        startIcon={<ClearIcon />}
                                         onClick={() => { props.set_is_modal_active(false); }}>
                                         Salir
                                     </Button>

@@ -23,6 +23,9 @@ export const useActividadHook = (): any => {
       nombre_plan: '',
       nombre_producto: '',
       id_plan: 0,
+      id_producto: 0,
+      id_programa: 0,
+      id_proyecto: 0,
     },
   });
 
@@ -36,6 +39,9 @@ export const useActividadHook = (): any => {
       nombre_plan: '',
       nombre_producto: '',
       id_plan: 0,
+      id_producto: 0,
+      id_programa: 0,
+      id_proyecto: 0,
     });
   };
 
@@ -44,7 +50,9 @@ export const useActividadHook = (): any => {
     useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_actividad } = useContext(DataContextActividades);
+  const { id_programa, id_proyecto, fetch_data_actividad } = useContext(
+    DataContextActividades
+  );
 
   // declaracion redux
   const {
@@ -54,9 +62,11 @@ export const useActividadHook = (): any => {
 
   const onsubmit_actividad = handleSubmit_actividad(async (data) => {
     try {
-      console.log(data, 'data');
-      data.id_producto = id_producto;
+      //  console.log('')(data, 'data');
       set_is_saving_actividad(true);
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
+      data.id_producto = id_producto;
       await post_actividad(data as IActividades);
       control_success('Se creó correctamente');
       await limpiar_formulario_actividad();
@@ -75,8 +85,10 @@ export const useActividadHook = (): any => {
 
   const onsubmit_editar = handleSubmit_actividad(async (data) => {
     try {
-      console.log(data, 'data');
+      //  console.log('')(data, 'data');
       set_is_saving_actividad(true);
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
       data.id_producto = id_producto;
       await put_actividad((id_actividad as number) ?? 0, data as IActividades);
       control_success('Se actualizó correctamente');

@@ -18,7 +18,7 @@ import {
   Stack,
   ButtonGroup,
   Button,
-  makeStyles
+  makeStyles,
 } from '@mui/material';
 import Select from 'react-select';
 import { DataGrid } from '@mui/x-data-grid';
@@ -32,7 +32,7 @@ import { Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   to_resume_ccds_service,
-  to_finished_ccds_service
+  to_finished_ccds_service,
 } from '../store/thunks/ccdThunks';
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
@@ -66,7 +66,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
     loadingButton,
     loadingButtonGuardarRelacion,
     activateLoadingButtonGuardarRelacion,
-    desactivateLoadingButtonGuardarRelacion
+    desactivateLoadingButtonGuardarRelacion,
   } = useContext(ModalContext);
 
   const dispatch: any = useAppDispatch();
@@ -82,7 +82,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
   const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
-  // console.log(series_ccd);
+  // //  console.log('')(series_ccd);
   useEffect(() => {
     set_flag_btn_finish(
       ccd_current?.fecha_terminado !== null &&
@@ -126,7 +126,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
     // on_submit_create_or_delete_relation_unidad,
     create_or_delete_relation_unidad,
     clean_ccd,
-    reset
+    reset,
   } = use_ccd() as any;
 
   return (
@@ -139,14 +139,14 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26'
+          boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
         <Grid item xs={12}>
           <Title title="Cuadro de clasificación documental" />
           <form
             style={{
-              marginTop: '20px'
+              marginTop: '20px',
             }}
             onSubmit={(e: any) => {
               on_submit_create_ccd(e);
@@ -158,7 +158,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                 xs={12}
                 sm={3}
                 sx={{
-                  zIndex: 2
+                  zIndex: 2,
                 }}
               >
                 <Controller
@@ -179,7 +179,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           style={{
                             color: 'rgba(0, 0, 0, 0.6)',
                             fontWeight: 'thin',
-                            fontSize: '0.75rem'
+                            fontSize: '0.75rem',
                           }}
                         >
                           {ccd_current
@@ -208,7 +208,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       // margin="dense"
@@ -224,11 +224,11 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           control_warning('máximo 50 caracteres');
 
                         onChange(e.target.value);
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       error={!(error == null)}
                       inputProps={{
-                        maxLength: 50
+                        maxLength: 50,
                       }}
                       helperText={
                         error != null
@@ -247,7 +247,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       required
@@ -258,7 +258,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                       variant="outlined"
                       value={value}
                       inputProps={{
-                        maxLength: 10
+                        maxLength: 10,
                       }}
                       error={!(error == null)}
                       onChange={(e) => {
@@ -266,7 +266,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           control_warning('máximo 10 caracteres');
 
                         onChange(e.target.value);
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       helperText={
                         error != null
@@ -286,7 +286,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       required
@@ -297,7 +297,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                         color:
                           series_ccd.length > 0 || ccd_current?.fecha_terminado
                             ? 'red'
-                            : 'blue'
+                            : 'blue',
                       }}
                       disabled={
                         series_ccd.length > 0 ||
@@ -326,7 +326,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       required
@@ -361,7 +361,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                   rules={{ required: false }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <>
                       <Button
@@ -373,7 +373,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                         component="label"
                         style={{
                           marginTop: '.15rem',
-                          width: '100%'
+                          width: '100%',
                         }}
                         startIcon={<CloudUploadIcon />}
                       >
@@ -413,7 +413,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           style={{
                             color: 'rgba(0, 0, 0, 0.6)',
                             fontWeight: 'thin',
-                            fontSize: '0.75rem'
+                            fontSize: '0.75rem',
                           }}
                         >
                           {control_create_ccd._formValues.ruta_soporte
@@ -504,7 +504,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     xs={12}
                     sm={2}
                     sx={{
-                      zIndex: 6
+                      zIndex: 6,
                     }}
                   >
                     <Controller
@@ -512,15 +512,15 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                       control={control}
                       render={({
                         field: { onChange, value, name },
-                        fieldState: { error }
+                        fieldState: { error },
                       }) => (
                         <>
                           <Select
                             styles={{
                               control: (provided) => ({
                                 ...provided,
-                                overflowY: 'auto'
-                              })
+                                overflowY: 'auto',
+                              }),
                             }}
                             value={value}
                             onChange={(selectedOption: any) => {
@@ -538,7 +538,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                               style={{
                                 color: 'rgba(0, 0, 0, 0.6)',
                                 fontWeight: 'thin',
-                                fontSize: '0.75rem'
+                                fontSize: '0.75rem',
                               }}
                             >
                               series
@@ -571,7 +571,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     xs={12}
                     sm={2}
                     sx={{
-                      zIndex: 6
+                      zIndex: 6,
                     }}
                   >
                     <Controller
@@ -579,7 +579,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                       control={control}
                       render={({
                         field: { onChange, value, name },
-                        fieldState: { error }
+                        fieldState: { error },
                       }) => (
                         <>
                           <Select
@@ -591,7 +591,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                               // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
 
                               //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
-                              // console.log('Valor seleccionado:', selectedOption);
+                              // //  console.log('')('Valor seleccionado:', selectedOption);
                             }}
                             // isClearable
                             // isSearchable
@@ -601,7 +601,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                               style={{
                                 color: 'rgba(0, 0, 0, 0.6)',
                                 fontWeight: 'thin',
-                                fontSize: '0.75rem'
+                                fontSize: '0.75rem',
                               }}
                             >
                               {/* {error ? (
@@ -647,7 +647,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                   alignItems="center"
                   sx={{
                     mt: '20px',
-                    display: 'flex'
+                    display: 'flex',
                   }}
                 >
                   <ButtonGroup
@@ -659,7 +659,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                       variant="outlined"
                       disabled={ccd_current === null}
                       onClick={() => {
-                        // console.log('ver catalogo de series y subseries');
+                        // //  console.log('')('ver catalogo de series y subseries');
                         openModalModalSeriesAndSubseries();
                         dispatch(
                           getCatalogoSeriesYSubseries(ccd_current.id_ccd)
@@ -671,7 +671,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           color: 'primary.main',
                           width: '18px',
                           height: '18px',
-                          marginRight: '7px'
+                          marginRight: '7px',
                         }}
                       />{' '}
                       VER CATÁLOGO
@@ -691,7 +691,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
               borderRadius: '15px',
               p: '20px',
               mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26'
+              boxShadow: '0px 3px 6px #042F4A26',
             }}
           >
             <Grid item xs={12}>
@@ -708,7 +708,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     xs={12}
                     sm={4.5}
                     sx={{
-                      zIndex: 5
+                      zIndex: 5,
                     }}
                   >
                     <label className="text-terciary">
@@ -721,7 +721,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                       name="unidades_asignacion"
                       control={control}
                       rules={{
-                        required: true
+                        required: true,
                       }}
                       render={({ field }) => (
                         <Select
@@ -745,7 +745,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     xs={12}
                     sm={4.5}
                     sx={{
-                      zIndex: 5
+                      zIndex: 5,
                     }}
                   >
                     <label className="text-terciary">
@@ -756,18 +756,19 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                       name="catalogo_asignacion"
                       control={control}
                       rules={{
-                        required: true
+                        required: true,
                       }}
                       render={({
                         field: { onChange, value },
-                        fieldState: { error }
+                        fieldState: { error },
                       }) => (
                         <Select
                           value={value}
                           // isMulti prop will enable the multi select
+                          closeMenuOnSelect={false}
                           isMulti
                           onChange={(selectedOption) => {
-                            // console.log('selectedOption', selectedOption);
+                            //  console.log('')('selectedOption', selectedOption);
                             onChange(selectedOption);
                           }}
                           options={list_sries_asignacion}
@@ -789,7 +790,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     xs={12}
                     sm={3}
                     sx={{
-                      marginTop: '25px'
+                      marginTop: '25px',
                     }}
                   >
                     <LoadingButton
@@ -813,7 +814,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     <Button
                       fullWidth
                       sx={{
-                        marginTop: '7px'
+                        marginTop: '7px',
                       }}
                       onClick={() => {
                         reset({
@@ -822,7 +823,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                           sries: '',
                           subserie_asignacion: [],
                           subserie: '',
-                          unidades_asignacion: { label: '', value: 0 }
+                          unidades_asignacion: { label: '', value: 0 },
                         });
                         // void dispatch(get_assignments_service(ccd_current));
                       }}
@@ -841,17 +842,17 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     style={{
                       margin: 7,
                       display: 'flex',
-                      justifyContent: 'flex-end'
+                      justifyContent: 'flex-end',
                     }}
                   >
                     {download_xls({
                       nurseries: assignments_ccd,
-                      columns: columns_asignacion
+                      columns: columns_asignacion,
                     })}
                     {download_pdf({
                       nurseries: assignments_ccd,
                       columns: columns_asignacion,
-                      title: 'Actividades'
+                      title: 'Actividades',
                     })}
                   </ButtonGroup>
                   <DataGrid
@@ -860,7 +861,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     // ! se deben realizar cambios de filtro para la seleccion de los datos
                     rows={assignments_ccd}
                     sx={{
-                      zIndex: 2
+                      zIndex: 2,
                     }}
                     columns={columns_asignacion}
                     pageSize={10}

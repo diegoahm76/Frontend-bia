@@ -15,10 +15,11 @@ import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasC
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
-import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
+import { Encuasta_Routes as Encuesta } from '../Encuesta/routes/Encuasta_Routes';
 
 import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
+import { Reubicacion_Expediantes_Routes } from '../ReubicacionExpediente/routes/Reubicacion_Routes';
 
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
 import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
@@ -26,13 +27,16 @@ import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute'
 import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
 import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/routes/ReportesDocumentosRoutes';
-import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
+import { Encuasta_Routess as EncuestaRoutes } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
 import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
 // import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
+import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
+import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
+import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
 
 const routes = [
   {
@@ -122,12 +126,18 @@ const routes = [
   {
     path: 'encuesta/',
     name: 'encuesta',
-    component: () => <Encuasta_Routes />,
+    component: () => <Encuesta />,
+  },
+
+  {
+    path: 'Reubicacion_Expedientes/',
+    name: 'Reubicacion_Expedientes',
+    component: () => <Reubicacion_Expediantes_Routes />,
   },
   {
     path: 'encuesta_asignacion/',
     name: 'encuesta_asignacion',
-    component: () => <Encuasta_Routess />,
+    component: () => <EncuestaRoutes />,
   },
   {
     path: 'Interno_encuesta/',
@@ -139,7 +149,6 @@ const routes = [
     path: 'expedientes/',
     name: 'expedientes',
     component: () => <ExpedientesRoutes />,
-    // component: () => <CierreExpedientesRoutes />,
   },
   {
     path: 'archivo_fisico/',
@@ -167,6 +176,11 @@ const routes = [
     component: () => <PanelVentanillaRoutes />,
   },
   {
+    path: 'bandeja_tareas/',
+    name: 'bandeja_tareas/',
+    component: () => <BandejaTareasRoutes />,
+  },
+  {
     path: 'central_digitalizacion/',
     name: 'central_digitalizacion',
     component: () => <CentralDigitalizacionRoutes />,
@@ -177,7 +191,17 @@ const routes = [
     name: 'solicitudes_otros',
     component: () => <SolicitudesOtrosRoutes />,
   },
+  {
+    path: 'tramites/',
+    name: 'tramites',
+    component: () => <TramitesServiciosRouter />,
+  },
 
+  {
+    path: 'Pqrsdf/complementos/',
+    name: 'complementos_pqrsdf',
+    component: () => <ComplementoPqrsdfRoutes />,
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

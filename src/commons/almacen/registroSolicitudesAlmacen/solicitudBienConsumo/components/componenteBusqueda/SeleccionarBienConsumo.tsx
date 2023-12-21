@@ -38,7 +38,7 @@ const SeleccionarBienConsumo = () => {
     }, [aux_bienes_solicitud]);
 
     useEffect(() => {
-        console.log(current_bien)
+        //  console.log('')(current_bien)
         reset_bien(current_bien)
     }, [current_bien]);
 
@@ -225,7 +225,7 @@ const SeleccionarBienConsumo = () => {
 
 
     const get_bienes_filtro: any = (async () => {
-        console.log("buscar...")
+        //  console.log('')("buscar...")
         const codigo_bien = get_values_bien("codigo_bien")
         const nombre = get_values_bien("nombre")
         if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined) {
@@ -255,9 +255,9 @@ const SeleccionarBienConsumo = () => {
     };
     const delete_bien_solicitud = (item: IObjBienesSolicitud): void => {
         const bien: IObjBienConsumo | undefined = bienes.find((p: IObjBienConsumo) => p.id_bien === item.id_bien)
-        console.log("bien", bien)
+        //  console.log('')("bien", bien)
         if (bien !== undefined) {
-            console.log(bien)
+            //  console.log('')(bien)
             dispatch(set_current_bien(bien))
         }
         const aux_items: IObjBienesSolicitud[] = []

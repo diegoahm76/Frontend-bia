@@ -144,7 +144,7 @@ export const PozosScreen: React.FC = () => {
         item_ya_usado: datos.item_ya_usado,
       }));
       set_rows(datos_pozo);
-      console.log(datos_pozo, 'datos_pozo');
+      //  console.log('')(datos_pozo, 'datos_pozo');
     } catch (error: any) {
       control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
     }

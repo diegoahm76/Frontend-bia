@@ -84,10 +84,10 @@ export const PantallaPrinciipalConfiguracionPQR: React.FC = () => {
       const res: any = await api.get(url);
       const dato_consulta_letra: any = res.data.data;
       set_consulta_letra(dato_consulta_letra);
-      console.log(dato_consulta_letra)
+      //  console.log('')(dato_consulta_letra)
       const primerElementoConsulta = dato_consulta_letra[0];
       const { tiempo_respuesta_en_dias } = primerElementoConsulta;
-      console.log(tiempo_respuesta_en_dias)
+      //  console.log('')(tiempo_respuesta_en_dias)
       setTiempoRespuesta(
         tiempo_respuesta_en_dias !== null ? tiempo_respuesta_en_dias : 0
       );

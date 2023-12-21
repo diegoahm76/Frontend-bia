@@ -39,7 +39,7 @@ export const get_marca_service = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get('almacen/marcas/get-list');
-            console.log(data)
+            //  console.log('')(data)
             dispatch(get_marks(data));
             return data;
         } catch (error: any) {
@@ -55,7 +55,7 @@ export const get_others_all_service: any = () => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=OAc`);
-            console.log(data)
+            //  console.log('')(data)
             dispatch(set_others(data.Elementos));
             return data;
         } catch (error: any) {
@@ -105,7 +105,7 @@ export const get_cv_other_service: (id: any) => any = (id: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/hoja-de-vida/otros/get-by-id/${id}/`);
-            console.log(data)
+            //  console.log('')(data)
             if (data.success === true) {
                 dispatch(set_current_cv_others(data.data));
             }

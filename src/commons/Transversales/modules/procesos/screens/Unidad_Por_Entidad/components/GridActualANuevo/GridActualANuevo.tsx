@@ -117,14 +117,14 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
 
   useEffect(() => {
     if (asignacionConsultaTablaTemporal) {
-     /* console.log(
+     /* //  console.log('')(
         'resultados consulta tabla temporal',
         asignacionConsultaTablaTemporal
       ); */
     }
 
     if (gridActualANuevo) {
-     // console.log('gridActualANuevo', gridActualANuevo);
+     // //  console.log('')('gridActualANuevo', gridActualANuevo);
 
       const unidadesSeleccionadasTemp = gridActualANuevo
         ?.filter((persona: any) => {
@@ -144,7 +144,7 @@ export const GridActualANuevo: FC<any> = (): JSX.Element => {
 
       dispatch(setUnidadesSeleccionadas(unidadesSeleccionadasTemp));
 
-      // console.log('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
+      // //  console.log('')('unidadesSeleccionadasTemp', unidadesSeleccionadasTemp);
     }
   }, [gridActualANuevo]);
 

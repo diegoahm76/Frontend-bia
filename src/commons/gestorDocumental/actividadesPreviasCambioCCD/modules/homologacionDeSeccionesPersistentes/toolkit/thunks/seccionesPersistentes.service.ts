@@ -20,7 +20,7 @@ export const fnGetHomologacionUnidades = async (
 
     if (data?.success) {
       control_success(data?.detail);
-      console.log(data.data);
+      //  console.log('')(data.data);
 
       //* la validacion debe hacerse si tanto unidades conincidentes como unidades persistentes estan vacias, caso contrario la validación no se debe hacer ya que genera traumatismo en el desaarrollo y uso del módulo
       /* if (data.data?.coincidencias?.length === 0) {
@@ -62,7 +62,7 @@ export const fnGetUnidadesPersistentes = async (
     setLoading(true);
     const url = `gestor/ccd/persistencia-unidades-ccd/get/${idCcdNuevo}`;
     const { data } = await api.get(url);
-    console.log(data);
+    //  console.log('')(data);
 
     if (data.success) {
       control_success(data.detail);

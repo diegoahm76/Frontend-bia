@@ -65,7 +65,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
     //* obtiene el organigrama actual
     const obtenerOrganigramas = async (): Promise<any> => {
       const organigramasActuales = await get_organigrama_acual(navigate);
-      // console.log('res', organigramasActuales);
+      // //  console.log('')('res', organigramasActuales);
       setOrganigramaActual(
         organigramasActuales?.map((item: any) => ({
           label: item?.nombre,
@@ -80,18 +80,18 @@ export const ActualANuevo: FC = (): JSX.Element => {
       // ? se debe revisar porque ambos escenarios la propiedad: id_organigrama_nuevo está presente
 
       if (asignacionConsultaTablaTemporal?.id_organigrama_nuevo) {
-        console.log('assssignacion T026', asignacionConsultaTablaTemporal);
+        //  console.log('')('assssignacion T026', asignacionConsultaTablaTemporal);
         // ! se debe realizar la consulta de los organigramas disponibles para el traslado
         void getOrganigramasDispobibles().then((resOrganigramas: any) => {
-          // console.log(resOrganigramas);
-          // console.log(asignacionConsultaTablaTemporal?.id_organigrama_nuevo);
-          // console.log('resOrganigramas', resOrganigramas);
+          // //  console.log('')(resOrganigramas);
+          // //  console.log('')(asignacionConsultaTablaTemporal?.id_organigrama_nuevo);
+          // //  console.log('')('resOrganigramas', resOrganigramas);
           const organigramaNecesario = resOrganigramas?.filter(
             (item: any) =>
               item?.id_organigrama ===
               asignacionConsultaTablaTemporal?.id_organigrama_nuevo
           );
-          // console.log('organigramaNecesario', organigramaNecesario);
+          // //  console.log('')('organigramaNecesario', organigramaNecesario);
 
           setOrganigramasDisponibles(
             organigramaNecesario?.map((item: any) => ({
@@ -100,7 +100,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
             }))
           );
 
-          // console.log('organigramaNecesario', organigramaNecesario);
+          // //  console.log('')('organigramaNecesario', organigramaNecesario);
         });
 
         // ? se deben realizar las acciones necesarias para volver reemplazar la función del onchange cuando si se pueden elegir datos para llamar la data necesaria - unidades organizacionales disponibles para el traslado
@@ -110,7 +110,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
             asignacionConsultaTablaTemporal?.id_organigrama_nuevo
           )
         );
-        // console.log(organigrama_current);
+        // //  console.log('')(organigrama_current);
 
         handleGridActualANuevo(true);
         //* dentro de esta seleccion, tambien debe existir una selección de modo que se pueda realizar la consulta de las unidades que se deben mostrar en la tabla de asignaciones
@@ -148,7 +148,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
 
               const arraySinRepetidos = [...dataMixed2, ...dataMixed];
 
-              // console.log('arraySinRepetidosPrimerOpcion', arraySinRepetidos);
+              // //  console.log('')('arraySinRepetidosPrimerOpcion', arraySinRepetidos);
 
               const elementosNoRepetidos = eliminarObjetosDuplicadosPorId(
                 arraySinRepetidos || []
@@ -189,14 +189,14 @@ export const ActualANuevo: FC = (): JSX.Element => {
         );
         // 2. se realiza la consulta del listado de unidades del organigrama seleccioanado para traer las unidades de dicho organigrama que deben mostrarse en la tabla en la que se van a realizar las asignaciones del traslado
 
-        // console.log('selectedOption', selectedOption);
+        // //  console.log('')('selectedOption', selectedOption);
         // onChange(selectedOption);
       } else {
         const organigramasDisponibles = await getOrganigramasDispobibles();
         setOrganigramasDisponibles(
           filtrarOrganigramas(organigramasDisponibles)
         );
-        // console.log('organigramasDisponibles', organigramasDisponibles);
+        // //  console.log('')('organigramasDisponibles', organigramasDisponibles);
       }
     };
 
@@ -315,12 +315,12 @@ export const ActualANuevo: FC = (): JSX.Element => {
                         // el value también debe venir preselccionado cuando ya exista datos en la tabla T026 y no se haya realizado la puesta en producción del organigrama que he seleccionado
 
                         onChange={(selectedOption) => {
-                          // console.log('selectedOption', selectedOption);
+                          // //  console.log('')('selectedOption', selectedOption);
                           //* selecciona el id del organigrama sobre el que estoy trabajando para hacer el almacenamiento de datos dentro de la tabla temporal T026
                           dispatch(
                             set_current_id_organigrama(selectedOption.value)
                           );
-                          // console.log(organigrama_current);
+                          // //  console.log('')(organigrama_current);
 
                           handleGridActualANuevo(true);
                           //* dentro de esta seleccion, tambien debe existir una selección de modo que se pueda realizar la consulta de las unidades que se deben mostrar en la tabla de asignaciones
@@ -341,7 +341,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                                 );
                                 // ! realizo la asignaciónde la dataMixed
                                 dispatch(setGridActualANuevo(dataMixed));
-                                // console.log('data mixed', dataMixed);
+                                // //  console.log('')('data mixed', dataMixed);
 
                                 //* se limpian las unidades seleccionadas al realizar un cambio de organigrama - analizar que tan viable es esta opción al momento en el que se deben traer los datos
                                 dispatch(setUnidadesSeleccionadas([]));
@@ -350,7 +350,7 @@ export const ActualANuevo: FC = (): JSX.Element => {
                           );
                           // 2. se realiza la consulta del listado de unidades del organigrama seleccioanado para traer las unidades de dicho organigrama que deben mostrarse en la tabla en la que se van a realizar las asignaciones del traslado
 
-                          // console.log('selectedOption', selectedOption);
+                          // //  console.log('')('selectedOption', selectedOption);
                           onChange(selectedOption);
                         }}
                         /* isDisabled={

@@ -199,7 +199,7 @@ const SeleccionarCambio = ({
   }, [current_stage_change]);
 
   const get_cambios: any = async () => {
-    console.log('buscando...');
+    //  console.log('')('buscando...');
     const code_bien = get_values('codigo');
     const nombre_bien = get_values('nombre');
     const cod_etapa_lote_origen = get_values('cod_etapa_lote_origen');

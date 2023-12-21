@@ -101,9 +101,9 @@ export const CarteraGeneralFecha: React.FC = () => {
   
   // useEffect(() => {
   //   const intervalId = setInterval(() => {
-  //      console.log("11111");
-  //     console.log(get_cartera_fecha);
-  //     console.log(reportes_recaudo);
+  //      //  console.log('')("11111");
+  //     //  console.log('')(get_cartera_fecha);
+  //     //  console.log('')(reportes_recaudo);
   //   }, 10000); // 20 segundos en milisegundos
 
   //   // Limpiar el intervalo cuando el componente se desmonte

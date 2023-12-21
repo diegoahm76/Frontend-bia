@@ -17,13 +17,14 @@ import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useSeguimientoPAIHook } from '../../hooks/useSeguimientoPAIHook';
 import { DataContextSeguimientoPAI } from '../../context/context';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 import InfoIcon from '@mui/icons-material/Info';
 import { meses_selected } from '../../../PlanAnualAdquisiciones/choices/selects';
+import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -74,12 +75,23 @@ export const AgregarSeguimientoPAI: React.FC = () => {
   const { mode, seguimiento_pai } = useAppSelector((state) => state.planes);
 
   const {
+    // * id
+    id_programa,
+    id_proyecto,
+    id_producto,
+    id_indicador,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_indicador,
+    // * data
     proyectos_selected,
     productos_selected,
     actividades_selected,
     unidad_organizacional_selected,
     indicadores_selected,
     metas_selected,
+    programas_selected,
     rows_anexos,
 
     fetch_data_productos,
@@ -89,17 +101,49 @@ export const AgregarSeguimientoPAI: React.FC = () => {
     fetch_data_indicadores,
     fetch_data_metas,
     fetch_data_anexos,
+    fetch_data_programas,
   } = useContext(DataContextSeguimientoPAI);
 
   useEffect(() => {
-    fetch_data_productos();
-    fetch_data_actividades();
-    fetch_data_proyectos();
     fetch_data_unidad_organizacional();
     fetch_data_indicadores();
     fetch_data_metas();
+    fetch_data_programas();
     // fetch_data_anexos();
   }, []);
+
+  useEffect(() => {
+    const fetchDataProyectos = async () => {
+      if (id_programa) {
+        await fetch_data_proyectos();
+        // set_value_seguimiento_pai('id_proyecto', seguimiento_pai.id_proyecto);
+      }
+    };
+
+    fetchDataProyectos();
+  }, [id_programa]);
+
+  useEffect(() => {
+    const fetchDataProductos = async () => {
+      if (id_proyecto) {
+        await fetch_data_productos();
+        // set_value_seguimiento_pai('id_producto', seguimiento_pai.id_producto);
+      }
+    };
+
+    fetchDataProductos();
+  }, [id_proyecto]);
+
+  useEffect(() => {
+    const fetchDataActividades = async () => {
+      if (id_producto) {
+        await fetch_data_actividades();
+        // set_value_seguimiento_pai('id_actividad', seguimiento_pai.id_actividad);
+      }
+    };
+
+    fetchDataActividades();
+  }, [id_producto]);
 
   useEffect(() => {
     fetch_data_anexos();
@@ -114,20 +158,60 @@ export const AgregarSeguimientoPAI: React.FC = () => {
     set_value_seguimiento_pai('fecha_registro_avance', value);
   };
 
+  const [fecha_creacion_pai, set_fecha_creacion_pai] = useState<Dayjs | null>(
+    null
+  );
+
+  const handle_date_creacion_change = (
+    fieldName: string,
+    value: Dayjs | null
+  ): void => {
+    if (value !== null) {
+      switch (fieldName) {
+        case 'fecha_crea':
+          set_fecha_creacion_pai(value);
+          set_value_seguimiento_pai(
+            'fecha_creacion',
+            value.format('YYYY-MM-DD')
+          );
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
   console.log(currentDate); // Imprime la fecha actual en formato 'YYYY-MM-DD'
 
   useEffect(() => {
     if (mode.crear) {
       set_value_seguimiento_pai('fecha_registro_avance', currentDate);
+      // set_fecha_creacion_pai(dayjs(seguimiento_pai?.fecha_creacion));
+      set_value_seguimiento_pai(
+        'fecha_creacion',
+        fecha_creacion_pai?.format('YYYY-MM-DD')
+      );
       limpiar_formulario_seguimiento_pai();
     }
     if (mode.editar) {
       set_value_seguimiento_pai(
         'fecha_registro_avance',
-        seguimiento_pai.fecha_registro_avance
+        seguimiento_pai.fecha_registro_avance ?? null
       );
+      if (seguimiento_pai?.fecha_creacion) {
+        set_value_seguimiento_pai(
+          'fecha_creacion',
+          dayjs(seguimiento_pai.fecha_creacion).format('YYYY-MM-DD')
+        );
+        set_fecha_creacion_pai(dayjs(seguimiento_pai.fecha_creacion) ?? null);
+      }
+      set_id_programa(seguimiento_pai.id_programa ?? null);
+      set_id_proyecto(seguimiento_pai.id_proyecto ?? null);
+      set_id_producto(seguimiento_pai.id_producto ?? null);
+      set_id_indicador(seguimiento_pai.id_indicador ?? null);
       reset_seguimiento_pai({
         id_seguimiento_pai: seguimiento_pai.id_seguimiento_pai,
+        nombre_programa: seguimiento_pai.nombre_programa,
         nombre_proyecto: seguimiento_pai.nombre_proyecto,
         nombre_producto: seguimiento_pai.nombre_producto,
         nombre_actividad: seguimiento_pai.nombre_actividad,
@@ -147,7 +231,10 @@ export const AgregarSeguimientoPAI: React.FC = () => {
         beneficiarios: seguimiento_pai.beneficiarios,
         compromisos: seguimiento_pai.compromisos,
         contratros: seguimiento_pai.contratros,
+        adelanto: seguimiento_pai.adelanto,
+        fecha_creacion: seguimiento_pai.fecha_creacion,
         id_unidad_organizacional: seguimiento_pai.id_unidad_organizacional,
+        id_programa: seguimiento_pai.id_programa,
         id_proyecto: seguimiento_pai.id_proyecto,
         id_producto: seguimiento_pai.id_producto,
         id_actividad: seguimiento_pai.id_actividad,
@@ -155,7 +242,14 @@ export const AgregarSeguimientoPAI: React.FC = () => {
         id_meta: seguimiento_pai.id_meta,
       });
     }
-  }, [mode, seguimiento_pai]);
+  }, [
+    mode,
+    seguimiento_pai,
+    // id_programa,
+    // id_proyecto,
+    // id_producto,
+    // id_indicador,
+  ]);
 
   const porcentaje_avance = Number(
     data_watch_seguimiento_pai.porcentaje_avance
@@ -256,7 +350,43 @@ export const AgregarSeguimientoPAI: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="id_programa"
+              control={control_seguimiento_pai}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={false}
+                  fullWidth
+                  required
+                  error={!!errors_seguimiento_pai.id_programa}
+                  helperText={
+                    errors_seguimiento_pai?.id_programa?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : 'ingrese el programa'
+                  }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_programa(Number(event.target.value));
+                    console.log(event.target.value, 'id_programa');
+                  }}
+                >
+                  {programas_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_proyecto"
               control={control_seguimiento_pai}
@@ -268,7 +398,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={id_programa ? false : true}
                   fullWidth
                   required
                   error={!!errors_seguimiento_pai.id_proyecto}
@@ -277,6 +407,11 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                       ? 'Este campo es obligatorio'
                       : 'ingrese el proyecto'
                   }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_proyecto(Number(event.target.value));
+                    console.log(event.target.value, 'id_proyecto');
+                  }}
                 >
                   {proyectos_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -287,7 +422,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_producto"
               control={control_seguimiento_pai}
@@ -299,7 +434,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={id_proyecto ? false : true}
                   fullWidth
                   required
                   error={!!errors_seguimiento_pai.id_producto}
@@ -308,6 +443,11 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                       ? 'Este campo es obligatorio'
                       : 'ingrese el producto'
                   }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_producto(Number(event.target.value));
+                    console.log(event.target.value, 'id_producto');
+                  }}
                 >
                   {productos_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -330,7 +470,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={false}
+                  disabled={id_producto ? false : true}
                   fullWidth
                   required
                   error={!!errors_seguimiento_pai.id_actividad}
@@ -596,7 +736,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  label="Entrega vigencia"
+                  label="Entregable vigencia"
                   variant="outlined"
                   multiline
                   value={value}
@@ -623,7 +763,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  label="Hizo"
+                  label="¿Qué se hizo?"
                   variant="outlined"
                   multiline
                   value={value}
@@ -642,6 +782,33 @@ export const AgregarSeguimientoPAI: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
+              name="cuando"
+              control={control_seguimiento_pai}
+              rules={{ required: false }}
+              defaultValue=""
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="¿Cuándo?"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  // error={!!errors_seguimiento_pai.cuando}
+                  // helperText={
+                  //   errors_seguimiento_pai.cuando
+                  //     ? 'Es obligatorio ingresar cuando'
+                  //     : 'Ingrese cuando'
+                  // }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
               name="donde"
               control={control_seguimiento_pai}
               rules={{ required: false }}
@@ -650,7 +817,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  label="donde"
+                  label="¿Dónde? Municipios"
                   variant="outlined"
                   multiline
                   value={value}
@@ -669,6 +836,33 @@ export const AgregarSeguimientoPAI: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
+              name="adelanto"
+              control={control_seguimiento_pai}
+              rules={{ required: false }}
+              defaultValue=""
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="¿Cómo lo adelantó de forma breve y concreta?"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  // error={!!errors_seguimiento_pai.adelanto}
+                  // helperText={
+                  //   errors_seguimiento_pai.adelanto
+                  //     ? 'Es obligatorio ingresar adelanto'
+                  //     : 'Ingrese adelanto'
+                  // }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
               name="resultado"
               control={control_seguimiento_pai}
               rules={{ required: false }}
@@ -677,7 +871,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  label="Resultado"
+                  label="Resultado o conclusión"
                   variant="outlined"
                   multiline
                   value={value}
@@ -704,7 +898,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  label="Participacion"
+                  label="Participación de otras instituciones"
                   variant="outlined"
                   multiline
                   value={value}
@@ -758,7 +952,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  label="Compromisos"
+                  label="Compromisos u Observaciones adicionales"
                   variant="outlined"
                   multiline
                   value={value}
@@ -785,7 +979,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  label="Contratros"
+                  label="Contratos o convenios celebrados en el desarrollo de la acción operativa"
                   variant="outlined"
                   multiline
                   value={value}
@@ -801,6 +995,33 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 />
               )}
             />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de creación del PAI"
+                value={fecha_creacion_pai}
+                onChange={(value) => {
+                  handle_date_creacion_change('fecha_crea', value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_seguimiento_pai('fecha_creacion', {
+                      required: true,
+                    })}
+                    error={!!errors_seguimiento_pai.fecha_creacion}
+                    helperText={
+                      errors_seguimiento_pai.fecha_creacion
+                        ? 'Es obligatorio la fecha de creación del PAI'
+                        : 'Ingrese la fecha de creación del PAI'
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">

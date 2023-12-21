@@ -50,7 +50,7 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
       }
     );
     
-    console.log(RESTRICCIONES_ACTUALIZADAS);
+    //  console.log('')(RESTRICCIONES_ACTUALIZADAS);
     dispatch(
       set_restricciones_para_todas_las_unidades_organizacionales_action(
         RESTRICCIONES_ACTUALIZADAS
@@ -66,8 +66,8 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
       renderCell: (params: any) => (
         <div
           onClick={() => {
-            console.log('se hace click');
-            console.log(params.row);
+            //  console.log('')('se hace click');
+            //  console.log('')(params.row);
           }}
           style={{
             display: 'flex',
@@ -152,7 +152,7 @@ export const RestriccionTodUnidOrg: FC<any> = (): JSX.Element => {
 
 /*
 
-const handleCheckboxChange = ( event: any, id_restriccion: number ): void => { const RESTRICCIONES_ACTUALIZADAS = restriccionesParaTodasLasUnidadesOrganizacionales.map( (restriccion: any) => { console.log('restriccion.id', restriccion), restriccion.id === id_restriccion ? { ...restriccion, checked: event.target.checked } : restriccion; } ); console.log(RESTRICCIONES_ACTUALIZADAS); dispatch( set_restricciones_para_todas_las_unidades_organizacionales_action( RESTRICCIONES_ACTUALIZADAS ) ); };
+const handleCheckboxChange = ( event: any, id_restriccion: number ): void => { const RESTRICCIONES_ACTUALIZADAS = restriccionesParaTodasLasUnidadesOrganizacionales.map( (restriccion: any) => { //  console.log('')('restriccion.id', restriccion), restriccion.id === id_restriccion ? { ...restriccion, checked: event.target.checked } : restriccion; } ); //  console.log('')(RESTRICCIONES_ACTUALIZADAS); dispatch( set_restricciones_para_todas_las_unidades_organizacionales_action( RESTRICCIONES_ACTUALIZADAS ) ); };
 
 
 
@@ -169,8 +169,8 @@ const handleCheckboxChange = ( event: any, id_restriccion: number ): void => { c
         const primeraOpcion = restriccionesParaTodasLasUnidadesOrganizacionales.find((item: any) => item.id === 'denegar_borrado_docs');
         const segundaOpcion = restriccionesParaTodasLasUnidadesOrganizacionales.find((item:any) => item.id === 'denegar_anulacion_docs');
 
-      console.log('primeraOpcion', primeraOpcion);
-      console.log('segundaOpcion', segundaOpcion);
+      //  console.log('')('primeraOpcion', primeraOpcion);
+      //  console.log('')('segundaOpcion', segundaOpcion);
 
       if(!primeraOpcion.checked && !segundaOpcion.checked && restriccion.id === 'excluir_und_actual_respon_series_doc_restriccion'){
         return restriccion;
@@ -195,7 +195,7 @@ const handleCheckboxChange = ( event: any, id_restriccion: number ): void => { c
       }
     );
     
-    console.log(RESTRICCIONES_ACTUALIZADAS);
+    //  console.log('')(RESTRICCIONES_ACTUALIZADAS);
     dispatch(
       set_restricciones_para_todas_las_unidades_organizacionales_action(
         RESTRICCIONES_ACTUALIZADAS

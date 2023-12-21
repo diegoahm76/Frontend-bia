@@ -115,7 +115,7 @@ export const EstablecerTipologias = (): JSX.Element => {
                 )
               );
               control_success('Tipología añadida a la relación TRD');
-              console.log(params.row);
+              //  console.log('')(params.row);
               /* reset_administrar_trd({
                 
 
@@ -173,8 +173,8 @@ export const EstablecerTipologias = (): JSX.Element => {
                   nuevasTipologias.length > 0
                     ? nuevasTipologias.filter(
                         (item: any) => {
-                          console.log(item);
-                          console.log(params.row);
+                          //  console.log('')(item);
+                          //  console.log('')(params.row);
                           return (
                             item.id_tipologia_documental !==
                             params.row.id_tipologia_documental

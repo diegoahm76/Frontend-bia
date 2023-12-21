@@ -166,28 +166,28 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              console.log('params.row', params.row);
+              //  console.log('')('params.row', params.row);
               dispatch(set_current_tca_action(params.row));
               closeModal();
               void get_catalogo_TRD_service(params.row.id_trd)
                 .then((res) => {
-                  console.log(res);
+                  //  console.log('')(res);
                   dispatch(set_catalog_trd_action(res));
                 })
                 .then(() => {
                   void get_catalogo_TCA_service(params.row.id_tca).then(
                     (res) => {
-                      console.log(res);
+                      //  console.log('')(res);
                       dispatch(set_catalog_TCA_action(res));
                     }
                   );
                 })
                 .catch((err) => {
-                  console.log(err);
+                  //  console.log('')(err);
                   dispatch(set_catalog_TCA_action([]));
                 });
               // reset_searched_trd_modal();
-              // console.log(params.row);
+              // //  console.log('')(params.row);
             }}
           >
             <Avatar
@@ -254,7 +254,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                       error={!!error}
                     />
@@ -280,7 +280,7 @@ export const BusquedaTCAModal: FC<any> = (): JSX.Element => {
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         onChange(e.target.value);
-                        // console.log(e.target.value);
+                        // //  console.log('')(e.target.value);
                       }}
                     />
                   )}

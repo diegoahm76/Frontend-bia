@@ -60,6 +60,7 @@ export const ExpedientesScreen: React.FC = () => {
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const [configuracion, set_configuracion] = useState<any>(null);
+    const [select_expediente, set_select_expediente] = useState<any>(null);
 
     // Sección apertura
     const [tdr, set_tdr] = useState<any>({});
@@ -218,7 +219,7 @@ export const ExpedientesScreen: React.FC = () => {
                 "id_persona_responsable_actual": persona_resp?.id_persona,
                 "fecha_apertura_expediente": fecha_creacion.format('YYYY-MM-DD'),
                 "palabras_clave_expediente": palabras_clave.replace(/,/g, '|'),
-                "cod_tipo_expediente": expediente?.cod_tipo_expediente,
+                "cod_tipo_expediente": configuracion.cod_tipo_expediente,
                 "carpetas_caja": carpetas.length === 0 ? [] : carpetas_union,
                 "id_cat_serie_und_org_ccd_trd_prop": serie.id_catserie_unidadorg,//tripeta serie
                 "id_trd_origen": tdr.id_trd,
@@ -653,7 +654,7 @@ export const ExpedientesScreen: React.FC = () => {
                             >
                                 Buscar expediente
                             </Button>}
-                            {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
+                            {abrir_modal_buscar && <BuscarExpediente set_select_expediente={set_select_expediente} is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
                         </Stack>
                     </Box>
                 </Grid>

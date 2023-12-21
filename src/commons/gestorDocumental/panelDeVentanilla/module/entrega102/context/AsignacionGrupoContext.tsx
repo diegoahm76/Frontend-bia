@@ -1,27 +1,22 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-//* create a simple contetx to share the state of the component
-
 import { createContext, useState } from 'react';
 
 export const AsignacionGrupoContext = createContext<any>({
   listaSeccionesSubsecciones: [],
   setListaSeccionesSubsecciones: () => {},
 });
+
 export const AsignacionGrupoProvider = ({ children }: any): JSX.Element => {
   // ? state declaration
   const [listaSeccionesSubsecciones, setListaSeccionesSubsecciones] =
     useState<any>([]);
 
   const [listaSubGrupos, setListaSubGrupos] = useState<any>([]);
+  const [currentGrupo, setCurrentGrupo] = useState(null)
 
   const [liderAsignado, setLiderAsignado] = useState(null);
 
-  // ? functions declaration
-  /* const setCurrentElementPqrsdComplementoTramitesYotrosContext = (
-    element: any
-  ) => {
-    setCurrentElementPqrsdComplementoTramitesYotros(element);
-  };*/
+  const [listaAsignaciones, setListaAsignaciones] = useState<any[]>([])
 
   const value = {
     listaSeccionesSubsecciones,
@@ -30,8 +25,14 @@ export const AsignacionGrupoProvider = ({ children }: any): JSX.Element => {
     listaSubGrupos,
     setListaSubGrupos,
 
+    currentGrupo,
+    setCurrentGrupo,
+
     liderAsignado,
     setLiderAsignado,
+
+    listaAsignaciones,
+    setListaAsignaciones
   };
 
   return (

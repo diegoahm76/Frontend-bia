@@ -112,7 +112,7 @@ export const getAllElements = async (
       ); // a
     }
 
-    console.log({ coincidenciasAgrupaciones, persistenciasAgrupaciones }); // imprimir los resultados en la consola
+    //  console.log('')({ coincidenciasAgrupaciones, persistenciasAgrupaciones }); // imprimir los resultados en la consola
     return {
       coincidenciasAgrupaciones,
       persistenciasAgrupaciones,

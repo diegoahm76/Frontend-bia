@@ -62,7 +62,7 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                                 justifyContent="center"
                                 spacing={2}
                             >
-                                <Grid item xs={12} sm={props.configuracion.cod_tipo_expediente === 'C' ? 6 : 8}>
+                                <Grid item xs={12} sm={props.configuracion?.cod_tipo_expediente === 'C' ? 6 : 8}>
                                     <TextField
                                         label="Titulo"
                                         type={'text'}
@@ -74,7 +74,7 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                                         value={props.expediente?.titulo_expediente ?? ''}
                                     />
                                 </Grid>
-                                {props.configuracion.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={6}>
+                                {props.configuracion?.cod_tipo_expediente === 'C' && <Grid item xs={12} sm={6}>
                                     <TextField
                                         label="Consecutivo"
                                         type={'text'}

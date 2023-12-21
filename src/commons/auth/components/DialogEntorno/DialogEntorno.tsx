@@ -48,8 +48,8 @@ export const DialogEntorno: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(userinfo)
-    console.log(representante_legal)
+    //  console.log('')(userinfo)
+    //  console.log('')(representante_legal)
   }, [userinfo])
 
   return (

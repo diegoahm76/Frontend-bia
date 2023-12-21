@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { formatDate } from '../../../../../../../../../../../utils/functions/formatDate';
 
 /*
 
@@ -25,7 +24,7 @@ export const columnsPqrsdf = [
   {
     headerName: 'Tipo de solicitud',
     field: 'tipo_solicitud',
-    minWidth: 250,
+    minWidth: 220,
   },
   {
     headerName: 'Nombre completo del titular',
@@ -43,12 +42,12 @@ export const columnsPqrsdf = [
   {
     headerName: 'Cantidad de anexos',
     field: 'cantidad_anexos',
-    minWidth: 250,
+    minWidth: 220,
   },
   {
     headerName: 'Radicado',
     field: 'radicado',
-    minWidth: 250,
+    minWidth: 235,
     renderCell: (params: any) => {
       return params.row.radicado ? params.row.radicado : 'N/A';
     },
@@ -56,15 +55,7 @@ export const columnsPqrsdf = [
   {
     headerName: 'Fecha de radicado',
     field: 'fecha_radicado',
-    minWidth: 250,
-  },
-  {
-    headerName: 'Requiere digitalización',
-    field: 'requiere_digitalizacion',
-    minWidth: 250,
-    renderCell: (params: any) => {
-      return params.value ? 'Si' : 'No';
-    },
+    minWidth: 230,
   },
   {
     headerName: 'Estado de solicitud',
@@ -72,14 +63,41 @@ export const columnsPqrsdf = [
     minWidth: 280,
   },
   {
-    headerName: 'Estado de asignación de grupo',
-    field: 'estado_asignacion_grupo',
-    minWidth: 250,
-  },
-  {
     headerName: 'Nombre de sucursal',
     field: 'nombre_sucursal',
+    minWidth: 230,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
+  },
+  {
+    headerName: 'Nombre de sucursal implicada',
+    field: 'nombre_sucursal_implicada',
+    minWidth: 230,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
+  },
+  {
+    headerName: 'Medio de solicitud',
+    field: 'medio_solicitud',
     minWidth: 250,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
+  },
+  {
+    headerName: 'Persona asignada',
+    field: 'persona_asignada',
+    minWidth: 280,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
+  },
+  {
+    headerName: 'Unidad asignada',
+    field: 'unidad_asignada',
+    minWidth: 280,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     },

@@ -25,7 +25,7 @@ export const AgregarActividad: React.FC = () => {
     limpiar_formulario_actividad,
   } = useActividadHook();
 
-  const { planes_selected, fetch_data_planes_selected } = useContext(
+  const { set_id_programa, set_id_proyecto, planes_selected, fetch_data_planes_selected } = useContext(
     DataContextActividades
   );
 
@@ -38,6 +38,8 @@ export const AgregarActividad: React.FC = () => {
       limpiar_formulario_actividad();
     }
     if (mode.editar) {
+      set_id_programa(actividad.id_programa);
+      set_id_proyecto(actividad.id_proyecto);
       reset_actividad({
         id_actividad: actividad.id_actividad,
         nombre_actividad: actividad.nombre_actividad,
@@ -46,6 +48,8 @@ export const AgregarActividad: React.FC = () => {
         nombre_producto: actividad.nombre_producto,
         id_plan: actividad.id_plan,
         id_producto: actividad.id_producto,
+        id_programa: actividad.id_programa,
+        id_proyecto: actividad.id_proyecto,
       });
     }
   }, [mode, actividad]);

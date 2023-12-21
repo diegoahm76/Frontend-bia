@@ -64,11 +64,15 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
 
     const obtener_trd_actual_fc: () => void = () => {
         dispatch(obtener_trd_actual()).then((response: any) => {
-            set_tdr(response.data);
-            props.set_tdr(response.data);
-            dispatch(obtener_unidades_marcadas(response.data.id_organigrama)).then((response: any) => {
-                set_lt_seccion(response.data);
-            })
+            if(response.data !== null && response.data !== undefined){
+                set_tdr(response.data);
+                props.set_tdr(response.data);
+                dispatch(obtener_unidades_marcadas(response.data.id_organigrama)).then((response: any) => {
+                    set_lt_seccion(response.data);
+                })
+            }else{
+                generar_notificación_reporte('Notificación', 'info', 'No existe un TRD actual, para continuar la apertura de expedientes se debe configurar un TRD', true);
+            }
         })
     }
     const obtener_serie_subserie_fc: () => void = () => {
@@ -89,7 +93,7 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
             if(service.success){
                 props.set_configuracion(service.data);
                 set_tipo_expediente(service.data.tipo_expediente);
-                service.data.cod_tipo_expediente === 'S' ? props.set_expediente(service.data) : props.set_expediente(null);
+                service.data.cod_tipo_expediente === 'S' ? props.set_expediente(service.data) : props.set_expediente({expediente: []});
             }else{
                 generar_notificación_reporte('Notificación', 'info', service.response.data.detail, true);
                 set_tipo_expediente('');
@@ -133,7 +137,7 @@ export const AperturaExpedientesScreen: React.FC<IProps> = (props: IProps) => {
                                             readOnly: true,
                                         }}
                                         fullWidth
-                                        value={tdr.nombre ?? ""}
+                                        value={tdr?.nombre ?? ""}
                                     />
                                 </Grid>
                             </Stack>

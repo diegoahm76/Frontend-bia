@@ -105,7 +105,7 @@ export const EditarLaboratorio: React.FC = () => {
                 />
               }
               onClick={() => {
-                console.log(params.row.id, 'id para eliminar');
+                //  console.log('')(params.row.id, 'id para eliminar');
                 handleDelete_select(params.row.id);
               }}
             />
@@ -302,7 +302,7 @@ export const EditarLaboratorio: React.FC = () => {
 
   useEffect(() => {
     if (rows_resultado_laboratorio.length > 0) {
-      console.log(rows_resultado_laboratorio);
+      //  console.log('')(rows_resultado_laboratorio);
     }
   }, [rows_resultado_laboratorio]);
 
@@ -385,7 +385,7 @@ export const EditarLaboratorio: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
-                    console.log(e.target.value);
+                    //  console.log('')(e.target.value);
                   }}
                   error={!!error}
                 />

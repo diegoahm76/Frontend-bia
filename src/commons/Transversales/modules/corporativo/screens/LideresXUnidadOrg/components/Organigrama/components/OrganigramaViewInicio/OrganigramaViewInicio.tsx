@@ -43,7 +43,7 @@ export const OrganigramaViewInicio = (): JSX.Element => {
 
   //* ----- Onsubmit function -----
   const onSubmit = (data?: any): void => {
-    console.log(data);
+    //  console.log('')(data);
   };
 
   return (

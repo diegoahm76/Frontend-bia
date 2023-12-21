@@ -58,7 +58,7 @@ function EditableTable() {
         return () => clearInterval(interval);
     }, []);
     const { cajas, } = useAppSelector((state: { deposito: any }) => state.deposito);
-    console.log(cajas)
+    //  console.log('')(cajas)
     return (
         
         <table style={{ borderCollapse: 'collapse', width: '100%' }}>

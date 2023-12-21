@@ -162,11 +162,11 @@ const SeleccionarIngresoCuarentena = ({
   }, []);
 
   useEffect(() => {
-    console.log(file);
+    //  console.log('')(file);
     if (file !== null) {
       if ('name' in file) {
         set_file_name(file.name);
-        console.log(file.name);
+        //  console.log('')(file.name);
         dispatch(
           set_current_plant_quarantine({
             ...current_plant_quarantine,

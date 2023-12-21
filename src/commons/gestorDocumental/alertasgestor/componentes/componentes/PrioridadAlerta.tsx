@@ -83,7 +83,7 @@ import { Props } from '../../interfaces/types';
                       }}
                       value={value}
                       onChange={(value) => {
-                        console.log(value);
+                        //  console.log('')(value);
                         onChange(value);
                       }}
                       // isDisabled={!control_format_documental_type._formValues.item.value}

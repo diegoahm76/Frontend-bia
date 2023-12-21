@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 /* eslint-disable @typescript-eslint/naming-convention */
 import builder from 'xmlbuilder';
+import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export type AnyObject = Record<string, any>;
 
@@ -8,8 +9,11 @@ export type AnyObject = Record<string, any>;
 export function xmlFromJson(json: any, rootElementName: string = 'root'): any {
   const root = builder.create(rootElementName);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   function buildXml(parent: any, data: any) {
+    if (data === null || data === undefined) {
+      return;
+    }
+
     if (Array.isArray(data)) {
       for (const item of data) {
         buildXml(parent, item);

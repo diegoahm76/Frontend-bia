@@ -91,7 +91,7 @@ const SeleccionarNuevoViverista = () => {
         );
         set_document_type(document_type_format);
       } catch (err) {
-        console.log(err);
+        //  console.log('')(err);
       }
     };
     void get_selects_options();

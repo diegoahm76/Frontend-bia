@@ -165,7 +165,7 @@ export const RegistrarCaja: React.FC = () => {
                 value={value}
                 onChange={(e) => {
                   onChange(e);
-                  console.log(e.target.value, 'e.target.value');
+                  //  console.log('')(e.target.value, 'e.target.value');
                   set_nuevo_orden(Number(e.target.value));
                 }}
               >

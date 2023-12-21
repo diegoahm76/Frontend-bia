@@ -240,7 +240,7 @@ export const AgregarLaboratorio: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
-                    console.log(e.target.value);
+                    //  console.log('')(e.target.value);
                   }}
                   error={!!error}
                 />

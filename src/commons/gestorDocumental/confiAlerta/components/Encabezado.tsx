@@ -7,6 +7,7 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Button, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, RadioGroup } from "@mui/material";
+import { control_warning } from "../../../almacen/configuracion/store/thunks/BodegaThunks";
 import { Pregunta, initialFormData, miEstilo } from "../interfaces/types";
 import { control_error, control_success } from "../../../../helpers";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -29,7 +30,6 @@ import { Title } from "../../../../components";
 import { api } from "../../../../api/axios";
 import Radio from '@mui/material/Radio';
 import { Buscar } from "./Buscar";
-import { control_warning } from "../../../almacen/configuracion/store/thunks/BodegaThunks";
 
 
 export const Encabezado: React.FC = () => {
@@ -349,7 +349,7 @@ export const Encabezado: React.FC = () => {
 
 
 
-        console.log('Encuesta actualizada exitosamente:', response.data);
+        //  console.log('')('Encuesta actualizada exitosamente:', response.data);
         control_success("Encuesta actualizada con éxito");
         setItemYaUsado(false);
         handleClear();
@@ -360,7 +360,7 @@ export const Encabezado: React.FC = () => {
           ...formData,
           preguntas: tempQuestions
         });
-        console.log('Encuesta creada exitosamente:', response.data);
+        //  console.log('')('Encuesta creada exitosamente:', response.data);
         control_success("Encuesta creada con éxito");
         setItemYaUsado(false)
         handleClear();

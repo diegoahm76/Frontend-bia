@@ -51,7 +51,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega, open_modal, set_open_
 
         set_municipalities(municipalities_format);
       } catch (err) {
-        console.log(err);
+        // //  console.log('')(err);
       }
     };
 

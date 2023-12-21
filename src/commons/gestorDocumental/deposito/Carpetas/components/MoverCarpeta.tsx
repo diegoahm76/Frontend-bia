@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import FormSelectController from '../../../../../components/partials/form/FormSelectController';
 import { get_busqueda_avanzada, get_depositos, get_estantes_deposito } from '../../store/thunks/deposito';
 import FormInputController from '../../../../../components/partials/form/FormInputController';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface IProps {
 
@@ -44,7 +45,7 @@ interface IProps {
 
 const MoverCarpeta = ({ control_carpeta_destino, open, handle_close_buscar, get_values, handle_mover_carpeta }: IProps) => {
     const { deposito, cajas_lista } = useAppSelector((state) => state.deposito);
-    console.log(cajas_lista)
+    //  console.log('')(cajas_lista)
     const dispatch = useAppDispatch();
 
     const columns: GridColDef[] = [
@@ -237,6 +238,8 @@ const MoverCarpeta = ({ control_carpeta_destino, open, handle_close_buscar, get_
                                         type="submit"
                                         variant="contained"
                                         color="primary"
+                                        startIcon={<SearchIcon />}
+
                                         onClick={mostrar_busqueda}
 
                                     >

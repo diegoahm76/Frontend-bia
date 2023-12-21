@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { type Obligacion } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
+import { TenerEncuenta } from './TenerEncuenta';
+import { useState } from 'react';
 
 interface RootState {
   obligaciones: {
@@ -99,9 +101,11 @@ export const TablaObligacionesRegistro: React.FC = () => {
       ),
     },
   ];
+  const [is_modal_active, set_is_buscar] = useState<boolean>(true);
 
   return (
     <>
+    <TenerEncuenta is_modal_active={is_modal_active}  set_is_modal_active={set_is_buscar} />
       <Grid
         container
         sx={{
@@ -113,6 +117,7 @@ export const TablaObligacionesRegistro: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+
         <Grid item xs={12}>
           <Grid item>
             <Box sx={{ width: '100%' }}>

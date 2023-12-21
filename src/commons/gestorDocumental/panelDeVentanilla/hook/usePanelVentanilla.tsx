@@ -17,11 +17,21 @@ export const usePanelVentanilla = () => {
     // ? pendiente el tipado, ya que por base de datos quizá cambie la información que se necesita
     defaultValues: {
       // ? para pqrsdf
+      fecha_inicio: '',
+      fecha_fin: '',
+      unidad_organizacional: {
+        value: '',
+        label: '',
+      },
       tipo_de_solicitud: {
         value: '',
         label: '',
       },
       estado_actual_solicitud: {
+        value: '',
+        label: '',
+      },
+      tipo_pqrsdf: {
         value: '',
         label: '',
       },
@@ -46,7 +56,12 @@ export const usePanelVentanilla = () => {
   const reset_search_form = () =>
     reset_busqueda_panel_ventanilla({
       // ? para pqrsdf
-
+      fecha_inicio: '',
+      fecha_fin: '',
+      unidad_organizacional: {
+        value: '',
+        label: '',
+      },
       //* se debe evaluar el borrado de los valores del selector llamado tipo de solicitud
       tipo_de_solicitud: {
         value: '',
@@ -75,21 +90,34 @@ export const usePanelVentanilla = () => {
 
   // ? Segundo paso solicitud al usuario
   const {
-    control: controlSegundoPasoEntrega99,
-    handleSubmit: handleSubmitSegundoPasoEntrega99,
-    // formState: formStateSegundoFormulario,
-    setValue: setValueSegundoFormularioEntrega99,
-    reset: resetSegundoFormularioEntrega99,
-  } = useForm();
+    control: controlFormulario,
+    handleSubmit: handleSubmitFormulario,
+    formState: { errors: errorsFormulario },
+    reset: resetFormulario,
+    watch: watchFormulario,
+    setValue: setValueFormulario,
+    getValues: getValuesFormulario,
+  } = useForm({
+    defaultValues: {
+      asunto: '',
+      descripcion_de_la_solicitud: '',
+      fecha_de_solicitud: '',
+      medio_almacenamiento: '',
+      nombre_archivo: '',
+      numero_folios: '',
+      ruta_soporte: '',
+    },
+  });
 
-  // ? Tercer paso solicitud al usuario
-  const {
-    control: controlTercerPasoEntrega99,
-    handleSubmit: handleSubmitTercerPasoEntrega99,
-    // formState: formStateTercerFormulario,
-    setValue: setValueTercerFormularioEntrega99,
-    reset: resetTercerPasoEntrega99,
-  } = useForm();
+  const watchFormularioValues = watchFormulario();
+  //  console.log('')('watchFormulario', watchFormularioValues);
+
+  const resetFormularioFunction = () => {
+    setValueFormulario('medio_almacenamiento', '');
+    setValueFormulario('nombre_archivo', '');
+    setValueFormulario('numero_folios', '');
+    setValueFormulario('ruta_soporte', '');
+  };
 
   // ? ----- controles para el manejo del modal de metadatos de la entrega 99 -----
 
@@ -100,10 +128,67 @@ export const usePanelVentanilla = () => {
     setValue: setValueManejoMetadatosModal,
     reset: resetManejoMetadatosModal,
     watch: watchManejoMetadatosModal,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      categoriaArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
+      tieneReplicaFisicaMetadatos: {
+        value: '',
+        label: '',
+      },
+      origenArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
+      tieneTipologiaRelacionadaMetadatos: {
+        value: '',
+        label: '',
+      },
+      tipologiasDocumentalesMetadatos: {
+        value: '',
+        label: '',
+      },
+      cualTipologiaDocumentalMetadatos: '',
+      asuntoMetadatos: '',
+      descripcionMetadatos: '',
+      palabrasClavesMetadatos: {} as any,
+    },
+  });
 
   //
   const watchExeManejoModalMetadatos = watchManejoMetadatosModal();
+  // //  console.log('')('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
+
+  // ? reset de los valores del modal de metadatos
+  const resetManejoMetadatosModalFunction = () =>
+    resetManejoMetadatosModal({
+      categoriaArchivoMetadatos: {
+        value: '',
+        label: '',
+      },
+      tieneReplicaFisicaMetadatos: {
+        value: '',
+        label: '',
+      },
+      origenArchivoMetadatos: {
+        label: '',
+        value: '',
+      },
+      tieneTipologiaRelacionadaMetadatos: {
+        value: '',
+        label: '',
+      },
+      tipologiasDocumentalesMetadatos: {
+        value: '',
+        label: '',
+      },
+      cualTipologiaDocumentalMetadatos: '',
+      asuntoMetadatos: '',
+      descripcionMetadatos: '',
+      palabrasClavesMetadatos: {} as any,
+    });
 
   return {
     // ! DECLARACIONES PARA LA ENTREGA 98 ................//
@@ -119,23 +204,22 @@ export const usePanelVentanilla = () => {
     // ! DECLARACIONES PARA LA ENTREGA 99 ................//
     // ! DECLARACIONES PARA LA ENTREGA 99 ................//
 
-    // ? Segundo paso
-    controlSegundoPasoEntrega99,
-    handleSubmitSegundoPasoEntrega99,
-    setValueSegundoFormularioEntrega99,
-    resetSegundoFormularioEntrega99,
-
-    // ? Tercer paso
-    controlTercerPasoEntrega99,
-    handleSubmitTercerPasoEntrega99,
-    setValueTercerFormularioEntrega99,
-    resetTercerPasoEntrega99,
+    // ? Formulario de solicitud al usuario
+    controlFormulario,
+    handleSubmitFormulario,
+    errorsFormulario,
+    setInfoReset: resetFormulario,
+    resetFormulario: resetFormularioFunction,
+    watchFormulario: watchFormularioValues,
+    setValueFormulario,
+    getValuesFormulario,
 
     // ? Manejo del modal de metadatos
     controlManejoMetadatosModal,
     handleSubmitManejoMetadatosModal,
     setValueManejoMetadatosModal,
     resetManejoMetadatosModal,
+    resetManejoMetadatosModalFunction,
     watchExeManejoModalMetadatos,
   };
 };

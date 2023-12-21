@@ -18,7 +18,7 @@ import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { tipo_medida } from '../../../Indicadores/choices/selects';
 import { useFuenteFinanciacionHook } from '../../hooks/useFuenteFinanciacionHook';
 import { DataContextFuentesFinanciacion } from '../../context/context';
-import NumberFormat from 'react-number-format';
+// import NumberFormat from 'react-number-format';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -42,27 +42,55 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
   const { mode, fuente_financiacion } = useAppSelector((state) => state.planes);
 
   const {
+    id_proyecto,
+    id_producto,
+    set_id_proyecto,
+    set_id_producto,
     cuencas_selected,
     indicadores_selected,
+    proyectos_selected,
+    productos_selected,
+    actividades_selected,
     fetch_data_cuencas,
     fetch_data_indicadores,
+    fetch_data_proyectos,
+    fetch_data_productos,
+    fetch_data_actividades,
   } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {
     fetch_data_cuencas();
     fetch_data_indicadores();
+    fetch_data_proyectos();
   }, []);
+
+  useEffect(() => {
+    if (id_proyecto) {
+      fetch_data_productos();
+    }
+  }, [id_proyecto]);
+
+  useEffect(() => {
+    if (id_producto) {
+      fetch_data_actividades();
+    }
+  }, [id_producto]);
 
   useEffect(() => {
     if (mode.crear) {
       limpiar_formulario_fuente();
     }
     if (mode.editar) {
+      set_id_proyecto(fuente_financiacion.id_proyecto ?? null);
+      set_id_producto(fuente_financiacion.id_producto ?? null);
       reset_fuente({
         id_fuente: fuente_financiacion.id_fuente,
         nombre_indicador: fuente_financiacion.nombre_indicador,
         nombre_fuente: fuente_financiacion.nombre_fuente,
         nombre_cuenca: fuente_financiacion.nombre_cuenca,
+        nombre_proyecto: fuente_financiacion.nombre_proyecto,
+        nombre_actividad: fuente_financiacion.nombre_actividad,
+        nombre_producto: fuente_financiacion.nombre_producto,
         vano_1: fuente_financiacion.vano_1,
         vano_2: fuente_financiacion.vano_2,
         vano_3: fuente_financiacion.vano_3,
@@ -70,6 +98,9 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
         valor_total: fuente_financiacion.valor_total,
         id_indicador: fuente_financiacion.id_indicador,
         id_cuenca: fuente_financiacion.id_cuenca,
+        id_proyecto: fuente_financiacion.id_proyecto,
+        id_actividad: fuente_financiacion.id_actividad,
+        id_producto: fuente_financiacion.id_producto,
       });
     }
   }, [mode, fuente_financiacion]);
@@ -115,7 +146,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de fuente_financiacions" />
+            <Title title="Registro de fuente de financiación" />
           </Grid>
           {mode.editar ? (
             <>
@@ -164,6 +195,108 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                       : 'Ingrese un nombre'
                   }
                 />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="id_proyecto"
+              control={control_fuente}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={false}
+                  fullWidth
+                  required
+                  error={!!errors_fuente.id_proyecto}
+                  helperText={
+                    errors_fuente?.id_proyecto?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : 'ingrese el proyecto'
+                  }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_proyecto(Number(event.target.value));
+                  }}
+                >
+                  {proyectos_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="id_producto"
+              control={control_fuente}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={id_proyecto ? false : true}
+                  fullWidth
+                  required
+                  error={!!errors_fuente.id_producto}
+                  helperText={
+                    errors_fuente?.id_producto?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : 'ingrese el producto'
+                  }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_producto(Number(event.target.value));
+                  }}
+                >
+                  {productos_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="id_actividad"
+              control={control_fuente}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={id_producto ? false : true}
+                  fullWidth
+                  required
+                  error={!!errors_fuente.id_actividad}
+                  helperText={
+                    errors_fuente?.id_actividad?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : 'ingrese la actividad'
+                  }
+                >
+                  {actividades_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               )}
             />
           </Grid>

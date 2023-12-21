@@ -309,7 +309,7 @@ export const ModalSeleccionCCDPSD = (): JSX.Element => {
             variant="outlined"
             color="error"
             onClick={() => {
-              console.log('cerrando modal');
+              //  console.log('')('cerrando modal');
               handleSeleccionCCD_PSD(false);
               reset_search_ccd_psd({ nombre: '', version: '' });
             }}

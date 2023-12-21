@@ -47,7 +47,7 @@ export const GridListadoAsign = (): JSX.Element => {
 
   const handleRequest = async (paramsRow: any) => {
     try {
-      console.log(paramsRow);
+      //  console.log('')(paramsRow);
       const { id_unidad_seccion_actual } = paramsRow;
       const { id_ccd_actual, id_ccd_nuevo } = seccionesSinResponsable;
 
@@ -64,8 +64,8 @@ export const GridListadoAsign = (): JSX.Element => {
         }),
       ]);
 
-      console.log(coincidencias);
-      console.log(unidadesRelacionadas);
+      //  console.log('')(coincidencias);
+      //  console.log('')(unidadesRelacionadas);
 
       // ? Setear la lista de series de la sección seleccionada sin responsable, y también se setea la sección seleccionada para acceder a esos datos más adelante, todo lo que contenga el params.row
       dispatch(
@@ -87,7 +87,7 @@ export const GridListadoAsign = (): JSX.Element => {
   };
 
   const handleDelete = (params: GridValueGetterParams) => {
-    console.log(params.row);
+    //  console.log('')(params.row);
     const filteredElementsToDelete = listadoDeAsignaciones.filter(
       (element) =>
         element.id_unidad_seccion_actual !== params.row.id_unidad_seccion_actual

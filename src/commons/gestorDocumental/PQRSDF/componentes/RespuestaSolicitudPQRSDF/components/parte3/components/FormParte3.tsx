@@ -13,10 +13,14 @@ import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { usePanelVentanilla } from '../../../../../../panelDeVentanilla/hook/usePanelVentanilla';
 
-export const FormParte3 = (): JSX.Element => {
+export const FormParte3 = ({
+  controlFormulario,
+  handleSubmitFormulario,
+  errorsFormulario,
+  resetFormulario,
+  watchFormulario,
+}: any): JSX.Element => {
 
-  // ? hooks
-  const { controlTercerPasoEntrega99 } = usePanelVentanilla();
 
   //* context
   const { handleModalAgregarMetadatos } = useContext(
@@ -34,7 +38,7 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="ruta_soporte"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: false }}
               render={({
@@ -110,7 +114,7 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="nombre_archivo"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -139,7 +143,7 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="medio_alamacenamiento"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -166,7 +170,7 @@ export const FormParte3 = (): JSX.Element => {
           <Grid item xs={12} sm={4}>
             <Controller
               name="numero_folios"
-              control={controlTercerPasoEntrega99}
+              control={controlFormulario}
               defaultValue=""
               rules={{ required: true }}
               render={({
@@ -207,8 +211,8 @@ export const FormParte3 = (): JSX.Element => {
               color="primary"
               startIcon={<BuildIcon />}
               onClick={() => {
-                console.log('click siuuu');
-                console.log('abriendo modal de metadatos');
+                //  console.log('')('click siuuu');
+                //  console.log('')('abriendo modal de metadatos');
                 handleModalAgregarMetadatos(true);
               }}
             >
@@ -226,8 +230,8 @@ export const FormParte3 = (): JSX.Element => {
               type="submit"
               startIcon={<AddIcon />}
               onClick={() => {
-                console.log('click siuuu');
-                console.log('soy el submit');
+                //  console.log('')('click siuuu');
+                //  console.log('')('soy el submit');
               }}
             >
               AGREGAR ANEXO
@@ -252,7 +256,7 @@ export const FormParte3 = (): JSX.Element => {
             color="warning"
             startIcon={<ArrowBackIcon />}
             onClick={() => {
-              console.log('click siuuu');
+              //  console.log('')('click siuuu');
             }}
             sx={{
               width: '60%',
@@ -265,7 +269,7 @@ export const FormParte3 = (): JSX.Element => {
             color="primary"
             startIcon={<CleanIcon />}
             onClick={() => {
-              console.log('click siuuu');
+              //  console.log('')('click siuuu');
             }}
             sx={{
               mt: '1rem',

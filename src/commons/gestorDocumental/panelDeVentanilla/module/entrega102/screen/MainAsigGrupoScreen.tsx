@@ -9,6 +9,9 @@ import { SeleccionUnidadSecSub } from '../components/SeleccionUnidadSecSub/Selec
 import { Grid } from '@mui/material';
 import { AsignacionGrupoContext } from '../context/AsignacionGrupoContext';
 import { SeleccionGrupo } from '../components/SeleccionGrupo/SeleccionGrupo';
+import { Asignaciones } from '../components/Asignaciones/Asginaciones';
+import { AccionesFinales } from '../components/AccionesFinales/AccionesFinales';
+import { getAsignaciones } from '../services/getAsignaciones.service';
 
 export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -21,24 +24,38 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
 
   //* context loading declaration
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
-  const { setListaSeccionesSubsecciones } = useContext(AsignacionGrupoContext);
+  const { setListaSeccionesSubsecciones, setListaAsignaciones } = useContext(
+    AsignacionGrupoContext
+  );
   // ? quitar mientras se termina de desarrollar el módulo
-  /* useEffect(() => {
+  useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) {
       navigate('/app/gestor_documental/panel_ventanilla/');
     }
-  }, []);
-*/
+  }, [currentElementPqrsdComplementoTramitesYotros]);
 
   useEffect(() => {
+    //* se entra a consultar el listado de asignaciones realizadas
+
+    if (!currentElementPqrsdComplementoTramitesYotros) return;
+
+    void getAsignaciones(
+      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+      handleGeneralLoading
+    ).then((res) => {
+      setListaAsignaciones(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!currentElementPqrsdComplementoTramitesYotros) return;
+
     void getSecSubAsiGrupo(handleGeneralLoading, navigate).then((res) => {
-      console.log(res);
+      //  console.log('')(res);
       setListaSeccionesSubsecciones(res);
     });
 
-
     //* aqui de entrada tambien se debe consultar el grillado para saber si se puede asginar o no
-
   }, []);
 
   return (
@@ -64,6 +81,11 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
       {/*selección de grupo*/}
 
       <SeleccionGrupo />
+
+      {/* asignaciones realizadas, (en espera, rechazadas, aceptadas) */}
+      <Asignaciones />
+      {/*acciones finales del módulo*/}
+      <AccionesFinales />
     </>
   );
 };

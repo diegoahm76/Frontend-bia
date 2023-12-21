@@ -15,7 +15,7 @@ import { Inicial_Formulario } from "../../interfaces/ConfiguracionTipologuias";
 export const BotonesActionsFormulario = () => {
   const navigate = useNavigate();
 
-  const { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return } = useContext(TipodeCeaccionContext);
+  const { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return ,form } = useContext(TipodeCeaccionContext);
 
 
   const crear_configuracion_expediente = async () => {
@@ -52,7 +52,7 @@ export const BotonesActionsFormulario = () => {
         ;
       const res = await api.post(url, postData);
       const numeroConsulta = res.data.data;
-      Set_Datos_Return(numeroConsulta);
+      Set_Datos_Return(numeroConsulta[0]);
       control_success("se creo correctamente  la configuracion de Sub-Seccion");
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -83,10 +83,6 @@ export const BotonesActionsFormulario = () => {
 
 
   //FUNCIONES PARA ACTUALIZAR 
-
-
-
-
 
   const ActualizarNingunoEmpresa = async () => {
     try {
@@ -224,6 +220,11 @@ export const BotonesActionsFormulario = () => {
     Set_Formulario_Empresa(Inicial_Formulario);
   }
 
+  const GuardarSalir=()=>{
+    Set_Formulario_Empresa(Inicial_Formulario);
+    control_success("Configuracion Guardada correctamente");
+  }
+
 
   return (
     <Grid
@@ -253,7 +254,7 @@ export const BotonesActionsFormulario = () => {
             fullWidth
             variant="contained"
           >
-            Guardar Sin Tipología
+            Guardar Sin Consecutivo
           </Button>
         </Grid>
       )}
@@ -267,14 +268,14 @@ export const BotonesActionsFormulario = () => {
               {Formulario_Empresa.opcion_seleccionada === "Ninguno" && (
                 
                   <Grid item xs={12} sm={5} md={3.4} lg={2.9}>
-                    <Button
+                    {/* <Button
                       startIcon={<SaveIcon />}
                       style={{ width: "90%", marginTop: 15 }}
                       color="success" // Cambia el color según si es una actualización o creación
                       fullWidth
                       variant="contained"   >
                       Actualizar de ninguno solito (sin funicon)
-                    </Button>
+                    </Button> */}
                   </Grid>
               )}
 
@@ -456,8 +457,9 @@ export const BotonesActionsFormulario = () => {
                       style={{ width: "90%", marginTop: 15 }}
                       color="success" // Cambia el color según si es una actualización o creación
                       fullWidth
-                      variant="contained"   >
-                      Actualizar U.Organizacional  (falta)
+                      variant="contained"  
+                      onClick={GuardarSalir} >
+                      Actualizar U.Organizacional 
                     </Button>
                   </Grid>
                 </>

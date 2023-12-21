@@ -1,3 +1,5 @@
+import type { IPlan } from '../Consultas/types/types';
+
 export interface IPlanes {
   id_plan?: number | null;
   nombre_plan: string;
@@ -38,6 +40,8 @@ export interface IProgramas {
   porcentaje_2: number | null;
   porcentaje_3: number | null;
   porcentaje_4: number | null;
+  cumplio: boolean;
+  fecha_creacion: string;
   nombre_programa: string;
   id_plan?: number | null;
 }
@@ -51,7 +55,10 @@ export interface IProyectos {
   pondera_3: number | null;
   pondera_4: number | null;
   nombre_proyecto: string;
-  id_programa?: number | null;
+  id_programa: number | null;
+  id_plan: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // productos
 export interface IProductos {
@@ -60,6 +67,8 @@ export interface IProductos {
   nombre_producto: string;
   id_proyecto?: number | null;
   numero_producto?: number | null;
+  id_programa: number | null;
+  id_plan: number | null;
 }
 // Actividades
 export interface IActividades {
@@ -70,6 +79,8 @@ export interface IActividades {
   numero_actividad?: number | null;
   id_plan?: number | null;
   nombre_plan?: string;
+  id_programa: number | null;
+  id_proyecto: number | null;
 }
 // Indicadores
 export interface Indicadores {
@@ -80,13 +91,17 @@ export interface Indicadores {
   nombre_actividad?: string;
   nombre_plan?: string;
   nombre_indicador: string;
+  nombre_proyecto?: string;
+  tipo_indicador?: string;
   linea_base: string;
   medida: string;
   id_medicion?: number | null;
   id_tipo?: number | null;
   id_producto?: number | null;
   id_actividad?: number | null;
-  id_plan?: number | null;
+  id_proyecto?: number | null;
+  id_plan: number | null;
+  id_programa: number | null;
 }
 // Metas por Indicador
 export interface IMetaIndicador {
@@ -96,6 +111,15 @@ export interface IMetaIndicador {
   unidad_meta: string;
   porcentaje_meta: number | null;
   valor_meta: string;
+  cumplio: boolean;
+  fecha_creacion_meta?: string;
+  agno_1: number | null;
+  agno_2: number | null;
+  agno_3: number | null;
+  agno_4: number | null;
+  valor_ejecutado_compromiso: number | null;
+  valor_ejecutado_obligado: number | null;
+  avance_fisico: number | null;
   id_indicador?: number | null;
 }
 // Rubro
@@ -104,6 +128,16 @@ export interface IRubro {
   cuenta: string;
   cod_pre: string;
   valcuenta: string;
+  nombre_programa?: string;
+  nombre_proyecto?: string;
+  nombre_producto?: string;
+  nombre_actividad?: string;
+  nombre_indicador?: string;
+  id_programa?: number | null;
+  id_proyecto?: number | null;
+  id_producto?: number | null;
+  id_actividad?: number | null;
+  id_indicador?: number | null;
 }
 // subprogramas
 export interface ISubprogramas {
@@ -118,6 +152,9 @@ export interface IFuentesFinanciacion {
   nombre_fuente: string;
   nombre_indicador?: string;
   nombre_cuenca?: string;
+  nombre_proyecto?: string;
+  nombre_actividad?: string;
+  nombre_producto?: string;
   vano_1: number | null;
   vano_2: number | null;
   vano_3: number | null;
@@ -125,6 +162,9 @@ export interface IFuentesFinanciacion {
   valor_total: number | null;
   id_indicador?: number | null;
   id_cuenca?: number | null;
+  id_proyecto?: number | null;
+  id_actividad?: number | null;
+  id_producto?: number | null;
 }
 // Detalle Inversion Cuentas
 export interface IDetalleCuentas {
@@ -248,6 +288,7 @@ export interface IUnspsc {
 // Seguimiento PAI
 export interface ISeguimientoPAI {
   id_seguimiento_pai?: number | null;
+  nombre_programa?: string;
   nombre_proyecto?: string;
   nombre_producto?: string;
   nombre_actividad?: string;
@@ -259,6 +300,7 @@ export interface ISeguimientoPAI {
   porcentaje_avance?: number | null;
   fecha_registro_avance?: string;
   entrega_vigencia?: string;
+  adelanto?: string;
   hizo?: string;
   cuando?: string;
   donde?: string;
@@ -267,7 +309,9 @@ export interface ISeguimientoPAI {
   beneficiarios?: string;
   compromisos?: string;
   contratros?: string;
+  fecha_creacion?: string;
   id_unidad_organizacional?: number | null;
+  id_programa: number | null;
   id_proyecto?: number | null;
   id_producto?: number | null;
   id_actividad?: number | null;
@@ -298,6 +342,7 @@ export interface IPlanesIndex {
   paa_codigos: IUnspsc;
   mode_paa_codigos: IMode;
   seguimiento_pai: ISeguimientoPAI;
+  consulta_plan: IPlan;
 }
 
 // unidades organizacionales

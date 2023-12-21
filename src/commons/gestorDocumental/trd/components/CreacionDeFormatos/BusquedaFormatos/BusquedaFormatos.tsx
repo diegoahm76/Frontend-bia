@@ -86,7 +86,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
       nombre, tamagno_max_mb, control_tamagno_max
     } = data_format_documental_type_watch_form;
-    console.log('cod_tipo_medio_doc', cod_tipo_medio_doc);
+    //  console.log('')('cod_tipo_medio_doc', cod_tipo_medio_doc);
 
     try {
       await dispatch(
@@ -105,7 +105,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         )
       );
     } catch (err) {
-      console.log(err);
+      //  console.log('')(err);
     }
   };
 
@@ -136,7 +136,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         )
       );
     } catch (err) {
-      console.log(err);
+      //  console.log('')(err);
     }
   };
   // ?  function that allow us to delete a format documental type
@@ -155,7 +155,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         )
       );
     } catch (err) {
-      console.log(err);
+      //  console.log('')(err);
     }
   };
 

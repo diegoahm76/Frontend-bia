@@ -11,10 +11,10 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { VerExpedientes } from "../../ConcesionAcceso/screens/VerExpedientes";
 import { VerDocumentos } from "../../ConcesionAcceso/screens/VerDocumentos";
 import { obtener_trd_actual_retirados } from "../../indexacionExpedientes/thunks/indexacionExpedientes";
-import { expedientes_por_filtros, obtener_documentos_expediente } from "../thunks/ConsultaExpedientes";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import BuscarExpediente from "./BuscarExpediente";
+import { expedientes_por_filtros, obtener_documentos_expediente } from "../thunks/ConsultaExpedientes";
 
 interface IProps {
     set_expediente: any,
@@ -50,7 +50,8 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             field: 'codigo_exp_und_serie_subserie',
             headerName: 'CÓDIGO',
             sortable: true,
-            width: 150,
+            width: 200,
+            valueGetter: (params) => params.row.codigo_exp_und_serie_subserie + '.' +  params.row.codigo_exp_Agno,
         },
         {
             field: 'nombre_trd_origen',

@@ -63,12 +63,12 @@ const StepTwo = () => {
   const [cual_medio_view, set_cual_medio_view] = useState<boolean>(false);
 
   const on_submit_exhibit = (data: IObjExhibit): void => {
-    console.log(data, metadata);
+    //  console.log('')(data, metadata);
     const exhibit_aux: IObjExhibit | undefined = exhibits.find(
       (p: IObjExhibit) => p.nombre_anexo === data.nombre_anexo
     );
     if (exhibit_aux === undefined) {
-      console.log(data);
+      //  console.log('')(data);
       dispatch(
         set_exhibits([
           ...exhibits,
@@ -93,7 +93,7 @@ const StepTwo = () => {
   };
 
   useEffect(() => {
-    console.log(exhibit);
+    //  console.log('')(exhibit);
     reset({
       ...exhibit,
       cod_medio_almacenamiento:
@@ -164,7 +164,7 @@ const StepTwo = () => {
   }, [file]);
 
   useEffect(() => {
-    console.log(metadata);
+    //  console.log('')(metadata);
     // if (metadata !== null) {
     //   if (metadata.asunto !== null && metadata.asunto !== '') {
     //     dispatch(
@@ -353,7 +353,7 @@ const StepTwo = () => {
         aux_items.push(option);
       }
     });
-    console.log(aux_items);
+    //  console.log('')(aux_items);
     dispatch(set_exhibits(aux_items));
   };
 

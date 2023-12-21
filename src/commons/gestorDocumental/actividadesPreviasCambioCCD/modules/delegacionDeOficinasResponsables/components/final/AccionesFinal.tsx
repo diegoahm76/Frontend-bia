@@ -72,7 +72,7 @@ export const AccionesFinal = (): JSX.Element => {
       }
     );
 
-    console.log('envío de unidades', oficinasDelegadas);
+    //  console.log('')('envío de unidades', oficinasDelegadas);
 
     postDelegaciones({
       delegaciones: {

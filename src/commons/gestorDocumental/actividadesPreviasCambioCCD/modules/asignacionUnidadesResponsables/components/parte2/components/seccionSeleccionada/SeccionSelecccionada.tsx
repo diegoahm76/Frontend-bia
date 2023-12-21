@@ -43,14 +43,14 @@ export const SeccionSelecccionada = (): JSX.Element => {
 
   // ? useeffect para cargar el elemento seleccionado
   useEffect(() => {
-    console.log('unidas responsable seleccionada para edicion');
-    console.log(currentUnidadAsociada);
+    //  console.log('')('unidas responsable seleccionada para edicion');
+    //  console.log('')(currentUnidadAsociada);
     const elementFounded = listadoDeAsignaciones?.find(
       (element) =>
         element?.id_unidad_seccion_actual ===
         currentUnidadAsociada?.id_unidad_seccion_actual
     );
-    console.log(elementFounded);
+    //  console.log('')(elementFounded);
     reset_asignaciones_resp({
       unidad_organizacional: {
         codigo: elementFounded?.cod_unidad_nueva,
@@ -87,7 +87,7 @@ export const SeccionSelecccionada = (): JSX.Element => {
       id_unidad_seccion_actual,
     } = seccionSeleccionada || {};
 
-    console.log(seccionSeleccionada)
+    //  console.log('')(seccionSeleccionada)
     if (!id_unidad_seccion_nueva)
       return control_warning('El campo de selección no puede estar vacío');
 
@@ -144,7 +144,7 @@ export const SeccionSelecccionada = (): JSX.Element => {
       );
       // o enviar una notificación con react-toastify u otra biblioteca similar
     } else {
-      console.log(form);
+      //  console.log('')(form);
       const elementToAddWithValidation =
         Array.isArray(listadoDeAsignaciones) && listadoDeAsignaciones.length > 0
           ? [
@@ -260,8 +260,8 @@ export const SeccionSelecccionada = (): JSX.Element => {
                 <Select
                   value={value}
                   onChange={(selectedOption) => {
-                    console.log(selectedOption);
-                    console.log(seriesSeccionSeleccionadaSinResponsable);
+                    //  console.log('')(selectedOption);
+                    //  console.log('')(seriesSeccionSeleccionadaSinResponsable);
                     setForm(selectedOption);
                     onChange(selectedOption);
                     // dispatch(setCurrentUnidadAsociada(selectedOption));

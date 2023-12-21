@@ -48,6 +48,13 @@ export interface FormDataCategoria {
   orden: string;
 }
 
+export interface FormDataAtributo {
+  descripcion: string;
+  obligatorio: boolean;
+  id_tipo: string;
+  id_categoria: string;
+}
+
 export interface EtapaFiltrada {
   etapa: EtapaProceso;
   subetapas: CategoriaAtributo[];
@@ -58,4 +65,4 @@ export interface DetallePeriodo {
   periodos: string[];
 }
 
-export interface DetallesPeriodos extends Record<string, DetallePeriodo>{};
+export interface DetallesPeriodos extends Record<string, DetallePeriodo> { };
