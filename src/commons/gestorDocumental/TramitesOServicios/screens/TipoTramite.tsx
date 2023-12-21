@@ -16,6 +16,7 @@ interface IProps {
     set_crear_tramite: any
     set_crear_tramite_error: any,
     set_tramite_servicio: any,
+    set_response_paso_1: any,
     limpiar: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -152,6 +153,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 props.set_formulario_paso_uno(obj_create);
                 dispatch(create_tramite_servicio(obj_create)).then((response: any) => {
                     if(response.success){
+                        props.set_response_paso_1(response.data)
                         props.set_crear_tramite_error(crear);
                     }
                 });
