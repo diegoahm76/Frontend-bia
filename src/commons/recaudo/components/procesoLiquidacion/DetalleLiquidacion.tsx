@@ -5,20 +5,22 @@ import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Box, Button, FormControl, Grid, InputLabel, List, ListItemText, MenuItem, Select, type SelectChangeEvent, TextField, Typography, Stack } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { Title } from "../../../../components";
-import type { OpcionLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
+import type { EstadoExpediente, OpcionLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import { api } from "../../../../api/axios";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
 interface IProps {
   rows_detalles: RowDetalles[];
-  expediente_liquidado: boolean;
+  estado_expediente: EstadoExpediente;
   set_rows_detalles: Dispatch<SetStateAction<RowDetalles[]>>;
   add_new_row_detalles: (formula: string, nuevas_variables: Record<string, string>, opcion_liquidacion: OpcionLiquidacion, id_opcion_liquidacion: string, concepto: string) => void;
   check_ciclo_and_periodo: (next: Function) => void;
+  edit_detalles_liquidacion: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
-export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente_liquidado, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
   const [concepto, set_concepto] = useState('');
@@ -69,13 +71,15 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
     set_variables_datos({});
   };
 
-  const handle_variable_input_change = (event: React.ChangeEvent<HTMLInputElement>, index: number, key: string): void => {
+  const handle_variable_input_change = (event: React.ChangeEvent<HTMLInputElement>, id: number, key: string): void => {
     const { value } = event.target;
-    const row_detalle = rows_detalles[index];
-    const new_variables = { ...row_detalle.variables, [key]: value === '' ? '0' : value };
-    const new_detalle: RowDetalles = { ...row_detalle, variables: new_variables, valor_liquidado: get_calculated_variables(row_detalle.formula_aplicada, new_variables) };
-    const new_detalles = rows_detalles.map((detalle, arrayIndex) => arrayIndex === index ? new_detalle : detalle);
-    set_rows_detalles(new_detalles);
+    const row_detalle = rows_detalles.find((detalle) => detalle.id === id);
+    if (row_detalle) {
+      const new_variables = { ...row_detalle.variables, [key]: value };
+      const new_detalle: RowDetalles = { ...row_detalle, variables: new_variables, valor_liquidado: get_calculated_variables(row_detalle.formula_aplicada, new_variables) };
+      const new_detalles = rows_detalles.map((detalle) => detalle.id === id ? new_detalle : detalle);
+      set_rows_detalles(new_detalles);
+    }
   };
 
   const handle_form_submit = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -117,11 +121,11 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
                 <ListItemText key={`${params.row.id}-${key}`}>
                   <Stack direction={'row'} spacing={2} alignItems={'center'}>
                     <Typography variant="body1">{key}</Typography>:
-                    {expediente_liquidado ?
+                    {estado_expediente === 'liquidado' ?
                       <Typography variant="body1">{value as string}</Typography> :
                       <TextField
                         name={key}
-                        value={rows_detalles[params.row.id].variables[key]}
+                        value={rows_detalles.find((detalle) => detalle.id === params.row.id)?.variables[key]}
                         type="number"
                         size="small"
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => handle_variable_input_change(event, params.row.id, key)}
@@ -198,36 +202,38 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
           </Grid>
 
           <Box component={'form'} sx={{ width: '100%' }} onSubmit={handle_form_submit}>
-            <Grid container justifyContent={'center'} spacing={2}>
-              <Grid item>
-                <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Parametros</InputLabel>
-                {opcion_liquidacion && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
-                  <div key={index}>
-                    <InputLabel sx={{ p: '18.5px' }}>{key}</InputLabel>
-                  </div>
-                ))}
-              </Grid>
+            {opcion_liquidacion && (
+              <Grid container justifyContent={'center'} spacing={2}>
+                <Grid item>
+                  <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Parametros</InputLabel>
+                  {Object.keys(opcion_liquidacion?.variables).map((key, index) => (
+                    <div key={index}>
+                      <InputLabel sx={{ p: '18.5px' }}>{key}</InputLabel>
+                    </div>
+                  ))}
+                </Grid>
 
-              <Grid item>
-                <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
-                {opcion_liquidacion && Object.keys(opcion_liquidacion?.variables).map((key, index) => (
-                  <div key={index}>
-                    <TextField
-                      type="number"
-                      sx={{ p: '10px' }}
-                      size="small"
-                      value={variables_datos[key] || ''}
-                      required
-                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handle_variables_change(event, key) }}
-                    />
-                  </div>
-                ))}
+                <Grid item>
+                  <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
+                  {Object.keys(opcion_liquidacion?.variables).map((key, index) => (
+                    <div key={index}>
+                      <TextField
+                        type="number"
+                        sx={{ p: '10px' }}
+                        size="small"
+                        value={variables_datos[key] || ''}
+                        required
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handle_variables_change(event, key) }}
+                      />
+                    </div>
+                  ))}
+                </Grid>
               </Grid>
-            </Grid>
+            )}
 
             <Grid container justifyContent='center' sx={{ my: '20px' }}>
               <Grid item xs={3}>
-                {!expediente_liquidado && (
+                {estado_expediente === 'activo' && (
                   <Button
                     type="submit"
                     variant="contained"
@@ -251,6 +257,22 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, expediente
               columns={column_detalle}
               getRowHeight={() => 'auto'}
             />
+            <Grid container justifyContent='center' sx={{ my: '20px' }}>
+              <Grid item xs={3}>
+                {estado_expediente === 'guardado' && (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    startIcon={<EditIcon />}
+                    onClick={edit_detalles_liquidacion}
+                  >
+                    Editar detalles de liquidación
+                  </Button>
+                )}
+              </Grid>
+            </Grid>
           </Box>
         </Grid>
       </Grid>
