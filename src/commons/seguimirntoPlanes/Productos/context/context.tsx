@@ -85,6 +85,8 @@ export const UserProviderProductos = ({
             nombre_proyecto: item.nombre_proyecto,
             id_programa: item.id_programa,
             id_plan: item.id_plan,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
         set_rows_producto(data_producto);

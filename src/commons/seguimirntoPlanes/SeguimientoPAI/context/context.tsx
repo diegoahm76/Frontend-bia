@@ -133,7 +133,6 @@ export const DataContextSeguimientoPAI = createContext<UserContext>({
   programas_selected: [],
   set_programas_selected: () => {},
 
-  
   archivos: [null],
   set_archivos: () => {},
 
@@ -153,7 +152,17 @@ export const DataContextSeguimientoPAI = createContext<UserContext>({
     valor_ejecutado_compromiso: null,
     valor_ejecutado_obligado: null,
     avance_fisico: null,
+    id_plan: null,
+    id_programa: null,
+    id_proyecto: null,
+    id_producto: null,
+    id_actividad: null,
     id_indicador: null,
+    nombre_plan: '',
+    nombre_programa: '',
+    nombre_proyecto: '',
+    nombre_producto: '',
+    nombre_actividad: '',
   },
   set_info_meta: () => {},
 
@@ -240,6 +249,16 @@ export const UserProviderSeguimientoPAI = ({
     valor_ejecutado_obligado: null,
     avance_fisico: null,
     id_indicador: null,
+    id_plan: null,
+    id_programa: null,
+    id_proyecto: null,
+    id_producto: null,
+    id_actividad: null,
+    nombre_plan: '',
+    nombre_programa: '',
+    nombre_proyecto: '',
+    nombre_producto: '',
+    nombre_actividad: '',
   });
 
   // * Metas
@@ -416,11 +435,11 @@ export const UserProviderSeguimientoPAI = ({
 
   const fetch_data_metas_id = async (): Promise<void> => {
     try {
-      const response = await get_metas_id(id_meta as number ?? 0);
+      const response = await get_metas_id((id_meta as number) ?? 0);
       if (response?.length > 0) {
         // Assuming you want to set info_meta with the first item in the response
         const firstMeta: IMetaIndicador = response[0];
-  
+
         set_info_meta(firstMeta);
       }
     } catch (error: any) {
@@ -429,7 +448,6 @@ export const UserProviderSeguimientoPAI = ({
       );
     }
   };
-  
 
   const fetch_data_unidad_organizacional = async (): Promise<void> => {
     try {

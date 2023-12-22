@@ -36,13 +36,13 @@ export interface IObjetivo {
 export interface IProgramas {
   id_programa?: number | null;
   nombre_plan?: string;
+  nombre_programa: string;
   porcentaje_1: number | null;
   porcentaje_2: number | null;
   porcentaje_3: number | null;
   porcentaje_4: number | null;
   cumplio: boolean;
   fecha_creacion: string;
-  nombre_programa: string;
   id_plan?: number | null;
 }
 // Proyectos
@@ -50,6 +50,7 @@ export interface IProyectos {
   id_proyecto?: number | null;
   numero_proyecto: number | null;
   nombre_programa?: string;
+  nombre_plan?: string;
   pondera_1: number | null;
   pondera_2: number | null;
   pondera_3: number | null;
@@ -65,10 +66,13 @@ export interface IProductos {
   id_producto?: number | null;
   nombre_proyecto?: string;
   nombre_producto: string;
+  nombre_plan?: string;
   id_proyecto?: number | null;
   numero_producto?: number | null;
   id_programa: number | null;
   id_plan: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // Actividades
 export interface IActividades {
@@ -79,8 +83,12 @@ export interface IActividades {
   numero_actividad?: number | null;
   id_plan?: number | null;
   nombre_plan?: string;
+  nombre_proyecto?: string;
+  nombre_programa?: string;
   id_programa: number | null;
   id_proyecto: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // Indicadores
 export interface Indicadores {
@@ -92,6 +100,7 @@ export interface Indicadores {
   nombre_plan?: string;
   nombre_indicador: string;
   nombre_proyecto?: string;
+  nombre_programa?: string;
   tipo_indicador?: string;
   linea_base: string;
   medida: string;
@@ -102,6 +111,8 @@ export interface Indicadores {
   id_proyecto?: number | null;
   id_plan: number | null;
   id_programa: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // Metas por Indicador
 export interface IMetaIndicador {
@@ -121,6 +132,16 @@ export interface IMetaIndicador {
   valor_ejecutado_obligado: number | null;
   avance_fisico: number | null;
   id_indicador?: number | null;
+  id_plan: number | null;
+  id_programa: number | null;
+  id_proyecto: number | null;
+  id_producto: number | null;
+  id_actividad: number | null;
+  nombre_plan?: string;
+  nombre_programa?: string;
+  nombre_proyecto?: string;
+  nombre_producto?: string;
+  nombre_actividad?: string;
 }
 // Rubro
 export interface IRubro {
