@@ -6,6 +6,7 @@ import { Indicadores } from '../../types/types';
 import { useAppSelector } from '../../../../hooks';
 import { post_indicador, put_indicador } from '../services/services';
 import { DataContextIndicador } from '../context/context';
+import dayjs from 'dayjs';
 
 export const useIndicadorHook = (): any => {
   const {
@@ -35,6 +36,8 @@ export const useIndicadorHook = (): any => {
       id_actividad: 0,
       id_plan: 0,
       id_proyecto: 0,
+      fecha_creacion: '',
+      cumplio: false,
     },
   });
 
@@ -60,7 +63,19 @@ export const useIndicadorHook = (): any => {
       id_actividad: 0,
       id_plan: 0,
       id_proyecto: 0,
+      fecha_creacion: '',
+      cumplio: false,
     });
+  };
+
+  // * fechas
+  const [fecha_creacion, set_fecha_creacion] = useState<Date | null>(
+    new Date()
+  );
+
+  const handle_change_fecha_creacion = (date: Date | null) => {
+    set_fecha_creacion(date);
+    set_value_indicador('fecha_creacion', dayjs(date).format('YYYY-MM-DD'));
   };
 
   // saving
@@ -79,6 +94,8 @@ export const useIndicadorHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_indicador(true);
+      const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
+      data.fecha_creacion = fecha_creacion_format;
       await post_indicador(data as Indicadores);
       control_success('Se creó correctamente');
       await limpiar_formulario_indicador();
@@ -99,6 +116,8 @@ export const useIndicadorHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_indicador(true);
+      const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
+      data.fecha_creacion = fecha_creacion_format;
       await put_indicador((id_indicador as number) ?? 0, data as Indicadores);
       control_success('Se actualizó correctamente');
       await limpiar_formulario_indicador();
@@ -130,5 +149,10 @@ export const useIndicadorHook = (): any => {
     is_saving_indicador,
 
     limpiar_formulario_indicador,
+
+    // * fechas
+    fecha_creacion,
+    set_fecha_creacion,
+    handle_change_fecha_creacion,
   };
 };

@@ -20,7 +20,6 @@ import { BancosRoutes } from '../BancoProyecto/router/BancosRoutes';
 import { PlanAdquisicionesRoutes } from '../PlanAnualAdquisiciones/router/PlanAdquisicionesRoutes';
 import { SeguimientoPAIRoutes } from '../SeguimientoPAI/router/SeguimientoPAIRoutes';
 import { ConsultarPlanesRoutes } from '../Consultas/router/ConsultarPlanesRoutes';
-import { ConsultarMetasRoutes } from '../ConsultasMetas/router/ConsultarPlanesRoutes';
 import { ConsultarSeguiminetoPAIRoutes } from '../ConsultaPAI/router/ConsultarPlanesRoutes';
 import { ConsultasRoutes } from '../Tableros/router/ConsultasRoutes';
 
@@ -135,12 +134,6 @@ const routes = [
     path: 'consulta_planes/',
     name: 'consulta_planes',
     component: () => <ConsultarPlanesRoutes />,
-  },
-  // consulta metas
-  {
-    path: 'consulta_metas/',
-    name: 'consulta_metas',
-    component: () => <ConsultarMetasRoutes />,
   },
   // consulta seguimiento pai ConsultarSeguiminetoPAIRoutes
   {
