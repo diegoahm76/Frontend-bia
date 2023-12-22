@@ -142,4 +142,17 @@ export const eviar_correo_radicado: any = (id_tramite: any) => {
     }
   };
 };
+// Listar tramites OPAS por persona titular
+export const obtener_opas_por_titular: any = (id_persona_titular: any) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`tramites/opa/tramites/list/${id_persona_titular}/`);
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
