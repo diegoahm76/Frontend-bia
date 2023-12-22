@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
-import type { Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
+import type { EstadoExpediente, Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import dayjs, { type Dayjs } from "dayjs";
 import PrintIcon from '@mui/icons-material/Print';
 import { api } from "../../../../api/axios";
-import type { DetallePeriodo, DetallesPeriodos } from "../../interfaces/proceso";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
 
 interface IProps {
@@ -17,7 +17,7 @@ interface IProps {
   nombre_deudor: string;
   rows_detalles: RowDetalles[];
   expedientes_deudor: Expediente[];
-  expediente_liquidado: boolean;
+  estado_expediente: EstadoExpediente;
   fecha_liquidacion: dayjs.Dayjs;
   fecha_vencimiento: dayjs.Dayjs;
   id_liquidacion_pdf: string;
@@ -37,7 +37,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   nombre_deudor,
   rows_detalles,
   expedientes_deudor,
-  expediente_liquidado,
+  estado_expediente,
   fecha_liquidacion,
   fecha_vencimiento,
   id_liquidacion_pdf,
@@ -200,21 +200,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
       <Grid container justifyContent={'center'}>
         <Grid item xs={12} sm={3}>
-          {expediente_liquidado ?
-            <>
-              <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
-              <Button
-                color="primary"
-                variant="contained"
-                fullWidth
-                startIcon={<PrintIcon />}
-                href={`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Imprimir recibo
-              </Button>
-            </> :
+          {estado_expediente === 'activo' && (
             <Button
               color="primary"
               variant="contained"
@@ -231,9 +217,35 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               }
               onClick={handle_submit_liquidacion}
             >
-              Guardar nueva liquidación
+              Guardar
             </Button>
-          }
+          )}
+          {estado_expediente === 'guardado' && (
+            <Button
+              color="primary"
+              variant="contained"
+              startIcon={<RequestQuoteIcon />}
+              fullWidth
+            >
+              Liquidar
+            </Button>
+          )}
+          {estado_expediente === 'liquidado' && (
+            <>
+              <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
+              <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                startIcon={<PrintIcon />}
+                href={`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Imprimir recibo
+              </Button>
+            </>
+          )}
         </Grid>
       </Grid>
     </>

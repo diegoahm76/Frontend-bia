@@ -74,6 +74,7 @@ export const Encuesta: React.FC = () => {
 
     /////////////////////// Municipios de encuestas 
     const [municipios, setmunicipios] = useState<Municipios[]>([]);
+    
     useEffect(() => {
         void fetch_data_municipio_encuestas({
             baseURL,

@@ -8,7 +8,8 @@ import { useAppDispatch } from "../../../../../hooks";
 import { obtener_cierre_indice } from "../thunks/FirmaCierreIndice";
 
 interface IProps {
-    indice: any
+    indice: any,
+    set_indice_cierre: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -19,6 +20,7 @@ export const VerCierreIndiceElectronico: React.FC<IProps> = (props: IProps) => {
     useEffect(() => {
         dispatch(obtener_cierre_indice(props.indice?.id_indice_electronico_exp)).then((response: any) => {
             set_indice_cierre(response.data);
+            props.set_indice_cierre(response.data);
         })
     }, []);
 

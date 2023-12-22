@@ -7,6 +7,7 @@ import { containerStyles } from './../../../../../../../tca/screens/utils/consta
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ElementosOtros } from './elementosOtros/ElementosOtros';
+import { ElementoOPAS } from './elementosOPAS/ElementoOPAS';
 
 export const ElementosPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
@@ -40,7 +41,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
     PQRSDF: <ListaElementosPqrsdf />,
     'Tramites y Servicios': <>hola trámites y servicios</>,
     Otros: <ElementosOtros/>,
-   // Opas: <ElementosOPAS/>,
+    OPA: <ElementoOPAS/>,
   } as any;
 
   const tipoSolicitud = listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud;
