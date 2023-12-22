@@ -23,7 +23,6 @@ interface IProps {
     cargar_anexos: any,
     set_cargar_anexos: any,
     response_paso_1: any,
-    set_formulario_paso_dos: any,
     set_anexar_error: any
 }
 
@@ -161,8 +160,10 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
                 data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
                 dispatch(cargar_anexos_opas(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
                     if(response.success)
-                        props.set_anexar_error(cargar);
+                        props.set_anexar_error(response.success);
                 });
+            }else{
+                props.set_anexar_error(true); 
             }
         }
     }, [props.cargar_anexos]);

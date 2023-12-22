@@ -22,7 +22,6 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
-    const [type_direction, set_type_direction] = useState('');
     const [lt_tipos_tramites, set_lt_tipos_tramites] = useState<any[]>([]);
     const [lt_tramites_servicios, set_lt_tramites_servicios] = useState<any[]>([]);
     const [lt_departamentos, set_lt_departamentos] = useState<any[]>([]);
@@ -44,6 +43,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     const [usar_direccion, set_usar_direccion] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const msj_error = 'El campo es obligatorio.';
+    
     useEffect(() => {
         tipos_tramites_fc();
         tramites_servicios_fc();
@@ -342,7 +342,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 open={abrir_modal}
                 openDialog={set_abrir_modal}
                 onChange={set_direccion}
-                type={type_direction}
+                type={''}
             />
         </>
     )
