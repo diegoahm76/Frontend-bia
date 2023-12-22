@@ -57,10 +57,34 @@ interface UserContext {
   set_indicadores_selected: (value: ValueProps[]) => void;
 
   // * rows
+  rows_programas: IProgramas[];
+  set_rows_programas: (value: IProgramas[]) => void;
+  rows_proyectos: IProyectos[];
+  set_rows_proyectos: (value: IProyectos[]) => void;
+  rows_productos: IProductos[];
+  set_rows_productos: (value: IProductos[]) => void;
+  rows_actividades: IActividades[];
+  set_rows_actividades: (value: IActividades[]) => void;
+  rows_indicadores: Indicadores[];
+  set_rows_indicadores: (value: Indicadores[]) => void;
   rows_metas: IMetaIndicador[];
   set_rows_metas: (value: IMetaIndicador[]) => void;
 
   // * info
+
+  //* estados boolean
+  ver_programas: boolean;
+  set_ver_programas: (value: boolean) => void;
+  ver_proyectos: boolean;
+  set_ver_proyectos: (value: boolean) => void;
+  ver_productos: boolean;
+  set_ver_productos: (value: boolean) => void;
+  ver_actividades: boolean;
+  set_ver_actividades: (value: boolean) => void;
+  ver_indicadores: boolean;
+  set_ver_indicadores: (value: boolean) => void;
+  ver_metas: boolean;
+  set_ver_metas: (value: boolean) => void;
 
   // loader
   loading: boolean;
@@ -110,6 +134,16 @@ export const DataContextConsulas = createContext<UserContext>({
   set_indicadores_selected: () => {},
 
   // * rows
+  rows_programas: [],
+  set_rows_programas: () => {},
+  rows_proyectos: [],
+  set_rows_proyectos: () => {},
+  rows_productos: [],
+  set_rows_productos: () => {},
+  rows_actividades: [],
+  set_rows_actividades: () => {},
+  rows_indicadores: [],
+  set_rows_indicadores: () => {},
   rows_metas: [],
   set_rows_metas: () => {},
 
@@ -121,6 +155,21 @@ export const DataContextConsulas = createContext<UserContext>({
   set_tipo_consulta: () => {},
 
   // * info
+
+  //* estados boolean
+
+  ver_programas: false,
+  set_ver_programas: () => {},
+  ver_proyectos: false,
+  set_ver_proyectos: () => {},
+  ver_productos: false,
+  set_ver_productos: () => {},
+  ver_actividades: false,
+  set_ver_actividades: () => {},
+  ver_indicadores: false,
+  set_ver_indicadores: () => {},
+  ver_metas: false,
+  set_ver_metas: () => {},
 
   // * fetch
   fetch_data_planes_selected: async () => {},
@@ -174,9 +223,27 @@ export const UserProviderConsultarPlanes = ({
 
   // * rows
 
+  const [rows_programas, set_rows_programas] = React.useState<IProgramas[]>([]);
+  const [rows_proyectos, set_rows_proyectos] = React.useState<IProyectos[]>([]);
+  const [rows_productos, set_rows_productos] = React.useState<IProductos[]>([]);
+  const [rows_actividades, set_rows_actividades] = React.useState<
+    IActividades[]
+  >([]);
+  const [rows_indicadores, set_rows_indicadores] = React.useState<
+    Indicadores[]
+  >([]);
   const [rows_metas, set_rows_metas] = React.useState<IMetaIndicador[]>([]);
 
   // * info
+
+  //* estados boolean
+
+  const [ver_programas, set_ver_programas] = React.useState<boolean>(true);
+  const [ver_proyectos, set_ver_proyectos] = React.useState<boolean>(true);
+  const [ver_productos, set_ver_productos] = React.useState<boolean>(true);
+  const [ver_actividades, set_ver_actividades] = React.useState<boolean>(true);
+  const [ver_indicadores, set_ver_indicadores] = React.useState<boolean>(true);
+  const [ver_metas, set_ver_metas] = React.useState<boolean>(true);
 
   // loader
 
@@ -334,10 +401,36 @@ export const UserProviderConsultarPlanes = ({
     set_indicadores_selected,
 
     // * rows
+
+    rows_programas,
+    set_rows_programas,
+    rows_proyectos,
+    set_rows_proyectos,
+    rows_productos,
+    set_rows_productos,
+    rows_actividades,
+    set_rows_actividades,
+    rows_indicadores,
+    set_rows_indicadores,
     rows_metas,
     set_rows_metas,
 
     // * info
+
+    //* estados boolean
+
+    ver_programas,
+    set_ver_programas,
+    ver_proyectos,
+    set_ver_proyectos,
+    ver_productos,
+    set_ver_productos,
+    ver_actividades,
+    set_ver_actividades,
+    ver_indicadores,
+    set_ver_indicadores,
+    ver_metas,
+    set_ver_metas,
 
     // loader
 

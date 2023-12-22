@@ -1,5 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  MenuItem,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -12,18 +22,32 @@ import { useIndicadorHook } from '../../hooks/useIndicadorHook';
 import { DataContextIndicador } from '../../context/context';
 import { tipo_medida, tipo_indicador } from '../../choices/selects';
 
+//* FECHAS
+// import type { Dayjs } from 'dayjs';
+// import dayjs from 'dayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import InfoIcon from '@mui/icons-material/Info';
+import dayjs from 'dayjs';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarIndicacdor: React.FC = () => {
   const {
     control_indicador,
     errors_indicador,
     reset_indicador,
+    set_value_indicador,
+    register_indicador,
+    data_watch_indicador,
 
     onsubmit_indicador,
     onsubmit_editar,
     is_saving_indicador,
 
     limpiar_formulario_indicador,
+    fecha_creacion,
+    set_fecha_creacion,
+    handle_change_fecha_creacion,
   } = useIndicadorHook();
 
   const {
@@ -50,6 +74,12 @@ export const AgregarIndicacdor: React.FC = () => {
       limpiar_formulario_indicador();
     }
     if (mode.editar) {
+      console.log('indicador', indicador);
+      set_value_indicador(
+        'fecha_creacion',
+        dayjs(indicador.fecha_creacion).format('YYYY-MM-DD')
+      );
+      set_fecha_creacion(indicador.fecha_creacion);
       reset_indicador({
         id_indicador: indicador.id_indicador,
         nombre_medicion: indicador.nombre_medicion,
@@ -68,6 +98,8 @@ export const AgregarIndicacdor: React.FC = () => {
         id_actividad: indicador.id_actividad,
         id_plan: indicador.id_plan,
         id_proyecto: indicador.id_proyecto,
+        fecha_creacion: indicador.fecha_creacion,
+        cumplio: indicador.cumplio,
       });
     }
   }, [mode, indicador]);
@@ -195,7 +227,7 @@ export const AgregarIndicacdor: React.FC = () => {
                   )}
                 />
               </Grid>{' '}
-              <Grid item xs={12} sm={6}></Grid>
+              {/* <Grid item xs={12} sm={6}></Grid> */}
             </>
           ) : null}
           <Grid item xs={12} sm={6}>
@@ -497,6 +529,103 @@ export const AgregarIndicacdor: React.FC = () => {
                 </TextField>
               )}
             />
+          </Grid>
+          <Grid
+            sx={{
+              marginBottom: '10px',
+              width: 'auto',
+            }}
+            item
+            xs={12}
+            sm={6}
+          >
+            <Controller
+              name="cumplio"
+              control={control_indicador}
+              // defaultValue=""
+              rules={{
+                required: data_watch_indicador.cumplio
+                  ? 'Este campo es requerido'
+                  : false,
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={value}
+                        onChange={(e) => {
+                          onChange(e.target.checked);
+                        }}
+                        // name="checkedB"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      value ? (
+                        <Typography variant="body2">
+                          <strong>Indicador cumplido</strong>
+                          <Tooltip title="SI" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'green',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2">
+                          <strong>Indicador no cumplido</strong>
+                          <Tooltip title="No" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'orange',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      )
+                    }
+                  />
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de creacion"
+                value={fecha_creacion}
+                onChange={(value) => {
+                  handle_change_fecha_creacion(value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_indicador('fecha_creacion', {
+                      required: true,
+                    })}
+                    error={!!errors_indicador.fecha_creacion}
+                    helperText={
+                      errors_indicador.fecha_creacion
+                        ? 'Es obligatorio la fecha de creación del indicador'
+                        : ''
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
           {/* <Grid item xs={12} sm={6} md={4}>
             <Controller

@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { ConsultaPrograma } from '../components/Planes/ConsultaPrograma';
+import { ConsultaPlan } from '../components/Planes/ConsultaPlan';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
-import { ConsultaProyecto } from '../components/Planes/ConsultaProyecto';
 import { useContext } from 'react';
 import { DataContextConsulas } from '../context/context';
 import { PlanSelected } from '../components/Planes/PlanSelected';
@@ -15,10 +14,7 @@ export const ConsultasScreen: React.FC = () => {
   return (
     <>
       <PlanSelected />
-      {tipo_consulta === 'programa' ? <ConsultaPrograma /> : null}
-      {tipo_consulta === 'proyecto' ? <ConsultaProyecto /> : null}
-      {/* <ConsultaPrograma />
-      <ConsultaProyecto /> */}
+      <ConsultaPlan />
       <Grid
         container
         spacing={2}
