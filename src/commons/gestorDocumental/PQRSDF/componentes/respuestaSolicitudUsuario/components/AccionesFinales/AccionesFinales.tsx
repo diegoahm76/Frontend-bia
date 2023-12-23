@@ -27,7 +27,7 @@ export const AccionesFinales = ({
   const [LoadingButton, setLoadingButton] = useState(false);
 
   const { anexosCreados } = useAppSelector(
-    (state) => state.AsignacionUsuarioSlice
+    (state) => state.ResSolicitudUsarioSlice
   );
   const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
     (state: any) => state.PanelVentanillaSlice

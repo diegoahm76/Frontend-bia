@@ -27,7 +27,7 @@ const initialState: {
 };
 
 export const ResSolicitudUsarioSlice = createSlice({
-  name: 'RequerimientoUsarioSlice',
+  name: 'ResSolicitudUsarioSlice',
   initialState,
   reducers: {
     addAnexo: (state, action: PayloadAction<Omit<Anexo, 'id'>>) => {

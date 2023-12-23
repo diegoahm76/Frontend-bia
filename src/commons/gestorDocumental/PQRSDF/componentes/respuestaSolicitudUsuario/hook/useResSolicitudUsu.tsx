@@ -3,73 +3,6 @@
 import { useForm } from 'react-hook-form';
 
 export const useResSolicitudUsu = () => {
-  // ? DECLARACIONES PARA EL MAIN MODULE, BANDEJA DE TAREAS
-  // ? DECLARACIONES PARA EL MAIN MODULE, BANDEJA DE TAREAS
-
-  const {
-    control: controlBusquedaBandejaTareas,
-    reset: resetBusquedaBandejaTareas,
-    watch: watchBusquedaBandejaTareas,
-  } = useForm({
-    // ? pendiente el tipado, ya que por base de datos quizá cambie la información que se necesita
-    defaultValues: {
-      // ? para pqrsdf en bandeja de tareas
-      fecha_inicio: '',
-      fecha_fin: '',
-      tipo_de_tarea: {
-        value: '',
-        label: '',
-      },
-      estado_asignacion_de_tarea: {
-        value: '',
-        label: '',
-      },
-      estado_de_la_tarea: {
-        value: '',
-        label: '',
-      },
-      mostrar_respuesta_con_req_pendientes: {
-        value: '',
-        label: '',
-      },
-
-      // ? pendiente si deben agregar mas elementos para los demas tipos de tareas
-
-      //* PROVISIONAL PARA TRAMITES Y SERVICIOS
-      expediente: '',
-    },
-  });
-
-  //* ejecucion del watch
-  const watchBusquedaBandejaDeTareas = watchBusquedaBandejaTareas();
-  // ? ------- funciones para el manejo de los elementos de la busqueda de la bandeja de tareas -------
-  const reset_search_form = () =>
-    resetBusquedaBandejaTareas({
-      fecha_inicio: '',
-      fecha_fin: '',
-      tipo_de_tarea: {
-        value: '',
-        label: '',
-      },
-      estado_asignacion_de_tarea: {
-        value: '',
-        label: '',
-      },
-      estado_de_la_tarea: {
-        value: '',
-        label: '',
-      },
-      mostrar_respuesta_con_req_pendientes: {
-        value: '',
-        label: '',
-      },
-
-      //* PROVISIONAL PARA TRAMITES Y SERVICIOS
-      expediente: '',
-    });
-
-  // * ------------------------------------------------------
-  //* ------------------------------------------------------
   // ? DECLARACIONES PARA LAS SUB ENTREGAS
   // ? 1 REQUERIMIENTOS AL USUARIO
 
@@ -175,13 +108,6 @@ export const useResSolicitudUsu = () => {
     });
 
   return {
-    // ? CONTROLES PARA EL MAIN MODULE, BANDEJA DE TAREAS
-
-    // ? Formulario de busqueda
-    controlBusquedaBandejaTareas,
-    watchBusquedaBandejaDeTareas,
-    reset_search_form,
-
     // ? CONTROLES PARA LAS SUB ENTREGAS
 
     // ? Formulario de solicitud al usuario

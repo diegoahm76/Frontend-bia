@@ -71,7 +71,7 @@ export const ModalMetadatos = ({
   );
   //* redux states
   const { metadatos, currentAnexo, viewMode } = useAppSelector(
-    (state) => state.AsignacionUsuarioSlice
+    (state) => state.ResSolicitudUsarioSlice
   );
 
   //* hooks
