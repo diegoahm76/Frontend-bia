@@ -38,9 +38,9 @@ import {
   handleCloseModal,
 } from './functions/modalFn.functions';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { setMetadatos } from '../../toolkit/slice/RequerimientoUsarioSlice';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { control } from 'leaflet';
+import { setMetadatos } from '../../toolkit/slice/ResSolicitudUsarioSlice';
 
 export const ModalMetadatos = ({
   tipologiasDocumentales,
@@ -71,7 +71,7 @@ export const ModalMetadatos = ({
   );
   //* redux states
   const { metadatos, currentAnexo, viewMode } = useAppSelector(
-    (state) => state.RequerimientoUsarioSlice
+    (state) => state.ResSolicitudUsarioSlice
   );
 
   //* hooks

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, createContext, useState } from 'react';
 
-export const BandejaTareasContext =
+export const ResContext =
   createContext<any>({
     radicado: '',
     setRadicado: () => {},
@@ -23,7 +23,7 @@ export const BandejaTareasContext =
     setActiveStep: () => {},
   });
 
-export const BandejaTareasProvider = ({ children }: ReactNode | any) => {
+export const ResProvider = ({ children }: ReactNode | any) => {
   const [radicado, setRadicado] = useState('');
   //* value de los paneles
   const [value, setValue] = useState(0);
@@ -71,8 +71,8 @@ export const BandejaTareasProvider = ({ children }: ReactNode | any) => {
   };
 
   return (
-    <BandejaTareasContext.Provider value={valuesToUse}>
+    <ResContext.Provider value={valuesToUse}>
       {children}
-    </BandejaTareasContext.Provider>
+    </ResContext.Provider>
   );
 };

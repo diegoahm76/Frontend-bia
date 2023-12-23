@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
-import { resetItems } from '../../toolkit/slice/RequerimientoUsarioSlice';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { useStepperContext } from '@mui/material';
-import { useStepperRequerimiento } from '../../../../hook/useStepperRequerimiento';
 import { postAsignacionUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
+import { useStepperResSolicitudUsuario } from '../../hook/useStepperResSolicitudUsuario';
+import { resetItems } from '../../toolkit/slice/ResSolicitudUsarioSlice';
 
 export const AccionesFinales = ({
   controlFormulario,
@@ -22,12 +22,12 @@ export const AccionesFinales = ({
 
   //* context
 
-  const { handleReset } = useStepperRequerimiento();
+  const { handleReset } = useStepperResSolicitudUsuario();
 
   const [LoadingButton, setLoadingButton] = useState(false);
 
   const { anexosCreados } = useAppSelector(
-    (state) => state.RequerimientoUsarioSlice
+    (state) => state.ResSolicitudUsarioSlice
   );
   const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
     (state: any) => state.PanelVentanillaSlice

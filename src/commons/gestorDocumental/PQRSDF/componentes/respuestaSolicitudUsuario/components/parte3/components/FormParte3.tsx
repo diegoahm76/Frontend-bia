@@ -21,21 +21,13 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import { ModalMetadatos } from './../../modalMetadatos/ModalMetadatos';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
-import { useStepperRequerimiento } from '../../../../../hook/useStepperRequerimiento';
 import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { TipologiaDocumental } from './types/FormParte3.types';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import {
-  addAnexo,
-  deleteAnexo,
-  editAnexo,
-  setCurrentAnexo,
-  setMetadatos,
-  setViewMode,
-} from '../../../toolkit/slice/RequerimientoUsarioSlice';
+
 import { columnsThirdForm } from './columns/columnsTercerFormulario';
 import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
@@ -47,8 +39,10 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a lo
 import './style.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { useBandejaTareas } from '../../../../../hook/useBandejaTareas';
 import  AttachFileIcon  from '@mui/icons-material/AttachFile';
+import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolicitudUsuario';
+import { useResSolicitudUsu } from '../../../hook/useResSolicitudUsu';
+import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../toolkit/slice/ResSolicitudUsarioSlice';
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -62,13 +56,13 @@ export const FormParte3 = ({
 
   //* redux states functions
   const { currentAnexo, anexosCreados, metadatos, viewMode } = useAppSelector(
-    (state: any) => state.RequerimientoUsarioSlice
+    (state: any) => state.ResSolicitudUsarioSlice
   );
 
 
 
   // ? stepper hook
-  const { handleBack } = useStepperRequerimiento();
+  const { handleBack } = useStepperResSolicitudUsuario();
 
   //* context
   const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
@@ -82,7 +76,7 @@ export const FormParte3 = ({
     controlManejoMetadatosModal,
     watchExeManejoModalMetadatos,
     resetManejoMetadatosModal,
-  } = useBandejaTareas();
+  } = useResSolicitudUsu();
 
   useEffect(() => {
     if (currentAnexo) {
@@ -236,8 +230,7 @@ export const FormParte3 = ({
     control_success('Se ha seleccionado el anexo para editar');
     //* volver al paso 2 ?
     // handleBack();
-
-    console.log('anexoSeleccionado', anexoSeleccionado);
+    //  console.log('')('anexoSeleccionado', anexoSeleccionado);
 
     //* seleccionar ese elemento como currentAnexo
     dispatch(setCurrentAnexo(anexoSeleccionado));
