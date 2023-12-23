@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { api } from '../../../../api/axios';
 import type {
   IMedicion,
@@ -10,6 +11,12 @@ import type {
   IActividades,
   IProyectos,
 } from '../../types/types';
+import { ResponseServer } from '../../../../interfaces/globalModels';
+import {
+  IBusquedaAvanzadaActividad,
+  IBusquedaIndicador,
+} from '../components/Programas/BusquedaAvanzada/types';
+import { IBusquedaMetas } from '../../MetasPorIndicador/components/Indicadores/BusquedaAvanzada/types';
 
 // ! Indicadores
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
@@ -45,6 +52,70 @@ export const get_tipos = async (): Promise<ITipos[]> => {
 export const get_proyectos = async (): Promise<IProyectos[]> => {
   const response = await api.get(`seguimiento/planes/consultar-proyectos/`);
   return response.data.data;
+};
+
+// Busqueda avanzada Proyectos
+
+export const search_actividades = async ({
+  nombre_programa,
+  nombre_plan,
+  nombre_proyecto,
+  nombre_producto,
+  nombre_actividad,
+}: any): Promise<
+  AxiosResponse<ResponseServer<IBusquedaAvanzadaActividad[]>>
+> => {
+  const url = `seguimiento/planes/busqueda-avanzada-actividades/?nombre_programa=${String(
+    nombre_programa ?? ''
+  )}&nombre_plan=${String(nombre_plan ?? '')}&nombre_proyecto=${String(
+    nombre_proyecto ?? ''
+  )}&nombre_producto=${String(nombre_producto ?? '')}&nombre_actividad=${String(
+    nombre_actividad ?? ''
+  )}`;
+  return await api.get<ResponseServer<IBusquedaAvanzadaActividad[]>>(url);
+};
+
+// busqueda avanzada indicadores
+
+export const search_indicadores = async ({
+  nombre_programa,
+  nombre_plan,
+  nombre_proyecto,
+  nombre_producto,
+  nombre_actividad,
+  nombre_indicador,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaIndicador[]>>> => {
+  const url = `seguimiento/planes/busqueda-avanzada-indicadores/?nombre_programa=${String(
+    nombre_programa ?? ''
+  )}&nombre_plan=${String(nombre_plan ?? '')}&nombre_proyecto=${String(
+    nombre_proyecto ?? ''
+  )}&nombre_producto=${String(nombre_producto ?? '')}&nombre_actividad=${String(
+    nombre_actividad ?? ''
+  )}&nombre_indicador=${String(nombre_indicador ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaIndicador[]>>(url);
+};
+
+// busqueda avanzada metas
+
+export const search_metas = async ({
+  nombre_programa,
+  nombre_plan,
+  nombre_proyecto,
+  nombre_producto,
+  nombre_actividad,
+  nombre_indicador,
+  nombre_meta,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaMetas[]>>> => {
+  const url = `seguimiento/planes/busqueda-avanzada-metas/?nombre_programa=${String(
+    nombre_programa ?? ''
+  )}&nombre_plan=${String(nombre_plan ?? '')}&nombre_proyecto=${String(
+    nombre_proyecto ?? ''
+  )}&nombre_producto=${String(nombre_producto ?? '')}&nombre_actividad=${String(
+    nombre_actividad ?? ''
+  )}&nombre_indicador=${String(nombre_indicador ?? '')}&nombre_meta=${String(
+    nombre_meta ?? ''
+  )}`;
+  return await api.get<ResponseServer<IBusquedaMetas[]>>(url);
 };
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------

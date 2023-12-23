@@ -31,28 +31,83 @@ import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar'
 export const ListarMetas: React.FC = () => {
   const columns_metas: GridColDef[] = [
     {
-      field: 'nombre_indicador',
-      headerName: 'NOMBRE INDICADOR',
+      field: 'id_meta',
+      headerName: 'ID Meta',
       sortable: true,
-      width: 300,
+      width: 100,
+    },
+    {
+      field: 'nombre_plan',
+      headerName: 'Nombre del Plan',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_programa',
+      headerName: 'Nombre del Programa',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_proyecto',
+      headerName: 'Nombre del Proyecto',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_producto',
+      headerName: 'Nombre del Producto',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_actividad',
+      headerName: 'Nombre de la Actividad',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_indicador',
+      headerName: 'Nombre del Indicador',
+      sortable: true,
+      width: 250,
     },
     {
       field: 'nombre_meta',
-      headerName: 'NOMBRE META',
+      headerName: 'Nombre de la Meta',
       sortable: true,
-      width: 300,
+      width: 150,
     },
     {
       field: 'unidad_meta',
-      headerName: 'UNIDAD META',
+      headerName: 'Unidad de Meta',
       sortable: true,
-      width: 120,
+      width: 100,
     },
     {
       field: 'porcentaje_meta',
-      headerName: 'PORCENTAJE META',
+      headerName: 'Porcentaje de Meta',
       sortable: true,
-      width: 300,
+      width: 150,
+    },
+    {
+      field: 'cumplio',
+      headerName: '¿Cumplió?',
+      sortable: true,
+      width: 100,
+      renderCell: (params) => (params.value ? 'Sí' : 'No'),
+    },
+    {
+      field: 'fecha_creacion_meta',
+      headerName: 'Fecha de Creación de Meta',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'avance_fisico',
+      headerName: 'Avance Físico',
+      sortable: true,
+      width: 150,
     },
     {
       field: 'valor_meta',
@@ -134,7 +189,7 @@ export const ListarMetas: React.FC = () => {
 
   return (
     <>
-      <Grid
+      {/* <Grid
         container
         spacing={2}
         m={2}
@@ -186,25 +241,40 @@ export const ListarMetas: React.FC = () => {
             </Box>
           </Grid>
         </>
-        <Grid container spacing={2} justifyContent="flex-end">
-          <Grid item>
-            <Button
-              variant="outlined"
-              color="primary"
-              disabled={false}
-              onClick={() => {
-                dispatch(
-                  set_current_mode_planes({
-                    ver: true,
-                    crear: true,
-                    editar: false,
-                  })
-                );
-              }}
-            >
-              Agregar Meta
-            </Button>
-          </Grid>
+      </Grid> */}
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+        justifyContent="flex-end"
+      >
+        <Grid item>
+          <Button
+            variant="outlined"
+            color="primary"
+            disabled={false}
+            onClick={() => {
+              dispatch(
+                set_current_mode_planes({
+                  ver: true,
+                  crear: true,
+                  editar: false,
+                })
+              );
+            }}
+          >
+            Agregar Meta
+          </Button>
         </Grid>
       </Grid>
     </>

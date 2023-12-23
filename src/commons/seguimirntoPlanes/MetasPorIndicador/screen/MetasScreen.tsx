@@ -8,6 +8,8 @@ import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ListarIndicador } from '../components/Indicadores/ListarIndicador';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaAvanzadaIndicadores } from '../components/Indicadores/BusquedaAvanzada/BusquedaAvanzadaIndicadores';
+import { BusquedaMetas } from '../components/Indicadores/BusquedaAvanzada/BusquedaMetas';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MetasScreen: React.FC = () => {
@@ -46,7 +48,8 @@ export const MetasScreen: React.FC = () => {
           <Title title="Metas por indicador " />
         </Grid>
       </Grid>
-      <ListarIndicador />
+      <BusquedaAvanzadaIndicadores />
+      {/* <ListarIndicador /> */}
       {mode.ver ? <ListarMetas /> : null}
       {mode.crear || mode.editar ? <Agregarmeta /> : null}
       <Grid
@@ -65,6 +68,7 @@ export const MetasScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaMetas />
         <Grid item>
           <ButtonSalir />
         </Grid>

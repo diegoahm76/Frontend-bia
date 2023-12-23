@@ -51,16 +51,16 @@ export const AgregarIndicacdor: React.FC = () => {
   } = useIndicadorHook();
 
   const {
-    planes_selected,
-    productos_selected,
-    actividad_selected,
+    // planes_selected,
+    // productos_selected,
+    // actividad_selected,
     medidor_selected,
     tipos_selected,
-    proyectos_selected,
-    fetch_data_proyectos_selected,
-    fetch_data_planes_selected,
-    fetch_data_producto_selected,
-    fetch_data_actividad_selected,
+    // proyectos_selected,
+    // fetch_data_proyectos_selected,
+    // fetch_data_planes_selected,
+    // fetch_data_producto_selected,
+    // fetch_data_actividad_selected,
     fetch_data_medidor_selected,
     fetch_data_tipos_selected,
   } = useContext(DataContextIndicador);
@@ -105,12 +105,12 @@ export const AgregarIndicacdor: React.FC = () => {
   }, [mode, indicador]);
 
   useEffect(() => {
-    fetch_data_planes_selected();
-    fetch_data_producto_selected();
-    fetch_data_actividad_selected();
+    // fetch_data_planes_selected();
+    // fetch_data_producto_selected();
+    // fetch_data_actividad_selected();
     fetch_data_medidor_selected();
     fetch_data_tipos_selected();
-    fetch_data_proyectos_selected();
+    // fetch_data_proyectos_selected();
   }, []);
 
   return (
@@ -282,7 +282,7 @@ export const AgregarIndicacdor: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          {/* <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_plan"
               control={control_indicador}
@@ -405,7 +405,7 @@ export const AgregarIndicacdor: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_medicion"
