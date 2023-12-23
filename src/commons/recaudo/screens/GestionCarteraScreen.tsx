@@ -16,7 +16,7 @@ import { RequisitosModal } from '../components/GestionCartera/modal/RequisitosMo
 import { NotificationModal } from '../components/NotificationModal';
 import type { Cartera } from '../interfaces/cobro';
 import { CreateProcesoModal } from '../components/GestionCartera/modal/CreateProcesoModal';
-import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/SeccionEnvio_MSM_CORREO';
+import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
 import { EtapaProcesoConext } from '../components/GestionCartera/Context/EtapaProcesoContext';
 import { toast } from 'react-toastify';
 

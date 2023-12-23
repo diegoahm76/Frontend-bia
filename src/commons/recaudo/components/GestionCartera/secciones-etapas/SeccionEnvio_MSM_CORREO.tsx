@@ -2,13 +2,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Button, Grid, TextField, } from "@mui/material"
 import { useContext, useEffect, useState } from "react";
-import { Title } from "../../../../components/Title";
-import { EtapaProcesoConext, initial_Etapa_valores } from "./Context/EtapaProcesoContext";
+import { Title } from "../../../../../components/Title";
+import { EtapaProcesoConext, initial_Etapa_valores } from "../Context/EtapaProcesoContext";
 import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { api } from "../../../../api/axios";
-import { control_error, control_success } from "../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
-import { IProps, NombreTipoVaraible, primera, valores_inicial } from "../../interfaces/seccionNotificacion";
+import { api } from "../../../../../api/axios";
+import { control_error, control_success } from "../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
+import { IProps, NombreTipoVaraible, primera, valores_inicial } from "../../../interfaces/seccionNotificacion";
+import { BottonPayPalFuncion } from "./Botton-PayPal";
 
 
 export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }: IProps) => {
@@ -193,7 +194,15 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
                             </Button>
                         </Grid>
                     </Grid >
+               
+               
+               
+               <BottonPayPalFuncion/>
+               
+               
                 </>)}
+
+
         </>
     )
 }
