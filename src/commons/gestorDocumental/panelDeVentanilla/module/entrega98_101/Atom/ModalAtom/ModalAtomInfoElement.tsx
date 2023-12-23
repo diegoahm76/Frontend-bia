@@ -14,25 +14,25 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // ? components
-import { Title } from '../../../../../../components';
-import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { Title } from '../../../../../../../components';
+import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { columnsAtom } from './columnsAtom/columnsAtom';
 import { useContext, useEffect, useState } from 'react';
-import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
-import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
-import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
+import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
+import { DownloadButton } from '../../../../../../../utils/DownloadButton/DownLoadButton';
+import { containerStyles } from '../../../../../tca/screens/utils/constants/constants';
 import InfoIcon from '@mui/icons-material/Info';
-import { PanelVentanillaContext } from '../../../context/PanelVentanillaContext';
-import { useAppSelector } from '../../../../../../hooks';
-import { getArchivoAnexoPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
-import { getArchivoAnexoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
-import { getMetadatosPqrsdf } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
-import { getMetadatoComplemento } from '../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
-import { formatDate } from '../../../../../../utils/functions/formatDate';
-import { ModalDenuncia } from './components/ModalDenuncia';
-import { getInfoDenuncia } from '../../../toolkit/thunks/PqrsdfyComplementos/denuncia/getInfoDenuncia.service';
+import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
+import { useAppSelector } from '../../../../../../../hooks';
+import { getArchivoAnexoPqrsdf } from '../../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
+import { getArchivoAnexoComplemento } from '../../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
+import { getMetadatosPqrsdf } from '../../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
+import { getMetadatoComplemento } from '../../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
+import { formatDate } from '../../../../../../../utils/functions/formatDate';
+import { ModalDenuncia } from '../modalDenuncia/ModalDenuncia';
+import { getInfoDenuncia } from '../../../../toolkit/thunks/PqrsdfyComplementos/denuncia/getInfoDenuncia.service';
 
 export const ModalAtomInfoElement = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
