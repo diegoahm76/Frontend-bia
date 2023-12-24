@@ -71,6 +71,8 @@ export const BuscarExpedienteIndicesElectronicos = (
         value: '',
         label: '',
       },
+      fecha_inicio_expediente: '',
+      fecha_fin_expediente: '',
     },
   });
 
@@ -84,7 +86,9 @@ export const BuscarExpedienteIndicesElectronicos = (
         exeWatch.fecha_apertura_expediente, // año de apertura
         exeWatch.id_serie_origen?.label, // nombre serie
         exeWatch.id_subserie_origen?.label, // nombre subserie
-        exeWatch.titulo_expediente // titulo expediente
+        exeWatch.titulo_expediente, // titulo expediente
+        exeWatch.fecha_inicio_expediente, // fecha inicio
+        exeWatch.fecha_fin_expediente // fecha final
       );
       setData(getExpedientes);
       console.log('getExpedientes', getExpedientes);
@@ -196,6 +200,55 @@ export const BuscarExpedienteIndicesElectronicos = (
                   )}
                 />
               </Grid>
+
+              <Grid item xs={12} sm={6}>
+              <Controller
+                name="fecha_inicio_expediente"
+                control={controlBusquedaExpediente}
+                defaultValue=""
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    fullWidth
+                    label="Fecha inicio"
+                    type="date"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="fecha_fin_expediente"
+                control={controlBusquedaExpediente}
+                defaultValue=""
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    fullWidth
+                    label="Fecha final"
+                    type="date"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                    }}
+                  />
+                )}
+              />
+            </Grid>
 
               <Grid
                 item
