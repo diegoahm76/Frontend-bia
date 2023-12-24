@@ -1,40 +1,160 @@
-import React from 'react'
+/* eslint-disable @typescript-eslint/naming-convention */
+import {
+  Autocomplete,
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { Title } from '../../../../../../../components';
+import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
+import CloseIcon from '@mui/icons-material/Close';
+import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { columnsModalOpas } from './columns/columnsModalOpas';
+import { DownloadButton } from '../../../../../../../utils/DownloadButton/DownLoadButton';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useAppSelector } from '../../../../../../../hooks';
+import { formatDate } from '../../../../../../../utils/functions/formatDate';
 
 export const ModalOpa = () => {
-  return (
-    <>
-    <Dialog
-      fullWidth
-      maxWidth="lg"
-      open={openModalOne}
-      onClose={() => {
-        handleOpenModalOne(false);
-        handleOpenModalTwo(false);
-      }}
-    >
-      <Box component="form">
-        <DialogTitle>
-          <Title title="Información de la solicitud" />
-        </DialogTitle>
-        <Divider />
+  // ? redux states use
+  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
+    (state) => state.PanelVentanillaSlice
+  );
 
-        {fifthLoading ? (
-          <Grid
-            container
-            sx={{
-              position: 'relative',
-              justifyContent: 'center',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '2rem',
-              mt: '1.2rem',
-              mb: '1.2rem',
-              boxShadow: '0px 3px 6px #042F4A26',
+  // ? context necesario
+  const { openModalOne, openModalTwo, handleOpenModalOne, handleOpenModalTwo } =
+    useContext(ModalAndLoadingContext);
+
+  // ? state para almacenar la informacion de los metadatos
+  const [infoMetadatos, setInfoMetadatos] = useState<any>({});
+  // ? state para almacenar la informacion de los anexos
+  const [infoAnexos, setInfoAnexos] = useState<any>([]);
+
+  //* use effect para cargar los datos de los anexos
+
+  useEffect(() => {
+    // ! PENDIENTE DE GENERAR LAS INTERACCIONES CON LOS SERVICIOS DE BACKEND
+    // ? se obtiene la informacion de los anexos
+    // ? se debe cambiar por la informacion de la opa
+    const anexos = [
+      {
+        id: 1,
+        nombre_archivo: 'archivo1',
+        descripcion: 'descripcion1',
+        fecha_creacion: 'fecha1',
+        fecha_modificacion: 'fecha1',
+        usuario_creacion: 'usuario1',
+        usuario_modificacion: 'usuario1',
+        tipo_archivo: 'tipo1',
+        origen_archivo: 'origen1',
+        nombre_tipologia_documental: 'tipologia1',
+        asunto: 'asunto1',
+        palabras_clave_doc: ['palabra1', 'palabra2'],
+      },
+      {
+        id: 2,
+        nombre_archivo: 'archivo2',
+        descripcion: 'descripcion2',
+        fecha_creacion: 'fecha2',
+        fecha_modificacion: 'fecha2',
+        usuario_creacion: 'usuario2',
+        usuario_modificacion: 'usuario2',
+        tipo_archivo: 'tipo2',
+        origen_archivo: 'origen2',
+        nombre_tipologia_documental: 'tipologia2',
+        asunto: 'asunto2',
+        palabras_clave_doc: ['palabra1', 'palabra2'],
+      },
+    ];
+    setInfoAnexos(anexos);
+  }, []);
+
+  const columns = [
+    ...columnsModalOpas,
+    {
+      headerName: 'Archivo',
+      field: 'archivo',
+      width: 110,
+      renderCell: (params: any) => (
+        //* revisar el nombre del archivo, y las demas opciones
+        <DownloadButton
+          fileUrl={params.row.archivo}
+          fileName={params.row.nombre_archivo}
+          condition={false}
+        />
+      ),
+    },
+    {
+      headerName: 'Ver metadatos anexo',
+      field: 'Detalle',
+      width: 200,
+      renderCell: (params: any) => (
+        <Tooltip title="Ver metadatos del anexo">
+          <IconButton
+            onClick={async () => {
+              handleOpenModalTwo(true);
+              /* await getMetadatosByAnexo(params.row.id_anexo, handleOpenModalTwo).then((res) => {
+                console.log(params.row)
+
+                setInfoMetadatos(res);
+              }).catch((err) => {
+                console.log(err);
+                handleOpenModalTwo(false);
+              }
+              );*/
+              // handleOpenModalOne(true); //* open modal
+              // await getInfoSolicitud(params);
+              setInfoMetadatos(params.row);
             }}
           >
-            <Loader altura={600} />
-          </Grid>
-        ) : (
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <Dialog
+        fullWidth
+        maxWidth="lg"
+        open={openModalOne}
+        onClose={() => {
+          handleOpenModalOne(false);
+          handleOpenModalTwo(false);
+        }}
+      >
+        <Box component="form">
+          <DialogTitle>
+            <Title title="Información de la OPA" />
+          </DialogTitle>
+          <Divider />
           <DialogContent
             sx={{
               mt: '1.2rem',
@@ -42,7 +162,13 @@ export const ModalOpa = () => {
               justifyContent: 'center',
             }}
           >
-            <Grid container spacing={2}>
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                justifyContent: 'center',
+              }}
+            >
               <Grid item xs={12} sm={8}>
                 <TextField
                   fullWidth
@@ -51,7 +177,8 @@ export const ModalOpa = () => {
                   size="small"
                   variant="outlined"
                   value={
-                    currentSolicitudUsuario?.detalleSolicitud?.asunto ?? 'N/A'
+                    currentElementPqrsdComplementoTramitesYotros?.asunto ??
+                    'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 50 }}
@@ -68,8 +195,7 @@ export const ModalOpa = () => {
                   //* se debe poner la condicional del reset
                   value={
                     formatDate(
-                      currentSolicitudUsuario?.detalleSolicitud
-                        ?.fecha_solicitud
+                      currentElementPqrsdComplementoTramitesYotros?.fecha_ini_estado_actual
                     ) ?? 'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
@@ -89,12 +215,83 @@ export const ModalOpa = () => {
                   fullWidth
                   disabled
                   multiline
-                  rows={5}
-                  label="Descripción de la solicitud"
+                  rows={3}
+                  label="Tipo de permiso ambiental"
                   size="small"
                   variant="outlined"
                   value={
-                    currentSolicitudUsuario?.detalleSolicitud?.descripcion ??
+                    currentElementPqrsdComplementoTramitesYotros?.tipo_permiso_ambiental ??
+                    'N/A'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ maxLength: 255 }}
+                />
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                sx={{
+                  mb: '.45rem',
+                }}
+              >
+                <TextField
+                  fullWidth
+                  disabled
+                  label="Radicado OPA"
+                  size="small"
+                  variant="outlined"
+                  value={
+                    currentElementPqrsdComplementoTramitesYotros?.radicado ??
+                    'N/A'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ maxLength: 255 }}
+                />
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                sx={{
+                  mt: '.45rem',
+                  mb: '.45rem',
+                }}
+              >
+                <TextField
+                  fullWidth
+                  disabled
+                  label="Tipo de operación de trámite"
+                  size="small"
+                  variant="outlined"
+                  value={
+                    currentElementPqrsdComplementoTramitesYotros?.tipo_operacion_tramite ??
+                    'N/A'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ maxLength: 255 }}
+                />
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                sx={{
+                  mt: '.45rem',
+                  mb: '.45rem',
+                }}
+              >
+                <TextField
+                  fullWidth
+                  disabled
+                  label="Cantidad de anexos"
+                  size="small"
+                  variant="outlined"
+                  value={
+                    currentElementPqrsdComplementoTramitesYotros?.cantidad_anexos ??
                     'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
@@ -104,13 +301,33 @@ export const ModalOpa = () => {
 
               {/*segund parte - anexos que sse han puesto en la solicitud */}
 
-              <RenderDataGrid
-                title="Anexos de la solicitud"
-                rows={currentSolicitudUsuario?.anexos ?? []}
-                columns={colums ?? []}
-              />
+              {infoAnexos.length > 0 ? (
+                <RenderDataGrid
+                  title="Anexos de la OPA"
+                  rows={infoAnexos}
+                  columns={columns ?? []}
+                />
+              ) : (
+                <Box
+                  sx={{
+                    justifyContent: 'center',
+                    display: 'flex',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      mt: '1.5rem',
+                      mb: '1.5rem',
+                    }}
+                    variant="h6"
+                    align="center"
+                  >
+                    No hay anexos para esta OPA
+                  </Typography>
+                </Box>
+              )}
 
-              {/*tercera parte, anexos de cada metadato*/}
+              {/*tercera parte, metadatos de cada archivo establecido*/}
 
               {openModalTwo && (
                 <>
@@ -129,7 +346,9 @@ export const ModalOpa = () => {
                       label="Origen del archivo"
                       size="small"
                       variant="outlined"
-                      value={infoMetadatos?.origen_archivo ?? 'N/A'}
+                      value={
+                        'ejeje siuu' /*infoMetadatos?.origen_archivo ?? 'N/A'*/
+                      }
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
                     />
@@ -151,7 +370,8 @@ export const ModalOpa = () => {
                       size="small"
                       variant="outlined"
                       value={
-                        infoMetadatos?.nombre_tipologia_documental ?? 'N/A'
+                        'jejej siuu'
+                        /* infoMetadatos?.nombre_tipologia_documental ?? 'N/A'*/
                       }
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
@@ -172,7 +392,7 @@ export const ModalOpa = () => {
                       label="Asunto"
                       size="small"
                       variant="outlined"
-                      value={infoMetadatos?.asunto ?? 'N/A'}
+                      value={'jeje siuu' /*infoMetadatos?.asunto ?? 'N/A'*/}
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 50 }}
                     />
@@ -195,7 +415,9 @@ export const ModalOpa = () => {
                       label="Descripción"
                       size="small"
                       variant="outlined"
-                      value={infoMetadatos?.descripcion ?? 'N/A'}
+                      value={
+                        'jeje siuu ' /*infoMetadatos?.descripcion ?? 'N/A'*/
+                      }
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
                     />
@@ -208,18 +430,23 @@ export const ModalOpa = () => {
                     sx={{ mt: '1.2rem', mb: '1.2rem' }}
                   >
                     <Autocomplete
-                      value={infoMetadatos?.palabras_clave_doc ?? ['N/A']}
+                      value={
+                        [
+                          'jajeje',
+                        ] /*infoMetadatos?.palabras_clave_doc ?? ['N/A']*/
+                      }
                       disabled
                       multiple
                       id="tags-filled"
                       options={
-                        infoMetadatos?.palabras_clave_doc
+                        /*infoMetadatos?.palabras_clave_doc
                           ? infoMetadatos?.palabras_clave_doc
-                          : []
+                          : */ []
                       }
                       freeSolo
                       renderTags={(value: readonly string[], getTagProps) =>
                         value.map((option: string, index: number) => (
+                          // eslint-disable-next-line react/jsx-key
                           <Chip
                             variant="outlined"
                             label={option}
@@ -231,7 +458,7 @@ export const ModalOpa = () => {
                         <TextField
                           {...params}
                           label="Palabras claves"
-                         // placeholder="Seleccionar"
+                          // placeholder="Seleccionar"
                         />
                       )}
                     />
@@ -240,29 +467,28 @@ export const ModalOpa = () => {
               )}
             </Grid>
           </DialogContent>
-        )}
-        <Divider />
-        <DialogActions>
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-          >
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={() => {
-                handleOpenModalOne(false);
-                handleOpenModalTwo(false);
-              }}
-              startIcon={<CloseIcon />}
+          <Divider />
+          <DialogActions>
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
-              CERRAR
-            </Button>
-          </Stack>
-        </DialogActions>
-      </Box>
-    </Dialog>
+              <Button
+                color="error"
+                variant="outlined"
+                onClick={() => {
+                  handleOpenModalOne(false);
+                  handleOpenModalTwo(false);
+                }}
+                startIcon={<CloseIcon />}
+              >
+                CERRAR
+              </Button>
+            </Stack>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </>
-  )
-}
+  );
+};

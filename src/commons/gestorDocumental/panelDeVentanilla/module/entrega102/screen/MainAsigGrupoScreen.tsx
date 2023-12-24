@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useContext, useEffect } from 'react';
-import { InformacionPQRSDF } from '../components/InformacionPQRSDF/InformacionPQRSDF';
+import { InformacionElemento } from '../components/InformacionElemento/InformacionElemento';
 import { useAppSelector } from '../../../../../../hooks';
 import { useNavigate } from 'react-router-dom';
 import { getSecSubAsiGrupo } from '../services/getSecSub.service';
@@ -11,7 +11,8 @@ import { AsignacionGrupoContext } from '../context/AsignacionGrupoContext';
 import { SeleccionGrupo } from '../components/SeleccionGrupo/SeleccionGrupo';
 import { Asignaciones } from '../components/Asignaciones/Asginaciones';
 import { AccionesFinales } from '../components/AccionesFinales/AccionesFinales';
-import { getAsignaciones } from '../services/getAsignaciones.service';
+import { getAsignaciones } from '../services/asignaciones/pqrsdf/getAsignaciones.service';
+import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
 
 export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -39,12 +40,61 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
 
     if (!currentElementPqrsdComplementoTramitesYotros) return;
 
-    void getAsignaciones(
-      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-      handleGeneralLoading
-    ).then((res) => {
-      setListaAsignaciones(res);
-    });
+    const tipo =
+      currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
+      currentElementPqrsdComplementoTramitesYotros?.tipo;
+
+    switch (tipo) {
+      case 'PQRSDF':
+        void getAsignaciones(
+          currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+          handleGeneralLoading
+        ).then((res) => {
+          setListaAsignaciones(res);
+        });
+        break;
+      case 'Tramites y Servicios':
+        // Call the service for Tramites y Servicios
+        showAlert(
+          'Atención',
+          'No hay servicio aún para ver las asignacion para tramites y servicios, así que no hay asignaciones de tramites y servicios jeje siu',
+          'warning'
+        );
+        break;
+      case 'Otros':
+        // Call the service for Otros
+        showAlert(
+          'Atención',
+          'No hay servicio aún para ver las asignacion para los otros, así que no hay asignaciones de OTROS JEJE jeje siu',
+          'warning'
+        );
+
+        break;
+/*      case 'Complemento de PQRSDF':
+      case 'Complemento de PQRSDF - Respuesta a solicitud':
+      case 'Complemento de PQRSDF - Respuesta a requerimiento':
+        // Call the service for Complemento de PQRSDF
+        showAlert(
+          'Atención',
+          'No hay servicio aún para ver las asignacion para OPA, así que no hay asignaciones de opa jeje siu',
+          'warning'
+        );
+
+        break;*/
+      case 'OPA':
+        //* se debe llamar el servicio respectivo para las asignaciones de OPA, apenas esté listo
+        showAlert(
+          'Atención',
+          'No hay servicio aún para ver las asignacion para OPA, así que no hay asignaciones de opa jeje siu',
+          'warning'
+        );
+
+        // Call the service for OPA
+        break;
+      default:
+        // Default service call or no service call
+        break;
+    }
   }, []);
 
   useEffect(() => {
@@ -72,8 +122,8 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        {/*primera parte, información de la PQRSDF seleccionada*/}
-        <InformacionPQRSDF />
+        {/*primera parte, información del elemento seleccionado (PQRSDF, OPA, Trámite, otro, etc)*/}
+        <InformacionElemento />
       </Grid>
 
       {/* segunda parte, seleccion de seccion y subseccion */}
