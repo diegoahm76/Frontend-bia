@@ -14,12 +14,12 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { useContext } from 'react';
 import { AsignacionGrupoContext } from '../../context/AsignacionGrupoContext';
 import SaveIcon from '@mui/icons-material/Save';
-import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 import { LoadingButton } from '@mui/lab';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
-import { postAsignacionGrupo } from '../../services/postAsignacionGrupo.service';
-import { getAsignaciones } from '../../services/getAsignaciones.service';
+import { postAsignacionGrupo as postAsignacionGrupoPQRSDF } from '../../services/post/pqrsdf/postAsignacionGrupo.service';
+import { getAsignaciones as getAsignacionesPQRSDF } from '../../services/asignaciones/pqrsdf/getAsignaciones.service';
+import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -62,14 +62,66 @@ export const AccionesFinales = (): JSX.Element => {
       return;
     }
 
-    const res = await postAsignacionGrupo(
-      {
-        id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-        id_persona_asignada: liderAsignado?.id_persona,
-        id_und_org_seccion_asignada: currentGrupo?.value,
-      },
-      handleSecondLoading
-    );
+    const tipo =
+      currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
+      currentElementPqrsdComplementoTramitesYotros?.tipo;
+
+    let res;
+
+    switch (tipo) {
+      case 'PQRSDF':
+        // Call the service for PQRSDF
+        res = await postAsignacionGrupoPQRSDF(
+          {
+            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_persona_asignada: liderAsignado?.id_persona,
+            id_und_org_seccion_asignada: currentGrupo?.value,
+          },
+          handleSecondLoading
+        );
+        break;
+      case 'Tramites y Servicios':
+        // Call the service for Tramites y Servicios
+      /*  res = await postAsignacionGrupoTramitesYServicios(
+          {
+            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_persona_asignada: liderAsignado?.id_persona,
+            id_und_org_seccion_asignada: currentGrupo?.value,
+          },
+          handleSecondLoading
+        );*/
+        break;
+      case 'Otros':
+        // Call the service for Otros
+      /*  res = await postAsignacionGrupoOtros(
+          {
+            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_persona_asignada: liderAsignado?.id_persona,
+            id_und_org_seccion_asignada: currentGrupo?.value,
+          },
+          handleSecondLoading
+        );*/
+        break;
+        case 'OPA':
+          // Call the service for OPA
+          showAlert(
+            'Atención',
+            'No hay servicio aún para asignar la OPA, así que no hay se realiza asignacion de opa jeje siu',
+            'warning'
+          );
+          /*res = await postAsignacionGrupoOPA(
+            {
+              id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+              id_persona_asignada: liderAsignado?.id_persona,
+              id_und_org_seccion_asignada: currentGrupo?.value,
+            },
+            handleSecondLoading
+          );*/
+          break;
+      default:
+        // Default service call or no service call
+        break;
+    }
 
     if (res) {
       await Swal.fire({
@@ -79,10 +131,46 @@ export const AccionesFinales = (): JSX.Element => {
         confirmButtonText: 'Entendido',
       });
 
-      const asignaciones = await getAsignaciones(
-        currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-        handleGeneralLoading
-      );
+      let asignaciones;
+
+      switch (tipo) {
+        case 'PQRSDF':
+          // Fetch the assignments for PQRSDF
+          asignaciones = await getAsignacionesPQRSDF(
+            // para pqrsdf
+            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            handleGeneralLoading
+          );
+          break;
+        case 'Tramites y Servicios':
+          // Fetch the assignments for Tramites y Servicios
+          /*asignaciones = await getAsignacionesTramitesYServicios(
+            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            handleGeneralLoading
+          );*/
+          break;
+        case 'Otros':
+        // Fetch the assignments for Otros
+        /* asignaciones = await getAsignacionesOtros(
+            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            handleGeneralLoading
+          );*/
+        case 'OPA':
+          showAlert(
+            'Atención',
+            'No hay servicio aún para ver las asignacion para OPA, así que no hay asignaciones de opa jeje siu',
+            'warning'
+          );
+          // Fetch the assignments for OOpas
+          /* asignaciones = await getAsignacionesOPas(
+              currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+              handleGeneralLoading
+            );*/
+          break;
+        default:
+          // Default fetch call or no fetch call
+          break;
+      }
 
       setListaAsignaciones(asignaciones);
     }
@@ -126,7 +214,7 @@ export const AccionesFinales = (): JSX.Element => {
                   startIcon={<CloseIcon />}
                   onClick={() => {
                     getOutModule(navigate, [
-                      () =>  console.log('haz salido del módulo'),
+                      () => console.log('haz salido del módulo'),
                     ]);
                   }}
                 >
@@ -151,7 +239,10 @@ export const AccionesFinales = (): JSX.Element => {
                   startIcon={<SaveIcon />}
                   onClick={handleClick}
                 >
-                  ASIGNAR A GRUPO
+                  {`ASIGNAR ${
+                    currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
+                    currentElementPqrsdComplementoTramitesYotros?.tipo
+                  } A GRUPO`}
                 </LoadingButton>
               </Stack>
             </Grid>

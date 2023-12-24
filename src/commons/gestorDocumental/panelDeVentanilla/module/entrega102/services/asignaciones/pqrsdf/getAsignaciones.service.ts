@@ -1,6 +1,7 @@
-import { api } from '../../../../../../api/axios';
-import { control_error, control_success } from '../../../../../../helpers';
-import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { api } from '../../../../../../../../api/axios';
+import { control_success } from '../../../../../../../../helpers';
+import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
+import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const getAsignaciones = async (
@@ -20,7 +21,11 @@ export const getAsignaciones = async (
       return data?.data;
     }
   } catch (error) {
-    control_error('No existen asignaciones actualmente');
+    showAlert(
+      'Atención',
+      'Sin asignaciones realizadas para este elemento',
+      'info'
+    )
     return [];
   } finally {
     setLoading(false);

@@ -86,8 +86,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   // ? functions
   const setActionsPQRSDF = (pqrsdf: any) => {
-    //  console.log('')(pqrsdf);
-
     if (pqrsdf.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
@@ -357,12 +355,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
                     return;
                   });
-
-                  /*   setActionsPQRSDF(params?.row);
-                  handleOpenInfoMetadatos(false);
-                  handleOpenInfoAnexos(false);*/
-
-                  // setMetadatos([]);
                 }}
               >
                 <Avatar

@@ -36,6 +36,23 @@ const actionsPQRSDF: any[] = [
   },
 ];
 
+const actionsComplements: any[] = [
+  {
+    id: 'Dig',
+    icon: <DevicesIcon />,
+    name: 'Enviar solicitud de digitalización',
+    path: '',
+    disabled: false,
+  },
+  {
+    id: 'ContinuarAsigGrup',
+    icon: <ReduceCapacityIcon />,
+    name: 'Continuar con asignación de grupo',
+    path: '',
+    disabled: false,
+  },
+];
+
 const actionsTramitesYServicios: any[] = [
   {
     id: 'Jurídica',
@@ -60,22 +77,30 @@ const actionsTramitesYServicios: any[] = [
   },
 ];
 
-const actionsComplements: any[] = [
+const actionsOpas: any[] = [
   {
     id: 'Dig',
     icon: <DevicesIcon />,
-    name: 'Enviar solicitud de digitalización',
+    name: 'Enviar solicitud de digitalización para la OPA',
     path: '',
     disabled: false,
   },
   {
-    id: 'ContinuarAsigGrup',
-    icon: <ReduceCapacityIcon />,
-    name: 'Continuar con asignación de grupo',
-    path: '',
+    id: 'AsigGrup',
+    icon: <GroupsIcon />,
+    name: 'Asignar OPA a unidad organizacional',
+    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
+    disabled: false,
+  },
+  {
+    id: 'Jurídica',
+    icon: <BalanceIcon />,
+    name: 'Revisión jurídica',
+    path: '', // pendiente por definir
     disabled: false,
   },
 ];
+
 
 const initialState: any = {
   // ? valores para los botones (acciones) que se ejercen dentro de panel de ventanilla
@@ -83,6 +108,7 @@ const initialState: any = {
   actions: actionsPQRSDF,
   actionsTramitesYServicios,
   actionsComplementos: actionsComplements,
+  actionsOpas: actionsOpas,
 
   currentElementPqrsdComplementoTramitesYotros: null,
   listaElementosPqrsfTramitesUotros: [],
@@ -96,22 +122,30 @@ export const PanelVentanillaSlice = createSlice({
   initialState,
   reducers: {
     // ! ------ STATES PARA PANEL DE VENTANILLA EN EL USO DE PQRSDF, TRÁMITES Y SERVICIOS Y OTROS, NO DE LOS MÓDULOS QUE DEPENDEN DE ESO ------
-    //* este es editor de actions inicial de los botones, se deberá también definir los de tramites y servicios y otros
+    //* mandejo de acciones para pqrsdf
     setActionssToManagePermissions: (state, action: PayloadAction<any>) => {
       state.actions = action.payload;
     },
-
+    //* mandejo de acciones para complementos
+    setActionssToManagePermissionsComplementos: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.actionsComplementos = action.payload;
+    },
+    //* mandejo de acciones para tramites y servicios
    /* setActionssToManagePermissionsTramitesYServicios: (
       state,
       action: PayloadAction<any>
     ) => {
       state.actionsTramitesYServicios = action.payload;
     },*/
-    setActionssToManagePermissionsComplementos: (
+    //* mandejo de acciones para opas
+    setActionssToManagePermissionsOpas: (
       state,
       action: PayloadAction<any>
     ) => {
-      state.actionsComplementos = action.payload;
+      state.actionsOpas = action.payload;
     },
 
     // ? ------------------------
@@ -157,6 +191,9 @@ export const {
   setActionssToManagePermissions,
   // ? acciones sobre lo botones del panel de ventanilla
   setActionssToManagePermissionsComplementos,
+
+  // ? acciones sobre lo botones del OPAS
+  setActionssToManagePermissionsOpas,
   // ? acciones sobre lista de elementos de pqrsdf, trámites y servicios y otros
   setListaElementosPqrsfTramitesUotrosBusqueda,
   // ? acciones sobre lista de complementos, derequerimientos y otros
