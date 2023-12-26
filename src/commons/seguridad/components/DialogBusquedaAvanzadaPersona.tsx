@@ -208,6 +208,14 @@ const DialogBusquedaAvanzada = ({
     }
   }, [tipo_persona]);
 
+  useEffect(() => {
+    console.log('tipo_persona', tipo_persona);
+    console.log('tipo_documento', tipo_documento);
+    console.log('tipo_persona_OPTTTT', tipo_persona_opt);
+  }
+  , [tipo_persona, tipo_documento]);
+
+
   const trigger_user_person_create_active = (data: any): void => {
     user_person_create_active();
     set_is_modal_active(false );
@@ -251,9 +259,9 @@ const DialogBusquedaAvanzada = ({
 
   return (
     <Dialog
-    sx={{
-      zIndex: 9999,
-    }}
+    /*sx={{
+      zIndex: 9,
+    }}*/
       fullWidth
       maxWidth="lg"
       open={is_modal_active}
