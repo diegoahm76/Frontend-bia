@@ -87,10 +87,10 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
   const handleSubmit = () => {
     //* los tipos de tareas, van a cambiar en definicion, pero mientras tanto se establece de esta manera
     const tipoDeTarea:
-      | 'PQRSDF'
-      | 'Tramites y servicios'
-      | 'Otros'
-      | 'OPAS'
+      | 'Responder PQRSDF' // Rpqr
+      | 'Responder Trámite' // Rtra
+      //| 'Otros'
+      // | 'OPAS'
       | undefined =
       controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label;
 
@@ -105,10 +105,10 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     }
 
     const searchActions = {
-      PQRSDF: searchSubmitPqrsdf,
-      'Tramites y servicios': searchSubmitTramitesYservicios,
-      Otros: searchSubmitOtros,
-      OPAS: searchSubmitopas,
+      'Responder PQRSDF': searchSubmitPqrsdf,
+      'Responder Trámite': searchSubmitTramitesYservicios,
+      // Otros: searchSubmitOtros,
+      // OPAS: searchSubmitopas,
     };
 
     const searchAction = searchActions[tipoDeTarea];
@@ -199,13 +199,13 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
             {/* ------------------------*/}
 
             {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label ===
-              'PQRSDF' ||
+              'Responder PQRSDF' ||
             !controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label ? (
               <BuscadorPqrsdf
                 controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
               />
             ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                ?.label === 'Tramites y servicios' ? (
+                ?.label === 'Responder Trámite' ? (
               <BuscadorTramitesYservicios
                 controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
               />

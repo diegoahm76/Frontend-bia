@@ -181,7 +181,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       minWidth: 250,
       renderCell: (params: any) => {
         switch (true) {
-          case params.row.dias_respuesta > 7:
+          case params.row.dias_respuesta >= 7:
             return (
               <Chip
                 size="small"
@@ -199,7 +199,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 variant="outlined"
               />
             );
-          case params.row.dias_respuesta < 4 && params.row.dias_respuesta > 0:
+          case params.row.dias_respuesta <= 4 && params.row.dias_respuesta > 0:
             return (
               <Chip
                 label={`${params.row.dias_respuesta} día(s)`}

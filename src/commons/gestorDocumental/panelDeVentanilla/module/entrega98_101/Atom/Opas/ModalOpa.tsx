@@ -304,7 +304,7 @@ export const ModalOpa = () => {
               {infoAnexos.length > 0 ? (
                 <RenderDataGrid
                   title="Anexos de la OPA"
-                  rows={infoAnexos}
+                  rows={[...infoAnexos, ...infoAnexos, ...infoAnexos]}
                   columns={columns ?? []}
                 />
               ) : (
