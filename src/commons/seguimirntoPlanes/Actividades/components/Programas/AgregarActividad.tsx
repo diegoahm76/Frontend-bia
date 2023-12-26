@@ -1,5 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  MenuItem,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -11,23 +21,42 @@ import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useActividadHook } from '../../hooks/useActividadHook';
 import { DataContextActividades } from '../../context/context';
 
+//* FECHAS
+// import type { Dayjs } from 'dayjs';
+// import dayjs from 'dayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import InfoIcon from '@mui/icons-material/Info';
+import dayjs from 'dayjs';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarActividad: React.FC = () => {
   const {
     control_actividad,
     errors_actividad,
     reset_actividad,
+    data_watch_actividad,
+    register_actividad,
+    set_value_actividad,
 
     onsubmit_actividad,
     onsubmit_editar,
     is_saving_actividad,
 
     limpiar_formulario_actividad,
+
+    // * fechas
+    fecha_creacion,
+    set_fecha_creacion,
+    handle_change_fecha_creacion,
   } = useActividadHook();
 
-  const { set_id_programa, set_id_proyecto, planes_selected, fetch_data_planes_selected } = useContext(
-    DataContextActividades
-  );
+  const {
+    set_id_programa,
+    set_id_proyecto,
+    planes_selected,
+    fetch_data_planes_selected,
+  } = useContext(DataContextActividades);
 
   const dispatch = useAppDispatch();
 
@@ -38,6 +67,11 @@ export const AgregarActividad: React.FC = () => {
       limpiar_formulario_actividad();
     }
     if (mode.editar) {
+      set_value_actividad(
+        'fecha_creacion',
+        dayjs(actividad.fecha_creacion).format('YYYY-MM-DD')
+      );
+      set_fecha_creacion(actividad.fecha_creacion);
       set_id_programa(actividad.id_programa);
       set_id_proyecto(actividad.id_proyecto);
       reset_actividad({
@@ -50,6 +84,8 @@ export const AgregarActividad: React.FC = () => {
         id_producto: actividad.id_producto,
         id_programa: actividad.id_programa,
         id_proyecto: actividad.id_proyecto,
+        fecha_creacion: actividad.fecha_creacion,
+        cumplio: actividad.cumplio,
       });
     }
   }, [mode, actividad]);
@@ -216,6 +252,103 @@ export const AgregarActividad: React.FC = () => {
                 </TextField>
               )}
             />
+          </Grid>
+          <Grid
+            sx={{
+              marginBottom: '10px',
+              width: 'auto',
+            }}
+            item
+            xs={12}
+            sm={6}
+          >
+            <Controller
+              name="cumplio"
+              control={control_actividad}
+              // defaultValue=""
+              rules={{
+                required: data_watch_actividad.cumplio
+                  ? 'Este campo es requerido'
+                  : false,
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={value}
+                        onChange={(e) => {
+                          onChange(e.target.checked);
+                        }}
+                        // name="checkedB"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      value ? (
+                        <Typography variant="body2">
+                          <strong>Actividad cumplida</strong>
+                          <Tooltip title="SI" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'green',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2">
+                          <strong>Actividad no cumplida</strong>
+                          <Tooltip title="No" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'orange',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      )
+                    }
+                  />
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de creacion"
+                value={fecha_creacion}
+                onChange={(value) => {
+                  handle_change_fecha_creacion(value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_actividad('fecha_creacion', {
+                      required: true,
+                    })}
+                    error={!!errors_actividad.fecha_creacion}
+                    helperText={
+                      errors_actividad.fecha_creacion
+                        ? 'Es obligatorio la fecha de creación'
+                        : ''
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>

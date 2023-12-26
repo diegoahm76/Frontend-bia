@@ -102,6 +102,8 @@ export const UserProviderActividades = ({
             nombre_plan: item.nombre_plan,
             id_programa: item.id_programa,
             id_proyecto: item.id_proyecto,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
 
@@ -130,6 +132,8 @@ export const UserProviderActividades = ({
             nombre_plan: item.nombre_plan,
             id_programa: item.id_programa,
             id_proyecto: item.id_proyecto,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
 
@@ -156,6 +160,8 @@ export const UserProviderActividades = ({
             nombre_proyecto: item.nombre_proyecto,
             id_plan: item.id_plan,
             id_programa: item.id_programa,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
 

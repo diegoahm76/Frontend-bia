@@ -119,32 +119,7 @@ export const IndexacionScreen: React.FC = () => {
                 <ArchivoDocumento expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion} set_actualizar={set_actualizar} set_id_documento_seleccionado={set_id_documento_seleccionado}></ArchivoDocumento>
             </Grid>}
             <Grid container>
-                <Grid item xs={12} sm={4}>
-                    <Box
-                        component="form"
-                        sx={{ mt: '20px', mb: '20px' }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <Stack
-                            direction="row"
-                            justifyContent="flex-start"
-                            spacing={2}
-                            sx={{ mt: '20px' }}
-                        >
-                          <Button
-                                color='primary'
-                                variant='contained'
-                                startIcon={<SearchIcon />}
-                                onClick={() => {  }}
-                            >
-                                Buscar documento
-                            </Button>
-                            {abrir_modal_buscar && <BuscarExpediente is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
-                        </Stack>
-                    </Box>
-                </Grid>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12} sm={12}>
                     <Box
                         component="form"
                         sx={{ mt: '20px', mb: '20px' }}

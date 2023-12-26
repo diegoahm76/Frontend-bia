@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField, Alert, Tooltip, IconButton, Avatar } from "@mui/material";
+import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField, Alert, Tooltip, IconButton, Avatar, FormHelperText } from "@mui/material";
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -8,6 +8,8 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { CloudUpload } from '@mui/icons-material';
 import React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useAppDispatch } from "../../../../hooks";
+import { cargar_anexos_opas } from "../thunks/TramitesOServicios";
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
@@ -18,15 +20,20 @@ const class_css = {
 }
 interface IProps {
     usuario: any,
+    cargar_anexos: any,
+    set_cargar_anexos: any,
+    response_paso_1: any,
+    set_anexar_error: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
+    const dispatch = useAppDispatch();
     const [descripcion, set_descripcion] = useState<any>("");
     const [error_descripcion, set_error_descripcion] = useState<any>("");
     const [error_file_name, set_error_file_name] = useState<any>("");
     const [tamaño, set_tamaño] = useState('');
-    const [file, set_file] = useState<any>('');
+    const [file, set_file] = useState<File | null>(null);
     const [file_name, set_file_name] = useState('');
     const [archivos, set_archivos] = useState<any>([]);
     const [limpiar, set_limpiar] = useState<boolean>(false);
@@ -113,7 +120,11 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
     const agregar_archivos: any = () => {
         if (validar_formulario()) {
             let archivos_grid: any[] = [...archivos];
-            archivos_grid = [...archivos_grid, {id: uuidv4(), nombre_archivo:file_name, descripcion: descripcion, tamaño: tamaño, data_json: file }];
+            const data_json = {
+                "id_anexo_tramite": null,
+                "descripcion": descripcion
+            }
+            archivos_grid = [...archivos_grid, {id: uuidv4(), nombre_archivo:file_name, descripcion: descripcion, tamaño: tamaño, archivo: file, data_json: data_json }];
             set_archivos([...archivos_grid]);
             set_limpiar(false);
         }
@@ -128,14 +139,34 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
 
 
     const validar_formulario = (): boolean => {
-        set_error_file_name(file_name === '');
         set_error_descripcion(descripcion === '');
-        return !(file_name === '' || descripcion === '');
+        return !(descripcion === '');
     }
 
     const cambio_descripcion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_descripcion(e.target.value);
     };
+
+    useEffect(() => {
+        if (props.cargar_anexos) {
+            const cargar = (archivos.length > 0);
+            props.set_cargar_anexos(cargar);
+            if (cargar) {
+                const data_anexos: any[] = archivos.map((obj:any) => obj.data_json);
+                const data_archivos: File[] = archivos.map((obj:any) => obj.archivo);
+                const form_data = new FormData();
+                form_data.append('data_anexos', JSON.stringify(data_anexos));
+                // form_data.append('archivos', data_archivos[0]);
+                data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
+                dispatch(cargar_anexos_opas(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
+                    if(response.success)
+                        props.set_anexar_error(response.success);
+                });
+            }else{
+                props.set_anexar_error(true); 
+            }
+        }
+    }, [props.cargar_anexos]);
 
     useEffect(() => {
         if (limpiar) {
@@ -188,7 +219,7 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        autoFocus
+                        required
                         margin="dense"
                         fullWidth
                         size="small"
@@ -197,7 +228,9 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
                         variant="outlined"
                         value={descripcion}
                         onChange={cambio_descripcion}
+                        error={error_descripcion}
                     />
+                    {error_descripcion && (<FormHelperText error id="desde-error">{'El campo es obligatorio.'}</FormHelperText>)}
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Alert severity="info">Adjunte los documentos requeridos para la solicitud, puede agregar los que necesite.</Alert>

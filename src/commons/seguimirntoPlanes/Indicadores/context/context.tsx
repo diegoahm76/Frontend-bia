@@ -164,6 +164,8 @@ export const UserProviderIndicador = ({
             nombre_actividad: item.nombre_actividad,
             nombre_plan: item.nombre_plan,
             id_programa: item.id_programa,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
         // dispatch(

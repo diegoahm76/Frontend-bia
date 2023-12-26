@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, createContext, useState } from 'react';
-import { PanelVentanillaContextProps } from './types/contextVentanilla.types';
 
 export const BandejaTareasContext =
   createContext<any>({
