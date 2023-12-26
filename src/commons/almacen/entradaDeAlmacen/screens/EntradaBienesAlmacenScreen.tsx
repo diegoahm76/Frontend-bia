@@ -127,7 +127,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   }
 
   const obtener_usuario: () => void = () => {
-    const data = localStorage.getItem('persist:macarenia_app');
+    const data = sessionStorage.getItem('persist:macarenia_app');
     if (data !== null) {
       const data_json = JSON.parse(data);
       const data_auth = JSON.parse(data_json.auth);
