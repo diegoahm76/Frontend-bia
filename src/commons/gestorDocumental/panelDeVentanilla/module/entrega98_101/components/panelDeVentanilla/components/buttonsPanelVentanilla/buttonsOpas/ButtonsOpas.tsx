@@ -8,18 +8,19 @@ import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAle
 import Swal from 'sweetalert2';
 import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
-import { postDigitalizacionPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service';
+import { postDigitalizacionPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service'
+
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
+export const ButtonsOpas: React.FC = (): JSX.Element => {
   //* dispatch decalration
   const dispatch = useAppDispatch();
   //* redux states
-  const actions = useAppSelector((state) => state.PanelVentanillaSlice.actions);
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+  const actionsOpas = useAppSelector((state) => state.PanelVentanillaSlice.actionsOpas);
+ /* const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
+  );*/
   //* navigate declaration
   const navigate = useNavigate();
 
@@ -28,8 +29,19 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
 
   const sendDigitalizationRequest = async () => {
-    const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
-    await postDigitalizacionPqrsdf(id_PQRSDF);
+    // ! pendiente de implementar el servicio de digitalización para las OPAS
+
+    // const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
+    Swal.fire({
+      title: 'Perfecto',
+      text: 'Se ha enviado la solicitud de digitalización.',
+      icon: 'info',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+    });
+
+    // await postDigitalizacionPqrsdf(id_PQRSDF);
     // dispatch(resetPanelVentanillaFull());
   };
 
@@ -55,16 +67,12 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
     });
   });
 
-  const handleAsignacionPersonal = withValidation(() =>
-    console.log('Enviar solicitud al usuario')
-  );
-
   const handleAsignacionGrupo = withValidation(() =>
     console.log('Asignar al grupo')
   );
 
-  const handleContinuarAsignacionAGrupo = withValidation(() =>
-    console.log('Continuar con asignación de grupo')
+  const handleAsignacionJurídica = withValidation(() =>
+    console.log('ir a revisión jurídica')
   );
 
   interface action {
@@ -73,9 +81,8 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
 
   const actionHandlers: action = {
     Dig: handleDigitalizacion,
-    AsigPer: handleAsignacionPersonal,
     AsigGrup: handleAsignacionGrupo,
-    ContinuarAsigGrup: handleContinuarAsignacionAGrupo,
+    Jurídica: handleAsignacionJurídica,
   };
 
   const handleClickActionsGeneral = (action: any) => {
@@ -93,12 +100,12 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
         icon={<MultipleStopIcon />}
         direction="right"
       >
-        {actions.every((action: { disabled: boolean }) => action.disabled) ? (
+        {actionsOpas.every((action: { disabled: boolean }) => action.disabled) ? (
           <Typography variant="body1" color="text.secondary">
             No hay acciones disponibles para el elemento seleccionado
           </Typography>
         ) : (
-          actions.map(
+          actionsOpas.map(
             (action: {
               id: string;
               icon: any;

@@ -6,11 +6,18 @@ import {
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/PanelVentanillaStore';
+import {
+  setActionssToManagePermissionsOpas,
+  setCurrentElementPqrsdComplementoTramitesYotros,
+} from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { columnsOpas } from './columnsOpas/columnsOpas';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import TaskIcon from '@mui/icons-material/Task';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ModalOpa as ModalOpaInformacion } from '../../../../../Atom/Opas/ModalOpa';
+import { useContext } from 'react';
+import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import Swal from 'sweetalert2';
 
 export const ElementoOPAS = (): JSX.Element => {
   // ? dispatch necesario
@@ -21,7 +28,90 @@ export const ElementoOPAS = (): JSX.Element => {
   const {
     listaElementosPqrsfTramitesUotros,
     currentElementPqrsdComplementoTramitesYotros,
+    actionsOpas,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
+
+  //* context necesario
+
+  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
+
+  // ? set actions OPAS, button selected
+
+  const setActionsOpas = (opa: any) => {
+    //  console.log('')(pqrsdf);
+
+    if (
+      opa?.estado_actual_solicitud === 'EN GESTION' ||
+      opa?.estado_asignacion_grupo === 'ACEPTADO'
+    ) {
+      void Swal.fire({
+        title: 'Opps...',
+        icon: 'error',
+        text: `Esta OPA ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
+        showConfirmButton: true,
+      });
+      return;
+    }
+
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(opa));
+    void Swal.fire({
+      icon: 'success',
+      title: 'Elemento seleccionado',
+      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      showConfirmButton: true,
+    });
+
+    const shouldDisable = (actionId: string) => {
+      const isAsigGrup = actionId === 'AsigGrup';
+      const isDig = actionId === 'Dig';
+      const hasAnexos = opa.cantidad_anexos > 0;
+      const requiresDigitalization = opa.requiere_digitalizacion;
+      const isRadicado = opa.estado_solicitud === 'RADICADO';
+      const isEnVentanillaSinPendientes =
+        opa.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+      const isEnVentanillaConPendientes =
+        opa.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+
+      // Primer caso
+      if (isRadicado && !hasAnexos) {
+        return isDig;
+      }
+
+      // Segundo caso
+      if (isRadicado && hasAnexos && !requiresDigitalization) {
+        return false;
+      }
+
+      // Tercer caso
+      if (isRadicado && hasAnexos && requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      // Cuarto caso
+      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+        return false;
+      }
+
+      // Quinto caso
+      if (isEnVentanillaSinPendientes && requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      // Sexto caso
+      if (isEnVentanillaConPendientes) {
+        return isAsigGrup;
+      }
+
+      // Caso por defecto
+      return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
+    };
+    const actionsOPAS = actionsOpas.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+    //  console.log('')(actionsPQRSDF);
+    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));
+  };
 
   //* const columns with actions
 
@@ -75,6 +165,11 @@ export const ElementoOPAS = (): JSX.Element => {
             <Tooltip title="Ver información asociada a OPA">
               <IconButton
                 onClick={() => {
+                  handleOpenModalOne(true);
+                  setActionsOpas(params?.row);
+
+                  //* pendiente llamada a servicio de anexos
+
                   /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     setActionsPQRSDF(params?.row);
                     navigate(
@@ -115,23 +210,8 @@ export const ElementoOPAS = (): JSX.Element => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Seleccionar elemento">
-              <IconButton
-                onClick={() => {
-                  /* if (params?.row?.estado_asignacion_grupo === 'EN GESTION') {
-                    control_warning(
-                      'No se pueden seleccionar esta pqrsdf ya que ha sido asignada a un grupo'
-                    );
-                    return;
-                  }
-
-                  dispatch(
-                    setListaElementosComplementosRequerimientosOtros([])
-                  );
-
-                  setActionsPQRSDF(params?.row);*/
-                }}
-              >
+            <Tooltip title="Seleccionar OPA para proceso">
+              <IconButton onClick={() => setActionsOpas(params?.row)}>
                 <Avatar
                   sx={{
                     width: 24,
@@ -158,24 +238,29 @@ export const ElementoOPAS = (): JSX.Element => {
   ];
 
   return (
-    <RenderDataGrid
-      rows={listaElementosPqrsfTramitesUotros ?? []}
-      columns={columns ?? []}
-      title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}S`}
-      aditionalElement={
-        currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ? (
-          <Button
-            onClick={() => {
-              dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-            }}
-            variant="contained"
-            color="primary"
-            endIcon={<RemoveDoneIcon />}
-          >
-            Quitar selección de OPA
-          </Button>
-        ) : null
-      }
-    />
+    <>
+      <RenderDataGrid
+        rows={listaElementosPqrsfTramitesUotros ?? []}
+        columns={columns ?? []}
+        title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}S`}
+        aditionalElement={
+          currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ? (
+            <Button
+              onClick={() => {
+                dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+              }}
+              variant="contained"
+              color="primary"
+              endIcon={<RemoveDoneIcon />}
+            >
+              Quitar selección de OPA
+            </Button>
+          ) : null
+        }
+      />
+      {/*modal para ver la información de la OPA seleccionada*/}
+      <ModalOpaInformacion />
+      {/*modal para ver la información de la OPA seleccionada*/}
+    </>
   );
 };
