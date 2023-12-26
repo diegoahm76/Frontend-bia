@@ -14,12 +14,27 @@ import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
 import Swal from 'sweetalert2';
 //import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 
-import { useAppDispatch } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
 import { useBandejaTareas } from '../../../../../../hook/useBandejaTareas';
+import { auth_slice } from './../../../../../../../../auth/store/authSlice';
+import { AuthSlice } from '../../../../../../../../auth/interfaces';
+import { getListadoTareasByPerson } from '../../../../../../toolkit/thunks/Pqrsdf/getListadoTareasByPerson.service';
+import {
+  setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setListaTareasPqrsdfTramitesUotrosUopas,
+} from '../../../../../../toolkit/store/BandejaDeTareasStore';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
+  //* redux states
+  const {
+    userinfo: { id_persona },
+  } = useAppSelector((state: AuthSlice) => state.auth);
+
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
@@ -43,23 +58,23 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
       fecha_fin,
     } = watchBusquedaBandejaDeTareas;
 
-    /*  void getGrilladoPqrsdfPanelVentanilla(
-      estado_actual_solicitud?.label,
+    void getListadoTareasByPerson(
+      id_persona,
+      handleSecondLoading
+      /* estado_actual_solicitud?.label,
       radicado,
       '' tipo_de_solicitud?.label,
       fecha_inicio,
       fecha_fin,
-      tipo_pqrsdf?.label,
-      //* se debe poner la busqueda por unidad organizacional
-      // * se debe poner la bsqueda por tipo de pqrs
-      handleSecondLoading
+      tipo_pqrsdf?.label,*/
     ).then((res: any) => {
-      dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
+      console.log(res)
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
 
       //* se limpian los otros controles para no crear conflictos
-      dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-      dispatch(setListaElementosComplementosRequerimientosOtros([]));
-    });*/
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+      // dispatch(setListaElementosComplementosRequerimientosOtros([]));
+    });
   };
 
   const searchSubmitTramitesYservicios = () => {
