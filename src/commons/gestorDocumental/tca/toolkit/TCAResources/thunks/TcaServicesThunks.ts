@@ -24,7 +24,7 @@ export const get_searched_tcas_service: any = (
       dispatch(set_get_tcas_action(data.data));
 
       data.data.length === 0
-        ? control_error('No se encontró data relacionada')
+        ? control_error('No se encontraron TCAs')
         : control_success(data.detail);
       return data.data;
     } catch (error: AxiosError | any) {

@@ -109,12 +109,7 @@ export const MostrarEditables: React.FC = () => {
     const [variable, setvariable] = useState<boolean>(false);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const handleButtonClick = (): void => {
-
-
-        setvariable(true);
-
-    };
+    const handleButtonClick = (): void => setvariable(true);
 
     useEffect(() => {
         void traer_personas_por_id();
@@ -287,7 +282,7 @@ export const MostrarEditables: React.FC = () => {
                             fullWidth
                             label="Almacenista"
                             value={almacenista}
-                            onClick={(): void => { fetch_data(id_persona_almacenista)/*.then(console.log('')).catch(console.error)*/ }} />
+                            onClick={(): void => { fetch_data(id_persona_almacenista)}} />
 
                         <Box style={{ display: 'flex' }}>
                             <ModalEditarCargo name={data_nombre[4]} fecha={fecha_inicio_almacenista} titlee={"Almacenista"} cod={5} onClick={handleButtonClick} />

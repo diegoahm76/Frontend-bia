@@ -202,8 +202,8 @@ export const CrearPorcentajeForm: React.FC = () => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={porcentaje}
-                columns={columns}
+                rows={porcentaje ?? []}
+                columns={columns ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}

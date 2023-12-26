@@ -43,6 +43,7 @@ export const checking_authentication: (
         return config;
       },
       async (error) => {
+        console.log(error);
         return await Promise.reject(error);
       }
     );

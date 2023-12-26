@@ -1,4 +1,4 @@
-import { Box, ButtonGroup, Grid } from '@mui/material';
+import { Box, ButtonGroup, Grid, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { type IObjBienesSolicitud } from '../../solicitudBienConsumo/interfaces/solicitudBienConsumo';
 import { useEffect, useState } from 'react';
@@ -20,7 +20,9 @@ const ListadoBienesSolicitud = () => {
 
   // const [action, set_action] = useState<string>("agregar");
 
-  const { bienes_solicitud } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
+  const { bienes_solicitud } = useAppSelector(
+    (state: { solic_consumo: any }) => state.solic_consumo
+  );
   const { bienes_solicitud_aux, bienes_despacho } = useAppSelector(
     (state) => state.despacho
   );
@@ -163,7 +165,6 @@ const ListadoBienesSolicitud = () => {
   };
 
   const select_model = (): void => {
-
     const model: IObjBienesSolicitud | undefined = bienes_solicitud_aux.find(
       (p) => p.id_bien === selected_row[0]
     );
@@ -184,24 +185,37 @@ const ListadoBienesSolicitud = () => {
         >
           <Box sx={{ width: '100%' }}>
             <Title title="Bienes de despacho solicitados"></Title>
-            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
-
-              {download_xls({ nurseries: bienes_solicitud_aux, columns: columns_bienes_solicitud })}
-              {download_pdf({ nurseries: bienes_solicitud_aux, columns: columns_bienes_solicitud, title: "Bienes de despacho" })}
-
+            <ButtonGroup
+              style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
+            >
+              {download_xls({
+                nurseries: bienes_solicitud_aux,
+                columns: columns_bienes_solicitud,
+              })}
+              {download_pdf({
+                nurseries: bienes_solicitud_aux,
+                columns: columns_bienes_solicitud,
+                title: 'Bienes de despacho',
+              })}
             </ButtonGroup>
-            <DataGrid
-              onSelectionModelChange={handle_selection_change}
-              density="compact"
-              autoHeight
-              rows={bienes_solicitud_aux}
-              columns={columns_bienes_solicitud}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => row.id_bien}
-              selectionModel={selected_row}
-            />
+            {bienes_solicitud_aux && bienes_solicitud_aux.length > 0 ? (
+              <DataGrid
+                onSelectionModelChange={handle_selection_change}
+                density="compact"
+                autoHeight
+                rows={bienes_solicitud_aux ?? []}
+                columns={columns_bienes_solicitud ?? []}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id_bien}
+                selectionModel={selected_row}
+              />
+            ) : (
+              <Typography variant="h6" component="h2">
+                No hay datos disponibles
+              </Typography>
+            )}
             <Grid item xs={12} md={12}>
               <FormButton
                 variant_button="contained"
