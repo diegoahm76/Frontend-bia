@@ -37,6 +37,7 @@ import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOt
 import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
+import { Consulta_Solicitud_Routes } from '../consultaSolicitud/routes/ConsultaSolicitud';
 
 const routes = [
   {
@@ -138,6 +139,12 @@ const routes = [
     path: 'encuesta_asignacion/',
     name: 'encuesta_asignacion',
     component: () => <EncuestaRoutes />,
+  },
+  
+  {
+    path: 'Consulta_Solicitudes/',
+    name: 'Consulta_Solicitudes',
+    component: () => <Consulta_Solicitud_Routes />,
   },
   {
     path: 'Interno_encuesta/',

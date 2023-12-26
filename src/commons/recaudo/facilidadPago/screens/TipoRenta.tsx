@@ -16,6 +16,7 @@ import SaveIcon from '@mui/icons-material/Save';
 interface ConfiguracionBasica {
     id_tipo_renta: any;
     nombre_tipo_renta: any;
+    valor_tipo_renta:any;
 }
 
 
@@ -64,6 +65,8 @@ export const TipoRenta: React.FC = () => {
     const columns = [
         { field: 'id_tipo_renta', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'nombre_tipo_renta', headerName: 'Tipo renta', width: 130, flex: 1 },
+        { field: 'valor_tipo_renta', headerName: 'Valor de tipo de renta', width: 130, flex: 1 },
+
         {
             field: 'Acciones',
             headerName: 'Acciones',
@@ -95,6 +98,9 @@ export const TipoRenta: React.FC = () => {
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         nombre_tipo_renta: selectedConfiguracion?.nombre_tipo_renta || "",
         id_tipo_renta: selectedConfiguracion?.id_tipo_renta || "",
+        valor_tipo_renta: selectedConfiguracion?.valor_tipo_renta || "",
+
+        
     });
 
     useEffect(() => {
@@ -113,6 +119,9 @@ export const TipoRenta: React.FC = () => {
             const url = `/recaudo/configuracion_baisca/tiporenta/put/${formValues.id_tipo_renta}/`;
             const dataToUpdate = {
                 nombre_tipo_renta: formValues.nombre_tipo_renta,
+                valor_tipo_renta: formValues.valor_tipo_renta,
+
+                
             };
             await api.put(url, dataToUpdate);
             fetchRenta();
@@ -120,6 +129,7 @@ export const TipoRenta: React.FC = () => {
                 ...formValues,
                 id_tipo_renta: "",
                 nombre_tipo_renta: "",
+                valor_tipo_renta:"",
             });
             control_success("Editado  exitosamente");
         } catch (error: any) {
@@ -139,6 +149,8 @@ export const TipoRenta: React.FC = () => {
                 ...formValues,
                 id_tipo_renta: "",
                 nombre_tipo_renta: "",
+                valor_tipo_renta:"",
+
             });
         } catch (error: any) {
             // console.error("Error al crear la configuración básica", error);
@@ -174,6 +186,21 @@ export const TipoRenta: React.FC = () => {
                             value={formValues.nombre_tipo_renta}
                         />
                     </Grid>
+                    
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            required
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            name="valor_tipo_renta"
+                            onChange={handleInputChange}
+                            label="Valor de tipo de renta"
+                            value={formValues.valor_tipo_renta}
+                        />
+                    </Grid>
+
+
                     <Grid item xs={12} sm={4}>
                         <Button
                             color="success"

@@ -36,6 +36,7 @@ export const Encuesta: React.FC = () => {
     };
     const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null);
     const [formData, setFormData] = useState(initialFormData);
+
     const handleInputChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | SelectChangeEvent<string>
     ) => {
@@ -43,6 +44,7 @@ export const Encuesta: React.FC = () => {
         const { name, value } = target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
+    
     const preguntas = [];
     const [respuestas, setRespuestas] = useState(Array(preguntas.length).fill(""));
 

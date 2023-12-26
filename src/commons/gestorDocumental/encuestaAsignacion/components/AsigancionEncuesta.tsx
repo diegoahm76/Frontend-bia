@@ -107,6 +107,7 @@ export const AsigancionEncuesta: React.FC = () => {
             control_error(error.response.data.detail);
         }
     };
+    
     useEffect(() => {
         setAsignaciones([])
         cargarEncuestas();

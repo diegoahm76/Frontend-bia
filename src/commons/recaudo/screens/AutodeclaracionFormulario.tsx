@@ -1,159 +1,53 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/naming-convention
 import 'leaflet/dist/leaflet.css';
-import { useState, useEffect } from 'react';
-import { Grid, TextField, } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import { api } from '../../../api/axios';
-import { control_error, control_success } from '../../../helpers';
+import { useEffect, useState } from 'react';
+import { FormControl, Grid, TextField, } from '@mui/material';
 import { Title } from '../../../components/Title';
 import { useSelector } from 'react-redux';
 import { AuthSlice } from '../../auth/interfaces';
-
-
-interface ConfiguracionBasica {
-    id: any;
-    orden: any
-    categoria: any;
-}
+import { FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, } from "@mui/material";
+import { api } from '../../../api/axios';
 
 
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 export const AutodeclaracionFormulario: React.FC = () => {
-    const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
     const { userinfo: { nombre_de_usuario, telefono_celular, email, nombre_unidad_organizacional } } = useSelector((state: AuthSlice) => state.auth);
-    const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
-    const fetchConfiguraciones = async (): Promise<void> => {
+
+    const initialFormData = {
+        municipio_cap: "",
+        municipio_v: "",
+    };
+    const [formData, setFormData] = useState(initialFormData);
+    const handleInputChange = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | SelectChangeEvent<string>
+    ) => {
+        const target = event.target as HTMLInputElement;
+        const { name, value } = target;
+        setFormData(prevState => ({ ...prevState, [name]: value }));
+    };
+    const [municipios, setMunicipios] = useState<Array<[string, string]>>([]);
+    const [municipios_v, setMunicipios_v] = useState<Array<[string, string]>>([]);
+
+    const fetchDepartamentos = async () => {
         try {
-            const url = "/recaudo/procesos/categoria-atributos/";
+            const url = "/choices/municipios/";
             const res = await api.get(url);
-            const configuracionesData: ConfiguracionBasica[] = res.data?.data || [];
-            setConfiguraciones(configuracionesData);
+            const departamentosData: Array<[string, string]> = res.data;
+            setMunicipios(departamentosData);
+            setMunicipios_v(departamentosData);
         } catch (error) {
             console.error(error);
         }
     };
-    const handleAbrirEditar = (configuracion: ConfiguracionBasica) => {
-        setSelectedConfiguracion(configuracion);
-        // setIsBuscarActivo(true);
-    };
     useEffect(() => {
-        void fetchConfiguraciones();
+        fetchDepartamentos();
     }, []);
 
-    const handleEliminarConfiguracion = async (id: number) => {
-        try {
-            const url = `/recaudo/configuracion_baisca/tipoCobro/delete/${id}/`;
-            const response = await api.delete(url);
-            console.log("Configuración eliminada con éxito", response.data);
-            // Actualizar la lista de configuraciones después de eliminar
-            fetchConfiguraciones();
-            control_error("eliminado exitosamente ");
 
-        } catch (error: any) {
-            console.error("Error al eliminar la configuración", error);
-            fetchConfiguraciones();
-            // control_error(error.response.data.detail);3
-
-            // Manejar el error
-        }
-    };
-
-    const columns = [
-        { field: 'id', headerName: ' Numero ', width: 130, flex: 1 },
-        { field: 'categoria', headerName: 'categoria', width: 130, flex: 1 },
-        { field: 'orden', headerName: 'orden', width: 130, flex: 1 },
-
-        {
-            field: 'Acciones',
-            headerName: 'Acciones',
-            width: 200,
-            flex: 1,
-            renderCell: (params: any) => (
-                <>
-                    {/* <IconButton
-                        color="error"
-                        onClick={() => handleEliminarConfiguracion(params.row.id)}
-                    >
-                        <DeleteIcon />
-                    </IconButton> */}
-
-                    <IconButton
-                        color="primary"
-                        onClick={() => handleAbrirEditar(params.row)}
-                    >
-                        <EditIcon />
-                    </IconButton>
-                </>
-            )
-        },
-
-    ];
-
-
-    //// editar tipos de cobro 
-    const [formValues, setFormValues] = useState<ConfiguracionBasica>({
-        categoria: selectedConfiguracion?.categoria || "",
-        orden: selectedConfiguracion?.orden || "",
-        id: selectedConfiguracion?.id || "",
-
-    });
-
-    useEffect(() => {
-        if (selectedConfiguracion) {
-            setFormValues(selectedConfiguracion);
-        }
-    }, [selectedConfiguracion]);
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setFormValues({ ...formValues, [name]: value });
-    };
-    // Editar  
-    const handleSubmit = async () => {
-        try {
-            const url = `/recaudo/procesos/categoria-atributos/${formValues.id}/`;
-            const dataToUpdate = {
-                categoria: formValues.categoria,
-                orden: formValues.orden,
-            };
-            await api.put(url, dataToUpdate);
-            fetchConfiguraciones();
-            setFormValues({
-                ...formValues,
-                id: "",
-                categoria: "",
-                orden: "",
-            });
-            control_success("Editado  exitosamente");
-        } catch (error: any) {
-            console.error("Error al actualizar la configuración", error);
-            control_error(error.response.data.detail);
-        }
-    };
-    //crear 
-    const handleSubmitCrear = async () => {
-        try {
-            const url = "/recaudo/procesos/categoria-atributos/";
-            const response = await api.post(url, formValues);
-            console.log("Configuración básica creada con éxito", response.data);
-            fetchConfiguraciones()
-            control_success("Guardado exitosamente");
-            setFormValues({
-                ...formValues,
-                // id: "",
-                categoria: "",
-                orden: "",
-            });
-        } catch (error: any) {
-            // console.error("Error al crear la configuración básica", error);
-            console.log(error.response.data.detail.detail);
-            control_error(error.response.data.detail?.error);
-        }
-    };
 
 
     return (
@@ -171,6 +65,10 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 }}
             >
                 <Title title="Formulario auto declaración  " />
+
+
+                
+
                 <Grid container item xs={12} spacing={2} marginTop={2}>
 
 
@@ -281,18 +179,27 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label="Cuerpo de agua en la que hace la capacitacion"
                         name="Cuerpo de agua en la que hace la capacitacion"
-                    />
+                    />municipios_v
                 </Grid>
-
-                <Grid item xs={12} marginLeft={3}  sm={3}>
-                    <TextField
-                        required
-                        fullWidth
-                        size="small"
-                        variant="standard"
-                        label="Municipio"
-                        name="Municipio"
-                    />
+            
+                <Grid item xs={12} marginLeft={3} sm={3}>
+                    <FormControl required variant="standard" size="small" fullWidth>
+                        <InputLabel id="municipio-select-label">municipio</InputLabel>
+                        <Select
+                            labelId="municipio-select-label"
+                            id="municipio-select"
+                            value={formData.municipio_cap}
+                            label="municipio"
+                            onChange={handleInputChange}
+                            name="municipio_cap"
+                        >
+                            {municipios.map((municipio) => (
+                                <MenuItem key={municipio[0]} value={municipio[0]}>
+                                    {municipio[1]}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Grid>
 
 
@@ -308,15 +215,24 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} marginLeft={3}  sm={3}>
-                    <TextField
-                        required
-                        fullWidth
-                        size="small"
-                        variant="standard"
-                        label="Municipio"
-                        name="Municipio"
-                    />
+                <Grid item xs={12} marginLeft={3} sm={3}>
+                    <FormControl required variant="standard" size="small" fullWidth>
+                        <InputLabel id="municipio-select-label">municipio</InputLabel>
+                        <Select
+                            labelId="municipio-select-label"
+                            id="municipio-select"
+                            value={formData.municipio_v}
+                            label="municipio"
+                            onChange={handleInputChange}
+                            name="municipio_v"
+                        >
+                            {municipios_v.map((municipio) => (
+                                <MenuItem key={municipio[0]} value={municipio[0]}>
+                                    {municipio[1]}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Grid>
 
 
