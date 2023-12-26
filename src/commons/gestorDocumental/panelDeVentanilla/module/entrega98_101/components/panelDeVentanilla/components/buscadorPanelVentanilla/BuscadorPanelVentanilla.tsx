@@ -23,6 +23,8 @@ import {
 } from '../../../../../../toolkit/store/PanelVentanillaStore';
 import { useAppDispatch } from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
+import { getOpasPanVen } from '../../../../../../toolkit/thunks/opas/getOpasPanVen.service';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* dispatch declaration
@@ -39,26 +41,30 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   } = usePanelVentanilla();
 
   // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA-----
-  const searchSubmitPqrsdf = () => {
-    const { tipo_de_solicitud, radicado, estado_actual_solicitud, fecha_inicio, fecha_fin } =
-      watch_busqueda_panel_ventanilla;
-    void getGrilladoPqrsdfPanelVentanilla(
-      estado_actual_solicitud?.label,
+  const searchSubmitPqrsdf = async () => {
+    const {
       radicado,
-      '' /*tipo_de_solicitud?.label,*/,
+      estado_actual_solicitud,
       fecha_inicio,
       fecha_fin,
-
+      tipo_pqrsdf,
+    } = watch_busqueda_panel_ventanilla;
+    const res = await getGrilladoPqrsdfPanelVentanilla(
+      estado_actual_solicitud?.label,
+      radicado,
+      '', //* va marcado manualmente como PQRSDF (tipo_de_solicitud)
+      fecha_inicio,
+      fecha_fin,
+      tipo_pqrsdf?.value,
       handleSecondLoading
-    ).then((res) => {
-      dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
+    );
 
-      //* se limpian los otros controles para no crear conflictos
-      dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-      dispatch(setListaElementosComplementosRequerimientosOtros([]));
-    });
+    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
+
+    //* se limpian los otros controles para no crear conflictos
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+    dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
-
   const searchSubmitTramitesYservicios = () => {
     //  console.log('')('searchSubmitTramitesYservicios');
 
@@ -67,8 +73,34 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
 
-  const searchSubmitOtros = () => {
+  const searchSubmitOtros = async () => {
     //  console.log('')('submit , buscando coincidencias de otros');
+
+    //* se limpian los otros controles para no crear conflictos
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+    dispatch(setListaElementosComplementosRequerimientosOtros([]));
+  };
+
+  const searchSubmitopas = async () => {
+    const {
+      nombre_titular,
+      radicado,
+      nombre_proyecto,
+      estado_actual_solicitud,
+      fecha_inicio,
+      fecha_fin,
+    } = watch_busqueda_panel_ventanilla;
+    const res = await getOpasPanVen(
+      handleSecondLoading,
+      '', //fecha_inicio,
+      '', // fecha_fin,
+      '', // nombre_proyecto
+      '', // estado_actual_solicitud?.label,
+      '', //radicado,
+      '', // nombre_titular,
+    );
+
+    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -80,6 +112,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       | 'PQRSDF'
       | 'Tramites y servicios'
       | 'Otros'
+      | 'OPAS'
       | undefined =
       control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud?.label;
 
@@ -97,6 +130,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       PQRSDF: searchSubmitPqrsdf,
       'Tramites y servicios': searchSubmitTramitesYservicios,
       Otros: searchSubmitOtros,
+      OPAS: searchSubmitopas,
     };
 
     const searchAction = searchActions[tipoDeSolicitud];
@@ -133,13 +167,12 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
           }}
         >
           <Grid container spacing={2}>
-            {/* se va a establecer solo el primer input y en base a la información que se proveea ahí se mostrará la búsqueda de trámites y servicios o la búsqueda correspondiente a trámites y servicios */}
             <Grid
               item
               xs={12}
               sm={4}
               sx={{
-                zIndex: 2,
+                zIndex: 20,
               }}
             >
               <Controller
@@ -203,10 +236,65 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                   control_busqueda_panel_ventanilla
                 }
               />
+            ) : control_busqueda_panel_ventanilla?._formValues
+                ?.tipo_de_solicitud?.label === 'OPAS' ? (
+              <BuscadorOpas
+                control_busqueda_panel_ventanilla={
+                  control_busqueda_panel_ventanilla
+                }
+              />
             ) : (
-              <>hola default</>
+              <>No hay elemento</>
             )}
 
+            <Grid item xs={12} sm={4}>
+              <Controller
+                name="fecha_inicio"
+                control={control_busqueda_panel_ventanilla}
+                defaultValue=""
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    fullWidth
+                    label="Fecha inicio"
+                    type="date"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Controller
+                name="fecha_fin"
+                control={control_busqueda_panel_ventanilla}
+                defaultValue=""
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    fullWidth
+                    label="Fecha final"
+                    type="date"
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                    }}
+                  />
+                )}
+              />
+            </Grid>
             {/* tambien se debe agregar la opción de otros */}
 
             {/* Otros */}

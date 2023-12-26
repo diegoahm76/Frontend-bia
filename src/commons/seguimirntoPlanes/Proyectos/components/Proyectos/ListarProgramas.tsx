@@ -65,6 +65,7 @@ export const ListarProgramas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -100,7 +101,7 @@ export const ListarProgramas: React.FC = () => {
     },
   ];
 
-  const { rows_programa, fetch_data_programa } =
+  const { rows_programa, set_id_plan, fetch_data_programa } =
     useContext(DataContextProyectos);
 
   const dispatch = useAppDispatch();

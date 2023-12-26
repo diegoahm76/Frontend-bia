@@ -117,7 +117,7 @@ export const AgregarEditarOpciones = ({
     // Convertir el código en un arreglo de líneas
     let lines = code.split('\n');
     // Filtrar las líneas que contienen declaraciones de variables
-    lines = lines.filter((line: any) => !line.includes('var'));
+    lines.shift();
     // Unir las líneas filtradas para obtener el código final
     code = lines.join('\n');
     // Eliminar los saltos de línea del código final
@@ -140,18 +140,18 @@ export const AgregarEditarOpciones = ({
   }
 
   const handleSubmit = (event: any) => {
-    if (variables.includes(form_data.variable)) {
-      set_notification_info({ type: 'warning', message: `Ya existe la variable ${form_data.variable}` });
+    if (/\b(var)\b/.test(form_data.variable)) {
+      set_notification_info({
+        type: 'warning',
+        message: `El nombre de la variable var es una palabra reservada que no se debe usar.
+        Por favor ingrese otro nombre diferente.`,
+      });
       set_open_notification_modal(true);
       return;
     }
 
-    if (form_data.variable.includes('variable')) {
-      set_notification_info({
-        type: 'warning',
-        message: `El nombre de la variable a agregar (${form_data.variable}) no debe incluir la palabra reservada variable.
-        \nPor favor ingrese otro nombre diferente.`,
-      });
+    if (variables.includes(form_data.variable)) {
+      set_notification_info({ type: 'warning', message: `Ya existe la variable ${form_data.variable}` });
       set_open_notification_modal(true);
       return;
     }
@@ -266,8 +266,7 @@ export const AgregarEditarOpciones = ({
           set_refresh_page(true);
         })
         .catch((error) => {
-          //  console.log('')(error);
-          set_notification_info({ type: 'error', message: `Hubo un error.` });
+          set_notification_info({ type: 'error', message: error.response.data?.nombre[0] ?? 'Hubo un error' });
           set_open_notification_modal(true);
         });
     }

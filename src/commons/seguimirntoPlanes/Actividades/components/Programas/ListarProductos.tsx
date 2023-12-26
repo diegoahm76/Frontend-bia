@@ -47,6 +47,8 @@ export const ListarProductos: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -83,7 +85,7 @@ export const ListarProductos: React.FC = () => {
     },
   ];
 
-  const { rows_productos, fetch_data_producto } = useContext(
+  const { set_id_programa, set_id_proyecto, rows_productos, fetch_data_producto } = useContext(
     DataContextActividades
   );
 

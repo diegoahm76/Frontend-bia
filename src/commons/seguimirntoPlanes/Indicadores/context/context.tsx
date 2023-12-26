@@ -25,6 +25,8 @@ import { IMedicion, ITipos } from '../../configuraciones/interfaces/interfaces';
 
 interface UserContext {
   // * id
+  id_programa: number | null;
+  set_id_programa: (value: number | null) => void;
 
   // * rows
   rows_indicador: Indicadores[];
@@ -62,6 +64,10 @@ interface UserContext {
 }
 
 export const DataContextIndicador = createContext<UserContext>({
+  // * id
+  id_programa: null,
+  set_id_programa: () => {},
+  // * rows
   rows_indicador: [],
   set_rows_indicador: () => {},
 
@@ -97,6 +103,7 @@ export const UserProviderIndicador = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
 
   // * select
   const [planes_selected, set_planes_selected] = React.useState<ValueProps[]>(
@@ -149,11 +156,16 @@ export const UserProviderIndicador = ({
             id_producto: item.id_producto,
             id_actividad: item.id_actividad,
             id_plan: item.id_plan,
+            id_proyecto: item.id_proyecto,
+            tipo_indicador: item.tipo_indicador,
             nombre_medicion: item.nombre_medicion,
             nombre_tipo: item.nombre_tipo,
             nombre_producto: item.nombre_producto,
             nombre_actividad: item.nombre_actividad,
             nombre_plan: item.nombre_plan,
+            id_programa: item.id_programa,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
         // dispatch(
@@ -289,7 +301,8 @@ export const UserProviderIndicador = ({
 
   const value: UserContext = {
     // * id
-
+    id_programa,
+    set_id_programa,
     // * select
     planes_selected,
     set_planes_selected,

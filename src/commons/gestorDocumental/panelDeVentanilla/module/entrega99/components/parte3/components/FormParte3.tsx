@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Carousel } from 'react-responsive-carousel';
-import { useContext, useEffect, useState } from 'react';
+import { MouseEventHandler, useContext, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { FILEWEIGHT } from '../../../../../../../../fileWeight/fileWeight';
@@ -590,7 +590,7 @@ export const FormParte3 = ({
             showStatus={false}
             showThumbs={false}
             infiniteLoop={true}
-            renderArrowPrev={(onClickHandler, hasPrev, label) =>
+            renderArrowPrev={(onClickHandler: MouseEventHandler<SVGSVGElement> | undefined, hasPrev: any, label: any) =>
               hasPrev && (
                 <ArrowBackIosIcon
                   onClick={onClickHandler}
@@ -604,7 +604,7 @@ export const FormParte3 = ({
                 />
               )
             }
-            renderArrowNext={(onClickHandler, hasNext, label) =>
+            renderArrowNext={(onClickHandler: MouseEventHandler<SVGSVGElement> | undefined, hasNext: any, label: any) =>
               hasNext && (
                 <ArrowForwardIosIcon
                   onClick={onClickHandler}

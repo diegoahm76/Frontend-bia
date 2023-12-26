@@ -95,6 +95,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
             headerName: 'CÓDIGO',
             sortable: true,
             width: 150,
+            valueGetter: (params) => params.row.codigo_exp_und_serie_subserie + '.' +  params.row.codigo_exp_Agno + (params.row.codigo_exp_consec_por_agno !== null ? '.' +  params.row.codigo_exp_consec_por_agno : ""),
         },
         {
             field: 'nombre_trd_origen',
@@ -276,7 +277,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                             boxShadow: '0px 3px 6px #042F4A26',
                         }}
                     >
-                        <Title title="Búsqueda de expedientes" />
+                        <Title title="Búsqueda de avanzada" />
                         <Grid container sx={{ mt: '10px' }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={12}>
@@ -559,12 +560,12 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                         </Grid>
                     </Grid>}
                     <>
-                        {expedientes.length > 0 && (
+                        {expedientes?.length > 0 && (
                             <Grid item xs={12}>
                                 <Title title="Resultados de la búsqueda" />
                             </Grid>
                         )}
-                        {expedientes.length > 0 && (
+                        {expedientes?.length > 0 && (
                             <Grid item xs={12}>
                                 <Box sx={{ width: '100%' }}>
                                     <>
@@ -582,12 +583,12 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                         )}
                     </>
                     <>
-                        {documentos.length > 0 && (
+                        {documentos?.length > 0 && (
                             <Grid item xs={12}>
                                 <Title title="Resultados de la búsqueda" />
                             </Grid>
                         )}
-                        {documentos.length > 0 && (
+                        {documentos?.length > 0 && (
                             <Grid item xs={12}>
                                 <Box sx={{ width: '100%' }}>
                                     <>

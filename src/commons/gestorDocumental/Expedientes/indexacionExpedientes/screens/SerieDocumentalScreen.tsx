@@ -23,6 +23,7 @@ interface IProps {
 export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
     const [tdr, set_tdr] = useState<any>("");
+    const [configuracion_local, set_configuracion_local] = useState<any>();
     const [lt_tdr, set_lt_tdr] = useState<any[]>([]);
     const [lt_seccion, set_lt_seccion] = useState<any>([]);
     const [seccion, set_seccion] = useState<string>("");
@@ -53,6 +54,11 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
 
     useEffect(() => {
         props.set_expediente(expediente);
+        if(expediente !== null && expediente !== undefined){
+            const config =  {...configuracion_local};
+            config.expediente = [config?.expediente.find((e: any) => e.id_expediente_documental === expediente.id_expediente_documental)];
+            props.set_configuracion(config);
+        }
     }, [expediente]);
 
     useEffect(() => {
@@ -96,8 +102,8 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
         dispatch(obtener_config_expediente(serie.id_catserie_unidadorg)).then((service: any) => {
             if (service.success) {
                 set_tipo_expediente(service.data.tipo_expediente);
-                props.set_configuracion(service.data);
                 if(service.data.cod_tipo_expediente === 'S'){
+                    props.set_configuracion(service.data);
                     dispatch(obtener_expediente_id_serie(serie.id_catserie_unidadorg)).then((response: any) => {
                         if(response.succes){
                             dispatch(obtener_expediente_simple_id_serie(response.data[0].id_expediente_documental)).then((response: any) => {
@@ -106,8 +112,10 @@ export const SerieDocumentalScreen: React.FC<IProps> = (props: IProps) => {
                             });
                         }
                     });
-                }else
+                }else{
+                    set_configuracion_local(service.data);
                     props.set_expediente(null);
+                }
             
             } else {
                 generar_notificación_reporte('Notificación', 'info', service.response.data.detail, true);

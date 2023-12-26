@@ -65,8 +65,49 @@ export interface Actividade {
   id_actividad: number | null;
   nombre_producto: string;
   nombre_plan: string;
-  numero_actividad: number | null;
+  indicadores: Indicadore[];
+  numero_actividad: null;
   nombre_actividad: string;
   id_producto: number | null;
   id_plan: number | null;
+}
+
+export interface Indicadore {
+  id_indicador: number | null;
+  nombre_medicion: string;
+  nombre_tipo: string;
+  nombre_producto: string;
+  nombre_actividad: string;
+  nombre_plan: string;
+  nombre_proyecto: string;
+  metas: Meta[];
+  nombre_indicador: string;
+  linea_base: string;
+  medida: string;
+  tipo_indicador: string;
+  id_medicion: number | null;
+  id_tipo: number | null;
+  id_producto: number | null;
+  id_actividad: number | null;
+  id_plan: number | null;
+  id_proyecto: number | null;
+}
+
+export interface Meta {
+  id_meta: number | null;
+  nombre_indicador: string;
+  nombre_meta: string;
+  unidad_meta: string;
+  porcentaje_meta: number | null;
+  valor_meta: string;
+  cumplio: boolean;
+  fecha_creacion_meta: string;
+  agno_1: number | null;
+  agno_2: number | null;
+  agno_3: number | null;
+  agno_4: number | null;
+  valor_ejecutado_compromiso: number | null;
+  valor_ejecutado_obligado: number | null;
+  avance_fisico: number | null;
+  id_indicador: number;
 }

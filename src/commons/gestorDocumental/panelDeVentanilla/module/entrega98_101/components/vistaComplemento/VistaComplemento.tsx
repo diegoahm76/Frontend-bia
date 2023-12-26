@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useAppSelector } from '../../../../../../../hooks';
-import { ModalAtomInfoElement } from '../../Atom/ModalAtomInfoElement';
+import { ModalAtomInfoElement } from '../../Atom/ModalAtom/ModalAtomInfoElement';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const VistaComplemento = (): JSX.Element => {

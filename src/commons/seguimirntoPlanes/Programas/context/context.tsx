@@ -77,6 +77,8 @@ export const UserProviderPrograma= ({
             porcentaje_3: item.porcentaje_3,
             porcentaje_4: item.porcentaje_4,
             id_plan: item.id_plan,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
 
