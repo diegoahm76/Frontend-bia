@@ -15,7 +15,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
   );
 
   //* context declaration
-  const { secondLoading, handleSecondLoading } = useContext(
+  const { secondLoading } = useContext(
     ModalAndLoadingContext
   );
 
