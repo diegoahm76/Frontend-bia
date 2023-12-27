@@ -151,9 +151,8 @@ export const useAdquisicionesHook = (): any => {
     });
   };
 
-  const { is_limpiar_formulario, set_is_limpiar_formulario } = useContext(
-    DataContextAdquisiciones
-  );
+  const { id_person, is_limpiar_formulario, set_is_limpiar_formulario } =
+    useContext(DataContextAdquisiciones);
 
   useEffect(() => {
     //  console.log('')('is_limpiar_formulario', is_limpiar_formulario);
@@ -179,6 +178,7 @@ export const useAdquisicionesHook = (): any => {
 
   const onsubmit_adquisiciones = handleSubmit_adquisiciones(async (data) => {
     try {
+      set_is_saving_adquisiciones(true);
       //  console.log('')(data, 'data');
       data.id_persona_responsable = id_persona;
       if (!data.id_persona_responsable || data.id_persona_responsable === 0) {
@@ -186,7 +186,6 @@ export const useAdquisicionesHook = (): any => {
         return;
       }
       // data.id_indicador = id_indicador;
-      set_is_saving_adquisiciones(true);
       await post_plan_adiquisiciones(data as IPlanAdquisiciones);
       control_success('Se creó correctamente');
       await limpiar_formulario_adquisiciones();
@@ -206,19 +205,20 @@ export const useAdquisicionesHook = (): any => {
 
   const onsubmit_editar = handleSubmit_adquisiciones(async (data) => {
     try {
+      set_is_saving_adquisiciones(true);
+      console.log('data', data);
       if (!data.id_persona_responsable || data.id_persona_responsable === 0) {
-        data.id_persona_responsable = id_persona;
-        if (!id_persona || id_persona === 0) {
+        data.id_persona_responsable = id_person;
+        if (!id_person || id_person === 0) {
           control_error('No se ha seleccionado una persona responsable');
           return;
         }
       }
-      if (data.id_persona_responsable !== id_persona) {
-        data.id_persona_responsable = id_persona;
+      if (data.id_persona_responsable !== id_person) {
+        data.id_persona_responsable = id_person;
       }
 
       //  console.log('')(data, 'data');
-      set_is_saving_adquisiciones(true);
       // data.id_indicador = id_indicador;
       await put_plan_adiquisiciones(
         (id_plan_anual as number) ?? 0,
