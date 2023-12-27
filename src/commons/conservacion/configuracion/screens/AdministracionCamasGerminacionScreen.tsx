@@ -10,6 +10,7 @@ import {
   Avatar,
   Divider,
   ButtonGroup,
+  Typography,
 } from '@mui/material';
 import { Title } from '../../../../components';
 import {
@@ -300,16 +301,24 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
               {download_xls({ nurseries: aux_germination_beds, columns })}
               {download_pdf({ nurseries: aux_germination_beds, columns ,title: 'Camas de germinacion', })}
             </ButtonGroup>
-                  <DataGrid
-                    density="compact"
-                    autoHeight
-                    rows={aux_germination_beds}
-                    columns={columns}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.nro_de_orden}
-                  />
+                  {
+                    (aux_germination_beds && aux_germination_beds.length > 0) ? (
+                      <DataGrid
+                        density="compact"
+                        autoHeight
+                        rows={aux_germination_beds ?? []}
+                        columns={columns ?? []}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        experimentalFeatures={{ newEditingApi: true }}
+                        getRowId={(row) => row.nro_de_orden}
+                      />
+                    ) : (
+                      <Typography variant="h6" component="h2">
+                        No hay datos disponibles
+                      </Typography>
+                    )
+                  }
                   <Stack
                     direction="row"
                     spacing={2}

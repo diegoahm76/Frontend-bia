@@ -17,6 +17,7 @@ import {
 } from '../../../../../../../../../../hooks';
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { setCurrentTareaPqrsdfTramitesUotrosUopas } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 /*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
@@ -24,11 +25,20 @@ import { ModalDenuncia } from '../../../../../Atom/components/ModalDenuncia';*/
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
-  //  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+
+    //* redux states
+  const {
+    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
+    listaTareasPqrsdfTramitesUotrosUopas,
+    actionsTareasPQRSDF,
+  } = useAppSelector((state) => state.BandejaTareasSlice);
+
+
   //* navigate declaration
   // const navigate = useNavigate();
   //* context declaration
-/*  const {
+  /*  const {
     setRadicado,
     setValue,
 
@@ -47,23 +57,18 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   } = useContext(ModalAndLoadingContext);*/
 
   //* loader button simulacion
- /* const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
+  /* const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );*/
   //* loader button simulacion
- /* const [loadingStatesUser, setLoadingStatesUser] = useState<
+  /* const [loadingStatesUser, setLoadingStatesUser] = useState<
     Record<string, boolean>
   >({});
 */
-  //* redux states
-/*  const {
-    listaElementosPqrsfTramitesUotros,
-    actions,
-    currentElementPqrsdComplementoTramitesYotros,
-  } = useAppSelector((state) => state.PanelVentanillaSlice);*/
+
 
   // ? functions
-/*  const setActionsPQRSDF = (pqrsdf: any) => {
+  /*  const setActionsPQRSDF = (pqrsdf: any) => {
     //  console.log('')(pqrsdf);
 
     if (pqrsdf.estado_solicitud === 'EN GESTION') {
@@ -140,25 +145,102 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   //* columns -------------------------------------------------------
 
+  const columns = [
+    ...columnsPqrsdf,
+    {
+      headerName: 'Días para respuesta',
+      field: 'dias_para_respuesta',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        switch (true) {
+          case params.row.dias_para_respuesta >= 7:
+            return (
+              <Chip
+                size="small"
+                label={`${params.row.dias_para_respuesta} día(s)`}
+                color="success"
+                variant="outlined"
+              />
+            );
+          case params.row.dias_para_respuesta < 7 && params.row.dias_para_respuesta > 4:
+            return (
+              <Chip
+                size="small"
+                label={`${params.row.dias_para_respuesta} día(s)`}
+                color="warning"
+                variant="outlined"
+              />
+            );
+          case params.row.dias_para_respuesta <= 4 && params.row.dias_para_respuesta > 0:
+            return (
+              <Chip
+                label={`${params.row.dias_para_respuesta} día(s)`}
+                color="error"
+                variant="outlined"
+                size="small"
+              />
+            );
+          case params.row.dias_para_respuesta <= 0:
+            return (
+              <Chip
+                label={`Tiempo agotado hace ${Math.abs(
+                  params.row.dias_para_respuesta
+                )} día(s)`}
+                color="error"
+                variant="outlined"
+                size="small"
+              />
+            );
+          default:
+            return params.row.dias_para_respuesta;
+        }
+      },
+    },
+
+    //* deben ser los botones para aceptar o rechazar la tarea (si esta aceptada, aparece el texto de aceptada, si esta rechazada, aparece el texto de rechazada junto con un button para ver el comentario de rechazo, si no esta aceptada ni rechazada, aparece un button para aceptar y otro para rechazar)
+    {
+      headerName: 'Estado de asignación',
+      field: 'estado_asignacion',
+      minWidth: 220,
+      renderCell: (params: any) => {
+        const estadoAsignacion = params.row.estado_asignacion;
+        const estadoAsignacionColor =
+          estadoAsignacion === 'ACEPTADA'
+            ? 'success'
+            : estadoAsignacion === 'RECHAZADA'
+            ? 'error'
+            : 'warning';
+        return (
+          <Chip
+            size="small"
+            label={estadoAsignacion}
+            color={estadoAsignacionColor}
+            variant="outlined"
+          />
+        );
+      },
+    }
+  ]
+
   return (
     <>
       <RenderDataGrid
-        rows={[] ?? []}
-        columns={[] ?? []}
+        rows={listaTareasPqrsdfTramitesUotrosUopas ?? []}
+        columns={columns ?? []}
         title={`Listado de tareas asignadas en PQRSDF`}
-        /* aditionalElement={
-          currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ? (
+        aditionalElement={
+          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ? (
             <Button
               onClick={() => {
-                dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+                dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
               }}
               variant="contained"
               color="primary"
             >
-              Quitar selección de PQRSDF
+              Quitar selección de Tarea
             </Button>
           ) : null
-        }*/
+        }
       />
     </>
   );

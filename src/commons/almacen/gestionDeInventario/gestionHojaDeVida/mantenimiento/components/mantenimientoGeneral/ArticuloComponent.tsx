@@ -84,7 +84,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
     }, [parent_details, detalle_seleccionado]);
 
     useEffect(() => {
-        const data = localStorage.getItem('persist:macarenia_app');
+        const data = sessionStorage.getItem('persist:macarenia_app');
         if (data !== null) {
             const data_json = JSON.parse(data);
             const data_auth = JSON.parse(data_json.auth);

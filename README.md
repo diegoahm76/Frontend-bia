@@ -12,8 +12,8 @@ Este proyecto tiene como objetivo digitalizar y optimizar los trámites y servic
 
 ## Tecnologías Utilizadas
 
-- **Frontend**: React, Typescipt, Material UI.
-- **Backend**: Python. Django.
+- **Frontend**: React, Typescipt, Material UI, Axios, Redux - toolkit.
+- **Backend**: Python. DRF.
 - **Base de Datos**: PostgreSQL.
 - **Pruebas Unitarias**: Jest.
 - **Control de Versiones**: Git, GitHub.

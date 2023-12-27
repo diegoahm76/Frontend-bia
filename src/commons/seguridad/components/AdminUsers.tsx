@@ -539,6 +539,7 @@ export const AdminUsers: React.FC = () => {
                     spacing={2}
                     sx={{
                       mt: '20px',
+                      zIndex: 999,
                     }}
                   >
                     <Box
@@ -554,14 +555,13 @@ export const AdminUsers: React.FC = () => {
                         style={{
                           padding: '10px',
                           justifyContent: 'center',
-                          zIndex: 99,
+                          zIndex: 999,
                         }}
                       >
                         <Select
                           {...register_admin_user('sucursal_defecto')}
                           value={watch_exe.sucursal_defecto}
                           onChange={(selectedOption) => {
-                            ////  console.log('')(selectedOption);
                             set_value_admin_user(
                               'sucursal_defecto',
                               selectedOption
@@ -572,10 +572,10 @@ export const AdminUsers: React.FC = () => {
                           styles={{
                             control: (base) => ({
                               ...base,
-                              zIndex: 99,
+                              zIndex: 999,
                             }),
                           }}
-                          menuPlacement="bottom"
+                          menuPlacement="top" // Cambiado de "bottom" a "top"
                         />
                         <label>
                           <small
