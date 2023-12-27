@@ -100,7 +100,7 @@ export const ConsultaSolucitud: React.FC = () => {
         //     )
         // },
 
-       
+
     ];
 
     const [encuestas, setEncuestas] = useState<Encuesta[]>([]);

@@ -154,7 +154,9 @@ export const AsigancionEncuesta: React.FC = () => {
                 sx={miEstilo}
             >
                 <Grid item xs={12} sm={12}>
-                    <Title title="Asignacion de encuesta " />
+                    <Title title="Asignación  de encuesta " />
+
+                    
                 </Grid>
 
                 <Grid item xs={12}>
