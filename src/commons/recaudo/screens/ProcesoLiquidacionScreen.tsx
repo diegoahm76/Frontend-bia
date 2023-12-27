@@ -247,30 +247,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       });
   };
 
-  const update_detalles = (): void => {
+  const update_liquidacion = (): void => {
     api.get(`recaudo/liquidaciones/liquidacion-base-por-expediente/${form_liquidacion.id_expediente}`)
       .then((response) => {
-        agregar_detalles(response.data.data.detalles);
-        submit_updated_liquidacion(response.data.data.id);
+        agregar_datos_inputs(response.data.data);
       })
       .catch((error) => {
         //  console.log('')(error);
-      });
-  };
-
-  const submit_updated_liquidacion = (id_liquidacion: number): void => {
-    api.put(`recaudo/liquidaciones/liquidacion-base/${id_liquidacion}/`, {
-      valor: form_liquidacion.valor,
-    })
-      .then((response) => {
-        console.log(response);
-        set_notification_info({ type: 'success', message: `Se ha guardado correctamente la liquidacion.` });
-        set_open_notification_modal(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        set_notification_info({ type: 'error', message: 'Hubo un error' });
-        set_open_notification_modal(true);
       });
   };
 
@@ -287,11 +270,28 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       });
   };
 
+  const edit_liquidacion = (): void => {
+    api.put(`recaudo/liquidaciones/liquidacion-base/${id_liquidacion_pdf}/`, {
+      valor: form_liquidacion.valor
+    })
+      .then((response) => {
+        // console.log(response);
+        set_notification_info({ type: 'success', message: 'Se ha actualizado correctamente la liquidación.' });
+        set_open_notification_modal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        set_notification_info({ type: 'success', message: 'Hubo un error' });
+        set_open_notification_modal(true);
+      });
+  };
+
   const edit_detalles_liquidacion = (): void => {
     rows_detalles.forEach((detalle) => {
       submit_updated_detalle(detalle.id, detalle.variables, detalle.valor_liquidado);
     });
-    update_detalles();
+    edit_liquidacion();
+    update_liquidacion();
   };
 
   const handle_position_tab_change = (event: SyntheticEvent, newValue: string): void => {
@@ -336,6 +336,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           set_fecha_vencimiento(dayjs(new Date()));
           set_form_detalle_liquidacion([]);
           set_rows_detalles([]);
+          set_id_liquidacion_pdf('');
         })
         .catch((error) => {
           //  console.log('')(error);

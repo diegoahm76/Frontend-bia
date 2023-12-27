@@ -198,9 +198,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>{currency_formatter(form_liquidacion.valor ?? 0)}</Typography>
       </Grid>
 
-      <Grid container justifyContent={'center'}>
-        <Grid item xs={12} sm={3}>
-          {estado_expediente === 'activo' && (
+      <Grid container justifyContent={'center'} spacing={3}>
+        {estado_expediente === 'activo' && (
+          <Grid item xs={12} sm={3}>
             <Button
               color="primary"
               variant="contained"
@@ -219,20 +219,11 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
             >
               Guardar
             </Button>
-          )}
-          {estado_expediente === 'guardado' && (
-            <Button
-              color="primary"
-              variant="contained"
-              startIcon={<RequestQuoteIcon />}
-              fullWidth
-            >
-              Liquidar
-            </Button>
-          )}
-          {estado_expediente === 'liquidado' && (
-            <>
-              <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
+          </Grid>
+        )}
+        {estado_expediente === 'guardado' && (
+          <>
+            <Grid item xs={12} sm={3}>
               <Button
                 color="primary"
                 variant="contained"
@@ -244,9 +235,24 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               >
                 Imprimir recibo
               </Button>
-            </>
-          )}
-        </Grid>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Button
+                color="primary"
+                variant="contained"
+                startIcon={<RequestQuoteIcon />}
+                fullWidth
+              >
+                Liquidar
+              </Button>
+            </Grid>
+          </>
+        )}
+        {estado_expediente === 'liquidado' && (
+          <Grid item xs={12} sm={3}>
+            <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
+          </Grid>
+        )}
       </Grid>
     </>
   )
