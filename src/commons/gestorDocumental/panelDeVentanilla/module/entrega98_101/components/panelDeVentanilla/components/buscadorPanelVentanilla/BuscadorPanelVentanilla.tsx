@@ -25,6 +25,7 @@ import { useAppDispatch } from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
 import { getOpasPanVen } from '../../../../../../toolkit/thunks/opas/getOpasPanVen.service';
+import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* dispatch declaration
@@ -90,6 +91,12 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       fecha_inicio,
       fecha_fin,
     } = watch_busqueda_panel_ventanilla;
+
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de OPAS se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
+      'warning'
+    );
     const res = await getOpasPanVen(
       handleSecondLoading,
       '', //fecha_inicio,
