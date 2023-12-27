@@ -29,9 +29,10 @@ import {
   get_busqueda_avanzada_expediente_cerrado,
   get_tipologias,
   get_trd,
+  serie_trd,
 } from '../../cierreExpediente/store/thunks/cierreExpedientesthunks';
 import FormDatePickerControllerV from '../../../../../components/partials/form/FormDatePickerControllerv';
-import { IObjTRD } from '../../cierreExpediente/interfaces/cierreExpedientes';
+import { IObjTrd } from '../../cierreExpediente/interfaces/cierreExpedientes';
 
 interface IProps {
   control_reapertura_expediente: any;
@@ -48,15 +49,20 @@ const BuscarExpedienteReapertura = ({
   get_values,
   handle_selected_expediente,
 }: IProps) => {
-  const { expedientes, trd } = useAppSelector((state) => state.cierre_expedientes);
+  const { expedientes, trd, serie_subserie } = useAppSelector(
+    (state) => state.cierre_expedientes
+  );
   const dispatch = useAppDispatch();
-  const [trdOptions, setTrdOptions] = useState<IObjTRD[]>([]);
+  const [trdOptions, setTrdOptions] = useState<IObjTrd[]>([]);
+
   useEffect(() => {
     void dispatch(get_trd());
     void dispatch(get_tipologias());
   }, []);
+
   useEffect(() => {
     setTrdOptions(trd);
+    console.log('TRD:', trd);
   }, [trd]);
 
   const columns: GridColDef[] = [
@@ -130,7 +136,8 @@ const BuscarExpedienteReapertura = ({
     const id_subserie_origen = get_values('id_subserie_origen') ?? '';
     const fecha_inicio_expediente = get_values('fecha_inicio_expediente') ?? '';
     const fecha_fin_expediente = get_values('fecha_fin_expediente') ?? '';
-    const codigo_exp_consec_por_agno = get_values('codigo_exp_consec_por_agno') ?? '';
+    const codigo_exp_consec_por_agno =
+      get_values('codigo_exp_consec_por_agno') ?? '';
     void dispatch(
       get_busqueda_avanzada_expediente_cerrado(
         titulo_expediente,
@@ -138,14 +145,16 @@ const BuscarExpedienteReapertura = ({
         codigos_uni_serie_subserie,
         fecha_apertura_expediente,
         id_serie_origen,
-        id_subserie_origen, fecha_inicio_expediente, fecha_fin_expediente, codigo_exp_consec_por_agno
+        id_subserie_origen,
+        fecha_inicio_expediente,
+        fecha_fin_expediente,
+        codigo_exp_consec_por_agno
       )
-     
     );
   };
 
   useEffect(() => {
-    console.log(expedientes)
+    console.log(expedientes);
   }, [expedientes]);
 
   return (
@@ -241,49 +250,6 @@ const BuscarExpedienteReapertura = ({
 
                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
                   <Controller
-                    name="nombre_trd_origen"
-                    control={control_reapertura_expediente}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        select
-                        size="small"
-                        label="TRD"
-                        variant="outlined"
-                        disabled={false}
-                        defaultValue={value}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        sx={{
-                          backgroundColor: 'white',
-                        }}
-                        InputLabelProps={{ shrink: true }}
-                        
-                      >
-                         {trdOptions.map((option) => (
-                          <MenuItem
-                            key={option.id_trd_origen}
-                            value={option.nombre_tdr_origen ?? ''}
-                          >
-                            {option.nombre_tdr_origen}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container justifyContent="center">
-                <Grid item xs={12} sm={3.5} margin={2}>
-                  <Controller
                     name="fecha_apertura_expediente"
                     control={control_reapertura_expediente}
                     rules={{ required: true }}
@@ -311,6 +277,65 @@ const BuscarExpedienteReapertura = ({
                     )}
                   />
                 </Grid>
+              </Grid>
+
+              <Grid container justifyContent="center">
+                <Grid item xs={12} sm={3.5} margin={2}>
+                  <Controller
+                    name="nombre_trd_origen"
+                    control={control_reapertura_expediente}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        key={trdOptions ? trdOptions.length : 0}
+                        margin="dense"
+                        fullWidth
+                        select
+                        size="small"
+                        label="TRD"
+                        variant="outlined"
+                        disabled={false}
+                        defaultValue={value}
+                        value={value}
+                        onChange={(e) => {
+                          onChange(e);
+                          const selectedTrd = trdOptions.find(
+                            (option) => option.nombre === e.target.value
+                          );
+                          if (selectedTrd) {
+                            // Aquí puedes acceder a la propiedad id_ccd de selectedTrd
+                            const id_ccd: number | undefined | null =
+                              selectedTrd.id_ccd;
+                            if (id_ccd !== null && id_ccd !== undefined) {
+                              console.log('id_ccd:', id_ccd);
+                              // También puedes realizar cualquier otra acción que necesites con id_ccd
+                              void dispatch(serie_trd(id_ccd));
+                            }
+                          }
+                        }}
+                        error={!(error == null)}
+                        sx={{
+                          backgroundColor: 'white',
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      >
+                        {trdOptions &&
+                          trdOptions.map((option) => (
+                            <MenuItem
+                              key={option.id_trd}
+                              value={option.nombre ?? ''}
+                            >
+                              {option.nombre}
+                            </MenuItem>
+                          ))}
+                      </TextField>
+                    )}
+                  />
+                </Grid>
 
                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
                   <Controller
@@ -322,6 +347,7 @@ const BuscarExpedienteReapertura = ({
                       fieldState: { error },
                     }) => (
                       <TextField
+                        select
                         autoFocus
                         margin="dense"
                         fullWidth
@@ -337,14 +363,23 @@ const BuscarExpedienteReapertura = ({
                           backgroundColor: 'white',
                         }}
                         InputLabelProps={{ shrink: true }}
-                      ></TextField>
+                      >
+                        {serie_subserie.map((option) => (
+                          <MenuItem
+                            key={option.id_cat_serie_und}
+                            value={option.nombre_serie ?? ''}
+                          >
+                            {option.nombre_serie}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     )}
                   />
                 </Grid>
 
                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
                   <Controller
-                    name="id_subserie_origen"
+                    name="id_suberie_origen"
                     control={control_reapertura_expediente}
                     rules={{ required: true }}
                     render={({
@@ -352,11 +387,12 @@ const BuscarExpedienteReapertura = ({
                       fieldState: { error },
                     }) => (
                       <TextField
+                        select
                         autoFocus
                         margin="dense"
                         fullWidth
                         size="small"
-                        label="Sub Serie"
+                        label="Serie"
                         variant="outlined"
                         disabled={false}
                         defaultValue={value}
@@ -367,12 +403,19 @@ const BuscarExpedienteReapertura = ({
                           backgroundColor: 'white',
                         }}
                         InputLabelProps={{ shrink: true }}
-                      ></TextField>
+                      >
+                        {serie_subserie.map((option) => (
+                          <MenuItem
+                            key={option.id_cat_serie_und}
+                            value={option.nombre_subserie ?? ''}
+                          >
+                            {option.nombre_subserie}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     )}
                   />
                 </Grid>
-
-                
               </Grid>
 
               <Grid container justifyContent="center">
@@ -401,8 +444,7 @@ const BuscarExpedienteReapertura = ({
                     control_form={control_reapertura_expediente}
                     control_name={'fecha_fin_expediente'}
                     default_value={null}
-                    rules={{required_rule:{rule:false, message:''}
-                    }}
+                    rules={{ required_rule: { rule: false, message: '' } }}
                     label={'Fecha final del Expediente'}
                     disabled={false}
                     format={'YYYY-MM-DD'}
@@ -467,7 +509,6 @@ const BuscarExpedienteReapertura = ({
                     )}
                   />
                 </Grid>
-
               </Grid>
 
               <>
@@ -477,7 +518,7 @@ const BuscarExpedienteReapertura = ({
                     {/* <Typography>Resultados de la búsqueda</Typography> */}
                   </Grid>
                 )}
-              {expedientes.length > 0 && (
+                {expedientes.length > 0 && (
                   <Grid item xs={12}>
                     <Box sx={{ width: '100%' }}>
                       <>
@@ -513,7 +554,7 @@ const BuscarExpedienteReapertura = ({
 
                 <Grid item margin={2}>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     color="error"
                     onClick={handle_close_buscar_reapertura}
                   >

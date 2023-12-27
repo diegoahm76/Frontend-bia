@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { ICierreExpedientes, IObjarchivo, IObjArchivoExpediente, IObjCierreExpediente, IObjExpedientes, IObjInformacionReapertura, IObjTRD, IObTipologia } from '../../interfaces/cierreExpedientes';
+import { ICierreExpedientes, IObjarchivo, IObjArchivoExpediente, IObjCierreExpediente, IObjExpedientes, IObjInformacionReapertura,  IObjSerieSubserie,  IObjTrd,  IObTipologia } from '../../interfaces/cierreExpedientes';
 
 
 const initial_state_current_cierre_expediente: IObjCierreExpediente = {
@@ -75,6 +75,7 @@ export const initial_state: ICierreExpedientes = {
     archivos_por_expedientes: [],
     current_archivo_expediente: initial_state_current_archivo_expediente,
     informacion_reapertura: initial_state_informacion_reapertura,
+    serie_subserie:[],
 
 
 }
@@ -92,7 +93,7 @@ export const cierre_expedientes_slice = createSlice({
         },
         set_trd: (
             state: ICierreExpedientes,
-            action: PayloadAction<IObjTRD[]>
+            action: PayloadAction<IObjTrd[]>
         ) => {
             state.trd = action.payload;
         },
@@ -126,9 +127,15 @@ export const cierre_expedientes_slice = createSlice({
         ) => {
             state.informacion_reapertura = action.payload;
         },
+        set_serie_subserie: (
+            state: ICierreExpedientes,
+            action: PayloadAction<IObjSerieSubserie[]>
+        ) => {
+            state.serie_subserie = action.payload;
+        },
     }
 })
 
 export const {
-    set_current_cierre_expedientes, set_trd, set_tipologias, set_expedientes, set_current_archivo_expediente, set_archivos_por_expediente, set_informacion_reapertura
+    set_current_cierre_expedientes, set_trd, set_tipologias,set_serie_subserie, set_expedientes, set_current_archivo_expediente, set_archivos_por_expediente, set_informacion_reapertura
 } = cierre_expedientes_slice.actions;
