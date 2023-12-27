@@ -224,8 +224,8 @@ export const ODSScreen: React.FC = () => {
               </ButtonGroup>
               <DataGrid
                 autoHeight
-                rows={rows}
-                columns={columns}
+                rows={rows ?? []}
+                columns={columns ?? []}
                 getRowId={(row) => uuidv4()}
                 pageSize={10}
                 rowsPerPageOptions={[10]}

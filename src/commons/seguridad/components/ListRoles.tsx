@@ -282,8 +282,8 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
             <DataGrid
               density="compact"
               autoHeight
-              rows={roles}
-              columns={columns}
+              rows={roles ?? []}
+              columns={columns ?? []}
               pageSize={10}
               rowsPerPageOptions={[10]}
               getRowId={(row) => row.id_rol}

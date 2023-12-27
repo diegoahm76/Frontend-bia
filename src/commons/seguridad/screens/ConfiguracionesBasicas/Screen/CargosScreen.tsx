@@ -197,8 +197,8 @@ export const CargoScreen: React.FC = () => {
                         <>
                             <DataGrid
                                 autoHeight
-                                rows={rows}
-                                columns={columns}
+                                rows={rows ?? []}
+                                columns={columns ?? []}
                                 getRowId={(row) => row.id_cargo}
                                 pageSize={5}
                                 rowsPerPageOptions={[5]}

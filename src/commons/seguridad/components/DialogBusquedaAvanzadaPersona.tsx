@@ -401,7 +401,7 @@ const DialogBusquedaAvanzada = ({
             density="compact"
             autoHeight
             rows={persons ?? []}
-            columns={columns_persons}
+            columns={columns_persons ?? []}
             pageSize={10}
             rowsPerPageOptions={[10]}
             getRowId={(row) => row.id_persona}

@@ -131,8 +131,8 @@ export const ConsultarProgramasPlanes: React.FC = () => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={rows_programas}
-                columns={columns_programa}
+                rows={rows_programas ?? []}
+                columns={columns_programa ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 getRowId={(row) => uuidv4()}

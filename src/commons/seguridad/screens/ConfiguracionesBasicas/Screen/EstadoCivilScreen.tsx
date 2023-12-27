@@ -223,8 +223,8 @@ export const EstadoCivilScreen: React.FC = () => {
                         <>
                             <DataGrid
                                 autoHeight
-                                rows={rows}
-                                columns={columns}
+                                rows={rows ?? []}
+                                columns={columns ?? []}
                                 getRowId={(row) => row.cod_estado_civil}
                                 pageSize={5}
                                 rowsPerPageOptions={[5]}
