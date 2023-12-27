@@ -181,11 +181,11 @@ export const ListarMetas: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (id_indicador) {
-      fetch_data_mata_indicador();
-    }
-  }, [id_indicador]);
+  // useEffect(() => {
+  //   if (id_indicador) {
+  //     fetch_data_mata_indicador();
+  //   }
+  // }, [id_indicador]);
 
   return (
     <>

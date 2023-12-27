@@ -54,8 +54,9 @@ export const AgregarActividad: React.FC = () => {
   const {
     set_id_programa,
     set_id_proyecto,
-    planes_selected,
-    fetch_data_planes_selected,
+    set_id_plan,
+    set_id_producto,
+    set_id_actividad,
   } = useContext(DataContextActividades);
 
   const dispatch = useAppDispatch();
@@ -74,6 +75,9 @@ export const AgregarActividad: React.FC = () => {
       set_fecha_creacion(actividad.fecha_creacion);
       set_id_programa(actividad.id_programa);
       set_id_proyecto(actividad.id_proyecto);
+      set_id_plan(actividad.id_plan ?? null);
+      set_id_producto(actividad.id_producto ?? null);
+      set_id_actividad(actividad.id_actividad ?? null);
       reset_actividad({
         id_actividad: actividad.id_actividad,
         nombre_actividad: actividad.nombre_actividad,
@@ -89,10 +93,6 @@ export const AgregarActividad: React.FC = () => {
       });
     }
   }, [mode, actividad]);
-
-  useEffect(() => {
-    fetch_data_planes_selected();
-  }, []);
 
   return (
     <>
@@ -218,38 +218,6 @@ export const AgregarActividad: React.FC = () => {
                   //     : 'Ingrese un nombre'
                   // }
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="id_plan"
-              control={control_actividad}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  // label="Tipo de eje"
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_actividad.id_plan}
-                  helperText={
-                    errors_actividad?.id_plan?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el plan'
-                  }
-                >
-                  {planes_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
               )}
             />
           </Grid>
