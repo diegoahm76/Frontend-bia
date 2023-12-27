@@ -103,6 +103,8 @@ export interface IObjReaperturaExpediente {
   titulo_expediente?: string | null;
   id_expediente_doc?: number | null;
   justificacion_reapertura?: string | null;
+  fecha_inicio_expediente?: string | null;
+  fecha_fin_expediente?: string | null;
 }
 
 export interface IObjInformacionReapertura {
@@ -117,4 +119,16 @@ export interface IObjInformacionReapertura {
     id_expediente_doc?: number | null;
     id_persona_cierra_reabre?: number | null;
   };
+}
+
+export interface IObjTrd {
+  id_trd?: number | null;
+  usado?: boolean;
+  version?: string | null;
+  nombre?: string | null;
+  fecha_terminado?: string | null;
+  fecha_puesta_produccion?: string | null;
+  fecha_retiro_produccion?: string | null;
+  actual?: boolean;
+  id_ccd?: number | null;
 }

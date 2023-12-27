@@ -101,8 +101,6 @@ export function CierreSolicitudScreen(): JSX.Element {
           disabled={false}
           helper_text={''}
           hidden_text={false}
-          min_date={'2023-06-20'}
-          max_date={'2023-07-20 '}
           format={'YYYY-MM-DD'}
         />
         <FormDatePickerController
