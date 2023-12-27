@@ -320,7 +320,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         ...form,
         id_opcion_liq: Number(form.id_opcion_liq),
         id_liquidacion,
-        valor: form.valor,
+        valor: form.valor.toFixed(4),
       };
       api.post('recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
         .then((response) => {
@@ -351,7 +351,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       vencimiento: fecha_vencimiento.format('YYYY-MM-DDTHH:mm:ss'),
       id_deudor: Number(form_liquidacion.id_deudor),
       id_expediente: Number(form_liquidacion.id_expediente),
-      valor: form_liquidacion.valor,
+      valor: form_liquidacion.valor?.toFixed(4),
     })
       .then((response) => {
         //  console.log('')(response);
