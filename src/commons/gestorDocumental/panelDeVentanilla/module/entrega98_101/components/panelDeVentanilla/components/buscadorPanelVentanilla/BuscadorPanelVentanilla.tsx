@@ -68,6 +68,11 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
   const searchSubmitTramitesYservicios = () => {
     //  console.log('')('searchSubmitTramitesYservicios');
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de Trámites y servicios no está disponible ',
+      'warning'
+    );
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -76,6 +81,11 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
 
   const searchSubmitOtros = async () => {
     //  console.log('')('submit , buscando coincidencias de otros');
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de Otros no está disponible ',
+      'warning'
+    );
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));

@@ -18,6 +18,7 @@ import {
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { setCurrentTareaPqrsdfTramitesUotrosUopas } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
+import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
 /*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
@@ -38,7 +39,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   //* navigate declaration
   // const navigate = useNavigate();
   //* context declaration
-  /*  const {
+  const {
     setRadicado,
     setValue,
 
@@ -46,7 +47,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     metadatos,
     setAnexos,
     setMetadatos,
-  } = useContext(PanelVentanillaContext);
+  } = useContext(BandejaTareasContext);
   const {
     handleGeneralLoading,
     handleThirdLoading,
@@ -54,7 +55,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
-  } = useContext(ModalAndLoadingContext);*/
+  } = useContext(ModalAndLoadingContext);
 
   //* loader button simulacion
   /* const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
@@ -219,7 +220,101 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
           />
         );
       },
-    }
+    },
+
+    {
+      headerName: 'Acciones',
+      field: 'Acciones',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <>
+            <Tooltip title="Ver info de la tarea">
+              <IconButton
+                onClick={() => {
+
+                  // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
+
+                  //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
+
+                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            {/* </Link>*/}
+
+            <Tooltip title="Seleccionar tarea para procesos">
+              <IconButton
+                onClick={() => {
+                  /*if (params?.row?.estado_asignacion_grupo === 'EN GESTION') {
+                    control_warning(
+                      'No se pueden seleccionar esta pqrsdf ya que ha sido asignada a un grupo'
+                    );
+                    return;
+                  }
+
+                  dispatch(
+                    setListaElementosComplementosRequerimientosOtros([])
+                  );
+
+                  setActionsPQRSDF(params?.row);*/
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <TaskIcon
+                    sx={{
+                      color: 'warning.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      },
+    },
   ]
 
   return (
