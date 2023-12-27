@@ -74,7 +74,11 @@ const EstadOtros = () => {
       <Box
         sx={{ width: '80%', alignItems: 'center', justifyContent: 'center' ,margin: 'auto',}}
       >
+        {otros && Array.isArray(otros) && otros.length > 0 ? (
         <Title title="Solicitudes Otros Realizadas" />
+        ) : (
+          <p></p>
+        )}
         {otros && Array.isArray(otros) && otros.length > 0 ? (
           <DataGrid
             density="compact"
