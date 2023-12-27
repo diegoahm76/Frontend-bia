@@ -170,8 +170,8 @@ export const ListarPlanes: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_planes}
-                  columns={columns_planes}
+                  rows={rows_planes ?? []}
+                  columns={columns_planes ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

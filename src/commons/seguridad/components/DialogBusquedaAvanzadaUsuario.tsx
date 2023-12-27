@@ -225,7 +225,7 @@ const dialog_busqueda_avanzada_usuario = ({
                 density="compact"
                 autoHeight
                 rows={users ?? []}
-                columns={columns_users}
+                columns={columns_users ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 getRowId={(row) => row.id_usuario}

@@ -224,8 +224,8 @@ export const FuentesRecursosPAAScreen: React.FC = () => {
               </ButtonGroup>
               <DataGrid
                 autoHeight
-                rows={rows}
-                columns={columns}
+                rows={rows ?? []}
+                columns={columns ?? []}
                 getRowId={(row) => row.id_fuente}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
