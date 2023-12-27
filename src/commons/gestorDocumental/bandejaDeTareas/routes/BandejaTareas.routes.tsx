@@ -19,7 +19,7 @@ const routes = [
     component: () => <MainViewBandejaTareas />,
   },
   {
-    path: 'requerimiento_a_usario/',
+    path: 'requerimiento_a_usuario/',
     component: () => (
       <>
         <BandejaTareasProvider>

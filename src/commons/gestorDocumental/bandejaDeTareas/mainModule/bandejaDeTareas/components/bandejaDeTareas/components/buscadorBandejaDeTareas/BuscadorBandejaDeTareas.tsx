@@ -14,12 +14,27 @@ import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
 import Swal from 'sweetalert2';
 //import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 
-import { useAppDispatch } from '../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
 import { useBandejaTareas } from '../../../../../../hook/useBandejaTareas';
+import { auth_slice } from './../../../../../../../../auth/store/authSlice';
+import { AuthSlice } from '../../../../../../../../auth/interfaces';
+import { getListadoTareasByPerson } from '../../../../../../toolkit/thunks/Pqrsdf/getListadoTareasByPerson.service';
+import {
+  setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setListaTareasPqrsdfTramitesUotrosUopas,
+} from '../../../../../../toolkit/store/BandejaDeTareasStore';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
+  //* redux states
+  const {
+    userinfo: { id_persona },
+  } = useAppSelector((state: AuthSlice) => state.auth);
+
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
@@ -43,23 +58,23 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
       fecha_fin,
     } = watchBusquedaBandejaDeTareas;
 
-    /*  void getGrilladoPqrsdfPanelVentanilla(
-      estado_actual_solicitud?.label,
+    void getListadoTareasByPerson(
+      id_persona,
+      handleSecondLoading
+      /* estado_actual_solicitud?.label,
       radicado,
       '' tipo_de_solicitud?.label,
       fecha_inicio,
       fecha_fin,
-      tipo_pqrsdf?.label,
-      //* se debe poner la busqueda por unidad organizacional
-      // * se debe poner la bsqueda por tipo de pqrs
-      handleSecondLoading
+      tipo_pqrsdf?.label,*/
     ).then((res: any) => {
-      dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
+      console.log(res)
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
 
       //* se limpian los otros controles para no crear conflictos
-      dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-      dispatch(setListaElementosComplementosRequerimientosOtros([]));
-    });*/
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+      // dispatch(setListaElementosComplementosRequerimientosOtros([]));
+    });
   };
 
   const searchSubmitTramitesYservicios = () => {
@@ -87,10 +102,10 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
   const handleSubmit = () => {
     //* los tipos de tareas, van a cambiar en definicion, pero mientras tanto se establece de esta manera
     const tipoDeTarea:
-      | 'PQRSDF'
-      | 'Tramites y servicios'
-      | 'Otros'
-      | 'OPAS'
+      | 'Responder PQRSDF' // Rpqr
+      | 'Responder Trámite' // Rtra
+      //| 'Otros'
+      // | 'OPAS'
       | undefined =
       controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label;
 
@@ -105,10 +120,10 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     }
 
     const searchActions = {
-      PQRSDF: searchSubmitPqrsdf,
-      'Tramites y servicios': searchSubmitTramitesYservicios,
-      Otros: searchSubmitOtros,
-      OPAS: searchSubmitopas,
+      'Responder PQRSDF': searchSubmitPqrsdf,
+      'Responder Trámite': searchSubmitTramitesYservicios,
+      // Otros: searchSubmitOtros,
+      // OPAS: searchSubmitopas,
     };
 
     const searchAction = searchActions[tipoDeTarea];
@@ -199,13 +214,13 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
             {/* ------------------------*/}
 
             {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label ===
-              'PQRSDF' ||
+              'Responder PQRSDF' ||
             !controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label ? (
               <BuscadorPqrsdf
                 controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
               />
             ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                ?.label === 'Tramites y servicios' ? (
+                ?.label === 'Responder Trámite' ? (
               <BuscadorTramitesYservicios
                 controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
               />

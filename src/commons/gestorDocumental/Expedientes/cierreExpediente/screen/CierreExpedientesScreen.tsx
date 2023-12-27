@@ -207,7 +207,7 @@ const CierreExpedientesScreen = () => {
                     default_value=''
                     rules={{}}
                     type="text"
-                    disabled={false}
+                    disabled={true}
                     helper_text=""
                     hidden_text={null}
                     label={"Expediente"}
@@ -353,7 +353,7 @@ const CierreExpedientesScreen = () => {
                 </Grid>
 
                 <Grid item margin={2}>
-                    <Button variant="outlined"
+                    <Button variant="contained"
                         color="error"
                         onClick={handle_close_buscar}>
                         Salir

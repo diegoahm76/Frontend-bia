@@ -25,8 +25,16 @@ import { IMedicion, ITipos } from '../../configuraciones/interfaces/interfaces';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
   id_programa: number | null;
+  id_proyecto: number | null;
+  id_producto: number | null;
+  id_actividad: number | null;
+  set_id_plan: (value: number | null) => void;
   set_id_programa: (value: number | null) => void;
+  set_id_proyecto: (value: number | null) => void;
+  set_id_producto: (value: number | null) => void;
+  set_id_actividad: (value: number | null) => void;
 
   // * rows
   rows_indicador: Indicadores[];
@@ -65,9 +73,16 @@ interface UserContext {
 
 export const DataContextIndicador = createContext<UserContext>({
   // * id
+  id_plan: null,
   id_programa: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+  set_id_plan: () => {},
   set_id_programa: () => {},
-  // * rows
+  set_id_proyecto: () => {},
+  set_id_producto: () => {},
+  set_id_actividad: () => {}, // * rows
   rows_indicador: [],
   set_rows_indicador: () => {},
 
@@ -103,8 +118,11 @@ export const UserProviderIndicador = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
-
+  const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
+  const [id_producto, set_id_producto] = React.useState<number | null>(null);
+  const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
   // * select
   const [planes_selected, set_planes_selected] = React.useState<ValueProps[]>(
     []
@@ -164,6 +182,8 @@ export const UserProviderIndicador = ({
             nombre_actividad: item.nombre_actividad,
             nombre_plan: item.nombre_plan,
             id_programa: item.id_programa,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
         // dispatch(
@@ -299,8 +319,16 @@ export const UserProviderIndicador = ({
 
   const value: UserContext = {
     // * id
+    id_plan,
     id_programa,
+    id_proyecto,
+    id_producto,
+    id_actividad,
+    set_id_plan,
     set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
     // * select
     planes_selected,
     set_planes_selected,

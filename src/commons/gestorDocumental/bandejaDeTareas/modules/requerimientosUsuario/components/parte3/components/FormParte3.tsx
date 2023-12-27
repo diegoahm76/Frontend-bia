@@ -62,7 +62,7 @@ export const FormParte3 = ({
 
   //* redux states functions
   const { currentAnexo, anexosCreados, metadatos, viewMode } = useAppSelector(
-    (state: any) => state.AsignacionUsuarioSlice
+    (state: any) => state.RequerimientoUsarioSlice
   );
 
 
@@ -236,7 +236,8 @@ export const FormParte3 = ({
     control_success('Se ha seleccionado el anexo para editar');
     //* volver al paso 2 ?
     // handleBack();
-    //  console.log('')('anexoSeleccionado', anexoSeleccionado);
+
+    console.log('anexoSeleccionado', anexoSeleccionado);
 
     //* seleccionar ese elemento como currentAnexo
     dispatch(setCurrentAnexo(anexoSeleccionado));

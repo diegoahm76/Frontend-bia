@@ -257,7 +257,7 @@ export const get_uni_organizacional = (): any => {
         try {
             const { data } = await api.get('transversal/organigrama/unidades/get-list/organigrama-actual/');
             //  console.log('')(data.data, "data")
-            dispatch(get_unidad_organizacional(data.data));
+            dispatch(get_unidad_organizacional(data));
             return data;
         } catch (error: any) {
             return error as AxiosError;

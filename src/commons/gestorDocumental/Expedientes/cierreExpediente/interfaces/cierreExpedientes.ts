@@ -1,11 +1,12 @@
 export interface ICierreExpedientes {
   current_cierre_Expediente: IObjCierreExpediente;
-  trd: IObjTRD[];
+  trd: IObjTrd[];
   tipologias: IObTipologia[];
   expedientes: IObjExpedientes[];
   current_archivo_expediente: IObjArchivoExpediente;
   archivos_por_expedientes: IObjarchivo[];
   informacion_reapertura: IObjInformacionReapertura;
+  serie_subserie:IObjSerieSubserie[]
 }
 
 export interface IObjCierreExpediente {
@@ -16,13 +17,7 @@ export interface IObjCierreExpediente {
   justificacion_reapertura?: string | null;
 }
 
-export interface IObjTRD {
-  id_trd_origen?: number | null;
-  nombre_tdr_origen?: string | null;
-  actual_tdr_origen?: boolean;
-  fecha_retiro_produccion_tdr_origen?: string | null;
-  estado_actual?: string | null;
-}
+
 
 export interface IObTipologia {
   id_tipologia_documental?: number | null;
@@ -103,6 +98,8 @@ export interface IObjReaperturaExpediente {
   titulo_expediente?: string | null;
   id_expediente_doc?: number | null;
   justificacion_reapertura?: string | null;
+  fecha_inicio_expediente?: string | null;
+  fecha_fin_expediente?: string | null;
 }
 
 export interface IObjInformacionReapertura {
@@ -117,4 +114,31 @@ export interface IObjInformacionReapertura {
     id_expediente_doc?: number | null;
     id_persona_cierra_reabre?: number | null;
   };
+}
+
+export interface IObjTrd {
+  id_trd?: number | null;
+  usado?: boolean;
+  version?: string | null;
+  nombre?: string | null;
+  fecha_terminado?: string | null;
+  fecha_puesta_produccion?: string | null;
+  fecha_retiro_produccion?: string | null;
+  actual?: boolean;
+  id_ccd?: number | null;
+}
+
+
+
+
+export interface IObjSerieSubserie{
+  id_cat_serie_und?: number | null;
+  id_unidad_organizacional?: number | null;
+  id_catalogo_serie?: number | null;
+  id_serie_doc?: number | null;
+  nombre_serie?: string | null;
+  codigo_serie?: string | null;
+  id_subserie_doc?: number | null;
+  nombre_subserie?: string | null;
+  codigo_subserie?: string | null;
 }

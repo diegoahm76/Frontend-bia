@@ -99,6 +99,16 @@ export const Agregarmeta: React.FC = () => {
         valor_ejecutado_obligado: meta.valor_ejecutado_obligado,
         avance_fisico: meta.avance_fisico,
         id_indicador: meta.id_indicador,
+        id_plan: meta.id_plan,
+        id_programa: meta.id_programa,
+        id_proyecto: meta.id_proyecto,
+        id_producto: meta.id_producto,
+        id_actividad: meta.id_actividad,
+        nombre_plan: meta.nombre_plan,
+        nombre_programa: meta.nombre_programa,
+        nombre_proyecto: meta.nombre_proyecto,
+        nombre_producto: meta.nombre_producto,
+        nombre_actividad: meta.nombre_actividad,
       });
     }
   }, [mode, meta]);

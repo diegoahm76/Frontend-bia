@@ -102,11 +102,16 @@ export function CrearPqrsdfScreen(): JSX.Element {
   const { id } = useParams();
 
   useEffect(() => {
-    dispatch(set_pqr(initial_state_pqr));
-    set_action('crear');
+    console.log(id);
     if (id !== null && id !== undefined) {
       void dispatch(get_pqrsdf_id_service(id));
+      set_action('editar');
     } else {
+      console.log('iniciar');
+
+      dispatch(set_pqr(initial_state_pqr));
+      dispatch(set_exhibits([]));
+      set_action('crear');
     }
     // if (type_applicant.key === null) {
     //       // no viene de ventanilla
@@ -583,9 +588,9 @@ export function CrearPqrsdfScreen(): JSX.Element {
       );
 
       void dispatch(add_pqrsdf_service(form_data, navigate));
+      dispatch(reset_state());
+      initial_values();
     }
-    dispatch(reset_state());
-    initial_values();
   };
   const delete_pqr = (): void => {
     if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
@@ -655,17 +660,19 @@ export function CrearPqrsdfScreen(): JSX.Element {
         />
         {filed.numero_radicado_completo !== null && <ImpresionRadicadoScreen />}
         <Grid container direction="row" padding={2} spacing={2}>
-          <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={handle_submit_pqrsdf(on_submit)}
-              icon_class={<SaveIcon />}
-              disabled={!flag_create}
-              label={action}
-              type_button="button"
-              color_button="success"
-            />
-          </Grid>
+          {pqr.id_radicado === null && (
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={handle_submit_pqrsdf(on_submit)}
+                icon_class={<SaveIcon />}
+                disabled={!flag_create}
+                label={action}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+          )}
           {pqr.id_PQRSDF !== null && pqr.id_radicado === null && (
             <>
               <Grid item xs={12} md={3}>

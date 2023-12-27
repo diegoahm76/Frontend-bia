@@ -5,7 +5,7 @@ import { get_item } from "../getItemFromLocalStorage";
       // Arrange
       const key = "existing_key";
       const value = "existing_value";
-      localStorage.setItem(key, value);
+      sessionStorage.setItem(key, value);
 
       // Act
       const result = get_item(key);

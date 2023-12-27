@@ -6,6 +6,7 @@ import { IProductos } from '../../types/types';
 import { useAppSelector } from '../../../../hooks';
 import { post_producto, put_producto } from '../services/services';
 import { DataContextProductos } from '../context/context';
+import dayjs from 'dayjs';
 
 export const useProductoHook = (): any => {
   const {
@@ -24,6 +25,8 @@ export const useProductoHook = (): any => {
       id_plan: null,
       id_programa: null,
       id_producto: null,
+      fecha_creacion: '',
+      cumplio: false,
     },
   });
 
@@ -38,30 +41,50 @@ export const useProductoHook = (): any => {
       id_plan: null,
       id_programa: null,
       id_producto: null,
+      fecha_creacion: '',
+      cumplio: false,
     });
+  };
+
+  // * fechas
+  const [fecha_creacion, set_fecha_creacion] = useState<Date | null>(
+    new Date()
+  );
+
+  const handle_change_fecha_creacion = (date: Date | null) => {
+    set_fecha_creacion(date);
+    set_value_producto('fecha_creacion', dayjs(date).format('YYYY-MM-DD'));
   };
 
   // saving
   const [is_saving_producto, set_is_saving_producto] = useState<boolean>(false);
 
   // declaracion context
-  const { id_plan, id_programa, fetch_data_producto } =
-    useContext(DataContextProductos);
-  // declaracion redux
   const {
-    producto: { id_producto },
-    proyecto: { id_proyecto },
-  } = useAppSelector((state) => state.planes);
+    id_plan,
+    id_programa,
+    id_proyecto,
+    id_producto,
+    fetch_data_producto,
+  } = useContext(DataContextProductos);
+  // declaracion redux
+  // const {
+  //   producto: { id_producto },
+  //   proyecto: { id_proyecto },
+  // } = useAppSelector((state) => state.planes);
 
   const onsubmit_producto = handleSubmit_producto(async (data) => {
     try {
+      set_is_saving_producto(true);
       console.log(id_plan, 'id_plan');
-      console.log(id_programa, 'id_programa');  
+      console.log(id_programa, 'id_programa');
       console.log(data, 'data');
       data.id_plan = id_plan;
       data.id_programa = id_programa;
+      data.id_producto = id_producto;
       data.id_proyecto = id_proyecto;
-      set_is_saving_producto(true);
+      const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
+      data.fecha_creacion = fecha_creacion_format;
       await post_producto(data as IProductos);
       control_success('Se creó correctamente');
       await limpiar_formulario_producto();
@@ -80,13 +103,14 @@ export const useProductoHook = (): any => {
 
   const onsubmit_editar = handleSubmit_producto(async (data) => {
     try {
+      set_is_saving_producto(true);
       console.log(data, 'data');
-      console.log(id_plan, 'id_plan');
-      console.log(id_programa, 'id_programa');  
+      const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
+      data.fecha_creacion = fecha_creacion_format;
       data.id_plan = id_plan;
       data.id_programa = id_programa;
+      data.id_producto = id_producto;
       data.id_proyecto = id_proyecto;
-      set_is_saving_producto(true);
       data.id_proyecto = id_proyecto;
       await put_producto((id_producto as number) ?? 0, data as IProductos);
       control_success('Se actualizó correctamente');
@@ -119,5 +143,10 @@ export const useProductoHook = (): any => {
     is_saving_producto,
 
     limpiar_formulario_producto,
+
+    // fechas
+    fecha_creacion,
+    set_fecha_creacion,
+    handle_change_fecha_creacion,
   };
 };

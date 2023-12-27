@@ -51,7 +51,7 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             headerName: 'CÓDIGO',
             sortable: true,
             width: 200,
-            valueGetter: (params) => params.row.codigo_exp_und_serie_subserie + '.' +  params.row.codigo_exp_Agno,
+            valueGetter: (params) => params.row.codigo_exp_und_serie_subserie + '.' +  params.row.codigo_exp_Agno + (params.row.codigo_exp_consec_por_agno !== null ? '.' +  params.row.codigo_exp_consec_por_agno : ""),
         },
         {
             field: 'nombre_trd_origen',

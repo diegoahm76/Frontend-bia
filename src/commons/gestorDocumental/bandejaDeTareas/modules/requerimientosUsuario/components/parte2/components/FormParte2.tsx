@@ -20,7 +20,7 @@ export const FormParte2 = ({
 
     //* redux states functions
 /*    const { currentAnexo } = useAppSelector(
-      (state: any) => state.AsignacionUsuarioSlice
+      (state: any) => state.RequerimientoUsarioSlice
     );
   
 

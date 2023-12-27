@@ -9,7 +9,6 @@ import Swal from 'sweetalert2';
 import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
 import { postDigitalizacionPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service';
-import { resetPanelVentanillaFull } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ButtonsPqrsdf: React.FC = (): JSX.Element => {

@@ -81,7 +81,7 @@ export const ProtectedRoutes: React.FC = () => {
               <Route path="transversal/*" element={<TransversalRoutes />} />
             ) : null}
             {/* ---------------- Transversal ---------------- */}
-            {allowed_routes.includes('TRSV') ? (
+            {allowed_routes.includes('PLAN') ? (
               <Route path="planes/*" element={<SeguimientoPlanesRoutes />} />
             ) : null}
             {/* Usuarios */}

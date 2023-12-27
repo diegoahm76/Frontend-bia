@@ -44,7 +44,7 @@ export const get_searched_trd = (
       dispatch(get_trds(data.data));
 
       data.data.length === 0
-        ? control_error('No se encontró data relacionada')
+        ? control_error('No se encontraron datos')
         : control_success(data.detail);
       return data.data;
     } catch (error: AxiosError | any) {
@@ -159,7 +159,7 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
       });
 
       if(new_data.length === 0) {
-        control_error('No se encontró data relacionada');
+        control_error('No se encontraron datos');
       }
 
       dispatch(get_catalogo_series_subseries_unidad_organizacional(new_data));
@@ -322,7 +322,7 @@ export const get_tipologias_documentales_by_name = (
         ? control_success(
             data.detail || 'proceso exitoso, se encontró la siguiente data'
           )
-        : control_error('No se encontró data relacionada');
+        : control_error('No se encontraron datos');
 
       dispatch(get_data_tipologias_documentales(data.data));
       return data.data;
@@ -356,7 +356,7 @@ export const get_formatos_documentales_by_code = (code?: string): any => {
         ? control_success(
             data.detail || 'proceso exitoso, se encontró la siguiente data'
           )
-        : control_error('No se encontró data relacionada');
+        : control_error('No se encontraron datos');
 
       dispatch(get_data_format_documental_type(data.data));
       return data.data;
@@ -387,9 +387,9 @@ export const get_formatos_documentales_by_id_tipologia = (
 
       data.data.length > 0
         ? control_success(
-            data.detail || 'proceso exitoso, se encontró la siguiente data'
+            data.detail || 'proceso exitoso, se encontraron los siguientes datos'
           )
-        : control_error('No se encontró data relacionada');
+        : control_error('No se encontraron datos');
       //  console.log('')(data.data, 'data.data');
       return data.data;
     } catch (error: any) {
