@@ -226,7 +226,7 @@ const ReaperturaExpedienteScreen = () => {
                     default_value=''
                     rules={{}}
                     type="text"
-                    disabled={false}
+                    disabled={true}
                     helper_text=""
                     hidden_text={null}
                     label={"Expediente Cerrado"}
@@ -446,7 +446,7 @@ const ReaperturaExpedienteScreen = () => {
                 </Grid>
 
                 <Grid item margin={2}>
-                    <Button variant="outlined"
+                    <Button variant="contained"
                         color="error"
                     //   onClick={handle_close_buscar}
                     >

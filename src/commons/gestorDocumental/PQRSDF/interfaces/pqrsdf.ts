@@ -54,6 +54,7 @@ export interface IPqrsdf {
   department: IObjListType;
   resources: IObjListType[];
   resource: IObjListType[];
+  file_fisico: any | null;
 
 
   //Radicados pqr

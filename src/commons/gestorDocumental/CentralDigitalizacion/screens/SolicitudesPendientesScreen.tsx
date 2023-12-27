@@ -54,9 +54,9 @@ export function SolicitudesPendientesScreen(): JSX.Element {
               on_click_function={null}
               icon_class={<SaveIcon />}
               disabled={false}
-              label="Crear PQRSDF"
+              label="Solicitudes de digitalización respondidas"
               type_button="button"
-              color_button="success"
+              color_button="primary"
             />
           </Grid>
 

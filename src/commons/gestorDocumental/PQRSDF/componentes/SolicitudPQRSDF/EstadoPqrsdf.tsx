@@ -22,6 +22,9 @@ import {
   set_grantor,
   set_pqrs,
   set_pqr_status,
+  initial_state_pqr,
+  set_pqr,
+  set_exhibits,
 } from '../../store/slice/pqrsdfSlice';
 import { get_pqrs_service } from '../../store/thunks/pqrsdfThunks';
 
@@ -64,10 +67,16 @@ const EstadoPqrsdf = () => {
               void dispatch(get_pqrs_service(grantor.id_persona));
             }
           }
+        } else {
+          dispatch(set_pqrs([]));
+          dispatch(set_pqr(initial_state_pqr));
+          dispatch(set_exhibits([]));
         }
       } else {
         dispatch(set_pqr_status({ id: null, key: null, label: null }));
         dispatch(set_pqrs([]));
+        dispatch(set_pqr(initial_state_pqr));
+        dispatch(set_exhibits([]));
       }
     }
   };
