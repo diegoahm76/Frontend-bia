@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,28 +20,29 @@ import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-// import ChecklistOutlinedIcon from '@mui/icons-material/Edit';
+// import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { IBusquedaIndicador } from './types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import {
-  set_current_indicador,
   set_current_mode_planes,
+  set_current_proyecto,
 } from '../../../../store/slice/indexPlanes';
-import { search_indicadores } from '../../../../Indicadores/services/services';
-import { DataContextMetas } from '../../../context/context';
+import EditIcon from '@mui/icons-material/Edit';
+import { search_proyectos } from '../../../../Indicadores/services/services';
+import { IBusquedaProgramas } from '../../../../Programas/components/Programas/BusquedaAvanzada/types';
+import { DataContextProductos } from '../../../context/context';
+import { IBusquedaProyecto } from '../../../../Proyectos/components/Proyectos/BusquedaAvanzada/types';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaAvanzadaIndicadores: React.FC = () => {
+export const BusquedaProyecto: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
-
   const columns: GridColDef[] = [
     {
       field: 'nombre_plan',
@@ -55,60 +57,59 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       width: 250,
     },
     {
+      field: 'numero_proyecto',
+      headerName: 'Número de Proyecto',
+      sortable: true,
+      width: 150,
+    },
+    {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 250,
+      width: 350,
     },
     {
-      field: 'nombre_producto',
-      headerName: 'Nombre del Producto',
+      field: 'pondera_1',
+      headerName: 'Ponderación 1',
       sortable: true,
-      width: 250,
+      width: 120,
     },
     {
-      field: 'nombre_actividad',
-      headerName: 'Nombre de la Actividad',
+      field: 'pondera_2',
+      headerName: 'Ponderación 2',
       sortable: true,
-      width: 250,
+      width: 120,
     },
     {
-      field: 'nombre_indicador',
-      headerName: 'Nombre del Indicador',
+      field: 'pondera_3',
+      headerName: 'Ponderación 3',
       sortable: true,
-      width: 250,
+      width: 120,
     },
     {
-      field: 'nombre_medicion',
-      headerName: 'Nombre de Medición',
+      field: 'pondera_4',
+      headerName: 'Ponderación 4',
       sortable: true,
-      width: 150,
+      width: 120,
     },
-    {
-      field: 'nombre_tipo',
-      headerName: 'Nombre de Tipo',
-      sortable: true,
-      width: 150,
-    },
-
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 100,
+      width: 120,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'fecha_creacion',
       headerName: 'Fecha de Creación',
       sortable: true,
-      width: 150,
+      width: 180,
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      width: 250,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -118,9 +119,6 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               set_id_plan(params.row.id_plan);
               set_id_programa(params.row.id_programa);
               set_id_proyecto(params.row.id_proyecto);
-              set_id_producto(params.row.id_producto);
-              set_id_actividad(params.row.id_actividad);
-              set_id_indicador(params.row.id_indicador);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -128,14 +126,11 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                   editar: false,
                 })
               );
-              // dispatch(set_current_indicador(params.row));
+              dispatch(set_current_proyecto(params.row));
               reset({
                 nombre_plan: params.row.nombre_plan,
                 nombre_programa: params.row.nombre_programa,
                 nombre_proyecto: params.row.nombre_proyecto,
-                nombre_producto: params.row.nombre_producto,
-                nombre_actividad: params.row.nombre_actividad,
-                nombre_indicador: params.row.nombre_indicador,
               });
               handle_close();
             }}
@@ -150,7 +145,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               variant="rounded"
             >
               <ChecklistOutlinedIcon
-                titleAccess="Seleccionar indicador"
+                titleAccess="Editar plan"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -175,15 +170,12 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       nombre_plan: '',
       nombre_programa: '',
       nombre_proyecto: '',
-      nombre_producto: '',
-      nombre_actividad: '',
-      nombre_indicador: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaIndicador[]>([]);
+  const [rows, set_rows] = useState<IBusquedaProyecto[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -197,26 +189,16 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
-    async ({
-      nombre_plan,
-      nombre_programa,
-      nombre_proyecto,
-      nombre_producto,
-      nombre_actividad,
-      nombre_indicador,
-    }) => {
+    async ({ nombre_plan, nombre_programa, nombre_proyecto }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_indicadores({
+        } = await search_proyectos({
           nombre_plan,
           nombre_programa,
           nombre_proyecto,
-          nombre_producto,
-          nombre_actividad,
-          nombre_indicador,
         });
 
         if (data?.length > 0) {
@@ -232,14 +214,8 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     }
   );
 
-  const {
-    set_id_plan,
-    set_id_programa,
-    set_id_proyecto,
-    set_id_producto,
-    set_id_actividad,
-    set_id_indicador,
-  } = useContext(DataContextMetas);
+  const { set_id_plan, set_id_programa, set_id_proyecto } =
+    useContext(DataContextProductos);
 
   useEffect(() => {
     reset();
@@ -265,12 +241,12 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Indicadores" />
+          <Title title="Busqueda Proyectos" />
         </Grid>
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={3}>
           <Controller
             name="nombre_plan"
             control={control}
@@ -289,7 +265,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={3}>
           <Controller
             name="nombre_programa"
             control={control}
@@ -308,7 +284,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={3}>
           <Controller
             name="nombre_proyecto"
             control={control}
@@ -318,63 +294,6 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               <TextField
                 fullWidth
                 label="Nombre proyecto"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Controller
-            name="nombre_producto"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Nombre producto"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Controller
-            name="nombre_actividad"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Nombre actividad"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Controller
-            name="nombre_indicador"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Nombre indicador"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -437,7 +356,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada indicadores" />
+            <Title title="Búsqueda avanzada proyectos" />
             {/* <form
               onSubmit={(e) => {
                 void on_submit_advance(e);
@@ -451,7 +370,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               }}
             > */}
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre_plan"
                   control={control}
@@ -470,7 +389,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre_programa"
                   control={control}
@@ -489,7 +408,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre_proyecto"
                   control={control}
@@ -499,63 +418,6 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                     <TextField
                       fullWidth
                       label="Nombre proyecto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_producto"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre producto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_actividad"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre actividad"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_indicador"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre indicador"
                       value={value}
                       onChange={onChange}
                       size="small"

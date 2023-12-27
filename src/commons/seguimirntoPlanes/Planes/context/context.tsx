@@ -8,6 +8,8 @@ import { get_planes } from '../services/services';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
 
   // * rows
   rows_planes: IPlanes[];
@@ -21,6 +23,10 @@ interface UserContext {
 }
 
 export const DataContextPlanes = createContext<UserContext>({
+  // * id
+  id_plan: null,
+  set_id_plan: () => {},
+  // * rows
   rows_planes: [],
   set_rows_planes: () => {},
   fetch_data_planes: async () => {},
@@ -35,6 +41,7 @@ export const UserProviderPlanes = ({
   //   const { cajas } = useAppSelector((state) => state.deposito);
 
   // * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
 
   // * select
 
@@ -68,6 +75,8 @@ export const UserProviderPlanes = ({
   };
   const value: UserContext = {
     // * id
+    id_plan,
+    set_id_plan,
 
     // * select
 
