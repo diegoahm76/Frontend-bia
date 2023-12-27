@@ -63,6 +63,7 @@ export const GestionCarteraScreen: React.FC = () => {
 
   const [filtered_nombres, set_filtered_nombres] = useState<string>('');
   const [filtered_apellidos, set_filtered_apellidos] = useState<string>('');
+  const [filtered_identificacion, set_filtered_identificacion] = useState<string>('');
 
   const columns_carteras: GridColDef[] = [
     {
@@ -84,13 +85,21 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'nombre_deudor',
-      headerName: 'Nombre Deudor',
+      field: 'nombres_deudor',
+      headerName: 'Nombres Deudor',
       minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        return `${params.row.id_deudor.nombres} ${params.row.id_deudor.apellidos}`;
+        return params.row.id_deudor.nombres;
+      }
+    },
+    {
+      field: 'apellidos_deudor',
+      headerName: 'Apellidos Deudor',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.row.id_deudor.apellidos;
       }
     },
     {
@@ -546,12 +555,12 @@ export const GestionCarteraScreen: React.FC = () => {
 
   const filter_by_name = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    if (filtered_nombres === '' && filtered_apellidos === '') {
-      toast.info('Escriba por lo menos los nombres o apellidos del deudor', {
+    if (filtered_nombres === '' && filtered_apellidos === '' && filtered_identificacion === '') {
+      toast.info('Escriba por lo menos los nombres o apellidos o la identificación del deudor', {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     } else {
-      api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}`)
+      api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}&identificacion=${filtered_identificacion}`)
         .then((response) => {
           if ((response.data.data as Cartera[]).length > 0) {
             set_carteras(response.data.data);
@@ -568,9 +577,10 @@ export const GestionCarteraScreen: React.FC = () => {
   };
 
   const clear_filter = (): void => {
-    if (filtered_nombres !== '' || filtered_apellidos !== '') {
+    if (filtered_nombres !== '' || filtered_apellidos !== '' || filtered_identificacion !== '') {
       set_filtered_nombres('');
       set_filtered_apellidos('');
+      set_filtered_identificacion('');
       update_carteras();
     }
   };
@@ -674,6 +684,14 @@ export const GestionCarteraScreen: React.FC = () => {
                       set_filtered_apellidos(event.target.value);
                     }}
                   />
+                  <TextField
+                    label='Identificación'
+                    size='small'
+                    value={filtered_identificacion}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      set_filtered_identificacion(event.target.value);
+                    }}
+                  />
                   <Button
                     type='submit'
                     variant='contained'
@@ -707,6 +725,7 @@ export const GestionCarteraScreen: React.FC = () => {
                   initialState={{
                     columns: {
                       columnVisibilityModel: {
+                        id: false,
                         codigo_contable: false,
                         valor_sancion: false,
                       }
