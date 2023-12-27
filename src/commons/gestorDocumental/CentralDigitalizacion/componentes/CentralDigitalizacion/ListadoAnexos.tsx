@@ -37,8 +37,14 @@ interface IProps {
 const ListadoAnexos = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { exhibits, metadata, exhibit, storage_mediums, digitization_request } =
-    useAppSelector((state) => state.central_digitalizacion_slice);
+  const {
+    exhibits,
+    metadata,
+    exhibit,
+    storage_mediums,
+    digitization_request,
+    file_fisico,
+  } = useAppSelector((state) => state.central_digitalizacion_slice);
   const {
     control: control_form,
     handleSubmit: handle_submit_exhibit,
@@ -46,7 +52,7 @@ const ListadoAnexos = () => {
     getValues: get_values,
   } = useForm<IObjExhibit>();
   const [action, set_action] = useState<string>('Agregar');
-
+  const [cual_medio_view, set_cual_medio_view] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<string>('');
   const [add_metadata_is_active, set_add_metadata_is_active] =
@@ -76,6 +82,8 @@ const ListadoAnexos = () => {
         }
       }
     } else {
+      set_file_name('');
+
       if ((exhibit.metadatos?.archivo ?? null) !== null) {
         dispatch(
           set_exhibit({
@@ -125,8 +133,55 @@ const ListadoAnexos = () => {
     }
   }, [file]);
 
+  useEffect(() => {
+    if (file_fisico !== null) {
+      if ('name' in file_fisico) {
+        set_file_name(file_fisico.name);
+        dispatch(
+          set_exhibit({
+            ...exhibit,
+            nombre_anexo: get_values('nombre_anexo'),
+            orden_anexo_doc: get_values('orden_anexo_doc'),
+            cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+            medio_almacenamiento_otros_cual: get_values(
+              'medio_almacenamiento_otros_cual'
+            ),
+            numero_folios: 1,
+            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+            exhibit_link: file_fisico,
+            metadatos:
+              exhibit.id_anexo === null
+                ? metadata.asunto ?? null !== null
+                  ? metadata
+                  : null
+                : metadata,
+          })
+        );
+      }
+    }
+  }, [file_fisico]);
+
   const add_metadata_form = (): void => {
-    set_add_metadata_is_active(true);
+    const nombre_anexo = get_values('nombre_anexo') ?? '';
+    const medio_almacenamiento_otros_cual =
+      get_values('medio_almacenamiento_otros_cual') ?? '';
+    const cod_medio_almacenamiento =
+      get_values('cod_medio_almacenamiento') ?? '';
+    if (nombre_anexo !== '' && cod_medio_almacenamiento !== '') {
+      if (cod_medio_almacenamiento === 'Ot') {
+        if (medio_almacenamiento_otros_cual !== '') {
+          set_add_metadata_is_active(true);
+        } else {
+          control_error('Debe ingresar el nombre del medio de almacenamiento');
+        }
+      } else {
+        set_add_metadata_is_active(true);
+      }
+    } else {
+      control_error(
+        'Debe ingresar el nombre del anexo y el medio de almacenamiento'
+      );
+    }
   };
 
   const columns_list: GridColDef[] = [
@@ -298,7 +353,7 @@ const ListadoAnexos = () => {
                 required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Documento',
-              disabled: false,
+              disabled: exhibit.metadatos?.cod_origen_archivo === 'F',
               helper_text: '',
               set_value: set_file,
               file_name,
@@ -347,6 +402,9 @@ const ListadoAnexos = () => {
               type: 'text',
               disabled: true,
               helper_text: '',
+              hidden_text: !(
+                (exhibit.cod_medio_almacenamiento ?? null) === 'Ot'
+              ),
             },
             {
               datum_type: 'input_controller',
@@ -379,6 +437,7 @@ const ListadoAnexos = () => {
         <MetadataFormDialog
           is_modal_active={add_metadata_is_active}
           set_is_modal_active={set_add_metadata_is_active}
+          get_values_anexo={get_values}
         />
       </Grid>
     </>

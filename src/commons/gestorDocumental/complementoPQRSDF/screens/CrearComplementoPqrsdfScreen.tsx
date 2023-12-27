@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 import {
+  initial_state_complemento,
   reset_state,
   set_attorney,
   set_complement_pqr,
@@ -147,11 +148,47 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
     void dispatch(get_file_typology_service());
     void dispatch(get_offices_service());
   }, []);
-
+  const delete_complemento_pqr = (): void => {
+    if (
+      complement_pqr.idComplementoUsu_PQR !== null &&
+      complement_pqr.idComplementoUsu_PQR !== undefined
+    ) {
+      const fecha_actual = new Date();
+      const fecha_registro = new Date(complement_pqr.fecha_complemento ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        const params = {
+          id_PQRSDF: pqr.id_PQRSDF,
+          id_persona_titular: userinfo.id_persona,
+          id_persona_interpone: userinfo.id_persona,
+        };
+        void dispatch(
+          delete_complemento_pqrsdf_service(
+            complement_pqr.idComplementoUsu_PQR,
+            true,
+            params
+          )
+        );
+        dispatch(reset_state());
+        initial_values();
+      } else {
+        control_error(
+          'Solo se pueden eliminar siembras hasta 30 dias despues de la fecha de creación'
+        );
+      }
+    }
+  };
   const StepComponent = (step: number) => {
     switch (step) {
       case 1:
-        return <StepOne control_form={control_pqrsdf} reset={reset_pqrsdf} />;
+        return (
+          <StepOne
+            control_form={control_pqrsdf}
+            reset={reset_pqrsdf}
+            delete_function={delete_complemento_pqr}
+          />
+        );
 
       case 2:
         return (
@@ -175,8 +212,8 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
     console.log('validate_pqr', data);
   };
   const validate_complemento = (data: any, step: number) => {
-    console.log('validate_complemento', data, pqr);
-    dispatch(set_complement_pqr({ ...complement_pqr, anexos: exhibits }));
+    console.log('validate_complemento', data, exhibits);
+    dispatch(set_complement_pqr({ ...data }));
   };
   const [configuration_steps, set_configuration_steps] = useState<
     IObjStepConfiguration[]
@@ -232,7 +269,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
     ) {
       if ('anexos' in complement_pqr) {
         if (
-          complement_pqr.anexos === undefined &&
+          complement_pqr.anexos === undefined ||
           complement_pqr.anexos === null
         ) {
           set_step(0);
@@ -241,6 +278,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
           //   get_complemento_pqrsdf_id_service(complement_pqr.id_PQRSDF)
           // ); servicio para consultar complemento por id
         } else {
+          set_step(1);
           dispatch(set_exhibits(complement_pqr.anexos ?? []));
         }
       } else {
@@ -248,6 +286,8 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
         // void dispatch(get_complemento_pqrsdf_id_service(pqr.id_PQRSDF));servicio para consultar complemento por id
       }
       set_action('editar');
+    } else {
+      set_action('crear');
     }
   }, [complement_pqr]);
 
@@ -259,6 +299,11 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
   }, [exhibits]);
 
   const on_submit = (data: IObjComplementPqr): void => {
+    const params = {
+      id_PQRSDF: pqr.id_PQRSDF,
+      id_persona_titular: userinfo.id_persona,
+      id_persona_interpone: userinfo.id_persona,
+    };
     const form_data: any = new FormData();
     if (
       complement_pqr.idComplementoUsu_PQR !== null &&
@@ -323,7 +368,9 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
         });
         form_data.append('isCreateForWeb', 'True');
 
-        void dispatch(edit_complemento_pqrsdf_service(form_data, navigate));
+        void dispatch(
+          edit_complemento_pqrsdf_service(form_data, navigate, params)
+        );
       } else {
         control_error(
           'Solo se pueden editar pqrsdf hasta 30 dias despues de la fecha de creación'
@@ -347,7 +394,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       });
       const data_edit: any = {
         ...data,
-        fecha_registro: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
+        fecha_complemento: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
         id_persona_titular: userinfo.id_persona,
         id_persona_interpone: userinfo.id_persona,
         cantidad_anexos: exhibits.length,
@@ -355,6 +402,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
         cod_relacion_titular: 'MP',
         anexos: aux_items,
         requiere_digitalizacion: !ya_digitalizado,
+        id_PQRSDF: pqr.id_PQRSDF,
       };
       console.log(data_edit);
 
@@ -368,39 +416,14 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       form_data.append('id_persona_guarda', userinfo.id_persona);
       form_data.append('isCreateForWeb', 'True');
 
-      void dispatch(add_complemento_pqrsdf_service(form_data, navigate));
+      void dispatch(
+        add_complemento_pqrsdf_service(form_data, navigate, params)
+      );
     }
     dispatch(reset_state());
     initial_values();
   };
-  const delete_complemento_pqr = (): void => {
-    if (
-      complement_pqr.idComplementoUsu_PQR !== null &&
-      complement_pqr.idComplementoUsu_PQR !== undefined
-    ) {
-      const fecha_actual = new Date();
-      const fecha_registro = new Date(complement_pqr.fecha_complemento ?? '');
-      const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
-      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
-      if (diferencia_dias <= 30) {
-        void dispatch(
-          delete_complemento_pqrsdf_service(
-            complement_pqr.idComplementoUsu_PQR,
-            true
-          )
-        );
-        dispatch(reset_state());
-        initial_values();
-        navigate(
-          `/app/gestor_documental/pqrsdf/complemento/crear_complemento/`
-        );
-      } else {
-        control_error(
-          'Solo se pueden eliminar siembras hasta 30 dias despues de la fecha de creación'
-        );
-      }
-    }
-  };
+
   const radicate_complemento_pqr = (): void => {
     if (
       complement_pqr.idComplementoUsu_PQR !== null &&
@@ -411,13 +434,20 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
       if (diferencia_dias <= 30) {
+        const params = {
+          id_PQRSDF: pqr.id_PQRSDF,
+          id_persona_titular: userinfo.id_persona,
+          id_persona_interpone: userinfo.id_persona,
+        };
         void dispatch(
           radicar_complemento_pqrsdf_service(
             complement_pqr.idComplementoUsu_PQR,
             userinfo.id_persona ?? 0,
-            true
+            params
           )
         );
+        dispatch(reset_state());
+        initial_values();
       } else {
         control_error(
           'Solo se pueden radicar complementos hasta 30 dias despues de la fecha de creación'
@@ -454,17 +484,19 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
           step={step}
         />
         <Grid container direction="row" padding={2} spacing={2}>
-          <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={handle_submit_complemento(on_submit)}
-              icon_class={<SaveIcon />}
-              disabled={!flag_create}
-              label={action}
-              type_button="button"
-              color_button="success"
-            />
-          </Grid>
+          {complement_pqr.id_radicado === null && (
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={handle_submit_complemento(on_submit)}
+                icon_class={<SaveIcon />}
+                disabled={!flag_create}
+                label={action}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+          )}
           {complement_pqr.idComplementoUsu_PQR !== null &&
             complement_pqr.id_radicado === null && (
               <>

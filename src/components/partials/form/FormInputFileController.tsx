@@ -88,9 +88,7 @@ const FormInputFileController = ({
                 min: rules.min_rule?.rule,
                 max: rules.max_rule?.rule,
               }}
-              render={({
-                fieldState: { error },
-              }) => (
+              render={({ fieldState: { error } }) => (
                 <FormControl fullWidth>
                   <Button
                     fullWidth
@@ -145,7 +143,7 @@ const FormInputFileController = ({
             value_file !== null &&
             typeof value_file === 'string' && (
               <Grid item xs={1} md={1} spacing={1}>
-                <DownloadButton                  
+                <DownloadButton
                   fileUrl={value_file}
                   fileName={control_name}
                   condition={false}
