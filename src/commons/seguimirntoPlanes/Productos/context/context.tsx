@@ -13,6 +13,10 @@ interface UserContext {
   set_id_plan: (value: number | null) => void;
   id_programa: number | null;
   set_id_programa: (value: number | null) => void;
+  id_proyecto: number | null;
+  set_id_proyecto: (value: number | null) => void;
+  id_producto: number | null;
+  set_id_producto: (value: number | null) => void;
 
   // * rows
   rows_producto: IProductos[];
@@ -36,6 +40,10 @@ export const DataContextProductos = createContext<UserContext>({
   set_id_plan: () => {},
   id_programa: null,
   set_id_programa: () => {},
+  id_proyecto: null,
+  set_id_proyecto: () => {},
+  id_producto: null,
+  set_id_producto: () => {},
   // * select
   rows_producto: [],
   set_rows_producto: () => {},
@@ -55,6 +63,8 @@ export const UserProviderProductos = ({
 
   const [id_plan, set_id_plan] = React.useState<number | null>(null);
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
+  const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
+  const [id_producto, set_id_producto] = React.useState<number | null>(null);
 
   // * select
 
@@ -67,9 +77,9 @@ export const UserProviderProductos = ({
 
   // * fetch
   //* declaracion context
-  const {
-    proyecto: { id_proyecto },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   proyecto: { id_proyecto },
+  // } = useAppSelector((state) => state.planes);
 
   const fetch_data_producto = async (): Promise<void> => {
     try {
@@ -131,10 +141,14 @@ export const UserProviderProductos = ({
 
   const value: UserContext = {
     // * id
-    id_plan, // use the state variable here
-    set_id_plan, // use the state setter function here
-    id_programa, // use the state variable here
-    set_id_programa, // use the state setter function here
+    id_plan, 
+    set_id_plan, 
+    id_programa, 
+    set_id_programa, 
+    id_proyecto, 
+    set_id_proyecto, 
+    id_producto,  
+    set_id_producto, 
 
     // * select
 

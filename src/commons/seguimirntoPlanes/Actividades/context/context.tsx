@@ -14,6 +14,12 @@ interface UserContext {
   set_id_programa: (value: number | null) => void;
   id_proyecto: number | null;
   set_id_proyecto: (value: number | null) => void;
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
+  id_actividad: number | null;
+  set_id_actividad: (value: number | null) => void;
+  id_producto: number | null;
+  set_id_producto: (value: number | null) => void;
 
   // * rows
   rows_actividad: IActividades[];
@@ -42,6 +48,13 @@ export const DataContextActividades = createContext<UserContext>({
   set_id_programa: () => {},
   id_proyecto: null,
   set_id_proyecto: () => {},
+  id_plan: null,
+  set_id_plan: () => {},
+  id_actividad: null,
+  set_id_actividad: () => {},
+  id_producto: null,
+  set_id_producto: () => {},
+
   // * rows
   rows_actividad: [],
   set_rows_actividad: () => {},
@@ -65,6 +78,9 @@ export const UserProviderActividades = ({
   // * id
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
   const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
+  const [id_producto, set_id_producto] = React.useState<number | null>(null);
 
   // * select
   const [planes_selected, set_planes_selected] = React.useState<
@@ -82,9 +98,9 @@ export const UserProviderActividades = ({
 
   // * fetch
   //* declaracion context
-  const {
-    producto: { id_producto },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   producto: { id_producto },
+  // } = useAppSelector((state) => state.planes);
 
   const fetch_data_actividad = async (): Promise<void> => {
     try {
@@ -199,6 +215,12 @@ export const UserProviderActividades = ({
     set_id_programa,
     id_proyecto,
     set_id_proyecto,
+    id_plan,
+    set_id_plan,
+    id_actividad,
+    set_id_actividad,
+    id_producto,
+    set_id_producto,
 
     // * select
     planes_selected,

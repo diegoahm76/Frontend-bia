@@ -65,15 +65,20 @@ export const useActividadHook = (): any => {
     useState<boolean>(false);
 
   // declaracion context
-  const { id_programa, id_proyecto, fetch_data_actividad } = useContext(
-    DataContextActividades
-  );
+  const {
+    id_programa,
+    id_proyecto,
+    id_actividad,
+    id_producto,
+    id_plan,
+    fetch_data_actividad,
+  } = useContext(DataContextActividades);
 
   // declaracion redux
-  const {
-    actividad: { id_actividad },
-    producto: { id_producto },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   actividad: { id_actividad },
+  //   producto: { id_producto },
+  // } = useAppSelector((state) => state.planes);
 
   const onsubmit_actividad = handleSubmit_actividad(async (data) => {
     try {
@@ -82,6 +87,8 @@ export const useActividadHook = (): any => {
       data.id_programa = id_programa;
       data.id_proyecto = id_proyecto;
       data.id_producto = id_producto;
+      data.id_plan = id_plan;
+      data.id_actividad = id_actividad;
       const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
       data.fecha_creacion = fecha_creacion_format;
       await post_actividad(data as IActividades);
@@ -107,6 +114,8 @@ export const useActividadHook = (): any => {
       data.id_programa = id_programa;
       data.id_proyecto = id_proyecto;
       data.id_producto = id_producto;
+      data.id_plan = id_plan;
+      data.id_actividad = id_actividad;
       const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
       data.fecha_creacion = fecha_creacion_format;
       await put_actividad((id_actividad as number) ?? 0, data as IActividades);

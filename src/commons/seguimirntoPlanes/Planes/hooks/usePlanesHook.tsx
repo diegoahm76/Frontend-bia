@@ -50,7 +50,7 @@ export const usePlanesHook = (): any => {
   const [is_saving_planes, set_is_saving_planes] = useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_planes } = useContext(DataContextPlanes);
+  const { id_plan, fetch_data_planes } = useContext(DataContextPlanes);
 
   const onsubmit_planes = handleSubmit_planes(async (data) => {
     try {
@@ -74,13 +74,14 @@ export const usePlanesHook = (): any => {
 
   // editar
   // declaracion redux
-  const {
-    plan: { id_plan },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   plan: { id_plan },
+  // } = useAppSelector((state) => state.planes);
 
   const onsubmit_editar = handleSubmit_planes(async (data) => {
     try {
       //  console.log('')(data, 'data');
+      data.id_plan = id_plan;
       data.agno_inicio = agno_ini;
       data.agno_fin = agno_fin;
       set_is_saving_planes(true);

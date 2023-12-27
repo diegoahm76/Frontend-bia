@@ -3,12 +3,27 @@ import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { AgregarPlanes } from '../components/Planes/AgregarPlanes';
 import { ListarPlanes } from '../components/Planes/ListarPlanes';
-import { useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaPlan } from '../components/Planes/BusquedaAvanzada/BusquedaPlan';
+import { useEffect } from 'react';
+import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PlanesScreen: React.FC = () => {
   const { mode } = useAppSelector((state) => state.planes);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(
+      set_current_mode_planes({
+        ver: true,
+        crear: false,
+        editar: false,
+      })
+    );
+  }, []);
 
   return (
     <>
@@ -31,7 +46,8 @@ export const PlanesScreen: React.FC = () => {
           <Title title="Planes" />
         </Grid>
       </Grid>
-      <ListarPlanes />
+      <BusquedaPlan />
+      {mode.ver ? <ListarPlanes /> : null}
       {mode.crear || mode.editar ? <AgregarPlanes /> : null}
       <Grid
         container

@@ -64,13 +64,14 @@ export const useProyectoHook = (): any => {
   const [is_saving_proyecto, set_is_saving_proyecto] = useState<boolean>(false);
 
   // declaracion context
-  const { id_plan, fetch_data_proyecto } = useContext(DataContextProyectos);
+  const { id_plan, id_programa, id_proyecto, fetch_data_proyecto } =
+    useContext(DataContextProyectos);
 
   // declaracion redux
-  const {
-    proyecto: { id_proyecto },
-    programa: { id_programa },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   proyecto: { id_proyecto },
+  //   programa: { id_programa },
+  // } = useAppSelector((state) => state.planes);
 
   const onsubmit_proyecto = handleSubmit_proyecto(async (data) => {
     try {
@@ -100,6 +101,7 @@ export const useProyectoHook = (): any => {
     try {
       console.log(data, 'data');
       data.id_plan = id_plan ?? 0;
+      data.id_programa = id_programa ?? 0;
       const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
       data.fecha_creacion = fecha_creacion_format;
       set_is_saving_proyecto(true);
