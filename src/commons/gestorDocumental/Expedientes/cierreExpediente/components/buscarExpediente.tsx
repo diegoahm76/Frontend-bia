@@ -21,19 +21,16 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
-import { control_error } from '../../../../../helpers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import {
   get_busqueda_avanzada_expediente,
   get_tipologias,
   get_trd,
+  serie_trd,
 } from '../store/thunks/cierreExpedientesthunks';
-import { IObjTRD } from '../interfaces/cierreExpedientes';
+import { IObjTrd} from '../interfaces/cierreExpedientes';
 import FormDatePickerController from '../../../../../components/partials/form/FormDatePickerController';
 import FormDatePickerControllerV from '../../../../../components/partials/form/FormDatePickerControllerv';
 
@@ -52,11 +49,11 @@ const BuscarExpediente = ({
   get_values,
   handle_selected_expediente,
 }: IProps) => {
-  const { expedientes, trd } = useAppSelector(
+  const { expedientes, trd, serie_subserie } = useAppSelector(
     (state) => state.cierre_expedientes
   );
   const dispatch = useAppDispatch();
-  const [trdOptions, setTrdOptions] = useState<IObjTRD[]>([]);
+  const [trdOptions, setTrdOptions] = useState<IObjTrd[]>([]);
 
   useEffect(() => {
     void dispatch(get_trd());
@@ -241,49 +238,7 @@ const BuscarExpediente = ({
                 </Grid>
 
                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
-                  <Controller
-                    name="nombre_trd_origen"
-                    control={control_cierre_expediente}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        select
-                        label="TRD"
-                        variant="outlined"
-                        disabled={false}
-                        defaultValue={value}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        sx={{
-                          backgroundColor: 'white',
-                        }}
-                        InputLabelProps={{ shrink: true }}
-                      >
-                        {trdOptions.map((option) => (
-                          <MenuItem
-                            key={option.id_trd_origen}
-                            value={option.nombre_tdr_origen ?? ''}
-                          >
-                            {option.nombre_tdr_origen}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container justifyContent="center">
-                <Grid item xs={12} sm={3.5} margin={2}>
-                  <Controller
+                <Controller
                     name="fecha_apertura_expediente"
                     control={control_cierre_expediente}
                     rules={{ required: true }}
@@ -310,10 +265,74 @@ const BuscarExpediente = ({
                       ></TextField>
                     )}
                   />
+
+
+
+                </Grid>
+              </Grid>
+
+              <Grid container justifyContent="center">
+                <Grid item xs={12} sm={3.5} margin={2}>
+                  
+                <Controller
+                    name="nombre_trd_origen"
+                    control={control_cierre_expediente}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        key={trdOptions ? trdOptions.length : 0}
+                        margin="dense"
+                        fullWidth
+                        select
+                        size="small"
+                        label="TRD"
+                        variant="outlined"
+                        disabled={false}
+                        defaultValue={value}
+                        value={value}
+                        onChange={(e) => {
+                          onChange(e);
+                          const selectedTrd = trdOptions.find(
+                            (option) => option.nombre === e.target.value
+                          );
+                          if (selectedTrd) {
+                            // Aquí puedes acceder a la propiedad id_ccd de selectedTrd
+                            const id_ccd: number | undefined | null =
+                              selectedTrd.id_ccd;
+                            if (id_ccd !== null && id_ccd !== undefined) {
+                              console.log('id_ccd:', id_ccd);
+                              // También puedes realizar cualquier otra acción que necesites con id_ccd
+                              void dispatch(serie_trd(id_ccd));
+                            }
+                          }
+                        }}
+                        error={!(error == null)}
+                        sx={{
+                          backgroundColor: 'white',
+                        }}
+                        InputLabelProps={{ shrink: true }}
+                      >
+                        {trdOptions &&
+                          trdOptions.map((option) => (
+                            <MenuItem
+                              key={option.id_trd}
+                              value={option.nombre ?? ''}
+                            >
+                              {option.nombre}
+                            </MenuItem>
+                          ))}
+                      </TextField>
+                    )}
+                  />
+                  
                 </Grid>
 
                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
-                  <Controller
+                <Controller
                     name="id_serie_origen"
                     control={control_cierre_expediente}
                     rules={{ required: true }}
@@ -322,6 +341,7 @@ const BuscarExpediente = ({
                       fieldState: { error },
                     }) => (
                       <TextField
+                        select
                         autoFocus
                         margin="dense"
                         fullWidth
@@ -337,14 +357,23 @@ const BuscarExpediente = ({
                           backgroundColor: 'white',
                         }}
                         InputLabelProps={{ shrink: true }}
-                      ></TextField>
+                      >
+                        {serie_subserie.map((option) => (
+                          <MenuItem
+                            key={option.id_cat_serie_und}
+                            value={option.nombre_serie ?? ''}
+                          >
+                            {option.nombre_serie}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     )}
                   />
                 </Grid>
 
                 <Grid item xs={12} sm={3.5} marginTop={2} margin={2}>
-                  <Controller
-                    name="id_subserie_origen"
+                <Controller
+                    name="id_suberie_origen"
                     control={control_cierre_expediente}
                     rules={{ required: true }}
                     render={({
@@ -352,11 +381,12 @@ const BuscarExpediente = ({
                       fieldState: { error },
                     }) => (
                       <TextField
+                        select
                         autoFocus
                         margin="dense"
                         fullWidth
                         size="small"
-                        label="Sub Serie"
+                        label="Serie"
                         variant="outlined"
                         disabled={false}
                         defaultValue={value}
@@ -367,7 +397,16 @@ const BuscarExpediente = ({
                           backgroundColor: 'white',
                         }}
                         InputLabelProps={{ shrink: true }}
-                      ></TextField>
+                      >
+                        {serie_subserie.map((option) => (
+                          <MenuItem
+                            key={option.id_cat_serie_und}
+                            value={option.nombre_subserie ?? ''}
+                          >
+                            {option.nombre_subserie}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     )}
                   />
                 </Grid>
@@ -510,7 +549,7 @@ const BuscarExpediente = ({
 
                     <Grid item margin={2}>
                       <Button
-                        variant="outlined"
+                        variant="contained"
                         color="error"
                         onClick={handle_close_buscar}
                       >

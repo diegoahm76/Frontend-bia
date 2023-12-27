@@ -11,6 +11,7 @@ import {
   set_archivos_por_expediente,
   set_expedientes,
   set_informacion_reapertura,
+  set_serie_subserie,
   set_tipologias,
   set_trd,
 } from '../slice/indexCierreExpedientes';
@@ -50,14 +51,16 @@ export const get_trd = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        'gestor/expedientes-archivos/expedientes/listar-trd/'
+        'gestor/trd/get-list/'
       );
 
-      if (data.success === true) {
-        dispatch(set_trd(data.data));
+      
+        dispatch(set_trd(data));
+        console.log('Datos de TRD seteados:', data);
+        return data;
       }
-      return data;
-    } catch (error: any) {
+     
+     catch (error: any) {
       control_error(error.response.data.detail);
 
       return error as AxiosError;
@@ -335,6 +338,31 @@ export const delete_file = (
       if (data.success) {
         control_success(data.detail);
         dispatch(get_archivos_id_expediente(id_expediente_documental));
+      } else {
+        control_error(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+export const serie_trd = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/ccd/catalogo/serie-subserie/get-by-id-ccd/${id}/`
+      );
+      //  console.log('')(data);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success === true) {
+        control_success(data.detail);
+        dispatch(set_serie_subserie(data.data));
       } else {
         control_error(data.detail);
       }
