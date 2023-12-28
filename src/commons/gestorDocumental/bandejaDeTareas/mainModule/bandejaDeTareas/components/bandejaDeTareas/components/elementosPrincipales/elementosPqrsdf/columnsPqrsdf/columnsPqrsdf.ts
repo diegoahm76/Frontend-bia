@@ -70,14 +70,6 @@ export const columnsPqrsdf = [
     },
   },
   {
-    headerName: 'Estado de la tarea',
-    field: 'estado_tarea',
-    minWidth: 220,
-    renderCell: (params: any) => {
-      return params.value ?? 'Sin estado';
-    },
-  },
-  {
     headerName: 'Fecha de respuesta',
     field: 'fecha_respondido',
     minWidth: 220,

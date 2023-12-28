@@ -12,6 +12,7 @@ import TaskIcon from '@mui/icons-material/Task';
 import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
 import ClearIcon from '@mui/icons-material/Clear';
 import CommentIcon from '@mui/icons-material/Comment';
+import ClearAllIcon from '@mui/icons-material/ClearAll';
 
 import {
   useAppDispatch,
@@ -27,6 +28,8 @@ import { BandejaTareasContext } from '../../../../../../context/BandejaTareasCon
 import { putAceptarTarea } from '../../../../../../../toolkit/thunks/Pqrsdf/putAceptarTarea.service';
 import { getListadoTareasByPerson } from '../../../../../../../toolkit/thunks/Pqrsdf/getListadoTareasByPerson.service';
 import { AuthSlice } from '../../../../../../../../../auth/interfaces';
+import { GridCellParams, GridValueGetterParams } from '@mui/x-data-grid';
+import { getAnexosPqrsdf } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
 /*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
@@ -56,7 +59,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   } = useAppSelector((state: AuthSlice) => state.auth);
 
   //* navigate declaration
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   //* context declaration
   const {
     setRadicado,
@@ -89,32 +92,43 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   // ? functions
 
-  const handleAcceptClick = async (row: { id_tarea_asignada: number }) => {
+  const handleAcceptClick = async (row: {
+    id_tarea_asignada: number;
+    tipo_tarea: string;
+  }) => {
     console.log(row);
 
-    /*putAceptarTarea(row.id_tarea_asignada).then((res) => {
-      console.log(res);
+    await Swal.fire({
+      title: 'Aceptar tarea',
+      text: `¿Estás seguro que deseas aceptar esta tarea?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await putAceptarTarea(row.id_tarea_asignada).then(async (res) => {
+          console.log(res);
+          //* llamar el servicio de la busqueda de las tareas
+          void getListadoTareasByPerson(
+            id_persona,
+            handleSecondLoading,
+            'Rpqr'
+          ).then(async (res: any) => {
+            dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res ?? []));
+            //* se limpian los otros controles para no crear conflictos
+            dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+          });
+        });
 
-      //* llamar el servicio de la busqueda de las tareas
-      void getListadoTareasByPerson(
-        id_persona,
-        handleSecondLoading,
-        //* se deberan pasar como parametros los valores de la row para que se haga la busqueda con los filtros
-        estado_actual_solicitud?.label,
-        radicado,
-        '' tipo_de_solicitud?.label,
-        fecha_inicio,
-        fecha_fin,
-        tipo_pqrsdf?.label,
-      ).then((res: any) => {
-        console.log(res);
-        dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
-
-        //* se limpian los otros controles para no crear conflictos
-        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
-        // dispatch(setListaElementosComplementosRequerimientosOtros([]));
+        return;
+      }
+      await Swal.fire({
+        title: 'Tarea NO ACEPTADA',
+        icon: 'info',
+        showConfirmButton: true,
       });
-    });*/
+    });
   };
 
   const handleRejectClick = (_row: any) => {
@@ -125,9 +139,9 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     console.log('viendo comentario de rechazo de tarea');
   };
 
-  /*  const setActionsPQRSDF = (pqrsdf: any) => {
+  const setActionsPQRSDF = (tareaPQRSDF: any) => {
     //  console.log('')(pqrsdf);
-
+    /*
     if (pqrsdf.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
@@ -136,17 +150,17 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         showConfirmButton: true,
       });
       return;
-    }
+    }*/
 
-    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(pqrsdf));
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaPQRSDF));
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Has seleccionado una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 
-    const shouldDisable = (actionId: string) => {
+    /*   const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
       const hasAnexos = pqrsdf.cantidad_anexos > 0;
@@ -196,9 +210,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       disabled: shouldDisable(action.id),
     }));
 
-    //  console.log('')(actionsPQRSDF);
-    dispatch(setActionssToManagePermissions(actionsPQRSDF));
-  };*/
+    dispatch(setActionssToManagePermissions(actionsPQRSDF));*/
+  };
 
   //* columns -------------------------------------------------------
 
@@ -258,15 +271,12 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
     //* deben ser los botones para aceptar o rechazar la tarea (si esta aceptada, aparece el texto de aceptada, si esta rechazada, aparece el texto de rechazada junto con un button para ver el comentario de rechazo, si no esta aceptada ni rechazada, aparece un button para aceptar y otro para rechazar)
     {
-      headerName: 'Estado de asignación',
-      field: 'estado_asignacion',
+      headerName: 'Estado asignación de tarea',
+      field: 'estado_tarea',
       minWidth: 220,
       renderCell: (params: any) => {
-        switch (params.row.estado_asignacion) {
-          case undefined:
+        switch (params.row.estado_tarea) {
           case null:
-          case 'PENDIENTE':
-          case false:
             return (
               <>
                 <Tooltip title="Aceptar tarea">
@@ -283,7 +293,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 </Tooltip>
               </>
             );
-          case 'ACEPTADA':
+          case 'Aceptado':
             return (
               <Chip
                 label="Tarea aceptada"
@@ -292,7 +302,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 size="small"
               />
             );
-          case 'RECHAZADA':
+          case 'Rechazado':
             return (
               <>
                 <Chip
@@ -323,7 +333,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       headerName: 'Acciones',
       field: 'Acciones',
       minWidth: 250,
-      renderCell: (/*params: any*/) => {
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
         return (
           <>
             <Tooltip title="Ver info de la tarea">
@@ -331,11 +341,11 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 onClick={() => {
                   // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
                   //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                  void getAnexosPqrsdf(params?.row?.id_pqrsdf).then((res) => {
                     //  console.log('')(res);
                     setActionsPQRSDF(params?.row);
                     navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                      `/app/gestor_documental/bandeja_tareas/info_tarea/${params.row.id_pqrsdf}`
                     );
                     setAnexos(res);
                     if (res.length > 0) {
@@ -345,7 +355,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                     }
 
                     return;
-                  });*/
+                  });
                 }}
               >
                 <Avatar
@@ -420,6 +430,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         aditionalElement={
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ? (
             <Button
+              endIcon={<ClearAllIcon />}
               onClick={() => {
                 dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
               }}

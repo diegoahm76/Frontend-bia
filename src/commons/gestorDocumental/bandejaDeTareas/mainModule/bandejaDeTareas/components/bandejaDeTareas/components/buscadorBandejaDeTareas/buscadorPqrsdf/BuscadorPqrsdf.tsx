@@ -5,6 +5,7 @@ import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 import { getEstadoSolicitudTarea } from '../../../../../services/servicesStates/pqrsdf/getEstadoSolicitudTarea.service';
 import { getEstadoAsignacionTarea } from '../../../../../services/servicesStates/pqrsdf/getEstadoAsignacionTarea.service';
+import { choiceShowTaskRequerimientos } from './utils/choiceShowTaskRequerimientos';
 
 export const BuscadorPqrsdf = (props: any): JSX.Element => {
   const { controlBusquedaBandejaTareas } = props;
@@ -51,7 +52,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
         <Controller
           name="estado_asignacion_de_tarea"
           control={controlBusquedaBandejaTareas}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ field: { onChange, value }}) => (
             <div>
               {request?.estadoAsignacionTarea?.length === 0 ? (
                 <Skeleton variant="text" height={35} /> // Reemplaza esto con tu componente de Skeleton
@@ -97,7 +98,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
           <Controller
             name="estado_de_la_tarea"
             control={controlBusquedaBandejaTareas}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
+            render={({ field: { onChange, value }}) => (
               <div>
                 <Select
                   value={value}
@@ -138,7 +139,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
         <Controller
           name="mostrar_respuesta_con_req_pendientes"
           control={controlBusquedaBandejaTareas}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ field: { onChange, value }}) => (
             <div>
               <Select
                 value={value}
@@ -146,7 +147,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
                   //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
-                options={[]}
+                options={choiceShowTaskRequerimientos ?? []}
                 placeholder="Seleccionar"
               />
               <label>
