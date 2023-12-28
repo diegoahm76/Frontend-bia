@@ -33,7 +33,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { control_success } from '../../../../../../../../helpers';
-0;
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import './style.css';
@@ -58,7 +57,6 @@ export const FormParte3 = ({
   const { currentAnexo, anexosCreados, metadatos, viewMode } = useAppSelector(
     (state: any) => state.ResSolicitudUsarioSlice
   );
-
 
 
   // ? stepper hook
@@ -174,7 +172,7 @@ export const FormParte3 = ({
       },
       tieneReplicaFisicaMetadatos: {
         value: metadatos?.tieneReplicaFisicaMetadatos?.value,
-        label: metadatos?.tieneReplicaFisicaMetadatos?.label,
+        label: metadatos?.tieneReplicaFisicaMetadatos?.value,
       },
       origenArchivoMetadatos: {
         value: metadatos?.origenArchivoMetadatos?.value,
@@ -304,6 +302,7 @@ export const FormParte3 = ({
         }}
         onSubmit={(e: any) => {
           e.preventDefault();
+          console.log(e,"eeeeee")
           handleAnexo();
           //* luego de la creación del anexo no se deben limpiar los campos del formualrio, ya que el usuario puede seguir creando sobre esa misma solicitud, solo el button limpiar campos puede hacer eso ya que se le advierte plenamente al usuario
         }}
