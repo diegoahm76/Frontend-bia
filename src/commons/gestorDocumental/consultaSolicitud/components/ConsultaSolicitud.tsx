@@ -7,49 +7,29 @@ import { useState, useEffect } from 'react';
 import { api } from '../../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { Title } from '../../../../components';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { miEstilo } from '../../Encuesta/interfaces/types';
-import { Persona } from '../../alertasgestor/interfaces/types';
+  import { miEstilo } from '../../Encuesta/interfaces/types';
 import { control_error, control_success } from '../../../../helpers';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
-import { Button, ButtonGroup, Divider, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, } from '@mui/material';
+import { Button, ButtonGroup, Divider, FormControl, Grid, InputLabel, MenuItem, Select,   TextField, } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
+ import { BuscadorPersona } from '../../../../components/BuscadorPersona';
+import { organigrama, AsignacionEncuesta, FormData, Sexo, estado, Persona } from '../interfaces/types';
 
-export interface Encuesta {
-    id_encabezado_encuesta: number;
-    nombre_encuesta: string;
-    item_ya_usado: boolean;
-};
-interface AsignacionEncuesta {
-    id_persona: number;
-    id_encuesta: number;
-    nombre_encuesta: string;
-    nombre_completo: string;
-    id_alerta_generada: number;
-    id_encabezado_encuesta: number;
-};
-interface FormData {
-    id_persona_alertar: any;
-    id_encabezado_encuesta: any;
-    fecha_desde: any;
-    fecha_hasta: any;
-    radicado: any;
-    estado_solicitud: any
-}
+
 export const ConsultaSolucitud: React.FC = () => {
     const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
 
     const initialFormData: FormData = {
         id_persona_alertar: null,
-        id_encabezado_encuesta: null,
+        organigrama: null,
         fecha_desde: null,
         fecha_hasta: null,
         radicado: null,
         estado_solicitud: null,
+        pqrs: null,
+        estado: null,
     };
     const [formData, setFormData] = useState(initialFormData);
     const handleInputChange = (event: any) => {
@@ -86,39 +66,60 @@ export const ConsultaSolucitud: React.FC = () => {
         { field: 'Tiempo respuesta', headerName: 'Tiempo respuesta', width: 150, felx: 1, },
         { field: 'Estado', headerName: 'Estado', width: 120, felx: 1, },
         { field: 'Ubicación', headerName: 'Ubicación', width: 150, felx: 1, },
-        // {
-        //     field: 'Documento',
-        //     headerName: 'Archivo',
-        //     width: 200,
-        //     flex: 1,
-        //     renderCell: (params: any) => (
-        //         <DownloadButton
-        //             condition={false}
-        //             fileUrl={params.value.ruta_archivo}
-        //             fileName={params.value.id_documento}
-        //         />
-        //     )
-        // },
-
-
     ];
 
-    const [encuestas, setEncuestas] = useState<Encuesta[]>([]);
-
-    const cargarEncuestas = async () => {
+    // Efecto para cargar los datos del pqrs
+    const [pqrss, setpqrs] = useState<Sexo[]>([]);
+    const fetchSpqrs = async (): Promise<void> => {
         try {
-            const response = await api.get('/gestor/encuestas/encuesta_disponibles/get/');
+            const url = "/gestor/choices/cod-tipo-pqrs/";
+            const res = await api.get<{ data: Sexo[] }>(url);
+            setpqrs(res.data.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSpqrs();
+    }, []);
+
+    //Organigrama 
+    const [organigrama, setorganigrama] = useState<organigrama[]>([]);
+    const cargarorganigrama = async () => {
+        try {
+            const response = await api.get('/transversal/organigrama/unidades/get-list/organigrama-actual/');
             if (response.data.success) {
-                setEncuestas(response.data.data);
+                setorganigrama(response.data.data);
             }
         } catch (error: any) {
-            console.error('Error al cargar las encuestas', error);
+            console.error('Error al cargar las organigrama', error);
             control_error(error.response.data.detail);
         }
     };
     useEffect(() => {
-        cargarEncuestas();
+        cargarorganigrama();
     }, []);
+
+    //Estado 
+    const [estado, setestado] = useState<estado[]>([]);
+    const cargarestado = async () => {
+        try {
+            const response = await api.get('/gestor/pqr/get-estado-solicitud/');
+            if (response.data.success) {
+                setestado(response.data.data);
+            }
+        } catch (error: any) {
+            console.error('Error al cargar las estado', error);
+            control_error(error.response.data.detail);
+        }
+    };
+    useEffect(() => {
+        cargarestado();
+    }, []);
+    //Buscar personas 
+    const [persona, set_persona] = useState<Persona | undefined>();
+    const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
     return (
         <>
             <Grid container
@@ -126,21 +127,95 @@ export const ConsultaSolucitud: React.FC = () => {
                 sx={miEstilo}
             >
                 <Grid item xs={12} sm={12}>
-                    <Title title="Consulta estado de una solicitud" />
+                    <Title title="Reportes - PQRSDF" />
                 </Grid>
-                <Grid item xs={12} sm={2}>
-                    <TextField
-                        required
-                        fullWidth
-                        size="small"
-                        name="radicado"
-                        label="radicado"
-                        variant="outlined"
-                        value={formData.radicado}
-                        onChange={handleInputChange}
+            </Grid>
+            <Grid container
+                item xs={12} marginLeft={2} marginRight={2} marginTop={3} spacing={2}
+                sx={miEstilo}
+            >
+                <Grid item xs={12} sm={12}>
+                    <Title title="Filtro de búsqueda    " />
+                </Grid>
+
+
+
+
+                <Grid item xs={12}>
+                    <BuscadorPersona
+                        onResult={(data) => {
+                            void on_result(data);
+                        }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={2}>
+
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        label="Primer Nombre"
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={persona?.primer_nombre}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel >PQRS</InputLabel>
+                        <Select
+                            onChange={handleInputChange}
+                            value={formData.pqrs}
+                            name="pqrs"
+                            label="PQRS"
+                        >
+                            {pqrss.map((pqrs) => (
+                                <MenuItem key={pqrs.value} value={pqrs.value}>
+                                    {pqrs.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel   >Organigrama</InputLabel>
+                        <Select
+                            label="Organigrama"
+                            onChange={handleInputChange}
+                            name="organigrama"
+                            value={formData.organigrama}
+                        >
+                            {organigrama.map(organigrama => (
+                                <MenuItem key={organigrama.id_unidad_organizacional} value={organigrama.id_unidad_organizacional}>
+                                    {organigrama.nombre}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+
+                <Grid item xs={12} sm={3}>
+                    <FormControl required size="small" fullWidth>
+                        <InputLabel   >estado</InputLabel>
+                        <Select
+                            label="estado"
+                            onChange={handleInputChange}
+                            name="estado"
+                            value={formData.estado}
+                        >
+                            {estado.map(estado => (
+                                <MenuItem key={estado.id_estado_solicitud} value={estado.id_estado_solicitud}>
+                                    {estado.nombre}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Fecha Desde"
@@ -165,7 +240,7 @@ export const ConsultaSolucitud: React.FC = () => {
                     </LocalizationProvider>
                 </Grid>
 
-                <Grid item xs={12} sm={2}>
+                <Grid item xs={12} sm={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Fecha hasta"
@@ -188,24 +263,6 @@ export const ConsultaSolucitud: React.FC = () => {
 
                         />
                     </LocalizationProvider>
-                </Grid>
-
-                <Grid item xs={12} sm={2}>
-                    <FormControl required size="small" fullWidth>
-                        <InputLabel   >Tipo de Encuesta</InputLabel>
-                        <Select
-                            label="Tipo de Encuesta"
-                            onChange={handleInputChange}
-                            name="id_encabezado_encuesta"
-                            value={formData.id_encabezado_encuesta}
-                        >
-                            {encuestas.map(encuesta => (
-                                <MenuItem key={encuesta.id_encabezado_encuesta} value={encuesta.id_encabezado_encuesta}>
-                                    {encuesta.nombre_encuesta}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
                 </Grid>
 
                 <Grid item xs={12} sm={10} ></Grid>

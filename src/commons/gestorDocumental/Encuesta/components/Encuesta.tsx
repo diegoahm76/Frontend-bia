@@ -220,6 +220,7 @@ export const Encuesta: React.FC = () => {
         };
         fetchSexo();
     }, []);
+    
     const [usuarioData, setUsuarioData] = useState<UsuarioRegistrado | null>(null);
     const fetchUsuarioRegistrado = async (): Promise<any> => {
         try {
