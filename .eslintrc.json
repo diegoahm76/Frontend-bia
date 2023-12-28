@@ -34,6 +34,12 @@
         "selector": "ExportDefaultDeclaration",
         "message": "Avoid using `export default` in ReactJS, use named exports instead."
       }
-    ]
+    ],
+    "no-unused-vars": ["warn", {
+      "vars": "all",
+      "args": "after-used",
+      "ignoreRestSiblings": false,
+      "argsIgnorePattern": "^_"  // ignore unused args that start with _
+    }]
   }
 }

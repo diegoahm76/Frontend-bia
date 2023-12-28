@@ -991,7 +991,7 @@ export const ListarPlanes: React.FC = () => {
                             nombre_objetivo: objetivo.nombre_objetivo,
                             nombre_plan: plan.nombre_plan,
                           }))
-                        )}
+                        ) ?? []}
                         columns={columns_obejtivos}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
@@ -1038,7 +1038,7 @@ export const ListarPlanes: React.FC = () => {
                             nombre_tipo_eje: eje.nombre_tipo_eje,
                             nombre: eje.nombre,
                           }))
-                        )}
+                        ) ?? []}
                         columns={colums_ejes}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
@@ -1142,7 +1142,7 @@ export const ListarPlanes: React.FC = () => {
                                       pondera_4: proyecto.pondera_4,
                                     }))
                                   )
-                                )}
+                                ) ?? []}
                                 columns={columns_proyectos}
                                 pageSize={10}
                                 rowsPerPageOptions={[10]}
@@ -1208,7 +1208,7 @@ export const ListarPlanes: React.FC = () => {
                                                 )
                                             )
                                           )
-                                        )}
+                                        ) ?? []}
                                         columns={columns_productos}
                                         pageSize={10}
                                         rowsPerPageOptions={[10]}
@@ -1293,7 +1293,7 @@ export const ListarPlanes: React.FC = () => {
                                                             )
                                                         )
                                                     )
-                                                )}
+                                                ) ?? []}
                                                 columns={colums_actividades}
                                                 pageSize={10}
                                                 rowsPerPageOptions={[10]}
@@ -1329,43 +1329,43 @@ export const ListarPlanes: React.FC = () => {
                                                   <DataGrid
                                                     density="compact"
                                                     autoHeight
-                                                    rows={rows_planes.flatMap(
+                                                    rows={rows_planes?.flatMap(
                                                       (plan) =>
-                                                        plan.programas.flatMap(
+                                                        plan?.programas.flatMap(
                                                           (programa) =>
-                                                            programa.proyectos.flatMap(
+                                                            programa?.proyectos.flatMap(
                                                               (proyecto) =>
-                                                                proyecto.productos.flatMap(
+                                                                proyecto?.productos?.flatMap(
                                                                   (producto) =>
                                                                     producto.actividades.flatMap(
                                                                       (
                                                                         actividad
                                                                       ) =>
-                                                                        actividad.indicadores.map(
+                                                                        actividad?.indicadores?.map(
                                                                           (
                                                                             indicador
                                                                           ) => ({
                                                                             nombre_indicador:
-                                                                              indicador.nombre_indicador,
+                                                                              indicador?.nombre_indicador,
                                                                             linea_base:
-                                                                              indicador.linea_base,
+                                                                              indicador?.linea_base,
                                                                             medida:
-                                                                              indicador.medida,
+                                                                              indicador?.medida,
                                                                             tipo_indicador:
-                                                                              indicador.tipo_indicador,
+                                                                              indicador?.tipo_indicador,
                                                                             nombre_tipo:
-                                                                              indicador.nombre_tipo,
+                                                                              indicador?.nombre_tipo,
                                                                             nombre_medicion:
-                                                                              indicador.nombre_medicion,
+                                                                              indicador?.nombre_medicion,
                                                                             metas:
-                                                                              indicador.metas,
+                                                                              indicador?.metas,
                                                                           })
                                                                         )
                                                                     )
                                                                 )
                                                             )
                                                         )
-                                                    )}
+                                                    ) ?? []}
                                                     columns={colums_indicadores}
                                                     pageSize={10}
                                                     rowsPerPageOptions={[10]}

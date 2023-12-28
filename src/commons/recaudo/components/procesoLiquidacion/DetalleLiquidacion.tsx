@@ -147,7 +147,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
         if (!params.value) {
           return params.value;
         }
-        return currency_formatter(Number(params.value));
+        return currency_formatter(Number(params.value), 4);
       }
     },
   ]

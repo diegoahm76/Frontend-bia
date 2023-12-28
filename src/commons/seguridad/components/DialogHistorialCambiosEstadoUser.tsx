@@ -131,8 +131,8 @@ export const DialogHistorialCambiosEstadoUser: React.FC<IProps> = ({
             <Grid item xs={12}>
               <DataGrid
                 autoHeight
-                rows={rows}
-                columns={columns}
+                rows={rows ?? []}
+                columns={columns ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 getRowId={(row) => row.id_historico}

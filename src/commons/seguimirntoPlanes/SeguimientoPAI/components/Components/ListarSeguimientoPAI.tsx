@@ -173,8 +173,8 @@ export const ListarSeguimientoPAI: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_seguimiento_pai}
-                  columns={columns_seguimiento_pai}
+                  rows={rows_seguimiento_pai ?? []}
+                  columns={columns_seguimiento_pai ?? []}
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}

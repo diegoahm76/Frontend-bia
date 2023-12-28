@@ -6,7 +6,6 @@ import { ListaElementosPqrsdf } from './elementosPqrsdf/ElementosPqrsdf';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
-import { ElementosOtros } from './elementosOtros/ElementosOtros';
 
 export const ElementosPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
@@ -15,7 +14,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
   );
 
   //* context declaration
-  const { secondLoading, handleSecondLoading } = useContext(
+  const { secondLoading } = useContext(
     ModalAndLoadingContext
   );
 
