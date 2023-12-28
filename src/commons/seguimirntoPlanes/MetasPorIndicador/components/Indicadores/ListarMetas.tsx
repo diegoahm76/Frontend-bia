@@ -231,8 +231,8 @@ export const ListarMetas: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_metas}
-                  columns={columns_metas}
+                  rows={rows_metas ?? []}
+                  columns={columns_metas ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

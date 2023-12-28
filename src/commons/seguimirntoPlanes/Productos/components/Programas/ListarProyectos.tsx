@@ -162,8 +162,8 @@ export const ListarProyectos: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_proyectos}
-                  columns={columns_proyectos}
+                  rows={rows_proyectos ?? []}
+                  columns={columns_proyectos ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

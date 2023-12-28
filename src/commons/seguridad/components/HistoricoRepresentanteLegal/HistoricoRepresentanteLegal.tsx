@@ -140,8 +140,8 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
                         {rows.length > 0 ? (
                             <DataGrid
                                 autoHeight
-                                rows={rows}
-                                columns={columns}
+                                rows={rows ?? []}
+                                columns={columns ?? []}
                                 getRowId={(row) => row.id_historico_represent_legal}
                                 pageSize={5}
                                 rowsPerPageOptions={[5]}

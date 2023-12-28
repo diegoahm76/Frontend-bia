@@ -131,8 +131,8 @@ export const ConsultarProductos: React.FC = () => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={rows_productos}
-                columns={columns_productos}
+                rows={rows_productos ?? []}
+                columns={columns_productos ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 getRowId={(row) => uuidv4()}

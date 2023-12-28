@@ -180,11 +180,11 @@ export const MostrrModalArchivado: React.FC<MostrrModalArchivadoProps> = ({ data
                 <DataGrid
                   density="compact"
                   autoHeight
-                  columns={columns}
+                  columns={columns ?? []}
                 //   rows={data}
                 rows={data.filter((item) =>
                     item.nombre_modulo.toLowerCase().includes(filtroNombreModulo.toLowerCase())
-                  )}
+                  ) ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(_row) => uuidv4()}

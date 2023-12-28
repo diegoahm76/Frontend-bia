@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -8,33 +9,33 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 // ? icons
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // ? components
-import { Title } from '../../../../../../../components';
-import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { useNavigate } from 'react-router-dom';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { columnsAtom } from './columnsAtom/columnsAtom';
-import { useContext, useState } from 'react';
-import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
-import { DownloadButton } from '../../../../../../../utils/DownloadButton/DownLoadButton';
-import { containerStyles } from '../../../../../tca/screens/utils/constants/constants';
-import InfoIcon from '@mui/icons-material/Info';
-import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
-import { useAppSelector } from '../../../../../../../hooks';
-import { getArchivoAnexoPqrsdf } from '../../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
-import { getArchivoAnexoComplemento } from '../../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
-import { getMetadatosPqrsdf } from '../../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
-import { getMetadatoComplemento } from '../../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
-import { formatDate } from '../../../../../../../utils/functions/formatDate';
-import { ModalDenuncia } from '../modalDenuncia/ModalDenuncia';
-import { getInfoDenuncia } from '../../../../toolkit/thunks/PqrsdfyComplementos/denuncia/getInfoDenuncia.service';
 
-export const ModalAtomInfoElement = (props: any): JSX.Element => {
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
+import { BandejaTareasContext } from '../../context/BandejaTareasContext';
+import { useAppSelector } from '../../../../../../hooks';
+import { columnsAtom } from '../../../../panelDeVentanilla/module/entrega98_101/Atom/ModalAtom/columnsAtom/columnsAtom';
+import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
+import { Title } from '../../../../../../components';
+import { formatDate } from '../../../../../../utils/functions/formatDate';
+import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
+import { getMetadatosPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
+import { getMetadatoComplemento } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
+import  InfoIcon  from '@mui/icons-material/Info';
+import { getArchivoAnexoPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
+import { getArchivoAnexoComplemento } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
+import { getInfoDenuncia } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/denuncia/getInfoDenuncia.service';
+
+
+export const ModuleInfoTarea = (props: any): JSX.Element => {
   // ! debe recibir una cantidad de props aprox de 10
   const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
     (state) => state.PanelVentanillaSlice
@@ -58,10 +59,11 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
   const {
     anexos,
     metadatos,
+    setAnexos,
     setMetadatos,
     archivoAnexos,
     setArchivoAnexos,
-  } = useContext(PanelVentanillaContext);
+  } = useContext(BandejaTareasContext);
 
   // ? useState declaration
   const [infoDenuncia, setInfoDenuncia] = useState<any>(null);
@@ -868,10 +870,13 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
       </Grid>
 
       {/* modal de la denuncia */}
-      <ModalDenuncia
+
+            <>Pendiente de la definicion del modal de denuncia</>
+
+     {/* <ModalDenuncia
         setInfoDenuncia={setInfoDenuncia}
         infoDenuncia={infoDenuncia}
-      />
+      />*/}
       {/* modal de la denuncia */}
     </>
   );

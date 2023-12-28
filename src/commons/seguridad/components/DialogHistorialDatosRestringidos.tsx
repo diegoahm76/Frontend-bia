@@ -136,8 +136,8 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
             {rows.length > 0 ? (
               <DataGrid
                 autoHeight
-                rows={rows}
-                columns={columns}
+                rows={rows ?? []}
+                columns={columns ?? []}
                 getRowId={(row) => row.historico_cambio_id_persona}
                 pageSize={5}
                 rowsPerPageOptions={[5]}

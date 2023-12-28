@@ -401,8 +401,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
-              rows={busqueda_avanzada_personas_list}
-              columns={columns_busqueda_avanzada_persona}
+              rows={busqueda_avanzada_personas_list ?? []}
+              columns={columns_busqueda_avanzada_persona ?? []}
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}

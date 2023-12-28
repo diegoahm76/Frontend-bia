@@ -213,8 +213,8 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                                     <>
                                         <DataGrid
                                             autoHeight
-                                            rows={rows}
-                                            columns={columns}
+                                            rows={rows ?? []}
+                                            columns={columns ?? []}
                                             getRowId={(row) => row.id_historico_autoriza_noti}
                                             pageSize={5}
                                             rowsPerPageOptions={[5]}

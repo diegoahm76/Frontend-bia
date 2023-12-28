@@ -148,8 +148,8 @@ export const ListarIndicador: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_indicador}
-                  columns={columns_indicador}
+                  rows={rows_indicador ?? []}
+                  columns={columns_indicador ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

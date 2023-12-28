@@ -28,6 +28,7 @@ import {
   setCurrentTareaPqrsdfTramitesUotrosUopas,
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../toolkit/store/BandejaDeTareasStore';
+import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -58,6 +59,12 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
       fecha_fin,
     } = watchBusquedaBandejaDeTareas;
 
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de Bandeja De tareas (Responder PQRSDF) se encuentra en construcción',
+      'warning'
+    );
+
     void getListadoTareasByPerson(
       id_persona,
       handleSecondLoading
@@ -79,6 +86,12 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
   const searchSubmitTramitesYservicios = () => {
     console.log('submit , buscando coincidencias de tramites y servicios');
+
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de Responder trámite no está disponible ',
+      'warning'
+    );
 
     //* se limpian los otros controles para no crear conflictos
     //dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));

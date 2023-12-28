@@ -221,8 +221,8 @@ export const IntervalosScreen: React.FC = () => {
               </ButtonGroup>
               <DataGrid
                 autoHeight
-                rows={rows}
-                columns={columns}
+                rows={rows ?? []}
+                columns={columns ?? []}
                 getRowId={(row) => row.id_intervalo}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
