@@ -59,6 +59,20 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
       fecha_fin,
     } = watchBusquedaBandejaDeTareas;
 
+
+    console.log(
+      'tipo_de_tarea',
+      tipo_de_tarea,
+      'estado_asignacion_de_tarea',
+      estado_asignacion_de_tarea,
+      'estado_de_la_tarea',
+      estado_de_la_tarea,
+      'fecha_inicio',
+      fecha_inicio,
+      'fecha_fin',
+      fecha_fin
+    )
+
     showAlert(
       'Estimado usuario!',
       'Esta funcionalidad de Bandeja De tareas (Responder PQRSDF) se encuentra en construcción',

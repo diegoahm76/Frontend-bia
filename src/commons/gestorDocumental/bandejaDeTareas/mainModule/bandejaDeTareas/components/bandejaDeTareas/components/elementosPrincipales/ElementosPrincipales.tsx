@@ -37,10 +37,10 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
 
   const tipoTarea: any = {
     'Responder PQRSDF': <ListaElementosPqrsdf />,
-    "Responder Trámite": <>hola trámites y servicios siuuuuuuuuuuuuuu</>,
+    'Responder Trámite': <>hola trámites y servicios siuuuuuuuuuuuuuu</>,
     // Otros: <ElementosOtros />,
     // Opas: <ElementosOPAS/>,
-  } as any;
+  } as const;
 
   const tipoDeTarea = listaTareasPqrsdfTramitesUotrosUopas[0]?.tipo_tarea;
   const Componente: any = tipoTarea[tipoDeTarea];
