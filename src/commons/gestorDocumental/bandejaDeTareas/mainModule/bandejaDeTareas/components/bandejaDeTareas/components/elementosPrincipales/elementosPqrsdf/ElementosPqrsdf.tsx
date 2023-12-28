@@ -2,39 +2,58 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, useEffect, useState } from 'react';
 // import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Box, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { LoadingButton } from '@mui/lab';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import TaskIcon from '@mui/icons-material/Task';
+import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
+import ClearIcon from '@mui/icons-material/Clear';
+import CommentIcon from '@mui/icons-material/Comment';
+
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-import { setCurrentTareaPqrsdfTramitesUotrosUopas } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
+import {
+  setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setListaTareasPqrsdfTramitesUotrosUopas,
+} from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
+import { putAceptarTarea } from '../../../../../../../toolkit/thunks/Pqrsdf/putAceptarTarea.service';
+import { getListadoTareasByPerson } from '../../../../../../../toolkit/thunks/Pqrsdf/getListadoTareasByPerson.service';
+import { AuthSlice } from '../../../../../../../../../auth/interfaces';
 /*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
 import { ModalDenuncia } from '../../../../../Atom/components/ModalDenuncia';*/
 
+const iconStyles = {
+  color: 'white',
+  width: '25px',
+  height: '25px',
+  ml: 3.5,
+  mr: 2,
+  borderRadius: '30%',
+} as const;
+
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
-    //* redux states
+  //* redux states
   const {
     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
     listaTareasPqrsdfTramitesUotrosUopas,
     actionsTareasPQRSDF,
   } = useAppSelector((state) => state.BandejaTareasSlice);
-
+  const {
+    userinfo: { id_persona },
+  } = useAppSelector((state: AuthSlice) => state.auth);
 
   //* navigate declaration
   // const navigate = useNavigate();
@@ -55,6 +74,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
+    handleSecondLoading,
   } = useContext(ModalAndLoadingContext);
 
   //* loader button simulacion
@@ -67,8 +87,44 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   >({});
 */
 
-
   // ? functions
+
+  const handleAcceptClick = async (row: { id_tarea_asignada: number }) => {
+    console.log(row);
+
+    /*putAceptarTarea(row.id_tarea_asignada).then((res) => {
+      console.log(res);
+
+      //* llamar el servicio de la busqueda de las tareas
+      void getListadoTareasByPerson(
+        id_persona,
+        handleSecondLoading,
+        //* se deberan pasar como parametros los valores de la row para que se haga la busqueda con los filtros
+        estado_actual_solicitud?.label,
+        radicado,
+        '' tipo_de_solicitud?.label,
+        fecha_inicio,
+        fecha_fin,
+        tipo_pqrsdf?.label,
+      ).then((res: any) => {
+        console.log(res);
+        dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
+
+        //* se limpian los otros controles para no crear conflictos
+        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+        // dispatch(setListaElementosComplementosRequerimientosOtros([]));
+      });
+    });*/
+  };
+
+  const handleRejectClick = (_row: any) => {
+    console.log('rechanzando tarea');
+  };
+
+  const handleCommentClick = (_row: any) => {
+    console.log('viendo comentario de rechazo de tarea');
+  };
+
   /*  const setActionsPQRSDF = (pqrsdf: any) => {
     //  console.log('')(pqrsdf);
 
@@ -163,7 +219,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 variant="outlined"
               />
             );
-          case params.row.dias_para_respuesta < 7 && params.row.dias_para_respuesta > 4:
+          case params.row.dias_para_respuesta < 7 &&
+            params.row.dias_para_respuesta > 4:
             return (
               <Chip
                 size="small"
@@ -172,7 +229,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 variant="outlined"
               />
             );
-          case params.row.dias_para_respuesta <= 4 && params.row.dias_para_respuesta > 0:
+          case params.row.dias_para_respuesta <= 4 &&
+            params.row.dias_para_respuesta > 0:
             return (
               <Chip
                 label={`${params.row.dias_para_respuesta} día(s)`}
@@ -204,21 +262,60 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       field: 'estado_asignacion',
       minWidth: 220,
       renderCell: (params: any) => {
-        const estadoAsignacion = params.row.estado_asignacion;
-        const estadoAsignacionColor =
-          estadoAsignacion === 'ACEPTADA'
-            ? 'success'
-            : estadoAsignacion === 'RECHAZADA'
-            ? 'error'
-            : 'warning';
-        return (
-          <Chip
-            size="small"
-            label={estadoAsignacion}
-            color={estadoAsignacionColor}
-            variant="outlined"
-          />
-        );
+        switch (params.row.estado_asignacion) {
+          case undefined:
+          case null:
+          case 'PENDIENTE':
+          case false:
+            return (
+              <>
+                <Tooltip title="Aceptar tarea">
+                  <DownloadDoneIcon
+                    sx={{ ...iconStyles, background: 'green' }}
+                    onClick={() => handleAcceptClick(params.row)}
+                  />
+                </Tooltip>
+                <Tooltip title="Rechazar tarea">
+                  <ClearIcon
+                    sx={{ ...iconStyles, background: 'red' }}
+                    onClick={() => handleRejectClick(params.row)}
+                  />
+                </Tooltip>
+              </>
+            );
+          case 'ACEPTADA':
+            return (
+              <Chip
+                label="Tarea aceptada"
+                color="success"
+                variant="outlined"
+                size="small"
+              />
+            );
+          case 'RECHAZADA':
+            return (
+              <>
+                <Chip
+                  label="Tarea rechazada"
+                  color="error"
+                  variant="outlined"
+                  size="small"
+                />
+                <Tooltip title="Ver motivo de rechazo">
+                  <CommentIcon
+                    sx={{
+                      ...iconStyles,
+                      color: 'primary.main',
+                      background: undefined,
+                    }}
+                    onClick={() => handleCommentClick(params.row)}
+                  />
+                </Tooltip>
+              </>
+            );
+          default:
+            return null;
+        }
       },
     },
 
@@ -232,11 +329,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
             <Tooltip title="Ver info de la tarea">
               <IconButton
                 onClick={() => {
-
                   // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
-
                   //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-
                   /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     //  console.log('')(res);
                     setActionsPQRSDF(params?.row);
@@ -315,7 +409,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         );
       },
     },
-  ]
+  ];
 
   return (
     <>
