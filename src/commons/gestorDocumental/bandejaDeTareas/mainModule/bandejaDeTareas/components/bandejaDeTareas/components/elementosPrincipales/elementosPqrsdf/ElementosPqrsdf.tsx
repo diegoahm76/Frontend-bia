@@ -226,7 +226,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       headerName: 'Acciones',
       field: 'Acciones',
       minWidth: 250,
-      renderCell: (params: any) => {
+      renderCell: (/*params: any*/) => {
         return (
           <>
             <Tooltip title="Ver info de la tarea">

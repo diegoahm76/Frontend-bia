@@ -9,11 +9,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../../../../../../components';
 import { choicesTipoDeSolicitud } from '../../utils/choices';
-import { getRequestStates } from './services/getRequestStates.service';
 import { BuscadorPqrsdf } from './buscadorPqrsdf/BuscadorPqrsdf';
 import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/BuscadorTramitesYServicios';
 import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
-import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 import {
@@ -93,14 +91,14 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitopas = async () => {
-    const {
+ /*   const {
       nombre_titular,
       radicado,
       nombre_proyecto,
       estado_actual_solicitud,
       fecha_inicio,
       fecha_fin,
-    } = watch_busqueda_panel_ventanilla;
+    } = watch_busqueda_panel_ventanilla;*/
 
     showAlert(
       'Estimado usuario!',
@@ -199,7 +197,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <div>
                     <Select
@@ -271,7 +268,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 defaultValue=""
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <TextField
                     fullWidth
@@ -295,7 +291,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 defaultValue=""
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <TextField
                     fullWidth

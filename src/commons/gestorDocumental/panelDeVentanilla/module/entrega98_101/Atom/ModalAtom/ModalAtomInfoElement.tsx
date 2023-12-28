@@ -19,7 +19,7 @@ import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDat
 import { useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { columnsAtom } from './columnsAtom/columnsAtom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
 import { DownloadButton } from '../../../../../../../utils/DownloadButton/DownLoadButton';
 import { containerStyles } from '../../../../../tca/screens/utils/constants/constants';
@@ -58,7 +58,6 @@ export const ModalAtomInfoElement = (props: any): JSX.Element => {
   const {
     anexos,
     metadatos,
-    setAnexos,
     setMetadatos,
     archivoAnexos,
     setArchivoAnexos,
