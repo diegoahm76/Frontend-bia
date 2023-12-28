@@ -128,8 +128,9 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
         if (tramite_servicio === 'O') {
             set_steps([...steps, ...opas]);
         } else {
-            if (tramite_servicio !== '')
-                window.location.href = 'http://localhost:3000/#/app/gestor_documental/expedientes/indexacion_expedientes';
+            set_steps(['Tipo de trámite']);
+            // if (tramite_servicio !== '')
+                // window.location.href = 'http://localhost:3000/#/app/gestor_documental/expedientes/indexacion_expedientes';
         }
     }, [tramite_servicio]);
 
@@ -236,17 +237,6 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                                 ))}
                             </Stepper>
                             <div>
-                                {allStepsCompleted() ? (
-                                    <React.Fragment>
-                                        <Typography sx={{ mt: 2, mb: 1 }}>
-                                            All steps completed - you&apos;re finished
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                            <Box sx={{ flex: '1 1 auto' }} />
-                                            <Button onClick={handleReset}>Restablecer</Button>
-                                        </Box>
-                                    </React.Fragment>
-                                ) : (
                                     <React.Fragment>
                                         {activeStep === 0 && <Box>
                                             <Grid container sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -268,21 +258,14 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                                                 <Radicado usuario={props.usuario} response_paso_1={response_paso_1} radicado={radicado} usuario_cache={props.usuario_cache} set_restablecer={set_restablecer}></Radicado>
                                             </Grid>
                                         </Box>}
-                                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                        {tramite_servicio === 'O' && <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                                             <Box sx={{ flex: '1 1 auto' }} />
-                                            {activeStep !== steps.length &&
-                                                (completed[activeStep] ? (
-                                                    <Typography variant="subtitle2" sx={{ display: 'inline-block', mt: '7px' }}>
-                                                        {steps[activeStep]} fue completado.
-                                                    </Typography>
-                                                ) : (
-                                                    activeStep !== 3 && <Button variant={completedSteps() === totalSteps() - 2 ? 'contained':'outlined' } onClick={handleComplete}>
+                                            {activeStep !== 3 && <Button variant={completedSteps() === totalSteps() - 2 ? 'contained':'outlined' } onClick={handleComplete}>
                                                         {completedSteps() === totalSteps() - 2 ? 'Radicar' : 'Siguiente'}
                                                     </Button>
-                                                ))}
-                                        </Box>
+                                                }
+                                        </Box>}
                                     </React.Fragment>
-                                )}
                             </div>
                         </Box>
                     </Grid>
