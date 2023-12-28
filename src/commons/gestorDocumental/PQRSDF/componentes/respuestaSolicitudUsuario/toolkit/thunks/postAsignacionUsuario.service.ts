@@ -6,11 +6,14 @@ export const postAsignacionUsuario = async (
   formData: any,
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-  const url = `gestor/panel_ventanilla/pqrsdf/solicitud-al-usuario/create/`;
+  const url = `gestor/pqr/crear-respuesta-pqrsdf/`;
+  console.log('formData', formData);
   try {
     setLoadingButton(true);
+
     const response = await api.post(url, formData);
-    //  console.log('')('response', response);
+
+    // console.log('')('response', response);
     return Promise.resolve(response);
   } catch (error) {
     Swal.fire({

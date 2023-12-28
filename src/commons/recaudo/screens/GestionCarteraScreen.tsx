@@ -16,7 +16,7 @@ import { RequisitosModal } from '../components/GestionCartera/modal/RequisitosMo
 import { NotificationModal } from '../components/NotificationModal';
 import type { Cartera } from '../interfaces/cobro';
 import { CreateProcesoModal } from '../components/GestionCartera/modal/CreateProcesoModal';
-import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/SeccionEnvio_MSM_CORREO';
+import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
 import { EtapaProcesoConext } from '../components/GestionCartera/Context/EtapaProcesoContext';
 import { toast } from 'react-toastify';
 
@@ -59,7 +59,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [open_create_proceso_modal, set_open_create_proceso_modal] = useState(false);
   const [valores_proceso, set_valores_proceso] = useState<ValoresProceso[][]>([]);
   const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
-  const { etapa_proceso, set_etapa_proceso } = useContext(EtapaProcesoConext);
+  const { set_etapa_proceso } = useContext(EtapaProcesoConext);
 
   const [filtered_nombres, set_filtered_nombres] = useState<string>('');
   const [filtered_apellidos, set_filtered_apellidos] = useState<string>('');
@@ -196,8 +196,6 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_id_cartera(params.row.id);
                   set_position_tab('2');
                   set_data_complemet(params.row);
-
-
 
                   set_etapa_proceso((prevEtapa: any) => ({
                     ...prevEtapa,
@@ -534,7 +532,12 @@ export const GestionCarteraScreen: React.FC = () => {
         set_position_tab('1');
         set_notification_info({ type: 'success', message: 'Se ha creado correctamente el proceso.' });
         set_open_notification_modal(true);
-        console.log("data retur  crear-proceso", response)
+        // console.log("data retur  crear-proceso", response.data?.id_categoria)
+        set_etapa_proceso((prevEtapa: any) => ({
+          ...prevEtapa,
+          disable: false,
+          nuevo_proceso: response.data?.id_categoria,
+        }));
       })
       .catch((error) => {
         //  console.log('')(error);
