@@ -57,9 +57,9 @@ console.log('anexosCreados', anexosCreados);
     });
   formData.append("isCreateForWeb","False");
     formData.append(
-      'solicitud_usu_PQRSDF',
+      'respuesta_pqrsdf',
       JSON.stringify({
-        id_pqrsdf: 150,
+        id_pqrsdf: 152,
         asunto: 'Prueba',
         descripcion: 'Prueba 1',
         cantidad_anexos: 1,
@@ -71,11 +71,11 @@ console.log('anexosCreados', anexosCreados);
           medio_almacenamiento_otros_Cual: null,
           numero_folios: 0, // Modifica según tus necesidades
           ya_digitalizado: true,
-          meta_data: {
+          metadatos: {
             asunto: anexo.asunto,
             descripcion: anexo.descripcionMetadatos,
             cod_categoria_archivo: anexo.categoriaArchivoMetadatos?.value,
-            tiene_replica_fisica: anexo.tieneReplicaFisicaMetadatos?.value,
+            tiene_replica_fisica: anexo.tieneReplicaFisicaMetadatos?.value === 'Si' ? true : false,
             cod_origen_archivo: anexo.origenArchivoMetadatos?.value,
             id_tipologia_doc: anexo.tipologiasDocumentalesMetadatos?.value,
             palabras_clave_doc:anexo.palabrasClavesMetadatos.join('|'),
