@@ -415,8 +415,8 @@ export const BusquedaPrograma: React.FC = () => {
                       <DataGrid
                         density="compact"
                         autoHeight
-                        rows={rows}
-                        columns={columns}
+                        rows={rows ?? []}
+                        columns={columns ?? []}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}

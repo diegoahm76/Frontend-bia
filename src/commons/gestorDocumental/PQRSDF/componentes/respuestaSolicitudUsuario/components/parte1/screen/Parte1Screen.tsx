@@ -20,7 +20,7 @@ export const Parte1Screen = ({
         mt: '2rem',
       }}
     >
-      <Title title="Información del PQRSDF a realizar el requerimiento" />
+      <Title title="Información del PQRSDF " />
       <FormParte1
         controlFormulario={controlFormulario}
         handleSubmitFormulario={handleSubmitFormulario}

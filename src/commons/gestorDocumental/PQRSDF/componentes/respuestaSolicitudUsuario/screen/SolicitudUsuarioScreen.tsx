@@ -12,6 +12,7 @@ import { getInitialData } from '../services/getInitialData.service';
 import { useStepperResSolicitudUsuario } from '../hook/useStepperResSolicitudUsuario';
 import { useResSolicitudUsu } from '../hook/useResSolicitudUsu';
 import { StepperResSolicitudUsario } from '../components/stepper/StepperResSolicitudUsario';
+import { Parte1Screen } from '../components/parte1/screen/Parte1Screen';
 
 export const SolicitudUsuarioScreen = (): JSX.Element => {
   const { handleReset } = useStepperResSolicitudUsuario();
@@ -84,6 +85,18 @@ export const SolicitudUsuarioScreen = (): JSX.Element => {
           <Title title="Requerimiento sobre una solicitud" />
           {/* parte Inicial */}
           <ParteInicial />
+
+          <Parte1Screen
+            controlFormulario={controlFormulario}
+            handleSubmitFormulario={handleSubmitFormulario}
+            errorsFormulario={errorsFormulario}
+            resetFormulario={resetFormulario}
+            watchFormulario={watchFormulario}
+            setInfoReset={setInfoReset}
+          />
+
+
+
           {/*stepper*/}
           <StepperResSolicitudUsario {...props} />
         </Grid>

@@ -49,7 +49,7 @@ export const ResProvider = ({ children }: ReactNode | any) => {
   const [skipped, setSkipped] = useState(new Set<number>());
 
   const valuesToUse = {
-    // ? entrega 99
+    // ? entrega 104
     radicado,
     setRadicado,
     value,

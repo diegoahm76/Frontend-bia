@@ -201,8 +201,8 @@ export const Sucursal: FC = () => {
           <DataGrid
             density="compact"
             autoHeight
-            columns={columns}
-            rows={data_entidad}
+            columns={columns ?? []}
+            rows={data_entidad ?? []}
             pageSize={10}
             rowsPerPageOptions={[10]}
             getRowId={(row) => row.id_sucursal_empresa}

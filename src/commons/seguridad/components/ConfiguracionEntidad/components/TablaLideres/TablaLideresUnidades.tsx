@@ -108,7 +108,7 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
               density="compact"
               autoHeight
               columns={columns ?? []}
-              rows={data_lideres}
+              rows={data_lideres ?? []}
               pageSize={10}
               rowsPerPageOptions={[10]}
               getRowId={(row) => row.id_persona}

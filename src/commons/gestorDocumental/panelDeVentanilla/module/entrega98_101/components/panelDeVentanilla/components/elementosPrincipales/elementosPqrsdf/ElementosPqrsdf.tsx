@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -38,17 +38,12 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     setRadicado,
     setValue,
 
-    anexos,
-    metadatos,
     setAnexos,
-    setMetadatos,
   } = useContext(PanelVentanillaContext);
   const {
     handleGeneralLoading,
     handleThirdLoading,
 
-    openModalOne: infoAnexos,
-    openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
   } = useContext(ModalAndLoadingContext);

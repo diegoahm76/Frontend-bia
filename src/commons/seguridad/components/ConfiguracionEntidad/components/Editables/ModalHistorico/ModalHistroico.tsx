@@ -192,8 +192,8 @@ export const MostrrModalHistorico: React.FC<interfazModalHistorico> = ({ cargo, 
                             <DataGrid
                                 density="compact"
                                 autoHeight
-                                columns={columns}
-                                rows={dataHistorico}
+                                columns={columns ?? []}
+                                rows={dataHistorico ?? []}
                                 pageSize={10}
                                 rowsPerPageOptions={[10]}
                                 getRowId={(row) => row.id_historico_perfil_entidad}

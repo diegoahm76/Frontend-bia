@@ -203,6 +203,9 @@ export const FormParte3 = ({
 
     const dataCreateAnexo = createAnexoData();
     const dataEditAnexo = createAnexoData(currentAnexo);
+
+
+
     // Reset functions that are common to both cases
     resetFormulario();
     resetManejoMetadatosModalFunction();
@@ -215,7 +218,7 @@ export const FormParte3 = ({
       dispatch(addAnexo(dataCreateAnexo));
     }
   };
-
+console.log(currentAnexo,"aqui")
   const handleDeleteAnexo = async (id: string) => {
     const result = await Swal.fire({
       title: '¿Estás seguro de eliminar el anexo?',
@@ -246,7 +249,6 @@ export const FormParte3 = ({
       dispatch(setMetadatos(anexoSeleccionado as any));
     }
   };
-
   //* columns
   const columns = [
     ...columnsThirdForm,

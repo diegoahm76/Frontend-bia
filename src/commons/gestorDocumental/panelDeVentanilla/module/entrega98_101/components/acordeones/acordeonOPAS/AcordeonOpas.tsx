@@ -7,24 +7,24 @@ import Typography from '@mui/material/Typography';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import Swal from 'sweetalert2';
 
-import { BuscadorSolicitudes } from '../buscador/BuscadorSolicitudes';
+import { BuscadorSolicitudes } from '../../buscador/BuscadorSolicitudes';
 import {
   accordionData,
   consultaColumns,
   infoSolicitudColumns,
   stylesTypography,
-} from './accordionData'; // Import your accordion data from a separate file
+} from '../accordionData'; // Import your accordion data from a separate file
 import { Grid } from '@mui/material';
-import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { control_success } from '../../../../../../../helpers';
-import { PanelVentanillaContext } from '../../../../context/PanelVentanillaContext';
-import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
-import { Loader } from '../../../../../../../utils/Loader/Loader';
-import { useAppSelector } from '../../../../../../../hooks';
-import { containerStyles } from './../../../../../tca/screens/utils/constants/constants';
-import { VisaulTexto } from '../../../../../actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
+import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { control_success } from '../../../../../../../../helpers';
+import { PanelVentanillaContext } from '../../../../../context/PanelVentanillaContext';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { useAppSelector } from '../../../../../../../../hooks';
+import { containerStyles } from '../../../../../../tca/screens/utils/constants/constants';
+import { VisaulTexto } from '../../../../../../actividadesPreviasCambioCCD/modules/asignacionUnidadesResponsables/components/parte2/components/unidadesSeries/visualTexto/VisualTexto';
 
-export const AcordeonPqrsdf = () => {
+export const AcordeonOpas = (): JSX.Element => {
   //* context declaration
   const { radicado, setRadicado, expanded, setExpanded } = useContext(
     PanelVentanillaContext

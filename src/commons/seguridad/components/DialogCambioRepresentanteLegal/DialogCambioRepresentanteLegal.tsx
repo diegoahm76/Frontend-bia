@@ -292,8 +292,8 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                     <Box sx={{ height: 400, width: '100%' }}>
 
                       <DataGrid
-                        rows={rows}
-                        columns={columns}
+                        rows={rows ?? []}
+                        columns={columns ?? []}
                         pageSize={5}
                         getRowId={(row) => row.id_persona}
                         rowsPerPageOptions={[5]}

@@ -34,6 +34,7 @@ export const FormParte2 = ({
     }
   }, [currentAnexo]);
 */
+ console.log("watchFormulario",watchFormulario)
   return (
     <>
       <form
@@ -46,6 +47,7 @@ export const FormParte2 = ({
             control_warning('Todos los campos son obligatorios');
             return;
           }
+         
 
           handleNext();
         }}

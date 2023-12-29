@@ -1,16 +1,36 @@
 import { api } from '../../../../../../api/axios';
 import { control_success } from '../../../../../../helpers';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
+import { formatDateUse } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const getListadoTareasByPerson = async (
   idPersona: number,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  tipo_de_tarea: string = '',
+  estado_asignacion_de_tarea: string = '',
+  estado_de_la_tarea: string = '',
+  fecha_inicio: string = '',
+  fecha_fin: string = '',
+  mostrar_respuesta_con_req_pendientes: boolean = false
 ) => {
   try {
     setLoading(true);
-    //* tambien recibirá otros filtros para la búsqueda pero ya se hará en el backend y la url se modificará
-    const url = `gestor/bandeja-tareas/tareas-asignadas/get-by-persona/${idPersona}/`;
+    const formattedFechaInicio = fecha_inicio
+      ? encodeURIComponent(formatDateUse(new Date(fecha_inicio)))
+      : '';
+    const formattedFechaFin = fecha_fin
+      ? encodeURIComponent(formatDateUse(new Date(fecha_fin)))
+      : '';
+    const url = `gestor/bandeja-tareas/tareas-asignadas/get-by-persona/${idPersona}/?tipo_tarea=${encodeURIComponent(
+      tipo_de_tarea
+    )}&estado_asignacion=${encodeURIComponent(
+      estado_asignacion_de_tarea
+    )}&estado_tarea=${encodeURIComponent(
+      estado_de_la_tarea
+    )}&fecha_inicio=${formattedFechaInicio}&fecha_fin=${formattedFechaFin}&mostrar_requerimiento=${encodeURIComponent(
+      mostrar_respuesta_con_req_pendientes
+    )}`;
     const { data } = await api.get(url);
 
     if (data && data?.data?.length) {
@@ -19,7 +39,7 @@ export const getListadoTareasByPerson = async (
     }
 
     showAlert(
-      'Opps...',
+      'Atención...',
       'No se encontraron tareas asignadas para este usuario',
       'warning'
     );

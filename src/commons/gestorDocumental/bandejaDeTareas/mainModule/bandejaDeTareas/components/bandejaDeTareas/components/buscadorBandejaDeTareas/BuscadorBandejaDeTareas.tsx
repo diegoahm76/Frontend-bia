@@ -28,6 +28,7 @@ import {
   setCurrentTareaPqrsdfTramitesUotrosUopas,
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../toolkit/store/BandejaDeTareasStore';
+import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -49,88 +50,93 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
   } = useBandejaTareas();
 
   // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA-----
-  const searchSubmitPqrsdf = () => {
-    const {
-      tipo_de_tarea,
-      estado_asignacion_de_tarea,
-      estado_de_la_tarea,
-      fecha_inicio,
-      fecha_fin,
-    } = watchBusquedaBandejaDeTareas;
+  const searchPqrsdf = async () => {
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de Bandeja De tareas (Responder PQRSDF) se encuentra en construcción',
+      'warning'
+    );
+    try {
+      const {
+        tipo_de_tarea,
+        estado_asignacion_de_tarea,
+        estado_de_la_tarea,
+        fecha_inicio,
+        fecha_fin,
+        mostrar_respuesta_con_req_pendientes,
+      } = watchBusquedaBandejaDeTareas;
 
-    void getListadoTareasByPerson(
-      id_persona,
-      handleSecondLoading
-      /* estado_actual_solicitud?.label,
-      radicado,
-      '' tipo_de_solicitud?.label,
-      fecha_inicio,
-      fecha_fin,
-      tipo_pqrsdf?.label,*/
-    ).then((res: any) => {
-      console.log(res)
+      const res = await getListadoTareasByPerson(
+        id_persona,
+        handleSecondLoading,
+        tipo_de_tarea?.value,
+        estado_asignacion_de_tarea?.value,
+        estado_de_la_tarea?.value,
+        fecha_inicio,
+        fecha_fin,
+        mostrar_respuesta_con_req_pendientes?.value
+      );
+
+      console.log(res);
       dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
-
-      //* se limpian los otros controles para no crear conflictos
       dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
-      // dispatch(setListaElementosComplementosRequerimientosOtros([]));
-    });
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
   };
 
-  const searchSubmitTramitesYservicios = () => {
-    console.log('submit , buscando coincidencias de tramites y servicios');
-
-    //* se limpian los otros controles para no crear conflictos
-    //dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-    //dispatch(setListaElementosComplementosRequerimientosOtros([]));
+  const searchTramitesYservicios = () => {
+    try {
+      console.log('submit , buscando coincidencias de tramites y servicios');
+      showAlert(
+        'Estimado usuario!',
+        'Esta funcionalidad de Responder trámite no está disponible ',
+        'warning'
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
-  const searchSubmitOtros = () => {
-    console.log('submit , buscando coincidencias de otros');
+  //* se deben agregar las funciones para los demas tipos de tareas (otros y opas)
 
-    //* se limpian los otros controles para no crear conflictos
-    // dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-    // dispatch(setListaElementosComplementosRequerimientosOtros([]));
-  };
-
-  const searchSubmitopas = () => {
-    console.log('submit , buscando coincidencias de opas');
-    // dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-    // dispatch(setListaElementosComplementosRequerimientosOtros([]));
-  };
-
-  const handleSubmit = () => {
-    //* los tipos de tareas, van a cambiar en definicion, pero mientras tanto se establece de esta manera
-    const tipoDeTarea:
-      | 'Responder PQRSDF' // Rpqr
-      | 'Responder Trámite' // Rtra
-      //| 'Otros'
-      // | 'OPAS'
-      | undefined =
+  const unifiedSearchSubmit = async () => {
+    const tipoDeTarea =
       controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label;
 
     if (!tipoDeTarea) {
-      Swal.fire({
-        title: 'Opps...',
-        text: 'Debe seleccionar un tipo de tarea para realizar la búsqueda',
-        icon: 'warning',
-        confirmButtonText: 'Aceptar',
-      });
+      showAlert(
+        'Opps...',
+        'Debe seleccionar un tipo de tarea para realizar la búsqueda',
+        'warning'
+      );
       return;
     }
 
-    const searchActions = {
-      'Responder PQRSDF': searchSubmitPqrsdf,
-      'Responder Trámite': searchSubmitTramitesYservicios,
-      // Otros: searchSubmitOtros,
-      // OPAS: searchSubmitopas,
-    };
+    switch (tipoDeTarea) {
+      case 'Responder PQRSDF':
+        await searchPqrsdf();
+        break;
 
-    const searchAction = searchActions[tipoDeTarea];
+      case 'Responder Trámite':
+        await searchTramitesYservicios();
+        break;
 
-    //* se debe pasar el tema del loading
-    if (searchAction) {
-      searchAction();
+      // case 'Otros':
+      //   console.log('submit , buscando coincidencias de otros');
+      //   break;
+
+      // case 'OPAS':
+      //   console.log('submit , buscando coincidencias de opas');
+      //   break;
+
+      default:
+        showAlert(
+          'Opss...',
+          'Esta tarea no está registrada en el sistema, por favor comuníquese con el administrador del BIA',
+          'warning'
+        );
+        break;
     }
   };
 
@@ -154,7 +160,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         <form
           onSubmit={(w) => {
             w.preventDefault();
-            handleSubmit();
+            unifiedSearchSubmit();
           }}
           style={{
             marginTop: '2.2rem',
