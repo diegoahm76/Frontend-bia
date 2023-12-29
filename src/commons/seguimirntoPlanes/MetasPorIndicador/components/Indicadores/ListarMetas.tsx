@@ -31,12 +31,6 @@ import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar'
 export const ListarMetas: React.FC = () => {
   const columns_metas: GridColDef[] = [
     {
-      field: 'id_meta',
-      headerName: 'ID Meta',
-      sortable: true,
-      width: 100,
-    },
-    {
       field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
@@ -138,6 +132,12 @@ export const ListarMetas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
+              set_id_producto(params.row.id_producto);
+              set_id_actividad(params.row.id_actividad);
+              set_id_indicador(params.row.id_indicador);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -158,7 +158,7 @@ export const ListarMetas: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar meta"
+                titleAccess="Editar Meta"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -172,24 +172,33 @@ export const ListarMetas: React.FC = () => {
     },
   ];
 
-  const { rows_metas, fetch_data_mata_indicador } =
-    useContext(DataContextMetas);
-
   const {
-    indicador: { id_indicador },
-  } = useAppSelector((state) => state.planes);
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
+    set_id_indicador,
+    id_indicador,
+    rows_metas,
+    fetch_data_mata_indicador,
+  } = useContext(DataContextMetas);
+
+  // const {
+  //   indicador: { id_indicador },
+  // } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   if (id_indicador) {
-  //     fetch_data_mata_indicador();
-  //   }
-  // }, [id_indicador]);
+  useEffect(() => {
+    if (id_indicador) {
+      fetch_data_mata_indicador();
+    }
+  }, [id_indicador]);
 
   return (
     <>
-      {/* <Grid
+      <Grid
         container
         spacing={2}
         m={2}
@@ -241,40 +250,41 @@ export const ListarMetas: React.FC = () => {
             </Box>
           </Grid>
         </>
-      </Grid> */}
-      <Grid
-        container
-        spacing={2}
-        m={2}
-        p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-        justifyContent="flex-end"
-      >
-        <Grid item>
-          <Button
-            variant="outlined"
-            color="primary"
-            disabled={false}
-            onClick={() => {
-              dispatch(
-                set_current_mode_planes({
-                  ver: true,
-                  crear: true,
-                  editar: false,
-                })
-              );
-            }}
-          >
-            Agregar Meta
-          </Button>
+
+        <Grid
+          container
+          spacing={2}
+          // m={2}
+          // p={2}
+          // sx={{
+          //   position: 'relative',
+          //   background: '#FAFAFA',
+          //   borderRadius: '15px',
+          //   p: '20px',
+          //   m: '10px 0 20px 0',
+          //   mb: '20px',
+          //   boxShadow: '0px 3px 6px #042F4A26',
+          // }}
+          justifyContent="flex-end"
+        >
+          <Grid item>
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={false}
+              onClick={() => {
+                dispatch(
+                  set_current_mode_planes({
+                    ver: true,
+                    crear: true,
+                    editar: false,
+                  })
+                );
+              }}
+            >
+              Agregar Meta
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </>

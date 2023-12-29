@@ -95,18 +95,18 @@ export const ListarIndicador: React.FC = () => {
     },
   ];
 
-  const { rows_indicador, fetch_data_indicadores } =
+  const { rows_indicador, fetch_data_indicadores_id_actividad } =
     useContext(DataContextIndicador);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetch_data_indicadores();
+    fetch_data_indicadores_id_actividad();
   }, []);
 
   return (
     <>
-      {/* <Grid
+      <Grid
         container
         spacing={2}
         m={2}
@@ -157,42 +157,43 @@ export const ListarIndicador: React.FC = () => {
               </>
             </Box>
           </Grid>
-        </>
-      </Grid> */}
-      <Grid
-        container
-        spacing={2}
-        m={2}
-        p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-        justifyContent="flex-end"
-      >
-        <Grid item>
-          <Button
-            variant="outlined"
-            color="primary"
-            disabled={false}
-            onClick={() => {
-              dispatch(
-                set_current_mode_planes({
-                  ver: true,
-                  crear: true,
-                  editar: false,
-                })
-              );
+
+          <Grid
+            container
+            spacing={2}
+            m={2}
+            p={2}
+            sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              borderRadius: '15px',
+              p: '20px',
+              m: '10px 0 20px 0',
+              mb: '20px',
+              boxShadow: '0px 3px 6px #042F4A26',
             }}
+            justifyContent="flex-end"
           >
-            Agregar indicador
-          </Button>
-        </Grid>
+            <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                disabled={false}
+                onClick={() => {
+                  dispatch(
+                    set_current_mode_planes({
+                      ver: true,
+                      crear: true,
+                      editar: false,
+                    })
+                  );
+                }}
+              >
+                Agregar indicador
+              </Button>
+            </Grid>
+          </Grid>
+        </>
       </Grid>
     </>
   );

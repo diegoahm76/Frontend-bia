@@ -188,7 +188,12 @@ export const AgregarPrograma: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   error={!!errors_programa.porcentaje_1}
                   helperText={
                     errors_programa.porcentaje_1
@@ -214,7 +219,12 @@ export const AgregarPrograma: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   error={!!errors_programa.porcentaje_2}
                   helperText={
                     errors_programa.porcentaje_2
@@ -240,7 +250,12 @@ export const AgregarPrograma: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   error={!!errors_programa.porcentaje_3}
                   helperText={
                     errors_programa.porcentaje_3
@@ -266,7 +281,12 @@ export const AgregarPrograma: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   error={!!errors_programa.porcentaje_4}
                   helperText={
                     errors_programa.porcentaje_4

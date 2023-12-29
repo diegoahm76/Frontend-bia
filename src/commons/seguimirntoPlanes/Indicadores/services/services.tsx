@@ -29,6 +29,15 @@ export const get_indicadores = async (): Promise<Indicadores[]> => {
   return response.data.data;
 };
 
+// * indicadores por id producto
+
+export const get_indicadores_id_actividad = async (
+  id_actividad: number
+): Promise<Indicadores[]> => {
+  const response = await api.get(`seguimiento/planes/consultar-indicadores-id-actividad/${id_actividad}/`);
+  return response.data.data;
+};
+
 export const get_productos = async (): Promise<IProductos[]> => {
   const response = await api.get(`seguimiento/planes/consultar-productos/`);
   return response.data.data;
