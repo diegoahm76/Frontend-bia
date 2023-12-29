@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -9,6 +10,7 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -113,6 +115,7 @@ export const EntidadesScreen: React.FC = () => {
   const [entidad, set_entidad] = useState<IEntidades>();
   const [is_crear, set_is_crear] = useState<boolean>(false);
   const [is_editar, set_is_editar] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handle_open_crear = (): void => {
     set_is_crear(true);
@@ -121,8 +124,9 @@ export const EntidadesScreen: React.FC = () => {
     set_is_editar(true);
   };
 
-  const get_traer_entidad = async (): Promise<void> => {
+  const get_traer_entidad = async () => {
     try {
+      setSearchTerm('');
       const response = await get_entidades();
       const datos_entidad = response.map((datos: IEntidades) => ({
         id_entidad: datos.id_entidad,
@@ -131,13 +135,14 @@ export const EntidadesScreen: React.FC = () => {
         registro_precargado: datos.registro_precargado,
         item_ya_usado: datos.item_ya_usado,
       }));
-      set_rows(datos_entidad);
+      set_rows(filterRows(datos_entidad, ''));
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'
       );
     }
   };
+
   const confirmar_eliminar_entidad = (id_entidad: number): void => {
     void Swal.fire({
       // title: "Estas seguro?",
@@ -171,6 +176,12 @@ export const EntidadesScreen: React.FC = () => {
   useEffect(() => {
     void get_traer_entidad();
   }, []);
+
+  const filterRows = (rows: any[], searchTerm: string) => {
+    return rows.filter((row) =>
+      row.nombre_entidad.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
 
   return (
     <>
@@ -219,9 +230,18 @@ export const EntidadesScreen: React.FC = () => {
                   title: 'CREAR ENTIDAD',
                 })}
               </ButtonGroup>
+              <TextField
+                label="Buscar entidad"
+                variant="outlined"
+                size='small'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ marginBottom: '20px' }}
+              />
+
               <DataGrid
                 autoHeight
-                rows={rows}
+                rows={filterRows(rows, searchTerm)}
                 columns={columns}
                 getRowId={(row) => row.id_entidad}
                 pageSize={10}

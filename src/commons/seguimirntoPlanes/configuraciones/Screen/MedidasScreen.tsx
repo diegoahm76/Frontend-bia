@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -9,6 +10,7 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -113,6 +115,7 @@ export const MedidasScreen: React.FC = () => {
   const [medicion, set_medicion] = useState<IMedicion>();
   const [is_crear, set_is_crear] = useState<boolean>(false);
   const [is_editar, set_is_editar] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handle_open_crear = (): void => {
     set_is_crear(true);
@@ -121,8 +124,15 @@ export const MedidasScreen: React.FC = () => {
     set_is_editar(true);
   };
 
+  const filterRows = (rows: any[], searchTerm: string) => {
+    return rows.filter((row) =>
+      row.nombre_medicion.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
   const get_traer_medicion = async (): Promise<void> => {
     try {
+      setSearchTerm('')
       const response = await get_mediciones();
       const datos_medicion = response.map((datos: IMedicion) => ({
         id_medicion: datos.id_medicion,
@@ -131,7 +141,7 @@ export const MedidasScreen: React.FC = () => {
         registro_precargado: datos.registro_precargado,
         item_ya_usado: datos.item_ya_usado,
       }));
-      set_rows(datos_medicion);
+      set_rows(filterRows(datos_medicion, ''));
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'
@@ -219,9 +229,17 @@ export const MedidasScreen: React.FC = () => {
                   title: 'CREAR MEDICION',
                 })}
               </ButtonGroup>
+              <TextField
+                label="Buscar medición"
+                size="small"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ marginBottom: '20px' }}
+              />
               <DataGrid
                 autoHeight
-                rows={rows ?? []}
+                rows={filterRows(rows, searchTerm)}
                 columns={columns ?? []}
                 getRowId={(row) => row.id_medicion}
                 pageSize={10}
