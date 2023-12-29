@@ -10,7 +10,7 @@ export const CentralDigitalizacionRoutes: React.FC = () => {
         path="solicitudes_pendientes"
         element={<SolicitudesPendientesScreen />}
       />
-      <Route path="anexos" element={<ListadoAnexosScreen />} />
+      <Route path="anexos/:id" element={<ListadoAnexosScreen />} />
       {/* <Route path="crear_pqrsdf" element={<CrearPqrsdfScreen />} />
       <Route path="imprimir_radicado" element={<ImpresionRadicadoScreen />} /> */}
       <Route path="/*" element={<Navigate to={'/'} />} />

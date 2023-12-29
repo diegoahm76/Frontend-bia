@@ -292,22 +292,31 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             }
 
         }
-    }, [props.resultado_busqueda, props.seleccion_presentacion]);
+    }, [props?.resultado_busqueda, props?.seleccion_presentacion]);
 
     return (
         <>
-            <Title title={props.titulo} />
+            <Title title={props.titulo ?? 'N/A'} />
             <Box component="form" sx={{ mt: '20px','& .super-app.positive_green': { backgroundColor: '#C4DFAA' },  '& .super-app.positive': { backgroundColor: '#fdfd96' }, '& .super-app.warning': { backgroundColor: '#ffa07a' }, '& .super-app.danger': { backgroundColor: '#ff6961' }}} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
                         <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={props.filtros} nombre_archivo={props.nombre_archivo} filtros_pdf={props.filtros_pdf}></ExportDocs>
-                        <DataGrid
-                            autoHeight
-                            rows={props.resultado_busqueda}
-                            columns={columnas_mp}
-                            getRowId={(row) => uuidv4()}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]} />
+                        {
+                            (props?.resultado_busqueda && props?.resultado_busqueda.length > 0) ? (
+                                <DataGrid
+                                    autoHeight
+                                    rows={props.resultado_busqueda ?? []}
+                                    columns={columnas_mp ?? []}
+                                    getRowId={(row) => uuidv4()}
+                                    pageSize={5}
+                                    rowsPerPageOptions={[5]}
+                                />
+                            ) : (
+                                <Typography variant="h6" component="h2">
+                                    No hay datos disponibles
+                                </Typography>
+                            )
+                        }
                     </Grid>
                 </Grid>
             </Box>

@@ -13,6 +13,7 @@ import {
   Button,
   TextField,
   Divider,
+  Typography,
 } from '@mui/material';
 // Icons de Material UI
 // import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -339,16 +340,24 @@ export function TiposMezclaScreen(): JSX.Element {
           <Divider />
           <Grid item sx={{ marginTop: '20px' }}>
             <Box sx={{ width: '100%' }}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={filterednurseries}
-                columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_mezcla}
-              />
+              {
+                (filterednurseries && filterednurseries.length > 0) ? (
+                  <DataGrid
+                    density="compact"
+                    autoHeight
+                    rows={filterednurseries ?? []}
+                    columns={columns ?? []}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => row.id_mezcla}
+                  />
+                ) : (
+                  <Typography variant="h6" component="h2">
+                    No hay datos disponibles
+                  </Typography>
+                )
+              }
             </Box>
           </Grid>
           <AddMixtureDialogForm

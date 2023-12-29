@@ -4,6 +4,7 @@ import { ModalAndLoadingProvider } from '../../../../context/GeneralContext';
 import { MainViewBandejaTareas } from '../screen/MainViewBandejaTareas';
 import { RequerimientoUsuarioScreen } from '../modules/requerimientosUsuario/screen/RequerimientoUsuarioScreen';
 import { BandejaTareasProvider } from '../mainModule/context/BandejaTareasContext';
+import { VistaTareaPqrsdf } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaTareaPqrsdf';
 /*import { AsignacionUsuarioScreen } from '../module/entrega99/screen/AsignacionUsuarioScreen';
 import { PanelVentanillaProvider } from '../context/PanelVentanillaContext';
 import { VistaPqr } from '../module/entrega98_101/components/vistaPqr/VistaPqr';
@@ -39,17 +40,12 @@ const routes = [
       </>
     ),
   },
-
+ */
   //* van a venit posteriorment los modulos que desprenden de trámites y servicios y otros
-
   {
-    path: 'pqr_info/:id',
-    component: () => <VistaPqr />,
+    path: 'info_tarea/:id_PQRSDF',
+    component: () => <VistaTareaPqrsdf />,
   },
-  {
-    path: 'complemento_info/:id',
-    component: () => <VistaComplemento />,
-  },*/
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

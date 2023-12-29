@@ -72,7 +72,7 @@ const FormDatePickerController = ({
                   <DatePicker
                     disabled={disabled}
                     label={label}
-                    value={value}
+                    value={(value === null || value == undefined)?null:value === ''?null: value}
                     onChange={onChange}
                     inputFormat={'YYYY-MM-DD'}
                     minDate={min_date ?? null}
@@ -91,8 +91,8 @@ const FormDatePickerController = ({
                     )}
                   />
                 </LocalizationProvider>
-                <FormHelperText error={!(error == null)}>
-                  {error != null
+                <FormHelperText error={!(error??null === null)}>
+                  {error !== null && error !== undefined
                     ? error.type === 'required'
                       ? rules.required_rule?.message
                       : error.type === 'min'

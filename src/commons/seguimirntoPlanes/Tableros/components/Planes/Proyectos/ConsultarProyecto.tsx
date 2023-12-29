@@ -131,8 +131,8 @@ export const ConsultarProyecto: React.FC = () => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={rows_proyectos}
-                columns={columns_proyecto}
+                rows={rows_proyectos ?? []}
+                columns={columns_proyecto ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 getRowId={(row) => uuidv4()}

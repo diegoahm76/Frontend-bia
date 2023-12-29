@@ -142,7 +142,7 @@ export const get_digitalization_requests_service = (params: any): any => {
         `gestor/central-digitalizacion/get-solicitudes-pendientes/`,
         { params }
       );
-      //  console.log('')(data);
+      console.log(data);
       if (data.success) {
         dispatch(set_digitization_requests(data.data));
         control_success(data.detail);
@@ -316,7 +316,7 @@ export const response_request_service = (params: any): any => {
       // dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
-      console.log('delete_metadata_service');
+      console.log('response_request_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

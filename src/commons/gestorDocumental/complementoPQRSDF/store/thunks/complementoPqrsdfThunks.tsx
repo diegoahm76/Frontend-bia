@@ -602,6 +602,7 @@ export const get_pqrs_service = (id: string | number): any => {
 export const get_pqrsdf_id_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      console.log(params);
       const { data } = await api.get(
         `gestor/complementos-pqr/get-complementos-pqrsdf/`,
         { params }
@@ -655,7 +656,8 @@ export const get_complemento_pqrsdf_id_service = (params: any): any => {
 // crear pqrsdf
 export const add_complemento_pqrsdf_service = (
   pqrsdf: any,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  params: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -667,6 +669,8 @@ export const add_complemento_pqrsdf_service = (
       console.log(data);
 
       control_success(data.detail);
+      dispatch(get_pqrsdf_id_service(params));
+
       // navigate(
       //   `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
       // );
@@ -684,7 +688,8 @@ export const add_complemento_pqrsdf_service = (
 // editar pqrsdf
 export const edit_complemento_pqrsdf_service = (
   pqrsdf: any,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  params: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -695,6 +700,8 @@ export const edit_complemento_pqrsdf_service = (
       console.log(data);
 
       control_success(data.detail);
+      dispatch(get_pqrsdf_id_service(params));
+
       // navigate(
       //   `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
       // );
@@ -718,24 +725,19 @@ export const edit_complemento_pqrsdf_service = (
 // borrar pqrsdf
 export const delete_complemento_pqrsdf_service = (
   id: number | string,
-  is_web: boolean
+  is_web: boolean,
+  params: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const params: any = {
-        id_PQRSDF: id,
-        isCreateForWeb: is_web,
-      };
       const { data } = await api.delete(
-        `gestor/complementos-pqr/delete-complemento-pqrsdf/?idComplementoUsu_PQR=${id}&isCreateForWeb=${
-          is_web ? 'True' : 'False'
-        }`
+        `gestor/complementos-pqr/delete-complemento-pqrsdf/?idComplementoUsu_PQR=${id}`
       );
       console.log(data);
 
       if (data.success) {
         control_success(data.detail);
-        dispatch(set_pqr(initial_state_pqr));
+        dispatch(get_pqrsdf_id_service(params));
       }
       return data;
     } catch (error: any) {
@@ -749,14 +751,13 @@ export const delete_complemento_pqrsdf_service = (
 export const radicar_complemento_pqrsdf_service = (
   id: number | string,
   id_user: number,
-  is_web: boolean
+  params_pqr: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const params: any = {
         id_complemento_PQRSDF: id,
         id_persona_guarda: id_user,
-        isCreateForWeb: is_web,
       };
       const { data } = await api.post(
         `gestor/complementos-pqr/radicar-complemento-pqrsdf/`,
@@ -764,6 +765,8 @@ export const radicar_complemento_pqrsdf_service = (
       );
       if (data.success) {
         control_success(data.detail);
+        dispatch(get_pqrsdf_id_service(params_pqr));
+
         // void dispatch(get_complemento_pqrsdf_id_service(id));
       }
       return data;

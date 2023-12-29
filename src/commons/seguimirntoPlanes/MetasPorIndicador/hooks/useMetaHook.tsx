@@ -90,13 +90,14 @@ export const useMetaHook = (): any => {
     id_proyecto,
     id_producto,
     id_actividad,
+    id_indicador,
     fetch_data_mata_indicador,
   } = useContext(DataContextMetas);
 
   // declaracion redux
   const {
     meta: { id_meta },
-    indicador: { id_indicador },
+    // indicador: { id_indicador },
   } = useAppSelector((state) => state.planes);
 
   const onsubmit_meta = handleSubmit_meta(async (data) => {
@@ -140,7 +141,6 @@ export const useMetaHook = (): any => {
       data.fecha_creacion_meta = dayjs(data.fecha_creacion_meta).format(
         'YYYY-MM-DD'
       );
-      data.id_indicador = id_indicador;
       await put_meta((id_meta as number) ?? 0, data as IMetaIndicador);
       control_success('Se actualizó correctamente');
       await limpiar_formulario_meta();

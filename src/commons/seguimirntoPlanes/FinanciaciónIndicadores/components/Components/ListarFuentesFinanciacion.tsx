@@ -238,8 +238,8 @@ export const ListarFuentesFinanciacion: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_fuentes}
-                  columns={columns_fuente}
+                  rows={rows_fuentes ?? []}
+                  columns={columns_fuente ?? []}
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}

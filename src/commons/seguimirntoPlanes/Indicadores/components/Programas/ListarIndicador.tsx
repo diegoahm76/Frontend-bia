@@ -106,7 +106,7 @@ export const ListarIndicador: React.FC = () => {
 
   return (
     <>
-      <Grid
+      {/* <Grid
         container
         spacing={2}
         m={2}
@@ -148,8 +148,8 @@ export const ListarIndicador: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_indicador}
-                  columns={columns_indicador}
+                  rows={rows_indicador ?? []}
+                  columns={columns_indicador ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
@@ -158,25 +158,40 @@ export const ListarIndicador: React.FC = () => {
             </Box>
           </Grid>
         </>
-        <Grid container spacing={2} justifyContent="flex-end">
-          <Grid item>
-            <Button
-              variant="outlined"
-              color="primary"
-              disabled={false}
-              onClick={() => {
-                dispatch(
-                  set_current_mode_planes({
-                    ver: true,
-                    crear: true,
-                    editar: false,
-                  })
-                );
-              }}
-            >
-              Agregar indicador
-            </Button>
-          </Grid>
+      </Grid> */}
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+        justifyContent="flex-end"
+      >
+        <Grid item>
+          <Button
+            variant="outlined"
+            color="primary"
+            disabled={false}
+            onClick={() => {
+              dispatch(
+                set_current_mode_planes({
+                  ver: true,
+                  crear: true,
+                  editar: false,
+                })
+              );
+            }}
+          >
+            Agregar indicador
+          </Button>
         </Grid>
       </Grid>
     </>

@@ -1,5 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -42,6 +52,7 @@ export const AgregarPlanAdquisicion: React.FC = () => {
     estado_vf_selected,
     unidades_organizaciones_selected,
     ubicacion_selected,
+    set_id_person,
     set_is_limpiar_formulario,
     fetch_data_planes,
     fetch_data_intervalos,
@@ -67,6 +78,10 @@ export const AgregarPlanAdquisicion: React.FC = () => {
       limpiar_formulario_adquisiciones();
     }
     if (mode.editar) {
+      set_id_person(
+        (plan_adquisiciones.id_persona_responsable as number) ?? null
+      );
+      console.log('plan_adquisiciones', plan_adquisiciones);
       reset_adquisiciones({
         id_plan_anual: plan_adquisiciones.id_plan_anual,
         nombre_plan: plan_adquisiciones.nombre_plan,
@@ -458,23 +473,23 @@ export const AgregarPlanAdquisicion: React.FC = () => {
               control={control_adquisiciones}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Vigencia futura"
-                  variant="outlined"
-                  multiline
-                  value={value}
-                  disabled={false}
-                  required={true}
-                  onChange={onChange}
-                  error={!!errors_adquisiciones.vigencia_futura}
-                  helperText={
-                    errors_adquisiciones.vigencia_futura
-                      ? 'Es obligatorio ingresar una vigencia'
-                      : 'Ingrese una vigencia futura'
-                  }
-                />
+                <FormControl variant="outlined" fullWidth size="small">
+                  <InputLabel>Vigencia futura</InputLabel>
+                  <Select
+                    label="Vigencia futura"
+                    value={value}
+                    onChange={onChange}
+                    error={!!errors_adquisiciones.vigencia_futura}
+                  >
+                    <MenuItem value={0}>0</MenuItem>
+                    <MenuItem value={1}>1</MenuItem>
+                  </Select>
+                  <FormHelperText>
+                    {errors_adquisiciones.vigencia_futura
+                      ? 'Es obligatorio seleccionar una vigencia'
+                      : 'Seleccione una vigencia futura'}
+                  </FormHelperText>
+                </FormControl>
               )}
             />
           </Grid>

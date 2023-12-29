@@ -105,8 +105,8 @@ export const AccionesFinales = (): JSX.Element => {
         case 'OPA':
           // Call the service for OPA
           showAlert(
-            'Atención',
-            'No hay servicio aún para asignar la OPA, así que no hay se realiza asignacion de opa jeje siu',
+            'Estimado usuario:',
+            'No hay servicio aún para asignar la OPA, así que no se realiza asignacion por el momento',
             'warning'
           );
           /*res = await postAsignacionGrupoOPA(
@@ -158,7 +158,7 @@ export const AccionesFinales = (): JSX.Element => {
         case 'OPA':
           showAlert(
             'Atención',
-            'No hay servicio aún para ver las asignacion para OPA, así que no hay asignaciones de opa jeje siu',
+            'No hay servicio aún para ver las asignaciones de las OPA, así que no hay asignaciones de opa por el momento',
             'warning'
           );
           // Fetch the assignments for OOpas

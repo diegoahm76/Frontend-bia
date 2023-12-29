@@ -151,8 +151,8 @@ export const ListarPaaCodigos: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_paa_codigos}
-                  columns={columns_paa_codigos}
+                  rows={rows_paa_codigos ?? []}
+                  columns={columns_paa_codigos ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

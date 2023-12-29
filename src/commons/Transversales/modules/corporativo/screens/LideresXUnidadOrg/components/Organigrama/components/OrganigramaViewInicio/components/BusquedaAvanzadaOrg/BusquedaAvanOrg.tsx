@@ -377,8 +377,8 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               sx={{ mt: '15px' }}
               density="compact"
               autoHeight
-              rows={organigramas_list}
-              columns={columns_busqueda_avazada_organigrama_lideres}
+              rows={organigramas_list ?? []}
+              columns={columns_busqueda_avazada_organigrama_lideres ?? []}
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}

@@ -9,11 +9,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../../../../../../components';
 import { choicesTipoDeSolicitud } from '../../utils/choices';
-import { getRequestStates } from './services/getRequestStates.service';
 import { BuscadorPqrsdf } from './buscadorPqrsdf/BuscadorPqrsdf';
 import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/BuscadorTramitesYServicios';
 import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
-import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 import {
@@ -25,6 +23,7 @@ import { useAppDispatch } from '../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
 import { getOpasPanVen } from '../../../../../../toolkit/thunks/opas/getOpasPanVen.service';
+import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* dispatch declaration
@@ -67,6 +66,11 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
   const searchSubmitTramitesYservicios = () => {
     //  console.log('')('searchSubmitTramitesYservicios');
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de Trámites y servicios no está disponible ',
+      'warning'
+    );
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -75,6 +79,11 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
 
   const searchSubmitOtros = async () => {
     //  console.log('')('submit , buscando coincidencias de otros');
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de Otros no está disponible ',
+      'warning'
+    );
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -82,14 +91,20 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitopas = async () => {
-    const {
+ /*   const {
       nombre_titular,
       radicado,
       nombre_proyecto,
       estado_actual_solicitud,
       fecha_inicio,
       fecha_fin,
-    } = watch_busqueda_panel_ventanilla;
+    } = watch_busqueda_panel_ventanilla;*/
+
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de OPAS se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
+      'warning'
+    );
     const res = await getOpasPanVen(
       handleSecondLoading,
       '', //fecha_inicio,
@@ -182,7 +197,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <div>
                     <Select
@@ -254,7 +268,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 defaultValue=""
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <TextField
                     fullWidth
@@ -278,7 +291,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 defaultValue=""
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <TextField
                     fullWidth

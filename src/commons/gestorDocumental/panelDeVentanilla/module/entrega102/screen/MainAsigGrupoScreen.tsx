@@ -57,7 +57,7 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
         // Call the service for Tramites y Servicios
         showAlert(
           'Atención',
-          'No hay servicio aún para ver las asignacion para tramites y servicios, así que no hay asignaciones de tramites y servicios jeje siu',
+          'No hay servicio aún para ver las asignacion para tramites y servicios, así que no hay asignaciones de tramites y servicios por el momento',
           'warning'
         );
         break;
@@ -65,7 +65,7 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
         // Call the service for Otros
         showAlert(
           'Atención',
-          'No hay servicio aún para ver las asignacion para los otros, así que no hay asignaciones de OTROS JEJE jeje siu',
+          'No hay servicio aún para ver las asignacion para los otros, así que no hay asignaciones de OTROS por el momento',
           'warning'
         );
 
@@ -85,7 +85,7 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
         //* se debe llamar el servicio respectivo para las asignaciones de OPA, apenas esté listo
         showAlert(
           'Atención',
-          'No hay servicio aún para ver las asignacion para OPA, así que no hay asignaciones de opa jeje siu',
+          'No hay servicio aún para ver las asignaciones de las OPAS, así que no hay asignaciones de opa por el momento',
           'warning'
         );
 

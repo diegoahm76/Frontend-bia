@@ -12,7 +12,7 @@ import { Action } from '../types/toolkit.types';
 // Update import paths in ParteInicial, AccionesFinales, StepperRequerimientoUsuario, FormParte2, RequerimientoUsuarioScreen, FormParte1, ElementosPqrsdf, and FormParte3
 //* todos inicialmente deben tener el disabled en true ya que sobre todos los elementos no se puede permitir ciertas acciones dependiendo lo que incluye el elemento
 
-const actionsPQRSDF: Action[] = [
+const actionsTareasPQRSDF: Action[] = [
   {
     id: 'InfoSolictud',
     icon: <ContactPageIcon />,
@@ -70,7 +70,7 @@ const actionsTramitesYServicios: Action[] = [
 const initialState: any = {
   // ? valores para los botones (acciones) que se ejercen dentro de panel de ventanilla
   //* acciones de los botones (tambien se deberán configurar los botones para pqrsdf, trámites y servicios y otros)
-  actionsPQRSDF,
+  actionsTareasPQRSDF,
   actionsTramitesYServicios,
 
   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas: null,
@@ -84,7 +84,7 @@ export const BandejaTareasSlice = createSlice({
     // ! ------ STATES PARA PANEL DE VENTANILLA EN EL USO DE PQRSDF, TRÁMITES Y SERVICIOS Y OTROS, NO DE LOS MÓDULOS QUE DEPENDEN DE ESO ------
     //* este es editor de actions inicial de los botones, se deberá también definir los de tramites y servicios y otros
     setActionssTareasPQRSDF: (state, action: PayloadAction<any>) => {
-      state.actionsPQRSDF = action.payload;
+      state.actionsTareasPQRSDF = action.payload;
     },
 
     setActionsTareasTramites: (state, action: PayloadAction<any>) => {
@@ -115,7 +115,7 @@ export const BandejaTareasSlice = createSlice({
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetBandejaDeTareasFull: (state) => {
-      state.actionsPQRSDF = [];
+      state.actionsTareasPQRSDF = [];
       // state.actions = [];
       // state.actionsTramitesYServicios = [];
       // state.actionsComplementos = [];

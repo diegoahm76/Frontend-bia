@@ -729,6 +729,17 @@ export const radicar_pqrsdf_service = (
           set_filed({
             ...data.data,
             numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
+            nombre_tipo_radicado:
+              data.data.cod_tipo_radicado === 'E'
+                ? 'Entrada'
+                : data.data.cod_tipo_radicado === 'S'
+                ? 'Salidad'
+                : data.data.cod_tipo_radicado === 'I'
+                ? 'Interno'
+                : data.data.cod_tipo_radicado === 'U'
+                ? 'Unico'
+                : '',
+            titular: data.data.persona_titular,
           })
         );
       }

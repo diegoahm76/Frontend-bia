@@ -142,6 +142,7 @@ export const initial_state_digitization_request: IObjDigitizationRequest = {
 };
 
 const initial_state: ICentralDigitization = {
+  file_fisico: null,
   request_types: [],
   request_type: initial_state_list,
   list_request_status: [],
@@ -169,6 +170,12 @@ export const central_digitalizacion_slice = createSlice({
   initialState: initial_state,
   reducers: {
     reset_state: () => initial_state,
+    set_file_fisico: (
+      state: ICentralDigitization,
+      action: PayloadAction<any>
+    ) => {
+      state.file_fisico = action.payload;
+    },
     set_request_types: (
       state: ICentralDigitization,
       action: PayloadAction<IObjListType[]>
@@ -279,6 +286,7 @@ export const central_digitalizacion_slice = createSlice({
   },
 });
 export const {
+  set_file_fisico,
   set_list_request_status,
   set_request_status,
   set_request_type,

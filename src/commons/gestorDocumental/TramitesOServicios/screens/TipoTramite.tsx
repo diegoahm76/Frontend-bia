@@ -19,6 +19,19 @@ interface IProps {
     set_response_paso_1: any,
     limpiar: any
 }
+const lt_determinantes_amb = [{id_permiso_ambiental: 'DA', nombre: 'Determinantes ambientales'},{id_permiso_ambiental: 'DAPP', nombre: 'Determinantes ambientales planes parciales'}];
+const lt_licencias_amb = [{id_permiso_ambiental: 'LH', nombre: 'Licencias de Hidrocarburos'},{id_permiso_ambiental: 'LAU', nombre: 'Licencias de Aire y Urbano'}];
+const lt_permisos_menor = [{id_permiso_ambiental: 'PFNM', nombre: 'Aprovechamiento de productos forestales no maderables (PFNM)'},{id_permiso_ambiental: 'AFAD', nombre: 'Autorización para aprovechamiento forestal de árboles domésticos'},
+{id_permiso_ambiental: 'CADV', nombre: 'Certificación ambiental para desintegración vehicular'},{id_permiso_ambiental: 'CDA', nombre: 'Certificación en materia de revisión de gases para centros de diagnóstico automotor (CDA)'},
+{id_permiso_ambiental: 'CIEPF', nombre: 'Certificación para importar o exportar productos forestales en segundo grado de transformación y los productos de la flora silvestre no obtenidos mediante aprovechamiento del medio natural'},{id_permiso_ambiental: 'CAS', nombre: 'Concesión de aguas subterráneas'},
+{id_permiso_ambiental: 'CASV', nombre: 'Concesión de Aguas Superficiales y Vertimientos'},{id_permiso_ambiental: 'ACAL', nombre: 'Inscripción como acopiador primario de aceites lubricantes usados'},
+{id_permiso_ambiental: 'RCD', nombre: 'Inscripción como gestor de residuos de construcción y demolición (RCD)'},{id_permiso_ambiental: 'MAPS', nombre: 'Medidas de manejo ambiental para proyectos sísmicos'},
+{id_permiso_ambiental: 'EAFF', nombre: 'Permiso de emisión atmosférica para fuentes fijas'},{id_permiso_ambiental: 'OCPL', nombre: 'Permiso de Ocupación de Cauce, Playa y Lechos '},
+{id_permiso_ambiental: 'PEAS', nombre: 'Permiso de prospección y exploración de aguas subterráneas'},{id_permiso_ambiental: 'RES', nombre: 'Permiso de recolección de especímenes de especies silvestres de la diversidad biológica con fines de investigación científica no comercial'},
+{id_permiso_ambiental: 'PVS', nombre: 'Permiso de vertimientos al suelo'},{id_permiso_ambiental: 'AFAAPU', nombre: 'Permiso de Aprovechamiento Forestal de Árboles Aislados, Persistentes y Únicos'},
+{id_permiso_ambiental: 'CMDHS', nombre: 'Plan de contingencia para el manejo de derrames de hidrocarburos o sustancias nocivas'},{id_permiso_ambiental: 'CMDS', nombre: 'Plan de contingencia para el manejo de derrames de hidrocarburos o sustancias nocivas en estaciones de servicio'},
+{id_permiso_ambiental: 'PIT', nombre: 'Proyectos industriales (trituradoras)'},{id_permiso_ambiental: 'RLO', nombre: 'Registro de libro de operaciones'},
+{id_permiso_ambiental: 'OPVPM', nombre: 'Solicitud para la obtención de productos vegetales, producción y movilización del carbón vegetal con fines comerciales'}];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
@@ -46,7 +59,6 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     
     useEffect(() => {
         tipos_tramites_fc();
-        tramites_servicios_fc();
         get_departamentos_fc();
     }, []);
 
@@ -85,6 +97,9 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
             set_municipio(props.usuario.cod_municipio_notificacion_nal);
             set_direccion(props.usuario.direccion_notificaciones);
             set_descripcion(props.usuario.direccion_notificacion_referencia);
+            set_error_departamento(false);
+            set_error_municipio(false);
+            set_error_direccion(false);
             if (props.usuario.ubicacion_georeferenciada !== null)
                 set_coordenada_x(props.usuario.ubicacion_georeferenciada);
             if (props.usuario.ubicacion_georeferenciada_lon !== null)
@@ -113,12 +128,115 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     const cambio_tipo_tramite: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipo_tramite(e.target.value);
         props.set_tramite_servicio(e.target.value);
+        set_lt_tramites_servicios_por_tramite(e.target.value);
         set_error_tipo_tramite(false);
+    }
+
+    const set_lt_tramites_servicios_por_tramite: (opcion: any) => void = (opcion: any) => {
+        switch (opcion) {
+            case 'O':
+                tramites_servicios_fc();
+                break;
+            case 'L':
+                set_lt_tramites_servicios(lt_licencias_amb);
+                break;
+            case 'P':
+                set_lt_tramites_servicios(lt_permisos_menor);
+                break;
+            case 'D':
+                set_lt_tramites_servicios(lt_determinantes_amb);
+                break;
+        
+            default:
+                set_lt_tramites_servicios([]);
+                break;
+        }
     }
 
     const cambio_tramite_servicio: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tramite_servicio(e.target.value);
+        redireccion_url(e.target.value);
         set_error_tramite_servicio(false);
+    }
+
+    const redireccion_url: (opcion: any) => void = (opcion: any) => {
+        switch (opcion) {
+            case 'DA':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Determinantes_Ambi';
+                break;
+            case 'DAPP':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/DeterAmbiPP';
+                break;
+            case 'LH':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/LicHidroC';
+                break;
+            case 'LAU':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Lic_Aire_Urb';
+                break;
+            case 'PFNM':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Aprov_Forestal';
+                break;
+            case 'AFAD':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Aprov_Forestal_Arboles_Domesticos';
+                break;
+            case 'CADV':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/CertDesVehicular';
+                break;
+            case 'CDA':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Diagnostico_Motor_CDA';
+                break;
+            case 'IEPF':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Certimpexp';
+                break;
+            case 'CAS':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Aguas_Subte';
+                break;
+            case 'CASV':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Concesion_Aguas';
+                break;
+            case 'ACAL':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Acopaceites';
+                break;
+            case 'RCD':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/GestorResiduos';
+                break;
+            case 'MAPS':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Med_ManAmbien';
+                break;
+            case 'EAFF':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Emision_Atmos';
+                break;
+            case 'OCPL':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/OcupacionCauce';
+                break;
+            case 'PEAS':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Prospeccion_explo';
+                break;
+            case 'RES':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/PermRecolecEspe';
+                break;
+            case 'PVS':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/VertiASuelos';
+                break;
+            case 'AFAAPU':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Arboles_Aislados';
+                break;
+            case 'CMDHS':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/PlanContDer';
+                break;
+            case 'CMDS':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/PDC';
+                break;
+            case 'PIT':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Proyec_Industri';
+                break;
+            case 'RLO':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/RegisOpera';
+                break;
+            case 'OPVPM':
+                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/SolObtProdVege';
+                break;
+        }
     }
 
     const cambio_descripcion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,9 +288,9 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
         return !(departamento === '' || municipio === '' || tipo_tramite === '' || tramite_servicio === '' || direccion === '');
     }
 
-    useEffect(() => {
-        set_error_direccion(direccion !== '');
-    }, [direccion]);    
+    // useEffect(() => {
+    //     set_error_direccion(direccion == '');
+    // }, [direccion]);    
     
     useEffect(() => {
         if (limpiar) {
@@ -217,6 +335,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                             value={tramite_servicio ?? ""}
                             onChange={cambio_tramite_servicio}
                             readOnly={false}
+                            disabled={tipo_tramite === ""}
                             error={error_tramite_servicio}
                         >
                             {lt_tramites_servicios.map((m: any) => (
@@ -228,6 +347,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                     </FormControl>
                     {error_tramite_servicio && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
                 </Grid>
+                {tipo_tramite === 'O' && <>
                 <Grid item xs={12} sm={12}>
                     <span style={{ marginTop: '9px' }} >{"Usar la misma dirección del titular "}</span>
                     <Checkbox checked={usar_direccion} onChange={cambio_usar_direccion} inputProps={{ 'aria-label': 'controlled' }} />
@@ -337,6 +457,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 <Grid item xs={12} sm={12}>
                     <Geolocalizacion coordenada_x={coordenada_x} coordenada_y={coordenada_y}></Geolocalizacion>
                 </Grid>
+                </>}
             </Grid>
             <DialogGeneradorDeDirecciones
                 open={abrir_modal}

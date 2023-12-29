@@ -202,8 +202,8 @@ export const CargosScreen: React.FC<IProps> = ({
                                     <>
                                         <DataGrid
                                             autoHeight
-                                            rows={rows}
-                                            columns={columns_juridica}
+                                            rows={rows ?? []}
+                                            columns={columns_juridica ?? []}
                                             getRowId={(row) => row.id_historico_autoriza_noti}
                                             pageSize={5}
                                             rowsPerPageOptions={[5]}
@@ -214,8 +214,8 @@ export const CargosScreen: React.FC<IProps> = ({
                                     <>
                                         <DataGrid
                                             autoHeight
-                                            rows={rows}
-                                            columns={columns}
+                                            rows={rows ?? []}
+                                            columns={columns ?? []}
                                             getRowId={(row) => row.id_historico_autoriza_noti}
                                             pageSize={5}
                                             rowsPerPageOptions={[5]}

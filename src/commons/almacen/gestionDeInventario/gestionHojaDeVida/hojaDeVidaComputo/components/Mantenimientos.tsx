@@ -1,5 +1,5 @@
 
-import { Box, ButtonGroup, Grid } from '@mui/material';
+import { Box, ButtonGroup, Grid, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../../../components/Title';
@@ -66,16 +66,24 @@ const Mantenimiento = () => {
                             {download_pdf({ nurseries: maintenance, columns: columns_mantenimientos, title: "Mantenimientos" })}
 
                         </ButtonGroup>
-                        <DataGrid
-                            density="compact"
-                            autoHeight
-                            columns={columns_mantenimientos}
-                            pageSize={10}
-                            rowsPerPageOptions={[10]}
-                            experimentalFeatures={{ newEditingApi: true }}
-                            getRowId={(row) => row.id_programacion_mantenimiento}
-                            rows={maintenance}
-                        />
+                        {
+                            (maintenance && maintenance.length > 0) ? (
+                                <DataGrid
+                                    density="compact"
+                                    autoHeight
+                                    columns={columns_mantenimientos ?? []}
+                                    rows={maintenance ?? []}
+                                    pageSize={10}
+                                    rowsPerPageOptions={[10]}
+                                    experimentalFeatures={{ newEditingApi: true }}
+                                    getRowId={(row) => row.id_programacion_mantenimiento}
+                                />
+                            ) : (
+                                <Typography variant="h6" component="h2">
+                                    No hay datos disponibles
+                                </Typography>
+                            )
+                        }
 
                     </Box>
                 </Grid>

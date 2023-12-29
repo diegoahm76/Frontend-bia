@@ -200,8 +200,8 @@ export const ListarDetalleInversion: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_detalle_inversion}
-                  columns={columns_detalle}
+                  rows={rows_detalle_inversion ?? []}
+                  columns={columns_detalle ?? []}
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}

@@ -773,7 +773,7 @@ const BusquedaAvanzadaFisico = ({
                           label="Depósito"
                           variant="outlined"
                           size="small"
-                          error={!(Error == null)}
+                          error={false}
                           sx={{
                             backgroundColor: 'white',
                             marginTop: 0.5,
@@ -1245,7 +1245,7 @@ const BusquedaAvanzadaFisico = ({
                       <DataGrid
                         density="compact"
                         autoHeight
-                        columns={columns}
+                        columns={columns_carpetas}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         rows={carpetas}

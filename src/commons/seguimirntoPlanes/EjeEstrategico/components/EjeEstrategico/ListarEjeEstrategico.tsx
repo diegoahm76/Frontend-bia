@@ -156,8 +156,8 @@ export const ListarEjeEstrategico: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_eje_estrategico}
-                  columns={columns_eje}
+                  rows={rows_eje_estrategico ?? []}
+                  columns={columns_eje ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
