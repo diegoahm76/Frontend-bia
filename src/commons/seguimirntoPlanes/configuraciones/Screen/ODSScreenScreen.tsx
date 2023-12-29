@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -9,6 +10,7 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -120,6 +122,7 @@ export const ODSScreen: React.FC = () => {
   const [ods, set_ods] = useState<IObjetivoDesarrolloSostenible>();
   const [is_crear, set_is_crear] = useState<boolean>(false);
   const [is_editar, set_is_editar] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handle_open_crear = (): void => {
     set_is_crear(true);
@@ -128,8 +131,15 @@ export const ODSScreen: React.FC = () => {
     set_is_editar(true);
   };
 
+  const filterRows = (rows: any[], searchTerm: string) => {
+    return rows.filter((row) =>
+      row.nombre_objetivo.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
   const get_traer_ods = async (): Promise<void> => {
     try {
+      setSearchTerm('')
       const response = await get_ods();
       const datos_ods = response.map(
         (datos: IObjetivoDesarrolloSostenible) => ({
@@ -140,7 +150,7 @@ export const ODSScreen: React.FC = () => {
           registro_precargado: datos.registro_precargado,
         })
       );
-      set_rows(datos_ods);
+      set_rows(filterRows(datos_ods, ''));
       //  console.log('')(datos_ods, 'datos_ods');
     } catch (error: any) {
       control_error(
@@ -222,11 +232,19 @@ export const ODSScreen: React.FC = () => {
                   title: ' CREAR ODS',
                 })}
               </ButtonGroup>
+              <TextField
+                label="Buscar entidad"
+                size="small"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ marginBottom: '20px' }}
+              />
               <DataGrid
                 autoHeight
-                rows={rows ?? []}
+                rows={filterRows(rows, searchTerm)}
                 columns={columns ?? []}
-                getRowId={(row) => uuidv4()}
+                getRowId={() => uuidv4()}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
               />
