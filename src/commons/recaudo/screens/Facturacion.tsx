@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
@@ -24,14 +25,14 @@ import { UnidadOrganizacional } from '../../conservacion/solicitudMaterial/inter
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 
-interface SerieSubserie {
+export interface SerieSubserie {
   id_catserie_unidadorg: number;
   id_serie_doc: number;
   nombre_serie_doc: string;
   id_subserie_doc: number | null;
   nombre_subserie_doc: string | null;
 }
-interface UnidadOrganizaciona {
+export interface UnidadOrganizaciona {
   id_unidad_organizacional: number;
   nombre: string;
 }
@@ -157,8 +158,10 @@ export const Facturacion: React.FC = () => {
 
 
   const [idUnidadSeleccionada, setIdUnidadSeleccionada] = useState('');
-  const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
+  
   const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
+
+  const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
 
   const fetchUnidades = async () => {
     try {

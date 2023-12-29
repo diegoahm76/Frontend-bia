@@ -4,12 +4,14 @@ export interface organigrama {
     item_ya_usado: boolean;
 };
 export interface AsignacionEncuesta {
-    id_persona: number;
-    id_encuesta: number;
-    nombre_encuesta: string;
-    nombre_completo: string;
-    id_alerta_generada: number;
-    id_encabezado_encuesta: number;
+    id_pqrsdf: any;
+    tipo_pqrsdf: any;
+    medio_solicitud: any;
+    sucursal_recepcion: any;
+    numero_radicado: any;
+    fecha_radicado: any;
+    persona_recibe: any;
+    fecha_solicitud: any;
 };
 export interface FormData {
     id_persona_alertar: any;
@@ -34,7 +36,7 @@ export interface estado {
 }
 
 export interface Persona {
-    id_persona: number;
+    id_persona: any;
     primer_nombre: string;
     segundo_nombre: string;
     primer_apellido: string;
