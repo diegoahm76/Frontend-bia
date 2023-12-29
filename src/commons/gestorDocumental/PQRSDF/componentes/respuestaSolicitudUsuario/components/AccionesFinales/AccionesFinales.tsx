@@ -22,6 +22,8 @@ export const AccionesFinales = ({
 
   //* context
 
+  const nombres =["danna","valentino"];
+
   const { handleReset } = useStepperResSolicitudUsuario();
 
   const [LoadingButton, setLoadingButton] = useState(false);
@@ -68,11 +70,11 @@ export const AccionesFinales = ({
           metadatos: {
             asunto: anexo.asunto,
             descripcion: anexo.descripcionMetadatos,
-            cod_categoria_archivo: anexo.categoriaArchivoMetadatos?.value,
-            tiene_replica_fisica: anexo.tieneReplicaFisicaMetadatos?.value === 'Si' ? true : false,
-            cod_origen_archivo: anexo.origenArchivoMetadatos?.value,
-            id_tipologia_doc: anexo.tipologiasDocumentalesMetadatos?.value,
-            palabras_clave_doc: anexo.palabrasClavesMetadatos.join('|'),
+            cod_categoria_archivo: anexo.categoriaArchivoMetadatos?.value || null,
+            tiene_replica_fisica: anexo.tieneReplicaFisicaMetadatos?.value === 'Si',
+            cod_origen_archivo: anexo.origenArchivoMetadatos?.value || null,
+            id_tipologia_doc: anexo.tipologiasDocumentalesMetadatos?.value || null,
+            palabras_clave_doc: anexo.palabrasClavesMetadatos ? anexo.palabrasClavesMetadatos.join('|') : null,
           },
         })),
       })
