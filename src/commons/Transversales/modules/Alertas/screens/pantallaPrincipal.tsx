@@ -68,7 +68,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       set_alertas_leidas_icono(AlertasLeidas.length);
       setNumeroDeAlertas(AlertasNoLeidas.length)
       set_bandeja_alerta(data.data);
-//  console.log('')(data)
+ console.log("mostrat data a rechard",data)
       return data.data;
     } catch (error) {
       // console.error(error);

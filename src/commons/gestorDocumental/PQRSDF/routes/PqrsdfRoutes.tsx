@@ -16,11 +16,13 @@ export const PqrsdfRoutes: React.FC = () => {
       <Route
         path="respuesta_pqrsdf"
         element={
+        
           <ResProvider>
             <ResSolicitudUsuarioProvider>
               <SolicitudUsuarioScreen />
             </ResSolicitudUsuarioProvider>
           </ResProvider>
+    
         }
       />
       <Route path="/*" element={<Navigate to={'/'} />} />

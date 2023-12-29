@@ -101,7 +101,7 @@ export const ConsultarActividades: React.FC = () => {
       {rows_actividades.length > 0 ? (
         <>
           <Grid item xs={12}>
-            <Title title="Actividadess " />
+            <Title title="Actividades " />
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">

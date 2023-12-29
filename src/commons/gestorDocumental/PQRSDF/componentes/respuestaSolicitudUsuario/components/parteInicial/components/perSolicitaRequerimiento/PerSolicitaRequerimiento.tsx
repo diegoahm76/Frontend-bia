@@ -4,10 +4,30 @@ import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
 import { useContext } from 'react';
 import { ResSolicitudUsuarioContext } from '../../../../context/ResSolicitudUsarioContext';
+import { useSelector } from 'react-redux';
+import { AuthSlice } from '../../../../../../../../auth/interfaces/authModels';
+
+
+interface DataRegistePortal {
+  auth: {
+    userinfo: {
+      tipo_documento: string;
+      numero_documento: string;
+      nombre_de_usuario: string;
+    
+    };  
+  };
+
+}
+
 
 export const PerSolicitaRequerimiento = (): JSX.Element => {
   //* context declaration
   const { infoInicialUsuario } = useContext(ResSolicitudUsuarioContext);
+
+  const { userinfo:{numero_documento, nombre_de_usuario,tipo_documento} } = useSelector((state: DataRegistePortal) => state.auth);
+
+
 
   return (
     <Grid
@@ -18,7 +38,7 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
         justifyContent: 'center',
       }}
     >
-      <Title title="Persona que realiza el requerimiento" />
+      <Title title="Persona que realiza la respuesta" />
       <form
         style={{
           marginTop: '3rem',
@@ -40,7 +60,7 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
               label="Nombres"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataSolicita?.data?.nombres ?? 'N/A'}
+              value={nombre_de_usuario ?? 'N/A'}
               inputProps={{
                 maxLength: 50,
               }}
@@ -54,7 +74,7 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
               label="Apellidos"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataSolicita?.data?.apellidos ?? 'N/A'}
+              value={nombre_de_usuario?? 'N/A'}
               inputProps={{
                 maxLength: 10,
               }}
@@ -69,7 +89,7 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               value={
-                infoInicialUsuario?.dataSolicita?.data?.tipo_documento ?? 'N/A'
+                tipo_documento?? 'N/A'
               }
             />
           </Grid>
@@ -82,26 +102,11 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
               disabled
               InputLabelProps={{ shrink: true }}
               value={
-                infoInicialUsuario?.dataSolicita?.data?.numero_documento ??
-                'N/A'
+                numero_documento?? 'N/A'
               }
             />
           </Grid>
 
-          <Grid item xs={12} sm={8}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Unidad organizacional solicitante"
-              variant="outlined"
-              disabled
-              InputLabelProps={{ shrink: true }}
-              value={
-                infoInicialUsuario?.dataSolicita?.data
-                  ?.unidad_organizacional_actual ?? 'N/A'
-              }
-            />
-          </Grid>
         </Grid>
       </form>
     </Grid>

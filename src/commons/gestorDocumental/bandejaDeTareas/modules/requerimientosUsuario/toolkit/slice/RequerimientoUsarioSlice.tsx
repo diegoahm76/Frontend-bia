@@ -12,6 +12,15 @@ interface Anexo {
   id: string;
   nombre_archivo: string;
   // other properties...
+
+  descripcion?: string | null;
+  cod_categoria_archivo?: string | null;
+  tiene_replica_fisica?: boolean | null;
+  cod_origen_archivo?: string | null;
+  id_tipologia_doc?: number | null;
+  tipologia_no_creada_TRD?: string | null;
+  palabras_clave_doc?: string | null;
+
 }
 const initialState: {
   anexosCreados: Anexo[];

@@ -28,6 +28,7 @@ import {
 import { ModalInfoSolicitud } from './ModalInfoSolicitud/ModalInfoSolicitud';
 import { ResSolicitudUsuarioContext } from '../../../context/ResSolicitudUsarioContext';
 import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolicitudUsuario';
+import { api } from '../../../../../../../../api/axios';
 
 export const FormParte1 = ({
   controlFormulario,
@@ -48,7 +49,9 @@ export const FormParte1 = ({
   const {
     setInfoInicialUsuario,
     infoInicialUsuario,
-    setCurrentSolicitudUsuario,
+    respuestaPqrs,
+    setRespuestaPqrs
+
   } = useContext(ResSolicitudUsuarioContext);
 
   //* navigate declaration
@@ -64,37 +67,9 @@ export const FormParte1 = ({
   const { handleGeneralLoading, handleSecondLoading } = useContext(
     ModalAndLoadingContext
   );
-/*
-  useEffect(() => {
-    if (!currentElementPqrsdComplementoTramitesYotros) {
-      navigate('/app/gestor_documental/panel_ventanilla/');
-      return;
-    }
-    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
-    handleReset();
-    void getInitialData(
-      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-      navigate,
-      handleGeneralLoading,
-      handleSecondLoading
-    ).then((data) => {
-      setInfoInicialUsuario(data);
-    });
-  }, []);
 
-  const getInfoSolicitud = async (params: any) => {
-    const [detalleSolicitud, anexos] = await Promise.all([
-      getDetalleSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf, handleFifthLoading),
-      getAnexosSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf, handleFifthLoading),
-    ]);
 
-    const data = {
-      detalleSolicitud,
-      anexos,
-    };
 
-    setCurrentSolicitudUsuario(data);
-  };*/
 
   // ? definicion de las columnas
   const columns = [
@@ -150,6 +125,23 @@ export const FormParte1 = ({
       </Grid>
     );
   }
+
+
+  useEffect(() => {
+    const fetchData = async (): Promise<void> => {
+      try {
+        const url = '/gestor/pqr/get_pqrsdf-panel/43/';
+        const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
+        const facilidadPagoData = res.data.data;
+        setRespuestaPqrs(facilidadPagoData)
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+
+    fetchData(); // Llama a la función que realiza la petición al montar el componente
+  }, []);
+
 
   return (
     <>
@@ -236,7 +228,7 @@ export const FormParte1 = ({
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.detallePQRSDF?.data?.asunto ?? 'N/A'}
+              value={respuestaPqrs?.asunto?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -272,7 +264,7 @@ export const FormParte1 = ({
 
           {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
 
-          {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
+          {/* {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
           0 ? (
             <RenderDataGrid
               title="Histórico de respuestas al usuario"
@@ -294,7 +286,7 @@ export const FormParte1 = ({
             >
               No hay histórico de requerimientos para este elemento
             </Typography>
-          )}
+          )} */}
         </Grid>
 
         <Grid
@@ -309,7 +301,7 @@ export const FormParte1 = ({
             paddingBottom: '2rem',
           }}
         >
-          <Button
+          {/* <Button
             variant="contained"
             color="success"
             startIcon={<SaveAsIcon />}
@@ -323,7 +315,7 @@ export const FormParte1 = ({
             }}
           >
             Crear solicitud de requerimiento
-          </Button>
+          </Button> */}
         </Grid>
       </form>
 

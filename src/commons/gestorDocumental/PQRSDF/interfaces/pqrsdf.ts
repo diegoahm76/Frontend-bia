@@ -152,6 +152,10 @@ export interface IObjPqr {
   nro_folios_totales?: number | null; // total folios en anexos
   anexos?: IObjExhibit[];
   denuncia?: IObjPqrDenuncia | null;
+
+
+
+  descripcionMetadatos?: string | null; // descripcion de metadatos
 }
 
 export interface IObjPqrDenuncia {
@@ -198,6 +202,7 @@ export interface IObjExhibit {
   id_docu_de_arch_exp?: number | null;
   metadatos: IObjMetaData | null;
   nombre_medio_almacenamiento?: string | number | null;
+  descripcionMetadatos?:string|null;
 }
 
 export interface IObjMetaData {

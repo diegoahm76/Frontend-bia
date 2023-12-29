@@ -6,11 +6,12 @@ interface Etapa {
   telefono: string;
   nombres: string;
   email: string;
-  mostrar_modal:boolean;
-  disable:boolean;
-  apellidos:string;
-  identificacion:string;
-  tipo_cambio:string
+  mostrar_modal: boolean;
+  disable: boolean;
+  apellidos: string;
+  identificacion: string;
+  tipo_cambio: string;
+  nuevo_proceso:string 
 }
 
 interface EtapaContext {
@@ -23,16 +24,17 @@ export const initial_Etapa_valores: Etapa = {
   telefono: "",
   nombres: "",
   email: "",
-  mostrar_modal:false,
-  disable:true,
-  apellidos:"",
-  identificacion:"",
-tipo_cambio:""
+  mostrar_modal: false,
+  disable: true,
+  apellidos: "",
+  identificacion: "",
+  tipo_cambio: "",
+  nuevo_proceso:""
 };
 
 export const EtapaProcesoConext = createContext<EtapaContext>({
   etapa_proceso: initial_Etapa_valores,
-  set_etapa_proceso: () => {},
+  set_etapa_proceso: () => { },
 });
 
 interface EtapaProcesoProviderProps {
@@ -41,7 +43,7 @@ interface EtapaProcesoProviderProps {
 
 export const EtapaProcesoProvider: React.FC<EtapaProcesoProviderProps> = ({ children }) => {
   const [etapa_proceso, set_etapa_proceso] = useState<Etapa>(initial_Etapa_valores);
-console.log("etapa_proceso", etapa_proceso);
+  console.log("etapa_proceso", etapa_proceso);
   const valores_etapa: EtapaContext = { etapa_proceso, set_etapa_proceso };
 
   return (
