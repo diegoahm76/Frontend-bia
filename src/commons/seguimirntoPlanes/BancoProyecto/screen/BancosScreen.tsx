@@ -7,6 +7,8 @@ import { AgregarBanco } from '../components/Components/AgregarBanco';
 import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaMetas } from '../components/Components/BusquedaAvanzada/BusquedaMetas';
+import { BusquedaBanco } from '../components/Components/BusquedaAvanzada/BusquedaBanco';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BancosScreen: React.FC = () => {
@@ -45,7 +47,8 @@ export const BancosScreen: React.FC = () => {
           <Title title="Banco de proyectos " />
         </Grid>
       </Grid>
-      <ListarBanco />
+      <BusquedaMetas />
+      {mode.ver ? <ListarBanco /> : null}
       {mode.crear || mode.editar ? <AgregarBanco /> : null}
       <Grid
         container
@@ -63,6 +66,7 @@ export const BancosScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaBanco />
         <Grid item>
           <ButtonSalir />
         </Grid>

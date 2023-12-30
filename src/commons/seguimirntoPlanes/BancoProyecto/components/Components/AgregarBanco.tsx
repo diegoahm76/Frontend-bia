@@ -3,14 +3,12 @@ import { Button, Grid, MenuItem, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useBancosHook } from '../../hooks/useBancosHook';
 import { DataContextBancos } from '../../context/context';
-import { DataContextIndicador } from '../../../Indicadores/context/context';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -19,8 +17,6 @@ export const AgregarBanco: React.FC = () => {
     control_banco,
     errors_banco,
     reset_banco,
-    data_watch_banco,
-    set_value_banco,
 
     onsubmit_banco,
     onsubmit_editar,
@@ -33,47 +29,31 @@ export const AgregarBanco: React.FC = () => {
 
   const { mode, banco } = useAppSelector((state) => state.planes);
 
-  const id_indicador = data_watch_banco.id_indicador;
-
-  const {
-    actividad_selected,
-    fetch_data_actividad_selected,
-    indicadores_selected,
-    fetch_data_indicadores,
-  } = useContext(DataContextIndicador);
-
   const {
     rubros_selected,
-    metas_selected,
-    proyectos_selected,
     fuentes_selected,
+    set_id_proyecto,
+    set_id_actividad,
     set_id_indicador,
-    fetch_data_metas,
+    set_id_meta,
     fetch_data_rubros,
-    fetch_data_proyectos,
     fetch_data_fuentes,
   } = useContext(DataContextBancos);
 
   useEffect(() => {
-    fetch_data_actividad_selected();
     fetch_data_rubros();
-    fetch_data_metas();
-    fetch_data_proyectos();
     fetch_data_fuentes();
-    fetch_data_indicadores();
   }, []);
-
-  useEffect(() => {
-    if (id_indicador || banco.id_indicador) {
-      set_id_indicador(id_indicador ?? banco.id_indicador);
-    }
-  }, [id_indicador, banco]);
 
   useEffect(() => {
     if (mode.crear) {
       limpiar_formulario_banco();
     }
     if (mode.editar) {
+      set_id_proyecto(banco.id_proyecto ?? null);
+      set_id_actividad(banco.id_actividad ?? null);
+      set_id_indicador(banco.id_indicador ?? null);
+      set_id_meta(banco.id_meta ?? null);
       reset_banco({
         id_banco: banco.id_banco,
         nombre_proyecto: banco.nombre_proyecto,
@@ -232,68 +212,6 @@ export const AgregarBanco: React.FC = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="id_indicador"
-              control={control_banco}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_banco.id_indicador}
-                  helperText={
-                    errors_banco?.id_indicador?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el sector'
-                  }
-                >
-                  {indicadores_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Controller
-              name="id_meta"
-              control={control_banco}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={!id_indicador}
-                  fullWidth
-                  required
-                  error={!!errors_banco.id_meta}
-                  helperText={
-                    errors_banco?.id_meta?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese meta'
-                  }
-                >
-                  {metas_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Controller
               name="id_rubro"
               control={control_banco}
               defaultValue=""
@@ -346,68 +264,6 @@ export const AgregarBanco: React.FC = () => {
                   }
                 >
                   {fuentes_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Controller
-              name="id_proyecto"
-              control={control_banco}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_banco.id_proyecto}
-                  helperText={
-                    errors_banco?.id_proyecto?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el proyecto'
-                  }
-                >
-                  {proyectos_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Controller
-              name="id_actividad"
-              control={control_banco}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_banco.id_actividad}
-                  helperText={
-                    errors_banco?.id_actividad?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese la actividad'
-                  }
-                >
-                  {actividad_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>

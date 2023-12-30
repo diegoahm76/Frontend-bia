@@ -7,6 +7,7 @@ import { AgregarFuenteFinanciacion } from '../components/Components/AgregarFuent
 import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaConcepto } from '../components/Components/BusquedaAvanzada/BusquedaConcepto';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FuentesScreen: React.FC = () => {
@@ -45,7 +46,8 @@ export const FuentesScreen: React.FC = () => {
           <Title title="Fuentes de financiación  " />
         </Grid>
       </Grid>
-      <ListarFuentesFinanciacion />
+      <BusquedaConcepto />
+      {mode.ver ? <ListarFuentesFinanciacion /> : null}
       {mode.crear || mode.editar ? <AgregarFuenteFinanciacion /> : null}
       <Grid
         container

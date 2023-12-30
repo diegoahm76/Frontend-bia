@@ -17,7 +17,7 @@ import {
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   set_current_banco,
@@ -193,7 +193,7 @@ export const ListarBanco: React.FC = () => {
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
-                  getRowId={(row) => uuidv4()}
+                  getRowId={() => uuidv4()}
                 />
               </>
             </Box>

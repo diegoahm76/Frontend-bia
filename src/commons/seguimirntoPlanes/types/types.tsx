@@ -227,7 +227,7 @@ export interface IConceptoPOAI {
 // fuentes de financiacion
 export interface IFuentes {
   id_fuente: number | null;
-  nombre_fuente?: string;
+  nombre_fuente: string;
   vano_1: number | null;
   vano_2: number | null;
   vano_3: number | null;

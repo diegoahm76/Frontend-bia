@@ -10,6 +10,8 @@ import type {
 } from '../../types/types';
 import { ResponseServer } from '../../../../interfaces/globalModels';
 import { IBusquedaDetalleInversion } from '../components/Components/BusquedaAvanzada/types';
+import { IBusquedaBancoProyecto } from '../../BancoProyecto/components/Components/BusquedaAvanzada/types';
+import { IBusquedaConceptoPOAI } from '../../ConceptoPOAI/components/Components/BusquedaAvanzada/types';
 
 // ! detalle de inversion cuentas
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
@@ -65,6 +67,41 @@ export const search_detalle_inversion = async ({
     nombre_actividad ?? ''
   )}&nombre_indicador=${String(nombre_indicador ?? '')}`;
   return await api.get<ResponseServer<IBusquedaDetalleInversion[]>>(url);
+};
+
+// Busqueda avanzada banco proyecto por objeto_contrato, nombre_proyecto, nombre_actividad, nombre_indicador y nombre_meta
+
+export const search_banco_proyecto = async ({
+  nombre_proyecto,
+  nombre_actividad,
+  nombre_indicador,
+  nombre_meta,
+  objeto_contrato,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaBancoProyecto[]>>> => {
+  const url = `seguimiento-planes/consultar-banco-proyectos-avanzado/?nombre_proyecto=${String(
+    nombre_proyecto ?? ''
+  )}&nombre_actividad=${String(
+    nombre_actividad ?? ''
+  )}&nombre_indicador=${String(nombre_indicador ?? '')}&nombre_meta=${String(
+    nombre_meta ?? ''
+  )}&objeto_contrato=${String(objeto_contrato ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaBancoProyecto[]>>(url);
+};
+
+// IBusquedaConceptoPOAI
+// busqueda avanzada de conceptos POAI por concepto, nombre y nombre indicador
+
+export const search_concepto_poai = async ({
+  concepto,
+  nombre,
+  nombre_indicador,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaConceptoPOAI[]>>> => {
+  const url = `seguimiento-planes/consultar-conceptos-poai-avanzado/?concepto=${String(
+    concepto ?? ''
+  )}&nombre=${String(nombre ?? '')}&nombre_indicador=${String(
+    nombre_indicador ?? ''
+  )}`;
+  return await api.get<ResponseServer<IBusquedaConceptoPOAI[]>>(url);
 };
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------

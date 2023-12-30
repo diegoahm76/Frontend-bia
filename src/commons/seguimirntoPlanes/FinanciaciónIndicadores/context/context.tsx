@@ -24,10 +24,18 @@ import { get_indicadores } from '../../Indicadores/services/services';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  id_programa: number | null;
   id_proyecto: number | null;
-  set_id_proyecto: (value: number | null) => void;
   id_producto: number | null;
+  id_actividad: number | null;
+  id_indicador: number | null;
+  set_id_plan: (value: number | null) => void;
+  set_id_programa: (value: number | null) => void;
+  set_id_proyecto: (value: number | null) => void;
   set_id_producto: (value: number | null) => void;
+  set_id_actividad: (value: number | null) => void;
+  set_id_indicador: (value: number | null) => void;
 
   // * rows
   rows_fuentes: IFuentesFinanciacion[];
@@ -58,11 +66,18 @@ interface UserContext {
 
 export const DataContextFuentesFinanciacion = createContext<UserContext>({
   // * id
+  id_plan: null,
+  id_programa: null,
   id_proyecto: null,
-  set_id_proyecto: () => {},
   id_producto: null,
+  id_actividad: null,
+  id_indicador: null,
+  set_id_plan: () => {},
+  set_id_programa: () => {},
+  set_id_proyecto: () => {},
   set_id_producto: () => {},
-
+  set_id_actividad: () => {},
+  set_id_indicador: () => {},
   rows_fuentes: [],
   set_rows_fuentes: () => {},
 
@@ -91,9 +106,12 @@ export const UserProviderFuentesFinanciacion = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
   const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
   const [id_producto, set_id_producto] = React.useState<number | null>(null);
-
+  const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
+  const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
   // * select
   const [cuencas_selected, set_cuencas_selected] = React.useState<ValueProps[]>(
     []
@@ -253,11 +271,19 @@ export const UserProviderFuentesFinanciacion = ({
 
   const value: UserContext = {
     // * id
+    id_plan,
+    id_programa,
     id_proyecto,
-    set_id_proyecto,
     id_producto,
+    id_actividad,
+    id_indicador,
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
     set_id_producto,
-
+    set_id_actividad,
+    set_id_indicador,
+    
     // * select
     cuencas_selected,
     set_cuencas_selected,
