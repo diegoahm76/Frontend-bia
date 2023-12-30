@@ -22,17 +22,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { IBusquedaIndicador } from './types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
-import {
-  set_current_mode_planes,
-} from '../../../../store/slice/indexPlanes';
+import { set_current_mode_planes } from '../../../../store/slice/indexPlanes';
 import { search_indicadores } from '../../../../Indicadores/services/services';
-import { DataContextMetas } from '../../../context/context';
+import { IBusquedaIndicador } from '../../../../Indicadores/components/Programas/BusquedaAvanzada/types';
+import { DataContextFuentesFinanciacion } from '../../../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaIndicadores: React.FC = () => {
@@ -234,7 +232,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
-  } = useContext(DataContextMetas);
+  } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {
     reset();

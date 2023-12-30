@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
@@ -16,90 +17,71 @@ import {
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import {
+  DataGrid,
+  GridValueFormatterParams,
+  type GridColDef,
+} from '@mui/x-data-grid';
+// import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
-
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { IBusquedaIndicador } from './types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
-import {
-  set_current_mode_planes,
-} from '../../../../store/slice/indexPlanes';
-import { search_indicadores } from '../../../../Indicadores/services/services';
-import { DataContextMetas } from '../../../context/context';
+import { set_current_mode_planes } from '../../../../store/slice/indexPlanes';
+import { search_concepto_poai } from '../../../../DetalleInversionCuentas/services/services';
+import { IBusquedaConceptoPOAI } from '../../../../ConceptoPOAI/components/Components/BusquedaAvanzada/types';
+import { DataContextFuentesFinanciacion } from '../../../context/context';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaAvanzadaIndicadores: React.FC = () => {
+export const BusquedaConcepto: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre_plan',
-      headerName: 'Nombre del Plan',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_programa',
-      headerName: 'Nombre del Programa',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_proyecto',
-      headerName: 'Nombre del Proyecto',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_producto',
-      headerName: 'Nombre del Producto',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_actividad',
-      headerName: 'Nombre de la Actividad',
-      sortable: true,
-      width: 250,
-    },
-    {
       field: 'nombre_indicador',
       headerName: 'Nombre del Indicador',
       sortable: true,
+      width: 350,
+    },
+    {
+      field: 'nombre',
+      headerName: 'Nombre grupo',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'rubro',
+      headerName: 'Rubro',
+      sortable: true,
       width: 250,
     },
     {
-      field: 'nombre_medicion',
-      headerName: 'Nombre de Medición',
+      field: 'concepto',
+      headerName: 'Concepto',
       sortable: true,
-      width: 150,
+      width: 200,
     },
     {
-      field: 'nombre_tipo',
-      headerName: 'Nombre de Tipo',
+      field: 'valor_total',
+      headerName: 'Valor total',
       sortable: true,
-      width: 150,
-    },
+      width: 300,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
 
-    {
-      field: 'cumplio',
-      headerName: '¿Cumplió?',
-      sortable: true,
-      width: 100,
-      renderCell: (params) => (params.value ? 'Sí' : 'No'),
-    },
-    {
-      field: 'fecha_creacion',
-      headerName: 'Fecha de Creación',
-      sortable: true,
-      width: 150,
+        return formattedInversion;
+      },
     },
     {
       field: 'acciones',
@@ -112,12 +94,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              set_id_plan(params.row.id_plan);
-              set_id_programa(params.row.id_programa);
-              set_id_proyecto(params.row.id_proyecto);
-              set_id_producto(params.row.id_producto);
-              set_id_actividad(params.row.id_actividad);
-              set_id_indicador(params.row.id_indicador);
+              set_id_concepto(params.row.id_concepto);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -125,13 +102,9 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                   editar: false,
                 })
               );
-              // dispatch(set_current_indicador(params.row));
               reset({
-                nombre_plan: params.row.nombre_plan,
-                nombre_programa: params.row.nombre_programa,
-                nombre_proyecto: params.row.nombre_proyecto,
-                nombre_producto: params.row.nombre_producto,
-                nombre_actividad: params.row.nombre_actividad,
+                concepto: params.row.concepto,
+                nombre: params.row.nombre,
                 nombre_indicador: params.row.nombre_indicador,
               });
               handle_close();
@@ -147,7 +120,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               variant="rounded"
             >
               <ChecklistOutlinedIcon
-                titleAccess="Seleccionar indicador"
+                titleAccess="Seleccionar concepto"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -167,18 +140,15 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     control,
   } = useForm({
     defaultValues: {
-      nombre_plan: '',
-      nombre_programa: '',
-      nombre_proyecto: '',
-      nombre_producto: '',
-      nombre_actividad: '',
+      concepto: '',
+      nombre: '',
       nombre_indicador: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaIndicador[]>([]);
+  const [rows, set_rows] = useState<IBusquedaConceptoPOAI[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -192,25 +162,15 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
-    async ({
-      nombre_plan,
-      nombre_programa,
-      nombre_proyecto,
-      nombre_producto,
-      nombre_actividad,
-      nombre_indicador,
-    }) => {
+    async ({ concepto, nombre, nombre_indicador }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_indicadores({
-          nombre_plan,
-          nombre_programa,
-          nombre_proyecto,
-          nombre_producto,
-          nombre_actividad,
+        } = await search_concepto_poai({
+          concepto,
+          nombre,
           nombre_indicador,
         });
 
@@ -227,14 +187,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     }
   );
 
-  const {
-    set_id_plan,
-    set_id_programa,
-    set_id_proyecto,
-    set_id_producto,
-    set_id_actividad,
-    set_id_indicador,
-  } = useContext(DataContextMetas);
+  const { set_id_concepto } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {
     reset();
@@ -260,59 +213,21 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Indicadores" />
+          <Title title="Concepto POAI" />
         </Grid>
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={3}>
           <Controller
-            name="nombre_plan"
+            name="concepto"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
               <TextField
                 fullWidth
-                label="Nombre plan"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Controller
-            name="nombre_programa"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Nombre programa"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Controller
-            name="nombre_proyecto"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Nombre proyecto"
+                label="Concepto"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -324,33 +239,14 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Controller
-            name="nombre_producto"
+            name="nombre"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
               <TextField
                 fullWidth
-                label="Nombre producto"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Controller
-            name="nombre_actividad"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Nombre actividad"
+                label="Nombre grupo"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -391,30 +287,6 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
             Buscar
           </Button>
         </Grid>
-        {/* {id_deposito && (
-          <>
-            <Grid container spacing={2} justifyContent="flex-end">
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    // set_id_deposito(null);
-                    dispatch(
-                      set_current_mode_estantes({
-                        ver: false,
-                        crear: true,
-                        editar: false,
-                      })
-                    );
-                  }}
-                >
-                  Agregar estante
-                </Button>
-              </Grid>
-            </Grid>
-          </>
-        )} */}
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
@@ -432,68 +304,18 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada indicadores" />
-            {/* <form
-              onSubmit={(e) => {
-                void on_submit_advance(e);
-              }}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            > */}
+            <Title title="Búsqueda avanzada concepto POAI" />
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="nombre_plan"
+                  name="concepto"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre plan"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="nombre_programa"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre programa"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="nombre_proyecto"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre proyecto"
+                      label="Concepto"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -505,33 +327,14 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="nombre_producto"
+                  name="nombre"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre producto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_actividad"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre actividad"
+                      label="Nombre grupo"
                       value={value}
                       onChange={onChange}
                       size="small"
