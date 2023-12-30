@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { api } from '../../../../api/axios';
 import type { ISector } from '../../configuraciones/interfaces/interfaces';
 import type {
@@ -7,6 +8,8 @@ import type {
   IProyectos,
   IRubro,
 } from '../../types/types';
+import { ResponseServer } from '../../../../interfaces/globalModels';
+import { IBusquedaDetalleInversion } from '../components/Components/BusquedaAvanzada/types';
 
 // ! detalle de inversion cuentas
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
@@ -40,6 +43,28 @@ export const get_proyectos = async (): Promise<IProyectos[]> => {
 export const get_rubros = async (): Promise<IRubro[]> => {
   const response = await api.get(`seguimiento/planes/consultar-rubros/`);
   return response.data.data;
+};
+
+// busqueda avanzada detalle inversion
+
+export const search_detalle_inversion = async ({
+  nombre_programa,
+  cuenta,
+  nombre_proyecto,
+  nombre_producto,
+  nombre_actividad,
+  nombre_indicador,
+}: any): Promise<
+  AxiosResponse<ResponseServer<IBusquedaDetalleInversion[]>>
+> => {
+  const url = `seguimiento-planes/consultar-detalle-inversion-cuentas-avanzado/?nombre_programa=${String(
+    nombre_programa ?? ''
+  )}&cuenta=${String(cuenta ?? '')}&nombre_proyecto=${String(
+    nombre_proyecto ?? ''
+  )}&nombre_producto=${String(nombre_producto ?? '')}&nombre_actividad=${String(
+    nombre_actividad ?? ''
+  )}&nombre_indicador=${String(nombre_indicador ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaDetalleInversion[]>>(url);
 };
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
