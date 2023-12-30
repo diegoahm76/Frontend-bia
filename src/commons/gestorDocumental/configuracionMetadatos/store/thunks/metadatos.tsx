@@ -195,6 +195,7 @@ export const crear_valor_metadato: any = (
             //  console.log('')(data);
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success === true) {
+                dispatch(set_valores_metadatos(data.data));
                 control_success(data.detail);
             } else {
                 control_error(data.detail);

@@ -773,22 +773,21 @@ export const get_filings_service = (params: any): any => {
 
 
 // obtener otros
-export const get_others_service = (id: string | number): any => {
+export const get_others_service_id = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`gestor/radicados/otros/get_otros/${id}/`);
+      const { data } = await api.get(`gestor/radicados/otros/get_otros-panel/${id}/`);
       console.log(data);
-      dispatch(set_others(data.data));
+     
 
-      if ('data' in data) {
-        if (data.data.length > 0) {
-          control_success('Se encontraron pqrs');
-        } else {
-          control_error('No se encontrarón pqrs');
+      if (data.success === true) {
+        dispatch(set_others(data.data));
+        
+      
+      }  else {
+          control_error('No se encontrarón otros');
         }
-      } else {
-        control_error(data.detail);
-      }
+      
       return data;
     } catch (error: any) {
       console.log('get_pqrs_service');
@@ -802,7 +801,7 @@ export const get_others_service = (id: string | number): any => {
 
 export const add_other_service = (
   otro: any,
-  navigate: NavigateFunction
+ // navigate: NavigateFunction
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -819,6 +818,33 @@ export const add_other_service = (
       return data;
     } catch (error: any) {
       console.log('add_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// solicitudes otros id titular
+
+export const get_others_service = (id: string | number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`gestor/radicados/otros/get_otros/${id}/`);
+      console.log(data);
+     
+
+      if (data.success === true) {
+        dispatch(set_others(data.data));
+        
+      
+      }  else {
+          control_error('No se encontrarón otros');
+        }
+      
+      return data;
+    } catch (error: any) {
+      console.log('get_pqrs_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
