@@ -37,6 +37,12 @@ export const ListarFuentesFinanciacion: React.FC = () => {
       width: 250,
     },
     {
+      field: 'nombre_fuente',
+      headerName: 'Nombre de la Fuente',
+      sortable: true,
+      width: 250,
+    },
+    {
       field: 'vano_1',
       headerName: 'AÑO 1',
       sortable: true,

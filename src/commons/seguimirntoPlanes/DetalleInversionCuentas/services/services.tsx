@@ -12,6 +12,7 @@ import { ResponseServer } from '../../../../interfaces/globalModels';
 import { IBusquedaDetalleInversion } from '../components/Components/BusquedaAvanzada/types';
 import { IBusquedaBancoProyecto } from '../../BancoProyecto/components/Components/BusquedaAvanzada/types';
 import { IBusquedaConceptoPOAI } from '../../ConceptoPOAI/components/Components/BusquedaAvanzada/types';
+import { IBusquedaFuente } from '../../FuenteFinanciacion/components/Components/BusquedaAvanzada/types';
 
 // ! detalle de inversion cuentas
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
@@ -102,6 +103,19 @@ export const search_concepto_poai = async ({
     nombre_indicador ?? ''
   )}`;
   return await api.get<ResponseServer<IBusquedaConceptoPOAI[]>>(url);
+};
+
+// IBusquedaFuente
+// Busqueda Avanzada de fuentes de financiación por nombre_fuente, concepto
+
+export const search_fuente = async ({
+  nombre_fuente,
+  concepto,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaFuente[]>>> => {
+  const url = `seguimiento-planes/consultar-fuentes-financiacion-avanzado/?nombre_fuente=${String(
+    nombre_fuente ?? ''
+  )}&concepto=${String(concepto ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaFuente[]>>(url);
 };
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------

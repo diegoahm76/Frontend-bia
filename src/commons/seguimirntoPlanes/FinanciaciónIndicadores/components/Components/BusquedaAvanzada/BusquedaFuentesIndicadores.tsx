@@ -10,7 +10,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Divider,
   Grid,
   IconButton,
   TextField,
@@ -24,53 +23,119 @@ import {
 } from '@mui/x-data-grid';
 // import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
+
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import { IBusquedaFuenteIndicador } from './types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
-import { set_current_mode_planes } from '../../../../store/slice/indexPlanes';
-import { search_concepto_poai } from '../../../../DetalleInversionCuentas/services/services';
-import { IBusquedaConceptoPOAI } from '../../../../ConceptoPOAI/components/Components/BusquedaAvanzada/types';
+import {
+  set_current_fuentes_financiacion,
+  set_current_mode_planes,
+} from '../../../../store/slice/indexPlanes';
+import EditIcon from '@mui/icons-material/Edit';
+import { search_fuentes_indicadores } from '../../../../Indicadores/services/services';
 import { DataContextFuentesFinanciacion } from '../../../context/context';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaConcepto: React.FC = () => {
+export const BusquedaFuentesIndicadores: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
       field: 'nombre_indicador',
-      headerName: 'Nombre del Indicador',
-      sortable: true,
-      width: 350,
-    },
-    {
-      field: 'nombre',
-      headerName: 'Nombre grupo',
-      sortable: true,
-      width: 200,
-    },
-    {
-      field: 'rubro',
-      headerName: 'Rubro',
+      headerName: 'NOMBRE INDICADOR',
       sortable: true,
       width: 250,
     },
     {
-      field: 'concepto',
-      headerName: 'Concepto',
+      field: 'nombre_fuente',
+      headerName: 'NOMBRE FUENTE',
       sortable: true,
-      width: 200,
+      width: 250,
+    },
+    {
+      field: 'nombre_cuenca',
+      headerName: 'NOMBRE CUENCA',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'vano_1',
+      headerName: 'AÑO 1',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
+    },
+    {
+      field: 'vano_2',
+      headerName: 'AÑO 2',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
+    },
+    {
+      field: 'vano_3',
+      headerName: 'AÑO 3',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
+    },
+    {
+      field: 'vano_4',
+      headerName: 'AÑO 4',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
     },
     {
       field: 'valor_total',
-      headerName: 'Valor total',
+      headerName: 'VALOR TOTAL',
       sortable: true,
-      width: 300,
+      width: 150,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -94,17 +159,25 @@ export const BusquedaConcepto: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              set_id_concepto(params.row.id_concepto);
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
+              set_id_producto(params.row.id_producto);
+              set_id_actividad(params.row.id_actividad);
+              set_id_indicador(params.row.id_indicador);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
                   crear: false,
-                  editar: false,
+                  editar: true,
                 })
               );
+              dispatch(set_current_fuentes_financiacion(params.row));
               reset({
-                concepto: params.row.concepto,
-                nombre: params.row.nombre,
+                nombre_fuente: params.row.nombre_fuente,
+                nombre_proyecto: params.row.nombre_proyecto,
+                nombre_producto: params.row.nombre_producto,
+                nombre_actividad: params.row.nombre_actividad,
                 nombre_indicador: params.row.nombre_indicador,
               });
               handle_close();
@@ -119,8 +192,8 @@ export const BusquedaConcepto: React.FC = () => {
               }}
               variant="rounded"
             >
-              <ChecklistOutlinedIcon
-                titleAccess="Seleccionar concepto"
+              <EditIcon
+                titleAccess="Editar fuente de financiación"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -140,15 +213,17 @@ export const BusquedaConcepto: React.FC = () => {
     control,
   } = useForm({
     defaultValues: {
-      concepto: '',
-      nombre: '',
+      nombre_fuente: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
       nombre_indicador: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaConceptoPOAI[]>([]);
+  const [rows, set_rows] = useState<IBusquedaFuenteIndicador[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -162,15 +237,23 @@ export const BusquedaConcepto: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
-    async ({ concepto, nombre, nombre_indicador }) => {
+    async ({
+      nombre_fuente,
+      nombre_proyecto,
+      nombre_producto,
+      nombre_actividad,
+      nombre_indicador,
+    }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_concepto_poai({
-          concepto,
-          nombre,
+        } = await search_fuentes_indicadores({
+          nombre_fuente,
+          nombre_proyecto,
+          nombre_producto,
+          nombre_actividad,
           nombre_indicador,
         });
 
@@ -187,7 +270,14 @@ export const BusquedaConcepto: React.FC = () => {
     }
   );
 
-  const { set_id_concepto } = useContext(DataContextFuentesFinanciacion);
+  const {
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
+    set_id_indicador,
+  } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {
     reset();
@@ -197,96 +287,17 @@ export const BusquedaConcepto: React.FC = () => {
 
   return (
     <>
-      <Grid
-        container
-        spacing={2}
-        m={2}
-        p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Title title="Concepto POAI" />
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Controller
-            name="concepto"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Concepto"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Controller
-            name="nombre"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Nombre grupo"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Controller
-            name="nombre_indicador"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Nombre indicador"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SearchIcon />}
-            onClick={() => {
-              handle_click_open();
-            }}
-          >
-            Buscar
-          </Button>
-        </Grid>
+      <Grid item>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<SearchIcon />}
+          onClick={() => {
+            handle_click_open();
+          }}
+        >
+          Buscar
+        </Button>
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
@@ -304,18 +315,18 @@ export const BusquedaConcepto: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada concepto POAI" />
+            <Title title="Búsqueda avanzada fuentes de financiación indicadores" />
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="concepto"
+                  name="nombre_fuente"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Concepto"
+                      label="Nombre fuente financiación"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -327,14 +338,52 @@ export const BusquedaConcepto: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="nombre"
+                  name="nombre_proyecto"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre grupo"
+                      label="Nombre proyecto"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="nombre_producto"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre producto"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="nombre_actividad"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre actividad"
                       value={value}
                       onChange={onChange}
                       size="small"

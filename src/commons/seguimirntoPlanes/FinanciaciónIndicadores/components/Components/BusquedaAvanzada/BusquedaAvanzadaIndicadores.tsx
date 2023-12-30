@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
@@ -17,13 +16,10 @@ import {
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  DataGrid,
-  GridValueFormatterParams,
-  type GridColDef,
-} from '@mui/x-data-grid';
-// import EditIcon from '@mui/icons-material/Edit';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { v4 as uuidv4 } from 'uuid';
+
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from '../../../../../../hooks';
@@ -32,56 +28,76 @@ import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import { set_current_mode_planes } from '../../../../store/slice/indexPlanes';
-import { search_concepto_poai } from '../../../../DetalleInversionCuentas/services/services';
-import { IBusquedaConceptoPOAI } from '../../../../ConceptoPOAI/components/Components/BusquedaAvanzada/types';
+import { search_indicadores } from '../../../../Indicadores/services/services';
+import { IBusquedaIndicador } from '../../../../Indicadores/components/Programas/BusquedaAvanzada/types';
 import { DataContextFuentesFinanciacion } from '../../../context/context';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaConcepto: React.FC = () => {
+export const BusquedaAvanzadaIndicadores: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre_indicador',
-      headerName: 'Nombre del Indicador',
-      sortable: true,
-      width: 350,
-    },
-    {
-      field: 'nombre',
-      headerName: 'Nombre grupo',
-      sortable: true,
-      width: 200,
-    },
-    {
-      field: 'rubro',
-      headerName: 'Rubro',
+      field: 'nombre_plan',
+      headerName: 'Nombre del Plan',
       sortable: true,
       width: 250,
     },
     {
-      field: 'concepto',
-      headerName: 'Concepto',
+      field: 'nombre_programa',
+      headerName: 'Nombre del Programa',
       sortable: true,
-      width: 200,
+      width: 250,
     },
     {
-      field: 'valor_total',
-      headerName: 'Valor total',
+      field: 'nombre_proyecto',
+      headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 300,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        const inversion = Number(params.value); // Convertir a número
-        const formattedInversion = inversion.toLocaleString('es-AR', {
-          style: 'currency',
-          currency: 'ARS',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        });
+      width: 250,
+    },
+    {
+      field: 'nombre_producto',
+      headerName: 'Nombre del Producto',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_actividad',
+      headerName: 'Nombre de la Actividad',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_indicador',
+      headerName: 'Nombre del Indicador',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_medicion',
+      headerName: 'Nombre de Medición',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nombre_tipo',
+      headerName: 'Nombre de Tipo',
+      sortable: true,
+      width: 150,
+    },
 
-        return formattedInversion;
-      },
+    {
+      field: 'cumplio',
+      headerName: '¿Cumplió?',
+      sortable: true,
+      width: 100,
+      renderCell: (params) => (params.value ? 'Sí' : 'No'),
+    },
+    {
+      field: 'fecha_creacion',
+      headerName: 'Fecha de Creación',
+      sortable: true,
+      width: 150,
     },
     {
       field: 'acciones',
@@ -107,9 +123,13 @@ export const BusquedaConcepto: React.FC = () => {
                   editar: false,
                 })
               );
+              // dispatch(set_current_indicador(params.row));
               reset({
-                concepto: params.row.concepto,
-                nombre: params.row.nombre,
+                nombre_plan: params.row.nombre_plan,
+                nombre_programa: params.row.nombre_programa,
+                nombre_proyecto: params.row.nombre_proyecto,
+                nombre_producto: params.row.nombre_producto,
+                nombre_actividad: params.row.nombre_actividad,
                 nombre_indicador: params.row.nombre_indicador,
               });
               handle_close();
@@ -125,7 +145,7 @@ export const BusquedaConcepto: React.FC = () => {
               variant="rounded"
             >
               <ChecklistOutlinedIcon
-                titleAccess="Seleccionar concepto"
+                titleAccess="Seleccionar indicador"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -145,15 +165,18 @@ export const BusquedaConcepto: React.FC = () => {
     control,
   } = useForm({
     defaultValues: {
-      concepto: '',
-      nombre: '',
+      nombre_plan: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
       nombre_indicador: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaConceptoPOAI[]>([]);
+  const [rows, set_rows] = useState<IBusquedaIndicador[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -167,15 +190,25 @@ export const BusquedaConcepto: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
-    async ({ concepto, nombre, nombre_indicador }) => {
+    async ({
+      nombre_plan,
+      nombre_programa,
+      nombre_proyecto,
+      nombre_producto,
+      nombre_actividad,
+      nombre_indicador,
+    }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_concepto_poai({
-          concepto,
-          nombre,
+        } = await search_indicadores({
+          nombre_plan,
+          nombre_programa,
+          nombre_proyecto,
+          nombre_producto,
+          nombre_actividad,
           nombre_indicador,
         });
 
@@ -232,14 +265,14 @@ export const BusquedaConcepto: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Controller
-            name="concepto"
+            name="nombre_plan"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
               <TextField
                 fullWidth
-                label="Concepto"
+                label="Nombre plan"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -251,14 +284,71 @@ export const BusquedaConcepto: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Controller
-            name="nombre"
+            name="nombre_programa"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
               <TextField
                 fullWidth
-                label="Nombre grupo"
+                label="Nombre programa"
+                value={value}
+                onChange={onChange}
+                size="small"
+                margin="dense"
+                disabled={true}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <Controller
+            name="nombre_proyecto"
+            control={control}
+            render={(
+              { field: { onChange, value } } // formState: { errors }
+            ) => (
+              <TextField
+                fullWidth
+                label="Nombre proyecto"
+                value={value}
+                onChange={onChange}
+                size="small"
+                margin="dense"
+                disabled={true}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Controller
+            name="nombre_producto"
+            control={control}
+            render={(
+              { field: { onChange, value } } // formState: { errors }
+            ) => (
+              <TextField
+                fullWidth
+                label="Nombre producto"
+                value={value}
+                onChange={onChange}
+                size="small"
+                margin="dense"
+                disabled={true}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Controller
+            name="nombre_actividad"
+            control={control}
+            render={(
+              { field: { onChange, value } } // formState: { errors }
+            ) => (
+              <TextField
+                fullWidth
+                label="Nombre actividad"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -299,6 +389,30 @@ export const BusquedaConcepto: React.FC = () => {
             Buscar
           </Button>
         </Grid>
+        {/* {id_deposito && (
+          <>
+            <Grid container spacing={2} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    // set_id_deposito(null);
+                    dispatch(
+                      set_current_mode_estantes({
+                        ver: false,
+                        crear: true,
+                        editar: false,
+                      })
+                    );
+                  }}
+                >
+                  Agregar estante
+                </Button>
+              </Grid>
+            </Grid>
+          </>
+        )} */}
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
@@ -316,18 +430,68 @@ export const BusquedaConcepto: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada concepto POAI" />
+            <Title title="Búsqueda avanzada indicadores" />
+            {/* <form
+              onSubmit={(e) => {
+                void on_submit_advance(e);
+              }}
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            > */}
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
-                  name="concepto"
+                  name="nombre_plan"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Concepto"
+                      label="Nombre plan"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_programa"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre programa"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_proyecto"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre proyecto"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -339,14 +503,33 @@ export const BusquedaConcepto: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="nombre"
+                  name="nombre_producto"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre grupo"
+                      label="Nombre producto"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="nombre_actividad"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre actividad"
                       value={value}
                       onChange={onChange}
                       size="small"
