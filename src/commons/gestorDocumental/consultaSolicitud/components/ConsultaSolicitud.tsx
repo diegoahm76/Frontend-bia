@@ -9,16 +9,14 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Title } from '../../../../components';
 import { miEstilo } from '../../Encuesta/interfaces/types';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { control_error, control_success } from '../../../../helpers';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { BuscadorPersona } from '../../../../components/BuscadorPersona';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { organigrama, AsignacionEncuesta, FormData, Sexo, estado, Persona } from '../interfaces/types';
 import { Button, ButtonGroup, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, } from '@mui/material';
 import { showAlert } from '../../../../utils/showAlert/ShowAlert';
-
+import SearchIcon from '@mui/icons-material/Search';
 
 export const ConsultaSolucitud: React.FC = () => {
     const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
@@ -50,12 +48,6 @@ export const ConsultaSolucitud: React.FC = () => {
             [name]: value,
         }));
     };
-    // const formpqrs = `?cod_tipo_PQRSDF=${formData.pqrs}`;
-    // const formdesde = `fecha_desde=${formData.fecha_desde}`;
-    // const formhasta = `fecha_desde=${formData.fecha_hasta}`;
-    // const formorganigrama = `?cod_ti=${formData.organigrama}`;
-    // const formpersona = `?cod_tipo_PQRSDF=${persona?.id_persona}`;
-
 
 
     const cargarAsignaciones = async () => {
@@ -69,18 +61,18 @@ export const ConsultaSolucitud: React.FC = () => {
         } catch (error: any) {
             console.error('Error al cargar las asignaciones de encuesta', error);
             // control_error(error.response.data.detail);
-            showAlert("Opss" ,`${error?.response?.data?.detail}`, "error")
+            showAlert("Opss", `${error?.response?.data?.detail}`, "error")
         }
     };
-    
-    // useEffect(() => {
-    //     cargarAsignaciones();
-    // }, [formdesde, formhasta, formpqrs, formpersona, formorganigrama]);
-    const columns = [
 
+    useEffect(() => {
+        cargarAsignaciones();
+    }, []);
+    const columns = [
+        { field: 'tipo_pqrsdf_descripcion', headerName: 'Tipo de PQESDF', width: 220, flex: 1, },
         { field: 'medio_solicitud', headerName: 'Medio de solicitud', width: 220, flex: 1, },
-        { field: 'sucursal_recepcion', headerName: 'Sucursal de recepcion', width: 220, flex: 1, },
-        { field: 'numero_radicado', headerName: 'Numero radicado', width: 220, flex: 1, },
+        { field: 'sucursal_recepcion', headerName: 'Sucursal de recepción', width: 220, flex: 1, },
+        { field: 'numero_radicado', headerName: 'Número radicado', width: 220, flex: 1, },
         {
             field: 'fecha_radicado', headerName: 'Fecha radicado', width: 220, flex: 1, valueFormatter: (params: { value: string | number | Date; }) => {
                 const date = new Date(params.value);
@@ -149,13 +141,11 @@ export const ConsultaSolucitud: React.FC = () => {
     }, []);
 
     //eliminar 
-    const [key, setKey] = useState(0); // Estado para cambiar la clave única
 
     const handleResetForm = () => {
         setFormData(initialFormData);
         cargarAsignaciones();
         set_persona(personainicial);
-        setKey((prevKey) => prevKey + 1);
     };
     //Buscar personas 
 
@@ -252,7 +242,7 @@ export const ConsultaSolucitud: React.FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             key={key}
@@ -276,26 +266,49 @@ export const ConsultaSolucitud: React.FC = () => {
 
                         />
                     </LocalizationProvider>
+                </Grid> */}
+
+
+
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        fullWidth
+                        label="Fecha desde  "
+                        type="date"
+                        size="small"
+                        name="fecha_desde"
+                        variant="outlined"
+                        value={formData.fecha_desde}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                            handleInputChange(e);
+                        }}
+                    />
+
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        fullWidth
+                        label=" Fecha hasta  "
+                        type="date"
+                        size="small"
+                        name="fecha_hasta"
+                        variant="outlined"
+                        value={formData.fecha_hasta}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                            handleInputChange(e);
+                        }}
+                    />
+
                 </Grid>
 
 
 
 
-                <TextField
-                    fullWidth
-                    label=" fecha_desde  "
-                    type="date"
-                    size="small"
-                    name="fecha_desde"
-                    variant="outlined"
-                    value={formData.fecha_desde}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => {
-                        handleInputChange(e);
-                    }}
-                  />
 
-                <Grid item xs={12} sm={3}>
+
+                {/* <Grid item xs={12} sm={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             key={key}
@@ -319,7 +332,7 @@ export const ConsultaSolucitud: React.FC = () => {
 
                         />
                     </LocalizationProvider>
-                </Grid>
+                </Grid> */}
                 <Grid item  >
                     <Button
                         variant="outlined"
@@ -333,18 +346,20 @@ export const ConsultaSolucitud: React.FC = () => {
                 </Grid>
                 <Grid item  >
                     <Button
-                        variant="outlined"
+                        color='primary'
+                        variant='contained'
+                        startIcon={<SearchIcon />}
                         onClick={() => {
                             cargarAsignaciones();
                         }}
                     >
-                        buscar 
+                        buscar
                     </Button>
                 </Grid>
 
 
-                <Grid item xs={12} sm={10} ></Grid>
-                <Grid item xs={12} sm={2} >
+                <Grid item xs={12} sm={11} ></Grid>
+                <Grid item  >
                     <ButtonGroup style={{ margin: 5, }}>
                         {download_xls({ nurseries: asignaciones, columns })}
                         {download_pdf({

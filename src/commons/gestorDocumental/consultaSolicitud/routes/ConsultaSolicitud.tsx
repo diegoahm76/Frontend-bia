@@ -6,7 +6,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 export const Consulta_Solicitud_Routes: React.FC = () => {
     return (
         <Routes>
-            <Route path="/Consulta_Solicitudes" element={<  ConsultaSolucitud />} />
+            <Route path="/Reportes_PQRSDF" element={<  ConsultaSolucitud />} />
             <Route path="/*" element={<Navigate to={'/'} />} />
         </Routes>
     );

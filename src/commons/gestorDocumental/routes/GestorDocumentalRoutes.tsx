@@ -142,8 +142,8 @@ const routes = [
   },
   
   {
-    path: 'Consulta_Solicitudes/',
-    name: 'Consulta_Solicitudes',
+    path: 'Reportes_PQRSDF/',
+    name: 'Reportes_PQRSDF',
     component: () => <Consulta_Solicitud_Routes />,
   },
   {

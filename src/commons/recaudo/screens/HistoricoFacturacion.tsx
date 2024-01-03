@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
@@ -72,7 +73,7 @@ export const HistoricoFacturacion: React.FC = () => {
     }, []);
     const columns = [
         // { field: 'id_documento', headerName: ' Numero ', width: 130, flex: 1 },
-        { field: 'nombre_completo', headerName: 'nombre_completo', width: 130, flex: 1 },
+        { field: 'nombre_completo', headerName: 'Nombre completo', width: 130, flex: 1 },
         { field: 'radicado', headerName: 'Radicado', width: 130, flex: 1 },
 
         {
@@ -84,7 +85,7 @@ export const HistoricoFacturacion: React.FC = () => {
         },
         {
             field: 'formato',
-            headerName: 'formato',
+            headerName: 'Formato',
             width: 180,
             flex: 1,
             valueGetter: (params: any) => (params.row.ruta_archivo.formato),
@@ -115,7 +116,7 @@ export const HistoricoFacturacion: React.FC = () => {
     return (
         <>
             <RenderDataGrid
-                title='Historico archivos '
+                title='Histórico de archivos'
                 columns={columns ?? []}
                 rows={Historico ?? []}
             />
