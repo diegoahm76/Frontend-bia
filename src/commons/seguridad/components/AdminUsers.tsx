@@ -6,20 +6,16 @@ import {
   Stack,
   Button,
   Input,
-  // InputLabel,
   Autocomplete,
-  Avatar,
   Skeleton,
-  // Chip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// import SaveIcon from '@mui/icons-material/Save';
 import HistoryIcon from '@mui/icons-material/History';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from './DialogHistorialCambiosEstadoUser';
 import { use_admin_users } from '../hooks/AdminUserHooks';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import EditIcon from '@mui/icons-material/Edit';
 import { getSucursalesToUser } from '../request/seguridadRequest';
@@ -47,7 +43,6 @@ export const AdminUsers: React.FC = () => {
     bloqueado_opt,
     roles,
     roles_opt,
-    // rol_fixed,
     on_submit,
     on_change,
     handle_change_autocomplete,
@@ -59,9 +54,7 @@ export const AdminUsers: React.FC = () => {
     watch_admin_user,
     listaSucursales,
     setListaSucursales,
-    setSucursalSelected,
     set_value_admin_user,
-    set_roles_opt,
   } = use_admin_users();
 
   const watch_exe = watch_admin_user();
@@ -85,18 +78,6 @@ export const AdminUsers: React.FC = () => {
       // Update the component state with the new list of sucursales
       setListaSucursales(sucursualesToUse);
     });
-
-    /* let zCamundaRoles = [];
-    let otherRoles = [];
-    roles_opt.forEach((role) => {
-      if (role.label.includes('zCamunda')) {
-        zCamundaRoles.push(role);
-      } else {
-        otherRoles.push(role);
-      }
-    });
-    otherRoles.push({ value: 1978547, label: 'Rol Camunda prueba' });
-    set_roles_opt(otherRoles);*/
   }, [watch_exe.tipo_usuario]);
 
   return (
@@ -105,7 +86,6 @@ export const AdminUsers: React.FC = () => {
         <>
           <form
             onSubmit={(e) => {
-              //  console.log('')(watch_admin_user());
               void on_submit(e);
             }}
           >
@@ -301,15 +281,16 @@ export const AdminUsers: React.FC = () => {
                   </Grid>
 
                   <Grid item xs={12} sm={3} md={3}>
-                    {selected_image != null && (
-                      <Avatar
-                        variant="rounded"
-                        sx={{ width: '200px', height: '200px' }}
-                        // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                        src={selected_image.toString()}
-                        alt="Imagen seleccionada"
-                      />
-                    )}
+                    <img
+                      src={user_info?.profile_img}
+                      // alt={`Imagen de ${selected_image}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                      }}
+                    />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2} sx={{ mt: '20px' }}>
@@ -372,32 +353,6 @@ export const AdminUsers: React.FC = () => {
                         onChange={handle_change_autocomplete as any}
                       />
                     )}
-                    {/*
-                      normal 
-                    
-                    {roles_opt.length > 0 && (
-                      <Autocomplete
-                        disabled={tipo_usuario === 'E' && true}
-                        multiple
-                        fullWidth
-                        options={roles_opt}
-                        getOptionLabel={(option) => option?.label}
-                        isOptionEqualToValue={(option, value) =>
-                          option.value === value.value
-                        }
-                        value={roles ?? []}
-                        renderInput={(params) => (
-                          <TextField
-                            key={params.id}
-                            {...params}
-                            label="Selección de roles"
-                            placeholder="Roles asignados"
-                          />
-                        )}
-                        {...register_admin_user('roles')}
-                        onChange={handle_change_autocomplete as any}
-                      />
-                    )}*/}
                   </Grid>
                 </Grid>
               </>
@@ -532,6 +487,7 @@ export const AdminUsers: React.FC = () => {
                 </Grid>
 
                 {/* espacio de trabajo */}
+
 
                 {watch_exe.tipo_usuario === 'I' && (
                   <Grid
@@ -672,7 +628,7 @@ export const AdminUsers: React.FC = () => {
       <DialogHistorialCambiosEstadoUser
         is_modal_active={historial_cambios_estado_is_active}
         set_is_modal_active={set_historial_cambios_estado_is_active}
-        id_usuario={user_info.id_usuario}
+        id_usuario={user_info?.id_usuario ?? 0}
       />
     </>
   );

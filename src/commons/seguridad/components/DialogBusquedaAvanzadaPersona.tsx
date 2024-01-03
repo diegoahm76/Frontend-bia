@@ -28,12 +28,13 @@ import type {
   FormValuesSearchPerson,
   keys_object_search_person,
 } from '../interfaces';
-import { get_persons } from '../store/thunks';
+import { get_data_user, get_persons } from '../store/thunks';
 import { set_data_person_search } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
 import { Title } from '../../../components';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
+import { use_admin_users } from '../hooks/AdminUserHooks';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -69,6 +70,8 @@ const DialogBusquedaAvanzada = ({
     watch: watch_search_person,
   } = useForm<FormValuesSearchPerson>();
   const numero_documento = watch_search_person('numero_documento');
+
+  const {set_selected_image} = use_admin_users();
 
   const columns_persons: GridColDef[] = [
     // {
@@ -217,7 +220,12 @@ const DialogBusquedaAvanzada = ({
   const trigger_user_edit_active = (data: any): void => {
     user_edit_active();
     set_is_modal_active(false );
-    dispatch(set_data_person_search(data));
+    // console.log(data)
+    dispatch(set_data_person_search(
+      data
+ 
+    ));
+    dispatch(get_data_user(data?.usuarios[0]?.id_usuario));
   };
 
   const handle_close_busqueda_avanzada = (): void => {

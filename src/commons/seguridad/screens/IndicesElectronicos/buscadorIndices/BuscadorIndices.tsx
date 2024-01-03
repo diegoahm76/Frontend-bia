@@ -7,33 +7,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
 import {
-  Avatar,
-  Box,
   Button,
-  Dialog,
-  DialogContent,
   Grid,
-  IconButton,
-  MenuItem,
   Stack,
   TextField,
 } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
 import { control_error } from '../../../../../helpers';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import { v4 as uuidv4 } from 'uuid';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Select from 'react-select';
 import { getExpedientesByFiltro } from '../services/getExpedientes.service';
-import { row } from './../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
 import { getSeriesByCcd } from '../services/busqueda/getSeriesByCcd.service';
 import { getSubseriesBySeriesId } from '../services/busqueda/getSubseriesBySeriesId.service';
 
@@ -173,7 +160,6 @@ export const BuscarExpedienteIndicesElectronicos = (
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error },
                   }) => (
                     <TextField
                       required
@@ -187,15 +173,8 @@ export const BuscarExpedienteIndicesElectronicos = (
                         onChange(e.target.value);
                         e.target.value.length === 50 &&
                           control_warning('máximo 50 caracteres');
-                        // //  console.log('')(e.target.value);
                       }}
                       inputProps={{ maxLength: 50 }}
-                      // error={!!error}
-                      /* helperText={
-                      error
-                        ? 'Es obligatorio subir un archivo'
-                        : 'Seleccione un archivo'
-                    } */
                     />
                   )}
                 />
@@ -208,7 +187,6 @@ export const BuscarExpedienteIndicesElectronicos = (
                 defaultValue=""
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <TextField
                     fullWidth
@@ -232,7 +210,6 @@ export const BuscarExpedienteIndicesElectronicos = (
                 defaultValue=""
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
                 }) => (
                   <TextField
                     fullWidth
@@ -243,7 +220,7 @@ export const BuscarExpedienteIndicesElectronicos = (
                     value={value}
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
-                      onChange(e.target.value);
+                      onChange(e?.target?.value);
                     }}
                   />
                 )}
@@ -267,12 +244,10 @@ export const BuscarExpedienteIndicesElectronicos = (
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error },
                   }) => (
                     <div>
                       <Select
                         value={value}
-                        // name="id_ccd"
                         onChange={(selectedOption) => {
                           //* llamar las series
                           void getSeriesByCcd(
@@ -282,11 +257,11 @@ export const BuscarExpedienteIndicesElectronicos = (
 
                             setdataInicialSelects({
                               ...dataInicialSelects,
-                              dataSeries: res.map((el: any) => {
+                              dataSeries: res?.map((el: any) => {
                                 return {
                                   ...el,
-                                  value: el.id_serie_doc,
-                                  label: el.nombre_serie,
+                                  value: el?.id_serie_doc,
+                                  label: el?.nombre_serie,
                                 };
                               }),
                             });
@@ -297,8 +272,8 @@ export const BuscarExpedienteIndicesElectronicos = (
                           dataInicialSelects?.dataTrd?.map((el: any) => {
                             return {
                               ...el,
-                              value: el.id_ccd,
-                              label: el.nombre,
+                              value: el?.id_ccd,
+                              label: el?.nombre,
                             };
                           }) ?? []
                         }
@@ -322,7 +297,7 @@ export const BuscarExpedienteIndicesElectronicos = (
                 />
               </Grid>
 
-              {exeWatch.id_trd_origen?.label && (
+              {exeWatch?.id_trd_origen?.label && (
                 <Grid
                   item
                   xs={12}
@@ -340,7 +315,6 @@ export const BuscarExpedienteIndicesElectronicos = (
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error },
                     }) => (
                       <div>
                         <Select
@@ -353,11 +327,11 @@ export const BuscarExpedienteIndicesElectronicos = (
 
                               setdataInicialSelects({
                                 ...dataInicialSelects,
-                                dataSubseries: res.map((el: any) => {
+                                dataSubseries: res?.map((el: any) => {
                                   return {
                                     ...el,
-                                    value: el.id_subserie_doc,
-                                    label: el.nombre,
+                                    value: el?.id_subserie_doc,
+                                    label: el?.nombre,
                                   };
                                 }),
                               });
@@ -387,8 +361,8 @@ export const BuscarExpedienteIndicesElectronicos = (
                 </Grid>
               )}
 
-              {exeWatch.id_trd_origen?.label &&
-                exeWatch.id_serie_origen?.label && (
+              {exeWatch?.id_trd_origen?.label &&
+                exeWatch?.id_serie_origen?.label && (
                   <Grid
                     item
                     xs={12}
@@ -406,18 +380,11 @@ export const BuscarExpedienteIndicesElectronicos = (
                       rules={{ required: true }}
                       render={({
                         field: { onChange, value },
-                        fieldState: { error },
                       }) => (
                         <div>
                           <Select
                             value={value}
-                            // name="id_ccd"
                             onChange={(selectedOption) => {
-                              /* dispatch(
-                          getServiceSeriesSubseriesXUnidadOrganizacional(
-                            selectedOption.item
-                          )
-                        );*/
                               onChange(selectedOption);
                             }}
                             options={

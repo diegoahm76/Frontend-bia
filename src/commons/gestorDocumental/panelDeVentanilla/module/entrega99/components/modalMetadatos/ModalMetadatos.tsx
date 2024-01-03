@@ -29,19 +29,13 @@ import {
   tieneReplicaFisisca,
   tieneTipologiaRelacionada,
 } from './utils/choices';
-import { usePanelVentanilla } from '../../../../hook/usePanelVentanilla';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { getTipologiasDocumentalesMetadatos } from '../../services/getTipologiasDocumentales.service';
 import { TipologiaDocumental } from '../parte3/components/types/FormParte3.types';
 import { control_success } from '../../../../../../../helpers';
-import {
-  handleCleanField,
-  handleCloseModal,
-} from './functions/modalFn.functions';
+import { handleCloseModal } from './functions/modalFn.functions';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { setMetadatos } from '../../toolkit/slice/AsignacionUsuarioSlice';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { control } from 'leaflet';
 
 export const ModalMetadatos = ({
   tipologiasDocumentales,
@@ -76,7 +70,7 @@ export const ModalMetadatos = ({
   );
 
   //* hooks
-/*  const {
+  /*  const {
   
   } = usePanelVentanilla();*/
 
@@ -148,18 +142,37 @@ export const ModalMetadatos = ({
 
   // ? functions
   const handleSubmit = async () => {
+    console.log('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
+
     for (let key in watchExeManejoModalMetadatos) {
       // Si la clave es una de las excepciones, continúa con la siguiente iteración
-      if (key === 'tipologiasDocumentalesMetadatos' || key === 'cualTipologiaDocumentalMetadatos') {
+      if (
+        key === 'tipologiasDocumentalesMetadatos' ||
+        key === 'cualTipologiaDocumentalMetadatos'
+      ) {
         continue;
       }
 
-      if (watchExeManejoModalMetadatos[key as keyof typeof watchExeManejoModalMetadatos] === '') {
+      let value =
+        watchExeManejoModalMetadatos[
+          key as keyof typeof watchExeManejoModalMetadatos
+        ];
+
+      // Comprueba si el valor es una cadena vacía
+      if (value === '') {
+        control_warning('Todos los campos son obligatorios');
+        return;
+      }
+
+      // Comprueba si el valor es un objeto y, en caso afirmativo, si su propiedad 'value' es una cadena vacía o si el objeto está vacío
+      if (
+        typeof value === 'object' &&
+        (value.value === '' || Object.keys(value).length === 0)
+      ) {
         control_warning('Todos los campos son obligatorios');
         return;
       }
     }
-
 
     dispatch(setMetadatos(watchExeManejoModalMetadatos as any));
     control_success('Se han establecido los metadatos');
@@ -211,21 +224,11 @@ export const ModalMetadatos = ({
                   name="categoriaArchivoMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <div>
                       <Select
                         value={value}
-                        // name="id_ccd"
                         onChange={(selectedOption) => {
-                          //  console.log('')(selectedOption);
-                          /*dispatch(
-                            getServiceSeriesSubseriesXUnidadOrganizacional(
-                              selectedOption.item
-                            )
-                          );*/
                           onChange(selectedOption);
                         }}
                         options={categoriaArhivo ?? []}
@@ -262,10 +265,7 @@ export const ModalMetadatos = ({
                   name="tieneReplicaFisicaMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <div>
                       <Select
                         value={value}
@@ -312,10 +312,7 @@ export const ModalMetadatos = ({
                   name="origenArchivoMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <div>
                       <Select
                         value={value}
@@ -369,10 +366,7 @@ export const ModalMetadatos = ({
                   name="tieneTipologiaRelacionadaMetadatos"
                   control={controlManejoMetadatosModal}
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <div>
                       <Select
                         value={value}
@@ -425,10 +419,7 @@ export const ModalMetadatos = ({
                     name="tipologiasDocumentalesMetadatos"
                     control={controlManejoMetadatosModal}
                     // rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
+                    render={({ field: { onChange, value } }) => (
                       <div>
                         {fourthLoading ? (
                           <Skeleton variant="text" height={35} /> // Reemplaza esto con tu componente de Skeleton
@@ -490,10 +481,7 @@ export const ModalMetadatos = ({
                     control={controlManejoMetadatosModal}
                     defaultValue=""
                     // rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
+                    render={({ field: { onChange, value } }) => (
                       <TextField
                         required
                         fullWidth
@@ -530,10 +518,7 @@ export const ModalMetadatos = ({
                   control={controlManejoMetadatosModal}
                   defaultValue=""
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
                       required
                       fullWidth
@@ -570,10 +555,7 @@ export const ModalMetadatos = ({
                   control={controlManejoMetadatosModal}
                   defaultValue=""
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
                       required
                       multiline
@@ -601,10 +583,8 @@ export const ModalMetadatos = ({
                 <Controller
                   name="palabrasClavesMetadatos"
                   control={controlManejoMetadatosModal}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
                     <Autocomplete
                       onChange={(event, newValue) => {
                         if (newValue.length <= 5) {
@@ -663,18 +643,6 @@ export const ModalMetadatos = ({
               >
                 Limpiar campos
               </Button>
-              {/* <Button
-                color="error"
-                variant="contained"
-                onClick={() => {
-                  //  console.log('')('cerrando modal');
-
-                  resetManejoMetadatosModal();
-                }}
-                startIcon={<CloseIcon />}
-              >
-                CANCELAR
-              </Button>*/}
               <Button
                 color="success"
                 type="submit"
