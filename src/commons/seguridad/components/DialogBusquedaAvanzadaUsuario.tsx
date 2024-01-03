@@ -120,7 +120,7 @@ const dialog_busqueda_avanzada_usuario = ({
 
   const trigger_user_edit_active = (data: any): void => {
     set_is_modal_active(false);
-    console.log('data', data);
+    // console.log('data', data);
     dispatch(set_data_user_search({
       ...data,
       usuarios: [
@@ -130,7 +130,7 @@ const dialog_busqueda_avanzada_usuario = ({
         }
       ]
     }));
-    dispatch(get_data_user(data.id_usuario, set_selected_image));
+    dispatch(get_data_user(data.id_usuario));
     dispatch(set_action_admin_users('EDIT'));
   };
 

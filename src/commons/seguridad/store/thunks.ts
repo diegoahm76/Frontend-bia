@@ -64,27 +64,13 @@ export const get_persons: (
   };
 };
 
-export const get_data_user: (id: number, set_selected_image?: any) => any = (
+export const get_data_user: (id: number) => any = (
   id: number,
-  set_selected_image?: any,
 ) => {
   return async (dispatch: Dispatch<any>) => {
     const { data } = await get_user_by_id(id);
     //  console.log('')(data.data);
     const infoResume = data?.data;
-    console.log('info resumeeee', 
-    {...infoResume,
-    profile_img:
-      process.env.NODE_ENV === 'development'
-        ? `${
-            process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-            'https://back-end-bia-beta.up.railway.app'
-          }${infoResume?.profile_img}`
-        : `${
-            process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-            'http://70.30.6.237'
-          }${infoResume?.profile_img}`,
-  });
     dispatch(
       set_user_info({
         ...infoResume,
@@ -100,34 +86,6 @@ export const get_data_user: (id: number, set_selected_image?: any) => any = (
               }${infoResume?.profile_img}`,
       })
     );
-/*    dispatch(set_data_user_search({
-      ...infoResume,
-      profile_img:
-        process.env.NODE_ENV === 'development'
-          ? `${
-              process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-              'https://back-end-bia-beta.up.railway.app'
-            }${infoResume?.profile_img}`
-          : `${
-              process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-              'http://70.30.6.237'
-            }${infoResume?.profile_img}`,
-
-    }));
-*/
-/*   const img = infoResume?.profile_img
-    ? process.env.NODE_ENV === 'development'
-      ? `${
-          process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-          'https://back-end-bia-beta.up.railway.app'
-        }${infoResume.profile_img}`
-      : `${
-          process.env.REACT_APP_DOWNLOAD_FILES_PROD || 'http://70.30.6.237'
-        }${infoResume.profile_img}`
-    : ''
-
-    console.log('info resu imggggg', img)
-    set_selected_image(img);*/
     return data;
   };
 };
@@ -136,6 +94,5 @@ export const get_data_legal_person = (id_person: number) => {
   return async (dispatch: Dispatch<any>) => {
     const resp = await consultar_datos_persona(id_person);
     dispatch(set_data_legal_person(resp));
-    //  console.log('')(resp);
   };
 };

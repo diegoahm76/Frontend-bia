@@ -54,7 +54,7 @@ export const use_busqueda_avanzada = () => {
         get_tipo_usuario(),
         get_tipo_documento()
       ]);
-      console.log('tipoPersonaResponse', tipoPersonaResponse.data.data)
+      //console.log('tipoPersonaResponse', tipoPersonaResponse.data.data)
 
 
       set_tipo_persona_opt(tipoPersonaResponse.data.data ?? []);

@@ -220,12 +220,12 @@ const DialogBusquedaAvanzada = ({
   const trigger_user_edit_active = (data: any): void => {
     user_edit_active();
     set_is_modal_active(false );
-    console.log(data)
+    // console.log(data)
     dispatch(set_data_person_search(
       data
  
     ));
-    dispatch(get_data_user(data?.usuarios[0]?.id_usuario, set_selected_image));
+    dispatch(get_data_user(data?.usuarios[0]?.id_usuario));
   };
 
   const handle_close_busqueda_avanzada = (): void => {

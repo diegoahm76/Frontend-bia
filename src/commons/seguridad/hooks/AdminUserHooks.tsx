@@ -31,7 +31,6 @@ import { toast, type ToastContent } from 'react-toastify';
 import type { SelectChangeEvent } from '@mui/material';
 import {
   set_action_admin_users,
-  set_data_user_search,
   set_user_info,
 } from '../store';
 import { auth_url } from '../../auth/api/auth';
@@ -351,44 +350,6 @@ export const use_admin_users = () => {
   };
 
   //* ----------- Cambio de imagen -----------------
-/*  const handle_image_select = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    if (event.target.files?.[0] != null) {
-      // Obtener el archivo seleccionado
-      const file = event.target.files[0];
-
-      const fileSize = file.size / 1024; // size in KB
-      const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      const isValidFileType = validFileTypes.includes(file.type);
-
-      if (fileSize > 50) {
-        control_warning('La imagen debe ser menor a 50 KB en peso de arhivo');
-        event.target.value = ''; // reset the file input
-        set_selected_image('');
-      } else if (!isValidFileType) {
-        control_warning('La imagen debe ser formato JPG, JPEG o PNG');
-        event.target.value = ''; // reset the file input
-        set_selected_image('');
-      } else {
-        set_file_image(file);
-
-        // Crear un objeto FileReader
-        const reader = new FileReader();
-        // Definir la función que se ejecuta cuando se completa la lectura del archivo
-        reader.onload = (upload) => {
-          // Obtener los datos de la imagen
-          if (upload?.target != null) {
-            set_selected_image(upload.target.result as string);
-          }
-        };
-        // Leer el contenido del archivo como una URL de datos
-        reader.readAsDataURL(file);
-      }
-    } else {
-      set_selected_image('');
-    }
-  };*/
 
   const handle_image_select = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -397,9 +358,6 @@ export const use_admin_users = () => {
       // Obtener el archivo seleccionado
       const file = event.target.files[0];
 
-      console.log('file', file)
-      console.log('user_infooooooo', user_info)
-
       const fileSize = file.size / 1024; // size in KB
       const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       const isValidFileType = validFileTypes.includes(file.type);
@@ -409,14 +367,12 @@ export const use_admin_users = () => {
         event.target.value = ''; // reset the file input
         dispatch(set_user_info({
           ...user_info,
-          profile_img: '',
         }))
       } else if (!isValidFileType) {
         control_warning('La imagen debe ser formato JPG, JPEG o PNG');
         event.target.value = ''; // reset the file input
         dispatch(set_user_info({
           ...user_info,
-          profile_img: '',
         }))
       } else {
         set_file_image(file);
@@ -446,15 +402,11 @@ export const use_admin_users = () => {
 
   // Paso de datos a formulario para creacion de usuario persona Natural o Juridica
   useEffect(() => {
-   /* dispatch(set_data_user_search(null));
-    dispatch(set_user_info(null));*/
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (data_person_search.id_persona > 0) {
-      //  console.log('')('data_person_search', data_person_search);
       set_roles(roles_choise_adapter(user_info.roles));
 
-      //console.log('data_person_search', data_person_search);
 
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const activoo = data_register.activo;
@@ -511,51 +463,8 @@ export const use_admin_users = () => {
         dispatch(
           get_data_user(
             data_person_search?.usuarios[0]?.id_usuario,
-            set_selected_image
           )
         );
-
-        /*  dispatch(get_data_user(data_person_search?.usuarios[0]?.id_usuario))
-          .then((res: any) => {
-           console.log('res ejjeeheheh suyyyy', res);
-
-            const img =
-              process.env.NODE_ENV === 'development'
-                ? `${
-                    process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                    'https://back-end-bia-beta.up.railway.app'
-                  }${res?.data?.profile_img}`
-                : `${
-                    process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                    'http://70.30.6.237'
-                  }${res?.data?.profile_img}`;
-
-            console.log('imgamahsdiahs', img);
-            set_selected_image(img);
-          })
-          .catch((err: any) => {
-            console.log('err', err);
-          });
-*/
-        /*void get_user_by_id(data_person_search?.usuarios[0]?.id_usuario).then(
-          (res) => {
-            console.log('res', res);
-
-            const img =
-              process.env.NODE_ENV === 'development'
-                ? `${
-                    process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                    'https://back-end-bia-beta.up.railway.app'
-                  }${res?.data?.data?.profile_img}`
-                : `${
-                    process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                    'http://70.30.6.237'
-                  }${res?.data?.data?.profile_img}`;
-
-            console.log('imgamahsdiahs', img);
-            set_selected_image(img);
-          }
-        );*/
       } else if (data_person_search.usuarios.length === 2) {
         // Disparar modal con los 2 usuarios disponibles
         set_users_x_person_is_active(true);
@@ -571,8 +480,6 @@ export const use_admin_users = () => {
 
   // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {
-   /* dispatch(set_data_user_search(null));
-    dispatch(set_user_info(null));*/
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (user_info.id_usuario > 0) {
@@ -581,65 +488,6 @@ export const use_admin_users = () => {
       } else {
         set_roles(roles_choise_adapter(user_info.roles));
       }
-
-      /* void get_person_by_id(String(data_person_search?.id_persona))
-        .then((res) => {
-          console.log('res', res);
-
-          const img =
-            process.env.NODE_ENV === 'development'
-              ? `${
-                  process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                  'https://back-end-bia-beta.up.railway.app'
-                }${res?.data?.data?.profile_img}`
-              : `${
-                  process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                  'http://70.30.6.237'
-                }${res?.data?.data?.profile_img}`;
-
-          console.log('imgamahsdiahs', img);
-          set_selected_image(img);
-        })
-        .catch((error) => {
-          console.error('Error fetching person by id:', error);
-        });*/
-
-      /*void get_user_by_id(data_person_search?.usuarios[0]?.id_usuario).then(
-        (res) => {
-          console.log('res', res);
-
-          const img =
-            process.env.NODE_ENV === 'development'
-              ? `${
-                  process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                  'https://back-end-bia-beta.up.railway.app'
-                }${res?.data?.data?.profile_img}`
-              : `${
-                  process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                  'http://70.30.6.237'
-                }${res?.data?.data?.profile_img}`;
-
-                console.log('imgamahsdiahs', img);
-          set_selected_image(img);
-        }
-      );
-*/
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      /*if (user_info?.profile_img) {
-        const img =
-          process.env.NODE_ENV === 'development'
-            ? `${
-                process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                'https://back-end-bia-beta.up.railway.app'
-              }${user_info?.profile_img}`
-            : `${
-                process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                'http://70.30.6.237'
-              }${user_info?.profile_img}`;
-
-        set_selected_image(img);
-      }*/
-
       const activoo = data_register.activo;
       set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);

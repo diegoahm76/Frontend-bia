@@ -195,7 +195,7 @@ export const AdminUsuariosScreen: React.FC = () => {
   // Busca data de usuario despues de seleccionarlo en el modal cuando persona tiene mas de un usuario
   const search_data_user_selected = (id_user: number): void => {
     dispatch(set_user_info(initial_state_user_info));
-    dispatch(get_data_user(id_user, set_selected_image));
+    dispatch(get_data_user(id_user));
     set_users_x_person_is_active(false);
   };
 
@@ -252,7 +252,7 @@ export const AdminUsuariosScreen: React.FC = () => {
         dispatch(set_action_admin_users('EDIT'));
         if (data_person_search.data?.usuarios.length === 1) {
           dispatch(
-            get_data_user(data_person_search.data?.usuarios[0]?.id_usuario, set_selected_image)
+            get_data_user(data_person_search.data?.usuarios[0]?.id_usuario)
           );
         } else if (data_person_search.data?.usuarios.length === 2) {
           // Disparar modal con los 2 usuarios disponibles
