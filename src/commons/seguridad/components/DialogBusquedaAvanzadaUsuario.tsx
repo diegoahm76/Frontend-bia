@@ -28,6 +28,7 @@ import {
 } from '../store/seguridadSlice';
 import { Title } from '../../../components';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
+import { use_admin_users } from '../hooks/AdminUserHooks';
 
 interface IProps {
   is_modal_active: boolean;
@@ -45,15 +46,9 @@ const dialog_busqueda_avanzada_usuario = ({
     handleSubmit: handle_submit_search_user,
   } = useForm<FormValuesSearchUser>();
 
+  const { set_selected_image } = use_admin_users();
+
   const columns_users: GridColDef[] = [
-    // {
-    //   headerName: 'ID usuario',
-    //   field: 'id_usuario',
-    // },
-    // {
-    //   headerName: 'ID persona',
-    //   field: 'persona',
-    // },
     {
       headerName: 'Tipo persona',
       field: 'tipo_persona',
@@ -125,8 +120,17 @@ const dialog_busqueda_avanzada_usuario = ({
 
   const trigger_user_edit_active = (data: any): void => {
     set_is_modal_active(false);
-    dispatch(set_data_user_search(data));
-    dispatch(get_data_user(data.id_usuario));
+    console.log('data', data);
+    dispatch(set_data_user_search({
+      ...data,
+      usuarios: [
+        {
+          id_usuario: data?.id_usuario,
+          is_superuser: data?.is_superuser,
+        }
+      ]
+    }));
+    dispatch(get_data_user(data.id_usuario, set_selected_image));
     dispatch(set_action_admin_users('EDIT'));
   };
 

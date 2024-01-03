@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { type Dispatch } from 'react';
 import {
   persons_request,
@@ -7,6 +8,7 @@ import {
 import {
   delegate_superuser_role,
   set_data_legal_person,
+  set_data_user_search,
   set_persons,
   set_user_info,
   set_users,
@@ -62,11 +64,71 @@ export const get_persons: (
   };
 };
 
-export const get_data_user: (id: number) => any = (id: number) => {
+export const get_data_user: (id: number, set_selected_image?: any) => any = (
+  id: number,
+  set_selected_image?: any,
+) => {
   return async (dispatch: Dispatch<any>) => {
     const { data } = await get_user_by_id(id);
     //  console.log('')(data.data);
-    dispatch(set_user_info(data.data));
+    const infoResume = data?.data;
+    console.log('info resumeeee', 
+    {...infoResume,
+    profile_img:
+      process.env.NODE_ENV === 'development'
+        ? `${
+            process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+            'https://back-end-bia-beta.up.railway.app'
+          }${infoResume?.profile_img}`
+        : `${
+            process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+            'http://70.30.6.237'
+          }${infoResume?.profile_img}`,
+  });
+    dispatch(
+      set_user_info({
+        ...infoResume,
+        profile_img:
+          process.env.NODE_ENV === 'development'
+            ? `${
+                process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+                'https://back-end-bia-beta.up.railway.app'
+              }${infoResume?.profile_img}`
+            : `${
+                process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+                'http://70.30.6.237'
+              }${infoResume?.profile_img}`,
+      })
+    );
+/*    dispatch(set_data_user_search({
+      ...infoResume,
+      profile_img:
+        process.env.NODE_ENV === 'development'
+          ? `${
+              process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+              'https://back-end-bia-beta.up.railway.app'
+            }${infoResume?.profile_img}`
+          : `${
+              process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+              'http://70.30.6.237'
+            }${infoResume?.profile_img}`,
+
+    }));
+*/
+/*   const img = infoResume?.profile_img
+    ? process.env.NODE_ENV === 'development'
+      ? `${
+          process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+          'https://back-end-bia-beta.up.railway.app'
+        }${infoResume.profile_img}`
+      : `${
+          process.env.REACT_APP_DOWNLOAD_FILES_PROD || 'http://70.30.6.237'
+        }${infoResume.profile_img}`
+    : ''
+
+    console.log('info resu imggggg', img)
+    set_selected_image(img);*/
+    return data;
   };
 };
 

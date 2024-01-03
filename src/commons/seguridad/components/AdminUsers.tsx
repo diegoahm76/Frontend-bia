@@ -7,7 +7,6 @@ import {
   Button,
   Input,
   Autocomplete,
-  Avatar,
   Skeleton,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -21,7 +20,6 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import EditIcon from '@mui/icons-material/Edit';
 import { getSucursalesToUser } from '../request/seguridadRequest';
 import Select from 'react-select';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsers: React.FC = () => {
   const {
@@ -56,7 +54,6 @@ export const AdminUsers: React.FC = () => {
     watch_admin_user,
     listaSucursales,
     setListaSucursales,
-    clear_image,
     set_value_admin_user,
   } = use_admin_users();
 
@@ -284,18 +281,16 @@ export const AdminUsers: React.FC = () => {
                   </Grid>
 
                   <Grid item xs={12} sm={3} md={3}>
-                    {selected_image != null && (
-                     <img
-                        src={selected_image}
-                        // alt="imagen de usuario"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          borderRadius: '50%',
-                        }}
-                      />
-                    )}
+                    <img
+                      src={user_info?.profile_img}
+                      // alt={`Imagen de ${selected_image}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                      }}
+                    />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2} sx={{ mt: '20px' }}>
@@ -358,32 +353,6 @@ export const AdminUsers: React.FC = () => {
                         onChange={handle_change_autocomplete as any}
                       />
                     )}
-                    {/*
-                      normal 
-                    
-                    {roles_opt.length > 0 && (
-                      <Autocomplete
-                        disabled={tipo_usuario === 'E' && true}
-                        multiple
-                        fullWidth
-                        options={roles_opt}
-                        getOptionLabel={(option) => option?.label}
-                        isOptionEqualToValue={(option, value) =>
-                          option.value === value.value
-                        }
-                        value={roles ?? []}
-                        renderInput={(params) => (
-                          <TextField
-                            key={params.id}
-                            {...params}
-                            label="Selección de roles"
-                            placeholder="Roles asignados"
-                          />
-                        )}
-                        {...register_admin_user('roles')}
-                        onChange={handle_change_autocomplete as any}
-                      />
-                    )}*/}
                   </Grid>
                 </Grid>
               </>
@@ -518,6 +487,7 @@ export const AdminUsers: React.FC = () => {
                 </Grid>
 
                 {/* espacio de trabajo */}
+
 
                 {watch_exe.tipo_usuario === 'I' && (
                   <Grid
@@ -658,7 +628,7 @@ export const AdminUsers: React.FC = () => {
       <DialogHistorialCambiosEstadoUser
         is_modal_active={historial_cambios_estado_is_active}
         set_is_modal_active={set_historial_cambios_estado_is_active}
-        id_usuario={user_info.id_usuario}
+        id_usuario={user_info?.id_usuario ?? 0}
       />
     </>
   );

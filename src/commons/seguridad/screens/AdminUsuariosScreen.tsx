@@ -71,6 +71,8 @@ const initial_state_data_register: DataAadminUser = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsuariosScreen: React.FC = () => {
+
+
   const dispatch = useDispatch();
   const { data_user_search, data_person_search } = useSelector(
     (state: SeguridadSlice) => state.seguridad
@@ -118,7 +120,8 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_loading_inputs,
     set_numero_documento,
     reset_admin_user,
-    clean_user_info    
+    clean_user_info,
+    set_selected_image,
   } = use_admin_users();
   // const numero_documento = watch('numero_documento');
   useEffect(() => {
@@ -192,7 +195,7 @@ export const AdminUsuariosScreen: React.FC = () => {
   // Busca data de usuario despues de seleccionarlo en el modal cuando persona tiene mas de un usuario
   const search_data_user_selected = (id_user: number): void => {
     dispatch(set_user_info(initial_state_user_info));
-    dispatch(get_data_user(id_user));
+    dispatch(get_data_user(id_user, set_selected_image));
     set_users_x_person_is_active(false);
   };
 
@@ -249,7 +252,7 @@ export const AdminUsuariosScreen: React.FC = () => {
         dispatch(set_action_admin_users('EDIT'));
         if (data_person_search.data?.usuarios.length === 1) {
           dispatch(
-            get_data_user(data_person_search.data?.usuarios[0].id_usuario)
+            get_data_user(data_person_search.data?.usuarios[0]?.id_usuario, set_selected_image)
           );
         } else if (data_person_search.data?.usuarios.length === 2) {
           // Disparar modal con los 2 usuarios disponibles
