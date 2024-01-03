@@ -17,7 +17,7 @@ import {
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   set_current_concepto_poai,
@@ -32,27 +32,33 @@ export const ListarConceptoPOAI: React.FC = () => {
   const columns_concepto: GridColDef[] = [
     {
       field: 'nombre_indicador',
-      headerName: 'NOMBRE INDICADOR',
+      headerName: 'Nombre del Indicador',
       sortable: true,
-      width: 250,
+      width: 350,
     },
     {
       field: 'nombre',
-      headerName: 'GRUPO RESPONSABLE',
+      headerName: 'Nombre grupo',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'rubro',
+      headerName: 'Rubro',
       sortable: true,
       width: 250,
     },
     {
       field: 'concepto',
-      headerName: 'CONCEPTO',
+      headerName: 'Concepto',
       sortable: true,
-      width: 250,
+      width: 200,
     },
     {
       field: 'valor_total',
-      headerName: 'VALOR TOTAL',
+      headerName: 'Valor total',
       sortable: true,
-      width: 150,
+      width: 300,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -175,7 +181,7 @@ export const ListarConceptoPOAI: React.FC = () => {
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
-                  getRowId={(row) => uuidv4()}
+                  getRowId={() => uuidv4()}
                 />
               </>
             </Box>

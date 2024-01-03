@@ -23,104 +23,54 @@ import {
 } from '@mui/x-data-grid';
 // import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
-
+import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { IBusquedaMetas } from './types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
-import { DataContextMetas } from '../../../context/context';
 import {
-  set_current_meta,
+  set_current_concepto_poai,
   set_current_mode_planes,
 } from '../../../../store/slice/indexPlanes';
-import EditIcon from '@mui/icons-material/Edit';
-import { search_metas } from '../../../../Indicadores/services/services';
+import { IBusquedaConceptoPOAI } from './types';
+import { DataContextConceptoPOAI } from '../../../context/context';
+import { search_concepto_poai } from '../../../../DetalleInversionCuentas/services/services';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaMetas: React.FC = () => {
+export const BusquedaConcepto: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre_plan',
-      headerName: 'Nombre del Plan',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_programa',
-      headerName: 'Nombre del Programa',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_proyecto',
-      headerName: 'Nombre del Proyecto',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_producto',
-      headerName: 'Nombre del Producto',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_actividad',
-      headerName: 'Nombre de la Actividad',
-      sortable: true,
-      width: 250,
-    },
-    {
       field: 'nombre_indicador',
       headerName: 'Nombre del Indicador',
       sortable: true,
-      width: 250,
+      width: 350,
     },
     {
-      field: 'nombre_meta',
-      headerName: 'Nombre de la Meta',
-      sortable: true,
-      width: 150,
-    },
-    {
-      field: 'unidad_meta',
-      headerName: 'Unidad de Meta',
-      sortable: true,
-      width: 100,
-    },
-    {
-      field: 'porcentaje_meta',
-      headerName: 'Porcentaje de Meta',
-      sortable: true,
-      width: 150,
-    },
-    {
-      field: 'cumplio',
-      headerName: '¿Cumplió?',
-      sortable: true,
-      width: 100,
-      renderCell: (params) => (params.value ? 'Sí' : 'No'),
-    },
-    {
-      field: 'fecha_creacion_meta',
-      headerName: 'Fecha de Creación de Meta',
+      field: 'nombre',
+      headerName: 'Nombre grupo',
       sortable: true,
       width: 200,
     },
     {
-      field: 'avance_fisico',
-      headerName: 'Avance Físico',
+      field: 'rubro',
+      headerName: 'Rubro',
       sortable: true,
-      width: 150,
+      width: 250,
     },
     {
-      field: 'valor_meta',
-      headerName: 'VALOR META',
+      field: 'concepto',
+      headerName: 'Concepto',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'valor_total',
+      headerName: 'Valor total',
       sortable: true,
       width: 300,
       valueFormatter: (params: GridValueFormatterParams) => {
@@ -159,15 +109,11 @@ export const BusquedaMetas: React.FC = () => {
                   editar: true,
                 })
               );
-              dispatch(set_current_meta(params.row));
+              dispatch(set_current_concepto_poai(params.row));
               reset({
-                nombre_plan: params.row.nombre_plan,
-                nombre_programa: params.row.nombre_programa,
-                nombre_proyecto: params.row.nombre_proyecto,
-                nombre_producto: params.row.nombre_producto,
-                nombre_actividad: params.row.nombre_actividad,
+                concepto: params.row.concepto,
+                nombre: params.row.nombre,
                 nombre_indicador: params.row.nombre_indicador,
-                nombre_meta: params.row.nombre_meta,
               });
               handle_close();
             }}
@@ -182,7 +128,7 @@ export const BusquedaMetas: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar Meta"
+                titleAccess="Editar"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -202,19 +148,15 @@ export const BusquedaMetas: React.FC = () => {
     control,
   } = useForm({
     defaultValues: {
-      nombre_plan: '',
-      nombre_programa: '',
-      nombre_proyecto: '',
-      nombre_producto: '',
-      nombre_actividad: '',
+      concepto: '',
+      nombre: '',
       nombre_indicador: '',
-      nombre_meta: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaMetas[]>([]);
+  const [rows, set_rows] = useState<IBusquedaConceptoPOAI[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -228,28 +170,16 @@ export const BusquedaMetas: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
-    async ({
-      nombre_plan,
-      nombre_programa,
-      nombre_proyecto,
-      nombre_producto,
-      nombre_actividad,
-      nombre_indicador,
-      nombre_meta,
-    }) => {
+    async ({ concepto, nombre, nombre_indicador }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_metas({
-          nombre_plan,
-          nombre_programa,
-          nombre_proyecto,
-          nombre_producto,
-          nombre_actividad,
+        } = await search_concepto_poai({
+          concepto,
+          nombre,
           nombre_indicador,
-          nombre_meta,
         });
 
         if (data?.length > 0) {
@@ -272,7 +202,7 @@ export const BusquedaMetas: React.FC = () => {
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
-  } = useContext(DataContextMetas);
+  } = useContext(DataContextConceptoPOAI);
 
   useEffect(() => {
     reset();
@@ -310,30 +240,18 @@ export const BusquedaMetas: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada Metas" />
-            {/* <form
-              onSubmit={(e) => {
-                void on_submit_advance(e);
-              }}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            > */}
+            <Title title="Búsqueda avanzada concepto POAI" />
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="nombre_plan"
+                  name="concepto"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre plan"
+                      label="Concepto"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -345,71 +263,14 @@ export const BusquedaMetas: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="nombre_programa"
+                  name="nombre"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre programa"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_proyecto"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre proyecto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_producto"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre producto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_actividad"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre actividad"
+                      label="Nombre grupo"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -429,25 +290,6 @@ export const BusquedaMetas: React.FC = () => {
                     <TextField
                       fullWidth
                       label="Nombre indicador"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_meta"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre Meta"
                       value={value}
                       onChange={onChange}
                       size="small"

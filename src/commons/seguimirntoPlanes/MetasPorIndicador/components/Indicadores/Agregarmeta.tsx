@@ -14,7 +14,6 @@ import {
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
@@ -577,7 +576,6 @@ export const Agregarmeta: React.FC = () => {
               }}
               render={({
                 field: { onChange, value },
-                fieldState: { error },
               }) => (
                 <FormControl>
                   <FormControlLabel
