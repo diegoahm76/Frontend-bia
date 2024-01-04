@@ -30,6 +30,7 @@ import { getListadoTareasByPerson } from '../../../../../../../toolkit/thunks/Pq
 import { AuthSlice } from '../../../../../../../../../auth/interfaces';
 import { GridCellParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { getAnexosPqrsdf } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
+import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
 /*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
@@ -98,37 +99,39 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   }) => {
     console.log(row);
 
-    await Swal.fire({
-      title: 'Aceptar tarea',
-      text: `¿Estás seguro que deseas aceptar esta tarea?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Aceptar',
-      cancelButtonText: 'Cancelar',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await putAceptarTarea(row.id_tarea_asignada).then(async (res) => {
-          console.log(res);
-          //* llamar el servicio de la busqueda de las tareas
-          void getListadoTareasByPerson(
-            id_persona,
-            handleSecondLoading,
-            'Rpqr'
-          ).then(async (res: any) => {
-            dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res ?? []));
-            //* se limpian los otros controles para no crear conflictos
-            dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
-          });
-        });
-
-        return;
-      }
-      await Swal.fire({
-        title: 'Tarea NO ACEPTADA',
-        icon: 'info',
-        showConfirmButton: true,
+    try {
+      const result = await Swal.fire({
+        title: 'Aceptar tarea',
+        text: `¿Estás seguro que deseas aceptar esta tarea?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
       });
-    });
+
+      if (result.isConfirmed) {
+        const res = await putAceptarTarea(row.id_tarea_asignada);
+        console.log(res);
+
+        const listadoTareas = await getListadoTareasByPerson(
+          id_persona,
+          handleSecondLoading,
+          'Rpqr'
+        );
+
+        dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+      } else {
+        await Swal.fire({
+          title: 'Tarea NO ACEPTADA',
+          icon: 'info',
+          showConfirmButton: true,
+        });
+      }
+    } catch (error) {
+      showAlert('Opps...', 'Ha ocurrido un error desconocido, por favor intente de nuevo', 'error')
+      return;
+    }
   };
 
   const handleRejectClick = (_row: any) => {
