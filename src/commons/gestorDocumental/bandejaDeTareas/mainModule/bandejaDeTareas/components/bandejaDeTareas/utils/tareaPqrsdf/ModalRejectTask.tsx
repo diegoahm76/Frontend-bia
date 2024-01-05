@@ -11,7 +11,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
 import { Title } from '../../../../../../../../../components';
@@ -19,20 +19,97 @@ import { Controller, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import {
+  setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setListaTareasPqrsdfTramitesUotrosUopas,
+} from '../../../../../../toolkit/store/BandejaDeTareasStore';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
+import { control_error } from '../../../../../../../../../helpers';
+import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { putRechazarTarea } from '../../../../services/servicesStates/pqrsdf/rechazarTarea/putRechazarTarea.service';
+import { getListadoTareasByPerson } from '../../../../../../toolkit/thunks/Pqrsdf/getListadoTareasByPerson.service';
+import { AuthSlice } from '../../../../../../../../auth/interfaces';
+import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 
-export const ModalRejectTask: FC = (props: any): JSX.Element => {
-  const { title = 'Rechazar tarea' } = props;
+export const ModalRejectTask: FC = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
-  const handleSubsmit = () => {
-    //* set the service to reject the task
-    console.log('handleSubsmit');
+  //* redux states
+  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
+    useAppSelector((state) => state.BandejaTareasSlice);
+  const {
+    userinfo: { id_persona },
+  } = useAppSelector((state: AuthSlice) => state.auth);
+
+  //* context declaration
+  const { openModalNuevo, handleOpenModalNuevo, handleSecondLoading } =
+    useContext(ModalAndLoadingContext);
+
+  const resetState = () => {
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+    handleOpenModalNuevo(false);
+    reset_justificacion({
+      justificacion_rechazo: '',
+    });
+  };
+
+  const handleSubsmit = async () => {
+    if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas)
+      return control_error('No se ha seleccionado una tarea para rechazar');
+    if (!exe_watch_justificacion?.justificacion_rechazo)
+      return control_warning(
+        'Debe ingresar una justificación de rechazo para la tarea'
+      );
+
+    try {
+      const rejectTask = await putRechazarTarea(
+        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_tarea_asignada,
+        exe_watch_justificacion?.justificacion_rechazo,
+        setLoading
+      );
+
+      if (rejectTask?.status === 200) {
+        const listadoTareas = await getListadoTareasByPerson(
+          id_persona,
+          handleSecondLoading,
+          'Rpqr'
+        );
+
+        dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+        showAlert(
+          'Tarea rechazada',
+          'La tarea se ha rechazado correctamente',
+          'success'
+        );
+      } else {
+        showAlert(
+          'Opps!',
+          'No se ha podido rechazar la tarea, por favor intente nuevamente',
+          'error'
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      showAlert(
+        'Opps!',
+        'No se ha podido rechazar la tarea, por favor intente nuevamente',
+        'error'
+      );
+    } finally {
+      resetState();
+    }
   };
 
   //* states
   const [loading, setLoading] = useState(false);
 
-  const { control: control_justificacion,
-    handleSubmit: handleSubmit_justificacion,
+  const {
+    control: control_justificacion,
     reset: reset_justificacion,
     watch: watch_justificacion,
   } = useForm({
@@ -48,8 +125,11 @@ export const ModalRejectTask: FC = (props: any): JSX.Element => {
       <Dialog
         fullWidth
         maxWidth="md"
-        open={false}
-        // onClose={closeModal}
+        open={openModalNuevo}
+        onClose={() => {
+          dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+          handleOpenModalNuevo(false);
+        }}
       >
         <Box
           component="form"
@@ -59,7 +139,12 @@ export const ModalRejectTask: FC = (props: any): JSX.Element => {
           }}
         >
           <DialogTitle>
-            <Title title={title} />
+            <Title
+              title={`Rechazar tarea con radicado: ${
+                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.radicado ??
+                'N/A'
+              }`}
+            />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -69,21 +154,26 @@ export const ModalRejectTask: FC = (props: any): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={12} lg={12} md={12}
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                lg={12}
+                md={12}
                 sx={{
-                  marginY: '1.5rem'
+                  marginY: '1.5rem',
                 }}
               >
                 <Controller
                   name="justificacion_rechazo"
                   control={control_justificacion}
                   defaultValue=""
-                  rules={{ required: false }}
+                  // rules={{ required: true }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       label="Justificación de rechazo *"
-                      placeholder='Escriba la justificación de rechazo de la tarea'
+                      placeholder="Escriba la justificación de rechazo de la tarea"
                       size="small"
                       multiline
                       rows={8}
@@ -98,16 +188,6 @@ export const ModalRejectTask: FC = (props: any): JSX.Element => {
                   )}
                 />
               </Grid>
-              {/*<Grid item xs={12} sm={3}>
-                <LoadingButton
-                  loading={loading}
-                  variant="contained"
-                  type="submit"
-                  color="primary"
-                >
-                  BUSCAR
-                </LoadingButton>
-              </Grid>*/}
             </Grid>
           </DialogContent>
           <Divider />
@@ -120,23 +200,32 @@ export const ModalRejectTask: FC = (props: any): JSX.Element => {
               <Button
                 variant="outlined"
                 color="primary"
-                onClick={() => {}}
+                onClick={() => {
+                  reset_justificacion({
+                    justificacion_rechazo: '',
+                  });
+                }}
                 startIcon={<CleanIcon />}
               >
                 LIMPIAR CAMPOS
               </Button>
-              <Button
+              <LoadingButton
+                loading={loading}
+                type="submit"
                 color="success"
                 variant="contained"
                 onClick={() => {}}
                 startIcon={<CheckCircleOutlineIcon />}
               >
-                ACEPTAR TAREA
-              </Button>
+                RECHAZAR TAREA
+              </LoadingButton>
               <Button
                 color="error"
                 variant="contained"
-                onClick={() => {}}
+                onClick={() => {
+                  dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+                  handleOpenModalNuevo(false);
+                }}
                 startIcon={<CloseIcon />}
               >
                 CANCELAR Y CERRAR

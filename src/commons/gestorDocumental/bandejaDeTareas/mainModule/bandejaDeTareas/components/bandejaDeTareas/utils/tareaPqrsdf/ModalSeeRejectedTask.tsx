@@ -11,28 +11,64 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Title } from '../../../../../../../../../components';
+import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../hooks';
+import { setCurrentTareaPqrsdfTramitesUotrosUopas } from '../../../../../../toolkit/store/BandejaDeTareasStore';
+import { getInfoTareaRechazada } from '../../../../services/servicesStates/pqrsdf/rechazarTarea/getInfoTareaRechazada.service';
+import { control_success } from '../../../../../../../../../helpers';
 
 export const ModalSeeRejectedTask: FC = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
+  //* redux states
+  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
+    useAppSelector((state) => state.BandejaTareasSlice);
+
+  //* context declaration
+  const { openModalNuevoNumero2, handleOpenModalNuevoNumero2 } = useContext(
+    ModalAndLoadingContext
+  );
+
   //* useState
   const [infoTareaRechazada, setInfoTareaRechazada] = useState('');
 
-  //* useEffect
+  const modifications = [
+    'La tarea que se me asignó no era la correcta, se debe asignar la tarea de responder la PQRSDF',
+    'La tarea asignada no era la correcta, se debe asignar la tarea de responder la PQRSDF',
+    'La tarea que se me asignó era incorrecta, se debe asignar la tarea de responder la PQRSDF',
+    'La tarea asignada era incorrecta, se debe asignar la tarea de responder la PQRSDF',
+    'La tarea que se me asignó no era la correcta, se debe asignar la tarea de responder el trámite',
+    // Agrega más variaciones aquí
+  ];
+
   useEffect(() => {
-    console.log('ModalSeeRejectedTask');
-    //* para cargar los datos de la tarea rechazada
-    setInfoTareaRechazada('hola, esta es la justificación del rechazo de la tarea');
-  }, []);
+    if (!openModalNuevoNumero2) return;
+
+    // void getInfoTareaRechazada(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada, handleOpenModalNuevoNumero2);
+    //* en el then se debe setear el estado de la justificación
+
+    const randomIndex = Math.floor(Math.random() * modifications.length);
+    setInfoTareaRechazada(modifications[randomIndex]);
+    control_success('Se ha obtenido la justificación del rechazo de la tarea');
+  }, [openModalNuevoNumero2]);
 
   return (
     <>
       <Dialog
         fullWidth
         maxWidth="md"
-        open={true}
-        // onClose={closeModal}
+        open={openModalNuevoNumero2}
+        onClose={() => {
+          dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+          handleOpenModalNuevoNumero2(false);
+        }}
       >
         <Box component="form">
           <DialogTitle>
@@ -80,7 +116,10 @@ export const ModalSeeRejectedTask: FC = (): JSX.Element => {
               <Button
                 color="error"
                 variant="contained"
-                onClick={() => {}}
+                onClick={() => {
+                  dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+                  handleOpenModalNuevoNumero2(false);
+                }}
                 startIcon={<CloseIcon />}
               >
                 CERRAR
