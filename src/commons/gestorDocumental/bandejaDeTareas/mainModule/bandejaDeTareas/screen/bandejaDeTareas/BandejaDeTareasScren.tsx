@@ -16,5 +16,5 @@ export const BandejaDeTareasScreen = (): JSX.Element => {
       {/* Acciones finales, salida del módulo */}
       <SalidaModulo />
     </>
-  );   
+  );
 };

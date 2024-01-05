@@ -7,12 +7,10 @@ import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../../../../../../components';
-import { choicesTipoDeTarea } from '../../utils/choices';
+import { choicesTipoDeTarea } from '../../utils/tareaPqrsdf/choices';
 import { BuscadorPqrsdf } from './buscadorPqrsdf/BuscadorPqrsdf';
 import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/BuscadorTramitesYServicios';
 import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
-import Swal from 'sweetalert2';
-//import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 
 import {
   useAppDispatch,
@@ -21,7 +19,6 @@ import {
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
 import { useBandejaTareas } from '../../../../../../hook/useBandejaTareas';
-import { auth_slice } from './../../../../../../../../auth/store/authSlice';
 import { AuthSlice } from '../../../../../../../../auth/interfaces';
 import { getListadoTareasByPerson } from '../../../../../../toolkit/thunks/Pqrsdf/getListadoTareasByPerson.service';
 import {
