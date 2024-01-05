@@ -14,6 +14,7 @@ import 'primeicons/primeicons.css';
 import { Loader } from './utils/Loader/Loader';
 import setupLocatorUI from '@locator/runtime';
 
+//En productivo comentar la siguiente linea
 if (process.env.NODE_ENV === 'development') {
   setupLocatorUI();
 }
