@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import {
   setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setInfoTarea,
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
@@ -33,6 +34,7 @@ import { getAnexosPqrsdf } from '../../../../../../../../panelDeVentanilla/toolk
 import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
 import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
+import { getDetalleDeTarea } from '../../../../../services/servicesStates/pqrsdf/detalleDeTarea/getDetalleDeTarea.service';
 /*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
@@ -65,8 +67,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   const navigate = useNavigate();
   //* context declaration
   const {
-    setRadicado,
-    setValue,
+    //setRadicado,
+    // setValue,
 
     anexos,
     metadatos,
@@ -139,23 +141,13 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   };
 
   const handleRejectClick = (_row: any) => {
-    console.log(_row)
-    //* activar el modal para registrar el motivo de rechazo de la tarea
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
     handleOpenModalNuevo(true)
-
-
-    console.log('rechanzando tarea');
   };
 
   const handleCommentClick = (_row: any) => {
-    //* abrir el modal para ver el comentario de rechazo de la tarea
-    //* el servicio se llama al montat el componente, por lo que no es necesario llamarlo de nuevo
     handleOpenModalNuevoNumero2(true)
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
-
-
-    console.log('viendo comentario de rechazo de tarea');
   };
 
   const setActionsPQRSDF = (tareaPQRSDF: any) => {
@@ -360,21 +352,32 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 onClick={() => {
                   // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
                   //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-                  void getAnexosPqrsdf(params?.row?.id_pqrsdf).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/bandeja_tareas/info_tarea/${params.row.id_pqrsdf}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
+                  console.log(params.row);
 
-                    return;
-                  });
+                  (async () => {
+                    try {
+                      const idPqrsdf = params?.row?.id_pqrsdf;
+                      const [detalleTarea, anexosPqrsdf] = await Promise.all([
+                        getDetalleDeTarea(idPqrsdf, navigate),
+                        getAnexosPqrsdf(idPqrsdf),
+                      ]);
+
+                      console.log(detalleTarea, anexosPqrsdf);
+
+                      
+                      dispatch(setInfoTarea(detalleTarea));
+                      setAnexos(anexosPqrsdf);
+                      if (detalleTarea || anexosPqrsdf.length > 0) {
+                        navigate(`/app/gestor_documental/bandeja_tareas/info_tarea/${idPqrsdf}`);
+                        handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                        //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
+                        handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqrsdf que se consulta con el id del anexo
+                      }
+                    } catch (error) {
+                      console.error(error);
+                      // Handle the error appropriately here
+                    }
+                  })();
                 }}
               >
                 <Avatar

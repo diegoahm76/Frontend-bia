@@ -29,7 +29,6 @@ import {
 } from '../store/seguridadSlice';
 import { Title } from '../../../components';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
-import { use_admin_users } from '../hooks/AdminUserHooks';
 
 interface IProps {
   is_modal_active: boolean;
@@ -47,7 +46,6 @@ const dialog_busqueda_avanzada_usuario = ({
     handleSubmit: handle_submit_search_user,
   } = useForm<FormValuesSearchUser>();
 
-  const { set_selected_image } = use_admin_users();
 
   const columns_users: GridColDef[] = [
     {

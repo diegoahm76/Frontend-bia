@@ -17,17 +17,11 @@ const routes = [
   {
     path: '',
     name: '',
-    component: () => <MainViewBandejaTareas />,
+    component: () => (<MainViewBandejaTareas />),
   },
   {
     path: 'requerimiento_a_usuario/',
-    component: () => (
-      <>
-        <BandejaTareasProvider>
-          <RequerimientoUsuarioScreen />
-        </BandejaTareasProvider>
-      </>
-    ),
+    component: () => (<RequerimientoUsuarioScreen />),
   },
   /*
   {
@@ -52,7 +46,7 @@ const routes = [
 export const BandejaTareasRoutes: React.FC = () => {
   return (
     <ModalAndLoadingProvider>
-      {/* <PanelVentanillaProvider>*/}
+      <BandejaTareasProvider>
       <Routes>
         {routes.map((route) => (
           <Route
@@ -63,7 +57,7 @@ export const BandejaTareasRoutes: React.FC = () => {
         ))}
         <Route path="/*" element={<Page404 />} />
       </Routes>
-      {/*  </PanelVentanillaProvider>*/}
+      </BandejaTareasProvider>
     </ModalAndLoadingProvider>
   );
 };

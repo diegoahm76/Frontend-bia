@@ -4,13 +4,13 @@ import React, { ReactNode, createContext, useState } from 'react';
 
 export const BandejaTareasContext =
   createContext<any>({
-    radicado: '',
-    setRadicado: () => {},
-    value: 0,
-    setValue: () => {},
-    handleChange: () => {},
-    expanded: false,
-    setExpanded: () => {},
+    // radicado: '',
+    // setRadicado: () => {},
+    // value: 0,
+    // setValue: () => {},
+    //handleChange: () => {},
+    // expanded: false,
+    // setExpanded: () => {},
     anexos: [],
     setAnexos: () => {},
     archivoAnexos: null,
@@ -24,11 +24,11 @@ export const BandejaTareasContext =
   });
 
 export const BandejaTareasProvider = ({ children }: ReactNode | any) => {
-  const [radicado, setRadicado] = useState('');
+/*  const [radicado, setRadicado] = useState('');
   //* value de los paneles
   const [value, setValue] = useState(0);
   //* expanded de los acordeones
-  const [expanded, setExpanded] = useState<string | boolean>(false);
+  const [expanded, setExpanded] = useState<string | boolean>(false);*/
 
   //* almacenar informacion de los anexos
   const [anexos, setAnexos] = useState<any>([]);
@@ -39,8 +39,8 @@ export const BandejaTareasProvider = ({ children }: ReactNode | any) => {
 
   //? funciones actualizadoras
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) =>
-    setValue(newValue);
+/*  const handleChange = (event: React.SyntheticEvent, newValue: number) =>
+    setValue(newValue);*/
 
   // ! -- MANEJO DE DATA DE LA ENTREGA 99 -- ! //
 
@@ -50,13 +50,13 @@ export const BandejaTareasProvider = ({ children }: ReactNode | any) => {
 
   const valuesToUse = {
     // ? entrega 99
-    radicado,
+    /*radicado,
     setRadicado,
     value,
     setValue,
     handleChange,
     expanded,
-    setExpanded,
+    setExpanded,*/
     anexos,
     setAnexos,
     archivoAnexos,

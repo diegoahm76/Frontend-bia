@@ -9,9 +9,9 @@ export const getInfoTareaRechazada = async (
 ): Promise<any> => {
   try {
     const url = `gestor/bandeja-tareas/tareas-asignadas-jus-rechazo/get/${id_tarea_asignada}/`;
-    const response = await api.get(url);
-    console.log('response', response);
-    return response;
+    const {data} = await api.get(url);
+    console.log('response', data?.data);
+    return data?.data?.justificacion_rechazo;
   } catch (error) {
     showAlert(
       'Opss..',
