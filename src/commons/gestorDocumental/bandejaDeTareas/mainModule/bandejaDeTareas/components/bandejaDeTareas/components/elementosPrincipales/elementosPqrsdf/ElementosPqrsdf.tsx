@@ -1,12 +1,10 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useEffect, useState } from 'react';
-// import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { Avatar, Box, Button, Chip, IconButton, Tooltip } from '@mui/material';
+import { useContext } from 'react';
+import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
-import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
@@ -47,6 +45,7 @@ const iconStyles = {
   ml: 3.5,
   mr: 2,
   borderRadius: '30%',
+  cursor: 'pointer',
 } as const;
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
@@ -57,7 +56,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   const {
     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
     listaTareasPqrsdfTramitesUotrosUopas,
-    actionsTareasPQRSDF,
+    // actionsTareasPQRSDF,
   } = useAppSelector((state) => state.BandejaTareasSlice);
   const {
     userinfo: { id_persona },
@@ -70,16 +69,16 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     //setRadicado,
     // setValue,
 
-    anexos,
-    metadatos,
+    // anexos,
+    // metadatos,
     setAnexos,
-    setMetadatos,
+    //setMetadatos,
   } = useContext(BandejaTareasContext);
   const {
-    handleGeneralLoading,
-    handleThirdLoading,
-    openModalOne: infoAnexos,
-    openModalTwo: infoMetadatos,
+    // handleGeneralLoading,
+    //handleThirdLoading,
+    //openModalOne: infoAnexos,
+    //openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
     handleSecondLoading,
@@ -216,7 +215,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
     };
 
-    const actionsPQRSDF = actions.map((action: any) => ({
+    const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
     }));
@@ -361,10 +360,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                         getDetalleDeTarea(idPqrsdf, navigate),
                         getAnexosPqrsdf(idPqrsdf),
                       ]);
-
-                      console.log(detalleTarea, anexosPqrsdf);
-
-                      
                       dispatch(setInfoTarea(detalleTarea));
                       setAnexos(anexosPqrsdf);
                       if (detalleTarea || anexosPqrsdf.length > 0) {

@@ -34,7 +34,6 @@ import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
 import { Title } from '../../../components';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
-import { use_admin_users } from '../hooks/AdminUserHooks';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -71,13 +70,8 @@ const DialogBusquedaAvanzada = ({
   } = useForm<FormValuesSearchPerson>();
   const numero_documento = watch_search_person('numero_documento');
 
-  const { set_selected_image } = use_admin_users();
 
   const columns_persons: GridColDef[] = [
-    // {
-    //   headerName: 'ID persona',
-    //   field: 'id_persona',
-    // },
     {
       headerName: 'Tipo persona',
       field: 'tipo_persona',
@@ -195,7 +189,7 @@ const DialogBusquedaAvanzada = ({
     },
   ];
 
-  // Consultamos si el usuario existe
+  //?  Consultamos si el usuario existe
   useEffect(() => {
     if (numero_documento !== undefined && numero_documento !== '') {
       set_numero_documento(numero_documento);

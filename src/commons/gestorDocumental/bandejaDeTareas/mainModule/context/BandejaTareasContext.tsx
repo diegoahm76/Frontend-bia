@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { ReactNode, createContext, useState } from 'react';
+import { ReactNode, createContext, useState } from 'react';
 
 export const BandejaTareasContext =
   createContext<any>({

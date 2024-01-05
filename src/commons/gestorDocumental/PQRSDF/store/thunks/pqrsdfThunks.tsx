@@ -9,7 +9,6 @@ import {
 import {
   initial_state_pqr,
   set_areas,
-  set_attorney,
   set_attorneys,
   set_companies,
   set_company,
@@ -17,10 +16,8 @@ import {
   set_destination_offices,
   set_document_types,
   set_file_categories,
-  set_file_origin,
   set_file_origins,
   set_file_typologies,
-  set_file_typology,
   set_filed,
   set_filed_types,
   set_filings,
@@ -686,6 +683,7 @@ export const delete_pqrsdf_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      // eslint-disable-next-line no-unused-vars
       const params: any = {
         id_PQRSDF: id,
         isCreateForWeb: is_web,
@@ -805,6 +803,7 @@ export const get_others_service = (id: string | number): any => {
 
 export const add_other_service = (
   otro: any,
+  // eslint-disable-next-line no-unused-vars
   navigate: NavigateFunction
 ): any => {
   return async (dispatch: Dispatch<any>) => {
