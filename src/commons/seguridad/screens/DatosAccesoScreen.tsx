@@ -425,7 +425,7 @@ export const DatosAccesoScreen: React.FC = () => {
                           className="align-middle ml-1"
                         />
                       ) : (
-                        ''
+                        <UpdateIcon />
                       )
                     }
                     aria-label="Actualizar"

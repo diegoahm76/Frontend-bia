@@ -48,6 +48,7 @@ import {
   get_ciudades,
   get_departamentos,
 } from '../../../../../request/getRequest';
+import { showAlert } from '../../../../../utils/showAlert/ShowAlert';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -756,23 +757,14 @@ export const radicar_pqrsdf_service = (
 export const get_filings_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(params);
       const { data } = await api.get(`gestor/radicados/imprimir-radicado/`, {
         params,
       });
-      console.log(data);
       dispatch(set_filings(data.data));
-
-      // if ('data' in data) {
-      //   dispatch(set_pqr(data.data));
-
-      // } else {
-      //   control_error(data.detail);
-      // }
       return data;
     } catch (error: any) {
       console.log('get_filings_service');
-      control_error(error.response.data.detail);
+      showAlert('Opps!', error.response.data.detail || 'Ha ocurrido un error, por favor intente de nuevo', 'error');
       return error as AxiosError;
     }
   };
