@@ -1,4 +1,5 @@
-import { Box, SpeedDial, SpeedDialAction } from '@mui/material';
+/* eslint-disable no-unused-vars */
+import { Box, SpeedDial, SpeedDialAction, Typography } from '@mui/material';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
 import {
   useAppDispatch,
@@ -11,18 +12,13 @@ import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
-
-  // ? LAS ACCIONES SOBRE LA PQRSDF VAN A CAMBIAR, POR ENDE SE VAN A REALIZAR LAS RESPECTIVAS MODIFICACIONES SOBRE EL MODULO DE BANDEJA DE TAREAS EN PQRSDF
-
-
   //* dispatch decalration
   const dispatch = useAppDispatch();
   //* redux states
-  const actions = useAppSelector((state) => state.PanelVentanillaSlice.actions);
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
+
+  const {
+    /*currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,*/ actionsTareasPQRSDF,
+  } = useAppSelector((state) => state.BandejaTareasSlice);
   //* navigate declaration
   const navigate = useNavigate();
 
@@ -30,7 +26,7 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
 
- /* const sendDigitalizationRequest = async () => {
+  /* const sendDigitalizationRequest = async () => {
     const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
     await postDigitalizacionPqrsdf(id_PQRSDF);
     dispatch(resetPanelVentanillaFull());
@@ -47,7 +43,7 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
       denyButtonColor: '#d33',
     }).then(async (result) => {
       if (result.isConfirmed) {
-       // await sendDigitalizationRequest();
+        // await sendDigitalizationRequest();
       } else if (result.isDenied) {
         showAlert(
           'Opps...',
@@ -82,39 +78,50 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   };
 
   const handleClickActionsGeneral = (action: any) => {
-    const handler = actionHandlers[action.id];
+    console.log('hola', action)
+
+    /*const handler = actionHandlers[action.id];
     if (handler) {
       handler(action, navigate);
-    }
+    }*/
   };
 
   return (
     <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-      buttons para pqrsdf
-{/*      <SpeedDial
+      <SpeedDial
         ariaLabel="SpeedDial basic example"
         sx={{ position: 'absolute', top: 0, left: 0 }}
         icon={<MultipleStopIcon />}
         direction="right"
       >
-        {actions.map(
-          (action: {
-            id: string;
-            icon: any;
-            name: string;
-            path: string;
-            disabled: boolean;
-          }) =>
-            action.disabled ? null : (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-                onClick={() => handleClickActionsGeneral(action)}
-              />
-            )
+        {actionsTareasPQRSDF.every(
+          (action: { disabled: boolean }) => action.disabled
+        ) ? (
+          <Typography variant="body1" color="text.secondary">
+            No hay acciones disponibles para el elemento seleccionado
+          </Typography>
+        ) : (
+          actionsTareasPQRSDF.map(
+            (action: {
+              id: string;
+              icon: any;
+              name: string;
+              path: string;
+              disabled: boolean;
+            }) =>
+              action.disabled ? (
+                <></>
+              ) : (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                  onClick={() => handleClickActionsGeneral(action)}
+                />
+              )
+          )
         )}
-      </SpeedDial>*/}
+      </SpeedDial>
     </Box>
   );
 };

@@ -39,26 +39,19 @@ export const ModalSeeRejectedTask: FC = (): JSX.Element => {
   //* useState
   const [infoTareaRechazada, setInfoTareaRechazada] = useState('');
 
-  const modifications = [
-    'La tarea que se me asignó no era la correcta, se debe asignar la tarea de responder la PQRSDF',
-    'La tarea asignada no era la correcta, se debe asignar la tarea de responder la PQRSDF',
-    'La tarea que se me asignó era incorrecta, se debe asignar la tarea de responder la PQRSDF',
-    'La tarea asignada era incorrecta, se debe asignar la tarea de responder la PQRSDF',
-    'La tarea que se me asignó no era la correcta, se debe asignar la tarea de responder el trámite',
-    // Agrega más variaciones aquí
-  ];
+useEffect(() => {
+  if (!openModalNuevoNumero2) return;
 
-  useEffect(() => {
-    if (!openModalNuevoNumero2) return;
-
-    // void getInfoTareaRechazada(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada, handleOpenModalNuevoNumero2);
-    //* en el then se debe setear el estado de la justificación
-
-    const randomIndex = Math.floor(Math.random() * modifications.length);
-    setInfoTareaRechazada(modifications[randomIndex]);
-    control_success('Se ha obtenido la justificación del rechazo de la tarea');
-  }, [openModalNuevoNumero2]);
-
+  (async () => {
+    try {
+      const justificación = await getInfoTareaRechazada(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada, handleOpenModalNuevoNumero2);
+      setInfoTareaRechazada(justificación);
+      control_success('Se ha obtenido la justificación del rechazo de la tarea');
+    } catch (error) {
+      console.error(error);
+    }
+  })();
+}, [openModalNuevoNumero2]);
   return (
     <>
       <Dialog

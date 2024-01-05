@@ -2,7 +2,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 // ? neccesary icon for the pqrsdf actions
-import ContactPageIcon from '@mui/icons-material/ContactPage';
+// import ContactPageIcon from '@mui/icons-material/ContactPage';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import SendIcon from '@mui/icons-material/Send';
@@ -13,13 +13,13 @@ import { Action } from '../types/toolkit.types';
 //* todos inicialmente deben tener el disabled en true ya que sobre todos los elementos no se puede permitir ciertas acciones dependiendo lo que incluye el elemento
 
 const actionsTareasPQRSDF: Action[] = [
-  {
+  /*  {
     id: 'InfoSolictud',
     icon: <ContactPageIcon />,
     name: 'Ver información de la solicitud',
     path: '',
     disabled: false,
-  },
+  },*/
   {
     id: 'RespondeSolicitud',
     icon: <ReplyAllIcon />,
@@ -75,6 +75,9 @@ const initialState: any = {
 
   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas: null,
   listaTareasPqrsdfTramitesUotrosUopas: [],
+
+  //* informacion de tarea
+  infoTarea: null,
 };
 
 export const BandejaTareasSlice = createSlice({
@@ -113,6 +116,13 @@ export const BandejaTareasSlice = createSlice({
         action.payload;
     },
 
+    // ? ------------------------
+    // ? ------------------------
+    // set info tarea
+    setInfoTarea: (state, action: PayloadAction<any>) => {
+      state.infoTarea = action.payload;
+    },
+
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetBandejaDeTareasFull: (state) => {
       state.actionsTareasPQRSDF = [];
@@ -121,6 +131,8 @@ export const BandejaTareasSlice = createSlice({
       // state.actionsComplementos = [];
       state.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = null;
       state.listaTareasPqrsdfTramitesUotrosUopas = [];
+
+      state.infoTarea = null;
     },
   },
 });
@@ -134,5 +146,7 @@ export const {
   // ? elemento actual de la tarea
   setCurrentTareaPqrsdfTramitesUotrosUopas,
   // ? reset de todos los estados del slice
+  // ? set info tarea
+  setInfoTarea,
   resetBandejaDeTareasFull,
 } = BandejaTareasSlice.actions;
