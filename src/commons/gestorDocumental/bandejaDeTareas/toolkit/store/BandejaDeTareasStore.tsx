@@ -38,7 +38,7 @@ const actionsTareasPQRSDF: Action[] = [
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/requerimiento_a_usuario',
     disabled: false,
   },
   {

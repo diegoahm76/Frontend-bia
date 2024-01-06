@@ -130,7 +130,7 @@ export const ModalInfoTarea = (): JSX.Element => {
                   size="small"
                   variant="outlined"
                   value={
-                    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea.toUpperCase() ??
+                    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea?.toUpperCase() ??
                     'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
