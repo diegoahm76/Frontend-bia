@@ -5,24 +5,25 @@ import { MainViewBandejaTareas } from '../screen/MainViewBandejaTareas';
 import { RequerimientoUsuarioScreen } from '../modules/requerimientosUsuario/screen/RequerimientoUsuarioScreen';
 import { BandejaTareasProvider } from '../mainModule/context/BandejaTareasContext';
 import { VistaTareaPqrsdf } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaTareaPqrsdf';
-/*import { AsignacionUsuarioScreen } from '../module/entrega99/screen/AsignacionUsuarioScreen';
-import { PanelVentanillaProvider } from '../context/PanelVentanillaContext';
-import { VistaPqr } from '../module/entrega98_101/components/vistaPqr/VistaPqr';
-import { VistaComplemento } from '../module/entrega98_101/components/vistaComplemento/VistaComplemento';
-import { MainAsigGrupoScreen } from '../module/entrega102/screen/MainAsigGrupoScreen';
-import { AsignacionGrupoProvider } from '../module/entrega102/context/AsignacionGrupoContext';
-import { SolicitudAlUsuarioProvider } from '../module/entrega99/context/SolicitudUsarioContext';*/
+import { RequerimientoAlUsuarioProvider } from '../modules/requerimientosUsuario/context/RequerimientoUsarioContext';
 
 const routes = [
   {
     path: '',
     name: '',
-    component: () => (<MainViewBandejaTareas />),
+    component: () => <MainViewBandejaTareas />,
   },
   {
     path: 'requerimiento_a_usuario/',
-    component: () => (<RequerimientoUsuarioScreen />),
+    component: () => (
+      <RequerimientoAlUsuarioProvider>
+        <RequerimientoUsuarioScreen />
+      </RequerimientoAlUsuarioProvider>
+    ),
   },
+
+  //* pendiente re asignaciones
+  //* pendiente ruta a respuesta de pqrsdf
   /*
   {
     path: 'asignar_a_grupo/',
@@ -47,16 +48,16 @@ export const BandejaTareasRoutes: React.FC = () => {
   return (
     <ModalAndLoadingProvider>
       <BandejaTareasProvider>
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-            element={route.component()}
-          />
-        ))}
-        <Route path="/*" element={<Page404 />} />
-      </Routes>
+        <Routes>
+          {routes.map((route) => (
+            <Route
+              key={route.path}
+              path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+              element={route.component()}
+            />
+          ))}
+          <Route path="/*" element={<Page404 />} />
+        </Routes>
       </BandejaTareasProvider>
     </ModalAndLoadingProvider>
   );

@@ -36,7 +36,7 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                   justifyContent: 'flex-end'
                 }}
               >
-                {download_xls({ nurseries: rows, columns })}
+                {download_xls({ nurseries: rows , columns  })}
                 {download_pdf({ nurseries: rows, columns, title })}
               </ButtonGroup>
 
@@ -44,13 +44,21 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows}
-                  columns={columns}
+                  rows={rows ?? []}
+                  columns={columns ?? []}
                   pageSize={10}
                   rowHeight={75}
                   rowsPerPageOptions={[10]}
                   experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row: any) => uuidv4()}
+                  getRowId={() => {
+                    try {
+                      return uuidv4();
+                    } catch (error) {
+                      console.error(error);
+                      //? Genera un ID de respaldo único
+                      return `fallback-id-${Date.now()}-${Math.random()}`;
+                    }
+                  }}
                 />
               </Box>
             </Grid>

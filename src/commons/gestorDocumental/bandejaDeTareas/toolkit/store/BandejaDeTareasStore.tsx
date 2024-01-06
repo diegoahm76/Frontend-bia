@@ -24,7 +24,7 @@ const actionsTareasPQRSDF: Action[] = [
     id: 'RespondeSolicitud',
     icon: <ReplyAllIcon />,
     name: 'Responder solicitud',
-    path: '',
+    path: '/app/gestor_documental/Pqrsdf/Respuesta_pqrsdf',
     disabled: false,
   },
   {
@@ -125,7 +125,7 @@ export const BandejaTareasSlice = createSlice({
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetBandejaDeTareasFull: (state) => {
-      state.actionsTareasPQRSDF = [];
+      // state.actionsTareasPQRSDF = [];
       // state.actions = [];
       // state.actionsTramitesYServicios = [];
       // state.actionsComplementos = [];
