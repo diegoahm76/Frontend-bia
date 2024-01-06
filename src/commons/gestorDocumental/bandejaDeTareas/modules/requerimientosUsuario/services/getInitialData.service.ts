@@ -1,6 +1,4 @@
-import axios from 'axios';
 import { api } from '../../../../../../api/axios';
-import Swal from 'sweetalert2';
 import { API_PATHS, handleError } from './functions/helpers';
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -40,7 +38,7 @@ export const getInitialData = async (
       dataHistoricoSolicitudesPQRSDF: responseHistoricoSolicitudesPQRSDF.data,
     };
 
-    //  console.log('')('data Informaciones', data);
+    console.log('data Informaciones', data);
     return data;
   } catch (error) {
     handleError(navigate, '/app/gestor_documental/panel_ventanilla/');

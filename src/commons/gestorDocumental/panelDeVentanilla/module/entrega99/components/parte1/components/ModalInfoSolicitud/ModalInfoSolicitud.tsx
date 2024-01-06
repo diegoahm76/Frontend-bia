@@ -16,6 +16,7 @@ import {
   Stack,
   TextField,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Title } from '../../../../../../../../../components';
@@ -67,15 +68,16 @@ export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
           <IconButton
             onClick={async () => {
               handleOpenModalTwo(true);
-              await getMetadatosByAnexo(params.row.id_anexo, handleOpenModalTwo).then((res) => {
-                console.log(params.row)
+              await getMetadatosByAnexo(params.row.id_anexo, handleOpenModalTwo)
+                .then((res) => {
+                  console.log(params.row);
 
-                setInfoMetadatos(res);
-              }).catch((err) => {
-                console.log(err);
-                handleOpenModalTwo(false);
-              }
-              );
+                  setInfoMetadatos(res);
+                })
+                .catch((err) => {
+                  console.log(err);
+                  handleOpenModalTwo(false);
+                });
               // handleOpenModalOne(true); //* open modal
               // await getInfoSolicitud(params);
             }}
@@ -222,11 +224,30 @@ export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
 
                 {/*segund parte - anexos que sse han puesto en la solicitud */}
 
-                <RenderDataGrid
-                  title="Anexos de la solicitud"
-                  rows={currentSolicitudUsuario?.anexos ?? []}
-                  columns={colums ?? []}
-                />
+                {currentSolicitudUsuario?.anexos &&
+                currentSolicitudUsuario?.anexos.length > 0 ? (
+                  <RenderDataGrid
+                    title="Anexos de la solicitud"
+                    rows={currentSolicitudUsuario?.anexos ?? []}
+                    columns={colums ?? []}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: '100%',
+                      mt: '1.2rem',
+                      mb: '1.2rem',
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                    >
+                      No hay anexos disponibles para este elemento.
+                    </Typography>
+                  </Box>
+                )}
 
                 {/*tercera parte, anexos de cada metadato*/}
 
@@ -349,7 +370,7 @@ export const ModalInfoSolicitud: React.FC = (): JSX.Element => {
                           <TextField
                             {...params}
                             label="Palabras claves"
-                           // placeholder="Seleccionar"
+                            // placeholder="Seleccionar"
                           />
                         )}
                       />

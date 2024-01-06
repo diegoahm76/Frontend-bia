@@ -2,7 +2,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 // ? neccesary icon for the pqrsdf actions
-// import ContactPageIcon from '@mui/icons-material/ContactPage';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import SendIcon from '@mui/icons-material/Send';
@@ -13,18 +13,18 @@ import { Action } from '../types/toolkit.types';
 //* todos inicialmente deben tener el disabled en true ya que sobre todos los elementos no se puede permitir ciertas acciones dependiendo lo que incluye el elemento
 
 const actionsTareasPQRSDF: Action[] = [
-  /*  {
+  {
     id: 'InfoSolictud',
     icon: <ContactPageIcon />,
-    name: 'Ver información de la solicitud',
+    name: 'Ver información resumida de la tarea',
     path: '',
     disabled: false,
-  },*/
+  },
   {
     id: 'RespondeSolicitud',
     icon: <ReplyAllIcon />,
     name: 'Responder solicitud',
-    path: '',
+    path: '/app/gestor_documental/Pqrsdf/Respuesta_pqrsdf',
     disabled: false,
   },
   {
@@ -38,7 +38,7 @@ const actionsTareasPQRSDF: Action[] = [
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/requerimiento_a_usuario',
     disabled: false,
   },
   {
@@ -125,7 +125,7 @@ export const BandejaTareasSlice = createSlice({
 
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetBandejaDeTareasFull: (state) => {
-      state.actionsTareasPQRSDF = [];
+      // state.actionsTareasPQRSDF = [];
       // state.actions = [];
       // state.actionsTramitesYServicios = [];
       // state.actionsComplementos = [];

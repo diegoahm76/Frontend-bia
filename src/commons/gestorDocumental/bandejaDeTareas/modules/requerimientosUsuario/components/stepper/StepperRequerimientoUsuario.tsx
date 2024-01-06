@@ -21,13 +21,12 @@ export const StepperRequerimientoAlUsuario = ({
   resetFormularioFunction,
   setInfoReset,
 }: any): JSX.Element => {
-  const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
-    BandejaTareasContext
-  );
+  const { skipped, activeStep, setSkipped, setActiveStep } =
+    useContext(BandejaTareasContext);
 
   // ? stepper hook
   const { isStepSkipped, handleNext, handleBack, handleReset } =
-  useStepperRequerimiento();
+    useStepperRequerimiento();
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -76,58 +75,45 @@ export const StepperRequerimientoAlUsuario = ({
       */}
 
       {activeStep === steps.length ? (
-        <>
-          {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>*/}
-        </>
+        <></>
       ) : (
         <>
-          {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-            </Button>
-          </Box>*/}
           {(() => {
             switch (activeStep) {
               case 0:
-                return <Parte1Screen
-                  controlFormulario={controlFormulario}
-                  handleSubmitFormulario={handleSubmitFormulario}
-                  errorsFormulario={errorsFormulario}
-                  resetFormulario={resetFormulario}
-                  watchFormulario={watchFormulario}
-                  setInfoReset={setInfoReset}
-                />;
+                return (
+                  <Parte1Screen
+                    controlFormulario={controlFormulario}
+                    handleSubmitFormulario={handleSubmitFormulario}
+                    errorsFormulario={errorsFormulario}
+                    resetFormulario={resetFormulario}
+                    watchFormulario={watchFormulario}
+                    setInfoReset={setInfoReset}
+                  />
+                );
               case 1:
-                return <Parte2Screen
-                  controlFormulario={controlFormulario}
-                  handleSubmitFormulario={handleSubmitFormulario}
-                  errorsFormulario={errorsFormulario}
-                  resetFormulario={resetFormulario}
-                  watchFormulario={watchFormulario}
-                  setInfoReset={setInfoReset}
-                />;
+                return (
+                  <Parte2Screen
+                    controlFormulario={controlFormulario}
+                    handleSubmitFormulario={handleSubmitFormulario}
+                    errorsFormulario={errorsFormulario}
+                    resetFormulario={resetFormulario}
+                    watchFormulario={watchFormulario}
+                    setInfoReset={setInfoReset}
+                  />
+                );
               case 2:
-                return <Parte3Screen
-                  controlFormulario={controlFormulario}
-                  handleSubmitFormulario={handleSubmitFormulario}
-                  errorsFormulario={errorsFormulario}
-                  resetFormulario={resetFormulario}
-                  watchFormulario={watchFormulario}
-                  resetFormularioFunction={resetFormularioFunction}
-                  setInfoReset={setInfoReset}                />;
+                return (
+                  <Parte3Screen
+                    controlFormulario={controlFormulario}
+                    handleSubmitFormulario={handleSubmitFormulario}
+                    errorsFormulario={errorsFormulario}
+                    resetFormulario={resetFormulario}
+                    watchFormulario={watchFormulario}
+                    resetFormularioFunction={resetFormularioFunction}
+                    setInfoReset={setInfoReset}
+                  />
+                );
               default:
                 return null;
             }

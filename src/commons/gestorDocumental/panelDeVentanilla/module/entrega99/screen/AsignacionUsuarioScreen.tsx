@@ -4,38 +4,14 @@ import { Grid } from '@mui/material';
 import { StepperAsignacionUsuario } from '../components/stepper/StepperAsignacionUsuario';
 import { Title } from '../../../../../../components';
 import { ParteInicial } from '../components/parteInicial/screen/ParteInicial';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { usePanelVentanilla } from '../../../hook/usePanelVentanilla';
-import { useAppSelector } from '../../../../../../hooks';
 import { useSstepperFn } from '../hook/useSstepperFn';
-import { SolicitudAlUsuarioContext } from '../context/SolicitudUsarioContext';
-import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
-import { useNavigate } from 'react-router-dom';
-import { getInitialData } from '../services/getInitialData.service';
 
 export const AsignacionUsuarioScreen = (): JSX.Element => {
   const { handleReset } = useSstepperFn();
-  /*  const navigate = useNavigate();
 
-  //* redux state
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
-
-
-  //* context declaration
-  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
-  const { generalLoading, handleGeneralLoading, handleSecondLoading } =
-    useContext(ModalAndLoadingContext);*/
-  {
-    /*de entrada al módulo se van a tener que realizar ciertas solictudes para llenar infomación dentro de los campos de la entrega*/
-  }
-
-  {
-    /* esa información debe pasaar derecho a los frames predispuestos */
-  }
 
   useEffect(() => {
     Swal.fire({

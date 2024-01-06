@@ -1,14 +1,17 @@
 /* eslint-disable no-unused-vars */
+import { useContext } from 'react';
 import { Box, SpeedDial, SpeedDialAction, Typography } from '@mui/material';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
-import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
-import Swal from 'sweetalert2';
+//import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
+//import Swal from 'sweetalert2';
 import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
+import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { ModalInfoTarea } from '../../../utils/tareaPqrsdf/ModalInfoTarea';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
@@ -17,12 +20,15 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   //* redux states
 
   const {
-    /*currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,*/ actionsTareasPQRSDF,
+    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
+    actionsTareasPQRSDF,
   } = useAppSelector((state) => state.BandejaTareasSlice);
   //* navigate declaration
   const navigate = useNavigate();
 
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  //* context declaration
+  const { handleThirdLoading } = useContext(ModalAndLoadingContext);
+
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
 
@@ -32,38 +38,28 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
     dispatch(resetPanelVentanillaFull());
   };
 */
-  const handleDigitalizacion = withValidation(async () => {
-    await Swal.fire({
-      title: '¿Desea enviar la solicitud de digitalización?',
-      text: 'Se enviará la solicitud de digitalización al módulo de central de digitalización.',
-      showDenyButton: true,
-      confirmButtonText: `Si, digitalizar`,
-      denyButtonText: `No, cancelar`,
-      confirmButtonColor: '#3085d6',
-      denyButtonColor: '#d33',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        // await sendDigitalizationRequest();
-      } else if (result.isDenied) {
-        showAlert(
-          'Opps...',
-          'Haz decidido no enviar la solicitud de digitalización.',
-          'info'
-        );
-      }
-    });
-  });
+  const handleInfoSolicitud = withValidation(() => {
+    handleThirdLoading(true)
+    console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas)
+  } );
 
-  const handleAsignacionPersonal = withValidation(() =>
-    console.log('Enviar solicitud al usuario')
+  const handleRespondeSolicitud = withValidation(() =>
+    console.log('Responder solicitud')
   );
 
-  const handleAsignacionGrupo = withValidation(() =>
-    console.log('Asignar al grupo')
+  const handleReasignar = withValidation(() => console.log('Reasignar'));
+
+  const handleRequerimientoUsuario = withValidation(() =>
+    console.log('Enviar requerimiento al usuario')
   );
 
-  const handleContinuarAsignacionAGrupo = withValidation(() =>
-    console.log('Continuar con asignación de grupo')
+  const handleVerRespuestasRequerimientosOSolicitudesAlUsuario = withValidation(
+    () =>
+      console.log('Ver respuestas a requerimientos o solicitudes al usuario')
+  );
+
+  const handleSeguimientoARespuesta = withValidation(() =>
+    console.log('Seguimiento a respuesta de la tarea')
   );
 
   interface action {
@@ -71,57 +67,66 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   }
 
   const actionHandlers: action = {
-    Dig: handleDigitalizacion,
-    AsigPer: handleAsignacionPersonal,
-    AsigGrup: handleAsignacionGrupo,
-    ContinuarAsigGrup: handleContinuarAsignacionAGrupo,
+    InfoSolictud: handleInfoSolicitud,
+    RespondeSolicitud: handleRespondeSolicitud,
+    Reasignar: handleReasignar,
+    RequerimientoUsuario: handleRequerimientoUsuario,
+    VerRespuestasRequerimientosOSolicitudesAlUsuario:
+      handleVerRespuestasRequerimientosOSolicitudesAlUsuario,
+    SeguimientoARespuesta: handleSeguimientoARespuesta,
   };
 
   const handleClickActionsGeneral = (action: any) => {
-    console.log('hola', action)
+    console.log('hola', action);
 
-    /*const handler = actionHandlers[action.id];
+    const handler = actionHandlers[action.id];
     if (handler) {
       handler(action, navigate);
-    }*/
+    }
   };
 
   return (
-    <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-      <SpeedDial
-        ariaLabel="SpeedDial basic example"
-        sx={{ position: 'absolute', top: 0, left: 0 }}
-        icon={<MultipleStopIcon />}
-        direction="right"
-      >
-        {actionsTareasPQRSDF.every(
-          (action: { disabled: boolean }) => action.disabled
-        ) ? (
-          <Typography variant="body1" color="text.secondary">
-            No hay acciones disponibles para el elemento seleccionado
-          </Typography>
-        ) : (
-          actionsTareasPQRSDF.map(
-            (action: {
-              id: string;
-              icon: any;
-              name: string;
-              path: string;
-              disabled: boolean;
-            }) =>
-              action.disabled ? (
-                <></>
-              ) : (
-                <SpeedDialAction
-                  key={action.name}
-                  icon={action.icon}
-                  tooltipTitle={action.name}
-                  onClick={() => handleClickActionsGeneral(action)}
-                />
-              )
-          )
-        )}
-      </SpeedDial>
-    </Box>
+    <>
+      {/*se acomoda el modal para ver la información resumida de la tarea*/}
+      <ModalInfoTarea />
+      {/*se acomoda el modal para ver la información resumida de la tarea*/}
+
+      <Box sx={{ height: 70, transform: 'translateZ(0px)', flexGrow: 1 }}>
+        <SpeedDial
+          ariaLabel="SpeedDial basic example"
+          sx={{ mt: '1.5rem', mr: '1.5rem' }}
+          icon={<MultipleStopIcon />}
+          direction="right"
+        >
+          {actionsTareasPQRSDF.every(
+            (action: { disabled: boolean }) => action.disabled
+          ) ? (
+            <Typography variant="body1" color="text.secondary">
+              No hay acciones disponibles para el elemento seleccionado
+            </Typography>
+          ) : (
+            actionsTareasPQRSDF.map(
+              (action: {
+                id: string;
+                icon: any;
+                name: string;
+                path: string;
+                disabled: boolean;
+              }) =>
+                action.disabled ? (
+                  <></>
+                ) : (
+                  <SpeedDialAction
+                    key={action.name}
+                    icon={action.icon}
+                    tooltipTitle={action.name}
+                    onClick={() => handleClickActionsGeneral(action)}
+                  />
+                )
+            )
+          )}
+        </SpeedDial>
+      </Box>
+    </>
   );
 };
