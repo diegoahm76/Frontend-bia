@@ -2,15 +2,15 @@
 import { api } from '../../../../../../../../../api/axios';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 
-export const getDetalleDeTarea = async (idTarea: string, navigate: any) => {
+export const getDetalleComplemento = async (idComplemento: string | number, navigate: any) => {
   try {
-    const url = `gestor/bandeja-tareas/pqrsdf/detalle/get-by-id/${idTarea}/`;
+    const url = `gestor/bandeja-tareas/complemento/get-detalle-by-id/${idComplemento}/`;
     const { data } = await api.get(url);
     return data?.data;
   } catch (error) {
     showAlert(
       'Opss!',
-      'Ocurrio un error al obtener el detalle de la tarea, te redireccionaremos a la bandeja de tareas.',
+      'Ocurrio un error al obtener el detalle del complemento, intenta nuevamente.',
       'error'
     );
     setTimeout(() => {

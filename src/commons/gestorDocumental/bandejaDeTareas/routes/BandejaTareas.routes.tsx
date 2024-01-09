@@ -8,6 +8,7 @@ import { VistaTareaPqrsdf } from '../mainModule/bandejaDeTareas/components/bande
 import { RequerimientoAlUsuarioProvider } from '../modules/requerimientosUsuario/context/RequerimientoUsarioContext';
 import { ReasignacionProvider } from '../modules/reasignaciones/context/ReasignacionContext';
 import { MainReasignacionesScreen } from '../modules/reasignaciones/screen/MainReasignacionesScreen';
+import { VistaComplementoTarea } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaComplementoTarea';
 
 const routes = [
   {
@@ -41,6 +42,10 @@ const routes = [
   {
     path: 'info_tarea/:id_PQRSDF',
     component: () => <VistaTareaPqrsdf />,
+  },
+  {
+    path: 'info_complemento/:id_complemento_usu_pqr',
+    component: () => <VistaComplementoTarea />,
   },
 ];
 

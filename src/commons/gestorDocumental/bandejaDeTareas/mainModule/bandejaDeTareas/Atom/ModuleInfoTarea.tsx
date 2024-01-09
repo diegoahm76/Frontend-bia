@@ -79,6 +79,8 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
               <IconButton
                 onClick={async () => {
                   let archivo;
+
+                  console.log(params.row);
                   if (params.row.pqrsdf) {
                     archivo = await getArchivoAnexoPqrsdf(
                       params.row.id_anexo,
@@ -566,7 +568,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                   disabled
                   variant="outlined"
                   value={
-                    archivoAnexos?.anexoActual?.observacion_digitalizacion ?? ''
+                    archivoAnexos?.anexoActual?.observacion_digitalizacion ?? 'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
                 />

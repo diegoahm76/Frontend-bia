@@ -15,10 +15,10 @@ import { Asignaciones } from '../components/reasignaciones/Asginaciones';
 
 export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
   //* redux states
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+/*  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
+  );*/
   //* navigate declaration
   const navigate = useNavigate();
 
@@ -30,27 +30,38 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
   // ? quitar mientras se termina de desarrollar el módulo
 /*  useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) {
-      navigate('/app/gestor_documental/panel_ventanilla/');
+      navigate('/app/gestor_documental/bandeja_tareas/');
     }
   }, [currentElementPqrsdComplementoTramitesYotros]);
 */
   useEffect(() => {
     //* se entra a consultar el listado de asignaciones realizadas
 
-    if (!currentElementPqrsdComplementoTramitesYotros) return;
+    //if (!currentElementPqrsdComplementoTramitesYotros) return;
 
-    const tipo =
+    /*const tipo =
       currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
-      currentElementPqrsdComplementoTramitesYotros?.tipo;
+      currentElementPqrsdComplementoTramitesYotros?.tipo;*/
 
-    switch (tipo) {
+      const hola = {
+        'tipo':'PQRSDF'
+      }
+
+      const tipo = hola?.tipo;
+
+      switch (tipo) {
       case 'PQRSDF':
-        void getAsignaciones(
+      /*  void getAsignaciones(
           currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
           handleGeneralLoading
         ).then((res) => {
           setListaAsignaciones(res);
-        });
+        });*/
+        showAlert(
+          'Atención',
+          'No hay servicio aún para ver las asignacion para PQRSDF, así que no hay asignaciones de PQRSDF por el momento',
+          'warning'
+        );
         break;
       case 'Tramites y Servicios':
         // Call the service for Tramites y Servicios
