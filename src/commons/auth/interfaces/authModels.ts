@@ -41,9 +41,11 @@ export interface IUserInfo {
   entorno: "C" | "L";
   dialog_representante: boolean;
   is_blocked: boolean;
+  profile_img?: any;
 }
 
 export interface UserData {
+  profile_img: any;
   nombre_unidad_organizacional: string | null;
   id_unidad_organizacional_actual?: number | null;
   email: string;

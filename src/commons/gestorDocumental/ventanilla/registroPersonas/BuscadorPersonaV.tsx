@@ -31,7 +31,12 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
-import { get_person_by_document, get_tipo_documento, search_avanzada } from '../../../../request';
+import {
+  get_person_by_document,
+  get_tipo_documento,
+  search_avanzada,
+} from '../../../../request';
+import { showAlert } from '../../../../utils/showAlert/ShowAlert';
 
 interface PropsBuscador {
   onResult: (data_persona: InfoPersona) => void;
@@ -252,10 +257,9 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
           tiene_usuario: false,
           digito_verificacion: '',
           cod_naturaleza_empresa: '',
-          tipo_usuario:'',
+          tipo_usuario: '',
         };
         onResult(new_data);
-        
       }
     } catch (error) {
       const temp_error = error as AxiosError;
@@ -275,6 +279,15 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       razon_social,
       nombre_comercial,
     }) => {
+      if (!tipo_documento || !numero_documento) {
+        showAlert(
+          'Ops!',
+          'Debe ingresar el tipo y número de documento para realizar la búsqueda',
+          'warning'
+        );
+        return;
+      }
+
       set_is_search(true);
       try {
         set_rows([]);

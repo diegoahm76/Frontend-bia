@@ -1,12 +1,10 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useEffect, useState } from 'react';
-// import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { Avatar, Box, Button, Chip, IconButton, Tooltip } from '@mui/material';
+import { useContext } from 'react';
+import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
-import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
@@ -22,6 +20,7 @@ import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import {
   setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setInfoTarea,
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
@@ -30,6 +29,10 @@ import { getListadoTareasByPerson } from '../../../../../../../toolkit/thunks/Pq
 import { AuthSlice } from '../../../../../../../../../auth/interfaces';
 import { GridCellParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { getAnexosPqrsdf } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
+import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
+import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
+import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
+import { getDetalleDeTarea } from '../../../../../services/servicesStates/pqrsdf/detalleDeTarea/getDetalleDeTarea.service';
 /*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
@@ -42,6 +45,7 @@ const iconStyles = {
   ml: 3.5,
   mr: 2,
   borderRadius: '30%',
+  cursor: 'pointer',
 } as const;
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
@@ -52,7 +56,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   const {
     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
     listaTareasPqrsdfTramitesUotrosUopas,
-    actionsTareasPQRSDF,
+    // actionsTareasPQRSDF,
   } = useAppSelector((state) => state.BandejaTareasSlice);
   const {
     userinfo: { id_persona },
@@ -62,22 +66,24 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   const navigate = useNavigate();
   //* context declaration
   const {
-    setRadicado,
-    setValue,
+    //setRadicado,
+    // setValue,
 
-    anexos,
-    metadatos,
+    // anexos,
+    // metadatos,
     setAnexos,
-    setMetadatos,
+    //setMetadatos,
   } = useContext(BandejaTareasContext);
   const {
-    handleGeneralLoading,
-    handleThirdLoading,
-    openModalOne: infoAnexos,
-    openModalTwo: infoMetadatos,
+    // handleGeneralLoading,
+    //handleThirdLoading,
+    //openModalOne: infoAnexos,
+    //openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
     handleSecondLoading,
+    handleOpenModalNuevo,
+    handleOpenModalNuevoNumero2
   } = useContext(ModalAndLoadingContext);
 
   //* loader button simulacion
@@ -98,45 +104,49 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   }) => {
     console.log(row);
 
-    await Swal.fire({
-      title: 'Aceptar tarea',
-      text: `¿Estás seguro que deseas aceptar esta tarea?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Aceptar',
-      cancelButtonText: 'Cancelar',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await putAceptarTarea(row.id_tarea_asignada).then(async (res) => {
-          console.log(res);
-          //* llamar el servicio de la busqueda de las tareas
-          void getListadoTareasByPerson(
-            id_persona,
-            handleSecondLoading,
-            'Rpqr'
-          ).then(async (res: any) => {
-            dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res ?? []));
-            //* se limpian los otros controles para no crear conflictos
-            dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
-          });
-        });
-
-        return;
-      }
-      await Swal.fire({
-        title: 'Tarea NO ACEPTADA',
-        icon: 'info',
-        showConfirmButton: true,
+    try {
+      const result = await Swal.fire({
+        title: 'Aceptar tarea',
+        text: `¿Estás seguro que deseas aceptar esta tarea?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
       });
-    });
+
+      if (result.isConfirmed) {
+        const res = await putAceptarTarea(row.id_tarea_asignada);
+        console.log(res);
+
+        const listadoTareas = await getListadoTareasByPerson(
+          id_persona,
+          handleSecondLoading,
+          'Rpqr'
+        );
+
+        dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+      } else {
+        await Swal.fire({
+          title: 'La tarea no ha sido aceptada',
+          icon: 'info',
+          showConfirmButton: true,
+        });
+      }
+    } catch (error) {
+      showAlert('Opps...', 'Ha ocurrido un error desconocido, por favor intente de nuevo', 'error')
+      return;
+    }
   };
 
   const handleRejectClick = (_row: any) => {
-    console.log('rechanzando tarea');
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
+    handleOpenModalNuevo(true)
   };
 
   const handleCommentClick = (_row: any) => {
-    console.log('viendo comentario de rechazo de tarea');
+    handleOpenModalNuevoNumero2(true)
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
   };
 
   const setActionsPQRSDF = (tareaPQRSDF: any) => {
@@ -205,7 +215,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
     };
 
-    const actionsPQRSDF = actions.map((action: any) => ({
+    const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
     }));
@@ -341,21 +351,28 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 onClick={() => {
                   // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
                   //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-                  void getAnexosPqrsdf(params?.row?.id_pqrsdf).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/bandeja_tareas/info_tarea/${params.row.id_pqrsdf}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
+                  console.log(params.row);
 
-                    return;
-                  });
+                  (async () => {
+                    try {
+                      const idPqrsdf = params?.row?.id_pqrsdf;
+                      const [detalleTarea, anexosPqrsdf] = await Promise.all([
+                        getDetalleDeTarea(idPqrsdf, navigate),
+                        getAnexosPqrsdf(idPqrsdf),
+                      ]);
+                      dispatch(setInfoTarea(detalleTarea));
+                      setAnexos(anexosPqrsdf);
+                      if (detalleTarea || anexosPqrsdf.length > 0) {
+                        navigate(`/app/gestor_documental/bandeja_tareas/info_tarea/${idPqrsdf}`);
+                        handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                        //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
+                        handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqrsdf que se consulta con el id del anexo
+                      }
+                    } catch (error) {
+                      console.error(error);
+                      // Handle the error appropriately here
+                    }
+                  })();
                 }}
               >
                 <Avatar
@@ -382,18 +399,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
             <Tooltip title="Seleccionar tarea para procesos">
               <IconButton
                 onClick={() => {
-                  /*if (params?.row?.estado_asignacion_grupo === 'EN GESTION') {
-                    control_warning(
-                      'No se pueden seleccionar esta pqrsdf ya que ha sido asignada a un grupo'
-                    );
-                    return;
-                  }
-
-                  dispatch(
-                    setListaElementosComplementosRequerimientosOtros([])
-                  );
-
-                  setActionsPQRSDF(params?.row);*/
+                  //* I have to analize this function, if may we need aditional information
+                  setActionsPQRSDF(params?.row);
                 }}
               >
                 <Avatar
@@ -423,6 +430,12 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   return (
     <>
+      {/*se genera un espacio para el modal que rechaza la tarea*/}
+      <ModalRejectTask />
+      {/*se genera un espacio para el modal que muestra el comentario de rechazo de la tarea*/}
+      <ModalSeeRejectedTask />
+
+
       <RenderDataGrid
         rows={listaTareasPqrsdfTramitesUotrosUopas ?? []}
         columns={columns ?? []}

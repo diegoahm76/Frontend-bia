@@ -75,6 +75,10 @@ export const DialogHistorialCambiosEstadoUser: React.FC<IProps> = ({
   };
 
   const historico = async (): Promise<void> => {
+    if (id_usuario === null || id_usuario === 0) {
+      return;
+    }
+
     try {
       const response = await user_historico_cambios_estado(id_usuario);
       const new_historico = response.data?.map(

@@ -218,7 +218,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   params.row.registro_precargado === false ||
                   params.row.item_ya_usado === false
                 ) {
-                  control_warning('No se puede editar el formato tipo de medio');
+                  control_warning('No se puede editar el formato tipo de medio porque es un registro precargado o ya esta siendo usado');
                   return;
                 }
 
@@ -262,7 +262,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   params.row.item_ya_usado !== false
                 ) {
                   control_warning(
-                    'No se puede eliminar el formato tipo de medio'
+                    'No se puede eliminar el formato tipo de medio porque es un registro precargado o ya esta siendo usado'
                   );
                   return;
                 }
@@ -621,8 +621,8 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={data_format_documental_type}
-                  columns={columns_creacion_formatos}
+                  rows={data_format_documental_type ?? []}
+                  columns={columns_creacion_formatos ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   experimentalFeatures={{ newEditingApi: true }}

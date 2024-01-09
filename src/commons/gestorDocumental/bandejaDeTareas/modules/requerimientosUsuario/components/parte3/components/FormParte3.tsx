@@ -48,7 +48,7 @@ import './style.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useBandejaTareas } from '../../../../../hook/useBandejaTareas';
-import  AttachFileIcon  from '@mui/icons-material/AttachFile';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -64,8 +64,6 @@ export const FormParte3 = ({
   const { currentAnexo, anexosCreados, metadatos, viewMode } = useAppSelector(
     (state: any) => state.RequerimientoUsarioSlice
   );
-
-
 
   // ? stepper hook
   const { handleBack } = useStepperRequerimiento();
@@ -95,15 +93,13 @@ export const FormParte3 = ({
 
   // ? funciones third form
 
-
-
   const handleAnexo = () => {
     // ? se debe hacer la validacion, si no hay arhivo, pero hay metadata, se debe permitir añadir, pero si no hay archivo ni metadata, no se debe permitir añadir
 
     if (watchFormulario.ruta_soporte === '' && !metadatos) {
       showAlert(
         'Advertencia',
-        'Es obligatorio subir un archivo o agregar metadatos para poder crear un anexo',
+        'Para crear un anexo: La carga de un archivo es requerida, aunque existen condiciones bajo las cuales no es obligatoria.\n\nEn caso de optar por no subir un archivo, es necesario agregar metadatos, seleccionar la opción de origen del archivo como físico y proporciona el nombre del archivo, así como el número de folios del archivo físico.',
         'warning'
       );
       return;
@@ -204,8 +200,6 @@ export const FormParte3 = ({
     const dataCreateAnexo = createAnexoData();
     const dataEditAnexo = createAnexoData(currentAnexo);
 
-
-
     // Reset functions that are common to both cases
     resetFormulario();
     resetManejoMetadatosModalFunction();
@@ -218,7 +212,7 @@ export const FormParte3 = ({
       dispatch(addAnexo(dataCreateAnexo));
     }
   };
-console.log(currentAnexo,"aqui")
+  console.log(currentAnexo, 'aqui');
   const handleDeleteAnexo = async (id: string) => {
     const result = await Swal.fire({
       title: '¿Estás seguro de eliminar el anexo?',
@@ -497,7 +491,7 @@ console.log(currentAnexo,"aqui")
               }}
               variant="contained"
               color="primary"
-              startIcon={<AttachFileIcon/>}
+              startIcon={<AttachFileIcon />}
               onClick={() => {
                 //  console.log('')('click siuuu');
                 //  console.log('')('abriendo modal de metadatos');

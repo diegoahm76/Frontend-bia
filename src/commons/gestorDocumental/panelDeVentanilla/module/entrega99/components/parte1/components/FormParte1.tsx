@@ -44,6 +44,7 @@ export const FormParte1 = ({
     secondLoading,
     handleFifthLoading,
     handleOpenModalOne,
+    openModalOne,
   } = useContext(ModalAndLoadingContext);
   const {
     setInfoInicialUsuario,
@@ -110,6 +111,7 @@ export const FormParte1 = ({
           <IconButton
             onClick={async () => {
               handleOpenModalOne(true); //* open modal
+              console.log(openModalOne);
               await getInfoSolicitud(params);
             }}
           >

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // import clienteAxios from '../../../api/axios';
 import { type IUserInfo } from '../interfaces/authModels';
 
-const initial_state: IUserInfo = {
+const initial_state: IUserInfo | any = {
   userinfo: {
     email: '',
     nombre_de_usuario: '',
