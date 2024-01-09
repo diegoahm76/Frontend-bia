@@ -60,6 +60,13 @@ export const BuscarExpedienteIndicesElectronicos = (
       },
       fecha_inicio_expediente: '',
       fecha_fin_expediente: '',
+
+      //* revisar este par
+      tipoDeExpediente: {
+        value: '',
+        label: '',
+      },
+      consecutivo: '',
     },
   });
 
@@ -76,6 +83,7 @@ export const BuscarExpedienteIndicesElectronicos = (
         exeWatch.titulo_expediente, // titulo expediente
         exeWatch.fecha_inicio_expediente, // fecha inicio
         exeWatch.fecha_fin_expediente // fecha final
+        exeWatch.consecutivo // consecutivo
       );
       setData(getExpedientes);
       console.log('getExpedientes', getExpedientes);
