@@ -37,6 +37,7 @@ import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOt
 import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
+import { RutesWorkFlowPQRSDF } from '../WorkFlowPQRSDF/routes/RutesWorkFlowPQRSDF';
 
 const routes = [
   {
@@ -196,7 +197,12 @@ const routes = [
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
   },
-
+  {
+    path: 'rutesworkFlowpqrs/',
+    name: 'rutesworkFlowpqrs',
+    component: () => <RutesWorkFlowPQRSDF />,
+  },
+  
   {
     path: 'Pqrsdf/complementos/',
     name: 'complementos_pqrsdf',

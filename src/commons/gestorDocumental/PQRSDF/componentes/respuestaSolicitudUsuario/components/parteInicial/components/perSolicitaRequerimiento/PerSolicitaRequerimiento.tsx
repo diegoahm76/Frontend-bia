@@ -5,7 +5,6 @@ import { Title } from '../../../../../../../../../components';
 import { useContext } from 'react';
 import { ResSolicitudUsuarioContext } from '../../../../context/ResSolicitudUsarioContext';
 import { useSelector } from 'react-redux';
-import { AuthSlice } from '../../../../../../../../auth/interfaces/authModels';
 
 
 interface DataRegistePortal {
@@ -28,6 +27,11 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
   const { userinfo:{numero_documento, nombre_de_usuario,tipo_documento} } = useSelector((state: DataRegistePortal) => state.auth);
 
 
+
+
+
+
+  
 
   return (
     <Grid

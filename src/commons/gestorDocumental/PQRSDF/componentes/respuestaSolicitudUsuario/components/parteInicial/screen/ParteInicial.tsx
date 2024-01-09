@@ -6,52 +6,38 @@ import { PersonaTitular } from '../components/personaTitular/PersonaTitular';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { useAppSelector } from '../../../../../../../../hooks';
+import { useNavigate } from 'react-router-dom';
+import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolicitudUsuario';
 
 export const ParteInicial: React.FC  = (): JSX.Element => {
  
   const { generalLoading } =
   useContext(ModalAndLoadingContext);
 
-
-
-/*  //* navigate declaration
   const navigate = useNavigate();
-
-  //* redux state
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  const {handleReset}=useStepperResSolicitudUsuario();
+  const currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = useAppSelector(
+    (state: any) =>
+      state.BandejaTareasSlice.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
   );
 
-  const { handleReset } = useSstepperFn();
-
-  //* context declaration
-  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
-  const { generalLoading, handleGeneralLoading, handleSecondLoading } =
-    useContext(ModalAndLoadingContext);
-
- useEffect(() => {
-    if (!currentElementPqrsdComplementoTramitesYotros) {
-      //  console.log('')('noo curentttt')
-      navigate('/app/gestor_documental/panel_ventanilla/');
-      return;
-    }
-    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
-    handleReset();
+//currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_prqsdf
 
 
-//  console.log('')('hiii perrassasasasas')
 
-    void getInitialData(
-      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-      navigate,
-      handleGeneralLoading,
-      handleSecondLoading
-    ).then((data) => {
-      setInfoInicialUsuario(data);
-    });
-  }, []);
-*/
+useEffect(() => {
+  if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) {
+    navigate('/app/gestor_documental/bandeja_tareas/');
+    return;
+  }
+  //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
+  handleReset();
+
+}, []);
+
+
+
   if (generalLoading) {
     return (
       <Grid

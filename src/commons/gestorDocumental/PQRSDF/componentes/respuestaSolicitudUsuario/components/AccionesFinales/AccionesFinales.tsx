@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { useStepperContext } from '@mui/material';
+// import { useStepperContext } from '@mui/material';
 import {  postResponderUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
 import { useStepperResSolicitudUsuario } from '../../hook/useStepperResSolicitudUsuario';
 import { resetItems } from '../../toolkit/slice/ResSolicitudUsarioSlice';
+import { ResSolicitudUsuarioContext } from '../../context/ResSolicitudUsarioContext';
 
 export const AccionesFinales = ({
-  controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
+  // controlFormulario,
+  // handleSubmitFormulario,
+  // errorsFormulario,
   resetFormulario,
-  watchFormulario,
+   watchFormulario,
   setInfoReset,
 }: any): JSX.Element => {
   //* dispatch declaration
@@ -22,7 +23,7 @@ export const AccionesFinales = ({
 
   //* context
 
-  const nombres =["danna","valentino"];
+  const {respuestaPqrs} = useContext(ResSolicitudUsuarioContext);
 
   const { handleReset } = useStepperResSolicitudUsuario();
 
@@ -31,9 +32,9 @@ export const AccionesFinales = ({
   const { anexosCreados } = useAppSelector(
     (state) => state.ResSolicitudUsarioSlice
   );
-  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
-    (state: any) => state.PanelVentanillaSlice
-  );
+  // const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
+  //   (state: any) => state.PanelVentanillaSlice
+  // );
   console.log('anexosCreados', anexosCreados);
   //* handleSumbit
 
@@ -55,9 +56,9 @@ export const AccionesFinales = ({
     formData.append(
       'respuesta_pqrsdf',
       JSON.stringify({
-        id_pqrsdf: 154,
-        asunto: 'Prueba',
-        descripcion: 'Prueba 1',
+        id_pqrsdf: 149,
+        asunto: watchFormulario.asunto,
+        descripcion: watchFormulario.descripcion_de_la_solicitud,
         cantidad_anexos: 1,
         nro_folios_totales: 1,
         anexos: anexosCreados.map((anexo, index) => ({
@@ -65,7 +66,7 @@ export const AccionesFinales = ({
           orden_anexo_doc: index,
           cod_medio_almacenamiento: 'Pa',
           medio_almacenamiento_otros_Cual: null,
-          numero_folios: 0, // Modifica según tus necesidades
+          numero_folios: watchFormulario.numero_folios, // Modifica según tus necesidades
           ya_digitalizado: true,
           metadatos: {
             asunto: anexo.asunto,
@@ -74,7 +75,9 @@ export const AccionesFinales = ({
             tiene_replica_fisica: anexo.tieneReplicaFisicaMetadatos?.value === 'Si',
             cod_origen_archivo: anexo.origenArchivoMetadatos?.value || null,
             id_tipologia_doc: anexo.tipologiasDocumentalesMetadatos?.value || null,
-            palabras_clave_doc: anexo.palabrasClavesMetadatos ? anexo.palabrasClavesMetadatos.join('|') : null,
+            tipologia_no_creada_TRD: null,
+            palabras_clave_doc: (anexo && anexo.palabrasClavesMetadatos || []).join('|')
+
           },
         })),
       })

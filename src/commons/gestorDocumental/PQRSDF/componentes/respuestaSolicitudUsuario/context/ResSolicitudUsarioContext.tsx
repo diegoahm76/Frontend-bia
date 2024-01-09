@@ -67,12 +67,16 @@ const valoresIniciales: RespuestaPQRS = {
   denuncia: null,
   anexos: [],
 };
+
+
+
 export const ResSolicitudUsuarioContext = createContext<any>({
   infoInicialUsuario: {},
   setInfoInicialUsuario: () => {},
   respuestaPqrs: {},
   setRespuestaPqrs: () => {},
 });
+
 
 export const ResSolicitudUsuarioProvider = ({ children }: any): JSX.Element => {
 
