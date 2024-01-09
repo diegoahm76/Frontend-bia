@@ -14,6 +14,7 @@ import {
   Chip,
   Tooltip,
   Toolbar,
+  Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -45,45 +46,47 @@ const dialog_busqueda_avanzada_usuario = ({
     handleSubmit: handle_submit_search_user,
   } = useForm<FormValuesSearchUser>();
 
+
   const columns_users: GridColDef[] = [
-    // {
-    //   headerName: 'ID usuario',
-    //   field: 'id_usuario',
-    // },
-    // {
-    //   headerName: 'ID persona',
-    //   field: 'persona',
-    // },
     {
       headerName: 'Tipo persona',
       field: 'tipo_persona',
       renderCell: (params) => {
-        return params.row.tipo_persona === 'N' ? 'NATURAL' : params.row.tipo_persona === 'J' ? 'JURÍDICO' : '';
+        return params.row.tipo_persona === 'N'
+          ? 'NATURAL'
+          : params.row.tipo_persona === 'J'
+          ? 'JURÍDICO'
+          : '';
       },
     },
     {
       headerName: 'Nombre completo',
       field: 'nombre_completo',
-      width: 250,flex: 1,
+      width: 250,
+      flex: 1,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
-      width: 150,flex: 1,
+      width: 150,
+      flex: 1,
     },
     {
       headerName: 'Nombre de usuario',
       field: 'nombre_de_usuario',
-      width: 150,flex: 1,
+      width: 150,
+      flex: 1,
     },
     {
       headerName: 'Razón social',
       field: 'razon_social',
-      width: 150,flex: 1,
+      width: 150,
+      flex: 1,
     },
     {
       headerName: 'Super usuario',
-      field: 'is_superuser',flex: 1,
+      field: 'is_superuser',
+      flex: 1,
       renderCell: (params) => {
         return params.row.is_superuser === true ? (
           <Chip size="small" label="Si" color="success" variant="outlined" />
@@ -94,7 +97,8 @@ const dialog_busqueda_avanzada_usuario = ({
     },
     {
       headerName: 'Acciones',
-      field: 'accion',flex: 1,
+      field: 'accion',
+      flex: 1,
       renderCell: (params: any) => (
         <>
           <Tooltip title="Editar">
@@ -125,7 +129,18 @@ const dialog_busqueda_avanzada_usuario = ({
 
   const trigger_user_edit_active = (data: any): void => {
     set_is_modal_active(false);
-    dispatch(set_data_user_search(data));
+    // console.log('data', data);
+    dispatch(
+      set_data_user_search({
+        ...data,
+        usuarios: [
+          {
+            id_usuario: data?.id_usuario,
+            is_superuser: data?.is_superuser,
+          },
+        ],
+      })
+    );
     dispatch(get_data_user(data.id_usuario));
     dispatch(set_action_admin_users('EDIT'));
   };
@@ -140,9 +155,9 @@ const dialog_busqueda_avanzada_usuario = ({
 
   return (
     <Dialog
-    sx={{
-      zIndex:9999,
-    }}
+      sx={{
+        zIndex: 9999,
+      }}
       open={is_modal_active}
       onClose={handle_close_busqueda_avanzada}
       fullWidth
@@ -150,9 +165,8 @@ const dialog_busqueda_avanzada_usuario = ({
     >
       <DialogTitle>
         <Toolbar>
-
-    <Title title="Busqueda avanzada por Usuario  " />
-        </Toolbar> 
+          <Title title="Búsqueda avanzada de usuario" />
+        </Toolbar>
         <IconButton
           aria-label="close"
           onClick={() => {
@@ -199,38 +213,63 @@ const dialog_busqueda_avanzada_usuario = ({
                 required
                 label="Nombre de usuario"
                 size="small"
-        
                 fullWidth
               />
             </Grid>
             <Grid item xs={12} sm={3}>
               <Button
                 type="submit"
-                variant="outlined"
+                color="primary"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 fullWidth
               >
                 BUSCAR
               </Button>
-
-            
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <ButtonGroup style={{ display: 'flex', justifyContent: 'flex-end',margin:4 }}>
-              {download_xls({ nurseries: users, columns: columns_users })}
-            </ButtonGroup>
-            <Grid item xs={12}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={users ?? []}
-                columns={columns_users ?? []}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                getRowId={(row) => row.id_usuario}
-              />
-            </Grid>
+            {
+              // eslint-disable-next-line no-nested-ternary
+              users?.length === 0 ? (
+                <Grid
+                  item
+                  xs={12}
+                  sx={{
+                    marginY: '4.5rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography variant="h6" component="div" gutterBottom>
+                    Sin resultados / sin búsqueda realizada
+                  </Typography>
+                </Grid>
+              ) : (
+                <>
+                  <ButtonGroup
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      margin: 4,
+                    }}
+                  >
+                    {download_xls({ nurseries: users, columns: columns_users })}
+                  </ButtonGroup>
+                  <Grid item xs={12}>
+                    <DataGrid
+                      density="compact"
+                      autoHeight
+                      rows={users ?? []}
+                      columns={columns_users ?? []}
+                      pageSize={10}
+                      rowsPerPageOptions={[10]}
+                      getRowId={(row) => row?.id_usuario}
+                    />
+                  </Grid>
+                </>
+              )
+            }
           </Grid>
         </Grid>
       </Box>

@@ -12,14 +12,12 @@ import {
   Divider,
   Grid,
   IconButton,
-  MenuItem,
   TextField,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-// import ChecklistOutlinedIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -31,7 +29,6 @@ import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import {
-  set_current_indicador,
   set_current_mode_planes,
 } from '../../../../store/slice/indexPlanes';
 import { search_indicadores } from '../../../../Indicadores/services/services';
@@ -168,8 +165,6 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     reset,
     handleSubmit: handle_submit,
     control,
-    watch,
-    formState: { errors },
   } = useForm({
     defaultValues: {
       nombre_plan: '',
@@ -609,7 +604,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                         columns={columns ?? []}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
-                        getRowId={(row) => uuidv4()}
+                        getRowId={() => uuidv4()}
                       />
                     </Box>
                   </Grid>

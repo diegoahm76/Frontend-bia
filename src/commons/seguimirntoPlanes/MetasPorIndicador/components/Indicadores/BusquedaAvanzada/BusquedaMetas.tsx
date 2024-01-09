@@ -10,10 +10,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Divider,
   Grid,
   IconButton,
-  MenuItem,
   TextField,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
@@ -23,7 +21,6 @@ import {
   GridValueFormatterParams,
   type GridColDef,
 } from '@mui/x-data-grid';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 // import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -203,8 +200,6 @@ export const BusquedaMetas: React.FC = () => {
     reset,
     handleSubmit: handle_submit,
     control,
-    watch,
-    formState: { errors },
   } = useForm({
     defaultValues: {
       nombre_plan: '',
@@ -506,7 +501,7 @@ export const BusquedaMetas: React.FC = () => {
                         columns={columns ?? []}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
-                        getRowId={(row) => uuidv4()}
+                        getRowId={() => uuidv4()}
                       />
                     </Box>
                   </Grid>

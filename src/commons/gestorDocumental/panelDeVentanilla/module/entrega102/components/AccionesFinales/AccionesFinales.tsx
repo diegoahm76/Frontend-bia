@@ -126,8 +126,8 @@ export const AccionesFinales = (): JSX.Element => {
     if (res) {
       await Swal.fire({
         icon: 'success',
-        title: 'Éxito',
-        text: `Se ha asignado el grupo correctamente`,
+        title: 'Ok',
+        text: `Se ha lanzado la asignación a grupo correctamente`,
         confirmButtonText: 'Entendido',
       });
 

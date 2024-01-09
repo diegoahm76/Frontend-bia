@@ -29,7 +29,10 @@ import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
-import { set_current_actividad, set_current_mode_planes } from '../../../../store/slice/indexPlanes';
+import {
+  set_current_actividad,
+  set_current_mode_planes,
+} from '../../../../store/slice/indexPlanes';
 import { DataContextActividades } from '../../../context/context';
 import { IBusquedaAvanzadaActividad } from '../../../../Indicadores/components/Programas/BusquedaAvanzada/types';
 import { search_actividades } from '../../../../Indicadores/services/services';

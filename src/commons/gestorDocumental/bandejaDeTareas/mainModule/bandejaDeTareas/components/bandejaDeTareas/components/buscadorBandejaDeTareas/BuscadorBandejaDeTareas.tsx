@@ -7,12 +7,10 @@ import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../../../../../../components';
-import { choicesTipoDeTarea } from '../../utils/choices';
+import { choicesTipoDeTarea } from '../../utils/tareaPqrsdf/choices';
 import { BuscadorPqrsdf } from './buscadorPqrsdf/BuscadorPqrsdf';
 import { BuscadorTramitesYservicios } from './buscadorTramitesYServicios/BuscadorTramitesYServicios';
 import { BuscadorOtros } from './buscadorOtros/buscadorOtros';
-import Swal from 'sweetalert2';
-//import { getGrilladoPqrsdfPanelVentanilla } from '../../../../../../toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 
 import {
   useAppDispatch,
@@ -21,7 +19,6 @@ import {
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
 import { useBandejaTareas } from '../../../../../../hook/useBandejaTareas';
-import { auth_slice } from './../../../../../../../../auth/store/authSlice';
 import { AuthSlice } from '../../../../../../../../auth/interfaces';
 import { getListadoTareasByPerson } from '../../../../../../toolkit/thunks/Pqrsdf/getListadoTareasByPerson.service';
 import {
@@ -143,187 +140,187 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
   const resetForm = () => reset_search_form();
 
   return (
-    <Grid
-      container
-      sx={{
-        position: 'relative',
-        background: '#FAFAFA',
-        borderRadius: '15px',
-        p: '20px',
-        mb: '20px',
-        mt: '2rem',
-        boxShadow: '0px 3px 6px #042F4A26',
-      }}
-    >
-      <Grid item xs={12}>
-        <Title title="Buscar elemento" />
-        <form
-          onSubmit={(w) => {
-            w.preventDefault();
-            unifiedSearchSubmit();
-          }}
-          style={{
-            marginTop: '2.2rem',
-          }}
-        >
-          <Grid container spacing={2}>
-            <Grid
-              item
-              xs={12}
-              sm={4}
-              sx={{
-                zIndex: 20,
-              }}
-            >
-              <Controller
-                //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
-                name="tipo_de_tarea"
-                control={controlBusquedaBandejaTareas}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <div>
-                    <Select
-                      required
-                      value={value}
-                      onChange={(selectedOption) => {
-                        //  console.log('')(selectedOption);
-                        onChange(selectedOption);
-                      }}
-                      options={choicesTipoDeTarea ?? []}
-                      placeholder="Seleccionar"
-                    />
-                    <label>
-                      <small
-                        style={{
-                          color: 'rgba(0, 0, 0, 0.6)',
-                          fontWeight: 'thin',
-                          fontSize: '0.75rem',
-                          marginTop: '0.25rem',
-                          marginLeft: '0.25rem',
-                        }}
-                      >
-                        Tipo de tarea
-                      </small>
-                    </label>
-                  </div>
-                )}
-              />
-            </Grid>
-
-            {/* ------------------------*/}
-
-            {/* se debe entrar a definir si esos van a ser los tipos de tareas o si se manejará de una manera disinta */}
-
-            {/* ------------------------*/}
-
-            {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label ===
-              'Responder PQRSDF' ||
-            !controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea?.label ? (
-              <BuscadorPqrsdf
-                controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
-              />
-            ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                ?.label === 'Responder Trámite' ? (
-              <BuscadorTramitesYservicios
-                controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
-              />
-            ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                ?.label === 'Otros' ? (
-              <BuscadorOtros
-                controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
-              />
-            ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                ?.label === 'OPAS' ? (
-              <BuscadorOpas
-                controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
-              />
-            ) : (
-              <>No hay elemento</>
-            )}
-
-            <Grid item xs={12} sm={4}>
-              <Controller
-                name="fecha_inicio"
-                control={controlBusquedaBandejaTareas}
-                defaultValue=""
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    fullWidth
-                    label="Fecha inicio"
-                    type="date"
-                    size="small"
-                    variant="outlined"
-                    value={value}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => {
-                      onChange(e.target.value);
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Controller
-                name="fecha_fin"
-                control={controlBusquedaBandejaTareas}
-                defaultValue=""
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    fullWidth
-                    label="Fecha final"
-                    type="date"
-                    size="small"
-                    variant="outlined"
-                    value={value}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => {
-                      onChange(e.target.value);
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            {/* tambien se debe agregar la opción de otros */}
-
-            {/* Otros */}
-            {/* Tramites y servicios  */}
-          </Grid>
-
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mb: '20px', mt: '20px' }}
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          mt: '2rem',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Title title="Buscar elemento" />
+          <form
+            onSubmit={(w) => {
+              w.preventDefault();
+              unifiedSearchSubmit();
+            }}
+            style={{
+              marginTop: '2.2rem',
+            }}
           >
-            <LoadingButton
-              loading={false}
-              type="submit"
-              color="primary"
-              variant="contained"
-              startIcon={<SearchIcon />}
+            <Grid container spacing={2}>
+              <Grid
+                item
+                xs={12}
+                sm={4}
+                sx={{
+                  zIndex: 20,
+                }}
+              >
+                <Controller
+                  //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
+                  name="tipo_de_tarea"
+                  control={controlBusquedaBandejaTareas}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                  }) => (
+                    <div>
+                      <Select
+                        required
+                        value={value}
+                        onChange={(selectedOption) => {
+                          //  console.log('')(selectedOption);
+                          onChange(selectedOption);
+                        }}
+                        options={choicesTipoDeTarea ?? []}
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          Tipo de tarea
+                        </small>
+                      </label>
+                    </div>
+                  )}
+                />
+              </Grid>
+
+              {/* ------------------------*/}
+
+              {/* se debe entrar a definir si esos van a ser los tipos de tareas o si se manejará de una manera disinta */}
+
+              {/* ------------------------*/}
+
+              {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                ?.label === 'Responder PQRSDF' ||
+              !controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                ?.label ? (
+                <BuscadorPqrsdf
+                  controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
+                />
+              ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                  ?.label === 'Responder Trámite' ? (
+                <BuscadorTramitesYservicios
+                  controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
+                />
+              ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                  ?.label === 'Otros' ? (
+                <BuscadorOtros
+                  controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
+                />
+              ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                  ?.label === 'OPAS' ? (
+                <BuscadorOpas
+                  controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
+                />
+              ) : (
+                <>No hay elemento</>
+              )}
+
+              <Grid item xs={12} sm={4}>
+                <Controller
+                  name="fecha_inicio"
+                  control={controlBusquedaBandejaTareas}
+                  defaultValue=""
+                  render={({
+                    field: { onChange, value },
+                  }) => (
+                    <TextField
+                      fullWidth
+                      label="Fecha inicio"
+                      type="date"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Controller
+                  name="fecha_fin"
+                  control={controlBusquedaBandejaTareas}
+                  defaultValue=""
+                  render={({
+                    field: { onChange, value },
+                  }) => (
+                    <TextField
+                      fullWidth
+                      label="Fecha final"
+                      type="date"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+              {/* tambien se debe agregar la opción de otros */}
+
+              {/* Otros */}
+              {/* Tramites y servicios  */}
+            </Grid>
+
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mb: '20px', mt: '20px' }}
             >
-              BUSCAR TAREA
-            </LoadingButton>
-            <Button
-              color="primary"
-              variant="outlined"
-              startIcon={<CleanIcon />}
-              onClick={resetForm}
-            >
-              LIMPIAR CAMPOS
-            </Button>
-          </Stack>
-        </form>
+              <LoadingButton
+                loading={false}
+                type="submit"
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+              >
+                BUSCAR TAREA
+              </LoadingButton>
+              <Button
+                color="primary"
+                variant="outlined"
+                startIcon={<CleanIcon />}
+                onClick={resetForm}
+              >
+                LIMPIAR CAMPOS
+              </Button>
+            </Stack>
+          </form>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };

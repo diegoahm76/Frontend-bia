@@ -323,7 +323,7 @@ export const BusquedaPrograma: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada planes" />
+            <Title title="Búsqueda avanzada programas" />
             {/* <form
               onSubmit={(e) => {
                 void on_submit_advance(e);

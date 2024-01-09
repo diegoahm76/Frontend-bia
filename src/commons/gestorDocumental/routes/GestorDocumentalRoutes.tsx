@@ -37,6 +37,7 @@ import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOt
 import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
+import { ModalAndLoadingProvider } from '../../../context/GeneralContext';
 import { RutesWorkFlowPQRSDF } from '../WorkFlowPQRSDF/routes/RutesWorkFlowPQRSDF';
 
 const routes = [
@@ -213,17 +214,15 @@ const routes = [
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
-    // <Suspense fallback={<Loader />}>
-    <Routes>
-      {routes.map((route) => (
-        <Route
-          key={route.path}
-          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-          element={route.component()}
-        />
-      ))}
-      <Route path="/*" element={<Page404 />} />
-    </Routes>
-    // </Suspense>
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+            element={route.component()}
+          />
+        ))}
+        <Route path="/*" element={<Page404 />} />
+      </Routes>
   );
 };

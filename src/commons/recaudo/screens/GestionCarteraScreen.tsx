@@ -29,6 +29,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [procesos, set_procesos] = useState<Proceso[]>([]);
   const [categorias, set_categorias] = useState<CategoriaAtributo[]>([]);
   const [position_tab, set_position_tab] = useState('1');
+  // eslint-disable-next-line no-unused-vars
   const [data_complemet, set_data_complemet] = useState<any[]>([]);
   const [selected_proceso, set_selected_proceso] = useState({
     fecha_facturacion: '',
@@ -145,6 +146,18 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
+      field: 'id_tipo_renta',
+      headerName: 'Tipo Renta',
+      minWidth: 100,
+      flex: 1,
+      valueGetter: (params) => {
+        if (!params.value) {
+          return params.value;
+        }
+        return params.value.nombre_tipo_renta;
+      }
+    },
+    {
       field: 'monto_inicial',
       headerName: 'Saldo Capital',
       minWidth: 100,
@@ -236,7 +249,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       });
   }, []);
 
@@ -246,7 +259,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_categorias(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       })
   }, []);
 
@@ -257,7 +270,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-        //  console.log('')(error);
+      console.log(error);
       })
       .finally(() => {
         set_loading(false);
@@ -270,7 +283,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_flujos_proceso(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       });
   }, []);
 
@@ -290,7 +303,7 @@ export const GestionCarteraScreen: React.FC = () => {
           group_valores_proceso(response.data.data);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
     }
   }, [id_proceso]);
@@ -311,7 +324,7 @@ export const GestionCarteraScreen: React.FC = () => {
           delete_duplicated_atributos(response.data.data);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
     }
   }, [id_etapa]);
@@ -322,7 +335,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       });
   };
 
@@ -334,7 +347,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       })
       .finally(() => {
         set_loading(false);
@@ -347,7 +360,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_flujos_proceso(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       });
   };
 
@@ -405,7 +418,7 @@ export const GestionCarteraScreen: React.FC = () => {
           set_open_notification_modal(true);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
       api.get(`recaudo/procesos/atributos/${id_etapa_destino}`)
         .then((response) => {
@@ -413,7 +426,7 @@ export const GestionCarteraScreen: React.FC = () => {
           group_atributos(response.data.data);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
     }
   };
@@ -441,7 +454,7 @@ export const GestionCarteraScreen: React.FC = () => {
           }
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
     }
   };
@@ -540,7 +553,7 @@ export const GestionCarteraScreen: React.FC = () => {
         }));
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       })
@@ -594,11 +607,11 @@ export const GestionCarteraScreen: React.FC = () => {
       id_atributo: Number(id_atributo),
       valor: value,
     })
-      .then((response) => {
+      .then(() => {
         set_notification_info({ type: 'success', message: `Se ha guardado correctamente el valor "${value}".` });
         set_open_notification_modal(true);
       })
-      .catch((error) => {
+      .catch(() => {
         //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
@@ -611,11 +624,11 @@ export const GestionCarteraScreen: React.FC = () => {
       id_atributo: Number(id_atributo),
       documento: value,
     })
-      .then((response) => {
+      .then(() => {
         set_notification_info({ type: 'success', message: `Se ha guardado correctamente el archivo "${value.name}".` });
         set_open_notification_modal(true);
       })
-      .catch((error) => {
+      .catch(() => {
         //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);

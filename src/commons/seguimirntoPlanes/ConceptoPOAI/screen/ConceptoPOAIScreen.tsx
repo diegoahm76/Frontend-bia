@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import { AgregarConceptoPOAI } from '../components/Components/AgregarConceptoPOAI';
+import { BusquedaAvanzadaIndicadores } from '../components/Components/BusquedaAvanzada/BusquedaAvanzadaIndicadores';
+import { BusquedaConcepto } from '../components/Components/BusquedaAvanzada/BusquedaConcepto';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConceptoPOAIScreen: React.FC = () => {
@@ -45,7 +47,8 @@ export const ConceptoPOAIScreen: React.FC = () => {
           <Title title="Concepto POAI " />
         </Grid>
       </Grid>
-      <ListarConceptoPOAI />
+      <BusquedaAvanzadaIndicadores />
+      {mode.ver ? <ListarConceptoPOAI /> : null}
       {mode.crear || mode.editar ? <AgregarConceptoPOAI /> : null}
       <Grid
         container
@@ -63,6 +66,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaConcepto />
         <Grid item>
           <ButtonSalir />
         </Grid>

@@ -197,6 +197,8 @@ export interface IDetalleCuentas {
   nombre_proyecto?: string;
   nombre_producto?: string;
   nombre_actividad?: string;
+  nombre_meta?: string;
+  nombre_indicador?: string;
   cuenta: string;
   valor_cuenta: number | null;
   id_sector?: number | null;
@@ -206,6 +208,8 @@ export interface IDetalleCuentas {
   id_proyecto?: number | null;
   id_producto?: number | null;
   id_actividad?: number | null;
+  id_indicador: number | null;
+  id_meta: number | null;
 }
 
 // Concepto POAI
@@ -223,7 +227,7 @@ export interface IConceptoPOAI {
 // fuentes de financiacion
 export interface IFuentes {
   id_fuente: number | null;
-  nombre_fuente?: string;
+  nombre_fuente: string;
   vano_1: number | null;
   vano_2: number | null;
   vano_3: number | null;

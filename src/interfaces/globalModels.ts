@@ -20,6 +20,7 @@ export interface ResponseThunks<T = any | null> {
 }
 
 export interface ResponseServer<T> {
+  profile_img: any;
   success: boolean;
   detail: string;
   data: T;
@@ -218,6 +219,7 @@ export interface BusquedaAvanzada {
   nombre_comercial?: string;
 }
 export interface CompleteInfoPersona {
+  profile_img: any;
   acepta_notificacion_email: boolean;
   acepta_notificacion_sms: boolean;
   acepta_tratamiento_datos: boolean;

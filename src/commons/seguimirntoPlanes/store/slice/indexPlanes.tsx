@@ -216,6 +216,8 @@ export const initial_state_detalle_inversion: IDetalleCuentas = {
   nombre_proyecto: '',
   nombre_producto: '',
   nombre_actividad: '',
+  nombre_indicador: '',
+  nombre_meta: '',
   cuenta: '',
   valor_cuenta: null,
   id_sector: null,
@@ -225,6 +227,8 @@ export const initial_state_detalle_inversion: IDetalleCuentas = {
   id_proyecto: null,
   id_producto: null,
   id_actividad: null,
+  id_indicador: null,
+  id_meta: null,
 };
 
 export const initial_state_concepto_poai: IConceptoPOAI = {

@@ -68,9 +68,15 @@ export const useDetalleInversionHook = (): any => {
   const [is_saving_detalle, set_is_saving_detalle] = useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_detalle_inversion } = useContext(
-    DataContextDetalleInversion
-  );
+  const {
+    id_programa,
+    id_proyecto,
+    id_producto,
+    id_actividad,
+    id_indicador,
+    id_meta,
+    fetch_data_detalle_inversion,
+  } = useContext(DataContextDetalleInversion);
 
   // declaracion redux
   const {
@@ -83,6 +89,12 @@ export const useDetalleInversionHook = (): any => {
       //  console.log('')(data, 'data');
       // data.id_indicador = id_indicador;
       set_is_saving_detalle(true);
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
+      data.id_producto = id_producto;
+      data.id_actividad = id_actividad;
+      data.id_indicador = id_indicador;
+      data.id_meta = id_meta;
       await post_detalle_inversion(data as IDetalleCuentas);
       control_success('Se creó correctamente');
       await limpiar_formulario_detalle();
@@ -104,6 +116,12 @@ export const useDetalleInversionHook = (): any => {
       //  console.log('')(data, 'data');
       set_is_saving_detalle(true);
       // data.id_indicador = id_indicador;
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
+      data.id_producto = id_producto;
+      data.id_actividad = id_actividad;
+      data.id_indicador = id_indicador;
+      data.id_meta = id_meta;
       await put_detalle_inversion(
         (id_detalle_inversion as number) ?? 0,
         data as IDetalleCuentas

@@ -21,11 +21,21 @@ import { IBusquedaPLanes } from '../../Planes/components/Planes/BusquedaAvanzada
 import { IBusquedaProgramas } from '../../Programas/components/Programas/BusquedaAvanzada/types';
 import { IBusquedaProyecto } from '../../Proyectos/components/Proyectos/BusquedaAvanzada/types';
 import { IBusquedaProductos } from '../../Productos/components/Programas/BusquedaAvanzada/types';
+import { IBusquedaFuenteIndicador } from '../../FinanciaciónIndicadores/components/Components/BusquedaAvanzada/types';
 
 // ! Indicadores
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
 export const get_indicadores = async (): Promise<Indicadores[]> => {
   const response = await api.get(`seguimiento/planes/consultar-indicadores/`);
+  return response.data.data;
+};
+
+// * indicadores por id producto
+
+export const get_indicadores_id_actividad = async (
+  id_actividad: number
+): Promise<Indicadores[]> => {
+  const response = await api.get(`seguimiento/planes/consultar-indicadores-id-actividad/${id_actividad}/`);
   return response.data.data;
 };
 
@@ -174,6 +184,24 @@ export const search_productos = async ({
     nombre_proyecto ?? ''
   )}&nombre_producto=${String(nombre_producto ?? '')}`;
   return await api.get<ResponseServer<IBusquedaProductos[]>>(url);
+};
+
+// IBusquedaFuenteIndicador 
+// Busqueda avanzada de fuentes de financiacion indicadores por nombre fuente, nombre proyecto, nombre producto, nombre actividad, nombre indicador
+
+export const search_fuentes_indicadores = async ({
+  nombre_fuente,
+  nombre_proyecto,
+  nombre_producto,
+  nombre_actividad,
+  nombre_indicador,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaFuenteIndicador[]>>> => {
+  const url = `seguimiento-planes/consultar-fuentes-financiacion-indicadores-avanzado/?nombre_fuente=${String(
+    nombre_fuente ?? ''
+  )}&nombre_proyecto=${String(nombre_proyecto ?? '')}&nombre_producto=${String(
+    nombre_producto ?? ''
+  )}&nombre_actividad=${String(nombre_actividad ?? '')}&nombre_indicador=${String(nombre_indicador ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaFuenteIndicador[]>>(url);
 };
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------

@@ -4,7 +4,6 @@
 import React, { createContext } from 'react';
 import type { IMetaIndicador } from '../../types/types';
 import { control_error } from '../../../../helpers';
-import { useAppSelector } from '../../../../hooks';
 import { get_metas_id } from '../services/services';
 
 interface UserContext {

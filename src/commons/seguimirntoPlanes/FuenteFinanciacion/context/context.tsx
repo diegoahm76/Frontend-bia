@@ -11,6 +11,8 @@ import { get_concepto_poai } from '../../ConceptoPOAI/services/services';
 
 interface UserContext {
   // * id
+  id_concepto: number | null;
+  set_id_concepto: (value: number | null) => void;
 
   // * rows
   rows_fuentes: IFuentes[];
@@ -29,6 +31,10 @@ interface UserContext {
 }
 
 export const DataContextFuentesFinanciacion = createContext<UserContext>({
+  // * id
+  id_concepto: null,
+  set_id_concepto: () => {},
+
   rows_fuentes: [],
   set_rows_fuentes: () => {},
 
@@ -45,6 +51,7 @@ export const UserProviderFuentesFinanciacion = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_concepto, set_id_concepto] = React.useState<number | null>(null);
 
   // * select
   const [concepto_selected, set_concepto_selected] = React.useState<
@@ -108,6 +115,8 @@ export const UserProviderFuentesFinanciacion = ({
 
   const value: UserContext = {
     // * id
+    id_concepto,
+    set_id_concepto,
 
     // * select
     concepto_selected,
