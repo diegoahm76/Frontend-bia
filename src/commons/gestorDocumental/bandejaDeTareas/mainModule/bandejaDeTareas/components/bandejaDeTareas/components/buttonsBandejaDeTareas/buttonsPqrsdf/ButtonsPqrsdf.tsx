@@ -12,6 +12,7 @@ import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { ModalInfoTarea } from '../../../utils/tareaPqrsdf/ModalInfoTarea';
+import { ModalRespuestaReqReasigna } from '../../../utils/tareaPqrsdf/RespuestaReqReasignaciones/ModalRespuestaReqReasigna';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
@@ -27,17 +28,11 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   const navigate = useNavigate();
 
   //* context declaration
-  const { handleThirdLoading } = useContext(ModalAndLoadingContext);
+  const { handleThirdLoading, handleFourthLoading } = useContext(ModalAndLoadingContext);
 
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
 
-  /* const sendDigitalizationRequest = async () => {
-    const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
-    await postDigitalizacionPqrsdf(id_PQRSDF);
-    dispatch(resetPanelVentanillaFull());
-  };
-*/
   const handleInfoSolicitud = withValidation(() => {
     handleThirdLoading(true)
     console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas)
@@ -51,11 +46,15 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
 
   const handleRequerimientoUsuario = withValidation(() =>
     console.log('Enviar requerimiento al usuario')
+    //* por la propiedad path de cada acción se puede saber a que ruta se debe redireccionar
   );
 
   const handleVerRespuestasRequerimientosOSolicitudesAlUsuario = withValidation(
-    () =>
-      console.log('Ver respuestas a requerimientos o solicitudes al usuario')
+    () => {
+      // console.log('Ver respuestas a requerimientos o solicitudes al usuario')
+      handleFourthLoading(true)
+
+    }
   );
 
   const handleSeguimientoARespuesta = withValidation(() =>
@@ -90,6 +89,9 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
       {/*se acomoda el modal para ver la información resumida de la tarea*/}
       <ModalInfoTarea />
       {/*se acomoda el modal para ver la información resumida de la tarea*/}
+      {/* se acomoda el modal para ver las respuestas de los requerimientos y las reasignaciones */}
+      <ModalRespuestaReqReasigna/>
+      {/* se acomoda el modal para ver las respuestas de los requerimientos y las reasignaciones */}
 
       <Box sx={{ height: 70, transform: 'translateZ(0px)', flexGrow: 1 }}>
         <SpeedDial
