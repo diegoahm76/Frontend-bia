@@ -6,6 +6,8 @@ import { RequerimientoUsuarioScreen } from '../modules/requerimientosUsuario/scr
 import { BandejaTareasProvider } from '../mainModule/context/BandejaTareasContext';
 import { VistaTareaPqrsdf } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaTareaPqrsdf';
 import { RequerimientoAlUsuarioProvider } from '../modules/requerimientosUsuario/context/RequerimientoUsarioContext';
+import { ReasignacionProvider } from '../modules/reasignaciones/context/ReasignacionContext';
+import { MainReasignacionesScreen } from '../modules/reasignaciones/screen/MainReasignacionesScreen';
 
 const routes = [
   {
@@ -24,18 +26,17 @@ const routes = [
 
   //* pendiente re asignaciones
   //* pendiente ruta a respuesta de pqrsdf
-  /*
   {
-    path: 'asignar_a_grupo/',
+    path: 'reasignacion_tarea/',
     component: () => (
       <>
-        <AsignacionGrupoProvider>
-          <MainAsigGrupoScreen />
-        </AsignacionGrupoProvider>
+        <ReasignacionProvider>
+          <MainReasignacionesScreen />
+        </ReasignacionProvider>
       </>
     ),
   },
- */
+
   //* van a venit posteriorment los modulos que desprenden de trámites y servicios y otros
   {
     path: 'info_tarea/:id_PQRSDF',
