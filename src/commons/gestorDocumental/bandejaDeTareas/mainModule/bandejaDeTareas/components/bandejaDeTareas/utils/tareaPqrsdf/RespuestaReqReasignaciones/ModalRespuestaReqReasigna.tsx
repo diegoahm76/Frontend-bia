@@ -20,7 +20,6 @@ import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/
 import { GridValueGetterParams } from '@mui/x-data-grid';
 import { columnsStatic } from './columns/columns';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Title } from '../../../../../../../../../../components';
 
 export const ModalRespuestaReqReasigna = (): JSX.Element => {
   const {
@@ -40,14 +39,6 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
         getComplementosReqResSolicitudes(
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
         ).then((data) => {
-          /* if(data?.length === 0) {
-            handleFourthLoading(false);
-            showAlert('Aviso', 'No hay datos. El modal se cerrará en 1 segundo.', 'info');
-            setTimeout(() => {
-              handleFourthLoading(false);
-              setDataComplementos([]);
-            }, 1000);
-          }*/
           setDataComplementos(data);
         });
       })();
