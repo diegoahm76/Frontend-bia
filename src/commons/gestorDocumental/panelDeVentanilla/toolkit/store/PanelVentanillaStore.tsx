@@ -47,7 +47,7 @@ const actionsComplements: any[] = [
   {
     id: 'ContinuarAsigGrup',
     icon: <ReduceCapacityIcon />,
-    name: 'Continuar con asignación de grupo',
+    name: 'Continuar con asignación a unidad organizacional',
     path: '',
     disabled: false,
   },
