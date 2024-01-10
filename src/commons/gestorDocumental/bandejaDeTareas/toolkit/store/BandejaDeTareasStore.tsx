@@ -31,7 +31,7 @@ const actionsTareasPQRSDF: Action[] = [
     id: 'Reasignar',
     icon: <PersonAddAlt1Icon />,
     name: 'Reasignar',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
     disabled: false,
   },
   {

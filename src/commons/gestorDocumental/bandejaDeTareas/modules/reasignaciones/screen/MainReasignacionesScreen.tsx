@@ -15,43 +15,38 @@ import { Asignaciones } from '../components/reasignaciones/Asginaciones';
 
 export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
   //* redux states
-/*  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+  const currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = useAppSelector(
     (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );*/
+      state.BandejaTareasSlice
+        .currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
+  );
   //* navigate declaration
   const navigate = useNavigate();
 
   //* context loading declaration
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
-  const { setListaSeccionesSubsecciones, setListaAsignaciones } = useContext(
-    ReasignacionContext
-  );
+  const { setListaSeccionesSubsecciones, setListaAsignaciones } =
+    useContext(ReasignacionContext);
   // ? quitar mientras se termina de desarrollar el módulo
-/*  useEffect(() => {
-    if (!currentElementPqrsdComplementoTramitesYotros) {
+  useEffect(() => {
+    if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) {
       navigate('/app/gestor_documental/bandeja_tareas/');
     }
-  }, [currentElementPqrsdComplementoTramitesYotros]);
-*/
+  }, [currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas]);
+
   useEffect(() => {
     //* se entra a consultar el listado de asignaciones realizadas
 
-    //if (!currentElementPqrsdComplementoTramitesYotros) return;
+    if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) return;
 
-    /*const tipo =
-      currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
-      currentElementPqrsdComplementoTramitesYotros?.tipo;*/
+    const tipo =
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
 
-      const hola = {
-        'tipo':'PQRSDF'
-      }
 
-      const tipo = hola?.tipo;
-
-      switch (tipo) {
-      case 'PQRSDF':
-      /*  void getAsignaciones(
+    switch (tipo) {
+      case 'Responder PQRSDF':
+        /*  void getAsignaciones(
           currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
           handleGeneralLoading
         ).then((res) => {
@@ -59,19 +54,19 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         });*/
         showAlert(
           'Atención',
-          'No hay servicio aún para ver las asignacion para PQRSDF, así que no hay asignaciones de PQRSDF por el momento',
+          'No hay servicio para ver reasignaciones de las (RESPUESTAS A PQRSDF),',
           'warning'
         );
         break;
-      case 'Tramites y Servicios':
+      case 'Responder Trámite':
         // Call the service for Tramites y Servicios
         showAlert(
           'Atención',
-          'No hay servicio aún para ver las asignacion para tramites y servicios, así que no hay asignaciones de tramites y servicios por el momento',
+          'No hay servicio para ver reasignaciones de las (RESPUESTAS A TRÁMITES),',
           'warning'
         );
         break;
-      case 'Otros':
+      case 'Otros': // ? se debe mirar el tipo de tarea a establecer ---------------
         // Call the service for Otros
         showAlert(
           'Atención',
@@ -80,7 +75,7 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         );
 
         break;
-/*      case 'Complemento de PQRSDF':
+      /*      case 'Complemento de PQRSDF':
       case 'Complemento de PQRSDF - Respuesta a solicitud':
       case 'Complemento de PQRSDF - Respuesta a requerimiento':
         // Call the service for Complemento de PQRSDF
@@ -91,7 +86,7 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         );
 
         break;*/
-      case 'OPA':
+      case 'OPA': // ? se debe mirar el tipo de tarea a establecer ---------------
         //* se debe llamar el servicio respectivo para las asignaciones de OPA, apenas esté listo
         showAlert(
           'Atención',
@@ -107,7 +102,7 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
     }
   }, []);
 
-/*  useEffect(() => {
+  /*  useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) return;
 
     void getSecSubAsiGrupo(handleGeneralLoading, navigate).then((res) => {
@@ -137,13 +132,13 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
       </Grid>
 
       {/* segunda parte, seleccion de seccion y subseccion */}
-      <SeleccionUnidadSecSub />
+     <SeleccionUnidadSecSub />
       {/*selección de grupo*/}
 
-      <SeleccionGrupo />
+      {/*<SeleccionGrupo />*/}
 
       {/* asignaciones realizadas, (en espera, rechazadas, aceptadas) */}
-      <Asignaciones />
+     {/* <Asignaciones />*/}
       {/*acciones finales del módulo*/}
       <AccionesFinales />
     </>

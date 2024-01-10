@@ -83,7 +83,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     handleOpenModalTwo: handleOpenInfoMetadatos,
     handleSecondLoading,
     handleOpenModalNuevo,
-    handleOpenModalNuevoNumero2
+    handleOpenModalNuevoNumero2,
   } = useContext(ModalAndLoadingContext);
 
   //* loader button simulacion
@@ -134,18 +134,22 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         });
       }
     } catch (error) {
-      showAlert('Opps...', 'Ha ocurrido un error desconocido, por favor intente de nuevo', 'error')
+      showAlert(
+        'Opps...',
+        'Ha ocurrido un error desconocido, por favor intente de nuevo',
+        'error'
+      );
       return;
     }
   };
 
   const handleRejectClick = (_row: any) => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
-    handleOpenModalNuevo(true)
+    handleOpenModalNuevo(true);
   };
 
   const handleCommentClick = (_row: any) => {
-    handleOpenModalNuevoNumero2(true)
+    handleOpenModalNuevoNumero2(true);
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
   };
 
@@ -363,7 +367,9 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                       dispatch(setInfoTarea(detalleTarea));
                       setAnexos(anexosPqrsdf);
                       if (detalleTarea || anexosPqrsdf.length > 0) {
-                        navigate(`/app/gestor_documental/bandeja_tareas/info_tarea/${idPqrsdf}`);
+                        navigate(
+                          `/app/gestor_documental/bandeja_tareas/info_tarea/${idPqrsdf}`
+                        );
                         handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                         //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
                         handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqrsdf que se consulta con el id del anexo
@@ -435,9 +441,12 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       {/*se genera un espacio para el modal que muestra el comentario de rechazo de la tarea*/}
       <ModalSeeRejectedTask />
 
-
       <RenderDataGrid
-        rows={listaTareasPqrsdfTramitesUotrosUopas ?? []}
+        rows={
+          listaTareasPqrsdfTramitesUotrosUopas.filter(
+            (el: { radicado: string }) => el.radicado
+          ) ?? []
+        }
         columns={columns ?? []}
         title={`Listado de tareas asignadas en PQRSDF`}
         aditionalElement={
