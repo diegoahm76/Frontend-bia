@@ -6,12 +6,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
-import {
-  Button,
-  Grid,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Button, Grid, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { Controller, useForm } from 'react-hook-form';
@@ -60,6 +55,13 @@ export const BuscarExpedienteIndicesElectronicos = (
       },
       fecha_inicio_expediente: '',
       fecha_fin_expediente: '',
+
+      //* revisar este par
+      tipoDeExpediente: {
+        value: '',
+        label: '',
+      },
+      consecutivo: '',
     },
   });
 
@@ -75,7 +77,9 @@ export const BuscarExpedienteIndicesElectronicos = (
         exeWatch.id_subserie_origen?.label, // nombre subserie
         exeWatch.titulo_expediente, // titulo expediente
         exeWatch.fecha_inicio_expediente, // fecha inicio
-        exeWatch.fecha_fin_expediente // fecha final
+        exeWatch.fecha_fin_expediente, // fecha final
+        exeWatch.consecutivo, // consecutivo
+        exeWatch.tipoDeExpediente?.value // tipo de expediente
       );
       setData(getExpedientes);
       console.log('getExpedientes', getExpedientes);
@@ -110,6 +114,96 @@ export const BuscarExpedienteIndicesElectronicos = (
             }}
           >
             <Grid container spacing={2}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                sx={{
+                  zIndex: 2,
+                  mt: '.7rem',
+                  mb: '.7rem',
+                }}
+              >
+                {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
+                <Controller
+                  name="tipoDeExpediente"
+                  control={controlBusquedaExpediente}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <div>
+                      <Select
+                        value={value}
+                        onChange={(selectedOption) => {
+                          onChange(selectedOption);
+                        }}
+                        options={
+                          [
+                            {
+                              value: 'simple',
+                              label: 'Simple',
+                            },
+                            {
+                              value: 'complejo',
+                              label: 'Complejo',
+                            },
+                          ] ?? []
+                        }
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          Tipo de expediente
+                        </small>
+                      </label>
+                    </div>
+                  )}
+                />
+              </Grid>
+
+              {exeWatch?.tipoDeExpediente?.value === 'complejo' && (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  sx={{
+                    mt: '.7rem',
+                    mb: '.7rem',
+                  }}
+                >
+                  <Controller
+                    name="consecutivo"
+                    control={controlBusquedaExpediente}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({ field: { onChange, value } }) => (
+                      <TextField
+                        required
+                        fullWidth
+                        label="Consecutivo del expediente"
+                        size="small"
+                        variant="outlined"
+                        value={value}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                          onChange(e.target.value);
+                          e.target.value.length === 50 &&
+                            control_warning('máximo 50 caracteres');
+                        }}
+                        inputProps={{ maxLength: 50 }}
+                      />
+                    )}
+                  />
+                </Grid>
+              )}
+
               <Grid
                 item
                 xs={12}
@@ -158,9 +252,7 @@ export const BuscarExpedienteIndicesElectronicos = (
                   control={controlBusquedaExpediente}
                   defaultValue=""
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
                       required
                       fullWidth
@@ -180,57 +272,69 @@ export const BuscarExpedienteIndicesElectronicos = (
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-              <Controller
-                name="fecha_inicio_expediente"
-                control={controlBusquedaExpediente}
-                defaultValue=""
-                render={({
-                  field: { onChange, value },
-                }) => (
-                  <TextField
-                    fullWidth
-                    label="Fecha inicio"
-                    type="date"
-                    size="small"
-                    variant="outlined"
-                    value={value}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => {
-                      onChange(e.target.value);
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="fecha_fin_expediente"
-                control={controlBusquedaExpediente}
-                defaultValue=""
-                render={({
-                  field: { onChange, value },
-                }) => (
-                  <TextField
-                    fullWidth
-                    label="Fecha final"
-                    type="date"
-                    size="small"
-                    variant="outlined"
-                    value={value}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={(e) => {
-                      onChange(e?.target?.value);
-                    }}
-                  />
-                )}
-              />
-            </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                sx={{
+                  mt: '.7rem',
+                  mb: '.7rem',
+                }}
+              >
+                <Controller
+                  name="fecha_inicio_expediente"
+                  control={controlBusquedaExpediente}
+                  defaultValue=""
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      label="Fecha inicio"
+                      type="date"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                sx={{
+                  mt: '.7rem',
+                  mb: '.7rem',
+                }}
+              >
+                <Controller
+                  name="fecha_fin_expediente"
+                  control={controlBusquedaExpediente}
+                  defaultValue=""
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      label="Fecha final"
+                      type="date"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e?.target?.value);
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
 
               <Grid
                 item
                 xs={12}
-                sm={4}
+                sm={6}
                 sx={{
                   zIndex: 2,
                   mt: '.7rem',
@@ -242,9 +346,7 @@ export const BuscarExpedienteIndicesElectronicos = (
                   name="id_trd_origen"
                   control={controlBusquedaExpediente}
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <div>
                       <Select
                         value={value}
@@ -301,7 +403,7 @@ export const BuscarExpedienteIndicesElectronicos = (
                 <Grid
                   item
                   xs={12}
-                  sm={4}
+                  sm={6}
                   sx={{
                     zIndex: 2,
                     mt: '.7rem',
@@ -313,9 +415,7 @@ export const BuscarExpedienteIndicesElectronicos = (
                     name="id_serie_origen"
                     control={controlBusquedaExpediente}
                     rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                    }) => (
+                    render={({ field: { onChange, value } }) => (
                       <div>
                         <Select
                           value={value}
@@ -366,7 +466,7 @@ export const BuscarExpedienteIndicesElectronicos = (
                   <Grid
                     item
                     xs={12}
-                    sm={4}
+                    sm={6}
                     sx={{
                       zIndex: 2,
                       mt: '.7rem',
@@ -378,18 +478,14 @@ export const BuscarExpedienteIndicesElectronicos = (
                       name="id_subserie_origen"
                       control={controlBusquedaExpediente}
                       rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                      }) => (
+                      render={({ field: { onChange, value } }) => (
                         <div>
                           <Select
                             value={value}
                             onChange={(selectedOption) => {
                               onChange(selectedOption);
                             }}
-                            options={
-                              dataInicialSelects?.dataSubseries ?? []
-                            }
+                            options={dataInicialSelects?.dataSubseries ?? []}
                             placeholder="Seleccionar"
                           />
                           <label>

@@ -44,9 +44,9 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
 
   // ? states
   //* loader button simulacion
-  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
+  /*const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
-  );
+  );*/
 
   // ? se va a tener que modificar esta función con la nueva propiedad que se agrega. si la pqr ya fue asignada a grupo, no se puede volver a asignar (constinuar asig grup)
   const shouldDisable = (actionId: string, complemento: any) => {

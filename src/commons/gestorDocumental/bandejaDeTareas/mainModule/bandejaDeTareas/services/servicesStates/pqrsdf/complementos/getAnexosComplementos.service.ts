@@ -1,11 +1,12 @@
-import Swal from 'sweetalert2';
-import {  control_success } from '../../../../../../../helpers';
-import { api } from '../../../../../../../api/axios';
+import Swal from "sweetalert2";
+import { api } from "../../../../../../../../../api/axios";
+import { control_success } from "../../../../../../../../../helpers";
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const getAnexosComplemento = async (idComplemento: number) => {
+export const getAnexosComplementoBandejaTareas = async (idComplemento: number) => {
   try {
-    const url = `gestor/panel_ventanilla/complementos/anexos/get/${idComplemento}/`;
+    // gestor/bandeja-tareas/complemento/get-anexos-by-id/37/
+    const url = `gestor/bandeja-tareas/complemento/get-anexos-by-id/${idComplemento}/`;
     const { data } = await api.get(url);
 
     if (data.data.length > 0) {

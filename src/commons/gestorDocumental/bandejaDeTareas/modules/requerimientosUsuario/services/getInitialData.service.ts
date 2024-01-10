@@ -41,7 +41,7 @@ export const getInitialData = async (
     console.log('data Informaciones', data);
     return data;
   } catch (error) {
-    handleError(navigate, '/app/gestor_documental/panel_ventanilla/');
+    handleError(navigate, '/app/gestor_documental/bandeja_tareas/');
   } finally {
     setLoadings(false);
   }

@@ -1,6 +1,6 @@
-import Swal from 'sweetalert2';
 import { api } from '../../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../../helpers';
+import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const getAnexosPqrsdf = async (id_pqrsdf: any) => {
@@ -18,7 +18,11 @@ export const getAnexosPqrsdf = async (id_pqrsdf: any) => {
       return [];
     }
   } catch (err: any) {
-    control_error(err?.response?.data.detail || err.message);
+    showAlert(
+      'Opps...',
+      err?.response?.data.detail || err.message || 'No se encontraron anexos para la PQRSDF.',
+      'error'
+    );
     return [];
   }
 };

@@ -13,6 +13,7 @@ const handleRequest = async (request: any) => {
     const token = sessionStorage.getItem('token');
     if (token) {
       request.headers.Authorization = `Bearer ${token}`;
+      request.headers.withCredentials = true;
        console.log(
         `%c ${request?.method?.toUpperCase()} ${request.url}`,
         'color: blue; font-weight: bold;'
