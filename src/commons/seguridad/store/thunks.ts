@@ -82,7 +82,7 @@ export const get_data_user: (id: number) => any = (
               }${infoResume?.profile_img}`
             : `${
                 process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                'http://70.30.6.237'
+                'https://bia.cormacarena.gov.co'
               }${infoResume?.profile_img}`,
       })
     );
