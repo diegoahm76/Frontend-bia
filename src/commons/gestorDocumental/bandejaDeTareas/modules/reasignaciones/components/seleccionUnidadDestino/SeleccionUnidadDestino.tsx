@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext } from 'react';
-import { Button, Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack, Typography } from '@mui/material';
 import Select from 'react-select';
 import { stylesGrid } from './../../../../../permisosSeriesDoc/utils/styles';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,7 +11,7 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { getSubGrupoAsiGrupo } from '../../services/getSubyGrups.service';
 import { ReasignacionContext } from '../../context/ReasignacionContext';
 
-export const SeleccionUnidadSecSub = (): JSX.Element => {
+export const SeleccionUnidadDestino = (): JSX.Element => {
   const {
     control: control_seleccionar_seccion_control,
     reset: reset_select_seleccionar,
@@ -26,6 +26,7 @@ export const SeleccionUnidadSecSub = (): JSX.Element => {
     listaSeccionesSubsecciones,
     setListaSubGrupos,
     setLiderAsignado,
+
   } = useContext(ReasignacionContext);
 
   //* functions
@@ -63,7 +64,8 @@ export const SeleccionUnidadSecSub = (): JSX.Element => {
 
   return (
     <>
-      {listaSeccionesSubsecciones?.length > 0 ? (
+      {/* listaSeccionesSubsecciones?.length > 0 */}
+      {listaSeccionesSubsecciones?.length === 0 ? (
         <Grid
           container
           sx={{
@@ -82,7 +84,6 @@ export const SeleccionUnidadSecSub = (): JSX.Element => {
             sm={12}
             sx={{
               ...stylesGrid,
-              mt: '1.8rem',
               mb: '1.8rem',
 
               zIndex: 10,
@@ -94,15 +95,13 @@ export const SeleccionUnidadSecSub = (): JSX.Element => {
                 marginBottom: '1.5rem',
               }}
             >
-              <Title title="Seleccionar sección o subsección" />
+              <Title title="Seleccionar unidad organizacional de destino" />
             </section>
             <Controller
               name="id_unidad_organizacional"
               control={control_seleccionar_seccion_control}
               rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <div>
                   <Select
                     value={value}
@@ -157,7 +156,32 @@ export const SeleccionUnidadSecSub = (): JSX.Element => {
           </Stack>
         </Grid>
       ) : (
-        <> </>
+        <Grid
+          container
+          sx={{
+            position: 'relative',
+            justifyContent: 'center',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
+              textAlign: 'center',
+              color: '#042F4A',
+              fontWeight: 'bold',
+              mt: '1.5rem',
+              mb: '1.5rem',
+            }}
+          >
+            No hay secciones o subsecciones para seleccionar
+          </Typography>
+        </Grid>
       )}
     </>
   );

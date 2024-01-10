@@ -27,6 +27,7 @@ export const AccionesFinales = (): JSX.Element => {
     liderAsignado,
     currentGrupo,
     setListaAsignaciones,
+    comentario,
   } = useContext(ReasignacionContext);
   const { secondLoading, handleSecondLoading, handleGeneralLoading } =
     useContext(ModalAndLoadingContext);
@@ -71,6 +72,12 @@ export const AccionesFinales = (): JSX.Element => {
 
     switch (tipo) {
       case 'Responder PQRSDF':
+      console.log('liderAsignado', liderAsignado)
+      console.log('currentGrupo', currentGrupo)
+      console.log('currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas)
+      console.log('comentario de reasignacion', comentario)
+
+
         showAlert(
           'Atención',
           'No hay servicio aún para (RESPUESTA A PQRSDF), así que no se realiza re-asignacion por el momento',
@@ -132,15 +139,15 @@ export const AccionesFinales = (): JSX.Element => {
     if (res) {
       await Swal.fire({
         icon: 'success',
-        title: 'Ok',
-        text: `Se ha lanzado la asignación a grupo correctamente`,
+        title: '¡Éxito!',
+        text: `Se ha realizado la asignación a grupo correctamente`,
         confirmButtonText: 'Entendido',
       });
 
       let asignaciones;
 
       switch (tipo) {
-        case 'PQRSDF':
+        case 'Responder PQRSDF':
           // Fetch the assignments for PQRSDF
           /*asignaciones = await getAsignacionesPQRSDF(
             // para pqrsdf
@@ -148,7 +155,7 @@ export const AccionesFinales = (): JSX.Element => {
             handleGeneralLoading
           );*/
           break;
-        case 'Tramites y Servicios':
+        case 'Responder Trámite':
           // Fetch the assignments for Tramites y Servicios
           /*asignaciones = await getAsignacionesTramitesYServicios(
             currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,

@@ -4,14 +4,12 @@ import { InformacionElemento } from '../components/InformacionElemento/Informaci
 import { useAppSelector } from '../../../../../../hooks';
 import { useNavigate } from 'react-router-dom';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
-import { SeleccionUnidadSecSub } from '../components/SeleccionUnidadSecSub/SeleccionUnidadSecSub';
 import { Grid } from '@mui/material';
-import { SeleccionGrupo } from '../components/SeleccionGrupo/SeleccionGrupo';
 import { AccionesFinales } from '../components/AccionesFinales/AccionesFinales';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
 import { ReasignacionContext } from '../context/ReasignacionContext';
-import { getAsignaciones } from '../services/reasignaciones/pqrsdf/getAsignaciones.service';
-import { Asignaciones } from '../components/reasignaciones/Asginaciones';
+import { SeleccionUnidadDestino } from '../components/seleccionUnidadDestino/SeleccionUnidadDestino';
+import { SeleccionarUsuario } from '../components/seleccionarUsuario/SeleccionarUsuario';
 
 export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -42,7 +40,6 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
     const tipo =
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
-
 
     switch (tipo) {
       case 'Responder PQRSDF':
@@ -132,13 +129,13 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
       </Grid>
 
       {/* segunda parte, seleccion de seccion y subseccion */}
-     <SeleccionUnidadSecSub />
+      <SeleccionUnidadDestino />
       {/*selección de grupo*/}
 
-      {/*<SeleccionGrupo />*/}
+      <SeleccionarUsuario />
 
       {/* asignaciones realizadas, (en espera, rechazadas, aceptadas) */}
-     {/* <Asignaciones />*/}
+      {/* <ReasignacionesGrid />*/}
       {/*acciones finales del módulo*/}
       <AccionesFinales />
     </>
