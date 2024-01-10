@@ -237,7 +237,7 @@ export const DatosAccesoScreen: React.FC = () => {
                               }${image_url}`
                             : `${
                                 process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                                'http://70.30.6.237'
+                                'https://bia.cormacarena.gov.co'
                               }${image_url}`
                           : image_url != null
                           ? image_url
