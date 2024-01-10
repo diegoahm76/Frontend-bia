@@ -16,8 +16,7 @@ export const putContinuarAsigGrupoComple = async (
     console.log({
       complemento_asignado_unidad: true,
     })
-    // gestor/panel_ventanilla/pqrsdf/asignacion/grupo/update/32/
-    const url = `gestor/panel_ventanilla/complementos/asignacion/grupo/update/${idComplemento}/`;
+    const url = `gestor/panel_ventanilla/pqrsdf/asignacion/grupo/update/${idComplemento}/`;
     const response = await api.put(url, {
       complemento_asignado_unidad: true,
     });
