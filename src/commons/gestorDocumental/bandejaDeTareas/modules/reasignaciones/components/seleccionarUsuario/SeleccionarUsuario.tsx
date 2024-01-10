@@ -2,7 +2,7 @@
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
 import { Loader } from './../../../../../../../utils/Loader/Loader';
-import { Button, Grid, Stack, TextField } from '@mui/material';
+import { Button, Grid, Stack, TextField, Typography } from '@mui/material';
 import { stylesGrid } from './../../../../../permisosSeriesDoc/utils/styles';
 import Select from 'react-select';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,10 +11,15 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { getLiderByUnidadOrganizacional } from '../../services/getLiderUnidadOrganizacional.service';
 import { ReasignacionContext } from '../../context/ReasignacionContext';
 
-export const SeleccionGrupo = (): JSX.Element => {
-  const { listaSubGrupos, liderAsignado, setLiderAsignado, setCurrentGrupo } = useContext(
-    ReasignacionContext
-  );
+export const SeleccionarUsuario = (): JSX.Element => {
+  const {
+    listaSubGrupos,
+    liderAsignado,
+    setLiderAsignado,
+    setCurrentGrupo,
+    comentario,
+    setComentario,
+  } = useContext(ReasignacionContext);
 
   const { secondLoading } = useContext(ModalAndLoadingContext);
 
@@ -32,6 +37,7 @@ export const SeleccionGrupo = (): JSX.Element => {
       },
     });
     setLiderAsignado(undefined);
+    setComentario(undefined);
     //* ademas de estepar de acciones e deben limpiar los demas controles que esten debajo del mismop
   };
 
@@ -56,7 +62,8 @@ export const SeleccionGrupo = (): JSX.Element => {
 
   return (
     <>
-      {listaSubGrupos.length > 0 ? (
+      {/* listaSubGrupos.length > 0  */}
+      {listaSubGrupos.length === 0 ? (
         <Grid
           container
           sx={{
@@ -75,7 +82,6 @@ export const SeleccionGrupo = (): JSX.Element => {
             sm={12}
             sx={{
               ...stylesGrid,
-              mt: '1.8rem',
               mb: '1.8rem',
 
               zIndex: 7,
@@ -87,16 +93,13 @@ export const SeleccionGrupo = (): JSX.Element => {
                 marginBottom: '2.2rem',
               }}
             >
-              <Title title="Asginar a: " />
+              <Title title="Seleccionar usuario" />
             </section>
             <Controller
               name="id_unidad_org"
               control={control_seccion_asociada_control}
               rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <div>
                   <Select
                     value={value}
@@ -107,17 +110,16 @@ export const SeleccionGrupo = (): JSX.Element => {
                       void getLiderByUnidadOrganizacional(
                         value,
                         setLiderAsignado
-                      )
-                        .then((res) => {
-                          //  console.log('')(res);
+                      ).then((res) => {
+                        //  console.log('')(res);
 
-                          if (Array.isArray(res)) {
-                            setLiderAsignado(undefined);
-                            return;
-                          }
+                        if (Array.isArray(res)) {
+                          setLiderAsignado(undefined);
+                          return;
+                        }
 
-                          setLiderAsignado(res);
-                        })
+                        setLiderAsignado(res);
+                      });
                       onChange(selectedOption);
                     }}
                     // listaSubGrupos
@@ -142,7 +144,8 @@ export const SeleccionGrupo = (): JSX.Element => {
             />
           </Grid>
 
-          {liderAsignado ? (
+          {/*  {liderAsignado ? (*/}
+          <>
             <Grid
               item
               xs={12}
@@ -158,16 +161,43 @@ export const SeleccionGrupo = (): JSX.Element => {
               <TextField
                 fullWidth
                 disabled
-                label="Líder de la unidad seleccionada"
+                label="Usuario seleccionado"
                 size="small"
                 variant="outlined"
                 value={liderAsignado?.lider ?? ''}
                 sx={{ mt: '.3rem', mb: '.45rem' }}
               />
             </Grid>
-          ) : (
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                ...stylesGrid,
+                mt: '1.8rem',
+                mb: '1.8rem',
+
+                zIndex: 5,
+              }}
+            >
+              <TextField
+                fullWidth
+                multiline
+                rows={5}
+                label="Comentario de re-asignación"
+                onChange={(e) => {
+                  setComentario(e.target.value);
+                }}
+                size="small"
+                variant="outlined"
+                value={comentario ?? ''}
+                sx={{ mt: '.3rem', mb: '.45rem' }}
+              />
+            </Grid>
+          </>
+          {/*  ) : (
             <></>
-          )}
+          )}*/}
 
           <Stack
             direction="row"
@@ -189,7 +219,32 @@ export const SeleccionGrupo = (): JSX.Element => {
           </Stack>
         </Grid>
       ) : (
-        <></>
+        <Grid
+          container
+          sx={{
+            position: 'relative',
+            justifyContent: 'center',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
+              textAlign: 'center',
+              color: '#042F4A',
+              fontWeight: 'bold',
+              mt: '1.5rem',
+              mb: '1.5rem',
+            }}
+          >
+            No hay usuario para seleccionar
+          </Typography>
+        </Grid>
       )}
     </>
   );
