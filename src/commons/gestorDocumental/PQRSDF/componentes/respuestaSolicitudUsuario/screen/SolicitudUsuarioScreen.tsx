@@ -95,8 +95,7 @@ export const SolicitudUsuarioScreen = (): JSX.Element => {
             setInfoReset={setInfoReset}
           />
 
-
-
+        
           {/*stepper*/}
           <StepperResSolicitudUsario {...props} />
         </Grid>
