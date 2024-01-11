@@ -110,8 +110,7 @@ export const HistoricoFacturacion: React.FC = () => {
                     fileName={params.value.id_documento}
                 />
             )
-        },
-
+        }, 
     ];
     return (
         <>

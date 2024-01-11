@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -6,16 +7,15 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { Title } from "../../../../components";
 import SaveIcon from '@mui/icons-material/Save';
+import ReplyIcon from '@mui/icons-material/Reply';
 import { api, baseURL } from "../../../../api/axios";
+import { TablaEncuestaAsignada } from "./TablaEncuestaAsignada";
 import { Button, FormControl, Grid, TextField } from "@mui/material";
 import { control_error, control_success } from "../../../../helpers";
-import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 import { RadioGroup, FormControlLabel, Radio, Typography, } from "@mui/material";
 import { FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, } from "@mui/material";
 import { fetch_data_dptos_encuestas, fetch_data_municipio_encuestas, fetch_data_pais_encuestas } from "../services/encuestas.service";
 import { Departamento, EncuestaDetalle, Municipios, Paises, RangoEdad, Sexo, TipoDocumento, UsuarioRegistrado, miEstilo } from "../interfaces/types";
-import { TablaEncuestaAsignada } from "./TablaEncuestaAsignada";
-import ReplyIcon from '@mui/icons-material/Reply';
 
 export const Encuesta: React.FC = () => {
 

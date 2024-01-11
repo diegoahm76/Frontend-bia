@@ -155,71 +155,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
       }
     },
   ]
-  const [visor, setVisor] = useState('');
-  const [asunto, setAsunto] = useState('');
-  const primeraFila = rows_detalles[0];
-  const formulasAplicadas: string[] = [];
 
-  // Iterar sobre cada fila de rows_detalles y obtener el valor de 'formula_aplicada'
-  rows_detalles.forEach((fila) => {
-    formulasAplicadas.push(fila.formula_aplicada);
-  });
-
-  const valor_liquidado: string[] = [];
-
-  // Iterar sobre cada fila de rows_detalles y obtener el valor de 'formula_aplicada'
-  rows_detalles.forEach((fila) => {
-    valor_liquidado.push(fila.valor_liquidado);
-  });
-  const generarHistoricoBajas = () => {
-    const doc = new jsPDF();
-    const anchoPagina = doc.internal.pageSize.width;
-    const agregarEncabezado = () => {
-      doc.setFontSize(22);
-      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
-      doc.setFontSize(12);
-      // doc.addImage(`sasd`, 160, 10, 40, 10);
-
-
-
-
-    };
-    agregarEncabezado();
-    // Añadir información del usuario   
-    doc.setFontSize(12);
-    let y = 30; // posición inicial para el texto
-    // doc.text(`${consecutivoActual}`, 10, y);
-    // y += 6;
-    doc.text(` `, 10, y);
-    y += 6;
-    // doc.text(dayjs().format('DD/MM/YYYY'), 10, y);
-    // y += 6;
-    doc.text(`Formulas aplicadas :${formulasAplicadas}:  `, 10, y);
-    y += 6;
-    doc.text(`valores liquidados :${valor_liquidado} `, 10, y);
-    y += 6;
-    doc.text(`T  `, 10, y);
-    y += 6;
-    doc.text(`C `, 10, y);
-    y += 6; // Espacio antes del asunto
-    // Añadir asunto
-    const lineas = doc.splitTextToSize(asunto, anchoPagina - 20);
-    for (let i = 0; i < lineas.length; i++) {
-      if (y > 280) {
-        doc.addPage();
-        agregarEncabezado();
-        y = 30;
-      }
-      doc.text(lineas[i], 10, y);
-      y += 6;
-    }
-    let yFinal = doc.internal.pageSize.getHeight() - 30; // Ajusta esto según sea necesario
-    doc.setFontSize(12);
-    doc.text(`:`, 10, yFinal);
-    yFinal += 10;
-    doc.text(`: `, 10, yFinal);
-    setVisor(doc.output('datauristring'));
-  };
   return (
     <>
       <Grid
@@ -236,11 +172,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
         <Grid item xs={12}>
           <Title title="Detalle de liquidación"></Title>
 
-          <Button variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
-          <Grid item xs={12} sm={12}>
-            <embed src={visor} type="application/pdf" width="100%" height="1080px" />
-          </Grid>
-
+      
           <Grid container direction={'column'} sx={{ my: '20px' }} gap={1}>
             <Grid item xs={12}>
               <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>

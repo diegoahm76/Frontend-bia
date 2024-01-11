@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes } from 'react-router-dom';
 import { OrganigramaRoutes } from '../organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../ccd/routes/CcdRoutes';
@@ -38,6 +39,11 @@ import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesSe
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
 import { Consulta_Solicitud_Routes } from '../consultaSolicitud/routes/ConsultaSolicitud';
+import { Consulta_estadoPQR_Routes } from '../consultaEstadoPQR/routes/ConsultaEstadoPQR';
+import { Consulta_ExternoPQR_Routes } from '../consultarEstadoExternoPQR/routes/ConsultaExternoPQR';
+import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/ConsultaAnonimo';
+import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
+import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
 
 const routes = [
   {
@@ -140,7 +146,7 @@ const routes = [
     name: 'encuesta_asignacion',
     component: () => <EncuestaRoutes />,
   },
-  
+
   {
     path: 'Reportes_PQRSDF/',
     name: 'Reportes_PQRSDF',
@@ -203,7 +209,31 @@ const routes = [
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
   },
-
+  {
+    path: 'consulta_estadopqr/',
+    name: 'consulta_estadopqr',
+    component: () => <Consulta_estadoPQR_Routes />,
+  },
+  {
+    path: 'ConsultaExternoPQR/',
+    name: 'ConsultaExternoPQR',
+    component: () => <Consulta_ExternoPQR_Routes />,
+  },
+  {
+    path: 'Consulta_AnonimoPQR/',
+    name: 'Consulta_AnonimoPQR',
+    component: () => <Consulta_AnonimoPQR_Routes />,
+  },
+  {
+    path: 'ConsultaOtros/',
+    name: 'ConsultaOtros',
+    component: () => <Consulta_Otros_Routes />,
+  },
+  {
+    path: 'ConsultaOtrosExterno/',
+    name: 'ConsultaOtrosExterno',
+    component: () => <Consulta_OtrosExterno_Routes />,
+  },
   {
     path: 'Pqrsdf/complementos/',
     name: 'complementos_pqrsdf',

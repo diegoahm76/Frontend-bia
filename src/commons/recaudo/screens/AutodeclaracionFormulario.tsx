@@ -8,7 +8,7 @@ import { FormControl, Grid, TextField, } from '@mui/material';
 import { Title } from '../../../components/Title';
 import { useSelector } from 'react-redux';
 import { AuthSlice } from '../../auth/interfaces';
-import { FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent, } from "@mui/material";
+import { InputLabel, MenuItem, Select, SelectChangeEvent, } from "@mui/material";
 import { api } from '../../../api/axios';
 
 
