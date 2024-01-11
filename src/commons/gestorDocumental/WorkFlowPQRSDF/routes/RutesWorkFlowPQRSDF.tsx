@@ -11,7 +11,7 @@ export const RutesWorkFlowPQRSDF = (): ReactElement => {
           path="/*"
           element={<ConsultarWorkFlow/>}
         />
-        <Route path="/*" element={<Page404 />} />
+        {/* <Route path="/*" element={<Page404 />} /> */}
       </Routes>
   );
 };

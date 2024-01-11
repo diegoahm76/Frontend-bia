@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Grid, TextField } from '@mui/material';
@@ -5,6 +6,7 @@ import { Title } from '../../../../../../../../../components';
 import { useContext } from 'react';
 import { ResSolicitudUsuarioContext } from '../../../../context/ResSolicitudUsarioContext';
 import { useSelector } from 'react-redux';
+import { api } from '../../../../../../../../../api/axios';
 
 
 interface DataRegistePortal {
@@ -28,10 +30,6 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
 
 
 
-
-
-
-  
 
   return (
     <Grid

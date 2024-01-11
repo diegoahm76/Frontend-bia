@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useState } from 'react';
+import {  useState } from 'react';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 // import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import {  postResponderUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
 import { useStepperResSolicitudUsuario } from '../../hook/useStepperResSolicitudUsuario';
 import { resetItems } from '../../toolkit/slice/ResSolicitudUsarioSlice';
-import { ResSolicitudUsuarioContext } from '../../context/ResSolicitudUsarioContext';
 
 export const AccionesFinales = ({
   // controlFormulario,
@@ -23,7 +22,7 @@ export const AccionesFinales = ({
 
   //* context
 
-  const {respuestaPqrs} = useContext(ResSolicitudUsuarioContext);
+
 
   const { handleReset } = useStepperResSolicitudUsuario();
 

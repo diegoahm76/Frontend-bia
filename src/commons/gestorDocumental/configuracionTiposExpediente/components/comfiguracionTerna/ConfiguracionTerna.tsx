@@ -100,7 +100,7 @@ export const ConfiguracionTerna: React.FC = () => {
       const res: any = await api.get(url);
       const consulta_EstructuraExpediente: any = res.data.data;
       set_choise_estructura_expediente(consulta_EstructuraExpediente);
-    } catch (error:any) {
+    } catch (error: any) {
       console.error(error.response.data.detail);
     }
   };
@@ -172,7 +172,7 @@ export const ConfiguracionTerna: React.FC = () => {
     }
   };
 
-  
+
   useEffect(() => {
     fetch_choise_seccionsubseccion().catch((error) => {
       console.error(error);
@@ -234,8 +234,8 @@ export const ConfiguracionTerna: React.FC = () => {
         <Grid container style={{ marginTop: 10 }}>
 
 
-          <Grid item xs={12}  sm={6}>
-            <FormControl fullWidth  size="small">
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
               <InputLabel id="choise-label">Seccion o Subseccion</InputLabel>
               <Select
                 id="demo-simple-select-2"
@@ -255,8 +255,8 @@ export const ConfiguracionTerna: React.FC = () => {
           </Grid>
 
 
-          <Grid item xs={12}  sm={6}>
-            <FormControl fullWidth  size="small">
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
               <InputLabel id="choise-label">Serie-Subserie</InputLabel>
               <Select
                 id="demo-simple-select-2"
@@ -267,8 +267,9 @@ export const ConfiguracionTerna: React.FC = () => {
                 onChange={(event) => set_variable_serie_subserie(event.target.value)}
               >
                 {get_serie_subserie?.map((item: any, index: number) => (
-                  <MenuItem key={index} value={item.id_catserie_unidadorg}>
-                    {item.nombre_serie_doc}
+                  <MenuItem key={item.id_catserie_unidadorg} value={item.id_catserie_unidadorg}>
+                    {`${item.cod_serie_doc || ''}${item.cod_serie_doc && item.nombre_serie_doc ? '-' : ''}${item.nombre_serie_doc || ''}/${item.cod_subserie_doc || ''
+                      }${item.cod_subserie_doc && item.nombre_subserie_doc ? '-' : ''}${item.nombre_subserie_doc || ''}`}
                   </MenuItem>
                 ))}
               </Select>
@@ -280,12 +281,12 @@ export const ConfiguracionTerna: React.FC = () => {
         <Grid container item xs={12} alignItems="center" justifyContent="center">
 
           <Grid item xs={12} sm={5} md={4} style={{ margin: 10 }}>
-            <FormControl fullWidth  size="small">
+            <FormControl fullWidth size="small">
               <InputLabel id="choise-label">Estructura del Expediente</InputLabel>
               <Select
                 label="Estructura del Expediente"
                 id="demo-simple-select-2"
-               
+
                 name="cod_tipo_expediente"
                 value={form_data.cod_tipo_expediente || ""}
                 onChange={handle_creacion_form} // Cuando cambie el valor, actualiza variablex
@@ -304,7 +305,7 @@ export const ConfiguracionTerna: React.FC = () => {
 
 
 
-        <Grid item xs={12}  sm={6} >
+        <Grid item xs={12} sm={6} >
           <TextField
             style={{ width: '95%', marginTop: 10 }}
             label={`Cantidad de numeros`}
@@ -318,7 +319,7 @@ export const ConfiguracionTerna: React.FC = () => {
         </Grid>
 
 
-        <Grid item xs={12}  sm={6} >
+        <Grid item xs={12} sm={6} >
           <TextField
             style={{ width: '95%', marginTop: 10 }}
             label={`Consecutivo Inicial`}
@@ -364,7 +365,7 @@ export const ConfiguracionTerna: React.FC = () => {
                   void confirmarAccion(
                     actualizar_datos_existentes,
                     '¿Estás seguro de realizar este proceso?'
-                  );  
+                  );
                 } else {
                   void confirmarAccion(
                     crear_configuracion_expediente,
@@ -378,7 +379,7 @@ export const ConfiguracionTerna: React.FC = () => {
 
           </Grid>
           <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-          <ModalConfiguracionTiposExpedientes/>
+            <ModalConfiguracionTiposExpedientes />
           </Grid>
           <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
             <Button fullWidth variant="outlined"
@@ -406,7 +407,7 @@ export const ConfiguracionTerna: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
-   
+
       </Grid >
     </>
   );
