@@ -253,7 +253,7 @@ export const AccionesFinales = (): JSX.Element => {
                   startIcon={<SaveIcon />}
                   onClick={handleClick}
                 >
-                  {`ASIGNAR (${
+                  {`RE-ASIGNAR (${
                     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
                     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo
                   }) A UNIDAD`}

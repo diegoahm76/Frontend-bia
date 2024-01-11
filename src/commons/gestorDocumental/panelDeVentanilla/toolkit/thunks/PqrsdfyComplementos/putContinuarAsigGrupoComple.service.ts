@@ -23,8 +23,8 @@ export const putContinuarAsigGrupoComple = async (
 
      if (response?.data?.succes || response?.data?.success) {
       showAlert(
-        'Asignación a unidad de complementos exitosa',
-        'Se ha continuado con la asignación a unidad de complementos',
+        'Asignación a unidad de complemento exitosa',
+        'Se ha continuado con la asignación a unidad del complemento seleccionado',
         'success'
       );
     }
