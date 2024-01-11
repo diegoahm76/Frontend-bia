@@ -29,6 +29,7 @@ import { ModalInfoSolicitud } from './ModalInfoSolicitud/ModalInfoSolicitud';
 import { ResSolicitudUsuarioContext } from '../../../context/ResSolicitudUsarioContext';
 import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolicitudUsuario';
 import { api } from '../../../../../../../../api/axios';
+import { PQRSDFContext } from '../../../context/CreateRespuestaPqrs';
 
 export const FormParte1 = ({
   controlFormulario,
@@ -59,7 +60,7 @@ export const FormParte1 = ({
 
   //* redux state
   const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
+    (state:any) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
   );
 
@@ -128,19 +129,43 @@ export const FormParte1 = ({
   }
 
 
+  const { pqrsdfData,setPQRSDFData } = useContext(PQRSDFContext);
+
+
+  console.log("pqrsdfData", pqrsdfData);
+
+  const Peticion_Respuesta_PQRS = async (): Promise<void> => {
+    try {
+      const url = `/gestor/pqr/get_pqrsdf-panel/${currentElementPqrsdComplementoTramitesYotros.id_pqrsdf}/`;
+      const res = await api.get(url);
+      const consulta = res.data.data;
+        ;  // Coloca el objeto dentro de un arreglo
+      setPQRSDFData(consulta);
+      // setRespuestaPqrs(consulta);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // Aquí podrías manejar el error de manera más específica
+    }
+  };
+
+
+
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        const url = '/gestor/pqr/get_pqrsdf-panel/145/';
+        const url = `/gestor/pqr/get_pqrsdf-panel/${currentElementPqrsdComplementoTramitesYotros.id_pqrsdf}/`;
         const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
         const facilidadPagoData = res.data.data;
         setRespuestaPqrs(facilidadPagoData)
+    
       } catch (error) {
         console.error('Error al obtener datos:', error);
       }
     };
-
+    Peticion_Respuesta_PQRS()
     fetchData(); // Llama a la función que realiza la petición al montar el componente
+
+
   }, []);
 
 
