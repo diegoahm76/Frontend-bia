@@ -7,7 +7,7 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { ReasignacionContext } from '../../context/ReasignacionContext';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const Asignaciones = (): JSX.Element => {
+export const ReasignacionUsuario = (): JSX.Element => {
   //* context declaration
   const { listaAsignaciones } = useContext(ReasignacionContext);
   const { generalLoading } = useContext(ModalAndLoadingContext);

@@ -7,7 +7,7 @@ export const API_PATHS = {
   //* persona titular de la pqrsdf
   titular: (id: number) => `gestor/bandeja-tareas/pqrsdf/titular/get/${id}/`,
   detalleSolicitud: (id: number) =>
-    `gestor/bandeja-tareas/pqrsdf/detalle-requerimiento/get/${id}/`,
+    `gestor/panel_ventanilla/pqrsdf/detalle-solicitud/get/${id}/`,
   solicitudUsuario: (id: number) =>
     `gestor/bandeja-tareas/pqrsdf/requerimiento/get/${id}/`,
 };

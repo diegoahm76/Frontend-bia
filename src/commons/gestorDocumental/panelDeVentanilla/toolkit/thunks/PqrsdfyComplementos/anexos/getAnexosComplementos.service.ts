@@ -1,11 +1,11 @@
 import Swal from 'sweetalert2';
-import { control_error, control_success } from '../../../../../../../helpers';
+import {  control_success } from '../../../../../../../helpers';
 import { api } from '../../../../../../../api/axios';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const getAnexosComplemento = async (idComplemento: number) => {
   try {
-    const url = `gestor/panel_ventanilla/pqrsdf/anexo/get/${idComplemento}/`;
+    const url = `gestor/panel_ventanilla/complementos/anexos/get/${idComplemento}/`;
     const { data } = await api.get(url);
 
     if (data.data.length > 0) {

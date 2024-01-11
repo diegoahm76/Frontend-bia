@@ -17,6 +17,7 @@ import { Facturacion } from '../screens/Facturacion';
 import { SupEtapasProceso } from '../screens/SupEtapasProceso';
 import { AutodeclaracionFormulario } from '../screens/AutodeclaracionFormulario';
 import { EtapaProcesoProvider } from '../components/GestionCartera/Context/EtapaProcesoContext';
+import { HistoricoFacturacion } from '../screens/HistoricoFacturacion';
 
 
 
@@ -41,6 +42,7 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="facturacion/*" element={<Facturacion/>} />
       <Route path="Sup_Etapas/*" element={<SupEtapasProceso />} />
       <Route path="Autodeclaracion_formulatio/*" element={<AutodeclaracionFormulario/>} />
+      <Route path="HistoricoFacturacion/*" element={<HistoricoFacturacion />} />
 
       
       <Route path="/*" element={<Page404 />} />

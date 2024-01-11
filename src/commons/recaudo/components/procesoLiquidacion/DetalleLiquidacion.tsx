@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable object-shorthand */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint no-new-func: 0 */
@@ -10,6 +12,8 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { api } from "../../../../api/axios";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
+import { jsPDF } from 'jspdf';
+
 interface IProps {
   rows_detalles: RowDetalles[];
   estado_expediente: EstadoExpediente;
@@ -167,6 +171,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
       >
         <Grid item xs={12}>
           <Title title="Detalle de liquidación"></Title>
+
+      
           <Grid container direction={'column'} sx={{ my: '20px' }} gap={1}>
             <Grid item xs={12}>
               <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
