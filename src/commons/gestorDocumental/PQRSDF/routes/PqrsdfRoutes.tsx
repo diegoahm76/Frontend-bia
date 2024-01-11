@@ -5,6 +5,7 @@ import { ImpresionRadicadoScreen } from '../screens/ImpresionRadicadoScreen';
 import { SolicitudUsuarioScreen } from '../componentes/respuestaSolicitudUsuario/screen/SolicitudUsuarioScreen';
 import { ResSolicitudUsuarioProvider } from '../componentes/respuestaSolicitudUsuario/context/ResSolicitudUsarioContext';
 import { ResProvider } from '../componentes/respuestaSolicitudUsuario/context/ResContext';
+import { PQRSDFProvider } from '../componentes/respuestaSolicitudUsuario/context/CreateRespuestaPqrs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PqrsdfRoutes: React.FC = () => {
@@ -16,13 +17,13 @@ export const PqrsdfRoutes: React.FC = () => {
       <Route
         path="respuesta_pqrsdf"
         element={
-        
+          <PQRSDFProvider>
           <ResProvider>
             <ResSolicitudUsuarioProvider>
               <SolicitudUsuarioScreen />
             </ResSolicitudUsuarioProvider>
           </ResProvider>
-    
+          </PQRSDFProvider>
         }
       />
       <Route path="/*" element={<Navigate to={'/'} />} />

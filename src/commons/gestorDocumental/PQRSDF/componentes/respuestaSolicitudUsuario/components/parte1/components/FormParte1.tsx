@@ -72,6 +72,7 @@ export const FormParte1 = ({
 
 
   // ? definicion de las columnas
+
   const columns = [
     ...columnsGridHistorico,
     {
@@ -130,7 +131,7 @@ export const FormParte1 = ({
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        const url = '/gestor/pqr/get_pqrsdf-panel/43/';
+        const url = '/gestor/pqr/get_pqrsdf-panel/145/';
         const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
         const facilidadPagoData = res.data.data;
         setRespuestaPqrs(facilidadPagoData)
@@ -141,6 +142,9 @@ export const FormParte1 = ({
 
     fetchData(); // Llama a la función que realiza la petición al montar el componente
   }, []);
+
+
+
 
 
   return (
@@ -169,7 +173,7 @@ export const FormParte1 = ({
               inputProps={{
                 maxLength: 50,
               }}
-              value={infoInicialUsuario?.detallePQRSDF?.data?.tipo ?? 'N/A'}
+              value={respuestaPqrs.tipo_pqrsdf_descripcion?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -180,12 +184,10 @@ export const FormParte1 = ({
               label="Estado"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              inputProps={{
+              inputProps={{     
                 maxLength: 10,
               }}
-              value={
-                infoInicialUsuario?.detallePQRSDF?.data?.estado_actual ?? 'N/A'
-              }
+              value={respuestaPqrs.estado?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -207,12 +209,7 @@ export const FormParte1 = ({
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={
-                formatDate(
-                  infoInicialUsuario?.detallePQRSDF?.data
-                    ?.fecha_radicado_entrada
-                ) ?? 'N/A'
-              }
+              value={respuestaPqrs.fecha_radicado?? 'N/A'} 
             />
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -254,9 +251,7 @@ export const FormParte1 = ({
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={
-                infoInicialUsuario?.detallePQRSDF?.data?.descripcion ?? 'N/A'
-              }
+              value={respuestaPqrs.descripcion?? 'N/A'}
             />
           </Grid>
 

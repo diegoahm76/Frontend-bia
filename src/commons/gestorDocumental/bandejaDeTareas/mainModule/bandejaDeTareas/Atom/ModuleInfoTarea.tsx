@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -20,7 +20,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { BandejaTareasContext } from '../../context/BandejaTareasContext';
-import { useAppSelector } from '../../../../../../hooks';
 import { columnsAtom } from '../../../../panelDeVentanilla/module/entrega98_101/Atom/ModalAtom/columnsAtom/columnsAtom';
 import { containerStyles } from '../../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../../components';
@@ -29,17 +28,17 @@ import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGr
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
 import { getMetadatosPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
 import { getMetadatoComplemento } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
-import  InfoIcon  from '@mui/icons-material/Info';
+import InfoIcon from '@mui/icons-material/Info';
 import { getArchivoAnexoPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
 import { getArchivoAnexoComplemento } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
 import { getInfoDenuncia } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/denuncia/getInfoDenuncia.service';
-
+import { useAppSelector } from '../../../../../../hooks';
+import { ModuleInfoDenuncia } from './ModuleInfoDenuncia';
 
 export const ModuleInfoTarea = (props: any): JSX.Element => {
-  // ! debe recibir una cantidad de props aprox de 10
-  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
-    (state) => state.PanelVentanillaSlice
-  );
+  //* redux states selected
+  const { infoTarea } = useAppSelector((state) => state.BandejaTareasSlice);
+
   //* navigate declaration
   const navigate = useNavigate();
 
@@ -59,7 +58,6 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
   const {
     anexos,
     metadatos,
-    setAnexos,
     setMetadatos,
     archivoAnexos,
     setArchivoAnexos,
@@ -81,6 +79,8 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
               <IconButton
                 onClick={async () => {
                   let archivo;
+
+                  console.log(params.row);
                   if (params.row.pqrsdf) {
                     archivo = await getArchivoAnexoPqrsdf(
                       params.row.id_anexo,
@@ -150,9 +150,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                 label="Radicado"
                 size="small"
                 variant="outlined"
-                value={
-                  currentElementPqrsdComplementoTramitesYotros?.radicado ?? ''
-                }
+                value={infoTarea?.radicado ?? 'N/A'}
                 InputLabelProps={{ shrink: true }}
                 style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
               />
@@ -164,10 +162,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                 label="Títular"
                 size="small"
                 variant="outlined"
-                value={
-                  currentElementPqrsdComplementoTramitesYotros?.nombre_completo_titular ??
-                  ''
-                }
+                value={infoTarea?.nombre_completo_titular ?? ''}
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -178,10 +173,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                 label="Cantidad de anexos"
                 size="small"
                 variant="outlined"
-                value={
-                  currentElementPqrsdComplementoTramitesYotros?.cantidad_anexos ??
-                  ''
-                }
+                value={infoTarea?.cantidad_anexos ?? ''}
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -194,14 +186,12 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                 label="Asunto"
                 size="small"
                 variant="outlined"
-                value={
-                  currentElementPqrsdComplementoTramitesYotros?.asunto ?? ''
-                }
+                value={infoTarea?.asunto ?? ''}
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
             {/*se procede a añadir los nuevos campos para el renderizado de los elementos*/}
-            {currentElementPqrsdComplementoTramitesYotros?.es_pqrsdf && (
+            {infoTarea?.es_pqrsdf && (
               <>
                 <Grid
                   item
@@ -222,27 +212,22 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Tipo de PQRSDF"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.tipo_PQRSDF ??
-                      'N/A'
-                    }
+                    value={infoTarea?.tipo_PQRSDF ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
-                  {(currentElementPqrsdComplementoTramitesYotros?.tipo_PQRSDF ===
-                    'Denuncia' ||
-                    currentElementPqrsdComplementoTramitesYotros?.cod_tipo_PQRSDF ===
-                      'D') && (
+                  {(infoTarea?.tipo_PQRSDF === 'Denuncia' ||
+                    infoTarea?.cod_tipo_PQRSDF === 'D') && (
                     <Button
                       sx={{
                         mt: '.8rem',
                       }}
                       color="primary"
-                      variant="outlined"
+                      variant="contained"
                       onClick={async () => {
                         handleGeneralLoading(true);
                         const GET_DENUNCIA_INFO = await getInfoDenuncia(
-                          currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+                          infoTarea?.id_PQRSDF,
                           handleGeneralLoading
                         );
                         console.log(GET_DENUNCIA_INFO);
@@ -270,11 +255,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Fecha de registro"
                     size="small"
                     variant="outlined"
-                    value={
-                      formatDate(
-                        currentElementPqrsdComplementoTramitesYotros?.fecha_registro
-                      ) ?? 'N/A'
-                    }
+                    value={formatDate(infoTarea?.fecha_registro) ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -295,10 +276,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Medio de solicitud"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.medio_solicitud ??
-                      'N/A'
-                    }
+                    value={infoTarea?.medio_solicitud ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -319,10 +297,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Forma de presentación"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.forma_presentacion ??
-                      'N/A'
-                    }
+                    value={infoTarea?.forma_presentacion ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -343,10 +318,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Número de folios totales"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.numero_folios ??
-                      'N/A'
-                    }
+                    value={infoTarea?.numero_folios ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -367,10 +339,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="persona que recibe la solicitud"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.persona_recibe ??
-                      'N/A'
-                    }
+                    value={infoTarea?.persona_recibe ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -391,10 +360,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Sucursal implicada"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.nombre_sucursal_implicada ??
-                      'N/A'
-                    }
+                    value={infoTarea?.nombre_sucursal_implicada ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -415,10 +381,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Sucursal de recepción física"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.nombre_sucursal_recepcion_fisica ??
-                      'N/A'
-                    }
+                    value={infoTarea?.nombre_sucursal_recepcion_fisica ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -439,10 +402,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Cantidad de anexos"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.cantidad_anexos ??
-                      'N/A'
-                    }
+                    value={infoTarea?.cantidad_anexos ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -464,15 +424,9 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     size="small"
                     variant="outlined"
                     value={
-                      currentElementPqrsdComplementoTramitesYotros?.fecha_radicado &&
-                      !isNaN(
-                        new Date(
-                          currentElementPqrsdComplementoTramitesYotros.fecha_radicado
-                        ).getTime()
-                      )
-                        ? formatDate(
-                            currentElementPqrsdComplementoTramitesYotros.fecha_radicado
-                          )
+                      infoTarea?.fecha_radicado &&
+                      !isNaN(new Date(infoTarea.fecha_radicado).getTime())
+                        ? formatDate(infoTarea.fecha_radicado)
                         : 'N/A'
                     }
                     InputLabelProps={{ shrink: true }}
@@ -484,7 +438,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
 
             {/*definicion de elemento cuando es complemento*/}
 
-            {currentElementPqrsdComplementoTramitesYotros?.es_complemento && (
+            {infoTarea?.es_complemento && (
               <>
                 <Grid
                   item
@@ -501,11 +455,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Fecha complemento"
                     size="small"
                     variant="outlined"
-                    value={
-                      formatDate(
-                        currentElementPqrsdComplementoTramitesYotros?.fecha_complemento
-                      ) ?? 'N/A'
-                    }
+                    value={formatDate(infoTarea?.fecha_complemento) ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -526,10 +476,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Número de folios totales"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.nro_folios_totales ??
-                      '0'
-                    }
+                    value={infoTarea?.nro_folios_totales ?? '0'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -550,10 +497,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Descripción del complemento"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.descripcion ??
-                      'N/A'
-                    }
+                    value={infoTarea?.descripcion ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -574,10 +518,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                     label="Nombre completo de quien recibe"
                     size="small"
                     variant="outlined"
-                    value={
-                      currentElementPqrsdComplementoTramitesYotros?.nombre_completo_recibe ??
-                      'N/A'
-                    }
+                    value={infoTarea?.nombre_completo_recibe ?? 'N/A'}
                     InputLabelProps={{ shrink: true }}
                     style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
                   />
@@ -590,12 +531,11 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
         {/*arriba*/}
         {/* condicional sobre esto para añadir campos diferentes para el complemento o para la pqrsdf */}
 
-        {anexos.length > 0 && (
+        {anexos?.length > 0 && (
           <RenderDataGrid
             rows={anexos || []}
             columns={colums || []}
             title={titleOpcion}
-            // ? se debe reemplazar ese button por el ojito que aparecere dentro de las columnas de la tabla para así ver los anexos
           />
         )}
 
@@ -628,7 +568,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                   disabled
                   variant="outlined"
                   value={
-                    archivoAnexos?.anexoActual?.observacion_digitalizacion ?? ''
+                    archivoAnexos?.anexoActual?.observacion_digitalizacion ?? 'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
                 />
@@ -831,7 +771,6 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                   variant="contained"
                   onClick={() => {
                     handleOpenInfoMetadatos(false);
-                    // handleOpenInfoAnexos(false);
                   }}
                   startIcon={<CloseIcon />}
                 >
@@ -855,28 +794,25 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
         >
           <Button
             color="error"
-            variant="outlined"
+            variant="contained"
             onClick={() => {
-              navigate('/app/gestor_documental/panel_ventanilla/');
+              navigate('/app/gestor_documental/bandeja_tareas/');
               handleOpenInfoMetadatos(false);
               handleOpenInfoAnexos(false);
               setMetadatos([]);
             }}
             startIcon={<ArrowBackIcon />}
           >
-            VOLVER A PANEL DE VENTANILLA
+            VOLVER A LA BANDEJA DE TAREAS
           </Button>
         </Stack>
       </Grid>
 
       {/* modal de la denuncia */}
-
-            <>Pendiente de la definicion del modal de denuncia</>
-
-     {/* <ModalDenuncia
+      <ModuleInfoDenuncia
         setInfoDenuncia={setInfoDenuncia}
         infoDenuncia={infoDenuncia}
-      />*/}
+      />
       {/* modal de la denuncia */}
     </>
   );

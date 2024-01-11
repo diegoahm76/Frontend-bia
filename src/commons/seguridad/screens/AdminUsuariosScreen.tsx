@@ -33,6 +33,7 @@ import {
 } from '../store/seguridadSlice';
 import { get_person_user_or_users_by_document } from '../request/seguridadRequest';
 import { control_error } from '../../../helpers';
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
 const initial_state_data_register: DataAadminUser = {
   tipo_persona: '',
@@ -71,6 +72,8 @@ const initial_state_data_register: DataAadminUser = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsuariosScreen: React.FC = () => {
+
+
   const dispatch = useDispatch();
   const { data_user_search, data_person_search } = useSelector(
     (state: SeguridadSlice) => state.seguridad
@@ -99,7 +102,6 @@ export const AdminUsuariosScreen: React.FC = () => {
     }
   });
 
-  // const dataForm = watch();
 
   const {
     users_x_person_is_active,
@@ -118,7 +120,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_loading_inputs,
     set_numero_documento,
     reset_admin_user,
-    clean_user_info    
+    clean_user_info,
   } = use_admin_users();
   // const numero_documento = watch('numero_documento');
   useEffect(() => {
@@ -147,12 +149,11 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_value_form('persona_que_creo', '');
   }, []);
 
-  // Consultamos si el usuario existe
+  //? Consultamos si el usuario existe
   useEffect(() => {
     if (numero_documento !== undefined && numero_documento !== '') {
       set_numero_documento(numero_documento);
       set_value_ini('numero_documento', numero_documento);
-      //  console.log('')('numero_documento', numero_documento);
     }
   }, [numero_documento]);
 
@@ -189,14 +190,14 @@ export const AdminUsuariosScreen: React.FC = () => {
     }
   }, [tipo_persona]);
 
-  // Busca data de usuario despues de seleccionarlo en el modal cuando persona tiene mas de un usuario
+  //? Busca data de usuario despues de seleccionarlo en el modal cuando persona tiene mas de un usuario
   const search_data_user_selected = (id_user: number): void => {
     dispatch(set_user_info(initial_state_user_info));
     dispatch(get_data_user(id_user));
     set_users_x_person_is_active(false);
   };
 
-  // Limpia datos del formulario y permite mostrar la informacion de persona Natural o Juridica
+  //? Limpia datos del formulario y permite mostrar la informacion de persona Natural o Juridica
   const handle_user_person_create_active = (): void => {
     set_data_register(initial_state_data_register);
     dispatch(set_user_info(initial_state_user_info));
@@ -205,7 +206,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_loading_inputs(true);
   };
 
-  // Limpia datos del formulario y permite mostrar la informacion de persona Natural o Juridica
+  //? Limpia datos del formulario y permite mostrar la informacion de persona Natural o Juridica
   const handle_user_edit_active = (): void => {
     dispatch(set_user_info(initial_state_user_info));
     set_data_register(initial_state_data_register);
@@ -214,7 +215,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_loading_inputs(true);
   };
 
-  // Establece los valores del formulario INICIAL
+  //? Establece los valores del formulario INICIAL
   const set_value_form = (name: string, value: string): void => {
     set_data_register({
       ...data_register,
@@ -223,18 +224,17 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_value_ini(name as keys_object, value);
   };
 
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
+  //? Se usa para escuchar los cambios de valor del componente CustomSelect
   const on_change = (e: SelectChangeEvent<string>): void => {
     set_value_form(e.target.name, e.target.value);
   };
 
-  // Cambio inputs
+  //? Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    //  console.log('')(e.target.value);
     set_value_form(e.target.name, e.target.value);
   };
 
-  // Realiza buqueda por persona para editar o crear dependiendo si tiene usuario o no
+  //? Realiza buqueda por persona para editar o crear dependiendo si tiene usuario o no
   const on_submit_search_ini_persona = async (
     data_search_ini: any
   ): Promise<void> => {
@@ -249,7 +249,7 @@ export const AdminUsuariosScreen: React.FC = () => {
         dispatch(set_action_admin_users('EDIT'));
         if (data_person_search.data?.usuarios.length === 1) {
           dispatch(
-            get_data_user(data_person_search.data?.usuarios[0].id_usuario)
+            get_data_user(data_person_search.data?.usuarios[0]?.id_usuario)
           );
         } else if (data_person_search.data?.usuarios.length === 2) {
           // Disparar modal con los 2 usuarios disponibles
@@ -267,30 +267,32 @@ export const AdminUsuariosScreen: React.FC = () => {
     <Grid container>
       <Grid item xs={12}>
         <Card variant="outlined" sx={{ borderRadius: 5, padding: '20px' }}>
-          <Title title="Administrar usuarios" />
+          <Title title="Administración de personas y usuarios" />
           <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={8} md={6}>
               <Button
                 fullWidth
-                variant="outlined"
-                startIcon={<SearchIcon />}
+                color="primary"
+                variant="contained"
+                startIcon={<DoubleArrowIcon />}
                 onClick={() => {
                   set_busqueda_avanzada_person_is_active(true);
                 }}
               >
-                BUSQUEDA POR PERSONA
+                REALIZAR BÚSQUEDA POR PERSONA
               </Button>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={8} md={6}>
               <Button
                 fullWidth
-                variant="outlined"
-                startIcon={<SearchIcon />}
+                color="primary"
+                variant="contained"
+                startIcon={<DoubleArrowIcon />}
                 onClick={() => {
                   set_busqueda_avanzada_user_is_active(true);
                 }}
               >
-                BUSQUEDA POR USUARIO
+                REALIZAR BÚSQUEDA POR USUARIO
               </Button>
             </Grid>
           </Grid>
@@ -359,7 +361,8 @@ export const AdminUsuariosScreen: React.FC = () => {
                 <Button
                   type="submit"
                   fullWidth
-                  variant="outlined"
+                  color="primary"
+                  variant="contained"
                   startIcon={<SearchIcon />}
                 >
                   BUSCAR PERSONA

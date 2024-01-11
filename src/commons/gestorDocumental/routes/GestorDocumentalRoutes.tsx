@@ -38,6 +38,7 @@ import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOt
 import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
+import { RutesWorkFlowPQRSDF } from '../WorkFlowPQRSDF/routes/RutesWorkFlowPQRSDF';
 import { Consulta_Solicitud_Routes } from '../consultaSolicitud/routes/ConsultaSolicitud';
 import { Consulta_estadoPQR_Routes } from '../consultaEstadoPQR/routes/ConsultaEstadoPQR';
 import { Consulta_ExternoPQR_Routes } from '../consultarEstadoExternoPQR/routes/ConsultaExternoPQR';
@@ -209,31 +210,7 @@ const routes = [
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
   },
-  {
-    path: 'consulta_estadopqr/',
-    name: 'consulta_estadopqr',
-    component: () => <Consulta_estadoPQR_Routes />,
-  },
-  {
-    path: 'ConsultaExternoPQR/',
-    name: 'ConsultaExternoPQR',
-    component: () => <Consulta_ExternoPQR_Routes />,
-  },
-  {
-    path: 'Consulta_AnonimoPQR/',
-    name: 'Consulta_AnonimoPQR',
-    component: () => <Consulta_AnonimoPQR_Routes />,
-  },
-  {
-    path: 'ConsultaOtros/',
-    name: 'ConsultaOtros',
-    component: () => <Consulta_Otros_Routes />,
-  },
-  {
-    path: 'ConsultaOtrosExterno/',
-    name: 'ConsultaOtrosExterno',
-    component: () => <Consulta_OtrosExterno_Routes />,
-  },
+
   {
     path: 'Pqrsdf/complementos/',
     name: 'complementos_pqrsdf',
@@ -244,17 +221,15 @@ const routes = [
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
-    // <Suspense fallback={<Loader />}>
-    <Routes>
-      {routes.map((route) => (
-        <Route
-          key={route.path}
-          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-          element={route.component()}
-        />
-      ))}
-      <Route path="/*" element={<Page404 />} />
-    </Routes>
-    // </Suspense>
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+            element={route.component()}
+          />
+        ))}
+        <Route path="/*" element={<Page404 />} />
+      </Routes>
   );
 };

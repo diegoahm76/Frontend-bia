@@ -147,25 +147,43 @@ export const ModalMetadatos = ({
 
   // ? functions
   const handleSubmit = async () => {
+    console.log('watchExeManejoModalMetadatos', watchExeManejoModalMetadatos);
+
     for (let key in watchExeManejoModalMetadatos) {
       // Si la clave es una de las excepciones, continúa con la siguiente iteración
-      if (key === 'tipologiasDocumentalesMetadatos' || key === 'cualTipologiaDocumentalMetadatos') {
+      if (
+        key === 'tipologiasDocumentalesMetadatos' ||
+        key === 'cualTipologiaDocumentalMetadatos'
+      ) {
         continue;
       }
 
-      if (watchExeManejoModalMetadatos[key as keyof typeof watchExeManejoModalMetadatos] === '') {
+      let value =
+        watchExeManejoModalMetadatos[
+          key as keyof typeof watchExeManejoModalMetadatos
+        ];
+
+      // Comprueba si el valor es una cadena vacía
+      if (value === '') {
+        control_warning('Todos los campos son obligatorios');
+        return;
+      }
+
+      // Comprueba si el valor es un objeto y, en caso afirmativo, si su propiedad 'value' es una cadena vacía o si el objeto está vacío
+      if (
+        typeof value === 'object' &&
+        (value.value === '' || Object.keys(value).length === 0)
+      ) {
         control_warning('Todos los campos son obligatorios');
         return;
       }
     }
-
 
     dispatch(setMetadatos(watchExeManejoModalMetadatos as any));
     control_success('Se han establecido los metadatos');
     handleModalAgregarMetadatos(false);
     // resetManejoMetadatosModalFunction();
   };
-
   return (
     <>
       <Dialog

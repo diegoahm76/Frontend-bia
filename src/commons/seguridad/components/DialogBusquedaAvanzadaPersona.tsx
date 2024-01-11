@@ -28,7 +28,7 @@ import type {
   FormValuesSearchPerson,
   keys_object_search_person,
 } from '../interfaces';
-import { get_persons } from '../store/thunks';
+import { get_data_user, get_persons } from '../store/thunks';
 import { set_data_person_search } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
@@ -70,37 +70,43 @@ const DialogBusquedaAvanzada = ({
   } = useForm<FormValuesSearchPerson>();
   const numero_documento = watch_search_person('numero_documento');
 
+
   const columns_persons: GridColDef[] = [
-    // {
-    //   headerName: 'ID persona',
-    //   field: 'id_persona',
-    // },
     {
       headerName: 'Tipo persona',
-      field: 'tipo_persona',flex: 1,
+      field: 'tipo_persona',
+      flex: 1,
       renderCell: (params) => {
-        return params.row.tipo_persona === 'N' ? 'NATURAL' : params.row.tipo_persona === 'J' ? 'JURÍDICO' : '';
+        return params.row.tipo_persona === 'N'
+          ? 'NATURAL'
+          : params.row.tipo_persona === 'J'
+          ? 'JURÍDICO'
+          : '';
       },
     },
-    
+
     {
       headerName: 'Nombre completo',
       field: 'nombre_completo',
-      width: 250,flex: 1,
+      width: 250,
+      flex: 1,
     },
     {
       headerName: 'Razón social',
       field: 'razon_social',
-      width: 150,flex: 1,
+      width: 150,
+      flex: 1,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
-      width: 150,flex: 1,
+      width: 150,
+      flex: 1,
     },
     {
       headerName: 'Tiene usuario',
-      field: 'tiene_usuario',flex: 1,
+      field: 'tiene_usuario',
+      flex: 1,
       renderCell: (params) => {
         return params.row.tiene_usuario === true ? (
           <Chip size="small" label="Si" color="success" variant="outlined" />
@@ -111,15 +117,18 @@ const DialogBusquedaAvanzada = ({
     },
     {
       headerName: 'Tipo documento',
-      field: 'tipo_documento',flex: 1,
+      field: 'tipo_documento',
+      flex: 1,
     },
     {
       headerName: 'Numero documento',
-      field: 'numero_documento',flex: 1,
+      field: 'numero_documento',
+      flex: 1,
     },
     {
       headerName: 'Acciones',
-      field: 'accion',flex: 1,
+      field: 'accion',
+      flex: 1,
       renderCell: (params: any) => (
         <>
           {params.row.tiene_usuario === true ? (
@@ -180,7 +189,7 @@ const DialogBusquedaAvanzada = ({
     },
   ];
 
-  // Consultamos si el usuario existe
+  //?  Consultamos si el usuario existe
   useEffect(() => {
     if (numero_documento !== undefined && numero_documento !== '') {
       set_numero_documento(numero_documento);
@@ -210,14 +219,15 @@ const DialogBusquedaAvanzada = ({
 
   const trigger_user_person_create_active = (data: any): void => {
     user_person_create_active();
-    set_is_modal_active(false );
+    set_is_modal_active(false);
     dispatch(set_data_person_search(data));
   };
 
   const trigger_user_edit_active = (data: any): void => {
     user_edit_active();
-    set_is_modal_active(false );
+    set_is_modal_active(false);
     dispatch(set_data_person_search(data));
+    dispatch(get_data_user(data?.usuarios[0]?.id_usuario));
   };
 
   const handle_close_busqueda_avanzada = (): void => {
@@ -251,16 +261,11 @@ const DialogBusquedaAvanzada = ({
 
   return (
     <Dialog
-    /*sx={{
-      zIndex: 9,
-    }}*/
       fullWidth
       maxWidth="lg"
       open={is_modal_active}
       onClose={handle_close_busqueda_avanzada}
     >
-
-
       <DialogTitle>
         <Grid
           container
@@ -269,14 +274,15 @@ const DialogBusquedaAvanzada = ({
             position: 'relative',
             background: '#FAFAFA',
             borderRadius: '15px',
-            p: '20px', mb: '20px',
+            p: '20px',
+            mb: '20px',
             boxShadow: '0px 3px 6px #042F4A26',
             marginTop: '0px',
             marginLeft: '-5px',
             width: '99%',
           }}
         >
-          <Title title="Busqueda avanzada por Persona " />
+          <Title title="Búsqueda avanzada por persona " />
         </Grid>
 
         <IconButton
@@ -294,9 +300,6 @@ const DialogBusquedaAvanzada = ({
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-
-
-
       <Divider />
       <Grid
         container
@@ -312,10 +315,6 @@ const DialogBusquedaAvanzada = ({
           marginTop: '20px',
         }}
       >
-
-
-
-        {/* <DialogContent sx={{ mb: '0px' }}> */}
         <Box
           component="form"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -383,7 +382,8 @@ const DialogBusquedaAvanzada = ({
             <Grid item xs={12} sm={2}>
               <Button
                 type="submit"
-                variant="outlined"
+                color="primary"
+                variant="contained"
                 startIcon={<SearchIcon />}
                 fullWidth
               >
@@ -392,25 +392,35 @@ const DialogBusquedaAvanzada = ({
             </Grid>
           </Grid>
         </Box>
-        <ButtonGroup >
-          {download_xls({ nurseries: persons, columns: columns_persons })}
-         
-        </ButtonGroup> 
-        <Grid item xs={12} sx={{ mt: '15px' }}>
-          <DataGrid
-            density="compact"
-            autoHeight
-            rows={persons ?? []}
-            columns={columns_persons ?? []}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            getRowId={(row) => row.id_persona}
-          />
-        </Grid>
-        {/* </DialogContent> */}
 
+        {
+          // eslint-disable-next-line no-nested-ternary
+          persons?.length === 0 ? (
+            <Grid item xs={12} sx={{ marginY: '4.5rem', display: 'flex', justifyContent: 'center', }}>
+              <Typography variant="h6" component="div" gutterBottom>
+                Sin resultados / sin búsqueda realizada
+              </Typography>
+            </Grid>
+          ) : (
+            <>
+              <ButtonGroup>
+                {download_xls({ nurseries: persons, columns: columns_persons })}
+              </ButtonGroup>
+              <Grid item xs={12} sx={{ mt: '15px' }}>
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={persons ?? []}
+                  columns={columns_persons ?? []}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  getRowId={(row) => row?.id_persona}
+                />
+              </Grid>
+            </>
+          )
+        }
       </Grid>
-
     </Dialog>
   );
 };

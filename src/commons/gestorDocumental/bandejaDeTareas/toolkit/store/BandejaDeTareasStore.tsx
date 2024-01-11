@@ -16,7 +16,7 @@ const actionsTareasPQRSDF: Action[] = [
   {
     id: 'InfoSolictud',
     icon: <ContactPageIcon />,
-    name: 'Ver información de la solicitud',
+    name: 'Ver información resumida de la tarea',
     path: '',
     disabled: false,
   },
@@ -24,21 +24,21 @@ const actionsTareasPQRSDF: Action[] = [
     id: 'RespondeSolicitud',
     icon: <ReplyAllIcon />,
     name: 'Responder solicitud',
-    path: '',
+    path: '/app/gestor_documental/Pqrsdf/Respuesta_pqrsdf',
     disabled: false,
   },
   {
     id: 'Reasignar',
     icon: <PersonAddAlt1Icon />,
     name: 'Reasignar',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
     disabled: false,
   },
   {
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/requerimiento_a_usuario',
     disabled: false,
   },
   {
@@ -75,6 +75,9 @@ const initialState: any = {
 
   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas: null,
   listaTareasPqrsdfTramitesUotrosUopas: [],
+
+  //* informacion de tarea
+  infoTarea: null,
 };
 
 export const BandejaTareasSlice = createSlice({
@@ -113,14 +116,23 @@ export const BandejaTareasSlice = createSlice({
         action.payload;
     },
 
+    // ? ------------------------
+    // ? ------------------------
+    // set info tarea
+    setInfoTarea: (state, action: PayloadAction<any>) => {
+      state.infoTarea = action.payload;
+    },
+
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetBandejaDeTareasFull: (state) => {
-      state.actionsTareasPQRSDF = [];
+      // state.actionsTareasPQRSDF = [];
       // state.actions = [];
       // state.actionsTramitesYServicios = [];
       // state.actionsComplementos = [];
       state.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = null;
       state.listaTareasPqrsdfTramitesUotrosUopas = [];
+
+      state.infoTarea = null;
     },
   },
 });
@@ -134,5 +146,7 @@ export const {
   // ? elemento actual de la tarea
   setCurrentTareaPqrsdfTramitesUotrosUopas,
   // ? reset de todos los estados del slice
+  // ? set info tarea
+  setInfoTarea,
   resetBandejaDeTareasFull,
 } = BandejaTareasSlice.actions;

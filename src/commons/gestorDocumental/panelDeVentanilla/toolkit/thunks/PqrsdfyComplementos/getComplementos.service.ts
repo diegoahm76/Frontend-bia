@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Swal from 'sweetalert2';
-import { control_error, control_success } from '../../../../../../helpers';
-import { formatDate } from '../../../../../../utils/functions/formatDate';
+import { control_success } from '../../../../../../helpers';
 import { api } from '../../../../../../api/axios';
 
 export const getComplementosAsociadosPqrsdf = async (
