@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import dayjs, { Dayjs } from "dayjs";
 import { useForm } from "react-hook-form";
@@ -18,10 +19,11 @@ import { IObjCarpeta } from "../../deposito/interfaces/deposito";
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import MoverCarpeta from "../../deposito/Carpetas/components/MoverCarpeta";
-import BuscarExpediente from "../../Expedientes/aperturaExpedientes/screens/BuscarExpediente";
+// import ReubicacioBusquda from "../../Expedientes/aperturaExpedientes/screens/ReubicacioBusquda";
 import AnularExpedienteModal from "../../Expedientes/aperturaExpedientes/screens/AnularExpediente";
 import { Grid, TextField, Box, Button, Stack, FormHelperText, Typography, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { buscar_persona, obtener_unidad_organizacional, obtener_usuario_logueado } from "../../Expedientes/aperturaExpedientes/thunks/aperturaExpedientes";
+import ReubicacioBusquda from "./ReubicacioBusquda";
 
 dayjs.extend(dayOfYear);
 const class_css = {
@@ -329,7 +331,7 @@ export const Expedien: React.FC = () => {
                     </>
 
                     {/* </Grid> */}
-                    {abrir_modal_buscar && <BuscarExpediente set_select_expediente={set_select_expediente} is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></BuscarExpediente>}
+                    {abrir_modal_buscar && <ReubicacioBusquda set_select_expediente={set_select_expediente} is_modal_active={abrir_modal_buscar} set_is_modal_active={set_abrir_modal_buscar} set_expediente={set_expediente} serie={serie}></ReubicacioBusquda>}
                     {/* </Stack> */}
                 </Grid>
                 {select_expediente && select_expediente.nombre_unidad_org ? (

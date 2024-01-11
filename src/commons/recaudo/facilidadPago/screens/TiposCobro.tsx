@@ -16,6 +16,7 @@ import SaveIcon from '@mui/icons-material/Save';
 interface ConfiguracionBasica {
     id_tipo_cobro: any;
     nombre_tipo_cobro: any;
+    valor_tipo_cobro: any;
 }
 
 
@@ -64,6 +65,8 @@ export const TiposCobro: React.FC = () => {
     const columns = [
         { field: 'id_tipo_cobro', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'nombre_tipo_cobro', headerName: 'Tipo cobro', width: 130, flex: 1 },
+        { field: 'valor_tipo_cobro', headerName: ' valor_tipo_cobro ', width: 130, flex: 1 },
+
         {
             field: 'Acciones',
             headerName: 'Acciones',
@@ -95,6 +98,8 @@ export const TiposCobro: React.FC = () => {
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         nombre_tipo_cobro: selectedConfiguracion?.nombre_tipo_cobro || "",
         id_tipo_cobro: selectedConfiguracion?.id_tipo_cobro || "",
+        valor_tipo_cobro: selectedConfiguracion?.valor_tipo_cobro || "",
+
     });
 
     useEffect(() => {
@@ -113,6 +118,7 @@ export const TiposCobro: React.FC = () => {
             const url = `/recaudo/configuracion_baisca/tipoCobro/put/${formValues.id_tipo_cobro}/`;
             const dataToUpdate = {
                 nombre_tipo_cobro: formValues.nombre_tipo_cobro,
+                valor_tipo_cobro: formValues.valor_tipo_cobro
             };
             await api.put(url, dataToUpdate);
             fetchConfiguraciones();
@@ -120,6 +126,7 @@ export const TiposCobro: React.FC = () => {
                 ...formValues,
                 id_tipo_cobro: "",
                 nombre_tipo_cobro: "",
+                valor_tipo_cobro: "",
             });
             control_success("Editado  exitosamente");
         } catch (error: any) {
@@ -139,6 +146,7 @@ export const TiposCobro: React.FC = () => {
                 ...formValues,
                 id_tipo_cobro: "",
                 nombre_tipo_cobro: "",
+                valor_tipo_cobro: "",
             });
         } catch (error: any) {
             // console.error("Error al crear la configuración básica", error);
@@ -179,6 +187,22 @@ export const TiposCobro: React.FC = () => {
                             value={formValues.nombre_tipo_cobro}
                         />
                     </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            required
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            name="valor_tipo_cobro"
+                            onChange={handleInputChange}
+                            label="valor de tipo de cobro"
+                            value={formValues.valor_tipo_cobro}
+                        />
+                    </Grid>
+
+
+
                     <Grid item xs={12} sm={4}>
                         <Button
                             color="success"

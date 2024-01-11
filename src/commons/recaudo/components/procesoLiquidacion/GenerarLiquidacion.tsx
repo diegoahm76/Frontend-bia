@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable object-shorthand */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint no-new-func: 0 */
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
 import type { EstadoExpediente, Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
@@ -11,6 +16,8 @@ import dayjs, { type Dayjs } from "dayjs";
 import PrintIcon from '@mui/icons-material/Print';
 import { api } from "../../../../api/axios";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
+import { jsPDF } from 'jspdf';
+import {    useState } from "react";
 
 interface IProps {
   form_liquidacion: FormLiquidacion;
@@ -63,6 +70,26 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
     }
   };
 
+
+
+  const [visor, setVisor] = useState('');
+ 
+  const generarHistoricoBajas = () => {
+    const doc = new jsPDF();
+    const anchoPagina = doc.internal.pageSize.width;
+    const agregarEncabezado = () => {
+      doc.setFontSize(22);
+      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
+      doc.setFontSize(12); 
+    };
+    agregarEncabezado(); 
+    doc.setFontSize(12);
+    let y = 30;  
+    setVisor(doc.output('datauristring'));
+  };
+
+
+  
   return (
     <>
       <Grid container spacing={2}>
@@ -236,6 +263,24 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 Imprimir recibo
               </Button>
             </Grid>
+
+
+
+
+            <Button variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
+          <Grid item xs={12} sm={12}>
+            <embed src={visor} type="application/pdf" width="100%" height="1080px" />
+          </Grid>
+
+
+
+
+
+
+
+
+
+
             <Grid item xs={12} sm={3}>
               <Button
                 color="primary"

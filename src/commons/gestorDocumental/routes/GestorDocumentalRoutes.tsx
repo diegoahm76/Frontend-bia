@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes } from 'react-router-dom';
 import { OrganigramaRoutes } from '../organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../ccd/routes/CcdRoutes';
@@ -38,6 +39,12 @@ import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesSe
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
 import { RutesWorkFlowPQRSDF } from '../WorkFlowPQRSDF/routes/RutesWorkFlowPQRSDF';
+import { Consulta_Solicitud_Routes } from '../consultaSolicitud/routes/ConsultaSolicitud';
+import { Consulta_estadoPQR_Routes } from '../consultaEstadoPQR/routes/ConsultaEstadoPQR';
+import { Consulta_ExternoPQR_Routes } from '../consultarEstadoExternoPQR/routes/ConsultaExternoPQR';
+import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/ConsultaAnonimo';
+import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
+import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
 
 const routes = [
   {
@@ -140,6 +147,12 @@ const routes = [
     name: 'encuesta_asignacion',
     component: () => <EncuestaRoutes />,
   },
+
+  {
+    path: 'Reportes_PQRSDF/',
+    name: 'Reportes_PQRSDF',
+    component: () => <Consulta_Solicitud_Routes />,
+  },
   {
     path: 'Interno_encuesta/',
     name: 'Interno_encuesta',
@@ -197,12 +210,7 @@ const routes = [
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
   },
-  {
-    path: 'rutesworkFlowpqrs/',
-    name: 'rutesworkFlowpqrs',
-    component: () => <RutesWorkFlowPQRSDF />,
-  },
-  
+
   {
     path: 'Pqrsdf/complementos/',
     name: 'complementos_pqrsdf',

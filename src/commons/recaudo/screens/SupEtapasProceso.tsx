@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
@@ -69,7 +70,7 @@ export const SupEtapasProceso: React.FC = () => {
     const columns = [
         { field: 'id', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'categoria', headerName: 'categoria', width: 130, flex: 1 },
-        { field: 'id_etapa', headerName: 'id_etapa', width: 130, flex: 1 },
+        { field: 'id_etapa', headerName: 'id etapa', width: 130, flex: 1 },
 
         { field: 'orden', headerName: 'orden', width: 130, flex: 1 },
 

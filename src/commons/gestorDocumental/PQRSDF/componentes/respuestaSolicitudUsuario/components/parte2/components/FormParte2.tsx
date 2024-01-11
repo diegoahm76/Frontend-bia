@@ -5,8 +5,9 @@ import { control_warning } from '../../../../../../../almacen/configuracion/stor
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAppSelector } from '../../../../../../../../hooks';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolicitudUsuario';
+import { ResSolicitudUsuarioContext } from '../../../context/ResSolicitudUsarioContext';
 export const FormParte2 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -17,7 +18,7 @@ export const FormParte2 = ({
 }: any): JSX.Element => {
   // ? stepper hook
   const { handleNext, handleBack } = useStepperResSolicitudUsuario();
-
+  const {respuestaPqrs} = useContext(ResSolicitudUsuarioContext);
     //* redux states functions
 /*    const { currentAnexo } = useAppSelector(
       (state: any) => state.ResSolicitudUsarioSlice
@@ -73,7 +74,7 @@ export const FormParte2 = ({
                   // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
-                  value={value}
+                  value={respuestaPqrs.asunto??value}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
