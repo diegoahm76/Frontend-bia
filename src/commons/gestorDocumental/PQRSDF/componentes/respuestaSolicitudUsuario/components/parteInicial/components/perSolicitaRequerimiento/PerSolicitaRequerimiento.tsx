@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Grid, TextField } from '@mui/material';
@@ -5,7 +6,7 @@ import { Title } from '../../../../../../../../../components';
 import { useContext } from 'react';
 import { ResSolicitudUsuarioContext } from '../../../../context/ResSolicitudUsarioContext';
 import { useSelector } from 'react-redux';
-import { AuthSlice } from '../../../../../../../../auth/interfaces/authModels';
+import { api } from '../../../../../../../../../api/axios';
 
 
 interface DataRegistePortal {
@@ -26,6 +27,7 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
   const { infoInicialUsuario } = useContext(ResSolicitudUsuarioContext);
 
   const { userinfo:{numero_documento, nombre_de_usuario,tipo_documento} } = useSelector((state: DataRegistePortal) => state.auth);
+
 
 
 
