@@ -26,7 +26,7 @@ interface ConfiguracionBasica {
     descripccion: any;
 }
 
-interface Variable {
+export interface Variable {
     id_variables: number;
     nombre: string;
     tipo_cobro: number;
@@ -77,7 +77,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     //////
     const [variables, setVariables] = useState<Variable[]>([]);
 
-    const fetchVariables = async () => {
+     const fetchVariables = async () => {
         try {
             const res = await api.get("/recaudo/configuracion_baisca/variables/get/");
             setVariables(res.data.data);
@@ -89,7 +89,12 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     useEffect(() => {
         fetchVariables();
     }, []);
-
+    
+    useEffect(() => {
+        if (is_modal_active) {
+          fetchVariables();
+        }
+      }, [is_modal_active]);
 
     // fecha de finalizacion 
     const [fechaFin, setFechaFin] = useState((formValues.fecha_fin));
