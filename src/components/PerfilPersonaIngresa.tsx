@@ -82,14 +82,14 @@ export const PerfilPersonaIngresa: React.FC = () => {
                 marginRight: '.5rem',
               }}
             >
-              {`Logueado como: ${nombre_usu}`.toUpperCase()} -
+              {`En Sesión : ${nombre_usu}`.toUpperCase()} -
             </strong>{' '}
             <strong>
               {tipo_persona === 'J'
-                ? 'Entorno Actual : Usuario - Empresa'.toUpperCase()
+                ? 'Entorno : Usuario - Empresa'.toUpperCase()
                 : tipo_persona === 'N' && tipo_usuario === 'I'
-                ? 'Entorno Actual : Usuario - Interno'.toUpperCase()
-                : 'Entorno Actual : Usuario - Persona'.toUpperCase()}
+                ? 'Entorno : Usuario - Interno'.toUpperCase()
+                : 'Entorno : Usuario - Persona'.toUpperCase()}
             </strong>
           </Typography>
         </Hidden>
@@ -119,14 +119,14 @@ export const PerfilPersonaIngresa: React.FC = () => {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose}>
-              {`Logueado como: ${nombre_usu}`.toUpperCase()}
+              {`En Sesión : ${nombre_usu}`.toUpperCase()}
             </MenuItem>
             <MenuItem onClick={handleClose}>
               {tipo_persona === 'J'
-                ? 'Entorno Actual : Usuario - Empresa'.toUpperCase()
+                ? 'Entorno : Usuario - Empresa'.toUpperCase()
                 : tipo_persona === 'N' && tipo_usuario === 'I'
-                ? 'Entorno Actual : Usuario - Interno'.toUpperCase()
-                : 'Entorno Actual : Usuario - Persona'.toUpperCase()}
+                ? 'Entorno : Usuario - Interno'.toUpperCase()
+                : 'Entorno : Usuario - Persona'.toUpperCase()}
             </MenuItem>
           </Menu>
         </Hidden>
