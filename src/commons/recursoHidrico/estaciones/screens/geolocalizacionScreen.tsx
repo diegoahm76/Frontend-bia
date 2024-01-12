@@ -32,6 +32,8 @@ export const GeolocalizacionScreen: React.FC = () => {
   const [dato, set_dato] = useState<Datos[]>([]);
   const [dato_migracion, set_dato_migracion] = useState<DatosMigracion[]>([]);
 
+
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const obtener_posicion = async () => {
     try {

@@ -7,7 +7,7 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { ReasignacionContext } from '../../context/ReasignacionContext';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const ReasignacionUsuario = (): JSX.Element => {
+export const ReasignacionesGrid = (): JSX.Element => {
   //* context declaration
   const { listaAsignaciones } = useContext(ReasignacionContext);
   const { generalLoading } = useContext(ModalAndLoadingContext);
@@ -21,12 +21,12 @@ export const ReasignacionUsuario = (): JSX.Element => {
   const columns = [
     ...columnsAsignaciones,
     {
-      headerName: 'Estado asignación',
-      field: 'estado_asignado',
-      minWidth: 150,
+      headerName: 'Estado de reasignación',
+      field: 'estado_asignacion',
+      minWidth: 200,
       renderCell: (params: any) => {
         const estado =
-          estadoMapping[params.row.estado_asignado] ||
+          estadoMapping[params.row.estado_asignacion] ||
           estadoMapping['EN ESPERA'];
 
         return <Chip label={estado.label} size="small" color={estado.color} />;

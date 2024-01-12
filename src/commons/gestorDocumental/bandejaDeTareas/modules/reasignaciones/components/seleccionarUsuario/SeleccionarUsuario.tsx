@@ -10,8 +10,11 @@ import { Title } from '../../../../../../../components';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { getLiderByUnidadOrganizacional } from '../../services/getLiderUnidadOrganizacional.service';
 import { ReasignacionContext } from '../../context/ReasignacionContext';
+import { useAppSelector } from '../../../../../../../hooks';
 
 export const SeleccionarUsuario = (): JSX.Element => {
+  const { userinfo } = useAppSelector((state) => state.auth);
+
   const {
     listaSubGrupos,
     liderAsignado,
@@ -62,8 +65,7 @@ export const SeleccionarUsuario = (): JSX.Element => {
 
   return (
     <>
-      {/* listaSubGrupos.length > 0  */}
-      {listaSubGrupos.length === 0 ? (
+      {listaSubGrupos.length > 0 ? (
         <Grid
           container
           sx={{
@@ -104,22 +106,23 @@ export const SeleccionarUsuario = (): JSX.Element => {
                   <Select
                     value={value}
                     onChange={(selectedOption) => {
-                      const { value } = selectedOption;
-                      //* se va a tener que hacer la consulta de si la unidad tiene lider actual o si no no se deben permite asignala la pqrsdf a dicha unidad}
-                      setCurrentGrupo(selectedOption);
-                      void getLiderByUnidadOrganizacional(
-                        value,
-                        setLiderAsignado
-                      ).then((res) => {
-                        //  console.log('')(res);
-
-                        if (Array.isArray(res)) {
-                          setLiderAsignado(undefined);
-                          return;
+                      console.log(selectedOption)
+                      setCurrentGrupo(selectedOption); // ? en realidad es para seleccionar el usuario jiji
+                      (async () => {
+                        try {
+                          const res = await getLiderByUnidadOrganizacional(
+                            userinfo?.id_unidad_organizacional_actual,
+                            setLiderAsignado
+                          );
+                          if (Array.isArray(res)) {
+                            setLiderAsignado(undefined);
+                            return;
+                          }
+                          setLiderAsignado(res);
+                        } catch (error) {
+                          console.error(error);
                         }
-
-                        setLiderAsignado(res);
-                      });
+                      })();
                       onChange(selectedOption);
                     }}
                     // listaSubGrupos
@@ -144,60 +147,60 @@ export const SeleccionarUsuario = (): JSX.Element => {
             />
           </Grid>
 
-          {/*  {liderAsignado ? (*/}
-          <>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                ...stylesGrid,
-                mt: '1.8rem',
-                mb: '1.8rem',
+          {liderAsignado ? (
+            <>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                sx={{
+                  ...stylesGrid,
+                  mt: '1.8rem',
+                  mb: '1.8rem',
 
-                zIndex: 5,
-              }}
-            >
-              <TextField
-                fullWidth
-                disabled
-                label="Usuario seleccionado"
-                size="small"
-                variant="outlined"
-                value={liderAsignado?.lider ?? ''}
-                sx={{ mt: '.3rem', mb: '.45rem' }}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                ...stylesGrid,
-                mt: '1.8rem',
-                mb: '1.8rem',
-
-                zIndex: 5,
-              }}
-            >
-              <TextField
-                fullWidth
-                multiline
-                rows={5}
-                label="Comentario de re-asignación"
-                onChange={(e) => {
-                  setComentario(e.target.value);
+                  zIndex: 5,
                 }}
-                size="small"
-                variant="outlined"
-                value={comentario ?? ''}
-                sx={{ mt: '.3rem', mb: '.45rem' }}
-              />
-            </Grid>
-          </>
-          {/*  ) : (
+              >
+                <TextField
+                  fullWidth
+                  disabled
+                  label="Líder de la unidad seleccionada"
+                  size="small"
+                  variant="outlined"
+                  value={liderAsignado?.lider ?? ''}
+                  sx={{ mt: '.3rem', mb: '.45rem' }}
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                sx={{
+                  ...stylesGrid,
+                  mt: '1.8rem',
+                  mb: '1.8rem',
+
+                  zIndex: 5,
+                }}
+              >
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={5}
+                  label="Comentario de re-asignación"
+                  onChange={(e) => {
+                    setComentario(e.target.value);
+                  }}
+                  size="small"
+                  variant="outlined"
+                  value={comentario ?? ''}
+                  sx={{ mt: '.3rem', mb: '.45rem' }}
+                />
+              </Grid>
+            </>
+          ) : (
             <></>
-          )}*/}
+          )}
 
           <Stack
             direction="row"
@@ -219,32 +222,7 @@ export const SeleccionarUsuario = (): JSX.Element => {
           </Stack>
         </Grid>
       ) : (
-        <Grid
-          container
-          sx={{
-            position: 'relative',
-            justifyContent: 'center',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        >
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              textAlign: 'center',
-              color: '#042F4A',
-              fontWeight: 'bold',
-              mt: '1.5rem',
-              mb: '1.5rem',
-            }}
-          >
-            No hay usuario para seleccionar
-          </Typography>
-        </Grid>
+        <></>
       )}
     </>
   );

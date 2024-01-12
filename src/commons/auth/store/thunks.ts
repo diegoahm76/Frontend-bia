@@ -51,6 +51,7 @@ export const checking_authentication: (
     // Validamos el tipo de persona y usario para mostrar u ocultar el dialog de entornos
     if (data?.userinfo.tipo_persona === 'J') {
       dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
+      // dispatch(open_dialog_representado());
       dispatch(set_authenticated());
     } else if (
       data?.userinfo.tipo_persona === 'N' &&
@@ -85,12 +86,6 @@ export const get_persmisions_user: (
       dispatch(logout({ error_message: resp.error_message }));
       return;
     }
-
-  /*  //  console.log('')(
-      '🚀 ~ file: thunks.ts ~ line 86 ~ return ~ resp.data',
-      resp.data
-    ); */
-    //* fixed rendered menu
     const permissions = resp.data?.map((e) => {
   return {
     ...e,

@@ -10,6 +10,9 @@ import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
 import { ReasignacionContext } from '../context/ReasignacionContext';
 import { SeleccionUnidadDestino } from '../components/seleccionUnidadDestino/SeleccionUnidadDestino';
 import { SeleccionarUsuario } from '../components/seleccionarUsuario/SeleccionarUsuario';
+import { getUnidadesHijasById } from '../services/getUnidadesHijas.service';
+import { getReAsignacionesTareasPqrsdf } from '../services/reasignaciones/pqrsdf/getReAsignacionesTaskPqrsdf.service';
+import { ReasignacionesGrid } from '../components/reasignacionesGrid/ReasignacionesGrid';
 
 export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -18,6 +21,8 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
       state.BandejaTareasSlice
         .currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
   );
+
+  const { userinfo } = useAppSelector((state) => state.auth);
   //* navigate declaration
   const navigate = useNavigate();
 
@@ -43,12 +48,12 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
 
     switch (tipo) {
       case 'Responder PQRSDF':
-        /*  void getAsignaciones(
-          currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+        void getReAsignacionesTareasPqrsdf(
+          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
           handleGeneralLoading
         ).then((res) => {
           setListaAsignaciones(res);
-        });*/
+        });
         showAlert(
           'Atención',
           'No hay servicio para ver reasignaciones de las (RESPUESTAS A PQRSDF),',
@@ -99,17 +104,20 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
     }
   }, []);
 
-  /*  useEffect(() => {
-    if (!currentElementPqrsdComplementoTramitesYotros) return;
+  useEffect(() => {
+    if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) return;
 
-    void getSecSubAsiGrupo(handleGeneralLoading, navigate).then((res) => {
-      //  console.log('')(res);
+    void getUnidadesHijasById(
+      userinfo?.id_unidad_organizacional_actual,
+      handleGeneralLoading,
+      navigate
+    ).then((res) => {
       setListaSeccionesSubsecciones(res);
     });
 
     //* aqui de entrada tambien se debe consultar el grillado para saber si se puede asginar o no
   }, []);
-*/
+
   return (
     <>
       <Grid
@@ -135,7 +143,7 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
       <SeleccionarUsuario />
 
       {/* asignaciones realizadas, (en espera, rechazadas, aceptadas) */}
-      {/* <ReasignacionesGrid />*/}
+      <ReasignacionesGrid />
       {/*acciones finales del módulo*/}
       <AccionesFinales />
     </>

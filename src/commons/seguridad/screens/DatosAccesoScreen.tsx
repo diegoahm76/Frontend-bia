@@ -223,29 +223,28 @@ export const DatosAccesoScreen: React.FC = () => {
                     width: '500px',
                   }}
                 >
-                  <div
+                  <img
+                    src={
+                      image_url
+                        ? process.env.NODE_ENV === 'development'
+                          ? `${
+                              process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+                              'https://back-end-bia-beta.up.railway.app'
+                            }${image_url}`
+                          : `${
+                              process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+                              'https://bia.cormacarena.gov.co'
+                            }${image_url}`
+                        : image_url != null
+                        ? image_url
+                        : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'
+                    }
+                    alt="Background"
                     style={{
                       height: '100%',
                       width: '100%',
-                      // borderRadius: '100%',
-                      backgroundImage: `url(${
-                        image_url?.includes('/media/home/BIA/')
-                          ? process.env.NODE_ENV === 'development'
-                            ? `${
-                                process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                                'https://back-end-bia-beta.up.railway.app'
-                              }${image_url}`
-                            : `${
-                                process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                                'https://bia.cormacarena.gov.co'
-                              }${image_url}`
-                          : image_url != null
-                          ? image_url
-                          : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'
-                      })`,
-                      backgroundSize: 'contain',
-                      backgroundPosition: 'center',
-                      backgroundRepeat: 'no-repeat',
+                      objectFit: 'contain',
+                      objectPosition: 'center',
                     }}
                   />
                   <Button
