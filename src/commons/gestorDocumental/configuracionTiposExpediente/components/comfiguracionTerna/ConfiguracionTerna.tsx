@@ -305,32 +305,36 @@ export const ConfiguracionTerna: React.FC = () => {
 
 
 
-        <Grid item xs={12} sm={6} >
-          <TextField
-            style={{ width: '95%', marginTop: 10 }}
-            label={`Cantidad de numeros`}
-            variant="outlined"
-            size="small"
-            fullWidth
-            name="cantidad_digitos"
-            value={form_data.cantidad_digitos || ""}
-            onChange={handle_creacion_form}
-          />
-        </Grid>
 
+        {form_data.cod_tipo_expediente === "S" ? null : (
+  <>
+    <Grid item xs={12} sm={6}>
+      <TextField
+        style={{ width: '95%', marginTop: 10 }}
+        label={`Cantidad de numeros`}
+        variant="outlined"
+        size="small"
+        fullWidth
+        name="cantidad_digitos"
+        value={form_data.cantidad_digitos || ""}
+        onChange={handle_creacion_form}
+      />
+    </Grid>
 
-        <Grid item xs={12} sm={6} >
-          <TextField
-            style={{ width: '95%', marginTop: 10 }}
-            label={`Consecutivo Inicial`}
-            variant="outlined"
-            size="small"
-            fullWidth
-            name="consecutivo_inicial"
-            value={form_data.consecutivo_inicial || ""}
-            onChange={handle_creacion_form}
-          />
-        </Grid>
+    <Grid item xs={12} sm={6}>
+      <TextField
+        style={{ width: '95%', marginTop: 10 }}
+        label={`Consecutivo Inicial`}
+        variant="outlined"
+        size="small"
+        fullWidth
+        name="consecutivo_inicial"
+        value={form_data.consecutivo_inicial || ""}
+        onChange={handle_creacion_form}
+      />
+    </Grid>
+  </>
+)}
 
 
 
