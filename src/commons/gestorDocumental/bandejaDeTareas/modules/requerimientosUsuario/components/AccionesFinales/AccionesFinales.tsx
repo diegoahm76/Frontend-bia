@@ -65,6 +65,7 @@ export const AccionesFinales = ({
           +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
       })
     );
+    formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
 
     anexosCreados.forEach((anexo: any, index: number) => {
       formData.append('archivo', anexo.ruta_soporte);

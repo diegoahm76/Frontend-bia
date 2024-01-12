@@ -22,9 +22,6 @@ export const ParteInicial: React.FC  = (): JSX.Element => {
       state.BandejaTareasSlice.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
   );
 
-//currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_prqsdf
-
-
 
 useEffect(() => {
   if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) {

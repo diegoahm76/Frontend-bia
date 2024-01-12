@@ -18,7 +18,8 @@ export const FormParte2 = ({
 }: any): JSX.Element => {
   // ? stepper hook
   const { handleNext, handleBack } = useStepperResSolicitudUsuario();
-  const {respuestaPqrs} = useContext(ResSolicitudUsuarioContext);
+  const {respuestaPqrsdfMade, 
+    setrespuestaPqrsdfMade} = useContext(ResSolicitudUsuarioContext);
     //* redux states functions
 /*    const { currentAnexo } = useAppSelector(
       (state: any) => state.ResSolicitudUsarioSlice
@@ -74,7 +75,7 @@ export const FormParte2 = ({
                   // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
-                  value={respuestaPqrs.asunto??value}
+                  value={value ?? respuestaPqrsdfMade.asunto}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);

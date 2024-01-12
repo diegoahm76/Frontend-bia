@@ -3,7 +3,6 @@
 import {  Grid, } from '@mui/material';
 import { Title } from '../../../../../../../../components';
 import { FormParte1 } from '../components/FormParte1';
-import { RespuestaHistorico } from '../../respuestaHistorico/RespuestaHistorico';
 
 export const Parte1Screen = ({
   controlFormulario,
@@ -30,11 +29,10 @@ export const Parte1Screen = ({
           watchFormulario={watchFormulario}
         />
       </Grid>
-
-
-      <RespuestaHistorico />
     </>
   );
 };
 // Compare this snippet from src/commons/gestorDocumental/panelDeVentanilla/module/entrega99/components/parte1/screen/Parte1Screen.tsx:
+
+
 
