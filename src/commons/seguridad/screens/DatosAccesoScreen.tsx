@@ -227,9 +227,8 @@ export const DatosAccesoScreen: React.FC = () => {
                     style={{
                       height: '100%',
                       width: '100%',
-                      // borderRadius: '100%',
                       backgroundImage: `url(${
-                        image_url?.includes('/media/home/BIA/')
+                        image_url?.includes('/media/home/')
                           ? process.env.NODE_ENV === 'development'
                             ? `${
                                 process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
