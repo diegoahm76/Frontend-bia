@@ -146,15 +146,12 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'id_tipo_renta',
+      field: 'tipo_renta',
       headerName: 'Tipo Renta',
       minWidth: 100,
       flex: 1,
       valueGetter: (params) => {
-        if (!params.value) {
-          return params.value;
-        }
-        return params.value.nombre_tipo_renta;
+        return params.value ?? 'Sin tipo renta';
       }
     },
     {
