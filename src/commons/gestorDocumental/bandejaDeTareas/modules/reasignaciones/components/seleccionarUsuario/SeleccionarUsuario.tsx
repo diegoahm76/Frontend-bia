@@ -106,6 +106,7 @@ export const SeleccionarUsuario = (): JSX.Element => {
                   <Select
                     value={value}
                     onChange={(selectedOption) => {
+                      console.log(selectedOption)
                       setCurrentGrupo(selectedOption); // ? en realidad es para seleccionar el usuario jiji
                       (async () => {
                         try {
