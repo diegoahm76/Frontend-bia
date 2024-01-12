@@ -38,12 +38,6 @@ export interface ProcesoCartera {
   id_categoria: number;
 }
 
-export interface TipoRenta {
-  id_tipo_renta: number;
-  nombre_tipo_renta: string;
-  valor_tipo_renta: string;
-}
-
 export interface Cartera {
   id: number;
   nombre: string;
@@ -62,5 +56,5 @@ export interface Cartera {
   tipo_cobro: string;
   id_deudor: Deudor;
   proceso_cartera: ProcesoCartera[];
-  id_tipo_renta: TipoRenta;
+  tipo_renta: string | null;
 }
