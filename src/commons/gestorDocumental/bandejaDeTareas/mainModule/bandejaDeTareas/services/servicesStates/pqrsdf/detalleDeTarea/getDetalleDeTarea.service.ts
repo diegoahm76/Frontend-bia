@@ -10,10 +10,12 @@ export const getDetalleDeTarea = async (idTarea: string, navigate: any) => {
   } catch (error) {
     showAlert(
       'Opss!',
-      'Ocurrio un error al obtener el detalle de la tarea, te redigiremos a bandeja de tareas',
+      'Ocurrio un error al obtener el detalle de la tarea, te redireccionaremos a la bandeja de tareas.',
       'error'
     );
-    navigate('/app/gestor_documental/bandeja_tareas/');
+    setTimeout(() => {
+      navigate('/app/gestor_documental/bandeja_tareas/');
+    }, 3000);
     throw {};
   }
 };

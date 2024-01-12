@@ -136,7 +136,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         data.length > 0 && (
           <RenderDataGrid
             columns={columnsIndicesElectronicos ?? []}
-            rows={[...data, ...data] ?? []}
+            rows={[...data,] ?? []}
             title="Listado de expedientes encontrados"
           />
         )
@@ -148,7 +148,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         data?.length > 0 && dataIndice?.length > 0 && (
           <RenderDataGrid
             columns={columnsDelIndiceExp ?? []}
-            rows={[...Array(10).fill([...dataIndice])].flat() ?? []}
+            rows={[...dataIndice] ?? []}
             title="índice electrónico del expediente"
             aditionalElement={
               <Button

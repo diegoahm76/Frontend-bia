@@ -42,7 +42,7 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
 
 
   const yearr = new Date().getFullYear();
-  const year =yearr+1;
+  const year = yearr + 1;
   const [form_data, set_form_data] = useState<AgnoExpediente>(inicial_datos_form);
   const [variable_choise_seccion, set_variable_choise_seccion] = useState<string>("");
   const [variable_serie_subserie, set_variable_serie_subserie] = useState<any>(); // Inicializa variablex con un valor inicial en este caso, una cadena vacía.
@@ -99,7 +99,7 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
       const res: any = await api.get(url);
       const consulta_EstructuraExpediente: any = res.data.data;
       set_choise_estructura_expediente(consulta_EstructuraExpediente);
-    } catch (error:any) {
+    } catch (error: any) {
       console.error(error.response.data.detail);
     }
   };
@@ -171,7 +171,7 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
     }
   };
 
-  
+
   useEffect(() => {
     fetch_choise_seccionsubseccion().catch((error) => {
       console.error(error);
@@ -232,8 +232,8 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
         <Grid container style={{ marginTop: 10 }}>
 
 
-          <Grid item xs={12}  sm={6}>
-            <FormControl fullWidth  size="small">
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
               <InputLabel id="choise-label">Seccion o Subseccion</InputLabel>
               <Select
                 id="demo-simple-select-2"
@@ -253,8 +253,8 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
           </Grid>
 
 
-          <Grid item xs={12}  sm={6}>
-            <FormControl fullWidth  size="small">
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
               <InputLabel id="choise-label">Serie-Subserie</InputLabel>
               <Select
                 id="demo-simple-select-2"
@@ -278,12 +278,12 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
         <Grid container item xs={12} alignItems="center" justifyContent="center">
 
           <Grid item xs={12} sm={5} md={4} style={{ margin: 10 }}>
-            <FormControl fullWidth  size="small">
+            <FormControl fullWidth size="small">
               <InputLabel id="choise-label">Estructura del Expediente</InputLabel>
               <Select
                 label="Estructura del Expediente"
                 id="demo-simple-select-2"
-               
+
                 name="cod_tipo_expediente"
                 value={form_data.cod_tipo_expediente || ""}
                 onChange={handle_creacion_form} // Cuando cambie el valor, actualiza variablex
@@ -300,32 +300,39 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
 
 
 
-        <Grid item xs={12}  sm={6} >
-          <TextField
-            style={{ width: '95%', marginTop: 10 }}
-            label={`Cantidad de numeros`}
-            variant="outlined"
-            size="small"
-            fullWidth
-            name="cantidad_digitos"
-            value={form_data.cantidad_digitos || ""}
-            onChange={handle_creacion_form}
-          />
-        </Grid>
 
 
-        <Grid item xs={12}  sm={6} >
-          <TextField
-            style={{ width: '95%', marginTop: 10 }}
-            label={`Consecutivo Inicial`}
-            variant="outlined"
-            size="small"
-            fullWidth
-            name="consecutivo_inicial"
-            value={form_data.consecutivo_inicial || ""}
-            onChange={handle_creacion_form}
-          />
-        </Grid>
+        {form_data.cod_tipo_expediente === "S" ? null : (
+          <>
+            <Grid item xs={12} sm={6} >
+              <TextField
+                style={{ width: '95%', marginTop: 10 }}
+                label={`Cantidad de numeros`}
+                variant="outlined"
+                size="small"
+                fullWidth
+                name="cantidad_digitos"
+                value={form_data.cantidad_digitos || ""}
+                onChange={handle_creacion_form}
+              />
+            </Grid>
+
+
+            <Grid item xs={12} sm={6} >
+              <TextField
+                style={{ width: '95%', marginTop: 10 }}
+                label={`Consecutivo Inicial`}
+                variant="outlined"
+                size="small"
+                fullWidth
+                name="consecutivo_inicial"
+                value={form_data.consecutivo_inicial || ""}
+                onChange={handle_creacion_form}
+              />
+            </Grid>
+          </>
+        )}
+
 
 
 
@@ -360,7 +367,7 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
                   void confirmarAccion(
                     actualizar_datos_existentes,
                     '¿Estás seguro de realizar este proceso?'
-                  );  
+                  );
                 } else {
                   void confirmarAccion(
                     crear_configuracion_expediente,
@@ -373,7 +380,7 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
             </Button>
 
           </Grid>
-       
+
           <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
             <Button fullWidth variant="outlined"
               startIcon={<CleanIcon />}
@@ -400,7 +407,7 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
-   
+
       </Grid >
     </>
   );

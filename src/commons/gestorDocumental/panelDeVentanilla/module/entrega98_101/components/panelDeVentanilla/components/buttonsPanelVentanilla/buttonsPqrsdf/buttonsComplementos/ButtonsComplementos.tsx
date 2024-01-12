@@ -10,6 +10,7 @@ import { showAlert } from '../../../../../../../../../../../utils/showAlert/Show
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { postDigitalizacionComplementos } from '../../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service';
+import { putContinuarAsigGrupoComple } from '../../../../../../../../toolkit/thunks/PqrsdfyComplementos/putContinuarAsigGrupoComple.service';
 
 export const ButtonsComplementos = (): JSX.Element => {
   //* dispatch declaration
@@ -29,6 +30,13 @@ export const ButtonsComplementos = (): JSX.Element => {
     const { idComplementoUsu_PQR } =
       currentElementPqrsdComplementoTramitesYotros;
     await postDigitalizacionComplementos(idComplementoUsu_PQR);
+    // dispatch(resetPanelVentanillaFull());
+  };
+
+  const sendContinuarAsignacionAGrupoRequest = async () => {
+    const { idComplementoUsu_PQR } =
+      currentElementPqrsdComplementoTramitesYotros;
+    await putContinuarAsigGrupoComple(idComplementoUsu_PQR);
     // dispatch(resetPanelVentanillaFull());
   };
 
@@ -54,14 +62,32 @@ export const ButtonsComplementos = (): JSX.Element => {
     });
   });
 
-  const handleContinuarAsignacionAGrupo = withValidation(() =>
-    console.log('Continuar con asignación de grupo')
+  const handleContinuarAsignacionAGrupo = withValidation(
+    async () =>
+      await Swal.fire({
+        title: '¿Desea continuar con la asignación a unidad?',
+        text: 'Se enviará la solicitud de asignación a unidad para el complemento.',
+        showDenyButton: true,
+        confirmButtonText: `Si, continuar`,
+        denyButtonText: `No, cancelar`,
+        confirmButtonColor: '#3085d6',
+        denyButtonColor: '#d33',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await sendContinuarAsignacionAGrupoRequest();
+        } else if (result.isDenied) {
+          showAlert(
+            'Opps...',
+            'Haz decidido cancelar la acción de continuar con la asignación a unidad.',
+            'info'
+          );
+        }
+      })
   );
 
   const actionHandlers: any = {
-    'Dig': handleDigitalizacion,
-    'ContinuarAsigGrup': handleContinuarAsignacionAGrupo,
-    // puedes agregar más manejadores de acción aquí
+    Dig: handleDigitalizacion,
+    ContinuarAsigGrup: handleContinuarAsignacionAGrupo,
   };
 
   const handleClickActionsGeneral = (action: any) => {
@@ -98,7 +124,7 @@ export const ButtonsComplementos = (): JSX.Element => {
               disabled: boolean;
             }) =>
               action.disabled ? (
-                <></>
+                null
               ) : (
                 <SpeedDialAction
                   key={action.name}

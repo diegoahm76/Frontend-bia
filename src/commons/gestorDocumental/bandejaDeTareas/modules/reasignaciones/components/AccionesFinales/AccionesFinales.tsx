@@ -7,7 +7,6 @@ import {
   reset_all,
 } from '../../../../../../../utils/functions/getOutOfModule';
 //* cambiar por reset bandeja Tareas
-// import { resetPanelVentanillaFull } from '../../../../toolkit/store/PanelVentanillaStore';
 import CloseIcon from '@mui/icons-material/Close';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +18,7 @@ import { LoadingButton } from '@mui/lab';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 import { ReasignacionContext } from '../../context/ReasignacionContext';
+import { resetBandejaDeTareasFull } from '../../../../toolkit/store/BandejaDeTareasStore';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -27,6 +27,7 @@ export const AccionesFinales = (): JSX.Element => {
     liderAsignado,
     currentGrupo,
     setListaAsignaciones,
+    comentario,
   } = useContext(ReasignacionContext);
   const { secondLoading, handleSecondLoading, handleGeneralLoading } =
     useContext(ModalAndLoadingContext);
@@ -37,14 +38,16 @@ export const AccionesFinales = (): JSX.Element => {
   const navigate = useNavigate();
 
   //* redux states
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+  const currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = useAppSelector(
     (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+      state.BandejaTareasSlice
+        .currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
   );
 
   // ? declaración de las funciones
 
   const handleClick = async () => {
+
     const item = listaAsignaciones.find(
       (item: any) =>
         item.estado_asignado === 'EN ESPERA' ||
@@ -62,28 +65,39 @@ export const AccionesFinales = (): JSX.Element => {
     }
 
     const tipo =
-      currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
-      currentElementPqrsdComplementoTramitesYotros?.tipo;
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
 
     let res;
 
     switch (tipo) {
-      case 'PQRSDF':
+      case 'Responder PQRSDF':
+      console.log('liderAsignado', liderAsignado)
+      console.log('currentGrupo', currentGrupo)
+      console.log('currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas)
+      console.log('comentario de reasignacion', comentario)
+
+
+        showAlert(
+          'Atención',
+          'No hay servicio aún para (RESPUESTA A PQRSDF), así que no se realiza re-asignacion por el momento',
+          'warning'
+        )
         // Call the service for PQRSDF
-       /* res = await postAsignacionGrupoPQRSDF(
+        /* res = await postAsignacionGrupoPQRSDF(
           {
-            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_pqrsdf: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
             id_persona_asignada: liderAsignado?.id_persona,
             id_und_org_seccion_asignada: currentGrupo?.value,
           },
           handleSecondLoading
         );*/
         break;
-      case 'Tramites y Servicios':
+      case 'Responder Trámite':
         // Call the service for Tramites y Servicios
-      /*  res = await postAsignacionGrupoTramitesYServicios(
+        /*  res = await postAsignacionGrupoTramitesYServicios(
           {
-            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_pqrsdf: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
             id_persona_asignada: liderAsignado?.id_persona,
             id_und_org_seccion_asignada: currentGrupo?.value,
           },
@@ -92,23 +106,23 @@ export const AccionesFinales = (): JSX.Element => {
         break;
       case 'Otros':
         // Call the service for Otros
-      /*  res = await postAsignacionGrupoOtros(
+        /*  res = await postAsignacionGrupoOtros(
           {
-            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_pqrsdf: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
             id_persona_asignada: liderAsignado?.id_persona,
             id_und_org_seccion_asignada: currentGrupo?.value,
           },
           handleSecondLoading
         );*/
         break;
-        case 'OPA':
-          // Call the service for OPA
-          showAlert(
-            'Estimado usuario:',
-            'No hay servicio aún para asignar la OPA, así que no se realiza asignacion por el momento',
-            'warning'
-          );
-          /*res = await postAsignacionGrupoOPA(
+      case 'OPA':
+        // Call the service for OPA
+        showAlert(
+          'Estimado usuario:',
+          'No hay servicio aún para asignar la OPA, así que no se realiza asignacion por el momento',
+          'warning'
+        );
+        /*res = await postAsignacionGrupoOPA(
             {
               id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
               id_persona_asignada: liderAsignado?.id_persona,
@@ -116,7 +130,7 @@ export const AccionesFinales = (): JSX.Element => {
             },
             handleSecondLoading
           );*/
-          break;
+        break;
       default:
         // Default service call or no service call
         break;
@@ -125,15 +139,15 @@ export const AccionesFinales = (): JSX.Element => {
     if (res) {
       await Swal.fire({
         icon: 'success',
-        title: 'Ok',
-        text: `Se ha lanzado la asignación a grupo correctamente`,
+        title: '¡Éxito!',
+        text: `Se ha realizado la asignación a grupo correctamente`,
         confirmButtonText: 'Entendido',
       });
 
       let asignaciones;
 
       switch (tipo) {
-        case 'PQRSDF':
+        case 'Responder PQRSDF':
           // Fetch the assignments for PQRSDF
           /*asignaciones = await getAsignacionesPQRSDF(
             // para pqrsdf
@@ -141,7 +155,7 @@ export const AccionesFinales = (): JSX.Element => {
             handleGeneralLoading
           );*/
           break;
-        case 'Tramites y Servicios':
+        case 'Responder Trámite':
           // Fetch the assignments for Tramites y Servicios
           /*asignaciones = await getAsignacionesTramitesYServicios(
             currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
@@ -213,7 +227,7 @@ export const AccionesFinales = (): JSX.Element => {
                   startIcon={<CloseIcon />}
                   onClick={() => {
                     getOutModule(navigate, [
-                      () => console.log('haz salido del módulo'),
+                      () => dispatch(resetBandejaDeTareasFull()),
                     ]);
                   }}
                 >
@@ -226,10 +240,10 @@ export const AccionesFinales = (): JSX.Element => {
                   startIcon={<CleanIcon />}
                   onClick={() => {
                     console.log('reset');
-                   //  reset_all([() => dispatch(resetPanelVentanillaFull())]);
+                    reset_all([() => dispatch(resetBandejaDeTareasFull())]);
                   }}
                 >
-                  REINICIAR Y VOLVER A PANEL DE VENTANILLA
+                  REINICIAR Y VOLVER A BANDEJA DE TAREAS
                 </Button>
 
                 <LoadingButton
@@ -239,10 +253,10 @@ export const AccionesFinales = (): JSX.Element => {
                   startIcon={<SaveIcon />}
                   onClick={handleClick}
                 >
-                  {`ASIGNAR ${
-                    currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
-                    currentElementPqrsdComplementoTramitesYotros?.tipo
-                  } A GRUPO`}
+                  {`RE-ASIGNAR (${
+                    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
+                    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo
+                  }) A UNIDAD`}
                 </LoadingButton>
               </Stack>
             </Grid>

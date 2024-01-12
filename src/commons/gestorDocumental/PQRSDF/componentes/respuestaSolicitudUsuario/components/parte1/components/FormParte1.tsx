@@ -38,73 +38,27 @@ export const FormParte1 = ({
   watchFormulario,
 }: any): JSX.Element => {
   // ? stepper hook
-  const { handleNext, handleReset } = useStepperResSolicitudUsuario();
 
   //* context declaration
-  const {
-    secondLoading,
-    handleFifthLoading,
-    handleOpenModalOne,
-  } = useContext(ModalAndLoadingContext);
+  const { secondLoading } = useContext(ModalAndLoadingContext);
   const {
     setInfoInicialUsuario,
     infoInicialUsuario,
     respuestaPqrs,
-    setRespuestaPqrs
-
+    setRespuestaPqrs,
+    respuestaPqrsdfMade, 
+    setrespuestaPqrsdfMade
   } = useContext(ResSolicitudUsuarioContext);
 
   //* navigate declaration
   const navigate = useNavigate();
 
   //* redux state
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  const currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = useAppSelector(
+    (state: any) =>
+      state.BandejaTareasSlice
+        .currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
   );
-
-  //* context declaration
-  const { handleGeneralLoading, handleSecondLoading } = useContext(
-    ModalAndLoadingContext
-  );
-
-
-
-
-  // ? definicion de las columnas
-  const columns = [
-    ...columnsGridHistorico,
-    {
-      headerName: 'Acciones',
-      field: 'accion',
-      renderCell: (params: any) => (
-        <>
-        <Tooltip title="Ver solicitud realizada">
-          <IconButton
-            onClick={async () => {
-              handleOpenModalOne(true); //* open modal
-              // await getInfoSolicitud(params);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
-        </>
-      ),
-    },
-  ];
 
   if (secondLoading) {
     return (
@@ -126,22 +80,40 @@ export const FormParte1 = ({
     );
   }
 
+  const getPqrsdfResponse = async () => {
+    try {
+      const url = `/gestor/pqr/get_respuesta_pqrsdf-panel/${+currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf}/`;
+      const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
+      const respuestaPqrsdf = res.data.data;
+      setrespuestaPqrsdfMade(respuestaPqrsdf);
+      console.log('respuesta a una solicitud', respuestaPqrsdf);
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+    }
+  };
+
+  const fetchData = async (): Promise<void> => {
+    try {
+      console.log(
+        'url',
+        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf
+      );
+      const url = `/gestor/pqr/get_pqrsdf-panel/${+currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf}/`;
+      const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
+      const respuestaPqrsdf = res.data.data;
+      setRespuestaPqrs(respuestaPqrsdf);
+      console.log('respuesta a una solicitud', respuestaPqrsdf);
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      try {
-        const url = '/gestor/pqr/get_pqrsdf-panel/43/';
-        const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
-        const facilidadPagoData = res.data.data;
-        setRespuestaPqrs(facilidadPagoData)
-      } catch (error) {
-        console.error('Error al obtener datos:', error);
-      }
-    };
-
-    fetchData(); // Llama a la función que realiza la petición al montar el componente
+    (async () => {
+      await fetchData();
+      await getPqrsdfResponse();
+    })();
   }, []);
-
 
   return (
     <>
@@ -169,7 +141,7 @@ export const FormParte1 = ({
               inputProps={{
                 maxLength: 50,
               }}
-              value={infoInicialUsuario?.detallePQRSDF?.data?.tipo ?? 'N/A'}
+              value={respuestaPqrs.tipo_pqrsdf_descripcion ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -183,9 +155,7 @@ export const FormParte1 = ({
               inputProps={{
                 maxLength: 10,
               }}
-              value={
-                infoInicialUsuario?.detallePQRSDF?.data?.estado_actual ?? 'N/A'
-              }
+              value={respuestaPqrs.estado ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -207,12 +177,7 @@ export const FormParte1 = ({
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={
-                formatDate(
-                  infoInicialUsuario?.detallePQRSDF?.data
-                    ?.fecha_radicado_entrada
-                ) ?? 'N/A'
-              }
+              value={respuestaPqrs.fecha_radicado ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -228,7 +193,7 @@ export const FormParte1 = ({
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={respuestaPqrs?.asunto?? 'N/A'}
+              value={respuestaPqrs?.asunto ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -254,42 +219,11 @@ export const FormParte1 = ({
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={
-                infoInicialUsuario?.detallePQRSDF?.data?.descripcion ?? 'N/A'
-              }
+              value={respuestaPqrs.descripcion ?? 'N/A'}
             />
           </Grid>
-
-          {/* tabla de elementos a mostrar */}
-
-          {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
-
-          {/* {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
-          0 ? (
-            <RenderDataGrid
-              title="Histórico de respuestas al usuario"
-              columns={columns ?? []}
-              rows={
-                [...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data] ??
-                []
-              }
-            />
-          ) : (
-            <Typography
-              variant="body1"
-              color="text.primary"
-              sx={{
-                textAlign: 'center',
-                justifyContent: 'center',
-                mt: '1.5rem',
-              }}
-            >
-              No hay histórico de requerimientos para este elemento
-            </Typography>
-          )} */}
         </Grid>
-
-        <Grid
+        {/*  <Grid
           item
           xs={12}
           sm={12}
@@ -301,7 +235,7 @@ export const FormParte1 = ({
             paddingBottom: '2rem',
           }}
         >
-          {/* <Button
+         <Button
             variant="contained"
             color="success"
             startIcon={<SaveAsIcon />}
@@ -315,8 +249,8 @@ export const FormParte1 = ({
             }}
           >
             Crear solicitud de requerimiento
-          </Button> */}
-        </Grid>
+          </Button>
+        </Grid>*/}
       </form>
 
       {/*<ModalInfoSolicitud />*/}

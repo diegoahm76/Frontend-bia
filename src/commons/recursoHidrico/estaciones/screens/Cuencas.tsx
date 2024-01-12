@@ -173,7 +173,7 @@ export const Cuencas: React.FC = () => {
 
 
              
-                        <h3>  {zonaHidrica.codigo_rio}:</h3>{zonaHidrica.nombre_sub_zona_hidrica}
+                        <h3>  {zonaHidrica.codigo_rio}:</h3>
                         <ul>
                             <li> {zonaHidrica.nombre_sub_zona_hidrica}</li>
                             

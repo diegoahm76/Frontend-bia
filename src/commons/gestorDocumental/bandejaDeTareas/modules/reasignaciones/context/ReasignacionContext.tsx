@@ -15,6 +15,7 @@ export const ReasignacionProvider = ({ children }: any): JSX.Element => {
   const [currentGrupo, setCurrentGrupo] = useState(null)
 
   const [liderAsignado, setLiderAsignado] = useState(null);
+  const [comentario, setComentario] = useState(null)
 
   const [listaAsignaciones, setListaAsignaciones] = useState<any[]>([])
 
@@ -30,6 +31,9 @@ export const ReasignacionProvider = ({ children }: any): JSX.Element => {
 
     liderAsignado,
     setLiderAsignado,
+
+    comentario,
+    setComentario,
 
     listaAsignaciones,
     setListaAsignaciones

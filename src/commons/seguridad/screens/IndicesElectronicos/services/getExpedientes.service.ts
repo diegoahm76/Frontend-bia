@@ -13,7 +13,9 @@ export const getExpedientesByFiltro = async (
   id_subserie_origen: string = '',
   titulo_expediente: string = '',
   fecha_inicio_expediente: string = '',
-  fecha_fin_expediente: string = ''
+  fecha_fin_expediente: string = '',
+  consecutivo_expediente: string = '',
+  tipo_de_expediente: string = ''
 ) => {
   try {
     setLoadingButton(true);
@@ -27,13 +29,23 @@ export const getExpedientesByFiltro = async (
 
     const url = `gestor/expedientes-archivos/expedientes/buscar-expediente-abierto/?id_trd_origen=${id_trd_origen}&fecha_apertura_expediente=${fecha_apertura_expediente}&id_serie_origen=${id_serie_origen}&id_subserie_origen=${id_subserie_origen}&titulo_expediente=${encodeURIComponent(
       titulo_expediente
-    )}&fecha_inicio_expediente=${formattedFechaInicio}&fecha_fin_expediente=${formattedFechaFin}`;
+    )}&fecha_inicio_expediente=${formattedFechaInicio}&fecha_fin_expediente=${formattedFechaFin}&codigo_exp_consec_por_agno=${consecutivo_expediente}`;
 
     const { data } = await api.get(url);
 
     if (data?.data?.length > 0) {
       control_success('se han encontrado los siguientes expedientes');
-      return data.data;
+      console.log(data.data);
+
+      if (tipo_de_expediente === '') {
+        return data?.data;
+      } else if (tipo_de_expediente === 'simple') {
+        return data.data.filter(
+          (expediente: any) => !expediente.codigo_exp_consec_por_agno
+        );
+      } else {
+        return data?.data;
+      }
     }
     control_warning(
       'No se han encontrado expedientes que coincidan con los filtros seleccionados'

@@ -16,6 +16,7 @@ export interface CategoriaAtributo {
   id: number;
   categoria: string;
   orden: number;
+  id_etapa:any;
 }
 
 export interface AtributoEtapa {

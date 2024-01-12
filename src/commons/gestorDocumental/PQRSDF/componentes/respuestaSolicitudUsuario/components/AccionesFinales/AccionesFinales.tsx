@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState } from 'react';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { useStepperContext } from '@mui/material';
-import {  postResponderUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
+// import { useStepperContext } from '@mui/material';
+import { postResponderUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
 import { useStepperResSolicitudUsuario } from '../../hook/useStepperResSolicitudUsuario';
 import { resetItems } from '../../toolkit/slice/ResSolicitudUsarioSlice';
+import { AuthSlice } from '../../../../../../auth/interfaces';
 
 export const AccionesFinales = ({
-  controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
+  // controlFormulario,
+  // handleSubmitFormulario,
+  // errorsFormulario,
   resetFormulario,
   watchFormulario,
   setInfoReset,
@@ -22,8 +23,6 @@ export const AccionesFinales = ({
 
   //* context
 
-  const nombres =["danna","valentino"];
-
   const { handleReset } = useStepperResSolicitudUsuario();
 
   const [LoadingButton, setLoadingButton] = useState(false);
@@ -31,9 +30,13 @@ export const AccionesFinales = ({
   const { anexosCreados } = useAppSelector(
     (state) => state.ResSolicitudUsarioSlice
   );
-  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
-    (state: any) => state.PanelVentanillaSlice
+
+  const { userinfo } = useAppSelector(
+    (state: AuthSlice) => state.auth
   );
+
+  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
+    useAppSelector((state: any) => state.BandejaTareasSlice);
   console.log('anexosCreados', anexosCreados);
   //* handleSumbit
 
@@ -50,31 +53,45 @@ export const AccionesFinales = ({
         ); // Use append method to add multiple values with the same field name
       }
     });
-    //* 
-    formData.append('isCreateForWeb', 'False');
+
+    formData.append('isCreateForWeb', userinfo?.tipo_usuario === 'I' ? 'False' : 'True'); //? detectar si el usuario logueado es interno o externo
     formData.append(
       'respuesta_pqrsdf',
       JSON.stringify({
-        id_pqrsdf: 154,
-        asunto: 'Prueba',
-        descripcion: 'Prueba 1',
-        cantidad_anexos: 1,
-        nro_folios_totales: 1,
+        id_pqrsdf:
+          +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf,
+        asunto: watchFormulario.asunto,
+        descripcion: watchFormulario.descripcion_de_la_solicitud,
+        cantidad_anexos: +anexosCreados.length,
+        nro_folios_totales: +anexosCreados.reduce(
+          (acc: number, anexo: any) => acc + anexo.numero_folios,
+          0
+        ),
         anexos: anexosCreados.map((anexo, index) => ({
           nombre_anexo: anexo.nombre_archivo,
-          orden_anexo_doc: index,
+          orden_anexo_doc: +index,
           cod_medio_almacenamiento: 'Pa',
           medio_almacenamiento_otros_Cual: null,
-          numero_folios: 0, // Modifica según tus necesidades
+          numero_folios: +anexosCreados.reduce(
+            (acc: number, anexo: any) => acc + anexo.numero_folios,
+            0
+          ),
           ya_digitalizado: true,
           metadatos: {
             asunto: anexo.asunto,
             descripcion: anexo.descripcionMetadatos,
-            cod_categoria_archivo: anexo.categoriaArchivoMetadatos?.value || null,
-            tiene_replica_fisica: anexo.tieneReplicaFisicaMetadatos?.value === 'Si',
+            cod_categoria_archivo:
+              anexo.categoriaArchivoMetadatos?.value || null,
+            tiene_replica_fisica:
+              anexo.tieneReplicaFisicaMetadatos?.value === 'Si',
             cod_origen_archivo: anexo.origenArchivoMetadatos?.value || null,
-            id_tipologia_doc: anexo.tipologiasDocumentalesMetadatos?.value || null,
-            palabras_clave_doc: anexo.palabrasClavesMetadatos ? anexo.palabrasClavesMetadatos.join('|') : null,
+            id_tipologia_doc:
+              +anexo.tipologiasDocumentalesMetadatos?.value || null,
+            tipologia_no_creada_TRD: null,
+            palabras_clave_doc: (
+              (anexo && anexo.palabrasClavesMetadatos) ||
+              []
+            ).join('|'),
           },
         })),
       })
@@ -93,7 +110,6 @@ export const AccionesFinales = ({
       });
   };
 
-
   const handleSubmit = async () => {
     if (anexosCreados.length === 0) {
       Swal.fire({
@@ -107,8 +123,8 @@ export const AccionesFinales = ({
     }
 
     await Swal.fire({
-      title: '¿Está seguro de enviar la solicitud al usuario?',
-      text: 'Una vez enviada la solicitud no podrá realizar cambios',
+      title: '¿Está seguro de responder la PQRSDF?',
+      text: 'Una vez enviada la respuesta no podrá realizar cambios',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Enviar',
