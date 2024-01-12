@@ -11,12 +11,15 @@ import {
   ListItemButton,
   DialogTitle,
   Typography,
-  ListItemIcon
+  ListItemIcon,
+  MenuItem,
+  Select,
 } from '@mui/material';
 import {
+  close_dialog_entorno,
   close_dialog_representado,
   set_authenticated,
-  set_representado
+  set_representado,
 } from '../../store';
 import { type AuthSlice } from '../../interfaces';
 
@@ -29,7 +32,7 @@ export const DialogRepresentantes: React.FC = () => {
   const options = [
     { label: 'Nombre propio', value: 'Nombre propio' },
     { label: 'En representación de una empresa', value: 'Nombre propio' },
-    { label: 'En representación de una persona', value: 'Nombre propio' }
+    { label: 'En representación de una persona', value: 'Nombre propio' },
   ];
 
   const select_representado = (value: string): void => {
@@ -40,8 +43,13 @@ export const DialogRepresentantes: React.FC = () => {
   return (
     <Dialog
       open={dialog_representante}
-      onClose={() => dispatch(close_dialog_representado())}
+      maxWidth="md"
+      onClose={() => {
+        dispatch(close_dialog_representado());
+        dispatch(close_dialog_entorno());
+      }}
       aria-labelledby="responsive-dialog-title"
+      
     >
       <DialogTitle
         textAlign="center"
@@ -59,12 +67,38 @@ export const DialogRepresentantes: React.FC = () => {
               <ListItem key={option.label} disableGutters alignItems="center">
                 <ListItemButton
                   autoFocus
-                  onClick={() => select_representado(option.value)}
+                  onClick={() => {
+                    if(option.label !== 'En representación de una empresa') {
+                      select_representado(option.value)
+                    }
+                  }}
                 >
                   <ListItemIcon>
                     <PersonIcon />
                   </ListItemIcon>
                   <ListItemText primary={option.label} />
+
+
+                  {option.label === 'En representación de una empresa' && (
+                  <Select
+                    sx={{
+                      border: '0',
+                    }}
+                    // value={/*selectedValue*/} // Aquí debes poner el estado que guarda el valor seleccionado
+                    onChange={(event: any) =>
+                      select_representado(event.target.value)
+                    }
+                  >
+                    {representante_legal.map((representante) => (
+                      <MenuItem
+                        key={representante.value}
+                        value={representante.value}
+                      >
+                        {representante.label}
+                      </MenuItem>
+                    ))}
+                  </Select>)}
+
                 </ListItemButton>
               </ListItem>
             ))
