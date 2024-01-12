@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../api/axios';
-import { control_error, control_success } from '../../../../../../helpers';
+import { control_success } from '../../../../../../helpers';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const getLiderByUnidadOrganizacional = async (
