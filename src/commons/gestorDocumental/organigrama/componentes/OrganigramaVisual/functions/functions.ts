@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function StyleColor(type: string) {
+  console.log()
   switch (type) {
     case 'AS':
       return 'green'; // Bright Orange

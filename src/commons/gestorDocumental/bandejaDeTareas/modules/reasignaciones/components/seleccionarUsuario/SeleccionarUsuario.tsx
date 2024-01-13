@@ -149,7 +149,7 @@ export const SeleccionarUsuario = (): JSX.Element => {
 
           {liderAsignado ? (
             <>
-              <Grid
+             {/* <Grid
                 item
                 xs={12}
                 sm={12}
@@ -170,7 +170,7 @@ export const SeleccionarUsuario = (): JSX.Element => {
                   value={liderAsignado?.lider ?? ''}
                   sx={{ mt: '.3rem', mb: '.45rem' }}
                 />
-              </Grid>
+              </Grid>*/}
               <Grid
                 item
                 xs={12}

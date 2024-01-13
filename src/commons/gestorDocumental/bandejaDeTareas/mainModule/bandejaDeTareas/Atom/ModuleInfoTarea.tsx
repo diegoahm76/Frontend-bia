@@ -55,13 +55,8 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
   } = useContext(ModalAndLoadingContext);
 
   //* datos que se setean dentro de los anexos y los metadatos
-  const {
-    anexos,
-    metadatos,
-    setMetadatos,
-    archivoAnexos,
-    setArchivoAnexos,
-  } = useContext(BandejaTareasContext);
+  const { anexos, metadatos, setMetadatos, archivoAnexos, setArchivoAnexos } =
+    useContext(BandejaTareasContext);
 
   // ? useState declaration
   const [infoDenuncia, setInfoDenuncia] = useState<any>(null);
@@ -533,7 +528,11 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
 
         {anexos?.length > 0 && (
           <RenderDataGrid
-            rows={anexos || []}
+            rows={
+              [
+                ...anexos,
+              ] || []
+            }
             columns={colums || []}
             title={titleOpcion}
           />
@@ -568,7 +567,8 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
                   disabled
                   variant="outlined"
                   value={
-                    archivoAnexos?.anexoActual?.observacion_digitalizacion ?? 'N/A'
+                    archivoAnexos?.anexoActual?.observacion_digitalizacion ??
+                    'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
                 />
