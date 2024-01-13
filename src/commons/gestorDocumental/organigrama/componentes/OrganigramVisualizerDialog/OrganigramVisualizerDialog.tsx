@@ -12,9 +12,8 @@ import {
 import { type TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppSelector } from '../../../../../hooks';
-import { Subtitle } from '../../../../../components/Subtitle';
-import OrganigramVisual from '../OrganigramaVisual/OrganigramVisual';
 import type { IProps } from './types/types';
+import OrganigramVisual from '../OrganigramaVisual/OrganigramVisual';
 
 const transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -47,7 +46,7 @@ export const OrganigramVisualizerDialog = ({
       <AppBar sx={{ position: 'relative' }}>
         <Toolbar>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Visualizar organigrama
+            {`Visualizando organigrama : ${organigram_current?.nombre}`}
           </Typography>
           <IconButton
             edge="start"
@@ -61,7 +60,6 @@ export const OrganigramVisualizerDialog = ({
       </AppBar>
       <Box>
         <DialogContent sx={{ mb: '0px' }}>
-          <Subtitle title={organigram_current?.nombre} />
           <OrganigramVisual />
         </DialogContent>
       </Box>

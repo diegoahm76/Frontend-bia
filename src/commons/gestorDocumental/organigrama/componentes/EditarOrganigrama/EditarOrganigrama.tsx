@@ -619,7 +619,14 @@ export const EditarOrganigrama = ({
                         onChange={(option: SingleValue<any>) => {
                           set_value_unidades('agrupacion_documental', option);
                         }}
-                        options={options_agrupacion_d}
+                        options={[
+                          ...options_agrupacion_d,
+                          {
+                            label: 'Sin agrupación documental',
+                            value: '',
+                            isDisabled: false
+                          }
+                        ]}
                         placeholder="Seleccionar"
                       />
                     )}

@@ -1,0 +1,13 @@
+.myDiv {
+  margin: 0 auto;
+}
+
+.myDiv::after {
+  content: "";
+  display: block;
+  width: 100%;
+  border-bottom: 5px solid black;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
