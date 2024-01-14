@@ -55,9 +55,13 @@ export const ReasignacionesGrid = (): JSX.Element => {
 
   return listaAsignaciones.length > 0 ? (
     <RenderDataGrid
-      title="Estado de las asignaciones"
+      title="Estado de las reasignaciones"
       columns={columns ?? []}
-      rows={[...listaAsignaciones] ?? []}
+      rows={
+        [
+          ...listaAsignaciones,
+        ] ?? []
+      }
     />
   ) : (
     <></>
