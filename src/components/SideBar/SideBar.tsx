@@ -35,7 +35,11 @@ import {
 } from '../../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import type { AuthSlice } from '../../commons/auth/interfaces';
-import { logout, set_is_loading, set_permissions } from '../../commons/auth/store';
+import {
+  logout,
+  set_is_loading,
+  set_permissions,
+} from '../../commons/auth/store';
 import { SuperUserScreen } from '../../commons/seguridad/screens/SuperUserScreen';
 import { FooterGov } from '../goviernoEnLinea/FooterGov';
 import { HeaderGov } from '../goviernoEnLinea/HeaderGov';
@@ -67,7 +71,9 @@ export const SideBar: FC<SideBarProps> = ({
   const dispatch = useDispatch();
   const [open, set_open] = useState(false);
   const [dialog_open, set_dialog_open] = useState(false);
-  const { userinfo, permisos, is_loading } = useSelector((state: AuthSlice) => state.auth);
+  const { userinfo, permisos, is_loading } = useSelector(
+    (state: AuthSlice) => state.auth
+  );
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
@@ -87,16 +93,19 @@ export const SideBar: FC<SideBarProps> = ({
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
-    const delay = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
-
     const updateState = async () => {
-      await delay(800);
-      dispatch(set_permissions(permisos));
-      await delay(1500);
-      dispatch(set_is_loading?.(false));
+      try {
+        await delay(800);
+        dispatch(set_permissions(permisos));
+        await delay(1500);
+        dispatch(set_is_loading?.(false));
+      } catch (error) {
+        console.error('Failed to update state:', error);
+      }
     };
 
     updateState();

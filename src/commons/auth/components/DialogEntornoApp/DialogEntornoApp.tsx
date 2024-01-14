@@ -16,6 +16,7 @@ import {
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import {
   close_dialog_representado_app,
+  get_persmisions_user,
   setRepresentacionLegal,
   set_is_loading,
   set_permissions,
@@ -26,7 +27,7 @@ import Select from 'react-select';
 import BoyIcon from '@mui/icons-material/Boy';
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
 import { useAppSelector } from '../../../../hooks';
-import { permissions_request } from '../../request/authRequest';
+// import { permissions_request } from '../../request/authRequest';
 import { showAlert } from '../../../../utils/showAlert/ShowAlert';
 
 export const DialogEntornoApp: React.FC = () => {
@@ -71,12 +72,12 @@ export const DialogEntornoApp: React.FC = () => {
       menuPlacement="top"
       onChange={(value) => {
         onChange(value);
-        (async () => {
+        dispatch(get_persmisions_user(userinfo.id_usuario, 'C'))
+      /*  (async () => {
           dispatch(set_is_loading?.(true));
-          permissions_request(userinfo.id_usuario, 'C')
-            .then((res) => {
-              const dataMenu = res.data;
-              dispatch(set_permissions(dataMenu));
+            .then((res: any) => {
+              // const dataMenu = res.data;
+              //dispatch(set_permissions(dataMenu));
             })
             .catch(() => {
               showAlert(
@@ -90,7 +91,7 @@ export const DialogEntornoApp: React.FC = () => {
             .finally(() => {
               dispatch(set_is_loading?.(false));
             });
-        })();
+        })();*/
       }}
       options={options}
       isSearchable={false}
@@ -129,12 +130,12 @@ export const DialogEntornoApp: React.FC = () => {
               onClick={() => {
                 select_representado('');
                 //* llamar el servicio para cargar el menú pero con entorno laboral
-                (async () => {
+                dispatch(get_persmisions_user(userinfo.id_usuario, 'L'))
+                /*(async () => {
                   dispatch(set_is_loading?.(true));
-                  permissions_request(userinfo.id_usuario, 'L')
-                    .then((res) => {
-                      const dataMenu = res.data;
-                      dispatch(set_permissions(dataMenu));
+                    .then((res: any) => {
+                      //const dataMenu = res.data;
+                      //dispatch(set_permissions(dataMenu));
                     })
                     .catch(() => {
                       showAlert(
@@ -148,7 +149,7 @@ export const DialogEntornoApp: React.FC = () => {
                     .finally(() => {
                       dispatch(set_is_loading?.(false));
                     });
-                })();
+                })();*/
                 dispatch(close_dialog_representado_app());
               }}
             >
@@ -172,12 +173,12 @@ export const DialogEntornoApp: React.FC = () => {
                         cod_relacion_con_el_titular: option.value,
                       });
                       dispatch(close_dialog_representado_app());
-                      (async () => {
+                      dispatch(get_persmisions_user(userinfo.id_usuario, 'C'))
+                      /*(async () => {
                         dispatch(set_is_loading?.(true));
-                        permissions_request(userinfo.id_usuario, 'C')
-                          .then((res) => {
-                            const dataMenu = res.data;
-                            dispatch(set_permissions(dataMenu));
+                          .then((res: any) => {
+                            //const dataMenu = res.data;
+                            // dispatch(set_permissions(dataMenu));
                           })
                           .catch(() => {
                             showAlert(
@@ -191,7 +192,7 @@ export const DialogEntornoApp: React.FC = () => {
                           .finally(() => {
                             dispatch(set_is_loading?.(false));
                           });
-                      })();
+                      })();*/
                     }}
                   >
                     <ListItemIcon>

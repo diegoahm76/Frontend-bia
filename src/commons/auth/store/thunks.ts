@@ -9,8 +9,10 @@ import {
   open_dialog_entorno,
   open_dialog_representado,
   set_authenticated,
+  set_is_loading,
   set_permissions
 } from './authSlice';
+import { RecentActorsOutlined } from '@mui/icons-material';
 
 export const checking_authentication: (
   nombre_de_usuario: string,
@@ -44,15 +46,18 @@ export const checking_authentication: (
       },
       async (error) => {
         console.log(error);
-        return await Promise.reject(error);
+        console.log('error en el interceptor');
       }
     );
 
     // Validamos el tipo de persona y usario para mostrar u ocultar el dialog de entornos
     if (data?.userinfo.tipo_persona === 'J') {
       dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
+      setTimeout(() => {
       // dispatch(open_dialog_representado());
       dispatch(set_authenticated());
+      }
+      , 1000);
     } else if (
       data?.userinfo.tipo_persona === 'N' &&
       data?.userinfo.tipo_usuario === 'I'
@@ -79,6 +84,7 @@ export const get_persmisions_user: (
   tipo_entorno: string
 ) => any = (id_usuario: number, tipo_entorno: string) => {
   return async (dispatch: Dispatch<any>) => {
+    dispatch(set_is_loading?.(true));
     const resp = await permissions_request(id_usuario, tipo_entorno);
     // podemos enviar mensaje de error al dispatch
     if (!resp.ok) {

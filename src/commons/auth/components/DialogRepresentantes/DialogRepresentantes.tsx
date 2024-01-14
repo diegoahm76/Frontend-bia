@@ -16,6 +16,7 @@ import {
 import {
   close_dialog_entorno,
   close_dialog_representado,
+  close_dialog_representado_app,
   setRepresentacionLegal,
   set_authenticated,
 } from '../../store';
@@ -40,6 +41,7 @@ export const DialogRepresentantes: React.FC = () => {
     console.log(value);
     dispatch(setRepresentacionLegal(value));
     dispatch(set_authenticated());
+    dispatch(close_dialog_representado_app());
   };
 
   const renderSelect = (placeholder: string, options: any, onChange: any) => (
