@@ -525,7 +525,7 @@ export const FormParte3 = ({
             title="Listado de Anexos"
             columns={columns ?? []}
             rows={
-              [...anexosCreados, ...anexosCreados,...anexosCreados,...anexosCreados,...anexosCreados,...anexosCreados,...anexosCreados,...anexosCreados,...anexosCreados]?.sort(
+              [...anexosCreados]?.sort(
                 (
                   a: { ruta_soporte?: string; nombre_archivo: string },
                   b: { ruta_soporte?: string; nombre_archivo: string }

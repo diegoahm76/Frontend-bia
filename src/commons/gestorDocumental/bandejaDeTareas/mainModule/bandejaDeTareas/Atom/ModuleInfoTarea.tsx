@@ -528,11 +528,7 @@ export const ModuleInfoTarea = (props: any): JSX.Element => {
 
         {anexos?.length > 0 && (
           <RenderDataGrid
-            rows={
-              [
-                ...anexos,
-              ] || []
-            }
+            rows={[...anexos] || []}
             columns={colums || []}
             title={titleOpcion}
           />
