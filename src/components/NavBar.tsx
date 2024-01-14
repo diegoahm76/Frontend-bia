@@ -1,13 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { AppBar, IconButton, Badge, Stack, Toolbar } from '@mui/material';
+import {
+  AppBar,
+  IconButton,
+  Badge,
+  Stack,
+  Toolbar,
+  Tooltip,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import HomeIcon from '@mui/icons-material/Home';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import {
   open_drawer_desktop,
   open_drawer_mobile,
@@ -19,6 +27,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useContext } from 'react';
 import { AlertasContext } from '../commons/Transversales/modules/Alertas/context/AlertasContext';
 import { PerfilPersonaIngresa } from './PerfilPersonaIngresa';
+import { DialogEntornoApp } from '../commons/auth/components/DialogEntornoApp/DialogEntornoApp';
+import { open_dialog_representado } from '../commons/auth/store';
 
 interface Props {
   drawer_width: number;
@@ -111,7 +121,26 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             </IconButton>
 
             <IconButton onClick={handle_direct_home}>
+            <Tooltip title="Volver al home">
               <HomeIcon sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }} />
+            </Tooltip>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                dispatch(open_dialog_representado())
+                console.log('cambio de entorno');
+              }}
+            >
+              {userinfo.tipo_persona !== 'J' /*&&
+              userinfo.tipo_usuario !== 'I'*/ ? (
+                <Tooltip title="Realizar cambio de entorno">
+                  <ChangeCircleIcon
+                    sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
+                  />
+                </Tooltip>
+              ) : (
+                <></>
+              )}
             </IconButton>
           </Stack>
 
@@ -127,15 +156,21 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
           <Stack spacing={2} direction="row">
             <IconButton onClick={handle_button_mod_dark}>
               {mod_dark ? (
+                <Tooltip title="Modo claro">
                 <Brightness7Icon sx={{ color: '#FAFAFA' }} />
+                </Tooltip>
               ) : (
+                <Tooltip title="Modo oscuro">
                 <Brightness4Icon sx={{ color: '#707070' }} />
+                </Tooltip>
               )}
             </IconButton>
             <IconButton>
+              <Tooltip title="Notificaciones">
               <NotificationsIcon
                 sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
               />
+              </Tooltip>
             </IconButton>
             <Link to="/app/transversal/bandeja_alertas">
               <Badge
@@ -150,15 +185,21 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
                 sx={{ position: 'relative', left: '-4px' }} // Ajusta la posición del círculo según tus necesidades
               >
                 <IconButton>
+                  <Tooltip title="Bandeja de alertas">
                   <ReportProblemIcon
                     sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
                   />
+                  </Tooltip>
                 </IconButton>
               </Badge>
             </Link>
           </Stack>
         </Toolbar>
       </AppBar>
+
+      {/*dialog entorno app*/}
+            <DialogEntornoApp/>
+      {/*dialog entorno app*/}
     </>
   );
 };

@@ -28,6 +28,7 @@ const initial_state: IUserInfo | any = {
   entorno: 'C',
   is_blocked: false,
   representacion_legal: 'MP',
+  is_loading: true,
 };
 
 export const auth_slice = createSlice({
@@ -85,6 +86,9 @@ export const auth_slice = createSlice({
       state.status = 'not-authenticated';
       state.error_message = '';
     },
+    close_dialog_representado_app: (state) => {
+      state.dialog_representante = false;
+    },
     change_entorno: (state, { payload }) => {
       state.entorno = payload;
     },
@@ -96,6 +100,11 @@ export const auth_slice = createSlice({
     },
     setRepresentacionLegal: (state, { payload }) => {
       state.representacion_legal = payload;
+    },
+
+
+    set_is_loading: (state, { payload }) => {
+      state.is_loading = payload;
     },
   },
 });
@@ -112,6 +121,8 @@ export const {
   set_authenticated,
   open_dialog_representado,
   close_dialog_representado,
+  close_dialog_representado_app,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   setRepresentacionLegal,
+  set_is_loading,
 } = auth_slice.actions;

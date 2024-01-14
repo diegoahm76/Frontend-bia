@@ -85,7 +85,7 @@ export const DialogRepresentantes: React.FC = () => {
         variant="subtitle1"
         sx={{ padding: '10px' }}
       >
-        <Typography>Seleccione como ingresará al sistema</Typography>
+        <Typography>Seleccione la representación con la que ingresará al sistema</Typography>
       </DialogTitle>
 
       <List
