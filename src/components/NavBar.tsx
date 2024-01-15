@@ -8,6 +8,7 @@ import {
   Stack,
   Toolbar,
   Tooltip,
+  Button,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -86,7 +87,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
         }}
       >
         <Toolbar sx={{ justifyContent: 'space-between', width: '100%' }}>
-          <Stack spacing={2} direction="row">
+          <Stack spacing={3} direction="row">
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -121,27 +122,29 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             </IconButton>
 
             <IconButton onClick={handle_direct_home}>
-            <Tooltip title="Volver al home">
-              <HomeIcon sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }} />
-            </Tooltip>
+              <Tooltip title="Volver al home">
+                <HomeIcon sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }} />
+              </Tooltip>
             </IconButton>
-            <IconButton
-              onClick={() => {
-                dispatch(open_dialog_representado())
-                console.log('cambio de entorno');
-              }}
-            >
-              {userinfo.tipo_persona !== 'J' /*&&
-              userinfo.tipo_usuario !== 'I'*/ ? (
-                <Tooltip title="Realizar cambio de entorno">
-                  <ChangeCircleIcon
-                    sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
-                  />
-                </Tooltip>
-              ) : (
-                <></>
-              )}
-            </IconButton>
+          </Stack>
+
+          <Stack spacing={2} direction="row">
+            {userinfo.tipo_persona !== 'J' ? (
+              <Tooltip title="Realizar cambio de entorno">
+                <Button
+                  variant="contained"
+                  startIcon={<ChangeCircleIcon />}
+                  color={mod_dark ? 'secondary' : 'primary'}
+                  onClick={() => {
+                    dispatch(open_dialog_representado());
+                  }}
+                >
+                  entorno
+                </Button>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
           </Stack>
 
           <Stack spacing={2} direction="row">
@@ -157,19 +160,19 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             <IconButton onClick={handle_button_mod_dark}>
               {mod_dark ? (
                 <Tooltip title="Modo claro">
-                <Brightness7Icon sx={{ color: '#FAFAFA' }} />
+                  <Brightness7Icon sx={{ color: '#FAFAFA' }} />
                 </Tooltip>
               ) : (
                 <Tooltip title="Modo oscuro">
-                <Brightness4Icon sx={{ color: '#707070' }} />
+                  <Brightness4Icon sx={{ color: '#707070' }} />
                 </Tooltip>
               )}
             </IconButton>
             <IconButton>
               <Tooltip title="Notificaciones">
-              <NotificationsIcon
-                sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
-              />
+                <NotificationsIcon
+                  sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
+                />
               </Tooltip>
             </IconButton>
             <Link to="/app/transversal/bandeja_alertas">
@@ -186,9 +189,9 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
               >
                 <IconButton>
                   <Tooltip title="Bandeja de alertas">
-                  <ReportProblemIcon
-                    sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
-                  />
+                    <ReportProblemIcon
+                      sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
+                    />
                   </Tooltip>
                 </IconButton>
               </Badge>
@@ -198,7 +201,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
       </AppBar>
 
       {/*dialog entorno app*/}
-            <DialogEntornoApp/>
+      <DialogEntornoApp />
       {/*dialog entorno app*/}
     </>
   );

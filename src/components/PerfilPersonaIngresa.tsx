@@ -82,14 +82,14 @@ export const PerfilPersonaIngresa: React.FC = () => {
                 marginRight: '.5rem',
               }}
             >
-              {`En Sesión : ${nombre_usu}`.toUpperCase()} -
+              {`${nombre_usu} :`.toUpperCase()}
             </strong>{' '}
             <strong>
               {tipo_persona === 'J'
-                ? 'Entorno : Usuario - Empresa'.toUpperCase()
+                ? ' Usuario - Empresa'.toUpperCase()
                 : tipo_persona === 'N' && tipo_usuario === 'I'
-                ? 'Entorno : Usuario - Interno'.toUpperCase()
-                : 'Entorno : Usuario - Persona'.toUpperCase()}
+                ? ' Usuario - Interno'.toUpperCase()
+                : ' Usuario - Persona'.toUpperCase()}
             </strong>
           </Typography>
         </Hidden>
