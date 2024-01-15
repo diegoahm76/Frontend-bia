@@ -17,7 +17,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import { api } from "../../../../api/axios";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
 import { jsPDF } from 'jspdf';
-import {    useState } from "react";
+import { useState } from "react";
 
 interface IProps {
   form_liquidacion: FormLiquidacion;
@@ -73,23 +73,29 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
 
   const [visor, setVisor] = useState('');
- 
+
   const generarHistoricoBajas = () => {
     const doc = new jsPDF();
     const anchoPagina = doc.internal.pageSize.width;
     const agregarEncabezado = () => {
       doc.setFontSize(22);
       doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
-      doc.setFontSize(12); 
+      doc.setFontSize(12);
     };
-    agregarEncabezado(); 
+    agregarEncabezado();
     doc.setFontSize(12);
-    let y = 30;  
+    let y = 30;
     setVisor(doc.output('datauristring'));
   };
 
 
-  
+  const [pdfUrl, setPdfUrl] = useState('');
+
+  const handleOpenPdf = () => {
+    // Aquí estableces la URL del PDF que deseas mostrar
+    setPdfUrl(`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`);
+  };
+
   return (
     <>
       <Grid container spacing={2}>
@@ -264,15 +270,33 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               </Button>
             </Grid>
 
+            {/* {id_liquidacion_pdf} */}
 
-
-
-            <Button variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
-          <Grid item xs={12} sm={12}>
-            <embed src={visor} type="application/pdf" width="100%" height="1080px" />
-          </Grid>
-
-
+            {/* <div>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={3}>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    fullWidth
+                    startIcon={<PrintIcon />}
+                    onClick={handleOpenPdf}
+                  >
+                    Imprimir recibo
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  {/* Aquí es donde se mostrará el PDF */}
+                 {/* pdfUrl && (
+                    <iframe
+                      src={pdfUrl}
+                      width="100%"
+                      height="600px"
+                    />
+                  )
+                </Grid>
+              </Grid> */}
+            {/* </div> */} 
 
 
 
