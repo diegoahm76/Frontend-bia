@@ -155,7 +155,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   }, [rows_detalles]);
 
   const get_liquidacion_por_expediente = (estado_expediente: EstadoExpediente): void => {
-    if (estado_expediente === 'guardado') {
+    if (estado_expediente?.toLowerCase() === 'guardado') {
       api.get(`recaudo/liquidaciones/liquidacion-base-por-expediente/${form_liquidacion.id_expediente}`)
         .then((response) => {
           agregar_datos_inputs(response.data.data);
