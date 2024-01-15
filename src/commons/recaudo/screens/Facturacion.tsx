@@ -136,7 +136,66 @@ export const Facturacion: React.FC = () => {
     doc.text(`Tel.: ${telefono}`, 10, y);
     y += 6;
     doc.text(`Ciudad: ${ciudad}`, 10, y);
-    y += 6; // Espacio antes del asunto
+    y += 6;
+    doc.text(``, 10, y);
+    y += 6; doc.text(``, 10, y);
+    y += 6;
+//     y += 6;
+//     doc.text(`Cordial Saludo, En consideración al proceso de liquidación del instrumento económico mencionado 
+// en el asunto, por medio de la presente solicito amablemente su colaboración para obtener 
+// la siguiente información:`, 10, y);
+
+    doc.text(`Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los 
+documentos de cobro de la vigencia 2023 de la tasa por utilización de agua.
+
+Cordial Saludo,
+    
+Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, 
+por medio de la presente solicito amablemente su colaboración para obtener la siguiente información: 
+    
+a)Usuarios cuyos expedientes fueron archivados en el periodo comprendido del 01 de enero al 31 
+de diciembre de 2023. 
+    
+b)Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el 
+periodo comprendido del 01 de enero al 31 de diciembre de 2023. 
+    
+Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada
+al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante
+mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar 
+el 12 de enero del 2024, con la finalidad de llevar a cabo un proceso eficiente en términos de
+tiempo y manejo adecuado de la información. Agradezco la atención prestada.
+    
+Atentamente,    
+    `, 10, y);
+y += 6;
+
+
+
+
+    y += 6;
+    // doc.text(`mencionado en el asunto, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información:`, 10, y);
+    // y += 6;
+    doc.text(``, 10, y);
+    y += 6;
+    doc.text(``, 10, y);
+    y += 6;
+    doc.text(``, 10, y);
+    y += 6; doc.text(``, 10, y);
+    y += 6; doc.text(``, 10, y);
+    y += 6;
+    y += 6; doc.text(``, 10, y);
+    y += 6;
+    y += 6; doc.text(``, 10, y);
+    y += 6;
+    y += 6; doc.text(``, 10, y);
+    y += 6;
+    y += 6; doc.text(``, 10, y);
+    y += 6;
+    y += 6; doc.text(``, 10, y);
+    y += 6;
+  
+    
+    // Espacio antes del asunto
     // Añadir asunto
     const lineas = doc.splitTextToSize(asunto, anchoPagina - 20);
     for (let i = 0; i < lineas.length; i++) {
@@ -225,6 +284,8 @@ export const Facturacion: React.FC = () => {
   };
   const [asunto, setAsunto] = useState('');
   const [identificacion, setIdentificacion] = useState('');
+  const [Fecha, setFecha] = useState('');
+
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
   const [ciudad, setCiudad] = useState('');
@@ -496,6 +557,16 @@ export const Facturacion: React.FC = () => {
             fullWidth
             value={identificacion}
             onChange={(e) => setIdentificacion(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label="Fecha"
+            variant="outlined"
+            size="small"
+            fullWidth
+            value={Fecha}
+            onChange={(e) => setFecha(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
