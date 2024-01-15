@@ -11,37 +11,71 @@ import {
   ListItemButton,
   DialogTitle,
   Typography,
-  ListItemIcon
+  ListItemIcon,
 } from '@mui/material';
 import {
+  close_dialog_entorno,
   close_dialog_representado,
+  setRepresentacionLegal,
   set_authenticated,
-  set_representado
 } from '../../store';
 import { type AuthSlice } from '../../interfaces';
+import Select from 'react-select';
+import BoyIcon from '@mui/icons-material/Boy';
+import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
 
 export const DialogRepresentantes: React.FC = () => {
   const dispatch = useDispatch();
-  const { dialog_representante, representante_legal } = useSelector(
+  const { dialog_representante, representante_legal, apoderados } = useSelector(
     (state: AuthSlice) => state.auth
   );
 
   const options = [
-    { label: 'Nombre propio', value: 'Nombre propio' },
+    { label: 'Nombre propio', value: 'MP' },
     { label: 'En representación de una empresa', value: 'Nombre propio' },
-    { label: 'En representación de una persona', value: 'Nombre propio' }
+    { label: 'En representación de una persona', value: 'Nombre propio' },
   ];
 
-  const select_representado = (value: string): void => {
-    dispatch(set_representado(value));
+  const select_representado = (value: string | object): void => {
+    console.log(value);
+    dispatch(setRepresentacionLegal(value));
     dispatch(set_authenticated());
   };
+
+  const renderSelect = (placeholder: string, options: any, onChange: any) => (
+    <Select
+      styles={{
+        control: (base) => ({
+          ...base,
+          boxShadow: 'none',
+          width: '100%', // Hacer que el ancho sea responsivo
+          zIndex: 99,
+        }),
+        menu: (base) => ({
+          ...base,
+          zIndex: 99,
+          width: '100%',
+          maxHeight: '130px', // Limitar la altura máxima del menú
+          overflowY: 'auto', // Habilitar el desbordamiento de scroll
+        }),
+      }}
+      placeholder={placeholder}
+      menuPlacement="top"
+      onChange={onChange}
+      options={options}
+      isSearchable={false}
+    />
+  );
 
   return (
     <Dialog
       open={dialog_representante}
-      onClose={() => dispatch(close_dialog_representado())}
-      aria-labelledby="responsive-dialog-title"
+      maxWidth="lg"
+      sx={{ '& .MuiDialog-paper': { width: '55%', maxHeight: '700px' } }}
+      onClose={() => {
+        dispatch(close_dialog_representado());
+        dispatch(close_dialog_entorno());
+      }}
     >
       <DialogTitle
         textAlign="center"
@@ -51,40 +85,85 @@ export const DialogRepresentantes: React.FC = () => {
         variant="subtitle1"
         sx={{ padding: '10px' }}
       >
-        <Typography>Seleccione a quien representará</Typography>
+        <Typography>Seleccione como ingresará al sistema</Typography>
       </DialogTitle>
-      <List>
-        {representante_legal.length > 0
-          ? options.map((option) => (
+
+      <List
+        sx={{
+          padding: 2,
+        }}
+      >
+        {options.map((option) => (
+          <>
+            {option.label !== 'En representación de una empresa' &&
+            option.label !== 'En representación de una persona' && (
               <ListItem key={option.label} disableGutters alignItems="center">
                 <ListItemButton
                   autoFocus
-                  onClick={() => select_representado(option.value)}
+                  onClick={() => {
+                    select_representado({
+                      cod_relacion_con_el_titular: option.value,
+                    });
+                  }}
                 >
                   <ListItemIcon>
-                    <PersonIcon />
+                    <BoyIcon
+                      fontSize='large'
+                    />
                   </ListItemIcon>
                   <ListItemText primary={option.label} />
                 </ListItemButton>
               </ListItem>
-            ))
-          : options
-              .filter(
-                (option) => option.label !== 'En representación de una empresa'
-              )
-              .map((option) => (
-                <ListItem key={option.label} disableGutters alignItems="center">
-                  <ListItemButton
-                    autoFocus
-                    onClick={() => select_representado(option.value)}
-                  >
-                    <ListItemIcon>
-                      <PersonIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={option.label} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
+            )}
+
+            {option.label === 'En representación de una empresa' &&
+            representante_legal?.length > 0 && (
+              <ListItem key={option.label} disableGutters alignItems="center">
+                <ListItemButton autoFocus>
+                  <ListItemIcon>
+                    <EmojiTransportationIcon
+                      fontSize='large'
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={option.label} />
+                  {renderSelect(
+                    'Seleccione una empresa',
+                    [...representante_legal].map((representante) => ({
+                      representacion: representante,
+                      value: representante?.razon_social,
+                      label: representante?.razon_social || 'Sin razón social',
+                    })),
+                    select_representado
+                  )}
+                </ListItemButton>
+              </ListItem>
+            )}
+
+            {option.label === 'En representación de una persona' &&
+            apoderados?.length > 0 && (
+              <ListItem key={option.label} disableGutters alignItems="center">
+                <ListItemButton autoFocus>
+                  <ListItemIcon>
+                    <PersonIcon
+                      fontSize='large'
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={option.label} />
+                  {renderSelect(
+                    'Seleccione una persona',
+                    [...apoderados].map((apoderado) => ({
+                      representacion: apoderado,
+                      value: apoderado?.id_apoderados_persona,
+                      label: apoderado?.nombre_persona_poderdante || 'Sin nombre',
+                    })),
+                    select_representado
+                  )}
+                </ListItemButton>
+              </ListItem>
+            )}
+          </>
+        ))}
+
       </List>
     </Dialog>
   );

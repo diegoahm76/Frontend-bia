@@ -62,14 +62,17 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
 
     // Segundo caso: Complemento NO requiere digitalización
     if (!requiresDigitalization) {
-      // Si complemento_asignado_unidad es true, habilita el botón de "Continuar con asignación a grupo"
-      if (isComplementoAsignadoUnidad && isContinuarAsigGrup) {
-        return false;
+      // Si complemento_asignado_unidad es true, deshabilita el botón de "Continuar con asignación a grupo"
+      // Si el botón es "Dig", también se deshabilita
+      if (isComplementoAsignadoUnidad || isDig) {
+        return true;
       }
-      return true;
+      // Si complemento_asignado_unidad es false, habilita únicamente el botón de "Continuar con asignación a grupo"
+      if (!isComplementoAsignadoUnidad) {
+        return !isContinuarAsigGrup;
+      }
     }
   };
-
   const setActionsComplementos = (complemento: any) => {
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(complemento));
     void Swal.fire({

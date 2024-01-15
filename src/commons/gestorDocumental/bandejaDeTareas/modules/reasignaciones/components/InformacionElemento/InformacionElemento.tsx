@@ -4,7 +4,6 @@ import React from 'react';
 import { Title } from '../../../../../../../components';
 import { useAppSelector } from '../../../../../../../hooks';
 import { formatDate } from '../../../../../../../utils/functions/formatDate';
-import { InputLabel } from '@mui/material';
 
 export const InformacionElemento: React.FC = (): JSX.Element => {
   //* redux states
@@ -13,6 +12,8 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
       state.BandejaTareasSlice
         .currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
   );
+
+  const { userinfo } = useAppSelector((state) => state.auth);
   return (
     <Grid item xs={12}>
       <Title title="Información de la solicitud seleccionada en bandeja de tareas" />
@@ -22,7 +23,7 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
         }}
       >
         <Grid container spacing={2}>
-         <Grid
+          <Grid
             item
             xs={12}
             sm={6}
@@ -37,7 +38,8 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
               size="small"
               variant="outlined"
               value={
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
+                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ??
+                'N/A'
               }
               sx={{ mt: '.2rem', mb: '.45rem' }}
               InputLabelProps={{
@@ -45,7 +47,7 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
               }}
             />
           </Grid>
-        <Grid
+          <Grid
             item
             xs={12}
             sm={6}
@@ -60,7 +62,8 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
               size="small"
               variant="outlined"
               value={
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.asignado_por
+                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.asignado_por ??
+                'N/A'
               }
               sx={{ mt: '.2rem', mb: '.45rem' }}
               InputLabelProps={{
@@ -68,7 +71,7 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
               }}
             />
           </Grid>
-         <Grid
+          <Grid
             item
             xs={12}
             sm={4}
@@ -85,8 +88,7 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
               value={
                 formatDate(
                   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.fecha_asignacion
-                )
-                ?? 'N/A'
+                ) ?? 'N/A'
               }
               sx={{ mt: '.3rem', mb: '.45rem' }}
               InputLabelProps={{
@@ -111,8 +113,7 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
               value={
                 formatDate(
                   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.fecha_radicado
-                )
-                ?? 'N/A'
+                ) ?? 'N/A'
               }
               sx={{ mt: '.3rem', mb: '.45rem' }}
               InputLabelProps={{
@@ -120,27 +121,33 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
               }}
             />
           </Grid>
-           <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4}>
             <TextField
               fullWidth
               disabled
               label="Radicado"
               size="small"
               variant="outlined"
-              value={currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.radicado}
+              value={
+                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.radicado ??
+                'N/A'
+              }
               sx={{ mt: '.2rem', mb: '.45rem' }}
               InputLabelProps={{
                 shrink: true,
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={5.5}
-          sx={{
-            width: '60%',
-            margin: '.6rem auto',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
+          <Grid
+            item
+            xs={12}
+            sm={5.5}
+            sx={{
+              width: '60%',
+              margin: '.6rem auto',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
           >
             <TextField
               fullWidth
@@ -148,7 +155,7 @@ export const InformacionElemento: React.FC = (): JSX.Element => {
               label="Unidad organizacional actual"
               size="small"
               variant="outlined"
-              value={'Grupo: agua subterráneas'}
+              value={userinfo?.nombre_unidad_organizacional ?? 'N/A'}
               sx={{ mt: '.2rem', mb: '.45rem' }}
               InputLabelProps={{
                 shrink: true,

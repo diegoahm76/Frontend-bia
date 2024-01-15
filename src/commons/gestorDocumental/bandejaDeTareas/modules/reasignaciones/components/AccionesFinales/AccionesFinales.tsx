@@ -19,6 +19,8 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 import { ReasignacionContext } from '../../context/ReasignacionContext';
 import { resetBandejaDeTareasFull } from '../../../../toolkit/store/BandejaDeTareasStore';
+import { postReAsignacionTarea } from '../../services/post/pqrsdf/postReAsignacionTarea.service';
+import { getReAsignacionesTareasPqrsdf } from '../../services/reasignaciones/pqrsdf/getReAsignacionesTaskPqrsdf.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -50,15 +52,15 @@ export const AccionesFinales = (): JSX.Element => {
 
     const item = listaAsignaciones.find(
       (item: any) =>
-        item.estado_asignado === 'EN ESPERA' ||
-        item.estado_asignado === 'ACEPTADA'
+        item.estado_asignacion === 'En espera' ||
+        item.estado_asignacion === 'Aceptada'
     );
 
     if (item) {
       await Swal.fire({
         icon: 'warning',
         title: 'Atención',
-        text: `Hay asignaciones pendientes por aceptar o rechazar, por favor verifique`,
+        text: `Hay reasignaciones pendientes por aceptar o rechazar, por favor verifique`,
         confirmButtonText: 'Entendido',
       });
       return;
@@ -72,26 +74,14 @@ export const AccionesFinales = (): JSX.Element => {
 
     switch (tipo) {
       case 'Responder PQRSDF':
-      console.log('liderAsignado', liderAsignado)
-      console.log('currentGrupo', currentGrupo)
-      console.log('currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas)
-      console.log('comentario de reasignacion', comentario)
-
-
-        showAlert(
-          'Atención',
-          'No hay servicio aún para (RESPUESTA A PQRSDF), así que no se realiza re-asignacion por el momento',
-          'warning'
-        )
-        // Call the service for PQRSDF
-        /* res = await postAsignacionGrupoPQRSDF(
+        res = await postReAsignacionTarea(
           {
-            id_pqrsdf: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
-            id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_tarea_asignada: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_persona_a_quien_se_reasigna: currentGrupo?.value,
+            comentario_reasignacion: comentario,
           },
           handleSecondLoading
-        );*/
+        );
         break;
       case 'Responder Trámite':
         // Call the service for Tramites y Servicios
@@ -148,24 +138,23 @@ export const AccionesFinales = (): JSX.Element => {
 
       switch (tipo) {
         case 'Responder PQRSDF':
-          // Fetch the assignments for PQRSDF
-          /*asignaciones = await getAsignacionesPQRSDF(
+          asignaciones = await getReAsignacionesTareasPqrsdf(
             // para pqrsdf
-            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
             handleGeneralLoading
-          );*/
+          );
           break;
         case 'Responder Trámite':
           // Fetch the assignments for Tramites y Servicios
           /*asignaciones = await getAsignacionesTramitesYServicios(
-            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
             handleGeneralLoading
           );*/
           break;
         case 'Otros':
         // Fetch the assignments for Otros
         /* asignaciones = await getAsignacionesOtros(
-            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
             handleGeneralLoading
           );*/
         case 'OPA':
@@ -176,7 +165,7 @@ export const AccionesFinales = (): JSX.Element => {
           );
           // Fetch the assignments for OOpas
           /* asignaciones = await getAsignacionesOPas(
-              currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
               handleGeneralLoading
             );*/
           break;
@@ -253,7 +242,7 @@ export const AccionesFinales = (): JSX.Element => {
                   startIcon={<SaveIcon />}
                   onClick={handleClick}
                 >
-                  {`ASIGNAR (${
+                  {`RE-ASIGNAR (${
                     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
                     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo
                   }) A UNIDAD`}
