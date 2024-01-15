@@ -232,7 +232,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
       </Grid>
 
       <Grid container justifyContent={'center'} spacing={3}>
-        {estado_expediente === 'activo' && (
+        {estado_expediente?.toLowerCase() === 'activo' && (
           <Grid item xs={12} sm={3}>
             <Button
               color="primary"
@@ -254,7 +254,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
             </Button>
           </Grid>
         )}
-        {estado_expediente === 'guardado' && (
+        {estado_expediente?.toLowerCase() === 'guardado' && (
           <>
             <Grid item xs={12} sm={3}>
               <Button
@@ -317,7 +317,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
             </Grid>
           </>
         )}
-        {estado_expediente === 'liquidado' && (
+        {estado_expediente?.toLowerCase() === 'liquidado' && (
           <Grid item xs={12} sm={3}>
             <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
           </Grid>
