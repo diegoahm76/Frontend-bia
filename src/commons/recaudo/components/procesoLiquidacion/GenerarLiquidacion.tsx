@@ -270,9 +270,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               </Button>
             </Grid>
 
-            {id_liquidacion_pdf}
+            {/* {id_liquidacion_pdf} */}
 
-            <div>
+            {/* <div>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={3}>
                   <Button
@@ -287,16 +287,16 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   {/* Aquí es donde se mostrará el PDF */}
-                  {pdfUrl && (
+                 {/* pdfUrl && (
                     <iframe
                       src={pdfUrl}
                       width="100%"
                       height="600px"
                     />
-                  )}
+                  )
                 </Grid>
-              </Grid>
-            </div>
+              </Grid> */}
+            {/* </div> */} 
 
 
 
