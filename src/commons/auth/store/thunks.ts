@@ -10,7 +10,7 @@ import {
   open_dialog_representado,
   set_authenticated,
   set_is_loading,
-  set_permissions
+  set_permissions,
 } from './authSlice';
 import { RecentActorsOutlined } from '@mui/icons-material';
 
@@ -23,7 +23,7 @@ export const checking_authentication: (
 
     const { ok, data, error_message, is_blocked } = await login_post({
       nombre_de_usuario,
-      password
+      password,
     });
     // Se limpia los permisos que vienen del back
     if (data?.permisos !== undefined) {
@@ -54,10 +54,9 @@ export const checking_authentication: (
     if (data?.userinfo.tipo_persona === 'J') {
       dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
       setTimeout(() => {
-      // dispatch(open_dialog_representado());
-      dispatch(set_authenticated());
-      }
-      , 1000);
+        // dispatch(open_dialog_representado());
+        dispatch(set_authenticated());
+      }, 1000);
     } else if (
       data?.userinfo.tipo_persona === 'N' &&
       data?.userinfo.tipo_usuario === 'I'
@@ -93,55 +92,54 @@ export const get_persmisions_user: (
       return;
     }
     const permissions = resp.data?.map((e) => {
-  return {
-    ...e,
-    hola : 'hola',
-    expanded: false,
-    menus: e.menus?.map((i) => {
       return {
-        ...i,
+        ...e,
+        hola: 'hola',
         expanded: false,
-        submenus: i.submenus?.map((o) => {
+        menus: e.menus?.map((i) => {
           return {
-            ...o,
+            ...i,
             expanded: false,
-            submenus: o.submenus?.map((s) => {
+            submenus: i.submenus?.map((o) => {
               return {
-                ...s,
+                ...o,
                 expanded: false,
-                modulos: s.modulos?.map((m) => {
+                submenus: o.submenus?.map((s) => {
                   return {
-                    ...m,
-                    expanded: false
+                    ...s,
+                    expanded: false,
+                    modulos: s.modulos?.map((m) => {
+                      return {
+                        ...m,
+                        expanded: false,
+                      };
+                    }),
+                    submenus: s.submenus?.map((m) => {
+                      return {
+                        ...m,
+                        expanded: false,
+                        modulos: m.modulos?.map((m) => {
+                          return {
+                            ...m,
+                            expanded: false,
+                          };
+                        }),
+                      };
+                    }),
                   };
                 }),
-                submenus: s.submenus?.map((m) => {
+                modulos: o.modulos?.map((m) => {
                   return {
                     ...m,
                     expanded: false,
-                    modulos: m.modulos?.map((m) => {
-                      return {
-                        ...m,
-                        expanded: false
-                      };
-                    })
                   };
-                })
+                }),
               };
             }),
-            modulos: o.modulos?.map((m) => {
-              return {
-                ...m,
-                expanded: false,
-              };
-            })
           };
-        })
+        }),
       };
-    })
-  };
-});
-
-dispatch(set_permissions(permissions));
+    });
+    dispatch(set_permissions(permissions));
   };
 };

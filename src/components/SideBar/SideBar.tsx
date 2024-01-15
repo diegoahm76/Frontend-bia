@@ -71,9 +71,12 @@ export const SideBar: FC<SideBarProps> = ({
   const dispatch = useDispatch();
   const [open, set_open] = useState(false);
   const [dialog_open, set_dialog_open] = useState(false);
-  const { userinfo, permisos, is_loading } = useSelector(
+  const { userinfo, permisos: permisos_store, is_loading } = useSelector(
     (state: AuthSlice) => state.auth
   );
+
+  const [permisos, set_permisos] = useState<any[]>([]);
+
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
@@ -100,7 +103,7 @@ export const SideBar: FC<SideBarProps> = ({
     const updateState = async () => {
       try {
         await delay(800);
-        dispatch(set_permissions(permisos));
+        set_permisos(permisos_store);
         await delay(1500);
         dispatch(set_is_loading?.(false));
       } catch (error) {
@@ -109,7 +112,7 @@ export const SideBar: FC<SideBarProps> = ({
     };
 
     updateState();
-  }, [permisos]);
+  }, [permisos_store]);
 
   // ? ------- static side bar content, except super user delegation screen ------
   const conten_drawer = (
@@ -308,7 +311,7 @@ export const SideBar: FC<SideBarProps> = ({
               <ListItemButton
                 sx={{ borderRadius: '10px' }}
                 onClick={() => {
-                  open_collapse(indexStore, set_permissions, dispatch);
+                  open_collapse(indexStore, set_permisos);
                 }}
               >
                 <ListItemText primary={elementStore.desc_subsistema} />
@@ -339,8 +342,7 @@ export const SideBar: FC<SideBarProps> = ({
                           open_collapse_sbm(
                             indexStore,
                             indexMenu,
-                            set_permissions,
-                            dispatch
+                            set_permisos,
                           );
                         }}
                       >
@@ -370,8 +372,7 @@ export const SideBar: FC<SideBarProps> = ({
                                       indexStore,
                                       indexMenu,
                                       indexSubmenuMenu,
-                                      set_permissions,
-                                      dispatch
+                                      set_permisos,
                                     );
                                   }}
                                 >
@@ -411,8 +412,7 @@ export const SideBar: FC<SideBarProps> = ({
                                                     indexMenu,
                                                     indexSubmenuMenu,
                                                     indexElement,
-                                                    set_permissions,
-                                                    dispatch
+                                                    set_permisos,
                                                   );
                                                 }}
                                               >
