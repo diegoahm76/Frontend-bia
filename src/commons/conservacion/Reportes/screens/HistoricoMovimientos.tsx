@@ -1393,6 +1393,7 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 reporte={reporte}
                 tipo_reporte={seleccion_reporte}
               ></ReportesXLS>
+              ss
               {/* <Box component="form" noValidate autoComplete="off"> */}
                 <embed
                   src={visor}
