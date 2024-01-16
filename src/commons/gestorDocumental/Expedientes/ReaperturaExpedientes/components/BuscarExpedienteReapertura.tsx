@@ -392,7 +392,7 @@ const BuscarExpedienteReapertura = ({
                         margin="dense"
                         fullWidth
                         size="small"
-                        label="Serie"
+                        label="SubSerie"
                         variant="outlined"
                         disabled={false}
                         defaultValue={value}

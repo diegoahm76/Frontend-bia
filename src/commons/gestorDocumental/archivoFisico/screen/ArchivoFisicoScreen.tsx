@@ -217,10 +217,7 @@ export const ArchivoFisicoScreen: React.FC = () => {
         </div>
       ),
     },
-    {
-      field: 'ACCIÓN',
-      header: 'ACCIÓN',
-    },
+    
   ];
 
   const definition_levels = [
@@ -344,7 +341,6 @@ export const ArchivoFisicoScreen: React.FC = () => {
                 name="nombre_deposito"
                 control={control_deposito}
                 defaultValue=""
-                // rules={{ required: false }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
