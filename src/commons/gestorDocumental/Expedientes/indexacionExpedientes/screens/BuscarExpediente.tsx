@@ -1,5 +1,5 @@
 
-import {Box,Button,Dialog,DialogContent,Grid,TextField} from '@mui/material';
+import {Box,Button,Dialog,DialogContent,Grid,} from '@mui/material';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -28,18 +28,26 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
 
 
     const columns: GridColDef[] = [
-        {
-            field: 'codigo_exp_Agno',
-            headerName: 'AÑO',
-            sortable: true,
-            width: 250,
-        },
+        
         {
             field: 'codigo_exp_consec_por_agno',
             headerName: 'CONSECUTIVO',
             sortable: true,
             width: 250,
         },
+        {
+            field: 'tipo_expediente',
+            headerName: 'TIPO EXPEDIENTE',
+            sortable: true,
+            width: 250,
+        },
+        {
+            field: 'codigo_exp_Agno',
+            headerName: 'AÑO',
+            sortable: true,
+            width: 250,
+        },
+      
         {
             field: 'titulo_expediente',
             headerName: 'TÍTULO EXPEDIENTE',
