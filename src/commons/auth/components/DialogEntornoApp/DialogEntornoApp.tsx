@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import {
+  change_entorno,
   close_dialog_representado_app,
   get_persmisions_user,
   setRepresentacionLegal,
@@ -73,25 +74,6 @@ export const DialogEntornoApp: React.FC = () => {
       onChange={(value) => {
         onChange(value);
         dispatch(get_persmisions_user(userinfo.id_usuario, 'C'))
-      /*  (async () => {
-          dispatch(set_is_loading?.(true));
-            .then((res: any) => {
-              // const dataMenu = res.data;
-              //dispatch(set_permissions(dataMenu));
-            })
-            .catch(() => {
-              showAlert(
-                'Opss..',
-                'No se pudo cargar el menú, intente de nuevo',
-                'error'
-              );
-              dispatch(set_is_loading?.(false));
-              dispatch(set_permissions([]));
-            })
-            .finally(() => {
-              dispatch(set_is_loading?.(false));
-            });
-        })();*/
       }}
       options={options}
       isSearchable={false}
@@ -131,32 +113,13 @@ export const DialogEntornoApp: React.FC = () => {
                 select_representado('');
                 //* llamar el servicio para cargar el menú pero con entorno laboral
                 dispatch(get_persmisions_user(userinfo.id_usuario, 'L'))
-                /*(async () => {
-                  dispatch(set_is_loading?.(true));
-                    .then((res: any) => {
-                      //const dataMenu = res.data;
-                      //dispatch(set_permissions(dataMenu));
-                    })
-                    .catch(() => {
-                      showAlert(
-                        'Opss..',
-                        'No se pudo cargar el menú, intente de nuevo',
-                        'error'
-                      );
-                      dispatch(set_is_loading?.(false));
-                      dispatch(set_permissions([]));
-                    })
-                    .finally(() => {
-                      dispatch(set_is_loading?.(false));
-                    });
-                })();*/
                 dispatch(close_dialog_representado_app());
               }}
             >
               <ListItemIcon>
                 <PersonPinIcon fontSize="large" />
               </ListItemIcon>
-              <ListItemText primary={'Continuar como usuario interno'} />
+              <ListItemText primary={'Continuar como usuario interno - entorno laboral'} />
             </ListItemButton>
           </ListItem>
         )}
@@ -174,6 +137,7 @@ export const DialogEntornoApp: React.FC = () => {
                       });
                       dispatch(close_dialog_representado_app());
                       dispatch(get_persmisions_user(userinfo.id_usuario, 'C'))
+                      
                       /*(async () => {
                         dispatch(set_is_loading?.(true));
                           .then((res: any) => {

@@ -111,6 +111,10 @@ export const auth_slice = createSlice({
     set_is_loading: (state, { payload }) => {
       state.is_loading = payload;
     },
+
+   /* set_entorno: (state, { payload }) => {
+      state.entorno = payload;
+    },*/
   },
 });
 

@@ -10,8 +10,8 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
-import  VisibilityIcon  from '@mui/icons-material/Visibility';
+import { useEffect, useState } from 'react';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 /*
 {
@@ -30,8 +30,8 @@ import  VisibilityIcon  from '@mui/icons-material/Visibility';
 
 export const PerfilPersonaIngresa: React.FC = () => {
   const {
-    userinfo: { nombre_de_usuario, tipo_persona, tipo_usuario },
-  } = useSelector((state: AuthSlice) => state.auth);
+    userinfo: { nombre_de_usuario, tipo_persona, entorno: entorno_store },
+  } = useSelector((state: any) => state.auth);
   const { mod_dark } = useSelector(
     (state: {
       layout: {
@@ -42,6 +42,14 @@ export const PerfilPersonaIngresa: React.FC = () => {
   const nombre_usu = nombre_de_usuario;
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [entorno, setEntorno] = useState('');
+
+  useEffect(() => {
+    setEntorno(entorno_store);
+    console.log('entorno_store', entorno_store);
+  }, [entorno_store]);
+
+  console.log('siuuuuuuuuu', entorno_store)
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -87,9 +95,9 @@ export const PerfilPersonaIngresa: React.FC = () => {
             <strong>
               {tipo_persona === 'J'
                 ? ' Usuario - Empresa'.toUpperCase()
-                : tipo_persona === 'N' && tipo_usuario === 'I'
-                ? ' Usuario - Interno'.toUpperCase()
-                : ' Usuario - Persona'.toUpperCase()}
+                : tipo_persona === 'N' && entorno == 'L'
+                ? ' Usuario - Laboral'.toUpperCase()
+                : ' Usuario - Externo'.toUpperCase()}
             </strong>
           </Typography>
         </Hidden>
@@ -107,7 +115,7 @@ export const PerfilPersonaIngresa: React.FC = () => {
                 fontSize: 14,
               }}
             >
-                Información
+              Información
             </Button>
           </Tooltip>
 
@@ -124,9 +132,9 @@ export const PerfilPersonaIngresa: React.FC = () => {
             <MenuItem onClick={handleClose}>
               {tipo_persona === 'J'
                 ? 'Entorno : Usuario - Empresa'.toUpperCase()
-                : tipo_persona === 'N' && tipo_usuario === 'I'
-                ? 'Entorno : Usuario - Interno'.toUpperCase()
-                : 'Entorno : Usuario - Persona'.toUpperCase()}
+                : tipo_persona === 'N' && entorno === 'L'
+                ? 'Entorno : Usuario - Laboral'.toUpperCase()
+                : 'Entorno : Usuario - Externo'.toUpperCase()}
             </MenuItem>
           </Menu>
         </Hidden>
