@@ -111,7 +111,7 @@ export const search_avanzada = async ({
   nombre_comercial
 }: BusquedaAvanzada): Promise<AxiosResponse<ResponseServer<InfoPersona[]>>> => {
   return await api.get<ResponseServer<InfoPersona[]>>(
-    `personas/get-personas-filters/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}&primer_nombre=${
+    `personas/get-personas-filters/?tipo_documento=${tipo_documento??''}&numero_documento=${numero_documento??''}&primer_nombre=${
       primer_nombre ?? ''
     }&primer_apellido=${primer_apellido ?? ''}&razon_social=${
       razon_social ?? ''

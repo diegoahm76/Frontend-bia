@@ -17,7 +17,7 @@ import {
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   set_current_detalle_inversion,
@@ -31,16 +31,70 @@ import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar'
 export const ListarDetalleInversion: React.FC = () => {
   const columns_detalle: GridColDef[] = [
     {
+      field: 'nombre_sector',
+      headerName: 'Nombre del Sector',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'rubro',
+      headerName: 'Rubro',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_programa',
+      headerName: 'Nombre del Programa',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_subprograma',
+      headerName: 'Nombre del Subprograma',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_proyecto',
+      headerName: 'Nombre del Proyecto',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'nombre_producto',
+      headerName: 'Nombre del Producto',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'nombre_actividad',
+      headerName: 'Nombre de la Actividad',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'nombre_indicador',
+      headerName: 'Nombre del Indicador',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_meta',
+      headerName: 'Nombre de la Meta',
+      sortable: true,
+      width: 150,
+    },
+    {
       field: 'cuenta',
-      headerName: 'CUENTA',
+      headerName: 'Cuenta',
       sortable: true,
       width: 250,
     },
     {
       field: 'valor_cuenta',
-      headerName: 'VALOR CUENTA',
+      headerName: 'VALOR DE LA CUENTA',
       sortable: true,
-      width: 150,
+      width: 300,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -54,48 +108,6 @@ export const ListarDetalleInversion: React.FC = () => {
       },
     },
     {
-      field: 'nombre_sector',
-      headerName: 'NOMBRE SECTOR',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_rubro',
-      headerName: 'RUBRO',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_programa',
-      headerName: 'NOMBRE PROGRAMA',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_subprograma',
-      headerName: 'NOMBRE SUBPROGRAMA',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_proyecto',
-      headerName: 'NOMBRE PROYECTO',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_producto',
-      headerName: 'NOMBRE PRODUCTO',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_actividad',
-      headerName: 'NOMBRE ACTIVIDAD',
-      sortable: true,
-      width: 250,
-    },
-    {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
@@ -106,6 +118,12 @@ export const ListarDetalleInversion: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
+              set_id_producto(params.row.id_producto);
+              set_id_actividad(params.row.id_actividad);
+              set_id_indicador(params.row.id_indicador);
+              set_id_meta(params.row.id_meta);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -140,9 +158,16 @@ export const ListarDetalleInversion: React.FC = () => {
     },
   ];
 
-  const { rows_detalle_inversion, fetch_data_detalle_inversion } = useContext(
-    DataContextDetalleInversion
-  );
+  const {
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
+    set_id_indicador,
+    set_id_meta,
+    rows_detalle_inversion,
+    fetch_data_detalle_inversion,
+  } = useContext(DataContextDetalleInversion);
 
   // const {
   //   indicador: { id_indicador },
@@ -200,12 +225,12 @@ export const ListarDetalleInversion: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_detalle_inversion}
-                  columns={columns_detalle}
+                  rows={rows_detalle_inversion ?? []}
+                  columns={columns_detalle ?? []}
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
-                  getRowId={(row) => uuidv4()}
+                  getRowId={() => uuidv4()}
                 />
               </>
             </Box>

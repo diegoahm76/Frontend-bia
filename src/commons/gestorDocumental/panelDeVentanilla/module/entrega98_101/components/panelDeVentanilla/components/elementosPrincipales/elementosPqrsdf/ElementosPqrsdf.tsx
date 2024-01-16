@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -26,7 +26,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
-import { ModalDenuncia } from '../../../../../Atom/components/ModalDenuncia';
+import  RemoveDoneIcon  from '@mui/icons-material/RemoveDone';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -38,17 +38,12 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     setRadicado,
     setValue,
 
-    anexos,
-    metadatos,
     setAnexos,
-    setMetadatos,
   } = useContext(PanelVentanillaContext);
   const {
     handleGeneralLoading,
     handleThirdLoading,
 
-    openModalOne: infoAnexos,
-    openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
   } = useContext(ModalAndLoadingContext);
@@ -86,8 +81,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   // ? functions
   const setActionsPQRSDF = (pqrsdf: any) => {
-    //  console.log('')(pqrsdf);
-
     if (pqrsdf.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
@@ -183,7 +176,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       minWidth: 250,
       renderCell: (params: any) => {
         switch (true) {
-          case params.row.dias_respuesta > 7:
+          case params.row.dias_respuesta >= 7:
             return (
               <Chip
                 size="small"
@@ -201,7 +194,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 variant="outlined"
               />
             );
-          case params.row.dias_respuesta < 4 && params.row.dias_respuesta > 0:
+          case params.row.dias_respuesta <= 4 && params.row.dias_respuesta > 0:
             return (
               <Chip
                 label={`${params.row.dias_respuesta} día(s)`}
@@ -357,12 +350,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
                     return;
                   });
-
-                  /*   setActionsPQRSDF(params?.row);
-                  handleOpenInfoMetadatos(false);
-                  handleOpenInfoAnexos(false);*/
-
-                  // setMetadatos([]);
                 }}
               >
                 <Avatar
@@ -500,6 +487,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               }}
               variant="contained"
               color="primary"
+              endIcon={<RemoveDoneIcon />}
             >
               Quitar selección de PQRSDF
             </Button>

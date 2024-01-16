@@ -19,6 +19,9 @@ import { setListaHistoricoSolicitudes } from '../toolkit/store/PanelVentanillaSt
 import { useAppDispatch } from '../../../../hooks';
 import { PanelDeVentanillaScreen } from '../module/entrega98_101/screen/panelDeVentanilla/PanelDeVentanillaScreen';
 import { HistoricoSolicitudesScreen } from '../module/entrega98_101/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
+import { showAlert } from '../../../../utils/showAlert/ShowAlert';
+import { HisSolOpasScreen } from '../module/entrega98_101/screen/historicoSolicitudesOPAS/HistSolOpasScrenn';
+import { HisSolOtrosScreen } from '../module/entrega98_101/screen/historicoSolicitudesOtros/HisSolOtrosScreen';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   // * dispatch declaration
@@ -31,15 +34,39 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleRequestRadicado = async () => {
-    try {
-    } catch (error) {
-      //  console.log('')(error);
-    } finally {
-    }
     const historico = await getHistoricoByRadicado('', handleGeneralLoading);
 
     dispatch(setListaHistoricoSolicitudes(historico));
-    //  console.log('')(historico);
+  };
+
+  // ? -----------------------------------------------------------------------
+  // ? ----- ESTA FUNCION SE DEBE CAMBIAR EL SERVICIO AL QUE SE ESTÁ LLAMANDO, YA QUE ESTE NO EXISTE -----
+  // ? EL HISTORICO DE OPAS ES DIFERENTE AL DE PQRSDF
+  // ? -----------------------------------------------------------------------
+  // ? -----------------------------------------------------------------------
+
+  const handleRequestRadicadoOpas = async () => {
+    showAlert(
+      'Estimado usuario',
+      'Actualmente estamos trabajando en el desarrollo de esta funcionalidad para ver el histórico de OPAS. Por el momento, no se han establecido servicios específicos, pero puede interactuar de manera simulada.',
+      'warning'
+    );
+
+    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+
+    dispatch(setListaHistoricoSolicitudes(historico));
+  };
+
+  const handleRequestRadicadoOtros = async () => {
+    showAlert(
+      'Estimado usuario',
+      'Actualmente estamos trabajando en el desarrollo de esta funcionalidad para ver el histórico de los OTROS. Por el momento, no se han establecido servicios específicos, pero puede interactuar de manera simulada.',
+      'warning'
+    );
+
+    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+
+    dispatch(setListaHistoricoSolicitudes(historico));
   };
 
   return (
@@ -62,8 +89,18 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
             />
             <Tab
               onClick={handleRequestRadicado}
-              label="Histórico de solicitudes"
+              label="Histórico de solicitudes PQRSDF"
               {...a11yProps(1)}
+            />
+            <Tab
+              onClick={handleRequestRadicadoOpas}
+              label="Histórico de solicitudes OPAS"
+              {...a11yProps(2)}
+            />
+             <Tab
+              onClick={handleRequestRadicadoOtros}
+              label="Histórico de solicitudes OTROS"
+              {...a11yProps(3)}
             />
           </Tabs>
         </Box>
@@ -72,8 +109,13 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
           {/* se debe reemplazar por el inicio del componente de la parte 1 */}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          {/* se debe reemplazar por el inicio del componente de la parte 2 */}
           <HistoricoSolicitudesScreen />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <HisSolOpasScreen />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+          <HisSolOtrosScreen />
         </CustomTabPanel>
       </Box>
     </Grid>

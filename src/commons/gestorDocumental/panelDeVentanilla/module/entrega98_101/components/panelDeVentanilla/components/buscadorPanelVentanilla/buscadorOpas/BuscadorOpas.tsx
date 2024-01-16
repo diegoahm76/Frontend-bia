@@ -1,16 +1,10 @@
-import { Grid } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BuscadorOpas = (props: any): JSX.Element => {
   const { control_busqueda_panel_ventanilla } = props;
-
-  //* hooks
-  /*  const {
-    control_busqueda_panel_ventanilla,
-    watch_busqueda_panel_ventanilla,
-  } = usePanelVentanilla();*/
 
   // ? useState Necesario
   // const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
@@ -27,16 +21,16 @@ export const BuscadorOpas = (props: any): JSX.Element => {
 
   return (
     <>
-      {/*el select de tipo de solicitud va a ir en el panel principal de busqueda para que se puede manejar la dualidad al momento de seleccionar*/}
-      {/*<Grid item xs={12} sm={4}>
+      {/*el select de tipo de solicitud, fecha de inicio y fin va a ir en el panel principal de busqueda para que se puede manejar la dualidad al momento de seleccionar*/}
+      <Grid item xs={12} sm={4}>
         <Controller
-          name="radicado"
+          name="nombre_titular"
           control={control_busqueda_panel_ventanilla}
           defaultValue=""
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
               fullWidth
-              label="Radicado"
+              label="Nombre titular OPA"
               size="small"
               variant="outlined"
               value={value}
@@ -48,7 +42,49 @@ export const BuscadorOpas = (props: any): JSX.Element => {
             />
           )}
         />
-      </Grid>*/}
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Controller
+          name="radicado"
+          control={control_busqueda_panel_ventanilla}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              fullWidth
+              label="Radicado OPA"
+              size="small"
+              variant="outlined"
+              value={value}
+              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                onChange(e.target.value);
+              }}
+              inputProps={{ maxLength: 50 }}
+            />
+          )}
+        />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Controller
+          name="nombre_proyecto"
+          control={control_busqueda_panel_ventanilla}
+          defaultValue=""
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              fullWidth
+              label="Nombre proyecto OPA"
+              size="small"
+              variant="outlined"
+              value={value}
+              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                onChange(e.target.value);
+              }}
+              inputProps={{ maxLength: 50 }}
+            />
+          )}
+        />
+      </Grid>
       <Grid
         item
         xs={12}

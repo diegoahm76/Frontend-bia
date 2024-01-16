@@ -93,6 +93,8 @@ export const initial_state_productos: IProductos = {
   numero_producto: null,
   id_plan: null,
   id_programa: null,
+  fecha_creacion: '',
+  cumplio: false,
 };
 
 export const initial_state_actividades: IActividades = {
@@ -105,6 +107,8 @@ export const initial_state_actividades: IActividades = {
   nombre_plan: '',
   id_proyecto: null,
   id_programa: null,
+  fecha_creacion: '',
+  cumplio: false,
 };
 
 export const initial_state_indicadores: Indicadores = {
@@ -126,6 +130,8 @@ export const initial_state_indicadores: Indicadores = {
   id_plan: null,
   id_proyecto: null,
   id_programa: null,
+  fecha_creacion: '',
+  cumplio: false,
 };
 
 export const initial_state_meta: IMetaIndicador = {
@@ -145,6 +151,16 @@ export const initial_state_meta: IMetaIndicador = {
   valor_ejecutado_obligado: null,
   avance_fisico: null,
   id_indicador: null,
+  id_plan: null,
+  id_programa: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+  nombre_plan: '',
+  nombre_programa: '',
+  nombre_proyecto: '',
+  nombre_producto: '',
+  nombre_actividad: '',
 };
 
 export const initial_state_rubro: IRubro = {
@@ -200,6 +216,8 @@ export const initial_state_detalle_inversion: IDetalleCuentas = {
   nombre_proyecto: '',
   nombre_producto: '',
   nombre_actividad: '',
+  nombre_indicador: '',
+  nombre_meta: '',
   cuenta: '',
   valor_cuenta: null,
   id_sector: null,
@@ -209,6 +227,8 @@ export const initial_state_detalle_inversion: IDetalleCuentas = {
   id_proyecto: null,
   id_producto: null,
   id_actividad: null,
+  id_indicador: null,
+  id_meta: null,
 };
 
 export const initial_state_concepto_poai: IConceptoPOAI = {

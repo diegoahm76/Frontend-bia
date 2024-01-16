@@ -5,62 +5,74 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Chip,
   Grid,
   IconButton,
 } from '@mui/material';
-import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import EditIcon from '@mui/icons-material/Edit';
 import {
-  set_current_programa,
   set_current_mode_planes,
+  set_current_programa,
 } from '../../../store/slice/indexPlanes';
+import EditIcon from '@mui/icons-material/Edit';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { DataContextprograma } from '../../context/context';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { v4 as uuidv4 } from 'uuid';
+import { Title } from '../../../../../components/Title';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarPrograma: React.FC = () => {
-  const columns_programas: GridColDef[] = [
+  const columns: GridColDef[] = [
     {
       field: 'nombre_plan',
-      headerName: 'NOMBRE DEL PLAN',
+      headerName: 'Nombre del Plan',
       sortable: true,
-      width: 300,
+      width: 250,
     },
     {
       field: 'nombre_programa',
-      headerName: 'NOMBRE DEL PROGRAMA',
+      headerName: 'Nombre del Programa',
       sortable: true,
-      width: 300,
+      width: 350,
     },
     {
       field: 'porcentaje_1',
-      headerName: 'AÑO 1',
+      headerName: 'Porcentaje 1',
       sortable: true,
-      width: 100,
+      width: 120,
     },
     {
       field: 'porcentaje_2',
-      headerName: 'AÑO 2',
+      headerName: 'Porcentaje 2',
       sortable: true,
-      width: 100,
+      width: 120,
     },
     {
       field: 'porcentaje_3',
-      headerName: 'AÑO 3',
+      headerName: 'Porcentaje 3',
       sortable: true,
-      width: 100,
+      width: 120,
     },
     {
       field: 'porcentaje_4',
-      headerName: 'AÑO 4',
+      headerName: 'Porcentaje 4',
       sortable: true,
-      width: 100,
+      width: 120,
+    },
+    {
+      field: 'cumplio',
+      headerName: '¿Cumplió?',
+      sortable: true,
+      width: 120,
+      renderCell: (params) => (params.value ? 'Sí' : 'No'),
+    },
+    {
+      field: 'fecha_creacion',
+      headerName: 'Fecha de Creación',
+      sortable: true,
+      width: 180,
     },
     {
       field: 'acciones',
@@ -73,6 +85,8 @@ export const ListarPrograma: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -93,7 +107,7 @@ export const ListarPrograma: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar programa"
+                titleAccess="Editar Programa"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -107,14 +121,18 @@ export const ListarPrograma: React.FC = () => {
     },
   ];
 
-  const { rows_programa, fetch_data_programa } =
-    useContext(DataContextprograma);
-
-  const {
-    plan: { id_plan },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   plan: { id_plan },
+  // } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
+  const {
+    id_plan,
+    rows_programa,
+    set_id_plan,
+    set_id_programa,
+    fetch_data_programa,
+  } = useContext(DataContextprograma);
 
   useEffect(() => {
     if (id_plan) {
@@ -139,13 +157,14 @@ export const ListarPrograma: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Title title="Listado de programas " />
-        </Grid>
-        <>
-          <Grid item xs={12}>
-            <Box sx={{ width: '100%' }}>
-              <>
+        {rows_programa.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Title title="Listado de programas" />
+              {/* <Typography>Resultados de la búsqueda</Typography> */}
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ width: '100%' }}>
                 <ButtonGroup
                   style={{
                     margin: 7,
@@ -153,29 +172,26 @@ export const ListarPrograma: React.FC = () => {
                     justifyContent: 'flex-end',
                   }}
                 >
-                  {download_xls({
-                    nurseries: rows_programa,
-                    columns: columns_programas,
-                  })}
+                  {download_xls({ nurseries: rows_programa, columns })}
                   {download_pdf({
                     nurseries: rows_programa,
-                    columns: columns_programas,
-                    title: 'CREAR ',
+                    columns,
+                    title: 'RProgramas',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
                   rows={rows_programa}
-                  columns={columns_programas}
+                  columns={columns}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
-              </>
-            </Box>
-          </Grid>
-        </>
+              </Box>
+            </Grid>
+          </>
+        )}
         <Grid container spacing={2} justifyContent="flex-end">
           <Grid item>
             <Button

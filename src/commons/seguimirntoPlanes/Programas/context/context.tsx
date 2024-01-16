@@ -10,6 +10,10 @@ import { get_programa_id } from '../services/services';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
+  id_programa : number | null;
+  set_id_programa : (value: number | null) => void;
 
   // * rows
   rows_programa: IProgramas[];
@@ -27,6 +31,12 @@ interface UserContext {
 }
 
 export const DataContextprograma = createContext<UserContext>({
+  // * id
+  id_plan: null,
+  set_id_plan: () => {},
+  id_programa : null,
+  set_id_programa : () => {},
+  // * rows
   rows_programa: [],
   set_rows_programa: () => {},
 
@@ -36,12 +46,14 @@ export const DataContextprograma = createContext<UserContext>({
   fetch_data_programa: async () => {},
 });
 
-export const UserProviderPrograma= ({
+export const UserProviderPrograma = ({
   children,
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
 
   // * select
   const [tipo_eje_selected, set_tipo_eje_selected] = React.useState<
@@ -50,17 +62,15 @@ export const UserProviderPrograma= ({
 
   // * rows
 
-  const [rows_programa, set_rows_programa] = React.useState<
-    IProgramas[]
-  >([]);
+  const [rows_programa, set_rows_programa] = React.useState<IProgramas[]>([]);
 
   // * info
 
   // * fetch
   //* declaracion context
-  const {
-    plan: { id_plan },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   plan: { id_plan },
+  // } = useAppSelector((state) => state.planes);
 
   const fetch_data_programa = async (): Promise<void> => {
     try {
@@ -93,6 +103,10 @@ export const UserProviderPrograma= ({
 
   const value: UserContext = {
     // * id
+    id_plan,
+    set_id_plan,
+    id_programa,
+    set_id_programa,
 
     // * select
     tipo_eje_selected,

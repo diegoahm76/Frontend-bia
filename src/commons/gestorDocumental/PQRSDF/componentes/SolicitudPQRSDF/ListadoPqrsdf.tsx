@@ -27,11 +27,14 @@ import { IObjPqr, IObjPqrRequest } from '../../interfaces/pqrsdf';
 import PqrDetailDialog from './PqrDetailDialog';
 import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { get_pqr_types_service } from '../../store/thunks/pqrsdfThunks';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoPqrsdf = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { pqrs, pqr } = useAppSelector((state) => state.pqrsdf_slice);
+  const { pqrs, pqr, pqr_types } = useAppSelector(
+    (state) => state.pqrsdf_slice
+  );
   const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
 
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
@@ -47,8 +50,8 @@ const ListadoPqrsdf = () => {
     set_detail_is_active(false);
   }, [pqrs]);
   useEffect(() => {
-    //  console.log('')(button_option);
-  }, [button_option]);
+    void dispatch(get_pqr_types_service());
+  }, []);
 
   useEffect(() => {
     //  console.log('')(selectedPqr);
@@ -72,9 +75,9 @@ const ListadoPqrsdf = () => {
       }
       if ('id_solicitud_al_usuario_sobre_pqrsdf' in selectedPqr) {
         set_button_option('request');
+        console.log(selectedPqr);
         const pqr = pqrs.find(
-          (objeto: IObjPqr) =>
-            objeto.id_PQRSDF === selectedPqr.id_pqrsdf.split('-')[0]
+          (objeto: IObjPqr) => objeto.id_PQRSDF === selectedPqr.id_pqrsdf
         );
         dispatch(set_pqr(pqr ?? initial_state_pqr));
         dispatch(
@@ -91,7 +94,7 @@ const ListadoPqrsdf = () => {
   }, [selectedPqr]);
 
   const get_product_severity: any = (pqr: IObjPqr) => {
-    switch (pqr.id_estado_actual_solicitud) {
+    switch (pqr.id_estado_actual_solicitud?.toString()) {
       case '6' || '7' || '8':
         return 'success';
       case '1' || '2':
@@ -114,6 +117,14 @@ const ListadoPqrsdf = () => {
       field: 'cod_tipo_PQRSDF',
       header: 'Tipo de tramite',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {
+            pqr_types.find((objeto) => objeto.key === rowData.cod_tipo_PQRSDF)
+              ?.label
+          }
+        </div>
+      ),
     },
     {
       headerStyle: { width: '4rem' },
@@ -132,12 +143,24 @@ const ListadoPqrsdf = () => {
       field: 'fecha_radicado',
       header: 'Fecha de radicado',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.fecha_radicado === null
+            ? '-'
+            : new Date(rowData.fecha_radicado).toDateString()}
+        </div>
+      ),
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'numero_radicado',
+      field: 'numero_radicado_entrada',
       header: 'Número de radicado',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+        </div>
+      ),
     },
 
     {
@@ -191,21 +214,40 @@ const ListadoPqrsdf = () => {
       field: 'fecha_radicado_salida',
       header: 'Fecha de radicado de salida',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.fecha_radicado_salida === null
+            ? '-'
+            : new Date(rowData.fecha_radicado).toDateString()}
+        </div>
+      ),
     },
     {
       field: 'numero_radicado_salida',
       header: 'Número de radicado de salida',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.numero_radicado_salida === ''
+            ? 'SIN RADICAR'
+            : rowData.numero_radicado_salida}
+        </div>
+      ),
     },
 
     {
-      field: 'fecha_radicado_salida',
+      field: 'fecha_solicitud',
       header: 'Fecha de notificación',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {new Date(rowData.fecha_solicitud).toDateString()}
+        </div>
+      ),
     },
 
     {
-      field: 'organizational_unit',
+      field: 'nombre_und_org_oficina_solicita',
       header: 'Unidad organizacional solicitante',
       sortable: false,
     },

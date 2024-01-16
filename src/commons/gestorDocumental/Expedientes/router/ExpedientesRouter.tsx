@@ -15,8 +15,7 @@ import { ConsultaIndiceElectronicoScreen } from '../ConsultaIndiceElectronico/sc
 export const ExpedientesRoutes = (): ReactElement => {
   return (
     <UserProvider>
-      <Routes>
-        <Route
+      <Routes> <Route
           path="cierre_expedientes/*"
           element={<CierreExpedientesScreen />}
         />

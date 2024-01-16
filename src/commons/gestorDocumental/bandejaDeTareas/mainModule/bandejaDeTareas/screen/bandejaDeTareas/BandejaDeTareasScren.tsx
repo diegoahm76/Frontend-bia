@@ -8,7 +8,7 @@ export const BandejaDeTareasScreen = (): JSX.Element => {
   return (
     <>
       {/* primer parte, button */}
-      <ButtonsBandejaDeTareas />
+     <ButtonsBandejaDeTareas />
       {/* segunda parte, buscado panel de ventanilla */}
       <BuscadorBandejaDeTareas />
       {/* tercer parte, elementos principales de la busqueda (pqrsdf, tramites u otros) */}
@@ -16,5 +16,5 @@ export const BandejaDeTareasScreen = (): JSX.Element => {
       {/* Acciones finales, salida del módulo */}
       <SalidaModulo />
     </>
-  );   
+  );
 };

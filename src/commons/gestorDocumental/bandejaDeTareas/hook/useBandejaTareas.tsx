@@ -29,7 +29,7 @@ export const useBandejaTareas = () => {
         label: '',
       },
       mostrar_respuesta_con_req_pendientes:{
-        value: '',
+        value: true,
         label: '',
       },
 
@@ -61,7 +61,7 @@ export const useBandejaTareas = () => {
         label: '',
       },
       mostrar_respuesta_con_req_pendientes:{
-        value: '',
+        value: true,
         label: '',
       },
 

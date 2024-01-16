@@ -70,6 +70,7 @@ export const AgregarProyecto: React.FC = () => {
         pondera_2: proyecto.pondera_2,
         pondera_3: proyecto.pondera_3,
         pondera_4: proyecto.pondera_4,
+        numero_proyecto: proyecto.numero_proyecto,
         id_programa: proyecto.id_programa,
         fecha_creacion: proyecto.fecha_creacion,
         cumplio: proyecto.cumplio,

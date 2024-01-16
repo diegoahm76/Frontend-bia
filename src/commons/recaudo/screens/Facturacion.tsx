@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
@@ -7,60 +8,160 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Select,
-  type SelectChangeEvent,
-  TextField,
-  Box,
-  Button,
-  Stack,
-  FormHelperText,
-  Switch,
-  Card,
-  CardContent,
-  Typography,
-  CircularProgress,
-  IconButton,
+  Select, TextField, Button, Dialog
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
-import { useNavigate } from 'react-router-dom';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import dayjs from 'dayjs';
 import { logo_cormacarena_h } from '../../conservacion/Reportes/logos/logos';
 import { Title } from '../../../components';
 import { useSelector } from 'react-redux';
 import { AuthSlice } from '../../auth/interfaces';
-import { LoadingButton } from '@mui/lab';
-import { DataGrid } from '@mui/x-data-grid';
-import { SelectItem } from 'primereact/selectitem';
 import { api } from '../../../api/axios';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
-import { control_success, control_error } from '../../../helpers';
+import { control_error, control_success } from '../../../helpers';
 import { Persona } from '../../../interfaces/globalModels';
 import { UnidadOrganizacional } from '../../conservacion/solicitudMaterial/interfaces/solicitudVivero';
-import { Alertas } from '../../gestorDocumental/alertasgestor/interfaces/types';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import SaveIcon from '@mui/icons-material/Save';
 
-interface UnidadOrganizaciona {
-  id_unidad_organizacional: number;
-  nombre: string;
-}
-interface SerieSubserie {
+export interface SerieSubserie {
   id_catserie_unidadorg: number;
   id_serie_doc: number;
   nombre_serie_doc: string;
   id_subserie_doc: number | null;
   nombre_subserie_doc: string | null;
 }
+export interface UnidadOrganizaciona {
+  id_unidad_organizacional: number;
+  nombre: string;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Facturacion: React.FC = () => {
   const { userinfo: { nombre_unidad_organizacional, nombre, id_persona } } = useSelector((state: AuthSlice) => state.auth);
+  const [visor, setVisor] = useState('');
+
+  const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
+  const realizarActualizacion = async () => {
+    try {
+      const url = "/gestor/adminitrador_radicados/config_tipos_radicado_agno/generar_n/";
+      const payload = {
+        cod_tipo_radicado: "U",
+        id_persona: id_persona, // Asumiendo que id_persona viene del estado de Redux
+        fecha_actual: new Date().toISOString() // O la fecha que necesites enviar
+      };
+
+      const res = await api.put(url, payload);
+      const data = res.data.data;
+      setConsecutivoActual(data.radicado_nuevo);
+      await generarHistoricoBajas();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    generarHistoricoBajas();
+
+  }, [consecutivoActual]);
+  const [plantillaSeleccionada, setPlantillaSeleccionada] = useState('plantilla1');
+
+  const generarHistoricoBajas = () => {
+    const doc = new jsPDF();
+    const anchoPagina = doc.internal.pageSize.width;
+    const agregarEncabezado = () => {
+      doc.setFontSize(22);
+      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
+      doc.setFontSize(12);
+      doc.addImage(logo_cormacarena_h, 160, 10, 40, 10);
+
+      if (plantillaSeleccionada === 'plantilla1') {
+        let xCuadro = 120; // Ajusta según sea necesario
+        let yCuadro = 25; // Ubicación justo debajo de la imagen
+        let anchoCuadro = 80; // Ajusta según sea necesario
+        let altoCuadro = 30; // Ajusta según sea necesari
+        // Dibujar el cuadro
+        doc.rect(xCuadro, yCuadro, anchoCuadro, altoCuadro);
+        // Agregar texto dentro del cuadro
+        doc.setFontSize(9);
+        const espacioEntreLineas = 6; // Espacio entre líneas de texto
+        let yTexto = yCuadro + 10; // Posición inicial del texto en Y
+        doc.text("Cormacarena ", xCuadro + 30, yTexto);
+        yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
+        doc.text(`Radicado: ${consecutivoActual}`, xCuadro + 10, yTexto);
+        yTexto += espacioEntreLineas;
+
+        doc.text(dayjs().format('DD/MM/YYYY'), xCuadro + 10, yTexto);
+        yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
+
+        doc.text(`Nombre: ${nombre}`, xCuadro + 10, yTexto); // Reemplazar X con el número de hojas
+      } else if (plantillaSeleccionada === 'plantilla2') {
+        let xCuadro = 120; // Ajusta según sea necesario
+        let yCuadro = 25; // Ubicación justo debajo de la imagen
+        let anchoCuadro = 80; // Ajusta según sea necesario
+        let altoCuadro = 30; // Ajusta según sea necesari
+        // Dibujar el cuadro
+        doc.rect(xCuadro, yCuadro, anchoCuadro, altoCuadro);
+        // Agregar texto dentro del cuadro
+        doc.setFontSize(9);
+        const espacioEntreLineas = 6; // Espacio entre líneas de texto
+        let yTexto = yCuadro + 10; // Posición inicial del texto en Y
+        doc.text("Cormacarenaccc ", xCuadro + 30, yTexto);
+        yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
+        doc.text(`Radicado: ${consecutivoActual}`, xCuadro + 10, yTexto);
+        yTexto += espacioEntreLineas;
+
+        doc.text(dayjs().format('DD/MM/YYYY'), xCuadro + 10, yTexto);
+        yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
+
+        doc.text(`Nombre: ${nombre}`, xCuadro + 10, yTexto); // Reemplazar X con el número de hojas
+      }
+
+
+    };
+    agregarEncabezado();
+    // Añadir información del usuario   
+    doc.setFontSize(12);
+    let y = 30; // posición inicial para el texto
+    // doc.text(`${consecutivoActual}`, 10, y);
+    // y += 6;
+    doc.text(`${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}`, 10, y);
+    y += 6;
+    // doc.text(dayjs().format('DD/MM/YYYY'), 10, y);
+    // y += 6;
+    doc.text(`Identificación: ${identificacion}`, 10, y);
+    y += 6;
+    doc.text(`Email: ${email}`, 10, y);
+    y += 6;
+    doc.text(`Tel.: ${telefono}`, 10, y);
+    y += 6;
+    doc.text(`Ciudad: ${ciudad}`, 10, y);
+    y += 6; // Espacio antes del asunto
+    // Añadir asunto
+    const lineas = doc.splitTextToSize(asunto, anchoPagina - 20);
+    for (let i = 0; i < lineas.length; i++) {
+      if (y > 280) {
+        doc.addPage();
+        agregarEncabezado();
+        y = 30;
+      }
+      doc.text(lineas[i], 10, y);
+      y += 6;
+    }
+    let yFinal = doc.internal.pageSize.getHeight() - 30; // Ajusta esto según sea necesario
+    doc.setFontSize(12);
+    doc.text(`Nombre: ${nombre}`, 10, yFinal);
+    yFinal += 10;
+    doc.text(`Contratista Grupo: ${nombre_unidad_organizacional}`, 10, yFinal);
+    setVisor(doc.output('datauristring'));
+  };
+
+
   const [idUnidadSeleccionada, setIdUnidadSeleccionada] = useState('');
-  const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
+  
   const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
+
+  const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
 
   const fetchUnidades = async () => {
     try {
@@ -122,168 +223,89 @@ export const Facturacion: React.FC = () => {
       setNombreSubserieSeleccionada('');
     }
   };
-  const [visor, setVisor] = useState('');
   const [asunto, setAsunto] = useState('');
   const [identificacion, setIdentificacion] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
   const [ciudad, setCiudad] = useState('');
 
-  const generarHistoricoBajas = () => {
-    const doc = new jsPDF();
-    const anchoPagina = doc.internal.pageSize.width;
 
-    // Añadir título, fecha y logo
-    const agregarEncabezado = () => {
-      doc.setFontSize(22);
-      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
-      doc.setFontSize(12);
-      doc.text(dayjs().format('DD/MM/YYYY'), anchoPagina - 40, 10);
-      doc.addImage(logo_cormacarena_h, 160, 10, 40, 10); // Asegúrate de tener esta imagen
-    };
-    agregarEncabezado();
-
-    // Añadir información del usuario   
-    doc.setFontSize(12);
-    let y = 30; // posición inicial para el texto
-    doc.text(`${consecutivoActual}`, 10, y);
-    y += 6;
-    doc.text(`${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}`, 10, y);
-    y += 6;
-    doc.text(`Identificación: ${identificacion}`, 10, y);
-    y += 6;
-    doc.text(`Email: ${email}`, 10, y);
-    y += 6;
-    doc.text(`Tel.: ${telefono}`, 10, y);
-    y += 6;
-    doc.text(`Ciudad: ${ciudad}`, 10, y);
-    y += 6; // Espacio antes del asunto
-
-    // Añadir asunto
-    const lineas = doc.splitTextToSize(asunto, anchoPagina - 20);
-    for (let i = 0; i < lineas.length; i++) {
-      if (y > 280) {
-        doc.addPage();
-        agregarEncabezado();
-        y = 30;
-      }
-      doc.text(lineas[i], 10, y);
-      y += 6;
+  const dataURItoBlob = (dataURI: string) => {
+    const byteString = atob(dataURI.split(',')[1]);
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
     }
+    return new Blob([ab], { type: mimeString });
+  };
 
-    let yFinal = doc.internal.pageSize.getHeight() - 30; // Ajusta esto según sea necesario
-    doc.setFontSize(12);
-    doc.text(`Nombre: ${nombre}`, 10, yFinal);
-    yFinal += 10;
-    doc.text(`Contratista Grupo: ${nombre_unidad_organizacional}`, 10, yFinal);
+  const generarArchivo = () => {
+    const blob = dataURItoBlob(visor);
+    return new File([blob], "documento.pdf", { type: "application/pdf" });
+  };
+  const initialFormData = {
+    id_persona_alertar: null,
+    perfil_sistema: null,
+    cod_clase_alerta: String,
+    id_persona: null,
+    id_unidad_org_lider: undefined,
 
-    setVisor(doc.output('datauristring'));
+  };
+  const [formData, setFormData] = useState(initialFormData);
+  const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+
+    }));
+  };
+
+
+  const miVariable = `${formData.id_unidad_org_lider}`;
+  const enviarDocumento = async () => {
+
+    try {
+      const formData = new FormData();
+
+      formData.append("radicado", `${consecutivoActual}`);
+      formData.append("ids_destinatarios_personas", `${persona?.id_persona}`);
+      formData.append("ids_destinatarios_unidades", `${miVariable}`);
+
+      formData.append("id_persona", id_persona.toString());
+
+      const archivo = generarArchivo();
+      formData.append("archivo", archivo);
+      const url = "/recaudo/formulario/documento_formulario_recuado/";
+      const response = await api.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log("Documento enviado con éxito", response.data);
+      control_success("Documento enviado con éxito");
+
+    } catch (error) {
+      console.error("Error al enviar el documento", error);
+    }
   };
 
 
 
-  const initial_data: Alertas[] = [];
-  const [persona, set_persona] = useState<Persona | undefined>();
+
+
+
+  const [persona, set_persona] = useState<Persona | null>();
   const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
 
-  const [data_entidad, setdata_entidad] = useState<Alertas[]>(initial_data);
-  const fetch_dataget = async (): Promise<void> => {
-    try {
-      const url = "/transversal/alertas/personas_alertar/get-by-configuracion/Gst_SlALid/";
-      const res = await api.get(url);
-      const sucursales_data = res.data.data;
-      setdata_entidad(sucursales_data);
-      console.log(sucursales_data)
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
 
-  useEffect(() => {
-    fetch_dataget().catch((error) => {
-      console.error(error);
-    });
-  }, []);
-  const columns = [
-    {
-      field: "detalle",
-      headerName: "Detalle",
-      width: 200,
-      flex: 1,
-      valueGetter: (params: any) => params.row.datos_reordenados.detalle
-    },
-    {
-      field: "destinatario",
-      headerName: "destinatario",
-      width: 200,
-      flex: 1,
-      valueGetter: (params: any) => params.row.datos_reordenados.destinatario
-    },
-    {
-      field: "nombre",
-      headerName: "nombre",
-      width: 200,
-      flex: 1,
-      valueGetter: (params: any) => params.row.datos_reordenados.nombre
-    },
 
-    {
-      field: "accion",
-      headerName: "Acción",
-      width: 150,
-      // flex: 1,
-      renderCell: (params: any) => (
-        <>
-          <IconButton
-            color="primary"
-            aria-label="Eliminar"
-            onClick={() => {
-              // setselected_row(params.row);
-              void handleeliminafila(params);
-            }}
-          >
 
-            n
-          </IconButton>
 
-        </>
-      ),
-    },
-  ];
-  const handleeliminafila = async (params: any): Promise<void> => {
 
-    try {
-      const url = `/transversal/alertas/personas_alertar/delete/${params.row.id_persona_alertar}/`;
-      await api.delete(url);
-      // Actualiza el estado de los datos después de eliminar
-      const updated_data = data_entidad.filter(row => row.id_persona_alertar !== params.row.id_persona_alertar);
-      setdata_entidad(updated_data);
-      control_success("Alerta eliminada correctamente");
-      // setselected_row(null); // Limpia la fila seleccionada
-    } catch (error) {
-      console.error(error);
-      control_error("Alerta no eliminada");
-
-    }
-
-  };
-
-  const [perfil, set_perfil] = useState<SelectItem[]>([]);
-
-  useEffect(() => {
-    const fetch_perfil = async (): Promise<void> => {
-      try {
-        const url = `/listas/perfiles_sistema/`;
-        const res_perfil = await api.get(url);
-        const alertas_perfil = res_perfil.data.data;
-        set_perfil(alertas_perfil);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    void fetch_perfil();
-  }, []);
 
 
   const [lider, set_lider] = useState<UnidadOrganizacional[]>([]);
@@ -308,31 +330,12 @@ export const Facturacion: React.FC = () => {
     setselected_button('lider');
     set_persona(undefined);
   };
-  const handle_selectperfil = (): void => {
-    setselected_button('perfil');
-    set_persona(undefined);
 
-  };
   const handle_selectbuscar = (): void => {
     setselected_button('buscador');
+    setFormData(initialFormData);
   };
   // crear 
-  const initialFormData = {
-    id_persona_alertar: null,
-    perfil_sistema: null,
-    cod_clase_alerta: String,
-    id_persona: null,
-    id_unidad_org_lider: null,
-  };
-  const [formData, setFormData] = useState(initialFormData);
-  const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-
-    }));
-  };
 
   useEffect(() => {
     if (persona?.id_persona !== formData.id_persona) {
@@ -348,13 +351,13 @@ export const Facturacion: React.FC = () => {
       set_persona(undefined);
       setFormData((prevData) => ({
         ...prevData,
-        id_unidad_org_lider: null,
+        id_unidad_org_lider: undefined,
       }));
     }
   }, [formData.perfil_sistema]);
 
   useEffect(() => {
-    if (formData.id_unidad_org_lider !== null) {
+    if (formData.id_unidad_org_lider !== undefined) {
       set_persona(undefined);
       setFormData((prevData) => ({
         ...prevData,
@@ -363,25 +366,22 @@ export const Facturacion: React.FC = () => {
     }
   }, [formData.id_unidad_org_lider]);
 
+  const [is_modal_active, set_is_buscar] = useState<boolean>(false);
+  const handle_open_buscar = (): void => {
+    if (persona?.id_persona === undefined && formData.id_unidad_org_lider === undefined) {
+      control_error("Deves de elejir un destinatario ");
+    } else {
+      set_is_buscar(true);
+      realizarActualizacion();
 
-  const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
-  const realizarActualizacion = async () => {
-    try {
-      const url = "/gestor/adminitrador_radicados/config_tipos_radicado_agno/generar_n/";
-      const payload = {
-        cod_tipo_radicado: "U",
-        id_persona: id_persona, // Asumiendo que id_persona viene del estado de Redux
-        fecha_actual: new Date().toISOString() // O la fecha que necesites enviar
-      };
-
-      const res = await api.put(url, payload);
-      const data = res.data.data;
-      setConsecutivoActual(data.radicado_nuevo);
-    } catch (error) {
-      console.error(error);
     }
   };
 
+
+  const handle_close = (): void => {
+    set_is_buscar(false);
+    enviarDocumento();
+  };
   return (
     <>
       <Grid
@@ -398,16 +398,59 @@ export const Facturacion: React.FC = () => {
         }}
       >
         <Title title="Generación de documento" />
+
+        {/* <FormControl fullWidth size="small">
+          <InputLabel id="plantilla-select-label">Seleccionar Plantilla</InputLabel>
+          <Select
+            labelId="plantilla-select-label"
+            id="plantilla-select"
+            value={plantillaSeleccionada}
+            label="Seleccionar Plantilla"
+            onChange={(e) => setPlantillaSeleccionada(e.target.value)}
+          >
+            <MenuItem value="plantilla1">Plantilla con Cuadro</MenuItem>
+            <MenuItem value="plantilla2">Plantilla sin Cuadro</MenuItem>
+          </Select>
+        </FormControl> */}
+
+        <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
+          <Grid container
+            item xs={12} marginLeft={2} marginRight={2} marginTop={3}
+            sx={{
+
+              width: '900px', // Cambia '700px' por el ancho que desees
+              height: '900px', // Cambia '500px' por el alto que desees
+              position: 'relative',
+              background: '#FAFAFA',
+              borderRadius: '15px',
+              p: '20px', m: '10px 0 20px 0', mb: '20px',
+              boxShadow: '0px 3px 6px #042F4A26',
+            }}
+
+          >
+            <Grid item xs={12} >
+              <Title title="Numero de radicado" />
+
+            </Grid>
+            <Grid item xs={12} marginTop={3} >
+              <div>
+                <h3>Radicado : {consecutivoActual}</h3>
+              </div>
+            </Grid>
+
+          </Grid>
+        </Dialog>
+
         <>
+
+
           {/* ... (resto de tu JSX) */}
-          <button onClick={realizarActualizacion}>Actualizar Consecutivo</button>
-        
+
         </>
         {/* miguel
         {id_persona} */}
         {/* {idUnidadSeleccionada} */}
-        <Grid item xs={12} sm={3}>
-
+        <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="unidad-organizacional-select-label">Unidad Organizacional</InputLabel>
             <Select
@@ -425,10 +468,7 @@ export const Facturacion: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
-        <Grid item xs={12} sm={3}>
-
-
+        <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="serie-subserie-select-label">Serie/Subserie</InputLabel>
             <Select
@@ -447,9 +487,8 @@ export const Facturacion: React.FC = () => {
           </FormControl>
         </Grid>
         {/* {nombre}
-
           {nombre_unidad_organizacional} */}
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Identificación Usuario "
             variant="outlined"
@@ -459,10 +498,7 @@ export const Facturacion: React.FC = () => {
             onChange={(e) => setIdentificacion(e.target.value)}
           />
         </Grid>
-
-
-
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Email"
             variant="outlined"
@@ -472,8 +508,7 @@ export const Facturacion: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </Grid>
-
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Teléfono"
             variant="outlined"
@@ -483,8 +518,7 @@ export const Facturacion: React.FC = () => {
             onChange={(e) => setTelefono(e.target.value)}
           />
         </Grid>
-
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Ciudad"
             variant="outlined"
@@ -494,7 +528,6 @@ export const Facturacion: React.FC = () => {
             onChange={(e) => setCiudad(e.target.value)}
           />
         </Grid>
-
         <Grid item xs={12} sm={12}>
           <TextField
             rows={3}
@@ -507,16 +540,24 @@ export const Facturacion: React.FC = () => {
             onChange={(e) => setAsunto(e.target.value)}
           />
         </Grid>
+        <Grid item >
 
-        <Button onClick={generarHistoricoBajas}>Generar Informe</Button>
+          <Button startIcon={<VisibilityIcon />} variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
+        </Grid>
+        <Grid item >
+
+          <Button
+            startIcon={<SaveIcon />}
+            color='success'
+            variant='contained'
+            onClick={handle_open_buscar}
+          >Enviar Documento
+          </Button>
+        </Grid>
         <Grid item xs={12} sm={12}>
-          <div>
-            <embed src={visor} type="application/pdf" width="100%" height="1080px" />
-          </div>
+          {/* <Button onClick={enviarDocumento}>Enviar Documento</Button> */}
         </Grid>
       </Grid>
-
-
       <Grid container
         spacing={2}
         m={2} p={2}
@@ -552,12 +593,10 @@ export const Facturacion: React.FC = () => {
             <Button variant="contained" color="primary" onClick={handle_selectlider}>  Lider de unidad</Button>
           </Grid>
           <Grid item>
-            <Button variant="contained" color="primary" onClick={handle_selectperfil}>  Perfil</Button>
-          </Grid>
-          <Grid item>
             <Button variant="contained" color="primary" onClick={handle_selectbuscar}>  BuscadorPersona</Button>
           </Grid>
         </Grid>
+        {/* {formData.id_unidad_org_lider} */}
         {selected_button === 'lider' && (
           <Grid item xs={12}>
             <Grid item xs={12} sm={3}>
@@ -574,23 +613,7 @@ export const Facturacion: React.FC = () => {
             </Grid>
           </Grid>
         )}
-        {selected_button === 'perfil' && (
-          <><Grid item xs={12}>
-            <Grid item xs={12} sm={3}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Perfil</InputLabel>
-                <Select value={formData.perfil_sistema} label="Perfil" name="perfil_sistema" onChange={handleInputChange}>
-                  {perfil.map(item => (
-                    <MenuItem key={item.value} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-          </>
-        )}
+
         {/* {selected_button === 'buscador' && (
                 <Grid item xs={12}>
                     <BuscadorPersona
@@ -626,34 +649,31 @@ export const Facturacion: React.FC = () => {
             </Grid>
           </>
         )}
-        {/* <Grid item xs={12}  sm={3}> 
-            <TextField
-                label="Primer Nombre"
-                variant="outlined"
-                fullWidth
-                size="small" disabled
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                //   onChange={onChange}
-                value={persona?.primer_nombre}
-            /> </Grid> */}
 
-        {/* <>{persona?.primer_nombre}</> */}
         {/* <>{persona?.id_persona}</> */}
-        <Grid item xs={12}  >
-          <DataGrid
-            density="compact"
-            autoHeight
-            columns={columns}
-            rows={data_entidad}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            getRowId={(row) => row.id_persona_alertar}
-          />
+
+
+      </Grid>
+      <Grid
+        container
+        spacing={2} m={2} p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12} sm={12}>
+          <embed src={visor} type="application/pdf" width="100%" height="1080px" />
         </Grid>
 
       </Grid>
+
+
 
 
 

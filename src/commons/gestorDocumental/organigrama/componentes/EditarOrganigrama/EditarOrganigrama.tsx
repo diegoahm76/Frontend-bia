@@ -474,7 +474,7 @@ export const EditarOrganigrama = ({
               }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                   <Controller
                     name="codigo"
                     control={control_unidades}
@@ -507,7 +507,7 @@ export const EditarOrganigrama = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
                   <Controller
                     name="nombre"
                     control={control_unidades}
@@ -518,17 +518,20 @@ export const EditarOrganigrama = ({
                       fieldState: { error }
                     }) => (
                       <TextField
-                        // margin="dense"
                         fullWidth
                         size="small"
                         label="Nombre"
                         inputProps={{
-                          maxLength: 50
+                          maxLength: 120
                         }}
                         variant="outlined"
                         disabled={organigram_current?.fecha_terminado}
                         value={value}
-                        onChange={onChange}
+                        onChange={(e) => {
+                          onChange(e.target.value);
+                          e.target.value.length === 120 &&
+                            control_warning('máximo 120 caracteres');
+                        }}
                         error={!(error == null)}
                         helperText={
                           error != null
@@ -539,7 +542,7 @@ export const EditarOrganigrama = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                   <Controller
                     name="tipo_unidad"
                     control={control_unidades}
@@ -566,7 +569,7 @@ export const EditarOrganigrama = ({
                     Tipo de unidad{' '}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={2}>
                   <Controller
                     name="nivel_unidad"
                     control={control_unidades}
@@ -616,7 +619,14 @@ export const EditarOrganigrama = ({
                         onChange={(option: SingleValue<any>) => {
                           set_value_unidades('agrupacion_documental', option);
                         }}
-                        options={options_agrupacion_d}
+                        options={[
+                          ...options_agrupacion_d,
+                          {
+                            label: 'Sin agrupación documental',
+                            value: '',
+                            isDisabled: false
+                          }
+                        ]}
                         placeholder="Seleccionar"
                       />
                     )}
@@ -702,7 +712,7 @@ export const EditarOrganigrama = ({
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={2}>
                 <Controller
                   name="codigo"
                   control={control_unidades}
@@ -732,7 +742,7 @@ export const EditarOrganigrama = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre"
                   control={control_unidades}
@@ -747,11 +757,14 @@ export const EditarOrganigrama = ({
                       size="small"
                       label="Nombre"
                       variant="outlined"
-                      // disabled={organigram_current.fecha_terminado !== null}
                       value={value}
-                      onChange={onChange}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                        e.target.value.length === 120 &&
+                          control_warning('máximo 120 caracteres');
+                      }}
                       inputProps={{
-                        maxLength: 255
+                        maxLength: 120
                       }}
                       error={!(error == null)}
                       helperText={
@@ -763,7 +776,7 @@ export const EditarOrganigrama = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={2}>
                 <Controller
                   name="tipo_unidad"
                   control={control_unidades}
@@ -790,7 +803,7 @@ export const EditarOrganigrama = ({
                   Tipo de unidad{' '}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={2}>
                 <Controller
                   name="nivel_unidad"
                   control={control_unidades}

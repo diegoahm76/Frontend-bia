@@ -1,23 +1,30 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable object-shorthand */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint no-new-func: 0 */
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
-import type { Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
+import type { EstadoExpediente, Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import dayjs, { type Dayjs } from "dayjs";
 import PrintIcon from '@mui/icons-material/Print';
 import { api } from "../../../../api/axios";
-import type { DetallePeriodo, DetallesPeriodos } from "../../interfaces/proceso";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
+import { jsPDF } from 'jspdf';
+import { useState } from "react";
 
 interface IProps {
   form_liquidacion: FormLiquidacion;
   nombre_deudor: string;
   rows_detalles: RowDetalles[];
   expedientes_deudor: Expediente[];
-  expediente_liquidado: boolean;
+  estado_expediente: EstadoExpediente;
   fecha_liquidacion: dayjs.Dayjs;
   fecha_vencimiento: dayjs.Dayjs;
   id_liquidacion_pdf: string;
@@ -37,7 +44,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   nombre_deudor,
   rows_detalles,
   expedientes_deudor,
-  expediente_liquidado,
+  estado_expediente,
   fecha_liquidacion,
   fecha_vencimiento,
   id_liquidacion_pdf,
@@ -61,6 +68,32 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
     if (date !== null) {
       set_fecha_vencimiento(date);
     }
+  };
+
+
+
+  const [visor, setVisor] = useState('');
+
+  const generarHistoricoBajas = () => {
+    const doc = new jsPDF();
+    const anchoPagina = doc.internal.pageSize.width;
+    const agregarEncabezado = () => {
+      doc.setFontSize(22);
+      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
+      doc.setFontSize(12);
+    };
+    agregarEncabezado();
+    doc.setFontSize(12);
+    let y = 30;
+    setVisor(doc.output('datauristring'));
+  };
+
+
+  const [pdfUrl, setPdfUrl] = useState('');
+
+  const handleOpenPdf = () => {
+    // Aquí estableces la URL del PDF que deseas mostrar
+    setPdfUrl(`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`);
   };
 
   return (
@@ -195,26 +228,12 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         }}
       >
         <Typography color='black' variant="h4">Total de la obligacion</Typography>
-        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>{currency_formatter(form_liquidacion.valor ?? 0)}</Typography>
+        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>{currency_formatter(form_liquidacion.valor ?? 0, 4)}</Typography>
       </Grid>
 
-      <Grid container justifyContent={'center'}>
-        <Grid item xs={12} sm={3}>
-          {expediente_liquidado ?
-            <>
-              <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
-              <Button
-                color="primary"
-                variant="contained"
-                fullWidth
-                startIcon={<PrintIcon />}
-                href={`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Imprimir recibo
-              </Button>
-            </> :
+      <Grid container justifyContent={'center'} spacing={3}>
+        {estado_expediente?.toLowerCase() === 'activo' && (
+          <Grid item xs={12} sm={3}>
             <Button
               color="primary"
               variant="contained"
@@ -231,10 +250,78 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
               }
               onClick={handle_submit_liquidacion}
             >
-              Guardar nueva liquidación
+              Guardar
             </Button>
-          }
-        </Grid>
+          </Grid>
+        )}
+        {estado_expediente?.toLowerCase() === 'guardado' && (
+          <>
+            <Grid item xs={12} sm={3}>
+              <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                startIcon={<PrintIcon />}
+                href={`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Imprimir recibo
+              </Button>
+            </Grid>
+
+            {/* {id_liquidacion_pdf} */}
+
+            {/* <div>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={3}>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    fullWidth
+                    startIcon={<PrintIcon />}
+                    onClick={handleOpenPdf}
+                  >
+                    Imprimir recibo
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  {/* Aquí es donde se mostrará el PDF */}
+                 {/* pdfUrl && (
+                    <iframe
+                      src={pdfUrl}
+                      width="100%"
+                      height="600px"
+                    />
+                  )
+                </Grid>
+              </Grid> */}
+            {/* </div> */} 
+
+
+
+
+
+
+
+
+            <Grid item xs={12} sm={3}>
+              <Button
+                color="primary"
+                variant="contained"
+                startIcon={<RequestQuoteIcon />}
+                fullWidth
+              >
+                Liquidar
+              </Button>
+            </Grid>
+          </>
+        )}
+        {estado_expediente?.toLowerCase() === 'liquidado' && (
+          <Grid item xs={12} sm={3}>
+            <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
+          </Grid>
+        )}
       </Grid>
     </>
   )

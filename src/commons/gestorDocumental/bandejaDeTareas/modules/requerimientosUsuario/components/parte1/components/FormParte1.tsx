@@ -27,7 +27,7 @@ import {
   getAnexosSolicitud,
   getDetalleSolicitud,
 } from '../../../services/afterCreatedUserRequest.service';
-import { ModalInfoSolicitud } from './ModalInfoSolicitud/ModalInfoSolicitud';
+import { ModalInfoSolicitudReq } from './ModalInfoSolicitud/ModalInfoSolicitudReq';
 
 export const FormParte1 = ({
   controlFormulario,
@@ -55,25 +55,25 @@ export const FormParte1 = ({
   const navigate = useNavigate();
 
   //* redux state
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+  const currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = useAppSelector(
+    (state: any) =>
+      state.BandejaTareasSlice
+        .currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
   );
 
-  //* context declaration
-  const { handleGeneralLoading, handleSecondLoading } = useContext(
-    ModalAndLoadingContext
-  );
-/*
+  const { handleGeneralLoading, handleSecondLoading } =
+    useContext(ModalAndLoadingContext);
+
   useEffect(() => {
-    if (!currentElementPqrsdComplementoTramitesYotros) {
-      navigate('/app/gestor_documental/panel_ventanilla/');
+    if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) {
+      navigate('/app/gestor_documental/bandeja_tareas/');
       return;
     }
     //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
     handleReset();
+
     void getInitialData(
-      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
       navigate,
       handleGeneralLoading,
       handleSecondLoading
@@ -94,7 +94,7 @@ export const FormParte1 = ({
     };
 
     setCurrentSolicitudUsuario(data);
-  };*/
+  };
 
   // ? definicion de las columnas
   const columns = [
@@ -104,11 +104,12 @@ export const FormParte1 = ({
       field: 'accion',
       renderCell: (params: any) => (
         <>
-        <Tooltip title="Ver solicitud realizada">
+        <Tooltip title="Ver solicitud de requerimiento realizada">
           <IconButton
             onClick={async () => {
               handleOpenModalOne(true); //* open modal
-              // await getInfoSolicitud(params);
+              await getInfoSolicitud(params); // ? modificar solicitud
+              console.log('params', params);
             }}
           >
             <Avatar
@@ -275,7 +276,7 @@ export const FormParte1 = ({
           {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
           0 ? (
             <RenderDataGrid
-              title="Histórico de solicitudes de complemento al usuario"
+              title="Histórico de requerimientos realizados"
               columns={columns ?? []}
               rows={
                 [...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data] ??
@@ -327,7 +328,7 @@ export const FormParte1 = ({
         </Grid>
       </form>
 
-      {/*<ModalInfoSolicitud />*/}
+      <ModalInfoSolicitudReq />
     </>
   );
 };

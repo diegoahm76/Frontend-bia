@@ -1,63 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { PerSolicitaComplemento } from '../components/perSolicitaComplemento/PerSolicitaComplemento';
 import { PersonaTitular } from '../components/personaTitular/PersonaTitular';
-import { PanelDeVentanillaScreen } from './../../../../entrega98_101/screen/panelDeVentanilla/PanelDeVentanillaScreen';
-import { useAppSelector } from '../../../../../../../../hooks';
-import { getInitialData } from '../../../services/getInitialData.service';
-import { SolicitudAlUsuarioContext } from '../../../context/SolicitudUsarioContext';
-import { useNavigate } from 'react-router-dom';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../utils/Loader/Loader';
-import { useSstepperFn } from '../../../hook/useSstepperFn';
 
 export const ParteInicial: React.FC  = (): JSX.Element => {
  
   const { generalLoading } =
   useContext(ModalAndLoadingContext);
 
-
-
-/*  //* navigate declaration
-  const navigate = useNavigate();
-
-  //* redux state
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
-
-  const { handleReset } = useSstepperFn();
-
-  //* context declaration
-  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(SolicitudAlUsuarioContext);
-  const { generalLoading, handleGeneralLoading, handleSecondLoading } =
-    useContext(ModalAndLoadingContext);
-
- useEffect(() => {
-    if (!currentElementPqrsdComplementoTramitesYotros) {
-      //  console.log('')('noo curentttt')
-      navigate('/app/gestor_documental/panel_ventanilla/');
-      return;
-    }
-    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
-    handleReset();
-
-
-//  console.log('')('hiii perrassasasasas')
-
-    void getInitialData(
-      currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-      navigate,
-      handleGeneralLoading,
-      handleSecondLoading
-    ).then((data) => {
-      setInfoInicialUsuario(data);
-    });
-  }, []);
-*/
   if (generalLoading) {
     return (
       <Grid

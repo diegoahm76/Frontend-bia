@@ -216,8 +216,8 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_plan_adquisiciones}
-                  columns={columns_adquisiciones}
+                  rows={rows_plan_adquisiciones ?? []}
+                  columns={columns_adquisiciones  ?? []}
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}

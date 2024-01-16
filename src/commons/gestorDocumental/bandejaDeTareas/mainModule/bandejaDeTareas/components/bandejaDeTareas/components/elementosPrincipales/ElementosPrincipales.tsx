@@ -6,20 +6,19 @@ import { ListaElementosPqrsdf } from './elementosPqrsdf/ElementosPqrsdf';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
-import { ElementosOtros } from './elementosOtros/ElementosOtros';
 
 export const ElementosPrincipales: React.FC = (): JSX.Element => {
-  /*  //* states from redux store
-  const { listaElementosPqrsfTramitesUotros } = useAppSelector(
-    (state) => state.PanelVentanillaSlice
+  //* states from redux store
+  const { listaTareasPqrsdfTramitesUotrosUopas } = useAppSelector(
+    (state) => state.BandejaTareasSlice
   );
 
   //* context declaration
-  const { secondLoading, handleSecondLoading } = useContext(
+  const { secondLoading } = useContext(
     ModalAndLoadingContext
   );
-  */
-  /* if (secondLoading)
+
+  if (secondLoading)
     return (
       <Grid
         container
@@ -34,24 +33,21 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
       </Grid>
     );
 
-  if (!listaElementosPqrsfTramitesUotros?.length) return <></>;*/
+  if (!listaTareasPqrsdfTramitesUotrosUopas?.length) return <></>;
 
-  /*  const tipoTarea: any = {
-    PQRSDF: <ListaElementosPqrsdf />,
-    'Tramites y Servicios': <>hola trámites y servicios</>,
-    Otros: <ElementosOtros/>,
-   // Opas: <ElementosOPAS/>,
-  } as any;
+  const tipoTarea: any = {
+    'Responder PQRSDF': <ListaElementosPqrsdf />,
+    'Responder Trámite': <>hola trámites y servicios siuuuuuuuuuuuuuu</>,
+    // Otros: <ElementosOtros />,
+    // Opas: <ElementosOPAS/>,
+  } as const;
 
-  const tipoSolicitud = listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud;
-  const Componente: any = tipoTarea[tipoSolicitud];*/
+  const tipoDeTarea = listaTareasPqrsdfTramitesUotrosUopas[0]?.tipo_tarea;
+  const Componente: any = tipoTarea[tipoDeTarea];
 
   return (
     <>
-      {/*  se va a manejar el grillado con guia en el primer elemento del array con base al tipo de solicitud, tal vez de la misma manera se podra manejar la lógica y actualización de los botones sin necesidad de esperar a darle click a alguno de los elementos de la lista   */}
-      Listado de elemntos principales, ya se definirá la estructura inicial,
-      pero se va a manejar un grid por cada elemento (PQRSDF, tramite, otros y opas)
-      {/*{Componente || <></>}*/}
+      {Componente || <></>}
     </>
   );
 };

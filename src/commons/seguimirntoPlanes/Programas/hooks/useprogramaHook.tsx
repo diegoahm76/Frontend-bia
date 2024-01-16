@@ -62,20 +62,23 @@ export const useprogramaHook = (): any => {
   };
 
   // declaracion context
-  const { fetch_data_programa } = useContext(DataContextprograma);
+  const { id_programa, id_plan, fetch_data_programa } =
+    useContext(DataContextprograma);
 
   // declaracion redux
-  const {
-    plan: { id_plan },
-    programa: { id_programa },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   plan: { id_plan },
+  //   programa: { id_programa },
+  // } = useAppSelector((state) => state.planes);
 
   const onsubmit_programa = handleSubmit_programa(async (data) => {
     try {
+      set_is_saving_programa(true);
       const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
       data.fecha_creacion = fecha_creacion_format;
+      data.id_programa = id_programa;
+
       data.id_plan = id_plan;
-      set_is_saving_programa(true);
       await post_programa(data as IProgramas);
       control_success('Se creó correctamente');
       await limpiar_formulario_programa();
@@ -94,10 +97,11 @@ export const useprogramaHook = (): any => {
 
   const onsubmit_editar = handleSubmit_programa(async (data) => {
     try {
-      //  console.log('')(data, 'data');
+      set_is_saving_programa(true);
+      data.id_programa = id_programa;
+      data.id_plan = id_plan;
       const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
       data.fecha_creacion = fecha_creacion_format;
-      set_is_saving_programa(true);
       await put_programa((id_programa as number) ?? 0, data as IProgramas);
       control_success('Se actualizó correctamente');
       await limpiar_formulario_programa();

@@ -157,8 +157,8 @@ export const ListarRubros: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_rubros}
-                  columns={columns_rubro}
+                  rows={rows_rubros ?? []}
+                  columns={columns_rubro ?? []} 
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

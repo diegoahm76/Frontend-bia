@@ -22,9 +22,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
-import {
-  editar_persona_natural_cuenta_propia,
-} from '../../request/Request';
+import { editar_persona_natural_cuenta_propia } from '../../request/Request';
 import type { Dayjs } from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -33,6 +31,7 @@ import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos'
 
 import { use_register } from '../../../auth/hooks/registerHook';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
@@ -90,7 +89,9 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   // watchers
   const misma_direccion = watch('misma_direccion') ?? false;
   const acepta_notificacion_email =
-    watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email ?? false;
+    watch('acepta_notificacion_email') ??
+    data?.acepta_notificacion_email ??
+    false;
   const acepta_notificacion_sms =
     watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
 
@@ -112,7 +113,6 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   useEffect(() => {
     if (data !== null) {
       const timeout = setTimeout(() => {
-
         set_value('tipo_persona', data.tipo_persona);
         set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
         set_value('fecha_nacimiento', data.fecha_nacimiento);
@@ -120,7 +120,10 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
         set_value('sexo', data.sexo);
         set_value('estado_civil', data.estado_civil);
         set_value('departamento_expedicion', data.cod_departamento_expedicion);
-        set_value('cod_municipio_expedicion_id', data.cod_municipio_expedicion_id);
+        set_value(
+          'cod_municipio_expedicion_id',
+          data.cod_municipio_expedicion_id
+        );
         // residencia
         set_value('pais_residencia', data.pais_residencia);
         set_value('departamento_residencia', data.cod_departamento_residencia);
@@ -129,24 +132,50 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
         set_value('direccion_residencia_ref', data.direccion_residencia_ref);
         // notificaciones
         set_value('dpto_notifiacion', data.cod_departamento_notificacion);
-        set_value('cod_departamento_notificacion', data.cod_departamento_notificacion);
-        set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
+        set_value(
+          'cod_departamento_notificacion',
+          data.cod_departamento_notificacion
+        );
+        set_value(
+          'cod_municipio_notificacion_nal',
+          data.cod_municipio_notificacion_nal
+        );
         set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
         set_value('direccion_notificaciones', data.direccion_notificaciones);
-        set_value('complemento_direccion', data.direccion_notificacion_referencia);
+        set_value(
+          'complemento_direccion',
+          data.direccion_notificacion_referencia
+        );
 
         // laboral
         set_value('departamento_laboral', data.cod_departamento_laboral);
         set_value('cod_municipio_laboral_nal', data.cod_municipio_laboral_nal);
         set_value('direccion_laboral', data.direccion_laboral);
-        set_value('dpto_notifiacion', getValues('cod_departamento_notificacion'));
-        set_value('cod_departamento_notificacion', getValues('cod_departamento_notificacion'));
-        set_value('cod_municipio_notificacion_nal', getValues('cod_municipio_notificacion_nal'));
-        set_value('ciudad_notificacion', getValues('cod_municipio_notificacion_nal'));
-        set_value('direccion_notificaciones', getValues('direccion_notificaciones'));
+        set_value(
+          'dpto_notifiacion',
+          getValues('cod_departamento_notificacion')
+        );
+        set_value(
+          'cod_departamento_notificacion',
+          getValues('cod_departamento_notificacion')
+        );
+        set_value(
+          'cod_municipio_notificacion_nal',
+          getValues('cod_municipio_notificacion_nal')
+        );
+        set_value(
+          'ciudad_notificacion',
+          getValues('cod_municipio_notificacion_nal')
+        );
+        set_value(
+          'direccion_notificaciones',
+          getValues('direccion_notificaciones')
+        );
         set_value('complemento_direccion', getValues('complemento_direccion'));
       }, 1000);
-      return () => { clearTimeout(timeout); };
+      return () => {
+        clearTimeout(timeout);
+      };
     }
   }, [data]);
 
@@ -175,7 +204,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
         {/* Datos personales */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
-            <Title title="Datos persónale" />
+            <Title title="Datos personales" />
           </Grid>
           <Grid item xs={12} sm={4}>
             <CustomSelect
@@ -396,6 +425,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Button
+                  startIcon={<DriveFileRenameOutlineIcon />}
                   variant="contained"
                   onClick={() => {
                     open_modal(true);
@@ -494,6 +524,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Button
+              startIcon={<DriveFileRenameOutlineIcon />}
               variant="contained"
               onClick={() => {
                 open_modal(true);
@@ -622,12 +653,13 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               label="Direccion *"
               disabled
               fullWidth
-              {...register('direccion_laboral',)}
+              {...register('direccion_laboral')}
               value={direccion_laboral}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Button
+              startIcon={<DriveFileRenameOutlineIcon />}
               variant="contained"
               onClick={() => {
                 open_modal(true);
@@ -645,7 +677,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
-              label="¿Autoriza notificaciones judiciales por correo electrónico?"
+              label="¿Autoriza notificaciones judiciales a través de correo electrónico?"
               control={
                 <Checkbox
                   size="small"
@@ -693,6 +725,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               <LoadingButton
                 type="submit"
                 variant="contained"
+                startIcon={<UpdateIcon />}
                 fullWidth
                 color="success"
                 loading={loading}

@@ -99,7 +99,7 @@ export const MostrarEmail: React.FC = () => {
             email_corporativo_sistema: updatedEmail,
           };
           setDataEntidad(updatedDataEntidadWithUpdatedEmail);
-          control_success('Email Corporativo actualizado correctamente');
+          control_success('Email corporativo actualizado correctamente');
           setConfirmEmailValue('');
           setEmailValue('');
         })

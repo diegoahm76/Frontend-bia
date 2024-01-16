@@ -67,6 +67,7 @@ import { AsignacionUsuarioSlice } from '../commons/gestorDocumental/panelDeVenta
 import { complemento_pqrsdf_slice } from "../commons/gestorDocumental/complementoPQRSDF/store/slice/complementoPqrsdfSlice";
 import { BandejaTareasSlice } from '../commons/gestorDocumental/bandejaDeTareas/toolkit/store/BandejaDeTareasStore';
 import { RequerimientoUsarioSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/requerimientosUsuario/toolkit/slice/RequerimientoUsarioSlice';
+import { ResSolicitudUsarioSlice } from '../commons/gestorDocumental/PQRSDF/componentes/respuestaSolicitudUsuario/toolkit/slice/ResSolicitudUsarioSlice';
 
 
 const persist_config = {
@@ -168,6 +169,10 @@ const app_reducers = combineReducers({
   // ? requerimiento al usuario slice
   RequerimientoUsarioSlice: RequerimientoUsarioSlice.reducer,
   // ? requerimiento al usuario slice
+
+  //* respuesta solciitud usuario
+  ResSolicitudUsarioSlice: ResSolicitudUsarioSlice.reducer,
+  //* respuesta solciitud usuario
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

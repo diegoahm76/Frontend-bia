@@ -20,16 +20,14 @@ import { useContext } from 'react';
 import { AlertasContext } from '../commons/Transversales/modules/Alertas/context/AlertasContext';
 import { PerfilPersonaIngresa } from './PerfilPersonaIngresa';
 
-
 interface Props {
   drawer_width: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
+  const { numeroDeAlertas } = useContext(AlertasContext);
 
-  const { numeroDeAlertas } = useContext(AlertasContext)
- 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -59,13 +57,14 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
     navigate('/');
   };
 
-  const tiene_alerta = true; 
+  const tiene_alerta = true;
 
   return (
     <>
       <AppBar
         elevation={0}
         sx={{
+          // height: '80px',
           width: desktop_open
             ? { sm: `calc(100% - ${drawer_width}px)` }
             : { md: `100%` },
@@ -76,7 +75,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
           mt: userinfo.tipo_usuario === 'E' ? '48px' : '0px',
         }}
       >
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Toolbar sx={{ justifyContent: 'space-between', width: '100%' }}>
           <Stack spacing={2} direction="row">
             <IconButton
               color="inherit"
@@ -92,7 +91,6 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
               <MenuIcon sx={{ color: '#FAFAFA', ml: '0 !import' }} />
             </IconButton>
 
-           
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -111,30 +109,21 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
                 }}
               />
             </IconButton>
-           
+
             <IconButton onClick={handle_direct_home}>
               <HomeIcon sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }} />
-            </IconButton> 
-            
-
-
-
-
-
-            <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  }}
->
-  <PerfilPersonaIngresa modo={mod_dark} />
-</div>
-
-
-           
+            </IconButton>
           </Stack>
+
+          <Stack spacing={2} direction="row">
+            {/*perfil de la persona que ingresa*/}
+            <IconButton>
+              <PerfilPersonaIngresa />
+            </IconButton>
+
+            {/*perfil de la persona que ingresa*/}
+          </Stack>
+
           <Stack spacing={2} direction="row">
             <IconButton onClick={handle_button_mod_dark}>
               {mod_dark ? (
@@ -168,7 +157,6 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
               </Badge>
             </Link>
           </Stack>
-
         </Toolbar>
       </AppBar>
     </>

@@ -50,7 +50,7 @@ export const useFuenteFinanciacionHook = (): any => {
   const [is_saving_fuente, set_is_saving_fuente] = useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_fuente_financiacion } = useContext(
+  const { id_concepto, fetch_data_fuente_financiacion } = useContext(
     DataContextFuentesFinanciacion
   );
 
@@ -63,7 +63,7 @@ export const useFuenteFinanciacionHook = (): any => {
   const onsubmit_fuente = handleSubmit_fuente(async (data) => {
     try {
       //  console.log('')(data, 'data');
-      // data.id_indicador = id_indicador;
+      data.id_concepto = id_concepto;
       set_is_saving_fuente(true);
       await post_fuentes_fiananciacion(data as IFuentes);
       control_success('Se creó correctamente');
@@ -85,7 +85,7 @@ export const useFuenteFinanciacionHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_fuente(true);
-      // data.id_indicador = id_indicador;
+      data.id_concepto = id_concepto;
       await put_fuentes_fiananciacion(
         (id_fuente as number) ?? 0,
         data as IFuentes

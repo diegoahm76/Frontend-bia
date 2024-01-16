@@ -8,6 +8,8 @@ import { useEffect } from 'react';
 import { ListarPrograma } from '../components/Programas/ListarPrograma';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaPlan } from '../components/Programas/BusquedaAvanzada/BusquedaPlan';
+import { BusquedaPrograma } from '../components/Programas/BusquedaAvanzada/BusquedaPrograma';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramasScreen: React.FC = () => {
@@ -46,7 +48,8 @@ export const ProgramasScreen: React.FC = () => {
           <Title title="Programas " />
         </Grid>
       </Grid>
-      <ListarPlanes />
+
+      <BusquedaPlan />
       {mode.ver ? <ListarPrograma /> : null}
       {mode.crear || mode.editar ? <AgregarPrograma /> : null}
       <Grid
@@ -65,6 +68,7 @@ export const ProgramasScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaPrograma />
         <Grid item>
           <ButtonSalir />
         </Grid>
