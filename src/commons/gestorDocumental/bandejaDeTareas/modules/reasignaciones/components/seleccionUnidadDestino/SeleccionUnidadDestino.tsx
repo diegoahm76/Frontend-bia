@@ -8,10 +8,13 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { Title } from '../../../../../../../components';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { getSubGrupoAsiGrupo } from '../../services/getSubyGrups.service';
+import { getUsuariosMiembrosDeUnidad } from '../../services/getUsuMiemUni.service';
 import { ReasignacionContext } from '../../context/ReasignacionContext';
+import { useAppSelector } from '../../../../../../../hooks';
 
 export const SeleccionUnidadDestino = (): JSX.Element => {
+  const { userinfo } = useAppSelector((state) => state.auth);
+
   const {
     control: control_seleccionar_seccion_control,
     reset: reset_select_seleccionar,
@@ -22,12 +25,8 @@ export const SeleccionUnidadDestino = (): JSX.Element => {
     ModalAndLoadingContext
   );
 
-  const {
-    listaSeccionesSubsecciones,
-    setListaSubGrupos,
-    setLiderAsignado,
-
-  } = useContext(ReasignacionContext);
+  const { listaSeccionesSubsecciones, setListaSubGrupos, setLiderAsignado } =
+    useContext(ReasignacionContext);
 
   //* functions
 
@@ -64,8 +63,7 @@ export const SeleccionUnidadDestino = (): JSX.Element => {
 
   return (
     <>
-      {/* listaSeccionesSubsecciones?.length > 0 */}
-      {listaSeccionesSubsecciones?.length === 0 ? (
+      {listaSeccionesSubsecciones?.length > 0 ? (
         <Grid
           container
           sx={{
@@ -95,7 +93,7 @@ export const SeleccionUnidadDestino = (): JSX.Element => {
                 marginBottom: '1.5rem',
               }}
             >
-              <Title title="Seleccionar unidad organizacional de destino" />
+              <Title title="Seleccionar unidad organizacional de destino:" />
             </section>
             <Controller
               name="id_unidad_organizacional"
@@ -106,14 +104,14 @@ export const SeleccionUnidadDestino = (): JSX.Element => {
                   <Select
                     value={value}
                     onChange={(selectedOption) => {
-                      const { value } = selectedOption;
-                      //* llamada a funcion de las unidade que son o desprenden de ese valor que se está estableciendo arriba
-                      void getSubGrupoAsiGrupo(handleSecondLoading, value).then(
-                        (res) => {
-                          setListaSubGrupos(res);
-                        }
-                      );
-
+                      (async() => {
+                        const res = await getUsuariosMiembrosDeUnidad(
+                          handleSecondLoading,
+                          userinfo?.id_unidad_organizacional_actual,
+                        );
+                        setListaSubGrupos(res);
+                      }
+                      )();
                       onChange(selectedOption);
                     }}
                     options={listaSeccionesSubsecciones ?? []}

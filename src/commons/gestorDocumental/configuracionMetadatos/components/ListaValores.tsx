@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import FormInputController from '../../../../components/partials/form/FormInputController';
@@ -5,8 +6,6 @@ import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from '@mui/icons-material/Add';
 import type { IMetadatos, IObjValoresMetadatos, } from '../interfaces/Metadatos';
 import { Controller, useForm } from 'react-hook-form';
-import FormSelectController from '../../../../components/partials/form/FormSelectController';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../api/axios';
@@ -14,28 +13,28 @@ import { v4 as uuidv4 } from 'uuid';
 import { IList } from '../../../../interfaces/globalModels';
 import { crear_metadato, crear_valor_metadato, editar_metadato, eliminar_metadato, get_metadatos, get_valores_metadato, get_valores_metadatos } from '../store/thunks/metadatos';
 import { initial_state_metadato, initial_state_valor_metadato, set_current_valor_metadato } from '../store/slice/indexMetadatos';
-import ListadoMetadatos from './ListarMetadatos';
-import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
-import FormButton from '../../../../components/partials/form/FormButton';
+
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 
 
 
 
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const ValoresMetadatos = () => {
+interface IProps {
+
+    selected_metadato: any;
+}
+// eslint-disable-next-line react/prop-types
+const ValoresMetadatos = ({ selected_metadato }: IProps) => {
     const { control: control_metadatos, reset, handleSubmit: handle_submit, watch } = useForm<IMetadatos>();
 
     const { control: control_valores, reset: reset_valores, handleSubmit: handle_submit_valores, } = useForm<IObjValoresMetadatos>();
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const { valores_metadatos, current_valor_metadato, } = useAppSelector((state) => state.metadatos);
-    const [tipos_datos, set_tipos_datos] = useState<IList[]>([]);
     const [agregar_valor, set_agregar_valor] = useState(false);
     const [action, set_action] = useState<string>("Guardar");
     const [valores_metadatos_loaded, set_valores_metadatos_loaded] = useState(false);
-    const [selected_metadato, set_selected_metadato] = useState<IMetadatos>(initial_state_metadato);
     const [selected_valor, set_selected_valor] = useState<IObjValoresMetadatos>(initial_state_valor_metadato);
     let orden_dentro_de_lista = 0;
     const dispatch = useAppDispatch();
@@ -51,10 +50,7 @@ const ValoresMetadatos = () => {
 
 
     // editar desde la tabla
-    const handle_edit_click = (metadato: IMetadatos) => {
-        set_selected_metadato(metadato);
-        set_action("Editar");
-    };
+   
 
     // editar desde la tabla
     const handle_edit_valores_click = (valores: IObjValoresMetadatos) => {
@@ -70,7 +66,7 @@ const ValoresMetadatos = () => {
 
     // asignar metadatos de la tabla al formulario
     useEffect(() => {
-        //  console.log('')(selected_metadato)
+        console.log('Selected Metadato:', selected_metadato); 
         reset(selected_metadato);
     }, [selected_metadato]);
 
@@ -97,25 +93,8 @@ const ValoresMetadatos = () => {
     }, [])
 
 
-    useEffect(() => {
-        const get_selects_options: any = async () => {
-            try {
-                const { data: tipos_datos_no_format } = await api.get(
-                    'gestor/choices/tipo-dato-alojar/'
-                );
 
-                const tipos_datos_format: IList[] = text_choise_adapter(
-                    tipos_datos_no_format
-                );
 
-                set_tipos_datos(tipos_datos_format);
-            } catch (err) {
-                //  console.log('')(err);
-            }
-        };
-
-        void get_selects_options();
-    }, []);
 
 
     const handle_valor = () => {
@@ -159,66 +138,26 @@ const ValoresMetadatos = () => {
     ]
 
 
-    const on_submit = (data: IMetadatos): void => {
 
 
-        if (action === "Editar" && selected_metadato) {
-            const data_edit = {
-                ...selected_metadato,
-                ...data,
-            }
-            //  console.log('')(data_edit)
-            void dispatch(editar_metadato(selected_metadato.id_metadato_personalizado, data_edit))
-
-        } else {
-
-            const data_aux = {
-                ...data,
-                longitud_dato_alojar: data.longitud_dato_alojar ? Number(data.longitud_dato_alojar) : undefined,
-                valor_minimo: data.valor_minimo ? Number(data.valor_minimo) : undefined,
-                valor_maximo: data.valor_maximo ? Number(data.valor_maximo) : undefined,
-                orden_aparicion: data.orden_aparicion ? Number(data.orden_aparicion) : undefined,
-            };
-            void dispatch(crear_metadato(data_aux));
-        }
-        set_action("Guardar");
-        set_selected_metadato(initial_state_metadato);
-
-        void dispatch(get_metadatos());
-    }
-
-
-    const on_submit_elimnar = (data: IMetadatos): void => {
-
-        if (
-            selected_metadato.id_metadato_personalizado !== null &&
-            selected_metadato.id_metadato_personalizado !== undefined
-
-        ) {
-            void dispatch(
-                eliminar_metadato(selected_metadato.id_metadato_personalizado)
-            );
-            void dispatch(get_metadatos());
-        }
-
-        //  console.log('')(selected_metadato)
-
-    }
+    
     const on_submit_agregar_valor = (data: IObjValoresMetadatos): void => {
+        console.log("Data received:", data);
 
         if (
             selected_metadato.id_metadato_personalizado !== null &&
             selected_metadato.id_metadato_personalizado !== undefined
 
         ) {
+           
             orden_dentro_de_lista++;
-
             const data_valor = {
                 ...data,
                 id_metadato_personalizado: selected_metadato.id_metadato_personalizado,
-                orden_dentro_de_lista: orden_dentro_de_lista
+                
             }
             void dispatch(crear_valor_metadato(data_valor))
+            console.log(data_valor)
             void dispatch(get_valores_metadatos())
         }
 
@@ -243,9 +182,9 @@ const ValoresMetadatos = () => {
                     m: '10px 0 20px 0',
                     mb: '20px',
                     boxShadow: '0px 3px 6px #042F4A26',
-                    display: 'flex',           // Centra los elementos horizontalmente
+                    display: 'flex',          
                     justifyContent: 'center',
-                    alignItems: 'center',  // Centra los elementos verticalmente
+                    alignItems: 'center',
                     width: '100%'
                 }}
             >
@@ -273,7 +212,7 @@ const ValoresMetadatos = () => {
                             color="success"
                             sx={{ marginLeft: '10px' }}
                             onClick={handle_submit_valores(on_submit_agregar_valor)}>
-                            Guardar valor
+                            Guardar valorM
                         </Button>
                     </div>
                 </Grid>

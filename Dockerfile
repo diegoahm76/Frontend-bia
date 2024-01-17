@@ -13,7 +13,7 @@ WORKDIR /home/node/app
 # Copia todos los archivos de la aplicación
 COPY --chown=node . .
 
-# Ejecuta la variable de entorno 
+# Ejecuta la variable de entorno
 ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 # Instala las dependencias

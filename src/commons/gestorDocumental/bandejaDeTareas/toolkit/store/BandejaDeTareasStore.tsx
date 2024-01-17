@@ -52,7 +52,7 @@ const actionsTareasPQRSDF: Action[] = [
     id: 'SeguimientoARespuesta',
     icon: <QueryStatsIcon />,
     name: 'Seguimiento a respuesta de la tarea',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/seguimiento_tarea',
     disabled: false,
   },
 ];

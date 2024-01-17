@@ -9,6 +9,7 @@ import { RequerimientoAlUsuarioProvider } from '../modules/requerimientosUsuario
 import { ReasignacionProvider } from '../modules/reasignaciones/context/ReasignacionContext';
 import { MainReasignacionesScreen } from '../modules/reasignaciones/screen/MainReasignacionesScreen';
 import { VistaComplementoTarea } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaComplementoTarea';
+import { MainScreenSeguimientoTarea } from '../modules/seguimientoTarea/screen/MainScreenSeguimientoTarea';
 
 const routes = [
   {
@@ -34,6 +35,14 @@ const routes = [
         <ReasignacionProvider>
           <MainReasignacionesScreen />
         </ReasignacionProvider>
+      </>
+    ),
+  },
+  {
+    path: 'seguimiento_tarea/',
+    component: () => (
+      <>
+        <MainScreenSeguimientoTarea />
       </>
     ),
   },

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles.css';
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import CloseIcon from '@mui/icons-material/Close';
 import { getOutModule } from '../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../../../hooks';
 export const BiaGpt = (): JSX.Element => {
   //* const navigate declaration
   const navigate = useNavigate();
@@ -20,6 +21,21 @@ export const BiaGpt = (): JSX.Element => {
       };
     }) => state.layout
   );
+
+  const { representacion_legal, userinfo, permisos, apoderados } = useAppSelector((state) => state.auth);
+
+  console.log('console.log, presenteacion legal', representacion_legal);
+  console.log('userinfouserinfouserinfo', userinfo);
+  console.log('permisospermisospermisos', permisos);
+  console.log('representante_legalrepresentante_legalrepresentante_legal', representacion_legal)
+  console.log('apoderadosapoderadosapoderados', apoderados)
+
+  useEffect(() => {
+    console.log('userinfouserinfouserinfo', userinfo);
+  }, [
+    mod_dark,
+    representacion_legal,
+  ]);
 
   return (
     <>

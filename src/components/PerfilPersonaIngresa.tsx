@@ -1,45 +1,138 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { AuthSlice } from "../commons/auth/interfaces/authModels";
-import { useSelector } from "react-redux";
-import Avatar from '@mui/material/Avatar';
-import Chip from '@mui/material/Chip';
-import Button from "@mui/material/Button";
-import ButtonGroup from '@mui/material/ButtonGroup';
-import { InputText } from "primereact/inputtext";
+import type { AuthSlice } from '../commons/auth/interfaces/authModels';
+import Button from '@mui/material/Button';
+import {
+  Box,
+  Hidden,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import {  useState } from 'react';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useAppSelector } from '../hooks';
 
-interface PerfilPersonaIngresaProps {
-    modo: any;
+/*
+{
+    "email": "guillermo.sarmiento@macarenia.org",
+    "telefono_celular": "573204030369",
+    "tipo_documento": "CC",
+    "numero_documento": "222",
+    "nombre_de_usuario": "seguridad",
+    "nombre": "SeguridadNombre  SeguridadApellido ",
+    "tipo_usuario": "I",
+    "tipo_persona": "N",
+    "nombre_unidad_organizacional": "Unidad 3",
+    "profile_img": "/media/home/BIA/Otros/FotosPerfil/Pf-00000112-12012024.png"
 }
+*/
 
-export const PerfilPersonaIngresa: React.FC<PerfilPersonaIngresaProps> = ({ modo }: PerfilPersonaIngresaProps) => {
-    const { userinfo: { nombre_de_usuario } } = useSelector((state: AuthSlice) => state.auth);
-    const nombre_usu = nombre_de_usuario;
-    const etiqueta = (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'black' }}>
-            <strong>{nombre_usu}</strong>
-            <div>Persona</div>
-        </div>
-    );
+export const PerfilPersonaIngresa: React.FC = () => {
+  const {
+    userinfo: { nombre_de_usuario = '', tipo_persona = '' } = {},
+    entorno = '',
+  } = useAppSelector((state: AuthSlice) => state.auth);
+  const { mod_dark } = useAppSelector(
+    (state: {
+      layout: {
+        mod_dark: boolean;
+      };
+    }) => state.layout
+  );
+  const nombre_usu = nombre_de_usuario;
 
-    return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' ,flex:1}}>
-            {/* <Avatar
-                alt="Remy Sharp"
-                src=""
-                style={{ marginRight: 5 }}
-            />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'black' }}>
-                <Chip label={etiqueta} style={{ width: 'auto', height: 39, backgroundColor: modo ? '#9b99c1' : '#d9d9d9' }} />
-            </div>
+  const [anchorEl, setAnchorEl] = useState(null);
+  // const [entorno, setEntorno] = useState('');
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'black', marginLeft: 15 }}>
-                <ButtonGroup >
-                    <span className="p-float-label">
-                        <InputText id="username" style={{ width: 100, height: 15, marginTop: 5 }} value="hola" type="text" className="p-inputtext-sm" placeholder="Small" />
-                        <label htmlFor="username" style={{ marginTop: 5 }}>Username</label>
-                    </span>
-                </ButtonGroup>
-            </div> */}
-        </div>
-    );
-}
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          color: 'black',
+        }}
+      >
+        <Hidden smDown mdDown>
+          <Typography
+            component="div"
+            sx={{
+              width: 'auto',
+              height: 39,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0 10px',
+              color: mod_dark ? '#fff' : '#042F4A',
+              borderRadius: 1, // 1 => 4px
+              fontWeight: 'bold',
+              fontSize: 14,
+            }}
+          >
+            <strong
+              style={{
+                marginRight: '.5rem',
+              }}
+            >
+              {`${nombre_usu} :`.toUpperCase()}
+            </strong>{' '}
+            <strong>
+              {tipo_persona === 'J'
+                ? ' Usuario - Empresa'.toUpperCase()
+                : tipo_persona === 'N' && entorno == 'L'
+                ? ' Usuario - Laboral'.toUpperCase()
+                : ' Usuario - Externo'.toUpperCase()}
+            </strong>
+          </Typography>
+        </Hidden>
+        <Hidden mdUp>
+          <Tooltip title="Ver Perfil">
+            <Button
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+              startIcon={<VisibilityIcon />}
+              sx={{
+                color: mod_dark ? '#fff' : '#042F4A',
+                borderRadius: 1, // 1 => 4px
+                fontWeight: 'bold',
+                fontSize: 14,
+              }}
+            >
+              Información
+            </Button>
+          </Tooltip>
+
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>
+              {`En Sesión : ${nombre_usu}`.toUpperCase()}
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+            {tipo_persona === 'J'
+                ? ' Usuario - Empresa'.toUpperCase()
+                : tipo_persona === 'N' && entorno == 'L'
+                ? ' Usuario - Laboral'.toUpperCase()
+                : ' Usuario - Externo'.toUpperCase()}
+            </MenuItem>
+          </Menu>
+        </Hidden>
+      </Box>
+    </>
+  );
+};

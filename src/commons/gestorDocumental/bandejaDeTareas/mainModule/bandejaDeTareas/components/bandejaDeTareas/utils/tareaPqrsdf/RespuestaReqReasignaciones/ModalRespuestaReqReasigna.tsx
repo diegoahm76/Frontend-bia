@@ -14,7 +14,10 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useContext, useEffect, useState } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../../hooks';
 import { getComplementosReqResSolicitudes } from '../../../../../services/servicesStates/pqrsdf/reqResSolicitudes/getReqResSolicitudes.service';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { GridValueGetterParams } from '@mui/x-data-grid';
@@ -29,13 +32,11 @@ import { BandejaTareasContext } from '../../../../../../context/BandejaTareasCon
 import { getAnexosComplementoBandejaTareas } from '../../../../../services/servicesStates/pqrsdf/complementos/getAnexosComplementos.service';
 
 export const ModalRespuestaReqReasigna = (): JSX.Element => {
-
   //* redux states
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  const {
-    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
-  } = useAppSelector((state) => state.BandejaTareasSlice);
+  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
+    useAppSelector((state) => state.BandejaTareasSlice);
 
   const { fourthLoading, handleFourthLoading } = useContext(
     ModalAndLoadingContext
@@ -45,10 +46,7 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
   const navigate = useNavigate();
 
   //* context declaration
-  const {
-    setAnexos,
-  } = useContext(BandejaTareasContext);
-
+  const { setAnexos } = useContext(BandejaTareasContext);
 
   //* useeffect para llamar un servicio con la informacion, solo se llama el servicio cuando handleThirdLoading es true
 
@@ -73,55 +71,56 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
       field: 'acciones',
       renderCell: (params: GridValueGetterParams) => (
         <Tooltip title="Ver info del complemento">
-              <IconButton
-                onClick={() => {
-                  // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
-                  //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-                  console.log(params.row);
+          <IconButton
+            onClick={() => {
+              // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
+              //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
+              console.log(params.row);
 
+              // 'info_complemento/:id_complemento_usu_pqr'
 
-                  // 'info_complemento/:id_complemento_usu_pqr'
-
-                 (async () => {
-                    try {
-                      const idComplemento = params?.row?.id_complemento_usu_pqr;
-                      const [detalleTarea , anexosPqrsdf] = await Promise.all([
-                        getDetalleComplemento(idComplemento, navigate),
-                        getAnexosComplementoBandejaTareas(idComplemento),
-                      ]);
-                      dispatch(setInfoTarea(detalleTarea));
-                      setAnexos(anexosPqrsdf);
-                      if (detalleTarea || anexosPqrsdf.length > 0) {
-                       navigate(`/app/gestor_documental/bandeja_tareas/info_complemento/${idComplemento}`);
-                       // handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                        //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
-                      //  handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqrsdf que se consulta con el id del anexo
-                      }
-                    } catch (error) {
-                      console.error(error);
-                    }
-                  })();
+              (async () => {
+                try {
+                  const idComplemento = params?.row?.id_complemento_usu_pqr;
+                  const [detalleTarea, anexosPqrsdf] = await Promise.all([
+                    getDetalleComplemento(idComplemento, navigate),
+                    getAnexosComplementoBandejaTareas(idComplemento),
+                  ]);
+                  dispatch(setInfoTarea(detalleTarea));
+                  setAnexos(anexosPqrsdf);
+                  if (detalleTarea || anexosPqrsdf.length > 0) {
+                    navigate(
+                      `/app/gestor_documental/bandeja_tareas/info_complemento/${idComplemento}`
+                    );
+                    // handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                    //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
+                    //  handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqrsdf que se consulta con el id del anexo
+                  }
+                } catch (error) {
+                  console.error(error);
+                }
+              })();
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
+                sx={{
+                  color: 'primary.main',
+                  width: '18px',
+                  height: '18px',
                 }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <VisibilityIcon
-                    sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px',
-                    }}
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
+              />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];
@@ -144,7 +143,9 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
             <RenderDataGrid
               title="Respuesta de requerimientos o solicitudes al usuario"
               columns={columns ?? []}
-              rows={dataComplementos}
+              rows={[
+                ...dataComplementos,
+              ]}
             />
           ) : (
             <Box

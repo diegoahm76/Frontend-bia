@@ -36,6 +36,7 @@ import {
   get_file_typology_service,
   get_media_types_service,
   get_offices_service,
+  get_others_service_id,
   get_pqr_types_service,
   get_pqrsdf_id_service,
   get_presentation_types_service,
@@ -71,7 +72,7 @@ export function CrearOtroScreen(): JSX.Element {
 
   useEffect(() => {
     if (id !== null && id !== undefined) {
-      void dispatch(get_pqrsdf_id_service(id));
+      void dispatch(get_others_service_id(id));
     }
 
 
@@ -207,13 +208,13 @@ export function CrearOtroScreen(): JSX.Element {
       if ('anexos' in otro) {
         if (otro.anexos === undefined && otro.anexos === null) {
           set_step(0);
-          void dispatch(get_pqrsdf_id_service(otro.id_otros));
+          void dispatch(get_others_service_id(otro.id_otros));
         } else {
           dispatch(set_exhibits(otro.anexos ?? []));
         }
       } else {
         set_step(0);
-        void dispatch(get_pqrsdf_id_service(otro.id_otros));
+        void dispatch(get_others_service_id(otro.id_otros));
       }
       
       set_action('editar');
@@ -229,6 +230,7 @@ export function CrearOtroScreen(): JSX.Element {
 
   const on_submit = (data: IObjOtros): void => {
     const form_data: any = new FormData();
+    console.log(data)
     if (otro.id_otros !== null && otro.id_otros !== undefined) {
       const fecha_actual = new Date();
       const fecha_registro = new Date(data.fecha_registro ?? '');
@@ -256,7 +258,6 @@ export function CrearOtroScreen(): JSX.Element {
           ...data,
           cantidad_anexos: exhibits.length,
           nro_folios_totales: folios,
-          cod_relacion_con_el_titular: 'MP',
           es_anonima: false,
           anexos: aux_items,
           requiere_digitalizacion: !ya_digitalizado,
@@ -336,7 +337,7 @@ export function CrearOtroScreen(): JSX.Element {
       form_data.append('id_persona_guarda', userinfo.id_persona);
       form_data.append('isCreateForWeb', 'True');
 
-      void dispatch(add_other_service(form_data, navigate));
+      void dispatch(add_other_service(form_data));
     }
     dispatch(reset_state());
     initial_values();

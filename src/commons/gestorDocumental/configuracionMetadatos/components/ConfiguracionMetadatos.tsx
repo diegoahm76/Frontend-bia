@@ -91,11 +91,7 @@ const ConfiguracionMetadatos = () => {
 
     }, [])
 
-    useEffect(() => {
-
-        //  console.log('')(valores_metadatos)
-
-    }, [])
+   
 
 
     useEffect(() => {
@@ -205,29 +201,10 @@ const ConfiguracionMetadatos = () => {
         //  console.log('')(selected_metadato)
 
     }
-    const on_submit_agregar_valor = (data: IObjValoresMetadatos): void => {
-
-        if (
-            selected_metadato.id_metadato_personalizado !== null &&
-            selected_metadato.id_metadato_personalizado !== undefined
-
-        ) {
-            orden_dentro_de_lista++;
-
-            const data_valor = {
-                ...data,
-                id_metadato_personalizado: selected_metadato.id_metadato_personalizado,
-                orden_dentro_de_lista: orden_dentro_de_lista
-            }
-            void dispatch(crear_valor_metadato(data_valor))
-            void dispatch(get_valores_metadatos())
-        }
-
-    }
-
+ 
     return (
         <>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} justifyContent={'center'}>
                 <Title title="CONFIGURACIÓN DE METADATOS" />
 
                 <FormInputController
@@ -276,7 +253,7 @@ const ConfiguracionMetadatos = () => {
 
                 <FormSelectController
                     xs={12}
-                    md={2}
+                    md={3}
                     marginTop={2}
                     control_form={control_metadatos}
                     control_name={'cod_tipo_dato_alojar'}
@@ -294,7 +271,7 @@ const ConfiguracionMetadatos = () => {
                 />
                 <FormInputController
                     xs={12}
-                    md={2}
+                    md={3}
                     margin={0}
                     marginTop={2}
                     control_form={control_metadatos}
@@ -308,7 +285,7 @@ const ConfiguracionMetadatos = () => {
                     helper_text={''} />
                 <FormInputController
                     xs={12}
-                    md={2}
+                    md={3}
                     margin={0}
                     marginTop={2}
                     control_form={control_metadatos}
@@ -322,7 +299,7 @@ const ConfiguracionMetadatos = () => {
                     helper_text={''} />
                 <FormInputController
                     xs={12}
-                    md={2}
+                    md={3}
                     margin={0}
                     marginTop={2}
                     control_form={control_metadatos}
@@ -339,9 +316,9 @@ const ConfiguracionMetadatos = () => {
 
             </Grid>
 
-            <Grid container spacing={2} alignItems="center">
+            <Grid container spacing={2} >
 
-                <Grid item xs={12} sm={2} marginTop={2}>
+                <Grid item xs={12} sm={3} marginTop={2}>
                     <Controller
                         name="orden_aparicion"
                         control={control_metadatos}
@@ -369,7 +346,7 @@ const ConfiguracionMetadatos = () => {
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} sm={2} marginTop={2}>
+                <Grid item xs={12} sm={3} marginTop={2}>
                     <Controller
                         name="esObligatorio"
                         control={control_metadatos}
@@ -399,7 +376,7 @@ const ConfiguracionMetadatos = () => {
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} sm={2} marginTop={2}>
+                <Grid item xs={12} sm={3} marginTop={2}>
                     <Controller
                         name="aplica_para_documento"
                         control={control_metadatos}
@@ -429,7 +406,7 @@ const ConfiguracionMetadatos = () => {
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} sm={2} marginTop={2}>
+                <Grid item xs={12} sm={1.5} marginTop={2}>
                     <Controller
                         name="aplica_para_expediente"
                         control={control_metadatos}
@@ -460,7 +437,7 @@ const ConfiguracionMetadatos = () => {
                     />
                 </Grid>
                 {selected_metadato.id_metadato_personalizado !== null &&
-                    <Grid item xs={12} sm={2} marginTop={2} container alignItems="center" justifyContent="flex-end">
+                    <Grid item xs={12} sm={1.5} marginTop={2} container alignItems="center" justifyContent="flex-end">
                         <Controller
                             name="activo"
                             control={control_metadatos}
@@ -505,7 +482,8 @@ const ConfiguracionMetadatos = () => {
                 </Grid>
             </Grid>
             {agregar_valor && (
-                <ValoresMetadatos />
+                <ValoresMetadatos selected_metadato={selected_metadato}
+                />
             )}
 
 

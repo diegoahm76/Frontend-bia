@@ -422,7 +422,7 @@ const StepTwOtros = () => {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: (type_applicant.key ?? null) === null,
+              disabled: true, // (type_applicant.key ?? null) === null,
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',

@@ -40,8 +40,10 @@ export interface IUserInfo {
   open_dialog: boolean;
   entorno: "C" | "L";
   dialog_representante: boolean;
+  apoderados: any[];
   is_blocked: boolean;
   profile_img?: any;
+  is_loading?: boolean;
 }
 
 export interface UserData {
