@@ -3,8 +3,9 @@
 import { useEffect } from 'react';
 import { useAppSelector } from '../../../../../../hooks';
 import { InfoTareaSeguimiento } from '../components/infoTareaSeguimiento/InfoTareaSeguimiento';
-import { SeguimientoTareaHistory } from '../components/seguimientoTareaHistory/SeguimientoTareaHistory';
+import { SeguimientoReasignacionTar } from '../components/seguimientoTareaHistory/SeguimientoReasignacionTar';
 import { useNavigate } from 'react-router-dom';
+import { SeguimientoRespuestaTarea } from '../components/seguimientoRespuestaTarea/SeguimientoRespuestaTarea';
 
 export const MainScreenSeguimientoTarea = (): JSX.Element => {
   //* redux states
@@ -27,7 +28,9 @@ export const MainScreenSeguimientoTarea = (): JSX.Element => {
       {/*Información relacionada a la tareas que se le hace seguimiento*/}
       <InfoTareaSeguimiento />
       {/*Acciones finales para la tarea*/}
-      <SeguimientoTareaHistory />
+      <SeguimientoReasignacionTar />
+      {/*respuesta de la tarea*/}
+      <SeguimientoRespuestaTarea/>
     </>
   );
 };

@@ -34,9 +34,12 @@ import {
   open_drawer_mobile,
 } from '../../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
-import ListIcon from '@mui/icons-material/List';
 import type { AuthSlice } from '../../commons/auth/interfaces';
-import { logout } from '../../commons/auth/store';
+import {
+  logout,
+  set_is_loading,
+  set_permissions,
+} from '../../commons/auth/store';
 import { SuperUserScreen } from '../../commons/seguridad/screens/SuperUserScreen';
 import { FooterGov } from '../goviernoEnLinea/FooterGov';
 import { HeaderGov } from '../goviernoEnLinea/HeaderGov';
@@ -68,12 +71,12 @@ export const SideBar: FC<SideBarProps> = ({
   const dispatch = useDispatch();
   const [open, set_open] = useState(false);
   const [dialog_open, set_dialog_open] = useState(false);
-  const [is_loading, set_is_loading] = useState(true);
-  const { userinfo, permisos: permisos_store } = useSelector(
+  const { userinfo, permisos: permisos_store, is_loading } = useSelector(
     (state: AuthSlice) => state.auth
   );
 
   const [permisos, set_permisos] = useState<any[]>([]);
+
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
@@ -93,21 +96,23 @@ export const SideBar: FC<SideBarProps> = ({
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
-    const delay = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
-
     const updateState = async () => {
-      await delay(800);
-      set_permisos(permisos_store);
-      await delay(1500);
-      set_is_loading(false);
+      try {
+        await delay(800);
+        set_permisos(permisos_store);
+        await delay(1500);
+        dispatch(set_is_loading?.(false));
+      } catch (error) {
+        console.error('Failed to update state:', error);
+      }
     };
 
     updateState();
   }, [permisos_store]);
-
 
   // ? ------- static side bar content, except super user delegation screen ------
   const conten_drawer = (
@@ -179,13 +184,8 @@ export const SideBar: FC<SideBarProps> = ({
                   }}
                 />
               </ListItemIcon>
-              <ListItemText
-                primary="BIA GPT"
-                onClick={handleBiaGpt}
-              />
+              <ListItemText primary="BIA GPT" onClick={handleBiaGpt} />
             </ListItemButton>
-
-
 
             {/* -------------- Datos de acceso del usuario ------------------- */}
             <ListItemButton sx={{ pl: 4 }}>
@@ -298,8 +298,8 @@ export const SideBar: FC<SideBarProps> = ({
       {/* -------------- Close List main elements ------------------- */}
 
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      {!is_loading && permisos.length  ? (
-        permisos.map((elementStore, indexStore) => {
+      {!is_loading && permisos.length ? (
+        permisos.map((elementStore: any, indexStore) => {
           return (
             <List
               sx={{
@@ -342,7 +342,7 @@ export const SideBar: FC<SideBarProps> = ({
                           open_collapse_sbm(
                             indexStore,
                             indexMenu,
-                            set_permisos
+                            set_permisos,
                           );
                         }}
                       >
@@ -372,7 +372,7 @@ export const SideBar: FC<SideBarProps> = ({
                                       indexStore,
                                       indexMenu,
                                       indexSubmenuMenu,
-                                      set_permisos
+                                      set_permisos,
                                     );
                                   }}
                                 >
@@ -412,7 +412,7 @@ export const SideBar: FC<SideBarProps> = ({
                                                     indexMenu,
                                                     indexSubmenuMenu,
                                                     indexElement,
-                                                    set_permisos
+                                                    set_permisos,
                                                   );
                                                 }}
                                               >
