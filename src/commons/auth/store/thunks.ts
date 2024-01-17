@@ -84,12 +84,9 @@ export const get_persmisions_user: (
   tipo_entorno: string
 ) => any = (id_usuario: number, tipo_entorno: string) => {
   return async (dispatch: Dispatch<any>) => {
-    dispatch(change_entorno(tipo_entorno));
     dispatch(set_is_loading?.(true));
     const resp = await permissions_request(id_usuario, tipo_entorno);
-    // podemos enviar mensaje de error al dispatch
     if (!resp.ok) {
-      // Agregar dispatch de error
       dispatch(logout({ error_message: resp.error_message }));
       return;
     }
@@ -143,5 +140,6 @@ export const get_persmisions_user: (
       };
     });
     dispatch(set_permissions(permissions));
+    dispatch(change_entorno(tipo_entorno));
   };
 };

@@ -15,25 +15,22 @@ import {
 } from '@mui/material';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import {
-  change_entorno,
   close_dialog_representado_app,
   get_persmisions_user,
   setRepresentacionLegal,
-  set_is_loading,
-  set_permissions,
-  // set_authenticated,
 } from '../../store';
 import { type AuthSlice } from '../../interfaces';
 import Select from 'react-select';
 import BoyIcon from '@mui/icons-material/Boy';
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
 import { useAppSelector } from '../../../../hooks';
-// import { permissions_request } from '../../request/authRequest';
-import { showAlert } from '../../../../utils/showAlert/ShowAlert';
+import { useNavigate } from 'react-router-dom';
 
 export const DialogEntornoApp: React.FC = () => {
   //* redux states
   const { userinfo } = useAppSelector((state) => state.auth);
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { dialog_representante, representante_legal, apoderados } = useSelector(
@@ -73,7 +70,8 @@ export const DialogEntornoApp: React.FC = () => {
       menuPlacement="top"
       onChange={(value) => {
         onChange(value);
-        dispatch(get_persmisions_user(userinfo.id_usuario, 'C'))
+        dispatch(get_persmisions_user(userinfo.id_usuario, 'C'));
+        navigate('/app/home', { replace: true });
       }}
       options={options}
       isSearchable={false}
@@ -112,14 +110,17 @@ export const DialogEntornoApp: React.FC = () => {
               onClick={() => {
                 select_representado('');
                 //* llamar el servicio para cargar el menú pero con entorno laboral
-                dispatch(get_persmisions_user(userinfo.id_usuario, 'L'))
+                dispatch(get_persmisions_user(userinfo.id_usuario, 'L'));
                 dispatch(close_dialog_representado_app());
+                navigate('/app/home', { replace: true });
               }}
             >
               <ListItemIcon>
                 <PersonPinIcon fontSize="large" />
               </ListItemIcon>
-              <ListItemText primary={'Continuar como usuario interno - entorno laboral'} />
+              <ListItemText
+                primary={'Continuar como usuario interno - entorno laboral'}
+              />
             </ListItemButton>
           </ListItem>
         )}
@@ -136,27 +137,8 @@ export const DialogEntornoApp: React.FC = () => {
                         cod_relacion_con_el_titular: option.value,
                       });
                       dispatch(close_dialog_representado_app());
-                      dispatch(get_persmisions_user(userinfo.id_usuario, 'C'))
-                      
-                      /*(async () => {
-                        dispatch(set_is_loading?.(true));
-                          .then((res: any) => {
-                            //const dataMenu = res.data;
-                            // dispatch(set_permissions(dataMenu));
-                          })
-                          .catch(() => {
-                            showAlert(
-                              'Opss..',
-                              'No se pudo cargar el menú, intente de nuevo',
-                              'error'
-                            );
-                            dispatch(set_is_loading?.(false));
-                            dispatch(set_permissions([]));
-                          })
-                          .finally(() => {
-                            dispatch(set_is_loading?.(false));
-                          });
-                      })();*/
+                      dispatch(get_persmisions_user(userinfo.id_usuario, 'C'));
+                      navigate('/app/home', { replace: true });
                     }}
                   >
                     <ListItemIcon>

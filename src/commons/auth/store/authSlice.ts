@@ -28,12 +28,7 @@ const initial_state: IUserInfo | any = {
   entorno: 'C',
   is_blocked: false,
   representacion_legal: 'MP',
-
-/*  const [is_loading, set_is_loading] = useState(true);
-  const [permisos, set_permisos] = useState<any[]>([]);*/
-
   is_loading: false,
-  // permissions: [],
 };
 
 export const auth_slice = createSlice({
@@ -111,10 +106,6 @@ export const auth_slice = createSlice({
     set_is_loading: (state, { payload }) => {
       state.is_loading = payload;
     },
-
-   /* set_entorno: (state, { payload }) => {
-      state.entorno = payload;
-    },*/
   },
 });
 

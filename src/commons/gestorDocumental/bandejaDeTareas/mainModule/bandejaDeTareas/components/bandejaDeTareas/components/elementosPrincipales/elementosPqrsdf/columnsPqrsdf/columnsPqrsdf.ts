@@ -62,14 +62,6 @@ export const columnsPqrsdf = [
     },
   },
   {
-    headerName: 'Requerimientos pendientes de respuesta',
-    field: 'requerimientos_pendientes_respuesta',
-    minWidth: 280,
-    renderCell: (params: any) => {
-      return params.value ? 'SI' : 'NO';
-    },
-  },
-  {
     headerName: 'Fecha de respuesta',
     field: 'fecha_respondido',
     minWidth: 220,

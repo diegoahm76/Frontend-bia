@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { AuthSlice } from '../commons/auth/interfaces/authModels';
-import { useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import {
   Box,
@@ -10,8 +9,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useAppSelector } from '../hooks';
 
 /*
 {
@@ -30,9 +30,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const PerfilPersonaIngresa: React.FC = () => {
   const {
-    userinfo: { nombre_de_usuario, tipo_persona, entorno: entorno_store },
-  } = useSelector((state: any) => state.auth);
-  const { mod_dark } = useSelector(
+    userinfo: { nombre_de_usuario = '', tipo_persona = '' } = {},
+    entorno = '',
+  } = useAppSelector((state: AuthSlice) => state.auth);
+  const { mod_dark } = useAppSelector(
     (state: {
       layout: {
         mod_dark: boolean;
@@ -42,14 +43,7 @@ export const PerfilPersonaIngresa: React.FC = () => {
   const nombre_usu = nombre_de_usuario;
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [entorno, setEntorno] = useState('');
-
-  useEffect(() => {
-    setEntorno(entorno_store);
-    console.log('entorno_store', entorno_store);
-  }, [entorno_store]);
-
-  console.log('siuuuuuuuuu', entorno_store)
+  // const [entorno, setEntorno] = useState('');
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -130,11 +124,11 @@ export const PerfilPersonaIngresa: React.FC = () => {
               {`En Sesión : ${nombre_usu}`.toUpperCase()}
             </MenuItem>
             <MenuItem onClick={handleClose}>
-              {tipo_persona === 'J'
-                ? 'Entorno : Usuario - Empresa'.toUpperCase()
-                : tipo_persona === 'N' && entorno === 'L'
-                ? 'Entorno : Usuario - Laboral'.toUpperCase()
-                : 'Entorno : Usuario - Externo'.toUpperCase()}
+            {tipo_persona === 'J'
+                ? ' Usuario - Empresa'.toUpperCase()
+                : tipo_persona === 'N' && entorno == 'L'
+                ? ' Usuario - Laboral'.toUpperCase()
+                : ' Usuario - Externo'.toUpperCase()}
             </MenuItem>
           </Menu>
         </Hidden>
