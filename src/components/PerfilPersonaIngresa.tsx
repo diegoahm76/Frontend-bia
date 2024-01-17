@@ -88,10 +88,10 @@ export const PerfilPersonaIngresa: React.FC = () => {
             </strong>{' '}
             <strong>
               {tipo_persona === 'J'
-                ? ' Usuario - Empresa'.toUpperCase()
+                ? 'Empresa'.toUpperCase()
                 : tipo_persona === 'N' && entorno == 'L'
-                ? ' Usuario - Laboral'.toUpperCase()
-                : ' Usuario - Externo'.toUpperCase()}
+                ? 'Laboral'.toUpperCase()
+                : 'Externo'.toUpperCase()}
             </strong>
           </Typography>
         </Hidden>
@@ -125,10 +125,10 @@ export const PerfilPersonaIngresa: React.FC = () => {
             </MenuItem>
             <MenuItem onClick={handleClose}>
             {tipo_persona === 'J'
-                ? ' Usuario - Empresa'.toUpperCase()
+                ? 'Empresa'.toUpperCase()
                 : tipo_persona === 'N' && entorno == 'L'
-                ? ' Usuario - Laboral'.toUpperCase()
-                : ' Usuario - Externo'.toUpperCase()}
+                ? 'Laboral'.toUpperCase()
+                : 'Externo'.toUpperCase()}
             </MenuItem>
           </Menu>
         </Hidden>

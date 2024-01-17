@@ -1,8 +1,304 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react'
+import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../../hooks';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
+import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
+import {
+  setCurrentElementPqrsdComplementoTramitesYotros,
+  setListaElementosComplementosRequerimientosOtros,
+} from '../../../../../../../toolkit/store/PanelVentanillaStore';
+import { columnsOtros } from './columnsOtros/columnsOtros';
+import { LoadingButton } from '@mui/lab';
+import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import Swal from 'sweetalert2';
+import TaskIcon from '@mui/icons-material/Task';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export const ElementosOtros = (): JSX.Element => {
+  //* redux states
+  const {
+    listaElementosPqrsfTramitesUotros,
+    currentElementPqrsdComplementoTramitesYotros,
+  } = useAppSelector((state) => state.PanelVentanillaSlice);
+
+  //* dispatch necesario
+  const dispatch = useAppDispatch();
+
+  //* FUNCTIONS ---------------
+  const setActionsOtrosManejo = (pqrsdf: any) => {
+    if (pqrsdf.estado_solicitud === 'EN GESTION') {
+      void Swal.fire({
+        title: 'Opps...',
+        icon: 'error',
+        text: `Esta PQRSDF ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
+        showConfirmButton: true,
+      });
+      return;
+    }
+
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(pqrsdf));
+    void Swal.fire({
+      icon: 'success',
+      title: 'Elemento seleccionado',
+      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      showConfirmButton: true,
+    });
+
+    /*const shouldDisable = (actionId: string) => {
+        const isAsigGrup = actionId === 'AsigGrup';
+        const isDig = actionId === 'Dig';
+        const hasAnexos = pqrsdf.cantidad_anexos > 0;
+        const requiresDigitalization = pqrsdf.requiere_digitalizacion;
+        const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
+        const isEnVentanillaSinPendientes =
+          pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+        const isEnVentanillaConPendientes =
+          pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+  
+        // Primer caso
+        if (isRadicado && !hasAnexos && isDig) {
+          return true;
+        }
+  
+        // Segundo caso
+        if (isRadicado && hasAnexos && !requiresDigitalization) {
+          return false;
+        }
+  
+        // Tercer caso
+        if (isRadicado && hasAnexos && requiresDigitalization) {
+          return isAsigGrup;
+        }
+  
+        // Cuarto caso
+        if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+          return false;
+        }
+  
+        // Quinto caso
+        if (isEnVentanillaSinPendientes && requiresDigitalization) {
+          return isAsigGrup;
+        }
+  
+        // Sexto caso
+        if (isEnVentanillaConPendientes) {
+          return isAsigGrup;
+        }
+  
+        // Caso por defecto
+        return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
+      };
+  
+      const actionsPQRSDF = actions.map((action: any) => ({
+        ...action,
+        disabled: shouldDisable(action.id),
+      }));
+  
+      //  console.log('')(actionsPQRSDF);
+      dispatch(setActionssToManagePermissions(actionsPQRSDF));*/
+  };
+
+  // ? columns config
+  const columns = [
+    ...columnsOtros,
+    {
+      headerName: 'Requiere digitalización',
+      field: 'requiere_digitalizacion',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ? 'Sí' : 'No'}
+            color={params.value ? 'success' : 'error'}
+          />
+        );
+      },
+    },
+    //* sacar para poner color
+    {
+      headerName: 'Estado de asignación de grupo',
+      field: 'estado_asignacion_grupo',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ?? 'Sin asignar'}
+            color={
+              params.row?.estado_asignacion_grupo === 'Pendiente'
+                ? 'warning'
+                : params.row?.estado_asignacion_grupo === 'Aceptado'
+                ? 'success'
+                : params.row?.estado_asignacion_grupo === 'Rechazado'
+                ? 'error'
+                : params.row?.estado_asignacion_grupo === null
+                ? 'warning' // Cambia 'default' al color que desees para el caso null
+                : 'default'
+            }
+          />
+        );
+      },
+    },
+    //* sacar para poner color
+    {
+      headerName: 'Número de solicitudes de digitalización',
+      field: 'numero_solicitudes_digitalizacion',
+      minWidth: 300,
+      renderCell: (params: any) => {
+        return (
+          <LoadingButton
+            loading={false /*loadingStates[params.row.id_otros]*/}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              console.log(params.row);
+              /*if (params.value === 0) {
+                control_warning(
+                  'No hay solicitudes de digitalización para este radicado, por lo tanto no se podrá ver historial de solicitudes de digitalización'
+                );
+                return;
+              } else {
+                setLoadingStates((prev) => ({
+                  ...prev,
+                  [params.row.id_otros]: true,
+                }));
+                // Simulate an async operation
+                setTimeout(() => {
+                  setValue(1);
+                  //* se debe reemplazar por el radicado real que viene dentro del elemento que se va a buscar
+                  setRadicado(params?.row?.radicado);
+                  handleRequestRadicado(params?.row?.radicado);
+                  setLoadingStates((prev) => ({
+                    ...prev,
+                    [params.row.id_otros]: false,
+                  }));
+                }, 1000);
+              }*/
+            }}
+          >
+            {`Solicitudes de digitalización: ${params.value}`}
+          </LoadingButton>
+        );
+      },
+    },
+    {
+      headerName: 'Acciones',
+      field: 'Acciones',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <>
+            <Tooltip title="Ver info de la solicitud de otros">
+              <IconButton
+                onClick={() => {
+                  console.log('jiji', params.row);
+                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsOtrosManejo(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Seleccionar solicitud de otros para procesos">
+              <IconButton
+                onClick={() => {
+                  if (params?.row?.estado_asignacion_grupo === 'Aceptado') {
+                    control_warning(
+                      'No se pueden seleccionar esta pqrsdf ya que ha sido asignada a un grupo'
+                    );
+                    return;
+                  }
+
+                  dispatch(
+                    setListaElementosComplementosRequerimientosOtros([])
+                  );
+
+                  setActionsOtrosManejo(params?.row);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <TaskIcon
+                    sx={{
+                      color: 'warning.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      },
+    },
+  ];
+
   return (
-    <div>ElementosOtros</div>
-  )
-}
+    <>
+      <RenderDataGrid
+        rows={listaElementosPqrsfTramitesUotros ?? []}
+        columns={columns ?? []}
+        title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
+        aditionalElement={
+          currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ? (
+            <Button
+              onClick={() => {
+                dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+              }}
+              variant="contained"
+              color="primary"
+              endIcon={<RemoveDoneIcon />}
+            >
+              Quitar selección de solicitud de otros
+            </Button>
+          ) : null
+        }
+      />
+      {/*modal para ver la información de la solicitud de otro seleccionada*/}
+      {/*<ModalOpaInformacion />*/}{' '}
+      {/*se debe realizar el código de dicho modal, ya que aún no se encuentra implemenetado*/}
+      {/*modal para ver la información de la OPA seleccionada*/}
+    </>
+  );
+};
