@@ -128,7 +128,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             </IconButton>
           </Stack>
 
-          <Stack spacing={2} direction="row">
+         {/* <Stack spacing={2} direction="row">
             {userinfo.tipo_persona !== 'J' ? (
               <Tooltip title="Realizar cambio de entorno">
                 <Button
@@ -145,7 +145,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             ) : (
               <></>
             )}
-          </Stack>
+          </Stack>*/}
 
           <Stack spacing={2} direction="row">
             {/*perfil de la persona que ingresa*/}
