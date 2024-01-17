@@ -16,7 +16,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
   );
 
   //* context declaration
-  const { secondLoading, handleSecondLoading } = useContext(
+  const { secondLoading } = useContext(
     ModalAndLoadingContext
   );
   
@@ -40,7 +40,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
   const tipoSolicitudComponentMap: any = {
     PQRSDF: <ListaElementosPqrsdf />,
     'Tramites y Servicios': <>hola trámites y servicios</>,
-    Otros: <ElementosOtros/>,
+    OTROS: <ElementosOtros/>,
     OPA: <ElementoOPAS/>,
   } as any;
 

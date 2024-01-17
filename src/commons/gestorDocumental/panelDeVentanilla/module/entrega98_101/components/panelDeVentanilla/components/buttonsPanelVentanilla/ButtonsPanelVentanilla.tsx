@@ -6,14 +6,11 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
 
 import { useNavigate } from 'react-router-dom';
-import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import Swal from 'sweetalert2';
-import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 import { useAppSelector } from '../../../../../../../../../hooks';
-import { withValidation } from './functions/validationAction';
 import { ButtonsPqrsdf } from './buttonsPqrsdf/ButtonsPqrsdf';
 import { ButtonsComplementos } from './buttonsPqrsdf/buttonsComplementos/ButtonsComplementos';
 import { ButtonsOpas } from './buttonsOpas/ButtonsOpas';
+import { ButtonsOtros } from './buttonsOtros/ButtonsOtros';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
@@ -51,11 +48,7 @@ const renderTramitesYServicios = (actionsTramitesYServicios: any[]) => (
   </Box>
 );
 
-const renderOtros = () => (
-  <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-    <>Botones de Otros </>
-  </Box>
-);
+const renderOtros = () => <ButtonsOtros/>
 
 const renderComplementoPQRSDF = () => <ButtonsComplementos />;
 
@@ -63,7 +56,6 @@ const renderOPAS = () => <ButtonsOpas />;
 
 export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
-  const navigate = useNavigate();
 
   const actionsTramitesYServicios = useAppSelector(
     (state) => state.PanelVentanillaSlice.actionsTramitesYServicios
@@ -71,12 +63,6 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
   const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
-  const actionsComplementos = useAppSelector(
-    (state) => state.PanelVentanillaSlice.actionsComplementos
-  );
-  const actionsOpas = useAppSelector(
-    (state) => state.PanelVentanillaSlice.actionsOpas
   );
 
   return (
@@ -93,7 +79,7 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
             return renderTramitesYServicios(
               actionsTramitesYServicios /*|| actionsComplementos*/
             );
-          case 'Otros':
+          case 'OTROS':
             return renderOtros();
           case 'Complemento de PQRSDF':
           case 'Complemento de PQRSDF - Respuesta a solicitud':
