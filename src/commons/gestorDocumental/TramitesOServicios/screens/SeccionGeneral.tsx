@@ -9,7 +9,6 @@ import { ResumenTramite } from "./ResumenTramite";
 import { Radicado } from "./Radicado";
 import { radicar_opa } from "../thunks/TramitesOServicios";
 import { useAppDispatch } from "../../../../hooks";
-import { DataGrid } from "@mui/x-data-grid";
 import { TramitesEnProceso } from "./TramitesEnProceso";
 const class_css = {
     position: 'relative',
