@@ -17,6 +17,17 @@ interface Item {
 
 const BASE_URL = 'gestor/panel_ventanilla/pqrsdf/get/';
 
+/**
+ * Retrieves a list of items for the Pqrsdf Panel Ventanilla based on the provided filters.
+ * @param estado_actual_solicitud The current status of the request (optional).
+ * @param radicado The reference number of the request (optional).
+ * @param tipo_solicitud The type of request (optional).
+ * @param fecha_inicio The start date of the request (optional).
+ * @param fecha_fin The end date of the request (optional).
+ * @param tipo_pqrsdf The type of Pqrsdf (optional).
+ * @param handleSecondLoading A function to handle the loading state (optional).
+ * @returns A promise that resolves to an array of items for the Pqrsdf Panel Ventanilla.
+ */
 export const getGrilladoPqrsdfPanelVentanilla = async (
   estado_actual_solicitud: string = '',
   radicado: string = '',
