@@ -48,11 +48,6 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
   // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA-----
   const searchPqrsdf = async () => {
-    showAlert(
-      'Estimado usuario!',
-      'Esta funcionalidad de Bandeja De tareas (Responder PQRSDF) se encuentra en construcción',
-      'warning'
-    );
     try {
       const {
         tipo_de_tarea,
