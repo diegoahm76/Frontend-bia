@@ -49,11 +49,16 @@ export const AccionesFinales = (): JSX.Element => {
   // ? declaración de las funciones
 
   const handleClick = async () => {
+    if (!Array.isArray(listaAsignaciones)) {
+      console.error('listaAsignaciones debe ser un array');
+      return;
+    }
 
     const item = listaAsignaciones.find(
       (item: any) =>
-        item.estado_asignacion === 'En espera' ||
-        item.estado_asignacion === 'Aceptada'
+        item.hasOwnProperty('estado_asignacion') &&
+        (item.estado_asignacion === 'En espera' ||
+         item.estado_asignacion === 'Aceptada')
     );
 
     if (item) {
@@ -65,7 +70,6 @@ export const AccionesFinales = (): JSX.Element => {
       });
       return;
     }
-
     const tipo =
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;

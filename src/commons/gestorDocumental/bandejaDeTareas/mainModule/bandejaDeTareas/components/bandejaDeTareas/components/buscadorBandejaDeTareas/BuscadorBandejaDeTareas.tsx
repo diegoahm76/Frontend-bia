@@ -178,9 +178,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                   name="tipo_de_tarea"
                   control={controlBusquedaBandejaTareas}
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <div>
                       <Select
                         required
@@ -244,12 +242,32 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
               <Grid item xs={12} sm={4}>
                 <Controller
+                  name="radicado"
+                  control={controlBusquedaBandejaTareas}
+                  defaultValue=""
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      label="Radicado"
+                      type="text"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Controller
                   name="fecha_inicio"
                   control={controlBusquedaBandejaTareas}
                   defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       label="Fecha inicio"
@@ -270,9 +288,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                   name="fecha_fin"
                   control={controlBusquedaBandejaTareas}
                   defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       label="Fecha final"
