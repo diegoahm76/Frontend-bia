@@ -9,8 +9,8 @@ import Swal from 'sweetalert2';
 
 import { BuscadorSolicitudes } from '../../buscador/BuscadorSolicitudes';
 import {
-  accordionData,
   consultaColumns,
+  consultaColumnsOtros,
   infoSolicitudColumns,
   stylesTypography,
 } from '../accordionData'; // Import your accordion data from a separate file
@@ -111,7 +111,7 @@ export const AcordeonOtros = (): JSX.Element => {
             <Accordion
               ref={expanded === item?.cabecera?.radicado ? accordionRef : null}
               style={{ marginBottom: '1rem' }}
-              key={item?.cabecera?.id_PQRSDF}
+              key={item?.cabecera?.id_otros}
               expanded={expanded === item?.cabecera?.radicado}
               onChange={handleChange(item?.cabecera?.radicado)}
             >
@@ -143,9 +143,6 @@ export const AcordeonOtros = (): JSX.Element => {
               </Grid>
               <Grid item xs={6}>
                 <Typography sx={stylesTypography}>
-                  <b>Estado actual:</b> {item?.detalle?.estado_actual_solicitud}
-                </Typography>
-                <Typography sx={stylesTypography}>
                   <b>Asunto: </b>
                   {item?.detalle?.asunto}
                 </Typography>
@@ -162,7 +159,7 @@ export const AcordeonOtros = (): JSX.Element => {
               >
                 <VisaulTexto
                   elements={[
-                    'No se ha encontrado información relacionada a la respuesta de la solicitud',
+                    'No se ha encontrado información relacionada a la solicitud',
                   ]}
                 />
               </section>
@@ -191,7 +188,7 @@ export const AcordeonOtros = (): JSX.Element => {
             ) : (
               <RenderDataGrid
                 title="Información de la respuesta"
-                columns={consultaColumns ?? []}
+                columns={consultaColumnsOtros ?? []}
                 rows={[...item?.detalle?.registros] ?? []}
               />
             )}

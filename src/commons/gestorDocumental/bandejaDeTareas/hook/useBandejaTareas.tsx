@@ -32,6 +32,7 @@ export const useBandejaTareas = () => {
         value: true,
         label: '',
       },
+      radicado: '',
 
       // ? pendiente si deben agregar mas elementos para los demas tipos de tareas
 

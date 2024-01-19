@@ -78,7 +78,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 
