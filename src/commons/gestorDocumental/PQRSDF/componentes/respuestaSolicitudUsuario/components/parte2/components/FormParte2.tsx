@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, TextField } from '@mui/material';
-import { Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -36,7 +36,22 @@ export const FormParte2 = ({
     }
   }, [currentAnexo]);
 */
- console.log("watchFormulario",watchFormulario)
+//  console.log("watchFormulario",watchFormulario)
+
+
+const { handleSubmit, setValue, watch } = useForm();
+
+// Resto del código...
+
+useEffect(() => {
+  // Verifica si respuestaPqrsdfMade tiene valor antes de intentar asignarlo a watchFormulario
+  if (respuestaPqrsdfMade) {
+    // Actualiza el valor del campo 'asunto' en watchFormulario con el valor de respuestaPqrsdfMade.asunto
+    setValue('asunto', respuestaPqrsdfMade.asunto);
+  }
+}, [respuestaPqrsdfMade]);
+
+
   return (
     <>
       <form
@@ -57,36 +72,32 @@ export const FormParte2 = ({
           marginTop: '3rem',
         }}
       >
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={8}>
-            <Controller
-              name="asunto"
-              control={controlFormulario}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <TextField
-                  required
-                  fullWidth
-                  label="Asunto"
-                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
-                  size="small"
-                  variant="outlined"
-                  value={value ?? respuestaPqrsdfMade.asunto}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(e) => {
-                    onChange(e.target.value);
-                    e.target.value.length === 50 &&
-                      control_warning('máximo 50 caracteres');
-                  }}
-                  inputProps={{ maxLength: 50 }}
-                />
-              )}
-            />
-          </Grid>
+    <Grid container spacing={2}>
+  <Grid item xs={12} sm={8}>
+    <Controller
+      name="asunto"
+      control={controlFormulario}
+      defaultValue= ""
+      rules={{ required: true }}
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <TextField
+          required
+          fullWidth
+          label="Asunto"
+          size="small"
+          variant="outlined"
+          value={respuestaPqrsdfMade?.asunto || value}  
+          InputLabelProps={{ shrink: true }}
+          onChange={(e) => {
+            onChange(e.target.value);
+            e.target.value.length === 50 &&
+              control_warning('máximo 50 caracteres');
+          }}
+          inputProps={{ maxLength: 50 }}
+        />
+      )}
+    />
+  </Grid>
           <Grid item xs={12} sm={4}>
             <Controller
               name="fecha_de_solicitud"
@@ -134,7 +145,7 @@ export const FormParte2 = ({
                   // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
-                  value={value}
+                  value={respuestaPqrsdfMade?.descripcion || value}  
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);

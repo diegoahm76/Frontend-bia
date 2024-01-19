@@ -6,12 +6,20 @@ import { ResSolicitudUsuarioContext } from '../../../../context/ResSolicitudUsar
 
 export const PersonaTitular = (): JSX.Element => {
 
-  {/*datos deben salir de una mixtura del objeto de autenticación y */}
-
     //* context declaration
-    const { infoInicialUsuario } = useContext(ResSolicitudUsuarioContext);
-  
+    const {respuestaPqrsdfMade} = useContext(ResSolicitudUsuarioContext);
+    const nombresApellidos = respuestaPqrsdfMade?.nombres_apellidos_persona_titular ?? 'N/A';
 
+    // Dividir el campo en palabras usando espacio como separador
+    const palabras = nombresApellidos.split(' ');
+    
+    // Tomar el primer elemento como el nombre
+    const nombre = palabras.length > 0 ? palabras[0] : 'N/A';
+  
+    // Tomar el segundo elemento como el apellido
+    const apellido = palabras.length > 1 ? palabras[1] : 'N/A';
+     
+    
   return (
     <Grid
       item
@@ -35,7 +43,7 @@ export const PersonaTitular = (): JSX.Element => {
               label="Nombres"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.nombres ?? 'N/A'}
+              value={nombre}
               inputProps={{
                 maxLength: 50,
               }}
@@ -49,7 +57,7 @@ export const PersonaTitular = (): JSX.Element => {
               label="Apellidos"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.apellidos ?? 'N/A'}
+              value={apellido}
               inputProps={{
                 maxLength: 10,
               }}
@@ -63,7 +71,7 @@ export const PersonaTitular = (): JSX.Element => {
               disabled
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.tipo_documento ?? 'N/A'}
+              value={respuestaPqrsdfMade?.tipo_documento_persona_titular ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -74,7 +82,7 @@ export const PersonaTitular = (): JSX.Element => {
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.numero_documento ?? 'N/A'}
+              value={respuestaPqrsdfMade?.numero_documento_persona_titular ?? 'N/A'}
             />
           </Grid>
         </Grid>
