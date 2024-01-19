@@ -36,6 +36,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
   if (!listaTareasPqrsdfTramitesUotrosUopas?.length) return <></>;
 
   const tipoTarea: any = {
+    'RESPONDER PQRSDF': <ListaElementosPqrsdf />,
     'Responder PQRSDF': <ListaElementosPqrsdf />,
     'Responder Trámite': <>hola trámites y servicios siuuuuuuuuuuuuuu</>,
     // Otros: <ElementosOtros />,
