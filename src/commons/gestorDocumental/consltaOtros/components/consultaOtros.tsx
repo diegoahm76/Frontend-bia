@@ -190,8 +190,8 @@ export const ConsultaOtros: React.FC = () => {
                         size="small"
                         name="fecha_desde"
                         variant="outlined"
-                        value={formData.fecha_desde}
                         InputLabelProps={{ shrink: true }}
+                        value={formData.fecha_desde}
                         onChange={(e) => {
                             handleInputChange(e);
                         }}

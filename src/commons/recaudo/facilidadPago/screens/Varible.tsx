@@ -18,6 +18,7 @@ interface ConfiguracionBasica {
     nombre: any;
     tipo_cobro: any;
     tipo_renta: any;
+    valor_varaible:any
 }
 
 interface TipoRenta {
@@ -74,6 +75,9 @@ export const Varible: React.FC = () => {
     const columns = [
         { field: 'id_variables', headerName: ' Numero', width: 130, flex: 1 },
         { field: 'nombre', headerName: 'nombre', width: 130, flex: 1 },
+        
+        { field: 'valor_varaible', headerName: 'Valor varaible', width: 130, flex: 1 },
+
         {
             field: 'Acciones',
             headerName: 'Acciones',
@@ -104,6 +108,10 @@ export const Varible: React.FC = () => {
     //// editar tipos de cobro 
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         nombre: selectedConfiguracion?.nombre || "",
+        
+        valor_varaible: selectedConfiguracion?.valor_varaible || "",
+
+
         id_variables: selectedConfiguracion?.id_variables || "",
         tipo_cobro: selectedConfiguracion?.tipo_cobro || "",
         tipo_renta: selectedConfiguracion?.tipo_renta || "",
@@ -133,7 +141,9 @@ export const Varible: React.FC = () => {
                 nombre:formValues.nombre,
                 tipo_cobro:formValues.tipo_cobro,
                 tipo_renta:formValues.tipo_renta,
+                valor_varaible:formValues.valor_varaible,
 
+                
             };
             await api.put(url, dataToUpdate);
             fetchConfiguraciones();
@@ -143,6 +153,7 @@ export const Varible: React.FC = () => {
                 nombre: "",
                 tipo_cobro:"",
                 tipo_renta:"",
+                valor_varaible:"",
 
             });
             control_success("Editado  exitosamente");
@@ -163,6 +174,7 @@ export const Varible: React.FC = () => {
                 ...formValues,
                 id_variables: "",
                 nombre: "",
+                valor_varaible:"",
             });
         } catch (error: any) {
             // console.error("Error al crear la configuración básica", error);
@@ -263,7 +275,18 @@ export const Varible: React.FC = () => {
                         </TextField>
                     </Grid>
 
-
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            required
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            label="Valor varaible"
+                            name="valor_varaible"
+                            onChange={handleInputChange}
+                            value={formValues.valor_varaible}
+                        />
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             required
@@ -276,6 +299,10 @@ export const Varible: React.FC = () => {
                             value={formValues.nombre}
                         />
                     </Grid>
+
+
+
+                    
                     <Grid item xs={12} sm={4}>
                         <Button
                             color="success"

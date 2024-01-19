@@ -45,7 +45,8 @@ import { Consulta_ExternoPQR_Routes } from '../consultarEstadoExternoPQR/routes/
 import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/ConsultaAnonimo';
 import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
 import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
-
+import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
+ 
 const routes = [
   {
     path: 'organigrama/',
@@ -148,11 +149,7 @@ const routes = [
     component: () => <EncuestaRoutes />,
   },
 
-  {
-    path: 'Reportes_PQRSDF/',
-    name: 'Reportes_PQRSDF',
-    component: () => <Consulta_Solicitud_Routes />,
-  },
+
   {
     path: 'Interno_encuesta/',
     name: 'Interno_encuesta',
@@ -220,6 +217,45 @@ const routes = [
     name: 'complementos_pqrsdf',
     component: () => <ComplementoPqrsdfRoutes />,
   },
+
+  {
+    path: 'Reportes_PQRSDF/',
+    name: 'Reportes_PQRSDF',
+    component: () => <Consulta_Solicitud_Routes />,
+  },
+   {
+    path: 'Consulta_AnonimoPQR/',
+    name: 'Consulta_AnonimoPQR',
+    component: () => <Consulta_AnonimoPQR_Routes />,
+  },
+  {
+    path: 'consulta_estadopqr/',
+    name: 'consulta_estadopqr',
+    component: () => <Consulta_estadoPQR_Routes />,
+  },
+  {
+    path: 'ConsultaExternoPQR/',
+    name: 'ConsultaExternoPQR',
+    component: () => <Consulta_ExternoPQR_Routes />,
+  },
+ 
+  {
+    path: 'ConsultaOtros/',
+    name: 'ConsultaOtros',
+    component: () => <Consulta_Otros_Routes />,
+  },
+  {
+    path: 'ConsultaOtrosExterno/',
+    name: 'ConsultaOtrosExterno',
+    component: () => <Consulta_OtrosExterno_Routes />,
+  },
+  
+  {
+    path: 'Eliminacion_Documental/',
+    name: 'Eliminacion_Documental',
+    component: () => <DeleteDocumental_Routes />,
+  },
+
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

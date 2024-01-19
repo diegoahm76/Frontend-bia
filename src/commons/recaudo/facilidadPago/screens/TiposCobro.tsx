@@ -63,9 +63,10 @@ export const TiposCobro: React.FC = () => {
     };
 
     const columns = [
+        
         { field: 'id_tipo_cobro', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'nombre_tipo_cobro', headerName: 'Tipo cobro', width: 130, flex: 1 },
-        { field: 'valor_tipo_cobro', headerName: ' valor_tipo_cobro ', width: 130, flex: 1 },
+        // { field: 'valor_tipo_cobro', headerName: ' valor_tipo_cobro ', width: 130, flex: 1 },
 
         {
             field: 'Acciones',
@@ -188,7 +189,7 @@ export const TiposCobro: React.FC = () => {
                         />
                     </Grid>
 
-                    <Grid item xs={12} sm={4}>
+                    {/* <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             fullWidth
@@ -199,7 +200,7 @@ export const TiposCobro: React.FC = () => {
                             label="valor de tipo de cobro"
                             value={formValues.valor_tipo_cobro}
                         />
-                    </Grid>
+                    </Grid> */}
 
 
 
