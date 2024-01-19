@@ -83,6 +83,9 @@ export const ConceptoPago: React.FC = () => {
         { field: 'descripccion', headerName: 'Descripción', width: 200, flex: 1 },
 
         { field: 'nombre_variable', headerName: 'varible', width: 130, flex: 1 },
+        { field: 'estado', headerName: 'estado', width: 130, flex: 1 },
+
+        // estado
         {
             field: 'Estado',
             headerName: 'Estado',
@@ -208,14 +211,15 @@ export const ConceptoPago: React.FC = () => {
                 <Title title="Configuracion " />
 
                 <Grid container item xs={12} spacing={2} marginTop={2}  >
+                   <Grid item xs={4} sm={4}>
+                        <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de renta")}>Tipos de renta</Button>
+                    </Grid> 
                     <Grid item xs={4} sm={4}>
-                        <Button variant="contained" onClick={() => handleButtonClick("Tipos de cobro")}>Tipos de cobro</Button>
+                        <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de cobro")}>Tipos de cobro</Button>
                     </Grid>
+                    
                     <Grid item xs={4} sm={4}>
-                        <Button variant="contained" onClick={() => handleButtonClick("Tipos de renta")}>Tipos de renta</Button>
-                    </Grid>
-                    <Grid item xs={4} sm={4}>
-                        <Button variant="contained" onClick={() => handleButtonClick("Variable")}>Variable</Button>
+                        <Button fullWidth variant="contained" onClick={() => handleButtonClick("Variable")}>Variable</Button>
                     </Grid>
                 </Grid>
 

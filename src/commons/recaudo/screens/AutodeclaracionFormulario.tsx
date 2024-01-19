@@ -4,18 +4,22 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useState } from 'react';
-import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
-import { Title } from '../../../components/Title';
+import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
-import { AuthSlice } from '../../auth/interfaces';
 import { api } from '../../../api/axios';
-import SaveIcon from '@mui/icons-material/Save';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { DataGrid } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
+import { Title } from '../../../components/Title';
+import { AuthSlice } from '../../auth/interfaces';
 import { control_error } from '../alertas/store/thunks/alertas';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { control_success } from '../../recursoHidrico/requets/Request';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
+import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 
 interface FuenteAbastecimiento {
     tipo: string | null;
@@ -23,6 +27,8 @@ interface FuenteAbastecimiento {
     nombreFuente: string | null;
     caudalConcesionado: string | null;
     sistemaMedicionAguaCaptada: string | null;
+    cordenadaX: number | null;
+    cordenadaY: number | null;
 }
 
 interface CoordenadasSitioCaptacion {
@@ -36,8 +42,14 @@ interface FactoresUtilizacion {
     numeroUsuarios: number | null;
     numeroHectareas: number | null;
     consumoNumeroUsuarios: number | null;
+    consumoNumeroBovinos: any;
+    consumoNumeroPorcinos: any;
+    consumoNumeroHectareas: any;
 }
-
+interface Campo {
+    nombre: string;
+    valor: any;  // 'any' se usa aquí para permitir cualquier tipo, puedes ajustarlo según tus necesidades
+}
 interface CaptacionMensualAgua {
     mes: number | null;
     tiempoUso: number | null;
@@ -47,24 +59,24 @@ interface CaptacionMensualAgua {
 }
 
 interface FormData {
-    cc: number| null;
-    nit: number| null;
+    cc: number | null;
+    nit: number | null;
     fax: string;
     telefono: string;
     otrotipo: string;
     direccion: string;
     municipio: string;
-    expediente: number| null;
-    codigoCIIU: number| null;
+    expediente: number | null;
+    codigoCIIU: number | null;
     razonSocial: string;
     tipoUsuario: string;
-    numConcesion: number| null;
+    numConcesion: number | null;
     fechaCreacion: string;
     actividadEconomica: string;
     nombreRepresentanteLegal: string;
     factoresUtilizacion: FactoresUtilizacion;
     captacionesMensualesAgua: CaptacionMensualAgua[];
-    coordenadasSitioCaptacion: CoordenadasSitioCaptacion;
+    // coordenadasSitioCaptacion: CoordenadasSitioCaptacion;
     informacionFuentesAbastecimiento: FuenteAbastecimiento[];
 }
 
@@ -85,14 +97,14 @@ export const AutodeclaracionFormulario: React.FC = () => {
     const [type_directionn,
         // set_type_direction
     ] = useState('');
-    
+
     const initialFormData: FormData = {
         nit: null,
         cc: null,
         fax: "",
         municipio: "",
         numConcesion: null,
-        tipoUsuario: "EMPRESARIAL",
+        tipoUsuario: "",
         otrotipo: "",
         razonSocial: "",
         nombreRepresentanteLegal: "",
@@ -103,16 +115,16 @@ export const AutodeclaracionFormulario: React.FC = () => {
         expediente: null,
         fechaCreacion: "",
         informacionFuentesAbastecimiento: [],
-        coordenadasSitioCaptacion: {
-            cordenadaX: null,
-            cordenadaY: null,
-        },
+
         factoresUtilizacion: {
             numeroUsuarios: null,
             numeroBovinos: null,
             numeroPorcinos: null,
             numeroHectareas: null,
             consumoNumeroUsuarios: null,
+            consumoNumeroBovinos: null,
+            consumoNumeroPorcinos: null,
+            consumoNumeroHectareas: null,
         },
         captacionesMensualesAgua: []
     };
@@ -159,7 +171,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
             // Manejar la respuesta aquí, por ejemplo, mostrar un mensaje de éxito
             console.log('Formulario creado con éxito', res.data);
             control_success("Formulario creado con éxito")
-
+            setFormData(initialFormData);
         } catch (error: any) {
             // Manejar el error aquí, por ejemplo, mostrar un mensaje de error
             console.error('Error al crear el formulario', error);
@@ -169,11 +181,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
     };
 
     const [currentCaptacion, setCurrentCaptacion] = useState({
-        periodoUso: "",
-        tiempoUso: 0,
-        caudalUtilizado: 0,
-        volumenAguaCaptada: 0,
-        mes: 1
+        periodoUso: null,
+        tiempoUso: null,
+        caudalUtilizado: null,
+        volumenAguaCaptada: null,
+        mes: null
     });
 
     const handleCurrentCaptacionChange = (event: { target: { name: any; value: any; }; }) => {
@@ -181,46 +193,178 @@ export const AutodeclaracionFormulario: React.FC = () => {
         setCurrentCaptacion(prevState => ({ ...prevState, [name]: value }));
     };
 
+    const verificarDatosCaptacion = () => {
+        const campos = [
+            { nombre: 'periodo de Uso', valor: currentCaptacion.periodoUso },
+            { nombre: 'Tiempo de Uso', valor: currentCaptacion.tiempoUso },
+            { nombre: 'Caudal utilizado', valor: currentCaptacion.caudalUtilizado },
+            { nombre: 'Volumen de agua captada', valor: currentCaptacion.volumenAguaCaptada },
+            { nombre: 'Mes', valor: currentCaptacion.mes },
+        ];
+
+        for (let campo of campos) {
+            if (campo.valor === null || campo.valor === '') {
+                return campo.nombre;
+            }
+        }
+        return null;
+    };
+
     const agregarCaptacion = () => {
-        setFormData(prevState => ({
-            ...prevState,
-            captacionesMensualesAgua: [...prevState.captacionesMensualesAgua, currentCaptacion]
-        }));
-        setCurrentCaptacion({
-            periodoUso: "",
-            tiempoUso: 0,
-            caudalUtilizado: 0,
-            volumenAguaCaptada: 0,
-            mes: 1
-        });
+        // Verificar si el mes ya existe en los datos
+        const mesYaExiste = formData.captacionesMensualesAgua.some(captacion => captacion.mes === currentCaptacion.mes);
+        const campoFaltante = verificarDatosCaptacion();
+        if (campoFaltante) {
+            control_error(`Falta agregar dato: ${campoFaltante}`);
+            return;
+        }
+
+        const camposRequeridos = {
+            periodoUso: 'Periodo de Uso',
+            tiempoUso: 'Tiempo de Uso',
+            caudalUtilizado: 'Caudal Utilizado',
+            volumenAguaCaptada: 'Volumen de Agua Captada',
+            mes: 'Mes'
+        };
+
+
+        if (mesYaExiste) {
+            // Mostrar una alerta si el mes ya fue agregado
+            control_error("Mes ya agregado ");
+
+        }
+
+
+        else {
+            // Proceder a agregar la captación si el mes no existe
+            setFormData(prevState => ({
+                ...prevState,
+                captacionesMensualesAgua: [...prevState.captacionesMensualesAgua, currentCaptacion]
+            }));
+
+            // Reiniciar el estado de currentCaptacion
+            setCurrentCaptacion({
+                periodoUso: null,
+                caudalUtilizado: null,
+                tiempoUso: null,
+                volumenAguaCaptada: null,
+                mes: null
+            });
+        }
     };
 
 
+
+    const eliminarcaptacion = (id: number) => {
+        setFormData(prevState => ({
+            ...prevState,
+            captacionesMensualesAgua: prevState.captacionesMensualesAgua.filter((item, index) => index !== id)
+        }));
+    };
+    const columnas_captacion = [
+        { field: 'periodoUso', headerName: 'Periodo de uso', width: 220 },
+        { field: 'tiempoUso', headerName: 'Tiempo de uso', width: 220 },
+        { field: 'caudalUtilizado', headerName: 'Caudal utilizado', width: 220 },
+        { field: 'volumenAguaCaptada', headerName: 'Volumen de agua Captada', width: 220 },
+        { field: 'mes', headerName: 'Mes', width: 210 },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            sortable: false,
+            width: 150,
+            renderCell: (params: { id: any; }) => {
+                return (
+                    <IconButton color='error' onClick={() => eliminarcaptacion(params.id)}>
+                        <DeleteForeverIcon />
+                    </IconButton>
+                );
+            }
+        },
+    ];
+    //fuente 
+
     const [currentFuente, setCurrentFuente] = useState({
-        numero: 0,
+        numero: null,
         tipo: "",
         nombreFuente: "",
         caudalConcesionado: "",
-        sistemaMedicionAguaCaptada: ""
+        sistemaMedicionAguaCaptada: "",
+        cordenadaX: null,
+        cordenadaY: null,
     });
     const handleCurrentFuenteChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;
         setCurrentFuente(prevState => ({ ...prevState, [name]: value }));
     };
+
+    const verificarDatosFuente = () => {
+        const campos: Campo[] = [
+            { nombre: 'Numero', valor: currentFuente.numero },
+            { nombre: 'Tipo', valor: currentFuente.tipo },
+            { nombre: 'Nombre de fuente', valor: currentFuente.nombreFuente },
+            { nombre: 'Caudal concesionado', valor: currentFuente.caudalConcesionado },
+            { nombre: 'Sistema de medicion de agua captada', valor: currentFuente.sistemaMedicionAguaCaptada },
+            { nombre: 'Cordenada X', valor: currentFuente.cordenadaX },
+            { nombre: 'Cordenada Y', valor: currentFuente.cordenadaY },
+        ];
+
+        for (let campo of campos) {
+            if (campo.valor === null || campo.valor === '' || (typeof campo.valor === 'number' && isNaN(campo.valor))) {
+                return campo.nombre;
+            }
+        }
+        return null;
+    };
+
     const agregarFuente = () => {
+        const campoFaltante = verificarDatosFuente();
+        if (campoFaltante) {
+            control_error(`Falta agregar dato: ${campoFaltante}`);
+            return;
+        }
         setFormData(prevState => ({
             ...prevState,
             informacionFuentesAbastecimiento: [...prevState.informacionFuentesAbastecimiento, currentFuente]
+
         }));
-        // Reiniciar currentFuente
         setCurrentFuente({
-            numero: 0,
+            numero: null,
             tipo: "",
             nombreFuente: "",
             caudalConcesionado: "",
-            sistemaMedicionAguaCaptada: ""
+            sistemaMedicionAguaCaptada: "",
+            cordenadaX: null,
+            cordenadaY: null,
+
         });
     };
+    const eliminarFuente = (id: number) => {
+        setFormData(prevState => ({
+            ...prevState,
+            informacionFuentesAbastecimiento: prevState.informacionFuentesAbastecimiento.filter((item, index) => index !== id)
+        }));
+    };
+    const columnas = [
+        { field: 'numero', headerName: 'Número', width: 220 },
+        { field: 'tipo', headerName: 'Tipo', width: 220 },
+        { field: 'nombreFuente', headerName: 'Nombre de la Fuente', width: 220 },
+        { field: 'caudalConcesionado', headerName: 'Caudal Concesionado', width: 220 },
+        { field: 'sistemaMedicionAguaCaptada', headerName: 'Sistema de Medición', width: 220 },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            sortable: false,
+            width: 150,
+            renderCell: (params: { id: any; }) => {
+                return (
+                    <IconButton color='error' onClick={() => eliminarFuente(params.id)}>
+                        <DeleteForeverIcon />
+                    </IconButton>
+                );
+            }
+        },
+    ];
+
     ///
 
     return (
@@ -238,6 +382,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 }}
             >
                 <Title title="Formulario auto declaración  " />
+
+
 
             </Grid>
             {/* 222
@@ -406,7 +552,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             name="expediente"
                             variant="standard"
                             value={formData.expediente}
-                            onChange={handleInputChange} 
+                            onChange={handleInputChange}
                         />
                     </Grid>
 
@@ -508,9 +654,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     <TextField
                         fullWidth
                         size="small"
-                        variant="standard"
-                        label="Número"
                         name="numero"
+                        label="Número"
+                        variant="standard"
                         value={currentFuente.numero}
                         onChange={handleCurrentFuenteChange}
                     />
@@ -529,7 +675,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         onChange={handleCurrentFuenteChange}
                     />
                 </Grid>
-              
+
 
 
 
@@ -538,7 +684,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="nombreFuente"
+                        label="Nombre de fuente"
                         name="nombreFuente"
                         value={currentFuente.nombreFuente}
                         onChange={handleCurrentFuenteChange}
@@ -549,7 +695,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="caudalConcesionado"
+                        label="Caudal concesionado"
                         name="caudalConcesionado"
                         value={currentFuente.caudalConcesionado}
                         onChange={handleCurrentFuenteChange}
@@ -560,13 +706,35 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="sistemaMedicionAguaCaptada"
+                        label="Sistema de medicion de agua captada"
                         name="sistemaMedicionAguaCaptada"
                         value={currentFuente.sistemaMedicionAguaCaptada}
                         onChange={handleCurrentFuenteChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Cordenada X"
+                        name="cordenadaX"
+                        value={currentFuente.cordenadaX}
+                        onChange={handleCurrentFuenteChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Cordenada Y"
+                        name="cordenadaY"
+                        value={currentFuente.cordenadaY}
+                        onChange={handleCurrentFuenteChange}
+                    />
+                </Grid>
+                {/* <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
                         size="small"
@@ -584,8 +752,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             }));
                         }}
                     />
-                </Grid>
-                <Grid item xs={12} sm={4}>
+                </Grid> */}
+                {/* <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
                         size="small"
@@ -603,7 +771,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             }));
                         }}
                     />
-                </Grid>
+                </Grid> */}
 
 
 
@@ -613,14 +781,23 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 <Grid item >
                     <Button color='success'
                         variant='contained'
-                        startIcon={<AddIcon />} onClick={agregarFuente}>
+                        startIcon={<AddIcon />}
+                        onClick={agregarFuente}>
                         Agregar Fuente
                     </Button>
                 </Grid>
+                <Grid item xs={12} sm={12} marginTop={2}  >
+                    <DataGrid
+                        autoHeight
+                        pageSize={10}
+                        columns={columnas}
+                        density="compact"
+                        rowsPerPageOptions={[10]}
+                        rows={formData.informacionFuentesAbastecimiento.map((row, index) => ({ ...row, id: index }))}
+                        getRowId={(row) => row.id}
+                    />
 
-
-
-
+                </Grid>
             </Grid>
 
 
@@ -646,7 +823,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="numeroUsuarios "
+                        label="Número  de Usuarios "
                         name="numeroUsuarios"
                         value={formData.factoresUtilizacion.numeroUsuarios}
                         onChange={(event) => {
@@ -660,13 +837,36 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label=" consumo de Usuarios (lt/hab-dia) "
+                        name="consumoNumeroUsuarios"
+                        value={formData.factoresUtilizacion.consumoNumeroUsuarios}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroUsuarios: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+
+                </Grid>
+
 
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="numeroBovinos "
+                        label="Número  de bovinos "
                         name="numeroBovinos"
                         value={formData.factoresUtilizacion.numeroBovinos}
                         onChange={(event) => {
@@ -685,7 +885,31 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="numeroPorcinos "
+                        label=" consumo de bovinos (lt/hab-dia) "
+                        name="consumoNumeroBovinos "
+                        value={formData.factoresUtilizacion.consumoNumeroBovinos}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroBovinos: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Número de Porcinos "
                         name="numeroPorcinos"
                         value={formData.factoresUtilizacion.numeroPorcinos}
                         onChange={(event) => {
@@ -704,7 +928,29 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="numeroHectareas "
+                        label=" consumo de porcinos (lt/hab-dia) "
+                        name="consumoNumeroPorcinos"
+                        value={formData.factoresUtilizacion.consumoNumeroPorcinos}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroPorcinos: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Número hectáreas "
                         name="numeroHectareas"
                         value={formData.factoresUtilizacion.numeroHectareas}
                         onChange={(event) => {
@@ -719,24 +965,27 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            label="consumoNumeroUsuarios "
-                            name="consumoNumeroUsuarios"
-                            value={formData.factoresUtilizacion.consumoNumeroUsuarios}
-                            onChange={(event) => {
-                                setFormData(prevState => ({
-                                    ...prevState,
-                                    factoresUtilizacion: {
-                                        ...prevState.factoresUtilizacion,
-                                        consumoNumeroUsuarios: parseFloat(event.target.value) || 0
-                                    }
-                                }));
-                            }}
-                        />
-                    </Grid>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label=" consumo de hectareas (lt/hab-dia) "
+                        name="consumoNumeroHectareas"
+                        value={formData.factoresUtilizacion.consumoNumeroHectareas}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroHectareas: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+
+
+
             </Grid>
 
 
@@ -770,81 +1019,99 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <>
-                    <Title title=" Captación mensual de agua" />
 
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            name="periodoUso"
-                            variant="standard"
-                            label="Periodo de Uso"
-                            value={currentCaptacion.periodoUso}
-                            onChange={handleCurrentCaptacionChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            name="tiempoUso"
-                            variant="standard"
-                            label="tiempo de Uso"
-                            value={currentCaptacion.tiempoUso}
-                            onChange={handleCurrentCaptacionChange}
-                        />
-                    </Grid>
+                <Title title=" Captación mensual de agua" />
 
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            name="caudalUtilizado"
-                            label="caudalUtilizado"
-                            value={currentCaptacion.caudalUtilizado}
-                            onChange={handleCurrentCaptacionChange}
-                        />
-                    </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        name="periodoUso"
+                        variant="standard"
+                        label="Periodo de Uso"
+                        value={currentCaptacion.periodoUso}
+                        onChange={handleCurrentCaptacionChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        name="tiempoUso"
+                        variant="standard"
+                        label="Tiempo de Uso"
+                        value={currentCaptacion.tiempoUso}
+                        onChange={handleCurrentCaptacionChange}
+                    />
+                </Grid>
 
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            label="volumenAguaCaptada"
-                            name="volumenAguaCaptada"
-                            value={currentCaptacion.volumenAguaCaptada}
-                            onChange={handleCurrentCaptacionChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <FormControl fullWidth size="small" variant="standard">
-                            <InputLabel>Mes</InputLabel>
-                            <Select
-                                label="Mes"
-                                name="mes"
-                                value={currentCaptacion.mes}
-                                onChange={handleCurrentCaptacionChange}
-                            >
-                                <MenuItem value={1}>Enero</MenuItem>
-                                <MenuItem value={2}>Febrero</MenuItem>
-                                <MenuItem value={3}>Marzo</MenuItem>
-                                <MenuItem value={4}>Abril</MenuItem>
-                                <MenuItem value={5}>Mayo</MenuItem>
-                                <MenuItem value={6}>Junio</MenuItem>
-                                <MenuItem value={7}>Julio</MenuItem>
-                                <MenuItem value={8}>Agosto</MenuItem>
-                                <MenuItem value={9}>Septiembre</MenuItem>
-                                <MenuItem value={10}>Octubre</MenuItem>
-                                <MenuItem value={11}>Noviembre</MenuItem>
-                                <MenuItem value={12}>Diciembre</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        name="caudalUtilizado"
+                        label="Caudal utilizado"
+                        value={currentCaptacion.caudalUtilizado}
+                        onChange={handleCurrentCaptacionChange}
+                    />
+                </Grid>
 
-                    {/* 
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Volumen de agua captada"
+                        name="volumenAguaCaptada"
+                        value={currentCaptacion.volumenAguaCaptada}
+                        onChange={handleCurrentCaptacionChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small" variant="standard">
+                        <InputLabel>Mes</InputLabel>
+                        <Select
+                            label="Mes"
+                            name="mes"
+                            value={currentCaptacion.mes}
+                            onChange={handleCurrentCaptacionChange}
+                        >
+                            <MenuItem value={1}>Enero</MenuItem>
+                            <MenuItem value={2}>Febrero</MenuItem>
+                            <MenuItem value={3}>Marzo</MenuItem>
+                            <MenuItem value={4}>Abril</MenuItem>
+                            <MenuItem value={5}>Mayo</MenuItem>
+                            <MenuItem value={6}>Junio</MenuItem>
+                            <MenuItem value={7}>Julio</MenuItem>
+                            <MenuItem value={8}>Agosto</MenuItem>
+                            <MenuItem value={9}>Septiembre</MenuItem>
+                            <MenuItem value={10}>Octubre</MenuItem>
+                            <MenuItem value={11}>Noviembre</MenuItem>
+                            <MenuItem value={12}>Diciembre</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item >
+                    <Button color='success'
+                        variant='contained'
+                        startIcon={<AddIcon />} onClick={agregarCaptacion}>
+                        Agregar Captación
+                    </Button>
+                </Grid>
+
+                <Grid item xs={12} sm={12} marginTop={2} >
+                    <DataGrid
+                        autoHeight
+                        pageSize={10}
+                        columns={columnas_captacion}
+                        density="compact"
+                        rowsPerPageOptions={[10]}
+                        rows={formData.captacionesMensualesAgua.map((row, index) => ({ ...row, id: index }))}
+                        getRowId={(row) => row.id}
+                    />
+                </Grid>
+                {/* 
                     <Grid item >
 
 
@@ -868,7 +1135,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
  */}
 
 
-                    {/* 
+                {/* 
 
 
                     <Grid item xs={12} sm={4}>
@@ -910,7 +1177,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
                         />
                     </Grid> */}
-                    {/* <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
                             size="small"
@@ -934,18 +1201,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     </Grid>
                   
  */}
-                    <Grid item >
-                        <Button color='success'
-                            variant='contained'
-                            startIcon={<AddIcon />} onClick={agregarCaptacion}>
-                            Agregar Captación
-                        </Button>
-
-                    </Grid>
 
 
 
-                </>
+
+
             </Grid>
 
 

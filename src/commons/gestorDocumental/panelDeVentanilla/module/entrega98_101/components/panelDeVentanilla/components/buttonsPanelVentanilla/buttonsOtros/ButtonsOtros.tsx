@@ -8,7 +8,7 @@ import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAle
 import Swal from 'sweetalert2';
 import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
-import { postDigitalizacionPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service'
+import { postDigitalizacionOtros } from '../../../../../../../toolkit/thunks/otros/postDigitalizacionOtros.service';
 
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -17,10 +17,10 @@ export const ButtonsOtros: React.FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
   //* redux states
   const actionsOtros = useAppSelector((state) => state.PanelVentanillaSlice.actionsOtros);
- /* const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+ const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );*/
+  );
   //* navigate declaration
   const navigate = useNavigate();
 
@@ -30,18 +30,8 @@ export const ButtonsOtros: React.FC = (): JSX.Element => {
 
   const sendDigitalizationRequest = async () => {
     // ! pendiente de implementar el servicio de digitalización para los otros
-
-    // const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
-    Swal.fire({
-      title: 'Perfecto',
-      text: 'Se ha enviado la solicitud de digitalización.',
-      icon: 'info',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      allowEnterKey: false,
-    });
-
-    // await postDigitalizacionPqrsdf(id_PQRSDF);
+    const { id_otros } = currentElementPqrsdComplementoTramitesYotros;
+    await postDigitalizacionOtros(id_otros);
     // dispatch(resetPanelVentanillaFull());
   };
 
@@ -56,7 +46,8 @@ export const ButtonsOtros: React.FC = (): JSX.Element => {
       denyButtonColor: '#d33',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // await sendDigitalizationRequest();
+        console.log('estoy enviando la solicitu de digitalización de la solicitud de otros')
+        await sendDigitalizationRequest();
       } else if (result.isDenied) {
         showAlert(
           'Opps...',

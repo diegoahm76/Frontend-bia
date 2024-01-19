@@ -133,7 +133,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 

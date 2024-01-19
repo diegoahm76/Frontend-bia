@@ -7,6 +7,7 @@ import {
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import {
+  setActionsOtros,
   setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
@@ -16,20 +17,26 @@ import { control_warning } from '../../../../../../../../../almacen/configuracio
 import Swal from 'sweetalert2';
 import TaskIcon from '@mui/icons-material/Task';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ModalOtros } from '../../../../../Atom/otrosModal/ModalOtros';
+import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { useContext } from 'react';
 
 export const ElementosOtros = (): JSX.Element => {
   //* redux states
   const {
     listaElementosPqrsfTramitesUotros,
     currentElementPqrsdComplementoTramitesYotros,
+    actionsOtros,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
+
+  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
 
   //* dispatch necesario
   const dispatch = useAppDispatch();
 
   //* FUNCTIONS ---------------
-  const setActionsOtrosManejo = (pqrsdf: any) => {
-    if (pqrsdf.estado_solicitud === 'EN GESTION') {
+  const setActionsOtrosManejo = (otro: any) => {
+    if (otro.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
         icon: 'error',
@@ -39,66 +46,63 @@ export const ElementosOtros = (): JSX.Element => {
       return;
     }
 
-    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(pqrsdf));
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(otro));
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 
-    /*const shouldDisable = (actionId: string) => {
-        const isAsigGrup = actionId === 'AsigGrup';
-        const isDig = actionId === 'Dig';
-        const hasAnexos = pqrsdf.cantidad_anexos > 0;
-        const requiresDigitalization = pqrsdf.requiere_digitalizacion;
-        const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
-        const isEnVentanillaSinPendientes =
-          pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
-        const isEnVentanillaConPendientes =
-          pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
-  
-        // Primer caso
-        if (isRadicado && !hasAnexos && isDig) {
-          return true;
-        }
-  
-        // Segundo caso
-        if (isRadicado && hasAnexos && !requiresDigitalization) {
-          return false;
-        }
-  
-        // Tercer caso
-        if (isRadicado && hasAnexos && requiresDigitalization) {
-          return isAsigGrup;
-        }
-  
-        // Cuarto caso
-        if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-          return false;
-        }
-  
-        // Quinto caso
-        if (isEnVentanillaSinPendientes && requiresDigitalization) {
-          return isAsigGrup;
-        }
-  
-        // Sexto caso
-        if (isEnVentanillaConPendientes) {
-          return isAsigGrup;
-        }
-  
-        // Caso por defecto
-        return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
-      };
-  
-      const actionsPQRSDF = actions.map((action: any) => ({
-        ...action,
-        disabled: shouldDisable(action.id),
-      }));
-  
-      //  console.log('')(actionsPQRSDF);
-      dispatch(setActionssToManagePermissions(actionsPQRSDF));*/
+    /*    const shouldDisable = (actionId: string) => {
+      const isAsigGrup = actionId === 'AsigGrupOtro';
+      const isDig = actionId === 'DigOtro';
+      const hasAnexos = otro.cantidad_anexos > 0;
+      const requiresDigitalization = otro.requiere_digitalizacion;
+      const isRadicado = otro.estado_solicitud === 'RADICADO';
+      const isEnVentanillaSinPendientes =
+      otro.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+      const isEnVentanillaConPendientes =
+      otro.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+      const isEnGestion = otro.estado_solicitud === 'EN GESTION';
+
+      if (isEnGestion) {
+        return true;
+      }
+
+      if (isRadicado && !hasAnexos && isDig) {
+        return true;
+      }
+
+      if (isRadicado && hasAnexos && !requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      if (isRadicado && hasAnexos && requiresDigitalization) {
+        return isDig;
+      }
+
+      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      if (isEnVentanillaSinPendientes && requiresDigitalization) {
+        return isDig;
+      }
+
+      if (isEnVentanillaConPendientes) {
+        return isAsigGrup;
+      }
+
+      return actionId === 'DigOtro' && !(requiresDigitalization && hasAnexos);
+    };
+
+    const actionsOtrosNew = actionsOtros.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+
+    dispatch(setActionsOtros(actionsOtrosNew));*/
   };
 
   // ? columns config
@@ -196,6 +200,8 @@ export const ElementosOtros = (): JSX.Element => {
               <IconButton
                 onClick={() => {
                   console.log('jiji', params.row);
+                  handleOpenModalOne(true);
+                  setActionsOtrosManejo(params?.row);
                   /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     //  console.log('')(res);
                     setActionsOtrosManejo(params?.row);
@@ -296,9 +302,8 @@ export const ElementosOtros = (): JSX.Element => {
         }
       />
       {/*modal para ver la información de la solicitud de otro seleccionada*/}
-      {/*<ModalOpaInformacion />*/}{' '}
-      {/*se debe realizar el código de dicho modal, ya que aún no se encuentra implemenetado*/}
-      {/*modal para ver la información de la OPA seleccionada*/}
+      <ModalOtros />
+      {/*modal para ver la información de la solicitud de otro seleccionada*/}
     </>
   );
 };
