@@ -42,6 +42,9 @@ interface FactoresUtilizacion {
     numeroUsuarios: number | null;
     numeroHectareas: number | null;
     consumoNumeroUsuarios: number | null;
+    consumoNumeroBovinos: any;
+    consumoNumeroPorcinos: any;
+    consumoNumeroHectareas: any;
 }
 interface Campo {
     nombre: string;
@@ -112,13 +115,16 @@ export const AutodeclaracionFormulario: React.FC = () => {
         expediente: null,
         fechaCreacion: "",
         informacionFuentesAbastecimiento: [],
-      
+
         factoresUtilizacion: {
             numeroUsuarios: null,
             numeroBovinos: null,
             numeroPorcinos: null,
             numeroHectareas: null,
             consumoNumeroUsuarios: null,
+            consumoNumeroBovinos: null,
+            consumoNumeroPorcinos: null,
+            consumoNumeroHectareas: null,
         },
         captacionesMensualesAgua: []
     };
@@ -195,7 +201,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
             { nombre: 'Volumen de agua captada', valor: currentCaptacion.volumenAguaCaptada },
             { nombre: 'Mes', valor: currentCaptacion.mes },
         ];
-    
+
         for (let campo of campos) {
             if (campo.valor === null || campo.valor === '') {
                 return campo.nombre;
@@ -208,10 +214,10 @@ export const AutodeclaracionFormulario: React.FC = () => {
         // Verificar si el mes ya existe en los datos
         const mesYaExiste = formData.captacionesMensualesAgua.some(captacion => captacion.mes === currentCaptacion.mes);
         const campoFaltante = verificarDatosCaptacion();
-    if (campoFaltante) {
-        control_error(`Falta agregar dato: ${campoFaltante}`);
-        return;
-    }
+        if (campoFaltante) {
+            control_error(`Falta agregar dato: ${campoFaltante}`);
+            return;
+        }
 
         const camposRequeridos = {
             periodoUso: 'Periodo de Uso',
@@ -220,15 +226,15 @@ export const AutodeclaracionFormulario: React.FC = () => {
             volumenAguaCaptada: 'Volumen de Agua Captada',
             mes: 'Mes'
         };
-    
-        
+
+
         if (mesYaExiste) {
             // Mostrar una alerta si el mes ya fue agregado
             control_error("Mes ya agregado ");
 
-        } 
-        
-        
+        }
+
+
         else {
             // Proceder a agregar la captación si el mes no existe
             setFormData(prevState => ({
@@ -283,8 +289,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
         nombreFuente: "",
         caudalConcesionado: "",
         sistemaMedicionAguaCaptada: "",
-        cordenadaX:null,
-        cordenadaY:null,
+        cordenadaX: null,
+        cordenadaY: null,
     });
     const handleCurrentFuenteChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;
@@ -301,7 +307,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
             { nombre: 'Cordenada X', valor: currentFuente.cordenadaX },
             { nombre: 'Cordenada Y', valor: currentFuente.cordenadaY },
         ];
-    
+
         for (let campo of campos) {
             if (campo.valor === null || campo.valor === '' || (typeof campo.valor === 'number' && isNaN(campo.valor))) {
                 return campo.nombre;
@@ -327,8 +333,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
             nombreFuente: "",
             caudalConcesionado: "",
             sistemaMedicionAguaCaptada: "",
-            cordenadaX:null,
-            cordenadaY:null,
+            cordenadaX: null,
+            cordenadaY: null,
 
         });
     };
@@ -780,7 +786,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         Agregar Fuente
                     </Button>
                 </Grid>
-                <Grid item xs={12} sm={12} marginTop={2}  > 
+                <Grid item xs={12} sm={12} marginTop={2}  >
                     <DataGrid
                         autoHeight
                         pageSize={10}
@@ -836,7 +842,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="Numero de consumo de Usuarios (lt/hab-dia) "
+                        label=" consumo de Usuarios (lt/hab-dia) "
                         name="consumoNumeroUsuarios"
                         value={formData.factoresUtilizacion.consumoNumeroUsuarios}
                         onChange={(event) => {
@@ -850,6 +856,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
+                <Grid item xs={12} sm={4}>
+
+                </Grid>
+
+
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -874,6 +885,30 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
+                        label=" consumo de bovinos (lt/hab-dia) "
+                        name="consumoNumeroBovinos "
+                        value={formData.factoresUtilizacion.consumoNumeroBovinos}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroBovinos: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
                         label="Número de Porcinos "
                         name="numeroPorcinos"
                         value={formData.factoresUtilizacion.numeroPorcinos}
@@ -893,7 +928,29 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="Porcinos hectáreas "
+                        label=" consumo de porcinos (lt/hab-dia) "
+                        name="consumoNumeroPorcinos"
+                        value={formData.factoresUtilizacion.consumoNumeroPorcinos}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroPorcinos: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Número hectáreas "
                         name="numeroHectareas"
                         value={formData.factoresUtilizacion.numeroHectareas}
                         onChange={(event) => {
@@ -907,7 +964,28 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
-           
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label=" consumo de hectareas (lt/hab-dia) "
+                        name="consumoNumeroHectareas"
+                        value={formData.factoresUtilizacion.consumoNumeroHectareas}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroHectareas: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+
+
+
             </Grid>
 
 
@@ -1019,10 +1097,10 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant='contained'
                         startIcon={<AddIcon />} onClick={agregarCaptacion}>
                         Agregar Captación
-                    </Button> 
+                    </Button>
                 </Grid>
-                
-                <Grid item xs={12} sm={12} marginTop={2} > 
+
+                <Grid item xs={12} sm={12} marginTop={2} >
                     <DataGrid
                         autoHeight
                         pageSize={10}
@@ -1123,7 +1201,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     </Grid>
                   
  */}
-               
+
 
 
 
