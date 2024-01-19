@@ -109,6 +109,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
     switch (tipoDeTarea) {
       case 'Responder PQRSDF':
+      case 'RESPONDER PQRSDF':
         await searchPqrsdf();
         break;
 
@@ -214,7 +215,8 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
               {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
                 ?.label === 'Responder PQRSDF' ||
               !controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                ?.label ? (
+                ?.label || controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                ?.label === 'RESPONDER PQRSDF' ? (
                 <BuscadorPqrsdf
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />

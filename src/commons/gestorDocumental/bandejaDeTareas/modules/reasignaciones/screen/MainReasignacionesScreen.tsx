@@ -47,6 +47,7 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
 
     switch (tipo) {
+      case 'RESPONDER PQRSDF':
       case 'Responder PQRSDF':
         void getReAsignacionesTareasPqrsdf(
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
