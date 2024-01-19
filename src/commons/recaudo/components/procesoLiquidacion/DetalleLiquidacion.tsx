@@ -13,6 +13,38 @@ import EditIcon from '@mui/icons-material/Edit';
 import { api } from "../../../../api/axios";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
 import { jsPDF } from 'jspdf';
+import { htmlContent } from "./cons";
+interface LiquidacionResponse {
+  success: boolean;
+  detail: string;
+  data: {
+      rp: number;
+      limite_pago: string;
+      doc_cobro: string;
+      ley: string;
+      fecha_impresion: string;
+      anio: number;
+      cedula: string;
+      titular: string;
+      representante_legal: string;
+      direccion: string;
+      telefono: string;
+      expediente: string;
+      exp_resolucion: string;
+      nombre_fuente: string;
+      predio: string;
+      municipio: string;
+      caudal_consecionado: number;
+      uso: string;
+      fr: number;
+      tt: number;
+      numero_cuota: string;
+      valor_cuota: number;
+      codigo_barras: string;
+      factor_costo_oportunidad: number;
+  };
+}
+
 
 interface IProps {
   rows_detalles: RowDetalles[];
@@ -156,8 +188,32 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
     },
   ]
 
+//codigo miguel para visor de factura 
+  const encodedHtml = encodeURIComponent(htmlContent);
+  const dataUri = 'data:text/html;charset=utf-8,' + encodedHtml;
+  const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+
+
+  const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
+    try {
+        const response = await api.get<LiquidacionResponse>('/recaudo/liquidaciones/liquidacion-pdf_miguel/16/');
+       
+            setLiquidacion(response.data);
+            console.log("Datos de liquidación cargados con éxito"); 
+    } catch (error: any) {
+        console.error('Error al cargar los datos de liquidación', error);
+        // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
+    }
+};
+  useEffect(() => {
+      cargarLiquidacion(setLiquidacion);
+  }, []);
+
   return (
     <>
+    
+{liquidacion?.data.cedula}
+
       <Grid
         container
         sx={{
@@ -172,7 +228,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
         <Grid item xs={12}>
           <Title title="Detalle de liquidación"></Title>
 
-      
+
           <Grid container direction={'column'} sx={{ my: '20px' }} gap={1}>
             <Grid item xs={12}>
               <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
@@ -282,6 +338,31 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
           </Box>
         </Grid>
       </Grid>
+
+
+      {/* <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          width: '100%',
+          height: '800px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26'
+        }}
+      >
+        <Grid item xs={12} sm={8}>
+          <div dangerouslySetInnerHTML={{ __html: htmlContent }} style={{ width: '50%', height: '50%' }} />
+        </Grid>
+
+        <Grid item xs={12} sm={12}> 
+          <embed src={dataUri} type="text/html" width="100%" height="100%" />
+        </Grid>
+
+
+      </Grid> */}
     </>
   )
 }
