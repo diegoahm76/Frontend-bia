@@ -17,6 +17,9 @@ import { control_warning } from '../../../../../../../../../almacen/configuracio
 import Swal from 'sweetalert2';
 import TaskIcon from '@mui/icons-material/Task';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ModalOtros } from '../../../../../Atom/otrosModal/ModalOtros';
+import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { useContext } from 'react';
 
 export const ElementosOtros = (): JSX.Element => {
   //* redux states
@@ -26,12 +29,13 @@ export const ElementosOtros = (): JSX.Element => {
     actionsOtros,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
+  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
+
   //* dispatch necesario
   const dispatch = useAppDispatch();
 
   //* FUNCTIONS ---------------
   const setActionsOtrosManejo = (otro: any) => {
-    
     if (otro.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
@@ -46,12 +50,11 @@ export const ElementosOtros = (): JSX.Element => {
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 
-
-/*    const shouldDisable = (actionId: string) => {
+    /*    const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrupOtro';
       const isDig = actionId === 'DigOtro';
       const hasAnexos = otro.cantidad_anexos > 0;
@@ -197,6 +200,8 @@ export const ElementosOtros = (): JSX.Element => {
               <IconButton
                 onClick={() => {
                   console.log('jiji', params.row);
+                  handleOpenModalOne(true);
+                  setActionsOtrosManejo(params?.row);
                   /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     //  console.log('')(res);
                     setActionsOtrosManejo(params?.row);
@@ -297,9 +302,8 @@ export const ElementosOtros = (): JSX.Element => {
         }
       />
       {/*modal para ver la información de la solicitud de otro seleccionada*/}
-      {/*<ModalOpaInformacion />*/}{' '}
-      {/*se debe realizar el código de dicho modal, ya que aún no se encuentra implemenetado*/}
-      {/*modal para ver la información de la OPA seleccionada*/}
+      <ModalOtros />
+      {/*modal para ver la información de la solicitud de otro seleccionada*/}
     </>
   );
 };
