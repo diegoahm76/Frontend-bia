@@ -43,6 +43,7 @@ export interface IUserInfo {
   apoderados: any[];
   is_blocked: boolean;
   profile_img?: any;
+  is_loading?: boolean;
 }
 
 export interface UserData {

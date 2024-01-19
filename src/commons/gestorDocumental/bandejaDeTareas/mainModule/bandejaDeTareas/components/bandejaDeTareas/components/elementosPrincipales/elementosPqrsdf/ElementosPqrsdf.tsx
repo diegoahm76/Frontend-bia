@@ -19,6 +19,7 @@ import {
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import {
+  setActionssTareasPQRSDF,
   setCurrentTareaPqrsdfTramitesUotrosUopas,
   setInfoTarea,
   setListaTareasPqrsdfTramitesUotrosUopas,
@@ -33,10 +34,6 @@ import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAle
 import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
 import { getDetalleDeTarea } from '../../../../../services/servicesStates/pqrsdf/detalleDeTarea/getDetalleDeTarea.service';
-/*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
-import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
-import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
-import { ModalDenuncia } from '../../../../../Atom/components/ModalDenuncia';*/
 
 const iconStyles = {
   color: 'white',
@@ -56,7 +53,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   const {
     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
     listaTareasPqrsdfTramitesUotrosUopas,
-    // actionsTareasPQRSDF,
+    actionsTareasPQRSDF,
   } = useAppSelector((state) => state.BandejaTareasSlice);
   const {
     userinfo: { id_persona },
@@ -65,36 +62,14 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   //* navigate declaration
   const navigate = useNavigate();
   //* context declaration
+  const { setAnexos } = useContext(BandejaTareasContext);
   const {
-    //setRadicado,
-    // setValue,
-
-    // anexos,
-    // metadatos,
-    setAnexos,
-    //setMetadatos,
-  } = useContext(BandejaTareasContext);
-  const {
-    // handleGeneralLoading,
-    //handleThirdLoading,
-    //openModalOne: infoAnexos,
-    //openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
     handleSecondLoading,
     handleOpenModalNuevo,
     handleOpenModalNuevoNumero2,
   } = useContext(ModalAndLoadingContext);
-
-  //* loader button simulacion
-  /* const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
-    {}
-  );*/
-  //* loader button simulacion
-  /* const [loadingStatesUser, setLoadingStatesUser] = useState<
-    Record<string, boolean>
-  >({});
-*/
 
   // ? functions
 
@@ -154,69 +129,117 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
   };
 
   const setActionsPQRSDF = (tareaPQRSDF: any) => {
-    //  console.log('')(pqrsdf);
-    /*
-    if (pqrsdf.estado_solicitud === 'EN GESTION') {
-      void Swal.fire({
-        title: 'Opps...',
-        icon: 'error',
-        text: `Esta PQRSDF ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
-        showConfirmButton: true,
-      });
-      return;
-    }*/
-
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaPQRSDF));
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 
-    /*   const shouldDisable = (actionId: string) => {
-      const isAsigGrup = actionId === 'AsigGrup';
-      const isDig = actionId === 'Dig';
-      const hasAnexos = pqrsdf.cantidad_anexos > 0;
-      const requiresDigitalization = pqrsdf.requiere_digitalizacion;
-      const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
-      const isEnVentanillaSinPendientes =
-        pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
-      const isEnVentanillaConPendientes =
-        pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+    const shouldDisable = (actionId: string) => {
+      const isVerInfo = actionId === 'InfoSolictud';
+      const isResponder = actionId === 'RespondeSolicitud';
+      const isReasignar = actionId === 'Reasignar';
+      const isEnviarReq = actionId === 'RequerimientoUsuario';
+      const isVerRespReq =
+        actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario';
+      const isSegRespTarea = actionId === 'SeguimientoARespuesta';
+
+      const isNoSeleccionado = !tareaPQRSDF;
+      const isEstadoAsignacionNoDefinido =
+        tareaPQRSDF.estado_tarea === null || tareaPQRSDF.estado_tarea === '';
+      const isEstadoAsignacionRechazada =
+        tareaPQRSDF.estado_tarea === 'Rechazado';
+      const isEstadoAsignacionAceptada =
+        tareaPQRSDF.estado_tarea === 'Aceptado';
+
+
+      const isEstadoTareaEnProcesoRespuesta =
+        tareaPQRSDF.respondida_por === null || tareaPQRSDF.respondida_por === '';
+
+      const isEstadoTareaRespondida =
+        tareaPQRSDF.respondida_por;
+
+      const isEstadoTareaDelegada = tareaPQRSDF.tarea_reasignada_a;
+
+      const isEstadoReasignacionEnEspera =
+        tareaPQRSDF.estado_reasignacion_tarea === null || tareaPQRSDF.estado_reasignacion_tarea === '';
+
+      const isEstadoReasignacionRechazada =
+        tareaPQRSDF.estado_reasignacion_tarea === 'Rechazado';
+      const isEstadoReasignacionAceptada =
+        tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado';
+
+      const hasReqPendientes = tareaPQRSDF.requerimientos_pendientes_respuesta;
 
       // Primer caso
-      if (isRadicado && !hasAnexos && isDig) {
+      if (isNoSeleccionado) {
         return true;
       }
 
       // Segundo caso
-      if (isRadicado && hasAnexos && !requiresDigitalization) {
-        return false;
+      if (isEstadoAsignacionNoDefinido) {
+        return !isVerInfo;
       }
 
       // Tercer caso
-      if (isRadicado && hasAnexos && requiresDigitalization) {
-        return isAsigGrup;
+      if (isEstadoAsignacionRechazada) {
+        return !isVerInfo;
       }
 
       // Cuarto caso
-      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        !hasReqPendientes
+      ) {
         return false;
       }
 
       // Quinto caso
-      if (isEnVentanillaSinPendientes && requiresDigitalization) {
-        return isAsigGrup;
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        hasReqPendientes
+      ) {
+        return isResponder;
       }
 
       // Sexto caso
-      if (isEnVentanillaConPendientes) {
-        return isAsigGrup;
+      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
+        return false;
+      }
+
+      // Séptimo caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionEnEspera
+      ) {
+        return isResponder || isEnviarReq;
+      }
+
+      // Octavo caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionRechazada
+      ) {
+        return false;
+      }
+
+      // Noveno caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaDelegada &&
+        isEstadoReasignacionAceptada
+      ) {
+        return isResponder || isEnviarReq;
       }
 
       // Caso por defecto
-      return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
+      return true;
     };
 
     const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
@@ -224,13 +247,27 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       disabled: shouldDisable(action.id),
     }));
 
-    dispatch(setActionssToManagePermissions(actionsPQRSDF));*/
+    dispatch(setActionssTareasPQRSDF(actionsPQRSDF));
   };
 
   //* columns -------------------------------------------------------
 
   const columns = [
     ...columnsPqrsdf,
+    {
+      headerName: 'Requerimientos pendientes de respuesta',
+      field: 'requerimientos_pendientes_respuesta',
+      minWidth: 280,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ? 'Sí' : 'No'}
+            color={params.value ? 'success' : 'error'}
+          />
+        );
+      },
+    },
     {
       headerName: 'Días para respuesta',
       field: 'dias_para_respuesta',

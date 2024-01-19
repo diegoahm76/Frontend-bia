@@ -157,7 +157,7 @@ export const ResSolicitudUsuarioProvider = ({ children }: any): JSX.Element => {
     const [respuestaPqrsdfMade, setrespuestaPqrsdfMade] = useState(null)
 
 console.log('stivencontext', respuestaPqrs)
-
+console.log('stivencontextjhon', respuestaPqrsdfMade)
 
   const value = {
     infoInicialUsuario,

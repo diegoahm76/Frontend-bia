@@ -63,7 +63,6 @@ const BusquedaAvanzadaFisico = ({
   handle_close_buscar,
   set_tipo,
 }: IProps) => {
- 
   const {
     control: control_estante,
     handleSubmit: handle_submit_estante,
@@ -107,8 +106,6 @@ const BusquedaAvanzadaFisico = ({
   });
   const { depositos, estantes, bandejas, cajas, carpetas, depositos_tabla } =
     useAppSelector((state) => state.archivo_fisico);
-
-
 
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -1026,7 +1023,6 @@ const BusquedaAvanzadaFisico = ({
                       />
                     </Box>
                   </Grid>
-                  
                 </Grid>
               )}
 
@@ -1168,7 +1164,6 @@ const BusquedaAvanzadaFisico = ({
                       />
                     </Box>
                   </Grid>
-                 
                 </Grid>
               )}
             </Grid>
@@ -1315,28 +1310,33 @@ const BusquedaAvanzadaFisico = ({
               >
                 Buscar Carpeta
               </LoadingButton>
-
-             
             </Grid>
-            
           )}
 
-<Grid container spacing={2} justifyContent="center" marginTop={2}>
-              <LoadingButton
-                type="submit"
-                variant="outlined"
-                color="primary"
-                onClick={limpiar}
-              
+          <Grid container spacing={2} justifyContent="center" marginTop={2}>
+            
+          <Grid item margin={2}>
+            <LoadingButton
+              type="submit"
+              variant="outlined"
+              color="primary"
+              onClick={limpiar}
+            >
+              Limpiar
+            </LoadingButton>
+            </Grid>
+            <Grid item margin={2}>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handle_close_buscar}
               >
-                Limpiar
-              </LoadingButton>
-              </Grid>
-          
-          
+                Salir
+              </Button>
+            </Grid>
+          </Grid>
         </DialogContent>
       </Dialog>
-      
     </>
   );
 };

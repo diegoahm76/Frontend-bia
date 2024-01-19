@@ -1,5 +1,6 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { PantallaPrincipalConfiguracoinTiposExpediente } from '../screen/pantallaPrincipalTiposExpedientes';
+import { ConfiguracionTernañosiguiente } from '../components/configuracionTernañosiguiente/ConfiguracionTernañoSiguiente';
+import { ConfiguracionTerna } from '../components/comfiguracionTerna/ConfiguracionTerna';
 
 
 
@@ -10,8 +11,9 @@ export const ConfiguracionTiposExpedientes_Routes: React.FC = () => {
   return (
 
     <Routes>
-      <Route path="/configuraciontiposexpedientes" element={<PantallaPrincipalConfiguracoinTiposExpediente/>} />
-  
+      <Route path="/configuraciontiposexpedientes" element={<ConfiguracionTerna/>} />
+      <Route path="/configuraciontiposexpedientesañosiguiente" element={     <ConfiguracionTernañosiguiente />} />
+
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   

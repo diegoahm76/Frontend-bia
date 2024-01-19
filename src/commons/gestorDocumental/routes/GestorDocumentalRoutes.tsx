@@ -196,7 +196,11 @@ const routes = [
     name: 'central_digitalizacion',
     component: () => <CentralDigitalizacionRoutes />,
   },
-
+  {
+    path: 'rutesworkFlowpqrs/',
+    name: 'rutesworkFlowpqrs',
+    component: () => <RutesWorkFlowPQRSDF />,
+  },
   {
     path: 'solicitudes_otros/',
     name: 'solicitudes_otros',

@@ -20,6 +20,8 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { postAsignacionGrupo as postAsignacionGrupoPQRSDF } from '../../services/post/pqrsdf/postAsignacionGrupo.service';
 import { getAsignaciones as getAsignacionesPQRSDF } from '../../services/asignaciones/pqrsdf/getAsignaciones.service';
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
+import { getAsignacionesOtros } from '../../services/asignaciones/otros/getAsignacionesOtros.service';
+import { postAsignacionGrupoOtros } from '../../services/post/otros/postAsignacionGrupoOtros.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -82,7 +84,7 @@ export const AccionesFinales = (): JSX.Element => {
         break;
       case 'Tramites y Servicios':
         // Call the service for Tramites y Servicios
-      /*  res = await postAsignacionGrupoTramitesYServicios(
+        /*  res = await postAsignacionGrupoTramitesYServicios(
           {
             id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
             id_persona_asignada: liderAsignado?.id_persona,
@@ -91,25 +93,25 @@ export const AccionesFinales = (): JSX.Element => {
           handleSecondLoading
         );*/
         break;
-      case 'Otros':
+      case 'OTROS':
         // Call the service for Otros
-      /*  res = await postAsignacionGrupoOtros(
+        res = await postAsignacionGrupoOtros(
           {
-            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_otros: currentElementPqrsdComplementoTramitesYotros?.id_otros,
             id_persona_asignada: liderAsignado?.id_persona,
             id_und_org_seccion_asignada: currentGrupo?.value,
           },
           handleSecondLoading
-        );*/
+        );
         break;
-        case 'OPA':
-          // Call the service for OPA
-          showAlert(
-            'Estimado usuario:',
-            'No hay servicio aún para asignar la OPA, así que no se realiza asignacion por el momento',
-            'warning'
-          );
-          /*res = await postAsignacionGrupoOPA(
+      case 'OPA':
+        // Call the service for OPA
+        showAlert(
+          'Estimado usuario:',
+          'No hay servicio aún para asignar la OPA, así que no se realiza asignacion por el momento',
+          'warning'
+        );
+        /*res = await postAsignacionGrupoOPA(
             {
               id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
               id_persona_asignada: liderAsignado?.id_persona,
@@ -117,7 +119,7 @@ export const AccionesFinales = (): JSX.Element => {
             },
             handleSecondLoading
           );*/
-          break;
+        break;
       default:
         // Default service call or no service call
         break;
@@ -149,12 +151,13 @@ export const AccionesFinales = (): JSX.Element => {
             handleGeneralLoading
           );*/
           break;
-        case 'Otros':
-        // Fetch the assignments for Otros
-        /* asignaciones = await getAsignacionesOtros(
-            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+        case 'OTROS':
+          // Fetch the assignments for Otros
+          asignaciones = await getAsignacionesOtros(
+            currentElementPqrsdComplementoTramitesYotros?.id_otros,
             handleGeneralLoading
-          );*/
+          );
+          break;
         case 'OPA':
           showAlert(
             'Atención',

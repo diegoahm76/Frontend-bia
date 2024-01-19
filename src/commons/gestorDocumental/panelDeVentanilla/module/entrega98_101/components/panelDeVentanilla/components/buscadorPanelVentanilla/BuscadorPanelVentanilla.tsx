@@ -24,6 +24,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../context/Gener
 import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
 import { getOpasPanVen } from '../../../../../../toolkit/thunks/opas/getOpasPanVen.service';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { getGrilladoSolicitudesOtrosfPanelVentanilla } from '../../../../../../toolkit/thunks/otros/getOtrosGridPanel.service';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* dispatch declaration
@@ -78,20 +79,29 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitOtros = async () => {
-    //  console.log('')('submit , buscando coincidencias de otros');
-    showAlert(
-      'Estimado usuario!',
-      'Esta funcionalidad de Otros no está disponible ',
-      'warning'
+    const { radicado, estado_actual_solicitud, fecha_inicio, fecha_fin } =
+      watch_busqueda_panel_ventanilla;
+    const res = await getGrilladoSolicitudesOtrosfPanelVentanilla(
+      estado_actual_solicitud?.label,
+      radicado,
+      fecha_inicio,
+      fecha_fin,
+      handleSecondLoading
     );
 
+    showAlert(
+      'Estimado usuario!',
+      'Esta funcionalidad de OTROS se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
+      'warning'
+    );
+    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
     dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
 
   const searchSubmitopas = async () => {
- /*   const {
+    /*   const {
       nombre_titular,
       radicado,
       nombre_proyecto,
@@ -112,7 +122,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       '', // nombre_proyecto
       '', // estado_actual_solicitud?.label,
       '', //radicado,
-      '', // nombre_titular,
+      '' // nombre_titular,
     );
 
     dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
@@ -195,9 +205,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 name="tipo_de_solicitud"
                 control={control_busqueda_panel_ventanilla}
                 rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <div>
                     <Select
                       required
@@ -266,9 +274,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 name="fecha_inicio"
                 control={control_busqueda_panel_ventanilla}
                 defaultValue=""
-                render={({
-                  field: { onChange, value },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <TextField
                     fullWidth
                     label="Fecha inicio"
@@ -289,9 +295,7 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
                 name="fecha_fin"
                 control={control_busqueda_panel_ventanilla}
                 defaultValue=""
-                render={({
-                  field: { onChange, value },
-                }) => (
+                render={({ field: { onChange, value } }) => (
                   <TextField
                     fullWidth
                     label="Fecha final"

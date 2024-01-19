@@ -157,7 +157,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
                 <ListItemText key={`${params.row.id}-${key}`}>
                   <Stack direction={'row'} spacing={2} alignItems={'center'}>
                     <Typography variant="body1">{key}</Typography>:
-                    {estado_expediente === 'liquidado' ?
+                    {estado_expediente?.toLowerCase() === 'liquidado' ?
                       <Typography variant="body1">{value as string}</Typography> :
                       <TextField
                         name={key}
@@ -295,7 +295,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
 
             <Grid container justifyContent='center' sx={{ my: '20px' }}>
               <Grid item xs={3}>
-                {estado_expediente === 'activo' && (
+                {estado_expediente?.toLowerCase() === 'activo' && (
                   <Button
                     type="submit"
                     variant="contained"
@@ -321,7 +321,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
             />
             <Grid container justifyContent='center' sx={{ my: '20px' }}>
               <Grid item xs={3}>
-                {estado_expediente === 'guardado' && (
+                {estado_expediente?.toLowerCase() === 'guardado' && (
                   <Button
                     type="submit"
                     variant="contained"

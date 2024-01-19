@@ -254,13 +254,13 @@ export const DesbloqueodeUsuario: React.FC = () => {
               sitekey={process.env.REACT_APP_SITE_KEY ?? ''}
               hl="es"
               onChange={() => {
-                set_is_valida_captcha(true);
+                set_is_valida_captcha?.(true);
               }}
               onExpired={() => {
-                set_is_valida_captcha(false);
+                set_is_valida_captcha?.(false);
               }}
               onError={() => {
-                set_is_valida_captcha(false);
+                set_is_valida_captcha?.(false);
               }}
             />
           </Grid>
