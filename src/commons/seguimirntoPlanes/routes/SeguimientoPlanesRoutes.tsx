@@ -22,6 +22,7 @@ import { SeguimientoPAIRoutes } from '../SeguimientoPAI/router/SeguimientoPAIRou
 import { ConsultarPlanesRoutes } from '../Consultas/router/ConsultarPlanesRoutes';
 import { ConsultarSeguiminetoPAIRoutes } from '../ConsultaPAI/router/ConsultarPlanesRoutes';
 import { ConsultasRoutes } from '../Tableros/router/ConsultasRoutes';
+import { SeguimientoPOAIRoutes } from '../SeguiminetoPOAI/router/SeguimientoPOAIRoutes';
 
 const routes = [
   {
@@ -146,6 +147,12 @@ const routes = [
     path: 'consultas_pp/',
     name: 'consultas_pp',
     component: () => <ConsultasRoutes />,
+  },
+  // seguimiento poai SeguimientoPOAIRoutes
+  {
+    path: 'seguimiento_poai/',
+    name: 'seguimiento_poai',
+    component: () => <SeguimientoPOAIRoutes />,
   },
   {
     path: '/*',
