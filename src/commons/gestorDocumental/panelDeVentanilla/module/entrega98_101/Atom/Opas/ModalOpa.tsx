@@ -304,7 +304,7 @@ export const ModalOpa = () => {
               {infoAnexos.length > 0 ? (
                 <RenderDataGrid
                   title="Anexos de la OPA"
-                  rows={[...infoAnexos, ...infoAnexos, ...infoAnexos]}
+                  rows={[...infoAnexos]}
                   columns={columns ?? []}
                 />
               ) : (
@@ -329,7 +329,7 @@ export const ModalOpa = () => {
 
               {/*tercera parte, metadatos de cada archivo establecido*/}
 
-              {openModalTwo && (
+              {openModalTwo ? (
                 <>
                   <Grid
                     item
@@ -464,6 +464,24 @@ export const ModalOpa = () => {
                     />
                   </Grid>
                 </>
+              ) : (
+                <Box
+                  sx={{
+                    justifyContent: 'center',
+                    display: 'flex',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      mt: '1.5rem',
+                      mb: '1.5rem',
+                    }}
+                    variant="h6"
+                    align="center"
+                  >
+                    Sin metadatos y/o archivo
+                  </Typography>
+                </Box>
               )}
             </Grid>
           </DialogContent>
