@@ -18,7 +18,7 @@ export const Parte2Screen = ({
         mt: '2rem',
       }}
     >
-      <Title title="Requerimiento sobre una solicitud" />
+      <Title title="Respueda a una solicitud PQRSDF" />
       <FormParte2
         controlFormulario={controlFormulario}
         handleSubmitFormulario={handleSubmitFormulario}
