@@ -18,6 +18,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'; // Icono de flecha
 
 const steps = [
     { label: 'GUARDADO', value: 0 },
@@ -44,18 +45,11 @@ export const ModalFlujoDeTrabajo = () => {
     };
 
 
-    const varaible_poso=2;
+    const varaible_poso = 2;
     return (
         <>
             <Grid item xs={12} sm={5} md={3.6} lg={2.5}>
-                <Button
-                    startIcon={<ClearIcon />}
-                    fullWidth
-                    style={{ width: "90%", marginTop: 15, backgroundColor: "orange" }}
-                    variant="contained"
-                    onClick={() => { setEstaModalAbierta(true) }} >
-                    Consultar
-                </Button>
+                <ArrowForwardIcon onClick={() => { setEstaModalAbierta(true) }} />
             </Grid>
 
             <Dialog open={estaModalAbierta} fullWidth maxWidth="xl" onClose={cerrarModal}>
@@ -129,7 +123,7 @@ export const ModalFlujoDeTrabajo = () => {
     );
 };
 
-const getStepIcon = (index:any) => {
+const getStepIcon = (index: any) => {
     switch (index) {
         case 0:
             return <SaveOutlinedIcon />;
@@ -150,7 +144,7 @@ const getStepIcon = (index:any) => {
     }
 };
 
-const getSubStepIcon = (subIndex:any) => {
+const getSubStepIcon = (subIndex: any) => {
     switch (subIndex) {
         case 0:
             return <CheckIcon />;
