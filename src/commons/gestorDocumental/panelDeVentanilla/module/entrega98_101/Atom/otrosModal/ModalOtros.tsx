@@ -26,6 +26,10 @@ import { DownloadButton } from '../../../../../../../utils/DownloadButton/DownLo
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useAppSelector } from '../../../../../../../hooks';
 import { formatDate } from '../../../../../../../utils/functions/formatDate';
+import { getAnexosOtros } from '../../../../toolkit/thunks/otros/anexos/getAnexosOtros.service';
+import { columnsAnexoOtros } from './columns/columnsAnexoOtros';
+import { getMetadatosPqrsdf } from '../../../../toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
+import { getArchivoAnexoPqrsdf } from '../../../../toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
 
 export const ModalOtros = (): JSX.Element => {
   // ? redux states use
@@ -45,57 +49,23 @@ export const ModalOtros = (): JSX.Element => {
   //* use effect para cargar los datos de los anexos
 
   useEffect(() => {
-    // ! PENDIENTE DE GENERAR LAS INTERACCIONES CON LOS SERVICIOS DE BACKEND
-    // ? se obtiene la informacion de los anexos
-    // ? se debe cambiar por la informacion de la opa
-    const anexos = [
-      {
-        id: 1,
-        nombre_archivo: 'archivo1',
-        descripcion: 'descripcion1',
-        fecha_creacion: 'fecha1',
-        fecha_modificacion: 'fecha1',
-        usuario_creacion: 'usuario1',
-        usuario_modificacion: 'usuario1',
-        tipo_archivo: 'tipo1',
-        origen_archivo: 'origen1',
-        nombre_tipologia_documental: 'tipologia1',
-        asunto: 'asunto1',
-        palabras_clave_doc: ['palabra1', 'palabra2'],
-      },
-      {
-        id: 2,
-        nombre_archivo: 'archivo2',
-        descripcion: 'descripcion2',
-        fecha_creacion: 'fecha2',
-        fecha_modificacion: 'fecha2',
-        usuario_creacion: 'usuario2',
-        usuario_modificacion: 'usuario2',
-        tipo_archivo: 'tipo2',
-        origen_archivo: 'origen2',
-        nombre_tipologia_documental: 'tipologia2',
-        asunto: 'asunto2',
-        palabras_clave_doc: ['palabra1', 'palabra2'],
-      },
-    ];
-    setInfoAnexos(anexos);
-  }, []);
+    if (!openModalOne) return;
+
+    (async () => {
+      try {
+        const res = await getAnexosOtros(
+          currentElementPqrsdComplementoTramitesYotros.id_otros
+        );
+        setInfoAnexos(res);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [openModalOne]);
 
   const columns = [
-    ...[],
-    {
-      headerName: 'Archivo',
-      field: 'archivo',
-      width: 110,
-      renderCell: (params: any) => (
-        //* revisar el nombre del archivo, y las demas opciones
-        <DownloadButton
-          fileUrl={params.row.archivo}
-          fileName={params.row.nombre_archivo}
-          condition={false}
-        />
-      ),
-    },
+    ...columnsAnexoOtros,
     {
       headerName: 'Ver metadatos anexo',
       field: 'Detalle',
@@ -104,19 +74,22 @@ export const ModalOtros = (): JSX.Element => {
         <Tooltip title="Ver metadatos del anexo">
           <IconButton
             onClick={async () => {
-              handleOpenModalTwo(true);
-              /* await getMetadatosByAnexo(params.row.id_anexo, handleOpenModalTwo).then((res) => {
-                console.log(params.row)
-
-                setInfoMetadatos(res);
-              }).catch((err) => {
+              try {
+                handleOpenModalTwo(true);
+                const [resByAnexo, resPqrsdf] = await Promise.all([
+                  getArchivoAnexoPqrsdf(params.row.id_anexo),
+                  getMetadatosPqrsdf(params.row.id_anexo),
+                ]);
+                console.log('resByAnexo', resByAnexo);
+                console.log('resPqrsdf', resPqrsdf);
+                setInfoMetadatos({
+                  ...resByAnexo,
+                  ...resPqrsdf,
+                }); // or use resPqrsdf based on your requirement
+              } catch (err) {
                 console.log(err);
                 handleOpenModalTwo(false);
               }
-              );*/
-              // handleOpenModalOne(true); //* open modal
-              // await getInfoSolicitud(params);
-              setInfoMetadatos(params.row);
             }}
           >
             <Avatar
@@ -195,7 +168,6 @@ export const ModalOtros = (): JSX.Element => {
                   value={
                     formatDate(
                       currentElementPqrsdComplementoTramitesYotros?.fecha_radicado
-
                     ) ?? 'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
@@ -303,8 +275,8 @@ export const ModalOtros = (): JSX.Element => {
 
               {infoAnexos.length > 0 ? (
                 <RenderDataGrid
-                  title="Anexos de la OPA"
-                  rows={[...infoAnexos, ...infoAnexos, ...infoAnexos]}
+                  title="Anexos de la solicitud de otros"
+                  rows={[...infoAnexos]}
                   columns={columns ?? []}
                 />
               ) : (
@@ -329,8 +301,37 @@ export const ModalOtros = (): JSX.Element => {
 
               {/*tercera parte, metadatos de cada archivo establecido*/}
 
-              {openModalTwo && (
+              {openModalTwo ? (
                 <>
+                  <>
+                    <Title title={`Archivo anexo`} />
+                    <Grid
+                      container
+                      spacing={2}
+                      sx={{
+                        mt: '1.5rem',
+                        mb: '2rem',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        sx={{
+                          textAlign: 'center',
+                        }}
+                      >
+                        <DownloadButton
+                          fileName={`archivo anexo ${infoMetadatos?.nombre_de_Guardado}}`}
+                          fileUrl={infoMetadatos?.ruta_archivo ?? ''}
+                          condition={false}
+                        />
+                      </Grid>
+                    </Grid>
+                  </>
+
                   <Grid
                     item
                     xs={12}
@@ -346,9 +347,7 @@ export const ModalOtros = (): JSX.Element => {
                       label="Origen del archivo"
                       size="small"
                       variant="outlined"
-                      value={
-                        'ejeje siuu' /*infoMetadatos?.origen_archivo ?? 'N/A'*/
-                      }
+                      value={infoMetadatos?.origen_archivo ?? 'N/A'}
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
                     />
@@ -370,8 +369,7 @@ export const ModalOtros = (): JSX.Element => {
                       size="small"
                       variant="outlined"
                       value={
-                        'jejej siuu'
-                        /* infoMetadatos?.nombre_tipologia_documental ?? 'N/A'*/
+                        infoMetadatos?.nombre_tipologia_documental ?? 'N/A'
                       }
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
@@ -392,7 +390,7 @@ export const ModalOtros = (): JSX.Element => {
                       label="Asunto"
                       size="small"
                       variant="outlined"
-                      value={'jeje siuu' /*infoMetadatos?.asunto ?? 'N/A'*/}
+                      value={infoMetadatos?.asunto ?? 'N/A'}
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 50 }}
                     />
@@ -415,9 +413,7 @@ export const ModalOtros = (): JSX.Element => {
                       label="Descripción"
                       size="small"
                       variant="outlined"
-                      value={
-                        'jeje siuu ' /*infoMetadatos?.descripcion ?? 'N/A'*/
-                      }
+                      value={infoMetadatos?.descripcion ?? 'N/A'}
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
                     />
@@ -430,18 +426,14 @@ export const ModalOtros = (): JSX.Element => {
                     sx={{ mt: '1.2rem', mb: '1.2rem' }}
                   >
                     <Autocomplete
-                      value={
-                        [
-                          'jajeje',
-                        ] /*infoMetadatos?.palabras_clave_doc ?? ['N/A']*/
-                      }
+                      value={infoMetadatos?.palabras_clave_doc ?? ['N/A']}
                       disabled
                       multiple
                       id="tags-filled"
                       options={
-                        /*infoMetadatos?.palabras_clave_doc
+                        infoMetadatos?.palabras_clave_doc
                           ? infoMetadatos?.palabras_clave_doc
-                          : */ []
+                          : []
                       }
                       freeSolo
                       renderTags={(value: readonly string[], getTagProps) =>
@@ -455,15 +447,29 @@ export const ModalOtros = (): JSX.Element => {
                         ))
                       }
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Palabras claves"
-                          // placeholder="Seleccionar"
-                        />
+                        <TextField {...params} label="Palabras claves" />
                       )}
                     />
                   </Grid>
                 </>
+              ) : (
+                <Box
+                  sx={{
+                    justifyContent: 'center',
+                    display: 'flex',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      mt: '1.5rem',
+                      mb: '1.5rem',
+                    }}
+                    variant="h6"
+                    align="center"
+                  >
+                    Sin metadatos y/o archivo
+                  </Typography>
+                </Box>
               )}
             </Grid>
           </DialogContent>

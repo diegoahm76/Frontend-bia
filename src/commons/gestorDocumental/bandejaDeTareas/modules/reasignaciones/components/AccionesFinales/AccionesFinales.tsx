@@ -77,6 +77,7 @@ export const AccionesFinales = (): JSX.Element => {
     let res;
 
     switch (tipo) {
+      case 'RESPONDER PQRSDF':
       case 'Responder PQRSDF':
         res = await postReAsignacionTarea(
           {
@@ -141,6 +142,7 @@ export const AccionesFinales = (): JSX.Element => {
       let asignaciones;
 
       switch (tipo) {
+        case 'RESPONDER PQRSDF':
         case 'Responder PQRSDF':
           asignaciones = await getReAsignacionesTareasPqrsdf(
             // para pqrsdf
