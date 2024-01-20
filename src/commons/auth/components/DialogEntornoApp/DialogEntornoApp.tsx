@@ -161,6 +161,8 @@ export const DialogEntornoApp: React.FC = () => {
                       'Seleccione una empresa',
                       [...representante_legal].map((representante) => ({
                         representacion: representante,
+                        cod_relacion_con_el_titular:
+                          representante?.cod_relacion_con_el_titular,
                         value: representante?.razon_social,
                         label:
                           representante?.razon_social || 'Sin razón social',
@@ -183,6 +185,9 @@ export const DialogEntornoApp: React.FC = () => {
                       'Seleccione una persona',
                       [...apoderados].map((apoderado) => ({
                         representacion: apoderado,
+                        cod_relacion_con_el_titular:
+                          apoderado?.cod_relacion_con_el_titular,
+
                         value: apoderado?.id_apoderados_persona,
                         label:
                           apoderado?.nombre_persona_poderdante || 'Sin nombre',

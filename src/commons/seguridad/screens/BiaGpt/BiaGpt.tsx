@@ -22,13 +22,9 @@ export const BiaGpt = (): JSX.Element => {
     }) => state.layout
   );
 
-  const { representacion_legal, userinfo, permisos, apoderados } = useAppSelector((state) => state.auth);
+  const { representacion_legal, userinfo } = useAppSelector((state) => state.auth);
 
-  console.log('console.log, presenteacion legal', representacion_legal);
-  console.log('userinfouserinfouserinfo', userinfo);
-  console.log('permisospermisospermisos', permisos);
   console.log('representante_legalrepresentante_legalrepresentante_legal', representacion_legal)
-  console.log('apoderadosapoderadosapoderados', apoderados)
 
   useEffect(() => {
     console.log('userinfouserinfouserinfo', userinfo);
