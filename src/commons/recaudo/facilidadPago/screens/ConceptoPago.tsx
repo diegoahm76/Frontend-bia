@@ -105,31 +105,31 @@ export const ConceptoPago: React.FC = () => {
         { field: 'fecha_fin', headerName: 'Fecha fin', width: 130, flex: 1 },
 
 
-        { field: 'valor', headerName: 'valor', width: 130, flex: 1 },
+        // { field: 'valor', headerName: 'valor', width: 130, flex: 1 },
 
-        {
-            field: 'Acciones',
-            headerName: 'Acciones',
-            width: 200,
-            flex: 1,
-            renderCell: (params: any) => (
-                <>
-                    <IconButton
-                        color="error"
-                        onClick={() => handleEliminarConfiguracion(params.row.id_valores_variables)}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
+        // {
+        //     field: 'Acciones',
+        //     headerName: 'Acciones',
+        //     width: 200,
+        //     flex: 1,
+        //     renderCell: (params: any) => (
+        //         <>
+        //             <IconButton
+        //                 color="error"
+        //                 onClick={() => handleEliminarConfiguracion(params.row.id_valores_variables)}
+        //             >
+        //                 <DeleteIcon />
+        //             </IconButton>
 
-                    <IconButton
-                        color="primary"
-                        onClick={() => handleAbrirEditar(params.row)}
-                    >
-                        <EditIcon />
-                    </IconButton>
-                </>
-            )
-        },
+        //             <IconButton
+        //                 color="primary"
+        //                 onClick={() => handleAbrirEditar(params.row)}
+        //             >
+        //                 <EditIcon />
+        //             </IconButton>
+        //         </>
+        //     )
+        // },
 
     ];
 
