@@ -290,7 +290,7 @@ const use_ccd = () => {
 
     set_list_unitys(
       filteredUnityOrganigram
-        .filter((item: any) => item.activo)
+        .filter((item: any) => item.activo && item.cod_agrupacion_documental)
         .map((item: any) => ({
           label: item?.nombre,
           value: item.id_unidad_organizacional!,
@@ -334,15 +334,22 @@ const use_ccd = () => {
 
   useEffect(() => {
     set_list_sries_asignacion(
-      seriesAndSubseries.map((item: any) => ({
-        item,
-        label: `${item.codigo_serie ? item.codigo_serie : ''} - ${
-          item.nombre_serie ? item.nombre_serie : ''
-        } - ${
-          item.nombre_subserie ? item.nombre_subserie : '(serie independiente)'
-        } - ${item.codigo_subserie ? item.codigo_subserie : ''}`,
-        value: `${item.id_serie_doc} - ${item.id_catalogo_serie}`,
-      }))
+      seriesAndSubseries
+        /*        .filter(
+          (el: { cod_agrupacion_documental: string }) =>
+            el.cod_agrupacion_documental
+        )*/
+        ?.map((item: any) => ({
+          item,
+          label: `${item.codigo_serie ? item.codigo_serie : ''} - ${
+            item.nombre_serie ? item.nombre_serie : ''
+          } - ${
+            item.nombre_subserie
+              ? item.nombre_subserie
+              : '(serie independiente)'
+          } - ${item.codigo_subserie ? item.codigo_subserie : ''}`,
+          value: `${item.id_serie_doc} - ${item.id_catalogo_serie}`,
+        }))
     );
   }, [seriesAndSubseries]);
 

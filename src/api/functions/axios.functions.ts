@@ -25,9 +25,8 @@ const handleRequest = async (request: any) => {
   return request;
 };
 
-const handleRequestError = async (error: any, /*dispatch: any*/) => {
+const handleRequestError = async (error: any, ) => {
   await handleSessionExpiry();
-  // dispatch(logout(''));
   return await Promise.reject(error);
 };
 
