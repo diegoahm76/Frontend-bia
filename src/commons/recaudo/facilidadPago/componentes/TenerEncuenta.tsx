@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -66,6 +67,7 @@ export const TenerEncuenta: React.FC<BuscarProps> = ({ is_modal_active, set_is_m
                             <li>En caso de que la propuesta de facilidad de pago sea superior a 1 año, debe de cumplir con alguna garantía.</li>
                         </ul>
                     </div>
+                    
                     <div>
                         <h3>Persona jurídica:</h3>
                         <ul>
