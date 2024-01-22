@@ -25,6 +25,9 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import VideoLabelIcon from '@mui/icons-material/VideoLabel';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
+import { HistoricoEliminacion } from "./HistoricoEliminacion";
+import { miEstilo } from "../../Encuesta/interfaces/types";
+import { Eliminacion } from "./Eliminacion";
 
 interface ConfiguracionBasica {
     id_valores_variables: any;
@@ -206,53 +209,22 @@ export const DeleteDocumental: React.FC = () => {
         switch (step) {
             case 0:
                 return <>
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            type="date"
-                            size="small"
-                            variant="outlined"
-                            label=" Fecha publicación"
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            type="date"
-                            size="small"
-                            variant="outlined"
-                            label=" Fecha de eliminación"
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <DataGrid
-                        rows={configuraciones}
-                        columns={columns}
-                        pageSize={5}
-                        autoHeight
-                        getRowId={(row) => row.id_valores_variables}
-                    />
+                    <HistoricoEliminacion />
                 </>
                     ;
             case 1:
-                return 'Hola Todos';
+                return <>
+                    <Eliminacion />
+                </>;
             default:
                 return '';
         }
     };
     return (
         <>
-            <Grid
-                container
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px',
-                    mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26'
-                }}
+            <Grid container
+                spacing={2} m={2} p={2}
+                sx={miEstilo}
             >
 
                 <Title title="Eliminacion documental    "></Title>
@@ -273,36 +245,36 @@ export const DeleteDocumental: React.FC = () => {
 
                 <Grid item xs={12} sm={12} marginTop={3}>
 
-                    {getMessage(activeStep)}
+                </Grid>
+                {getMessage(activeStep)}
+
+
+
+                <Grid item xs={12} sm={12} marginTop={3}>
+
                 </Grid>
 
 
-                {/* <Grid item xs={12} sm={12} marginTop={2}>
-                    <div style={{ height: 400, width: '100%' }}>
-                        <DataGrid
-                            rows={configuraciones}
-                            columns={columns}
-                            pageSize={5}
-                            autoHeight
-                            getRowId={(row) => row.id_valores_variables}
-                        />
-                    </div>
-                </Grid> */}
+            </Grid>
 
+
+
+            <Grid container
+                spacing={2} m={2} p={2}
+                sx={miEstilo}
+            >
 
                 <Grid item xs={4} sm={2}>
-                    <Button variant='contained' disabled={activeStep === 0} onClick={handleBack}>
+                    <Button fullWidth variant='contained' disabled={activeStep === 0} onClick={handleBack}>
                         Anterior
                     </Button>
                 </Grid>
                 <Grid item xs={4} sm={2}>
-
-                    <Button variant='contained' disabled={activeStep === steps.length - 1} onClick={handleNext}>
+                    <Button fullWidth variant='contained' disabled={activeStep === steps.length - 1} onClick={handleNext}>
                         Siguiente
                     </Button>
+
                 </Grid>
-
-
 
             </Grid>
         </>

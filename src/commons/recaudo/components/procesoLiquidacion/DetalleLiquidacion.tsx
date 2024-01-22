@@ -212,7 +212,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
   return (
     <>
     
-{liquidacion?.data.cedula}
+{/* {liquidacion?.data.cedula} */}
 
       <Grid
         container
