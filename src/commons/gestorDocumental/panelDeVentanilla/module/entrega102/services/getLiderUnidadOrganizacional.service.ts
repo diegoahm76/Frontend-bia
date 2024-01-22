@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../api/axios';
-import { control_error, control_success } from '../../../../../../helpers';
+import {  control_success } from '../../../../../../helpers';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const getLiderByUnidadOrganizacional = async (
@@ -20,9 +20,9 @@ export const getLiderByUnidadOrganizacional = async (
   } catch (error: any) {
     setLiderAsignado(undefined);
     void Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: `Esta unidad ${error?.response?.data?.detail} en consecuencia no se puede asignar la PQRSDF`,
+      icon: 'warning',
+      title: 'Opss...',
+      text: `Esta unidad ${error?.response?.data?.detail}, en consecuencia no se puede asignar el elemento, intente con otra unidad organizacional o asígne líder a la unidad seleccionada`,
     });
 
     return [];

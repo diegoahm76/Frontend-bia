@@ -7,27 +7,27 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
-import { useBancosHook } from '../../hooks/useBancosHook';
-import { DataContextBancos } from '../../context/context';
+import { useSeguimientoPOAIHook } from '../../hooks/useSeguimientoPOAIHook';
+import { DataContextSeguimientoPOAI } from '../../context/context';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarBanco: React.FC = () => {
+export const AgregarSeguiminetoPOAI: React.FC = () => {
   const {
-    control_banco,
-    errors_banco,
-    reset_banco,
+    control_seguimiento,
+    errors_seguimiento,
+    reset_seguimiento,
 
-    onsubmit_banco,
+    onsubmit_seguimiento,
     onsubmit_editar,
-    is_savingd_banco,
+    is_savingd_seguimiento,
 
-    limpiar_formulario_banco,
-  } = useBancosHook();
+    limpiar_formulario_seguimiento,
+  } = useSeguimientoPOAIHook();
 
   const dispatch = useAppDispatch();
 
-  const { mode, banco } = useAppSelector((state) => state.planes);
+  const { mode, seguimiento_poai } = useAppSelector((state) => state.planes);
 
   const {
     rubros_selected,
@@ -38,7 +38,7 @@ export const AgregarBanco: React.FC = () => {
     set_id_meta,
     fetch_data_rubros,
     fetch_data_fuentes,
-  } = useContext(DataContextBancos);
+  } = useContext(DataContextSeguimientoPOAI);
 
   useEffect(() => {
     fetch_data_rubros();
@@ -47,31 +47,75 @@ export const AgregarBanco: React.FC = () => {
 
   useEffect(() => {
     if (mode.crear) {
-      limpiar_formulario_banco();
+      limpiar_formulario_seguimiento();
     }
     if (mode.editar) {
-      set_id_proyecto(banco.id_proyecto ?? null);
-      set_id_actividad(banco.id_actividad ?? null);
-      set_id_indicador(banco.id_indicador ?? null);
-      set_id_meta(banco.id_meta ?? null);
-      reset_banco({
-        id_banco: banco.id_banco,
-        nombre_proyecto: banco.nombre_proyecto,
-        nombre_actividad: banco.nombre_actividad,
-        nombre_indicador: banco.nombre_indicador,
-        nombre_meta: banco.nombre_meta,
-        rubro: banco.rubro,
-        banco_valor: banco.banco_valor,
-        objeto_contrato: banco.objeto_contrato,
-        id_proyecto: banco.id_proyecto,
-        id_actividad: banco.id_actividad,
-        id_indicador: banco.id_indicador,
-        id_meta: banco.id_meta,
-        id_rubro: banco.id_rubro,
-        id_fuente_financiacion: banco.id_fuente_financiacion,
+      set_id_proyecto(seguimiento_poai.id_proyecto ?? null);
+      set_id_actividad(seguimiento_poai.id_actividad ?? null);
+      set_id_indicador(seguimiento_poai.id_indicador ?? null);
+      set_id_meta(seguimiento_poai.id_meta ?? null);
+      reset_seguimiento({
+        id_seguimiento: seguimiento_poai.id_seguimiento,
+        nombre_programa: seguimiento_poai.nombre_programa,
+        nombre_proyecto: seguimiento_poai.nombre_proyecto,
+        nombre_producto: seguimiento_poai.nombre_producto,
+        nombre_actividad: seguimiento_poai.nombre_actividad,
+        nombre_unidad: seguimiento_poai.nombre_unidad,
+        nombre_indicador: seguimiento_poai.nombre_indicador,
+        nombre_meta: seguimiento_poai.nombre_meta,
+        codigo_modalidad: seguimiento_poai.codigo_modalidad,
+        concepto: seguimiento_poai.concepto,
+        sector: seguimiento_poai.sector,
+        nombre_fuente: seguimiento_poai.nombre_fuente,
+        cuenta: seguimiento_poai.cuenta,
+        objeto_contrato: seguimiento_poai.objeto_contrato,
+        ubicacion: seguimiento_poai.ubicacion,
+        clase_tercero: seguimiento_poai.clase_tercero,
+        porcentaje_pto: seguimiento_poai.porcentaje_pto,
+        vano_1: seguimiento_poai.vano_1,
+        vano_2: seguimiento_poai.vano_2,
+        vano_3: seguimiento_poai.vano_3,
+        vano_4: seguimiento_poai.vano_4,
+        valor_total: seguimiento_poai.valor_total,
+        numero_cdp_paa: seguimiento_poai.numero_cdp_paa,
+        numero_rp_paa: seguimiento_poai.numero_rp_paa,
+        valor_seguimiento_banco_paa:
+          seguimiento_poai.valor_seguimiento_banco_paa,
+        valor_cdp_paa: seguimiento_poai.valor_cdp_paa,
+        valor_rp_paa: seguimiento_poai.valor_rp_paa,
+        fecha_termiacion: seguimiento_poai.fecha_termiacion,
+        duracion: seguimiento_poai.duracion,
+        valor_mesual_paoi: seguimiento_poai.valor_mesual_paoi,
+        mes_oferta_paa: seguimiento_poai.mes_oferta_paa,
+        mes_solicita: seguimiento_poai.mes_solicita,
+        valor_pagado: seguimiento_poai.valor_pagado,
+        valor_obligado: seguimiento_poai.valor_obligado,
+        valor_saldo: seguimiento_poai.valor_saldo,
+        porcentaje_ejecuta: seguimiento_poai.porcentaje_ejecuta,
+        numero_contrato: seguimiento_poai.numero_contrato,
+        numerp_rp: seguimiento_poai.numerp_rp,
+        fecha_rp: seguimiento_poai.fecha_rp,
+        valor_cdp: seguimiento_poai.valor_cdp,
+        fecha_cdp: seguimiento_poai.fecha_cdp,
+        observaciones: seguimiento_poai.observaciones,
+        id_plan: seguimiento_poai.id_plan,
+        id_programa: seguimiento_poai.id_programa,
+        id_proyecto: seguimiento_poai.id_proyecto,
+        id_producto: seguimiento_poai.id_producto,
+        id_actividad: seguimiento_poai.id_actividad,
+        id_indicador: seguimiento_poai.id_indicador,
+        id_meta: seguimiento_poai.id_meta,
+        id_concepto: seguimiento_poai.id_concepto,
+        id_fuente_financiacion: seguimiento_poai.id_fuente_financiacion,
+        id_unidad_organizacional: seguimiento_poai.id_unidad_organizacional,
+        id_detalle_inversion: seguimiento_poai.id_detalle_inversion,
+        id_banco_proyecto: seguimiento_poai.id_banco_proyecto,
+        id_modalidad: seguimiento_poai.id_modalidad,
+        id_ubicacion: seguimiento_poai.id_ubicacion,
+        id_clase_tercero: seguimiento_poai.id_clase_tercero,
       });
     }
-  }, [mode, banco]);
+  }, [mode, seguimiento_poai]);
 
   return (
     <>
@@ -80,7 +124,7 @@ export const AgregarBanco: React.FC = () => {
           e.preventDefault();
           e.stopPropagation();
           if (mode.crear) {
-            onsubmit_banco();
+            onsubmit_seguimiento();
           }
           if (mode.editar) {
             onsubmit_editar();
@@ -103,14 +147,14 @@ export const AgregarBanco: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de banco proyecto " />
+            <Title title="Registro de seguimiento POAI" />
           </Grid>
           {mode.editar ? (
             <>
               {/* <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre_sector"
-                  control={control_banco}
+                  control={control_seguimiento}
                   rules={{ required: false }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
@@ -132,7 +176,7 @@ export const AgregarBanco: React.FC = () => {
           {/* <Grid item xs={12} sm={6}>
             <Controller
               name="nombre_meta"
-              control={control_banco}
+              control={control_seguimiento}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -145,9 +189,9 @@ export const AgregarBanco: React.FC = () => {
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_banco.nombre_meta}
+                  error={!!errors_seguimiento.nombre_meta}
                   helperText={
-                    errors_banco.nombre_meta
+                    errors_seguimiento.nombre_meta
                       ? 'Es obligatorio ingresar un nombre'
                       : 'Ingrese un nombre'
                   }
@@ -158,7 +202,7 @@ export const AgregarBanco: React.FC = () => {
           <Grid item xs={12} sm={6}>
             <Controller
               name="objeto_contrato"
-              control={control_banco}
+              control={control_seguimiento}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -171,9 +215,9 @@ export const AgregarBanco: React.FC = () => {
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_banco.objeto_contrato}
+                  error={!!errors_seguimiento.objeto_contrato}
                   helperText={
-                    errors_banco.objeto_contrato
+                    errors_seguimiento.objeto_contrato
                       ? 'Es obligatorio ingresar un nombre'
                       : 'Ingrese un nombre'
                   }
@@ -184,7 +228,7 @@ export const AgregarBanco: React.FC = () => {
           <Grid item xs={12} sm={6}>
             <Controller
               name="banco_valor"
-              control={control_banco}
+              control={control_seguimiento}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -200,9 +244,9 @@ export const AgregarBanco: React.FC = () => {
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  error={!!errors_banco.banco_valor}
+                  error={!!errors_seguimiento.banco_valor}
                   helperText={
-                    errors_banco.banco_valor
+                    errors_seguimiento.banco_valor
                       ? 'Es obligatorio ingresar un valor'
                       : 'Ingrese un valor'
                   }
@@ -213,7 +257,7 @@ export const AgregarBanco: React.FC = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_rubro"
-              control={control_banco}
+              control={control_seguimiento}
               defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
@@ -225,9 +269,9 @@ export const AgregarBanco: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_banco.id_rubro}
+                  error={!!errors_seguimiento.id_rubro}
                   helperText={
-                    errors_banco?.id_rubro?.type === 'required'
+                    errors_seguimiento?.id_rubro?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : 'ingrese el rubro'
                   }
@@ -244,7 +288,7 @@ export const AgregarBanco: React.FC = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_fuente_financiacion"
-              control={control_banco}
+              control={control_seguimiento}
               defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
@@ -256,9 +300,10 @@ export const AgregarBanco: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_banco.id_fuente_financiacion}
+                  error={!!errors_seguimiento.id_fuente_financiacion}
                   helperText={
-                    errors_banco?.id_fuente_financiacion?.type === 'required'
+                    errors_seguimiento?.id_fuente_financiacion?.type ===
+                    'required'
                       ? 'Este campo es obligatorio'
                       : 'ingrese el fuente financiacion'
                   }
@@ -279,7 +324,7 @@ export const AgregarBanco: React.FC = () => {
                 color="warning"
                 disabled={false}
                 onClick={() => {
-                  limpiar_formulario_banco();
+                  limpiar_formulario_seguimiento();
                   dispatch(
                     set_current_mode_planes({
                       ver: true,
@@ -297,9 +342,9 @@ export const AgregarBanco: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_savingd_banco}
+                disabled={is_savingd_seguimiento}
                 startIcon={<SaveIcon />}
-                loading={is_savingd_banco}
+                loading={is_savingd_seguimiento}
               >
                 {mode.editar ? 'Actualizar' : 'Guardar'}
               </LoadingButton>

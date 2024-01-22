@@ -10,6 +10,7 @@ import {
   setActionsOtros,
   setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,
+  setListaHistoricoSolicitudes,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { columnsOtros } from './columnsOtros/columnsOtros';
 import { LoadingButton } from '@mui/lab';
@@ -19,7 +20,10 @@ import TaskIcon from '@mui/icons-material/Task';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalOtros } from '../../../../../Atom/otrosModal/ModalOtros';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { getHistoricoOtrosByRadicado } from '../../../../../../../toolkit/thunks/otros/getHistoricoOtrosByRadicado.service';
+import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
+import { getAnexosOtros } from '../../../../../../../toolkit/thunks/otros/anexos/getAnexosOtros.service';
 
 export const ElementosOtros = (): JSX.Element => {
   //* redux states
@@ -29,12 +33,41 @@ export const ElementosOtros = (): JSX.Element => {
     actionsOtros,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
-  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
-
+  const { handleOpenModalOne, handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
+  const {
+    setRadicado,
+    setValue,
+    setAnexos,
+  } = useContext(PanelVentanillaContext);
   //* dispatch necesario
   const dispatch = useAppDispatch();
 
+  //* states
+  //* loader button simulacion
+  const [loadingStates, setLoadingStates] = useState<any>({});
+
   //* FUNCTIONS ---------------
+
+  const handleRequestRadicadoOtro = async (radicado: string) => {
+    try {
+      const historico = await getHistoricoOtrosByRadicado(
+        '',
+        handleGeneralLoading
+      );
+
+      const historicoFiltrado = historico.filter(
+        (element: any) => element?.cabecera?.radicado === radicado
+      );
+
+      dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
+    } catch (error) {
+      console.error('Error handling request radicado: ', error);
+      // Handle or throw error as needed
+    }
+  };
+
   const setActionsOtrosManejo = (otro: any) => {
     if (otro.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
@@ -155,33 +188,33 @@ export const ElementosOtros = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <LoadingButton
-            loading={false /*loadingStates[params.row.id_otros]*/}
+            loading={loadingStates[params.row.id_otros]}
             color="primary"
             variant="contained"
             onClick={() => {
               console.log(params.row);
-              /*if (params.value === 0) {
+              if (params.value === 0) {
                 control_warning(
                   'No hay solicitudes de digitalización para este radicado, por lo tanto no se podrá ver historial de solicitudes de digitalización'
                 );
                 return;
               } else {
-                setLoadingStates((prev) => ({
+                setLoadingStates((prev: any) => ({
                   ...prev,
                   [params.row.id_otros]: true,
                 }));
                 // Simulate an async operation
                 setTimeout(() => {
-                  setValue(1);
+                  setValue(3);
                   //* se debe reemplazar por el radicado real que viene dentro del elemento que se va a buscar
                   setRadicado(params?.row?.radicado);
-                  handleRequestRadicado(params?.row?.radicado);
-                  setLoadingStates((prev) => ({
+                  handleRequestRadicadoOtro(params?.row?.radicado);
+                  setLoadingStates((prev: any) => ({
                     ...prev,
                     [params.row.id_otros]: false,
                   }));
                 }, 1000);
-              }*/
+              }
             }}
           >
             {`Solicitudes de digitalización: ${params.value}`}
@@ -199,24 +232,8 @@ export const ElementosOtros = (): JSX.Element => {
             <Tooltip title="Ver info de la solicitud de otros">
               <IconButton
                 onClick={() => {
-                  console.log('jiji', params.row);
                   handleOpenModalOne(true);
                   setActionsOtrosManejo(params?.row);
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsOtrosManejo(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
                 }}
               >
                 <Avatar
