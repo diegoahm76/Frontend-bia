@@ -234,25 +234,7 @@ export const Varible: React.FC = () => {
 
 
 
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            select
-                            required
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            label="Tipo cobro"
-                            name="tipo_cobro"
-                            onChange={handleInputChange}
-                            value={formValues.tipo_cobro}
-                        >
-                            {tiposCobro.map((tipo) => (
-                                <MenuItem key={tipo.id_tipo_cobro} value={tipo.id_tipo_cobro}>
-                                    {tipo.nombre_tipo_cobro}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </Grid>
+                    
 
 
                     <Grid item xs={12} sm={4}>
@@ -274,7 +256,25 @@ export const Varible: React.FC = () => {
                             ))}
                         </TextField>
                     </Grid>
-
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            select
+                            required
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            label="Tipo cobro"
+                            name="tipo_cobro"
+                            onChange={handleInputChange}
+                            value={formValues.tipo_cobro}
+                        >
+                            {tiposCobro.map((tipo) => (
+                                <MenuItem key={tipo.id_tipo_cobro} value={tipo.id_tipo_cobro}>
+                                    {tipo.nombre_tipo_cobro}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             required
