@@ -170,7 +170,7 @@ export const ConceptoPago: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                <Title title="Concepto de pago " />
+                <Title title="Concepto de pago. " />
                 <Grid item xs={3} sm={2} marginTop={2} >
                     <Button startIcon={<AddIcon />} onClick={handle_open_buscar} fullWidth variant="outlined"    >
                         Crear
