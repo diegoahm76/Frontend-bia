@@ -83,53 +83,53 @@ export const ConceptoPago: React.FC = () => {
         { field: 'descripccion', headerName: 'Descripción', width: 200, flex: 1 },
 
         { field: 'nombre_variable', headerName: 'varible', width: 130, flex: 1 },
-        { field: 'estado', headerName: 'estado', width: 130, flex: 1 },
+        // { field: 'estado', headerName: 'estado', width: 130, flex: 1 },
 
         // estado
-        {
-            field: 'Estado',
-            headerName: 'Estado',
-            width: 130,
-            flex: 1,
+        // {
+        //     field: 'Estado',
+        //     headerName: 'Estado',
+        //     width: 130,
+        //     flex: 1,
 
-            renderCell: (params: any) => (
-                <Chip
-                    size="small"
-                    label={params.value ? 'Activo' : 'Inactivo'}
-                    color={params.value ? 'success' : 'error'}
-                    variant="outlined"
-                />
-            )
-        },
+        //     renderCell: (params: any) => (
+        //         <Chip
+        //             size="small"
+        //             label={params.value ? 'Activo' : 'Inactivo'}
+        //             color={params.value ? 'success' : 'error'}
+        //             variant="outlined"
+        //         />
+        //     )
+        // },
         { field: 'fecha_inicio', headerName: 'fecha inicio', width: 130, flex: 1 },
         { field: 'fecha_fin', headerName: 'Fecha fin', width: 130, flex: 1 },
 
 
-        // { field: 'valor', headerName: 'valor', width: 130, flex: 1 },
+        { field: 'valor', headerName: 'valor', width: 130, flex: 1 },
 
-        // {
-        //     field: 'Acciones',
-        //     headerName: 'Acciones',
-        //     width: 200,
-        //     flex: 1,
-        //     renderCell: (params: any) => (
-        //         <>
-        //             <IconButton
-        //                 color="error"
-        //                 onClick={() => handleEliminarConfiguracion(params.row.id_valores_variables)}
-        //             >
-        //                 <DeleteIcon />
-        //             </IconButton>
+        {
+            field: 'Acciones',
+            headerName: 'Acciones',
+            width: 200,
+            flex: 1,
+            renderCell: (params: any) => (
+                <>
+                    <IconButton
+                        color="error"
+                        onClick={() => handleEliminarConfiguracion(params.row.id_valores_variables)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
 
-        //             <IconButton
-        //                 color="primary"
-        //                 onClick={() => handleAbrirEditar(params.row)}
-        //             >
-        //                 <EditIcon />
-        //             </IconButton>
-        //         </>
-        //     )
-        // },
+                    <IconButton
+                        color="primary"
+                        onClick={() => handleAbrirEditar(params.row)}
+                    >
+                        <EditIcon />
+                    </IconButton>
+                </>
+            )
+        },
 
     ];
 
@@ -170,7 +170,7 @@ export const ConceptoPago: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                <Title title="Concepto de pago " />
+                <Title title="Concepto de pago. " />
                 <Grid item xs={3} sm={2} marginTop={2} >
                     <Button startIcon={<AddIcon />} onClick={handle_open_buscar} fullWidth variant="outlined"    >
                         Crear
