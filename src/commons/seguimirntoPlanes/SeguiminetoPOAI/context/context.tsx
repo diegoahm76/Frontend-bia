@@ -8,18 +8,34 @@ import type {
   IMetaIndicador,
   IProyectos,
   IRubro,
+  IConceptoPOAI,
+  IDetalleCuentas,
+  IUnidadesActuales,
 } from '../../types/types';
+import type {
+  // IIntervalo,
+  IModalidad,
+  IUbicacion,
+} from '../../configuraciones/interfaces/interfaces';
+
 import { control_error } from '../../../../helpers';
 import {
   get_seguimiento,
   get_metas_indicador,
   get_proyectos,
   get_rubros,
+  get_detalle_inversion,
+  get_ubicaciones,
+  get_modalidades,
 } from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import { get_fuente_financiancion } from '../../FuenteFinanciacion/services/services';
 import { get_sector } from '../../configuraciones/Request/request';
 import { ISector } from '../../configuraciones/interfaces/interfaces';
+import {
+  get_concepto_poai,
+  get_unidades_organizacionales,
+} from '../../ConceptoPOAI/services/services';
 
 interface UserContext {
   // * id
@@ -53,6 +69,19 @@ interface UserContext {
   set_fuentes_selected: (value: ValueProps[]) => void;
   sector_selected: ValueProps[];
   set_sector_selected: (value: ValueProps[]) => void;
+
+  // * select
+  concepto_selected: ValueProps[];
+  set_concepto_selected: (value: ValueProps[]) => void;
+  detalle_selected: ValueProps[];
+  set_detalle_selected: (value: ValueProps[]) => void;
+  ubicacion_selected: ValueProps[];
+  set_ubicacion_selected: (value: ValueProps[]) => void;
+  unidades_organizaciones_selected: ValueProps[];
+  set_unidades_organizaciones_selected: (value: ValueProps[]) => void;
+  modalidad_selected: ValueProps[];
+  set_modalidad_selected: (value: ValueProps[]) => void;
+
   // * info
 
   // * fetch
@@ -63,6 +92,11 @@ interface UserContext {
   fetch_data_rubros: () => Promise<void>;
   fetch_data_fuentes: () => Promise<void>;
   fetach_data_sector: () => Promise<void>;
+  fetch_data_concepto: () => Promise<void>;
+  fetch_data_detalle: () => Promise<void>;
+  fetch_data_ubicacion: () => Promise<void>;
+  fetch_data_unidades_organizaciones: () => Promise<void>;
+  fetch_data_modalidad: () => Promise<void>;
 }
 
 export const DataContextSeguimientoPOAI = createContext<UserContext>({
@@ -95,12 +129,28 @@ export const DataContextSeguimientoPOAI = createContext<UserContext>({
   sector_selected: [],
   set_sector_selected: () => {},
 
+  concepto_selected: [],
+  set_concepto_selected: () => {},
+  detalle_selected: [],
+  set_detalle_selected: () => {},
+  ubicacion_selected: [],
+  set_ubicacion_selected: () => {},
+  unidades_organizaciones_selected: [],
+  set_unidades_organizaciones_selected: () => {},
+  modalidad_selected: [],
+  set_modalidad_selected: () => {},
+
   fetch_data_seguimiento: async () => {},
   fetch_data_metas: async () => {},
   fetch_data_proyectos: async () => {},
   fetch_data_rubros: async () => {},
   fetch_data_fuentes: async () => {},
   fetach_data_sector: async () => {},
+  fetch_data_concepto: async () => {},
+  fetch_data_detalle: async () => {},
+  fetch_data_ubicacion: async () => {},
+  fetch_data_unidades_organizaciones: async () => {},
+  fetch_data_modalidad: async () => {},
 });
 
 export const UserProviderSeguimientoPOAI = ({
@@ -131,6 +181,26 @@ export const UserProviderSeguimientoPOAI = ({
   const [sector_selected, set_sector_selected] = React.useState<ValueProps[]>(
     []
   );
+
+  const [concepto_selected, set_concepto_selected] = React.useState<
+    ValueProps[]
+  >([]);
+
+  const [detalle_selected, set_detalle_selected] = React.useState<ValueProps[]>(
+    []
+  );
+
+  // * select
+  const [ubicacion_selected, set_ubicacion_selected] = React.useState<
+    ValueProps[]
+  >([]);
+  const [
+    unidades_organizaciones_selected,
+    set_unidades_organizaciones_selected,
+  ] = React.useState<ValueProps[]>([]);
+  const [modalidad_selected, set_modalidad_selected] = React.useState<
+    ValueProps[]
+  >([]);
 
   // * rows
 
@@ -164,6 +234,104 @@ export const UserProviderSeguimientoPOAI = ({
       );
     }
   };
+
+  const fetch_data_concepto = async (): Promise<void> => {
+    try {
+      const response = await get_concepto_poai();
+      if (response?.length > 0) {
+        const data_concepto: ValueProps[] | any = response.map(
+          (item: IConceptoPOAI) => ({
+            value: item.id_concepto,
+            label: item.concepto,
+          })
+        );
+        set_concepto_selected(data_concepto);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
+  const fetch_data_detalle = async (): Promise<void> => {
+    try {
+      const response = await get_detalle_inversion();
+      if (response?.length > 0) {
+        const data_detalle: ValueProps[] | any = response.map(
+          (item: IDetalleCuentas) => ({
+            value: item.id_detalle_inversion,
+            label: item.cuenta,
+          })
+        );
+        set_detalle_selected(data_detalle);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
+  const fetch_data_unidades_organizaciones = async (): Promise<void> => {
+    try {
+      const response = await get_unidades_organizacionales();
+      if (response?.length > 0) {
+        const data_selected: ValueProps[] | any = response.map(
+          (item: IUnidadesActuales) => ({
+            value: item.id_unidad_organizacional,
+            label: item.nombre,
+          })
+        );
+        set_unidades_organizaciones_selected(data_selected);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
+  const fetch_data_ubicacion = async (): Promise<void> => {
+    try {
+      const response = await get_ubicaciones();
+      if (response?.length > 0) {
+        const data_selected: ValueProps[] | any = response.map(
+          (item: IUbicacion) => ({
+            value: item.id_ubicacion,
+            label: item.nombre_ubicacion,
+          })
+        );
+        set_ubicacion_selected(data_selected);
+      }
+    } catch (error: any) {
+      console.log(error);
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
+  const fetch_data_modalidad = async (): Promise<void> => {
+    try {
+      const response = await get_modalidades();
+      if (response?.length > 0) {
+        const data_selected: ValueProps[] | any = response.map(
+          (item: IModalidad) => ({
+            value: item.id_modalidad,
+            label: item.nombre_modalidad,
+          })
+        );
+        set_modalidad_selected(data_selected);
+      }
+    } catch (error: any) {
+      console.log(error);
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
 
   // const fetch_data_metas = async (): Promise<void> => {
   //   try {
@@ -305,6 +473,18 @@ export const UserProviderSeguimientoPOAI = ({
     sector_selected,
     set_sector_selected,
 
+    // * select
+    concepto_selected,
+    set_concepto_selected,
+    detalle_selected,
+    set_detalle_selected,
+    ubicacion_selected,
+    set_ubicacion_selected,
+    unidades_organizaciones_selected,
+    set_unidades_organizaciones_selected,
+    modalidad_selected,
+    set_modalidad_selected,
+
     // * rows
     rows_seguimiento,
     set_rows_seguimiento,
@@ -318,6 +498,11 @@ export const UserProviderSeguimientoPOAI = ({
     fetch_data_rubros,
     fetch_data_fuentes,
     fetach_data_sector,
+    fetch_data_concepto,
+    fetch_data_detalle,
+    fetch_data_ubicacion,
+    fetch_data_unidades_organizaciones,
+    fetch_data_modalidad,
   };
 
   return (

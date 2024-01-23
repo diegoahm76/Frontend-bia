@@ -4,13 +4,20 @@ import type {
   IProyectos,
   IRubro,
   IMetaIndicador,
+  IDetalleCuentas,
 } from '../../types/types';
+import type {
+  IIntervalo,
+  IModalidad,
+  IUbicacion,
+} from '../../configuraciones/interfaces/interfaces';
+
 
 // ! Bancos
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
 export const get_seguimiento = async (): Promise<ISeguiminetoPOAI[]> => {
   const response = await api.get(
-    `seguimiento-planes/consultar-banco-proyectos/`
+    `seguimiento-planes/consultar-seguimiento-poai/`
   );
   return response.data.data;
 };
@@ -39,10 +46,34 @@ export const get_metas_indicador = async (
   return response.data.data;
 };
 
+export const get_detalle_inversion = async (): Promise<IDetalleCuentas[]> => {
+  const response = await api.get(
+    `seguimiento-planes/consultar-detalle-inversion-cuentas/`
+  );
+  return response.data.data;
+};
+
+export const get_ubicaciones = async (): Promise<IUbicacion[]> => {
+  const response = await api.get(`seguimiento-planes/consultar-ubicaciones/`);
+  return response.data.data;
+};
+
+export const get_modalidades = async (): Promise<IModalidad[]> => {
+  const response = await api.get(`seguimiento-planes/consultar-modalidades/`);
+  return response.data.data;
+};
+
+export const get_intervalos = async (): Promise<IIntervalo[]> => {
+  const response = await api.get(`seguimiento-planes/consultar-intervalos/`);
+  return response.data.data;
+};
+
+
+
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
 export const post_seguimiento = async (data: ISeguiminetoPOAI): Promise<ISeguiminetoPOAI> => {
   const response = await api.post(
-    `seguimiento-planes/crear-banco-proyectos/`,
+    `seguimiento-planes/crear-seguimiento-poai/`,
     data
   );
   return response.data;
@@ -50,11 +81,11 @@ export const post_seguimiento = async (data: ISeguiminetoPOAI): Promise<ISeguimi
 
 // ? ----------------------------------------------- [ PUT ] -----------------------------------------------
 export const put_seguimiento = async (
-  id_detalle: number,
+  id_seguimiento: number,
   data: ISeguiminetoPOAI
 ): Promise<ISeguiminetoPOAI> => {
   const response = await api.put(
-    `seguimiento-planes/actualizar-banco-proyectos/${id_detalle}/`,
+    `seguimiento-planes/actualizar-seguimiento-poai/${id_seguimiento}/`,
     data
   );
   return response.data;

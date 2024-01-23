@@ -5,11 +5,19 @@ import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useSeguimientoPOAIHook } from '../../hooks/useSeguimientoPOAIHook';
 import { DataContextSeguimientoPOAI } from '../../context/context';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
+import { meses_selected } from '../../../PlanAnualAdquisiciones/choices/selects';
+
+// librerias de manejo de fechas
+
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarSeguiminetoPOAI: React.FC = () => {
@@ -17,6 +25,9 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
     control_seguimiento,
     errors_seguimiento,
     reset_seguimiento,
+    register_seguimiento,
+    set_value_seguimiento,
+    data_watch_seguimiento,
 
     onsubmit_seguimiento,
     onsubmit_editar,
@@ -32,24 +43,103 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
   const {
     rubros_selected,
     fuentes_selected,
+    concepto_selected,
+    sector_selected,
+    detalle_selected,
+    ubicacion_selected,
+    unidades_organizaciones_selected,
+    modalidad_selected,
     set_id_proyecto,
     set_id_actividad,
     set_id_indicador,
     set_id_meta,
     fetch_data_rubros,
     fetch_data_fuentes,
+    fetch_data_concepto,
+    fetach_data_sector,
+    fetch_data_detalle,
+    fetch_data_ubicacion,
+    fetch_data_unidades_organizaciones,
+    fetch_data_modalidad,
   } = useContext(DataContextSeguimientoPOAI);
 
   useEffect(() => {
     fetch_data_rubros();
     fetch_data_fuentes();
+    fetch_data_concepto();
+    fetach_data_sector();
+    fetch_data_detalle();
+    fetch_data_ubicacion();
+    fetch_data_unidades_organizaciones();
+    fetch_data_modalidad();
   }, []);
+
+  // calcular valor_total suma de vanos
+  const vano_1 = Number(data_watch_seguimiento.vano_1);
+  const vano_2 = Number(data_watch_seguimiento.vano_2);
+  const vano_3 = Number(data_watch_seguimiento.vano_3);
+  const vano_4 = Number(data_watch_seguimiento.vano_4);
+
+  const valor_total = vano_1 + vano_2 + vano_3 + vano_4;
+
+  useEffect(() => {
+    set_value_seguimiento('valor_total', valor_total);
+  }, [valor_total]);
+
+  const [fecha_termiacion, set_fecha_termiacion] = useState<Dayjs | null>(null);
+  const [fecha_rp, set_fecha_rp] = useState<Dayjs | null>(null);
+  const [fecha_cdp, set_fecha_cdp] = useState<Dayjs | null>(null);
+
+  const handle_date_creacion_change = (
+    fieldName: string,
+    value: Dayjs | null
+  ): void => {
+    if (value !== null) {
+      switch (fieldName) {
+        case 'fecha_termiacion':
+          set_fecha_termiacion(value);
+          set_value_seguimiento('fecha_termiacion', value.format('YYYY-MM-DD'));
+          break;
+        case 'fecha_rp':
+          set_fecha_rp(value);
+          set_value_seguimiento('fecha_rp', value.format('YYYY-MM-DD'));
+          break;
+        case 'fecha_cdp':
+          set_fecha_cdp(value);
+          set_value_seguimiento('fecha_cdp', value.format('YYYY-MM-DD'));
+          break;
+        default:
+          break;
+      }
+    }
+  };
 
   useEffect(() => {
     if (mode.crear) {
+      set_value_seguimiento(
+        'fecha_termiacion',
+        fecha_termiacion?.format('YYYY-MM-DD')
+      );
+      set_fecha_termiacion(fecha_termiacion ?? null);
+      set_value_seguimiento('fecha_rp', fecha_rp?.format('YYYY-MM-DD'));
+      set_fecha_rp(fecha_rp ?? null);
       limpiar_formulario_seguimiento();
     }
     if (mode.editar) {
+      if (seguimiento_poai?.fecha_termiacion) {
+        set_value_seguimiento(
+          'fecha_termiacion',
+          dayjs(seguimiento_poai.fecha_termiacion).format('YYYY-MM-DD')
+        );
+        set_fecha_termiacion(dayjs(seguimiento_poai.fecha_termiacion) ?? null);
+      }
+      if (seguimiento_poai?.fecha_rp) {
+        set_value_seguimiento(
+          'fecha_rp',
+          dayjs(seguimiento_poai.fecha_rp).format('YYYY-MM-DD')
+        );
+        set_fecha_rp(dayjs(seguimiento_poai.fecha_rp) ?? null);
+      }
       set_id_proyecto(seguimiento_poai.id_proyecto ?? null);
       set_id_actividad(seguimiento_poai.id_actividad ?? null);
       set_id_indicador(seguimiento_poai.id_indicador ?? null);
@@ -173,32 +263,1008 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               </Grid> */}
             </>
           ) : null}
-          {/* <Grid item xs={12} sm={6}>
+          {/* porcentaje_pto */}
+          <Grid item xs={12} sm={6}>
             <Controller
-              name="nombre_meta"
+              name="porcentaje_pto"
               control={control_seguimiento}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   fullWidth
                   size="small"
-                  label="Nombre Meta"
+                  label="% PTO"
                   variant="outlined"
                   multiline
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
-                  error={!!errors_seguimiento.nombre_meta}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
+                  error={!!errors_seguimiento.porcentaje_pto}
                   helperText={
-                    errors_seguimiento.nombre_meta
+                    errors_seguimiento.porcentaje_pto
+                      ? 'Es obligatorio ingresar un porcentaje'
+                      : 'Ingrese un porcentaje'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* id_concepto */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_concepto"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Concepto"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_concepto}
+                  helperText={
+                    errors_seguimiento.id_concepto
+                      ? 'Es obligatorio ingresar un concepto'
+                      : 'Ingrese un concepto'
+                  }
+                >
+                  {concepto_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* id_sector */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_sector"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Sector"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_sector}
+                  helperText={
+                    errors_seguimiento.id_sector
+                      ? 'Es obligatorio ingresar un sector'
+                      : 'Ingrese un sector'
+                  }
+                >
+                  {sector_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* id_detalle_inversion */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_detalle_inversion"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Detalle de inversion"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_detalle_inversion}
+                  helperText={
+                    errors_seguimiento.id_detalle_inversion
+                      ? 'Es obligatorio ingresar un detalle de inversion'
+                      : 'Ingrese un detalle de inversion'
+                  }
+                >
+                  {detalle_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* id_unidad_organizacional */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_unidad_organizacional"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Unidad organizacional"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_unidad_organizacional}
+                  helperText={
+                    errors_seguimiento.id_unidad_organizacional
+                      ? 'Es obligatorio ingresar una unidad organizacional'
+                      : 'Ingrese una unidad organizacional'
+                  }
+                >
+                  {unidades_organizaciones_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* descripcion */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="descripcion"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Descripción"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.descripcion}
+                  helperText={
+                    errors_seguimiento.descripcion
                       ? 'Es obligatorio ingresar un nombre'
                       : 'Ingrese un nombre'
                   }
                 />
               )}
             />
-          </Grid> */}
+          </Grid>
+          {/* vano 1 con label de año 1 */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="vano_1"
+              control={control_seguimiento}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Año 1"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.vano_1}
+                  helperText={
+                    errors_seguimiento.vano_1
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* vano 2 con label de año 2 */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="vano_2"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Año 2"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.vano_2}
+                  helperText={
+                    errors_seguimiento.vano_2
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* vano 3 con label de año 3 */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="vano_3"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Año 3"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.vano_3}
+                  helperText={
+                    errors_seguimiento.vano_3
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* vano 4 con label de año 4 */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="vano_4"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Año 4"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.vano_4}
+                  helperText={
+                    errors_seguimiento.vano_4
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* valor_total */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_total"
+              control={control_seguimiento}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor total"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  error={!!errors_seguimiento.valor_total}
+                  helperText={
+                    errors_seguimiento.valor_total
+                      ? 'Es obligatorio ingresar un valor total de fuente de financiacion'
+                      : 'Ingrese un valor total de fuente de financiacion'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* numero_cdp_paa */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="numero_cdp_paa"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Número CDP PAA"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
+                  error={!!errors_seguimiento.numero_cdp_paa}
+                  helperText={
+                    errors_seguimiento.numero_cdp_paa
+                      ? 'Es obligatorio ingresar un número'
+                      : 'Ingrese un número'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* numero_rp_paa */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="numero_rp_paa"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Número RP PAA"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
+                  error={!!errors_seguimiento.numero_rp_paa}
+                  helperText={
+                    errors_seguimiento.numero_rp_paa
+                      ? 'Es obligatorio ingresar un número'
+                      : 'Ingrese un número'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* valor_seguimiento_banco_paa */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_seguimiento_banco_paa"
+              control={control_seguimiento}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor seguimiento banco PAA"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.valor_seguimiento_banco_paa}
+                  helperText={
+                    errors_seguimiento.valor_seguimiento_banco_paa
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* valor_cdp_paa */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_cdp_paa"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor CDP PAA"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.valor_cdp_paa}
+                  helperText={
+                    errors_seguimiento.valor_cdp_paa
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* valor_rp_paa */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_rp_paa"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor RP PAA"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.valor_rp_paa}
+                  helperText={
+                    errors_seguimiento.valor_rp_paa
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* Fecha de terminacion */}
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de terminación"
+                value={fecha_termiacion}
+                onChange={(value) => {
+                  handle_date_creacion_change('fecha_termiacion', value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_seguimiento('fecha_termiacion', {
+                      required: true,
+                    })}
+                    error={!!errors_seguimiento.fecha_termiacion}
+                    helperText={
+                      errors_seguimiento.fecha_termiacion
+                        ? 'Es obligatorio la fecha de terminación'
+                        : 'Ingrese la fecha de terminación'
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+          {/* duracion debe ser un selECT con dia(s), mes(es), año(s) */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="duracion"
+              control={control_seguimiento}
+              defaultValue="dia"
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  size="small"
+                  label="Duración"
+                  margin="dense"
+                  disabled={false}
+                  fullWidth
+                  required
+                  error={!!errors_seguimiento.duracion}
+                  helperText={
+                    errors_seguimiento?.duracion?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : 'ingrese el duracion'
+                  }
+                >
+                  <MenuItem key="dia" value="dia">
+                    Día(s)
+                  </MenuItem>
+                  <MenuItem key="mes" value="mes">
+                    Mes(es)
+                  </MenuItem>
+                  <MenuItem key="año" value="año">
+                    Año(s)
+                  </MenuItem>
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* valor_mesual_paoi */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_mesual_paoi"
+              control={control_seguimiento}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor mensual PAOI"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.valor_mesual_paoi}
+                  helperText={
+                    errors_seguimiento.valor_mesual_paoi
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* id_modalidad */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_modalidad"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Modalidad"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_modalidad}
+                  helperText={
+                    errors_seguimiento.id_modalidad
+                      ? 'Es obligatorio ingresar una modalidad'
+                      : 'Ingrese una modalidad'
+                  }
+                >
+                  {modalidad_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* mes_oferta_paa */}
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="mes_oferta_paa"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Mes oferta"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.mes_oferta_paa}
+                  helperText={
+                    errors_seguimiento.mes_oferta_paa
+                      ? 'Es obligatorio ingresar mes de oferta'
+                      : 'Ingrese un  mes de oferta'
+                  }
+                >
+                  {meses_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* mes_solicita */}
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="mes_solicita"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Mes solicita"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.mes_solicita}
+                  helperText={
+                    errors_seguimiento.mes_solicita
+                      ? 'Es obligatorio ingresar mes de solicitud'
+                      : 'Ingrese un  mes de solicitud'
+                  }
+                >
+                  {meses_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* valor_pagado */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_pagado"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor pagado"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.valor_pagado}
+                  helperText={
+                    errors_seguimiento.valor_pagado
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* valor_obligado */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_obligado"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor obligado"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.valor_obligado}
+                  helperText={
+                    errors_seguimiento.valor_obligado
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* valor_saldo */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_saldo"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Valor saldo"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  multiline
+                  value={value}
+                  disabled={true}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.valor_saldo}
+                  helperText={
+                    errors_seguimiento.valor_saldo
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* porcentaje_ejecuta */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="porcentaje_ejecuta"
+              control={control_seguimiento}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="% ejecuta"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
+                  error={!!errors_seguimiento.porcentaje_ejecuta}
+                  helperText={
+                    errors_seguimiento.porcentaje_ejecuta
+                      ? 'Es obligatorio ingresar un porcentaje'
+                      : 'Ingrese un porcentaje'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* id_ubicacion */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_ubicacion"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Ubicación"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_ubicacion}
+                  helperText={
+                    errors_seguimiento.id_ubicacion
+                      ? 'Es obligatorio ingresar una ubicación'
+                      : 'Ingrese una ubicación'
+                  }
+                >
+                  {ubicacion_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          {/* numero_contrato */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="numero_contrato"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Número contrato"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.numero_contrato}
+                  helperText={
+                    errors_seguimiento.numero_contrato
+                      ? 'Es obligatorio ingresar un número'
+                      : 'Ingrese un número'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* numerp_rp */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="numer_rp"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Número RP"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.numerp_rp}
+                  helperText={
+                    errors_seguimiento.numerp_rp
+                      ? 'Es obligatorio ingresar un número'
+                      : 'Ingrese un número'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* fecha_rp */}
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha RP"
+                value={fecha_rp}
+                onChange={(value) => {
+                  handle_date_creacion_change('fecha_rp', value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_seguimiento('fecha_rp', {
+                      required: true,
+                    })}
+                    error={!!errors_seguimiento.fecha_rp}
+                    helperText={
+                      errors_seguimiento.fecha_rp
+                        ? 'Es obligatorio la fecha RP'
+                        : 'Ingrese la fecha RP'
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+          {/* valor_cdp */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="valor_cdp"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  InputProps={{
+                    inputComponent: NumericFormatCustom as any,
+                  }}
+                  fullWidth
+                  size="small"
+                  label="Valor CDP"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.valor_cdp}
+                  helperText={
+                    errors_seguimiento.valor_cdp
+                      ? 'Es obligatorio ingresar un valor'
+                      : 'Ingrese un valor'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          {/* fecha_cdp */}
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha CDP"
+                value={fecha_cdp}
+                onChange={(value) => {
+                  handle_date_creacion_change('fecha_cdp', value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_seguimiento('fecha_cdp', {
+                      required: true,
+                    })}
+                    error={!!errors_seguimiento.fecha_cdp}
+                    helperText={
+                      errors_seguimiento.fecha_cdp
+                        ? 'Es obligatorio la fecha CDP'
+                        : 'Ingrese la fecha CDP'
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+          {/* observaciones */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="observaciones"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  multiline
+                  label="Observaciones"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.observaciones}
+                  helperText={
+                    errors_seguimiento.observaciones
+                      ? 'Es obligatorio ingresar un nombre'
+                      : 'Ingrese un nombre'
+                  }
+                />
+              )}
+            />
+          </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
               name="objeto_contrato"

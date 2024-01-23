@@ -14,6 +14,7 @@ export const useSeguimientoPOAIHook = (): any => {
     register: register_seguimiento,
     handleSubmit: handleSubmit_seguimiento,
     setValue: set_value_seguimiento,
+    getValues: get_values_seguimiento,
     reset: reset_seguimiento,
     formState: { errors: errors_seguimiento },
   } = useForm<ISeguiminetoPOAI>({
@@ -217,6 +218,7 @@ export const useSeguimientoPOAIHook = (): any => {
     register_seguimiento,
     handleSubmit_seguimiento,
     set_value_seguimiento,
+    get_values_seguimiento,
     reset_seguimiento,
     errors_seguimiento,
 
