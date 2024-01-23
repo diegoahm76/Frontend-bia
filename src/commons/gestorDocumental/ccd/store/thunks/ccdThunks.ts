@@ -22,7 +22,7 @@ export const control_error = (message: ToastContent) =>
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: 'light'
+    theme: 'light',
   });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -35,7 +35,7 @@ export const control_success = (message: ToastContent) =>
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: 'light'
+    theme: 'light',
   });
 
 //! Obtener los CCDS terminados
@@ -45,8 +45,8 @@ export const get_finished_ccd_service = (): any => {
       const { data } = await api.get('gestor/ccd/get-terminados/', {
         params: {
           limit: 1500,
-          offset: 0
-        }
+          offset: 0,
+        },
       });
       return data;
     } catch (error: any) {
@@ -147,7 +147,9 @@ export const to_finished_ccds_service: any = (
       const { data } = await api.put(`gestor/ccd/finish/${id_ccd}/`);
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
-      control_warning('No olvides limpiar los campos antes de salir del módulo');
+      control_warning(
+        'No olvides limpiar los campos antes de salir del módulo'
+      );
       control_success(data.detail);
       set_flag_btn_finish(true);
       return data;
@@ -240,9 +242,10 @@ export const get_ccds_finished_x_organigrama: any = (
 export const get_ccds_posibles: any = (id_organigrama: string) => {
   return async () => {
     try {
-      const { data } = await api.get(
-        `gestor/activar/get-ccd-posibles/?id_organigrama=${id_organigrama}`
-      );
+      // const old_url = 'gestor/activar/get-ccd-posibles/?id_organigrama=${id_organigrama}';
+      const new_url = `gestor/ccd/activacion/get-ccd-posibles/?id_organigrama=${id_organigrama}`;
+
+      const { data } = await api.get(new_url);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -258,7 +261,7 @@ export const cambio_ccd_actual: any = (data_cambio: DataCambioCCDActual) => {
         'gestor/activar/instrumentos-archivisticos/',
         data_cambio
       );
-      control_success('Proceso exitoso');
+      control_success('El cambio del CCD fue exitoso');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

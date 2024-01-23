@@ -55,11 +55,11 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         ).then((res) => {
           setListaAsignaciones(res);
         });
-        showAlert(
+        /*showAlert(
           'Atención',
           'No hay servicio para ver reasignaciones de las (RESPUESTAS A PQRSDF),',
           'warning'
-        );
+        );*/
         break;
       case 'Responder Trámite':
         // Call the service for Tramites y Servicios

@@ -467,7 +467,7 @@ export const ModalOtros = (): JSX.Element => {
                     variant="h6"
                     align="center"
                   >
-                    Sin metadatos y/o archivo
+                    Sin metadatos y/o archivo existentes o sin cargar
                   </Typography>
                 </Box>
               )}

@@ -300,7 +300,7 @@ export const ElementosOtros = (): JSX.Element => {
   return (
     <>
       <RenderDataGrid
-        rows={listaElementosPqrsfTramitesUotros ?? []}
+        rows={[...listaElementosPqrsfTramitesUotros ]?? []}
         columns={columns ?? []}
         title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
         aditionalElement={

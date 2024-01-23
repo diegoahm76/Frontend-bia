@@ -4,7 +4,7 @@ import { type SetStateAction, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 import Swal from 'sweetalert2'; // , { type SweetAlertResult }
 import {
-  type AxiosError
+  type AxiosError,
   // type AxiosResponse
 } from 'axios';
 // Slices
@@ -13,12 +13,12 @@ import {
   get_organigrams,
   current_organigram,
   get_levels,
-  get_unitys
+  get_unitys,
 } from '../slices/organigramSlice';
 // Interfaces
 import type {
   DataCambioOrganigramaActual,
-  IObjCreateOrganigram
+  IObjCreateOrganigram,
 } from '../../interfaces/organigrama';
 import { api } from '../../../../../api/axios';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
@@ -33,7 +33,7 @@ const control_error = (message: ToastContent) =>
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: 'light'
+    theme: 'light',
   });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -46,7 +46,7 @@ const control_success = (message: ToastContent) =>
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: 'light'
+    theme: 'light',
   });
 
 // Obtener Organigrama
@@ -179,7 +179,7 @@ export const to_finalize_organigram_service: any = (
         position: 'center',
         icon: 'info',
         title: 'Atención',
-        text: response.data.detail
+        text: response.data.detail,
       });
       set_position_tab_organigrama('1');
       return response.data;
@@ -216,7 +216,7 @@ export const to_resume_organigram_service: any = (
         position: 'center',
         icon: 'info',
         title: 'Atención',
-        text: data.detail
+        text: data.detail,
       });
       return data;
     } catch (error: any) {
@@ -415,10 +415,14 @@ export const cambio_organigrama_actual: any = (
 export const get_organigrama_actual: any = () => {
   return async () => {
     try {
-      const { data } = await api.get(
-        'transversal/organigrama/get-organigrama-actual/'
-      );
-      //! //  console.log('')(data)
+      // const old_url = 'transversal/organigrama/get-organigrama-actual/';
+      const new_url = `transversal/organigrama/activacion/get-organigrama-actual/`;
+      const { data } = await api.get(new_url);
+
+      if (data?.success) {
+        control_success(data.detail);
+      }
+      
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -430,9 +434,10 @@ export const get_organigrama_actual: any = () => {
 export const get_organigramas_posibles: any = () => {
   return async () => {
     try {
-      const { data } = await api.get(
-        'transversal/organigrama/get-organigramas-posibles/'
-      );
+      // const old_url = 'transversal/organigrama/get-organigramas-posibles/'
+      const new_url =
+        'transversal/organigrama/activacion/get-organigramas-posibles/';
+      const { data } = await api.get(new_url);
       //  //  console.log('')(data);
       return data;
     } catch (error: any) {
