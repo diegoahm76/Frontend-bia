@@ -33,9 +33,7 @@ const OrganigramVisual = () => {
                 color: '#fff',
               }}
             >
-              {node.title} - {node.codigo} -{' '}
-              {node.cod_agrupacion_documental ?? 'N/A'} -{' '}
-              {node?.cod_tipo_unidad}
+              {node.codigo} - {node.title}
             </div>
           }
         >
@@ -66,9 +64,7 @@ const OrganigramVisual = () => {
                 color: '#fff',
               }}
             >
-              {node.title} - {node.codigo} -{' '}
-              {node.cod_agrupacion_documental ?? 'N/A'} -{' '}
-              {node?.cod_tipo_unidad}
+              {node.codigo} - {node.title}
             </div>
           }
         >
@@ -96,8 +92,7 @@ const OrganigramVisual = () => {
               padding: '.4rem',
             }}
           >
-            {node.title} - {node.codigo} -{' '}
-            {node.cod_agrupacion_documental ?? 'N/A'} - {node?.cod_tipo_unidad}
+            {node.codigo} - {node.title}{' '}
           </div>
         }
       >
@@ -154,9 +149,7 @@ const OrganigramVisual = () => {
                       padding: '.4rem',
                     }}
                   >
-                    {el.title} - {el.codigo} -{' '}
-                    {el.cod_agrupacion_documental ?? 'N/A'} -{' '}
-                    {el?.cod_tipo_unidad}
+                    {el.codigo} - {el.title}
                   </div>
                 ))}
             </div>
@@ -177,9 +170,7 @@ const OrganigramVisual = () => {
                       padding: '.4rem',
                     }}
                   >
-                    {el.title} - {el.codigo} -{' '}
-                    {el.cod_agrupacion_documental ?? 'N/A'} -{' '}
-                    {el?.cod_tipo_unidad}
+                    {el.codigo} - {el.title}
                   </div>
                 ))}
             </div>
