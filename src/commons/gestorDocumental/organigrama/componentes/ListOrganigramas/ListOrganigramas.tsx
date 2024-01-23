@@ -336,13 +336,13 @@ export function ListOrganigramas({
           CREAR ORGANIGRAMA
         </Button>
         <Link to="/app/transversal/procesos/cambio_organigrama_actual">
-          <Button variant="outlined" startIcon={<AssignmentTurnedInIcon />}>
+          <Button variant="contained" startIcon={<AssignmentTurnedInIcon />}>
             ELEGIR ORGANIGRAMA ACTUAL
           </Button>
         </Link>
         <Link to="/app/gestor_documental/activacion_instrumentos_archivisticos">
-          <Button variant="outlined" startIcon={<AssignmentTurnedInIcon />}>
-            ACTIVACIÓN DE INSTRUMENTOS ARCHIVISTICOS
+          <Button variant="contained" startIcon={<AssignmentTurnedInIcon />}>
+            ACTIVAR INSTRUMENTOS ARCHIVISTICOS (CCD - TRD - TCA)
           </Button>
         </Link>
       </Stack>
