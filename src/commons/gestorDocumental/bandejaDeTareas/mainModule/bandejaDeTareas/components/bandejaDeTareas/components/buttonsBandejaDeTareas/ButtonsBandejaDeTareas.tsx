@@ -52,6 +52,7 @@ export const ButtonsBandejaDeTareas = (): JSX.Element => {
 
         switch (tipo) {
           case 'Responder PQRSDF':
+            case 'RESPONDER PQRSDF':
             return renderPQRSDF();
         /*  case 'Tramites y Servicios':
             return renderTramitesYServicios(actionsTramitesYServicios);*/

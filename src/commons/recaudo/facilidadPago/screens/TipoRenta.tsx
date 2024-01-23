@@ -65,7 +65,7 @@ export const TipoRenta: React.FC = () => {
     const columns = [
         { field: 'id_tipo_renta', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'nombre_tipo_renta', headerName: 'Tipo renta', width: 130, flex: 1 },
-        { field: 'valor_tipo_renta', headerName: 'Valor de tipo de renta', width: 130, flex: 1 },
+        // { field: 'valor_tipo_renta', headerName: 'Valor de tipo de renta', width: 130, flex: 1 },
 
         {
             field: 'Acciones',
@@ -187,7 +187,7 @@ export const TipoRenta: React.FC = () => {
                         />
                     </Grid>
                     
-                    <Grid item xs={12} sm={4}>
+                    {/* <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             fullWidth
@@ -198,7 +198,7 @@ export const TipoRenta: React.FC = () => {
                             label="Valor de tipo de renta"
                             value={formValues.valor_tipo_renta}
                         />
-                    </Grid>
+                    </Grid> */}
 
 
                     <Grid item xs={12} sm={4}>

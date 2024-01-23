@@ -7,8 +7,10 @@ import {
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import {
+  setActionsOtros,
   setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,
+  setListaHistoricoSolicitudes,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { columnsOtros } from './columnsOtros/columnsOtros';
 import { LoadingButton } from '@mui/lab';
@@ -16,20 +18,58 @@ import { control_warning } from '../../../../../../../../../almacen/configuracio
 import Swal from 'sweetalert2';
 import TaskIcon from '@mui/icons-material/Task';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ModalOtros } from '../../../../../Atom/otrosModal/ModalOtros';
+import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { useContext, useState } from 'react';
+import { getHistoricoOtrosByRadicado } from '../../../../../../../toolkit/thunks/otros/getHistoricoOtrosByRadicado.service';
+import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
+import { getAnexosOtros } from '../../../../../../../toolkit/thunks/otros/anexos/getAnexosOtros.service';
 
 export const ElementosOtros = (): JSX.Element => {
   //* redux states
   const {
     listaElementosPqrsfTramitesUotros,
     currentElementPqrsdComplementoTramitesYotros,
+    actionsOtros,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
+  const { handleOpenModalOne, handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
+  const {
+    setRadicado,
+    setValue,
+    setAnexos,
+  } = useContext(PanelVentanillaContext);
   //* dispatch necesario
   const dispatch = useAppDispatch();
 
+  //* states
+  //* loader button simulacion
+  const [loadingStates, setLoadingStates] = useState<any>({});
+
   //* FUNCTIONS ---------------
-  const setActionsOtrosManejo = (pqrsdf: any) => {
-    if (pqrsdf.estado_solicitud === 'EN GESTION') {
+
+  const handleRequestRadicadoOtro = async (radicado: string) => {
+    try {
+      const historico = await getHistoricoOtrosByRadicado(
+        '',
+        handleGeneralLoading
+      );
+
+      const historicoFiltrado = historico.filter(
+        (element: any) => element?.cabecera?.radicado === radicado
+      );
+
+      dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
+    } catch (error) {
+      console.error('Error handling request radicado: ', error);
+      // Handle or throw error as needed
+    }
+  };
+
+  const setActionsOtrosManejo = (otro: any) => {
+    if (otro.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
         icon: 'error',
@@ -39,66 +79,63 @@ export const ElementosOtros = (): JSX.Element => {
       return;
     }
 
-    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(pqrsdf));
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(otro));
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 
-    /*const shouldDisable = (actionId: string) => {
-        const isAsigGrup = actionId === 'AsigGrup';
-        const isDig = actionId === 'Dig';
-        const hasAnexos = pqrsdf.cantidad_anexos > 0;
-        const requiresDigitalization = pqrsdf.requiere_digitalizacion;
-        const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
-        const isEnVentanillaSinPendientes =
-          pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
-        const isEnVentanillaConPendientes =
-          pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
-  
-        // Primer caso
-        if (isRadicado && !hasAnexos && isDig) {
-          return true;
-        }
-  
-        // Segundo caso
-        if (isRadicado && hasAnexos && !requiresDigitalization) {
-          return false;
-        }
-  
-        // Tercer caso
-        if (isRadicado && hasAnexos && requiresDigitalization) {
-          return isAsigGrup;
-        }
-  
-        // Cuarto caso
-        if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-          return false;
-        }
-  
-        // Quinto caso
-        if (isEnVentanillaSinPendientes && requiresDigitalization) {
-          return isAsigGrup;
-        }
-  
-        // Sexto caso
-        if (isEnVentanillaConPendientes) {
-          return isAsigGrup;
-        }
-  
-        // Caso por defecto
-        return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
-      };
-  
-      const actionsPQRSDF = actions.map((action: any) => ({
-        ...action,
-        disabled: shouldDisable(action.id),
-      }));
-  
-      //  console.log('')(actionsPQRSDF);
-      dispatch(setActionssToManagePermissions(actionsPQRSDF));*/
+    /*    const shouldDisable = (actionId: string) => {
+      const isAsigGrup = actionId === 'AsigGrupOtro';
+      const isDig = actionId === 'DigOtro';
+      const hasAnexos = otro.cantidad_anexos > 0;
+      const requiresDigitalization = otro.requiere_digitalizacion;
+      const isRadicado = otro.estado_solicitud === 'RADICADO';
+      const isEnVentanillaSinPendientes =
+      otro.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+      const isEnVentanillaConPendientes =
+      otro.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+      const isEnGestion = otro.estado_solicitud === 'EN GESTION';
+
+      if (isEnGestion) {
+        return true;
+      }
+
+      if (isRadicado && !hasAnexos && isDig) {
+        return true;
+      }
+
+      if (isRadicado && hasAnexos && !requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      if (isRadicado && hasAnexos && requiresDigitalization) {
+        return isDig;
+      }
+
+      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+        return isAsigGrup;
+      }
+
+      if (isEnVentanillaSinPendientes && requiresDigitalization) {
+        return isDig;
+      }
+
+      if (isEnVentanillaConPendientes) {
+        return isAsigGrup;
+      }
+
+      return actionId === 'DigOtro' && !(requiresDigitalization && hasAnexos);
+    };
+
+    const actionsOtrosNew = actionsOtros.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+
+    dispatch(setActionsOtros(actionsOtrosNew));*/
   };
 
   // ? columns config
@@ -151,33 +188,33 @@ export const ElementosOtros = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <LoadingButton
-            loading={false /*loadingStates[params.row.id_otros]*/}
+            loading={loadingStates[params.row.id_otros]}
             color="primary"
             variant="contained"
             onClick={() => {
               console.log(params.row);
-              /*if (params.value === 0) {
+              if (params.value === 0) {
                 control_warning(
                   'No hay solicitudes de digitalización para este radicado, por lo tanto no se podrá ver historial de solicitudes de digitalización'
                 );
                 return;
               } else {
-                setLoadingStates((prev) => ({
+                setLoadingStates((prev: any) => ({
                   ...prev,
                   [params.row.id_otros]: true,
                 }));
                 // Simulate an async operation
                 setTimeout(() => {
-                  setValue(1);
+                  setValue(3);
                   //* se debe reemplazar por el radicado real que viene dentro del elemento que se va a buscar
                   setRadicado(params?.row?.radicado);
-                  handleRequestRadicado(params?.row?.radicado);
-                  setLoadingStates((prev) => ({
+                  handleRequestRadicadoOtro(params?.row?.radicado);
+                  setLoadingStates((prev: any) => ({
                     ...prev,
                     [params.row.id_otros]: false,
                   }));
                 }, 1000);
-              }*/
+              }
             }}
           >
             {`Solicitudes de digitalización: ${params.value}`}
@@ -195,22 +232,8 @@ export const ElementosOtros = (): JSX.Element => {
             <Tooltip title="Ver info de la solicitud de otros">
               <IconButton
                 onClick={() => {
-                  console.log('jiji', params.row);
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsOtrosManejo(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
+                  handleOpenModalOne(true);
+                  setActionsOtrosManejo(params?.row);
                 }}
               >
                 <Avatar
@@ -277,7 +300,7 @@ export const ElementosOtros = (): JSX.Element => {
   return (
     <>
       <RenderDataGrid
-        rows={listaElementosPqrsfTramitesUotros ?? []}
+        rows={[...listaElementosPqrsfTramitesUotros ]?? []}
         columns={columns ?? []}
         title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
         aditionalElement={
@@ -296,9 +319,8 @@ export const ElementosOtros = (): JSX.Element => {
         }
       />
       {/*modal para ver la información de la solicitud de otro seleccionada*/}
-      {/*<ModalOpaInformacion />*/}{' '}
-      {/*se debe realizar el código de dicho modal, ya que aún no se encuentra implemenetado*/}
-      {/*modal para ver la información de la OPA seleccionada*/}
+      <ModalOtros />
+      {/*modal para ver la información de la solicitud de otro seleccionada*/}
     </>
   );
 };

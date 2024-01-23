@@ -44,8 +44,6 @@ import { useResSolicitudUsu } from '../../../hook/useResSolicitudUsu';
 import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../toolkit/slice/ResSolicitudUsarioSlice';
 export const FormParte3 = ({
   controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
   resetFormulario,
   watchFormulario,
   setInfoReset,

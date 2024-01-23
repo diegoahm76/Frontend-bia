@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -40,7 +41,12 @@ interface Rows {
   id: number;
   nombre: string;
 }
-
+ interface Variable {
+  id_variables: number;
+  nombre: string;
+  tipo_cobro: number;
+  tipo_renta: number;
+}
 interface IProps {
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
@@ -270,7 +276,6 @@ export const AgregarEditarOpciones = ({
           set_open_notification_modal(true);
         });
     }
-
   }
 
   const column: GridColDef[] = [
@@ -312,11 +317,50 @@ export const AgregarEditarOpciones = ({
     },
   ];
 
+  const [variabless, setVariabless] = useState<Variable[]>([]);
+  const [selectedVariable, setSelectedVariable] = useState<any>(null);
+
+  const handleSelectChange = (event: SelectChangeEvent<number>) => {
+      setSelectedVariable(event.target.value as number);
+  };
+  
+  const fetchVariables = async () => {
+     try {
+         const res = await api.get("/recaudo/configuracion_baisca/variables/get/");
+         setVariabless(res.data.data);
+     } catch (error) {
+         console.error("Error al obtener las variables", error);
+     }
+ };
+
+ useEffect(() => {
+     fetchVariables();
+ }, []);
+
+  
   return (
     <>
       <>
         {/* INICIO TEST */}
         <Grid container spacing={2} sx={{ my: '10px' }}>
+
+        <Grid item xs={12} sm={4.5}>
+        <FormControl size="small" fullWidth>
+            <InputLabel>Selecciona opción variable</InputLabel>
+            <Select
+                value={selectedVariable}
+                onChange={handleSelectChange}
+                label="Selecciona opción variable"
+            >
+                {variabless.map((variable) => (
+                    <MenuItem key={variable.id_variables} value={variable.id_variables}>
+                        {variable.nombre}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    </Grid>
+       
           <Grid item xs={12} sm={4.5}>
             <FormControl size="small" fullWidth>
               <InputLabel>Selecciona opción liquidación</InputLabel>
@@ -341,6 +385,9 @@ export const AgregarEditarOpciones = ({
               </Select>
             </FormControl>
           </Grid>
+
+
+
           <Grid item xs={12} sm={4.5}>
             <TextField
               label="Ingresa una variable"

@@ -1,4 +1,5 @@
 import { control_warning } from '../../commons/almacen/configuracion/store/thunks/BodegaThunks';
+import { logout } from '../../commons/auth/store';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const handleSessionExpiry = async () => {
@@ -24,7 +25,7 @@ const handleRequest = async (request: any) => {
   return request;
 };
 
-const handleRequestError = async (error: any) => {
+const handleRequestError = async (error: any, ) => {
   await handleSessionExpiry();
   return await Promise.reject(error);
 };

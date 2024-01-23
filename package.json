@@ -33,7 +33,6 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.29",
     "leaflet": "^1.9.3",
-    "million": "^2.6.4",
     "moment": "^2.29.4",
     "primeicons": "^6.0.1",
     "primereact": "^9.2.1",
@@ -65,10 +64,11 @@
     "xmlbuilder": "^15.1.1"
   },
   "scripts": {
-    "start": "craco start",
-    "dev": "craco start -p 3000 -H 0.0.0.0",
-    "build": "craco build",
-    "test": "craco test --watchAll"
+    "dev": "node --max-old-space-size=3072 node_modules/react-scripts/scripts/start.js",
+    "mobile": "node --max-old-space-size=3072 node_modules/react-scripts/scripts/start.js -p 3000 -H 0.0.0.0",
+    "start": "node --max-old-space-size=4096 node_modules/react-scripts/scripts/start.js --no-warnings",
+    "build": "node --max-old-space-size=4096 node_modules/react-scripts/scripts/build.js",
+    "test": "react-scripts test --watchAll"
   },
   "eslintConfig": {
     "extends": [
@@ -90,8 +90,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@craco/craco": "^7.1.0",
-    "@craco/types": "^7.1.0",
     "@faker-js/faker": "^7.6.0",
     "@locator/babel-jsx": "^0.4.2",
     "@locator/runtime": "^0.4.2",

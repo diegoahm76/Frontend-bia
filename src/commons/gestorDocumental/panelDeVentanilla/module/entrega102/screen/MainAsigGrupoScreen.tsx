@@ -13,6 +13,7 @@ import { Asignaciones } from '../components/Asignaciones/Asginaciones';
 import { AccionesFinales } from '../components/AccionesFinales/AccionesFinales';
 import { getAsignaciones } from '../services/asignaciones/pqrsdf/getAsignaciones.service';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
+import { getAsignacionesOtros } from '../services/asignaciones/otros/getAsignacionesOtros.service';
 
 export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -61,26 +62,15 @@ export const MainAsigGrupoScreen: React.FC = (): JSX.Element => {
           'warning'
         );
         break;
-      case 'Otros':
-        // Call the service for Otros
-        showAlert(
-          'Atención',
-          'No hay servicio aún para ver las asignacion para los otros, así que no hay asignaciones de OTROS por el momento',
-          'warning'
-        );
+      case 'OTROS':
+        void getAsignacionesOtros(
+          currentElementPqrsdComplementoTramitesYotros?.id_otros,
+          handleGeneralLoading
+        ).then((res) => {
+          setListaAsignaciones(res);
+        });
 
         break;
-/*      case 'Complemento de PQRSDF':
-      case 'Complemento de PQRSDF - Respuesta a solicitud':
-      case 'Complemento de PQRSDF - Respuesta a requerimiento':
-        // Call the service for Complemento de PQRSDF
-        showAlert(
-          'Atención',
-          'No hay servicio aún para ver las asignacion para OPA, así que no hay asignaciones de opa jeje siu',
-          'warning'
-        );
-
-        break;*/
       case 'OPA':
         //* se debe llamar el servicio respectivo para las asignaciones de OPA, apenas esté listo
         showAlert(

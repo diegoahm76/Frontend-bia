@@ -136,7 +136,35 @@ export const Facturacion: React.FC = () => {
     doc.text(`Tel.: ${telefono}`, 10, y);
     y += 6;
     doc.text(`Ciudad: ${ciudad}`, 10, y);
-    y += 6; // Espacio antes del asunto
+
+    y += 6; doc.text(``, 10, y);
+    y += 6;
+
+
+    let textoPersonalizado = `
+    Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los documentos de cobro de la vigencia  ${Fecha_vigencia ? Fecha_vigencia : '__________'} de la tasa por utilización de agua.
+
+Cordial Saludo,
+Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información: 
+a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${Fecha_a ? Fecha_a : '__________'} .  
+b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${Fecha_b ? Fecha_b : '__________'} .  
+Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${Fecha_entrega ? Fecha_entrega : '__________'} , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.
+
+ 
+     `;
+    const lineasPersonalizadas = doc.splitTextToSize(textoPersonalizado, anchoPagina - 20);
+    for (let i = 0; i < lineasPersonalizadas.length; i++) {
+      if (y > 280) {
+        doc.addPage();
+        agregarEncabezado();
+        y = 30;
+      }
+      doc.text(lineasPersonalizadas[i], 10, y);
+      y += 6;
+    }
+
+
+    // Espacio antes del asunto
     // Añadir asunto
     const lineas = doc.splitTextToSize(asunto, anchoPagina - 20);
     for (let i = 0; i < lineas.length; i++) {
@@ -150,6 +178,7 @@ export const Facturacion: React.FC = () => {
     }
     let yFinal = doc.internal.pageSize.getHeight() - 30; // Ajusta esto según sea necesario
     doc.setFontSize(12);
+    // doc.text(`Firma _____________________`, 10, yFinal);
     doc.text(`Nombre: ${nombre}`, 10, yFinal);
     yFinal += 10;
     doc.text(`Contratista Grupo: ${nombre_unidad_organizacional}`, 10, yFinal);
@@ -158,7 +187,7 @@ export const Facturacion: React.FC = () => {
 
 
   const [idUnidadSeleccionada, setIdUnidadSeleccionada] = useState('');
-  
+
   const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
 
   const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
@@ -225,6 +254,12 @@ export const Facturacion: React.FC = () => {
   };
   const [asunto, setAsunto] = useState('');
   const [identificacion, setIdentificacion] = useState('');
+  const [Fecha_vigencia, setFecha_vigencia] = useState('');
+  const [Fecha_entrega, setFecha_entrega] = useState('');
+
+  const [Fecha_a, setFecha_a] = useState('');
+  const [Fecha_b, setFecha_b] = useState('');
+
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
   const [ciudad, setCiudad] = useState('');
@@ -498,13 +533,66 @@ export const Facturacion: React.FC = () => {
             onChange={(e) => setIdentificacion(e.target.value)}
           />
         </Grid>
+
         <Grid item xs={12} sm={4}>
           <TextField
-            label="Email"
-            variant="outlined"
-            size="small"
             fullWidth
+            type="date"
+            size="small"
+            variant="outlined"
+            label=" Fecha vigencia"
+            value={Fecha_vigencia}
+            InputLabelProps={{ shrink: true }}
+            onChange={(e) => setFecha_vigencia(e.target.value)}
+          />
+        </Grid>
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            fullWidth
+            type="date"
+            size="small"
+            value={Fecha_a}
+            label="Fecha (A"
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+            onChange={(e) => setFecha_a(e.target.value)}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            fullWidth
+            type="date"
+            size="small"
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+            label="Fecha (B"
+            value={Fecha_b}
+            onChange={(e) => setFecha_b(e.target.value)}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            fullWidth
+            type="date"
+            size="small"
+            variant="outlined"
+            value={Fecha_entrega}
+            label=" Fecha entrega" 
+            InputLabelProps={{ shrink: true }} 
+            onChange={(e) => setFecha_entrega(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Email"
             value={email}
+            variant="outlined"
             onChange={(e) => setEmail(e.target.value)}
           />
         </Grid>

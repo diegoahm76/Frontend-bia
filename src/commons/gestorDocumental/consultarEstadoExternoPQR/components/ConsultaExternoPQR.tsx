@@ -18,6 +18,7 @@ import { cargarAsignaciones, cargarestado, cargarorganigrama, fetchSpqrs, fetchT
 
 export const ConsultaExternoPQR: React.FC = () => {
     const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
+  
     const initialFormData: FormData = {
         id_persona_alertar: null,
         pqrs: "",

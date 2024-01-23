@@ -12,7 +12,8 @@ export const getListadoTareasByPerson = async (
   estado_de_la_tarea: string = '',
   fecha_inicio: string = '',
   fecha_fin: string = '',
-  mostrar_respuesta_con_req_pendientes: boolean = false
+  mostrar_respuesta_con_req_pendientes: boolean = false,
+  radicado: string = ''
 ) => {
   try {
     setLoading(true);
@@ -30,7 +31,7 @@ export const getListadoTareasByPerson = async (
       estado_de_la_tarea
     )}&fecha_inicio=${formattedFechaInicio}&fecha_fin=${formattedFechaFin}&mostrar_requerimiento=${encodeURIComponent(
       mostrar_respuesta_con_req_pendientes
-    )}`;
+    )}&radicado=${encodeURIComponent(radicado)}`;
     const { data } = await api.get(url);
 
     if (data && data?.data?.length) {

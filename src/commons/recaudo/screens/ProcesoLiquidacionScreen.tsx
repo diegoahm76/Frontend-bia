@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint no-new-func: 0 */
 import { type SyntheticEvent, useState, useEffect } from 'react';
-import { Box, Grid, type SelectChangeEvent, Tab, Tooltip, IconButton, Avatar } from "@mui/material"
+import { Box, Grid, type SelectChangeEvent, Tab, Tooltip, IconButton, Avatar, Button } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiquidacion";
 import { Title } from "../../../components"
@@ -11,7 +12,8 @@ import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { NotificationModal } from '../components/NotificationModal';
 import dayjs, { type Dayjs } from 'dayjs';
 import type { DetallePeriodo, DetallesPeriodos } from '../interfaces/proceso';
-
+import { FacturacionVisor } from './FacturacionVisor';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 const detalles_ciclos: string[] = [
   'diario',
   'mensual',
@@ -407,7 +409,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       minWidth: 100,
       flex: 0.2,
       renderCell: (params) => {
-        return (
+        return (<>
+      
           <Tooltip title='Liquidar'>
             <IconButton
               onClick={() => {
@@ -435,11 +438,26 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               </Avatar>
             </IconButton>
           </Tooltip>
+          <IconButton
+            onClick={() => {
+              set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
+              set_nombre_deudor(`${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`);
+              // set_position_tab('2');
+              handle_open_buscar();
+            }}
+          >
+            <VisibilityIcon sx={{ color: 'primary.main' }} /> {/* Ícono del ojo */}
+          </IconButton>
+
+          </>
         );
       }
     }
   ];
-
+  const [is_modal_active, set_is_buscar] = useState<boolean>(false);
+  const handle_open_buscar = (): void => {
+    set_is_buscar(true);
+  };
   return (
     <>
       <Grid
@@ -453,6 +471,19 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
+        
+        {/* <Button onClick={handle_open_buscar} fullWidth variant="outlined"    >
+          Crear
+        </Button> */}
+
+        <FacturacionVisor
+          is_modal_active={is_modal_active}
+          set_is_modal_active={set_is_buscar}
+          form_liquidacion={form_liquidacion}
+          expedientes_deudor={expedientes_deudor}
+          id_liquidacion_pdf={id_liquidacion_pdf}
+          handle_select_form_liquidacion_change={handle_select_form_liquidacion_change}
+        />
         <Grid item xs={12}>
           <Title title="Proceso de Liquidación"></Title>
           <Box
@@ -519,6 +550,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+
+
+
 
       <TabContext value={position_tab}>
         <TabPanel value="2" sx={{ p: '20px 0' }}>

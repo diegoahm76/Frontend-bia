@@ -103,7 +103,7 @@ export const AgregarBanco: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de detalle inversión" />
+            <Title title="Registro de banco proyecto " />
           </Grid>
           {mode.editar ? (
             <>

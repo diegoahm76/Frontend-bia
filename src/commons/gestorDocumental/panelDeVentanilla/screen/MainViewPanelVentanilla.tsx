@@ -22,6 +22,7 @@ import { HistoricoSolicitudesScreen } from '../module/entrega98_101/screen/histo
 import { showAlert } from '../../../../utils/showAlert/ShowAlert';
 import { HisSolOpasScreen } from '../module/entrega98_101/screen/historicoSolicitudesOPAS/HistSolOpasScrenn';
 import { HisSolOtrosScreen } from '../module/entrega98_101/screen/historicoSolicitudesOtros/HisSolOtrosScreen';
+import { getHistoricoOtrosByRadicado } from '../toolkit/thunks/otros/getHistoricoOtrosByRadicado.service';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   // * dispatch declaration
@@ -60,11 +61,11 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   const handleRequestRadicadoOtros = async () => {
     showAlert(
       'Estimado usuario',
-      'Actualmente estamos trabajando en el desarrollo de esta funcionalidad para ver el histórico de los OTROS. Por el momento, no se han establecido servicios específicos, pero puede interactuar de manera simulada.',
+      'Actualmente estamos trabajando en el desarrollo de esta funcionalidad para ver el histórico de los OTROS.',
       'warning'
     );
 
-    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+    const historico = await getHistoricoOtrosByRadicado('', handleGeneralLoading);
 
     dispatch(setListaHistoricoSolicitudes(historico));
   };
