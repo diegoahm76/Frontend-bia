@@ -88,12 +88,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       fecha_fin,
       handleSecondLoading
     );
-
-    showAlert(
-      'Estimado usuario!',
-      'Esta funcionalidad de OTROS se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
-      'warning'
-    );
     dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));

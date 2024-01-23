@@ -59,12 +59,6 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   };
 
   const handleRequestRadicadoOtros = async () => {
-    showAlert(
-      'Estimado usuario',
-      'Actualmente estamos trabajando en el desarrollo de esta funcionalidad para ver el histórico de los OTROS.',
-      'warning'
-    );
-
     const historico = await getHistoricoOtrosByRadicado('', handleGeneralLoading);
 
     dispatch(setListaHistoricoSolicitudes(historico));

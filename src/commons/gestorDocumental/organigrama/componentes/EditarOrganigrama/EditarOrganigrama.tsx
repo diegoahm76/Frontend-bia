@@ -15,10 +15,7 @@ import {
   Button,
   TextField,
   Typography,
-  Chip
-  // MenuItem,
-  // InputLabel,
-  // FormControl,
+  Chip,
 } from '@mui/material';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 
@@ -36,25 +33,24 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import {
   to_finalize_organigram_service,
-  to_resume_organigram_service
+  to_resume_organigram_service,
 } from '../../store/thunks/organigramThunks';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { set_special_edit } from '../../store/slices/organigramSlice';
-import { FILEWEIGHT } from '../../../../../fileWeight/fileWeight';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-// import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { LoadingButton } from '@mui/lab';
 import SyncIcon from '@mui/icons-material/Sync';
 import { v4 as uuidv4 } from 'uuid';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Loader } from '../../../../../utils/Loader/Loader';
+import { useFiles } from '../../../../../hooks/useFiles/useFiles';
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarOrganigrama = ({
-  set_position_tab_organigrama
+  set_position_tab_organigrama,
 }: IProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const [view_organigram, set_view_organigram] = useState(false);
@@ -63,8 +59,10 @@ export const EditarOrganigrama = ({
     levels_organigram,
     unity_organigram,
     mold_organigram,
-    specialEdit
+    specialEdit,
   } = useAppSelector((state) => state.organigram);
+
+  const { controlar_tamagno_archivos } = useFiles();
 
   const {
     control_organigrama,
@@ -94,7 +92,7 @@ export const EditarOrganigrama = ({
     title_unidades,
     edit_prop_activo_unidad_org,
     loadingLevels,
-    dataloading
+    dataloading,
   } = useEditarOrganigrama();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -104,11 +102,11 @@ export const EditarOrganigrama = ({
       option?.orden === 1
         ? {
             label: 'Si',
-            value: true
+            value: true,
           }
         : {
             label: 'No',
-            value: false
+            value: false,
           }
     );
     set_value_unidades('nivel_unidad', option);
@@ -163,7 +161,7 @@ export const EditarOrganigrama = ({
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <TextField
                     // margin="dense"
@@ -174,7 +172,7 @@ export const EditarOrganigrama = ({
                     disabled={organigram_current?.fecha_terminado}
                     value={value}
                     inputProps={{
-                      maxLength: 50
+                      maxLength: 50,
                     }}
                     onChange={(e) => {
                       if (e.target.value.length === 50)
@@ -201,7 +199,7 @@ export const EditarOrganigrama = ({
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <TextField
                     // margin="dense"
@@ -212,7 +210,7 @@ export const EditarOrganigrama = ({
                     disabled={organigram_current?.fecha_terminado}
                     value={value}
                     inputProps={{
-                      maxLength: 10
+                      maxLength: 10,
                     }}
                     onChange={(e) => {
                       if (e.target.value.length === 10)
@@ -239,7 +237,7 @@ export const EditarOrganigrama = ({
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <TextField
                     // margin="dense"
@@ -250,7 +248,7 @@ export const EditarOrganigrama = ({
                     value={value}
                     disabled={organigram_current?.fecha_terminado}
                     inputProps={{
-                      maxLength: 255
+                      maxLength: 255,
                     }}
                     onChange={(e: any) => {
                       if (e.target.value.length === 255)
@@ -278,7 +276,7 @@ export const EditarOrganigrama = ({
                 rules={{ required: false }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <>
                     <Button
@@ -291,7 +289,7 @@ export const EditarOrganigrama = ({
                       component="label"
                       style={{
                         marginTop: '.15rem',
-                        width: '100%'
+                        width: '100%',
                       }}
                       startIcon={<CloudUploadIcon />}
                     >
@@ -301,26 +299,11 @@ export const EditarOrganigrama = ({
                       <input
                         style={{ display: 'none' }}
                         type="file"
-                        accept="application/pdf"
                         onChange={(e) => {
                           const files = (e.target as HTMLInputElement).files;
                           if (files && files.length > 0) {
                             const file = files[0];
-                            if (file.type !== 'application/pdf') {
-                              control_warning(
-                                'Precaución: Solo es admitido archivos en formato pdf'
-                              );
-                            } else if (file.size > FILEWEIGHT.PDF) {
-                              const MAX_FILE_SIZE_MB = (
-                                FILEWEIGHT.PDF /
-                                (1024 * 1024)
-                              ).toFixed(1);
-                              control_warning(
-                                `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                              );
-                            } else {
-                              onChange(file);
-                            }
+                            controlar_tamagno_archivos(file, onChange);
                           }
                         }}
                       />
@@ -330,7 +313,7 @@ export const EditarOrganigrama = ({
                         style={{
                           color: 'rgba(0, 0, 0, 0.6)',
                           fontWeight: 'thin',
-                          fontSize: '0.75rem'
+                          fontSize: '0.75rem',
                         }}
                       >
                         {control_organigrama._formValues?.ruta_resolucion
@@ -391,7 +374,7 @@ export const EditarOrganigrama = ({
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error }
+                      fieldState: { error },
                     }) => (
                       <TextField
                         fullWidth
@@ -482,7 +465,7 @@ export const EditarOrganigrama = ({
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error }
+                      fieldState: { error },
                     }) => (
                       <TextField
                         // margin="dense"
@@ -491,7 +474,7 @@ export const EditarOrganigrama = ({
                         label="Código"
                         variant="outlined"
                         inputProps={{
-                          maxLength: 10
+                          maxLength: 10,
                         }}
                         // eslint-disable-next-line eqeqeq
                         disabled={organigram_current?.fecha_terminado}
@@ -515,14 +498,14 @@ export const EditarOrganigrama = ({
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error }
+                      fieldState: { error },
                     }) => (
                       <TextField
                         fullWidth
                         size="small"
                         label="Nombre"
                         inputProps={{
-                          maxLength: 120
+                          maxLength: 120,
                         }}
                         variant="outlined"
                         disabled={organigram_current?.fecha_terminado}
@@ -624,8 +607,8 @@ export const EditarOrganigrama = ({
                           {
                             label: 'Sin agrupación documental',
                             value: '',
-                            isDisabled: false
-                          }
+                            isDisabled: false,
+                          },
                         ]}
                         placeholder="Seleccionar"
                       />
@@ -720,7 +703,7 @@ export const EditarOrganigrama = ({
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -730,7 +713,7 @@ export const EditarOrganigrama = ({
                       value={value}
                       onChange={onChange}
                       inputProps={{
-                        maxLength: 10
+                        maxLength: 10,
                       }}
                       error={!(error == null)}
                       helperText={
@@ -750,7 +733,7 @@ export const EditarOrganigrama = ({
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -764,7 +747,7 @@ export const EditarOrganigrama = ({
                           control_warning('máximo 120 caracteres');
                       }}
                       inputProps={{
-                        maxLength: 120
+                        maxLength: 120,
                       }}
                       error={!(error == null)}
                       helperText={
@@ -919,7 +902,7 @@ export const EditarOrganigrama = ({
           </Box>
         )}
 
-{/*        {organigram_current?.fecha_terminado && !organigram_current?.actual && (
+        {/*        {organigram_current?.fecha_terminado && !organigram_current?.actual && (
           <Button
             onClick={() => {
               // void dispatch(set_special_edit(false));
