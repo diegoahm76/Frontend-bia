@@ -38,7 +38,6 @@ export const ElementoOPAS = (): JSX.Element => {
   // ? set actions OPAS, button selected
 
   const setActionsOpas = (opa: any) => {
-    //  console.log('')(pqrsdf);
 
     if (
       opa?.estado_actual_solicitud === 'EN GESTION' ||
@@ -60,7 +59,7 @@ export const ElementoOPAS = (): JSX.Element => {
       text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
-
+/*
     const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
@@ -109,8 +108,7 @@ export const ElementoOPAS = (): JSX.Element => {
       ...action,
       disabled: shouldDisable(action.id),
     }));
-    //  console.log('')(actionsPQRSDF);
-    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));
+    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));*/
   };
 
   //* const columns with actions

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
+import { formatDate } from "../../../../../../../../../../../utils/functions/formatDate";
+
 /*
 
  {
@@ -53,6 +55,9 @@ export const columnsOpas = [
     headerName: 'Asunto',
     field: 'asunto',
     minWidth: 400,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Cantidad de anexos',
@@ -72,12 +77,12 @@ export const columnsOpas = [
     field: 'fecha_radicado',
     minWidth: 200,
     renderCell: (params: any) => {
-      return params.value ? params.value : 'N/A';
+      return params.value ? formatDate(params.value) : 'N/A';
     },
   },
   {
     headerName: 'Estado de solicitud',
-    field: 'estado_actual_solicitud',
+    field: 'estado_actual',
     minWidth: 260,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
@@ -87,26 +92,49 @@ export const columnsOpas = [
     headerName: 'Tipo de permiso ambiental',
     field: 'tipo_permiso_ambiental',
     minWidth: 380,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Permiso ambiental',
     field: 'permiso_ambiental',
     minWidth: 260,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Nombre del proyecto',
     field: 'nombre_proyecto',
     minWidth: 260,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Coordenada X',
     field: 'coordenada_x',
     minWidth: 160,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Coordenada Y',
     field: 'coordenada_y',
     minWidth: 160,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
+  },
+  {
+    headerName: 'Unidad asignada',
+    field: 'unidad_asignada',
+    minWidth: 160,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   }
 ];
 

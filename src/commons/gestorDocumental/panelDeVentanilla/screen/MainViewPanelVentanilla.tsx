@@ -23,6 +23,7 @@ import { showAlert } from '../../../../utils/showAlert/ShowAlert';
 import { HisSolOpasScreen } from '../module/entrega98_101/screen/historicoSolicitudesOPAS/HistSolOpasScrenn';
 import { HisSolOtrosScreen } from '../module/entrega98_101/screen/historicoSolicitudesOtros/HisSolOtrosScreen';
 import { getHistoricoOtrosByRadicado } from '../toolkit/thunks/otros/getHistoricoOtrosByRadicado.service';
+import { getHistoricoByRadicadoOPAS } from '../toolkit/thunks/opas/getHistoricoByRadicadoOPAS.service';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   // * dispatch declaration
@@ -47,13 +48,7 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   // ? -----------------------------------------------------------------------
 
   const handleRequestRadicadoOpas = async () => {
-    showAlert(
-      'Estimado usuario',
-      'Actualmente estamos trabajando en el desarrollo de esta funcionalidad para ver el histórico de OPAS. Por el momento, no se han establecido servicios específicos, pero puede interactuar de manera simulada.',
-      'warning'
-    );
-
-    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+    const historico = await getHistoricoByRadicadoOPAS('', handleGeneralLoading);
 
     dispatch(setListaHistoricoSolicitudes(historico));
   };
