@@ -11,16 +11,25 @@ export const columnsOtros = [
     headerName: 'Nombre completo del titular',
     field: 'nombre_completo_titular',
     width: 320,
+    renderCell: (params: any) => {
+      return params.value || 'N/A'
+    }
   },
   {
     headerName: 'Asunto',
     field: 'asunto',
     width: 320,
+    renderCell: (params: any) => {
+      return params.value || 'N/A'
+    }
   },
   {
     headerName: 'Cantidad de anexos',
     field: 'cantidad_anexos',
     width: 180,
+    renderCell: (params: any) => {
+      return params.value || 'N/A'
+    }
   },
   {
     headerName: 'Radicado',
@@ -39,6 +48,9 @@ export const columnsOtros = [
     headerName: 'Estado de la solicitud',
     field: 'estado_solicitud',
     width: 220,
+    renderCell_: (params: any) => {
+      return params.value || 'N/A'
+    }
   },
   {
     headerName: 'Persona asignada',
@@ -98,7 +110,7 @@ export const columnsOtros = [
     field: 'fecha_envio_definitivo_digitalizacion',
     width: 300,
     renderCell: (params: any) => {
-      return formatDate(params.value) || ''
+      return formatDate(params.value) || 'N/A'
     }
   },
   {
@@ -106,7 +118,7 @@ export const columnsOtros = [
     field: 'fecha_digitalizacion_completada',
     width: 290,
     renderCell: (params: any) => {
-      return formatDate(params.value) || ''
+      return formatDate(params.value) || 'N/A'
     }
   },
   {
@@ -114,7 +126,7 @@ export const columnsOtros = [
     field: 'fecha_inicial_estado_actual',
     width: 250,
     renderCell: (params: any) => {
-      return formatDate(params.value) || ''
+      return formatDate(params.value) || 'N/A'
     }
   },
   {
@@ -122,7 +134,7 @@ export const columnsOtros = [
     field: 'nombre_sucursal_recepcion_fisica',
     width: 300,
     renderCell: (params: any) => {
-      return params.value || ''
+      return params.value || 'N/A'
     }
   },
   {
@@ -146,7 +158,7 @@ export const columnsOtros = [
     field: "forma_presentacion",
     width: 200,
     renderCell: (params: any) => {
-      return params.value || ''
+      return params.value || 'N/A'
     }
   }
 ]
