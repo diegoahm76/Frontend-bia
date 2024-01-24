@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Avatar, Box, Button, Chip, Grid } from '@mui/material';
+import { Avatar, Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 
@@ -20,6 +20,8 @@ import { AuthSlice } from '../../../auth/interfaces';
 import PrimaryForm from '../../../../components/partials/form/PrimaryForm';
 import { Title } from '../../../../components/Title';
 import OtroDialog from './OtrosDetail';
+import { formatDate } from '../../../../utils/functions/formatDate';
+import { RenderDataGrid } from '../../tca/Atom/RenderDataGrid/RenderDataGrid';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EstadOtros = () => {
@@ -38,20 +40,19 @@ const EstadOtros = () => {
   const [data_loaded, set_data_loaded] = useState(false);
   const [selected_otro, set_selected_otro] = useState<any>(null);
   const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
- 
+
   const handleSelectionModelChange = (selectionModel: string | any[]) => {
     if (selectionModel.length > 0) {
       // Suponiendo que tus IDs de fila son únicos y puedes encontrar la fila seleccionada en el array 'otros'
-      const selectedRow = otros.find((row) => row.id_otros === selectionModel[0]);
+      const selectedRow = otros.find(
+        (row) => row.id_otros === selectionModel[0]
+      );
       set_selected_otro(selectedRow);
     } else {
       set_selected_otro(null);
     }
   };
-  
-  
-  
-  
+
   useEffect(() => {
     set_detail_is_active(false);
     set_selected_otro({});
@@ -63,6 +64,8 @@ const EstadOtros = () => {
       headerName: 'Fecha de Registro',
       width: 100,
       flex: 1,
+      renderCell: (params) =>
+        params?.value ? formatDate(params?.value) : 'No hay fecha de registro',
       cellClassName: 'truncate-cell',
     },
     {
@@ -107,6 +110,7 @@ const EstadOtros = () => {
         <Button
           onClick={() => {
             set_detail_is_active(true);
+            handleSelectionModelChange([params.row.id_otros]);
           }}
         >
           <Avatar
@@ -157,7 +161,7 @@ const EstadOtros = () => {
     <>
       <Box
         sx={{
-          width: '80%',
+          width: '100%',
           alignItems: 'center',
           justifyContent: 'center',
           margin: 'auto',
@@ -166,7 +170,7 @@ const EstadOtros = () => {
         {data_loaded && (
           <Box
             sx={{
-              width: '80%',
+              width: '100%',
               alignItems: 'center',
               justifyContent: 'center',
               margin: 'auto',
@@ -174,7 +178,13 @@ const EstadOtros = () => {
           >
             {otros && Array.isArray(otros) && otros.length > 0 ? (
               <>
-                <Title title="Solicitudes Otros Realizadas" />
+                <RenderDataGrid
+                  columns={columns}
+                  rows={otros}
+                  title="Solicitudes Otros Realizadas"
+                />
+
+                {/*<Title title="Solicitudes Otros Realizadas" />
                 <DataGrid
                   density="compact"
                   autoHeight
@@ -185,19 +195,26 @@ const EstadOtros = () => {
                   getRowId={(row) => row.id_otros}
                   rows={otros}
                   onSelectionModelChange={handleSelectionModelChange}
-                />
+                />*/}
               </>
             ) : (
-              <p>No tiene otros</p>
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                align="center"
+                sx={{ mt: 2 }}
+              >
+                No tiene solicitudes de otros
+              </Typography>
             )}
           </Box>
         )}
       </Box>
       <OtroDialog
-       is_modal_active={detail_is_active}
-       set_is_modal_active={set_detail_is_active}
-       selected_otro={selected_otro}/>
-      
+        is_modal_active={detail_is_active}
+        set_is_modal_active={set_detail_is_active}
+        selected_otro={selected_otro}
+      />
     </>
   );
 };

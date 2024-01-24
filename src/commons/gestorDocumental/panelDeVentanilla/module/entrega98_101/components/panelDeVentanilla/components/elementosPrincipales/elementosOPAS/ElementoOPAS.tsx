@@ -168,7 +168,7 @@ export const ElementoOPAS = (): JSX.Element => {
 
                   //* pendiente llamada a servicio de anexos
 
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                 /* void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     setActionsPQRSDF(params?.row);
                     navigate(
                       `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
