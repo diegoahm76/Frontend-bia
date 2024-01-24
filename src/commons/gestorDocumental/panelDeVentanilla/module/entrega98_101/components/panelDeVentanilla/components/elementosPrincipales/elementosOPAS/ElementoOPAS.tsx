@@ -165,27 +165,6 @@ export const ElementoOPAS = (): JSX.Element => {
                 onClick={() => {
                   handleOpenModalOne(true);
                   setActionsOpas(params?.row);
-
-                  //* pendiente llamada a servicio de anexos
-
-                 /* void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
-                  /*   setActionsPQRSDF(params?.row);
-                  handleOpenInfoMetadatos(false);
-                  handleOpenInfoAnexos(false);*/
-                  // setMetadatos([]);
                 }}
               >
                 <Avatar

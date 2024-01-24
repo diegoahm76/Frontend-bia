@@ -54,7 +54,7 @@ export const columnsOpas = [
   {
     headerName: 'Asunto',
     field: 'asunto',
-    minWidth: 400,
+    minWidth: 450,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     }
@@ -75,7 +75,7 @@ export const columnsOpas = [
   {
     headerName: 'Fecha de radicado',
     field: 'fecha_radicado',
-    minWidth: 200,
+    minWidth: 220,
     renderCell: (params: any) => {
       return params.value ? formatDate(params.value) : 'N/A';
     },
@@ -83,7 +83,7 @@ export const columnsOpas = [
   {
     headerName: 'Estado de solicitud',
     field: 'estado_actual',
-    minWidth: 260,
+    minWidth: 400,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     },
@@ -91,7 +91,7 @@ export const columnsOpas = [
   {
     headerName: 'Tipo de permiso ambiental',
     field: 'tipo_permiso_ambiental',
-    minWidth: 380,
+    minWidth: 400,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     }
@@ -99,7 +99,7 @@ export const columnsOpas = [
   {
     headerName: 'Permiso ambiental',
     field: 'permiso_ambiental',
-    minWidth: 260,
+    minWidth: 300,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     }
@@ -107,7 +107,7 @@ export const columnsOpas = [
   {
     headerName: 'Nombre del proyecto',
     field: 'nombre_proyecto',
-    minWidth: 260,
+    minWidth: 500,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     }
