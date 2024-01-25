@@ -5,13 +5,14 @@ import type {
   IRubro,
   IMetaIndicador,
   IDetalleCuentas,
+  IBanco,
 } from '../../types/types';
 import type {
   IIntervalo,
   IModalidad,
   IUbicacion,
 } from '../../configuraciones/interfaces/interfaces';
-
+import { ClaseTercero } from '../../../../interfaces/globalModels';
 
 // ! Bancos
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
@@ -40,8 +41,7 @@ export const get_rubros = async (): Promise<IRubro[]> => {
 //   );
 //   return response.data.data;
 // };
-export const get_metas_indicador = async (
-): Promise<IMetaIndicador[]> => {
+export const get_metas_indicador = async (): Promise<IMetaIndicador[]> => {
   const response = await api.get(`seguimiento/planes/consultar-metas/`);
   return response.data.data;
 };
@@ -68,10 +68,23 @@ export const get_intervalos = async (): Promise<IIntervalo[]> => {
   return response.data.data;
 };
 
+export const get_banco = async (): Promise<IBanco[]> => {
+  const response = await api.get(
+    `seguimiento-planes/consultar-banco-proyectos/`
+  );
+  return response.data.data;
+};
 
+export const get_clase_tercero = async (): Promise<ClaseTercero[]> => {
+  const response = await api.get(`listas/clase-tercero/`);
+  console.log(response.data.data, 'clase tercero');
+  return response.data.data;
+};
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
-export const post_seguimiento = async (data: ISeguiminetoPOAI): Promise<ISeguiminetoPOAI> => {
+export const post_seguimiento = async (
+  data: ISeguiminetoPOAI
+): Promise<ISeguiminetoPOAI> => {
   const response = await api.post(
     `seguimiento-planes/crear-seguimiento-poai/`,
     data

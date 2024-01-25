@@ -291,6 +291,8 @@ export const initial_state_plan_adquisiciones: IPlanAdquisiciones = {
   vigencia_futura: null,
   decreto_paa: false,
   suministro_paa: false,
+  email_persona_responsable: '',
+  telefono_persona_responsable: '',
   id_plan: null,
   id_intervalo: null,
   id_modalidad: null,

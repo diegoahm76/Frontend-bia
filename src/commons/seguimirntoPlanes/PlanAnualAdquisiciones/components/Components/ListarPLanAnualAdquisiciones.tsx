@@ -9,15 +9,14 @@ import {
   Grid,
   IconButton,
 } from '@mui/material';
-import { Title } from '../../../../../components/Title';
 import {
   DataGrid,
   type GridColDef,
-  type GridValueFormatterParams,
+  // type GridValueFormatterParams,
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch, } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   set_current_plan_adquisiciones,
@@ -39,8 +38,68 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
       width: 250,
     },
     {
+      field: 'nombre_intervalo',
+      headerName: 'NOMBRE INTERVALO',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nombre_modalidad',
+      headerName: 'NOMBRE MODALIDAD',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'codigo_modalidad',
+      headerName: 'CODIGO MODALIDAD',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nombre_fuente',
+      headerName: 'NOMBRE FUENTE',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_estado',
+      headerName: 'NOMBRE ESTADO',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nombre_unidad',
+      headerName: 'NOMBRE UNIDAD',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_ubicacion',
+      headerName: 'NOMBRE UBICACION',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'email_persona_responsable',
+      headerName: 'EMAIL PERSONA RESPONSABLE',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'telefono_persona_responsable',
+      headerName: 'TELEFONO PERSONA RESPONSABLE',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'persona_responsable',
+      headerName: 'PERSONA RESPONSABLE',
+      sortable: true,
+      width: 250,
+    },
+    {
       field: 'descripcion',
-      headerName: 'DESCRIPCIÓN',
+      headerName: 'DESCRIPCION',
       sortable: true,
       width: 250,
     },
@@ -48,38 +107,68 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
       field: 'mes_inicio',
       headerName: 'MES INICIO',
       sortable: true,
-      width: 100,
+      width: 150,
     },
     {
       field: 'mes_oferta',
       headerName: 'MES OFERTA',
       sortable: true,
-      width: 100,
+      width: 150,
     },
     {
       field: 'duracion',
-      headerName: 'DURACIÓN',
+      headerName: 'DURACION',
       sortable: true,
-      width: 100,
+      width: 150,
     },
-    // {
-    //   field: 'banco_valor',
-    //   headerName: 'BANCO VALOR',
-    //   sortable: true,
-    //   width: 150,
-    //   valueFormatter: (params: GridValueFormatterParams) => {
-    //     const inversion = Number(params.value); // Convertir a número
-    //     const formattedInversion = inversion.toLocaleString('es-AR', {
-    //       style: 'currency',
-    //       currency: 'ARS',
-    //       minimumFractionDigits: 0,
-    //       maximumFractionDigits: 2,
-    //     });
-
-    //     return formattedInversion;
-    //   },
-    // },
     {
+      field: 'valor_total_estimado',
+      headerName: 'VALOR TOTAL ESTIMADO',
+      sortable: true,
+      width: 200,
+      valueFormatter: (params) => {
+        const valorTotalEstimado = Number(params.value);
+        return valorTotalEstimado.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+      },
+    },
+    {
+      field: 'valor_vigencia_actual',
+      headerName: 'VALOR VIGENCIA ACTUAL',
+      sortable: true,
+      width: 200,
+      valueFormatter: (params) => {
+        const valorVigenciaActual = Number(params.value);
+        return valorVigenciaActual.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+      },
+    },
+    {
+      field: 'vigencia_futura',
+      headerName: 'VIGENCIA FUTURA',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'decreto_paa',
+      headerName: 'DECRETO PAA',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'suministro_paa',
+      headerName: 'SUMINISTRO PAA',
+      sortable: true,
+      width: 150,
+    },    {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
@@ -221,7 +310,7 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
-                  getRowId={(row) => uuidv4()}
+                  getRowId={() => uuidv4()}
                 />
               </>
             </Box>

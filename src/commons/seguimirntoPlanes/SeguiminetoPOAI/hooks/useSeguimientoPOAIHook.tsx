@@ -75,7 +75,7 @@ export const useSeguimientoPOAIHook = (): any => {
       id_banco_proyecto: 0,
       id_modalidad: 0,
       id_ubicacion: 0,
-      id_clase_tercero: 0,
+      id_clase_tercero: 1,
     },
   });
 
@@ -154,6 +154,9 @@ export const useSeguimientoPOAIHook = (): any => {
     id_actividad,
     id_indicador,
     id_meta,
+    id_producto,
+    id_programa,
+    id_plan,
     fetch_data_seguimiento,
   } = useContext(DataContextSeguimientoPOAI);
 
@@ -165,11 +168,14 @@ export const useSeguimientoPOAIHook = (): any => {
 
   const onsubmit_seguimiento = handleSubmit_seguimiento(async (data) => {
     try {
-      //  console.log('')(data, 'data');
+      console.log(data, 'data');
       data.id_indicador = id_indicador;
       data.id_proyecto = id_proyecto;
       data.id_actividad = id_actividad;
       data.id_meta = id_meta;
+      data.id_producto = id_producto;
+      data.id_programa = id_programa;
+      data.id_plan = id_plan;
       set_is_saving_seguimiento(true);
       await post_seguimiento(data as ISeguiminetoPOAI);
       control_success('Se creó correctamente');
@@ -195,6 +201,9 @@ export const useSeguimientoPOAIHook = (): any => {
       data.id_proyecto = id_proyecto;
       data.id_actividad = id_actividad;
       data.id_meta = id_meta;
+      data.id_producto = id_producto;
+      data.id_programa = id_programa;
+      data.id_plan = id_plan;
       await put_seguimiento(
         (id_seguimiento as number) ?? 0,
         data as ISeguiminetoPOAI

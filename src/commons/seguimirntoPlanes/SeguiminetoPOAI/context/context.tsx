@@ -11,6 +11,7 @@ import type {
   IConceptoPOAI,
   IDetalleCuentas,
   IUnidadesActuales,
+  IBanco,
 } from '../../types/types';
 import type {
   // IIntervalo,
@@ -27,6 +28,8 @@ import {
   get_detalle_inversion,
   get_ubicaciones,
   get_modalidades,
+  get_banco,
+  get_clase_tercero,
 } from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import { get_fuente_financiancion } from '../../FuenteFinanciacion/services/services';
@@ -36,6 +39,7 @@ import {
   get_concepto_poai,
   get_unidades_organizacionales,
 } from '../../ConceptoPOAI/services/services';
+import { ClaseTercero } from '../../../../interfaces/globalModels';
 
 interface UserContext {
   // * id
@@ -81,6 +85,10 @@ interface UserContext {
   set_unidades_organizaciones_selected: (value: ValueProps[]) => void;
   modalidad_selected: ValueProps[];
   set_modalidad_selected: (value: ValueProps[]) => void;
+  clase_terceros_selected: ValueProps[];
+  set_clase_terceros_selected: (value: ValueProps[]) => void;
+  banco_selected: ValueProps[];
+  set_banco_selected: (value: ValueProps[]) => void;
 
   // * info
 
@@ -97,6 +105,8 @@ interface UserContext {
   fetch_data_ubicacion: () => Promise<void>;
   fetch_data_unidades_organizaciones: () => Promise<void>;
   fetch_data_modalidad: () => Promise<void>;
+  fetch_data_clase_terceros: () => Promise<void>;
+  fetch_data_banco: () => Promise<void>;
 }
 
 export const DataContextSeguimientoPOAI = createContext<UserContext>({
@@ -139,6 +149,10 @@ export const DataContextSeguimientoPOAI = createContext<UserContext>({
   set_unidades_organizaciones_selected: () => {},
   modalidad_selected: [],
   set_modalidad_selected: () => {},
+  clase_terceros_selected: [],
+  set_clase_terceros_selected: () => {},
+  banco_selected: [],
+  set_banco_selected: () => {},
 
   fetch_data_seguimiento: async () => {},
   fetch_data_metas: async () => {},
@@ -151,6 +165,8 @@ export const DataContextSeguimientoPOAI = createContext<UserContext>({
   fetch_data_ubicacion: async () => {},
   fetch_data_unidades_organizaciones: async () => {},
   fetch_data_modalidad: async () => {},
+  fetch_data_clase_terceros: async () => {},
+  fetch_data_banco: async () => {},
 });
 
 export const UserProviderSeguimientoPOAI = ({
@@ -201,6 +217,12 @@ export const UserProviderSeguimientoPOAI = ({
   const [modalidad_selected, set_modalidad_selected] = React.useState<
     ValueProps[]
   >([]);
+
+  const [clase_terceros_selected, set_clase_terceros_selected] = React.useState<
+    ValueProps[]
+  >([]);
+
+  const [banco_selected, set_banco_selected] = React.useState<ValueProps[]>([]);
 
   // * rows
 
@@ -332,26 +354,48 @@ export const UserProviderSeguimientoPOAI = ({
     }
   };
 
+  const fetch_data_clase_terceros = async (): Promise<void> => {
+    try {
+      const response = await get_clase_tercero();
+      console.log(response, 'clase tercero');
+      if (response?.length > 0) {
+        const data_selected: ValueProps[] | any = response.map(
+          (item: ClaseTercero) => ({
+            value: item.value,
+            label: item.label,
+          })
+        );
+        console.log(data_selected, 'data tercero');
+        set_clase_terceros_selected(data_selected);
+      }
+    } catch (error: any) {
+      console.log(error);
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
 
-  // const fetch_data_metas = async (): Promise<void> => {
-  //   try {
-  //     if (!id_indicador) return;
-  //     const response = await get_metas_indicador((id_indicador as number) ?? 0);
-  //     if (response?.length > 0) {
-  //       const data_programas: ValueProps[] | any = response.map(
-  //         (item: IMetaIndicador) => ({
-  //           value: item.id_meta,
-  //           label: item.nombre_meta,
-  //         })
-  //       );
-  //       set_metas_selected(data_programas);
-  //     }
-  //   } catch (error: any) {
-  //     control_error(
-  //       error.response?.data?.detail || 'Algo paso, intente de nuevo'
-  //     );
-  //   }
-  // };
+  const fetch_data_banco = async (): Promise<void> => {
+    try {
+      const response = await get_banco();
+      if (response?.length > 0) {
+        const data_selected: ValueProps[] | any = response.map(
+          (item: IBanco) => ({
+            value: item.id_banco,
+            label: item.objeto_contrato,
+          })
+        );
+        set_banco_selected(data_selected);
+      }
+    } catch (error: any) {
+      console.log(error);
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
   const fetch_data_metas = async (): Promise<void> => {
     try {
       const response = await get_metas_indicador();
@@ -430,13 +474,13 @@ export const UserProviderSeguimientoPOAI = ({
     try {
       const response = await get_sector();
       if (response?.length > 0) {
-        const data_selected: ValueProps[] | any = response.map(
+        const data_sector: ValueProps[] | any = response.map(
           (item: ISector) => ({
             value: item.id_sector,
             label: item.nombre_sector,
           })
         );
-        set_fuentes_selected(data_selected);
+        set_sector_selected(data_sector);
       }
     } catch (error: any) {
       control_error(
@@ -444,7 +488,6 @@ export const UserProviderSeguimientoPOAI = ({
       );
     }
   };
-
   const value: UserContext = {
     id_plan,
     id_programa,
@@ -484,6 +527,10 @@ export const UserProviderSeguimientoPOAI = ({
     set_unidades_organizaciones_selected,
     modalidad_selected,
     set_modalidad_selected,
+    clase_terceros_selected,
+    set_clase_terceros_selected,
+    banco_selected,
+    set_banco_selected,
 
     // * rows
     rows_seguimiento,
@@ -503,6 +550,8 @@ export const UserProviderSeguimientoPOAI = ({
     fetch_data_ubicacion,
     fetch_data_unidades_organizaciones,
     fetch_data_modalidad,
+    fetch_data_clase_terceros,
+    fetch_data_banco,
   };
 
   return (

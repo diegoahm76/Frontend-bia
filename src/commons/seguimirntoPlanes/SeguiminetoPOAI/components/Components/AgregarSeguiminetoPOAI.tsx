@@ -41,7 +41,6 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
   const { mode, seguimiento_poai } = useAppSelector((state) => state.planes);
 
   const {
-    rubros_selected,
     fuentes_selected,
     concepto_selected,
     sector_selected,
@@ -49,6 +48,8 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
     ubicacion_selected,
     unidades_organizaciones_selected,
     modalidad_selected,
+    banco_selected,
+    clase_terceros_selected,
     set_id_proyecto,
     set_id_actividad,
     set_id_indicador,
@@ -61,7 +62,11 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
     fetch_data_ubicacion,
     fetch_data_unidades_organizaciones,
     fetch_data_modalidad,
+    fetch_data_banco,
+    fetch_data_clase_terceros,
   } = useContext(DataContextSeguimientoPOAI);
+
+  console.log('clase_terceros_selected', clase_terceros_selected);
 
   useEffect(() => {
     fetch_data_rubros();
@@ -72,6 +77,8 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
     fetch_data_ubicacion();
     fetch_data_unidades_organizaciones();
     fetch_data_modalidad();
+    fetch_data_banco();
+    fetch_data_clase_terceros();
   }, []);
 
   // calcular valor_total suma de vanos
@@ -423,6 +430,39 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               )}
             />
           </Grid>
+          {/* id_fuente financiacion */}
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="id_fuente_financiacion"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  size="small"
+                  margin="dense"
+                  disabled={false}
+                  fullWidth
+                  required
+                  error={!!errors_seguimiento.id_fuente_financiacion}
+                  helperText={
+                    errors_seguimiento?.id_fuente_financiacion?.type ===
+                    'required'
+                      ? 'Este campo es obligatorio'
+                      : 'ingrese el fuente financiacion'
+                  }
+                >
+                  {fuentes_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
           {/* descripcion */}
           <Grid item xs={12} sm={6}>
             <Controller
@@ -597,6 +637,38 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                       : 'Ingrese un valor total de fuente de financiacion'
                   }
                 />
+              )}
+            />
+          </Grid>
+          {/* id_banco */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_banco_proyecto"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Banco"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_banco_proyecto}
+                  helperText={
+                    errors_seguimiento.id_banco_proyecto
+                      ? 'Es obligatorio ingresar un banco'
+                      : 'Ingrese un banco'
+                  }
+                >
+                  {banco_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               )}
             />
           </Grid>
@@ -1125,10 +1197,43 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               )}
             />
           </Grid>
+          {/* id_banco */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_banco_proyecto"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Banco"
+                  size="small"
+                  margin="dense"
+                  disabled={true}
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_banco_proyecto}
+                  helperText={
+                    errors_seguimiento.id_banco_proyecto
+                      ? 'Es obligatorio ingresar un banco'
+                      : 'Ingrese un banco'
+                  }
+                >
+                  {banco_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
           {/* numerp_rp */}
           <Grid item xs={12} sm={6}>
             <Controller
-              name="numer_rp"
+              name="numerp_rp"
               control={control_seguimiento}
               rules={{ required: false }}
               render={({ field: { onChange, value } }) => (
@@ -1238,6 +1343,39 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
+          {/* id_clase_tercero */}
+          {/* <Grid item xs={12} sm={6}>
+            <Controller
+              name="id_clase_tercero"
+              control={control_seguimiento}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Clase tercero"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_seguimiento.id_clase_tercero}
+                  helperText={
+                    errors_seguimiento.id_clase_tercero
+                      ? 'Es obligatorio ingresar una clase de tercero'
+                      : 'Ingrese una clase de tercero'
+                  }
+                >
+                  {clase_terceros_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                  ;
+                </TextField>
+              )}
+            />
+          </Grid> */}
           {/* observaciones */}
           <Grid item xs={12} sm={6}>
             <Controller
@@ -1262,124 +1400,6 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                       : 'Ingrese un nombre'
                   }
                 />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="objeto_contrato"
-              control={control_seguimiento}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Objeto contrato"
-                  variant="outlined"
-                  multiline
-                  value={value}
-                  disabled={false}
-                  required={true}
-                  onChange={onChange}
-                  error={!!errors_seguimiento.objeto_contrato}
-                  helperText={
-                    errors_seguimiento.objeto_contrato
-                      ? 'Es obligatorio ingresar un nombre'
-                      : 'Ingrese un nombre'
-                  }
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="banco_valor"
-              control={control_seguimiento}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Valor banco"
-                  variant="outlined"
-                  InputProps={{
-                    inputComponent: NumericFormatCustom as any,
-                  }}
-                  multiline
-                  value={value}
-                  disabled={false}
-                  required={true}
-                  onChange={onChange}
-                  error={!!errors_seguimiento.banco_valor}
-                  helperText={
-                    errors_seguimiento.banco_valor
-                      ? 'Es obligatorio ingresar un valor'
-                      : 'Ingrese un valor'
-                  }
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Controller
-              name="id_rubro"
-              control={control_seguimiento}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_seguimiento.id_rubro}
-                  helperText={
-                    errors_seguimiento?.id_rubro?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el rubro'
-                  }
-                >
-                  {rubros_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Controller
-              name="id_fuente_financiacion"
-              control={control_seguimiento}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_seguimiento.id_fuente_financiacion}
-                  helperText={
-                    errors_seguimiento?.id_fuente_financiacion?.type ===
-                    'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese el fuente financiacion'
-                  }
-                >
-                  {fuentes_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
               )}
             />
           </Grid>

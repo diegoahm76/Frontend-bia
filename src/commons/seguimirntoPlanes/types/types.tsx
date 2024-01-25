@@ -274,6 +274,8 @@ export interface IPlanAdquisiciones {
   vigencia_futura?: number | null;
   decreto_paa?: boolean;
   suministro_paa?: boolean;
+  email_persona_responsable?: string;
+  telefono_persona_responsable: string;
   id_plan?: number | null;
   id_intervalo?: number | null;
   id_modalidad?: number | null;

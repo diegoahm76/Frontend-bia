@@ -174,7 +174,7 @@ export const UserProviderAdquisiciones = ({
   const [rows_plan_adquisiciones, set_rows_plan_adquisiciones] = React.useState<
     IPlanAdquisiciones[]
   >([]);
-  const [rows_paa_codigos, set_rows_paa_codigos] = React.useState<IUnspsc[]>(
+  const [rows_paa_codigos, set_rows_paa_codigos] = React.useState<any[]>(
     []
   );
 
@@ -210,6 +210,8 @@ export const UserProviderAdquisiciones = ({
             vigencia_futura: item.vigencia_futura,
             decreto_paa: item.decreto_paa,
             suministro_paa: item.suministro_paa,
+            telefono_persona_responsable: item.telefono_persona_responsable,
+            email_persona_responsable: item.email_persona_responsable,
             id_plan: item.id_plan,
             id_intervalo: item.id_intervalo,
             id_modalidad: item.id_modalidad,
