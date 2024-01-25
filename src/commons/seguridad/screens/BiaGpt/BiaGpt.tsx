@@ -9,6 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getOutModule } from '../../../../utils/functions/getOutOfModule';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../../../hooks';
+import { useFiles } from '../../../../hooks/useFiles/useFiles';
 export const BiaGpt = (): JSX.Element => {
   //* const navigate declaration
   const navigate = useNavigate();
@@ -22,20 +23,24 @@ export const BiaGpt = (): JSX.Element => {
     }) => state.layout
   );
 
-  const { representacion_legal, userinfo, permisos, apoderados } = useAppSelector((state) => state.auth);
+  const { representacion_legal, userinfo } = useAppSelector(
+    (state) => state.auth
+  );
 
-  console.log('console.log, presenteacion legal', representacion_legal);
-  console.log('userinfouserinfouserinfo', userinfo);
-  console.log('permisospermisospermisos', permisos);
-  console.log('representante_legalrepresentante_legalrepresentante_legal', representacion_legal)
-  console.log('apoderadosapoderadosapoderados', apoderados)
+  const { tamagno_archivos } = useFiles();
+
+  console.log(
+    'representante_legalrepresentante_legalrepresentante_legal',
+    representacion_legal
+  );
 
   useEffect(() => {
     console.log('userinfouserinfouserinfo', userinfo);
-  }, [
-    mod_dark,
-    representacion_legal,
-  ]);
+    console.log(
+      'tamagno_archivostamagno_archivostamagno_archivos',
+      tamagno_archivos
+    );
+  }, [mod_dark, representacion_legal]);
 
   return (
     <>

@@ -74,10 +74,6 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
       });
   }, []);
 
-  // const handle_liquidar = (): void => {
-  //   set_modal_detalle(true);
-  // }
-
   const get_calculated_variables = (funcion: string, variables: Record<string, string>): string => {
     const regex = new RegExp(Object.keys(variables).map((propiedad) => `\\b${propiedad}\\b`).join('|'), 'g');
     const formula = funcion.replace(regex, matched => variables[matched]);
@@ -111,7 +107,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
     const { value } = event.target;
     const row_detalle = rows_detalles.find((detalle) => detalle.id === id);
     if (row_detalle) {
-      const new_variables = { ...row_detalle.variables, [key]: value };
+      const new_variables = { ...row_detalle.variables, [key]: value === '' ? '0' : value };
       const new_detalle: RowDetalles = { ...row_detalle, variables: new_variables, valor_liquidado: get_calculated_variables(row_detalle.formula_aplicada, new_variables) };
       const new_detalles = rows_detalles.map((detalle) => detalle.id === id ? new_detalle : detalle);
       set_rows_detalles(new_detalles);
@@ -212,7 +208,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
   return (
     <>
     
-{liquidacion?.data.cedula}
+{/* {liquidacion?.data.cedula} */}
 
       <Grid
         container

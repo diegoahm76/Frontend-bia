@@ -102,7 +102,9 @@ export const AcordeonOtros = (): JSX.Element => {
         onSubmit={onSubmit}
       />
       {listaHistoricoSolicitudes && listaHistoricoSolicitudes.length > 0 ? (
-        [...listaHistoricoSolicitudes].map((item: any) => {
+        [
+          ...listaHistoricoSolicitudes,
+        ].map((item: any) => {
           if (!item?.cabecera?.radicado) {
             return null;
           }
@@ -115,95 +117,104 @@ export const AcordeonOtros = (): JSX.Element => {
               expanded={expanded === item?.cabecera?.radicado}
               onChange={handleChange(item?.cabecera?.radicado)}
             >
-               <AccordionSummary
-            expandIcon={
-              <ExpandCircleDownIcon
-                sx={{
-                  color: 'primary.main',
-                }}
-              />
-            }
-            aria-controls={`${item?.cabecera?.radicado}-content`}
-            id={`${item?.cabecera?.radicado}-header`}
-          >
-            <Typography>
-              <b>Radicado:</b> {item?.cabecera?.radicado}
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography sx={stylesTypography}>
-                  <b>Titular:</b> {item?.detalle?.titular}
-                </Typography>
-                <Typography sx={stylesTypography}>
-                  <b>Cantidad de anexos: </b>
-                  {item?.detalle?.cantidad_anexos}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography sx={stylesTypography}>
-                  <b>Asunto: </b>
-                  {item?.detalle?.asunto}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            {!item?.detalle?.solicitud_actual.length ? (
-              <section
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginTop: '1.7rem',
-                }}
+              <AccordionSummary
+                expandIcon={
+                  <ExpandCircleDownIcon
+                    sx={{
+                      color: 'primary.main',
+                    }}
+                  />
+                }
+                aria-controls={`${item?.cabecera?.radicado}-content`}
+                id={`${item?.cabecera?.radicado}-header`}
               >
-                <VisaulTexto
-                  elements={[
-                    'No se ha encontrado información relacionada a la solicitud',
-                  ]}
-                />
-              </section>
-            ) : (
-              <RenderDataGrid
-                title="Información de la respuesta"
-                columns={infoSolicitudColumns ?? []}
-                rows={[...item?.detalle?.solicitud_actual] ?? []}
-              />
-            )}
+                <Typography>
+                  <b>Radicado:</b> {item?.cabecera?.radicado}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Typography sx={stylesTypography}>
+                      <b>Titular:</b> {item?.detalle?.titular}
+                    </Typography>
+                    <Typography sx={stylesTypography}>
+                      <b>Cantidad de anexos: </b>
+                      {item?.detalle?.cantidad_anexos}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography sx={stylesTypography}>
+                      <b>Asunto: </b>
+                      {item?.detalle?.asunto}
+                    </Typography>
+                  </Grid>
+                </Grid>
 
-            {!item?.detalle?.registros.length ? (
-              <section
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginTop: '1.7rem',
-                }}
-              >
-                <VisaulTexto
-                  elements={[
-                    'No se ha encontrado información de los registros',
-                  ]}
-                />
-              </section>
-            ) : (
-              <RenderDataGrid
-                title="Información de la respuesta"
-                columns={consultaColumnsOtros ?? []}
-                rows={[...item?.detalle?.registros] ?? []}
-              />
-            )}
-          </AccordionDetails>
+                {!item?.detalle?.solicitud_actual.length ? (
+                  <section
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '1.7rem',
+                    }}
+                  >
+                    <VisaulTexto
+                      elements={[
+                        'No se ha encontrado información relacionada a la solicitud',
+                      ]}
+                    />
+                  </section>
+                ) : (
+                  <RenderDataGrid
+                    title="Información de la respuesta"
+                    columns={infoSolicitudColumns ?? []}
+                    rows={
+                      [
+                        ...item?.detalle?.solicitud_actual,
+                      ] ?? []
+                    }
+                  />
+                )}
+
+                {!item?.detalle?.registros.length ? (
+                  <section
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '1.7rem',
+                    }}
+                  >
+                    <VisaulTexto
+                      elements={[
+                        'No se ha encontrado información de los registros',
+                      ]}
+                    />
+                  </section>
+                ) : (
+                  <RenderDataGrid
+                    title="Información de la respuesta"
+                    columns={consultaColumnsOtros ?? []}
+                    rows={[...item?.detalle?.registros] ?? []}
+                  />
+                )}
+              </AccordionDetails>
             </Accordion>
           );
         })
       ) : (
         <Typography
-            variant="body1"
-            color="text.primary"
-            sx={{ textAlign: 'center', justifyContent: 'center', mt: '2rem', fontSize: '1.25rem' }}
-          >
-            No hay solicitudes para mostrar
-          </Typography>
+          variant="body1"
+          color="text.primary"
+          sx={{
+            textAlign: 'center',
+            justifyContent: 'center',
+            mt: '2rem',
+            fontSize: '1.25rem',
+          }}
+        >
+          No hay solicitudes para mostrar
+        </Typography>
       )}
     </>
   );
