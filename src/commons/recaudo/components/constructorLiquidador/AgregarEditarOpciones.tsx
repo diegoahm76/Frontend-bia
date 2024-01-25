@@ -9,6 +9,7 @@ import {
   Button,
   FormControl,
   Grid,
+  Dialog,
   IconButton,
   MenuItem,
   Select,
@@ -36,16 +37,18 @@ import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 
 import './AgregarEditarOpciones.css';
+import { Title } from "../../../../components";
 
 interface Rows {
   id: number;
   nombre: string;
 }
- interface Variable {
+interface Variable {
   id_variables: number;
   nombre: string;
   tipo_cobro: number;
   tipo_renta: number;
+  valor_varaible: any;
 }
 interface IProps {
   opciones_liquidaciones: OpcionLiquidacion[];
@@ -168,6 +171,7 @@ export const AgregarEditarOpciones = ({
       variable: ''
     }));
 
+
     set_variables([
       ...Array.from(new Set([...variables, form_data.variable.replace(/\s/g, '_')]))
     ]);
@@ -242,6 +246,9 @@ export const AgregarEditarOpciones = ({
         funcion: generateCode(),
         estado: form_data.estado,
         variables: variables.reduce((acumulador, valor) => {
+          if (valor === selectedVariableName) {
+            return { ...acumulador, [valor]: `${selectedVariable}` };
+          }
           return { ...acumulador, [valor]: '' };
         }, {}),
         bloques: JSON.stringify(json),
@@ -312,55 +319,134 @@ export const AgregarEditarOpciones = ({
               />
             </Avatar>
           </IconButton>
+          <Button
+            color='success'
+            variant='contained'
+            onClick={() => handleOpenModal(params.row.nombre)}
+          >
+            dd
+
+          </Button>
+
         </>
       ),
     },
   ];
 
-  const [variabless, setVariabless] = useState<Variable[]>([]);
+
+  //
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVariableName, setSelectedVariableName] = useState("");
+  const handleOpenModal = (variableName: any) => {
+    setSelectedVariableName(variableName);
+    setIsModalOpen(true);
+  };
+
+  const [valores, setvalores] = useState<Variable[]>([]);
   const [selectedVariable, setSelectedVariable] = useState<any>(null);
 
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
-      setSelectedVariable(event.target.value as number);
+    setSelectedVariable(event.target.value as number);
   };
-  
+
   const fetchVariables = async () => {
-     try {
-         const res = await api.get("/recaudo/configuracion_baisca/variables/get/");
-         setVariabless(res.data.data);
-     } catch (error) {
-         console.error("Error al obtener las variables", error);
-     }
- };
+    try {
+      const res = await api.get("/recaudo/configuracion_baisca/variables/get/");
+      setvalores(res.data.data);
+    } catch (error) {
+      console.error("Error al obtener las variables", error);
+    }
+  };
 
- useEffect(() => {
-     fetchVariables();
- }, []);
+  useEffect(() => {
+    fetchVariables();
+  }, []);
 
-  
+  const handleClick = () => {
+    console.log(variables);
+    console.log("2222222");
+
+  };
+
+  const [is_buscar, set_is_buscar] = useState<boolean>(true);
+  const handle_open_buscar = (): void => {
+    set_is_buscar(true);
+  };
+  const handle_close = (): void => {
+    set_is_buscar(false);
+    setIsModalOpen(false)
+  };
   return (
     <>
       <>
         {/* INICIO TEST */}
         <Grid container spacing={2} sx={{ my: '10px' }}>
 
-        <Grid item xs={12} sm={4.5}>
-        <FormControl size="small" fullWidth>
-            <InputLabel>Selecciona opción variable</InputLabel>
-            <Select
+          <Grid item xs={12} sm={4.5}>
+            <FormControl size="small" fullWidth>
+              <InputLabel>Selecciona opción variable</InputLabel>
+              <Select
                 value={selectedVariable}
                 onChange={handleSelectChange}
                 label="Selecciona opción variable"
-            >
-                {variabless.map((variable) => (
-                    <MenuItem key={variable.id_variables} value={variable.id_variables}>
-                        {variable.nombre}
-                    </MenuItem>
+              >
+                {valores.map((variable) => (
+                  <MenuItem key={variable.id_variables} value={variable.valor_varaible}>
+                    {variable.nombre}
+                  </MenuItem>
                 ))}
-            </Select>
-        </FormControl>
-    </Grid>
-       
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <div>
+            <button onClick={handleClick}>Hacer clic para registrar en la consola</button>
+          </div>
+          <Dialog
+            keepMounted
+            aria-describedby="alert-dialog-slide-description"
+            open={isModalOpen}
+            onClose={handle_close}
+            maxWidth="xl"
+          >
+
+            <Grid
+              container spacing={2}
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26'
+              }}
+            >
+              <Grid item xs={12} sm={12}>
+                <Title title="Asignar variable " />
+              </Grid>
+              <p>{selectedVariableName}</p>
+              <Grid item xs={12} sm={12}>
+                <FormControl size="small" fullWidth>
+                  <InputLabel>Selecciona opción variable</InputLabel>
+                  <Select
+                    value={selectedVariable}
+                    onChange={handleSelectChange}
+                    label="Selecciona opción variable"
+                  >
+                    {valores.map((variable) => (
+                      <MenuItem key={variable.id_variables} value={variable.id_variables}>
+                        {variable.nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+
+          </Dialog>
+      
+
           <Grid item xs={12} sm={4.5}>
             <FormControl size="small" fullWidth>
               <InputLabel>Selecciona opción liquidación</InputLabel>
@@ -504,7 +590,7 @@ export const AgregarEditarOpciones = ({
               startIcon={edit_opcion ? <EditIcon /> : <Save />}
               fullWidth
             >
-              {edit_opcion ? 'Editar ': 'Guardar '}opción liquidación
+              {edit_opcion ? 'Editar ' : 'Guardar '}opción liquidación
 
             </Button>
           </Grid>
