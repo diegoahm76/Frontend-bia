@@ -46,6 +46,7 @@ import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/Consult
 import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
 import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
 import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
+import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
  
 const routes = [
   {
@@ -197,9 +198,14 @@ const routes = [
     component: () => <CentralDigitalizacionRoutes />,
   },
   {
-    path: 'rutesworkFlowpqrs/',
-    name: 'rutesworkFlowpqrs',
+    path: 'workd_flowpqrs/',
+    name: 'workd_flowpqrs',
     component: () => <RutesWorkFlowPQRSDF />,
+  },
+  {
+    path: 'indicadores_pqrsdf/',
+    name: 'indicadores_pqrsdf',
+    component: () => <RutesIndicadores />,
   },
   {
     path: 'solicitudes_otros/',

@@ -51,7 +51,7 @@ export const ConsultarWorkFlow = () => {
     };
 
     const columns = [
-        { field: 'Id_PQRSDF', headerName: 'Tipo de PQRSDF', flex: 1 },
+        { field: 'tipo_pqrsdf_descripcion', headerName: 'tipo_pqrsdf_descripcion', flex: 1 },
         { field: 'Titular', headerName: 'Titular', flex: 1 },
         { field: 'Asunto', headerName: 'Asunto', flex: 1 },
         { field: 'Radicado', headerName: 'Radicado', flex: 1 },
@@ -256,7 +256,7 @@ export const ConsultarWorkFlow = () => {
 
 
 
-                {/* <Grid container spacing={2} justifyContent="flex-end"> */}
+                <Grid container spacing={2} justifyContent="flex-end">
 
 
 
@@ -286,7 +286,7 @@ export const ConsultarWorkFlow = () => {
                     </Button>
                 </Grid>
 
-
+                </Grid>
 
                 <Grid item xs={12} style={{ marginTop: 10 }}>
 
@@ -297,7 +297,7 @@ export const ConsultarWorkFlow = () => {
                         {download_pdf({
                             nurseries: data_table,
                             columns,
-                            title: 'Tabla sucursales',
+                            title: 'WorkFlow  de una solicitud PQRSDF',
                         })}
                     </ButtonGroup>
 

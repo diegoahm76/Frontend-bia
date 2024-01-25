@@ -19,47 +19,33 @@ import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlin
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { api } from "../../../../../api/axios";
-import './ModalWorkFlow.css';  // Asegúrate de ajustar la ruta según la ubicación real del archivo
+import './ModalWorkFlow.css';
 
-const steps = [
-    { label: 'GUARDADO', value: 0 },
-    {
-        label: 'RADICADO',
-        value: 0,
+interface SubStep {
+    label: string;
+    value?: number;
+}
 
-    },
-    {
-        label: 'EN VENTANILLA CON PENDIENTES', value: 0, subSteps: [
-            {
-                label: 'RADICADO INTERNO',
-                value: 0,
-                subSteps: [
-                    { label: 'NUEVO SUBPASO', value: 0 },
-                ],
-            },
-            // Agrega otros pasos específicos de la subrama aquí si es necesario
-        ],
-    },
-    { label: 'EN VENTANILLA SIN PENDIENTES', value: 0 },
-    {
-        label: 'EN GESTION', value: 0, subSteps: [
-            {
-                label: 'RADICADO INTERNO',
-                value: 0,
-                subSteps: [
-                    { label: 'NUEVO SUBPASO', value: 0 },
-                ],
-            },
-        ],
-    },
-    { label: 'RESPONDIDA', value: 0 },
-    { label: 'NOTIFICADA', value: 0 },
-];
+interface StepData {
+    label: string;
+    value: number;
+    subSteps?: SubStep[];
+}
 
+interface Iconsultadostres {
+    primer_nombre?: string;
+   
+}
 
+interface Iconsultados {
+    solicitud: string;
+    fecha_registro: string;
+    fecha_radicado?: string | null; // Añadido el tipo correcto aquí
+    persona_asignada: Iconsultadostres[];
+}
 
 interface Iconsulta {
-    arbol_solicitudes: any[];
+    arbol_solicitudes: Iconsultados[];
 }
 
 interface ModalFlujoDeTrabajoProps {
@@ -67,14 +53,88 @@ interface ModalFlujoDeTrabajoProps {
     onClose: () => void;
 }
 
+
 export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, onClose }) => {
+
     const [estadoWordFlow, set_estadoWordFlow] = useState<Iconsulta>({ arbol_solicitudes: [] });
 
+    const seEncontroGUARDADO = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "GUARDADO");
+    const guardadoFechaRegistro = seEncontroGUARDADO ? estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "GUARDADO")?.fecha_registro || 0 : 0;
+
+    const seEncontroRADICADO = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "RADICADO");
+    const guardadoFechaRegistroRADICADO = seEncontroRADICADO
+    ? estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "RADICADO")?.fecha_radicado || ""
+    : "";
+
+    const seEncontroENVENTANILLACONPENDIENTES = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN VENTANILLA CON PENDIENTES");
+    const seEncontroENVENTANILLASINPENDIENTES = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN VENTANILLA SIN PENDIENTES");
+   
+   
+    const seEncontroENGESTION = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN GESTION");
+    const guardadoFechaRegistroENGESTION = seEncontroENGESTION
+    ? (estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "EN GESTION")?.persona_asignada?.[0]?.primer_nombre || "")
+    : "";
+  
+  
+
+    const seEncontroRESPONDIDA = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "RESPONDIDA");
+
+    const cantidadTrue = [
+        seEncontroGUARDADO,
+        seEncontroRADICADO,
+        seEncontroENVENTANILLACONPENDIENTES,
+        seEncontroENVENTANILLASINPENDIENTES,
+        seEncontroENGESTION,
+        seEncontroRESPONDIDA
+    ].filter(Boolean).length;
+
+    console.log("guardadoFechaRegistro", guardadoFechaRegistro);
+
+    console.log("variable_poso", seEncontroGUARDADO, seEncontroRADICADO, seEncontroENVENTANILLACONPENDIENTES, seEncontroENVENTANILLASINPENDIENTES, seEncontroENGESTION, seEncontroRESPONDIDA);
+    const variable_poso = cantidadTrue - 1;
+
+
+
+    const steps = [
+        { label: 'GUARDADO', value: guardadoFechaRegistro.toString() },
+        {
+            label: 'RADICADO',
+            value: guardadoFechaRegistroRADICADO.toString(),
+        },
+        {
+            label: 'EN VENTANILLA CON PENDIENTES', value: 3, subSteps: [
+                {
+                    label: 'RADICADO INTERNO',
+                    value: 0,
+                    subSteps: [
+                        { label: 'NUEVO SUBPASO', value: 0 },
+                    ],
+                },
+            ],
+        },
+        { label: 'EN VENTANILLA SIN PENDIENTES', value: 0 },
+        {
+            label: 'EN GESTION', value: 0, subSteps: [
+                {
+                    label: 'RADICADO INTERNO',
+                    value: guardadoFechaRegistroENGESTION.toString(),
+                    subSteps: [
+                        { label: 'NUEVO SUBPASO', value: 0 },
+                    ],
+                },
+            ],
+        },
+        { label: 'RESPONDIDA', value: 0 },
+        { label: 'NOTIFICADA', value: 0 },
+    ];
+
+
     console.log("estadoWordFlow", estadoWordFlow.arbol_solicitudes);
-    console.log("data", data);
+    console.log("data", guardadoFechaRegistroENGESTION);
+
     const consulta_estado_word_flow = async (): Promise<void> => {
         try {
-            let url = `gestor/pqr/listar_informacion_arbol/131/`;
+            let url = `gestor/pqr/listar_informacion_arbol/${+data}/`;
             const res = await api.get(url);
             const Data_consulta = res.data;
             set_estadoWordFlow(Data_consulta);
@@ -87,9 +147,12 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
         onClose();
     };
 
-    const variable_poso = 2;
+
+
+
 
     useEffect(() => {
+
         consulta_estado_word_flow();
     }, []);
 
@@ -113,8 +176,8 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
                 {/* Contenido */}
                 <Box sx={{ width: '100%', marginTop: 5 }}>
                     <Stepper activeStep={variable_poso} alternativeLabel>
-                        {steps.map(({ label, value, subSteps }, index) => (
-                            <Step  key={label}>
+                        {steps.map((step, index) => (
+                            <Step key={step.label}>
                                 <StepLabel
                                     icon={getStepIcon(index)}
                                     sx={{
@@ -122,12 +185,12 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
                                         position: 'relative',
                                     }}
                                 >
-                                    {label}
-                                    <div style={{ marginTop: 0 }}>{` ${value}`}</div>
-                                    {subSteps && (
+                                    {step.label}
+                                    <div style={{ marginTop: 0 }}>{` ${step.value}`}</div>
+                                    {step.subSteps && (
                                         <Stepper activeStep={0} alternativeLabel style={{ marginTop: 12 }}>
-                                            {subSteps.map(({ label: subLabel, value: subValue }, subIndex) => (
-                                                <Step key={subLabel}>
+                                            {step.subSteps.map((subStep, subIndex) => (
+                                                <Step key={subStep.label}>
                                                     <StepLabel
                                                         icon={getSubStepIcon(subIndex, 'RADICADO INTERNO')}
                                                         sx={{
@@ -136,18 +199,13 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
                                                         }}
                                                     >
                                                         <div style={{ marginTop: 5 }}>{`${index + 1}.${subIndex + 1}`}</div>
-                                                        {subLabel}
-                                                        <div style={{ marginTop: 5 }}>{`${subValue}`}</div>
-
-                                                        {/* Añade líneas entre los iconos */}
+                                                        {subStep.label}
+                                                        <div style={{ marginTop: 5 }}>{`${subStep.value}`}</div>
                                                         {subIndex > 0 && (
                                                             <div className="stepper-line-vertical" style={{ top: '-12px' }} />
                                                         )}
-                                                        {/* <div className="stepper-line" /> */}
                                                     </StepLabel>
-
-                                                    {/* Agregar otro StepLabel debajo de "RADICADO INTERNO" */}
-                                                    {subLabel === 'RADICADO INTERNO' && (
+                                                    {subStep.label === 'RADICADO INTERNO' && (
                                                         <Step>
                                                             <StepLabel
                                                                 icon={getSubStepIcon(subIndex, 'OTRO SUBPASO')}
@@ -158,7 +216,6 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
                                                             >
                                                                 <div style={{ marginTop: 5 }}>{`${index + 1}.${subIndex + 2}`}</div>
                                                                 {'OTRO SUBPASO'}
-                                                                {/* Agrega cualquier contenido adicional según tus necesidades */}
                                                                 <div className="stepper-line" style={{ top: '-12px' }} />
                                                             </StepLabel>
                                                         </Step>
@@ -170,8 +227,8 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
                                 </StepLabel>
                             </Step>
                         ))}
-                    </Stepper>
 
+                    </Stepper>
                 </Box>
 
                 <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
@@ -212,7 +269,6 @@ const getStepIcon = (index: any) => {
     }
 };
 
-
 const getSubStepIcon = (subIndex: any, parentLabel: any) => {
     if (parentLabel === 'RADICADO INTERNO') {
         switch (subIndex) {
@@ -225,7 +281,6 @@ const getSubStepIcon = (subIndex: any, parentLabel: any) => {
                 return null;
         }
     }
-
 
     // Si no, asigna íconos según el subíndice
     switch (subIndex) {
