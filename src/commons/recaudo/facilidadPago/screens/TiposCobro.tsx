@@ -24,8 +24,10 @@ interface ConfiguracionBasica {
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TiposCobro: React.FC = () => {
-    const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
+
+    
+    const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
     const fetchConfiguraciones = async (): Promise<void> => {
         try {
             const url = "/recaudo/configuracion_baisca/tipoCobro/get/";
