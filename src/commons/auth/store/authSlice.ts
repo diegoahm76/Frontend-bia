@@ -29,6 +29,7 @@ const initial_state: IUserInfo | any = {
   is_blocked: false,
   representacion_legal: 'MP',
   is_loading: false,
+  tamagno_archivos: [],
 };
 
 export const auth_slice = createSlice({
@@ -44,6 +45,7 @@ export const auth_slice = createSlice({
       state.representacion_legal = {
         cod_relacion_con_el_titular: 'MP',
       };
+      state.tamagno_archivos = payload.tamagno_archivos;
     },
     logout: (state, { payload }) => {
       state.user_sesion = '';
@@ -102,6 +104,9 @@ export const auth_slice = createSlice({
       state.representacion_legal = payload;
     },
 
+    set_files: (state, { payload }) => {
+      state.tamagno_archivos = payload;
+    },
 
     set_is_loading: (state, { payload }) => {
       state.is_loading = payload;
@@ -124,5 +129,6 @@ export const {
   close_dialog_representado_app,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   setRepresentacionLegal,
+  set_files,
   set_is_loading,
 } = auth_slice.actions;
