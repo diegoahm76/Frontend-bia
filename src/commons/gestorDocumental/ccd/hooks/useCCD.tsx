@@ -550,17 +550,10 @@ const use_ccd = () => {
 
   const columns_asignacion: GridColDef[] = [
     {
-      headerName: 'ID Un. Org',
-      field: 'id_unidad_organizacional',
-      minWidth: 90,
-      maxWidth: 100,
-      hide: true,
-    },
-    {
       headerName: 'Unidad Organizacional',
       field: 'nombreUnidad',
-      minWidth: 210,
-      maxWidth: 220,
+      minWidth: 230,
+      maxWidth: 260,
     },
     {
       headerName: 'Cód. Serie',
@@ -571,8 +564,8 @@ const use_ccd = () => {
     {
       headerName: 'Serie',
       field: 'nombre_serie',
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 250,
+      maxWidth: 300,
     },
     {
       headerName: 'Cód. Subserie',
@@ -583,7 +576,8 @@ const use_ccd = () => {
     {
       headerName: 'Subserie',
       field: 'nombre_subserie',
-      minWidth: 150,
+      minWidth: 400,
+      maxWidth: 500,
     },
     {
       headerName: 'Acciones',
