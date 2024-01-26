@@ -32,7 +32,7 @@ export const AprovacionAutodeclaracion: React.FC = () => {
     const [Historico, setHistorico] = useState<Historico[]>([]);
     const fetchHistorico = async (): Promise<void> => {
         try {
-            const url = "/recaudo/formulario/ver_formulario/";
+            const url = "/recaudo/formulario/documento_formulario_recuado_get/";
             const res = await api.get(url);
             const HistoricoData: Historico[] = res.data?.data || [];
             setHistorico(HistoricoData);
