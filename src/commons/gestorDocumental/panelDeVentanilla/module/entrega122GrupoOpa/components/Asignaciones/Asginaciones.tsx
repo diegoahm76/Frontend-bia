@@ -2,16 +2,15 @@ import { Button, Chip, Grid } from '@mui/material';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsAsignaciones } from './columnsAsignaciones/columnsAsignaciones';
 import { useContext } from 'react';
-import { AsignacionGrupoContext } from '../../context/AsignacionGrupoContext';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
+import { AsignacionGrupoOpaContext } from '../../context/AsignacionGrupoOpaContext';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const Asignaciones = (): JSX.Element => {
   //* context declaration
-  const { listaAsignaciones, liderAsignado } = useContext(
-    AsignacionGrupoContext
-  );
+  const { listaAsignaciones } = useContext(AsignacionGrupoOpaContext);
   const { generalLoading } = useContext(ModalAndLoadingContext);
 
   const estadoMapping: any = {
@@ -60,6 +59,29 @@ export const Asignaciones = (): JSX.Element => {
       title="Estado de las asignaciones"
       columns={columns ?? []}
       rows={[...listaAsignaciones] ?? []}
+      aditionalElement={
+        listaAsignaciones?.length &&
+        listaAsignaciones.find(
+          (el: { estado_asignado: string }) =>
+            el.estado_asignado === 'RECHAZADA'
+        ) ? (
+          <Button
+            variant="contained"
+            color="primary"
+            // endIcon={<RemoveDoneIcon />}
+          >
+            {`La solicitud de OPA ha sido asignada al lider de la unidad ${
+              listaAsignaciones.find(
+                (el: { estado_asignado: string }) =>
+                  el.estado_asignado === 'RECHAZADA'
+              ).sec_sub
+            }
+                `}
+          </Button>
+        ) : (
+          <></>
+        )
+      }
     />
   ) : (
     <></>

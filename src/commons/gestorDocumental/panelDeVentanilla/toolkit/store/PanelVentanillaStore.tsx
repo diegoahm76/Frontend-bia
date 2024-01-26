@@ -88,7 +88,7 @@ const actionsOpas: any[] = [
     id: 'AsigGrup',
     icon: <GroupsIcon />,
     name: 'Asignar OPA a unidad organizacional',
-    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
+    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo_tramite_opa',
     disabled: false,
   },
   {

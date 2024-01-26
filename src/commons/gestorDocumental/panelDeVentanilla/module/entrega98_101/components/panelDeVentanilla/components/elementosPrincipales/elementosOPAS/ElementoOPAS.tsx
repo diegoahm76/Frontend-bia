@@ -116,8 +116,36 @@ export const ElementoOPAS = (): JSX.Element => {
   const columns = [
     ...columnsOpas,
     {
+      headerName: 'Costo del proyecto',
+      field: 'costo_proyecto',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={`$${params.value?.toLocaleString()}`}
+            color="primary"
+          />
+        );
+      }
+    },
+    {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
+      minWidth: 200,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ? 'Sí' : 'No'}
+            color={params.value ? 'success' : 'error'}
+          />
+        );
+      },
+    },
+    {
+      headerName: 'Pagado',
+      field: 'pagado',
       minWidth: 200,
       renderCell: (params: any) => {
         return (
