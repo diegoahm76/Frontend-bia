@@ -176,9 +176,9 @@ export const ValorRegional: React.FC = () => {
 
     return (
         <>
-            <div>
+            {/* <div>
                 <button onClick={handleClick}>consola  </button>
-            </div>
+            </div> */}
             <Grid container
                 item xs={12} spacing={2} marginLeft={2} marginRight={2} marginTop={3}
                 sx={miEstilo}
