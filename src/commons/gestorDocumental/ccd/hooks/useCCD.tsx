@@ -552,8 +552,8 @@ const use_ccd = () => {
     {
       headerName: 'Unidad Organizacional',
       field: 'nombreUnidad',
-      minWidth: 230,
-      maxWidth: 260,
+      minWidth: 350,
+      maxWidth: 400,
     },
     {
       headerName: 'Cód. Serie',
@@ -564,8 +564,8 @@ const use_ccd = () => {
     {
       headerName: 'Serie',
       field: 'nombre_serie',
-      minWidth: 250,
-      maxWidth: 300,
+      minWidth: 350,
+      maxWidth: 400,
     },
     {
       headerName: 'Cód. Subserie',
@@ -576,8 +576,8 @@ const use_ccd = () => {
     {
       headerName: 'Subserie',
       field: 'nombre_subserie',
-      minWidth: 400,
-      maxWidth: 500,
+      minWidth: 420,
+      maxWidth: 520,
     },
     {
       headerName: 'Acciones',
