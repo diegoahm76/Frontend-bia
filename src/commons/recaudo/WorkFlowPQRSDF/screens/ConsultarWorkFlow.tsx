@@ -6,15 +6,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { Title } from '../../../../components/Title';
 import { ModalFlujoDeTrabajo } from '../components/ModalWorkflow/ModalWorkFLow';
 import { api } from '../../../../api/axios';
-import { BuscadorPersona } from '../../ventanilla/registroPersonas/BuscadorPersonaV';
+// import { BuscadorPersona } from '../../ventanilla/registroPersonas/BuscadorPersonaV';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { DataTabla, Persona, initialData, initial_form } from '../interface/IwordFlow';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'; // Icono de flecha
 
-export const ConsultarWorkFlow = () => {
+
+export const ConsultarWorkFlowwwwwww = () => {
     const [data_table, set_data_tabla] = useState<DataTabla[]>(initialData);
     const [form, setForm] = useState(initial_form);
     const [choise_estado_data, set_choise_estado_data] = useState([]);
@@ -50,22 +51,12 @@ export const ConsultarWorkFlow = () => {
     };
 
     const columns = [
-        { field: 'tipo_pqrsdf_descripcion', headerName: 'Tipo pqrsdf', flex: 1 },
+        { field: 'tipo_pqrsdf_descripcion', headerName: 'tipo_pqrsdf_descripcion', flex: 1 },
         { field: 'Titular', headerName: 'Titular', flex: 1 },
         { field: 'Asunto', headerName: 'Asunto', flex: 1 },
         { field: 'Radicado', headerName: 'Radicado', flex: 1 },
-        {
-            field: 'Fecha de Radicado',
-            headerName: 'Fecha de Radicado',
-            flex: 1,
-            renderCell: (params:any) => (
-              <span>
-                {new Date(params.value).toLocaleDateString()}
-                {/* {' '} */}
-                {/* {new Date(params.value).toLocaleTimeString()} */}
-              </span>
-            ),
-          },        { field: 'Persona Que Radicó', headerName: 'Persona que Radicó', flex: 1 },
+        { field: 'Fecha de Radicado', headerName: 'Fecha de Radicado', flex: 1 },
+        { field: 'Persona Que Radicó', headerName: 'Persona que Radicó', flex: 1 },
         { field: 'Tiempo Para Respuesta', headerName: 'Tiempo Para Respuesta', flex: 1 },
         { field: 'Estado', headerName: 'Estado', flex: 1 },
         {
@@ -73,7 +64,7 @@ export const ConsultarWorkFlow = () => {
             headerName: 'Acciones',
             width: 150,
             renderCell: (params: any) => (
-                <AccountTreeIcon onClick={() => handleOpenModal(params.row)}></AccountTreeIcon>
+                <ArrowForwardIcon onClick={() => handleOpenModal(params.row)}>Abrir Modal</ArrowForwardIcon>
             ),
         },
     ];
@@ -254,11 +245,11 @@ export const ConsultarWorkFlow = () => {
 
                 <Grid item xs={9} style={{ marginTop: 0 }}  >
 
-                    <BuscadorPersona
+                    {/* <BuscadorPersona
                         onResult={(data) => {
                             void on_result(data);
                         }}
-                    />
+                    /> */}
 
                 </Grid>
 

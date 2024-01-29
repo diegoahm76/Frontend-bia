@@ -34,7 +34,7 @@ interface StepData {
 
 interface Iconsultadostres {
     primer_nombre?: string;
-
+   
 }
 
 interface Iconsultados {
@@ -63,19 +63,19 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
 
     const seEncontroRADICADO = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "RADICADO");
     const guardadoFechaRegistroRADICADO = seEncontroRADICADO
-        ? estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "RADICADO")?.fecha_radicado || ""
-        : "";
+    ? estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "RADICADO")?.fecha_radicado || ""
+    : "";
 
     const seEncontroENVENTANILLACONPENDIENTES = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN VENTANILLA CON PENDIENTES");
     const seEncontroENVENTANILLASINPENDIENTES = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN VENTANILLA SIN PENDIENTES");
-
-
+   
+   
     const seEncontroENGESTION = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN GESTION");
     const guardadoFechaRegistroENGESTION = seEncontroENGESTION
-        ? (estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "EN GESTION")?.persona_asignada?.[0]?.primer_nombre || "")
-        : "";
-
-
+    ? (estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "EN GESTION")?.persona_asignada?.[0]?.primer_nombre || "")
+    : "";
+  
+  
 
     const seEncontroRESPONDIDA = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "RESPONDIDA");
 
@@ -102,7 +102,7 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
             value: guardadoFechaRegistroRADICADO.toString(),
         },
         {
-            label: 'EN VENTANILLA CON PENDIENTES', value: null, subSteps: [
+            label: 'EN VENTANILLA CON PENDIENTES', value: 3, subSteps: [
                 {
                     label: 'RADICADO INTERNO',
                     value: 0,
@@ -231,21 +231,18 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
                     </Stepper>
                 </Box>
 
-                <Grid container spacing={2} justifyContent="flex-end">
-                    <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-                        <Button
-                            startIcon={<ClearIcon />}
-                            fullWidth
-                            style={{ width: "90%", marginTop: 15 }}
-                            variant="contained"
-                            color="error"
-                            onClick={cerrarModal}
-                        >
-                            Salir
-                        </Button>
-                    </Grid>
+                <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+                    <Button
+                        startIcon={<ClearIcon />}
+                        fullWidth
+                        style={{ width: "90%", marginTop: 15 }}
+                        variant="contained"
+                        color="error"
+                        onClick={cerrarModal}
+                    >
+                        Salir
+                    </Button>
                 </Grid>
-
             </Grid>
         </Dialog>
     );

@@ -198,8 +198,8 @@ const routes = [
     component: () => <CentralDigitalizacionRoutes />,
   },
   {
-    path: 'workd_flowpqrs/',
-    name: 'workd_flowpqrs',
+    path: 'busqueda/',
+    name: 'busqueda',
     component: () => <RutesWorkFlowPQRSDF />,
   },
   {

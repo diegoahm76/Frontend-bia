@@ -43,7 +43,7 @@ export const ConfigYDatosBasicosRoutes: FC = (): JSX.Element => {
       element: () => <RadicadosRoutes />
     }
     , {
-      path: '/configuraciontipologuiaño/*',
+      path: '/configuracion/*',
       element: () => <RutasConfiguracionTipologuias />
     }
   ];
