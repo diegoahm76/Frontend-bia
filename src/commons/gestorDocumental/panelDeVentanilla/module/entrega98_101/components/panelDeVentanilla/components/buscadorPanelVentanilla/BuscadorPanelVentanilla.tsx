@@ -88,12 +88,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       fecha_fin,
       handleSecondLoading
     );
-
-    showAlert(
-      'Estimado usuario!',
-      'Esta funcionalidad de OTROS se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
-      'warning'
-    );
     dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -101,14 +95,14 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitopas = async () => {
-    /*   const {
+    const {
       nombre_titular,
       radicado,
       nombre_proyecto,
       estado_actual_solicitud,
       fecha_inicio,
       fecha_fin,
-    } = watch_busqueda_panel_ventanilla;*/
+    } = watch_busqueda_panel_ventanilla;
 
     showAlert(
       'Estimado usuario!',
@@ -117,12 +111,12 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     );
     const res = await getOpasPanVen(
       handleSecondLoading,
-      '', //fecha_inicio,
-      '', // fecha_fin,
-      '', // nombre_proyecto
-      '', // estado_actual_solicitud?.label,
-      '', //radicado,
-      '' // nombre_titular,
+      fecha_inicio,
+      fecha_fin,
+      nombre_proyecto,
+      estado_actual_solicitud?.label,
+      radicado,
+      nombre_titular,
     );
 
     dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));

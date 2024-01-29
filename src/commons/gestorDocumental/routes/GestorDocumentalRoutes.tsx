@@ -46,6 +46,7 @@ import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/Consult
 import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
 import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
 import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
+import { Radicado_Email_Routes } from '../radicadoEmail/routes/RadicadoEmail';
 import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
  
 const routes = [
@@ -222,6 +223,11 @@ const routes = [
     path: 'Pqrsdf/complementos/',
     name: 'complementos_pqrsdf',
     component: () => <ComplementoPqrsdfRoutes />,
+  },
+  {
+    path: 'radicado_email/',
+    name: 'radicado_email',
+    component: () => <Radicado_Email_Routes />,
   },
 
   {

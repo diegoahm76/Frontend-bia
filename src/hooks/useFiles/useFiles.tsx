@@ -86,6 +86,8 @@ export const useFiles = () => {
       }
     }
   };
+
+
   return {
     tamagno_archivos: fileDocs,
     controlar_tamagno_archivos,

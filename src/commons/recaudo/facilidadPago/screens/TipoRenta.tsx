@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
@@ -11,21 +12,30 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { control_error, control_success } from '../../../../helpers';
 import SaveIcon from '@mui/icons-material/Save';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 
 interface ConfiguracionBasica {
     id_tipo_renta: any;
     nombre_tipo_renta: any;
-    valor_tipo_renta:any;
+    nombre_cobro:any;
+    tipo_cobro_asociado: any;
+ }
+
+
+interface ConfiguracionBasicaa {
+    id_tipo_cobro: any;
+    nombre_tipo_cobro: any;
+    valor_tipo_cobro: any;
 }
-
-
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TipoRenta: React.FC = () => {
-    const [Renta, setRenta] = useState<ConfiguracionBasica[]>([]);
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
+
+
+    const [Renta, setRenta] = useState<ConfiguracionBasica[]>([]);
     const fetchRenta = async (): Promise<void> => {
         try {
             const url = "/recaudo/configuracion_baisca/tiporenta/get/";
@@ -63,9 +73,11 @@ export const TipoRenta: React.FC = () => {
     };
 
     const columns = [
-        { field: 'id_tipo_renta', headerName: ' Numero ', width: 130, flex: 1 },
+        // { field: 'id_tipo_renta', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'nombre_tipo_renta', headerName: 'Tipo renta', width: 130, flex: 1 },
-        // { field: 'valor_tipo_renta', headerName: 'Valor de tipo de renta', width: 130, flex: 1 },
+        { field: 'nombre_cobro', headerName: 'Tipo de cobro asociado ', width: 130, flex: 1 },
+
+        // { field: 'tipo_cobro_asociado', headerName: 'Valor de tipo de renta', width: 130, flex: 1 },
 
         {
             field: 'Acciones',
@@ -98,9 +110,12 @@ export const TipoRenta: React.FC = () => {
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         nombre_tipo_renta: selectedConfiguracion?.nombre_tipo_renta || "",
         id_tipo_renta: selectedConfiguracion?.id_tipo_renta || "",
-        valor_tipo_renta: selectedConfiguracion?.valor_tipo_renta || "",
-
+        tipo_cobro_asociado: selectedConfiguracion?.tipo_cobro_asociado || "",
         
+        nombre_cobro: selectedConfiguracion?.nombre_cobro || "",
+
+
+
     });
 
     useEffect(() => {
@@ -109,7 +124,7 @@ export const TipoRenta: React.FC = () => {
         }
     }, [selectedConfiguracion]);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event:any) => {
         const { name, value } = event.target;
         setFormValues({ ...formValues, [name]: value });
     };
@@ -119,9 +134,9 @@ export const TipoRenta: React.FC = () => {
             const url = `/recaudo/configuracion_baisca/tiporenta/put/${formValues.id_tipo_renta}/`;
             const dataToUpdate = {
                 nombre_tipo_renta: formValues.nombre_tipo_renta,
-                valor_tipo_renta: formValues.valor_tipo_renta,
+                tipo_cobro_asociado: formValues.tipo_cobro_asociado,
 
-                
+
             };
             await api.put(url, dataToUpdate);
             fetchRenta();
@@ -129,7 +144,7 @@ export const TipoRenta: React.FC = () => {
                 ...formValues,
                 id_tipo_renta: "",
                 nombre_tipo_renta: "",
-                valor_tipo_renta:"",
+                tipo_cobro_asociado: "",
             });
             control_success("Editado  exitosamente");
         } catch (error: any) {
@@ -149,7 +164,7 @@ export const TipoRenta: React.FC = () => {
                 ...formValues,
                 id_tipo_renta: "",
                 nombre_tipo_renta: "",
-                valor_tipo_renta:"",
+                tipo_cobro_asociado: "",
 
             });
         } catch (error: any) {
@@ -159,6 +174,21 @@ export const TipoRenta: React.FC = () => {
         }
     };
 
+    const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasicaa[]>([]);
+    const fetchConfiguraciones = async (): Promise<void> => {
+        try {
+            const url = "/recaudo/configuracion_baisca/tipoCobro/get/";
+            const res = await api.get(url);
+            const configuracionesData: ConfiguracionBasicaa[] = res.data?.data || [];
+            setConfiguraciones(configuracionesData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        void fetchConfiguraciones();
+    }, []);
 
     return (
         <>
@@ -186,21 +216,38 @@ export const TipoRenta: React.FC = () => {
                             value={formValues.nombre_tipo_renta}
                         />
                     </Grid>
-                    
+
                     {/* <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             fullWidth
                             size="small"
                             variant="outlined"
-                            name="valor_tipo_renta"
+                            name="tipo_cobro_asociado"
                             onChange={handleInputChange}
                             label="Valor de tipo de renta"
-                            value={formValues.valor_tipo_renta}
+                            value={formValues.tipo_cobro_asociado}
                         />
                     </Grid> */}
-
-
+                    <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="configuracion-select-label">Tipo de Cobro</InputLabel>
+                        <Select
+                            labelId="configuracion-select-label"
+                            name="tipo_cobro_asociado"
+                            value={formValues.tipo_cobro_asociado}
+                            label="Tipo de Cobro"
+                            onChange={handleInputChange}
+                        >
+                            {configuraciones.map((configuracion) => (
+                                <MenuItem key={configuracion.id_tipo_cobro} value={configuracion.id_tipo_cobro}>
+                                    {configuracion.nombre_tipo_cobro}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    </Grid>
+                  
                     <Grid item xs={12} sm={4}>
                         <Button
                             color="success"

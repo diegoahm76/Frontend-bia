@@ -102,9 +102,7 @@ export const AcordeonOtros = (): JSX.Element => {
         onSubmit={onSubmit}
       />
       {listaHistoricoSolicitudes && listaHistoricoSolicitudes.length > 0 ? (
-        [
-          ...listaHistoricoSolicitudes,
-        ].map((item: any) => {
+        [...listaHistoricoSolicitudes].map((item: any) => {
           if (!item?.cabecera?.radicado) {
             return null;
           }
@@ -172,6 +170,10 @@ export const AcordeonOtros = (): JSX.Element => {
                     rows={
                       [
                         ...item?.detalle?.solicitud_actual,
+                        ...item?.detalle?.solicitud_actual,
+                        ...item?.detalle?.solicitud_actual,
+                        ...item?.detalle?.solicitud_actual,
+                        ...item?.detalle?.solicitud_actual,
                       ] ?? []
                     }
                   />
@@ -195,7 +197,15 @@ export const AcordeonOtros = (): JSX.Element => {
                   <RenderDataGrid
                     title="Información de la respuesta"
                     columns={consultaColumnsOtros ?? []}
-                    rows={[...item?.detalle?.registros] ?? []}
+                    rows={
+                      [
+                        ...item?.detalle?.registros,
+                        ...item?.detalle?.registros,
+                        ...item?.detalle?.registros,
+                        ...item?.detalle?.registros,
+                        ...item?.detalle?.registros,
+                      ] ?? []
+                    }
                   />
                 )}
               </AccordionDetails>

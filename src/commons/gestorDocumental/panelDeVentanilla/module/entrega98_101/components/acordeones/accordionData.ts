@@ -52,7 +52,7 @@ export const consultaColumns = [
   },
   {
     headerName: 'Fecha respuesta de la solicitud',
-    field: 'fecha_respuesta',
+    field: 'fecha_rta_solicitud',
     minWidth: 300,
     renderCell: (params: any) => {
       const validDate = formatDate(params.value);
@@ -63,10 +63,13 @@ export const consultaColumns = [
     headerName: 'Estado de la digitalización',
     field: 'estado_digitalizacion',
     minWidth: 255,
+    renderCell: (params: any) => {
+      return params.value ? params?.value : 'N/A';
+    }
   },
   {
-    headerName: 'Observaciones',
-    field: 'observaciones',
+    headerName: 'Observación',
+    field: 'observacio',
     minWidth: 360,
     renderCell: (params: any) => {
       return params.value || 'Sin observaciones';

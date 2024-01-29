@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -42,7 +41,7 @@ const StepTwOtros = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { exhibits, metadata, exhibit, storage_mediums, type_applicant } =
-    useAppSelector((state: { pqrsdf_slice: any; }) => state.pqrsdf_slice);
+    useAppSelector((state: { pqrsdf_slice: any }) => state.pqrsdf_slice);
   const {
     control: control_form,
     handleSubmit: handle_submit_exhibit,
@@ -270,7 +269,8 @@ const StepTwOtros = () => {
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {storage_mediums.find((p: { key: any; }) => p.key === params.value)?.label ?? ''}
+          {storage_mediums.find((p: { key: any }) => p.key === params.value)
+            ?.label ?? ''}
         </div>
       ),
     },
@@ -463,7 +463,6 @@ const StepTwOtros = () => {
               helper_text: '',
               step_number: '1',
             },
-            
 
             {
               datum_type: 'button',
@@ -485,22 +484,24 @@ const StepTwOtros = () => {
           direction="row"
           marginTop={2}
         >
-          <Box sx={{ width: '80%' }}>
+          <Box sx={{ width: '100%' }}>
             <Grid item xs={12} md={12} marginTop={2}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={exhibits}
-                columns={columns_list}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) =>
-                  row.id_anexo ?? null === null
-                    ? uuid()
-                    : row.id_anexo ?? uuid()
-                }
-              />
+              {exhibits.length > 0 && (
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={exhibits ?? []}
+                  columns={columns_list ?? []}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) =>
+                    row.id_anexo ?? null === null
+                      ? uuid()
+                      : row.id_anexo ?? uuid()
+                  }
+                />
+              )}
             </Grid>
           </Box>
         </Grid>

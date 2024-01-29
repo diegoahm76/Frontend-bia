@@ -65,13 +65,13 @@ export const AcordeonOpas = (): JSX.Element => {
     if (searchElement) {
       setExpanded?.(radicado);
       control_success(
-        'Se ha encontrado un elemento que coincide con el radicado ingresado'
+        'Se ha encontrado una OPA que coincide con el radicado ingresado'
       );
     } else {
       void Swal.fire({
         icon: 'warning',
         title: 'Oops...',
-        text: 'No se ha encontrado un elemento que coincida con el radicado ingresado',
+        text: 'No se ha encontrado una OPA que coincida con el radicado ingresado',
       });
       setExpanded?.(false);
     }
@@ -111,7 +111,7 @@ export const AcordeonOpas = (): JSX.Element => {
             <Accordion
               ref={expanded === item?.cabecera?.radicado ? accordionRef : null}
               style={{ marginBottom: '1rem' }}
-              key={item?.cabecera?.id_PQRSDF}
+              key={item?.cabecera?.id_solicitud_tramite}
               expanded={expanded === item?.cabecera?.radicado}
               onChange={handleChange(item?.cabecera?.radicado)}
             >
@@ -134,20 +134,20 @@ export const AcordeonOpas = (): JSX.Element => {
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Typography sx={stylesTypography}>
-                  <b>Titular:</b> {item?.detalle?.titular}
+                  <b>Titular:</b> {item?.detalle?.titular ?? 'Sin titular'}
                 </Typography>
                 <Typography sx={stylesTypography}>
-                  <b>Cantidad de anexos: </b>
-                  {item?.detalle?.cantidad_anexos}
+                  <b>Nombre del proyecto: </b>
+                  {item?.detalle?.nombre_proyecto ?? 'N/A'}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography sx={stylesTypography}>
-                  <b>Estado actual:</b> {item?.detalle?.estado_actual_solicitud}
+                  <b>Costo del proyecto:</b> {+item?.detalle?.costo_proyecto ?? 0}
                 </Typography>
                 <Typography sx={stylesTypography}>
-                  <b>Asunto: </b>
-                  {item?.detalle?.asunto}
+                  <b>Cantidad de predios: </b>
+                  {item?.detalle?.cantidad_predios ?? 'N/A'}
                 </Typography>
               </Grid>
             </Grid>
@@ -162,13 +162,13 @@ export const AcordeonOpas = (): JSX.Element => {
               >
                 <VisaulTexto
                   elements={[
-                    'No se ha encontrado información relacionada a la respuesta de la solicitud',
+                    'No se ha encontrado información relacionada a la respuesta de la solicitud de  la OPA',
                   ]}
                 />
               </section>
             ) : (
               <RenderDataGrid
-                title="Información de la respuesta"
+                title="Información de la respuesta OPA"
                 columns={infoSolicitudColumns ?? []}
                 rows={[...item?.detalle?.solicitud_actual] ?? []}
               />
@@ -184,13 +184,13 @@ export const AcordeonOpas = (): JSX.Element => {
               >
                 <VisaulTexto
                   elements={[
-                    'No se ha encontrado información de los registros',
+                    'No se ha encontrado información de los registros relacionados para la OPA',
                   ]}
                 />
               </section>
             ) : (
               <RenderDataGrid
-                title="Información de la respuesta"
+                title="Información de la respuesta OPA"
                 columns={consultaColumns ?? []}
                 rows={[...item?.detalle?.registros] ?? []}
               />

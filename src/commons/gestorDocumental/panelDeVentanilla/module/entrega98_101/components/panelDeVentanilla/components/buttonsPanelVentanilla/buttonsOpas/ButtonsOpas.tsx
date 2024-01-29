@@ -8,41 +8,30 @@ import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAle
 import Swal from 'sweetalert2';
 import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
-import { postDigitalizacionPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/postDigitalizacion.service'
-
+import { postDigitalizacionOpas } from '../../../../../../../toolkit/thunks/opas/postDigitalizacionOpas.service';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ButtonsOpas: React.FC = (): JSX.Element => {
   //* dispatch decalration
   const dispatch = useAppDispatch();
   //* redux states
-  const actionsOpas = useAppSelector((state) => state.PanelVentanillaSlice.actionsOpas);
- /* const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+  const actionsOpas = useAppSelector(
+    (state) => state.PanelVentanillaSlice.actionsOpas
+  );
+  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );*/
+  );
   //* navigate declaration
   const navigate = useNavigate();
 
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
+  // ? MANEJO DE ACCIONES PARA OPAS ----------------------
+  // ? MANEJO DE ACCIONES PARA OPAS ----------------------
 
   const sendDigitalizationRequest = async () => {
-    // ! pendiente de implementar el servicio de digitalización para las OPAS
-
-    // const { id_PQRSDF } = currentElementPqrsdComplementoTramitesYotros;
-    Swal.fire({
-      title: 'Perfecto',
-      text: 'Se ha enviado la solicitud de digitalización.',
-      icon: 'info',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      allowEnterKey: false,
-    });
-
-    // await postDigitalizacionPqrsdf(id_PQRSDF);
-    // dispatch(resetPanelVentanillaFull());
+    const { id_solicitud_tramite } =
+      currentElementPqrsdComplementoTramitesYotros;
+    await postDigitalizacionOpas(id_solicitud_tramite);
   };
 
   const handleDigitalizacion = withValidation(async () => {
@@ -100,7 +89,9 @@ export const ButtonsOpas: React.FC = (): JSX.Element => {
         icon={<MultipleStopIcon />}
         direction="right"
       >
-        {actionsOpas.every((action: { disabled: boolean }) => action.disabled) ? (
+        {actionsOpas.every(
+          (action: { disabled: boolean }) => action.disabled
+        ) ? (
           <Typography variant="body1" color="text.secondary">
             No hay acciones disponibles para el elemento seleccionado
           </Typography>

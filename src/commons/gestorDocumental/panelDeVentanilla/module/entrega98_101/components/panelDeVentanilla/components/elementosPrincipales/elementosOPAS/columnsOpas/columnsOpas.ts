@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
+import { formatDate } from "../../../../../../../../../../../utils/functions/formatDate";
+
 /*
 
  {
@@ -52,7 +54,10 @@ export const columnsOpas = [
   {
     headerName: 'Asunto',
     field: 'asunto',
-    minWidth: 400,
+    minWidth: 450,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Cantidad de anexos',
@@ -70,15 +75,15 @@ export const columnsOpas = [
   {
     headerName: 'Fecha de radicado',
     field: 'fecha_radicado',
-    minWidth: 200,
+    minWidth: 220,
     renderCell: (params: any) => {
-      return params.value ? params.value : 'N/A';
+      return params.value ? formatDate(params.value) : 'N/A';
     },
   },
   {
     headerName: 'Estado de solicitud',
-    field: 'estado_actual_solicitud',
-    minWidth: 260,
+    field: 'estado_actual',
+    minWidth: 400,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     },
@@ -86,27 +91,50 @@ export const columnsOpas = [
   {
     headerName: 'Tipo de permiso ambiental',
     field: 'tipo_permiso_ambiental',
-    minWidth: 380,
+    minWidth: 400,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Permiso ambiental',
     field: 'permiso_ambiental',
-    minWidth: 260,
+    minWidth: 300,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Nombre del proyecto',
     field: 'nombre_proyecto',
-    minWidth: 260,
+    minWidth: 500,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Coordenada X',
     field: 'coordenada_x',
     minWidth: 160,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Coordenada Y',
     field: 'coordenada_y',
     minWidth: 160,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
+  },
+  {
+    headerName: 'Unidad asignada',
+    field: 'unidad_asignada',
+    minWidth: 160,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   }
 ];
 
