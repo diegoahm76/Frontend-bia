@@ -6,13 +6,11 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import MultipleStopIcon from '@mui/icons-material/MultipleStop';
 
 import { useNavigate } from 'react-router-dom';
-import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import Swal from 'sweetalert2';
-import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 import { useAppSelector } from '../../../../../../../../../hooks';
-import { withValidation } from './functions/validationAction';
 import { ButtonsPqrsdf } from './buttonsPqrsdf/ButtonsPqrsdf';
 import { ButtonsComplementos } from './buttonsPqrsdf/buttonsComplementos/ButtonsComplementos';
+import { ButtonsOpas } from './buttonsOpas/ButtonsOpas';
+import { ButtonsOtros } from './buttonsOtros/ButtonsOtros';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
@@ -50,17 +48,14 @@ const renderTramitesYServicios = (actionsTramitesYServicios: any[]) => (
   </Box>
 );
 
-const renderOtros = () => (
-  <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-    <>Botones de Otros </>
-  </Box>
-);
+const renderOtros = () => <ButtonsOtros/>
 
 const renderComplementoPQRSDF = () => <ButtonsComplementos />;
 
+const renderOPAS = () => <ButtonsOpas />;
+
 export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
-  const navigate = useNavigate();
 
   const actionsTramitesYServicios = useAppSelector(
     (state) => state.PanelVentanillaSlice.actionsTramitesYServicios
@@ -69,92 +64,6 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
   );
-  const actionsComplementos = useAppSelector(
-    (state) => state.PanelVentanillaSlice.actionsComplementos
-  );
-
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-
-  const handleDigitalizacion = withValidation(async () => {
-    await Swal.fire({
-      title: '¿Desea enviar la solicitud de digitalización?',
-      text: 'Se enviará la solicitud de digitalización al módulo de central de digitalización.',
-      showDenyButton: true,
-      confirmButtonText: `Si, digitalizar`,
-      denyButtonText: `No, cancelar`,
-      confirmButtonColor: '#3085d6',
-      denyButtonColor: '#d33',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        showAlert(
-          'Solicitud enviada',
-          'Diríjase al módulo de central de digitalización.',
-          'success'
-        );
-        //* se debe añadir la lógica del envío de la solicitud con una función extra
-      } else if (result.isDenied) {
-        showAlert(
-          'Opps...',
-          'Haz decidido no enviar la solicitud de digitalización.',
-          'info'
-        );
-      }
-    });
-  });
-
-  const handleAsignacionPersonal = withValidation(() =>
-    console.log('Enviar solicitud al usuario')
-  );
-
-  const handleAsignacionGrupo = withValidation(() =>
-    console.log('Asignar al grupo')
-  );
-
-  const handleContinuarAsignacionAGrupo = withValidation(() =>
-    console.log('Continuar con asignación de grupo')
-  );
-
-  const handleClickActionsGeneral = (action: any) => {
-    //* por cada nombre se ejecutaran acciones diferentes, se debe analizar por si vienen cambios desde el backend que se plantee
-    switch (action.id) {
-      case 'Dig':
-        handleDigitalizacion(action, navigate);
-        break;
-      case 'AsigPer':
-        handleAsignacionPersonal(action, navigate);
-        break;
-      case 'AsigGrup':
-        handleAsignacionGrupo(action, navigate);
-        break;
-      case 'ContinuarAsigGrup':
-        handleContinuarAsignacionAGrupo(action, navigate);
-        break;
-      default:
-        break;
-    }
-  };
-
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-  // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
-
-  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
-  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
-  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
-  //*
-  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
-  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
-  // ! MANEJO DE ACCIONES PARA TRÁMITES Y SERVICIOS ----------------------
-
-  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
-  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
-  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
-  //*
-  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
-  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
-  // ! MANEJO DE ACCIONES PARA OTROS ----------------------
 
   return (
     <>
@@ -170,10 +79,16 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
             return renderTramitesYServicios(
               actionsTramitesYServicios /*|| actionsComplementos*/
             );
-          case 'Otros':
+          case 'OTROS':
             return renderOtros();
-          case 'Complemento de PQRSDF' || 'Complemento de PQRSDF - Respuesta a solicitud' || 'Complemento de PQRSDF - Respuesta a requerimiento':
+          case 'Complemento de PQRSDF':
+          case 'Complemento de PQRSDF - Respuesta a solicitud':
+          case 'Complemento de PQRSDF - Respuesta a requerimiento':
             return renderComplementoPQRSDF();
+
+          case 'OPA':
+            return renderOPAS();
+
           default:
             return null;
         }

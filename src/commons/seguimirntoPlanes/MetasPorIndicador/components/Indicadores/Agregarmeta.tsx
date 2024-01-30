@@ -14,7 +14,6 @@ import {
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
@@ -37,7 +36,6 @@ export const Agregarmeta: React.FC = () => {
     data_watch_meta,
     register_meta,
     set_value_meta,
-
     onsubmit_meta,
     onsubmit_editar,
     is_savingd_meta,
@@ -99,6 +97,16 @@ export const Agregarmeta: React.FC = () => {
         valor_ejecutado_obligado: meta.valor_ejecutado_obligado,
         avance_fisico: meta.avance_fisico,
         id_indicador: meta.id_indicador,
+        id_plan: meta.id_plan,
+        id_programa: meta.id_programa,
+        id_proyecto: meta.id_proyecto,
+        id_producto: meta.id_producto,
+        id_actividad: meta.id_actividad,
+        nombre_plan: meta.nombre_plan,
+        nombre_programa: meta.nombre_programa,
+        nombre_proyecto: meta.nombre_proyecto,
+        nombre_producto: meta.nombre_producto,
+        nombre_actividad: meta.nombre_actividad,
       });
     }
   }, [mode, meta]);
@@ -106,6 +114,24 @@ export const Agregarmeta: React.FC = () => {
   const porcentaje_meta = Number(data_watch_meta.porcentaje_meta);
   const isGuardarDisabled = porcentaje_meta > 100;
 
+  const agno_1 = Number(data_watch_meta.agno_1);
+  const agno_2 = Number(data_watch_meta.agno_2);
+  const agno_3 = Number(data_watch_meta.agno_3);
+  const agno_4 = Number(data_watch_meta.agno_4);
+
+  const isAgno1Disabled = agno_1 + agno_2 + agno_3 + agno_4 > 100;
+
+  const valor_meta = Number(data_watch_meta.valor_meta);
+  const valor_ejecutado_compromiso = Number(
+    data_watch_meta.valor_ejecutado_compromiso
+  );
+  const valor_ejecutado_obligado = Number(
+    data_watch_meta.valor_ejecutado_obligado
+  );
+
+  const isValorEjecutadoDisabled =
+    valor_ejecutado_compromiso > valor_meta ||
+    valor_ejecutado_obligado > valor_meta;
   return (
     <>
       <form
@@ -234,8 +260,12 @@ export const Agregarmeta: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
-                  // error={!!errors_meta.porcentaje_meta}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }} // error={!!errors_meta.porcentaje_meta}
                   // helperText={
                   //   errors_meta.porcentaje_meta
                   //     ? 'Es obligatorio ingresar un numero'
@@ -254,14 +284,18 @@ export const Agregarmeta: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  // type="number"
+                  type="number"
                   label="Avance fisico"
                   variant="outlined"
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
-                  // error={!!errors_meta.avance_fisico}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }} // error={!!errors_meta.avance_fisico}
                   // helperText={
                   //   errors_meta.avance_fisico
                   //     ? 'Es obligatorio ingresar un numero'
@@ -286,7 +320,12 @@ export const Agregarmeta: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   InputProps={{
                     inputComponent: NumericFormatCustom as any,
                   }}
@@ -315,15 +354,20 @@ export const Agregarmeta: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   InputProps={{
                     inputComponent: NumericFormatCustom as any,
                   }}
                   error={!!errors_meta.valor_ejecutado_compromiso}
                   helperText={
                     errors_meta.valor_ejecutado_compromiso
-                      ? 'Es obligatorio ingresar un valor de la cuenta'
-                      : 'Ingrese un valor de la cuenta'
+                      ? 'Es obligatorio ingresar el valor ejecutado por compromiso'
+                      : 'Ingrese un valor ejecutado por compromiso'
                   }
                 />
               )}
@@ -344,15 +388,20 @@ export const Agregarmeta: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   InputProps={{
                     inputComponent: NumericFormatCustom as any,
                   }}
                   error={!!errors_meta.valor_ejecutado_obligado}
                   helperText={
                     errors_meta.valor_ejecutado_obligado
-                      ? 'Es obligatorio ingresar un valor de la cuenta'
-                      : 'Ingrese un valor de la cuenta'
+                      ? 'Es obligatorio ingresar el valor ejecutado por obligado'
+                      : 'Ingrese un valor ejecutado por obligado'
                   }
                 />
               )}
@@ -373,13 +422,12 @@ export const Agregarmeta: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
-                  // error={!!errors_meta.agno_1}
-                  // helperText={
-                  //   errors_meta.agno_1
-                  //     ? 'Es obligatorio ingresar un numero'
-                  //     : 'Ingrese un numero'
-                  // }
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                 />
               )}
             />
@@ -399,8 +447,12 @@ export const Agregarmeta: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
-                  // error={!!errors_meta.agno_2}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }} // error={!!errors_meta.agno_2}
                   // helperText={
                   //   errors_meta.agno_2
                   //     ? 'Es obligatorio ingresar un numero'
@@ -425,8 +477,12 @@ export const Agregarmeta: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
-                  // error={!!errors_meta.agno_3}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }} // error={!!errors_meta.agno_3}
                   // helperText={
                   //   errors_meta.agno_3
                   //     ? 'Es obligatorio ingresar un numero'
@@ -451,8 +507,12 @@ export const Agregarmeta: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
-                  // error={!!errors_meta.agno_4}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }} // error={!!errors_meta.agno_4}
                   // helperText={
                   //   errors_meta.agno_4
                   //     ? 'Es obligatorio ingresar un numero'
@@ -468,6 +528,29 @@ export const Agregarmeta: React.FC = () => {
                 <Alert icon={false} severity="error">
                   <Typography>
                     El procentaje de la meta no puede ser mayor a 100
+                  </Typography>
+                </Alert>
+              </Grid>
+            </Grid>
+          ) : null}
+          {isAgno1Disabled ? (
+            <Grid item xs={12}>
+              <Grid container justifyContent="center" textAlign="center">
+                <Alert icon={false} severity="error">
+                  <Typography>
+                    La suma de los años no puede ser mayor al valor del
+                    porcentaje de la meta
+                  </Typography>
+                </Alert>
+              </Grid>
+            </Grid>
+          ) : null}
+          {isValorEjecutadoDisabled ? (
+            <Grid item xs={12}>
+              <Grid container justifyContent="center" textAlign="center">
+                <Alert icon={false} severity="error">
+                  <Typography>
+                    El valor ejecutado no puede ser mayor al valor de la meta
                   </Typography>
                 </Alert>
               </Grid>
@@ -493,7 +576,6 @@ export const Agregarmeta: React.FC = () => {
               }}
               render={({
                 field: { onChange, value },
-                fieldState: { error },
               }) => (
                 <FormControl>
                   <FormControlLabel
@@ -596,7 +678,12 @@ export const Agregarmeta: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_savingd_meta}
+                disabled={
+                  isValorEjecutadoDisabled ||
+                  isGuardarDisabled ||
+                  isAgno1Disabled ||
+                  is_savingd_meta
+                }
                 startIcon={<SaveIcon />}
                 loading={is_savingd_meta}
               >

@@ -223,8 +223,8 @@ export const TiposDocumentoScreen: React.FC = () => {
                         <>
                             <DataGrid
                                 autoHeight
-                                rows={rows}
-                                columns={columns}
+                                rows={rows ?? []}
+                                columns={columns ?? []}
                                 getRowId={(row) => row.cod_tipo_documento}
                                 pageSize={5}
                                 rowsPerPageOptions={[5]}

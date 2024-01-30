@@ -3,14 +3,17 @@ import { api } from '../../../api/axios';
 import { login_post, permissions_request } from '../request/authRequest';
 import { type UserData } from '../interfaces/authModels';
 import {
+  change_entorno,
   checking_credentials,
   login,
   logout,
   open_dialog_entorno,
   open_dialog_representado,
   set_authenticated,
-  set_permissions
+  set_is_loading,
+  set_permissions,
 } from './authSlice';
+import { RecentActorsOutlined } from '@mui/icons-material';
 
 export const checking_authentication: (
   nombre_de_usuario: string,
@@ -21,7 +24,7 @@ export const checking_authentication: (
 
     const { ok, data, error_message, is_blocked } = await login_post({
       nombre_de_usuario,
-      password
+      password,
     });
     // Se limpia los permisos que vienen del back
     if (data?.permisos !== undefined) {
@@ -35,7 +38,7 @@ export const checking_authentication: (
 
     const { tokens } = data?.userinfo as UserData;
 
-    localStorage.setItem('token', tokens.access);
+    sessionStorage.setItem('token', tokens.access);
     // Se establece el token en el header de las peticiones
     api.interceptors.request.use(
       (config) => {
@@ -43,14 +46,18 @@ export const checking_authentication: (
         return config;
       },
       async (error) => {
-        return await Promise.reject(error);
+        console.log(error);
+        console.log('error en el interceptor');
       }
     );
 
     // Validamos el tipo de persona y usario para mostrar u ocultar el dialog de entornos
     if (data?.userinfo.tipo_persona === 'J') {
       dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
-      dispatch(set_authenticated());
+      setTimeout(() => {
+        // dispatch(open_dialog_representado());
+        dispatch(set_authenticated());
+      }, 1000);
     } else if (
       data?.userinfo.tipo_persona === 'N' &&
       data?.userinfo.tipo_usuario === 'I'
@@ -77,95 +84,62 @@ export const get_persmisions_user: (
   tipo_entorno: string
 ) => any = (id_usuario: number, tipo_entorno: string) => {
   return async (dispatch: Dispatch<any>) => {
+    dispatch(set_is_loading?.(true));
     const resp = await permissions_request(id_usuario, tipo_entorno);
-    // podemos enviar mensaje de error al dispatch
     if (!resp.ok) {
-      // Agregar dispatch de error
       dispatch(logout({ error_message: resp.error_message }));
       return;
     }
-
-  /*  //  console.log('')(
-      '🚀 ~ file: thunks.ts ~ line 86 ~ return ~ resp.data',
-      resp.data
-    ); */
-    //* fixed rendered menu
     const permissions = resp.data?.map((e) => {
-  return {
-    ...e,
-    hola : 'hola',
-    expanded: false,
-    menus: e.menus?.map((i) => {
       return {
-        ...i,
+        ...e,
+        hola: 'hola',
         expanded: false,
-        submenus: i.submenus?.map((o) => {
+        menus: e.menus?.map((i) => {
           return {
-            ...o,
+            ...i,
             expanded: false,
-            submenus: o.submenus?.map((s) => {
+            submenus: i.submenus?.map((o) => {
               return {
-                ...s,
+                ...o,
                 expanded: false,
-                modulos: s.modulos?.map((m) => {
+                submenus: o.submenus?.map((s) => {
                   return {
-                    ...m,
-                    expanded: false
+                    ...s,
+                    expanded: false,
+                    modulos: s.modulos?.map((m) => {
+                      return {
+                        ...m,
+                        expanded: false,
+                      };
+                    }),
+                    submenus: s.submenus?.map((m) => {
+                      return {
+                        ...m,
+                        expanded: false,
+                        modulos: m.modulos?.map((m) => {
+                          return {
+                            ...m,
+                            expanded: false,
+                          };
+                        }),
+                      };
+                    }),
                   };
                 }),
-                submenus: s.submenus?.map((m) => {
+                modulos: o.modulos?.map((m) => {
                   return {
                     ...m,
                     expanded: false,
-                    modulos: m.modulos?.map((m) => {
-                      return {
-                        ...m,
-                        expanded: false
-                      };
-                    })
                   };
-                })
+                }),
               };
             }),
-            modulos: o.modulos?.map((m) => {
-              return {
-                ...m,
-                expanded: false,
-              };
-            })
           };
-        })
+        }),
       };
-    })
-  };
-});
-
-dispatch(set_permissions(permissions));
-
-    /* dispatch(
-      set_permissions(
-        resp.data?.map((e) => {
-          e.expanded = false;
-          e.menus.map((i) => {
-            
-            i.expanded = false;
-            i.modulos.map((o) => {
-              o.expanded = false;
-              return o;
-            });
-            return i;
-          });
-          return e;
-        })
-      )
-    ); */
+    });
+    dispatch(set_permissions(permissions));
+    dispatch(change_entorno(tipo_entorno));
   };
 };
-
-/* Ambos fragmentos de código tienen el mismo propósito, que es establecer la propiedad expanded en false para cada objeto en una estructura de datos anidada. Sin embargo, hay una diferencia importante en cómo se realiza esto.
-
-En el primer fragmento de código, se utiliza la sintaxis de objeto extendido (...) para crear una copia de cada objeto en la estructura de datos anidada y establecer la propiedad expanded en false. Esto se hace de manera recursiva utilizando la función map() para recorrer cada nivel de la estructura de datos anidada. El resultado final es una nueva estructura de datos anidada con las mismas propiedades que la original, pero con la propiedad expanded establecida en false.
-
-En el segundo fragmento de código, se modifica directamente la estructura de datos anidada original utilizando la sintaxis de asignación (=) para establecer la propiedad expanded en false. Esto también se hace de manera recursiva utilizando la función map(). Sin embargo, en lugar de crear una nueva estructura de datos anidada, se modifica la estructura de datos original.
-
-La principal diferencia entre estos dos enfoques es que el primer enfoque crea una nueva estructura de datos anidada, mientras que el segundo enfoque modifica la estructura de datos original. En general, es una buena práctica evitar modificar la estructura de datos original, ya que esto puede tener efectos secundarios no deseados en otras partes del código que dependen de la estructura de datos original. Por lo tanto, el primer enfoque es generalmente preferible al segundo enfoque */

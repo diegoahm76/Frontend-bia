@@ -1,4 +1,4 @@
-import type{ IPlan } from "../Consultas/types/types";
+import type { IPlan } from '../Consultas/types/types';
 
 export interface IPlanes {
   id_plan?: number | null;
@@ -36,11 +36,13 @@ export interface IObjetivo {
 export interface IProgramas {
   id_programa?: number | null;
   nombre_plan?: string;
+  nombre_programa: string;
   porcentaje_1: number | null;
   porcentaje_2: number | null;
   porcentaje_3: number | null;
   porcentaje_4: number | null;
-  nombre_programa: string;
+  cumplio: boolean;
+  fecha_creacion: string;
   id_plan?: number | null;
 }
 // Proyectos
@@ -48,20 +50,29 @@ export interface IProyectos {
   id_proyecto?: number | null;
   numero_proyecto: number | null;
   nombre_programa?: string;
+  nombre_plan?: string;
   pondera_1: number | null;
   pondera_2: number | null;
   pondera_3: number | null;
   pondera_4: number | null;
   nombre_proyecto: string;
-  id_programa?: number | null;
+  id_programa: number | null;
+  id_plan: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // productos
 export interface IProductos {
   id_producto?: number | null;
   nombre_proyecto?: string;
   nombre_producto: string;
+  nombre_plan?: string;
   id_proyecto?: number | null;
   numero_producto?: number | null;
+  id_programa: number | null;
+  id_plan: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // Actividades
 export interface IActividades {
@@ -72,6 +83,12 @@ export interface IActividades {
   numero_actividad?: number | null;
   id_plan?: number | null;
   nombre_plan?: string;
+  nombre_proyecto?: string;
+  nombre_programa?: string;
+  id_programa: number | null;
+  id_proyecto: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // Indicadores
 export interface Indicadores {
@@ -82,7 +99,8 @@ export interface Indicadores {
   nombre_actividad?: string;
   nombre_plan?: string;
   nombre_indicador: string;
-  nombre_proyecto? : string;
+  nombre_proyecto?: string;
+  nombre_programa?: string;
   tipo_indicador?: string;
   linea_base: string;
   medida: string;
@@ -90,8 +108,11 @@ export interface Indicadores {
   id_tipo?: number | null;
   id_producto?: number | null;
   id_actividad?: number | null;
-  id_plan?: number | null;
   id_proyecto?: number | null;
+  id_plan: number | null;
+  id_programa: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // Metas por Indicador
 export interface IMetaIndicador {
@@ -111,6 +132,16 @@ export interface IMetaIndicador {
   valor_ejecutado_obligado: number | null;
   avance_fisico: number | null;
   id_indicador?: number | null;
+  id_plan: number | null;
+  id_programa: number | null;
+  id_proyecto: number | null;
+  id_producto: number | null;
+  id_actividad: number | null;
+  nombre_plan?: string;
+  nombre_programa?: string;
+  nombre_proyecto?: string;
+  nombre_producto?: string;
+  nombre_actividad?: string;
 }
 // Rubro
 export interface IRubro {
@@ -166,6 +197,8 @@ export interface IDetalleCuentas {
   nombre_proyecto?: string;
   nombre_producto?: string;
   nombre_actividad?: string;
+  nombre_meta?: string;
+  nombre_indicador?: string;
   cuenta: string;
   valor_cuenta: number | null;
   id_sector?: number | null;
@@ -175,6 +208,8 @@ export interface IDetalleCuentas {
   id_proyecto?: number | null;
   id_producto?: number | null;
   id_actividad?: number | null;
+  id_indicador: number | null;
+  id_meta: number | null;
 }
 
 // Concepto POAI
@@ -192,7 +227,7 @@ export interface IConceptoPOAI {
 // fuentes de financiacion
 export interface IFuentes {
   id_fuente: number | null;
-  nombre_fuente?: string;
+  nombre_fuente: string;
   vano_1: number | null;
   vano_2: number | null;
   vano_3: number | null;
@@ -299,7 +334,7 @@ export interface ISeguimientoPAI {
   beneficiarios?: string;
   compromisos?: string;
   contratros?: string;
-  fecha_creacion? : string;
+  fecha_creacion?: string;
   id_unidad_organizacional?: number | null;
   id_programa: number | null;
   id_proyecto?: number | null;
@@ -307,6 +342,68 @@ export interface ISeguimientoPAI {
   id_actividad?: number | null;
   id_indicador?: number | null;
   id_meta?: number | null;
+}
+
+// Seguimiento POAI
+
+export interface ISeguiminetoPOAI {
+  id_seguimiento?: number | null;
+  nombre_programa?: string;
+  nombre_proyecto?: string;
+  nombre_producto?: string;
+  nombre_actividad?: string;
+  nombre_unidad?: string;
+  nombre_indicador?: string;
+  nombre_meta?: string;
+  codigo_modalidad?: string;
+  concepto?: string;
+  sector?: string;
+  nombre_fuente?: string;
+  cuenta?: string;
+  objeto_contrato?: string;
+  ubicacion?: string;
+  clase_tercero?: string;
+  porcentaje_pto?: number | null;
+  vano_1?: number | null;
+  vano_2?: number | null;
+  vano_3?: number | null;
+  vano_4?: number | null;
+  valor_total?: number | null;
+  numero_cdp_paa?: number | null;
+  numero_rp_paa?: number | null;
+  valor_seguimiento_banco_paa?: number | null;
+  valor_cdp_paa?: number | null;
+  valor_rp_paa?: number | null;
+  fecha_termiacion?: string;
+  duracion?: number | null;
+  valor_mesual_paoi?: number | null;
+  mes_oferta_paa?: string;
+  mes_solicita?: string;
+  valor_pagado?: number | null;
+  valor_obligado?: number | null;
+  valor_saldo?: number | null;
+  porcentaje_ejecuta?: number | null;
+  numero_contrato?: number | null;
+  numerp_rp?: number | null;
+  fecha_rp?: string;
+  valor_cdp?: number | null;
+  fecha_cdp?: string;
+  observaciones?: string;
+  id_plan?: number | null;
+  id_programa?: number | null;
+  id_proyecto?: number | null;
+  id_producto?: number | null;
+  id_actividad?: number | null;
+  id_indicador?: number | null;
+  id_meta?: number | null;
+  id_concepto?: number | null;
+  id_fuente_financiacion?: number | null;
+  id_unidad_organizacional?: number | null;
+  id_detalle_inversion?: number | null;
+  id_banco_proyecto?: number | null;
+  id_modalidad?: number | null;
+  id_ubicacion?: number | null;
+  id_clase_tercero?: number | null;
 }
 
 export interface IPlanesIndex {
@@ -333,6 +430,7 @@ export interface IPlanesIndex {
   mode_paa_codigos: IMode;
   seguimiento_pai: ISeguimientoPAI;
   consulta_plan: IPlan;
+  seguimiento_poai: ISeguiminetoPOAI;
 }
 
 // unidades organizacionales

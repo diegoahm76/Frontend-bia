@@ -71,6 +71,9 @@ export const ListarProyectos: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              console.log(params.row, 'params.row');
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -106,7 +109,7 @@ export const ListarProyectos: React.FC = () => {
     },
   ];
 
-  const { rows_proyectos, fetch_data_proyecto } =
+  const { set_id_plan, set_id_programa, rows_proyectos, fetch_data_proyecto } =
     useContext(DataContextProductos);
 
   const dispatch = useAppDispatch();
@@ -159,8 +162,8 @@ export const ListarProyectos: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_proyectos}
-                  columns={columns_proyectos}
+                  rows={rows_proyectos ?? []}
+                  columns={columns_proyectos ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

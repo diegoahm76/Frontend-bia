@@ -164,12 +164,12 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
           <Grid item xs={12} sm={6} md={3}>
             <CustomSelect
               onChange={handle_change_select}
-              label="Tipo de documento *"
+              label="Tipo de documento"
               name="tipo_documento"
               value={tipo_documento_av}
               options={tipo_documento_opt}
               disabled={is_loading}
-              required={true}
+              required={false}
               errors={errors}
               register={register}
             />
@@ -177,19 +177,13 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
           <Grid item xs={12} sm={6} md={3}>
             <TextField
               fullWidth
-              label="Número de documento *"
+              label="Número de documento"
               type="number"
               size="small"
               disabled={tipo_documento_av === '' ?? true}
               inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-              error={errors.numero_documento?.type === 'required'}
-              helperText={
-                errors.numero_documento?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : ''
-              }
               {...register('numero_documento', {
-                required: true,
+                required: false,
               })}
             />
           </Grid>

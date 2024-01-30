@@ -20,6 +20,7 @@ export const TramitesOServiciosScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [usuario, set_usuario] = useState<any>(null);
+    const [usuario_cache, set_usuario_cache] = useState<any>(null);
     const [limpiar, set_limpiar] = useState<boolean>(false);
 
     useEffect(() => {
@@ -28,6 +29,8 @@ export const TramitesOServiciosScreen: React.FC = () => {
 
     const obtener_usuario_logueado_fc: () => void = () => {
         dispatch(obtener_usuario_logueado()).then((response: any) => {
+            console.log(response)
+            set_usuario_cache(response);
             dispatch(get_info_persona(response.id_persona)).then((user: any) => {
                 set_usuario(user.data);
             })
@@ -52,7 +55,7 @@ export const TramitesOServiciosScreen: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <SeccionGeneral usuario={usuario}></SeccionGeneral>
+                <SeccionGeneral usuario={usuario} usuario_cache={usuario_cache}></SeccionGeneral>
             </Grid>
             <Grid container>
                 <Grid item xs={12} sm={12}>
@@ -62,14 +65,6 @@ export const TramitesOServiciosScreen: React.FC = () => {
                         spacing={2}
                         sx={{ mt: '10px' }}
                     >
-                        <Button
-                            // color='inherit'
-                            variant="outlined"
-                            startIcon={<CleanIcon />}
-                            onClick={() => { limpiar_formulario() }}
-                        >
-                            Limpiar
-                        </Button>
                         <Button
                             color="error"
                             variant='contained'

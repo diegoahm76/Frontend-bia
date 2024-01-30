@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -29,22 +29,18 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
 
   const { mode, fuente } = useAppSelector((state) => state.planes);
 
-  const { concepto_selected, fetch_data_concepto } = useContext(
-    DataContextFuentesFinanciacion
-  );
-
-  useEffect(() => {
-    fetch_data_concepto();
-  }, []);
+  const { set_id_concepto } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {
     if (mode.crear) {
       limpiar_formulario_fuente();
     }
     if (mode.editar) {
+      set_id_concepto(fuente.id_concepto ?? null);
       reset_fuente({
         id_fuente: fuente.id_fuente,
         concepto: fuente.concepto,
+        nombre_fuente: fuente.nombre_fuente,
         vano_1: fuente.vano_1,
         vano_2: fuente.vano_2,
         vano_3: fuente.vano_3,
@@ -245,7 +241,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Controller
               name="id_concepto"
               control={control_fuente}
@@ -275,7 +271,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
               <Button

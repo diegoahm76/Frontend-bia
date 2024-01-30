@@ -34,6 +34,16 @@ export const useMetaHook = (): any => {
       valor_ejecutado_obligado: 0,
       avance_fisico: 0,
       id_indicador: 0,
+      id_plan: 0,
+      id_programa: 0,
+      id_proyecto: 0,
+      id_producto: 0,
+      id_actividad: 0,
+      nombre_plan: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
     },
   });
 
@@ -57,6 +67,16 @@ export const useMetaHook = (): any => {
       valor_ejecutado_obligado: 0,
       avance_fisico: 0,
       id_indicador: 0,
+      id_plan: 0,
+      id_programa: 0,
+      id_proyecto: 0,
+      id_producto: 0,
+      id_actividad: 0,
+      nombre_plan: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
     });
   };
 
@@ -64,20 +84,34 @@ export const useMetaHook = (): any => {
   const [is_saving_meta, set_is_saving_meta] = useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_mata_indicador } = useContext(DataContextMetas);
+  const {
+    id_plan,
+    id_programa,
+    id_proyecto,
+    id_producto,
+    id_actividad,
+    id_indicador,
+    fetch_data_mata_indicador,
+  } = useContext(DataContextMetas);
 
   // declaracion redux
   const {
     meta: { id_meta },
-    indicador: { id_indicador },
+    // indicador: { id_indicador },
   } = useAppSelector((state) => state.planes);
 
   const onsubmit_meta = handleSubmit_meta(async (data) => {
     try {
-      //  console.log('')(data, 'data');
-      data.id_indicador = id_indicador;
-      dayjs(data.fecha_creacion_meta).format('YYYY-MM-DD');
       set_is_saving_meta(true);
+      data.id_plan = id_plan;
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
+      data.id_producto = id_producto;
+      data.id_actividad = id_actividad;
+      data.id_indicador = id_indicador;
+      data.fecha_creacion_meta = dayjs(data.fecha_creacion_meta).format(
+        'YYYY-MM-DD'
+      );
       await post_meta(data as IMetaIndicador);
       control_success('Se creó correctamente');
       await limpiar_formulario_meta();
@@ -98,8 +132,15 @@ export const useMetaHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_meta(true);
-      dayjs(data.fecha_creacion_meta).format('YYYY-MM-DD');
+      data.id_plan = id_plan;
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
+      data.id_producto = id_producto;
+      data.id_actividad = id_actividad;
       data.id_indicador = id_indicador;
+      data.fecha_creacion_meta = dayjs(data.fecha_creacion_meta).format(
+        'YYYY-MM-DD'
+      );
       await put_meta((id_meta as number) ?? 0, data as IMetaIndicador);
       control_success('Se actualizó correctamente');
       await limpiar_formulario_meta();

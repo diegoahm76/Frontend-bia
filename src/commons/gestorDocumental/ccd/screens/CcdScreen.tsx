@@ -54,6 +54,7 @@ import { FILEWEIGHT } from '../../../../fileWeight/fileWeight';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { useNavigate } from 'react-router-dom';
+import { useFiles } from '../../../../hooks/useFiles/useFiles';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
@@ -80,6 +81,8 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
     (state: any) => state.slice_series_and_subseries
   );
   const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
+
+  const { controlar_tamagno_archivos } = useFiles();
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   // //  console.log('')(series_ccd);
@@ -95,6 +98,11 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
     dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
     get_assignments_service(ccd_current?.id_ccd)(dispatch);
   }, [ccd_current]);
+
+  useEffect(() => {
+    console.log('hello world ccd')
+    clean_ccd();
+  }, []);
 
   // Hooks
   const {
@@ -383,27 +391,13 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                         <input
                           style={{ display: 'none' }}
                           type="file"
-                          accept="application/pdf"
+                          // accept="application/pdf"
                           disabled={ccd_current?.actual}
                           onChange={(e) => {
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
                               const file = files[0];
-                              if (file.type !== 'application/pdf') {
-                                control_warning(
-                                  'Precaución: Solo es admitido archivos en formato pdf'
-                                );
-                              } else if (file.size > FILEWEIGHT.PDF) {
-                                const MAX_FILE_SIZE_MB = (
-                                  FILEWEIGHT.PDF /
-                                  (1024 * 1024)
-                                ).toFixed(1);
-                                control_warning(
-                                  `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                                );
-                              } else {
-                                onChange(file);
-                              }
+                              controlar_tamagno_archivos(file, onChange);
                             }
                           }}
                         />

@@ -1,5 +1,5 @@
 
-import { Box, Button, Dialog, DialogContent, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -29,6 +29,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     const [palabras_clave, set_palabras_clave] = useState<any>("");
     const [lt_tdr, set_lt_tdr] = useState<any[]>([]);
     const [tdr, set_tdr] = useState<any>("");
+    const [consecutivo, set_consecutivo] = useState<any>("");
 
     useEffect(() => {
         obtener_trd_actual_fc();
@@ -61,6 +62,9 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     const cambio_palabras_clave: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_palabras_clave(e.target.value);
     };
+    const cambio_consecutivo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_consecutivo(e.target.value);
+    };
 
     const columns: GridColDef[] = [
         {
@@ -68,6 +72,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
             headerName: 'CÓDIGO',
             sortable: true,
             width: 150,
+            valueGetter: (params) => params.row.codigo_exp_und_serie_subserie + '.' + params.row.codigo_exp_Agno + (params.row.codigo_exp_consec_por_agno !== null ? '.' + params.row.codigo_exp_consec_por_agno : ""),
         },
         {
             field: 'nombre_trd_origen',
@@ -115,13 +120,13 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     const seleccionar_expediente: any = (expediente: any) => {
         props.set_expediente(expediente);
         dispatch(obtener_indice_por_expediente(expediente.id_expediente_documental)).then(((response: any) => {
-            response.data !== null && response.data !== undefined ? props.set_indice(response.data): props.set_indice(null);
+            response.data !== null && response.data !== undefined ? props.set_indice(response.data) : props.set_indice(null);
             props.set_is_modal_active(false);
         }));
     }
 
     const mostrar_busqueda_expediente: any = async () => {
-        dispatch(obtener_expedientes(tdr, año_apertura, serie, sub_serie, palabras_clave, titulo, cod_und_series)).then(((response: any) => {
+        dispatch(obtener_expedientes(tdr, año_apertura, serie, sub_serie, palabras_clave, titulo, cod_und_series, consecutivo)).then(((response: any) => {
             if (response.data !== null && response.data !== undefined)
                 set_expedientes(response.data);
             else
@@ -234,28 +239,32 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
 
                                     />
                                 </Grid>
-                            </Grid>
-                            <Grid container spacing={2} sx={{ mt: '1px' }}>
-                                <Grid item xs={12} sm={12}>
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="center"
-                                    >
-                                        <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                autoFocus
-                                                margin="dense"
-                                                fullWidth
-                                                size="small"
-                                                label="Palabras Clave"
-                                                variant="outlined"
-                                                value={palabras_clave}
-                                                onChange={cambio_palabras_clave}
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    fullWidth
+                                    size="small"
+                                    label="Consecutivo"
+                                    variant="outlined"
+                                    value={consecutivo}
+                                    onChange={cambio_consecutivo}
 
-                                            />
-                                        </Grid>
-                                    </Stack>
-                                </Grid>
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    fullWidth
+                                    size="small"
+                                    label="Palabras Clave"
+                                    variant="outlined"
+                                    value={palabras_clave}
+                                    onChange={cambio_palabras_clave}
+
+                                />
+                            </Grid>
                             </Grid>
                             <>
                                 {expedientes.length > 0 && (

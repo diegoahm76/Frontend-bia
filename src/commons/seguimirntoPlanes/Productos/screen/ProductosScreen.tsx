@@ -8,6 +8,8 @@ import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ListarProyectos } from '../components/Programas/ListarProyectos';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaProductos } from '../components/Programas/BusquedaAvanzada/BusquedaProductos';
+import { BusquedaProyecto } from '../components/Programas/BusquedaAvanzada/BusquedaProyecto';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProductosScreen: React.FC = () => {
@@ -46,7 +48,7 @@ export const ProductosScreen: React.FC = () => {
           <Title title="Productos " />
         </Grid>
       </Grid>
-      <ListarProyectos />
+      <BusquedaProyecto />
       {mode.ver ? <ListarProductos /> : null}
       {mode.crear || mode.editar ? <AgregarProducto /> : null}
       <Grid
@@ -65,6 +67,7 @@ export const ProductosScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaProductos />
         <Grid item>
           <ButtonSalir />
         </Grid>

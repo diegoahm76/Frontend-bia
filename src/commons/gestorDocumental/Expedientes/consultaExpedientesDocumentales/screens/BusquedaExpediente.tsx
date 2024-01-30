@@ -2,7 +2,6 @@ import { Grid, TextField, Box, Button, Stack, InputLabel, FormControl, Select, M
 import { Title } from "../../../../../components/Title";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../../hooks";
-import { DialogNoticacionesComponent } from "../../../../../components/DialogNotificaciones";
 import { buscar_expediente_id, obtener_serie_subserie, obtener_unidades_marcadas } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
 import dayjs, { Dayjs } from "dayjs";
 import SearchIcon from '@mui/icons-material/Search';
@@ -37,12 +36,6 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
     const [expediente, set_expediente] = useState<any>(null);
     const [documento, set_documento] = useState<any>(null);
     const [expedientes, set_expedientes] = useState<any>([]);
-    // Notificaciones
-    const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
-    const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
-    const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
-    const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
-    const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
     const [buscar_expediente_active, set_buscar_expediente_active] = useState<boolean>(false);
 
     const columns: GridColDef[] = [
@@ -50,7 +43,8 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             field: 'codigo_exp_und_serie_subserie',
             headerName: 'CÓDIGO',
             sortable: true,
-            width: 150,
+            width: 200,
+            valueGetter: (params) => params.row.codigo_exp_und_serie_subserie + '.' +  params.row.codigo_exp_Agno + (params.row.codigo_exp_consec_por_agno !== null ? '.' +  params.row.codigo_exp_consec_por_agno : ""),
         },
         {
             field: 'nombre_trd_origen',
@@ -91,14 +85,6 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
             valueGetter: (params) => params.row.nombre_persona_titular ?? 'N/A',
         }
     ];
-    const generar_notificación_reporte = (titulo: string, tipo: string, mensaje: string, active: boolean) => {
-        set_titulo_notificacion(titulo);
-        set_tipo_notificacion(tipo);
-        set_mensaje_notificacion(mensaje)
-        set_dialog_notificaciones_is_active(active);
-        set_abrir_modal(active);
-    }
-
     useEffect(() => {
         obtener_trd_actual_fc();
     }, []);
@@ -384,14 +370,6 @@ export const BusquedaExpediente: React.FC<IProps> = (props: IProps) => {
                     </Grid>
                 </Box>
             </Grid>
-            {dialog_notificaciones_is_active && (
-                <DialogNoticacionesComponent
-                    titulo_notificacion={titulo_notificacion}
-                    abrir_modal={abrir_modal}
-                    tipo_notificacion={tipo_notificacion}
-                    mensaje_notificacion={mensaje_notificacion}
-                    abrir_dialog={set_abrir_modal} />
-            )}
         </>
     )
 }

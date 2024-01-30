@@ -53,10 +53,12 @@ import { control_warning } from '../../../../../../../../almacen/configuracion/s
 
 import { LoadingButton } from '@mui/lab';
 import { FILEWEIGHT } from '../../../../../../../../../fileWeight/fileWeight';
+import { useFiles } from '../../../../../../../../../hooks/useFiles/useFiles';
 
 export const FormTRDAdmin = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
+  const {controlar_tamagno_archivos} = useFiles();
 
   //* define show or no show component
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -523,28 +525,13 @@ export const FormTRDAdmin = (): JSX.Element => {
                           <input
                             style={{ display: 'none' }}
                             type="file"
-                            accept="application/pdf"
+                            // accept="application/pdf"
                             // disabled={control_administrar_trd?.actual}
                             onChange={(e) => {
-                              const files = (e.target as HTMLInputElement)
-                                .files;
+                              const files = (e.target as HTMLInputElement).files;
                               if (files && files.length > 0) {
                                 const file = files[0];
-                                if (file.type !== 'application/pdf') {
-                                  control_warning(
-                                    'Precaución: Solo es admitido archivos en formato pdf'
-                                  );
-                                } else if (file.size > FILEWEIGHT.PDF) {
-                                  const MAX_FILE_SIZE_MB = (
-                                    FILEWEIGHT.PDF /
-                                    (1024 * 1024)
-                                  ).toFixed(1);
-                                  control_warning(
-                                    `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                                  );
-                                } else {
-                                  onChange(file);
-                                }
+                                controlar_tamagno_archivos(file, onChange)
                               }
                             }}
                           />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -9,6 +10,7 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -128,6 +130,7 @@ export const TipoEjeScreen: React.FC = () => {
   const [tipo_eje, set_tipo_eje] = useState(initial_state);
   const [is_crear, set_is_crear] = useState<boolean>(false);
   const [is_editar, set_is_editar] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handle_open_crear = (): void => {
     set_is_crear(true);
@@ -136,8 +139,15 @@ export const TipoEjeScreen: React.FC = () => {
     set_is_editar(true);
   };
 
+  const filterRows = (rows: any[], searchTerm: string) => {
+    return rows.filter((row) =>
+      row.nombre_tipo_eje.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
   const get_traer_tipo_eje = async (): Promise<void> => {
     try {
+      setSearchTerm('')
       const response = await get_tipos_eje();
       const datos_tipo_eje = response.map((datos: TiposEjes) => ({
         id_tipo_eje: datos.id_tipo_eje,
@@ -146,7 +156,7 @@ export const TipoEjeScreen: React.FC = () => {
         activo: datos.activo,
         item_ya_usado: datos.item_ya_usado,
       }));
-      set_rows(datos_tipo_eje);
+      set_rows(filterRows(datos_tipo_eje, ''));
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'
@@ -227,11 +237,19 @@ export const TipoEjeScreen: React.FC = () => {
                   title: 'Resultados de la búsqueda',
                 })}
               </ButtonGroup>
+              <TextField
+                label="Buscar tipo de eje estrategico"
+                size="small"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ marginBottom: '20px' }}
+              />
               <DataGrid
                 autoHeight
-                rows={rows}
+                rows={filterRows(rows, searchTerm)}
                 columns={columns}
-                getRowId={(row) => uuidv4()}
+                getRowId={() => uuidv4()}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
               />

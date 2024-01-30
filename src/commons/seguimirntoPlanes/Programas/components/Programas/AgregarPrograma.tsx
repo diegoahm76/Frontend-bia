@@ -1,5 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Alert, Button, Grid, TextField, Typography } from '@mui/material';
+import {
+  Alert,
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -9,6 +19,13 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect } from 'react';
 import { useprogramaHook } from '../../hooks/useprogramaHook';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
+//* FECHAS
+// import type { Dayjs } from 'dayjs';
+// import dayjs from 'dayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import InfoIcon from '@mui/icons-material/Info';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarPrograma: React.FC = () => {
@@ -17,12 +34,19 @@ export const AgregarPrograma: React.FC = () => {
     errors_programa,
     reset_programa,
     data_watch_programa,
+    register_programa,
+    set_value_programa,
 
     onsubmit_programa,
     onsubmit_editar,
     is_saving_programa,
 
     limpiar_formulario_programa,
+
+    // fecha
+    fecha_creacion,
+    set_fecha_creacion,
+    handle_change_fecha_creacion,
   } = useprogramaHook();
 
   const dispatch = useAppDispatch();
@@ -34,6 +58,11 @@ export const AgregarPrograma: React.FC = () => {
       limpiar_formulario_programa();
     }
     if (mode.editar) {
+      set_value_programa(
+        'fecha_creacion',
+        dayjs(programa.fecha_creacion).format('YYYY-MM-DD')
+      );
+      set_fecha_creacion(programa.fecha_creacion);
       reset_programa({
         id_programa: programa.id_programa,
         nombre_plan: programa.nombre_plan,
@@ -43,6 +72,8 @@ export const AgregarPrograma: React.FC = () => {
         porcentaje_3: programa.porcentaje_3,
         porcentaje_4: programa.porcentaje_4,
         id_plan: programa.id_plan,
+        fecha_creacion: programa.fecha_creacion,
+        cumplio: programa.cumplio,
       });
     }
   }, [mode, programa]);
@@ -157,12 +188,17 @@ export const AgregarPrograma: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   error={!!errors_programa.porcentaje_1}
                   helperText={
                     errors_programa.porcentaje_1
-                      ? 'Es obligatorio ingresar un numero'
-                      : 'Ingrese un numero'
+                      ? 'Es obligatorio ingresar un parcentaje'
+                      : 'Ingrese un parcentaje'
                   }
                 />
               )}
@@ -183,12 +219,17 @@ export const AgregarPrograma: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   error={!!errors_programa.porcentaje_2}
                   helperText={
                     errors_programa.porcentaje_2
-                      ? 'Es obligatorio ingresar un numero'
-                      : 'Ingrese un numero'
+                      ? 'Es obligatorio ingresar un parcentaje'
+                      : 'Ingrese un parcentaje'
                   }
                 />
               )}
@@ -209,12 +250,17 @@ export const AgregarPrograma: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   error={!!errors_programa.porcentaje_3}
                   helperText={
                     errors_programa.porcentaje_3
-                      ? 'Es obligatorio ingresar un numero'
-                      : 'Ingrese un numero'
+                      ? 'Es obligatorio ingresar un parcentaje'
+                      : 'Ingrese un parcentaje'
                   }
                 />
               )}
@@ -235,16 +281,118 @@ export const AgregarPrograma: React.FC = () => {
                   value={value}
                   disabled={false}
                   required={true}
-                  onChange={onChange}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) {
+                      onChange(e);
+                    }
+                  }}
                   error={!!errors_programa.porcentaje_4}
                   helperText={
                     errors_programa.porcentaje_4
-                      ? 'Es obligatorio ingresar un numero'
-                      : 'Ingrese un numero'
+                      ? 'Es obligatorio ingresar un parcentaje'
+                      : 'Ingrese un parcentaje'
                   }
                 />
               )}
             />
+          </Grid>
+          <Grid
+            sx={{
+              marginBottom: '10px',
+              width: 'auto',
+            }}
+            item
+            xs={12}
+            sm={6}
+          >
+            <Controller
+              name="cumplio"
+              control={control_programa}
+              // defaultValue=""
+              rules={{
+                required: data_watch_programa.cumplio
+                  ? 'Este campo es requerido'
+                  : false,
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={value}
+                        onChange={(e) => {
+                          onChange(e.target.checked);
+                        }}
+                        // name="checkedB"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      value ? (
+                        <Typography variant="body2">
+                          <strong>Programa cumplido</strong>
+                          <Tooltip title="SI" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'green',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2">
+                          <strong>Programa no cumplido</strong>
+                          <Tooltip title="No" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'orange',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      )
+                    }
+                  />
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de creacion"
+                value={fecha_creacion}
+                onChange={(value) => {
+                  handle_change_fecha_creacion(value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_programa('fecha_creacion', {
+                      required: true,
+                    })}
+                    error={!!errors_programa.fecha_creacion}
+                    helperText={
+                      errors_programa.fecha_creacion
+                        ? 'Es obligatorio la fecha de creacion del programa'
+                        : ''
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
           {isGuardarDisabled ? (
             <Grid item xs={12}>

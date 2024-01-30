@@ -6,6 +6,7 @@ import { IProgramas } from '../../types/types';
 import { useAppSelector } from '../../../../hooks';
 import { post_programa, put_programa } from '../services/services';
 import { DataContextprograma } from '../context/context';
+import dayjs from 'dayjs';
 
 export const useprogramaHook = (): any => {
   const {
@@ -25,6 +26,8 @@ export const useprogramaHook = (): any => {
       porcentaje_3: 0,
       porcentaje_4: 0,
       id_plan: null,
+      fecha_creacion: '',
+      cumplio: false,
     },
   });
 
@@ -40,26 +43,42 @@ export const useprogramaHook = (): any => {
       porcentaje_3: 0,
       porcentaje_4: 0,
       id_plan: null,
+      fecha_creacion: '',
+      cumplio: false,
     });
   };
 
   // saving
   const [is_saving_programa, set_is_saving_programa] = useState<boolean>(false);
 
+  // fecha
+  const [fecha_creacion, set_fecha_creacion] = useState<Date | null>(
+    new Date()
+  );
+
+  const handle_change_fecha_creacion = (date: Date | null) => {
+    set_fecha_creacion(date);
+    set_value_programa('fecha_creacion', dayjs(date).format('YYYY-MM-DD'));
+  };
+
   // declaracion context
-  const { fetch_data_programa } = useContext(DataContextprograma);
+  const { id_programa, id_plan, fetch_data_programa } =
+    useContext(DataContextprograma);
 
   // declaracion redux
-  const {
-    plan: { id_plan },
-    programa: { id_programa },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   plan: { id_plan },
+  //   programa: { id_programa },
+  // } = useAppSelector((state) => state.planes);
 
   const onsubmit_programa = handleSubmit_programa(async (data) => {
     try {
-      //  console.log('')(data, 'data');
-      data.id_plan = id_plan;
       set_is_saving_programa(true);
+      const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
+      data.fecha_creacion = fecha_creacion_format;
+      data.id_programa = id_programa;
+
+      data.id_plan = id_plan;
       await post_programa(data as IProgramas);
       control_success('Se creó correctamente');
       await limpiar_formulario_programa();
@@ -78,8 +97,11 @@ export const useprogramaHook = (): any => {
 
   const onsubmit_editar = handleSubmit_programa(async (data) => {
     try {
-      //  console.log('')(data, 'data');
       set_is_saving_programa(true);
+      data.id_programa = id_programa;
+      data.id_plan = id_plan;
+      const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
+      data.fecha_creacion = fecha_creacion_format;
       await put_programa((id_programa as number) ?? 0, data as IProgramas);
       control_success('Se actualizó correctamente');
       await limpiar_formulario_programa();
@@ -111,5 +133,10 @@ export const useprogramaHook = (): any => {
     is_saving_programa,
 
     limpiar_formulario_programa,
+
+    // fecha
+    fecha_creacion,
+    set_fecha_creacion,
+    handle_change_fecha_creacion,
   };
 };

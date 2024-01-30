@@ -80,7 +80,7 @@ const FormStepper = ({
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
       // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
+      throw new Error("No se puede saltar un paso que no es opcional.");
     }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);

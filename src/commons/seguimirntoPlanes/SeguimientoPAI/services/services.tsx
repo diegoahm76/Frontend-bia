@@ -56,7 +56,14 @@ export const get_documentos_seguimiento_pai = async (
 
   return archivos;
 };
-
+export const get_metas_id = async (
+  id_indicador: number
+): Promise<IMetaIndicador[]> => {
+  const response = await api.get(
+    `seguimiento/planes/consultar-metas-id-indicador/${id_indicador}/`
+  );
+  return response.data.data;
+};
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
 export const post_seguimiento_pai = async (
   data: ISeguimientoPAI,

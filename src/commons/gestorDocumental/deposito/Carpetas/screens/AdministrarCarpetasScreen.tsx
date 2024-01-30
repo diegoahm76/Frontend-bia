@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../hooks";
 import FormInputController from "../../../../../components/partials/form/FormInputController";
 import FormSelectController from "../../../../../components/partials/form/FormSelectController";
 import type { IBuscarCaja } from "../../Cajas/types/types";
-import { editar_carpeta, crear_carpeta, eliminar_carpeta, get_carpeta_id, mover_carpeta_seleccionada } from "../../store/thunks/deposito";
+import { editar_carpeta, crear_carpeta, eliminar_carpeta, get_carpeta_id, mover_carpeta_seleccionada, get_rotulo_carpeta } from "../../store/thunks/deposito";
 import ListadoCarpetas from "../components/CarpetasExistentes";
 import MoverCarpeta from "../components/MoverCarpeta";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -43,7 +43,7 @@ const AdministrarCarpetasScreen = () => {
 
 
     const dispatch = useAppDispatch();
-    const { cajas, carpetas } = useAppSelector(
+    const { cajas, carpetas,  } = useAppSelector(
         (state: { deposito: any }) => state.deposito
     );
     const [select_orden, set_select_orden] = useState(false);
@@ -95,14 +95,15 @@ const AdministrarCarpetasScreen = () => {
     const handle_mover_carpeta = (carpeta_mover: IObjCarpeta) => {
         set_mover_carpeta(true);
         reset_carpeta_destino(carpeta_mover)
-        //  console.log('')(carpeta_mover)
+        console.log(carpeta_mover)
 
     };
 
 
     useEffect(() => {
-        //  console.log('')(selected_carpeta)
+        console.log(selected_carpeta)
         reset(selected_carpeta);
+        console.log(cajas)
     }, [selected_carpeta]);
 
     const on_submit = (data: IObjCarpeta): void => {
@@ -113,7 +114,7 @@ const AdministrarCarpetasScreen = () => {
                 ...data,
 
             };
-            //  console.log('')(data_edit)
+            console.log(data_edit)
             void dispatch(
                 editar_carpeta(selected_carpeta.id_carpeta_caja, data_edit)
             );
@@ -123,16 +124,22 @@ const AdministrarCarpetasScreen = () => {
                 id_caja_bandeja: cajas.id_caja
 
             };
-            //  console.log('')(cajas)
+            console.log(selected_carpeta)
             void dispatch(crear_carpeta(data_aux));
         }
 
         set_selected_carpeta(initial_state_carpeta);
         set_action("Guardar");
-        void dispatch(get_carpeta_id(cajas.id_caja_bandeja))
+        void dispatch(get_carpeta_id(cajas.id_caja
+            ))
     };
 
-
+    useEffect(() => {
+        // Asegúrate de que selected_carpeta.id_carpeta no es undefined
+        if (cajas.id_carpeta !== undefined) {
+          void dispatch(get_rotulo_carpeta(cajas.id_carpeta));
+        }
+      }, [cajas.id_carpeta])
     const on_submit_elimnar = (data: IObjCarpeta): void => {
 
         if (
@@ -149,7 +156,7 @@ const AdministrarCarpetasScreen = () => {
 
 
     const on_submit_mover_carpeta = (data: IObjCarpeta): void => {
-        //  console.log('')(data)
+        console.log(data)
         const data_mover = {
             identificacion_caja_destino: data.identificacion_caja,
             identificacion_bandeja_destino: data.identificacion_bandeja,
@@ -161,7 +168,7 @@ const AdministrarCarpetasScreen = () => {
         };
 
         void dispatch(mover_carpeta_seleccionada(selected_carpeta.id_carpeta_caja, data_mover));
-        //  console.log('')(selected_carpeta);
+        console.log(selected_carpeta);
 
     }
 
@@ -499,7 +506,7 @@ const AdministrarCarpetasScreen = () => {
 
                     </DialogTitle>
                     <DialogContent>
-                        <Rotulo control_rotulo={control_rotulo} open={open_modal_rotulo} />
+                        <Rotulo control_rotulo={control_rotulo} open={open_modal_rotulo} selected_carpeta={selected_carpeta}/>
                     </DialogContent>
                 </Dialog>
             )}

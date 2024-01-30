@@ -9,24 +9,23 @@ import {
   Grid,
   IconButton,
 } from '@mui/material';
-import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { DataContextPlanes } from '../../context/context';
-import EditIcon from '@mui/icons-material/Edit';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useAppDispatch } from '../../../../../hooks';
 import {
   set_current_mode_planes,
   set_current_planes,
 } from '../../../store/slice/indexPlanes';
-import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { Title } from '../../../../../components/Title';
+import { v4 as uuidv4 } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarPlanes: React.FC = () => {
-  const columns_planes: GridColDef[] = [
+  const columns: GridColDef[] = [
     {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
@@ -91,9 +90,10 @@ export const ListarPlanes: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
               dispatch(
                 set_current_mode_planes({
-                  ver: false,
+                  ver: true,
                   crear: false,
                   editar: true,
                 })
@@ -124,8 +124,8 @@ export const ListarPlanes: React.FC = () => {
       ),
     },
   ];
-
-  const { rows_planes, fetch_data_planes } = useContext(DataContextPlanes);
+  const { rows_planes, set_id_plan, fetch_data_planes } =
+    useContext(DataContextPlanes);
 
   const dispatch = useAppDispatch();
 
@@ -149,14 +149,16 @@ export const ListarPlanes: React.FC = () => {
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
+        // justifyContent="flex-end"
       >
-        <Grid item xs={12}>
-          <Title title="Listado de planes " />
-        </Grid>
-        <>
-          <Grid item xs={12}>
-            <Box sx={{ width: '100%' }}>
-              <>
+        {rows_planes.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Title title="Listado de planes" />
+              {/* <Typography>Resultados de la búsqueda</Typography> */}
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ width: '100%' }}>
                 <ButtonGroup
                   style={{
                     margin: 7,
@@ -164,30 +166,42 @@ export const ListarPlanes: React.FC = () => {
                     justifyContent: 'flex-end',
                   }}
                 >
-                  {download_xls({
-                    nurseries: rows_planes,
-                    columns: columns_planes,
-                  })}
+                  {download_xls({ nurseries: rows_planes, columns })}
                   {download_pdf({
                     nurseries: rows_planes,
-                    columns: columns_planes,
-                    title: 'CREAR PLAN',
+                    columns,
+                    title: 'Planes',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
                   rows={rows_planes}
-                  columns={columns_planes}
+                  columns={columns}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
-              </>
-            </Box>
-          </Grid>
-        </>
-        <Grid container spacing={2} justifyContent="flex-end">
+              </Box>
+            </Grid>
+          </>
+        )}
+        <Grid
+          container
+          spacing={2}
+          // m={2}
+          // p={2}
+          // sx={{
+          //   position: 'relative',
+          //   background: '#FAFAFA',
+          //   borderRadius: '15px',
+          //   p: '20px',
+          //   m: '10px 0 20px 0',
+          //   mb: '20px',
+          //   boxShadow: '0px 3px 6px #042F4A26',
+          // }}
+          justifyContent="flex-end"
+        >
           <Grid item>
             <Button
               variant="outlined"
@@ -196,7 +210,7 @@ export const ListarPlanes: React.FC = () => {
               onClick={() => {
                 dispatch(
                   set_current_mode_planes({
-                    ver: false,
+                    ver: true,
                     crear: true,
                     editar: false,
                   })

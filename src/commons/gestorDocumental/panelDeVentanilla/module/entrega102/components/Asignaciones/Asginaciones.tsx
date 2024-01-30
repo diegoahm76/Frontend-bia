@@ -1,4 +1,4 @@
-import { Chip, Grid } from '@mui/material';
+import { Button, Chip, Grid } from '@mui/material';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsAsignaciones } from './columnsAsignaciones/columnsAsignaciones';
 import { useContext } from 'react';
@@ -9,7 +9,9 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 /* eslint-disable @typescript-eslint/naming-convention */
 export const Asignaciones = (): JSX.Element => {
   //* context declaration
-  const { listaAsignaciones } = useContext(AsignacionGrupoContext);
+  const { listaAsignaciones, liderAsignado } = useContext(
+    AsignacionGrupoContext
+  );
   const { generalLoading } = useContext(ModalAndLoadingContext);
 
   const estadoMapping: any = {

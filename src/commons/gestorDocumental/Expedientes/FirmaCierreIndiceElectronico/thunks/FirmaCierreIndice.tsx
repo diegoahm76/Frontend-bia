@@ -32,10 +32,10 @@ const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =
   });
 
 // Selección de Expediente
-export const obtener_expedientes: any = (id_trd_origen: string,fecha_apertura_expediente: string,id_serie_origen: string,id_subserie_origen: string,palabras_clave_expediente: string,titulo_expediente: string,codigos_uni_serie_subserie: string) => {
+export const obtener_expedientes: any = (id_trd_origen: string,fecha_apertura_expediente: string,id_serie_origen: string,id_subserie_origen: string,palabras_clave_expediente: string,titulo_expediente: string,codigos_uni_serie_subserie: string,codigo_exp_consec_por_agno: string) => {
   return async () => {
     try {
-      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expedientes/?id_trd_origen=${id_trd_origen}&fecha_apertura_expediente=${fecha_apertura_expediente}&id_serie_origen=${id_serie_origen}&id_subserie_origen=${id_subserie_origen}&palabras_clave_expediente=${palabras_clave_expediente}&titulo_expediente=${titulo_expediente}&codigos_uni_serie_subserie=${codigos_uni_serie_subserie}`);
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expedientes/?id_trd_origen=${id_trd_origen}&fecha_apertura_expediente=${fecha_apertura_expediente}&id_serie_origen=${id_serie_origen}&id_subserie_origen=${id_subserie_origen}&palabras_clave_expediente=${palabras_clave_expediente}&titulo_expediente=${titulo_expediente}&codigos_uni_serie_subserie=${codigos_uni_serie_subserie}&codigo_exp_consec_por_agno=${codigo_exp_consec_por_agno}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

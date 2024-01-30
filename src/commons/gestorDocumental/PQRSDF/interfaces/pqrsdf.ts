@@ -23,6 +23,8 @@ export interface IPqrsdf {
   person_type: IObjListType;
   document_types: IObjDocumentType[];
   document_type: IObjDocumentType;
+  otros: IObjOtros[];
+  otro:IObjOtros;
 
   // Crear PQRSDF
   pqr_types: IObjListType[];
@@ -150,6 +152,10 @@ export interface IObjPqr {
   nro_folios_totales?: number | null; // total folios en anexos
   anexos?: IObjExhibit[];
   denuncia?: IObjPqrDenuncia | null;
+
+
+
+  descripcionMetadatos?: string | null; // descripcion de metadatos
 }
 
 export interface IObjPqrDenuncia {
@@ -195,6 +201,8 @@ export interface IObjExhibit {
   exhibit_link?: string | IObjFile | null;
   id_docu_de_arch_exp?: number | null;
   metadatos: IObjMetaData | null;
+  nombre_medio_almacenamiento?: string | number | null;
+  descripcionMetadatos?:string|null;
 }
 
 export interface IObjMetaData {
@@ -224,6 +232,9 @@ export interface IObjMetaData {
   id_tipologia_doc?: number | null;
   tipologia_doc?: string | null;
   tipologia_no_creada_en_TRD?: string | null;
+  nro_folios_documento?: number | null;
+  tipologia_no_creada_TRD?: string | null;
+  id_archivo_sistema?: number | null;
 }
 export interface IObjFile{
   
@@ -250,4 +261,41 @@ export interface IObjFiled {
   nombre_tipo_radicado?: string | null;
   titular?: string | number;
   asunto?:string|null;
+}
+
+
+// OTROS / / / / / /  /
+
+
+
+export interface IObjOtros {
+  id_otros?: number | null;
+  nombre_estado_solicitud?: string | null;
+  id_persona_titular?: number | null;
+	id_persona_interpone?: number | null;
+	cod_relacion_titular?: number | string | null;
+	es_anonima?: boolean;
+	id_medio_solicitud?: number | null;
+	cod_forma_presentacion?: number | string | null;
+	asunto?: string | null;
+	descripcion?: string | null;
+	cantidad_anexos?: number | null;
+	nro_folios_totales?: number | null;
+	requiere_rta?: boolean;
+	id_sucursal_especifica_implicada?: number | null;
+	id_persona_recibe?: number | null;
+	id_sucursal_recepciona_fisica?: number | null;
+  numero_radicado_entrada?: number | null;
+  nombre_completo_titular?: string | null;
+  fecha_registro?: string | Date | null;
+  fecha_radicado?: string | null;
+  fecha_envio_definitivo_digitalizacion?: string | null;
+  fecha_digitalizacion_completada?: string | null;
+  fecha_inicial_estado_actual?: string | null;
+  id_radicados?: number | null;
+  id_estado_actual_solicitud?: number | null;
+  id_documento_archivo_expediente?: number | null;
+  id_expediente_documental?: number | null;
+  anexos?: IObjExhibit[];
+
 }

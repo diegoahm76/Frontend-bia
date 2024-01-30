@@ -2,13 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 // import clienteAxios from '../../../api/axios';
 import { type IUserInfo } from '../interfaces/authModels';
 
-const initial_state: IUserInfo = {
+const initial_state: IUserInfo | any = {
   userinfo: {
     email: '',
     nombre_de_usuario: '',
     tokens: {
       refresh: '',
-      access: ''
+      access: '',
     },
     is_superuser: false,
     id_usuario: 0,
@@ -20,12 +20,16 @@ const initial_state: IUserInfo = {
   user_sesion: '',
   permisos: [],
   representante_legal: [],
+  apoderados: [],
   status: 'not-authenticated',
   error_message: '',
   open_dialog: false,
   dialog_representante: false,
   entorno: 'C',
-  is_blocked: false
+  is_blocked: false,
+  representacion_legal: 'MP',
+  is_loading: false,
+  tamagno_archivos: [],
 };
 
 export const auth_slice = createSlice({
@@ -37,6 +41,11 @@ export const auth_slice = createSlice({
       state.user_sesion = payload.user_sesion;
       state.permisos = payload.permisos;
       state.representante_legal = payload.representante_legal;
+      state.apoderados = payload.apoderados;
+      state.representacion_legal = {
+        cod_relacion_con_el_titular: 'MP',
+      };
+      state.tamagno_archivos = payload.tamagno_archivos;
     },
     logout: (state, { payload }) => {
       state.user_sesion = '';
@@ -48,6 +57,7 @@ export const auth_slice = createSlice({
       state.dialog_representante = false;
       state.open_dialog = false;
       state.is_blocked = payload.is_blocked === true;
+      state.representacion_legal = null;
     },
     checking_credentials: (state) => {
       state.status = 'checking';
@@ -78,6 +88,9 @@ export const auth_slice = createSlice({
       state.status = 'not-authenticated';
       state.error_message = '';
     },
+    close_dialog_representado_app: (state) => {
+      state.dialog_representante = false;
+    },
     change_entorno: (state, { payload }) => {
       state.entorno = payload;
     },
@@ -87,10 +100,18 @@ export const auth_slice = createSlice({
     set_authenticated: (state) => {
       state.status = 'authenticated';
     },
-    set_representado: (state, { payload }) => {
-      state.representante_legal = [...payload];
-    }
-  }
+    setRepresentacionLegal: (state, { payload }) => {
+      state.representacion_legal = payload;
+    },
+
+    set_files: (state, { payload }) => {
+      state.tamagno_archivos = payload;
+    },
+
+    set_is_loading: (state, { payload }) => {
+      state.is_loading = payload;
+    },
+  },
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -105,5 +126,9 @@ export const {
   set_authenticated,
   open_dialog_representado,
   close_dialog_representado,
-  set_representado
+  close_dialog_representado_app,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  setRepresentacionLegal,
+  set_files,
+  set_is_loading,
 } = auth_slice.actions;

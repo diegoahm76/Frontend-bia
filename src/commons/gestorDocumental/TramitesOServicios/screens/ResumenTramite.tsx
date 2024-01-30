@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField } from "@mui/material";
+import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField, Tooltip, IconButton, Avatar, Fab, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ClearIcon from '@mui/icons-material/Clear';
-import CleanIcon from '@mui/icons-material/CleaningServices';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { Title } from "../../../../components/Title";
 import React from "react";
 const class_css = {
@@ -15,93 +14,28 @@ const class_css = {
     boxShadow: '0px 3px 6px #042F4A26',
 }
 interface IProps {
-    usuario: any,
+    formulario_paso_uno: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResumenTramite: React.FC<IProps> = (props: IProps) => {
-    const navigate = useNavigate();
-    const [expediente, set_expediente] = useState<any>(null);
-    const [documento, set_documento] = useState<any>(null);
-    const [limpiar, set_limpiar] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (limpiar) {
-        }
-    }, [limpiar]);
-
-    const limpiar_formulario = (): void => {
-        set_limpiar(true);
-    }
-
-    const salir_expediente: () => void = () => {
-        navigate('/home');
-    }
-
     return (
         <>
-                    <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Título"
-                                type={'text'}
-                                size="small"
-                                disabled={true}
-                                fullWidth
-                                value={''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Tipo de expediente"
-                                type={'text'}
-                                size="small"
-                                disabled={true}
-                                fullWidth
-                                value={''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Año de apertura"
-                                type={'text'}
-                                size="small"
-                                disabled={true}
-                                fullWidth
-                                value={''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Titular"
-                                type={'text'}
-                                size="small"
-                                disabled={true}
-                                fullWidth
-                                value={'N/A'}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Etapa actual"
-                                type={'text'}
-                                size="small"
-                                disabled={true}
-                                fullWidth
-                                value={''}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Fecha folio inicial"
-                                type={'text'}
-                                size="small"
-                                disabled={true}
-                                fullWidth
-                                value={''}
-                            />
-                        </Grid>
-                    </Grid>
+            <Grid item container spacing={2}>
+                <Grid item xs={12} sm={12}>
+                    <Typography variant="button" gutterBottom>
+                        Resumen de la solicitud de permisos pendientes a radicar
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                    <Paper elevation={2} sx={{padding:'5px', marginTop:'4px'}}>
+                        <Typography variant="button" gutterBottom sx={{mr:'800px'}}>
+                            {props.formulario_paso_uno?.desc_permiso_ambiental}
+                        </Typography>
+                        <Fab size="small" variant="extended" sx={{ marginX: '2px', marginY: '1px', backgroundColor: 'green', color: 'white', px: '20px' }}>Completado</Fab>
+                    </Paper>
+                </Grid>
+            </Grid>
         </>
     )
 }

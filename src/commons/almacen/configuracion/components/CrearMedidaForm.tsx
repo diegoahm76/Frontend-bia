@@ -199,8 +199,8 @@ const columns: GridColDef[] = [
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={medida}
-                columns={columns}
+                rows={medida ?? []}
+                columns={columns ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}

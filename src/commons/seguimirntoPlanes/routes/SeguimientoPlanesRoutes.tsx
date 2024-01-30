@@ -20,7 +20,9 @@ import { BancosRoutes } from '../BancoProyecto/router/BancosRoutes';
 import { PlanAdquisicionesRoutes } from '../PlanAnualAdquisiciones/router/PlanAdquisicionesRoutes';
 import { SeguimientoPAIRoutes } from '../SeguimientoPAI/router/SeguimientoPAIRoutes';
 import { ConsultarPlanesRoutes } from '../Consultas/router/ConsultarPlanesRoutes';
-import { ConsultarMetasRoutes } from '../ConsultasMetas/router/ConsultarPlanesRoutes';
+import { ConsultarSeguiminetoPAIRoutes } from '../ConsultaPAI/router/ConsultarPlanesRoutes';
+import { ConsultasRoutes } from '../Tableros/router/ConsultasRoutes';
+import { SeguimientoPOAIRoutes } from '../SeguiminetoPOAI/router/SeguimientoPOAIRoutes';
 
 const routes = [
   {
@@ -134,11 +136,23 @@ const routes = [
     name: 'consulta_planes',
     component: () => <ConsultarPlanesRoutes />,
   },
-  // consulta metas
+  // consulta seguimiento pai ConsultarSeguiminetoPAIRoutes
   {
-    path: 'consulta_metas/',
-    name: 'consulta_metas',
-    component: () => <ConsultarMetasRoutes />,
+    path: 'consulta_pai/',
+    name: 'consulta_pai',
+    component: () => <ConsultarSeguiminetoPAIRoutes />,
+  },
+  // consultas_pp
+  {
+    path: 'consultas_pp/',
+    name: 'consultas_pp',
+    component: () => <ConsultasRoutes />,
+  },
+  // seguimiento poai SeguimientoPOAIRoutes
+  {
+    path: 'seguimiento_poai/',
+    name: 'seguimiento_poai',
+    component: () => <SeguimientoPOAIRoutes />,
   },
   {
     path: '/*',

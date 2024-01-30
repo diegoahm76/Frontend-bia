@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { type SetStateAction, type Dispatch, useState, useEffect } from "react";
 import {
   Box,
@@ -30,9 +31,11 @@ interface IProps {
   form_data_atributo: FormDataAtributo;
   actualizar_atributo: boolean;
   is_modal_active: boolean;
+  id_etapa:any;
   set_form_data_atributo: Dispatch<SetStateAction<FormDataAtributo>>;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   submit_create_update_atributo: () => void;
+
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -40,6 +43,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({
   form_data_atributo,
   actualizar_atributo,
   is_modal_active,
+  id_etapa,
   set_form_data_atributo,
   set_is_modal_active,
   submit_create_update_atributo
@@ -91,7 +95,9 @@ export const CrearAtributoModal: React.FC<IProps> = ({
     submit_create_update_atributo();
     handle_close();
   };
-
+  const categoriasFiltradas = categorias_atributos.filter(
+    (categoria) => categoria.id_etapa === id_etapa
+  );
   return (
     <Dialog
       maxWidth="xl"
@@ -113,6 +119,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({
 
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container direction='column'>
+            {/* {id_etapa} */}
             <Grid item xs={11} md={5} margin={1}>
               <FormControl size='small' fullWidth required>
                 <InputLabel>Categoría del atributo</InputLabel>
@@ -127,7 +134,7 @@ export const CrearAtributoModal: React.FC<IProps> = ({
                   }}
                   onChange={handle_select_change}
                 >
-                  {categorias_atributos.map(({ id, categoria }) => (
+                  {categoriasFiltradas.map(({ id, categoria }) => (
                     <MenuItem key={id} value={id}>
                       {categoria}
                     </MenuItem>

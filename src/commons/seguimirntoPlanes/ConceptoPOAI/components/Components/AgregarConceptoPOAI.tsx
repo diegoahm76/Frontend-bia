@@ -30,10 +30,9 @@ export const AgregarConceptoPOAI: React.FC = () => {
   const { mode, concepto_poai } = useAppSelector((state) => state.planes);
 
   const {
-    indicadores_selected,
+    set_id_indicador,
     unidades_organizacionales_selected,
     fetch_data_unidades_organizacionales,
-    fetch_data_indicadores,
   } = useContext(DataContextConceptoPOAI);
 
   const { rubros_selected, fetch_data_rubros } = useContext(
@@ -42,7 +41,6 @@ export const AgregarConceptoPOAI: React.FC = () => {
 
   useEffect(() => {
     fetch_data_unidades_organizacionales();
-    fetch_data_indicadores();
     fetch_data_rubros();
   }, []);
 
@@ -51,6 +49,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
       limpiar_formulario_concepto();
     }
     if (mode.editar) {
+      set_id_indicador(concepto_poai.id_indicador ?? null);
       reset_concepto({
         id_concepto: concepto_poai.id_concepto,
         nombre_indicador: concepto_poai.nombre_indicador,
@@ -175,7 +174,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Controller
               name="id_indicador"
               control={control_concepto}
@@ -205,7 +204,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6}>
             <Controller
               name="id_rubro"

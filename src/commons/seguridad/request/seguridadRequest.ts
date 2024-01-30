@@ -214,18 +214,34 @@ export const user_historico_cambios_estado = async (
   }
 };
 
+// ? crear usuario
 export const crear_user_admin_user = async (
   data: FormData
 ): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.post('users/register/', data);
 };
 
+// ? editar usuario
 export const update_user_admin_user = async (
   id_usuario: number,
   data: FormData
 ): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.patch(`users/update/${id_usuario}/`, data);
 };
+
+// editar datos de acceso
+export const editar_datos_acceso = async (datos: FormData): Promise<any> => {
+  const response = await api.patch(`users/profile/update/`, datos);
+  return response.data;
+};
+
+
+export const get_users_rol = async (
+  id_rol: number
+): Promise<AxiosResponse<ResponseServer<UsersRol[]>>> => {
+  return await api.get(`roles/detail_usuarios_rol/${id_rol}/`);
+};
+
 
 // editar datos persona restringida juridica
 export const editar_datos_restringidos_juridica = async (
@@ -238,6 +254,9 @@ export const editar_datos_restringidos_juridica = async (
   );
   return response.data;
 };
+
+
+
 // consultar historico datos restringidos
 export const consultar_historico_restringido = async (
   id: number
@@ -258,16 +277,6 @@ export const get_person_user_or_users_by_document = async (
   );
 };
 
-// editar datos de acceso
-export const editar_datos_acceso = async (datos: FormData): Promise<any> => {
-  const response = await api.patch(`users/profile/update/`, datos);
-  return response.data;
-};
-export const get_users_rol = async (
-  id_rol: number
-): Promise<AxiosResponse<ResponseServer<UsersRol[]>>> => {
-  return await api.get(`roles/detail_usuarios_rol/${id_rol}/`);
-};
 
 // ? request añadida para traer los datos de una sucursal
 

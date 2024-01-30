@@ -16,7 +16,7 @@ import { RequisitosModal } from '../components/GestionCartera/modal/RequisitosMo
 import { NotificationModal } from '../components/NotificationModal';
 import type { Cartera } from '../interfaces/cobro';
 import { CreateProcesoModal } from '../components/GestionCartera/modal/CreateProcesoModal';
-import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/SeccionEnvio_MSM_CORREO';
+import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
 import { EtapaProcesoConext } from '../components/GestionCartera/Context/EtapaProcesoContext';
 import { toast } from 'react-toastify';
 
@@ -29,6 +29,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [procesos, set_procesos] = useState<Proceso[]>([]);
   const [categorias, set_categorias] = useState<CategoriaAtributo[]>([]);
   const [position_tab, set_position_tab] = useState('1');
+  // eslint-disable-next-line no-unused-vars
   const [data_complemet, set_data_complemet] = useState<any[]>([]);
   const [selected_proceso, set_selected_proceso] = useState({
     fecha_facturacion: '',
@@ -59,10 +60,11 @@ export const GestionCarteraScreen: React.FC = () => {
   const [open_create_proceso_modal, set_open_create_proceso_modal] = useState(false);
   const [valores_proceso, set_valores_proceso] = useState<ValoresProceso[][]>([]);
   const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
-  const { etapa_proceso, set_etapa_proceso } = useContext(EtapaProcesoConext);
+  const { set_etapa_proceso } = useContext(EtapaProcesoConext);
 
   const [filtered_nombres, set_filtered_nombres] = useState<string>('');
   const [filtered_apellidos, set_filtered_apellidos] = useState<string>('');
+  const [filtered_identificacion, set_filtered_identificacion] = useState<string>('');
 
   const columns_carteras: GridColDef[] = [
     {
@@ -84,13 +86,21 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'nombre_deudor',
-      headerName: 'Nombre Deudor',
+      field: 'nombres_deudor',
+      headerName: 'Nombres Deudor',
       minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        return `${params.row.id_deudor.nombres} ${params.row.id_deudor.apellidos}`;
+        return params.row.id_deudor.nombres;
+      }
+    },
+    {
+      field: 'apellidos_deudor',
+      headerName: 'Apellidos Deudor',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.row.id_deudor.apellidos;
       }
     },
     {
@@ -133,6 +143,15 @@ export const GestionCarteraScreen: React.FC = () => {
       flex: 1,
       valueGetter: (params) => {
         return categorias.find((categoria) => categoria.id === params.row.proceso_cartera[0]?.id_categoria)?.categoria ?? 'Sin subetapa activa';
+      }
+    },
+    {
+      field: 'tipo_renta',
+      headerName: 'Tipo Renta',
+      minWidth: 100,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
       }
     },
     {
@@ -188,8 +207,6 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_position_tab('2');
                   set_data_complemet(params.row);
 
-
-
                   set_etapa_proceso((prevEtapa: any) => ({
                     ...prevEtapa,
                     mostrar_modal: true,
@@ -229,7 +246,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       });
   }, []);
 
@@ -239,7 +256,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_categorias(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       })
   }, []);
 
@@ -250,7 +267,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-        //  console.log('')(error);
+      console.log(error);
       })
       .finally(() => {
         set_loading(false);
@@ -263,7 +280,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_flujos_proceso(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       });
   }, []);
 
@@ -283,7 +300,7 @@ export const GestionCarteraScreen: React.FC = () => {
           group_valores_proceso(response.data.data);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
     }
   }, [id_proceso]);
@@ -304,7 +321,7 @@ export const GestionCarteraScreen: React.FC = () => {
           delete_duplicated_atributos(response.data.data);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
     }
   }, [id_etapa]);
@@ -315,7 +332,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_procesos(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       });
   };
 
@@ -327,7 +344,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       })
       .finally(() => {
         set_loading(false);
@@ -340,7 +357,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_flujos_proceso(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
       });
   };
 
@@ -398,7 +415,7 @@ export const GestionCarteraScreen: React.FC = () => {
           set_open_notification_modal(true);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
       api.get(`recaudo/procesos/atributos/${id_etapa_destino}`)
         .then((response) => {
@@ -406,7 +423,7 @@ export const GestionCarteraScreen: React.FC = () => {
           group_atributos(response.data.data);
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
     }
   };
@@ -434,7 +451,7 @@ export const GestionCarteraScreen: React.FC = () => {
           }
         })
         .catch((error) => {
-          //  console.log('')(error);
+          console.log(error);
         });
     }
   };
@@ -525,10 +542,15 @@ export const GestionCarteraScreen: React.FC = () => {
         set_position_tab('1');
         set_notification_info({ type: 'success', message: 'Se ha creado correctamente el proceso.' });
         set_open_notification_modal(true);
-        console.log("data retur  crear-proceso", response)
+        // console.log("data retur  crear-proceso", response.data?.id_categoria)
+        set_etapa_proceso((prevEtapa: any) => ({
+          ...prevEtapa,
+          disable: false,
+          nuevo_proceso: response.data?.id_categoria,
+        }));
       })
       .catch((error) => {
-        //  console.log('')(error);
+        console.log(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
       })
@@ -546,12 +568,12 @@ export const GestionCarteraScreen: React.FC = () => {
 
   const filter_by_name = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    if (filtered_nombres === '' && filtered_apellidos === '') {
-      toast.info('Escriba por lo menos los nombres o apellidos del deudor', {
+    if (filtered_nombres === '' && filtered_apellidos === '' && filtered_identificacion === '') {
+      toast.info('Escriba por lo menos los nombres o apellidos o la identificación del deudor', {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     } else {
-      api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}`)
+      api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}&identificacion=${filtered_identificacion}`)
         .then((response) => {
           if ((response.data.data as Cartera[]).length > 0) {
             set_carteras(response.data.data);
@@ -568,9 +590,10 @@ export const GestionCarteraScreen: React.FC = () => {
   };
 
   const clear_filter = (): void => {
-    if (filtered_nombres !== '' || filtered_apellidos !== '') {
+    if (filtered_nombres !== '' || filtered_apellidos !== '' || filtered_identificacion !== '') {
       set_filtered_nombres('');
       set_filtered_apellidos('');
+      set_filtered_identificacion('');
       update_carteras();
     }
   };
@@ -581,11 +604,11 @@ export const GestionCarteraScreen: React.FC = () => {
       id_atributo: Number(id_atributo),
       valor: value,
     })
-      .then((response) => {
+      .then(() => {
         set_notification_info({ type: 'success', message: `Se ha guardado correctamente el valor "${value}".` });
         set_open_notification_modal(true);
       })
-      .catch((error) => {
+      .catch(() => {
         //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
@@ -598,11 +621,11 @@ export const GestionCarteraScreen: React.FC = () => {
       id_atributo: Number(id_atributo),
       documento: value,
     })
-      .then((response) => {
+      .then(() => {
         set_notification_info({ type: 'success', message: `Se ha guardado correctamente el archivo "${value.name}".` });
         set_open_notification_modal(true);
       })
-      .catch((error) => {
+      .catch(() => {
         //  console.log('')(error);
         set_notification_info({ type: 'error', message: `Hubo un error.` });
         set_open_notification_modal(true);
@@ -674,6 +697,14 @@ export const GestionCarteraScreen: React.FC = () => {
                       set_filtered_apellidos(event.target.value);
                     }}
                   />
+                  <TextField
+                    label='Identificación'
+                    size='small'
+                    value={filtered_identificacion}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      set_filtered_identificacion(event.target.value);
+                    }}
+                  />
                   <Button
                     type='submit'
                     variant='contained'
@@ -707,6 +738,7 @@ export const GestionCarteraScreen: React.FC = () => {
                   initialState={{
                     columns: {
                       columnVisibilityModel: {
+                        id: false,
                         codigo_contable: false,
                         valor_sancion: false,
                       }

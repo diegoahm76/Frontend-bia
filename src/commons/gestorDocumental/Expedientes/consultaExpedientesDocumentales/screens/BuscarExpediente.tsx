@@ -39,6 +39,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     const [persona_titular, set_persona_titular] = useState<any>("");
     const [persona, set_persona] = useState<any>("");
     const [filtro_cinco, set_filtro_cinco] = useState<any>("");
+    const [filtro_seis, set_filtro_seis] = useState<any>("");
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
 
     useEffect(() => {
@@ -87,6 +88,9 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     };
     const cambio_filtro_cinco: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_filtro_cinco(e.target.value);
+    };
+    const cambio_filtro_seis: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_filtro_seis(e.target.value);
     };
 
     const columns: GridColDef[] = [
@@ -234,7 +238,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
 
     const mostrar_busqueda_expediente: any = async () => {
         const personal_local = persona !== "" ? persona.id_persona : "";
-        dispatch(obtener_expedientes(tdr, año_apertura, filtro_tres, filtro_cuatro, filtro_cinco, filtro_uno, filtro_dos, personal_local)).then(((response: any) => {
+        dispatch(obtener_expedientes(tdr, año_apertura, filtro_tres, filtro_cuatro, filtro_cinco, filtro_uno, filtro_dos, personal_local, filtro_seis)).then(((response: any) => {
             response.data !== null ? set_expedientes(response.data) : set_expedientes([]);
         }));
     }
@@ -412,6 +416,19 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} sx={{ mt: '1px' }}>
+                            <Grid item xs={12} sm={3}>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        fullWidth
+                                        size="small"
+                                        label="Consecutivo"
+                                        variant="outlined"
+                                        value={filtro_seis}
+                                        onChange={cambio_filtro_seis}
+
+                                    />
+                                </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         autoFocus
@@ -445,7 +462,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                             set_persona={set_persona} />
                                     )}
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12} sm={3}>
                                     <TextField
                                         autoFocus
                                         margin="dense"
@@ -560,12 +577,12 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                         </Grid>
                     </Grid>}
                     <>
-                        {expedientes.length > 0 && (
+                        {expedientes?.length > 0 && (
                             <Grid item xs={12}>
                                 <Title title="Resultados de la búsqueda" />
                             </Grid>
                         )}
-                        {expedientes.length > 0 && (
+                        {expedientes?.length > 0 && (
                             <Grid item xs={12}>
                                 <Box sx={{ width: '100%' }}>
                                     <>
@@ -583,12 +600,12 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                         )}
                     </>
                     <>
-                        {documentos.length > 0 && (
+                        {documentos?.length > 0 && (
                             <Grid item xs={12}>
                                 <Title title="Resultados de la búsqueda" />
                             </Grid>
                         )}
-                        {documentos.length > 0 && (
+                        {documentos?.length > 0 && (
                             <Grid item xs={12}>
                                 <Box sx={{ width: '100%' }}>
                                     <>

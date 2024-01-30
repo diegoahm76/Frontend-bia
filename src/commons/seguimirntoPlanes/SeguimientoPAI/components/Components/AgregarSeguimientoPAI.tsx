@@ -1038,8 +1038,8 @@ export const AgregarSeguimientoPAI: React.FC = () => {
               <Divider />
               <DataGrid
                 autoHeight
-                rows={rows_anexos}
-                columns={columns_anexos}
+                rows={rows_anexos ?? []}
+                columns={columns_anexos ?? []}
                 getRowId={(row) => uuidv4()}
                 pageSize={10}
                 rowsPerPageOptions={[10]}

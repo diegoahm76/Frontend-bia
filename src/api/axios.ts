@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios';
-import { control_warning } from '../commons/almacen/configuracion/store/thunks/BodegaThunks';
 import {
   handleRequest,
   handleRequestError,
@@ -12,7 +11,7 @@ import {
 export const baseURL =
   process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_BETA_URL || 'https://back-end-bia-beta.up.railway.app/api/'
-    : process.env.REACT_APP_PROD_URL || 'http://70.30.6.237';
+    : process.env.REACT_APP_PROD_URL || 'https://bia.cormacarena.gov.co/api/';
 
 export const api = axios.create({
   baseURL,

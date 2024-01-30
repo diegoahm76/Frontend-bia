@@ -9,6 +9,14 @@ import { get_proyectos, get_producto_id } from '../services/services';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
+  id_programa: number | null;
+  set_id_programa: (value: number | null) => void;
+  id_proyecto: number | null;
+  set_id_proyecto: (value: number | null) => void;
+  id_producto: number | null;
+  set_id_producto: (value: number | null) => void;
 
   // * rows
   rows_producto: IProductos[];
@@ -27,6 +35,16 @@ interface UserContext {
 }
 
 export const DataContextProductos = createContext<UserContext>({
+  // * id
+  id_plan: null,
+  set_id_plan: () => {},
+  id_programa: null,
+  set_id_programa: () => {},
+  id_proyecto: null,
+  set_id_proyecto: () => {},
+  id_producto: null,
+  set_id_producto: () => {},
+  // * select
   rows_producto: [],
   set_rows_producto: () => {},
   rows_proyectos: [],
@@ -43,6 +61,11 @@ export const UserProviderProductos = ({
 }): JSX.Element => {
   // * id
 
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
+  const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
+  const [id_producto, set_id_producto] = React.useState<number | null>(null);
+
   // * select
 
   // * rows
@@ -54,9 +77,9 @@ export const UserProviderProductos = ({
 
   // * fetch
   //* declaracion context
-  const {
-    proyecto: { id_proyecto },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   proyecto: { id_proyecto },
+  // } = useAppSelector((state) => state.planes);
 
   const fetch_data_producto = async (): Promise<void> => {
     try {
@@ -70,9 +93,12 @@ export const UserProviderProductos = ({
             nombre_producto: item.nombre_producto,
             id_proyecto: item.id_proyecto,
             nombre_proyecto: item.nombre_proyecto,
+            id_programa: item.id_programa,
+            id_plan: item.id_plan,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
-
         set_rows_producto(data_producto);
       }
     } catch (error: any) {
@@ -98,6 +124,9 @@ export const UserProviderProductos = ({
             pondera_2: item.pondera_2,
             pondera_3: item.pondera_3,
             pondera_4: item.pondera_4,
+            fecha_creacion: item.fecha_creacion,
+            id_plan: item.id_plan,
+            cumplio: item.cumplio,
           })
         );
 
@@ -112,6 +141,14 @@ export const UserProviderProductos = ({
 
   const value: UserContext = {
     // * id
+    id_plan, 
+    set_id_plan, 
+    id_programa, 
+    set_id_programa, 
+    id_proyecto, 
+    set_id_proyecto, 
+    id_producto,  
+    set_id_producto, 
 
     // * select
 

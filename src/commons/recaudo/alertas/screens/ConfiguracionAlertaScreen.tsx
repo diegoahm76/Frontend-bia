@@ -97,6 +97,9 @@ const ConfiguracionAlertasScreen = () => {
                                     defaultValue={value}
                                     value={value}
                                     onChange={onChange}
+                                    inputProps={{
+                                        shrink: true,
+                                    }}
                                     error={!(error == null)}
                                 >
                                     {configuraciones.map((option) => (
@@ -131,7 +134,9 @@ const ConfiguracionAlertasScreen = () => {
                                     value={value}
                                     onChange={onChange}
                                     error={!(error == null)}
-
+                                    inputProps={{
+                                        shrink: true,
+                                    }}
                                 >
 
                                 </TextField>

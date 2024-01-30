@@ -11,6 +11,7 @@ import type {
   IObjMetaData,
   IObjFiled,
   IObjPqrDenuncia,
+  IObjOtros,
 } from '../../interfaces/pqrsdf';
 // import { type Persona } from '../../../../../interfaces/globalModels';
 
@@ -216,6 +217,36 @@ export const initial_state_denuncia: IObjPqrDenuncia = {
   ya_habia_puesto_en_conocimiento: false,
   ante_que_autoridad_había_interpuesto: null,
 };
+export const initial_state_otro: IObjOtros = {
+  id_otros: null,
+  nombre_estado_solicitud: null,
+  id_persona_titular: null,
+	id_persona_interpone: null,
+	cod_relacion_titular: null,
+	es_anonima: false,
+	id_medio_solicitud: null,
+	cod_forma_presentacion: null,
+	asunto: null,
+	descripcion: null,
+	cantidad_anexos: null,
+	nro_folios_totales: null,
+	requiere_rta: false,
+	id_sucursal_especifica_implicada: null,
+	id_persona_recibe: null,
+	id_sucursal_recepciona_fisica: null,
+  numero_radicado_entrada: null,
+  nombre_completo_titular: null,
+  fecha_registro: new Date(),
+  fecha_radicado: null,
+  fecha_envio_definitivo_digitalizacion: null,
+  fecha_digitalizacion_completada: null,
+  fecha_inicial_estado_actual: null,
+  id_radicados: null,
+  id_estado_actual_solicitud: null,
+  id_documento_archivo_expediente: null,
+  id_expediente_documental: null,
+  anexos:[],
+}
 
 const initial_state: IPqrsdf = {
   file_fisico: null,
@@ -283,7 +314,10 @@ const initial_state: IPqrsdf = {
   filed_types: [],
   filed_type: initial_state_list,
   denuncia: initial_state_denuncia,
+  otros: [],
+  otro: initial_state_otro,
 };
+
 
 export const pqrsdf_slice = createSlice({
   name: 'pqrsdf_slice',
@@ -540,6 +574,9 @@ export const pqrsdf_slice = createSlice({
     set_resource: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
       state.resource = action.payload;
     },
+    set_others: (state: IPqrsdf, action: PayloadAction<IObjOtros[]>) => {
+      state.otros = action.payload;
+    },
   },
 });
 export const {
@@ -597,4 +634,5 @@ export const {
   set_filed_type,
   set_filed_types,
   set_filings,
+  set_others,
 } = pqrsdf_slice.actions;

@@ -112,6 +112,8 @@ export const useSeguimientoPAIHook = (): any => {
   const onsubmit_seguimiento_pai = handleSubmit_seguimiento_pai(
     async (data) => {
       try {
+        data.fecha_creacion = dayjs(data.fecha_creacion).format('YYYY-MM-DD');
+
         console.log('data', data);
         const datos_documentos = new FormData();
 
@@ -150,6 +152,7 @@ export const useSeguimientoPAIHook = (): any => {
 
       set_is_saving_seguimiento_pai(true);
       data.fecha_registro_avance = fecha_registro_avance;
+      data.fecha_creacion = dayjs(data.fecha_creacion).format('YYYY-MM-DD');
       const datos_documentos = new FormData();
 
       archivos.forEach((archivo: any) => {

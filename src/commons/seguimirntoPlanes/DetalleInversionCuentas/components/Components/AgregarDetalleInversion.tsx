@@ -3,14 +3,12 @@ import { Button, Grid, MenuItem, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useDetalleInversionHook } from '../../hooks/useDetalleInversionHook';
 import { DataContextDetalleInversion } from '../../context/context';
-import { DataContextIndicador } from '../../../Indicadores/context/context';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -19,8 +17,6 @@ export const AgregarDetalleInversion: React.FC = () => {
     control_detalle,
     errors_detalle,
     reset_detalle,
-    data_watch_detalle,
-    set_value_detalle,
 
     onsubmit_detalle,
     onsubmit_editar,
@@ -34,32 +30,23 @@ export const AgregarDetalleInversion: React.FC = () => {
   const { mode, detalle_inversion } = useAppSelector((state) => state.planes);
 
   const {
-    id_programa,
-    id_proyecto,
-    id_producto,
-    actividades_selected,
-    productos_selected,
     rubros_selected,
     sector_selected,
-    programas_selected,
     subprogramas_selected,
-    proyectos_selected,
     set_id_programa,
     set_id_proyecto,
     set_id_producto,
-    fetch_data_productos,
-    fetch_data_actividades,
+    set_id_actividad,
+    set_id_indicador,
+    set_id_meta,
     fetch_data_rubros,
     fetch_data_sectores,
-    fetch_data_programas,
-    fetch_data_proyectos,
     fetch_data_subprogramas,
   } = useContext(DataContextDetalleInversion);
 
   useEffect(() => {
     fetch_data_rubros();
     fetch_data_sectores();
-    fetch_data_programas();
     fetch_data_subprogramas();
   }, []);
 
@@ -68,6 +55,12 @@ export const AgregarDetalleInversion: React.FC = () => {
       limpiar_formulario_detalle();
     }
     if (mode.editar) {
+      set_id_programa(detalle_inversion.id_programa ?? null);
+      set_id_proyecto(detalle_inversion.id_proyecto ?? null);
+      set_id_producto(detalle_inversion.id_producto ?? null);
+      set_id_actividad(detalle_inversion.id_actividad ?? null);
+      set_id_indicador(detalle_inversion.id_indicador ?? null);
+      set_id_meta(detalle_inversion.id_meta ?? null);
       reset_detalle({
         id_detalle_inversion: detalle_inversion.id_detalle_inversion,
         nombre_sector: detalle_inversion.nombre_sector,
@@ -89,24 +82,6 @@ export const AgregarDetalleInversion: React.FC = () => {
       });
     }
   }, [mode, detalle_inversion]);
-
-  useEffect(() => {
-    if (id_programa) {
-      fetch_data_proyectos();
-    }
-  }, [id_programa]);
-
-  useEffect(() => {
-    if (id_proyecto) {
-      fetch_data_productos();
-    }
-  }, [id_proyecto]);
-
-  useEffect(() => {
-    if (id_producto) {
-      fetch_data_actividades();
-    }
-  }, [id_producto]);
 
   return (
     <>
@@ -281,7 +256,7 @@ export const AgregarDetalleInversion: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          {/* <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_programa"
               control={control_detalle}
@@ -315,7 +290,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>{' '}
+          </Grid>{' '} */}
           <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_subprograma"
@@ -347,7 +322,7 @@ export const AgregarDetalleInversion: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          {/* <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_proyecto"
               control={control_detalle}
@@ -359,7 +334,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={id_programa ? false : true}
+                  disabled={false}
                   fullWidth
                   required
                   error={!!errors_detalle.id_proyecto}
@@ -394,7 +369,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={id_proyecto ? false : true}
+                  disabled={false}
                   fullWidth
                   required
                   error={!!errors_detalle.id_producto}
@@ -429,7 +404,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                   select
                   size="small"
                   margin="dense"
-                  disabled={id_producto ? false : true}
+                  disabled={false}
                   fullWidth
                   required
                   error={!!errors_detalle.id_actividad}
@@ -447,7 +422,7 @@ export const AgregarDetalleInversion: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
               <Button

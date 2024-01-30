@@ -380,8 +380,8 @@ const SeleccionarModeloDialogForm = ({
                 onSelectionModelChange={handle_selection_change}
                 density="compact"
                 autoHeight
-                rows={models || []}
-                columns={columns_model}
+                rows={models ?? []}
+                columns={columns_model ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}

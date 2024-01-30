@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
 import type { IList } from '../../../interfaces/globalModels';
@@ -48,21 +49,19 @@ export const use_busqueda_avanzada = () => {
   const get_selects_options = async (): Promise<void> => {
     set_loading(true);
     try {
-      const {
-        data: { data: res_tipo_persona },
-      } = await get_tipo_persona();
-      set_tipo_persona_opt(res_tipo_persona ?? []);
+      const [tipoPersonaResponse, tipoUsuarioResponse, tipoDocumentoResponse] = await Promise.all([
+        get_tipo_persona(),
+        get_tipo_usuario(),
+        get_tipo_documento()
+      ]);
+      //console.log('tipoPersonaResponse', tipoPersonaResponse.data.data)
 
-      const {
-        data: { data: res_tipo_usuario },
-      } = await get_tipo_usuario();
-      set_tipo_usuario_opt(res_tipo_usuario ?? []);
 
-      const {
-        data: { data: res_tipo_documento },
-      } = await get_tipo_documento();
-      set_tipo_documento_opt(res_tipo_documento ?? []);
-      set_tipo_documento_opt_all(res_tipo_documento ?? []);
+      set_tipo_persona_opt(tipoPersonaResponse.data.data ?? []);
+      set_tipo_usuario_opt(tipoUsuarioResponse.data.data ?? []);
+      const tipoDocumentoData = tipoDocumentoResponse.data.data ?? [];
+      set_tipo_documento_opt(tipoDocumentoData);
+      set_tipo_documento_opt_all(tipoDocumentoData);
     } catch (err) {
       control_error(err);
     } finally {

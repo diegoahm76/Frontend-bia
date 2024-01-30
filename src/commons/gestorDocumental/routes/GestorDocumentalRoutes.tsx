@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes } from 'react-router-dom';
 import { OrganigramaRoutes } from '../organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../ccd/routes/CcdRoutes';
@@ -15,7 +16,7 @@ import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasC
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
-import { Encuasta_Routes } from '../Encuesta/routes/Encuasta_Routes';
+import { Encuasta_Routes as Encuesta } from '../Encuesta/routes/Encuasta_Routes';
 
 import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
@@ -27,7 +28,7 @@ import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute'
 import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
 import { ReportesDocumentacionRoutes } from '../reportesDocumentacionPermisos/routes/ReportesDocumentosRoutes';
-import { Encuasta_Routess } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
+import { Encuasta_Routess as EncuestaRoutes } from '../encuestaAsignacion/routes/Encuesta_Asignacion';
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
 import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
@@ -36,7 +37,17 @@ import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanil
 import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
 import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
-
+import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
+import { RutesWorkFlowPQRSDF } from '../WorkFlowPQRSDF/routes/RutesWorkFlowPQRSDF';
+import { Consulta_Solicitud_Routes } from '../consultaSolicitud/routes/ConsultaSolicitud';
+import { Consulta_estadoPQR_Routes } from '../consultaEstadoPQR/routes/ConsultaEstadoPQR';
+import { Consulta_ExternoPQR_Routes } from '../consultarEstadoExternoPQR/routes/ConsultaExternoPQR';
+import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/ConsultaAnonimo';
+import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
+import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
+import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
+import { Radicado_Email_Routes } from '../radicadoEmail/routes/RadicadoEmail';
+ 
 const routes = [
   {
     path: 'organigrama/',
@@ -125,7 +136,7 @@ const routes = [
   {
     path: 'encuesta/',
     name: 'encuesta',
-    component: () => <Encuasta_Routes />,
+    component: () => <Encuesta />,
   },
 
   {
@@ -136,8 +147,10 @@ const routes = [
   {
     path: 'encuesta_asignacion/',
     name: 'encuesta_asignacion',
-    component: () => <Encuasta_Routess />,
+    component: () => <EncuestaRoutes />,
   },
+
+
   {
     path: 'Interno_encuesta/',
     name: 'Interno_encuesta',
@@ -148,7 +161,6 @@ const routes = [
     path: 'expedientes/',
     name: 'expedientes',
     component: () => <ExpedientesRoutes />,
-    // component: () => <CierreExpedientesRoutes />,
   },
   {
     path: 'archivo_fisico/',
@@ -176,11 +188,20 @@ const routes = [
     component: () => <PanelVentanillaRoutes />,
   },
   {
+    path: 'bandeja_tareas/',
+    name: 'bandeja_tareas/',
+    component: () => <BandejaTareasRoutes />,
+  },
+  {
     path: 'central_digitalizacion/',
     name: 'central_digitalizacion',
     component: () => <CentralDigitalizacionRoutes />,
   },
-
+  {
+    path: 'rutesworkFlowpqrs/',
+    name: 'rutesworkFlowpqrs',
+    component: () => <RutesWorkFlowPQRSDF />,
+  },
   {
     path: 'solicitudes_otros/',
     name: 'solicitudes_otros',
@@ -197,22 +218,64 @@ const routes = [
     name: 'complementos_pqrsdf',
     component: () => <ComplementoPqrsdfRoutes />,
   },
+  {
+    path: 'radicado_email/',
+    name: 'radicado_email',
+    component: () => <Radicado_Email_Routes />,
+  },
+
+  {
+    path: 'Reportes_PQRSDF/',
+    name: 'Reportes_PQRSDF',
+    component: () => <Consulta_Solicitud_Routes />,
+  },
+   {
+    path: 'Consulta_AnonimoPQR/',
+    name: 'Consulta_AnonimoPQR',
+    component: () => <Consulta_AnonimoPQR_Routes />,
+  },
+  {
+    path: 'consulta_estadopqr/',
+    name: 'consulta_estadopqr',
+    component: () => <Consulta_estadoPQR_Routes />,
+  },
+  {
+    path: 'ConsultaExternoPQR/',
+    name: 'ConsultaExternoPQR',
+    component: () => <Consulta_ExternoPQR_Routes />,
+  },
+ 
+  {
+    path: 'ConsultaOtros/',
+    name: 'ConsultaOtros',
+    component: () => <Consulta_Otros_Routes />,
+  },
+  {
+    path: 'ConsultaOtrosExterno/',
+    name: 'ConsultaOtrosExterno',
+    component: () => <Consulta_OtrosExterno_Routes />,
+  },
+  
+  {
+    path: 'Eliminacion_Documental/',
+    name: 'Eliminacion_Documental',
+    component: () => <DeleteDocumental_Routes />,
+  },
+
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
-    // <Suspense fallback={<Loader />}>
-    <Routes>
-      {routes.map((route) => (
-        <Route
-          key={route.path}
-          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-          element={route.component()}
-        />
-      ))}
-      <Route path="/*" element={<Page404 />} />
-    </Routes>
-    // </Suspense>
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+            element={route.component()}
+          />
+        ))}
+        <Route path="/*" element={<Page404 />} />
+      </Routes>
   );
 };

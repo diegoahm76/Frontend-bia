@@ -75,6 +75,10 @@ export const DialogHistorialCambiosEstadoUser: React.FC<IProps> = ({
   };
 
   const historico = async (): Promise<void> => {
+    if (id_usuario === null || id_usuario === 0) {
+      return;
+    }
+
     try {
       const response = await user_historico_cambios_estado(id_usuario);
       const new_historico = response.data?.map(
@@ -131,8 +135,8 @@ export const DialogHistorialCambiosEstadoUser: React.FC<IProps> = ({
             <Grid item xs={12}>
               <DataGrid
                 autoHeight
-                rows={rows}
-                columns={columns}
+                rows={rows ?? []}
+                columns={columns ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 getRowId={(row) => row.id_historico}

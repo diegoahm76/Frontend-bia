@@ -40,10 +40,14 @@ export interface IUserInfo {
   open_dialog: boolean;
   entorno: "C" | "L";
   dialog_representante: boolean;
+  apoderados: any[];
   is_blocked: boolean;
+  profile_img?: any;
+  is_loading?: boolean;
 }
 
 export interface UserData {
+  profile_img: any;
   nombre_unidad_organizacional: string | null;
   id_unidad_organizacional_actual?: number | null;
   email: string;
@@ -55,6 +59,7 @@ export interface UserData {
   id_persona: number;
   tipo_persona: string;
   nombre?: string;
+  telefono_celular?:any;
 }
 
 export interface Tokens {

@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -26,7 +26,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
-import { ModalDenuncia } from '../../../../../Atom/components/ModalDenuncia';
+import  RemoveDoneIcon  from '@mui/icons-material/RemoveDone';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -38,35 +38,29 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     setRadicado,
     setValue,
 
-    anexos,
-    metadatos,
     setAnexos,
-    setMetadatos,
   } = useContext(PanelVentanillaContext);
   const {
     handleGeneralLoading,
     handleThirdLoading,
 
-    openModalOne: infoAnexos,
-    openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
   } = useContext(ModalAndLoadingContext);
 
   const handleRequestRadicado = async (radicado: string) => {
     try {
+      const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+
+      const historicoFiltrado = historico.filter(
+        (element: any) => element?.cabecera?.radicado === radicado
+      );
+
+      dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
     } catch (error) {
-      //  console.log('')(error);
-    } finally {
+      console.error('Error handling request radicado: ', error);
+      // Handle or throw error as needed
     }
-    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
-
-    const historicoFiltrado = historico.filter(
-      (element: any) => element?.cabecera?.radicado === radicado
-    );
-
-    dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
-    //  console.log('')(historico);
   };
 
   //* loader button simulacion
@@ -87,8 +81,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
   // ? functions
   const setActionsPQRSDF = (pqrsdf: any) => {
-    //  console.log('')(pqrsdf);
-
     if (pqrsdf.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
@@ -103,31 +95,9 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
-
-    /*    const shouldDisable = (actionId: string) => {
-      const isAsigGrup = actionId === 'AsigGrup';
-      const isDigOrAsigGrup = ['Dig', 'AsigGrup'].includes(actionId);
-      const hasAnexos = pqrsdf.cantidad_anexos > 0;
-      const requiresDigitalization = pqrsdf.requiere_digitalizacion;
-      const isPQRSDF = pqrsdf.tipo_solicitud === 'PQRSDF';
-      const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
-      const isEnVentanilla = [
-        'EN VENTANILLA SIN PENDIENTES',
-        'EN VENTANILLA CON PENDIENTES',
-      ].includes(pqrsdf.estado_solicitud);
-
-      return (
-        (isPQRSDF && actionId === 'ContinuarAsigGrup') ||
-        (isRadicado && !hasAnexos && actionId === 'Dig') ||
-        (isRadicado && hasAnexos && isDigOrAsigGrup) ||
-        (isRadicado && hasAnexos && requiresDigitalization && isAsigGrup) ||
-        (isEnVentanilla && requiresDigitalization && isAsigGrup) ||
-        (actionId === 'Dig' && !requiresDigitalization) // Deshabilitar el botón de digitalización si no se requiere digitalización
-      );
-    };*/
 
     const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrup';
@@ -206,7 +176,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       minWidth: 250,
       renderCell: (params: any) => {
         switch (true) {
-          case params.row.dias_respuesta > 7:
+          case params.row.dias_respuesta >= 7:
             return (
               <Chip
                 size="small"
@@ -224,7 +194,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 variant="outlined"
               />
             );
-          case params.row.dias_respuesta < 4 && params.row.dias_respuesta > 0:
+          case params.row.dias_respuesta <= 4 && params.row.dias_respuesta > 0:
             return (
               <Chip
                 label={`${params.row.dias_respuesta} día(s)`}
@@ -339,7 +309,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         return (
           <Chip
             size="small"
-            label={params.value}
+            label={params.value ?? 'Sin asignar'}
             color={
               params.row?.estado_asignacion_grupo === 'Pendiente'
                 ? 'warning'
@@ -347,6 +317,8 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 ? 'success'
                 : params.row?.estado_asignacion_grupo === 'Rechazado'
                 ? 'error'
+                : params.row?.estado_asignacion_grupo === null
+                ? 'warning' // Cambia 'default' al color que desees para el caso null
                 : 'default'
             }
           />
@@ -378,12 +350,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
 
                     return;
                   });
-
-                  /*   setActionsPQRSDF(params?.row);
-                  handleOpenInfoMetadatos(false);
-                  handleOpenInfoAnexos(false);*/
-
-                  // setMetadatos([]);
                 }}
               >
                 <Avatar
@@ -521,6 +487,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               }}
               variant="contained"
               color="primary"
+              endIcon={<RemoveDoneIcon />}
             >
               Quitar selección de PQRSDF
             </Button>

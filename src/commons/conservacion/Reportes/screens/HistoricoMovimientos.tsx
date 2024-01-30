@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -1392,14 +1393,15 @@ export const HistoricoMovimientosScreen: React.FC = () => {
                 reporte={reporte}
                 tipo_reporte={seleccion_reporte}
               ></ReportesXLS>
-              <Box component="form" noValidate autoComplete="off">
+              ss
+              {/* <Box component="form" noValidate autoComplete="off"> */}
                 <embed
                   src={visor}
                   type="application/pdf"
                   width="100%"
                   height="1080px"
                 />
-              </Box>
+              {/* </Box> */}
             </Grid>
           </Grid>
         </Grid>
