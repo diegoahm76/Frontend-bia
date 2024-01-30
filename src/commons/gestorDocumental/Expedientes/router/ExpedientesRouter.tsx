@@ -12,6 +12,7 @@ import { ConsultaExpedientesDocScreen } from '../consultaExpedientesDocumentales
 import { IndicesElectronicos } from '../../../seguridad/screens/IndicesElectronicos/IndicesElectronicos';
 import { ConsultaIndiceElectronicoScreen } from '../ConsultaIndiceElectronico/screens/ConsultaIndiceElectronicoScreen';
 import { TransferDocMainScreen } from '../transferenciasDocumentales/screen/TransferDocMainScreen';
+import { TransferDocProvider } from '../transferenciasDocumentales/context/TransferDocContext';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const routesConfig = [
@@ -31,7 +32,11 @@ const routesConfig = [
   },
   {
     path: 'transferencias_documentales/*',
-    element: <TransferDocMainScreen />,
+    element: (
+      <TransferDocProvider>
+        <TransferDocMainScreen />
+      </TransferDocProvider>
+    ),
   },
   { path: '/*', element: <Page404 /> },
 ];
