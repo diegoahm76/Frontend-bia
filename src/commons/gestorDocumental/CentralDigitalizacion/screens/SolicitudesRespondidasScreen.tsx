@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import DigitalizacionesPendientes from '../componentes/CentralDigitalizacion/DigitalizacionesPendientes';
+import DigitalizacionesRespondidas from '../componentes/CentralDigitalizacion/DigitalizacionesRespondidas';
 import FormButton from '../../../../components/partials/form/FormButton';
 import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
@@ -17,7 +17,7 @@ import {
 } from '../store/thunks/centralDigitalizacionThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function SolicitudesPendientesScreen(): JSX.Element {
+export function SolicitudesRespondidasScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const { person } = useAppSelector(
     (state) => state.central_digitalizacion_slice
@@ -43,24 +43,11 @@ export function SolicitudesPendientesScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Central de digitalización"></Title>
+          <Title title="Historico de solicitudes de digitalización respondidas"></Title>
         </Grid>
-        <DigitalizacionesPendientes />
+        <DigitalizacionesRespondidas />
 
         <Grid container direction="row" padding={2} spacing={2}>
-          <Grid item xs={12} md={3}>
-            <FormButton
-              href={`/#/app/gestor_documental/central_digitalizacion/solicitudes_respondidas/`}
-              variant_button="contained"
-              on_click_function={null}
-              icon_class={<SaveIcon />}
-              disabled={false}
-              label="Solicitudes de digitalización respondidas"
-              type_button="button"
-              color_button="primary"
-            />
-          </Grid>
-
           <Grid item xs={12} md={3}>
             <Limpiar
               dispatch={dispatch}

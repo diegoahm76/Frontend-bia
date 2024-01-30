@@ -32,6 +32,7 @@ import FormDateRangePickerController from '../form/FormDateRangePickerController
 import AltRouteIcon from '@mui/icons-material/AltRoute';
 import FormCheckboxController from '../form/FormCheckboxController';
 import FormButtonGrid from '../form/FormButtonGrid';
+import FormKeywords from '../form/FormKeywords';
 interface IProps {
   set_models: any;
   form_filters: any[];
@@ -88,6 +89,7 @@ const SeleccionarModeloDialogForm = ({
           rows_text={form_input.rows_text ?? 1}
           on_blur_function={form_input.on_blur_function ?? null}
           set_value={form_input.set_value ?? null}
+          hidden_text={form_input.hidden_text ?? null}
           step_number={form_input.step_number ?? null}
         />
       );
@@ -250,6 +252,17 @@ const SeleccionarModeloDialogForm = ({
           type_button={form_input.type_button ?? null}
           style_button={form_input.style_button ?? null}
           color_button={form_input.color_button ?? null}
+        />
+      );
+    } else if (form_input.datum_type === 'keywords') {
+      return (
+        <FormKeywords
+          initial_values={form_input.initial_values}
+          hidden_text={form_input.hidden_text}
+          character_separator={form_input.character_separator}
+          set_form={form_input.set_form}
+          keywords={form_input.keywords ?? null}
+          disabled={form_input.disabled ?? null}
         />
       );
     }

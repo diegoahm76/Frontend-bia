@@ -11,21 +11,21 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { v4 as uuid } from 'uuid';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 import {
   set_digitization_request,
+  set_edit_digitization,
   set_request_status,
   set_request_type,
-  set_edit_digitization,
 } from '../../store/slice/centralDigitalizacionSlice';
 import {
   control_error,
-  get_digitalization_requests_service,
+  get_digitalization_responses_service,
 } from '../../store/thunks/centralDigitalizacionThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const DigitalizacionesPendientes = () => {
+const DigitalizacionesRespondidas = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const {
@@ -130,11 +130,11 @@ const DigitalizacionesPendientes = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          <Tooltip title="Desarrollar">
+          <Tooltip title="Ver">
             <IconButton
               onClick={() => {
                 //  console.log('')(params);
-                dispatch(set_edit_digitization(true));
+                dispatch(set_edit_digitization(false));
                 dispatch(set_digitization_request(params.row));
               }}
               href={`/#/app/gestor_documental/central_digitalizacion/anexos/${params.row.id_solicitud_de_digitalizacion}`}
@@ -148,7 +148,7 @@ const DigitalizacionesPendientes = () => {
                 }}
                 variant="rounded"
               >
-                <EditIcon
+                <VisibilityIcon
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
               </Avatar>
@@ -161,19 +161,56 @@ const DigitalizacionesPendientes = () => {
 
   const on_submit = (data: any): void => {
     const tipo_solicitud = get_values('tipo_solicitud') ?? '';
-    const estado_solicitud = get_values('estado_solicitud') ?? '';
-    const numero_radicado = get_values('numero_radicado') ?? '';
-    if (
-      tipo_solicitud === '' &&
-      estado_solicitud === '' &&
-      numero_radicado === ''
-    ) {
+    let fecha_desde = '';
+    let fecha_hasta = '';
+    if (data.date_range !== null && data.date_range !== undefined) {
+      if (
+        data.date_range[0] !== null &&
+        data.date_range[0] !== undefined &&
+        data.date_range[1] !== null &&
+        data.date_range[1] !== undefined
+      ) {
+        const fecha_start = new Date(data.date_range[0] ?? ''); // Obtén el valor de fecha_start del objeto enviado por el formulario
+        const year_start = fecha_start.getFullYear(); // Obtén el año
+        const month_start = fecha_start.getMonth() + 1; // Obtén el mes (se suma 1 porque los meses comienzan en 0)
+        const day_start = fecha_start.getDate(); // Obtén el día
+        const hours_start = fecha_start.getHours(); // Obtén las horas
+        const minutes_start = fecha_start.getMinutes(); // Obtén los minutos
+        const seconds_start = fecha_start.getSeconds(); // Obtén los segundos
+
+        const fecha_end = new Date(data.date_range[1] ?? ''); // Obtén el valor de fecha_end del objeto enviado por el formulario
+        const year_end = fecha_end.getFullYear(); // Obtén el año
+        const month_end = fecha_end.getMonth() + 1; // Obtén el mes (se suma 1 porque los meses comienzan en 0)
+        const day_end = fecha_end.getDate(); // Obtén el día
+        const hours_end = fecha_end.getHours(); // Obtén las horas
+        const minutes_end = fecha_end.getMinutes(); // Obtén los minutos
+        const seconds_end = fecha_end.getSeconds(); // Obtén los segundos
+
+        fecha_desde = `${year_start}-${month_start
+          .toString()
+          .padStart(2, '0')}-${day_start
+          .toString()
+          .padStart(2, '0')} ${hours_start
+          .toString()
+          .padStart(2, '0')}:${minutes_start
+          .toString()
+          .padStart(2, '0')}:${seconds_start.toString().padStart(2, '0')}`;
+        fecha_hasta = `${year_end}-${month_end
+          .toString()
+          .padStart(2, '0')}-${day_end.toString().padStart(2, '0')} ${hours_end
+          .toString()
+          .padStart(2, '0')}:${minutes_end
+          .toString()
+          .padStart(2, '0')}:${seconds_end.toString().padStart(2, '0')}`;
+      }
+    }
+    if (tipo_solicitud === '' && fecha_desde === '' && fecha_hasta === '') {
       control_error('Debe ingresa al menos una opción');
     } else {
       const params: {
         tipo_solicitud?: string;
-        estado_solicitud?: string;
-        numero_radicado?: string;
+        fecha_desde?: string;
+        fecha_hasta?: string;
       } = {};
 
       // Verificar y agregar propiedad al objeto solo si el valor no es una cadena vacía
@@ -181,14 +218,14 @@ const DigitalizacionesPendientes = () => {
         params.tipo_solicitud = tipo_solicitud;
       }
 
-      if (estado_solicitud !== '') {
-        params.estado_solicitud = estado_solicitud;
+      if (fecha_desde !== '') {
+        params.fecha_desde = fecha_desde;
       }
 
-      if (numero_radicado !== '') {
-        params.numero_radicado = numero_radicado;
+      if (fecha_hasta !== '') {
+        params.fecha_hasta = fecha_hasta;
       }
-      void dispatch(get_digitalization_requests_service(params));
+      void dispatch(get_digitalization_responses_service(params));
     }
   };
 
@@ -201,10 +238,6 @@ const DigitalizacionesPendientes = () => {
           button_submit_icon_class={null}
           show_button={false}
           form_inputs={[
-            {
-              datum_type: 'title',
-              title_label: 'Tareas de digitalización',
-            },
             {
               datum_type: 'select_controller',
               xs: 12,
@@ -222,37 +255,29 @@ const DigitalizacionesPendientes = () => {
               on_change_function: on_change_select,
             },
             {
-              datum_type: 'select_controller',
-              xs: 12,
-              md: 3,
+              datum_type: 'date_picker_range_controller',
+              xs: 4,
+              md: 4,
               control_form: control_solicitud,
-              control_name: 'estado_solicitud',
-              default_value: '',
-              rules: {},
-              label: 'Estado de solicitud',
+              control_name: 'date_range',
+              default_value: [null, null],
+              rules: {
+                required_rule: {
+                  rule: false,
+                  message: 'Rango de fechas requerido',
+                },
+              },
+              label_start: 'Fecha de inicio',
+              label_end: 'Fecha de fin',
               disabled: false,
               helper_text: '',
-              select_options: list_request_status,
-              option_label: 'label',
-              option_key: 'key',
-              on_change_function: on_change_select,
-            },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 3,
-              control_form: control_solicitud,
-              control_name: 'numero_radicado',
-              default_value: '',
-              rules: {},
-              label: 'Número de radicado',
-              type: 'text',
-              disabled: false,
-              helper_text: '',
+              hidden_text: false,
+              min_date: null,
+              max_date: null,
+              format: 'YYYY-MM-DD',
             },
             {
               datum_type: 'button',
-
               xs: 12,
               md: 3,
               on_click_function: handle_submit(on_submit),
@@ -282,4 +307,4 @@ const DigitalizacionesPendientes = () => {
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default DigitalizacionesPendientes;
+export default DigitalizacionesRespondidas;
