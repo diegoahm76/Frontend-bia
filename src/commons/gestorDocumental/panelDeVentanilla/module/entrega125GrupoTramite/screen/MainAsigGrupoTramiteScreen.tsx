@@ -11,10 +11,10 @@ import { SeleccionGrupo } from '../components/SeleccionGrupo/SeleccionGrupo';
 import { Asignaciones } from '../components/Asignaciones/Asginaciones';
 import { AccionesFinales } from '../components/AccionesFinales/AccionesFinales';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
-import { AsignacionGrupoOpaContext } from '../context/AsignacionGrupoOpaContext';
 import { getAsignacionesOpas } from '../services/asignaciones/opas/getAsignacionesOpas.service';
+import { AsignacionGrupoTramiteContext } from '../context/AsignacionGrupoTramiteContext';
 
-export const MainAsigGrupoOpaScreen: React.FC = (): JSX.Element => {
+export const MainAsigGrupoTramiteScreen: React.FC = (): JSX.Element => {
   //* redux states
   const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
     (state) =>
@@ -26,7 +26,7 @@ export const MainAsigGrupoOpaScreen: React.FC = (): JSX.Element => {
   //* context loading declaration
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
   const { setListaSeccionesSubsecciones, setListaAsignaciones } = useContext(
-    AsignacionGrupoOpaContext
+    AsignacionGrupoTramiteContext
   );
   // ? quitar mientras se termina de desarrollar el módulo
   useEffect(() => {
@@ -45,7 +45,15 @@ export const MainAsigGrupoOpaScreen: React.FC = (): JSX.Element => {
       currentElementPqrsdComplementoTramitesYotros?.tipo;
 
     switch (tipo) {
-      case 'OPA':
+      case 'Tramites y Servicios':
+        // Call the service for Tramites y Servicios
+        showAlert(
+          'Atención',
+          'No hay servicio aún para ver las asignacion para tramites y servicios, así que no hay asignaciones de tramites y servicios por el momento',
+          'warning'
+        );
+        break;
+      /*case 'OPA':
         (async () => {
           try {
             const res = await getAsignacionesOpas(currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite, handleGeneralLoading);
@@ -55,7 +63,7 @@ export const MainAsigGrupoOpaScreen: React.FC = (): JSX.Element => {
           }
         })();
         // Call the service for OPA
-        break;
+        break;*/
       default:
         console.log('No hay tipo de solicitud');
         break;

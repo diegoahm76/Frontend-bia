@@ -16,10 +16,11 @@ import SaveIcon from '@mui/icons-material/Save';
 import Swal from 'sweetalert2';
 import { LoadingButton } from '@mui/lab';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
-import { AsignacionGrupoOpaContext } from '../../context/AsignacionGrupoOpaContext';
+
 import { getAsignacionesOpas } from '../../services/asignaciones/opas/getAsignacionesOpas.service';
 import { postAsignacionGrupoOpas } from '../../services/post/opas/postAsignacionGrupo.service';
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
+import { AsignacionGrupoTramiteContext } from '../../context/AsignacionGrupoTramiteContext';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -28,7 +29,7 @@ export const AccionesFinales = (): JSX.Element => {
     liderAsignado,
     currentGrupo,
     setListaAsignaciones,
-  } = useContext(AsignacionGrupoOpaContext);
+  } = useContext(AsignacionGrupoTramiteContext);
   const { secondLoading, handleSecondLoading, handleGeneralLoading } =
     useContext(ModalAndLoadingContext);
   //* dispatch declaration
@@ -69,6 +70,17 @@ export const AccionesFinales = (): JSX.Element => {
     let res;
 
     switch (tipo) {
+      case 'Tramites y Servicios':
+        // Call the service for Tramites y Servicios
+        /*  res = await postAsignacionGrupoTramitesYServicios(
+          {
+            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_persona_asignada: liderAsignado?.id_persona,
+            id_und_org_seccion_asignada: currentGrupo?.value,
+          },
+          handleSecondLoading
+        );*/
+        break;
       case 'OPA':
         res = await postAsignacionGrupoOpas(
           {
@@ -96,7 +108,15 @@ export const AccionesFinales = (): JSX.Element => {
       });
 
       let asignaciones;
+
       switch (tipo) {
+        case 'Tramites y Servicios':
+          // Fetch the assignments for Tramites y Servicios
+          /*asignaciones = await getAsignacionesTramitesYServicios(
+            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            handleGeneralLoading
+          );*/
+          break;
         case 'OPA':
           asignaciones = await getAsignacionesOpas(
             currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,

@@ -4,13 +4,12 @@ import { columnsAsignaciones } from './columnsAsignaciones/columnsAsignaciones';
 import { useContext } from 'react';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
-import { AsignacionGrupoOpaContext } from '../../context/AsignacionGrupoOpaContext';
-import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
+import { AsignacionGrupoTramiteContext } from '../../context/AsignacionGrupoTramiteContext';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const Asignaciones = (): JSX.Element => {
   //* context declaration
-  const { listaAsignaciones } = useContext(AsignacionGrupoOpaContext);
+  const { listaAsignaciones } = useContext(AsignacionGrupoTramiteContext);
   const { generalLoading } = useContext(ModalAndLoadingContext);
 
   const estadoMapping: any = {
