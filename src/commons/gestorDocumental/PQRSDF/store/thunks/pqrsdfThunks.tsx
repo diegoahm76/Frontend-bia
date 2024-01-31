@@ -9,6 +9,7 @@ import {
 import {
   initial_state_pqr,
   set_areas,
+  set_attorney,
   set_attorneys,
   set_companies,
   set_company,
@@ -570,6 +571,28 @@ export const get_attorneys_service = (id: string | number): any => {
     }
   };
 };
+export const get_attorney_document_service = (
+  type: string | number,
+  document: string | number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `personas/get-personas-by-document/${type}/${document}/`
+      );
+      console.log(data);
+
+      if ('data' in data) {
+        dispatch(set_attorney(data.data));
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_attorney_document_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // obtener pqrsdf
 export const get_pqrs_service = (id: string | number): any => {
@@ -762,33 +785,34 @@ export const get_filings_service = (params: any): any => {
       return data;
     } catch (error: any) {
       console.log('get_filings_service');
-      showAlert('Opps!', error.response.data.detail || 'Ha ocurrido un error, por favor intente de nuevo', 'error');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
       return error as AxiosError;
     }
   };
 };
 
-
-
 // OTROS //
-
 
 // obtener otros
 export const get_others_service_id = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`gestor/radicados/otros/get_otros-panel/${id}/`);
+      const { data } = await api.get(
+        `gestor/radicados/otros/get_otros-panel/${id}/`
+      );
       console.log(data);
-     
 
       if (data.success === true) {
         dispatch(set_others(data.data));
-        
-      
-      }  else {
-          control_error('No se encontrarón otros');
-        }
-      
+      } else {
+        control_error('No se encontrarón otros');
+      }
+
       return data;
     } catch (error: any) {
       console.log('get_pqrs_service');
@@ -799,18 +823,19 @@ export const get_others_service_id = (id: string | number): any => {
 };
 // CREAR OTRO
 
-
 export const add_other_service = (
   otro: any,
 
   // eslint-disable-next-line no-unused-vars
   navigate?: NavigateFunction
-
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(otro);
-      const { data } = await api.post(`gestor/radicados/otros/crear-otros/`, otro);
+      const { data } = await api.post(
+        `gestor/radicados/otros/crear-otros/`,
+        otro
+      );
       console.log(data);
 
       control_success(data.detail);
@@ -828,7 +853,6 @@ export const add_other_service = (
   };
 };
 
-
 // solicitudes otros id titular
 
 export const get_others_service = (id: string | number): any => {
@@ -836,16 +860,13 @@ export const get_others_service = (id: string | number): any => {
     try {
       const { data } = await api.get(`gestor/radicados/otros/get_otros/${id}/`);
       console.log(data);
-     
 
       if (data.success === true) {
         dispatch(set_others(data.data));
-        
-      
-      }  else {
-          control_error('No se encontrarón otros');
-        }
-      
+      } else {
+        control_error('No se encontrarón otros');
+      }
+
       return data;
     } catch (error: any) {
       console.log('get_pqrs_service');

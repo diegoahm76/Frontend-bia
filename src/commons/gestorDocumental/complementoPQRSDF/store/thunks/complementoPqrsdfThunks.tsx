@@ -47,6 +47,7 @@ import {
   get_ciudades,
   get_departamentos,
 } from '../../../../../request/getRequest';
+import { set_filed } from '../../../PQRSDF/store/slice/pqrsdfSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -544,6 +545,29 @@ export const get_company_document_service = (
   };
 };
 
+export const get_attorney_document_service = (
+  type: string | number,
+  document: string | number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `personas/get-personas-by-document/${type}/${document}/`
+      );
+      console.log(data);
+
+      if ('data' in data) {
+        dispatch(set_attorney(data.data));
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_attorney_document_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // obtener apoderados
 export const get_attorneys_service = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -767,7 +791,23 @@ export const radicar_complemento_pqrsdf_service = (
         control_success(data.detail);
         dispatch(get_pqrsdf_id_service(params_pqr));
 
-        // void dispatch(get_complemento_pqrsdf_id_service(id));
+        dispatch(
+          set_filed({
+            ...data.data,
+            numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
+            nombre_tipo_radicado:
+              data.data.cod_tipo_radicado === 'E'
+                ? 'Entrada'
+                : data.data.cod_tipo_radicado === 'S'
+                ? 'Salidad'
+                : data.data.cod_tipo_radicado === 'I'
+                ? 'Interno'
+                : data.data.cod_tipo_radicado === 'U'
+                ? 'Unico'
+                : '',
+            titular: data.data.persona_titular,
+          })
+        );
       }
       return data;
     } catch (error: any) {

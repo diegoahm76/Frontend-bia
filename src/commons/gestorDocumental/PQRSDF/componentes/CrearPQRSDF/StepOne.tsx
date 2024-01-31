@@ -56,13 +56,10 @@ const StepOne = ({ control_form, reset }: IProps) => {
     reset({
       ...pqr,
       cod_forma_presentacion:
-        (type_applicant.key ?? null) === null
-          ? 'E'
-          : pqr.cod_forma_presentacion,
+        userinfo.tipo_usuario === 'E' ? 'E' : pqr.cod_forma_presentacion,
       id_medio_solicitud:
-        (type_applicant.key ?? null) === null ? 2 : pqr.id_medio_solicitud,
+        userinfo.tipo_usuario === 'E' ? 2 : pqr.id_medio_solicitud,
     });
-    //  console.log('')(pqr, type_applicant);
   }, []);
 
   return (
@@ -148,7 +145,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Forma de presentación',
-              disabled: (type_applicant.key ?? null) === null,
+              disabled: userinfo.tipo_usuario === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: presentation_types,
               option_label: 'label',
@@ -163,7 +160,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Medio de solicitud',
-              disabled: (type_applicant.key ?? null) === null,
+              disabled: userinfo.tipo_usuario === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',

@@ -33,6 +33,10 @@ import {
 import FormButton from '../../../../../components/partials/form/FormButton';
 import { IObjComplementPqr } from '../../interfaces/complemento_pqrsdf';
 import { delete_complemento_pqrsdf_service } from '../../store/thunks/complementoPqrsdfThunks';
+import {
+  initial_state_filed,
+  set_filed,
+} from '../../../PQRSDF/store/slice/pqrsdfSlice';
 interface IProps {
   delete_function: any;
 }
@@ -172,9 +176,11 @@ const ListadoComplementos = ({ delete_function }: IProps) => {
   };
   const edit_complement = (item: IObjComplementPqr): void => {
     dispatch(set_complement_pqr(item));
+    dispatch(set_filed(initial_state_filed));
   };
   const view_complement = (item: IObjComplementPqr): void => {
     dispatch(set_complement_pqr(item));
+    dispatch(set_filed(initial_state_filed));
   };
 
   return (

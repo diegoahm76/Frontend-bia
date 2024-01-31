@@ -189,6 +189,8 @@ export const initial_state_metadata: IObjMetaData = {
   id_archivo_en_sistema: null,
   id_tipologia_doc: null,
   tipologia_doc: null,
+  tipologia_no_creada_en_TRD: null,
+  tipologia_no_creada_TRD: null,
 };
 
 export const initial_state_filed: IObjFiled = {

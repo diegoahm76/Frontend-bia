@@ -45,11 +45,23 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
   );
 
   useEffect(() => {
-    reset(complement_pqr);
+    reset({
+      ...complement_pqr,
+      id_medio_solicitud_comple:
+        userinfo.tipo_usuario === 'E'
+          ? 2
+          : complement_pqr.id_medio_solicitud_comple,
+    });
   }, []);
 
   useEffect(() => {
-    reset(complement_pqr);
+    reset({
+      ...complement_pqr,
+      id_medio_solicitud_comple:
+        userinfo.tipo_usuario === 'E'
+          ? 2
+          : complement_pqr.id_medio_solicitud_comple,
+    });
   }, [complement_pqr]);
 
   return (
@@ -87,7 +99,9 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Medio de solicitud',
-              disabled: complement_pqr.id_radicado !== null,
+              disabled:
+                complement_pqr.id_radicado !== null ||
+                userinfo.tipo_usuario == 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',

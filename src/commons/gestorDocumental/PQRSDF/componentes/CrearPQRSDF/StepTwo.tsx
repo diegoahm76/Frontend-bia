@@ -103,9 +103,7 @@ const StepTwo = () => {
     reset({
       ...exhibit,
       cod_medio_almacenamiento:
-        (type_applicant.key ?? null) === null
-          ? 'Na'
-          : exhibit.cod_medio_almacenamiento,
+        userinfo.tipo_usuario === 'E' ? 'Na' : exhibit.cod_medio_almacenamiento,
     });
     if ((exhibit.id_anexo ?? null) !== null) {
       if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
@@ -481,7 +479,7 @@ const StepTwo = () => {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: (type_applicant.key ?? null) === null,
+              disabled: userinfo.tipo_usuario === 'E',
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
@@ -532,7 +530,7 @@ const StepTwo = () => {
               variant_button: 'contained',
               on_click_function: add_metadata_form,
               color_button: 'warning',
-              hidden_text: (type_applicant.key ?? null) === null,
+              hidden_text: userinfo.tipo_usuario === 'E',
             },
           ]}
         />

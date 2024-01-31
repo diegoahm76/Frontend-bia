@@ -169,6 +169,8 @@ const TipoPersona = () => {
           set_models={set_persons}
           reset_values={reset_persona}
           button_submit_label="BUSCAR"
+          button_submit_disabled={userinfo.tipo_usuario === 'E'}
+          show_search_button={!(userinfo.tipo_usuario === 'E')}
           form_inputs={[
             {
               datum_type: 'title',
@@ -183,7 +185,7 @@ const TipoPersona = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
-              disabled: false,
+              disabled: userinfo.tipo_usuario === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: aux_document_types,
               option_label: 'nombre',
@@ -200,7 +202,9 @@ const TipoPersona = () => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento',
               type: 'number',
-              disabled: (document_type.cod_tipo_documento ?? null) === null,
+              disabled:
+                (document_type.cod_tipo_documento ?? null) === null ||
+                userinfo.tipo_usuario === 'E',
               helper_text: 'Digite para buscar',
               on_blur_function: search_person,
             },

@@ -24,6 +24,7 @@ import {
   initial_state_person,
 } from '../../store/slice/pqrsdfSlice';
 import {
+  get_attorney_document_service,
   get_attorneys_service,
   get_document_types_service,
   get_person_document_service,
@@ -71,10 +72,19 @@ const TipoPoderdante = () => {
   }, []);
   useEffect(() => {
     reset_poderdante(grantor);
-    dispatch(set_attorney(initial_state_person));
+    if (userinfo.tipo_usuario == 'E') {
+      void dispatch(
+        get_attorney_document_service(
+          userinfo.tipo_documento ?? '',
+          userinfo.numero_documento ?? ''
+        )
+      );
+    } else {
+      dispatch(set_attorney(initial_state_person));
 
-    if (grantor.id_persona !== null && grantor.id_persona !== undefined) {
-      dispatch(get_attorneys_service(grantor.id_persona));
+      if (grantor.id_persona !== null && grantor.id_persona !== undefined) {
+        dispatch(get_attorneys_service(grantor.id_persona));
+      }
     }
   }, [grantor]);
 
@@ -189,6 +199,8 @@ const TipoPoderdante = () => {
           set_models={set_grantors}
           reset_values={reset_poderdante}
           button_submit_label="BUSCAR"
+          button_submit_disabled={userinfo.tipo_usuario === 'E'}
+          show_search_button={!(userinfo.tipo_usuario === 'E')}
           form_inputs={[
             {
               datum_type: 'title',
@@ -203,7 +215,7 @@ const TipoPoderdante = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
-              disabled: false,
+              disabled: userinfo.tipo_usuario === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: aux_document_types,
               option_label: 'nombre',
@@ -220,7 +232,9 @@ const TipoPoderdante = () => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento',
               type: 'number',
-              disabled: (document_type.cod_tipo_documento ?? null) === null,
+              disabled:
+                (document_type.cod_tipo_documento ?? null) === null ||
+                userinfo.tipo_usuario === 'E',
               helper_text: 'Digite para buscar',
               on_blur_function: search_person,
             },
@@ -328,6 +342,7 @@ const TipoPoderdante = () => {
           button_submit_label="Seleccionar apoderado"
           button_icon_class={<AdminPanelSettingsIcon />}
           button_submit_disabled={grantor.id_persona === null}
+          show_search_button={!(userinfo.tipo_usuario === 'E')}
           form_inputs={[
             {
               datum_type: 'select_controller',
