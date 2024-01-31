@@ -31,7 +31,7 @@ export const TransferDocMainScreen = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Requerimiento sobre una solicitud" />
+          <Title title="Transferencias documentales" />
           {/* parte Inicial */}
           {/*  <ParteInicial />*/}
           {/*stepper*/}

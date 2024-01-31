@@ -1,44 +1,26 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/*
-{
-    "tipo_persona_desc": "Natural",
-    "tipo_documento": "CC",
-    "numero_documento": "1006860603",
-    "primer_nombre": "JOHN",
-    "segundo_nombre": "FREDDY",
-    "primer_apellido": "BERMUDEZ",
-    "segundo_apellido": "RIVERA",
-    "nombre_completo": "JOHN FREDDY BERMUDEZ RIVERA",
-    "razon_social": null,
-    "nombre_comercial": "",
-    "digito_verificacion": null,
-    "cod_naturaleza_empresa": null,
-    "tiene_usuario": true,
-    "tipo_usuario": "Interno"
-}
-*/
 
 export const ModalColumns = [
   {
-    headerName: 'tipo_persona_desc',
+    headerName: 'Tipo Persona',
     field: 'tipo_persona_desc',
     minWidth: 150,
   },
   {
-    headerName: 'tipo_documento',
+    headerName: 'Tipo Documento',
     field: 'tipo_documento',
     minWidth: 150,
   },
   {
-    headerName: 'numero_documento',
+    headerName: 'Numero Documento',
     field: 'numero_documento',
-    minWidth: 150,
+    minWidth:200,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     },
   },
   {
-    headerName: 'primer_nombre',
+    headerName: 'Primer Nombre',
     field: 'primer_nombre',
     minWidth: 150,
     renderCell: (params: any) => {
@@ -46,7 +28,7 @@ export const ModalColumns = [
     },
   },
   {
-    headerName: 'segundo_nombre',
+    headerName: 'Segundo Nombre',
     field: 'segundo_nombre',
     minWidth: 150,
     renderCell: (params: any) => {
@@ -54,7 +36,7 @@ export const ModalColumns = [
     },
   },
   {
-    headerName: 'primer_apellido',
+    headerName: 'Primer Apellido',
     field: 'primer_apellido',
     minWidth: 150,
     renderCell: (params: any) => {
@@ -62,7 +44,7 @@ export const ModalColumns = [
     },
   },
   {
-    headerName: 'segundo_apellido',
+    headerName: 'Segundo Apellido',
     field: 'segundo_apellido',
     minWidth: 150,
     renderCell: (params: any) => {
@@ -70,31 +52,31 @@ export const ModalColumns = [
     },
   },
   {
-    headerName: 'nombre_completo',
+    headerName: 'Nombre Completo',
     field: 'nombre_completo',
-    minWidth: 150,
+    minWidth: 300,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     },
   },
   {
-    headerName: 'razon_social',
+    headerName: 'Razon Social',
     field: 'razon_social',
-    minWidth: 150,
+    minWidth: 300,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     },
   },
   {
-    headerName: 'nombre_comercial',
+    headerName: 'Nombre Comercial',
     field: 'nombre_comercial',
-    minWidth: 150,
+    minWidth: 300,
     renderCell: (params: any) => {
       return params.value ? params.value : 'N/A';
     },
   },
   {
-    headerName: 'digito_verificacion',
+    headerName: 'Digito Verificacion',
     field: 'digito_verificacion',
     minWidth: 150,
     renderCell: (params: any) => {
@@ -102,7 +84,7 @@ export const ModalColumns = [
     },
   },
   {
-    headerName: 'cod_naturaleza_empresa',
+    headerName: 'Naturaleza Empresa',
     field: 'cod_naturaleza_empresa',
     minWidth: 150,
     renderCell: (params: any) => {
@@ -110,7 +92,7 @@ export const ModalColumns = [
     },
   },
   {
-    headerName: 'tiene_usuario',
+    headerName: '¿Tiene Usuario?',
     field: 'tiene_usuario',
     minWidth: 150,
     renderCell: (params: any) => {
@@ -118,7 +100,7 @@ export const ModalColumns = [
     },
   },
   {
-    headerName: 'tipo_usuario',
+    headerName: 'Tipo Usuario',
     field: 'tipo_usuario',
     minWidth: 150,
     renderCell: (params: any) => {

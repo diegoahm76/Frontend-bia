@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import { TransferDocContext } from '../../context/TransferDocContext';
 import { useTransferenciasDocumentales } from '../../hook/useTransferenciasDocumentales';
 import { Parte1Screen } from '../parte1/screen/Parte1Screen';
+import { Parte2Screen } from '../parte2/screen/Parte2Screen';
 
 export const steps = ['Historial de transferencias', 'Expediente'];
 export const StepperTranferDocs = ({
@@ -16,21 +17,18 @@ export const StepperTranferDocs = ({
   resetHistorialTransferencias,
   watchHistorialTransferenciasExe,
 }: any): JSX.Element => {
-  const { skipped, activeStep, setSkipped, setActiveStep } =
+  const { activeStep } =
     useContext(TransferDocContext);
 
   // ? stepper hook
-  const { isStepSkipped, handleNext, handleBack, handleReset } =
+  const { isStepSkipped } =
     useTransferenciasDocumentales();
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper
-        activeStep={activeStep}
-        sx={{
-          mt: 5,
-        }}
-      >
+      <Stepper activeStep={activeStep} sx={{
+        my: '1.5rem',
+      }}>
         {steps.map((label: string, index: number) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
@@ -78,14 +76,6 @@ export const StepperTranferDocs = ({
               case 0:
                 return (
                   <>
-                    <>Hola soy la parte 1 del stepper</>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleNext}
-                    >
-                      Ir a la parte 2
-                    </Button>
                     <Parte1Screen
                       controlHistorialTransferencias={
                         controlHistorialTransferencias
@@ -98,35 +88,22 @@ export const StepperTranferDocs = ({
                       }
                     />
                   </>
-                  /* <Parte1Screen
-                    controlFormulario={controlFormulario}
-                    handleSubmitFormulario={handleSubmitFormulario}
-                    errorsFormulario={errorsFormulario}
-                    resetFormulario={resetFormulario}
-                    watchFormulario={watchFormulario}
-                    setInfoReset={setInfoReset}
-                  />*/
                 );
               case 1:
                 return (
                   <>
-                    <>2, soy el 2 siuu</>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleBack}
-                    >
-                      Volver
-                    </Button>
+                    <Parte2Screen
+                      controlHistorialTransferencias={
+                        controlHistorialTransferencias
+                      }
+                      resetHistorialTransferencias={
+                        resetHistorialTransferencias
+                      }
+                      watchHistorialTransferenciasExe={
+                        watchHistorialTransferenciasExe
+                      }
+                    />
                   </>
-                  /* <Parte2Screen
-                    controlFormulario={controlFormulario}
-                    handleSubmitFormulario={handleSubmitFormulario}
-                    errorsFormulario={errorsFormulario}
-                    resetFormulario={resetFormulario}
-                    watchFormulario={watchFormulario}
-                    setInfoReset={setInfoReset}
-                  />*/
                 );
               default:
                 return null;

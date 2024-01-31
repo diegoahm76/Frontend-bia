@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useContext } from 'react';
-import { BusquedaPersonas } from '../components/modalBusquedaPersona/ModalBusquedaPersona';
-import { HistoricoTransferenciasDoc } from '../components/historicoTransferenciasDoc/HistoricoTransferenciasDoc';
+import { Button } from '@mui/material';
+import { useTransferenciasDocumentales } from '../../../hook/useTransferenciasDocumentales';
+import { Transferencias } from '../components/transferencias/Transferencias';
 
-export const Parte1Screen = ({
+export const Parte2Screen = ({
   controlHistorialTransferencias,
   resetHistorialTransferencias,
   watchHistorialTransferenciasExe,
@@ -12,10 +13,13 @@ export const Parte1Screen = ({
   resetHistorialTransferencias: any;
   watchHistorialTransferenciasExe: any;
 }): JSX.Element => {
+  //* use hooks declarations
+  const { handleBack } = useTransferenciasDocumentales();
+
   return (
     <>
-      {/*parte inicial, busqueda y grillado de resultados*/}
-      <HistoricoTransferenciasDoc
+      {/*parte inicial, busqueda y grillado de resultados de los expedientes a trasnferir*/}
+      <Transferencias
         controlHistorialTransferencias={controlHistorialTransferencias}
         resetHistorialTransferencias={resetHistorialTransferencias}
         watchHistorialTransferenciasExe={watchHistorialTransferenciasExe}
@@ -23,11 +27,11 @@ export const Parte1Screen = ({
       {/*parte inicial, busqueda y grillado de resultados*/}
 
       {/*Modal de búsqueda de personas*/}
-      <BusquedaPersonas
-        controlHistorialTransferencias={controlHistorialTransferencias}
-        resetHistorialTransferencias={resetHistorialTransferencias}
-        watchHistorialTransferenciasExe={watchHistorialTransferenciasExe}
-      />
+      <>Soy la parte 2 de la parte 2</>
+{/*
+      <Button variant="contained" color="primary" onClick={handleBack}>
+        Volver
+      </Button>*/}
 
       {/*Modal de búsqueda de personas*/}
     </>

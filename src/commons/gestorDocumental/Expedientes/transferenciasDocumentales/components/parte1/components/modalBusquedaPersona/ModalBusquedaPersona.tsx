@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
-//! libraries or frameworks
 import { useContext, type FC, useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
@@ -19,17 +17,14 @@ import {
   IconButton,
   Stack,
   TextField,
+  Typography,
+  Tooltip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 import { Controller } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
-
-/*import { AvatarStyles } from '../../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
-import { Title } from '../../../../../../../../../../components';
-import { useLideresXUnidadOrganizacional } from '../../../../hook/useLideresXUnidadOrg';*/
 import Select from 'react-select';
 import { useAppDispatch } from '../../../../../../../../hooks';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
@@ -38,13 +33,8 @@ import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/Render
 import { getTipoDocOptions } from '../../../../toolkit/services/modalBusquedaPersona/getOptionsDocumentos.service';
 import { ModalColumns } from './columns/ModalColumns';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
-
-/*import { getPersonaByFilter } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
-import { ModalContextLideres } from '../../../../context/ModalContextLideres';
-import {
-  get_list_busqueda_avanzada_personas,
-  set_asignacion_lideres_current
-} from '../../../../toolkit/LideresSlices/LideresSlice';*/
+import { busquedaAvanzadaPersona } from '../../../../toolkit/services/modalBusquedaPersona/getGrilladoPersonas.service';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 
 export const BusquedaPersonas = ({
   controlHistorialTransferencias,
@@ -55,74 +45,71 @@ export const BusquedaPersonas = ({
   resetHistorialTransferencias: any;
   watchHistorialTransferenciasExe: any;
 }): JSX.Element => {
-  //* dispatch to use in the component * //
-  const dispatch = useAppDispatch();
+  //* use context declarations
+  const { generalLoading, handleGeneralLoading } = useContext(
+    ModalAndLoadingContext
+  );
   //* use States declaration
   const [optionsDocuments, setoptionsDocuments] = useState<any[]>([]);
+  const [resultadosPersona, setResultadosPersona] = useState<any[]>([]);
+  const [loadingGrid, setLoadingGrid] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      await getTipoDocOptions().then((data: any) => {
-        setoptionsDocuments(data);
-      });
+      const tiposDoc = await getTipoDocOptions();
+      setoptionsDocuments(tiposDoc);
     })();
   }, []);
 
-  /*  USAR LA FUNCION DE LA BUSQUEDA AVANZADA DE LA PERSONA */
-  /* export const search_avanzada = async ({
-    tipo_documento,
-    numero_documento,
-    primer_nombre,
-    primer_apellido,
-    razon_social,
-    nombre_comercial
-  }: BusquedaAvanzada): Promise<AxiosResponse<ResponseServer<InfoPersona[]>>> => {
-    return await api.get<ResponseServer<InfoPersona[]>>(
-      `personas/get-personas-filters/?tipo_documento=${tipo_documento??''}&numero_documento=${numero_documento??''}&primer_nombre=${
-        primer_nombre ?? ''
-      }&primer_apellido=${primer_apellido ?? ''}&razon_social=${
-        razon_social ?? ''
-      }&nombre_comercial=${nombre_comercial ?? ''}`
-    );
-  };
-
-  */
-
   // ? FUNCIONES ------------------
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const alertTitle = 'Opss!';
     const noOptionSelectedMsg =
       'No se ha seleccionado ninguna opción en los controles';
     const noDocTypeSelectedMsg = 'No se ha seleccionado el tipo de documento';
     const docNumberLengthMsg =
-      'El número de documento debe tener al menos 4 caracteres para realizar la búsqueda.';
+      'El número de documento debe tener al menos 3 caracteres para realizar la búsqueda.';
     const warning = 'warning';
+    const errorMsg = 'Ha ocurrido un error al realizar la búsqueda';
 
-    /*  if (!watchHistorialTransferenciasExe) {
+    if (!watchHistorialTransferenciasExe) {
       return showAlert(alertTitle, noOptionSelectedMsg, warning);
     }
 
-    if (!watchHistorialTransferenciasExe?.tipo_documento?.value && !watchHistorialTransferenciasExe?.numero_documento) {
+    if (
+      !watchHistorialTransferenciasExe?.tipo_documento?.value &&
+      !watchHistorialTransferenciasExe?.numero_documento
+    ) {
       return showAlert(alertTitle, noDocTypeSelectedMsg, warning);
     }
 
-    if (watchHistorialTransferenciasExe?.numero_documento.length < 4) {
+    if (watchHistorialTransferenciasExe?.numero_documento.length < 3) {
       return showAlert(alertTitle, docNumberLengthMsg, warning);
-    }*/
+    }
 
-    // Rest of your function logic here
-    console.log('Im the submit function', watchHistorialTransferenciasExe);
+    const data = {
+      setLoading: setLoadingGrid,
+      tipo_documento: watchHistorialTransferenciasExe?.tipo_documento?.value,
+      numero_documento: watchHistorialTransferenciasExe?.numero_documento,
+      primer_nombre: watchHistorialTransferenciasExe?.primer_nombre,
+      primer_apellido: watchHistorialTransferenciasExe?.primer_apellido,
+      razon_social: watchHistorialTransferenciasExe?.razon_social,
+      nombre_comercial: watchHistorialTransferenciasExe?.nombre_comercial,
+    };
+
+    try {
+      const response = await busquedaAvanzadaPersona(data);
+      setResultadosPersona(response);
+    } catch (err) {
+      showAlert(alertTitle, errorMsg, warning);
+    }
   };
+
   const resetFunction = (): void => {
-    console.log('Im the reset function');
-  };
-
-  const closeModal = (): any => {
-    /*  closeModalBusquedaPersona();
-    dispatch(get_list_busqueda_avanzada_personas([]));*/
-    resetFunction();
-    //  console.log('')('Im the close function');
+    resetHistorialTransferencias();
+    setResultadosPersona([]);
+    setLoadingGrid(false);
   };
 
   // ? FUNCIONES ------------------
@@ -135,19 +122,25 @@ export const BusquedaPersonas = ({
       width: 80,
       renderCell: (params: any) => (
         <>
-          <IconButton
-            onClick={() => {
-              // dispatch(set_asignacion_lideres_current(params.row));
-              closeModal();
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <HowToRegIcon
-                titleAccess="Seleccionar Persona"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+          <Tooltip title="Seleccionar Persona">
+            <IconButton
+              onClick={() => {
+                resetHistorialTransferencias({
+                  ...watchHistorialTransferenciasExe,
+                  id_persona: params.row.id_persona,
+                  persona_tranfirio: params.row.nombre_completo,
+                });
+                handleGeneralLoading(false);
+                setResultadosPersona([]);
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <HowToRegIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },
@@ -156,29 +149,20 @@ export const BusquedaPersonas = ({
 
   return (
     <>
-      <Dialog fullWidth maxWidth="lg" open={true} onClose={closeModal}>
+      <Dialog
+        fullWidth
+        maxWidth="lg"
+        open={generalLoading}
+        onClose={() => {
+          resetFunction();
+          handleGeneralLoading(false);
+        }}
+      >
         <Box
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit();
-            /* void getPersonaByFilter(
-              watch_asignaciones_lider_by_unidad_value?.tipo_documento,
-              watch_asignaciones_lider_by_unidad_value?.numero_documento,
-              watch_asignaciones_lider_by_unidad_value?.primer_nombre,
-              watch_asignaciones_lider_by_unidad_value?.segundo_nombre,
-              watch_asignaciones_lider_by_unidad_value?.primer_apellido,
-              watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
-              watch_asignaciones_lider_by_unidad_value
-                ?.id_unidad_organizacional_actual?.value
-                ? unidad_current?.value ||
-                    asignacion_lideres_current?.id_unidad_organizacional
-                : '',
-              setLoadingButton,
-              resetFunction
-            ).then((data: any) => {
-              dispatch(get_list_busqueda_avanzada_personas(data));
-            });*/
           }}
         >
           <DialogTitle>
@@ -365,7 +349,7 @@ export const BusquedaPersonas = ({
                 }}
               >
                 <LoadingButton
-                  loading={false}
+                  loading={loadingGrid}
                   variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
@@ -375,11 +359,22 @@ export const BusquedaPersonas = ({
                 </LoadingButton>
               </Grid>
             </Grid>
-            <RenderDataGrid
-              title="Resultados de la búsqueda"
-              rows={[] ?? []}
-              columns={columnsBusquedaPersona ?? []}
-            />
+
+            {resultadosPersona.length > 0 ? (
+              <RenderDataGrid
+                title="Resultados de la búsqueda"
+                rows={resultadosPersona ?? []}
+                columns={columnsBusquedaPersona ?? []}
+              />
+            ) : (
+              <Typography
+                variant="subtitle2"
+                sx={{ my: '7rem', textAlign: 'center', fontWeight: 'bold' }}
+              >
+                No se han encontrado resultados y/o no se ha realizado la
+                búsqueda
+              </Typography>
+            )}
           </DialogContent>
           <Divider />
           <DialogActions>
@@ -400,7 +395,10 @@ export const BusquedaPersonas = ({
               <Button
                 variant="contained"
                 color="error"
-                onClick={closeModal}
+                onClick={() => {
+                  resetFunction();
+                  handleGeneralLoading(false);
+                }}
                 startIcon={<CloseIcon />}
               >
                 CERRAR
