@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 //! libraries or frameworks
-import { useContext, type FC } from 'react';
+import { useContext, type FC, useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -34,6 +34,10 @@ import Select from 'react-select';
 import { useAppDispatch } from '../../../../../../../../hooks';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { Title } from '../../../../../../../../components';
+import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { getTipoDocOptions } from '../../../../toolkit/services/modalBusquedaPersona/getOptionsDocumentos.service';
+import { ModalColumns } from './columns/ModalColumns';
+import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 
 /*import { getPersonaByFilter } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
 import { ModalContextLideres } from '../../../../context/ModalContextLideres';
@@ -51,6 +55,19 @@ export const BusquedaPersonas = ({
   resetHistorialTransferencias: any;
   watchHistorialTransferenciasExe: any;
 }): JSX.Element => {
+  //* dispatch to use in the component * //
+  const dispatch = useAppDispatch();
+  //* use States declaration
+  const [optionsDocuments, setoptionsDocuments] = useState<any[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      await getTipoDocOptions().then((data: any) => {
+        setoptionsDocuments(data);
+      });
+    })();
+  }, []);
+
   /*  USAR LA FUNCION DE LA BUSQUEDA AVANZADA DE LA PERSONA */
   /* export const search_avanzada = async ({
     tipo_documento,
@@ -68,34 +85,35 @@ export const BusquedaPersonas = ({
       }&nombre_comercial=${nombre_comercial ?? ''}`
     );
   };
+
   */
 
-  // * dispatch to use in the component * //
-  const dispatch = useAppDispatch();
+  // ? FUNCIONES ------------------
 
-  //* -------- hook declaration -------- *//
-  /*  const {
-    control_buscar_asignaciones_lideres_por_unidad,
-    reset_buscar_asignaciones_lideres_por_unidad,
-    watch_asignaciones_lider_by_unidad_value
-  } = useLideresXUnidadOrganizacional();*/
+  const onSubmit = () => {
+    const alertTitle = 'Opss!';
+    const noOptionSelectedMsg =
+      'No se ha seleccionado ninguna opción en los controles';
+    const noDocTypeSelectedMsg = 'No se ha seleccionado el tipo de documento';
+    const docNumberLengthMsg =
+      'El número de documento debe tener al menos 4 caracteres para realizar la búsqueda.';
+    const warning = 'warning';
 
-  //* -------- use selector declaration -------- *//
-  /*  const {
-    organigrama_lideres_current,
-    unidad_current,
-    busqueda_avanzada_personas_list,
-    asignacion_lideres_current
-  } = useAppSelector((state) => state.lideres_slice);
-*/
-  // ? useContext declaration
-  /*  const {
-    modalBusquedaPersona,
-    closeModalBusquedaPersona,
-    loadingButton,
-    setLoadingButton
-  } = useContext(ModalContextLideres);
-*/
+    /*  if (!watchHistorialTransferenciasExe) {
+      return showAlert(alertTitle, noOptionSelectedMsg, warning);
+    }
+
+    if (!watchHistorialTransferenciasExe?.tipo_documento?.value && !watchHistorialTransferenciasExe?.numero_documento) {
+      return showAlert(alertTitle, noDocTypeSelectedMsg, warning);
+    }
+
+    if (watchHistorialTransferenciasExe?.numero_documento.length < 4) {
+      return showAlert(alertTitle, docNumberLengthMsg, warning);
+    }*/
+
+    // Rest of your function logic here
+    console.log('Im the submit function', watchHistorialTransferenciasExe);
+  };
   const resetFunction = (): void => {
     console.log('Im the reset function');
   };
@@ -106,6 +124,8 @@ export const BusquedaPersonas = ({
     resetFunction();
     //  console.log('')('Im the close function');
   };
+
+  // ? FUNCIONES ------------------
 
   //* -------- columns declaration -------- *//
   const columnsBusquedaPersona: GridColDef[] = [
@@ -118,7 +138,6 @@ export const BusquedaPersonas = ({
           <IconButton
             onClick={() => {
               // dispatch(set_asignacion_lideres_current(params.row));
-
               closeModal();
             }}
           >
@@ -132,16 +151,17 @@ export const BusquedaPersonas = ({
         </>
       ),
     },
-    // ...columnsModalBusAvanLider,
+    ...ModalColumns,
   ];
 
   return (
     <>
-      <Dialog fullWidth maxWidth="md" open={true} onClose={closeModal}>
+      <Dialog fullWidth maxWidth="lg" open={true} onClose={closeModal}>
         <Box
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
+            onSubmit();
             /* void getPersonaByFilter(
               watch_asignaciones_lider_by_unidad_value?.tipo_documento,
               watch_asignaciones_lider_by_unidad_value?.numero_documento,
@@ -172,7 +192,14 @@ export const BusquedaPersonas = ({
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 8,
+                }}
+              >
                 <Controller
                   name="tipo_documento"
                   control={controlHistorialTransferencias}
@@ -181,15 +208,18 @@ export const BusquedaPersonas = ({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <TextField
-                      fullWidth
-                      label="Tipo de documento"
-                      size="small"
-                      variant="outlined"
+                    <Select
+                      isClearable
                       value={value}
-                      InputLabelProps={{ shrink: true }}
                       onChange={onChange}
-                      error={!!error}
+                      options={optionsDocuments ?? []}
+                      placeholder="Tipo de documento"
+                      styles={{
+                        control: (provided, state) => ({
+                          ...provided,
+                          borderColor: error ? 'red' : provided.borderColor,
+                        }),
+                      }}
                     />
                   )}
                 />
@@ -199,6 +229,13 @@ export const BusquedaPersonas = ({
                   name="numero_documento"
                   control={controlHistorialTransferencias}
                   defaultValue=""
+                  rules={{
+                    required: 'Campo requerido',
+                    minLength: {
+                      value: 4,
+                      message: 'Mínimo 4 caracteres',
+                    },
+                  }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
@@ -212,122 +249,136 @@ export const BusquedaPersonas = ({
                       InputLabelProps={{ shrink: true }}
                       onChange={onChange}
                       error={!!error}
+                      // required
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="primer_nombre"
-                  control={controlHistorialTransferencias}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Primer nombre"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="segundo_nombre"
-                  control={controlHistorialTransferencias}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Segundo Nombre"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="primer_apellido"
-                  control={controlHistorialTransferencias}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Primer apellido"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="segundo_apellido"
-                  control={controlHistorialTransferencias}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Segundo apellido"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
-                    />
-                  )}
-                />
-              </Grid>
-              
 
-              <Grid item xs={12} sm={3}>
+              {watchHistorialTransferenciasExe?.tipo_documento?.label ===
+                'NIT' && (
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <Controller
+                      name="razon_social"
+                      control={controlHistorialTransferencias}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          fullWidth
+                          label="Razón social"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={onChange}
+                          error={!!error}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <Controller
+                      name="nombre_comercial"
+                      control={controlHistorialTransferencias}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          fullWidth
+                          label="Nombre comercial"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={onChange}
+                          error={!!error}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </>
+              )}
+
+              {watchHistorialTransferenciasExe?.tipo_documento?.label !==
+                'NIT' && (
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <Controller
+                      name="primer_nombre"
+                      control={controlHistorialTransferencias}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          fullWidth
+                          label="Primer nombre"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={onChange}
+                          error={!!error}
+                        />
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={3}>
+                    <Controller
+                      name="primer_apellido"
+                      control={controlHistorialTransferencias}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          fullWidth
+                          label="Primer apellido"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={onChange}
+                          error={!!error}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </>
+              )}
+
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  marginBottom: '1.2rem',
+                }}
+              >
                 <LoadingButton
                   loading={false}
-                  variant="outlined"
+                  variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
                   color="primary"
                 >
-                  BUSCAR
+                  BUSCAR PERSONA
                 </LoadingButton>
               </Grid>
             </Grid>
-            <DataGrid
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
+            <RenderDataGrid
+              title="Resultados de la búsqueda"
               rows={[] ?? []}
-              columns={[] ?? []}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(_row) => uuidv4()}
+              columns={columnsBusquedaPersona ?? []}
             />
           </DialogContent>
           <Divider />
