@@ -9,7 +9,8 @@ export const getSubGrupoAsiGrupo = async (
 ) => {
   try {
     setLoading(true);
-    const url = `gestor/panel_ventanilla/subseccion-grupo/get/${idUnidadOrg}/`;
+    //gestor/panel_ventanilla/asginar-opas/seccion-subseccion-grupos/5809/
+    const url = `gestor/panel_ventanilla/asginar-opas/seccion-subseccion-grupos/${idUnidadOrg}/`;
     const { data } = await api.get(url);
     if (data?.data?.length > 0) {
       const dataToReturn = data.data.map(

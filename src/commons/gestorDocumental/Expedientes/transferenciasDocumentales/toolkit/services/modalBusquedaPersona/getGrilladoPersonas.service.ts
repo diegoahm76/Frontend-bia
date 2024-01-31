@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { api } from '../../../../../../../api/axios';
+import { control_success } from '../../../../../../../helpers';
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 
 export const busquedaAvanzadaPersona = async ({
@@ -37,7 +38,7 @@ export const busquedaAvanzadaPersona = async ({
         'No se encontraron resultados para la búsqueda realizada',
         'warning'
       );
-
+    control_success('Se han encontrado las siguientes personas que coinciden con la búsqueda')
     return data?.data || [];
   } catch (error) {
     showAlert(

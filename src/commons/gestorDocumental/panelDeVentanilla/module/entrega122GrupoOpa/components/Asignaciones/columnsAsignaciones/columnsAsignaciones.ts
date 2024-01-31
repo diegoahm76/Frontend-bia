@@ -4,7 +4,7 @@ import { formatDate } from '../../../../../../../../utils/functions/formatDate';
 export const columnsAsignaciones = [
   {
     headerName: 'Consecutivo',
-    field: 'consecutivo_asign_x_pqrsdf',
+    field: 'consecutivo_asign_x_tramite',
     minWidth: 150,
   },
   {
@@ -34,9 +34,9 @@ export const columnsAsignaciones = [
     minWidth: 250,
   },
   {
-    headerName: 'Sección',
+    headerName: 'Unidad asignada',
     field: 'sec_sub',
-    minWidth: 300,
+    minWidth: 350,
   },
   {
     headerName: 'Grupo',
