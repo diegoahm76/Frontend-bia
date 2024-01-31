@@ -45,14 +45,6 @@ export const MainAsigGrupoOpaScreen: React.FC = (): JSX.Element => {
       currentElementPqrsdComplementoTramitesYotros?.tipo;
 
     switch (tipo) {
-      case 'Tramites y Servicios':
-        // Call the service for Tramites y Servicios
-        showAlert(
-          'Atención',
-          'No hay servicio aún para ver las asignacion para tramites y servicios, así que no hay asignaciones de tramites y servicios por el momento',
-          'warning'
-        );
-        break;
       case 'OPA':
         (async () => {
           try {

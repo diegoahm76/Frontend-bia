@@ -19,6 +19,7 @@ import { ModalAndLoadingContext } from '../../../../../../../context/GeneralCont
 import { AsignacionGrupoOpaContext } from '../../context/AsignacionGrupoOpaContext';
 import { getAsignacionesOpas } from '../../services/asignaciones/opas/getAsignacionesOpas.service';
 import { postAsignacionGrupoOpas } from '../../services/post/opas/postAsignacionGrupo.service';
+import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -68,17 +69,6 @@ export const AccionesFinales = (): JSX.Element => {
     let res;
 
     switch (tipo) {
-      case 'Tramites y Servicios':
-        // Call the service for Tramites y Servicios
-        /*  res = await postAsignacionGrupoTramitesYServicios(
-          {
-            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-            id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
-          },
-          handleSecondLoading
-        );*/
-        break;
       case 'OPA':
         res = await postAsignacionGrupoOpas(
           {
@@ -106,15 +96,7 @@ export const AccionesFinales = (): JSX.Element => {
       });
 
       let asignaciones;
-
       switch (tipo) {
-        case 'Tramites y Servicios':
-          // Fetch the assignments for Tramites y Servicios
-          /*asignaciones = await getAsignacionesTramitesYServicios(
-            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-            handleGeneralLoading
-          );*/
-          break;
         case 'OPA':
           asignaciones = await getAsignacionesOpas(
             currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
@@ -191,7 +173,19 @@ export const AccionesFinales = (): JSX.Element => {
                   color="success"
                   variant="contained"
                   startIcon={<SaveIcon />}
-                  onClick={handleClick}
+                  onClick={() => {
+                    listaAsignaciones?.length &&
+                    listaAsignaciones.find(
+                      (el: { estado_asignado: string }) =>
+                        el.estado_asignado === 'RECHAZADA'
+                    )
+                      ? showAlert(
+                          'Opps',
+                          'La asignación ya fue hecha automáticamente por el sistema',
+                          'warning'
+                        )
+                      : handleClick();
+                  }}
                 >
                   {`ASIGNAR ${
                     currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
