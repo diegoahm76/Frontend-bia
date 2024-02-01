@@ -74,6 +74,12 @@ const RecuperarUsuario = lazy(async () => {
   return { default: module.RecuperarUsuario };
 });
 
+const CrearPqrsdfScreen = lazy(async () => {
+  const module = await import(
+    '../../gestorDocumental/PQRSDF/screens/CrearPqrsdfScreen'
+  );
+  return { default: module.CrearPqrsdfScreen };
+});
 export const AuthRoutes: React.FC = () => {
   return (
     <Suspense fallback={<Loader />}>
@@ -94,6 +100,7 @@ export const AuthRoutes: React.FC = () => {
           path="/desbloqueo_usuario"
           element={<DesbloqueoDeUsuarioScreen />}
         />
+        <Route path="/crear_pqrsdf" element={<CrearPqrsdfScreen />} />
         <Route path="/activacion_cuenta" element={<ConfirmarCuentaScreen />} />
 
         <Route path="/*" element={<Page404 />} />

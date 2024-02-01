@@ -67,16 +67,17 @@ import {
   radicar_pqrsdf_service,
 } from '../store/thunks/pqrsdfThunks';
 import { useNavigate } from 'react-router-dom';
-
 import { useParams } from 'react-router-dom';
 import StepDenuncia from '../componentes/CrearPQRSDF/StepDenuncia';
 import ImprimirRadicado from '../componentes/ImpresionRadicado/ImprimirRadicado';
 import { ImpresionRadicadoScreen } from './ImpresionRadicadoScreen';
+import { checking_anonimous_authentication } from '../../../auth/store/thunks';
+import { logout } from '../../../auth/store';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearPqrsdfScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { userinfo, status } = useSelector((state: AuthSlice) => state.auth);
   const { representacion_legal } = useAppSelector((state) => state.auth);
 
   const {
@@ -115,105 +116,154 @@ export function CrearPqrsdfScreen(): JSX.Element {
       void dispatch(get_pqrsdf_id_service(id));
       set_action('editar');
     } else {
-      dispatch(set_pqr(initial_state_pqr));
-      dispatch(set_exhibits([]));
-      set_action('crear');
-      if (userinfo.tipo_usuario === 'E') {
+      if (status === 'not-authenticated') {
+        console.log('......');
+        dispatch(
+          checking_anonimous_authentication(
+            'solicitud.anonima',
+            'Anonima12345+'
+          )
+        );
         dispatch(
           set_type_applicant({
-            id: 'T',
-            key: 'T',
-            label: 'Titular',
+            id: 'A',
+            key: 'A',
+            label: 'Anónima',
           })
         );
-        if (on_behalf_of.id === null) {
-          if (representacion_legal.cod_relacion_con_el_titular === 'MP') {
-            dispatch(
-              set_on_behalf_of({
-                id: 'P',
-                key: 'P',
-                label: 'Propia',
-              })
-            );
-            void dispatch(
-              get_person_document_service(
-                userinfo.tipo_documento ?? '',
-                userinfo.numero_documento ?? '',
-                true
-              )
-            );
-          } else if (
-            representacion_legal.cod_relacion_con_el_titular === 'AP'
-          ) {
-            dispatch(
-              set_on_behalf_of({
-                id: 'A',
-                key: 'A',
-                label: 'Apoderado',
-              })
-            );
-            void dispatch(
-              get_person_document_service(
-                representacion_legal.representacion.tipo_documento ?? 'CC',
-                representacion_legal.representacion.numero_documento ?? '',
-                false
-              )
-            );
-            void dispatch(
-              get_attorney_document_service(
-                userinfo.tipo_documento ?? 'CC',
-                userinfo.numero_documento ?? ''
-              )
-            );
-          } else {
-            dispatch(
-              set_on_behalf_of({
-                id: 'E',
-                key: 'E',
-                label: 'Empresa',
-              })
-            );
-            void dispatch(
-              get_company_document_service(
-                representacion_legal.representacion.tipo_documento ?? 'NIT',
-                representacion_legal.representacion.numero_documento
-              )
-            );
-          }
-        }
+        dispatch(
+          set_on_behalf_of({
+            id: null,
+            key: null,
+            label: null,
+          })
+        );
       } else {
-        if (type_applicant.id !== 'T') {
+        dispatch(set_pqr(initial_state_pqr));
+        dispatch(set_exhibits([]));
+        set_action('crear');
+        console.log(userinfo);
+        if (userinfo.tipo_usuario === 'E') {
           dispatch(
             set_type_applicant({
-              id: 'A',
-              key: 'A',
-              label: 'Anónimo',
+              id: 'T',
+              key: 'T',
+              label: 'Titular',
             })
           );
-          dispatch(
-            set_on_behalf_of({
-              id: null,
-              key: null,
-              label: null,
-            })
-          );
-          dispatch(set_person(initial_state_person));
-          dispatch(set_attorney(initial_state_person));
-          dispatch(set_grantor(initial_state_person));
-          dispatch(set_company(initial_state_company));
+          if (on_behalf_of.id === null) {
+            if (representacion_legal.cod_relacion_con_el_titular === 'MP') {
+              dispatch(
+                set_on_behalf_of({
+                  id: 'P',
+                  key: 'P',
+                  label: 'Propia',
+                })
+              );
+              void dispatch(
+                get_person_document_service(
+                  userinfo.tipo_documento ?? '',
+                  userinfo.numero_documento ?? '',
+                  true
+                )
+              );
+            } else if (
+              representacion_legal.cod_relacion_con_el_titular === 'AP'
+            ) {
+              dispatch(
+                set_on_behalf_of({
+                  id: 'A',
+                  key: 'A',
+                  label: 'Apoderado',
+                })
+              );
+              void dispatch(
+                get_person_document_service(
+                  representacion_legal.representacion.tipo_documento ?? 'CC',
+                  representacion_legal.representacion.numero_documento ?? '',
+                  false
+                )
+              );
+              void dispatch(
+                get_attorney_document_service(
+                  userinfo.tipo_documento ?? 'CC',
+                  userinfo.numero_documento ?? ''
+                )
+              );
+            } else {
+              dispatch(
+                set_on_behalf_of({
+                  id: 'E',
+                  key: 'E',
+                  label: 'Empresa',
+                })
+              );
+              void dispatch(
+                get_company_document_service(
+                  representacion_legal.representacion.tipo_documento ?? 'NIT',
+                  representacion_legal.representacion.numero_documento
+                )
+              );
+            }
+          }
+        } else {
+          if (type_applicant.id !== 'T') {
+            dispatch(
+              set_type_applicant({
+                id: 'A',
+                key: 'A',
+                label: 'Anónimo',
+              })
+            );
+            dispatch(
+              set_on_behalf_of({
+                id: null,
+                key: null,
+                label: null,
+              })
+            );
+            dispatch(set_person(initial_state_person));
+            dispatch(set_attorney(initial_state_person));
+            dispatch(set_grantor(initial_state_person));
+            dispatch(set_company(initial_state_company));
+          }
         }
       }
     }
-
-    void dispatch(get_pqr_types_service());
-    void dispatch(get_presentation_types_service());
-    void dispatch(get_media_types_service());
-    void dispatch(get_storage_mediums_service());
-    void dispatch(get_file_categories_service());
-    void dispatch(get_file_origin_service());
-    void dispatch(get_file_typology_service());
-    void dispatch(get_offices_service());
+    if (status === 'authenticated') {
+      void dispatch(get_pqr_types_service());
+      void dispatch(get_presentation_types_service());
+      void dispatch(get_media_types_service());
+      void dispatch(get_storage_mediums_service());
+      void dispatch(get_file_categories_service());
+      void dispatch(get_file_origin_service());
+      void dispatch(get_file_typology_service());
+      void dispatch(get_offices_service());
+    }
   }, []);
+
+  useEffect(() => {
+    console.log(userinfo);
+    if (userinfo.id_persona !== null && userinfo.id_persona !== 0) {
+      void dispatch(get_pqr_types_service());
+      void dispatch(get_presentation_types_service());
+      void dispatch(get_media_types_service());
+      void dispatch(get_storage_mediums_service());
+      void dispatch(get_file_categories_service());
+      void dispatch(get_file_origin_service());
+      void dispatch(get_file_typology_service());
+      void dispatch(get_offices_service());
+      dispatch(
+        set_pqr({
+          ...pqr,
+          cod_forma_presentacion:
+            userinfo.tipo_usuario === 'E' ? 'E' : pqr.cod_forma_presentacion,
+          id_medio_solicitud:
+            userinfo.tipo_usuario === 'E' ? 2 : pqr.id_medio_solicitud,
+        })
+      );
+    }
+  }, [userinfo]);
 
   const StepComponent = (step: number) => {
     switch (step) {
@@ -337,6 +387,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
   };
 
   useEffect(() => {
+    console.log(pqr);
     reset_pqrsdf({
       ...pqr,
       cod_forma_presentacion:
@@ -592,10 +643,14 @@ export function CrearPqrsdfScreen(): JSX.Element {
         'isCreateForWeb',
         userinfo.tipo_usuario === 'E' ? 'True' : 'False'
       );
-
-      void dispatch(add_pqrsdf_service(form_data, navigate));
-      dispatch(reset_state());
-      initial_values();
+      console.log(status);
+      if (status === 'authenticated') {
+        void dispatch(add_pqrsdf_service(form_data, navigate));
+        dispatch(reset_state());
+        initial_values();
+      } else {
+        void dispatch(add_pqrsdf_service(form_data, navigate, false));
+      }
     }
   };
   const delete_pqr = (): void => {
@@ -633,6 +688,13 @@ export function CrearPqrsdfScreen(): JSX.Element {
       }
     }
   };
+  useEffect(() => {
+    if (status !== 'authenticated') {
+      dispatch(reset_state());
+      console.log('logout');
+      dispatch(logout(''));
+    }
+  }, [dispatch]);
 
   return (
     <>
@@ -711,7 +773,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
               reset_state={reset_state}
               set_initial_values={initial_values}
               variant_button={'outlined'}
-              clean_when_leaving={false}
+              clean_when_leaving={!(status === 'authenticated')}
             />
           </Grid>
         </Grid>

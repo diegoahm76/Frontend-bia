@@ -645,7 +645,8 @@ export const get_pqrsdf_id_service = (id: string | number): any => {
 // crear pqrsdf
 export const add_pqrsdf_service = (
   pqrsdf: any,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  navigate_flag?: boolean
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -654,9 +655,11 @@ export const add_pqrsdf_service = (
       console.log(data);
 
       control_success(data.detail);
-      navigate(
-        `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
-      );
+      if (navigate_flag ?? true) {
+        navigate(
+          `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+        );
+      }
 
       dispatch(set_pqr(data.data));
       return data;
