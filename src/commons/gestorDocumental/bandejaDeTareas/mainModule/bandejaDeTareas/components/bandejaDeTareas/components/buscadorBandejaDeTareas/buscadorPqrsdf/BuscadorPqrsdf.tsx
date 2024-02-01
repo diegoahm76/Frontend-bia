@@ -1,29 +1,34 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
-import { Button, Grid, Stack, TextField } from '@mui/material';
+import { Grid, Skeleton } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
-import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
-import { CHOICES_TIPO_PQR_SDF } from './utils/choicesTipoPQRSDF';
+import { getEstadoSolicitudTarea } from '../../../../../services/servicesStates/pqrsdf/getEstadoSolicitudTarea.service';
+import { getEstadoAsignacionTarea } from '../../../../../services/servicesStates/pqrsdf/getEstadoAsignacionTarea.service';
+import { choiceShowTaskRequerimientos } from './utils/choiceShowTaskRequerimientos';
 
 export const BuscadorPqrsdf = (props: any): JSX.Element => {
   const { controlBusquedaBandejaTareas } = props;
 
-/*  // ? useState Necesario
+  // ? useState Necesario
   const [request, setRequest] = useState<any>({
-    requestStatuses: [],
-    unidadesOrganizacionales: [],
+    estadoAsignacionTarea: [],
+    estadoSolicitudTarea: [],
   });
 
   const getDataToSelect = async (): Promise<any> => {
-    const [requestStatuses, unidadesOrganizacionales] = await Promise.all([
-      getRequestStates(),
-      getUnidadesOrgActual(),
+    const [requestAsignacion, requestSolicitud] = await Promise.all([
+      getEstadoAsignacionTarea(),
+      getEstadoSolicitudTarea(),
     ]);
 
+    console.log('requestAsignacion', requestAsignacion);
+    console.log('requestSolicitud', requestSolicitud);
+
+
     setRequest({
-      requestStatuses,
-      unidadesOrganizacionales,
+      estadoAsignacionTarea: requestAsignacion,
+      estadoSolicitudTarea: requestSolicitud,
     });
   };
 
@@ -31,9 +36,8 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
   useEffect(() => {
     void getDataToSelect();
   }, []);
-*/
-  // ?
 
+  // ?
   return (
     <>
       {/*el select de tipo de solicitud va a ir en el panel principal de busqueda para que se puede manejar la dualidad al momento de seleccionar*/}
@@ -48,17 +52,21 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
         <Controller
           name="estado_asignacion_de_tarea"
           control={controlBusquedaBandejaTareas}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ field: { onChange, value }}) => (
             <div>
-              <Select
-                value={value}
-                onChange={(selectedOption) => {
-                  //  console.log('')(selectedOption);
-                  onChange(selectedOption);
-                }}
-                options={[]}
-                placeholder="Seleccionar"
-              />
+              {request?.estadoAsignacionTarea?.length === 0 ? (
+                <Skeleton variant="text" height={35} /> // Reemplaza esto con tu componente de Skeleton
+              ) : (
+                <Select
+                  value={value}
+                  onChange={(selectedOption) => {
+                    //  console.log('')(selectedOption);
+                    onChange(selectedOption);
+                  }}
+                  options={request?.estadoAsignacionTarea ?? []}
+                  placeholder="Seleccionar"
+                />
+              )}
               <label>
                 <small
                   style={{
@@ -69,52 +77,57 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
                     marginLeft: '0.25rem',
                   }}
                 >
-                  Estado asignación de tarea	
+                  Estado asignación de tarea
                 </small>
               </label>
             </div>
           )}
         />
       </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={4}
-        sx={{
-          zIndex: 2,
-        }}
-      >
-        <Controller
-          name="estado_de_la_tarea"
-          control={controlBusquedaBandejaTareas}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <div>
-              <Select
-                value={value}
-                onChange={(selectedOption) => {
-                  //  console.log('')(selectedOption);
-                  onChange(selectedOption);
-                }}
-                options={[]}
-                placeholder="Seleccionar"
-              />
-              <label>
-                <small
-                  style={{
-                    color: 'rgba(0, 0, 0, 0.6)',
-                    fontWeight: 'thin',
-                    fontSize: '0.75rem',
-                    marginTop: '0.25rem',
-                    marginLeft: '0.25rem',
+
+      {controlBusquedaBandejaTareas?._formValues?.estado_asignacion_de_tarea
+        ?.value === 'Ac' && (
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          sx={{
+            zIndex: 2,
+          }}
+        >
+          <Controller
+            name="estado_de_la_tarea"
+            control={controlBusquedaBandejaTareas}
+            render={({ field: { onChange, value }}) => (
+              <div>
+                <Select
+                  value={value}
+                  onChange={(selectedOption) => {
+                    //  console.log('')(selectedOption);
+                    onChange(selectedOption);
                   }}
-                >
-                  Estado de la tarea
-                </small>
-              </label>
-            </div>
-          )}
-        />
-      </Grid>
+                  options={request?.estadoSolicitudTarea ?? []}
+                  placeholder="Seleccionar"
+                />
+                <label>
+                  <small
+                    style={{
+                      color: 'rgba(0, 0, 0, 0.6)',
+                      fontWeight: 'thin',
+                      fontSize: '0.75rem',
+                      marginTop: '0.25rem',
+                      marginLeft: '0.25rem',
+                    }}
+                  >
+                    Estado de la tarea
+                  </small>
+                </label>
+              </div>
+            )}
+          />
+        </Grid>
+      )}
+
       <Grid
         item
         xs={12}
@@ -126,7 +139,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
         <Controller
           name="mostrar_respuesta_con_req_pendientes"
           control={controlBusquedaBandejaTareas}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ field: { onChange, value }}) => (
             <div>
               <Select
                 value={value}
@@ -134,7 +147,7 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
                   //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
-                options={[]}
+                options={choiceShowTaskRequerimientos ?? []}
                 placeholder="Seleccionar"
               />
               <label>

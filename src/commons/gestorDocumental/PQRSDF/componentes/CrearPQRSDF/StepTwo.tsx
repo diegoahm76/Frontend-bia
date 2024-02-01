@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useState } from 'react';
-
 import { api } from '../../../../../api/axios';
 import { type Persona } from '../../../../../interfaces/globalModels';
 import { useForm } from 'react-hook-form';
@@ -46,13 +45,20 @@ interface IProps {
 const StepTwo = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { exhibits, metadata, exhibit, storage_mediums, type_applicant } =
-    useAppSelector((state) => state.pqrsdf_slice);
+  const {
+    exhibits,
+    metadata,
+    exhibit,
+    storage_mediums,
+    type_applicant,
+    file_fisico,
+  } = useAppSelector((state) => state.pqrsdf_slice);
   const {
     control: control_form,
     handleSubmit: handle_submit_exhibit,
     reset,
     getValues: get_values,
+    watch,
   } = useForm<IObjExhibit>();
   const [action, set_action] = useState<string>('Agregar');
 
@@ -164,6 +170,35 @@ const StepTwo = () => {
   }, [file]);
 
   useEffect(() => {
+    if (file_fisico !== null) {
+      if ('name' in file_fisico) {
+        set_file_name(file_fisico.name);
+        dispatch(
+          set_exhibit({
+            ...exhibit,
+            nombre_anexo: get_values('nombre_anexo'),
+            orden_anexo_doc: get_values('orden_anexo_doc'),
+            medio_almacenamiento: get_values('medio_almacenamiento'),
+            cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+            medio_almacenamiento_otros_cual: get_values(
+              'medio_almacenamiento_otros_cual'
+            ),
+            numero_folios: 1,
+            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+            exhibit_link: file_fisico,
+            metadatos:
+              exhibit.id_anexo === null
+                ? metadata.asunto ?? null !== null
+                  ? metadata
+                  : null
+                : metadata,
+          })
+        );
+      }
+    }
+  }, [file_fisico]);
+
+  useEffect(() => {
     //  console.log('')(metadata);
     // if (metadata !== null) {
     //   if (metadata.asunto !== null && metadata.asunto !== '') {
@@ -222,7 +257,26 @@ const StepTwo = () => {
   }, [metadata]);
 
   const add_metadata_form = (): void => {
-    set_add_metadata_is_active(true);
+    const nombre_anexo = get_values('nombre_anexo') ?? '';
+    const medio_almacenamiento_otros_cual =
+      get_values('medio_almacenamiento_otros_cual') ?? '';
+    const cod_medio_almacenamiento =
+      get_values('cod_medio_almacenamiento') ?? '';
+    if (nombre_anexo !== '' && cod_medio_almacenamiento !== '') {
+      if (cod_medio_almacenamiento === 'Ot') {
+        if (medio_almacenamiento_otros_cual !== '') {
+          set_add_metadata_is_active(true);
+        } else {
+          control_error('Debe ingresar el nombre del medio de almacenamiento');
+        }
+      } else {
+        set_add_metadata_is_active(true);
+      }
+    } else {
+      control_error(
+        'Debe ingresar el nombre del anexo y el medio de almacenamiento'
+      );
+    }
   };
 
   const columns_list: GridColDef[] = [
@@ -394,7 +448,7 @@ const StepTwo = () => {
                 required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Documento',
-              disabled: false,
+              disabled: exhibit.metadatos?.cod_origen_archivo === 'F',
               helper_text: '',
               set_value: set_file,
               file_name,
@@ -464,7 +518,7 @@ const StepTwo = () => {
               },
               label: 'Número de folios',
               type: 'number',
-              disabled: false,
+              disabled: exhibit.metadatos?.cod_origen_archivo === 'F',
               helper_text: '',
               step_number: '1',
             },
@@ -478,6 +532,7 @@ const StepTwo = () => {
               variant_button: 'contained',
               on_click_function: add_metadata_form,
               color_button: 'warning',
+              hidden_text: (type_applicant.key ?? null) === null,
             },
           ]}
         />
@@ -510,6 +565,7 @@ const StepTwo = () => {
         <MetadataFormDialog
           is_modal_active={add_metadata_is_active}
           set_is_modal_active={set_add_metadata_is_active}
+          get_values_anexo={get_values}
         />
       </Grid>
     </>

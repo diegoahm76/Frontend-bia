@@ -25,7 +25,7 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DialogEntorno: React.FC = () => {
-  const { open_dialog, userinfo, representante_legal } = useSelector(
+  const { open_dialog, userinfo } = useSelector(
     (state: AuthSlice) => state.auth
   );
 
@@ -46,11 +46,6 @@ export const DialogEntorno: React.FC = () => {
       dispatch(set_authenticated());
     }
   };
-
-  useEffect(() => {
-    //  console.log('')(userinfo)
-    //  console.log('')(representante_legal)
-  }, [userinfo])
 
   return (
     <Dialog onClose={handle_close} open={open_dialog}>

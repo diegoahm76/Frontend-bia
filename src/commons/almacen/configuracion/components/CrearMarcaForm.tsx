@@ -194,8 +194,8 @@ export const CrearMarcaForm: React.FC = () => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={marca}
-                columns={columns}
+                rows={marca ?? []}
+                columns={columns ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}

@@ -135,7 +135,7 @@ const DigitalizacionesPendientes = () => {
                 //  console.log('')(params);
                 dispatch(set_digitization_request(params.row));
               }}
-              href={`/#/app/gestor_documental/central_digitalizacion/anexos`}
+              href={`/#/app/gestor_documental/central_digitalizacion/anexos/${params.row.id_solicitud_de_digitalizacion}`}
             >
               <Avatar
                 sx={{

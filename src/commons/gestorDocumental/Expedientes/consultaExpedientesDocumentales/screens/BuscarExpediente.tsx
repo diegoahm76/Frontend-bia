@@ -560,12 +560,12 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                         </Grid>
                     </Grid>}
                     <>
-                        {expedientes.length > 0 && (
+                        {expedientes?.length > 0 && (
                             <Grid item xs={12}>
                                 <Title title="Resultados de la búsqueda" />
                             </Grid>
                         )}
-                        {expedientes.length > 0 && (
+                        {expedientes?.length > 0 && (
                             <Grid item xs={12}>
                                 <Box sx={{ width: '100%' }}>
                                     <>
@@ -583,12 +583,12 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                         )}
                     </>
                     <>
-                        {documentos.length > 0 && (
+                        {documentos?.length > 0 && (
                             <Grid item xs={12}>
                                 <Title title="Resultados de la búsqueda" />
                             </Grid>
                         )}
-                        {documentos.length > 0 && (
+                        {documentos?.length > 0 && (
                             <Grid item xs={12}>
                                 <Box sx={{ width: '100%' }}>
                                     <>

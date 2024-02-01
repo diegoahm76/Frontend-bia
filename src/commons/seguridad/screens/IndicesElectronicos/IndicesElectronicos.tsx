@@ -55,12 +55,13 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
   // ? useeffect para la busqueda de expedientes
 
   useEffect(() => {
-    void getTrdExp().then((res: any) => setdataInicialSelects({
-      dataTrd: res,
-      dataSeries: [],
-      dataSubSeries: [],
-    }))
-
+    void getTrdExp().then((res: any) =>
+      setdataInicialSelects({
+        dataTrd: res,
+        dataSeries: [],
+        dataSubSeries: [],
+      })
+    );
   }, []);
 
   // ? colums for the DataGrid
@@ -135,7 +136,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         data.length > 0 && (
           <RenderDataGrid
             columns={columnsIndicesElectronicos ?? []}
-            rows={[...data, ...data] ?? []}
+            rows={[...data,] ?? []}
             title="Listado de expedientes encontrados"
           />
         )
@@ -147,7 +148,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         data?.length > 0 && dataIndice?.length > 0 && (
           <RenderDataGrid
             columns={columnsDelIndiceExp ?? []}
-            rows={[...Array(10).fill([...dataIndice])].flat() ?? []}
+            rows={[...dataIndice] ?? []}
             title="índice electrónico del expediente"
             aditionalElement={
               <Button
@@ -219,18 +220,21 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                   >
                     SALIR DEL MÓDULO
                   </Button>
-                  <Button
-                    color="primary"
-                    variant="outlined"
-                    startIcon={<CleanIcon />}
-                    onClick={() => {
-                      setData([]);
-                      setDataIndice([]);
-                      setXmlToJsonisTrue({});
-                    }}
-                  >
-                    REINICIAR MÓDULO
-                  </Button>
+
+                  {data?.length > 0 && (
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      startIcon={<CleanIcon />}
+                      onClick={() => {
+                        setData([]);
+                        setDataIndice([]);
+                        setXmlToJsonisTrue({});
+                      }}
+                    >
+                      REINICIAR MÓDULO
+                    </Button>
+                  )}
                 </Stack>
               </Grid>
             </Grid>

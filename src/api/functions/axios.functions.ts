@@ -10,7 +10,7 @@ const handleSessionExpiry = async () => {
 
 const handleRequest = async (request: any) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       request.headers.Authorization = `Bearer ${token}`;
        console.log(

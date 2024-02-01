@@ -17,13 +17,15 @@ export interface Deudor {
   apellidos: string;
 }
 
+export type EstadoExpediente = 'activo' | 'guardado' | 'liquidado' | null;
+
 export interface Expediente {
   id: number;
   cod_expediente: string;
   numero_resolucion: string;
   cod_auto: string;
   cod_recurso: string;
-  liquidado: boolean;
+  estado: EstadoExpediente;
   id_deudor: number;
 }
 

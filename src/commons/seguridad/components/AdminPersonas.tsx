@@ -155,8 +155,8 @@ export function AdminPersonas(): JSX.Element {
           <DataGrid
             density="compact"
             autoHeight
-            rows={rows}
-            columns={columns}
+            rows={rows ?? []}
+            columns={columns ?? []}
             pageSize={10}
             rowsPerPageOptions={[10]}
             // getRowId={(row) => row.id_persona}

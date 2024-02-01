@@ -87,7 +87,7 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Medio de solicitud',
-              disabled: false,
+              disabled: complement_pqr.id_radicado !== null,
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',
@@ -104,7 +104,7 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Asunto',
               type: 'text',
-              disabled: false,
+              disabled: complement_pqr.id_radicado !== null,
               helper_text: '',
             },
             {
@@ -119,7 +119,7 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
               type: 'text',
               multiline_text: true,
               rows_text: 4,
-              disabled: false,
+              disabled: complement_pqr.id_radicado !== null,
               helper_text: '',
             },
           ]}

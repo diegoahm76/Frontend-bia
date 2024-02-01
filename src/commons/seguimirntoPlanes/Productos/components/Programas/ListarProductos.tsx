@@ -5,44 +5,68 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Chip,
   Grid,
   IconButton,
 } from '@mui/material';
-import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
-import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import EditIcon from '@mui/icons-material/Edit';
+import { useAppDispatch } from '../../../../../hooks';
 import {
-  set_current_producto,
   set_current_mode_planes,
+  set_current_producto,
 } from '../../../store/slice/indexPlanes';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import { useContext, useEffect } from 'react';
 import { DataContextProductos } from '../../context/context';
-import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { v4 as uuidv4 } from 'uuid';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { Title } from '../../../../../components/Title';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarProductos: React.FC = () => {
-  const columns_productos: GridColDef[] = [
+  const columns: GridColDef[] = [
     {
-      field: 'nombre_producto',
-      headerName: 'NOMBRE DEL PRODUCTO',
+      field: 'nombre_plan',
+      headerName: 'Nombre del Plan',
       sortable: true,
-      width: 300,
+      width: 250,
     },
     {
-      field: 'numero_producto',
-      headerName: 'NUMERO DEL PRODUCTO',
+      field: 'nombre_programa',
+      headerName: 'Nombre del Programa',
       sortable: true,
-      width: 200,
+      width: 250,
     },
     {
       field: 'nombre_proyecto',
-      headerName: 'NOMBRE DEL PROYECTO',
+      headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 300,
+      width: 350,
+    },
+    {
+      field: 'numero_producto',
+      headerName: 'Número de Producto',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nombre_producto',
+      headerName: 'Nombre del Producto',
+      sortable: true,
+      width: 350,
+    },
+    {
+      field: 'fecha_creacion',
+      headerName: 'Fecha de Creación',
+      sortable: true,
+      width: 180,
+    },
+    {
+      field: 'cumplio',
+      headerName: '¿Cumplió?',
+      sortable: true,
+      width: 120,
+      renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'acciones',
@@ -55,6 +79,10 @@ export const ListarProductos: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
+              set_id_producto(params.row.id_producto);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -75,7 +103,7 @@ export const ListarProductos: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar producto"
+                titleAccess="Editar Producto"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -88,17 +116,19 @@ export const ListarProductos: React.FC = () => {
       ),
     },
   ];
-
-  const { rows_producto, fetch_data_producto } =
-    useContext(DataContextProductos);
-
-  const {
-    proyecto: { id_proyecto },
-  } = useAppSelector((state) => state.planes);
-
   //  console.log('')('id_proyecto', id_proyecto);
 
   const dispatch = useAppDispatch();
+
+  const {
+    id_proyecto,
+    rows_producto,
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    fetch_data_producto,
+  } = useContext(DataContextProductos);
 
   useEffect(() => {
     if (id_proyecto) {
@@ -122,14 +152,16 @@ export const ListarProductos: React.FC = () => {
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
+        // justifyContent="flex-end"
       >
-        <Grid item xs={12}>
-          <Title title="Listado de productos " />
-        </Grid>
-        <>
-          <Grid item xs={12}>
-            <Box sx={{ width: '100%' }}>
-              <>
+        {rows_producto.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Title title="Listado de productos" />
+              {/* <Typography>Listado de productos</Typography> */}
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ width: '100%' }}>
                 <ButtonGroup
                   style={{
                     margin: 7,
@@ -137,29 +169,26 @@ export const ListarProductos: React.FC = () => {
                     justifyContent: 'flex-end',
                   }}
                 >
-                  {download_xls({
-                    nurseries: rows_producto,
-                    columns: columns_productos,
-                  })}
+                  {download_xls({ nurseries: rows_producto, columns })}
                   {download_pdf({
                     nurseries: rows_producto,
-                    columns: columns_productos,
-                    title: 'CREAR ',
+                    columns,
+                    title: 'Listado de productos',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
                   rows={rows_producto}
-                  columns={columns_productos}
+                  columns={columns}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
-              </>
-            </Box>
-          </Grid>
-        </>
+              </Box>
+            </Grid>
+          </>
+        )}
         <Grid container spacing={2} justifyContent="flex-end">
           <Grid item>
             <Button

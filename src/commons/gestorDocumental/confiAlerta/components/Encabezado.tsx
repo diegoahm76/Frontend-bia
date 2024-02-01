@@ -615,9 +615,9 @@ export const Encabezado: React.FC = () => {
                 <DataGrid
                   autoHeight
                   pageSize={5}
-                  rows={gridRows}
+                  rows={gridRows ?? []}
+                  columns={columns ?? []}
                   density="compact"
-                  columns={columns}
                   disableSelectionOnClick
                   rowsPerPageOptions={[5]}
                   getRowId={(row) => row.opciones}
@@ -670,7 +670,7 @@ export const Encabezado: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={questionGridRows}
+                  rows={questionGridRows ?? []}
                   columns={questionColumns}
                   rowsPerPageOptions={[5]}
                   pageSize={5}

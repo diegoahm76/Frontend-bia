@@ -64,9 +64,13 @@ export const useFuenteFinanciacionHook = (): any => {
   const [is_saving_fuente, set_is_saving_fuente] = useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_fuente_financiacion } = useContext(
-    DataContextFuentesFinanciacion
-  );
+  const {
+    id_proyecto,
+    id_producto,
+    id_actividad,
+    id_indicador,
+    fetch_data_fuente_financiacion,
+  } = useContext(DataContextFuentesFinanciacion);
 
   // declaracion redux
   const {
@@ -77,7 +81,10 @@ export const useFuenteFinanciacionHook = (): any => {
   const onsubmit_fuente = handleSubmit_fuente(async (data) => {
     try {
       //  console.log('')(data, 'data');
-      // data.id_indicador = id_indicador;
+      data.id_indicador = id_indicador;
+      data.id_cuenca = id_producto;
+      data.id_proyecto = id_proyecto;
+      data.id_actividad = id_actividad;
       set_is_saving_fuente(true);
       await post_fuentes_fiananciacion(data as IFuentesFinanciacion);
       control_success('Se creó correctamente');
@@ -99,7 +106,10 @@ export const useFuenteFinanciacionHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_fuente(true);
-      // data.id_indicador = id_indicador;
+      data.id_indicador = id_indicador;
+      data.id_cuenca = id_producto;
+      data.id_proyecto = id_proyecto;
+      data.id_actividad = id_actividad;
       await put_fuentes_fiananciacion(
         (id_fuente as number) ?? 0,
         data as IFuentesFinanciacion

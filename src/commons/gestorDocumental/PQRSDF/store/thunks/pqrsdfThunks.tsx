@@ -9,7 +9,6 @@ import {
 import {
   initial_state_pqr,
   set_areas,
-  set_attorney,
   set_attorneys,
   set_companies,
   set_company,
@@ -17,10 +16,8 @@ import {
   set_destination_offices,
   set_document_types,
   set_file_categories,
-  set_file_origin,
   set_file_origins,
   set_file_typologies,
-  set_file_typology,
   set_filed,
   set_filed_types,
   set_filings,
@@ -48,6 +45,7 @@ import {
   get_ciudades,
   get_departamentos,
 } from '../../../../../request/getRequest';
+import { showAlert } from '../../../../../utils/showAlert/ShowAlert';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -685,6 +683,7 @@ export const delete_pqrsdf_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      // eslint-disable-next-line no-unused-vars
       const params: any = {
         id_PQRSDF: id,
         isCreateForWeb: is_web,
@@ -729,6 +728,17 @@ export const radicar_pqrsdf_service = (
           set_filed({
             ...data.data,
             numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
+            nombre_tipo_radicado:
+              data.data.cod_tipo_radicado === 'E'
+                ? 'Entrada'
+                : data.data.cod_tipo_radicado === 'S'
+                ? 'Salidad'
+                : data.data.cod_tipo_radicado === 'I'
+                ? 'Interno'
+                : data.data.cod_tipo_radicado === 'U'
+                ? 'Unico'
+                : '',
+            titular: data.data.persona_titular,
           })
         );
       }
@@ -745,23 +755,14 @@ export const radicar_pqrsdf_service = (
 export const get_filings_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(params);
       const { data } = await api.get(`gestor/radicados/imprimir-radicado/`, {
         params,
       });
-      console.log(data);
       dispatch(set_filings(data.data));
-
-      // if ('data' in data) {
-      //   dispatch(set_pqr(data.data));
-
-      // } else {
-      //   control_error(data.detail);
-      // }
       return data;
     } catch (error: any) {
       console.log('get_filings_service');
-      control_error(error.response.data.detail);
+      showAlert('Opps!', error.response.data.detail || 'Ha ocurrido un error, por favor intente de nuevo', 'error');
       return error as AxiosError;
     }
   };
@@ -801,7 +802,10 @@ export const get_others_service_id = (id: string | number): any => {
 
 export const add_other_service = (
   otro: any,
- // navigate: NavigateFunction
+
+  // eslint-disable-next-line no-unused-vars
+  navigate: NavigateFunction
+
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {

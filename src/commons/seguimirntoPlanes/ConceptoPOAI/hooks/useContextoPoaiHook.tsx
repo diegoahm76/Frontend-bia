@@ -43,7 +43,9 @@ export const useContextoPoaiHook = (): any => {
   const [is_saving_concepto, set_is_saving_concepto] = useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_concepto_poai } = useContext(DataContextConceptoPOAI);
+  const { id_indicador, fetch_data_concepto_poai } = useContext(
+    DataContextConceptoPOAI
+  );
 
   // declaracion redux
   const {
@@ -54,8 +56,8 @@ export const useContextoPoaiHook = (): any => {
   const onsubmit_concepto = handleSubmit_concepto(async (data) => {
     try {
       //  console.log('')(data, 'data');
-      // data.id_indicador = id_indicador;
       set_is_saving_concepto(true);
+      data.id_indicador = id_indicador;
       await post_concepto_poai(data as IConceptoPOAI);
       control_success('Se creó correctamente');
       await limpiar_formulario_concepto();
@@ -76,7 +78,7 @@ export const useContextoPoaiHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_concepto(true);
-      // data.id_indicador = id_indicador;
+      data.id_indicador = id_indicador;
       await put_concepto_poai(
         (id_concepto as number) ?? 0,
         data as IConceptoPOAI

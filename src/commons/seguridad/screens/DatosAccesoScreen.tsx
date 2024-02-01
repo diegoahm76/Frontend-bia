@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import {
@@ -23,10 +24,14 @@ import type { Users } from '../interfaces';
 import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UpdateIcon from '@mui/icons-material/Update';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { editar_datos_acceso } from '../request/seguridadRequest';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosAccesoScreen: React.FC = () => {
+  //* redux states, auth slice
+  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+
   const {
     register,
     handleSubmit: handle_submit,
@@ -34,7 +39,6 @@ export const DatosAccesoScreen: React.FC = () => {
     watch,
   } = useForm();
   const [datos, set_datos] = useState<Users>();
-  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const [message_error, set_message_error_password] = useState('');
   const [is_error_password, set_error_password] = useState(false);
   const [is_cambio_password, set_is_cambio_password] = useState(false);
@@ -45,19 +49,6 @@ export const DatosAccesoScreen: React.FC = () => {
   const password = watch('password');
   const password2 = watch('password2');
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  // const handle_file_select = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const selected_file = event.target.files != null ? event.target.files[0] : null;
-  //   if (selected_file != null) {
-  //     set_file_name(selected_file.name);
-
-  //     const reader = new FileReader();
-  //     reader.onload = (event) => {
-  //       set_image_url(event.target?.result as string);
-  //     };
-  //     reader.readAsDataURL(selected_file);
-  //   }
-  // };
   const [errorfilesize, seterrorfilesize] = useState<string>('');
 
   const handle_file_select = (
@@ -66,10 +57,19 @@ export const DatosAccesoScreen: React.FC = () => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
-      if (selected_file.size > 854000) {
-        set_file_name('');
-        set_image_url(null);
-        seterrorfilesize('El tamaño de la imagen excede el límite de  844 kb');
+      // 50 KB in bytes
+      const maxSize = 50 * 1024;
+      const validFileTypes = ['image/jpeg', 'image/png'];
+      if (!validFileTypes.includes(selected_file.type)) {
+        //set_file_name('');
+        //set_image_url(null);
+        seterrorfilesize('El archivo no es un formato de imagen válido (jpg, jpeg, png)');
+        return;
+      } else if (selected_file.size > maxSize) {
+        //set_file_name('');
+        //set_image_url(null);
+        seterrorfilesize('El tamaño de la imagen excede el límite de 50 kb');
+        return;
       } else {
         set_file_name(selected_file.name);
 
@@ -123,11 +123,36 @@ export const DatosAccesoScreen: React.FC = () => {
   useEffect(() => {
     void datos_usuario(userinfo.id_usuario);
   }, []);
-
   const on_submit_persona: SubmitHandler<FieldValues> = async (data) => {
     try {
+      // console.log(userinfo?.profile_img, 'siuu');
       set_loading_natural(true);
+
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const {data: dataUser} = await get_user_by_id(userinfo.id_usuario);
+
       const datos_persona = new FormData();
+
+      let esta_retirando_foto = false;
+      let image_profile_actual = dataUser?.data?.profile_img;
+
+      if (image_profile_actual && !data.profile_img.length) {
+        // Tenía foto y la retiró
+        esta_retirando_foto = true;
+      } else if (!image_profile_actual && !data.profile_img.length) {
+        // No tenía foto y siguió sin asignarla
+        esta_retirando_foto = false;
+      } else if (data.profile_img.length > 0) {
+        // No tenía foto y la asignó o tenía una y la cambió por otra
+        esta_retirando_foto = false;
+        datos_persona.append('profile_img', data.profile_img[0]);
+      }
+
+      datos_persona.append(
+        'esta_retirando_foto',
+        esta_retirando_foto.toString()
+      );
+
       if (
         data.password !== undefined &&
         data.password !== '' &&
@@ -135,10 +160,7 @@ export const DatosAccesoScreen: React.FC = () => {
       ) {
         datos_persona.append('password', data.password);
       }
-      if (data.profile_img.length > 0) {
-        datos_persona.append('profile_img', data.profile_img[0]);
-      }
-      //  console.log('')(datos_persona);
+
       await editar_datos_acceso(datos_persona);
       reset_file_state();
       set_loading_natural(false);
@@ -163,6 +185,8 @@ export const DatosAccesoScreen: React.FC = () => {
       }
     }
   }, [datos]);
+
+
 
   return (
     <>
@@ -199,36 +223,30 @@ export const DatosAccesoScreen: React.FC = () => {
                     width: '500px',
                   }}
                 >
-                  <div
+                  <img
+                    src={
+                      image_url?.includes('/home')
+                        ? process.env.NODE_ENV === 'development'
+                          ? `${
+                              process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+                              'https://back-end-bia-beta.up.railway.app'
+                            }${image_url}`
+                          : `${
+                              process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+                              'https://bia.cormacarena.gov.co'
+                            }${image_url}`
+                        : image_url != null
+                        ? image_url
+                        : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'
+                    }
+                    alt="Background"
                     style={{
                       height: '100%',
                       width: '100%',
-                      // borderRadius: '100%',
-                      backgroundImage: `url(${
-                        image_url != null
-                          ? image_url
-                          : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'
-                      })`,
-                      backgroundSize: 'contain',
-                      backgroundPosition: 'center',
-                      backgroundRepeat: 'no-repeat',
+                      objectFit: 'contain',
+                      objectPosition: 'center',
                     }}
                   />
-                  {/* <img
-                      src={
-                        image_url != null
-                          ? image_url
-                          : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'
-                      }
-                      alt="Imagen de perfil"
-                      style={{
-                        height: '100%',
-                        width: '100%',
-                        objectFit: 'cover',
-                        borderRadius: '50%',
-                        imageRendering: '-webkit-optimize-contrast'
-                      }}
-                    /> */}
                   <Button
                     variant="outlined"
                     component="label"
@@ -377,6 +395,15 @@ export const DatosAccesoScreen: React.FC = () => {
                     </>
                   )}
                   <Button
+                    variant="outlined"
+                    startIcon={<CleaningServicesIcon />}
+                    onClick={() => {
+                      set_image_url(null);
+                    }}
+                  >
+                    Limpiar foto de perfil
+                  </Button>
+                  <Button
                     variant="contained"
                     startIcon={<UpdateIcon />}
                     onClick={() => {
@@ -397,7 +424,7 @@ export const DatosAccesoScreen: React.FC = () => {
                           className="align-middle ml-1"
                         />
                       ) : (
-                        ''
+                        <UpdateIcon />
                       )
                     }
                     aria-label="Actualizar"

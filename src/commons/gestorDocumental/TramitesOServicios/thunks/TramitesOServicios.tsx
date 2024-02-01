@@ -95,6 +95,59 @@ export const create_tramite_servicio: any = (tramite: any) => {
   return async () => {
     try {
       const { data } = await api.post(`tramites/opa/tramites/inicio-tramite/create/`,tramite);
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Paso 2. Añadir/Actualizar/Eliminar Anexos
+export const cargar_anexos_opas: any = (id_tramite: any, documentos: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`tramites/opa/tramites/anexos/update/${id_tramite}/`,documentos);
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Paso 3. Radicación de OPA
+export const radicar_opa: any = (id_tramite: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`tramites/opa/tramites/radicar/create/${id_tramite}/`);
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Paso 4. Volver a Enviar Radicación de Trámite OPA
+export const eviar_correo_radicado: any = (id_tramite: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`tramites/opa/tramites/radicar/volver-enviar/${id_tramite}/`);
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Listar tramites OPAS por persona titular
+export const obtener_opas_por_titular: any = (id_persona_titular: any) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`tramites/opa/tramites/list/${id_persona_titular}/`);
+      control_success(data.detail);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

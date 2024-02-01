@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { Grid, Select } from '@mui/material';
@@ -44,13 +45,14 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
   const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
   const [opengeneradordirecciones, setopengeneradordirecciones] =
     useState(false);
+
+
   const [selected_departamento_noti, setselected_departamento_noti] =
     useState('');
   const [departamentos_noti, set_departamentos_noti] = useState<Departamento[]>(
     []
   );
-  const [opengeneradordireccioness, setopengeneradordireccioness] =
-    useState(false);
+  const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
   const [departamentos_retur, set_departamentos_retur] = useState<
     Departamento[]
   >([]);
@@ -377,8 +379,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
     // set_type_direction
   ] = useState('');
   //  console.log('')(is_error);
-  const [
-    type_directionn,
+  const [  type_directionn,
     // set_type_direction
   ] = useState('');
   //  console.log('')(is_error);
@@ -417,17 +418,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
       });
     }
   };
-  const [
-    ,
-    // direccion_generada
-    setdireccion_generada,
-  ] = useState('');
+  const [  ,    setdireccion_generada,  ] = useState('');
 
-  const [
-    ,
-    // direccionGeneradaActiva
-    set_direccion_generada_activa,
-  ] = useState(false);
+  const [  ,  set_direccion_generada_activa,  ] = useState(false);
 
   const mostrardireccion_generada = (direccion: any): void => {
     setdireccion_generada(direccion);

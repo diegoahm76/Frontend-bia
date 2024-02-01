@@ -20,13 +20,22 @@ import {
   get_productos,
   get_tipos,
   get_proyectos,
+  get_indicadores_id_actividad,
 } from '../services/services';
 import { IMedicion, ITipos } from '../../configuraciones/interfaces/interfaces';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
   id_programa: number | null;
+  id_proyecto: number | null;
+  id_producto: number | null;
+  id_actividad: number | null;
+  set_id_plan: (value: number | null) => void;
   set_id_programa: (value: number | null) => void;
+  set_id_proyecto: (value: number | null) => void;
+  set_id_producto: (value: number | null) => void;
+  set_id_actividad: (value: number | null) => void;
 
   // * rows
   rows_indicador: Indicadores[];
@@ -53,6 +62,7 @@ interface UserContext {
 
   // * fetch
 
+  fetch_data_indicadores_id_actividad: () => Promise<void>;
   fetch_data_actividad_selected: () => Promise<void>;
   fetch_data_producto_selected: () => Promise<void>;
   fetch_data_planes_selected: () => Promise<void>;
@@ -65,9 +75,16 @@ interface UserContext {
 
 export const DataContextIndicador = createContext<UserContext>({
   // * id
+  id_plan: null,
   id_programa: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+  set_id_plan: () => {},
   set_id_programa: () => {},
-  // * rows
+  set_id_proyecto: () => {},
+  set_id_producto: () => {},
+  set_id_actividad: () => {}, // * rows
   rows_indicador: [],
   set_rows_indicador: () => {},
 
@@ -87,6 +104,7 @@ export const DataContextIndicador = createContext<UserContext>({
   tipos_selected: [],
   set_tipos_selected: () => {},
 
+  fetch_data_indicadores_id_actividad: async () => {},
   fetch_data_actividad_selected: async () => {},
   fetch_data_producto_selected: async () => {},
   fetch_data_planes_selected: async () => {},
@@ -103,8 +121,11 @@ export const UserProviderIndicador = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
-
+  const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
+  const [id_producto, set_id_producto] = React.useState<number | null>(null);
+  const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
   // * select
   const [planes_selected, set_planes_selected] = React.useState<ValueProps[]>(
     []
@@ -164,6 +185,56 @@ export const UserProviderIndicador = ({
             nombre_actividad: item.nombre_actividad,
             nombre_plan: item.nombre_plan,
             id_programa: item.id_programa,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
+          })
+        );
+        // dispatch(
+        //   set_current_indicador(data_indicador)
+        // );
+        set_rows_indicador(data_indicador);
+        const data_indicador_selected: ValueProps[] | any = response.map(
+          (item: Indicadores) => ({
+            value: item.id_indicador,
+            label: item.nombre_indicador,
+          })
+        );
+        set_indicadores_selected(data_indicador_selected);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
+  const fetch_data_indicadores_id_actividad = async (): Promise<void> => {
+    try {
+      const response = await get_indicadores_id_actividad(
+        (id_actividad as number) ?? 0
+      );
+      if (response?.length > 0) {
+        const data_indicador: Indicadores[] = response.map(
+          (item: Indicadores) => ({
+            id_indicador: item.id_indicador,
+            nombre_indicador: item.nombre_indicador,
+            linea_base: item.linea_base,
+            medida: item.medida,
+            id_medicion: item.id_medicion,
+            id_tipo: item.id_tipo,
+            id_producto: item.id_producto,
+            id_actividad: item.id_actividad,
+            id_plan: item.id_plan,
+            id_proyecto: item.id_proyecto,
+            tipo_indicador: item.tipo_indicador,
+            nombre_medicion: item.nombre_medicion,
+            nombre_tipo: item.nombre_tipo,
+            nombre_producto: item.nombre_producto,
+            nombre_actividad: item.nombre_actividad,
+            nombre_plan: item.nombre_plan,
+            id_programa: item.id_programa,
+            fecha_creacion: item.fecha_creacion,
+            cumplio: item.cumplio,
           })
         );
         // dispatch(
@@ -299,8 +370,16 @@ export const UserProviderIndicador = ({
 
   const value: UserContext = {
     // * id
+    id_plan,
     id_programa,
+    id_proyecto,
+    id_producto,
+    id_actividad,
+    set_id_plan,
     set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
     // * select
     planes_selected,
     set_planes_selected,
@@ -325,6 +404,7 @@ export const UserProviderIndicador = ({
     // * info
 
     // * fetch
+    fetch_data_indicadores_id_actividad,
     fetch_data_actividad_selected,
     fetch_data_producto_selected,
     fetch_data_planes_selected,

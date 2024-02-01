@@ -44,50 +44,36 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
 
   // ? states
   //* loader button simulacion
-  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
+  /*const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
-  );
-
-  //* se va a tener que revisar luego está funciónP
-  /*  const shouldDisable = (actionId: string, complemento: any) => {
-    const isDig = actionId === 'Dig';
-    const isContinuarAsigGrup = actionId === 'ContinuarAsigGrup';
-    const hasAnexos = complemento.cantidad_anexos > 0;
-    const requiresDigitalization = complemento.requiere_digitalizacion;
-
-    // Primer caso: Complemento requiere digitalización
-    if (requiresDigitalization) {
-      return !(isDig && hasAnexos) || isContinuarAsigGrup;
-    }
-
-    // Segundo caso: Complemento NO requiere digitalización
-    if (!requiresDigitalization) {
-      return isContinuarAsigGrup;
-    }
-  };*/
-
+  );*/
 
   // ? se va a tener que modificar esta función con la nueva propiedad que se agrega. si la pqr ya fue asignada a grupo, no se puede volver a asignar (constinuar asig grup)
   const shouldDisable = (actionId: string, complemento: any) => {
     const isDig = actionId === 'Dig';
     const isContinuarAsigGrup = actionId === 'ContinuarAsigGrup';
-    const isEnviarSolicitudUsuario = actionId === 'EnviarSolicitudUsuario';
-    const isAsignarGrupo = actionId === 'AsignarGrupo';
     const requiresDigitalization = complemento.requiere_digitalizacion;
+    const isComplementoAsignadoUnidad = complemento.complemento_asignado_unidad;
 
     // Primer caso: Complemento requiere digitalización
     if (requiresDigitalization) {
-      return isContinuarAsigGrup || isEnviarSolicitudUsuario || isAsignarGrupo || !isDig;
+      return !isDig;
     }
 
     // Segundo caso: Complemento NO requiere digitalización
     if (!requiresDigitalization) {
-      return isEnviarSolicitudUsuario;
+      // Si complemento_asignado_unidad es true, deshabilita el botón de "Continuar con asignación a grupo"
+      // Si el botón es "Dig", también se deshabilita
+      if (isComplementoAsignadoUnidad || isDig) {
+        return true;
+      }
+      // Si complemento_asignado_unidad es false, habilita únicamente el botón de "Continuar con asignación a grupo"
+      if (!isComplementoAsignadoUnidad) {
+        return !isContinuarAsigGrup;
+      }
     }
   };
-
   const setActionsComplementos = (complemento: any) => {
-    //  console.log('')(complemento);
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(complemento));
     void Swal.fire({
       icon: 'success',
@@ -100,7 +86,6 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       ...action,
       disabled: shouldDisable(action.id, complemento),
     }));
-    //  console.log('')(actionsComplementosPermissions);
     dispatch(setActionssToManagePermissionsComplementos(actionsComplementosPermissions));
   };
 
@@ -124,6 +109,19 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                 } digitalización`
               );
             }}
+          />
+        );
+      },
+    },
+    {
+      headerName: 'Complememto asignado a unidad',
+      field: 'complemento_asignado_unidad',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            label={params.value ? 'Si' : 'No'}
+            color={params.value ? 'success' : 'error'}
           />
         );
       },
@@ -154,9 +152,6 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            {/*<Link
-              to={`/app/gestor_documental/panel_ventanilla/complemento_info/${params.row.idComplementoUsu_PQR}`}
-            >*/}
             <Tooltip title="Ver info complemento asociado">
               <IconButton
                 onClick={() => {
@@ -199,7 +194,6 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-            {/*</Link>*/}
             <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {

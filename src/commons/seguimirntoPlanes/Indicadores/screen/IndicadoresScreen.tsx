@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ListarIndicador } from '../components/Programas/ListarIndicador';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaActividad } from '../components/Programas/BusquedaAvanzada/BusquedaActividad';
+import { BusquedaAvanzadaIndicadores } from '../components/Programas/BusquedaAvanzada/BusquedaAvanzadaIndicadores';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const IndicadoresScreen: React.FC = () => {
@@ -45,7 +47,8 @@ export const IndicadoresScreen: React.FC = () => {
           <Title title="Indicadores " />
         </Grid>
       </Grid>
-      <ListarIndicador />
+      <BusquedaActividad />
+      {mode.ver ? <ListarIndicador /> : null}
       {mode.crear || mode.editar ? <AgregarIndicacdor /> : null}
       <Grid
         container
@@ -63,6 +66,7 @@ export const IndicadoresScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaAvanzadaIndicadores />
         <Grid item>
           <ButtonSalir />
         </Grid>

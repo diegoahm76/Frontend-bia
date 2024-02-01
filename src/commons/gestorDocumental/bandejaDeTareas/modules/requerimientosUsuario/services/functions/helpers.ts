@@ -2,12 +2,14 @@ import Swal from 'sweetalert2';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const API_PATHS = {
-  solicita: 'gestor/panel_ventanilla/pqrsdf/solicita/get/',
-  titular: (id: number) => `gestor/panel_ventanilla/pqrsdf/titular/get/${id}/`,
+  //* persona que solicita el requerimiento al usuario
+  solicita: 'gestor/bandeja-tareas/pqrsdf/persona/requerimiento/get/',
+  //* persona titular de la pqrsdf
+  titular: (id: number) => `gestor/bandeja-tareas/pqrsdf/titular/get/${id}/`,
   detalleSolicitud: (id: number) =>
     `gestor/panel_ventanilla/pqrsdf/detalle-solicitud/get/${id}/`,
   solicitudUsuario: (id: number) =>
-    `gestor/panel_ventanilla/pqrsdf/solicitud-usuario/get/${id}/`,
+    `gestor/bandeja-tareas/pqrsdf/requerimiento/get/${id}/`,
 };
 
 export const handleError = (navigate: any, route?: any) => {

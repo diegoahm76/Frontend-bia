@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, Stack, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Grid, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
-import { LoadingButton } from '@mui/lab';
-import SearchIcon from '@mui/icons-material/Search';
-import CleanIcon from '@mui/icons-material/CleaningServices';
-import { Title } from '../../../../../../../../../../components';
-import { usePanelVentanilla } from '../../../../../../../hook/usePanelVentanilla';
-
 export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
   const { control_busqueda_panel_ventanilla } = props;
 
@@ -27,6 +20,7 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
 
   return (
     <>
+       {/*el select de tipo de solicitud, fecha de inicio y fin va a ir en el panel principal de busqueda para que se puede manejar la dualidad al momento de seleccionar*/}
       <Grid item xs={12} sm={4}>
         <Controller
           name="nombre_titular"
@@ -155,6 +149,47 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
           )}
         />
       </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={4}
+        sx={{
+          zIndex: 2,
+        }}
+      >
+        <Controller
+          //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
+          name="estado_actual_solicitud"
+          control={control_busqueda_panel_ventanilla}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <div>
+              <Select
+                value={value}
+                onChange={(selectedOption) => {
+                  //  console.log('')(selectedOption);
+                  onChange(selectedOption);
+                }}
+                options={[] as any[]}
+                placeholder="Seleccionar"
+              />
+              <label>
+                <small
+                  style={{
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    fontWeight: 'thin',
+                    fontSize: '0.75rem',
+                    marginTop: '0.25rem',
+                    marginLeft: '0.25rem',
+                  }}
+                >
+                  Estado del trámite
+                </small>
+              </label>
+            </div>
+          )}
+        />
+      </Grid>
+
     </>
   );
 };

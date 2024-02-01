@@ -9,6 +9,7 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
+  Typography,
 } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import SaveIcon from '@mui/icons-material/Save';
@@ -322,13 +323,22 @@ export const Destinatarios: React.FC = () => {
             {download_pdf({ nurseries: rows_personas_alertas, columns: colums_persona_alerta, title: 'Alertas programadas' })}
           </ButtonGroup>
         <Grid item xs={12}>
-              <DataGrid
-                autoHeight
-                rows={rows_personas_alertas}
-                columns={colums_persona_alerta}
-                getRowId={(row) => uuidv4()}
-                pageSize={10}
-                rowsPerPageOptions={[10]} />
+              {
+                (rows_personas_alertas && rows_personas_alertas.length > 0) ? (
+                  <DataGrid
+                    autoHeight
+                    rows={rows_personas_alertas ?? []}
+                    columns={colums_persona_alerta ?? []}
+                    getRowId={(row) => uuidv4()}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                  />
+                ) : (
+                  <Typography variant="h6" component="h2">
+                    No hay datos disponibles
+                  </Typography>
+                )
+              }
             </Grid> </Grid></>
         )}
         <Grid container item justifyContent="flex-end" spacing={2}>

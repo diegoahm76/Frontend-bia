@@ -7,7 +7,6 @@ import type { IList } from '../../../interfaces/globalModels';
 import type {
   IList2,
   DataAadminUser,
-  AdminUserHook,
   SeguridadSlice,
   UserCreate,
   keys_object,
@@ -16,6 +15,7 @@ import {
   get_tipo_documento,
   get_tipo_persona,
   get_tipo_usuario,
+  get_user_by_id,
 } from '../../../request';
 import { roles_choise_adapter } from '../adapters/roles_adapters';
 import {
@@ -29,8 +29,12 @@ import { control_success, control_error } from '../../../helpers';
 import { type AxiosError } from 'axios';
 import { toast, type ToastContent } from 'react-toastify';
 import type { SelectChangeEvent } from '@mui/material';
-import { set_action_admin_users } from '../store';
+import {
+  set_action_admin_users,
+  set_user_info,
+} from '../store';
 import { auth_url } from '../../auth/api/auth';
+import { control_warning } from '../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error2 = (
@@ -68,7 +72,7 @@ export const initial_state_data_register: any = {
   segundo_apellido: '',
   segundo_nombre: '',
   nombre_de_usuario: '',
-  imagen_usuario: new File([], ''),
+  imagen_usuario: '',
   tipo_usuario: '',
   roles: [
     {
@@ -123,9 +127,7 @@ export const use_admin_users = () => {
     historial_cambios_estado_is_active,
     set_historial_cambios_estado_is_active,
   ] = useState<boolean>(false);
-  const [selected_image, set_selected_image] = useState<
-    string | ArrayBuffer | null
-  >('');
+  const [selected_image, set_selected_image] = useState<string>('');
   const [file_image, set_file_image] = useState<File>();
   const [check_user_is_active, set_check_user_is_active] =
     useState<boolean>(true);
@@ -200,7 +202,6 @@ export const use_admin_users = () => {
         }
         data_create_user.append(
           'redirect_url',
-          // 'http://localhost:3000/#/app/seguridad/administracion_usuarios'
           `${auth_url}/auth/cambiar_contrasena/`
         );
         data_create_user.append('profile_img', file_image ?? '');
@@ -209,6 +210,11 @@ export const use_admin_users = () => {
 
         control_success(data.detail);
       } else if (action_admin_users === 'EDIT') {
+        console.log('data_register', data_user);
+
+        const newInfo = await get_user_by_id(user_info?.id_usuario);
+        console.log('newInfo', newInfo);
+
         const data_update_user = new FormData();
         data_update_user.append('is_active', data_register.activo.toString());
         data_update_user.append(
@@ -217,36 +223,42 @@ export const use_admin_users = () => {
         );
         data_update_user.append('tipo_usuario', data_register.tipo_usuario);
 
-        /* for (let i = 0; i < roles.length; i++) {
-          if (roles[i].value === 1978547) {
-            [
-              {
-                value: 7,
-                label: 'zCamunda - Rol Actor-Dirección General',
-              },
-              {
-                value: 26,
-                label: 'zCamunda - Rol Actor-Funcionario',
-              },
-              {
-                value: 9,
-                label: 'zCamunda - Rol Actor-Grupo Aguas-Ingeniero de Revisión',
-              },
-            ].forEach((zCamundaRole) => {
-              data_update_user.append('roles', `${zCamundaRole.value}`);
-            });
-          } else {
-            // Si no es la opción agrupada, agregar el rol normalmente
-            data_update_user.append('roles', `${roles[i].value}`);
-          }
-        }*/
-
-        // ? anterior
-
         for (let i = 0; i < roles.length; i++) {
           data_update_user.append('roles', `${roles[i].value}`);
         }
-        data_update_user.append('profile_img', data_register.imagen_usuario);
+        let image_profile_actual = newInfo?.data?.data?.profile_img;
+        let esta_retirando_foto = false;
+        let image_profile: any;
+
+        if (image_profile_actual && !data_user.imagen_usuario.length) {
+          // Tenía foto y la retiró
+          esta_retirando_foto = true;
+        } else if (!image_profile_actual && !data_user.imagen_usuario.length) {
+          // No tenía foto y siguió sin asignarla
+          esta_retirando_foto = false;
+        } else if (image_profile_actual && data_user.imagen_usuario.length) {
+          // Tenía una y la cambió por otra
+          esta_retirando_foto = false;
+          image_profile = data_user.imagen_usuario[0] as any;
+        } else if (!image_profile_actual && data_user.imagen_usuario.length) {
+          // No tenía foto y la asignó
+          esta_retirando_foto = false;
+          image_profile = data_user.imagen_usuario[0] as any;
+        } else if (image_profile_actual) {
+          // Tenía una foto y no la actualizó
+          image_profile = image_profile_actual;
+          esta_retirando_foto = false;
+        }
+
+        if (image_profile) {
+          data_update_user.append('profile_img', image_profile);
+        }
+
+        data_update_user.append(
+          'esta_retirando_foto',
+          esta_retirando_foto.toString()
+        );
+
         data_update_user.append(
           'justificacion_activacion',
           data_register.activo_justificacion_cambio ?? ''
@@ -255,13 +267,11 @@ export const use_admin_users = () => {
           'justificacion_bloqueo',
           data_register.bloqueado_justificacion_cambio ?? ''
         );
-
         data_update_user.append(
           'sucursal_defecto',
           watch_admin_user('sucursal_defecto')?.value ?? ''
         );
 
-        // Actualización de usuario Persona Natural
         const { data } = await update_user_admin_user(
           user_info.id_usuario,
           data_update_user
@@ -340,27 +350,53 @@ export const use_admin_users = () => {
   };
 
   //* ----------- Cambio de imagen -----------------
+
   const handle_image_select = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     if (event.target.files?.[0] != null) {
       // Obtener el archivo seleccionado
       const file = event.target.files[0];
-      set_file_image(file);
 
-      // Crear un objeto FileReader
-      const reader = new FileReader();
-      // // Definir la función que se ejecuta cuando se completa la lectura del archivo
-      reader.onload = (upload) => {
-        // Obtener los datos de la imagen
-        if (upload?.target != null) {
-          set_selected_image(upload.target.result);
-        }
-      };
-      // Leer el contenido del archivo como una URL de datos
-      reader.readAsDataURL(file);
+      const fileSize = file.size / 1024; // size in KB
+      const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      const isValidFileType = validFileTypes.includes(file.type);
+
+      if (fileSize > 50) {
+        control_warning('La imagen debe ser menor a 50 KB en peso de arhivo');
+        event.target.value = ''; // reset the file input
+        dispatch(set_user_info({
+          ...user_info,
+        }))
+      } else if (!isValidFileType) {
+        control_warning('La imagen debe ser formato JPG, JPEG o PNG');
+        event.target.value = ''; // reset the file input
+        dispatch(set_user_info({
+          ...user_info,
+        }))
+      } else {
+        set_file_image(file);
+
+        // Crear un objeto FileReader
+        const reader = new FileReader();
+        // Definir la función que se ejecuta cuando se completa la lectura del archivo
+        reader.onload = (upload: any) => {
+          // Obtener los datos de la imagen
+          if (upload?.target?.result) {
+            dispatch(set_user_info(({
+              ...user_info,
+              profile_img: upload.target.result as string,
+            })))
+          }
+        };
+        // Leer el contenido del archivo como una URL de datos
+        reader.readAsDataURL(file);
+      }
     } else {
-      set_selected_image('');
+      dispatch(set_user_info({
+        ...user_info,
+        profile_img: '',
+      }))
     }
   };
 
@@ -368,10 +404,10 @@ export const use_admin_users = () => {
   useEffect(() => {
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
-    if (data_person_search.id_persona !== 0) {
-      //  console.log('')('data_person_search', data_person_search);
+    if (data_person_search.id_persona > 0) {
       set_roles(roles_choise_adapter(user_info.roles));
-      set_selected_image(user_info.profile_img);
+
+
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const activoo = data_register.activo;
       set_activo(activoo);
@@ -424,7 +460,11 @@ export const use_admin_users = () => {
         set_value_admin_user('tipo_usuario', 'E');
       }
       if (data_person_search.usuarios.length === 1) {
-        dispatch(get_data_user(data_person_search.usuarios[0].id_usuario));
+        dispatch(
+          get_data_user(
+            data_person_search?.usuarios[0]?.id_usuario,
+          )
+        );
       } else if (data_person_search.usuarios.length === 2) {
         // Disparar modal con los 2 usuarios disponibles
         set_users_x_person_is_active(true);
@@ -440,18 +480,14 @@ export const use_admin_users = () => {
 
   // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {
-    //  console.log('')('user_info', user_info);
-
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
-    if (user_info.id_usuario !== 0) {
+    if (user_info.id_usuario > 0) {
       if (user_info.roles.length === 0 && user_info.tipo_usuario === 'E') {
         set_roles([{ value: 2, label: 'Rol Usuarios Web' }]);
       } else {
         set_roles(roles_choise_adapter(user_info.roles));
       }
-      set_selected_image(user_info.profile_img);
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const activoo = data_register.activo;
       set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
@@ -560,14 +596,6 @@ export const use_admin_users = () => {
       set_tipo_documento(user_info.tipo_documento);
       set_numero_documento(user_info.numero_documento);
       set_data_disponible(true);
-      /*      setSucursalSelected({
-        value: user_info?.id_sucursal_empresa,
-        label: user_info?.descripcion_sucursal_empresa,
-      });*/
-      /*    watch_admin_user('sucursal_defecto').value = {
-        value: user_info?.id_sucursal_empresa,
-        label: user_info?.descripcion_sucursal_empresa,
-      };*/
       set_value_admin_user('sucursal_defecto', {
         value: user_info?.id_sucursal_empresa,
         label: user_info?.descripcion_sucursal_empresa,
@@ -637,6 +665,16 @@ export const use_admin_users = () => {
     dispatch(set_action_admin_users('NEW'));
   };
 
+  const clear_image = (): void => {
+    set_selected_image('');
+    set_file_image(undefined);
+    set_data_register({
+      ...data_register,
+      imagen_usuario: '',
+    });
+    set_value_admin_user('imagen_usuario', '');
+  };
+
   return {
     watch_admin_user,
     errors_admin_users,
@@ -682,13 +720,14 @@ export const use_admin_users = () => {
     set_loading_inputs,
     reset_admin_user,
     clean_user_info,
-
+    clear_image,
     set_roles_opt,
-
+    file_image,
     //* nuevos export
     listaSucursales,
     setListaSucursales,
     sucursalSelected,
     setSucursalSelected,
+    set_selected_image,
   };
 };

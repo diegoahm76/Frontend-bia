@@ -59,7 +59,13 @@ export const useBancosHook = (): any => {
   const [is_saving_banco, set_is_saving_banco] = useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_bancos } = useContext(DataContextBancos);
+  const {
+    id_proyecto,
+    id_actividad,
+    id_indicador,
+    id_meta,
+    fetch_data_bancos,
+  } = useContext(DataContextBancos);
 
   // declaracion redux
   const {
@@ -70,7 +76,10 @@ export const useBancosHook = (): any => {
   const onsubmit_banco = handleSubmit_banco(async (data) => {
     try {
       //  console.log('')(data, 'data');
-      // data.id_indicador = id_indicador;
+      data.id_indicador = id_indicador;
+      data.id_proyecto = id_proyecto;
+      data.id_actividad = id_actividad;
+      data.id_meta = id_meta;
       set_is_saving_banco(true);
       await post_banco(data as IBanco);
       control_success('Se creó correctamente');
@@ -92,7 +101,10 @@ export const useBancosHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_banco(true);
-      // data.id_indicador = id_indicador;
+      data.id_indicador = id_indicador;
+      data.id_proyecto = id_proyecto;
+      data.id_actividad = id_actividad;
+      data.id_meta = id_meta;
       await put_banco((id_banco as number) ?? 0, data as IBanco);
       control_success('Se actualizó correctamente');
       await limpiar_formulario_banco();

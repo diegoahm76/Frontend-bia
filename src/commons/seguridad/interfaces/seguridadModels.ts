@@ -58,7 +58,7 @@ export interface DataAadminUser {
   segundo_nombre: string | null;
   // Datos de acceso
   nombre_de_usuario: string;
-  imagen_usuario: File;
+  imagen_usuario: any;
   // Tipo usuario y Roles
   tipo_usuario: string;
   roles: IList2[];
@@ -337,6 +337,7 @@ export interface DelegarSuper {
 }
 
 export interface InfoPersonal {
+  // id_usuario: number;
   id_persona: number;
   tipo_persona: string;
   tipo_documento: string;

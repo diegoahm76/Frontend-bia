@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useForm } from 'react-hook-form';
+import { INITIAL_STATES_FORM_PANEL_VENTANILLA } from './utils/initialStates';
 
 export const usePanelVentanilla = () => {
   // ? use Form declaration
@@ -15,36 +16,9 @@ export const usePanelVentanilla = () => {
     watch: watch_panel_ventanilla,
   } = useForm({
     // ? pendiente el tipado, ya que por base de datos quizá cambie la información que se necesita
-    defaultValues: {
-      // ? para pqrsdf
-      fecha_inicio: '',
-      fecha_fin: '',
-      unidad_organizacional: {
-        value: '',
-        label: '',
-      },
-      tipo_de_solicitud: {
-        value: '',
-        label: '',
-      },
-      estado_actual_solicitud: {
-        value: '',
-        label: '',
-      },
-      tipo_pqrsdf: {
-        value: '',
-        label: '',
-      },
-      radicado: '', //* sirve para pqrsdf y tramites y servicios
-      // ? para trámite y servicios
-      nombre_titular: '',
-      asunto_proyecto: '',
-      pago_tramite: {
-        value: '',
-        label: '',
-      },
-      expediente: '',
-    },
+    defaultValues: INITIAL_STATES_FORM_PANEL_VENTANILLA,
+
+    // ? para opas
 
     // ! se debe agregar tambien el de otros
   });
@@ -54,36 +28,7 @@ export const usePanelVentanilla = () => {
 
   // ? ------- funciones para el manejo de los elementos del panel de ventanilla -------
   const reset_search_form = () =>
-    reset_busqueda_panel_ventanilla({
-      // ? para pqrsdf
-      fecha_inicio: '',
-      fecha_fin: '',
-      unidad_organizacional: {
-        value: '',
-        label: '',
-      },
-      //* se debe evaluar el borrado de los valores del selector llamado tipo de solicitud
-      tipo_de_solicitud: {
-        value: '',
-        label: '',
-      },
-      estado_actual_solicitud: {
-        value: '',
-        label: '',
-      },
-      radicado: '',
-
-      // ? para trámite y servicios
-      nombre_titular: '',
-      asunto_proyecto: '',
-      pago_tramite: {
-        value: '',
-        label: '',
-      },
-      expediente: '',
-
-      // ! se debe agregar tambien el de otros
-    });
+    reset_busqueda_panel_ventanilla(INITIAL_STATES_FORM_PANEL_VENTANILLA);
 
   // ! DECLARACIONES PARA LA ENTREGA 99 ................//
   // ! DECLARACIONES PARA LA ENTREGA 99 ................//

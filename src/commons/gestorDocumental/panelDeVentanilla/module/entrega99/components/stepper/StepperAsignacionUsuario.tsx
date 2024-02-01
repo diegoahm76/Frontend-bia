@@ -21,12 +21,12 @@ export const StepperAsignacionUsuario = ({
   resetFormularioFunction,
   setInfoReset,
 }: any): JSX.Element => {
-  const { skipped, activeStep, setSkipped, setActiveStep } = useContext(
+  const {  activeStep, } = useContext(
     PanelVentanillaContext
   );
 
   // ? stepper hook
-  const { isStepSkipped, handleNext, handleBack, handleReset } =
+  const { isStepSkipped, } =
     useSstepperFn();
 
   return (
@@ -77,28 +77,9 @@ export const StepperAsignacionUsuario = ({
 
       {activeStep === steps.length ? (
         <>
-          {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>*/}
         </>
       ) : (
         <>
-          {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-            </Button>
-          </Box>*/}
           {(() => {
             switch (activeStep) {
               case 0:

@@ -50,8 +50,8 @@ const FormDatePickerControllerV = ({
   helper_text,
   default_value,
   hidden_text,
-  min_date,
-  max_date,
+  // min_date,
+  // max_date,
 }: IProps) => {
   return (
     <>

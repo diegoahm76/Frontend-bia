@@ -1,5 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, TextField } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
@@ -10,6 +19,13 @@ import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useProductoHook } from '../../hooks/useProductoHook';
 import { DataContextProductos } from '../../context/context';
+//* FECHAS
+// import type { Dayjs } from 'dayjs';
+// import dayjs from 'dayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import InfoIcon from '@mui/icons-material/Info';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarProducto: React.FC = () => {
@@ -17,12 +33,18 @@ export const AgregarProducto: React.FC = () => {
     control_producto,
     errors_producto,
     reset_producto,
+    register_producto,
+    data_watch_producto,
+    set_value_producto,
 
     onsubmit_producto,
     onsubmit_editar,
     is_saving_producto,
 
     limpiar_formulario_producto,
+    fecha_creacion,
+    set_fecha_creacion,
+    handle_change_fecha_creacion,
   } = useProductoHook();
 
   const dispatch = useAppDispatch();
@@ -37,7 +59,11 @@ export const AgregarProducto: React.FC = () => {
       limpiar_formulario_producto();
     }
     if (mode.editar) {
-      console.log(producto, 'producto');
+      set_value_producto(
+        'fecha_creacion',
+        dayjs(producto.fecha_creacion).format('YYYY-MM-DD')
+      );
+      set_fecha_creacion(producto.fecha_creacion);
       set_id_plan(producto.id_plan);
       set_id_programa(producto.id_programa);
       reset_producto({
@@ -47,6 +73,8 @@ export const AgregarProducto: React.FC = () => {
         nombre_producto: producto.nombre_producto,
         numero_producto: producto.numero_producto,
         nombre_proyecto: producto.nombre_proyecto,
+        fecha_creacion: producto.fecha_creacion,
+        cumplio: producto.cumplio,
       });
     }
   }, [mode, producto]);
@@ -160,6 +188,104 @@ export const AgregarProducto: React.FC = () => {
               )}
             />
           </Grid>
+          <Grid
+            sx={{
+              marginBottom: '10px',
+              width: 'auto',
+            }}
+            item
+            xs={12}
+            sm={6}
+          >
+            <Controller
+              name="cumplio"
+              control={control_producto}
+              // defaultValue=""
+              rules={{
+                required: data_watch_producto.cumplio
+                  ? 'Este campo es requerido'
+                  : false,
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={value}
+                        onChange={(e) => {
+                          onChange(e.target.checked);
+                        }}
+                        // name="checkedB"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      value ? (
+                        <Typography variant="body2">
+                          <strong>Producto cumplido</strong>
+                          <Tooltip title="SI" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'green',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2">
+                          <strong>Producto no cumplido</strong>
+                          <Tooltip title="No" placement="right">
+                            <InfoIcon
+                              sx={{
+                                width: '1.2rem',
+                                height: '1.2rem',
+                                ml: '0.5rem',
+                                color: 'orange',
+                              }}
+                            />
+                          </Tooltip>
+                        </Typography>
+                      )
+                    }
+                  />
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Fecha de creacion"
+                value={fecha_creacion}
+                onChange={(value) => {
+                  handle_change_fecha_creacion(value);
+                }}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    size="small"
+                    {...register_producto('fecha_creacion', {
+                      required: true,
+                    })}
+                    error={!!errors_producto.fecha_creacion}
+                    helperText={
+                      errors_producto.fecha_creacion
+                        ? 'Es obligatorio la fecha de creación'
+                        : ''
+                    }
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
               <Button

@@ -464,7 +464,7 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
               density="compact"
               autoHeight
               rows={busqueda_avanzada_personas_list || []}
-              columns={columns_busqueda_asignaciones_de_lider}
+              columns={columns_busqueda_asignaciones_de_lider ?? []}
               pageSize={5}
               rowsPerPageOptions={[7]}
               experimentalFeatures={{ newEditingApi: true }}

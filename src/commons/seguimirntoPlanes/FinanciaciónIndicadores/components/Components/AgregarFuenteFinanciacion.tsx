@@ -1,21 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  Alert,
-  Button,
-  Grid,
-  MenuItem,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Button, Grid, MenuItem, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useContext, useEffect } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
-import { tipo_medida } from '../../../Indicadores/choices/selects';
 import { useFuenteFinanciacionHook } from '../../hooks/useFuenteFinanciacionHook';
 import { DataContextFuentesFinanciacion } from '../../context/context';
 // import NumberFormat from 'react-number-format';
@@ -42,39 +33,17 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
   const { mode, fuente_financiacion } = useAppSelector((state) => state.planes);
 
   const {
-    id_proyecto,
-    id_producto,
     set_id_proyecto,
     set_id_producto,
+    set_id_actividad,
+    set_id_indicador,
     cuencas_selected,
-    indicadores_selected,
-    proyectos_selected,
-    productos_selected,
-    actividades_selected,
     fetch_data_cuencas,
-    fetch_data_indicadores,
-    fetch_data_proyectos,
-    fetch_data_productos,
-    fetch_data_actividades,
   } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {
     fetch_data_cuencas();
-    fetch_data_indicadores();
-    fetch_data_proyectos();
   }, []);
-
-  useEffect(() => {
-    if (id_proyecto) {
-      fetch_data_productos();
-    }
-  }, [id_proyecto]);
-
-  useEffect(() => {
-    if (id_producto) {
-      fetch_data_actividades();
-    }
-  }, [id_producto]);
 
   useEffect(() => {
     if (mode.crear) {
@@ -83,6 +52,8 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
     if (mode.editar) {
       set_id_proyecto(fuente_financiacion.id_proyecto ?? null);
       set_id_producto(fuente_financiacion.id_producto ?? null);
+      set_id_actividad(fuente_financiacion.id_actividad ?? null);
+      set_id_indicador(fuente_financiacion.id_indicador ?? null);
       reset_fuente({
         id_fuente: fuente_financiacion.id_fuente,
         nombre_indicador: fuente_financiacion.nombre_indicador,
@@ -199,7 +170,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
             />
           </Grid>
           <Grid item xs={12} sm={6}></Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          {/* <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_proyecto"
               control={control_fuente}
@@ -299,7 +270,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6} md={3}>
             <Controller
               name="vano_1"
@@ -438,7 +409,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Controller
               name="id_indicador"
               control={control_fuente}
@@ -468,7 +439,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6}>
             <Controller
               name="id_cuenca"

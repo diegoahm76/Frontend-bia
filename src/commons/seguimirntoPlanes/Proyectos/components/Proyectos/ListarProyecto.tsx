@@ -5,69 +5,86 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Chip,
   Grid,
   IconButton,
 } from '@mui/material';
-import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
-import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import EditIcon from '@mui/icons-material/Edit';
+import { useAppDispatch } from '../../../../../hooks';
 import {
-  set_current_proyecto,
   set_current_mode_planes,
+  set_current_proyecto,
 } from '../../../store/slice/indexPlanes';
+import EditIcon from '@mui/icons-material/Edit';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useContext, useEffect } from 'react';
 import { DataContextProyectos } from '../../context/context';
-import { Programa } from '../../../../recursoHidrico/PORH/Interfaces/interfaces';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { Title } from '../../../../../components/Title';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { v4 as uuidv4 } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarProyecto: React.FC = () => {
-  const columns_proyectos: GridColDef[] = [
+  const columns: GridColDef[] = [
     {
-      field: 'nombre_proyecto',
-      headerName: 'NOMBRE DEL PROYECTO',
+      field: 'nombre_plan',
+      headerName: 'Nombre del Plan',
       sortable: true,
-      width: 300,
-    },
-    {
-      field: 'numero_proyecto',
-      headerName: 'NUMERO DEL PROYECTO',
-      sortable: true,
-      width: 200,
+      width: 250,
     },
     {
       field: 'nombre_programa',
-      headerName: 'NOMBRE DEL PROGRAMA',
+      headerName: 'Nombre del Programa',
       sortable: true,
-      width: 300,
+      width: 250,
+    },
+    {
+      field: 'numero_proyecto',
+      headerName: 'Número de Proyecto',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nombre_proyecto',
+      headerName: 'Nombre del Proyecto',
+      sortable: true,
+      width: 350,
     },
     {
       field: 'pondera_1',
-      headerName: 'AÑO 1',
+      headerName: 'Ponderación 1',
       sortable: true,
-      width: 130,
+      width: 120,
     },
     {
       field: 'pondera_2',
-      headerName: 'AÑO 2',
+      headerName: 'Ponderación 2',
       sortable: true,
-      width: 130,
+      width: 120,
     },
     {
       field: 'pondera_3',
-      headerName: 'AÑO 3',
+      headerName: 'Ponderación 3',
       sortable: true,
-      width: 130,
+      width: 120,
     },
     {
       field: 'pondera_4',
-      headerName: 'AÑO 4',
+      headerName: 'Ponderación 4',
       sortable: true,
-      width: 130,
+      width: 120,
+    },
+    {
+      field: 'cumplio',
+      headerName: '¿Cumplió?',
+      sortable: true,
+      width: 120,
+      renderCell: (params) => (params.value ? 'Sí' : 'No'),
+    },
+    {
+      field: 'fecha_creacion',
+      headerName: 'Fecha de Creación',
+      sortable: true,
+      width: 180,
     },
     {
       field: 'acciones',
@@ -80,6 +97,9 @@ export const ListarProyecto: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -100,7 +120,7 @@ export const ListarProyecto: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar Proyecto"
+                titleAccess="Editar Programa"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -113,15 +133,14 @@ export const ListarProyecto: React.FC = () => {
       ),
     },
   ];
-
-  const { rows_proyecto, fetch_data_proyecto } =
-    useContext(DataContextProyectos);
-
   const {
-    programa: { id_programa },
-  } = useAppSelector((state) => state.planes);
-
-  //  console.log('')('id_programa', id_programa);
+    id_programa,
+    rows_proyecto,
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
+    fetch_data_proyecto,
+  } = useContext(DataContextProyectos);
 
   const dispatch = useAppDispatch();
 
@@ -147,14 +166,15 @@ export const ListarProyecto: React.FC = () => {
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
+        // justifyContent="flex-end"
       >
-        <Grid item xs={12}>
-          <Title title="Listado de proyectos " />
-        </Grid>
-        <>
-          <Grid item xs={12}>
-            <Box sx={{ width: '100%' }}>
-              <>
+        {rows_proyecto.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Title title="Listado de proyectos" />
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ width: '100%' }}>
                 <ButtonGroup
                   style={{
                     margin: 7,
@@ -162,29 +182,26 @@ export const ListarProyecto: React.FC = () => {
                     justifyContent: 'flex-end',
                   }}
                 >
-                  {download_xls({
-                    nurseries: rows_proyecto,
-                    columns: columns_proyectos,
-                  })}
+                  {download_xls({ nurseries: rows_proyecto, columns })}
                   {download_pdf({
                     nurseries: rows_proyecto,
-                    columns: columns_proyectos,
-                    title: 'CREAR ',
+                    columns,
+                    title: 'Listado de proyectos',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
                   rows={rows_proyecto}
-                  columns={columns_proyectos}
+                  columns={columns}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
-              </>
-            </Box>
-          </Grid>
-        </>
+              </Box>
+            </Grid>
+          </>
+        )}
         <Grid container spacing={2} justifyContent="flex-end">
           <Grid item>
             <Button

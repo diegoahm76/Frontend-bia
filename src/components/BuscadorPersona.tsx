@@ -544,8 +544,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                       {tipo_documento_av === 'NT' ? (
                         <>
                           <DataGrid
-                            rows={rows}
-                            columns={columns_juridica}
+                            rows={rows ?? []}
+                            columns={columns_juridica ?? []}
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                             getRowId={(row) => row.id_persona}
@@ -554,8 +554,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                       ) : (
                         <>
                           <DataGrid
-                            rows={rows}
-                            columns={columns}
+                            rows={rows ?? []}
+                            columns={columns ?? []}
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                             getRowId={(row) => row.id_persona}
