@@ -12,6 +12,7 @@ import { BuscadorPersona } from '../../../../ventanilla/registroPersonas/Buscado
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import { RadicadoData, ejemploData, initial_data } from '../interface/IBUsquedaAvanzadaRadicado';
+import { BuscadorPerzonasStiven } from '../../BuscadorPersonaPersonalizado/BuscadorPerzonas';
 
 
 
@@ -42,8 +43,8 @@ export const ConsultarRadicadosTable = () => {
 
     const columns = [
         { field: 'nombre_modulo', headerName: 'Nombre Módulo', flex: 1 },
-        { field: 'nombre_tipo_radicado', headerName: 'Tipo PQRSDF', flex: 1 },
-        { field: 'nombre_completo_radica', headerName: 'Titular', flex: 1 },
+        { field: 'nombre_tipo_radicado', headerName: 'Estado Solicitud', flex: 1 },
+        { field: 'nombre_completo_radica', headerName: 'Unidad Responsable', flex: 1 },
         { field: 'radicado', headerName: 'Radicado', flex: 1 },
         { field: 'prefijo_radicado', headerName: 'Prefijo Radicado', flex: 1 },
         {
@@ -101,10 +102,17 @@ export const ConsultarRadicadosTable = () => {
         choise_tipo_radicado();
     }, []);
 
-    const on_result = async (info_persona: Persona): Promise<void> => {
-        set_persona(info_persona);
-    };
 
+    const handleResult = async (persona?: Persona): Promise<void> => {
+        if (persona) {
+          // Haz lo que necesites con la información de la persona
+          set_persona(persona);
+         
+        } else {
+          // Manejar el caso en el que la persona es undefined
+          console.log("No se seleccionó ninguna persona.");
+        }
+      };
 
     return (
         <>
@@ -221,12 +229,9 @@ export const ConsultarRadicadosTable = () => {
                 )}
 
                 <Grid item xs={9} style={{ marginTop: 0 }}>
-                    <BuscadorPersona
-                        onResult={(data) => {
-                            void on_result(data);
-                        }}
-                    />
-                </Grid>
+  
+                <BuscadorPerzonasStiven onResultt={handleResult} />
+                  </Grid>
 
                 <Grid container spacing={2} justifyContent="flex-end">
                     <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
