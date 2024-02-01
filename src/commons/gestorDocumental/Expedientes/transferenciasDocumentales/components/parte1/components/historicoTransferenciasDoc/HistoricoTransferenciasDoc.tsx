@@ -31,6 +31,10 @@ export const HistoricoTransferenciasDoc = ({
     ModalAndLoadingContext
   );
 
+  const onSubmit = () => {
+    console.log(watchHistorialTransferenciasExe);
+  }
+
   return (
     <>
       <Grid
@@ -144,48 +148,7 @@ export const HistoricoTransferenciasDoc = ({
                 />
               </Grid>
 
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  zIndex: 20,
-                }}
-              >
-                <Controller
-                  //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
-                  name="unidad_que_transfirio"
-                  control={controlHistorialTransferencias}
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value } }) => (
-                    <div>
-                      <Select
-                        required
-                        value={value}
-                        onChange={(selectedOption) => {
-                          //  console.log('')(selectedOption);
-                          onChange(selectedOption);
-                        }}
-                        options={[] as any[]}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Unidad organizacional que transfirió
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid>
+             
             </Grid>
 
             <Stack
