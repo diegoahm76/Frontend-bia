@@ -52,6 +52,14 @@ export const columnsOpas = [
     },
   },
   {
+    headerName : "Nombre de la OPA",
+    field: "nombre_opa",
+    minWidth: 500,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'Opa desconocida';
+    }
+  },
+  {
     headerName: 'Asunto',
     field: 'asunto',
     minWidth: 450,
