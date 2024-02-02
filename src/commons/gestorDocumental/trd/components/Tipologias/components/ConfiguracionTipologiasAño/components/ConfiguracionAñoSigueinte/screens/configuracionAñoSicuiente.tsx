@@ -8,32 +8,23 @@ import { control_error, control_success } from "../../../../../../../../../../he
 import SaveIcon from "@mui/icons-material/Save";
 import { useSelector } from "react-redux";
 import { AuthSlice } from "../../../../../../../../../auth/interfaces/authModels";
+import { BotonInfo } from "../utils/BotonInfo";
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { useNavigate } from "react-router-dom";
 
 export const AñoConfiguracionAñoSiguiente = () => {
+
+
+    const navigate = useNavigate();
+
     const [tipologia_documental, setTipologiaDocumental] = useState<any>(null);
     const { userinfo: { id_persona } } = useSelector((state: AuthSlice) => state.auth);
 
     const initialFormValues = {
-        id_tipologia_documental: "8",
-        id_unidad_organizacional: "820",
+        id_tipologia_documental: "",
     };
 
     const [Formulario_Empresa, setFormularioEmpresa] = useState(initialFormValues);
-    const [persona, set_persona] = useState<Persona | undefined>();
-
-
-    // const {
-    //     id_persona,
-    //     primer_nombre,
-    //     segundo_nombre,
-    //     primer_apellido,
-    //     segundo_apellido,
-    // } = persona ?? {};
-    // const nombre_completo = `${primer_nombre ?? ''} ${segundo_nombre ?? ''} ${primer_apellido ?? ''} ${segundo_apellido ?? ''}`;
-    // const nombre = nombre_completo ?? '';
-
-
-
 
 
     const handleCompletarDatos = (field: string, value: string) => {
@@ -64,13 +55,11 @@ export const AñoConfiguracionAñoSiguiente = () => {
             const url = '/gestor/trd/configuracion-tipologia/administrador-numeros-tipologias/';
             const requestBody = {
                 id_tipologia_documental: +Formulario_Empresa.id_tipologia_documental,
-                id_unidad_organizacional: +Formulario_Empresa.id_unidad_organizacional,
-                id_persona: id_persona,  // Ajusta según tu sistema
                 fecha_actual: getCurrentDate(),  // Obtiene la fecha actual en formato YYYY-MM-DD
             };
 
             const response = await api.post(url, requestBody);
-        control_success(response.data.detail);  // Puedes manejar la respuesta según tus necesidades
+            control_success(response.data.detail);  // Puedes manejar la respuesta según tus necesidades
         } catch (error: any) {
             control_error(error.response.data.detail);  // Ajusta según la estructura del error
         }
@@ -80,9 +69,6 @@ export const AñoConfiguracionAñoSiguiente = () => {
 
 
 
-    // const on_result = async (info_persona: Persona): Promise<void> => {
-    //     set_persona(info_persona);
-    // };
 
 
     useEffect(() => {
@@ -107,21 +93,20 @@ export const AñoConfiguracionAñoSiguiente = () => {
                 }}
             >
                 <Grid item xs={12}>
-                    <Title title="Configuracion de Tipologias" />
+                    <Title title="Configuracion de Tipologias para Año Siguiente" />
                 </Grid>
 
 
-                {/* <Grid item xs={9} style={{ marginTop: 0 }}>
-                    <BuscadorPersona
-                        onResult={(data) => {
-                            void on_result(data);
-                        }}
-                    />
-                </Grid> */}
+                <Grid item xs={12}>
+                    <Grid container justifyContent="flex-end" alignItems="center">
+                        <Grid item xs={1} >
 
-
+                            <BotonInfo />
+                        </Grid>
+                    </Grid>
+                </Grid>
                 <Grid item container spacing={1} style={{ margin: 1 }}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={7}>
                         <FormControl fullWidth>
                             <InputLabel id="choise-label">Selecciona tipología documental</InputLabel>
                             <Select
@@ -141,19 +126,9 @@ export const AñoConfiguracionAñoSiguiente = () => {
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={3}>
-                        <TextField
-                            variant="outlined"
-                            size="medium"
-                            fullWidth
-                            label="id_unidad_organizacional"
-                            value={Formulario_Empresa.id_unidad_organizacional}
-                            onChange={(e) => handleCompletarDatos("id_unidad_organizacional", e.target.value)}
-                            style={{ marginTop: 15, width: '90%' }}
-                        />
-                    </Grid>
 
-                <Grid item xs={12} sm={3}>
+
+                    <Grid item xs={12} sm={5}>
                         <TextField
                             variant="outlined"
                             size="medium"
@@ -161,23 +136,46 @@ export const AñoConfiguracionAñoSiguiente = () => {
                             disabled
                             label="Fecha Actual"
                             value={getCurrentDate()}
-                            style={{ marginTop: 15, width: '90%' }}
+                            style={{ marginTop: 15, width: '95%' }}
                         />
                     </Grid>
-           
 
-                <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-                    <Button
-                        startIcon={<SaveIcon />}
-                        style={{ width: "90%", marginTop: 15 }}
-                        color="success" // Cambia el color según si es una actualización o creación
-                        fullWidth
-                        variant="contained"
-                        onClick={handlePostRequest} >
-                        Guardar Configuración
-                    </Button>
+
+
+                    <Grid container justifyContent="flex-end" alignItems="center">
+
+                        <Grid item xs={12} sm={5} md={3.5}>
+                            <Button
+                                style={{ marginTop: 25 }}
+                                color="error"
+                                variant="contained"
+                                startIcon={<ArrowOutwardIcon />}
+                                onClick={() => {
+                                    navigate(
+                                        "/app/gestor_documental/configuracion_datos_basicos/configuracion/tipologuia_actual"
+                                    );
+                                }}
+                            >
+                                Configuracion de Tipologias   Año Actual
+                            </Button>
+                        </Grid>
+
+
+
+                        <Grid item xs={12} sm={4} md={2.4} >
+                            <Button
+                                startIcon={<SaveIcon />}
+                                style={{ width: "90%", marginTop: 25 }}
+                                color="success" // Cambia el color según si es una actualización o creación
+                                fullWidth
+                                variant="contained"
+                                onClick={handlePostRequest} >
+                                Guardar Configuración
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Grid>
-            </Grid>                </Grid>
+            </Grid>
 
         </>
     );

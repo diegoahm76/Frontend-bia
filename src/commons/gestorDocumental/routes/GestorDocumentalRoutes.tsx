@@ -48,6 +48,7 @@ import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/Cons
 import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
 import { Radicado_Email_Routes } from '../radicadoEmail/routes/RadicadoEmail';
 import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
+import { RutasCentralDigitalizacionOtros } from '../centraldigitalizacionOtros/routes/RutasCentralDigitalizacionOtros';
  
 const routes = [
   {
@@ -267,6 +268,11 @@ const routes = [
     name: 'Eliminacion_Documental',
     component: () => <DeleteDocumental_Routes />,
   },
+  {
+    path: 'central_digitalizacion_otros/',
+    name: 'central_digitalizacion_otros',
+    component: () => <RutasCentralDigitalizacionOtros />,
+  }
 
 ];
 
