@@ -52,7 +52,6 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
     }, []);
     // const [selectedEncuestaId, setSelectedEncuestaId] = useState<number | null>(null); // Estado para almacenar el ID seleccionado
     const columns = [
-        // { field: "id_encabezado_encuesta", headerName: "ID", width: 100 },
         { field: "nombre_encuesta", headerName: "Nombre de encuesta", width: 300, flex: 1, },
         {
             field: "fecha_creacion", headerName: "Fecha creación", width: 300, flex: 1, valueFormatter: (params: { value: string | number | Date; }) => {
@@ -102,8 +101,7 @@ export const TablaEncuesta: React.FC<IProps> = ({ handleClear, setSelectedEncues
                 <TextField
                     variant="outlined"
                     size="small"
-                    label="Buscar"
-
+                    label="Buscar" 
                     fullWidth
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
