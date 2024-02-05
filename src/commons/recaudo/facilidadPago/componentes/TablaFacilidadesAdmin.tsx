@@ -16,6 +16,7 @@ import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { PlanPago } from './PlanPago';
+import { Documento } from './Documento';
 
 interface RootStateFacilidades {
   facilidades: {
@@ -43,7 +44,13 @@ export const TablaFacilidadesAdmin: React.FC = () => {
 
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
   const handle_open_buscar = (): void => {
-      set_is_buscar(true);
+    set_is_buscar(true);
+  };
+
+  const [is_modal_active_doc, set_doc] = useState<boolean>(false);
+
+  const handle_open_documento = (): void => {
+    set_doc(true);
   };
   const handle_open = (): void => { set_modal(true) };
   const handle_close = (): void => { set_modal(false) };
@@ -142,16 +149,22 @@ export const TablaFacilidadesAdmin: React.FC = () => {
             </Tooltip>
 
             {params.row.tiene_plan_pago && (
-         <IconButton  onClick={() => {
-           setIdFacilidadSeleccionada(params.row.id_facilidad);
-          handle_open_buscar();
-        }}>
-          <VisibilityIcon/>
-        </IconButton>
-        )}
+              <IconButton onClick={() => {
+                setIdFacilidadSeleccionada(params.row.id_facilidad);
+                handle_open_buscar();
+              }}>
+                <VisibilityIcon />
+              </IconButton>
+            )}
+
+            <IconButton onClick={() => {
+handle_open_documento()
+            }}>
+              documento
+            </IconButton>
           </>
         )
-        
+
       },
     },
     {
@@ -234,7 +247,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
     }
     set_visible_rows(filteredData);
   };
-  
+
   return (
     <Box sx={{ width: '100%' }}>
       <Stack
@@ -243,8 +256,19 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         spacing={2}
         sx={{ mb: '20px' }}
       >
-        <PlanPago  idFacilidadSeleccionada ={idFacilidadSeleccionada }is_modal_active={is_modal_active}
-                set_is_modal_active={set_is_buscar} />
+        <Documento
+          idFacilidadSeleccionada={idFacilidadSeleccionada}
+          is_modal_active_doc={is_modal_active_doc}
+          set_doc={set_doc}
+        />
+
+
+        <PlanPago
+          idFacilidadSeleccionada={idFacilidadSeleccionada}
+          is_modal_active={is_modal_active}
+          set_is_modal_active={set_is_buscar}
+        />
+
         <Grid item xs={12} sm={3}>
           <TextField
             value={search}
@@ -264,9 +288,9 @@ export const TablaFacilidadesAdmin: React.FC = () => {
             fullWidth
             size="small"
           />
-          </Grid>
-        <Grid item    xs={12} sm={2}>
-          <Button variant="contained" color="primary"  fullWidth startIcon={<SearchOutlined />} onClick={handleSearch}>
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Button variant="contained" color="primary" fullWidth startIcon={<SearchOutlined />} onClick={handleSearch}>
             Buscar
           </Button>
         </Grid>
@@ -311,30 +335,30 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         >
           Buscar
         </Button> */}
-        <Grid item    xs={12} sm={2}>
-           <Button
-          color='primary'
-          fullWidth
-          variant='outlined'
-          startIcon={<FilterAltOffOutlined />}
-          onClick={() => {
-            try {
-              void dispatch(get_facilidades_ingresadas());
-            } catch (error: any) {
-              throw new Error(error);
-            }
-          }}
-        >
-          Mostrar Todo
-        </Button>
+        <Grid item xs={12} sm={2}>
+          <Button
+            color='primary'
+            fullWidth
+            variant='outlined'
+            startIcon={<FilterAltOffOutlined />}
+            onClick={() => {
+              try {
+                void dispatch(get_facilidades_ingresadas());
+              } catch (error: any) {
+                throw new Error(error);
+              }
+            }}
+          >
+            Mostrar Todo
+          </Button>
         </Grid>
-       
+
       </Stack>
       {
         visible_rows.length !== 0 ? (
           <Grid
             container
-          
+
           >
             <Grid item xs={12}>
               <Grid item>

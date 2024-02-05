@@ -89,15 +89,7 @@ export const HistoricoFacturacion: React.FC = () => {
             width: 180,
             flex: 1,
             valueGetter: (params: any) => (params.row.ruta_archivo.formato),
-        },
-        // {
-        //     field: 'fecha_creacion_doc',
-        //     headerName: 'Fecha Creación',
-        //     width: 130,
-        //     flex: 1,
-        //     valueGetter: (params) => formatDateTime(params.row.ruta_archivo.fecha_creacion_doc),
-        // }
-
+        }, 
         {
             field: 'ruta_archivo',
             headerName: 'Archivo',
