@@ -268,8 +268,9 @@ export const LoginForm: React.FC = () => {
             >
               <i>
                 Si tiene algún reclamo o solicitud, ingrese a{' '}
-                <a href="#">PQR en línea</a> Número de atención: Linea nacional
-                01-8000-51847095 Email: <a href="#">pqrds@cormacarena.gov.co</a>
+                <a href={`#/auth/crear_pqrsdf`}>PQR en línea</a> Número de
+                atención: Linea nacional 01-8000-51847095 Email:{' '}
+                <a href="#">pqrds@cormacarena.gov.co</a>
               </i>
             </Typography>
           </Grid>

@@ -156,6 +156,27 @@ export const get_digitalization_requests_service = (params: any): any => {
   };
 };
 
+export const get_digitalization_responses_service = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/central-digitalizacion/get-solicitudes-respondidas/`,
+        { params }
+      );
+      console.log(data);
+      if (data.success) {
+        dispatch(set_digitization_requests(data.data));
+        control_success(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      //  console.log('')('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // obtener personas filtro
 export const get_digitalization_request_id_service = (id: any): any => {
   return async (dispatch: Dispatch<any>) => {

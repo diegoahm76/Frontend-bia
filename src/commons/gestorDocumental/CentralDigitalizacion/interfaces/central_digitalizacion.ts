@@ -9,7 +9,7 @@ export interface ICentralDigitization {
   digitization_requests: IObjDigitizationRequest[];
   digitization_request: IObjDigitizationRequest;
   storage_mediums: IObjListType[];
-
+  edit_digitization: boolean;
 
   exhibits: IObjExhibit[];
   exhibit: IObjExhibit;
@@ -57,6 +57,8 @@ export interface IObjDigitizationRequest{
   pqr?: IObjPqr;
   complemento_pqr?: IObjPqrRequest;
 }
+
+
 
 export interface IObjPerson {
   id_persona?: number | null;
