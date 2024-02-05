@@ -7,27 +7,27 @@ import React from "react";
 import { useState } from "react";
 import Step from '@mui/material/Step';
 import Stack from '@mui/material/Stack';
-import { VerMensaje } from "./VerMensaje";
 import Stepper from '@mui/material/Stepper';
 import { Button, Grid } from "@mui/material";
-import { BandejaEmail } from "./BandejaEmail";
 import Check from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
 import { Title } from "../../../../components";
 import StepLabel from '@mui/material/StepLabel';
+import MailIcon from '@mui/icons-material/Mail';
+import SendIcon from '@mui/icons-material/Send';
+import InboxIcon from '@mui/icons-material/Inbox';
+import ArchiveIcon from '@mui/icons-material/Archive';
 import { StepIconProps } from '@mui/material/StepIcon';
-import SettingsIcon from '@mui/icons-material/Settings';
+// import SettingsIcon from '@mui/icons-material/Settings';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { miEstilo } from "../../Encuesta/interfaces/types";
 import VideoLabelIcon from '@mui/icons-material/VideoLabel';
-import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
-import InboxIcon from '@mui/icons-material/Inbox';
-import MailIcon from '@mui/icons-material/Mail';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import SendIcon from '@mui/icons-material/Send';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import { Radicacion } from "./Radicacion";
-
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import { Creacion } from "./Creacion";
+import { HistoricoConsecutivo } from "./HistoricoConsecutivo";
+import SettingsIcon from '@mui/icons-material/Settings';
+import HistoryIcon from '@mui/icons-material/History';
 
 
 interface Email {
@@ -109,18 +109,18 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
         top: 22,
     },
-    [`&.${stepConnectorClasses.active}`]: {
-        [`& .${stepConnectorClasses.line}`]: {
-            backgroundImage:
-                'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-        },
-    },
-    [`&.${stepConnectorClasses.completed}`]: {
-        [`& .${stepConnectorClasses.line}`]: {
-            backgroundImage:
-                'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
-        },
-    },
+    // [`&.${stepConnectorClasses.active}`]: {
+    //     [`& .${stepConnectorClasses.line}`]: {
+    //         backgroundImage:
+    //             'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+    //     },
+    // },
+    // [`&.${stepConnectorClasses.completed}`]: {
+    //     [`& .${stepConnectorClasses.line}`]: {
+    //         backgroundImage:
+    //             'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+    //     },
+    // },
     [`& .${stepConnectorClasses.line}`]: {
         height: 3,
         border: 0,
@@ -157,9 +157,8 @@ function ColorlibStepIcon(props: StepIconProps) {
     const { active, completed, className } = props;
 
     const icons: { [index: string]: React.ReactElement } = {
-        1: <MailIcon />,
-        2: <AttachFileIcon />,
-        3: <SendIcon />,
+        1: <SettingsIcon  />,
+        2: <HistoryIcon  />,
     };
 
     return (
@@ -168,23 +167,19 @@ function ColorlibStepIcon(props: StepIconProps) {
         </ColorlibStepIconRoot>
     );
 }
-const steps = ['Buzón de Email    ', 'Adjuntos    ', 'Radicar correo'];
+const steps = ['Configuración  de consecutivos', 'Histórico de consecutivos',];
 
 
-export const Email: React.FC = () => {
+export const ConsecutivoConfiguracion: React.FC = () => {
+    
     const [activeStep, setActiveStep] = useState(0);
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
-    const handleEnd = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 2);
-    };
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
-    const handleExit = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 2);
-    };
+   
 
     const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
 
@@ -194,36 +189,19 @@ export const Email: React.FC = () => {
         switch (step) {
             case 0:
                 return <>
-                    <BandejaEmail
-                        steps={steps}
-                        handleEnd={handleEnd}
-                        handleNext={handleNext}
-                        handleBack={handleBack}
-                        activeStep={activeStep}
-                        selectedEmail={selectedEmail}
-                        setSelectedEmail={setSelectedEmail}
-                    />
+                    <Creacion />
                 </>
                     ;
             case 1:
                 return <>
-                    <VerMensaje
-                        steps={steps}
-                        activeStep={activeStep}
-                        handleBack={handleBack}
-                        handleNext={handleNext}
-                        selectedEmail={selectedEmail}
-                        setSelectedEmail={setSelectedEmail}
 
-                    />
-
+                    <HistoricoConsecutivo />
                 </>;
-            default:
-                return <Radicacion
-                    activeStep={activeStep}
-                    handleBack={handleBack}
-                    handleExit={handleExit}
-                />;
+
+                return <>
+                    3
+                </>
+                    ;
         }
     };
     return (
@@ -232,10 +210,12 @@ export const Email: React.FC = () => {
                 item xs={12} marginLeft={2} marginRight={2} marginTop={3} spacing={2}
                 sx={miEstilo}
             >
-                <Title title="Radicación de Email    " />
+                <Title title=" Configuracion de consecutivos" />
                 <Grid item xs={12} sm={12} marginTop={3}>
                     <Stack sx={{ width: '100%' }} spacing={4}>
-                        <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
+                        <Stepper alternativeLabel activeStep={activeStep} 
+                        connector={<ColorlibConnector />}
+                        >
                             {steps.map((label) => (
                                 <Step key={label}>
                                     <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
@@ -248,7 +228,7 @@ export const Email: React.FC = () => {
 
             {getMessage(activeStep)}
 
-            {/* <Grid container
+            <Grid container
                 spacing={2} m={2} p={2}
                 sx={miEstilo}
             >
@@ -265,7 +245,7 @@ export const Email: React.FC = () => {
 
                 </Grid>
 
-            </Grid> */}
+            </Grid>
 
         </>
     );
