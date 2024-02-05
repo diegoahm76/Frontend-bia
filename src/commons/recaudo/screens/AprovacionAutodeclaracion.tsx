@@ -71,13 +71,13 @@ export const AprovacionAutodeclaracion: React.FC = () => {
             flex: 1,
             valueGetter: (params: any) => formatDate(params.row.ruta_archivo.fecha_creacion_doc),
         },
-        {
-            field: 'formato',
-            headerName: 'Formato',
-            width: 180,
-            flex: 1,
-            valueGetter: (params: any) => (params.row.ruta_archivo.formato),
-        },
+        // {
+        //     field: 'formato',
+        //     headerName: 'Formato',
+        //     width: 180,
+        //     flex: 1,
+        //     valueGetter: (params: any) => (params.row.ruta_archivo.formato),
+        // },
         {
             field: 'acciones',
             headerName: 'Acciones',

@@ -459,6 +459,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
 
   const [lider, set_lider] = useState<UnidadOrganizacional[]>([]);
+  
   useEffect(() => {
     const fetch_perfil = async (): Promise<void> => {
       try {

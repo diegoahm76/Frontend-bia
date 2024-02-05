@@ -70,7 +70,7 @@ export const Asignaciones = (): JSX.Element => {
             color="primary"
             // endIcon={<RemoveDoneIcon />}
           >
-            {`La solicitud de OPA ha sido asignada al lider de la unidad ${
+            {`La solicitud de OPA ha sido asignada automáticamente por el sistema al lider de la unidad ${
               listaAsignaciones.find(
                 (el: { estado_asignado: string }) =>
                   el.estado_asignado === 'RECHAZADA'

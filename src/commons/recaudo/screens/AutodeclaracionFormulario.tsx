@@ -22,20 +22,20 @@ import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChang
 import IconButton from '@mui/material/IconButton';
 
 interface FuenteAbastecimiento {
-    tipo: string | null;
-    numero: number | null;
-    nombreFuente: string | null;
-    caudalConcesionado: string | null;
-    sistemaMedicionAguaCaptada: string | null;
-    cordenadaX: number | null;
-    cordenadaY: number | null;
+    tipo: string | any;
+    numero: number | any;
+    nombreFuente: string | any;
+    caudalConcesionado: string | any;
+    sistemaMedicionAguaCaptada: string | any;
+    cordenadaX: number | any;
+    cordenadaY: number | any;
 }
 
 interface CoordenadasSitioCaptacion {
     cordenadaX: number | null;
     cordenadaY: number | null;
 }
-
+ 
 interface FactoresUtilizacion {
     numeroBovinos: number | null;
     numeroPorcinos: number | null;
@@ -51,11 +51,11 @@ interface Campo {
     valor: any;  // 'any' se usa aquí para permitir cualquier tipo, puedes ajustarlo según tus necesidades
 }
 interface CaptacionMensualAgua {
-    mes: number | null;
-    tiempoUso: number | null;
-    periodoUso: string | null;
-    caudalUtilizado: number | null;
-    volumenAguaCaptada: number | null;
+    mes: number | any;
+    tiempoUso: number | any;
+    periodoUso: string | any;
+    caudalUtilizado: number | any;
+    volumenAguaCaptada: number | any;
 }
 
 interface FormData {
@@ -137,6 +137,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
         const { name, value } = target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
+
+
+
     const set_value_direction = (direccion_notificacion: any): void => {
         setdireccion_generadaa(direccion_notificacion);
         set_direccion_generada_activaa(true);
@@ -181,11 +184,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
     };
 
     const [currentCaptacion, setCurrentCaptacion] = useState({
-        periodoUso: null,
-        tiempoUso: null,
-        caudalUtilizado: null,
-        volumenAguaCaptada: null,
-        mes: null
+        periodoUso: "",
+        tiempoUso: "",
+        caudalUtilizado: "",
+        volumenAguaCaptada: "",
+        mes: ""
     });
 
     const handleCurrentCaptacionChange = (event: { target: { name: any; value: any; }; }) => {
@@ -244,11 +247,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
             // Reiniciar el estado de currentCaptacion
             setCurrentCaptacion({
-                periodoUso: null,
-                caudalUtilizado: null,
-                tiempoUso: null,
-                volumenAguaCaptada: null,
-                mes: null
+                periodoUso: "",
+                caudalUtilizado: "",
+                tiempoUso: "",
+                volumenAguaCaptada: "",
+                mes: ""
             });
         }
     };
@@ -284,13 +287,13 @@ export const AutodeclaracionFormulario: React.FC = () => {
     //fuente 
 
     const [currentFuente, setCurrentFuente] = useState({
-        numero: null,
+        numero: "",
         tipo: "",
         nombreFuente: "",
         caudalConcesionado: "",
         sistemaMedicionAguaCaptada: "",
-        cordenadaX: null,
-        cordenadaY: null,
+        cordenadaX: "",
+        cordenadaY: "",
     });
     const handleCurrentFuenteChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;
@@ -328,13 +331,13 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
         }));
         setCurrentFuente({
-            numero: null,
+            numero: "",
             tipo: "",
             nombreFuente: "",
             caudalConcesionado: "",
             sistemaMedicionAguaCaptada: "",
-            cordenadaX: null,
-            cordenadaY: null,
+            cordenadaX: "",
+            cordenadaY: "",
 
         });
     };
@@ -349,6 +352,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
         { field: 'tipo', headerName: 'Tipo', width: 220 },
         { field: 'nombreFuente', headerName: 'Nombre de la Fuente', width: 220 },
         { field: 'caudalConcesionado', headerName: 'Caudal Concesionado', width: 220 },
+        { field: 'cordenadaX', headerName: 'CordenadaX  ', width: 220 },
+        { field: 'cordenadaY', headerName: 'CordenadaY', width: 220 },
+
         { field: 'sistemaMedicionAguaCaptada', headerName: 'Sistema de Medición', width: 220 },
         {
             field: 'acciones',

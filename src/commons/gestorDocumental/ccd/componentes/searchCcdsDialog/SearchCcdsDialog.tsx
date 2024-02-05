@@ -42,7 +42,6 @@ import { download_xls } from '../../../../../documentos-descargar/XLS_descargar'
 const SearchCcdModal = ({
   is_modal_active,
   set_is_modal_active,
-  title
 }: IProps) => {
   const dispatch = useAppDispatch();
   const {
@@ -55,13 +54,10 @@ const SearchCcdModal = ({
   const { ccds } = useAppSelector((state) => state.ccd);
 
   // Hooks
-  const { clean_ccd } = use_ccd() as any;
 
   const {
     control: control_search_ccd,
-    handleSubmit,
     formState: { errors },
-    watch,
     reset: reset_search_ccd
   } = useForm({
     defaultValues: {
@@ -133,9 +129,6 @@ const SearchCcdModal = ({
                   )
                 );
                 openModalBusquedaCreacionCCD();
-                // dispatch(get_assignments_service(params.row.id_ccd));
-                // //  console.log('')('params para ver ccd en el icono del ojito', params);
-                // dispatch(get_ccd_current(params.row.id_ccd));
                 set_is_modal_active(false);
               }}
             >
@@ -198,7 +191,7 @@ const SearchCcdModal = ({
   return (
     <Dialog
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
       open={is_modal_active}
       onClose={() => {
         set_is_modal_active(false);

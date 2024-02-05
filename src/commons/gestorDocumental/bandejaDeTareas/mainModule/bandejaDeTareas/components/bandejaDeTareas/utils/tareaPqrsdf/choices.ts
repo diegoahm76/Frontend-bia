@@ -5,6 +5,6 @@
 export const choicesTipoDeTarea = [
   { value: 'Rpqr', label: 'Responder PQRSDF', idTipoSolicitud: 1 },
   { value: 'Rtra', label: 'Responder Trámite', idTipoSolicitud: 2 },
-  /*  { value: 'Otros', label: 'Otros', idTipoSolicitud: 3 },
-  { value:  'OPAS', label: 'OPAS', idTipoSolicitud: 4 },*/
+  { value: 'ROtros', label: 'Responder Otro', idTipoSolicitud: 3 },
+  { value: 'ROpas', label: 'Responder OPA', idTipoSolicitud: 4 },
 ];
