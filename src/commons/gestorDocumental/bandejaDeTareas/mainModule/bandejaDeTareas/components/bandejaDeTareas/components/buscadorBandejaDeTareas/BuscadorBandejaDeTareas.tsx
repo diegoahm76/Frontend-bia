@@ -79,7 +79,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     }
   };
 
-  const searchTramitesYservicios = () => {
+  const searchTramitesYservicios = async () => {
     try {
       console.log('submit , buscando coincidencias de tramites y servicios');
       showAlert(

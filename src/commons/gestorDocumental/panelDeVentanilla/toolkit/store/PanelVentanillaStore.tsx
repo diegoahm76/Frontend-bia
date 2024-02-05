@@ -63,8 +63,8 @@ const actionsTramitesYServicios: any[] = [
   {
     id: 'AsigGrup',
     icon: <GroupsIcon />,
-    name: 'Asignar al grupo y generación de expediente',
-    path: '', // pendiente por definir
+    name: 'Asignar a unidad organizacional  y generación de expediente',
+    path: '/app/gestor_documental/panel_ventanilla/asignar_tramite_a_unidad',
     disabled: false,
   },
   {
