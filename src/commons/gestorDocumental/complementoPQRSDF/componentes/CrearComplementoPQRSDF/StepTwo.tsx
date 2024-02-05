@@ -40,6 +40,7 @@ interface IProps {
 const StepTwo = ({ control_form, reset, watch }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const { complement_pqr, media_types } = useAppSelector(
     (state) => state.complemento_pqrsdf_slice
   );
@@ -48,7 +49,7 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
     reset({
       ...complement_pqr,
       id_medio_solicitud_comple:
-        userinfo.tipo_usuario === 'E'
+        representacion_legal.tipo_sesion === 'E'
           ? 2
           : complement_pqr.id_medio_solicitud_comple,
     });
@@ -58,7 +59,7 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
     reset({
       ...complement_pqr,
       id_medio_solicitud_comple:
-        userinfo.tipo_usuario === 'E'
+        representacion_legal.tipo_sesion === 'E'
           ? 2
           : complement_pqr.id_medio_solicitud_comple,
     });
@@ -101,7 +102,7 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
               label: 'Medio de solicitud',
               disabled:
                 complement_pqr.id_radicado !== null ||
-                userinfo.tipo_usuario == 'E',
+                representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',

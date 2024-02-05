@@ -46,6 +46,7 @@ interface IProps {
 const StepThree = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const { exhibits, metadata, exhibit, storage_mediums, type_applicant } =
     useAppSelector((state) => state.complemento_pqrsdf_slice);
   const { file_fisico } = useAppSelector((state) => state.pqrsdf_slice);
@@ -95,7 +96,9 @@ const StepThree = () => {
     reset({
       ...exhibit,
       cod_medio_almacenamiento:
-        userinfo.tipo_usuario === 'E' ? 'Na' : exhibit.cod_medio_almacenamiento,
+        representacion_legal.tipo_sesion === 'E'
+          ? 'Na'
+          : exhibit.cod_medio_almacenamiento,
     });
     if ((exhibit.id_anexo ?? null) !== null) {
       if (exhibit.exhibit_link !== null && exhibit.exhibit_link !== undefined) {
@@ -471,7 +474,7 @@ const StepThree = () => {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: userinfo.tipo_usuario === 'E',
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
@@ -522,7 +525,7 @@ const StepThree = () => {
               variant_button: 'contained',
               on_click_function: add_metadata_form,
               color_button: 'warning',
-              hidden_text: userinfo.tipo_usuario === 'E',
+              hidden_text: representacion_legal.tipo_sesion === 'E',
             },
           ]}
         />

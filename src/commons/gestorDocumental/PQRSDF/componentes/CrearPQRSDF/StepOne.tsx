@@ -31,6 +31,7 @@ interface IProps {
 const StepOne = ({ control_form, reset }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const {
     presentation_types,
     pqr_types,
@@ -56,9 +57,11 @@ const StepOne = ({ control_form, reset }: IProps) => {
     reset({
       ...pqr,
       cod_forma_presentacion:
-        userinfo.tipo_usuario === 'E' ? 'E' : pqr.cod_forma_presentacion,
+        representacion_legal.tipo_sesion === 'E'
+          ? 'E'
+          : pqr.cod_forma_presentacion,
       id_medio_solicitud:
-        userinfo.tipo_usuario === 'E' ? 2 : pqr.id_medio_solicitud,
+        representacion_legal.tipo_sesion === 'E' ? 2 : pqr.id_medio_solicitud,
     });
   }, []);
 
@@ -145,7 +148,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Forma de presentación',
-              disabled: userinfo.tipo_usuario === 'E',
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: presentation_types,
               option_label: 'label',
@@ -160,7 +163,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Medio de solicitud',
-              disabled: userinfo.tipo_usuario === 'E',
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',

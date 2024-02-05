@@ -117,7 +117,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       };
       void dispatch(get_pqrsdf_id_service(params));
     }
-    if (userinfo.tipo_usuario === 'E') {
+    if (representacion_legal.tipo_sesion === 'E') {
       dispatch(
         set_type_applicant({
           id: 'T',
@@ -305,7 +305,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
     reset_complemento({
       ...complement_pqr,
       id_medio_solicitud_comple:
-        userinfo.tipo_usuario === 'E'
+        representacion_legal.tipo_sesion === 'E'
           ? 2
           : complement_pqr.id_medio_solicitud_comple,
     });
@@ -413,7 +413,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
         });
         form_data.append(
           'isCreateForWeb',
-          userinfo.tipo_usuario === 'E' ? 'True' : 'False'
+          representacion_legal.tipo_sesion === 'E' ? 'True' : 'False'
         );
 
         void dispatch(
@@ -493,7 +493,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       form_data.append('id_persona_guarda', userinfo.id_persona);
       form_data.append(
         'isCreateForWeb',
-        userinfo.tipo_usuario === 'E' ? 'True' : 'False'
+        representacion_legal.tipo_sesion === 'E' ? 'True' : 'False'
       );
 
       void dispatch(

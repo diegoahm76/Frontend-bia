@@ -62,7 +62,7 @@ export function SolicitudPqrsdfScreen(): JSX.Element {
     dispatch(get_list_applicant_types_service());
     dispatch(get_list_on_behalf_service());
     dispatch(get_pqrs_status_aux_service());
-    if (userinfo.tipo_usuario === 'E') {
+    if (representacion_legal.tipo_sesion === 'E') {
       dispatch(
         set_type_applicant({
           id: 'T',

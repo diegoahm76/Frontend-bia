@@ -34,6 +34,7 @@ import {
 const TipoPoderdante = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const {
     control: control_tipo_poderdante,
     reset: reset_poderdante,
@@ -72,7 +73,7 @@ const TipoPoderdante = () => {
   }, []);
   useEffect(() => {
     reset_poderdante(grantor);
-    if (userinfo.tipo_usuario == 'E') {
+    if (representacion_legal.tipo_sesion === 'E') {
       void dispatch(
         get_attorney_document_service(
           userinfo.tipo_documento ?? '',
@@ -199,8 +200,8 @@ const TipoPoderdante = () => {
           set_models={set_grantors}
           reset_values={reset_poderdante}
           button_submit_label="BUSCAR"
-          button_submit_disabled={userinfo.tipo_usuario === 'E'}
-          show_search_button={!(userinfo.tipo_usuario === 'E')}
+          button_submit_disabled={representacion_legal.tipo_sesion === 'E'}
+          show_search_button={!(representacion_legal.tipo_sesion === 'E')}
           form_inputs={[
             {
               datum_type: 'title',
@@ -215,7 +216,7 @@ const TipoPoderdante = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
-              disabled: userinfo.tipo_usuario === 'E',
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: aux_document_types,
               option_label: 'nombre',
@@ -234,7 +235,7 @@ const TipoPoderdante = () => {
               type: 'number',
               disabled:
                 (document_type.cod_tipo_documento ?? null) === null ||
-                userinfo.tipo_usuario === 'E',
+                representacion_legal.tipo_sesion === 'E',
               helper_text: 'Digite para buscar',
               on_blur_function: search_person,
             },
@@ -342,7 +343,7 @@ const TipoPoderdante = () => {
           button_submit_label="Seleccionar apoderado"
           button_icon_class={<AdminPanelSettingsIcon />}
           button_submit_disabled={grantor.id_persona === null}
-          show_search_button={!(userinfo.tipo_usuario === 'E')}
+          show_search_button={!(representacion_legal.tipo_sesion === 'E')}
           form_inputs={[
             {
               datum_type: 'select_controller',

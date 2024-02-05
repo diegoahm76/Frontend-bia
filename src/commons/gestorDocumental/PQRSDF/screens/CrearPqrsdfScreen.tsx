@@ -143,7 +143,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         dispatch(set_exhibits([]));
         set_action('crear');
         console.log(userinfo);
-        if (userinfo.tipo_usuario === 'E') {
+        if (representacion_legal.tipo_sesion === 'E') {
           dispatch(
             set_type_applicant({
               id: 'T',
@@ -257,9 +257,13 @@ export function CrearPqrsdfScreen(): JSX.Element {
         set_pqr({
           ...pqr,
           cod_forma_presentacion:
-            userinfo.tipo_usuario === 'E' ? 'E' : pqr.cod_forma_presentacion,
+            representacion_legal.tipo_sesion === 'E'
+              ? 'E'
+              : pqr.cod_forma_presentacion,
           id_medio_solicitud:
-            userinfo.tipo_usuario === 'E' ? 2 : pqr.id_medio_solicitud,
+            representacion_legal.tipo_sesion === 'E'
+              ? 2
+              : pqr.id_medio_solicitud,
         })
       );
     }
@@ -391,9 +395,11 @@ export function CrearPqrsdfScreen(): JSX.Element {
     reset_pqrsdf({
       ...pqr,
       cod_forma_presentacion:
-        userinfo.tipo_usuario === 'E' ? 'E' : pqr.cod_forma_presentacion,
+        representacion_legal.tipo_sesion === 'E'
+          ? 'E'
+          : pqr.cod_forma_presentacion,
       id_medio_solicitud:
-        userinfo.tipo_usuario === 'E' ? 2 : pqr.id_medio_solicitud,
+        representacion_legal.tipo_sesion === 'E' ? 2 : pqr.id_medio_solicitud,
     });
     if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
       if ('anexos' in pqr) {
@@ -546,7 +552,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         });
         form_data.append(
           'isCreateForWeb',
-          userinfo.tipo_usuario === 'E' ? 'True' : 'False'
+          representacion_legal.tipo_sesion === 'E' ? 'True' : 'False'
         );
 
         void dispatch(edit_pqrsdf_service(form_data, navigate));
@@ -641,7 +647,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
       );
       form_data.append(
         'isCreateForWeb',
-        userinfo.tipo_usuario === 'E' ? 'True' : 'False'
+        representacion_legal.tipo_sesion === 'E' ? 'True' : 'False'
       );
       console.log(status);
       if (status === 'authenticated') {
