@@ -22,6 +22,7 @@ export const SuspenderAlerta: React.FC<InterfazMostarAlerta2> = ({
 }: InterfazMostarAlerta2) => {
   const alerta_inicial: AlertaBandejaAlertaPersona = {
     id_alerta_bandeja_alerta_persona: 0,
+    documento:"",
     nivel_prioridad: 0,
     tipo_alerta: '',
     fecha_hora: '',

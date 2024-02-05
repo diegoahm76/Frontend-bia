@@ -7,15 +7,16 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom"; // Asumo que estás utilizando react-router
 import { api } from "../../../../../../../../../api/axios";
 import { control_error, control_success } from "../../../../../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
-import {  TipodeCeaccionContext } from "../../context/CreacionTipologuia";
+import { TipodeCeaccionContext } from "../../context/CreacionTipologuia";
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { ConsultaAñosAnteriores } from "../ConsultaAñosAnteriores/ConsultaAñosAnteriores";
 import { Inicial_Formulario } from "../../interfaces/ConfiguracionTipologuias";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export const BotonesActionsFormulario = () => {
   const navigate = useNavigate();
 
-  const { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return ,form } = useContext(TipodeCeaccionContext);
+  const { Formulario_Empresa, Set_Formulario_Empresa, Set_Datos_Return, form } = useContext(TipodeCeaccionContext);
 
 
   const crear_configuracion_expediente = async () => {
@@ -220,7 +221,7 @@ export const BotonesActionsFormulario = () => {
     Set_Formulario_Empresa(Inicial_Formulario);
   }
 
-  const GuardarSalir=()=>{
+  const GuardarSalir = () => {
     Set_Formulario_Empresa(Inicial_Formulario);
     control_success("Configuracion Guardada correctamente");
   }
@@ -240,7 +241,23 @@ export const BotonesActionsFormulario = () => {
         boxShadow: '0px 3px 6px #042F4A26',
       }}
     >
+      <Grid item xs={12} sm={5} md={3.6} lg={2.5}>
+        <Button
+          startIcon={<SettingsIcon />}
+          fullWidth
+          style={{ width: "90%", marginTop: 15, backgroundColor: "orange" }}
+          variant="contained"
+          onClick={() => {
+            navigate(
+                "/app/gestor_documental/configuracion_datos_basicos/configuracion/tipologuia_siguiente"
+            );
+        }}
+        >
+         Configuracion para Año Siguiente
 
+
+        </Button>
+      </Grid>
 
       {/* NINGUNO A OTROS */}
 
@@ -266,9 +283,9 @@ export const BotonesActionsFormulario = () => {
           {Formulario_Empresa.actualizar === true && (
             <>
               {Formulario_Empresa.opcion_seleccionada === "Ninguno" && (
-                
-                  <Grid item xs={12} sm={5} md={3.4} lg={2.9}>
-                    {/* <Button
+
+                <Grid item xs={12} sm={5} md={3.4} lg={2.9}>
+                  {/* <Button
                       startIcon={<SaveIcon />}
                       style={{ width: "90%", marginTop: 15 }}
                       color="success" // Cambia el color según si es una actualización o creación
@@ -276,7 +293,7 @@ export const BotonesActionsFormulario = () => {
                       variant="contained"   >
                       Actualizar de ninguno solito (sin funicon)
                     </Button> */}
-                  </Grid>
+                </Grid>
               )}
 
 
@@ -457,9 +474,9 @@ export const BotonesActionsFormulario = () => {
                       style={{ width: "90%", marginTop: 15 }}
                       color="success" // Cambia el color según si es una actualización o creación
                       fullWidth
-                      variant="contained"  
+                      variant="contained"
                       onClick={GuardarSalir} >
-                      Actualizar U.Organizacional 
+                      Actualizar U.Organizacional
                     </Button>
                   </Grid>
                 </>

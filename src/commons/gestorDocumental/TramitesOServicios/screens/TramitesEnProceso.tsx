@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField, Tooltip, IconButton, Avatar, Fab, Paper } from "@mui/material";
+import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField, Tooltip, IconButton, Avatar, Fab, Paper, ButtonGroup } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -9,6 +9,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useAppDispatch } from "../../../../hooks";
 import { obtener_opas_por_titular } from "../thunks/TramitesOServicios";
 import dayjs from "dayjs";
+import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
+import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
@@ -62,7 +64,7 @@ export const TramitesEnProceso: React.FC<IProps> = (props: IProps) => {
             field: 'fecha_ini_estado_actual',
             headerName: 'Fecha inicio',
             width: 170,
-            valueGetter: (params) => dayjs(params.row.fecha_ini_estado_actual).format('DD/MM/YYYY HH:mm'), 
+            valueGetter: (params) => dayjs(params.row.fecha_ini_estado_actual).format('DD/MM/YYYY HH:mm'),
         },
         {
             field: 'estado_actual_solicitud',
@@ -80,20 +82,32 @@ export const TramitesEnProceso: React.FC<IProps> = (props: IProps) => {
         },
     ];
 
-    useEffect(()=>{
-        dispatch(obtener_opas_por_titular(props.usuario.id_persona)).then((response: any)=>{
+    useEffect(() => {
+        dispatch(obtener_opas_por_titular(props.usuario.id_persona)).then((response: any) => {
             response.success ? set_tramites_proceso(response.data) : [];
         });
-    },[])
+    }, [])
     return (
         <>
-<Grid
+            <Grid
                 container
                 sx={class_css}
             >
                 <Title title="Trámites en proceso" />
+
+                <div style={{ marginLeft: 'auto' }}>
+                    <ButtonGroup style={{ margin: 7 }}>
+                        {download_xls({ nurseries: tramites_proceso, columns })}
+                        {download_pdf({
+                            nurseries: tramites_proceso,
+                            columns,
+                            title: 'Mis alertas',
+                        })}
+                    </ButtonGroup>
+                </div>
+
                 <Grid item xs={12} sm={12} textAlign={'center'}>
-                <DataGrid
+                    <DataGrid
                         density="compact"
                         autoHeight
                         columns={columns}
@@ -101,7 +115,7 @@ export const TramitesEnProceso: React.FC<IProps> = (props: IProps) => {
                         rowsPerPageOptions={[5]}
                         rows={tramites_proceso}
                         getRowId={(row) => row.id_solicitud_tramite} />
-                    </Grid>
+                </Grid>
             </Grid>
         </>
     )
