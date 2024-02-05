@@ -99,6 +99,11 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
     get_assignments_service(ccd_current?.id_ccd)(dispatch);
   }, [ccd_current]);
 
+  useEffect(() => {
+    console.log('hello world ccd')
+    clean_ccd();
+  }, []);
+
   // Hooks
   const {
     // States
@@ -392,10 +397,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                             const files = (e.target as HTMLInputElement).files;
                             if (files && files.length > 0) {
                               const file = files[0];
-
                               controlar_tamagno_archivos(file, onChange);
-
-
                             }
                           }}
                         />

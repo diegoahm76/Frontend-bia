@@ -108,7 +108,10 @@ export const DialogEntornoApp: React.FC = () => {
             <ListItemButton
               autoFocus
               onClick={() => {
-                select_representado('');
+                select_representado({
+                  cod_relacion_con_el_titular: 'MP',
+                  tipo_sesion: 'I',
+                });
                 //* llamar el servicio para cargar el menú pero con entorno laboral
                 dispatch(get_persmisions_user(userinfo.id_usuario, 'L'));
                 dispatch(close_dialog_representado_app());
@@ -135,6 +138,7 @@ export const DialogEntornoApp: React.FC = () => {
                     onClick={() => {
                       select_representado({
                         cod_relacion_con_el_titular: option.value,
+                        tipo_sesion: 'E',
                       });
                       dispatch(close_dialog_representado_app());
                       dispatch(get_persmisions_user(userinfo.id_usuario, 'C'));
@@ -166,6 +170,7 @@ export const DialogEntornoApp: React.FC = () => {
                         value: representante?.razon_social,
                         label:
                           representante?.razon_social || 'Sin razón social',
+                        tipo_sesion: 'E',
                       })),
                       select_representado
                     )}
@@ -191,6 +196,7 @@ export const DialogEntornoApp: React.FC = () => {
                         value: apoderado?.id_apoderados_persona,
                         label:
                           apoderado?.nombre_persona_poderdante || 'Sin nombre',
+                        tipo_sesion: 'E',
                       })),
                       select_representado
                     )}

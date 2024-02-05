@@ -5,7 +5,10 @@ export const columnsAsignaciones = [
   {
     headerName: 'Consecutivo',
     field: 'consecutivo_asign_x_pqrsdf',
-    minWidth: 150,
+    minWidth: 130,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    }
   },
   {
     headerName: 'Acción',

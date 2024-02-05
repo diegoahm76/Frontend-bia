@@ -107,6 +107,7 @@ export const DialogRepresentantes: React.FC = () => {
                     onClick={() => {
                       select_representado({
                         cod_relacion_con_el_titular: option.value,
+                        tipo_sesion: 'E',
                       });
                     }}
                   >
@@ -135,6 +136,7 @@ export const DialogRepresentantes: React.FC = () => {
                         value: representante?.razon_social,
                         label:
                           representante?.razon_social || 'Sin razón social',
+                        tipo_sesion: 'E',
                       })),
                       select_representado
                     )}
@@ -159,6 +161,7 @@ export const DialogRepresentantes: React.FC = () => {
                         value: apoderado?.id_apoderados_persona,
                         label:
                           apoderado?.nombre_persona_poderdante || 'Sin nombre',
+                        tipo_sesion: 'E',
                       })),
                       select_representado
                     )}

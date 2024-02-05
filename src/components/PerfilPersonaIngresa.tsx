@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import {  useState } from 'react';
+import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useAppSelector } from '../hooks';
 
@@ -32,7 +32,9 @@ export const PerfilPersonaIngresa: React.FC = () => {
   const {
     userinfo: { nombre_de_usuario = '', tipo_persona = '' } = {},
     entorno = '',
-  } = useAppSelector((state: AuthSlice) => state.auth);
+    representacion_legal = '',
+  } = useAppSelector((state: any) => state.auth);
+
   const { mod_dark } = useAppSelector(
     (state: {
       layout: {
@@ -43,6 +45,7 @@ export const PerfilPersonaIngresa: React.FC = () => {
   const nombre_usu = nombre_de_usuario;
 
   const [anchorEl, setAnchorEl] = useState(null);
+  console.log('representacion_legal', representacion_legal);
   // const [entorno, setEntorno] = useState('');
 
   const handleClick = (event: any) => {
@@ -79,19 +82,24 @@ export const PerfilPersonaIngresa: React.FC = () => {
               fontSize: 14,
             }}
           >
-            <strong
-              style={{
-                marginRight: '.5rem',
-              }}
-            >
-              {`${nombre_usu} :`.toUpperCase()}
-            </strong>{' '}
+            {entorno == 'L' && (
+              <strong
+                style={{
+                  marginRight: '.5rem',
+                }}
+              >
+                {`${nombre_usu} :`.toUpperCase()}
+              </strong>
+            )}
+
             <strong>
               {tipo_persona === 'J'
                 ? 'Empresa'.toUpperCase()
                 : tipo_persona === 'N' && entorno == 'L'
                 ? 'Laboral'.toUpperCase()
-                : 'Externo'.toUpperCase()}
+                : `Externo - representando a: ${
+                    representacion_legal?.label ?? 'Misma persona'
+                  } `.toUpperCase()}
             </strong>
           </Typography>
         </Hidden>
@@ -124,7 +132,7 @@ export const PerfilPersonaIngresa: React.FC = () => {
               {`En Sesión : ${nombre_usu}`.toUpperCase()}
             </MenuItem>
             <MenuItem onClick={handleClose}>
-            {tipo_persona === 'J'
+              {tipo_persona === 'J'
                 ? 'Empresa'.toUpperCase()
                 : tipo_persona === 'N' && entorno == 'L'
                 ? 'Laboral'.toUpperCase()
