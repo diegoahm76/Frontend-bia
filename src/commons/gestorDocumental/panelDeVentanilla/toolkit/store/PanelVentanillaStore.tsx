@@ -199,6 +199,11 @@ export const PanelVentanillaSlice = createSlice({
       state.listaComplementosRequerimientosOtros = [];
       state.listaHistoricoSolicitudes = [];
     },
+    resetParcial: (state) => {
+      state.currentElementPqrsdComplementoTramitesYotros = null;
+      state.listaElementosPqrsfTramitesUotros = [];
+      state.listaComplementosRequerimientosOtros = [];
+    },
   },
 });
 
@@ -221,4 +226,5 @@ export const {
   setListaHistoricoSolicitudes,
   // ? reset de todos los estados del slice
   resetPanelVentanillaFull,
+  resetParcial,
 } = PanelVentanillaSlice.actions;

@@ -15,7 +15,10 @@ import { Title } from '../../../../components';
 import { PanelVentanillaContext } from '../context/PanelVentanillaContext';
 import { getHistoricoByRadicado } from '../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { ModalAndLoadingContext } from '../../../../context/GeneralContext';
-import { setListaHistoricoSolicitudes } from '../toolkit/store/PanelVentanillaStore';
+import {
+  resetParcial,
+  setListaHistoricoSolicitudes,
+} from '../toolkit/store/PanelVentanillaStore';
 import { useAppDispatch } from '../../../../hooks';
 import { PanelDeVentanillaScreen } from '../module/entrega98_101/screen/panelDeVentanilla/PanelDeVentanillaScreen';
 import { HistoricoSolicitudesScreen } from '../module/entrega98_101/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
@@ -36,8 +39,8 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleRequestRadicado = async () => {
+    dispatch(resetParcial());
     const historico = await getHistoricoByRadicado('', handleGeneralLoading);
-
     dispatch(setListaHistoricoSolicitudes(historico));
   };
 
@@ -48,13 +51,21 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   // ? -----------------------------------------------------------------------
 
   const handleRequestRadicadoOpas = async () => {
-    const historico = await getHistoricoByRadicadoOPAS('', handleGeneralLoading);
+    dispatch(resetParcial());
+    const historico = await getHistoricoByRadicadoOPAS(
+      '',
+      handleGeneralLoading
+    );
 
     dispatch(setListaHistoricoSolicitudes(historico));
   };
 
   const handleRequestRadicadoOtros = async () => {
-    const historico = await getHistoricoOtrosByRadicado('', handleGeneralLoading);
+    dispatch(resetParcial());
+    const historico = await getHistoricoOtrosByRadicado(
+      '',
+      handleGeneralLoading
+    );
 
     dispatch(setListaHistoricoSolicitudes(historico));
   };
@@ -63,11 +74,20 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
     <Grid container sx={containerStyles}>
       <Title title="Panel de ventanilla" />
       <Box sx={{ width: '100%', mt: '1.5rem' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box
+          sx={{
+            borderBottom: 1,
+            borderColor: 'divider',
+            width: '100%',
+            overflow: 'hidden',
+            overflowX: 'auto',
+          }}
+        >
           <Tabs
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
+            variant="fullWidth"
           >
             <Tab
               onClick={() => {
@@ -87,7 +107,7 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
               label="Histórico de solicitudes OPAS"
               {...a11yProps(2)}
             />
-             <Tab
+            <Tab
               onClick={handleRequestRadicadoOtros}
               label="Histórico de solicitudes OTROS"
               {...a11yProps(3)}

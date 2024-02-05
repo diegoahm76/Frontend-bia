@@ -344,6 +344,7 @@ export const AgregarEditarOpciones = ({
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVariableName, setSelectedVariableName] = useState("");
+  
   // const handleOpenModal = (variableName: any) => {
   //   setSelectedVariableName(variableName);
   //   setIsModalOpen(true);

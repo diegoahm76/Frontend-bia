@@ -72,7 +72,7 @@ export const SupEtapasProceso: React.FC = () => {
     const columns = [
         // { field: 'id', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'categoria', headerName: 'categoria', width: 130, flex: 1 },
-        // { field: 'id_etapa', headerName: 'id etapa', width: 130, flex: 1 },
+        { field: 'nombre_etapa', headerName: 'Nombre etapa', width: 130, flex: 1 },
 
         { field: 'orden', headerName: 'orden', width: 130, flex: 1 },
 

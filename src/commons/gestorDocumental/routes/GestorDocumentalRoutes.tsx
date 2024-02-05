@@ -47,6 +47,7 @@ import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
 import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
 import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
 import { Radicado_Email_Routes } from '../radicadoEmail/routes/RadicadoEmail';
+import { ConsecutivoConfi } from '../configuracionConsecutivo/routes/ConsecutivoConfi';
  
 const routes = [
   {
@@ -223,7 +224,12 @@ const routes = [
     name: 'radicado_email',
     component: () => <Radicado_Email_Routes />,
   },
-
+  {
+    path: 'consecutivo_configuracion/',
+    name: 'consecutivo_configuracion',
+    component: () => <ConsecutivoConfi />,
+  },
+  
   {
     path: 'Reportes_PQRSDF/',
     name: 'Reportes_PQRSDF',

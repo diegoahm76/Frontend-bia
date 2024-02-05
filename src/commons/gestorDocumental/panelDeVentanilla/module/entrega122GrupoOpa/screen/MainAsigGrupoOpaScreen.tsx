@@ -10,10 +10,9 @@ import { Grid } from '@mui/material';
 import { SeleccionGrupo } from '../components/SeleccionGrupo/SeleccionGrupo';
 import { Asignaciones } from '../components/Asignaciones/Asginaciones';
 import { AccionesFinales } from '../components/AccionesFinales/AccionesFinales';
-import { getAsignaciones } from '../services/asignaciones/pqrsdf/getAsignaciones.service';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
-import { getAsignacionesOtros } from '../services/asignaciones/otros/getAsignacionesOtros.service';
 import { AsignacionGrupoOpaContext } from '../context/AsignacionGrupoOpaContext';
+import { getAsignacionesOpas } from '../services/asignaciones/opas/getAsignacionesOpas.service';
 
 export const MainAsigGrupoOpaScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -46,22 +45,15 @@ export const MainAsigGrupoOpaScreen: React.FC = (): JSX.Element => {
       currentElementPqrsdComplementoTramitesYotros?.tipo;
 
     switch (tipo) {
-      case 'Tramites y Servicios':
-        // Call the service for Tramites y Servicios
-        showAlert(
-          'Atención',
-          'No hay servicio aún para ver las asignacion para tramites y servicios, así que no hay asignaciones de tramites y servicios por el momento',
-          'warning'
-        );
-        break;
       case 'OPA':
-        //* se debe llamar el servicio respectivo para las asignaciones de OPA, apenas esté listo
-        showAlert(
-          'Atención',
-          'No hay servicio aún para ver las asignaciones de las OPAS, así que no hay asignaciones de opa por el momento',
-          'warning'
-        );
-
+        (async () => {
+          try {
+            const res = await getAsignacionesOpas(currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite, handleGeneralLoading);
+            setListaAsignaciones(res);
+          } catch (error) {
+            console.error(error);
+          }
+        })();
         // Call the service for OPA
         break;
       default:
