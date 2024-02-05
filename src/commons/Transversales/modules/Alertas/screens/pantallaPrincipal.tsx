@@ -28,19 +28,23 @@ import { obtenerHoraDeFecha } from '../utils/ModificadorHora';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
-
   const { setNumeroDeAlertas } = useContext(AlertasContext);
 
   const navigate = useNavigate();
 
-  const { userinfo: { id_persona } } = useSelector((state: AuthSlice) => state.auth);
+  const {
+    userinfo: { id_persona },
+  } = useSelector((state: AuthSlice) => state.auth);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const [id_alertas, set_id_alertas] = useState<number | null>(null);
   const [mostrar_leidos, set_mostrar_leidos] = useState<any>(false);
-  const [bandeja_alerta, set_bandeja_alerta] = useState<AlertaBandejaAlertaPersona[]>([]);
+  const [bandeja_alerta, set_bandeja_alerta] = useState<
+    AlertaBandejaAlertaPersona[]
+  >([]);
   const [alertas_leidas_icono, set_alertas_leidas_icono] = useState<number>(0);
-  const [alertas_no_leidas_icono, set_alertas_no_leidas_icono] = useState<number>(0);
+  const [alertas_no_leidas_icono, set_alertas_no_leidas_icono] =
+    useState<number>(0);
   const fetch_data_get = async (): Promise<void> => {
     try {
       const url = `/transversal/alertas/bandeja_alerta_persona/get-bandeja-by-persona/${id_persona}/`;
@@ -59,28 +63,32 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const buscar_bandeja_alerta = async (): Promise<void> => {
     try {
-      if (id_alertas == null) throw new Error('No se encontro el id de la bandeja');
+      if (id_alertas == null)
+        throw new Error('No se encontro el id de la bandeja');
       const url = `/transversal/alertas/alertas_bandeja_Alerta_persona/get-alerta_bandeja-by-bandeja/${id_alertas}/`;
       const { data } = await api.get(url);
-      const AlertasNoLeidas = data.data.filter((el: any) => el.leido === false && el.archivado === false);
-      const AlertasLeidas = data.data.filter((el: any) => el.leido === true && el.archivado === false);
+      const AlertasNoLeidas = data.data.filter(
+        (el: any) => el.leido === false && el.archivado === false
+      );
+      const AlertasLeidas = data.data.filter(
+        (el: any) => el.leido === true && el.archivado === false
+      );
       set_alertas_no_leidas_icono(AlertasNoLeidas.length);
       set_alertas_leidas_icono(AlertasLeidas.length);
-      setNumeroDeAlertas(AlertasNoLeidas.length)
+      setNumeroDeAlertas(AlertasNoLeidas.length);
       set_bandeja_alerta(data.data);
- console.log("mostrat data a rechard",data)
+      console.log('mostrat data a rechard', data);
       return data.data;
     } catch (error) {
       // console.error(error);
     }
   };
 
-  
   const columns = [
     {
       field: 'nivel_prioridad',
-      headerName: 'Nivel',
-      width: 55,
+      headerName: 'Nivel de prioridad',
+      minWidth: 80,
       renderCell: (params: any) => {
         let icon_color = '';
         if (params.value === '1') {
@@ -93,10 +101,12 @@ export const PantallaPrincipalAlertas: React.FC = () => {
 
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <PriorityHighRoundedIcon
-              fontSize="small"
-              style={{ color: icon_color, marginRight: 4 }}
-            />
+            <Tooltip title={`Nivel de prioridad: ${params.value}`}>
+              <PriorityHighRoundedIcon
+                fontSize="small"
+                style={{ color: icon_color, marginRight: 4 }}
+              />
+            </Tooltip>
           </div>
         );
       },
@@ -104,33 +114,37 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     {
       field: 'tipo_alerta',
       headerName: 'Tipo Alerta',
-      width: 100,
+      minWidth: 200,
     },
     {
       field: 'fecha_hora',
       headerName: 'Fecha',
-      width: 80,
+      minWidth: 200,
       valueGetter: (params: any) =>
-        params.row.fecha_hora ? ModificadorFormatoFecha(params.row.fecha_hora) : 'Sin fecha',
+        params.row.fecha_hora
+          ? ModificadorFormatoFecha(params.row.fecha_hora)
+          : 'Sin fecha',
     },
     {
       field: 'fecha_horaa',
       headerName: 'Hora',
       width: 80,
       valueGetter: (params: any) =>
-        params.row.fecha_hora ? obtenerHoraDeFecha(params.row.fecha_hora) : 'Sin hora',
+        params.row.fecha_hora
+          ? obtenerHoraDeFecha(params.row.fecha_hora)
+          : 'Sin hora',
     },
     {
       field: 'nombre_clase_alerta',
       headerName: 'Nombre Clase Alerta',
-      width: 250,
+      minWidth: 400,
     },
     {
       field: 'responsable_directo',
       headerName: 'Responsable Directo',
-      headerAlign: 'center',
-      minWidth: 120,
-      maxWidth: 180,
+      // headerAlign: 'center',
+      minWidth: 200,
+      maxWidth: 250,
       valueGetter: (params: any) =>
         params.row.responsable_directo === true ? 'Sí' : 'No',
     },
@@ -144,7 +158,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     {
       field: 'nombre_modulo',
       headerName: 'Nombre Módulo',
-      width: 200,
+      minWidth: 300,
       valueGetter: (params: any) => {
         const ruta = (params.value || '').replace('/#/app/', ''); // Eliminar "/#/app/" si existe
         const firstPart = ruta.split('/')[0]; // Obtener la primera palabra después de eliminar '/#/app/'
@@ -185,7 +199,10 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               params.row.nombre_modulo.trim() !== '' ? (
                 <Button
                   onClick={() => {
-                    const ruta = (params.row.nombre_modulo || '').replace('/#', ''); // Eliminar "/#/app/"
+                    const ruta = (params.row.nombre_modulo || '').replace(
+                      '/#',
+                      ''
+                    ); // Eliminar "/#/app/"
                     navigate(ruta);
                   }}
                 >
@@ -304,7 +321,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               density="compact"
               autoHeight
               columns={columns as any}
-              rows={filtered_rows||""}
+              rows={filtered_rows || ''}
               pageSize={10}
               rowsPerPageOptions={[10]}
               getRowId={(_row) => uuidv4()}
