@@ -76,18 +76,8 @@ any): JSX.Element => {
     { field: "nombre_anexo", headerName: "Nombre Anexo", flex: 1 },
     { field: "orden_anexo_doc", headerName: "Orden Anexo Doc", flex: 1 },
     {
-      field: "cod_medio_almacenamiento",
-      headerName: "Código Medio Almacenamiento",
-      flex: 1,
-    },
-    {
       field: "nombre_medio_almacenamiento",
       headerName: "Nombre Medio Almacenamiento",
-      flex: 1,
-    },
-    {
-      field: "medio_almacenamiento_otros_Cual",
-      headerName: "Medio Almacenamiento Otros Cual",
       flex: 1,
     },
     { field: "numero_folios", headerName: "Número de Folios", flex: 1 },
@@ -144,20 +134,6 @@ any): JSX.Element => {
       flex: 1,
       valueGetter: (params: any) =>
         params.getValue(params.id, "metadatos")?.nro_folios_documento,
-    },
-    {
-      field: "metadatos.cod_origen_archivo",
-      headerName: "Código Origen Archivo",
-      flex: 1,
-      valueGetter: (params:any) =>
-        params.getValue(params.id, "metadatos")?.cod_origen_archivo,
-    },
-    {
-      field: "metadatos.tipologia_no_creada_TRD",
-      headerName: "Tipología No Creada TRD",
-      flex: 1,
-      valueGetter: (params:any) =>
-        params.getValue(params.id, "metadatos")?.tipologia_no_creada_TRD,
     },
     {
       field: "metadatos.palabras_clave_doc",
@@ -301,6 +277,7 @@ any): JSX.Element => {
             variant="contained"
             color="primary"
             type="submit"
+            disabled={respuestaPqrsdfMade?.anexos && respuestaPqrsdfMade.anexos.length > 0}
             endIcon={<ArrowForward />}
             sx={{
               width: "35%",

@@ -112,7 +112,7 @@ export const AñoConfiguracionAñoSiguiente = () => {
                             <Select
                                 id="demo-simple-select-2"
                                 name="id_tipologia_documental"
-                                style={{ width: "95%", marginTop: 15 }}
+                                style={{ width: "95%", marginTop: 0 }}
                                 label="Selecciona tipología documental"
                                 value={Formulario_Empresa.id_tipologia_documental || ""}
                                 onChange={(e) => handleCompletarDatos("id_tipologia_documental", e.target.value)}
@@ -136,7 +136,7 @@ export const AñoConfiguracionAñoSiguiente = () => {
                             disabled
                             label="Fecha Actual"
                             value={getCurrentDate()}
-                            style={{ marginTop: 15, width: '95%' }}
+                            style={{ marginTop: 0, width: '95%' }}
                         />
                     </Grid>
 
@@ -144,9 +144,9 @@ export const AñoConfiguracionAñoSiguiente = () => {
 
                     <Grid container justifyContent="flex-end" alignItems="center">
 
-                        <Grid item xs={12} sm={5} md={3.5}>
+                        <Grid item xs={12} md={3}>
                             <Button
-                                style={{ marginTop: 25 }}
+                                style={{ marginTop: 25 ,width:"90%"}}
                                 color="error"
                                 variant="contained"
                                 startIcon={<ArrowOutwardIcon />}
@@ -159,6 +159,7 @@ export const AñoConfiguracionAñoSiguiente = () => {
                                 Configuracion de Tipologias   Año Actual
                             </Button>
                         </Grid>
+
 
 
 

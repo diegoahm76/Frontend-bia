@@ -18,6 +18,7 @@ export const ModalConfirmacionArchivar: React.FC<InterfazMostarAlerta2> = ({ dat
 
 
     const alerta_inicial: AlertaBandejaAlertaPersona = {
+        documento: "",
         id_alerta_bandeja_alerta_persona: 0,
         nivel_prioridad: 0,
         tipo_alerta: "",

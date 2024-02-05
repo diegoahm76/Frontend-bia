@@ -11,6 +11,7 @@ import { TipodeCeaccionContext } from "../../context/CreacionTipologuia";
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { ConsultaAñosAnteriores } from "../ConsultaAñosAnteriores/ConsultaAñosAnteriores";
 import { Inicial_Formulario } from "../../interfaces/ConfiguracionTipologuias";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export const BotonesActionsFormulario = () => {
   const navigate = useNavigate();
@@ -242,7 +243,7 @@ export const BotonesActionsFormulario = () => {
     >
       <Grid item xs={12} sm={5} md={3.6} lg={2.5}>
         <Button
-          startIcon={<ClearIcon />}
+          startIcon={<SettingsIcon />}
           fullWidth
           style={{ width: "90%", marginTop: 15, backgroundColor: "orange" }}
           variant="contained"
