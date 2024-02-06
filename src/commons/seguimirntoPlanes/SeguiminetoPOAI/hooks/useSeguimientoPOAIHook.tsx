@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useForm } from 'react-hook-form';
 import { control_error, control_success } from '../../../../helpers';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { ISeguiminetoPOAI } from '../../types/types';
 import { useAppSelector } from '../../../../hooks';
 import { DataContextSeguimientoPOAI } from '../context/context';
@@ -14,11 +14,13 @@ export const useSeguimientoPOAIHook = (): any => {
     register: register_seguimiento,
     handleSubmit: handleSubmit_seguimiento,
     setValue: set_value_seguimiento,
+    getValues: get_values_seguimiento,
     reset: reset_seguimiento,
     formState: { errors: errors_seguimiento },
   } = useForm<ISeguiminetoPOAI>({
     defaultValues: {
       id_seguimiento: 0,
+      nombre_plan: '',
       nombre_programa: '',
       nombre_proyecto: '',
       nombre_producto: '',
@@ -41,6 +43,7 @@ export const useSeguimientoPOAIHook = (): any => {
       vano_4: 0,
       valor_total: 0,
       numero_cdp_paa: 0,
+      numero_cdp: 0,
       numero_rp_paa: 0,
       valor_seguimiento_banco_paa: 0,
       valor_cdp_paa: 0,
@@ -75,6 +78,7 @@ export const useSeguimientoPOAIHook = (): any => {
       id_modalidad: 0,
       id_ubicacion: 0,
       id_clase_tercero: 0,
+      id_sector: 0,
     },
   });
 
@@ -119,6 +123,7 @@ export const useSeguimientoPOAIHook = (): any => {
       valor_obligado: 0,
       valor_saldo: 0,
       porcentaje_ejecuta: 0,
+      numero_cdp: 0,
       numero_contrato: 0,
       numerp_rp: 0,
       fecha_rp: '',
@@ -140,6 +145,7 @@ export const useSeguimientoPOAIHook = (): any => {
       id_modalidad: 0,
       id_ubicacion: 0,
       id_clase_tercero: 0,
+      id_sector: 0,
     });
   };
 
@@ -153,22 +159,52 @@ export const useSeguimientoPOAIHook = (): any => {
     id_actividad,
     id_indicador,
     id_meta,
+    id_producto,
+    id_programa,
+    id_plan,
     fetch_data_seguimiento,
   } = useContext(DataContextSeguimientoPOAI);
 
   // declaracion redux
   const {
-    seguimiento_poai: { id_seguimiento },
+    seguimiento_poai: { id_seguimiento, id },
     // indicador: { id_indicador },
   } = useAppSelector((state) => state.planes);
 
   const onsubmit_seguimiento = handleSubmit_seguimiento(async (data) => {
     try {
-      //  console.log('')(data, 'data');
-      data.id_indicador = id_indicador;
-      data.id_proyecto = id_proyecto;
-      data.id_actividad = id_actividad;
-      data.id_meta = id_meta;
+      console.log(data, 'data');
+      data.id_indicador = Number(id_indicador);
+      data.id_proyecto = Number(id_proyecto);
+      data.id_actividad = Number(id_actividad);
+      data.id_meta = Number(id_meta);
+      data.id_producto = Number(id_producto);
+      data.id_programa = Number(id_programa);
+      data.id_plan = Number(id_plan);
+      // Convertir otros campos numéricos a números
+      data.porcentaje_pto = Number(data.porcentaje_pto);
+      data.vano_1 = Number(data.vano_1);
+      data.vano_2 = Number(data.vano_2);
+      data.vano_3 = Number(data.vano_3);
+      data.vano_4 = Number(data.vano_4);
+      data.valor_total = Number(data.valor_total);
+      data.numero_cdp_paa = Number(data.numero_cdp_paa);
+      data.numero_rp_paa = Number(data.numero_rp_paa);
+      data.valor_seguimiento_banco_paa = Number(
+        data.valor_seguimiento_banco_paa
+      );
+      data.valor_cdp_paa = Number(data.valor_cdp_paa);
+      data.valor_rp_paa = Number(data.valor_rp_paa);
+      data.duracion = Number(data.duracion);
+      data.valor_mesual_paoi = Number(data.valor_mesual_paoi);
+      data.valor_pagado = Number(data.valor_pagado);
+      data.valor_obligado = Number(data.valor_obligado);
+      data.valor_saldo = Number(data.valor_saldo);
+      data.porcentaje_ejecuta = Number(data.porcentaje_ejecuta);
+      data.numero_contrato = Number(data.numero_contrato);
+      data.numerp_rp = Number(data.numerp_rp);
+      data.valor_cdp = Number(data.valor_cdp);
+      // Continuar con otros campos numéricos si los hay
       set_is_saving_seguimiento(true);
       await post_seguimiento(data as ISeguiminetoPOAI);
       control_success('Se creó correctamente');
@@ -189,13 +225,42 @@ export const useSeguimientoPOAIHook = (): any => {
   const onsubmit_editar = handleSubmit_seguimiento(async (data) => {
     try {
       //  console.log('')(data, 'data');
+      console.log(id_seguimiento, 'id_seguimiento');
       set_is_saving_seguimiento(true);
       data.id_indicador = id_indicador;
       data.id_proyecto = id_proyecto;
       data.id_actividad = id_actividad;
       data.id_meta = id_meta;
+      data.id_producto = id_producto;
+      data.id_programa = id_programa;
+      data.id_plan = id_plan;
+      // Convertir otros campos numéricos a números
+      data.porcentaje_pto = Number(data.porcentaje_pto);
+      data.vano_1 = Number(data.vano_1);
+      data.vano_2 = Number(data.vano_2);
+      data.vano_3 = Number(data.vano_3);
+      data.vano_4 = Number(data.vano_4);
+      data.valor_total = Number(data.valor_total);
+      data.numero_cdp_paa = Number(data.numero_cdp_paa);
+      data.numero_rp_paa = Number(data.numero_rp_paa);
+      data.valor_seguimiento_banco_paa = Number(
+        data.valor_seguimiento_banco_paa
+      );
+      data.valor_cdp_paa = Number(data.valor_cdp_paa);
+      data.valor_rp_paa = Number(data.valor_rp_paa);
+      data.duracion = Number(data.duracion);
+      data.valor_mesual_paoi = Number(data.valor_mesual_paoi);
+      data.valor_pagado = Number(data.valor_pagado);
+      data.valor_obligado = Number(data.valor_obligado);
+      data.valor_saldo = Number(data.valor_saldo);
+      data.porcentaje_ejecuta = Number(data.porcentaje_ejecuta);
+      data.numero_contrato = Number(data.numero_contrato);
+      data.numerp_rp = Number(data.numerp_rp);
+      data.valor_cdp = Number(data.valor_cdp);
+      // Continuar con otros campos numéricos si los hay
+
       await put_seguimiento(
-        (id_seguimiento as number) ?? 0,
+        (id_seguimiento as number) ?? (id as number) ?? 0, 
         data as ISeguiminetoPOAI
       );
       control_success('Se actualizó correctamente');
@@ -217,6 +282,7 @@ export const useSeguimientoPOAIHook = (): any => {
     register_seguimiento,
     handleSubmit_seguimiento,
     set_value_seguimiento,
+    get_values_seguimiento,
     reset_seguimiento,
     errors_seguimiento,
 

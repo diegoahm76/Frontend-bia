@@ -49,3 +49,34 @@ export const meses_selected = [
     label: 'Diciembre',
   },
 ];
+
+export const clase_tercero = [
+    {
+        value: 1,
+        label: "Empresa"
+    },
+    {
+        value: 2,
+        label: "Funcionario"
+    },
+    {
+        value: 3,
+        label: "Contratista"
+    },
+    {
+        value: 4,
+        label: "Proveedor"
+    },
+    {
+        value: 5,
+        label: "Aseguradora"
+    },
+    {
+        value: 6,
+        label: "Conductor"
+    },
+    {
+        value: 7,
+        label: "Conductor Externo"
+    }
+];

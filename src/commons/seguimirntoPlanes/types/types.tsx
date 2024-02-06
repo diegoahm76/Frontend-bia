@@ -266,6 +266,7 @@ export interface IPlanAdquisiciones {
   nombre_ubicacion?: string;
   persona_responsable?: string;
   descripcion?: string;
+  codigo_modalidad: string;
   mes_inicio?: String;
   mes_oferta?: String;
   duracion?: number | null;
@@ -274,6 +275,8 @@ export interface IPlanAdquisiciones {
   vigencia_futura?: number | null;
   decreto_paa?: boolean;
   suministro_paa?: boolean;
+  email_persona_responsable?: string;
+  telefono_persona_responsable: string;
   id_plan?: number | null;
   id_intervalo?: number | null;
   id_modalidad?: number | null;
@@ -347,7 +350,9 @@ export interface ISeguimientoPAI {
 // Seguimiento POAI
 
 export interface ISeguiminetoPOAI {
+  id?: number | null;
   id_seguimiento?: number | null;
+  nombre_plan?: string;
   nombre_programa?: string;
   nombre_proyecto?: string;
   nombre_producto?: string;
@@ -385,6 +390,7 @@ export interface ISeguiminetoPOAI {
   porcentaje_ejecuta?: number | null;
   numero_contrato?: number | null;
   numerp_rp?: number | null;
+  numero_cdp?: number | null;
   fecha_rp?: string;
   valor_cdp?: number | null;
   fecha_cdp?: string;
@@ -404,8 +410,8 @@ export interface ISeguiminetoPOAI {
   id_modalidad?: number | null;
   id_ubicacion?: number | null;
   id_clase_tercero?: number | null;
+  id_sector?: number | null;
 }
-
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;

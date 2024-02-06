@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import { BusquedaMetas } from '../components/Components/BusquedaAvanzada/BusquedaMetas';
-import { BusquedaBanco } from '../components/Components/BusquedaAvanzada/BusquedaBanco';
+import { BusquedaSeguimientoPOAI } from '../components/Components/BusquedaAvanzada/BusquedaSeguimientoPOAI';
 import { AgregarSeguiminetoPOAI } from '../components/Components/AgregarSeguiminetoPOAI';
 import { ListarSeguiminetoPOAI } from '../components/Components/ListarSeguiminetoPOAI';
 
@@ -66,7 +66,7 @@ export const SeguimientoPOAIScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
-        <BusquedaBanco />
+        <BusquedaSeguimientoPOAI />
         <Grid item>
           <ButtonSalir />
         </Grid>
