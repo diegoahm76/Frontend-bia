@@ -101,4 +101,14 @@ export const columnsPqrsdf = [
       return params.value ?? 'Sin estado de reasignación';
     },
   },
+  {
+    headerName: 'Estado de la de tarea',
+    field: 'estado_tarea',
+    minWidth: 280,
+    renderCell: (params: any) => {
+      return params.value ?? 'N/A';
+    },
+  },
+
+
 ];

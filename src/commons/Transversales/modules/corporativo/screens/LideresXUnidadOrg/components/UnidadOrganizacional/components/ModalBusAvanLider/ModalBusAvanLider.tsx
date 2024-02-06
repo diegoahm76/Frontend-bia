@@ -45,17 +45,21 @@ import {
 } from '../../../../toolkit/LideresSlices/LideresSlice';
 import { getTipoDocumento } from '../SeleccionLider/services/getTipoDocumento.service';
 import { ISeleccionLideresProps } from '../SeleccionLider/types/seleccionLideres.types';
+import { RenderDataGrid } from '../../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 
-export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
+export const BusqueAsignacionesLiderModal = ({
+  control_seleccionar_lideres,
+  reset_seleccionar_lideres,
+  watch_seleccionar_lideres_value,
+}: {
+  control_seleccionar_lideres: any;
+  reset_seleccionar_lideres: any;
+  watch_seleccionar_lideres_value: any;
+}): JSX.Element => {
   // * dispatch to use in the component * //
   const dispatch = useAppDispatch();
 
   //* -------- hook declaration -------- *//
-  const {
-    control_buscar_asignaciones_lideres_por_unidad,
-    reset_buscar_asignaciones_lideres_por_unidad,
-    watch_asignaciones_lider_by_unidad_value,
-  } = useLideresXUnidadOrganizacional();
 
   //* -------- use selector declaration -------- *//
   const {
@@ -93,10 +97,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
   } = useContext(ModalContextLideres);
 
   const resetFunction = (): void => {
-    //  console.log('')('cleaning fields of the form');
-    reset_buscar_asignaciones_lideres_por_unidad({
-      tipo_documento: '',
-      numero_documento: '',
+    reset_seleccionar_lideres({
+      ...watch_seleccionar_lideres_value,
       primer_nombre: '',
       segundo_nombre: '',
       primer_apellido: '',
@@ -132,7 +134,13 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               //  dispatch(set_organigrama_lideres_current(params.row));
 
               // ! ACTUALIZA LA ASIGNACION DE LIDER
-              dispatch(set_asignacion_lideres_current(params.row));
+              console.log(params.row);
+              dispatch(
+                set_asignacion_lideres_current({
+                  ...asignacion_lideres_current,
+                  ...params.row,
+                })
+              );
 
               // ! ACTUALIZA LA LISTA DE UNIDADES ORGANIZACIONALES
               /* void get_asignaciones_lideres_by_id_organigrama_service(52).then(
@@ -176,6 +184,9 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
         maxWidth="lg"
         open={modalBusquedaPersona}
         onClose={closeModal}
+        sx={{
+          minHeight: '600px'
+        }}
       >
         <Box
           component="form"
@@ -189,8 +200,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               primer_apellido,
               segundo_apellido,
               id_unidad_organizacional_actual,
-            } = watch_asignaciones_lider_by_unidad_value || {};
-
+            } = watch_seleccionar_lideres_value || {};
+            //watch_asignaciones_lider_by_unidad_value
             try {
               const unidad = id_unidad_organizacional_actual?.value
                 ? unidad_current?.value ||
@@ -206,7 +217,8 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                 segundo_apellido || '',
                 unidad || '',
                 setLoadingButton || '',
-                resetFunction
+                () => {}
+                // resetFunction ()=>ñ
               );
 
               dispatch(get_list_busqueda_avanzada_personas(data));
@@ -236,7 +248,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               >
                 <Controller
                   name="tipo_documento"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value, ref },
@@ -262,7 +274,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="numero_documento"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
@@ -284,7 +296,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="primer_nombre"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
@@ -306,7 +318,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="segundo_nombre"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
@@ -328,7 +340,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="primer_apellido"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
@@ -350,7 +362,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="segundo_apellido"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
@@ -373,7 +385,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                 <Grid item xs={12} sm={3} zIndex={5}>
                   <Controller
                     name="id_unidad_organizacional_actual"
-                    control={control_buscar_asignaciones_lideres_por_unidad}
+                    control={control_seleccionar_lideres}
                     rules={{ required: true }}
                     render={({ field: { onChange, value } }) => (
                       <div>
@@ -439,17 +451,14 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                 </LoadingButton>
               </Grid>
             </Grid>
-            <DataGrid
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
-              rows={busqueda_avanzada_personas_list ?? []}
-              columns={columns_busqueda_avanzada_persona ?? []}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(_row) => uuidv4()}
-            />
+
+            {busqueda_avanzada_personas_list?.length > 0 && (
+              <RenderDataGrid
+                title="Resultados de la búsqueda"
+                rows={busqueda_avanzada_personas_list ?? []}
+                columns={columns_busqueda_avanzada_persona ?? []}
+              />
+            )}
           </DialogContent>
           <Divider />
           <DialogActions>

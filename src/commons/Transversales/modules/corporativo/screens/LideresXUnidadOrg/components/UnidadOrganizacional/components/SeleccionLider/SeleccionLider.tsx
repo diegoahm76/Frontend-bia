@@ -504,7 +504,11 @@ export const SeleccionLider = (): JSX.Element => {
       </Grid>
 
       {/* modal búsqueda avanzada de lideres */}
-      <BusqueAsignacionesLiderModal />
+      <BusqueAsignacionesLiderModal
+         control_seleccionar_lideres={control_seleccionar_lideres}
+         reset_seleccionar_lideres={reset_seleccionar_lideres}
+         watch_seleccionar_lideres_value={watch_seleccionar_lideres_value}
+      />
       {/* modal búsqueda avanzada de lideres */}
     </>
   );
