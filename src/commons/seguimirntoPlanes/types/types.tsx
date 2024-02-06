@@ -266,6 +266,7 @@ export interface IPlanAdquisiciones {
   nombre_ubicacion?: string;
   persona_responsable?: string;
   descripcion?: string;
+  codigo_modalidad: string;
   mes_inicio?: String;
   mes_oferta?: String;
   duracion?: number | null;

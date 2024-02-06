@@ -16,7 +16,7 @@ import {
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect, useState } from 'react';
-import { useAppDispatch, } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   set_current_plan_adquisiciones,
@@ -162,18 +162,20 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
       headerName: 'DECRETO PAA',
       sortable: true,
       width: 150,
+      valueGetter: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'suministro_paa',
       headerName: 'SUMINISTRO PAA',
       sortable: true,
       width: 150,
-    },    {
+      valueGetter: (params) => (params.value ? 'Sí' : 'No'),
+    },
+    {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
-      flex: 1,
+      width: 300,
       renderCell: (params) => (
         <>
           <IconButton
@@ -239,9 +241,11 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
     },
   ];
 
-  const { rows_plan_adquisiciones, fetch_data_plan_adquisiciones } = useContext(
-    DataContextAdquisiciones
-  );
+  const {
+    rows_plan_adquisiciones,
+    fetch_data_plan_adquisiciones,
+    fetch_data_paa_codigos,
+  } = useContext(DataContextAdquisiciones);
 
   const [open_dialog, set_open_dialog] = useState<boolean>(false);
 
@@ -249,11 +253,17 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
     set_open_dialog(true);
   };
 
-  // const {
-  //   indicador: { id_indicador },
-  // } = useAppSelector((state) => state.planes);s
+  const {
+    plan_adquisiciones: { id_plan_anual },
+  } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (id_plan_anual) {
+      fetch_data_paa_codigos();
+    }
+  }, [id_plan_anual]);
 
   useEffect(() => {
     // if (id_indicador) {
@@ -306,7 +316,7 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
                   density="compact"
                   autoHeight
                   rows={rows_plan_adquisiciones ?? []}
-                  columns={columns_adquisiciones  ?? []}
+                  columns={columns_adquisiciones ?? []}
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
