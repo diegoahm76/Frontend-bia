@@ -40,7 +40,7 @@ export interface ProcesoCartera {
 
 export interface Cartera {
   id: number;
-  id_obligacion: Obligacion;
+  nombre: string;
   dias_mora: number;
   valor_intereses: string;
   valor_sancion: string;
@@ -56,4 +56,5 @@ export interface Cartera {
   tipo_cobro: string;
   id_deudor: Deudor;
   proceso_cartera: ProcesoCartera[];
+  tipo_renta: string | null;
 }

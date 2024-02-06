@@ -40,16 +40,29 @@ interface IProps {
 const StepTwo = ({ control_form, reset, watch }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const { complement_pqr, media_types } = useAppSelector(
     (state) => state.complemento_pqrsdf_slice
   );
 
   useEffect(() => {
-    reset(complement_pqr);
+    reset({
+      ...complement_pqr,
+      id_medio_solicitud_comple:
+        representacion_legal.tipo_sesion === 'E'
+          ? 2
+          : complement_pqr.id_medio_solicitud_comple,
+    });
   }, []);
 
   useEffect(() => {
-    reset(complement_pqr);
+    reset({
+      ...complement_pqr,
+      id_medio_solicitud_comple:
+        representacion_legal.tipo_sesion === 'E'
+          ? 2
+          : complement_pqr.id_medio_solicitud_comple,
+    });
   }, [complement_pqr]);
 
   return (
@@ -87,7 +100,9 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Medio de solicitud',
-              disabled: false,
+              disabled:
+                complement_pqr.id_radicado !== null ||
+                representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',
@@ -104,7 +119,7 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Asunto',
               type: 'text',
-              disabled: false,
+              disabled: complement_pqr.id_radicado !== null,
               helper_text: '',
             },
             {
@@ -119,7 +134,7 @@ const StepTwo = ({ control_form, reset, watch }: IProps) => {
               type: 'text',
               multiline_text: true,
               rows_text: 4,
-              disabled: false,
+              disabled: complement_pqr.id_radicado !== null,
               helper_text: '',
             },
           ]}

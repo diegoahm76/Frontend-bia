@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { control_success } from '../../../../../../../helpers';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
-import { control } from 'leaflet';
 
 interface Anexo {
   asunto: string;
@@ -12,6 +11,15 @@ interface Anexo {
   id: string;
   nombre_archivo: string;
   // other properties...
+
+  descripcion?: string | null;
+  cod_categoria_archivo?: string | null;
+  tiene_replica_fisica?: boolean | null;
+  cod_origen_archivo?: string | null;
+  id_tipologia_doc?: number | null;
+  tipologia_no_creada_TRD?: string | null;
+  palabras_clave_doc?: string | null;
+
 }
 const initialState: {
   anexosCreados: Anexo[];
@@ -71,8 +79,10 @@ export const RequerimientoUsarioSlice = createSlice({
         );
         if (!isDuplicateName) {
           state.anexosCreados[index] = action.payload;
+          state.currentAnexo = null;
           control_success('Se ha editado el anexo');
         } else {
+          state.currentAnexo = null;
           control_warning('No se ha podido editar el anexo, el nombre del archivo no puede repetirse');
         }
       }

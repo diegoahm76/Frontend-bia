@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes } from 'react-router-dom';
 import { OrganigramaRoutes } from '../organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../ccd/routes/CcdRoutes';
@@ -37,7 +38,19 @@ import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOt
 import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
 import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/ComplementoPqrsdfRoutes';
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
-
+import { RutesWorkFlowPQRSDF } from '../WorkFlowPQRSDF/routes/RutesWorkFlowPQRSDF';
+import { Consulta_Solicitud_Routes } from '../consultaSolicitud/routes/ConsultaSolicitud';
+import { Consulta_estadoPQR_Routes } from '../consultaEstadoPQR/routes/ConsultaEstadoPQR';
+import { Consulta_ExternoPQR_Routes } from '../consultarEstadoExternoPQR/routes/ConsultaExternoPQR';
+import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/ConsultaAnonimo';
+import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
+import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
+import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
+import { Radicado_Email_Routes } from '../radicadoEmail/routes/RadicadoEmail';
+import { ConsecutivoConfi } from '../configuracionConsecutivo/routes/ConsecutivoConfi';
+import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
+import { RutasCentralDigitalizacionOtros } from '../centraldigitalizacionOtros/routes/RutasCentralDigitalizacionOtros';
+ 
 const routes = [
   {
     path: 'organigrama/',
@@ -139,6 +152,8 @@ const routes = [
     name: 'encuesta_asignacion',
     component: () => <EncuestaRoutes />,
   },
+
+
   {
     path: 'Interno_encuesta/',
     name: 'Interno_encuesta',
@@ -185,7 +200,16 @@ const routes = [
     name: 'central_digitalizacion',
     component: () => <CentralDigitalizacionRoutes />,
   },
-
+  {
+    path: 'busqueda/',
+    name: 'busqueda',
+    component: () => <RutesWorkFlowPQRSDF />,
+  },
+  {
+    path: 'indicadores_pqrsdf/',
+    name: 'indicadores_pqrsdf',
+    component: () => <RutesIndicadores />,
+  },
   {
     path: 'solicitudes_otros/',
     name: 'solicitudes_otros',
@@ -202,22 +226,74 @@ const routes = [
     name: 'complementos_pqrsdf',
     component: () => <ComplementoPqrsdfRoutes />,
   },
+  {
+    path: 'radicado_email/',
+    name: 'radicado_email',
+    component: () => <Radicado_Email_Routes />,
+  },
+  {
+    path: 'consecutivo_configuracion/',
+    name: 'consecutivo_configuracion',
+    component: () => <ConsecutivoConfi />,
+  },
+  
+  {
+    path: 'Reportes_PQRSDF/',
+    name: 'Reportes_PQRSDF',
+    component: () => <Consulta_Solicitud_Routes />,
+  },
+   {
+    path: 'Consulta_AnonimoPQR/',
+    name: 'Consulta_AnonimoPQR',
+    component: () => <Consulta_AnonimoPQR_Routes />,
+  },
+  {
+    path: 'consulta_estadopqr/',
+    name: 'consulta_estadopqr',
+    component: () => <Consulta_estadoPQR_Routes />,
+  },
+  {
+    path: 'ConsultaExternoPQR/',
+    name: 'ConsultaExternoPQR',
+    component: () => <Consulta_ExternoPQR_Routes />,
+  },
+ 
+  {
+    path: 'ConsultaOtros/',
+    name: 'ConsultaOtros',
+    component: () => <Consulta_Otros_Routes />,
+  },
+  {
+    path: 'ConsultaOtrosExterno/',
+    name: 'ConsultaOtrosExterno',
+    component: () => <Consulta_OtrosExterno_Routes />,
+  },
+  
+  {
+    path: 'Eliminacion_Documental/',
+    name: 'Eliminacion_Documental',
+    component: () => <DeleteDocumental_Routes />,
+  },
+  {
+    path: 'central_digitalizacion_otros/',
+    name: 'central_digitalizacion_otros',
+    component: () => <RutasCentralDigitalizacionOtros />,
+  }
+
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
-    // <Suspense fallback={<Loader />}>
-    <Routes>
-      {routes.map((route) => (
-        <Route
-          key={route.path}
-          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-          element={route.component()}
-        />
-      ))}
-      <Route path="/*" element={<Page404 />} />
-    </Routes>
-    // </Suspense>
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+            element={route.component()}
+          />
+        ))}
+        <Route path="/*" element={<Page404 />} />
+      </Routes>
   );
 };

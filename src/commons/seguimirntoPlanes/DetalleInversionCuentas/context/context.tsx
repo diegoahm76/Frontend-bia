@@ -18,7 +18,6 @@ import {
   get_detalle_inversion,
   get_subprogramas,
   get_programas,
-  get_proyectos,
   get_rubros,
 } from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
@@ -31,12 +30,21 @@ import {
 
 interface UserContext {
   // * id
+  // * id
+  id_plan: number | null;
   id_programa: number | null;
-  set_id_programa: (value: number | null) => void;
   id_proyecto: number | null;
-  set_id_proyecto: (value: number | null) => void;
   id_producto: number | null;
+  id_actividad: number | null;
+  id_indicador: number | null;
+  id_meta: number | null;
+  set_id_plan: (value: number | null) => void;
+  set_id_programa: (value: number | null) => void;
+  set_id_proyecto: (value: number | null) => void;
   set_id_producto: (value: number | null) => void;
+  set_id_actividad: (value: number | null) => void;
+  set_id_indicador: (value: number | null) => void;
+  set_id_meta: (value: number | null) => void;
 
   // * rows
   rows_detalle_inversion: IDetalleCuentas[];
@@ -75,12 +83,20 @@ interface UserContext {
 
 export const DataContextDetalleInversion = createContext<UserContext>({
   // * id
+  id_plan: null,
   id_programa: null,
-  set_id_programa: () => {},
   id_proyecto: null,
-  set_id_proyecto: () => {},
   id_producto: null,
+  id_actividad: null,
+  id_indicador: null,
+  id_meta: null,
+  set_id_plan: () => {},
+  set_id_programa: () => {},
+  set_id_proyecto: () => {},
   set_id_producto: () => {},
+  set_id_actividad: () => {},
+  set_id_indicador: () => {},
+  set_id_meta: () => {},
 
   rows_detalle_inversion: [],
   set_rows_detalle_inversion: () => {},
@@ -116,10 +132,14 @@ export const UserProviderDetalleInversion = ({
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
-  // * id
+  /// * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
   const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
   const [id_producto, set_id_producto] = React.useState<number | null>(null);
+  const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
+  const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
+  const [id_meta, set_id_meta] = React.useState<number | null>(null);
 
   // * select
   const [sector_selected, set_sector_selected] = React.useState<ValueProps[]>(
@@ -172,6 +192,8 @@ export const UserProviderDetalleInversion = ({
             nombre_proyecto: item.nombre_proyecto,
             nombre_producto: item.nombre_producto,
             nombre_actividad: item.nombre_actividad,
+            nombre_indicador: item.nombre_indicador,
+            nombre_meta: item.nombre_meta,
             cuenta: item.cuenta,
             valor_cuenta: item.valor_cuenta,
             id_sector: item.id_sector,
@@ -181,6 +203,8 @@ export const UserProviderDetalleInversion = ({
             id_proyecto: item.id_proyecto,
             id_producto: item.id_producto,
             id_actividad: item.id_actividad,
+            id_indicador: item.id_indicador,
+            id_meta: item.id_meta,
           })
         );
 
@@ -328,12 +352,20 @@ export const UserProviderDetalleInversion = ({
 
   const value: UserContext = {
     // * id
+    id_plan,
     id_programa,
-    set_id_programa,
     id_proyecto,
-    set_id_proyecto,
     id_producto,
+    id_actividad,
+    id_indicador,
+    id_meta,
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
     set_id_producto,
+    set_id_actividad,
+    set_id_indicador,
+    set_id_meta,
 
     // * select
     sector_selected,

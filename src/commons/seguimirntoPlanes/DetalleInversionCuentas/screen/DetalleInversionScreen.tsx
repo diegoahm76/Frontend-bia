@@ -7,6 +7,8 @@ import { AgregarDetalleInversion } from '../components/Components/AgregarDetalle
 import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaMetas } from '../components/Components/BusquedaAvanzada/BusquedaMetas';
+import { BusuquedaDetalleInversion } from '../components/Components/BusquedaAvanzada/BusuquedaDetalleInversion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DetalleInversionScreen: React.FC = () => {
@@ -45,7 +47,8 @@ export const DetalleInversionScreen: React.FC = () => {
           <Title title="Detalle inversión cuentas " />
         </Grid>
       </Grid>
-      <ListarDetalleInversion />
+      <BusquedaMetas />
+      {mode.ver ? <ListarDetalleInversion /> : null}
       {mode.crear || mode.editar ? <AgregarDetalleInversion /> : null}
       <Grid
         container
@@ -63,6 +66,7 @@ export const DetalleInversionScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusuquedaDetalleInversion />
         <Grid item>
           <ButtonSalir />
         </Grid>

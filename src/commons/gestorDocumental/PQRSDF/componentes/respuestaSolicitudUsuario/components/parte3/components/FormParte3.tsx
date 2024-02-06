@@ -33,7 +33,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { control_success } from '../../../../../../../../helpers';
-0;
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import './style.css';
@@ -43,22 +42,21 @@ import  AttachFileIcon  from '@mui/icons-material/AttachFile';
 import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolicitudUsuario';
 import { useResSolicitudUsu } from '../../../hook/useResSolicitudUsu';
 import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../toolkit/slice/ResSolicitudUsarioSlice';
+import { useFiles } from '../../../../../../../../hooks/useFiles/useFiles';
 export const FormParte3 = ({
   controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
   resetFormulario,
   watchFormulario,
   setInfoReset,
 }: any): JSX.Element => {
   //* dispatch de redux
   const dispatch: any = useAppDispatch();
+  const { controlar_tamagno_archivos } = useFiles();
 
   //* redux states functions
   const { currentAnexo, anexosCreados, metadatos, viewMode } = useAppSelector(
     (state: any) => state.ResSolicitudUsarioSlice
   );
-
 
 
   // ? stepper hook
@@ -174,7 +172,7 @@ export const FormParte3 = ({
       },
       tieneReplicaFisicaMetadatos: {
         value: metadatos?.tieneReplicaFisicaMetadatos?.value,
-        label: metadatos?.tieneReplicaFisicaMetadatos?.label,
+        label: metadatos?.tieneReplicaFisicaMetadatos?.value,
       },
       origenArchivoMetadatos: {
         value: metadatos?.origenArchivoMetadatos?.value,
@@ -304,6 +302,7 @@ export const FormParte3 = ({
         }}
         onSubmit={(e: any) => {
           e.preventDefault();
+          console.log(e,"eeeeee")
           handleAnexo();
           //* luego de la creación del anexo no se deben limpiar los campos del formualrio, ya que el usuario puede seguir creando sobre esa misma solicitud, solo el button limpiar campos puede hacer eso ya que se le advierte plenamente al usuario
         }}
@@ -337,27 +336,12 @@ export const FormParte3 = ({
                     <input
                       style={{ display: 'none' }}
                       type="file"
-                      accept="application/pdf"
                       // disabled={ccd_current?.actual}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
                           const file = files[0];
-                          if (file.type !== 'application/pdf') {
-                            control_warning(
-                              'Precaución: Solo es admitido archivos en formato pdf'
-                            );
-                          } else if (file.size > FILEWEIGHT.PDF) {
-                            const MAX_FILE_SIZE_MB = (
-                              FILEWEIGHT.PDF /
-                              (1024 * 1024)
-                            ).toFixed(1);
-                            control_warning(
-                              `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                            );
-                          } else {
-                            onChange(file);
-                          }
+                          controlar_tamagno_archivos(file,onChange)
                         }
                       }}
                     />

@@ -22,6 +22,7 @@ import type {
   InfoPersona,
   IUnspsc,
   ISeguimientoPAI,
+  ISeguiminetoPOAI,
 } from '../../types/types';
 import { IPlan } from '../../Consultas/types/types';
 
@@ -216,6 +217,8 @@ export const initial_state_detalle_inversion: IDetalleCuentas = {
   nombre_proyecto: '',
   nombre_producto: '',
   nombre_actividad: '',
+  nombre_indicador: '',
+  nombre_meta: '',
   cuenta: '',
   valor_cuenta: null,
   id_sector: null,
@@ -225,6 +228,8 @@ export const initial_state_detalle_inversion: IDetalleCuentas = {
   id_proyecto: null,
   id_producto: null,
   id_actividad: null,
+  id_indicador: null,
+  id_meta: null,
 };
 
 export const initial_state_concepto_poai: IConceptoPOAI = {
@@ -286,6 +291,9 @@ export const initial_state_plan_adquisiciones: IPlanAdquisiciones = {
   vigencia_futura: null,
   decreto_paa: false,
   suministro_paa: false,
+  codigo_modalidad: '',
+  email_persona_responsable: '',
+  telefono_persona_responsable: '',
   id_plan: null,
   id_intervalo: null,
   id_modalidad: null,
@@ -374,6 +382,70 @@ export const initial_state_consulta_plan: IPlan = {
   estado_vigencia: false,
 };
 
+export const initial_state_seguimineto_poai: ISeguiminetoPOAI = {
+  id_seguimiento: null,
+  id: null,
+  nombre_plan: '',
+  nombre_programa: '',
+  nombre_proyecto: '',
+  nombre_producto: '',
+  nombre_actividad: '',
+  nombre_unidad: '',
+  nombre_indicador: '',
+  nombre_meta: '',
+  codigo_modalidad: '',
+  concepto: '',
+  sector: '',
+  nombre_fuente: '',
+  cuenta: '',
+  objeto_contrato: '',
+  ubicacion: '',
+  clase_tercero: '',
+  porcentaje_pto: null,
+  vano_1: null,
+  vano_2: null,
+  vano_3: null,
+  vano_4: null,
+  valor_total: null,
+  numero_cdp_paa: null,
+  numero_rp_paa: null,
+  valor_seguimiento_banco_paa: null,
+  valor_cdp_paa: null,
+  valor_rp_paa: null,
+  fecha_termiacion: '',
+  duracion: null,
+  valor_mesual_paoi: null,
+  mes_oferta_paa: '',
+  mes_solicita: '',
+  valor_pagado: null,
+  valor_obligado: null,
+  valor_saldo: null,
+  porcentaje_ejecuta: null,
+  numero_contrato: null,
+  numerp_rp: null,
+  fecha_rp: '',
+  valor_cdp: null,
+  numero_cdp: null,
+  fecha_cdp: '',
+  observaciones: '',
+  id_plan: null,
+  id_programa: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+  id_indicador: null,
+  id_meta: null,
+  id_concepto: null,
+  id_fuente_financiacion: null,
+  id_unidad_organizacional: null,
+  id_detalle_inversion: null,
+  id_banco_proyecto: null,
+  id_modalidad: null,
+  id_ubicacion: null,
+  id_clase_tercero: null,
+  id_sector: null,
+};
+
 export const initial_state: IPlanesIndex = {
   plan: initial_state_planes,
   eje_estrategico: initial_state_eje_estrategico,
@@ -398,6 +470,7 @@ export const initial_state: IPlanesIndex = {
   mode_paa_codigos: mode_paa_codigos,
   seguimiento_pai: initial_state_segui_pai,
   consulta_plan: initial_state_consulta_plan,
+  seguimiento_poai: initial_state_seguimineto_poai,
 };
 
 export const planes_slice = createSlice({
@@ -538,6 +611,12 @@ export const planes_slice = createSlice({
     ) => {
       state.consulta_plan = action.payload;
     },
+    set_current_seguimiento_paoi: (
+      state: IPlanesIndex,
+      action: PayloadAction<ISeguiminetoPOAI>
+    ) => {
+      state.seguimiento_poai = action.payload;
+    },
   },
 });
 
@@ -566,4 +645,5 @@ export const {
   set_current_mode_paa_codigos,
   set_current_seguimiento_pai,
   set_current_consulta_plan,
+  set_current_seguimiento_paoi,
 } = planes_slice.actions;

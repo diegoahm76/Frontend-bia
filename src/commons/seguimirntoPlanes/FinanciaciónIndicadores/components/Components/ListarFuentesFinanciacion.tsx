@@ -17,7 +17,7 @@ import {
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   set_current_fuentes_financiacion,
@@ -238,12 +238,12 @@ export const ListarFuentesFinanciacion: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_fuentes}
-                  columns={columns_fuente}
+                  rows={rows_fuentes ?? []}
+                  columns={columns_fuente ?? []}
                   pageSize={10}
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
-                  getRowId={(row) => uuidv4()}
+                  getRowId={() => uuidv4()}
                 />
               </>
             </Box>

@@ -17,7 +17,7 @@ export const getDetalleSolicitud = async (
     await Swal.fire({
       icon: 'error',
       title: 'Oops...',
-      text: 'Error al cargar la información de la solicitud',
+      text: 'Error al cargar la información de la solicitud y/o no hay información asociada a la solicitud',
     });
   } finally {
     setLoading(false);
@@ -38,7 +38,7 @@ export const getAnexosSolicitud = async (
     await Swal.fire({
       icon: 'error',
       title: 'Oops...',
-      text: 'Error al cargar los anexos de la solicitud',
+      text: 'Error al cargar los anexos de la solicitud y/o no hay anexos asociados a la solicitud',
     });
   } finally {
     setLoading(false);

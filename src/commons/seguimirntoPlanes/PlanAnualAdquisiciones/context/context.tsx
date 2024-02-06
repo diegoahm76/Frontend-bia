@@ -41,11 +41,14 @@ interface UserContext {
   id_indicador: number | null;
   set_id_indicador: (value: number | null) => void;
 
+  id_person: number | null;
+  set_id_person: (value: number | null) => void;
+
   // * rows
   rows_plan_adquisiciones: IPlanAdquisiciones[];
   set_rows_plan_adquisiciones: (value: IPlanAdquisiciones[]) => void;
-  rows_paa_codigos: IPlanAdquisiciones[];
-  set_rows_paa_codigos: (value: IPlanAdquisiciones[]) => void;
+  rows_paa_codigos: IUnspsc[];
+  set_rows_paa_codigos: (value: IUnspsc[]) => void;
 
   // * select
   planes_selected: ValueProps[];
@@ -87,6 +90,9 @@ export const DataContextAdquisiciones = createContext<UserContext>({
 
   id_indicador: null,
   set_id_indicador: () => {},
+
+  id_person: null,
+  set_id_person: () => {},
 
   rows_plan_adquisiciones: [],
   set_rows_plan_adquisiciones: () => {},
@@ -134,6 +140,7 @@ export const UserProviderAdquisiciones = ({
 
   // * id
   const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
+  const [id_person, set_id_person] = React.useState<number | null>(null);
 
   // * select
   const [planes_selected, set_planes_selected] = React.useState<ValueProps[]>(
@@ -167,7 +174,7 @@ export const UserProviderAdquisiciones = ({
   const [rows_plan_adquisiciones, set_rows_plan_adquisiciones] = React.useState<
     IPlanAdquisiciones[]
   >([]);
-  const [rows_paa_codigos, set_rows_paa_codigos] = React.useState<IUnspsc[]>(
+  const [rows_paa_codigos, set_rows_paa_codigos] = React.useState<any[]>(
     []
   );
 
@@ -203,6 +210,9 @@ export const UserProviderAdquisiciones = ({
             vigencia_futura: item.vigencia_futura,
             decreto_paa: item.decreto_paa,
             suministro_paa: item.suministro_paa,
+            telefono_persona_responsable: item.telefono_persona_responsable,
+            email_persona_responsable: item.email_persona_responsable,
+            codigo_modalidad: item.codigo_modalidad,
             id_plan: item.id_plan,
             id_intervalo: item.id_intervalo,
             id_modalidad: item.id_modalidad,
@@ -325,7 +335,7 @@ export const UserProviderAdquisiciones = ({
         const data_selected: ValueProps[] | any = response.map(
           (item: IUbicacion) => ({
             value: item.id_ubicacion,
-            label: item.nombre_ubicacion,
+            label: `${item.codigo_ubicacion} - ${item.nombre_ubicacion} `,
           })
         );
         set_ubicacion_selected(data_selected);
@@ -407,6 +417,9 @@ export const UserProviderAdquisiciones = ({
     // * id
     id_indicador,
     set_id_indicador,
+
+    id_person,
+    set_id_person,
 
     // * select
     planes_selected,

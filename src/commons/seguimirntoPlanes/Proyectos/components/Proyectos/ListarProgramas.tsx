@@ -154,8 +154,8 @@ export const ListarProgramas: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_programa}
-                  columns={columns_programas}
+                  rows={rows_programa ?? []}
+                  columns={columns_programas ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

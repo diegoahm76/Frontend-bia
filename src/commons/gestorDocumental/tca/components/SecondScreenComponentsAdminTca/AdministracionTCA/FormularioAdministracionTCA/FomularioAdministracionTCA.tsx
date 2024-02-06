@@ -9,7 +9,7 @@ import {
   Button,
   Grid,
   Stack,
-  TextField
+  TextField,
   // TextField,
 } from '@mui/material';
 import { useContext /* , useEffect */ } from 'react';
@@ -32,13 +32,13 @@ import {
   set_catalog_TCA_action,
   set_catalog_trd_action,
   set_mixed_tipologias,
-  set_selected_item_from_catalogo_action
+  set_selected_item_from_catalogo_action,
 } from '../../../../toolkit/TCAResources/slice/TcaSlice';
 import {
   create_item_catalogo_tca_service,
   get_catalogo_TCA_service,
   get_catalogo_TRD_service,
-  update_item_catalogo_tca_service
+  update_item_catalogo_tca_service,
 } from '../../../../toolkit/TCAResources/thunks/TcaServicesThunks';
 import { LoadingButton } from '@mui/lab';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -47,6 +47,7 @@ import { HistorialCambiosTCA } from '../../components/HistorialCambiosTCAActual/
 import { FILEWEIGHT } from '../../../../../../../fileWeight/fileWeight';
 import SecurityIcon from '@mui/icons-material/Security';
 import { ModalReservarTipologias } from './../../components/ReservarTipologias/ModalReservarTipologias';
+import { useFiles } from '../../../../../../../hooks/useFiles/useFiles';
 
 export const FormularioAdministracionTCA: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -58,16 +59,18 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     closeModalAdministracionTca,
     loadingButton,
     setLoadingButton,
-    openModalReservaTipologia
+    openModalReservaTipologia,
   } = useContext(ModalContextTCA);
   // * state from tca_slice
   const { tca_current, selected_item_from_catalogo, mixed_tipologias } =
     useAppSelector((state: any) => state.tca_slice);
 
+  const { controlar_tamagno_archivos } = useFiles();
+
   const {
     control_administrar_tca,
     reset_administrar_tca,
-    watch_administrar_tca_value
+    watch_administrar_tca_value,
   } = use_tca();
 
   const updateCatalogoTRD = async (id: number) => {
@@ -85,10 +88,10 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       id_cat_serie_und_ccd_trd: '',
       cod_clas_expediente: {
         value: '',
-        label: ''
+        label: '',
       },
       justificacion_cambio: '',
-      ruta_archivo_cambio: ''
+      ruta_archivo_cambio: '',
     });
   };
 
@@ -106,11 +109,11 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     reset_administrar_tca({
       cod_clas_expediente: {
         value: selected_item_from_catalogo?.cod_clas_expediente,
-        label: comparacion
+        label: comparacion,
       },
       id_cat_serie_und_ccd_trd:
         selected_item_from_catalogo?.id_cat_serie_und_ccd_trd,
-      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio
+      justificacion_cambio: selected_item_from_catalogo?.justificacion_cambio,
     });
   }, [selected_item_from_catalogo]);
 
@@ -122,13 +125,14 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
     const bodyToSend: any = {
       id_tca: tca_current?.id_tca,
       id_cat_serie_und_ccd_trd: data1,
-      cod_clas_expediente: data2
+      cod_clas_expediente: data2,
     };
 
-
-    
-
-    void create_item_catalogo_tca_service(bodyToSend, setLoadingButton, mixed_tipologias)
+    void create_item_catalogo_tca_service(
+      bodyToSend,
+      setLoadingButton,
+      mixed_tipologias
+    )
       .then(async () => await updateCatalogoTRD(tca_current?.id_trd))
       .then(async () => await updateCatalogoTCA(tca_current?.id_tca))
       .then(() => {
@@ -157,8 +161,11 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
       );
     }
 
-    if(mixed_tipologias.length > 0){
-      formData.append('tipologias_reservadas', JSON.stringify(mixed_tipologias));
+    if (mixed_tipologias.length > 0) {
+      formData.append(
+        'tipologias_reservadas',
+        JSON.stringify(mixed_tipologias)
+      );
     }
 
     void update_item_catalogo_tca_service(
@@ -197,7 +204,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
             container
             spacing={2}
             sx={{
-              marginTop: '1rem'
+              marginTop: '1rem',
             }}
           >
             <Grid
@@ -205,7 +212,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               xs={12}
               sm={6}
               sx={{
-                zIndex: 2
+                zIndex: 2,
               }}
             >
               <Controller
@@ -214,7 +221,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <div>
                     <Select
@@ -230,7 +237,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                         style={{
                           color: 'rgba(0, 0, 0, 0.6)',
                           fontWeight: 'thin',
-                          fontSize: '0.75rem'
+                          fontSize: '0.75rem',
                         }}
                       >
                         Tipo de clasificación
@@ -248,7 +255,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
               xs={12}
               sm={6}
               sx={{
-                zIndex: 2
+                zIndex: 2,
               }}
             >
               <Button
@@ -280,7 +287,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error }
+                      fieldState: { error },
                     }) => (
                       <TextField
                         fullWidth
@@ -317,7 +324,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                     rules={{ required: false }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error }
+                      fieldState: { error },
                     }) => (
                       <>
                         <Button
@@ -328,7 +335,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           }
                           component="label"
                           style={{
-                            width: '100%'
+                            width: '100%',
                           }}
                           startIcon={<CloudUploadIcon />}
                         >
@@ -338,27 +345,13 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                           <input
                             style={{ display: 'none' }}
                             type="file"
-                            accept="application/pdf"
+                            // accept="application/pdf"
                             onChange={(e) => {
                               const files = (e.target as HTMLInputElement)
                                 .files;
                               if (files && files.length > 0) {
                                 const file = files[0];
-                                if (file.type !== 'application/pdf') {
-                                  control_warning(
-                                    'Precaución: Solo es admitido archivos en formato pdf'
-                                  );
-                                } else if (file.size > FILEWEIGHT.PDF) {
-                                  const MAX_FILE_SIZE_MB = (
-                                    FILEWEIGHT.PDF /
-                                    (1024 * 1024)
-                                  ).toFixed(1);
-                                  control_warning(
-                                    `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                                  );
-                                } else {
-                                  onChange(file);
-                                }
+                                controlar_tamagno_archivos(file, onChange);
                               }
                             }}
                           />
@@ -368,7 +361,7 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                             style={{
                               color: 'rgba(0, 0, 0, 0.6)',
                               fontWeight: 'thin',
-                              fontSize: '0.75rem'
+                              fontSize: '0.75rem',
                             }}
                           >
                             {control_administrar_tca._formValues
@@ -421,8 +414,8 @@ export const FormularioAdministracionTCA: FC = (): JSX.Element => {
                   id_cat_serie_und_ccd_trd: '',
                   cod_clas_expediente: {
                     value: '',
-                    label: ''
-                  }
+                    label: '',
+                  },
                 });
                 closeModalAdministracionTca();
                 dispatch(set_selected_item_from_catalogo_action(null));

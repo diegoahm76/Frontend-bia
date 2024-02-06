@@ -23,12 +23,14 @@ import {
   set_pqrs,
   set_pqr_status,
 } from '../../store/slice/complementoPqrsdfSlice';
+import ListadoComplementos from './ListadoComplementos';
 interface IProps {
   control_form: any | null;
   reset: any | null;
+  delete_function: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const StepOne = ({ control_form, reset }: IProps) => {
+const StepOne = ({ control_form, reset, delete_function }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const {
@@ -144,6 +146,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
             },
           ]}
         />
+        <ListadoComplementos delete_function={delete_function} />
       </Grid>
     </>
   );

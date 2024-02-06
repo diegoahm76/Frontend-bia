@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -38,17 +38,12 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     setRadicado,
     setValue,
 
-    anexos,
-    metadatos,
     setAnexos,
-    setMetadatos,
   } = useContext(PanelVentanillaContext);
   const {
     handleGeneralLoading,
     handleThirdLoading,
 
-    openModalOne: infoAnexos,
-    openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
   } = useContext(ModalAndLoadingContext);
@@ -100,7 +95,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 
@@ -181,7 +176,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       minWidth: 250,
       renderCell: (params: any) => {
         switch (true) {
-          case params.row.dias_respuesta > 7:
+          case params.row.dias_respuesta >= 7:
             return (
               <Chip
                 size="small"
@@ -199,7 +194,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 variant="outlined"
               />
             );
-          case params.row.dias_respuesta < 4 && params.row.dias_respuesta > 0:
+          case params.row.dias_respuesta <= 4 && params.row.dias_respuesta > 0:
             return (
               <Chip
                 label={`${params.row.dias_respuesta} día(s)`}

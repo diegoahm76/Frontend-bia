@@ -12,6 +12,10 @@ interface UserContext {
   // * id
   id_plan: number | null;
   set_id_plan: (value: number | null) => void;
+  id_programa: number | null;
+  set_id_programa: (value: number | null) => void;
+  id_proyecto: number | null;
+  set_id_proyecto: (value: number | null) => void;
 
   // * rows
   rows_proyecto: IProyectos[];
@@ -35,6 +39,11 @@ export const DataContextProyectos = createContext<UserContext>({
   // * id
   id_plan: null,
   set_id_plan: () => {},
+  id_programa: null,
+  set_id_programa: () => {},
+  id_proyecto: null,
+  set_id_proyecto: () => {},
+  // * rows
   rows_proyecto: [],
   set_rows_proyecto: () => {},
   rows_programa: [],
@@ -54,6 +63,8 @@ export const UserProviderProyectos = ({
 }): JSX.Element => {
   // * id
   const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
+  const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
 
   // * select
   const [tipo_eje_selected, set_tipo_eje_selected] = React.useState<
@@ -69,9 +80,9 @@ export const UserProviderProyectos = ({
 
   // * fetch
   //* declaracion context
-  const {
-    programa: { id_programa },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   programa: { id_programa },
+  // } = useAppSelector((state) => state.planes);
 
   const fetch_data_proyecto = async (): Promise<void> => {
     try {
@@ -137,6 +148,10 @@ export const UserProviderProyectos = ({
     // * id
     id_plan,
     set_id_plan,
+    id_programa,
+    set_id_programa,
+    id_proyecto,
+    set_id_proyecto,
 
     // * select
     tipo_eje_selected,

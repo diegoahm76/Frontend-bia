@@ -15,6 +15,7 @@ import { control_error } from '../../../../../../helpers/controlError';
 export const ModalInfoAlerta: React.FC<InterfazMostarAlerta> = ({ dat, marcador, activate_suspender_alerta, columnnns }: InterfazMostarAlerta) => {
 
     const alerta_inicial: AlertaBandejaAlertaPersona = {
+        documento: "",
         mensaje: "",
         id_alerta_bandeja_alerta_persona: 0,
         nivel_prioridad: 0,

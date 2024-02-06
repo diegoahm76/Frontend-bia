@@ -38,7 +38,6 @@ export const ElementoOPAS = (): JSX.Element => {
   // ? set actions OPAS, button selected
 
   const setActionsOpas = (opa: any) => {
-    //  console.log('')(pqrsdf);
 
     if (
       opa?.estado_actual_solicitud === 'EN GESTION' ||
@@ -57,10 +56,10 @@ export const ElementoOPAS = (): JSX.Element => {
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
-
+/*
     const shouldDisable = (actionId: string) => {
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
@@ -109,8 +108,7 @@ export const ElementoOPAS = (): JSX.Element => {
       ...action,
       disabled: shouldDisable(action.id),
     }));
-    //  console.log('')(actionsPQRSDF);
-    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));
+    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));*/
   };
 
   //* const columns with actions
@@ -118,8 +116,36 @@ export const ElementoOPAS = (): JSX.Element => {
   const columns = [
     ...columnsOpas,
     {
+      headerName: 'Costo del proyecto',
+      field: 'costo_proyecto',
+      minWidth: 250,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={`$${params.value?.toLocaleString()}`}
+            color="primary"
+          />
+        );
+      }
+    },
+    {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
+      minWidth: 200,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={params.value ? 'Sí' : 'No'}
+            color={params.value ? 'success' : 'error'}
+          />
+        );
+      },
+    },
+    {
+      headerName: 'Pagado',
+      field: 'pagado',
       minWidth: 200,
       renderCell: (params: any) => {
         return (
@@ -167,27 +193,6 @@ export const ElementoOPAS = (): JSX.Element => {
                 onClick={() => {
                   handleOpenModalOne(true);
                   setActionsOpas(params?.row);
-
-                  //* pendiente llamada a servicio de anexos
-
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
-                  /*   setActionsPQRSDF(params?.row);
-                  handleOpenInfoMetadatos(false);
-                  handleOpenInfoAnexos(false);*/
-                  // setMetadatos([]);
                 }}
               >
                 <Avatar

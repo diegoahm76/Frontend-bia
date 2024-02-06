@@ -31,28 +31,77 @@ import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar'
 export const ListarMetas: React.FC = () => {
   const columns_metas: GridColDef[] = [
     {
-      field: 'nombre_indicador',
-      headerName: 'NOMBRE INDICADOR',
+      field: 'nombre_plan',
+      headerName: 'Nombre del Plan',
       sortable: true,
-      width: 300,
+      width: 250,
+    },
+    {
+      field: 'nombre_programa',
+      headerName: 'Nombre del Programa',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_proyecto',
+      headerName: 'Nombre del Proyecto',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_producto',
+      headerName: 'Nombre del Producto',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_actividad',
+      headerName: 'Nombre de la Actividad',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_indicador',
+      headerName: 'Nombre del Indicador',
+      sortable: true,
+      width: 250,
     },
     {
       field: 'nombre_meta',
-      headerName: 'NOMBRE META',
+      headerName: 'Nombre de la Meta',
       sortable: true,
-      width: 300,
+      width: 150,
     },
     {
       field: 'unidad_meta',
-      headerName: 'UNIDAD META',
+      headerName: 'Unidad de Meta',
       sortable: true,
-      width: 120,
+      width: 100,
     },
     {
       field: 'porcentaje_meta',
-      headerName: 'PORCENTAJE META',
+      headerName: 'Porcentaje de Meta',
       sortable: true,
-      width: 300,
+      width: 150,
+    },
+    {
+      field: 'cumplio',
+      headerName: '¿Cumplió?',
+      sortable: true,
+      width: 100,
+      renderCell: (params) => (params.value ? 'Sí' : 'No'),
+    },
+    {
+      field: 'fecha_creacion_meta',
+      headerName: 'Fecha de Creación de Meta',
+      sortable: true,
+      width: 200,
+    },
+    {
+      field: 'avance_fisico',
+      headerName: 'Avance Físico',
+      sortable: true,
+      width: 150,
     },
     {
       field: 'valor_meta',
@@ -83,6 +132,12 @@ export const ListarMetas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
+              set_id_producto(params.row.id_producto);
+              set_id_actividad(params.row.id_actividad);
+              set_id_indicador(params.row.id_indicador);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -103,7 +158,7 @@ export const ListarMetas: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar meta"
+                titleAccess="Editar Meta"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -117,12 +172,21 @@ export const ListarMetas: React.FC = () => {
     },
   ];
 
-  const { rows_metas, fetch_data_mata_indicador } =
-    useContext(DataContextMetas);
-
   const {
-    indicador: { id_indicador },
-  } = useAppSelector((state) => state.planes);
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
+    set_id_indicador,
+    id_indicador,
+    rows_metas,
+    fetch_data_mata_indicador,
+  } = useContext(DataContextMetas);
+
+  // const {
+  //   indicador: { id_indicador },
+  // } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
 
@@ -176,8 +240,8 @@ export const ListarMetas: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_metas}
-                  columns={columns_metas}
+                  rows={rows_metas ?? []}
+                  columns={columns_metas ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
@@ -186,7 +250,23 @@ export const ListarMetas: React.FC = () => {
             </Box>
           </Grid>
         </>
-        <Grid container spacing={2} justifyContent="flex-end">
+
+        <Grid
+          container
+          spacing={2}
+          // m={2}
+          // p={2}
+          // sx={{
+          //   position: 'relative',
+          //   background: '#FAFAFA',
+          //   borderRadius: '15px',
+          //   p: '20px',
+          //   m: '10px 0 20px 0',
+          //   mb: '20px',
+          //   boxShadow: '0px 3px 6px #042F4A26',
+          // }}
+          justifyContent="flex-end"
+        >
           <Grid item>
             <Button
               variant="outlined"

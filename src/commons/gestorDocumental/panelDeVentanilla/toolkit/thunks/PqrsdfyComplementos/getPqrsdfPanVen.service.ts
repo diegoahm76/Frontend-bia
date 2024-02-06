@@ -1,7 +1,6 @@
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../api/axios';
-import { control_error, control_success } from '../../../../../../helpers';
-import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import {  control_success } from '../../../../../../helpers';
 import { formatDate } from '../../../../../../utils/functions/formatDate';
 
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -18,6 +17,17 @@ interface Item {
 
 const BASE_URL = 'gestor/panel_ventanilla/pqrsdf/get/';
 
+/**
+ * Retrieves a list of items for the Pqrsdf Panel Ventanilla based on the provided filters.
+ * @param estado_actual_solicitud The current status of the request (optional).
+ * @param radicado The reference number of the request (optional).
+ * @param tipo_solicitud The type of request (optional).
+ * @param fecha_inicio The start date of the request (optional).
+ * @param fecha_fin The end date of the request (optional).
+ * @param tipo_pqrsdf The type of Pqrsdf (optional).
+ * @param handleSecondLoading A function to handle the loading state (optional).
+ * @returns A promise that resolves to an array of items for the Pqrsdf Panel Ventanilla.
+ */
 export const getGrilladoPqrsdfPanelVentanilla = async (
   estado_actual_solicitud: string = '',
   radicado: string = '',

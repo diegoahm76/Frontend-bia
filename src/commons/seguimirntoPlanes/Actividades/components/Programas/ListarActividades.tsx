@@ -1,60 +1,93 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { Avatar, Box, Button, ButtonGroup, Chip, Grid, IconButton } from '@mui/material';
-import { Title } from '../../../../../components/Title';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
-import { useContext, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import EditIcon from '@mui/icons-material/Edit';
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonGroup,
+  Grid,
+  IconButton,
+} from '@mui/material';
+import { useAppDispatch } from '../../../../../hooks';
 import {
   set_current_actividad,
   set_current_mode_planes,
 } from '../../../store/slice/indexPlanes';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
 import { DataContextActividades } from '../../context/context';
-import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { useContext, useEffect } from 'react';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { Title } from '../../../../../components/Title';
+import { v4 as uuidv4 } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarActividades: React.FC = () => {
-
-  const columns_actividades: GridColDef[] = [
-    {
-      field: 'nombre_actividad',
-      headerName: 'NOMBRE ACTIVIDAD',
-      sortable: true,
-      width: 300,
-    },
-    {
-      field: 'numero_actividad',
-      headerName: 'NUMERO ACTIVIDAD',
-      sortable: true,
-      width: 120,
-    },
+  const columns: GridColDef[] = [
     {
       field: 'nombre_plan',
-      headerName: 'NOMBRE PLAN',
+      headerName: 'Nombre del Plan',
       sortable: true,
-      width: 300,
+      width: 250,
+    },
+    {
+      field: 'nombre_programa',
+      headerName: 'Nombre del Programa',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_proyecto',
+      headerName: 'Nombre del Proyecto',
+      sortable: true,
+      width: 250,
     },
     {
       field: 'nombre_producto',
-      headerName: 'NOMBRE PRODUCTO',
+      headerName: 'Nombre del Producto',
       sortable: true,
-      width: 300,
+      width: 250,
     },
-
     {
-      field: 'acciones',
-      headerName: 'ACCIONES',
+      field: 'numero_actividad',
+      headerName: 'Número de Actividad',
       sortable: true,
-      width: 200,
-      flex: 1,
+      width: 100,
+    },
+    {
+      field: 'nombre_actividad',
+      headerName: 'Nombre de la Actividad',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'fecha_creacion',
+      headerName: 'Fecha de Creación',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'cumplio',
+      headerName: '¿Cumplió?',
+      sortable: true,
+      width: 100,
+      renderCell: (params) => (params.value ? 'Sí' : 'No'),
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 250,
       renderCell: (params) => (
         <>
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
+              set_id_producto(params.row.id_producto);
+              set_id_actividad(params.row.id_actividad);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -63,6 +96,7 @@ export const ListarActividades: React.FC = () => {
                 })
               );
               dispatch(set_current_actividad(params.row));
+              /* Agrega la lógica que desees */
             }}
           >
             <Avatar
@@ -89,16 +123,18 @@ export const ListarActividades: React.FC = () => {
     },
   ];
 
-  const { rows_actividad, fetch_data_actividad } =
-    useContext(DataContextActividades);
+  const dispatch = useAppDispatch();
 
   const {
-    producto: { id_producto }, 
-  } = useAppSelector((state) => state.planes);
-
-  //  console.log('')('id_producto', id_producto);
-
-  const dispatch = useAppDispatch();
+    rows_actividad,
+    id_producto,
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
+    fetch_data_actividad,
+  } = useContext(DataContextActividades);
 
   useEffect(() => {
     if (id_producto) {
@@ -122,45 +158,45 @@ export const ListarActividades: React.FC = () => {
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
+        // justifyContent="flex-end"
       >
-        <Grid item xs={12}>
-          <Title title="Listado de actividads " />
-        </Grid>
-        <>
-          <Grid item xs={12}>
-            <Box sx={{ width: '100%' }}>
-              <>
-              <ButtonGroup
+        {rows_actividad.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Title title="Listado de actividades" />
+              {/* <Typography>Listado de actividades</Typography> */}
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ width: '100%' }}>
+                <ButtonGroup
                   style={{
                     margin: 7,
                     display: 'flex',
                     justifyContent: 'flex-end',
                   }}
                 >
-                  {download_xls({
-                    nurseries: rows_actividad,
-                    columns: columns_actividades,
-                  })}
+                  {download_xls({ nurseries: rows_actividad, columns })}
                   {download_pdf({
                     nurseries: rows_actividad,
-                    columns: columns_actividades,
-                    title: 'CREAR ACTIVIDAD',
+                    columns,
+                    title: 'Listado de actividades',
                   })}
                 </ButtonGroup>
                 <DataGrid
                   density="compact"
                   autoHeight
                   rows={rows_actividad}
-                  columns={columns_actividades}
+                  columns={columns}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
                 />
-              </>
-            </Box>
-          </Grid>
-        </>
-        <Grid container spacing={2} justifyContent="flex-end">
+              </Box>
+            </Grid>
+          </>
+        )}
+
+        <Grid container justifyContent="flex-end">
           <Grid item>
             <Button
               variant="outlined"

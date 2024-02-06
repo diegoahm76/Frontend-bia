@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
-import { Divider, Button, Grid, TextField, FormControl, InputLabel, Select, MenuItem, } from '@mui/material';
+import { Divider, Button, Grid, TextField, FormControl, InputLabel, Select, MenuItem, ButtonGroup, } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,6 +12,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import { api } from '../../../api/axios';
 import { control_error, control_success } from '../../../helpers';
 import { Title } from '../../../components/Title';
+import { download_xls } from '../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
 
 
 interface ConfiguracionBasica {
@@ -67,9 +70,9 @@ export const SupEtapasProceso: React.FC = () => {
     };
 
     const columns = [
-        { field: 'id', headerName: ' Numero ', width: 130, flex: 1 },
+        // { field: 'id', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'categoria', headerName: 'categoria', width: 130, flex: 1 },
-        { field: 'id_etapa', headerName: 'id_etapa', width: 130, flex: 1 },
+        { field: 'nombre_etapa', headerName: 'Nombre etapa', width: 130, flex: 1 },
 
         { field: 'orden', headerName: 'orden', width: 130, flex: 1 },
 
@@ -196,7 +199,7 @@ export const SupEtapasProceso: React.FC = () => {
             >
                 <Title title="Subetapas de procesos " />
                 <Grid container item xs={12} spacing={2} marginTop={2}>
-                    
+
                     <Grid item xs={12} sm={3}>
                         <FormControl fullWidth size="small">
                             <InputLabel id="etapa-select-label">Etapa</InputLabel>
@@ -268,6 +271,20 @@ export const SupEtapasProceso: React.FC = () => {
                             marginBottom: '8px',
                         }}
                     />
+
+                    <Grid item xs={12} sm={10} ></Grid>
+
+                    <Grid item >
+                        <ButtonGroup style={{ margin: 5, }}>
+                            {download_xls({ nurseries: configuraciones, columns })}
+                            {download_pdf({
+                                nurseries: configuraciones,
+                                columns,
+                                title: 'Mis alertas',
+                            })}
+                        </ButtonGroup>
+                    </Grid>
+
                     <Grid item xs={12} sm={12} marginTop={2}>
                         <div style={{ height: 400, width: '100%' }}>
                             <DataGrid

@@ -69,7 +69,6 @@ const StepDenuncia = ({ control_form, reset, watch }: IProps) => {
   useEffect(() => {
     void dispatch(get_areas_service());
     void dispatch(get_departments_service());
-    console.log(pqr);
     if (denuncia !== null) {
       if (typeof denuncia?.cod_recursos_fectados_presuntos === 'string') {
         reset({

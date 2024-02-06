@@ -131,8 +131,8 @@ export const ConsultarIndicadores: React.FC = () => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={rows_indicadores}
-                columns={columns_indicadores}
+                rows={rows_indicadores ?? []}
+                columns={columns_indicadores ?? []}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 getRowId={(row) => uuidv4()}

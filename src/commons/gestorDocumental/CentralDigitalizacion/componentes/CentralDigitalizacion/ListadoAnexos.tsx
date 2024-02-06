@@ -27,6 +27,8 @@ import { IObjExhibit } from '../../interfaces/central_digitalizacion';
 import { v4 as uuid } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 import { control_error } from '../../store/thunks/centralDigitalizacionThunks';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Title } from '../../../../../components/Title';
@@ -37,8 +39,15 @@ interface IProps {
 const ListadoAnexos = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { exhibits, metadata, exhibit, storage_mediums, digitization_request } =
-    useAppSelector((state) => state.central_digitalizacion_slice);
+  const {
+    exhibits,
+    metadata,
+    exhibit,
+    storage_mediums,
+    digitization_request,
+    file_fisico,
+    edit_digitization,
+  } = useAppSelector((state) => state.central_digitalizacion_slice);
   const {
     control: control_form,
     handleSubmit: handle_submit_exhibit,
@@ -46,9 +55,10 @@ const ListadoAnexos = () => {
     getValues: get_values,
   } = useForm<IObjExhibit>();
   const [action, set_action] = useState<string>('Agregar');
-
+  const [cual_medio_view, set_cual_medio_view] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<string>('');
+
   const [add_metadata_is_active, set_add_metadata_is_active] =
     useState<boolean>(false);
 
@@ -76,6 +86,8 @@ const ListadoAnexos = () => {
         }
       }
     } else {
+      set_file_name('');
+
       if ((exhibit.metadatos?.archivo ?? null) !== null) {
         dispatch(
           set_exhibit({
@@ -125,8 +137,55 @@ const ListadoAnexos = () => {
     }
   }, [file]);
 
+  useEffect(() => {
+    if (file_fisico !== null) {
+      if ('name' in file_fisico) {
+        set_file_name(file_fisico.name);
+        dispatch(
+          set_exhibit({
+            ...exhibit,
+            nombre_anexo: get_values('nombre_anexo'),
+            orden_anexo_doc: get_values('orden_anexo_doc'),
+            cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+            medio_almacenamiento_otros_cual: get_values(
+              'medio_almacenamiento_otros_cual'
+            ),
+            numero_folios: 1,
+            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+            exhibit_link: file_fisico,
+            metadatos:
+              exhibit.id_anexo === null
+                ? metadata.asunto ?? null !== null
+                  ? metadata
+                  : null
+                : metadata,
+          })
+        );
+      }
+    }
+  }, [file_fisico]);
+
   const add_metadata_form = (): void => {
-    set_add_metadata_is_active(true);
+    const nombre_anexo = get_values('nombre_anexo') ?? '';
+    const medio_almacenamiento_otros_cual =
+      get_values('medio_almacenamiento_otros_cual') ?? '';
+    const cod_medio_almacenamiento =
+      get_values('cod_medio_almacenamiento') ?? '';
+    if (nombre_anexo !== '' && cod_medio_almacenamiento !== '') {
+      if (cod_medio_almacenamiento === 'Ot') {
+        if (medio_almacenamiento_otros_cual !== '') {
+          set_add_metadata_is_active(true);
+        } else {
+          control_error('Debe ingresar el nombre del medio de almacenamiento');
+        }
+      } else {
+        set_add_metadata_is_active(true);
+      }
+    } else {
+      control_error(
+        'Debe ingresar el nombre del anexo y el medio de almacenamiento'
+      );
+    }
   };
 
   const columns_list: GridColDef[] = [
@@ -136,14 +195,12 @@ const ListadoAnexos = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          {params.row.exhibit_link !== null &&
-            params.row.exhibit_link !== undefined &&
-            typeof exhibit.exhibit_link === 'string' &&
-            params.row.metadatos.archivo.ruta_archivo !== '' &&
-            params.row.metadatos.archivo.ruta_archivo !== null &&
-            typeof params.row.metadatos.archivo.ruta_archivo === 'string' && (
+          {(params.row.metadatos?.archivo?.ruta_archivo ?? null) !== '' &&
+            (params.row.metadatos?.archivo?.ruta_archivo ?? null) !== null &&
+            typeof (params.row.metadatos?.archivo?.ruta_archivo ?? null) ===
+              'string' && (
               <Tooltip title="Ver archivo">
-                <Grid item xs={1} md={1} spacing={1}>
+                <Grid item xs={0.5} md={0.5}>
                   <DownloadButton
                     fileUrl={params.row.metadatos.archivo.ruta_archivo}
                     fileName={'exhibit_link'}
@@ -211,7 +268,9 @@ const ListadoAnexos = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          <Tooltip title="Digitalizar">
+          <Tooltip
+            title={edit_digitization ? 'Digitalizar' : 'Ver digitalización'}
+          >
             <IconButton
               onClick={() => {
                 select_exhibit(params.row);
@@ -226,9 +285,23 @@ const ListadoAnexos = () => {
                 }}
                 variant="rounded"
               >
-                <EditIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
+                {edit_digitization ? (
+                  <EditIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                ) : (
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                )}
               </Avatar>
             </IconButton>
           </Tooltip>
@@ -274,111 +347,117 @@ const ListadoAnexos = () => {
             </Grid>
           </Box>
         </Grid>
-
-        <PrimaryForm
-          on_submit_form={null}
-          button_submit_label={action}
-          button_submit_icon_class={null}
-          button_submit_type={'button'}
-          button_submit_function={null}
-          show_button={false}
-          form_inputs={[
-            {
-              datum_type: 'title',
-              title_label: `Anexo - ${exhibit.nombre_anexo}`,
-            },
-            {
-              datum_type: 'input_file_controller',
-              xs: 12,
-              md: 6,
-              control_form: control_form,
-              control_name: 'exhibit_link',
-              default_value: '',
-              rules: {
-                required_rule: { rule: true, message: 'Archivo requerido' },
+        {exhibit.id_anexo !== null && (
+          <PrimaryForm
+            on_submit_form={null}
+            button_submit_label={action}
+            button_submit_icon_class={null}
+            button_submit_type={'button'}
+            button_submit_function={null}
+            show_button={false}
+            form_inputs={[
+              {
+                datum_type: 'title',
+                title_label: `Anexo - ${exhibit.nombre_anexo}`,
               },
-              label: 'Documento',
-              disabled: false,
-              helper_text: '',
-              set_value: set_file,
-              file_name,
-              value_file:
-                (exhibit.id_anexo ?? null) !== null
-                  ? exhibit.exhibit_link ?? null
-                  : null,
-            },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 6,
-              control_form: control_form,
-              control_name: 'nombre_anexo',
-              default_value: '',
-              rules: {},
-              label: 'Nombre de archivo',
-              type: 'text',
-              disabled: true,
-              helper_text: '',
-            },
-            {
-              datum_type: 'select_controller',
-              xs: 12,
-              md: 3,
-              control_form: control_form,
-              control_name: 'cod_medio_almacenamiento',
-              default_value: '',
-              rules: {},
-              label: 'Medio de almacenamiento',
-              disabled: true,
-              helper_text: '',
-              select_options: storage_mediums,
-              option_label: 'label',
-              option_key: 'key',
-            },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 3,
-              control_form: control_form,
-              control_name: 'medio_almacenamiento_otros_cual',
-              default_value: '',
-              rules: {},
-              label: '¿Cual?',
-              type: 'text',
-              disabled: true,
-              helper_text: '',
-            },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 3,
-              control_form: control_form,
-              control_name: 'numero_folios',
-              default_value: '',
-              rules: {},
-              label: 'Número de folios',
-              type: 'number',
-              disabled: true,
-              helper_text: '',
-              step_number: '1',
-            },
-            {
-              datum_type: 'button',
-              xs: 12,
-              md: 3,
-              label: 'Agregar metadatos',
-              type_button: 'button',
-              disabled: false,
-              variant_button: 'contained',
-              on_click_function: add_metadata_form,
-              color_button: 'warning',
-            },
-          ]}
-        />
-
+              {
+                datum_type: 'input_file_controller',
+                xs: 12,
+                md: 6,
+                control_form: control_form,
+                control_name: 'exhibit_link',
+                default_value: '',
+                rules: {
+                  required_rule: { rule: true, message: 'Archivo requerido' },
+                },
+                label: 'Documento',
+                disabled:
+                  exhibit.metadatos?.cod_origen_archivo === 'F' ||
+                  !edit_digitization,
+                helper_text: '',
+                set_value: set_file,
+                file_name,
+                value_file:
+                  (exhibit.id_anexo ?? null) !== null
+                    ? exhibit.exhibit_link ?? null
+                    : null,
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 6,
+                control_form: control_form,
+                control_name: 'nombre_anexo',
+                default_value: '',
+                rules: {},
+                label: 'Nombre de archivo',
+                type: 'text',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'select_controller',
+                xs: 12,
+                md: 3,
+                control_form: control_form,
+                control_name: 'cod_medio_almacenamiento',
+                default_value: '',
+                rules: {},
+                label: 'Medio de almacenamiento',
+                disabled: true,
+                helper_text: '',
+                select_options: storage_mediums,
+                option_label: 'label',
+                option_key: 'key',
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 3,
+                control_form: control_form,
+                control_name: 'medio_almacenamiento_otros_cual',
+                default_value: '',
+                rules: {},
+                label: '¿Cual?',
+                type: 'text',
+                disabled: true,
+                helper_text: '',
+                hidden_text: !(
+                  (exhibit.cod_medio_almacenamiento ?? null) === 'Ot'
+                ),
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 3,
+                control_form: control_form,
+                control_name: 'numero_folios',
+                default_value: '',
+                rules: {},
+                label: 'Número de folios',
+                type: 'number',
+                disabled: true,
+                helper_text: '',
+                step_number: '1',
+              },
+              {
+                datum_type: 'button',
+                xs: 12,
+                md: 3,
+                label: 'Agregar metadatos',
+                type_button: 'button',
+                disabled: false,
+                variant_button: 'contained',
+                on_click_function: add_metadata_form,
+                color_button: 'warning',
+              },
+            ]}
+          />
+        )}
         <MetadataFormDialog
           is_modal_active={add_metadata_is_active}
           set_is_modal_active={set_add_metadata_is_active}
+          get_values_anexo={get_values}
         />
       </Grid>
     </>

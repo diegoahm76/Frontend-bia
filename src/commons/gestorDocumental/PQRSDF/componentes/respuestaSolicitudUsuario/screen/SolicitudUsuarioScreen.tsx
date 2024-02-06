@@ -3,39 +3,15 @@
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../../components';
 import { ParteInicial } from '../components/parteInicial/screen/ParteInicial';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { useAppSelector } from '../../../../../../hooks';
-import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
-import { useNavigate } from 'react-router-dom';
-import { getInitialData } from '../services/getInitialData.service';
 import { useStepperResSolicitudUsuario } from '../hook/useStepperResSolicitudUsuario';
 import { useResSolicitudUsu } from '../hook/useResSolicitudUsu';
 import { StepperResSolicitudUsario } from '../components/stepper/StepperResSolicitudUsario';
+import { Parte1Screen } from '../components/parte1/screen/Parte1Screen';
 
 export const SolicitudUsuarioScreen = (): JSX.Element => {
   const { handleReset } = useStepperResSolicitudUsuario();
-  /*  const navigate = useNavigate();
-
-  //* redux state
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
-
-
-  //* context declaration
-  const { setInfoInicialUsuario, infoInicialUsuario } = useContext(RequerimientoUsarioContext.);
-  const { generalLoading, handleGeneralLoading, handleSecondLoading } =
-    useContext(ModalAndLoadingContext);*/
-  {
-    /*de entrada al módulo se van a tener que realizar ciertas solictudes para llenar infomación dentro de los campos de la entrega*/
-  }
-
-  {
-    /* esa información debe pasaar derecho a los frames predispuestos */
-  }
-
   useEffect(() => {
     Swal.fire({
       icon: 'warning',
@@ -81,9 +57,20 @@ export const SolicitudUsuarioScreen = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Requerimiento sobre una solicitud" />
+          <Title title="Respuesta a una solicitud" />
           {/* parte Inicial */}
           <ParteInicial />
+
+          <Parte1Screen
+            controlFormulario={controlFormulario}
+            handleSubmitFormulario={handleSubmitFormulario}
+            errorsFormulario={errorsFormulario}
+            resetFormulario={resetFormulario}
+            watchFormulario={watchFormulario}
+            setInfoReset={setInfoReset}
+          />
+
+        
           {/*stepper*/}
           <StepperResSolicitudUsario {...props} />
         </Grid>

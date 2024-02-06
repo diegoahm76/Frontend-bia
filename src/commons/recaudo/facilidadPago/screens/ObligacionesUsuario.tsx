@@ -1,6 +1,6 @@
 import { EncabezadoObligacionesUsuario } from '../componentes/EncabezadoObligacionesUsuario';
 import { TablaObligacionesUsuario } from '../componentes/TablaObligacionesUsuario';
-import { Grid, Box } from "@mui/material";
+import { Grid, Box } from '@mui/material';
 import { useEffect } from 'react';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,21 +10,24 @@ import { type ObligacionesUsuario } from '../interfaces/interfaces';
 interface RootState {
   obligaciones: {
     obligaciones: ObligacionesUsuario[];
-  }
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ObligacionesUsuarios: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
+  const { obligaciones } = useSelector(
+    (state: RootState) => state.obligaciones
+  );
 
   useEffect(() => {
     try {
       void dispatch(get_obligaciones());
+      console.log('obligaciones', obligaciones);
     } catch (error: any) {
       throw new Error(error);
     }
-  }, [])
+  }, []);
 
   return (
     <>
@@ -42,22 +45,18 @@ export const ObligacionesUsuarios: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-          >
-            {
-              obligaciones.length !== 0 ? (
-                <>
-                  <p>Sus obligaciones pendientes por pago son las siguientes:</p>
-                  <TablaObligacionesUsuario />
-                </>
-              ): <p>Usted no tiene obligaciones pendientes por pago.</p>
-            }
+          <Box component="form" noValidate autoComplete="off">
+            {obligaciones?.length !== 0 ? (
+              <>
+                <p>El usuario tiene las siguientes obligaciones:</p>
+                <TablaObligacionesUsuario />
+              </>
+            ) : (
+              <>Sin obligaciones</>
+            )}
           </Box>
         </Grid>
       </Grid>
     </>
-  )
-}
+  );
+};

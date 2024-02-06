@@ -77,9 +77,10 @@ export const ActualizarEntidad: React.FC<IProps> = ({
 
   const on_submit = async (data: IEntidades): Promise<any> => {
     try {
+      console.log(data, 'data');
       set_is_loading(true);
       const datos_entidad = {
-        nombre: data.nombre_entidad,
+        nombre_entidad: data.nombre_entidad,
         activo: data.activo,
       };
       await editar_entidades(
@@ -88,7 +89,7 @@ export const ActualizarEntidad: React.FC<IProps> = ({
       );
       set_is_modal_active(false);
       control_success(
-        'Entidad actualizada correctamente || Algo salio mal, intenta de nuevamente mas tarde'
+        'Entidad actualizada correctamente'
       );
       void get_data();
       reset();

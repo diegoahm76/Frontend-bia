@@ -2,15 +2,34 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import React, { createContext } from 'react';
-import type { IConceptoPOAI, IUnidadesActuales, Indicadores } from '../../types/types';
+import type {
+  IConceptoPOAI,
+  IUnidadesActuales,
+  Indicadores,
+} from '../../types/types';
 import { control_error } from '../../../../helpers';
 // import { useAppSelector } from '../../../../hooks';
-import { get_concepto_poai, get_unidades_organizacionales } from '../services/services';
+import {
+  get_concepto_poai,
+  get_unidades_organizacionales,
+} from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import { get_indicadores } from '../../Indicadores/services/services';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  id_programa: number | null;
+  id_proyecto: number | null;
+  id_producto: number | null;
+  id_actividad: number | null;
+  id_indicador: number | null;
+  set_id_plan: (value: number | null) => void;
+  set_id_programa: (value: number | null) => void;
+  set_id_proyecto: (value: number | null) => void;
+  set_id_producto: (value: number | null) => void;
+  set_id_actividad: (value: number | null) => void;
+  set_id_indicador: (value: number | null) => void;
 
   // * rows
   rows_concepto: IConceptoPOAI[];
@@ -31,6 +50,19 @@ interface UserContext {
 }
 
 export const DataContextConceptoPOAI = createContext<UserContext>({
+  id_plan: null,
+  id_programa: null,
+  id_proyecto: null,
+  id_producto: null,
+  id_actividad: null,
+  id_indicador: null,
+  set_id_plan: () => {},
+  set_id_programa: () => {},
+  set_id_proyecto: () => {},
+  set_id_producto: () => {},
+  set_id_actividad: () => {},
+  set_id_indicador: () => {},
+
   rows_concepto: [],
   set_rows_concepto: () => {},
 
@@ -50,7 +82,12 @@ export const UserProviderConceptoPOAI = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
-
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
+  const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
+  const [id_producto, set_id_producto] = React.useState<number | null>(null);
+  const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
+  const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
   // * select
   const [indicadores_selected, set_indicadores_selected] = React.useState<
     ValueProps[]
@@ -132,16 +169,27 @@ export const UserProviderConceptoPOAI = ({
         );
         set_unidades_organizacionales_selected(data_unidades_organizacionales);
       }
-
     } catch (error: any) {
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo'
       );
     }
-  }
+  };
 
   const value: UserContext = {
     // * id
+    id_plan,
+    id_programa,
+    id_proyecto,
+    id_producto,
+    id_actividad,
+    id_indicador,
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
+    set_id_indicador,
 
     // * select
     indicadores_selected,

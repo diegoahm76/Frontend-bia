@@ -26,6 +26,7 @@ import MarkunreadMailboxIcon from '@mui/icons-material/MarkunreadMailbox';
 import { BotonConAlerta } from '../utils/MarcadorDeAlertasBoton';
 import { obtenerHoraDeFecha } from '../utils/ModificadorHora';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PantallaPrincipalAlertas: React.FC = () => {
 
@@ -39,6 +40,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
   const [id_alertas, set_id_alertas] = useState<number | null>(null);
   const [mostrar_leidos, set_mostrar_leidos] = useState<any>(false);
   const [bandeja_alerta, set_bandeja_alerta] = useState<AlertaBandejaAlertaPersona[]>([]);
+  // console.log(bandeja_alerta)
   const [alertas_leidas_icono, set_alertas_leidas_icono] = useState<number>(0);
   const [alertas_no_leidas_icono, set_alertas_no_leidas_icono] = useState<number>(0);
   const fetch_data_get = async (): Promise<void> => {
@@ -68,14 +70,14 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       set_alertas_leidas_icono(AlertasLeidas.length);
       setNumeroDeAlertas(AlertasNoLeidas.length)
       set_bandeja_alerta(data.data);
-//  console.log('')(data)
+      console.log("mostrat data a rechard", data)
       return data.data;
     } catch (error) {
       // console.error(error);
     }
   };
 
-  
+
   const columns = [
     {
       field: 'nivel_prioridad',
@@ -125,6 +127,14 @@ export const PantallaPrincipalAlertas: React.FC = () => {
       headerName: 'Nombre Clase Alerta',
       width: 250,
     },
+
+    //     {
+    //       field: 'ruta_archivo',
+    //       headerName: 'Archivo',
+    //       width: 200,
+    //       flex: 1,
+
+    //         },
     {
       field: 'responsable_directo',
       headerName: 'Responsable Directo',
@@ -151,6 +161,25 @@ export const PantallaPrincipalAlertas: React.FC = () => {
         const valorModificado = firstPart.replace(/_/g, ' '); // Reemplazar las barras bajas (_) por espacios
         return valorModificado;
       },
+    },
+    {
+      field: 'mensaje',
+      headerName: 'Mensaje',
+      width: 250,
+    },
+    {
+      field: 'documento',
+      headerName: 'Documento',
+      width: 110,
+      renderCell: (params: any) => (
+        params.value ? (
+          <DownloadButton
+            condition={false}
+            fileUrl={params.value}
+            fileName={params.mensaje}
+          />
+        ) : null
+      ),
     },
     {
       field: 'acciones',
@@ -182,7 +211,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
 
             <Tooltip title="Redirigir al origen de la alerta" placement="right">
               {params.row.nombre_modulo &&
-              params.row.nombre_modulo.trim() !== '' ? (
+                params.row.nombre_modulo.trim() !== '' ? (
                 <Button
                   onClick={() => {
                     const ruta = (params.row.nombre_modulo || '').replace('/#', ''); // Eliminar "/#/app/"
@@ -232,8 +261,8 @@ export const PantallaPrincipalAlertas: React.FC = () => {
     mostrar_leidos === true
       ? bandeja_alerta.filter((row) => row.leido && !row.archivado)
       : mostrar_leidos === false
-      ? bandeja_alerta.filter((row) => !row.leido && !row.archivado)
-      : bandeja_alerta.filter((row) => !row.archivado);
+        ? bandeja_alerta.filter((row) => !row.leido && !row.archivado)
+        : bandeja_alerta.filter((row) => !row.archivado);
 
   const Variablex = bandeja_alerta.filter((row) => row.archivado);
 
@@ -304,7 +333,7 @@ export const PantallaPrincipalAlertas: React.FC = () => {
               density="compact"
               autoHeight
               columns={columns as any}
-              rows={filtered_rows||""}
+              rows={filtered_rows || ""}
               pageSize={10}
               rowsPerPageOptions={[10]}
               getRowId={(_row) => uuidv4()}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, ButtonGroup, Grid } from '@mui/material';
+import { Box, ButtonGroup, Grid, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -187,18 +187,26 @@ const ListadoBienesEntrega = () => {
               {download_pdf({ nurseries: bienes_entrada_aux, columns: columns_bienes_entrega, title: "Bienes de Entrada" })}
 
             </ButtonGroup>
-            <DataGrid
-              onSelectionModelChange={handle_selection_change}
-              density="compact"
-              autoHeight
-              columns={columns_bienes_entrega}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(row) => row.id_bien}
-              selectionModel={selected_row}
-              rows={bienes_entrada_aux}
-            />
+            {
+              (bienes_entrada_aux && bienes_entrada_aux.length > 0) ? (
+                <DataGrid
+                  onSelectionModelChange={handle_selection_change}
+                  density="compact"
+                  autoHeight
+                  columns={columns_bienes_entrega ?? []}
+                  rows={bienes_entrada_aux ?? []}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) => row.id_bien}
+                  selectionModel={selected_row}
+                />
+              ) : (
+                <Typography variant="h6" component="h2">
+                  No hay datos disponibles
+                </Typography>
+              )
+            }
             <Grid item xs={12} md={12}>
               <FormButton
                 variant_button="contained"

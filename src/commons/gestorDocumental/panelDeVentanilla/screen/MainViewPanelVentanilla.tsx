@@ -15,10 +15,18 @@ import { Title } from '../../../../components';
 import { PanelVentanillaContext } from '../context/PanelVentanillaContext';
 import { getHistoricoByRadicado } from '../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { ModalAndLoadingContext } from '../../../../context/GeneralContext';
-import { setListaHistoricoSolicitudes } from '../toolkit/store/PanelVentanillaStore';
+import {
+  resetParcial,
+  setListaHistoricoSolicitudes,
+} from '../toolkit/store/PanelVentanillaStore';
 import { useAppDispatch } from '../../../../hooks';
 import { PanelDeVentanillaScreen } from '../module/entrega98_101/screen/panelDeVentanilla/PanelDeVentanillaScreen';
 import { HistoricoSolicitudesScreen } from '../module/entrega98_101/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
+import { showAlert } from '../../../../utils/showAlert/ShowAlert';
+import { HisSolOpasScreen } from '../module/entrega98_101/screen/historicoSolicitudesOPAS/HistSolOpasScrenn';
+import { HisSolOtrosScreen } from '../module/entrega98_101/screen/historicoSolicitudesOtros/HisSolOtrosScreen';
+import { getHistoricoOtrosByRadicado } from '../toolkit/thunks/otros/getHistoricoOtrosByRadicado.service';
+import { getHistoricoByRadicadoOPAS } from '../toolkit/thunks/opas/getHistoricoByRadicadoOPAS.service';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   // * dispatch declaration
@@ -31,26 +39,55 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleRequestRadicado = async () => {
-    try {
-    } catch (error) {
-      //  console.log('')(error);
-    } finally {
-    }
+    dispatch(resetParcial());
     const historico = await getHistoricoByRadicado('', handleGeneralLoading);
+    dispatch(setListaHistoricoSolicitudes(historico));
+  };
+
+  // ? -----------------------------------------------------------------------
+  // ? ----- ESTA FUNCION SE DEBE CAMBIAR EL SERVICIO AL QUE SE ESTÁ LLAMANDO, YA QUE ESTE NO EXISTE -----
+  // ? EL HISTORICO DE OPAS ES DIFERENTE AL DE PQRSDF
+  // ? -----------------------------------------------------------------------
+  // ? -----------------------------------------------------------------------
+
+  const handleRequestRadicadoOpas = async () => {
+    dispatch(resetParcial());
+    const historico = await getHistoricoByRadicadoOPAS(
+      '',
+      handleGeneralLoading
+    );
 
     dispatch(setListaHistoricoSolicitudes(historico));
-    //  console.log('')(historico);
+  };
+
+  const handleRequestRadicadoOtros = async () => {
+    dispatch(resetParcial());
+    const historico = await getHistoricoOtrosByRadicado(
+      '',
+      handleGeneralLoading
+    );
+
+    dispatch(setListaHistoricoSolicitudes(historico));
   };
 
   return (
     <Grid container sx={containerStyles}>
       <Title title="Panel de ventanilla" />
       <Box sx={{ width: '100%', mt: '1.5rem' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box
+          sx={{
+            borderBottom: 1,
+            borderColor: 'divider',
+            width: '100%',
+            overflow: 'hidden',
+            overflowX: 'auto',
+          }}
+        >
           <Tabs
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
+            variant="fullWidth"
           >
             <Tab
               onClick={() => {
@@ -65,6 +102,16 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
               label="Histórico de solicitudes PQRSDF"
               {...a11yProps(1)}
             />
+            <Tab
+              onClick={handleRequestRadicadoOpas}
+              label="Histórico de solicitudes OPAS"
+              {...a11yProps(2)}
+            />
+            <Tab
+              onClick={handleRequestRadicadoOtros}
+              label="Histórico de solicitudes OTROS"
+              {...a11yProps(3)}
+            />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
@@ -72,8 +119,13 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
           {/* se debe reemplazar por el inicio del componente de la parte 1 */}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          {/* se debe reemplazar por el inicio del componente de la parte 2 */}
           <HistoricoSolicitudesScreen />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <HisSolOpasScreen />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+          <HisSolOtrosScreen />
         </CustomTabPanel>
       </Box>
     </Grid>

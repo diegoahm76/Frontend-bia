@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import Button from '@mui/material/Button';
 import { Parte2Screen } from '../parte2/screen/Parte2Screen';
 import { Parte3Screen } from '../parte3/screen/Parte3Screen';
 import { steps } from './constants/constants';
@@ -101,16 +100,8 @@ export const StepperResSolicitudUsario = ({
           </Box>*/}
           {(() => {
             switch (activeStep) {
+      
               case 0:
-                return <Parte1Screen
-                  controlFormulario={controlFormulario}
-                  handleSubmitFormulario={handleSubmitFormulario}
-                  errorsFormulario={errorsFormulario}
-                  resetFormulario={resetFormulario}
-                  watchFormulario={watchFormulario}
-                  setInfoReset={setInfoReset}
-                />;
-              case 1:
                 return <Parte2Screen
                   controlFormulario={controlFormulario}
                   handleSubmitFormulario={handleSubmitFormulario}
@@ -119,7 +110,7 @@ export const StepperResSolicitudUsario = ({
                   watchFormulario={watchFormulario}
                   setInfoReset={setInfoReset}
                 />;
-              case 2:
+              case 1:
                 return <Parte3Screen
                   controlFormulario={controlFormulario}
                   handleSubmitFormulario={handleSubmitFormulario}

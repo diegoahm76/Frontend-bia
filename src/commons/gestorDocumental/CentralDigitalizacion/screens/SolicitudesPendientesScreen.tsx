@@ -50,13 +50,14 @@ export function SolicitudesPendientesScreen(): JSX.Element {
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton
+              href={`/#/app/gestor_documental/central_digitalizacion/solicitudes_respondidas/`}
               variant_button="contained"
               on_click_function={null}
               icon_class={<SaveIcon />}
               disabled={false}
-              label="Crear PQRSDF"
+              label="Solicitudes de digitalización respondidas"
               type_button="button"
-              color_button="success"
+              color_button="primary"
             />
           </Grid>
 

@@ -48,7 +48,8 @@ import './style.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useBandejaTareas } from '../../../../../hook/useBandejaTareas';
-import  AttachFileIcon  from '@mui/icons-material/AttachFile';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import { useFiles } from '../../../../../../../../hooks/useFiles/useFiles';
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -65,10 +66,9 @@ export const FormParte3 = ({
     (state: any) => state.RequerimientoUsarioSlice
   );
 
-
-
   // ? stepper hook
   const { handleBack } = useStepperRequerimiento();
+  const {controlar_tamagno_archivos} = useFiles()
 
   //* context
   const { handleModalAgregarMetadatos } = useContext(ModalAndLoadingContext);
@@ -95,15 +95,13 @@ export const FormParte3 = ({
 
   // ? funciones third form
 
-
-
   const handleAnexo = () => {
     // ? se debe hacer la validacion, si no hay arhivo, pero hay metadata, se debe permitir añadir, pero si no hay archivo ni metadata, no se debe permitir añadir
 
     if (watchFormulario.ruta_soporte === '' && !metadatos) {
       showAlert(
         'Advertencia',
-        'Es obligatorio subir un archivo o agregar metadatos para poder crear un anexo',
+        'Para crear un anexo: La carga de un archivo es requerida, aunque existen condiciones bajo las cuales no es obligatoria.\n\nEn caso de optar por no subir un archivo, es necesario agregar metadatos, seleccionar la opción de origen del archivo como físico y proporciona el nombre del archivo, así como el número de folios del archivo físico.',
         'warning'
       );
       return;
@@ -203,6 +201,7 @@ export const FormParte3 = ({
 
     const dataCreateAnexo = createAnexoData();
     const dataEditAnexo = createAnexoData(currentAnexo);
+
     // Reset functions that are common to both cases
     resetFormulario();
     resetManejoMetadatosModalFunction();
@@ -215,7 +214,7 @@ export const FormParte3 = ({
       dispatch(addAnexo(dataCreateAnexo));
     }
   };
-
+  console.log(currentAnexo, 'aqui');
   const handleDeleteAnexo = async (id: string) => {
     const result = await Swal.fire({
       title: '¿Estás seguro de eliminar el anexo?',
@@ -246,7 +245,6 @@ export const FormParte3 = ({
       dispatch(setMetadatos(anexoSeleccionado as any));
     }
   };
-
   //* columns
   const columns = [
     ...columnsThirdForm,
@@ -344,27 +342,13 @@ export const FormParte3 = ({
                     <input
                       style={{ display: 'none' }}
                       type="file"
-                      accept="application/pdf"
+                      // accept="application/pdf"
                       // disabled={ccd_current?.actual}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
                           const file = files[0];
-                          if (file.type !== 'application/pdf') {
-                            control_warning(
-                              'Precaución: Solo es admitido archivos en formato pdf'
-                            );
-                          } else if (file.size > FILEWEIGHT.PDF) {
-                            const MAX_FILE_SIZE_MB = (
-                              FILEWEIGHT.PDF /
-                              (1024 * 1024)
-                            ).toFixed(1);
-                            control_warning(
-                              `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                            );
-                          } else {
-                            onChange(file);
-                          }
+                          controlar_tamagno_archivos(file, onChange)
                         }
                       }}
                     />
@@ -495,7 +479,7 @@ export const FormParte3 = ({
               }}
               variant="contained"
               color="primary"
-              startIcon={<AttachFileIcon/>}
+              startIcon={<AttachFileIcon />}
               onClick={() => {
                 //  console.log('')('click siuuu');
                 //  console.log('')('abriendo modal de metadatos');

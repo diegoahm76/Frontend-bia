@@ -47,6 +47,7 @@ import {
   get_ciudades,
   get_departamentos,
 } from '../../../../../request/getRequest';
+import { set_filed } from '../../../PQRSDF/store/slice/pqrsdfSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -544,6 +545,29 @@ export const get_company_document_service = (
   };
 };
 
+export const get_attorney_document_service = (
+  type: string | number,
+  document: string | number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `personas/get-personas-by-document/${type}/${document}/`
+      );
+      console.log(data);
+
+      if ('data' in data) {
+        dispatch(set_attorney(data.data));
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_attorney_document_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // obtener apoderados
 export const get_attorneys_service = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -602,6 +626,7 @@ export const get_pqrs_service = (id: string | number): any => {
 export const get_pqrsdf_id_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      console.log(params);
       const { data } = await api.get(
         `gestor/complementos-pqr/get-complementos-pqrsdf/`,
         { params }
@@ -655,7 +680,8 @@ export const get_complemento_pqrsdf_id_service = (params: any): any => {
 // crear pqrsdf
 export const add_complemento_pqrsdf_service = (
   pqrsdf: any,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  params: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -667,6 +693,8 @@ export const add_complemento_pqrsdf_service = (
       console.log(data);
 
       control_success(data.detail);
+      dispatch(get_pqrsdf_id_service(params));
+
       // navigate(
       //   `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
       // );
@@ -684,7 +712,8 @@ export const add_complemento_pqrsdf_service = (
 // editar pqrsdf
 export const edit_complemento_pqrsdf_service = (
   pqrsdf: any,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  params: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -695,6 +724,8 @@ export const edit_complemento_pqrsdf_service = (
       console.log(data);
 
       control_success(data.detail);
+      dispatch(get_pqrsdf_id_service(params));
+
       // navigate(
       //   `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
       // );
@@ -718,24 +749,19 @@ export const edit_complemento_pqrsdf_service = (
 // borrar pqrsdf
 export const delete_complemento_pqrsdf_service = (
   id: number | string,
-  is_web: boolean
+  is_web: boolean,
+  params: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const params: any = {
-        id_PQRSDF: id,
-        isCreateForWeb: is_web,
-      };
       const { data } = await api.delete(
-        `gestor/complementos-pqr/delete-complemento-pqrsdf/?idComplementoUsu_PQR=${id}&isCreateForWeb=${
-          is_web ? 'True' : 'False'
-        }`
+        `gestor/complementos-pqr/delete-complemento-pqrsdf/?idComplementoUsu_PQR=${id}`
       );
       console.log(data);
 
       if (data.success) {
         control_success(data.detail);
-        dispatch(set_pqr(initial_state_pqr));
+        dispatch(get_pqrsdf_id_service(params));
       }
       return data;
     } catch (error: any) {
@@ -749,14 +775,13 @@ export const delete_complemento_pqrsdf_service = (
 export const radicar_complemento_pqrsdf_service = (
   id: number | string,
   id_user: number,
-  is_web: boolean
+  params_pqr: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const params: any = {
         id_complemento_PQRSDF: id,
         id_persona_guarda: id_user,
-        isCreateForWeb: is_web,
       };
       const { data } = await api.post(
         `gestor/complementos-pqr/radicar-complemento-pqrsdf/`,
@@ -764,7 +789,25 @@ export const radicar_complemento_pqrsdf_service = (
       );
       if (data.success) {
         control_success(data.detail);
-        // void dispatch(get_complemento_pqrsdf_id_service(id));
+        dispatch(get_pqrsdf_id_service(params_pqr));
+
+        dispatch(
+          set_filed({
+            ...data.data,
+            numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
+            nombre_tipo_radicado:
+              data.data.cod_tipo_radicado === 'E'
+                ? 'Entrada'
+                : data.data.cod_tipo_radicado === 'S'
+                ? 'Salidad'
+                : data.data.cod_tipo_radicado === 'I'
+                ? 'Interno'
+                : data.data.cod_tipo_radicado === 'U'
+                ? 'Unico'
+                : '',
+            titular: data.data.persona_titular,
+          })
+        );
       }
       return data;
     } catch (error: any) {

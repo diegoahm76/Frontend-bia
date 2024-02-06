@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 import {
+  initial_state_complemento,
   reset_state,
   set_attorney,
   set_complement_pqr,
@@ -64,11 +65,19 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import StepTwo from '../componentes/CrearComplementoPQRSDF/StepTwo';
 import StepThree from '../componentes/CrearComplementoPQRSDF/StepThree';
+import { ImpresionRadicadoScreen } from '../../PQRSDF/screens/ImpresionRadicadoScreen';
+import {
+  get_attorney_document_service,
+  get_company_document_service,
+  get_person_document_service,
+} from '../../PQRSDF/store/thunks/pqrsdfThunks';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearComplementoPqrsdfScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
+
   const { pqr, exhibits, complement_pqr } = useAppSelector(
     (state) => state.complemento_pqrsdf_slice
   );
@@ -81,6 +90,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
     company,
     grantor,
     attorney,
+    filed,
   } = useAppSelector((state) => state.pqrsdf_slice);
 
   const {
@@ -107,36 +117,68 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       };
       void dispatch(get_pqrsdf_id_service(params));
     }
-    // if (type_applicant.key === null) {
-    //       // no viene de ventanilla
-    //       if (!false) {
-    //         //si no esta logueado
-    //         dispatch(set_type_applicant(list_applicant_types[1]))
-    //       } else {
-    //         // si esta logueado
-    //         dispatch(set_type_applicant(list_applicant_types[0]))
-    //         //preguntar por usuario logueado y saber si es representación propia, empresa o apoderado
-    //         switch () {
-    //           case 'propia':
-    //             dispatch(set_on_behalf_of(list_on_behalf_of[0]))
-    //             dispatch(set_person(datos_de_persona_logueada))
-    //             break;
-
-    //           case 'empresa':
-    //             dispatch(set_on_behalf_of(list_on_behalf_of[1]))
-    //             dispatch(set_company(datos_de_empresa que_representa_logueada))
-    //             break;
-    //           case 'apoderado':
-    //             dispatch(set_on_behalf_of(list_on_behalf_of[2]))
-    //             dispatch(set_grantor(datos_de_poderdante_persona_logueada))
-    //             dispatch(set_attorney(datos_de_persona_logueada_apoderado))
-    //             break;
-
-    //           default:
-    //             return null;
-    //         }
-    //       }
-    //     }
+    if (representacion_legal.tipo_sesion === 'E') {
+      dispatch(
+        set_type_applicant({
+          id: 'T',
+          key: 'T',
+          label: 'Titular',
+        })
+      );
+      if (on_behalf_of.id === null) {
+        if (representacion_legal.cod_relacion_con_el_titular === 'MP') {
+          dispatch(
+            set_on_behalf_of({
+              id: 'P',
+              key: 'P',
+              label: 'Propia',
+            })
+          );
+          void dispatch(
+            get_person_document_service(
+              userinfo.tipo_documento ?? '',
+              userinfo.numero_documento ?? '',
+              true
+            )
+          );
+        } else if (representacion_legal.cod_relacion_con_el_titular === 'AP') {
+          dispatch(
+            set_on_behalf_of({
+              id: 'A',
+              key: 'A',
+              label: 'Apoderado',
+            })
+          );
+          void dispatch(
+            get_person_document_service(
+              representacion_legal.representacion.tipo_documento ?? 'CC',
+              representacion_legal.representacion.numero_documento ?? '',
+              false
+            )
+          );
+          void dispatch(
+            get_attorney_document_service(
+              userinfo.tipo_documento ?? 'CC',
+              userinfo.numero_documento ?? ''
+            )
+          );
+        } else {
+          dispatch(
+            set_on_behalf_of({
+              id: 'E',
+              key: 'E',
+              label: 'Empresa',
+            })
+          );
+          void dispatch(
+            get_company_document_service(
+              representacion_legal.representacion.tipo_documento ?? 'NIT',
+              representacion_legal.representacion.numero_documento
+            )
+          );
+        }
+      }
+    }
 
     void dispatch(get_pqr_types_service());
     void dispatch(get_presentation_types_service());
@@ -147,11 +189,47 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
     void dispatch(get_file_typology_service());
     void dispatch(get_offices_service());
   }, []);
-
+  const delete_complemento_pqr = (): void => {
+    if (
+      complement_pqr.idComplementoUsu_PQR !== null &&
+      complement_pqr.idComplementoUsu_PQR !== undefined
+    ) {
+      const fecha_actual = new Date();
+      const fecha_registro = new Date(complement_pqr.fecha_complemento ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 100) {
+        const params = {
+          id_PQRSDF: pqr.id_PQRSDF,
+          id_persona_titular: userinfo.id_persona,
+          id_persona_interpone: userinfo.id_persona,
+        };
+        void dispatch(
+          delete_complemento_pqrsdf_service(
+            complement_pqr.idComplementoUsu_PQR,
+            true,
+            params
+          )
+        );
+        dispatch(reset_state());
+        initial_values();
+      } else {
+        control_error(
+          'Solo se pueden eliminar complementos hasta 30 dias despues de la fecha de creación'
+        );
+      }
+    }
+  };
   const StepComponent = (step: number) => {
     switch (step) {
       case 1:
-        return <StepOne control_form={control_pqrsdf} reset={reset_pqrsdf} />;
+        return (
+          <StepOne
+            control_form={control_pqrsdf}
+            reset={reset_pqrsdf}
+            delete_function={delete_complemento_pqr}
+          />
+        );
 
       case 2:
         return (
@@ -175,8 +253,8 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
     console.log('validate_pqr', data);
   };
   const validate_complemento = (data: any, step: number) => {
-    console.log('validate_complemento', data, pqr);
-    dispatch(set_complement_pqr({ ...complement_pqr, anexos: exhibits }));
+    console.log('validate_complemento', data, exhibits);
+    dispatch(set_complement_pqr({ ...data }));
   };
   const [configuration_steps, set_configuration_steps] = useState<
     IObjStepConfiguration[]
@@ -224,7 +302,13 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
   };
 
   useEffect(() => {
-    reset_complemento(complement_pqr);
+    reset_complemento({
+      ...complement_pqr,
+      id_medio_solicitud_comple:
+        representacion_legal.tipo_sesion === 'E'
+          ? 2
+          : complement_pqr.id_medio_solicitud_comple,
+    });
     console.log(complement_pqr);
     if (
       complement_pqr.idComplementoUsu_PQR !== null &&
@@ -232,7 +316,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
     ) {
       if ('anexos' in complement_pqr) {
         if (
-          complement_pqr.anexos === undefined &&
+          complement_pqr.anexos === undefined ||
           complement_pqr.anexos === null
         ) {
           set_step(0);
@@ -241,6 +325,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
           //   get_complemento_pqrsdf_id_service(complement_pqr.id_PQRSDF)
           // ); servicio para consultar complemento por id
         } else {
+          set_step(1);
           dispatch(set_exhibits(complement_pqr.anexos ?? []));
         }
       } else {
@@ -248,6 +333,8 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
         // void dispatch(get_complemento_pqrsdf_id_service(pqr.id_PQRSDF));servicio para consultar complemento por id
       }
       set_action('editar');
+    } else {
+      set_action('crear');
     }
   }, [complement_pqr]);
 
@@ -259,6 +346,11 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
   }, [exhibits]);
 
   const on_submit = (data: IObjComplementPqr): void => {
+    const params = {
+      id_PQRSDF: pqr.id_PQRSDF,
+      id_persona_titular: userinfo.id_persona,
+      id_persona_interpone: userinfo.id_persona,
+    };
     const form_data: any = new FormData();
     if (
       complement_pqr.idComplementoUsu_PQR !== null &&
@@ -268,7 +360,7 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       const fecha_registro = new Date(data.fecha_complemento ?? '');
       const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
-      if (diferencia_dias <= 30) {
+      if (diferencia_dias <= 1000) {
         set_action('editar');
         let folios: number = 0;
         const aux_items: IObjExhibit[] = [];
@@ -290,10 +382,8 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
           ...data,
           cantidad_anexos: exhibits.length,
           nro_folios_totales: folios,
-          cod_relacion_titular: 'MP',
           anexos: aux_items,
           requiere_digitalizacion: !ya_digitalizado,
-          id_persona_interpone: userinfo.id_persona,
         };
         console.log(data_edit);
         form_data.append('complemento_pqrsdf', JSON.stringify(data_edit));
@@ -321,12 +411,17 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
             }
           }
         });
-        form_data.append('isCreateForWeb', 'True');
+        form_data.append(
+          'isCreateForWeb',
+          representacion_legal.tipo_sesion === 'E' ? 'True' : 'False'
+        );
 
-        void dispatch(edit_complemento_pqrsdf_service(form_data, navigate));
+        void dispatch(
+          edit_complemento_pqrsdf_service(form_data, navigate, params)
+        );
       } else {
         control_error(
-          'Solo se pueden editar pqrsdf hasta 30 dias despues de la fecha de creación'
+          'Solo se pueden editar complementos pqrsdf hasta 30 dias despues de la fecha de creación'
         );
       }
     } else {
@@ -347,14 +442,44 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       });
       const data_edit: any = {
         ...data,
-        fecha_registro: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
-        id_persona_titular: userinfo.id_persona,
-        id_persona_interpone: userinfo.id_persona,
+        fecha_complemento: fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
+        id_persona_titular:
+          person.id_persona !== null
+            ? person.id_persona
+            : grantor.id_persona !== null
+            ? grantor.id_persona
+            : company.id_persona !== null
+            ? company.id_persona
+            : pqr.id_persona_titular,
+        id_persona_interpone:
+          person.id_persona !== null
+            ? person.id_persona
+            : attorney.id_persona !== null
+            ? attorney.id_persona
+            : company.id_persona !== null
+            ? company.persona_representante?.id_persona
+            : pqr.id_persona_interpone,
         cantidad_anexos: exhibits.length,
         nro_folios_totales: folios,
-        cod_relacion_titular: 'MP',
+        cod_relacion_con_el_titular:
+          person.id_persona !== null
+            ? 'MP'
+            : grantor.id_persona !== null
+            ? 'AP'
+            : company.id_persona !== null
+            ? 'RL'
+            : 'MP',
+        cod_relacion_titular:
+          person.id_persona !== null
+            ? 'MP'
+            : grantor.id_persona !== null
+            ? 'AP'
+            : company.id_persona !== null
+            ? 'RL'
+            : 'MP',
         anexos: aux_items,
         requiere_digitalizacion: !ya_digitalizado,
+        id_PQRSDF: pqr.id_PQRSDF,
       };
       console.log(data_edit);
 
@@ -366,41 +491,19 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
         );
       });
       form_data.append('id_persona_guarda', userinfo.id_persona);
-      form_data.append('isCreateForWeb', 'True');
+      form_data.append(
+        'isCreateForWeb',
+        representacion_legal.tipo_sesion === 'E' ? 'True' : 'False'
+      );
 
-      void dispatch(add_complemento_pqrsdf_service(form_data, navigate));
+      void dispatch(
+        add_complemento_pqrsdf_service(form_data, navigate, params)
+      );
     }
     dispatch(reset_state());
     initial_values();
   };
-  const delete_complemento_pqr = (): void => {
-    if (
-      complement_pqr.idComplementoUsu_PQR !== null &&
-      complement_pqr.idComplementoUsu_PQR !== undefined
-    ) {
-      const fecha_actual = new Date();
-      const fecha_registro = new Date(complement_pqr.fecha_complemento ?? '');
-      const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
-      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
-      if (diferencia_dias <= 30) {
-        void dispatch(
-          delete_complemento_pqrsdf_service(
-            complement_pqr.idComplementoUsu_PQR,
-            true
-          )
-        );
-        dispatch(reset_state());
-        initial_values();
-        navigate(
-          `/app/gestor_documental/pqrsdf/complemento/crear_complemento/`
-        );
-      } else {
-        control_error(
-          'Solo se pueden eliminar siembras hasta 30 dias despues de la fecha de creación'
-        );
-      }
-    }
-  };
+
   const radicate_complemento_pqr = (): void => {
     if (
       complement_pqr.idComplementoUsu_PQR !== null &&
@@ -410,14 +513,21 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
       const fecha_registro = new Date(complement_pqr.fecha_complemento ?? '');
       const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
-      if (diferencia_dias <= 30) {
+      if (diferencia_dias <= 100) {
+        const params = {
+          id_PQRSDF: pqr.id_PQRSDF,
+          id_persona_titular: userinfo.id_persona,
+          id_persona_interpone: userinfo.id_persona,
+        };
         void dispatch(
           radicar_complemento_pqrsdf_service(
             complement_pqr.idComplementoUsu_PQR,
             userinfo.id_persona ?? 0,
-            true
+            params
           )
         );
+        // dispatch(reset_state());
+        //initial_values();
       } else {
         control_error(
           'Solo se pueden radicar complementos hasta 30 dias despues de la fecha de creación'
@@ -449,22 +559,25 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
 
         <FormStepper
           configuration_steps={configuration_steps}
-          message_success={`Formulario diligenciado correctamente, puede ${action} el PQRSDF`}
+          message_success={`Formulario diligenciado correctamente, puede ${action} el complemento de PQRSDF`}
           set_success={set_flag_create}
           step={step}
         />
+        {filed.numero_radicado_completo !== null && <ImpresionRadicadoScreen />}
         <Grid container direction="row" padding={2} spacing={2}>
-          <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={handle_submit_complemento(on_submit)}
-              icon_class={<SaveIcon />}
-              disabled={!flag_create}
-              label={action}
-              type_button="button"
-              color_button="success"
-            />
-          </Grid>
+          {complement_pqr.id_radicado === null && (
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={handle_submit_complemento(on_submit)}
+                icon_class={<SaveIcon />}
+                disabled={!flag_create}
+                label={action}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+          )}
           {complement_pqr.idComplementoUsu_PQR !== null &&
             complement_pqr.id_radicado === null && (
               <>

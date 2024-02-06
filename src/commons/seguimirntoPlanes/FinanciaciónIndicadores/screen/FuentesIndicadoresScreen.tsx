@@ -7,6 +7,8 @@ import { AgregarFuenteFinanciacion } from '../components/Components/AgregarFuent
 import { useEffect } from 'react';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaAvanzadaIndicadores } from '../components/Components/BusquedaAvanzada/BusquedaAvanzadaIndicadores';
+import { BusquedaFuentesIndicadores } from '../components/Components/BusquedaAvanzada/BusquedaFuentesIndicadores';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FuentesIndicadoresScreen: React.FC = () => {
@@ -45,7 +47,8 @@ export const FuentesIndicadoresScreen: React.FC = () => {
           <Title title="Fuentes de financiación indicadores " />
         </Grid>
       </Grid>
-      <ListarFuentesFinanciacion />
+      <BusquedaAvanzadaIndicadores />
+      {mode.ver ? <ListarFuentesFinanciacion /> : null}
       {mode.crear || mode.editar ? <AgregarFuenteFinanciacion /> : null}
       <Grid
         container
@@ -63,6 +66,7 @@ export const FuentesIndicadoresScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaFuentesIndicadores />
         <Grid item>
           <ButtonSalir />
         </Grid>

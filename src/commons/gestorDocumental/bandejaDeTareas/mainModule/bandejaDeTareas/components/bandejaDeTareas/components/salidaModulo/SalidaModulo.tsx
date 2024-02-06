@@ -14,19 +14,20 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../hooks';
+import { resetBandejaDeTareasFull } from '../../../../../../toolkit/store/BandejaDeTareasStore';
 
 export const SalidaModulo: React.FC = (): JSX.Element => {
-/*  //* navigate declaration
+  //* navigate declaration
   const navigate = useNavigate();
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   // ? redux states
 
-  const { listaElementosPqrsfTramitesUotros } = useAppSelector(
+  const { listaTareasPqrsdfTramitesUotrosUopas } = useAppSelector(
     (state) => state.BandejaTareasSlice
   );
-*/
+
   return (
     <>
       <Grid container sx={containerStyles}>
@@ -66,28 +67,28 @@ export const SalidaModulo: React.FC = (): JSX.Element => {
                     variant="contained"
                     startIcon={<CloseIcon />}
                     onClick={() => {
-                      /*getOutModule(navigate, [
-                        () => dispatch(resetPanelVentanillaFull()),
-                      ]);*/
+                      getOutModule(navigate, [
+                        () => dispatch(resetBandejaDeTareasFull()),
+                      ]);
                     }}
                   >
                     SALIR DEL MÓDULO
                   </Button>
 
-                 {/* {listaElementosPqrsfTramitesUotros?.length ? (
+                  {listaTareasPqrsdfTramitesUotrosUopas?.length ? (
                     <Button
                       color="primary"
                       variant="outlined"
                       startIcon={<CleanIcon />}
                       onClick={() => {
-                        reset_all([() => dispatch(resetPanelVentanillaFull())]);
+                        reset_all([() => dispatch(resetBandejaDeTareasFull())]);
                       }}
                     >
                       REINICIAR MÓDULO
                     </Button>
                   ) : (
                     <></>
-                  )}*/}
+                  )}
                 </Stack>
               </Grid>
             </Grid>

@@ -5,13 +5,28 @@ import { control_success } from '../../../../../../../helpers';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Swal from 'sweetalert2';
 
-interface Anexo {
+
+interface Metadatos {
+  value: string;
+  label: string;
+}
+
+export interface Anexo {
   asunto: string;
   descripcion_de_la_solicitud: string;
   id: string;
   nombre_archivo: string;
+
+  descripcionMetadatos?:string|null,
+  categoriaArchivoMetadatos?:Metadatos[]|any;
+  origenArchivoMetadatos?:Metadatos[]|any;
+  tieneReplicaFisicaMetadatos?:Metadatos[]|any;
+  tipologiasDocumentalesMetadatos?:Metadatos[]|any;
+  palabrasClavesMetadatos?:string[]|any;
   // other properties...
 }
+
+
 const initialState: {
   anexosCreados: Anexo[];
   currentAnexo: any;

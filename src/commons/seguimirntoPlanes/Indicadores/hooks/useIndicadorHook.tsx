@@ -83,7 +83,14 @@ export const useIndicadorHook = (): any => {
     useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_indicadores } = useContext(DataContextIndicador);
+  const {
+    id_plan,
+    id_programa,
+    id_proyecto,
+    id_producto,
+    id_actividad,
+    fetch_data_indicadores,
+  } = useContext(DataContextIndicador);
 
   // declaracion redux
   const {
@@ -94,6 +101,11 @@ export const useIndicadorHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_indicador(true);
+      data.id_plan = id_plan;
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
+      data.id_producto = id_producto;
+      data.id_actividad = id_actividad;
       const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
       data.fecha_creacion = fecha_creacion_format;
       await post_indicador(data as Indicadores);
@@ -116,6 +128,11 @@ export const useIndicadorHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       set_is_saving_indicador(true);
+      data.id_plan = id_plan;
+      data.id_programa = id_programa;
+      data.id_proyecto = id_proyecto;
+      data.id_producto = id_producto;
+      data.id_actividad = id_actividad;
       const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
       data.fecha_creacion = fecha_creacion_format;
       await put_indicador((id_indicador as number) ?? 0, data as Indicadores);

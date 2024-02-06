@@ -18,22 +18,27 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 import { Title } from '../../../../../components';
 import {
+  IObjListType,
   IObjMetaData,
   IObjPqr,
   IObjPqrRequest,
 } from '../../interfaces/central_digitalizacion';
 import {
+  initial_state_exhibit,
   set_exhibit,
+  set_file_fisico,
   set_metadata,
 } from '../../store/slice/centralDigitalizacionSlice';
 import {
   add_metadata_service,
   control_error,
+  control_success,
   delete_metadata_service,
   edit_metadata_service,
   get_file_categories_service,
@@ -43,10 +48,14 @@ import {
 } from '../../store/thunks/centralDigitalizacionThunks';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../../auth/interfaces';
+import { jsPDF } from 'jspdf';
+import logo_cormacarena_h from '../images/26_logocorma2_200x200.png';
+import dayjs from 'dayjs';
 interface IProps {
   action?: string;
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  get_values_anexo: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -54,6 +63,7 @@ const MetadataFormDialog = ({
   action,
   is_modal_active,
   set_is_modal_active,
+  get_values_anexo,
 }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -67,6 +77,9 @@ const MetadataFormDialog = ({
     file_typologies,
     exhibit,
     digitization_request,
+    storage_mediums,
+    file_fisico,
+    edit_digitization,
   } = useAppSelector((state) => state.central_digitalizacion_slice);
 
   const {
@@ -78,6 +91,11 @@ const MetadataFormDialog = ({
     watch,
   } = useForm<IObjMetaData>();
   const [keywords_object, set_keywords_object] = useState<any[]>([]);
+  const [doc, set_doc] = useState<jsPDF>(new jsPDF());
+  const [doc_height, set_doc_height] = useState<number>(0);
+  const [aux_origen_archivos, set_aux_origen_archivos] = useState<
+    IObjListType[]
+  >([]);
   const [checked_tiene_tipologia, set_checked_tiene_tipologia] = useState(
     metadata.tiene_tipologia
   );
@@ -118,8 +136,167 @@ const MetadataFormDialog = ({
       set_keywords_object([]);
     }
   }, [metadata]);
+  useEffect(() => {
+    if (watch('cod_origen_archivo') === 'F') {
+      control_success(
+        'Al seleccionar fisico se reemplazará el archivo por uno por defecto y se configurará el numero de folios en 1'
+      );
+      setValue('nro_folios_documento', 1);
+    }
+  }, [watch('cod_origen_archivo')]);
+  const crear_encabezado: (data: IObjMetaData) => {
+    title: string;
+  } = (data: IObjMetaData) => {
+    const title = `Archivo no digitalizado - solo almacenado en físico`;
+    doc.setFont('Arial', 'normal');
+    doc.setFontSize(12);
+    doc.addImage(logo_cormacarena_h, 'PNG', 160, 10, 40, 15);
+    doc.setFont('Arial', 'bold'); // establece la fuente en Arial
+    doc.text(
+      '(Buscar en carpeta física)',
+      (doc.internal.pageSize.width -
+        doc.getTextWidth('(Buscar en carpeta física)')) /
+        2,
+      10
+    );
+    doc.text(
+      title,
+      (doc.internal.pageSize.width - doc.getTextWidth(title)) / 2,
+      15
+    );
+    doc.setFont('Arial', 'normal'); // establece la fuente en Arial
+    const fecha_generacion = `Fecha de creación ${dayjs().format(
+      'DD/MM/YYYY'
+    )}`;
+    doc.text(
+      fecha_generacion,
+      doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion) - 5,
+      5
+    );
+    doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
+    doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
+    const linea_uno = `Nombre del anexo: ${
+      get_values_anexo('nombre_anexo') ?? ''
+    }               Medio de almacenamiento: ${
+      get_values_anexo('cod_medio_almacenamiento') === 'Ot'
+        ? get_values_anexo('medio_almacenamiento_otros_cual')
+        : storage_mediums.find(
+            (objeto) =>
+              objeto.key === get_values_anexo('cod_medio_almacenamiento')
+          )?.label
+    }`;
+    const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
+    const x_linea_uno =
+      (doc.internal.pageSize.width - ancho_texto_linea_uno) / 2;
+    doc.text(linea_uno, x_linea_uno, 45);
 
+    const linea_dos = `Categoría de archivo: ${
+      file_categories.find(
+        (objeto) => objeto.key === data.cod_categoria_archivo
+      )?.label
+    }           Tipología documental: ${
+      data.id_tipologia_doc !== null
+        ? file_typologies.find((objeto) => objeto.key === data.id_tipologia_doc)
+            ?.label
+        : data.tipologia_no_creada_en_TRD
+    }`;
+    const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
+    const x_linea_dos =
+      (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
+    doc.text(linea_dos, x_linea_dos, 55);
+
+    const linea_tres = `Asunto: ${data.asunto}`;
+    const ancho_texto_linea_tres = doc.getTextWidth(linea_tres);
+    const x_linea_tres =
+      (doc.internal.pageSize.width - ancho_texto_linea_tres) / 2;
+    doc.text(linea_tres, x_linea_tres, 65);
+
+    const pdfBlob = doc.output('blob');
+    const pdfFile = new File([pdfBlob], 'generado.pdf', {
+      type: 'application/pdf',
+    });
+    dispatch(set_file_fisico(pdfFile));
+    return { title };
+  };
   const on_submit = (data: IObjMetaData): void => {
+    let pdfFile = null;
+    if (data.cod_origen_archivo === 'F') {
+      set_doc(new jsPDF());
+      set_doc_height(doc.internal.pageSize.getHeight());
+      const title = `Archivo no digitalizado - solo almacenado en físico`;
+      doc.setFont('Arial', 'normal');
+      doc.setFontSize(12);
+      doc.addImage(logo_cormacarena_h, 'PNG', 160, 10, 40, 15);
+      doc.setFont('Arial', 'bold'); // establece la fuente en Arial
+      doc.text(
+        '(Buscar en carpeta física)',
+        (doc.internal.pageSize.width -
+          doc.getTextWidth('(Buscar en carpeta física)')) /
+          2,
+        10
+      );
+      doc.text(
+        title,
+        (doc.internal.pageSize.width - doc.getTextWidth(title)) / 2,
+        15
+      );
+      doc.setFont('Arial', 'normal'); // establece la fuente en Arial
+      const fecha_generacion = `Fecha de creación ${dayjs().format(
+        'DD/MM/YYYY'
+      )}`;
+      doc.text(
+        fecha_generacion,
+        doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion) - 5,
+        5
+      );
+      doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
+      doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
+      const linea_uno = `Nombre del anexo: ${
+        get_values_anexo('nombre_anexo') ?? ''
+      }               Medio de almacenamiento: ${
+        get_values_anexo('cod_medio_almacenamiento') === 'Ot'
+          ? get_values_anexo('medio_almacenamiento_otros_cual')
+          : storage_mediums.find(
+              (objeto) =>
+                objeto.key === get_values_anexo('cod_medio_almacenamiento')
+            )?.label
+      }`;
+      const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
+      const x_linea_uno =
+        (doc.internal.pageSize.width - ancho_texto_linea_uno) / 2;
+      doc.text(linea_uno, x_linea_uno, 45);
+
+      const linea_dos = `Categoría de archivo: ${
+        file_categories.find(
+          (objeto) => objeto.key === data.cod_categoria_archivo
+        )?.label
+      }           Tipología documental: ${
+        data.id_tipologia_doc !== null
+          ? file_typologies.find(
+              (objeto) => objeto.key === data.id_tipologia_doc
+            )?.label
+          : data.tipologia_no_creada_en_TRD
+      }`;
+      const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
+      const x_linea_dos =
+        (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
+      doc.text(linea_dos, x_linea_dos, 55);
+
+      const linea_tres = `Asunto: ${data.asunto}`;
+      const ancho_texto_linea_tres = doc.getTextWidth(linea_tres);
+      const x_linea_tres =
+        (doc.internal.pageSize.width - ancho_texto_linea_tres) / 2;
+      doc.text(linea_tres, x_linea_tres, 65);
+
+      const pdfBlob = doc.output('blob');
+      pdfFile = new File([pdfBlob], 'generado.pdf', {
+        type: 'application/pdf',
+      });
+      dispatch(set_file_fisico(pdfFile));
+    } else {
+      pdfFile = null;
+      dispatch(set_file_fisico(null));
+    }
     console.log(data.fecha_creacion_doc ?? '');
     const fecha = new Date(data.fecha_creacion_doc ?? '').toISOString();
 
@@ -136,7 +313,8 @@ const MetadataFormDialog = ({
         ? null
         : data.tipologia_no_creada_en_TRD,
       tiene_replica_fisica: checked_tiene_replica_fisica ?? null,
-      nro_folios_documento: Number(data.nro_folios_documento),
+      nro_folios_documento:
+        pdfFile === null ? Number(data.nro_folios_documento) : 1,
     };
     //  console.log('')(data_edit);
 
@@ -149,15 +327,25 @@ const MetadataFormDialog = ({
       const fecha_registro = new Date(data.fecha_creacion_doc ?? '');
       const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
-      if (diferencia_dias <= 30) {
+      if (diferencia_dias <= 100) {
         form_data.append('data_digitalizacion', JSON.stringify(data_edit));
+        console.log(exhibit, pdfFile);
 
-        if (exhibit.exhibit_link !== exhibit.metadatos?.archivo?.ruta_archivo) {
+        if (pdfFile !== null) {
+          form_data.append(`archivo`, pdfFile);
+        } else {
           if (
-            exhibit.exhibit_link !== null &&
-            exhibit.exhibit_link !== undefined
+            exhibit.exhibit_link !== exhibit.metadatos?.archivo?.ruta_archivo
           ) {
-            form_data.append(`archivo`, exhibit.exhibit_link);
+            if (
+              exhibit.exhibit_link !== null &&
+              exhibit.exhibit_link !== undefined
+            ) {
+              form_data.append(
+                `archivo`,
+                pdfFile === null ? exhibit.exhibit_link : pdfFile
+              );
+            }
           }
         }
         void dispatch(
@@ -173,13 +361,20 @@ const MetadataFormDialog = ({
       }
     } else {
       form_data.append('data_digitalizacion', JSON.stringify(data_edit));
-
-      if (exhibit.exhibit_link !== exhibit.metadatos?.archivo?.ruta_archivo) {
-        if (
-          exhibit.exhibit_link !== null &&
-          exhibit.exhibit_link !== undefined
-        ) {
-          form_data.append(`archivo`, exhibit.exhibit_link);
+      console.log(exhibit, pdfFile);
+      if (pdfFile !== null) {
+        form_data.append(`archivo`, pdfFile);
+      } else {
+        if (exhibit.exhibit_link !== exhibit.metadatos?.archivo?.ruta_archivo) {
+          if (
+            exhibit.exhibit_link !== null &&
+            exhibit.exhibit_link !== undefined
+          ) {
+            form_data.append(
+              `archivo`,
+              pdfFile === null ? exhibit.exhibit_link : pdfFile
+            );
+          }
         }
       }
 
@@ -191,6 +386,8 @@ const MetadataFormDialog = ({
       );
     }
     set_is_modal_active(false);
+    dispatch(set_exhibit(initial_state_exhibit));
+    dispatch(set_file_fisico(null));
   };
 
   const delete_metadata = (): void => {
@@ -203,8 +400,23 @@ const MetadataFormDialog = ({
       };
 
       void dispatch(delete_metadata_service(params));
+      set_is_modal_active(false);
+      dispatch(set_exhibit(initial_state_exhibit));
+      dispatch(set_file_fisico(null));
     }
   };
+
+  useEffect(() => {
+    set_aux_origen_archivos(file_origins);
+  }, [file_origins]);
+  useEffect(() => {
+    if (exhibit.cod_medio_almacenamiento === 'Pa') {
+      const arrayNuevo = file_origins.filter((objeto) => objeto.key !== 'Pa');
+      set_aux_origen_archivos(arrayNuevo);
+    } else {
+      set_aux_origen_archivos(file_origins);
+    }
+  }, [exhibit]);
 
   return (
     <Dialog
@@ -258,7 +470,8 @@ const MetadataFormDialog = ({
                   },
                   label: 'Número de folios',
                   type: 'number',
-                  disabled: false,
+                  disabled:
+                    watch('cod_origen_archivo') === 'F' || !edit_digitization,
                   helper_text: '',
                   step_number: '1',
                 },
@@ -273,7 +486,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Categoria de archivo',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   select_options: file_categories,
                   option_label: 'label',
@@ -290,9 +503,9 @@ const MetadataFormDialog = ({
                     required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Origen del archivo',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
-                  select_options: file_origins,
+                  select_options: aux_origen_archivos,
                   option_label: 'label',
                   option_key: 'key',
                 },
@@ -305,7 +518,7 @@ const MetadataFormDialog = ({
                   default_value: metadata.es_version_original ?? true,
                   rules: {},
                   label: 'Versión original',
-                  disabled: true,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
                 {
@@ -319,7 +532,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Tiene réplica física',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   checked: checked_tiene_replica_fisica,
                   set_checked: set_checked_tiene_replica_fisica,
@@ -337,7 +550,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Tiene tipología relacionada',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   checked: checked_tiene_tipologia,
                   set_checked: set_checked_tiene_tipologia,
@@ -354,7 +567,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: false, message: 'Requerido' },
                   },
                   label: 'Tipología relacionada',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   select_options: file_typologies,
                   option_label: 'label',
@@ -372,7 +585,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: false, message: 'Requerido' },
                   },
                   label: '¿Cual?',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
 
@@ -388,7 +601,7 @@ const MetadataFormDialog = ({
                   },
                   label: 'Asunto',
                   type: 'text',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
                 {
@@ -403,7 +616,7 @@ const MetadataFormDialog = ({
                   rows_text: 4,
                   label: 'Descripción',
                   type: 'text',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
                 {
@@ -413,6 +626,7 @@ const MetadataFormDialog = ({
                   character_separator: '|',
                   set_form: setValue,
                   keywords: 'palabras_clave_doc',
+                  disabled: !edit_digitization
                 },
                 {
                   datum_type: 'input_controller',
@@ -426,7 +640,7 @@ const MetadataFormDialog = ({
                   rows_text: 4,
                   label: 'Observación',
                   type: 'text',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
               ]}
@@ -440,23 +654,27 @@ const MetadataFormDialog = ({
             spacing={2}
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handle_submit(on_submit)}
-              startIcon={<SaveIcon />}
-            >
-              Agregar
-            </Button>
-            {metadata.id_metadatos_anexo_tmp !== null && (
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={delete_metadata}
-                startIcon={<SaveIcon />}
-              >
-                Eliminar
-              </Button>
+            {edit_digitization && (
+              <>
+                <Button
+                  color="success"
+                  variant="contained"
+                  onClick={handle_submit(on_submit)}
+                  startIcon={<SaveIcon />}
+                >
+                  Guardar
+                </Button>
+                {metadata.id_metadatos_anexo_tmp !== null && (
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={delete_metadata}
+                    startIcon={<DeleteIcon />}
+                  >
+                    Eliminar
+                  </Button>
+                )}
+              </>
             )}
             <Button
               color="error"

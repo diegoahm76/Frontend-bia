@@ -17,10 +17,8 @@ import {
   set_destination_offices,
   set_document_types,
   set_file_categories,
-  set_file_origin,
   set_file_origins,
   set_file_typologies,
-  set_file_typology,
   set_filed,
   set_filed_types,
   set_filings,
@@ -48,6 +46,7 @@ import {
   get_ciudades,
   get_departamentos,
 } from '../../../../../request/getRequest';
+import { showAlert } from '../../../../../utils/showAlert/ShowAlert';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -572,6 +571,28 @@ export const get_attorneys_service = (id: string | number): any => {
     }
   };
 };
+export const get_attorney_document_service = (
+  type: string | number,
+  document: string | number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `personas/get-personas-by-document/${type}/${document}/`
+      );
+      console.log(data);
+
+      if ('data' in data) {
+        dispatch(set_attorney(data.data));
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_attorney_document_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // obtener pqrsdf
 export const get_pqrs_service = (id: string | number): any => {
@@ -624,7 +645,8 @@ export const get_pqrsdf_id_service = (id: string | number): any => {
 // crear pqrsdf
 export const add_pqrsdf_service = (
   pqrsdf: any,
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  navigate_flag?: boolean
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -633,9 +655,11 @@ export const add_pqrsdf_service = (
       console.log(data);
 
       control_success(data.detail);
-      navigate(
-        `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
-      );
+      if (navigate_flag ?? true) {
+        navigate(
+          `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+        );
+      }
 
       dispatch(set_pqr(data.data));
       return data;
@@ -685,6 +709,7 @@ export const delete_pqrsdf_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      // eslint-disable-next-line no-unused-vars
       const params: any = {
         id_PQRSDF: id,
         isCreateForWeb: is_web,
@@ -729,6 +754,17 @@ export const radicar_pqrsdf_service = (
           set_filed({
             ...data.data,
             numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
+            nombre_tipo_radicado:
+              data.data.cod_tipo_radicado === 'E'
+                ? 'Entrada'
+                : data.data.cod_tipo_radicado === 'S'
+                ? 'Salidad'
+                : data.data.cod_tipo_radicado === 'I'
+                ? 'Interno'
+                : data.data.cod_tipo_radicado === 'U'
+                ? 'Unico'
+                : '',
+            titular: data.data.persona_titular,
           })
         );
       }
@@ -745,50 +781,41 @@ export const radicar_pqrsdf_service = (
 export const get_filings_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(params);
       const { data } = await api.get(`gestor/radicados/imprimir-radicado/`, {
         params,
       });
-      console.log(data);
       dispatch(set_filings(data.data));
-
-      // if ('data' in data) {
-      //   dispatch(set_pqr(data.data));
-
-      // } else {
-      //   control_error(data.detail);
-      // }
       return data;
     } catch (error: any) {
       console.log('get_filings_service');
-      control_error(error.response.data.detail);
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
       return error as AxiosError;
     }
   };
 };
 
-
-
 // OTROS //
 
-
 // obtener otros
-export const get_others_service = (id: string | number): any => {
+export const get_others_service_id = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`gestor/radicados/otros/get_otros/${id}/`);
+      const { data } = await api.get(
+        `gestor/radicados/otros/get_otros-panel/${id}/`
+      );
       console.log(data);
-      dispatch(set_others(data.data));
 
-      if ('data' in data) {
-        if (data.data.length > 0) {
-          control_success('Se encontraron pqrs');
-        } else {
-          control_error('No se encontrarón pqrs');
-        }
+      if (data.success === true) {
+        dispatch(set_others(data.data));
       } else {
-        control_error(data.detail);
+        control_error('No se encontrarón otros');
       }
+
       return data;
     } catch (error: any) {
       console.log('get_pqrs_service');
@@ -799,15 +826,19 @@ export const get_others_service = (id: string | number): any => {
 };
 // CREAR OTRO
 
-
 export const add_other_service = (
   otro: any,
-  navigate: NavigateFunction
+
+  // eslint-disable-next-line no-unused-vars
+  navigate?: NavigateFunction
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(otro);
-      const { data } = await api.post(`gestor/radicados/otros/crear-otros/`, otro);
+      const { data } = await api.post(
+        `gestor/radicados/otros/crear-otros/`,
+        otro
+      );
       console.log(data);
 
       control_success(data.detail);
@@ -819,6 +850,29 @@ export const add_other_service = (
       return data;
     } catch (error: any) {
       console.log('add_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// solicitudes otros id titular
+
+export const get_others_service = (id: string | number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`gestor/radicados/otros/get_otros/${id}/`);
+      console.log(data);
+
+      if (data.success === true) {
+        dispatch(set_others(data.data));
+      } else {
+        control_error('No se encontrarón otros');
+      }
+
+      return data;
+    } catch (error: any) {
+      console.log('get_pqrs_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

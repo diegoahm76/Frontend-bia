@@ -1,74 +1,51 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /*
    {
-        nombre_archivo: 'archivo2',
-        descripcion: 'descripcion2',
-        fecha_creacion: 'fecha2',
-        fecha_modificacion: 'fecha2',
-        usuario_creacion: 'usuario2',
-        usuario_modificacion: 'usuario2',
-        tipo_archivo: 'tipo2',
-        origen_archivo: 'origen2',
-        nombre_tipologia_documental: 'tipologia2',
-        asunto: 'asunto2',
-        palabras_clave_doc: ['palabra1', 'palabra2'],
-      },
+    "medio_almacenamiento": "No Aplica",
+    "nombre_anexo": "Policia",
+    "orden_anexo_doc": 1,
+    "cod_medio_almacenamiento": "Na",
+    "medio_almacenamiento_otros_Cual": null,
+    "numero_folios": 0,
+    "ya_digitalizado": false,
+    "observacion_digitalizacion": null,
+    "id_docu_arch_exp": null
+}
 */
 
 export const columnsModalOpas = [
   {
-    headerName: 'Nombre del archivo',
-    field: 'nombre_archivo',
+    headerName: 'Nombre del anexo',
+    field: 'nombre_anexo',
     width: 200,
   },
   {
-    headerName: 'Descripción',
-    field: 'descripcion',
+    headerName: 'Medio de almacenamiento',
+    field: 'medio_almacenamiento',
     width: 200,
   },
   {
-    headerName: 'Fecha de creación',
-    field: 'fecha_creacion',
+    headerName: 'Número de folios',
+    field: 'numero_folios',
     width: 200,
+    renderCell: (params: any) => {
+      return params.value ? 'N/A' : params.value;
+    },
   },
   {
-    headerName: 'Fecha de modificación',
-    field: 'fecha_modificacion',
+    headerName: 'Ya digitalizado',
+    field: 'ya_digitalizado',
     width: 200,
+    renderCell: (params: any) => {
+      return params.value ? 'Si' : 'No';
+    },
   },
   {
-    headerName: 'Usuario de creación',
-    field: 'usuario_creacion',
-    width: 200,
+    headerName: 'Observación de digitalización',
+    field: 'observacion_digitalizacion',
+    width: 350,
+    renderCell: (params: any) => {
+      return params.value ? params.value : 'N/A';
+    },
   },
-  {
-    headerName: 'Usuario de modificación',
-    field: 'usuario_modificacion',
-    width: 200,
-  },
-  {
-    headerName: 'Tipo de archivo',
-    field: 'tipo_archivo',
-    width: 200,
-  },
-  {
-    headerName: 'Origen del archivo',
-    field: 'origen_archivo',
-    width: 200,
-  },
-  {
-    headerName: 'Nombre de la tipología documental',
-    field: 'nombre_tipologia_documental',
-    width: 200,
-  },
-  {
-    headerName: 'Asunto',
-    field: 'asunto',
-    width: 200,
-  },
-  {
-    headerName: 'Palabras clave',
-    field: 'palabras_clave_doc',
-    width: 200,
-  }
 ];

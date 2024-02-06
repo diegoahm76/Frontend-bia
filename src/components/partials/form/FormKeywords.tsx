@@ -28,6 +28,7 @@ interface IProps {
   character_separator?: string | null;
   set_form?: any | null;
   keywords?: string | null;
+  disabled?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -37,6 +38,7 @@ const FormKeywords = ({
   character_separator,
   set_form,
   keywords,
+  disabled,
 }: IProps) => {
   const [chipData, setChipData] = useState<readonly ChipData[]>(
     initial_values ?? []
@@ -102,6 +104,7 @@ const FormKeywords = ({
                 label="Nueva Palabra"
                 value={newChip}
                 onChange={handleInputChange}
+                disabled={disabled ?? false}
               />
             </Grid>
 
@@ -113,6 +116,7 @@ const FormKeywords = ({
                 label="Agregar palabra"
                 type_button="button"
                 color_button="success"
+                disabled={disabled ?? false}
               />
             </Grid>
           </Grid>

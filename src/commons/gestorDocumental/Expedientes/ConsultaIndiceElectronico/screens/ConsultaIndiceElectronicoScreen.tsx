@@ -1,8 +1,6 @@
 import { Grid, Box, Button, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { obtener_usuario_logueado } from "../../aperturaExpedientes/thunks/aperturaExpedientes";
-import { useAppDispatch } from "../../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
@@ -37,10 +35,7 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
     const [indice_cierre, set_indice_cierre] = useState<any>(null);
     const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
-    const [visor, set_visor] = useState<any>();
     const [doc, set_doc] = useState<jsPDF>(new jsPDF({ orientation: "landscape" }));
-    const [doc_height, set_doc_height] = useState<number>(0);
-    const [titulo_reporte, set_titulo_reporte] = useState<any>();
 
     useEffect(() => {
         if (limpiar) {
@@ -167,7 +162,6 @@ export const ConsultaIndiceElectronicoScreen: React.FC = () => {
         doc.setFont('Arial', 'normal'); // establece la fuente en Arial
         const fecha_generacion = `Fecha de generación de reporte ${dayjs().format('DD/MM/YYYY')}`;
         doc.text(fecha_generacion, doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion) - 5, 5);
-        set_titulo_reporte({ reporte_seleccionado, title });
         return { reporte_seleccionado, title };
     };
     return (

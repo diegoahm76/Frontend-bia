@@ -71,8 +71,10 @@ export const AsignacionUsuarioSlice = createSlice({
         );
         if (!isDuplicateName) {
           state.anexosCreados[index] = action.payload;
+          state.currentAnexo = null;
           control_success('Se ha editado el anexo');
         } else {
+          state.currentAnexo = null;
           control_warning('No se ha podido editar el anexo, el nombre del archivo no puede repetirse');
         }
       }

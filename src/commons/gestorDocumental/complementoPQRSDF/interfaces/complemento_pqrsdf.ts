@@ -255,6 +255,7 @@ export interface IObjMetaData {
   id_tipologia_doc?: number | null;
   tipologia_doc?: string | null;
   tipologia_no_creada_TRD?: string | null;
+  tipologia_no_creada_en_TRD?: string | null;
 }
 export interface IObjFile{
   

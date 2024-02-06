@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -9,6 +10,7 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -119,6 +121,7 @@ export const CodigosUNSPSCScreen: React.FC = () => {
   const [codigo, set_codigo] = useState<ICodigoUnspsc>();
   const [is_crear, set_is_crear] = useState<boolean>(false);
   const [is_editar, set_is_editar] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handle_open_crear = (): void => {
     set_is_crear(true);
@@ -127,8 +130,9 @@ export const CodigosUNSPSCScreen: React.FC = () => {
     set_is_editar(true);
   };
 
-  const get_traer = async (): Promise<void> => {
+  const get_traer = async () => {
     try {
+      setSearchTerm('');
       const response = await get_codigo_unspsc();
       const datos = response.map((datos: ICodigoUnspsc) => ({
         id_codigo: datos.id_codigo,
@@ -138,7 +142,7 @@ export const CodigosUNSPSCScreen: React.FC = () => {
         registro_precargado: datos.registro_precargado,
         item_ya_usado: datos.item_ya_usado,
       }));
-      set_rows(datos);
+      set_rows(filterRows(datos, ''));
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'
@@ -173,6 +177,16 @@ export const CodigosUNSPSCScreen: React.FC = () => {
         }
       }
     });
+  };
+
+  const filterRows = (rows: any[], searchTerm: string) => {
+    return rows.filter(
+      (row) =>
+        row.nombre_producto_unsp
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        row.codigo_unsp.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   };
 
   useEffect(() => {
@@ -226,9 +240,17 @@ export const CodigosUNSPSCScreen: React.FC = () => {
                   title: 'CREAR',
                 })}
               </ButtonGroup>
+              <TextField
+                label="Buscar código UNSPSC"
+                size="small"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ marginBottom: '20px' }}
+              />
               <DataGrid
                 autoHeight
-                rows={rows}
+                rows={filterRows(rows, searchTerm)}
                 columns={columns}
                 getRowId={(row) => row.id_codigo}
                 pageSize={10}

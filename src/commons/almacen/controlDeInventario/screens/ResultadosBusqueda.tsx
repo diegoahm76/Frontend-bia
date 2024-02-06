@@ -537,8 +537,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={undefined} nombre_archivo={""} filtros_pdf={undefined}></ExportDocs>
                         <DataGrid
                             autoHeight
-                            rows={props.resultado_busqueda}
-                            columns={columnas_mp}
+                            rows={props.resultado_busqueda ?? []}
+                            columns={columnas_mp ?? []}
                             getRowId={(row) => uuidv4()}
                             pageSize={5}
                             rowsPerPageOptions={[5]} />
@@ -554,8 +554,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                                 <Typography variant="h6" gutterBottom> Propio </Typography>
                                 <DataGrid
                                     autoHeight
-                                    rows={propio}
-                                    columns={columnas_mp}
+                                    rows={propio ?? []}
+                                    columns={columnas_mp ?? []}
                                     getRowId={(row) => uuidv4()}
                                     pageSize={5}
                                     rowsPerPageOptions={[10]} />
@@ -567,8 +567,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                                 <Typography variant="h6" gutterBottom> No propio </Typography>
                                 <DataGrid
                                     autoHeight
-                                    rows={no_propio}
-                                    columns={columnas_mp}
+                                    rows={no_propio ?? []}
+                                    columns={columnas_mp ?? []}
                                     getRowId={(row) => uuidv4()}
                                     pageSize={5}
                                     rowsPerPageOptions={[10]} />
@@ -586,8 +586,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             <Typography variant="h6" gutterBottom> {rb.categoria} </Typography>
                             <DataGrid
                                 autoHeight
-                                rows={rb.inventario}
-                                columns={columnas_mp}
+                                rows={rb.inventario ?? []}
+                                columns={columnas_mp ?? []}
                                 getRowId={(row) => uuidv4()}
                                 pageSize={5}
                                 rowsPerPageOptions={[5]} />
@@ -602,8 +602,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         <Typography variant="h6" gutterBottom> No agrupado por categoría </Typography>
                         <DataGrid
                             autoHeight
-                            rows={props.resultado_busqueda}
-                            columns={columnas_mp}
+                            rows={props.resultado_busqueda ?? []}
+                            columns={columnas_mp ?? []}
                             getRowId={(row) => uuidv4()}
                             pageSize={5}
                             rowsPerPageOptions={[5]} />
@@ -619,8 +619,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             <Typography variant="h6" gutterBottom> {rb.nombre_bodega} </Typography>
                             <DataGrid
                                 autoHeight
-                                rows={rb.inventario}
-                                columns={columnas_mp}
+                                rows={rb.inventario ?? []}
+                                columns={columnas_mp ?? []}
                                 getRowId={(row) => uuidv4()}
                                 pageSize={5}
                                 rowsPerPageOptions={[5]} />
@@ -635,8 +635,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         <Typography variant="h6" gutterBottom> Para toda la entidad </Typography>
                         <DataGrid
                             autoHeight
-                            rows={props.resultado_busqueda}
-                            columns={columnas_mp}
+                            rows={props.resultado_busqueda ?? []} 
+                            columns={columnas_mp ?? []}
                             getRowId={(row) => uuidv4()}
                             pageSize={5}
                             rowsPerPageOptions={[5]} />
@@ -652,8 +652,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             <Typography variant="h6" gutterBottom> {rb.nombre_bodega}</Typography>
                             <DataGrid
                                 autoHeight
-                                rows={rb.inventario}
-                                columns={columnas_mp}
+                                rows={rb.inventario ?? []}
+                                columns={columnas_mp ?? []}
                                 getRowId={(row) => uuidv4()}
                                 pageSize={5}
                                 rowsPerPageOptions={[5]} />
@@ -667,8 +667,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={undefined} nombre_archivo={""} filtros_pdf={undefined}></ExportDocs>
                         <DataGrid
                             autoHeight
-                            rows={props.resultado_busqueda}
-                            columns={columnas_mp}
+                            rows={props.resultado_busqueda ?? []}
+                            columns={columnas_mp ?? []}
                             getRowId={() => uuidv4()}
                             pageSize={5}
                             rowsPerPageOptions={[5]} />

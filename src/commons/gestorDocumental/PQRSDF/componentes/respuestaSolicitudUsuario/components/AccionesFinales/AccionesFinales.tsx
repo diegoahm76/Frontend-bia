@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState } from 'react';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
-import { useStepperContext } from '@mui/material';
-import { postAsignacionUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
+// import { useStepperContext } from '@mui/material';
+import { postResponderUsuario } from '../../toolkit/thunks/postAsignacionUsuario.service';
 import { useStepperResSolicitudUsuario } from '../../hook/useStepperResSolicitudUsuario';
 import { resetItems } from '../../toolkit/slice/ResSolicitudUsarioSlice';
+import { AuthSlice } from '../../../../../../auth/interfaces';
 
 export const AccionesFinales = ({
-  controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
+  // controlFormulario,
+  // handleSubmitFormulario,
+  // errorsFormulario,
   resetFormulario,
   watchFormulario,
   setInfoReset,
@@ -29,71 +30,84 @@ export const AccionesFinales = ({
   const { anexosCreados } = useAppSelector(
     (state) => state.ResSolicitudUsarioSlice
   );
-  const { currentElementPqrsdComplementoTramitesYotros } = useAppSelector(
-    (state: any) => state.PanelVentanillaSlice
+
+  const { userinfo } = useAppSelector(
+    (state: AuthSlice) => state.auth
   );
 
+  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
+    useAppSelector((state: any) => state.BandejaTareasSlice);
+  console.log('anexosCreados', anexosCreados);
   //* handleSumbit
 
   const sendDataByFormData = () => {
-    const formData = new FormData(); // Use FormData instead of a normal object
-    //  console.log('')(anexosCreados);
-    formData.append(
-      'solicitud_usu_PQRSDF',
-      JSON.stringify({
-        asunto: anexosCreados[0]?.asunto,
-        descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-        id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-      })
-    );
+    const formData = new FormData();
 
-    anexosCreados.forEach((anexo: any, index: number) => {
+    anexosCreados.forEach((anexo: any) => {
       console.log('anexo', anexo);
 
       if (anexo?.ruta_soporte) {
-        formData.append('archivo', anexo.ruta_soporte); // Use append method to add multiple values with the same field name
+        formData.append(
+          `archivo-create-${anexo.nombre_archivo}`,
+          anexo.ruta_soporte
+        ); // Use append method to add multiple values with the same field name
       }
-      formData.append(
-        'anexo',
-        JSON.stringify({
-          nombre_anexo: anexo?.nombre_archivo,
-          numero_folios: anexo?.numero_folios,
-          cod_medio_almacenamiento: 'Na',
-          orden_anexo_doc: index + 1,
-          meta_data: {
+    });
+
+    formData.append('isCreateForWeb', userinfo?.tipo_usuario === 'I' ? 'False' : 'True'); //? detectar si el usuario logueado es interno o externo
+    formData.append(
+      'respuesta_pqrsdf',
+      JSON.stringify({
+        id_pqrsdf:
+          +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf,
+        asunto: watchFormulario.asunto,
+        descripcion: watchFormulario.descripcion_de_la_solicitud,
+        cantidad_anexos: +anexosCreados.length,
+        nro_folios_totales: +anexosCreados.reduce(
+          (acc: number, anexo: any) => acc + anexo.numero_folios,
+          0
+        ),
+        anexos: anexosCreados.map((anexo, index) => ({
+          nombre_anexo: anexo.nombre_archivo,
+          orden_anexo_doc: +index,
+          cod_medio_almacenamiento: 'Pa',
+          medio_almacenamiento_otros_Cual: null,
+          numero_folios: +anexosCreados.reduce(
+            (acc: number, anexo: any) => acc + anexo.numero_folios,
+            0
+          ),
+          ya_digitalizado: true,
+          metadatos: {
+            asunto: anexo.asunto,
+            descripcion: anexo.descripcionMetadatos,
+            cod_categoria_archivo:
+              anexo.categoriaArchivoMetadatos?.value || null,
             tiene_replica_fisica:
-              anexo?.tieneReplicaFisicaMetadatos?.value === 'Si' ? true : false,
-            cod_origen_archivo: anexo?.origenArchivoMetadatos?.value,
-            nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
-            descripcion: anexo?.descripcionMetadatos,
-            asunto: anexo?.asuntoMetadatos,
-            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
-            nro_folios_documento: anexo?.numero_folios,
-            id_tipologia_doc: anexo?.tipologiasDocumentalesMetadatos?.value
-              ? anexo?.tipologiasDocumentalesMetadatos?.value
-              : null,
-            tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos
-              ? anexo?.cualTipologiaDocumentalMetadatos
-              : null,
-            palabras_clave_doc: anexo?.palabrasClavesMetadatos.join('|'),
+              anexo.tieneReplicaFisicaMetadatos?.value === 'Si',
+            cod_origen_archivo: anexo.origenArchivoMetadatos?.value || null,
+            id_tipologia_doc:
+              +anexo.tipologiasDocumentalesMetadatos?.value || null,
+            tipologia_no_creada_TRD: null,
+            palabras_clave_doc: (
+              (anexo && anexo.palabrasClavesMetadatos) ||
+              []
+            ).join('|'),
           },
-        })
-      );
-    });
+        })),
+      })
+    );
 
-    postAsignacionUsuario(formData, setLoadingButton).then(() => {
-      handleReset();
-      resetFormulario({});
-      setInfoReset({});
-      dispatch(resetItems());
-
-      Swal.fire({
-        title: 'Solicitud enviada',
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 1500,
+    postResponderUsuario(formData, setLoadingButton)
+      .then(() => {
+        handleReset();
+        resetFormulario({});
+        setInfoReset({});
+        dispatch(resetItems());
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        // Aquí puedes manejar el error como prefieras, por ejemplo mostrando un mensaje al usuario
       });
-    });
   };
 
   const handleSubmit = async () => {
@@ -109,8 +123,8 @@ export const AccionesFinales = ({
     }
 
     await Swal.fire({
-      title: '¿Está seguro de enviar la solicitud al usuario?',
-      text: 'Una vez enviada la solicitud no podrá realizar cambios',
+      title: '¿Está seguro de responder la PQRSDF?',
+      text: 'Una vez enviada la respuesta no podrá realizar cambios',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Enviar',

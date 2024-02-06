@@ -29,9 +29,10 @@ export const useBandejaTareas = () => {
         label: '',
       },
       mostrar_respuesta_con_req_pendientes:{
-        value: '',
+        value: true,
         label: '',
       },
+      radicado: '',
 
       // ? pendiente si deben agregar mas elementos para los demas tipos de tareas
 
@@ -61,7 +62,7 @@ export const useBandejaTareas = () => {
         label: '',
       },
       mostrar_respuesta_con_req_pendientes:{
-        value: '',
+        value: true,
         label: '',
       },
 

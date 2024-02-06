@@ -21,13 +21,15 @@ import {
   control_error,
   get_digitalization_requests_service,
 } from '../../store/thunks/centralDigitalizacionThunks';
-
+interface IProps {
+  control_solicitud?: any;
+  reset: any;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SolicitudSeleccionada = () => {
+const SolicitudSeleccionada = ({ control_solicitud, reset }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { control: control_solicitud, reset } = useForm<any>();
-  const { digitization_request } = useAppSelector(
+  const { digitization_request, edit_digitization } = useAppSelector(
     (state) => state.central_digitalizacion_slice
   );
   useEffect(() => {
@@ -108,7 +110,7 @@ const SolicitudSeleccionada = () => {
               rows_text: 4,
               label: 'Observación de digitalización',
               type: 'text',
-              disabled: false,
+              disabled: !edit_digitization,
               helper_text: '',
             },
           ]}

@@ -159,7 +159,6 @@ const CierreExpedientesScreen = () => {
     ];
 
     const on_submit_cerrar_expediente = (data: FormValues): void => {
-
         if (selected_expediente && typeof selected_expediente.id_expediente_documental === 'number') {
             const form_data: any = new FormData();
             const current_date = new Date();
@@ -207,7 +206,7 @@ const CierreExpedientesScreen = () => {
                     default_value=''
                     rules={{}}
                     type="text"
-                    disabled={false}
+                    disabled={true}
                     helper_text=""
                     hidden_text={null}
                     label={"Expediente"}
@@ -310,7 +309,7 @@ const CierreExpedientesScreen = () => {
                                     columns={columns}
                                     pageSize={10}
                                     rowsPerPageOptions={[10]}
-                                    rows={archivos_por_expedientes}
+                                    rows={archivos_por_expedientes ?? []}
                                     getRowId={(row) => row.orden_en_expediente} />
                             </>
                         </Box>
@@ -353,7 +352,7 @@ const CierreExpedientesScreen = () => {
                 </Grid>
 
                 <Grid item margin={2}>
-                    <Button variant="outlined"
+                    <Button variant="contained"
                         color="error"
                         onClick={handle_close_buscar}>
                         Salir

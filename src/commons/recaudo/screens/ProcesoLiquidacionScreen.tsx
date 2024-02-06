@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint no-new-func: 0 */
 import { type SyntheticEvent, useState, useEffect } from 'react';
-import { Box, Grid, type SelectChangeEvent, Tab, Tooltip, IconButton, Avatar } from "@mui/material"
+import { Box, Grid, type SelectChangeEvent, Tab, Tooltip, IconButton, Avatar, Button } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiquidacion";
 import { Title } from "../../../components"
@@ -11,7 +12,8 @@ import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { NotificationModal } from '../components/NotificationModal';
 import dayjs, { type Dayjs } from 'dayjs';
 import type { DetallePeriodo, DetallesPeriodos } from '../interfaces/proceso';
-
+import { FacturacionVisor } from './FacturacionVisor';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 const detalles_ciclos: string[] = [
   'diario',
   'mensual',
@@ -155,7 +157,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   }, [rows_detalles]);
 
   const get_liquidacion_por_expediente = (estado_expediente: EstadoExpediente): void => {
-    if (estado_expediente === 'guardado') {
+    if (estado_expediente?.toLowerCase() === 'guardado') {
       api.get(`recaudo/liquidaciones/liquidacion-base-por-expediente/${form_liquidacion.id_expediente}`)
         .then((response) => {
           agregar_datos_inputs(response.data.data);
@@ -247,30 +249,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       });
   };
 
-  const update_detalles = (): void => {
+  const update_liquidacion = (): void => {
     api.get(`recaudo/liquidaciones/liquidacion-base-por-expediente/${form_liquidacion.id_expediente}`)
       .then((response) => {
-        agregar_detalles(response.data.data.detalles);
-        submit_updated_liquidacion(response.data.data.id);
+        agregar_datos_inputs(response.data.data);
       })
       .catch((error) => {
         //  console.log('')(error);
-      });
-  };
-
-  const submit_updated_liquidacion = (id_liquidacion: number): void => {
-    api.put(`recaudo/liquidaciones/liquidacion-base/${id_liquidacion}/`, {
-      valor: form_liquidacion.valor,
-    })
-      .then((response) => {
-        console.log(response);
-        set_notification_info({ type: 'success', message: `Se ha guardado correctamente la liquidacion.` });
-        set_open_notification_modal(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        set_notification_info({ type: 'error', message: 'Hubo un error' });
-        set_open_notification_modal(true);
       });
   };
 
@@ -287,11 +272,28 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       });
   };
 
+  const edit_liquidacion = (): void => {
+    api.put(`recaudo/liquidaciones/liquidacion-base/${id_liquidacion_pdf}/`, {
+      valor: form_liquidacion.valor
+    })
+      .then((response) => {
+        // console.log(response);
+        set_notification_info({ type: 'success', message: 'Se ha actualizado correctamente la liquidación.' });
+        set_open_notification_modal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        set_notification_info({ type: 'success', message: 'Hubo un error' });
+        set_open_notification_modal(true);
+      });
+  };
+
   const edit_detalles_liquidacion = (): void => {
     rows_detalles.forEach((detalle) => {
       submit_updated_detalle(detalle.id, detalle.variables, detalle.valor_liquidado);
     });
-    update_detalles();
+    edit_liquidacion();
+    update_liquidacion();
   };
 
   const handle_position_tab_change = (event: SyntheticEvent, newValue: string): void => {
@@ -320,7 +322,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         ...form,
         id_opcion_liq: Number(form.id_opcion_liq),
         id_liquidacion,
-        valor: form.valor,
+        valor: form.valor.toFixed(4),
       };
       api.post('recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
         .then((response) => {
@@ -336,6 +338,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           set_fecha_vencimiento(dayjs(new Date()));
           set_form_detalle_liquidacion([]);
           set_rows_detalles([]);
+          set_id_liquidacion_pdf('');
         })
         .catch((error) => {
           //  console.log('')(error);
@@ -350,7 +353,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       vencimiento: fecha_vencimiento.format('YYYY-MM-DDTHH:mm:ss'),
       id_deudor: Number(form_liquidacion.id_deudor),
       id_expediente: Number(form_liquidacion.id_expediente),
-      valor: form_liquidacion.valor,
+      valor: form_liquidacion.valor?.toFixed(4),
     })
       .then((response) => {
         //  console.log('')(response);
@@ -406,7 +409,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       minWidth: 100,
       flex: 0.2,
       renderCell: (params) => {
-        return (
+        return (<>
+      
           <Tooltip title='Liquidar'>
             <IconButton
               onClick={() => {
@@ -434,11 +438,26 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               </Avatar>
             </IconButton>
           </Tooltip>
+          <IconButton
+            onClick={() => {
+              set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
+              set_nombre_deudor(`${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`);
+              // set_position_tab('2');
+              handle_open_buscar();
+            }}
+          >
+            <VisibilityIcon sx={{ color: 'primary.main' }} /> {/* Ícono del ojo */}
+          </IconButton>
+
+          </>
         );
       }
     }
   ];
-
+  const [is_modal_active, set_is_buscar] = useState<boolean>(false);
+  const handle_open_buscar = (): void => {
+    set_is_buscar(true);
+  };
   return (
     <>
       <Grid
@@ -452,6 +471,19 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
+        
+        {/* <Button onClick={handle_open_buscar} fullWidth variant="outlined"    >
+          Crear
+        </Button> */}
+
+        <FacturacionVisor
+          is_modal_active={is_modal_active}
+          set_is_modal_active={set_is_buscar}
+          form_liquidacion={form_liquidacion}
+          expedientes_deudor={expedientes_deudor}
+          id_liquidacion_pdf={id_liquidacion_pdf}
+          handle_select_form_liquidacion_change={handle_select_form_liquidacion_change}
+        />
         <Grid item xs={12}>
           <Title title="Proceso de Liquidación"></Title>
           <Box
@@ -518,6 +550,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+
+
+
 
       <TabContext value={position_tab}>
         <TabPanel value="2" sx={{ p: '20px 0' }}>

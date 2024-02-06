@@ -142,8 +142,8 @@ export const ListarObjetivo: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows_objetivo}
-                  columns={columns_obj}
+                  rows={rows_objetivo ?? []}
+                  columns={columns_obj ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}

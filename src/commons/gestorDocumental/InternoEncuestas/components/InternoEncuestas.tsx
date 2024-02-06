@@ -20,9 +20,9 @@ import type React from 'react';
 
 
 export const TablaEncuestaInterno: React.FC<IProps> = ({ selectedEncuestaId, setSelectedEncuestaId }) => {
+    const { userinfo: { id_persona } } = useSelector((state: AuthSlice) => state.auth);
 
     const [asignaciones, setAsignaciones] = useState<AsignacionEncuestaUsuario[]>([]);
-    const { userinfo: { id_persona } } = useSelector((state: AuthSlice) => state.auth);
     const cargarAsignaciones = async () => {
         try {
             const response = await api.get(`/gestor/encuestas/asignacion_encuesta_usuario/get/${id_persona}/`);
@@ -44,9 +44,6 @@ export const TablaEncuestaInterno: React.FC<IProps> = ({ selectedEncuestaId, set
         { field: 'id_asignar_encuesta', headerName: 'Asignación', width: 200, flex: 1 },
         { field: 'nombre_completo', headerName: 'Nombre Completo', width: 200, flex: 1 },
         { field: 'nombre_encuesta', headerName: 'Nombre Encuesta', width: 200, flex: 1 },
-        // { field: 'id_encuesta', headerName: 'ID Encuesta', width: 150 },
-        // { field: 'id_persona', headerName: 'ID Persona', width: 150 },
-        // { field: 'id_alerta_generada', headerName: 'ID Alerta Generada', width: 200 },
         {
             field: 'acciones',
             headerName: 'Acciones',

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { useAppSelector } from '../../../../../hooks';
 
 //? icons necesario para los botones de acciones de pqrsdf
 import DevicesIcon from '@mui/icons-material/Devices';
@@ -47,7 +46,7 @@ const actionsComplements: any[] = [
   {
     id: 'ContinuarAsigGrup',
     icon: <ReduceCapacityIcon />,
-    name: 'Continuar con asignación de grupo',
+    name: 'Continuar con asignación a unidad organizacional',
     path: '',
     disabled: false,
   },
@@ -64,8 +63,8 @@ const actionsTramitesYServicios: any[] = [
   {
     id: 'AsigGrup',
     icon: <GroupsIcon />,
-    name: 'Asignar al grupo y generación de expediente',
-    path: '', // pendiente por definir
+    name: 'Asignar a unidad organizacional  y generación de expediente',
+    path: '/app/gestor_documental/panel_ventanilla/asignar_tramite_a_unidad',
     disabled: false,
   },
   {
@@ -89,7 +88,7 @@ const actionsOpas: any[] = [
     id: 'AsigGrup',
     icon: <GroupsIcon />,
     name: 'Asignar OPA a unidad organizacional',
-    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
+    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo_tramite_opa',
     disabled: false,
   },
   {
@@ -101,6 +100,22 @@ const actionsOpas: any[] = [
   },
 ];
 
+const actionsOtros = [
+  {
+    id: 'DigOtro',
+    icon: <DevicesIcon />,
+    name: 'Enviar solicitud de digitalización para la solicitud de otros',
+    path: '',
+    disabled: false,
+  },
+  {
+    id: 'AsigGrupOtro',
+    icon: <GroupsIcon />,
+    name: 'Asignar solicitud de otros a unidad organizacional',
+    path: '/app/gestor_documental/panel_ventanilla/asignar_a_grupo',
+    disabled: false,
+  },
+];
 
 const initialState: any = {
   // ? valores para los botones (acciones) que se ejercen dentro de panel de ventanilla
@@ -108,7 +123,8 @@ const initialState: any = {
   actions: actionsPQRSDF,
   actionsTramitesYServicios,
   actionsComplementos: actionsComplements,
-  actionsOpas: actionsOpas,
+  actionsOpas,
+  actionsOtros,
 
   currentElementPqrsdComplementoTramitesYotros: null,
   listaElementosPqrsfTramitesUotros: [],
@@ -134,18 +150,18 @@ export const PanelVentanillaSlice = createSlice({
       state.actionsComplementos = action.payload;
     },
     //* mandejo de acciones para tramites y servicios
-   /* setActionssToManagePermissionsTramitesYServicios: (
+    /* setActionssToManagePermissionsTramitesYServicios: (
       state,
       action: PayloadAction<any>
     ) => {
       state.actionsTramitesYServicios = action.payload;
     },*/
     //* mandejo de acciones para opas
-    setActionssToManagePermissionsOpas: (
-      state,
-      action: PayloadAction<any>
-    ) => {
+    setActionssToManagePermissionsOpas: (state, action: PayloadAction<any>) => {
       state.actionsOpas = action.payload;
+    },
+    setActionsOtros: (state, action: PayloadAction<any>) => {
+      state.actionsOtros = action.payload;
     },
 
     // ? ------------------------
@@ -183,6 +199,11 @@ export const PanelVentanillaSlice = createSlice({
       state.listaComplementosRequerimientosOtros = [];
       state.listaHistoricoSolicitudes = [];
     },
+    resetParcial: (state) => {
+      state.currentElementPqrsdComplementoTramitesYotros = null;
+      state.listaElementosPqrsfTramitesUotros = [];
+      state.listaComplementosRequerimientosOtros = [];
+    },
   },
 });
 
@@ -191,9 +212,10 @@ export const {
   setActionssToManagePermissions,
   // ? acciones sobre lo botones del panel de ventanilla
   setActionssToManagePermissionsComplementos,
-
   // ? acciones sobre lo botones del OPAS
   setActionssToManagePermissionsOpas,
+  // ? acciones sobre lo botones de otros
+  setActionsOtros,
   // ? acciones sobre lista de elementos de pqrsdf, trámites y servicios y otros
   setListaElementosPqrsfTramitesUotrosBusqueda,
   // ? acciones sobre lista de complementos, derequerimientos y otros
@@ -204,4 +226,5 @@ export const {
   setListaHistoricoSolicitudes,
   // ? reset de todos los estados del slice
   resetPanelVentanillaFull,
+  resetParcial,
 } = PanelVentanillaSlice.actions;

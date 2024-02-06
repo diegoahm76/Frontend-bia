@@ -4,13 +4,12 @@ import { ModalAndLoadingProvider } from '../../../../context/GeneralContext';
 import { MainViewBandejaTareas } from '../screen/MainViewBandejaTareas';
 import { RequerimientoUsuarioScreen } from '../modules/requerimientosUsuario/screen/RequerimientoUsuarioScreen';
 import { BandejaTareasProvider } from '../mainModule/context/BandejaTareasContext';
-/*import { AsignacionUsuarioScreen } from '../module/entrega99/screen/AsignacionUsuarioScreen';
-import { PanelVentanillaProvider } from '../context/PanelVentanillaContext';
-import { VistaPqr } from '../module/entrega98_101/components/vistaPqr/VistaPqr';
-import { VistaComplemento } from '../module/entrega98_101/components/vistaComplemento/VistaComplemento';
-import { MainAsigGrupoScreen } from '../module/entrega102/screen/MainAsigGrupoScreen';
-import { AsignacionGrupoProvider } from '../module/entrega102/context/AsignacionGrupoContext';
-import { SolicitudAlUsuarioProvider } from '../module/entrega99/context/SolicitudUsarioContext';*/
+import { VistaTareaPqrsdf } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaTareaPqrsdf';
+import { RequerimientoAlUsuarioProvider } from '../modules/requerimientosUsuario/context/RequerimientoUsarioContext';
+import { ReasignacionProvider } from '../modules/reasignaciones/context/ReasignacionContext';
+import { MainReasignacionesScreen } from '../modules/reasignaciones/screen/MainReasignacionesScreen';
+import { VistaComplementoTarea } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaComplementoTarea';
+import { MainScreenSeguimientoTarea } from '../modules/seguimientoTarea/screen/MainScreenSeguimientoTarea';
 
 const routes = [
   {
@@ -21,53 +20,60 @@ const routes = [
   {
     path: 'requerimiento_a_usuario/',
     component: () => (
+      <RequerimientoAlUsuarioProvider>
+        <RequerimientoUsuarioScreen />
+      </RequerimientoAlUsuarioProvider>
+    ),
+  },
+
+  //* pendiente re asignaciones
+  //* pendiente ruta a respuesta de pqrsdf
+  {
+    path: 'reasignacion_tarea/',
+    component: () => (
       <>
-        <BandejaTareasProvider>
-          <RequerimientoUsuarioScreen />
-        </BandejaTareasProvider>
+        <ReasignacionProvider>
+          <MainReasignacionesScreen />
+        </ReasignacionProvider>
       </>
     ),
   },
-  /*
   {
-    path: 'asignar_a_grupo/',
+    path: 'seguimiento_tarea/',
     component: () => (
       <>
-        <AsignacionGrupoProvider>
-          <MainAsigGrupoScreen />
-        </AsignacionGrupoProvider>
+        <MainScreenSeguimientoTarea />
       </>
     ),
   },
 
   //* van a venit posteriorment los modulos que desprenden de trámites y servicios y otros
-
   {
-    path: 'pqr_info/:id',
-    component: () => <VistaPqr />,
+    path: 'info_tarea/:id_PQRSDF',
+    component: () => <VistaTareaPqrsdf />,
   },
   {
-    path: 'complemento_info/:id',
-    component: () => <VistaComplemento />,
-  },*/
+    path: 'info_complemento/:id_complemento_usu_pqr',
+    component: () => <VistaComplementoTarea />,
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BandejaTareasRoutes: React.FC = () => {
   return (
     <ModalAndLoadingProvider>
-      {/* <PanelVentanillaProvider>*/}
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-            element={route.component()}
-          />
-        ))}
-        <Route path="/*" element={<Page404 />} />
-      </Routes>
-      {/*  </PanelVentanillaProvider>*/}
+      <BandejaTareasProvider>
+        <Routes>
+          {routes.map((route) => (
+            <Route
+              key={route.path}
+              path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+              element={route.component()}
+            />
+          ))}
+          <Route path="/*" element={<Page404 />} />
+        </Routes>
+      </BandejaTareasProvider>
     </ModalAndLoadingProvider>
   );
 };

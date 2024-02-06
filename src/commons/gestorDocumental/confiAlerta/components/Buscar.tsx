@@ -109,7 +109,7 @@ export const Buscar: React.FC<BuscarProps> = ({ handleClear, setSelectedEncuesta
                 }}
             >
                 <Grid item xs={12}  >
-                    <Title title="Selecione encuensta para ver los detalles de configuracion  " />
+                    <Title title="Seleccione encuesta para ver los detalles de configuración  " />
                 </Grid>
                 {/* <h1>{selectedEncuestaId !== null ? `ID seleccionado: ${selectedEncuestaId}` : ''}</h1> Mostrar el ID seleccionado en el h1 */}
                 <Grid item xs={12} marginTop={2} sm={3}>
@@ -140,10 +140,10 @@ export const Buscar: React.FC<BuscarProps> = ({ handleClear, setSelectedEncuesta
                     <DataGrid
                         density="compact"
                         autoHeight
-                        columns={columns}
-                        rows={encuestas}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
+                        columns={columns}
+                        rows={encuestas}
                         getRowId={(row) => row.id_encabezado_encuesta}
                     />
                 </Grid>
