@@ -383,6 +383,7 @@ export const initial_state_consulta_plan: IPlan = {
 
 export const initial_state_seguimineto_poai: ISeguiminetoPOAI = {
   id_seguimiento: null,
+  nombre_plan: '',
   nombre_programa: '',
   nombre_proyecto: '',
   nombre_producto: '',

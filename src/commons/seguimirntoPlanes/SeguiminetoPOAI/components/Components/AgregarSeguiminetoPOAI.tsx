@@ -10,7 +10,10 @@ import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useSeguimientoPOAIHook } from '../../hooks/useSeguimientoPOAIHook';
 import { DataContextSeguimientoPOAI } from '../../context/context';
 import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
-import { meses_selected } from '../../../PlanAnualAdquisiciones/choices/selects';
+import {
+  meses_selected,
+  clase_tercero,
+} from '../../../PlanAnualAdquisiciones/choices/selects';
 
 // librerias de manejo de fechas
 
@@ -41,6 +44,14 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
   const { mode, seguimiento_poai } = useAppSelector((state) => state.planes);
 
   const {
+    data_fuente,
+    nombre_plan,
+    nombre_programa,
+    nombre_proyecto,
+    nombre_producto,
+    nombre_actividad,
+    nombre_indicador,
+    nombre_meta,
     fuentes_selected,
     concepto_selected,
     sector_selected,
@@ -49,13 +60,18 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
     unidades_organizaciones_selected,
     modalidad_selected,
     banco_selected,
-    clase_terceros_selected,
+    id_fuente,
+    set_id_fuente,
+    set_id_plan,
+    set_id_programa,
     set_id_proyecto,
+    set_id_producto,
     set_id_actividad,
     set_id_indicador,
     set_id_meta,
     fetch_data_rubros,
     fetch_data_fuentes,
+    fetch_data_fuentes_by_id,
     fetch_data_concepto,
     fetach_data_sector,
     fetch_data_detalle,
@@ -63,10 +79,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
     fetch_data_unidades_organizaciones,
     fetch_data_modalidad,
     fetch_data_banco,
-    fetch_data_clase_terceros,
   } = useContext(DataContextSeguimientoPOAI);
-
-  console.log('clase_terceros_selected', clase_terceros_selected);
 
   useEffect(() => {
     fetch_data_rubros();
@@ -78,8 +91,27 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
     fetch_data_unidades_organizaciones();
     fetch_data_modalidad();
     fetch_data_banco();
-    fetch_data_clase_terceros();
+    set_value_seguimiento('nombre_plan', nombre_plan);
+    set_value_seguimiento('nombre_programa', nombre_programa);
+    set_value_seguimiento('nombre_proyecto', nombre_proyecto);
+    set_value_seguimiento('nombre_producto', nombre_producto);
+    set_value_seguimiento('nombre_actividad', nombre_actividad);
+    set_value_seguimiento('nombre_indicador', nombre_indicador);
+    set_value_seguimiento('nombre_meta', nombre_meta);
   }, []);
+
+  useEffect(() => {
+    if (id_fuente) {
+      fetch_data_fuentes_by_id();
+    }
+  }, [id_fuente]);
+
+  useEffect(() => {
+    set_value_seguimiento('vano_1', data_fuente?.vano_1 ?? 0);
+    set_value_seguimiento('vano_2', data_fuente?.vano_2 ?? 0);
+    set_value_seguimiento('vano_3', data_fuente?.vano_3 ?? 0);
+    set_value_seguimiento('vano_4', data_fuente?.vano_4 ?? 0);
+  }, [data_fuente]);
 
   // calcular valor_total suma de vanos
   const vano_1 = Number(data_watch_seguimiento.vano_1);
@@ -130,6 +162,8 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
       set_fecha_termiacion(fecha_termiacion ?? null);
       set_value_seguimiento('fecha_rp', fecha_rp?.format('YYYY-MM-DD'));
       set_fecha_rp(fecha_rp ?? null);
+      set_value_seguimiento('fecha_cdp', fecha_cdp?.format('YYYY-MM-DD'));
+      set_fecha_cdp(fecha_cdp ?? null);
       limpiar_formulario_seguimiento();
     }
     if (mode.editar) {
@@ -151,6 +185,10 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
       set_id_actividad(seguimiento_poai.id_actividad ?? null);
       set_id_indicador(seguimiento_poai.id_indicador ?? null);
       set_id_meta(seguimiento_poai.id_meta ?? null);
+      set_id_fuente(seguimiento_poai.id_fuente_financiacion ?? null);
+      set_id_plan(seguimiento_poai.id_plan ?? null);
+      set_id_programa(seguimiento_poai.id_programa ?? null);
+      set_id_producto(seguimiento_poai.id_producto ?? null);
       reset_seguimiento({
         id_seguimiento: seguimiento_poai.id_seguimiento,
         nombre_programa: seguimiento_poai.nombre_programa,
@@ -270,6 +308,33 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               </Grid> */}
             </>
           ) : null}
+          {/* nombre plan */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_plan"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre del plan"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
+          {/* nombre programa */}
+          {/* nombre proyecto */}
+          {/* nombre producto */}
+          {/* nombre actividad */}
+          {/* nombre indicador */}
+          {/* nombre meta */}
           {/* porcentaje_pto */}
           <Grid item xs={12} sm={6}>
             <Controller
@@ -334,6 +399,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               )}
             />
           </Grid>
+          {/* nombre_programa */}
           {/* id_sector */}
           <Grid item xs={12} sm={6}>
             <Controller
@@ -366,6 +432,9 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               )}
             />
           </Grid>
+          {/* nombre_proyecto */}
+          {/* nombre_producto */}
+          {/* nombre_actividad */}
           {/* id_detalle_inversion */}
           <Grid item xs={12} sm={6}>
             <Controller
@@ -453,6 +522,10 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                       ? 'Este campo es obligatorio'
                       : 'ingrese el fuente financiacion'
                   }
+                  onChange={(event) => {
+                    field.onChange(event);
+                    set_id_fuente(Number(event.target.value));
+                  }}
                 >
                   {fuentes_selected.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -462,34 +535,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                 </TextField>
               )}
             />
-          </Grid>
-          {/* descripcion */}
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="descripcion"
-              control={control_seguimiento}
-              rules={{ required: false }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Descripción"
-                  variant="outlined"
-                  multiline
-                  value={value}
-                  disabled={false}
-                  required={false}
-                  onChange={onChange}
-                  error={!!errors_seguimiento.descripcion}
-                  helperText={
-                    errors_seguimiento.descripcion
-                      ? 'Es obligatorio ingresar un nombre'
-                      : 'Ingrese un nombre'
-                  }
-                />
-              )}
-            />
-          </Grid>
+          </Grid>{' '}
           {/* vano 1 con label de año 1 */}
           <Grid item xs={12} sm={6}>
             <Controller
@@ -507,7 +553,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                   }}
                   multiline
                   value={value}
-                  disabled={false}
+                  disabled={true}
                   required={true}
                   onChange={onChange}
                   error={!!errors_seguimiento.vano_1}
@@ -537,7 +583,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                   }}
                   multiline
                   value={value}
-                  disabled={false}
+                  disabled={true}
                   required={false}
                   onChange={onChange}
                   error={!!errors_seguimiento.vano_2}
@@ -567,7 +613,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                   }}
                   multiline
                   value={value}
-                  disabled={false}
+                  disabled={true}
                   required={false}
                   onChange={onChange}
                   error={!!errors_seguimiento.vano_3}
@@ -597,7 +643,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                   }}
                   multiline
                   value={value}
-                  disabled={false}
+                  disabled={true}
                   required={false}
                   onChange={onChange}
                   error={!!errors_seguimiento.vano_4}
@@ -1344,12 +1390,12 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             </LocalizationProvider>
           </Grid>
           {/* id_clase_tercero */}
-          {/* <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_clase_tercero"
               control={control_seguimiento}
               defaultValue=""
-              rules={{ required: true }}
+              rules={{ required: false }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -1358,24 +1404,23 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                   margin="dense"
                   select
                   fullWidth
-                  required={true}
-                  error={!!errors_seguimiento.id_clase_tercero}
-                  helperText={
-                    errors_seguimiento.id_clase_tercero
-                      ? 'Es obligatorio ingresar una clase de tercero'
-                      : 'Ingrese una clase de tercero'
-                  }
+                  // required={true}
+                  // error={!!errors_seguimiento.mes_solicita}
+                  // helperText={
+                  //   errors_seguimiento.mes_solicita
+                  //     ? 'Es obligatorio ingresar mes de solicitud'
+                  //     : 'Ingrese un  mes de solicitud'
+                  // }
                 >
-                  {clase_terceros_selected.map((option) => (
+                  {clase_tercero.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
-                  ;
                 </TextField>
               )}
             />
-          </Grid> */}
+          </Grid>
           {/* observaciones */}
           <Grid item xs={12} sm={6}>
             <Controller

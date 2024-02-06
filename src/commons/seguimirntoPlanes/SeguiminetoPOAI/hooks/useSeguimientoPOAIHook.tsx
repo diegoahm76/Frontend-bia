@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useForm } from 'react-hook-form';
 import { control_error, control_success } from '../../../../helpers';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { ISeguiminetoPOAI } from '../../types/types';
 import { useAppSelector } from '../../../../hooks';
 import { DataContextSeguimientoPOAI } from '../context/context';
@@ -20,6 +20,7 @@ export const useSeguimientoPOAIHook = (): any => {
   } = useForm<ISeguiminetoPOAI>({
     defaultValues: {
       id_seguimiento: 0,
+      nombre_plan: '',
       nombre_programa: '',
       nombre_proyecto: '',
       nombre_producto: '',
@@ -75,7 +76,7 @@ export const useSeguimientoPOAIHook = (): any => {
       id_banco_proyecto: 0,
       id_modalidad: 0,
       id_ubicacion: 0,
-      id_clase_tercero: 1,
+      id_clase_tercero: 0,
     },
   });
 
@@ -150,6 +151,13 @@ export const useSeguimientoPOAIHook = (): any => {
 
   // declaracion context
   const {
+    nombre_plan,
+    nombre_programa,
+    nombre_proyecto,
+    nombre_producto,
+    nombre_actividad,
+    nombre_indicador,
+    nombre_meta,
     id_proyecto,
     id_actividad,
     id_indicador,
@@ -159,6 +167,25 @@ export const useSeguimientoPOAIHook = (): any => {
     id_plan,
     fetch_data_seguimiento,
   } = useContext(DataContextSeguimientoPOAI);
+
+  useEffect(() => {
+    console.log("entrooooooooooooooooo")
+    set_value_seguimiento('nombre_plan', nombre_plan);
+    set_value_seguimiento('nombre_programa', nombre_programa);
+    set_value_seguimiento('nombre_proyecto', nombre_proyecto);
+    set_value_seguimiento('nombre_producto', nombre_producto);
+    set_value_seguimiento('nombre_actividad', nombre_actividad);
+    set_value_seguimiento('nombre_indicador', nombre_indicador);
+    set_value_seguimiento('nombre_meta', nombre_meta);
+  }, [
+    nombre_plan,
+    nombre_programa,
+    nombre_proyecto,
+    nombre_producto,
+    nombre_actividad,
+    nombre_indicador,
+    nombre_meta,
+  ]);
 
   // declaracion redux
   const {

@@ -32,7 +32,10 @@ import {
   get_clase_tercero,
 } from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
-import { get_fuente_financiancion } from '../../FuenteFinanciacion/services/services';
+import {
+  get_fuente_financiancion,
+  get_fuente_financiancion_by_id,
+} from '../../FuenteFinanciacion/services/services';
 import { get_sector } from '../../configuraciones/Request/request';
 import { ISector } from '../../configuraciones/interfaces/interfaces';
 import {
@@ -42,6 +45,10 @@ import {
 import { ClaseTercero } from '../../../../interfaces/globalModels';
 
 interface UserContext {
+  // data
+  data_fuente: IFuentes;
+  set_data_fuente: (value: IFuentes) => void;
+
   // * id
   id_plan: number | null;
   id_programa: number | null;
@@ -50,6 +57,7 @@ interface UserContext {
   id_actividad: number | null;
   id_indicador: number | null;
   id_meta: number | null;
+  id_fuente: number | null;
   set_id_plan: (value: number | null) => void;
   set_id_programa: (value: number | null) => void;
   set_id_proyecto: (value: number | null) => void;
@@ -57,6 +65,7 @@ interface UserContext {
   set_id_actividad: (value: number | null) => void;
   set_id_indicador: (value: number | null) => void;
   set_id_meta: (value: number | null) => void;
+  set_id_fuente: (value: number | null) => void;
 
   // * rows
   rows_seguimiento: ISeguiminetoPOAI[];
@@ -90,6 +99,22 @@ interface UserContext {
   banco_selected: ValueProps[];
   set_banco_selected: (value: ValueProps[]) => void;
 
+  // * nombre
+  nombre_plan: string;
+  nombre_programa: string;
+  nombre_proyecto: string;
+  nombre_producto: string;
+  nombre_actividad: string;
+  nombre_indicador: string;
+  nombre_meta: string;
+  set_nombre_plan: (value: string) => void;
+  set_nombre_programa: (value: string) => void;
+  set_nombre_proyecto: (value: string) => void;
+  set_nombre_producto: (value: string) => void;
+  set_nombre_actividad: (value: string) => void;
+  set_nombre_indicador: (value: string) => void;
+  set_nombre_meta: (value: string) => void;
+
   // * info
 
   // * fetch
@@ -107,9 +132,22 @@ interface UserContext {
   fetch_data_modalidad: () => Promise<void>;
   fetch_data_clase_terceros: () => Promise<void>;
   fetch_data_banco: () => Promise<void>;
+  fetch_data_fuentes_by_id: () => Promise<void>;
 }
 
 export const DataContextSeguimientoPOAI = createContext<UserContext>({
+  // data
+  data_fuente: {
+    id_fuente: null,
+    nombre_fuente: '',
+    vano_1: null,
+    vano_2: null,
+    vano_3: null,
+    vano_4: null,
+    concepto: '',
+    id_concepto: null,
+  },
+  set_data_fuente: () => {},
   id_plan: null,
   id_programa: null,
   id_proyecto: null,
@@ -117,6 +155,7 @@ export const DataContextSeguimientoPOAI = createContext<UserContext>({
   id_actividad: null,
   id_indicador: null,
   id_meta: null,
+  id_fuente: null,
   set_id_plan: () => {},
   set_id_programa: () => {},
   set_id_proyecto: () => {},
@@ -124,6 +163,7 @@ export const DataContextSeguimientoPOAI = createContext<UserContext>({
   set_id_actividad: () => {},
   set_id_indicador: () => {},
   set_id_meta: () => {},
+  set_id_fuente: () => {},
 
   rows_seguimiento: [],
   set_rows_seguimiento: () => {},
@@ -154,6 +194,22 @@ export const DataContextSeguimientoPOAI = createContext<UserContext>({
   banco_selected: [],
   set_banco_selected: () => {},
 
+  // nombre
+  nombre_plan: '',
+  nombre_programa: '',
+  nombre_proyecto: '',
+  nombre_producto: '',
+  nombre_actividad: '',
+  nombre_indicador: '',
+  nombre_meta: '',
+  set_nombre_plan: () => {},
+  set_nombre_programa: () => {},
+  set_nombre_proyecto: () => {},
+  set_nombre_producto: () => {},
+  set_nombre_actividad: () => {},
+  set_nombre_indicador: () => {},
+  set_nombre_meta: () => {},
+
   fetch_data_seguimiento: async () => {},
   fetch_data_metas: async () => {},
   fetch_data_proyectos: async () => {},
@@ -167,6 +223,7 @@ export const DataContextSeguimientoPOAI = createContext<UserContext>({
   fetch_data_modalidad: async () => {},
   fetch_data_clase_terceros: async () => {},
   fetch_data_banco: async () => {},
+  fetch_data_fuentes_by_id: async () => {},
 });
 
 export const UserProviderSeguimientoPOAI = ({
@@ -174,6 +231,18 @@ export const UserProviderSeguimientoPOAI = ({
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
+  // data
+  const [data_fuente, set_data_fuente] = React.useState<IFuentes>({
+    id_fuente: null,
+    nombre_fuente: '',
+    vano_1: null,
+    vano_2: null,
+    vano_3: null,
+    vano_4: null,
+    concepto: '',
+    id_concepto: null,
+  });
+
   // * id
   const [id_plan, set_id_plan] = React.useState<number | null>(null);
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
@@ -182,6 +251,7 @@ export const UserProviderSeguimientoPOAI = ({
   const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
   const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
   const [id_meta, set_id_meta] = React.useState<number | null>(null);
+  const [id_fuente, set_id_fuente] = React.useState<number | null>(null);
 
   // * select
   const [metas_selected, set_metas_selected] = React.useState<ValueProps[]>([]);
@@ -224,6 +294,15 @@ export const UserProviderSeguimientoPOAI = ({
 
   const [banco_selected, set_banco_selected] = React.useState<ValueProps[]>([]);
 
+  // * nombre
+  const [nombre_plan, set_nombre_plan] = React.useState<string>('');
+  const [nombre_programa, set_nombre_programa] = React.useState<string>('');
+  const [nombre_proyecto, set_nombre_proyecto] = React.useState<string>('');
+  const [nombre_producto, set_nombre_producto] = React.useState<string>('');
+  const [nombre_actividad, set_nombre_actividad] = React.useState<string>('');
+  const [nombre_indicador, set_nombre_indicador] = React.useState<string>('');
+  const [nombre_meta, set_nombre_meta] = React.useState<string>(''); 
+
   // * rows
 
   const [rows_seguimiento, set_rows_seguimiento] = React.useState<
@@ -231,12 +310,6 @@ export const UserProviderSeguimientoPOAI = ({
   >([]);
 
   // * info
-
-  // * fetch
-  // //* declaracion context
-  // const {
-  //   indicador: { id_indicador },
-  // } = useAppSelector((state) => state.planes);
 
   const fetch_data_seguimiento = async (): Promise<void> => {
     try {
@@ -327,7 +400,6 @@ export const UserProviderSeguimientoPOAI = ({
         set_ubicacion_selected(data_selected);
       }
     } catch (error: any) {
-      console.log(error);
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo'
       );
@@ -347,7 +419,6 @@ export const UserProviderSeguimientoPOAI = ({
         set_modalidad_selected(data_selected);
       }
     } catch (error: any) {
-      console.log(error);
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo'
       );
@@ -357,7 +428,6 @@ export const UserProviderSeguimientoPOAI = ({
   const fetch_data_clase_terceros = async (): Promise<void> => {
     try {
       const response = await get_clase_tercero();
-      console.log(response, 'clase tercero');
       if (response?.length > 0) {
         const data_selected: ValueProps[] | any = response.map(
           (item: ClaseTercero) => ({
@@ -365,11 +435,9 @@ export const UserProviderSeguimientoPOAI = ({
             label: item.label,
           })
         );
-        console.log(data_selected, 'data tercero');
         set_clase_terceros_selected(data_selected);
       }
     } catch (error: any) {
-      console.log(error);
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo'
       );
@@ -389,7 +457,6 @@ export const UserProviderSeguimientoPOAI = ({
         set_banco_selected(data_selected);
       }
     } catch (error: any) {
-      console.log(error);
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo'
       );
@@ -470,6 +537,25 @@ export const UserProviderSeguimientoPOAI = ({
     }
   };
 
+  const fetch_data_fuentes_by_id = async (): Promise<void> => {
+    try {
+      const response = await get_fuente_financiancion();
+      if (response?.length > 0) {
+        const data = response.find(
+          (fuente: IFuentes) => fuente.id_fuente === id_fuente
+        );
+        if (data) {
+          set_data_fuente(data);
+        } else {
+        }
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
   const fetach_data_sector = async (): Promise<void> => {
     try {
       const response = await get_sector();
@@ -489,6 +575,8 @@ export const UserProviderSeguimientoPOAI = ({
     }
   };
   const value: UserContext = {
+    data_fuente,
+    set_data_fuente,
     id_plan,
     id_programa,
     id_proyecto,
@@ -496,6 +584,7 @@ export const UserProviderSeguimientoPOAI = ({
     id_actividad,
     id_indicador,
     id_meta,
+    id_fuente,
     set_id_plan,
     set_id_programa,
     set_id_proyecto,
@@ -503,6 +592,7 @@ export const UserProviderSeguimientoPOAI = ({
     set_id_actividad,
     set_id_indicador,
     set_id_meta,
+    set_id_fuente,
 
     // * select
     metas_selected,
@@ -532,6 +622,22 @@ export const UserProviderSeguimientoPOAI = ({
     banco_selected,
     set_banco_selected,
 
+    // * nombre
+    nombre_plan,
+    nombre_programa,
+    nombre_proyecto,
+    nombre_producto,
+    nombre_actividad,
+    nombre_indicador,
+    nombre_meta,
+    set_nombre_plan,
+    set_nombre_programa,
+    set_nombre_proyecto,
+    set_nombre_producto,
+    set_nombre_actividad,
+    set_nombre_indicador,
+    set_nombre_meta,
+
     // * rows
     rows_seguimiento,
     set_rows_seguimiento,
@@ -552,6 +658,7 @@ export const UserProviderSeguimientoPOAI = ({
     fetch_data_modalidad,
     fetch_data_clase_terceros,
     fetch_data_banco,
+    fetch_data_fuentes_by_id,
   };
 
   return (

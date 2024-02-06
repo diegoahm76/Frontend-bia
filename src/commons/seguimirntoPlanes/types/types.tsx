@@ -350,6 +350,7 @@ export interface ISeguimientoPAI {
 
 export interface ISeguiminetoPOAI {
   id_seguimiento?: number | null;
+  nombre_plan?: string;
   nombre_programa?: string;
   nombre_proyecto?: string;
   nombre_producto?: string;
