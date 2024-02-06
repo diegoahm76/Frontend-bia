@@ -19,12 +19,7 @@ interface BuscarProps {
     set_is_modal_active: any;
     fetchConfiguraciones: any;
 }
-interface ConfiguracionBasica {
-    fecha_fin: any;
-    valor: any;
-    variables: any;
-    descripccion: any;
-}
+
 
 export interface Variable {
     id_variables: number;
@@ -32,7 +27,13 @@ export interface Variable {
     tipo_cobro: number;
     tipo_renta: number;
 }
-
+interface ConfiguracionBasica {
+    fecha_fin: any;
+    valor: any;
+    variables: any;
+    descripccion: any;
+    fecha_inicio: any
+}
 export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones, is_modal_active, set_is_modal_active }) => {
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
 
@@ -45,6 +46,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         valor: selectedConfiguracion?.valor || "",
         fecha_fin: selectedConfiguracion?.fecha_fin || "",
+        fecha_inicio: selectedConfiguracion?.fecha_inicio || "",
         variables: selectedConfiguracion?.variables || "",
         descripccion: selectedConfiguracion?.descripccion || "",
     });
@@ -77,7 +79,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     //////
     const [variables, setVariables] = useState<Variable[]>([]);
 
-     const fetchVariables = async () => {
+    const fetchVariables = async () => {
         try {
             const res = await api.get("/recaudo/configuracion_baisca/variables/get/");
             setVariables(res.data.data);
@@ -89,12 +91,12 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     useEffect(() => {
         fetchVariables();
     }, []);
-    
+
     useEffect(() => {
         if (is_modal_active) {
-          fetchVariables();
+            fetchVariables();
         }
-      }, [is_modal_active]);
+    }, [is_modal_active]);
 
     // fecha de finalizacion 
     const [fechaFin, setFechaFin] = useState((formValues.fecha_fin));
@@ -165,7 +167,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 value={formValues.descripccion}
                             />
                         </Grid>
-
+                        {/* 
                         <Grid item xs={12} sm={4}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
@@ -187,10 +189,39 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                     minDate={today}
                                 />
                             </LocalizationProvider>
+                        </Grid> */}
+
+  <Grid item xs={12} sm={4}>
+                            <TextField
+                                fullWidth
+                                type="date"
+                                size="small"
+                                name="fecha_inicio"
+                                variant="outlined"
+                                label="fecha inicio"
+                                value={formValues.fecha_inicio}
+                                InputLabelProps={{ shrink: true }}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+
+                        
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                fullWidth
+                                type="date"
+                                size="small"
+                                name="fecha_fin"
+                                variant="outlined"
+                                label="fecha fin"
+                                value={formValues.fecha_fin}
+                                InputLabelProps={{ shrink: true }}
+                                onChange={handleInputChange}
+                            />
                         </Grid>
 
 
-
+                      
 
 
                         <Grid item xs={12} sm={4}>
