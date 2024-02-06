@@ -9,11 +9,13 @@ import {
   logout,
   open_dialog_entorno,
   open_dialog_representado,
+  setRepresentacionLegal,
   set_authenticated,
   set_is_loading,
   set_permissions,
 } from './authSlice';
 import { RecentActorsOutlined } from '@mui/icons-material';
+import { set_type_applicant } from '../../gestorDocumental/PQRSDF/store/slice/pqrsdfSlice';
 
 export const checking_authentication: (
   nombre_de_usuario: string,
@@ -62,6 +64,7 @@ export const checking_authentication: (
       data?.userinfo.tipo_persona === 'N' &&
       data?.userinfo.tipo_usuario === 'I'
     ) {
+
       // para este caso mostramos el dialog
       dispatch(open_dialog_entorno());
 
@@ -78,6 +81,56 @@ export const checking_authentication: (
     dispatch(login(data));
   };
 };
+
+export const checking_anonimous_authentication: (
+  nombre_de_usuario: string,
+  password: string
+) => any = (nombre_de_usuario: string, password: string) => {
+  return async (dispatch: Dispatch<any>) => {
+    dispatch(checking_credentials());
+
+    const { ok, data, error_message, is_blocked } = await login_post({
+      nombre_de_usuario,
+      password,
+    });
+    // Se limpia los permisos que vienen del back
+    if (data?.permisos !== undefined) {
+      data.permisos.length = 0;
+    }
+
+    if (!ok) {
+      // dispatch(logout({ error_message, is_blocked }));
+      return;
+    }
+
+    const { tokens } = data?.userinfo as UserData;
+
+    sessionStorage.setItem('token', tokens.access);
+    // Se establece el token en el header de las peticiones
+    api.interceptors.request.use(
+      (config) => {
+        config.headers.Authorization = `Bearer ${tokens.access}`;
+        return config;
+      },
+      async (error) => {
+        console.log(error);
+        console.log('error en el interceptor');
+      }
+    );
+
+   
+      dispatch(get_persmisions_user(data?.userinfo.id_usuario ?? 0, 'C'));
+      dispatch(setRepresentacionLegal({
+        "cod_relacion_con_el_titular": "MP"
+    }));
+    // dispatch(set_authenticated());
+    
+
+    // Enviamos los datos del usuario al store del login
+    dispatch(login(data));
+  };
+};
+
 
 export const get_persmisions_user: (
   id_usuario: number,

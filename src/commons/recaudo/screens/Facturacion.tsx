@@ -10,7 +10,7 @@ import {
   MenuItem,
   Select, TextField, Button, Dialog
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import dayjs from 'dayjs';
 import { logo_cormacarena_h } from '../../conservacion/Reportes/logos/logos';
@@ -35,6 +35,8 @@ export interface SerieSubserie {
 export interface UnidadOrganizaciona {
   id_unidad_organizacional: number;
   nombre: string;
+
+
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Facturacion: React.FC = () => {
@@ -64,6 +66,13 @@ export const Facturacion: React.FC = () => {
     generarHistoricoBajas();
 
   }, [consecutivoActual]);
+
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('1');
+
+  // Función para manejar el cambio en el select
+  const handleChangeee = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setOpcionSeleccionada(event.target.value);
+  };
   const [plantillaSeleccionada, setPlantillaSeleccionada] = useState('plantilla1');
 
   const generarHistoricoBajas = () => {
@@ -123,12 +132,10 @@ export const Facturacion: React.FC = () => {
     // Añadir información del usuario   
     doc.setFontSize(12);
     let y = 30; // posición inicial para el texto
-    // doc.text(`${consecutivoActual}`, 10, y);
-    // y += 6;
+
     doc.text(`${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}`, 10, y);
     y += 6;
-    // doc.text(dayjs().format('DD/MM/YYYY'), 10, y);
-    // y += 6;
+
     doc.text(`Identificación: ${identificacion}`, 10, y);
     y += 6;
     doc.text(`Email: ${email}`, 10, y);
@@ -140,8 +147,10 @@ export const Facturacion: React.FC = () => {
     y += 6; doc.text(``, 10, y);
     y += 6;
 
+    let texto1 = ` hola`;
+    let textoPersonalizado =
 
-    let textoPersonalizado = `
+      `
     Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los documentos de cobro de la vigencia  ${Fecha_vigencia ? Fecha_vigencia : '__________'} de la tasa por utilización de agua.
 
 Cordial Saludo,
@@ -152,20 +161,122 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
  
      `;
-    const lineasPersonalizadas = doc.splitTextToSize(textoPersonalizado, anchoPagina - 20);
-    for (let i = 0; i < lineasPersonalizadas.length; i++) {
-      if (y > 280) {
-        doc.addPage();
-        agregarEncabezado();
-        y = 30;
-      }
-      doc.text(lineasPersonalizadas[i], 10, y);
-      y += 6;
+
+
+    let textoAMostrar: string;
+
+    if (opcionSeleccionada === '1') {
+      textoAMostrar = `
+  Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los documentos de cobro de la vigencia  ${Fecha_vigencia ? Fecha_vigencia : '__________'} de la tasa por utilización de agua.
+
+Cordial Saludo,
+Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información: 
+a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${Fecha_a ? Fecha_a : '__________'} .  
+b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${Fecha_b ? Fecha_b : '__________'} .  
+Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${Fecha_entrega ? Fecha_entrega : '__________'} , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.
+
+
+   `;
     }
 
 
-    // Espacio antes del asunto
-    // Añadir asunto
+    else if (opcionSeleccionada === '2') {
+      textoAMostrar = ` 
+               «Por medio de la cual se otorga una facilidad de pago en instancia persuasiva a
+                 la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396 y 
+                                                 se toman otras determinaciones»
+
+               El Jefe de la Oficina Asesora Jurídica de la Corporación para el Desarrollo
+                 Sostenible del Área de Manejo Especial de la Macarena CORMACARENA, en
+                        uso de sus facultades legales conferidas mediante la Resolución número
+                                                  2.6.05.107 del 31 de enero de 2005
+
+.                                                            CONSIDERANDO:
+
+Que la Constitución Política de Colombia, en su artículo 209 establece que «la función administrativa está al servicio de los intereses generales y se desarrolla con fundamento en los principios de igualdad, moralidad, eficacia, economía, celeridad, imparcialidad y publicidad mediante la descentralización, la delegación y la desconcentración de funciones. Las autoridades administrativas deben coordinar sus actuaciones para el adecuado cumplimiento de los fines del Estado. La administración pública, en todos sus órdenes, tendrá un control interno que se ejercerá en los términos que señale la ley...»
+
+Que de conformidad con la resolución No 2.6.07.073 de fecha quince (15) de febrero de 2007, artículo quinto, numeral 4, facilidades de pago, establece como requisitos y documentos necesarios para el trámite los siguientes          
+
+1. Los deudores no deben encontrarse reportados en el boletín de deudores morosos del estado por incumplimiento de acuerdos de pago
+2. Tener obligaciones a favor de CORMACARENA
+3. Presentar un escrito en el cual solicite el plazo
+4. Ofrecer garantías que respalden el pago de las obligaciones, determinando los usuarios y capacidades de pago de los mismos
+
+Que mediante Resolución No 2.6.08.465 de fecha veintisiete (27) de junio de 2008, se adoptó El Manual de Cobro Persuasivo y coactivo de CORMACARENA, el cual tuvo su última actualización el día siete (07) de febrero de 2023.
+
+ 
+Que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, mediante escrito radicado en la Corporación con el número 18922 de fecha veintisiete (27) de julio de 2023 solicitó se le concediera una facilidad de pago para pagar el valor capital e intereses de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, la señora BLANCA LUCIA RAMIREZ TORO, realizó consignación del 30% del valor total de la deuda, capital más intereses, el día seis (06) de agosto de 2023, para dar continuidad al trámite de otorgamiento de la facilidad de pago.
+
+Que una vez revisado el boletín de deudores morosos del estado BDME, a través de la página web de la contaduría general de la nación, se verifico que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, no se encuentra reportada por incumplimiento de acuerdos de pago. En mérito de lo expuesto,
+
+                                                              RESUELVE
+                                                             
+ ARTÍCULO PRIMERO: Otorgar facilidad de pago a la señora BLANCA LUCIARAMIREZ TORO identificada con C.C. 32.505.396, con un plazo de nueve (09) cuotas mensuales de igual valor, para el pago de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, incluido valor capital e intereses. PARÁGRAFO PRIMERO: Teniendo en cuenta que el valor capital de la presente facilidad de pago es la suma de UN MILLON SEISCIENTOS OCHENTA Y TRES MIL QUINIENTOS TREINTA Y CINCO PESOS MCTE ($1.683.535) y que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, consignó el día seis (06) de agosto de 2023, la suma de QUINIENTOS QUINCE MIL SEISCIENTOS SESENTA Y SEIS PESOS MCTE ($515.666), el cual se aplicó proporcionalmente a capital por valor de QUINIENTOS CINCO MIL OCHOCIENTOS OCHENTA Y SEIS PESOS MCTE ($505.886) y a intereses de mora por valor de NUEVE MIL SETECIENTOS OCHENTA PESOS MCTE ($9.780).
+
+Conforme a lo anterior, queda un saldo a capital por valor de UN MILLON CIENTO SETENTA Y SIETE MIL SEISCIENTOS CUARENTA Y NUEVE PESOS MCTE ($1.177.649), más los intereses proyectados por el término de la facilidad de pago, es decir, al día cinco (05) de Junio del año 2024, fecha en la que se estima el pago total de las obligaciones, por valor de CIENTO CUARENTA Y DOS MIL CIENTO TRES PESOS MCTE ($142.103), y que arrojan una deuda total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752). ARTICULO SEGUNDO: Autorizar el pago del valor capital más los intereses que sumados arrojan un valor total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752) en nueve (09) cuotas, distribuido de la siguiente manera:
+
+
+
+No cuota FECHAS DE PAGO CUOTA
+1  05 de octubre de 2023 146,640
+2  05 de noviembre de 2023 146,639
+3  05 de diciembre de 2023 146,639
+4  05 de enero de 2024 146,639
+5  05 de febrero de 2024 146,639
+6  05 de marzo de 2024 146,639
+7  05 de abril de 2024 146,639
+8  05 de mayo de 2024 146,639
+9  05 de junio de 2024 146,639
+
+TOTAL 1,319,752
+
+PARÁGRAFO ÚNICO: Si el día acordado para el pago de las cuotas fuere feriado el pago se prorrogará hasta el día siguiente hábil.
+
+ARTÍCULO TERCERO: El pago deberá efectuarse en la cuenta corriente 364190062-66 Bancolombia (convenio 87318) por concepto de multas Ref. 1 C.C. (32505396) y Ref. 2. Resolución facilidad de pago (126223020) a nombre de CORMACARENA; identificada con NIT. 822.000.091-2, a más tardar en la fecha de vencimiento de la respectiva cuota y acreditarlo en la oficina del Grupo Rentas de la Corporación.
+
+ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en relación con el pago de una de las cuotas estipuladas y en las demás obligaciones contenidas en la presente resolución, CORMACARENA
+
+dispondrá la terminación anticipada de la facilidad de pago y se iniciará el trámite del proceso administrativo de cobro coactivo. Parágrafo único: Los saldos de las obligaciones que resulten luego de dar por terminada la facilidad de pago, se continuarán ejecutando por medio del respectivo proceso administrativo de cobro coactivo, hasta cuando se satisfaga la obligación en su totalidad. ARTÍCULO QUINTO: Como consecuencia de lo convenido en la facilidad de pago, las partes acuerdan interrumpir los términos de prescripción de las obligaciones, y se reanudaran en el momento en que se declare el incumplimiento de la presente Resolución. ARTÍCULO SEXTO: Notificar el contenido de la presente resolución a la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396; al correo electrónico jandreitahr21@hotmail.com adjuntando copia de la misma. ARTICULO SEPTIMO: Contra esta decisión no procede recurso alguno, de conformidad con el artículo 833-1 del Estatuto Tributario. ARTICULO OCTAVO: Remitir copia de la presente Resolución a la Subdirección Administrativa y Financiera para lo de su competencia.
+
+                                                             NOTIFÍQUESE Y CÚMPLASE,
+
+
+`;
+    }
+
+    else if (opcionSeleccionada === '3') {
+      textoAMostrar = ``
+    } else {
+      textoAMostrar = ''; // Valor predeterminado o manejo del caso 'undefined'
+    }
+    // Configuraciones iniciales
+    const lineHeight = 6; // Altura de línea para el texto
+    const margin = 10; // Márgenes izquierdo y derecho
+    const pageHeight = doc.internal.pageSize.height; // Altura de la página
+
+    // let y = 30; // posición inicial para el texto
+
+    // Función para añadir texto con control de páginas
+    const addTextWithPageControl = (text: string) => {
+      let lines = doc.splitTextToSize(text, doc.internal.pageSize.width - 2 * margin); // Divide el texto en líneas
+      lines.forEach((line: string | string[]) => {
+        if (y > pageHeight - 20) { // 20 es el margen inferior
+          doc.addPage();
+          y = 20; // Restablecer Y para la nueva página
+        }
+        doc.text(line, margin, y);
+        y += lineHeight;
+      });
+    };
+
+    // Añadir texto con control de páginas
+    addTextWithPageControl(textoAMostrar);
+
+
+
+    // y += 6; doc.text(textoAMostrar, 10, y);
+    //     y += 6;
+
     const lineas = doc.splitTextToSize(asunto, anchoPagina - 20);
     for (let i = 0; i < lineas.length; i++) {
       if (y > 280) {
@@ -194,7 +305,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   const fetchUnidades = async () => {
     try {
-      const url = "/gestor/configuracion-tipos-expendientes/seccion-subseccion/get/";
+      const url = "/transversal/organigrama/unidades/get-list/organigrama-actual/";
       const res = await api.get(url);
       const unidadesData = res.data.data;
       setUnidades(unidadesData);
@@ -207,6 +318,10 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
     fetchUnidades();
   }, []);
 
+  useEffect(() => {
+    generarHistoricoBajas();
+
+  }, [opcionSeleccionada]);
   const handleChange = (event: { target: { name: any; value: any; }; }) => {
     setUnidadSeleccionada(event.target.value as string);
     const selectedId = event.target.value;
@@ -232,7 +347,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   useEffect(() => {
     fetchSeriesSubseries();
-  }, []);
+  }, [idUnidadSeleccionada]);
   const [nombreSerieSeleccionada, setNombreSerieSeleccionada] = useState('');
   const [nombreSubserieSeleccionada, setNombreSubserieSeleccionada] = useState('');
 
@@ -344,6 +459,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
   const [lider, set_lider] = useState<UnidadOrganizacional[]>([]);
+  
   useEffect(() => {
     const fetch_perfil = async (): Promise<void> => {
       try {
@@ -402,14 +518,15 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   }, [formData.id_unidad_org_lider]);
 
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
-  const handle_open_buscar = (): void => {
-    if (persona?.id_persona === undefined && formData.id_unidad_org_lider === undefined) {
-      control_error("Deves de elejir un destinatario ");
-    } else {
-      set_is_buscar(true);
-      realizarActualizacion();
 
-    }
+  const handle_open_buscar = (): void => {
+    // if (persona?.id_persona === undefined && formData.id_unidad_org_lider === undefined) {
+    //   control_error("Deves de elejir un destinatario ");
+    // } else {
+    set_is_buscar(true);
+    realizarActualizacion();
+
+    // }
   };
 
 
@@ -434,19 +551,27 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       >
         <Title title="Generación de documento" />
 
-        {/* <FormControl fullWidth size="small">
-          <InputLabel id="plantilla-select-label">Seleccionar Plantilla</InputLabel>
-          <Select
-            labelId="plantilla-select-label"
-            id="plantilla-select"
-            value={plantillaSeleccionada}
-            label="Seleccionar Plantilla"
-            onChange={(e) => setPlantillaSeleccionada(e.target.value)}
-          >
-            <MenuItem value="plantilla1">Plantilla con Cuadro</MenuItem>
-            <MenuItem value="plantilla2">Plantilla sin Cuadro</MenuItem>
-          </Select>
-        </FormControl> */}
+        {/* <select value={opcionSeleccionada} onChange={handleChangeee}>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+
+        </select> */}
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="opcion-select-label">Plantilla</InputLabel>
+            <Select
+              labelId="Plantilla"
+              value={opcionSeleccionada}
+              label="Opción"
+              onChange={handleChangeee}
+            >
+              <MenuItem value="1">Plantilla 1</MenuItem>
+              <MenuItem value="2">Plantilla 2</MenuItem>
+              <MenuItem value="3">Vacio</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
         <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
           <Grid container
@@ -534,58 +659,68 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
           />
         </Grid>
 
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            type="date"
-            size="small"
-            variant="outlined"
-            label=" Fecha vigencia"
-            value={Fecha_vigencia}
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => setFecha_vigencia(e.target.value)}
-          />
-        </Grid>
 
+        {opcionSeleccionada === '1' ? (
 
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            type="date"
-            size="small"
-            value={Fecha_a}
-            label="Fecha (A"
-            variant="outlined"
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => setFecha_a(e.target.value)}
-          />
-        </Grid>
+          <>
 
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            type="date"
-            size="small"
-            variant="outlined"
-            InputLabelProps={{ shrink: true }}
-            label="Fecha (B"
-            value={Fecha_b}
-            onChange={(e) => setFecha_b(e.target.value)}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label=" Fecha vigencia"
+                value={Fecha_vigencia}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_vigencia(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                value={Fecha_a}
+                label="Fecha (A"
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_a(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+                label="Fecha (B"
+                value={Fecha_b}
+                onChange={(e) => setFecha_b(e.target.value)}
+              />
+            </Grid> 
+            <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
             type="date"
             size="small"
             variant="outlined"
             value={Fecha_entrega}
-            label=" Fecha entrega" 
-            InputLabelProps={{ shrink: true }} 
+            label=" Fecha entrega"
+            InputLabelProps={{ shrink: true }}
             onChange={(e) => setFecha_entrega(e.target.value)}
           />
         </Grid>
+          </>
+
+
+        ) : null}
+
+
+
+
+       
         <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
@@ -622,7 +757,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
             fullWidth
             multiline
             size="small"
-            label="Asunto"
+            label="Observaciones"
             value={asunto}
             variant="outlined"
             onChange={(e) => setAsunto(e.target.value)}
@@ -646,102 +781,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
           {/* <Button onClick={enviarDocumento}>Enviar Documento</Button> */}
         </Grid>
       </Grid>
-      <Grid container
-        spacing={2}
-        m={2} p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px', m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item marginTop={-2} xs={12}>
-          <Title title="Destinatario" />
-        </Grid>
-        <Grid container
-          item
-          // justifyContent="center"
-          spacing={2}>
 
-          {/* <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={() => {
-                set_mode('lider');
-                limpiar_destinatario();
-              }}
-            >
-              A lider de unidad
-            </Button> */}
-          <Grid item>
-            <Button variant="contained" color="primary" onClick={handle_selectlider}>  Lider de unidad</Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="primary" onClick={handle_selectbuscar}>  BuscadorPersona</Button>
-          </Grid>
-        </Grid>
-        {/* {formData.id_unidad_org_lider} */}
-        {selected_button === 'lider' && (
-          <Grid item xs={12}>
-            <Grid item xs={12} sm={3}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Lider de unidad</InputLabel>
-                <Select value={formData.id_unidad_org_lider} label="Lider de unidad" name="id_unidad_org_lider" onChange={handleInputChange}>
-                  {lider.map((unidad) => (
-                    <MenuItem key={unidad.id_unidad_organizacional} value={unidad.id_unidad_organizacional}>
-                      {unidad.nombre}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        )}
-
-        {/* {selected_button === 'buscador' && (
-                <Grid item xs={12}>
-                    <BuscadorPersona
-                        onResult={(data) => {
-                            void on_result(data);
-                        }}
-                    />
-                </Grid>
-                
-            )} */}
-
-        {selected_button === 'buscador' && (
-          <>
-            <Grid item xs={12}>
-              <BuscadorPersona
-                onResult={(data) => {
-                  void on_result(data);
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                label="Primer Nombre"
-                variant="outlined"
-                fullWidth
-                size="small"
-                disabled
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={persona?.primer_nombre}
-              />
-            </Grid>
-          </>
-        )}
-
-        {/* <>{persona?.id_persona}</> */}
-
-
-      </Grid>
       <Grid
         container
         spacing={2} m={2} p={2}

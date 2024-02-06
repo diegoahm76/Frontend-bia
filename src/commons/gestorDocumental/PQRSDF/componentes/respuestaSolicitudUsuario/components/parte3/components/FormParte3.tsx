@@ -42,6 +42,7 @@ import  AttachFileIcon  from '@mui/icons-material/AttachFile';
 import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolicitudUsuario';
 import { useResSolicitudUsu } from '../../../hook/useResSolicitudUsu';
 import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../toolkit/slice/ResSolicitudUsarioSlice';
+import { useFiles } from '../../../../../../../../hooks/useFiles/useFiles';
 export const FormParte3 = ({
   controlFormulario,
   resetFormulario,
@@ -50,6 +51,7 @@ export const FormParte3 = ({
 }: any): JSX.Element => {
   //* dispatch de redux
   const dispatch: any = useAppDispatch();
+  const { controlar_tamagno_archivos } = useFiles();
 
   //* redux states functions
   const { currentAnexo, anexosCreados, metadatos, viewMode } = useAppSelector(
@@ -334,27 +336,12 @@ export const FormParte3 = ({
                     <input
                       style={{ display: 'none' }}
                       type="file"
-                      accept="application/pdf"
                       // disabled={ccd_current?.actual}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
                           const file = files[0];
-                          if (file.type !== 'application/pdf') {
-                            control_warning(
-                              'Precaución: Solo es admitido archivos en formato pdf'
-                            );
-                          } else if (file.size > FILEWEIGHT.PDF) {
-                            const MAX_FILE_SIZE_MB = (
-                              FILEWEIGHT.PDF /
-                              (1024 * 1024)
-                            ).toFixed(1);
-                            control_warning(
-                              `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                            );
-                          } else {
-                            onChange(file);
-                          }
+                          controlar_tamagno_archivos(file,onChange)
                         }
                       }}
                     />

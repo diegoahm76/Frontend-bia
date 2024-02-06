@@ -25,6 +25,7 @@ import { BuscadorOpas } from './buscadorOpas/BuscadorOpas';
 import { getOpasPanVen } from '../../../../../../toolkit/thunks/opas/getOpasPanVen.service';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 import { getGrilladoSolicitudesOtrosfPanelVentanilla } from '../../../../../../toolkit/thunks/otros/getOtrosGridPanel.service';
+import { getGrilladoTramitesPanelVentanilla } from '../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getGrilladoTramServicios.service';
 
 export const BuscadorPanelVentanilla = (): JSX.Element => {
   //* dispatch declaration
@@ -65,13 +66,37 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
     dispatch(setListaElementosComplementosRequerimientosOtros([]));
   };
-  const searchSubmitTramitesYservicios = () => {
-    //  console.log('')('searchSubmitTramitesYservicios');
+  const searchSubmitTramitesYservicios = async () => {
+    const {
+      radicado,
+      fecha_inicio,
+      fecha_fin,
+
+      nombre_titular,
+      asunto_proyecto,
+      pago_tramite,
+      expediente,
+      estado_actual_solicitud,
+    } = watch_busqueda_panel_ventanilla;
     showAlert(
       'Estimado usuario!',
-      'Esta funcionalidad de Trámites y servicios no está disponible ',
+      'Esta funcionalidad de TRAMITE se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
       'warning'
     );
+    const res = await getGrilladoTramitesPanelVentanilla(
+      handleSecondLoading,
+      radicado,
+      fecha_inicio,
+      fecha_fin,
+      nombre_titular,
+      radicado,
+      asunto_proyecto,
+      pago_tramite?.value,
+      expediente,
+      estado_actual_solicitud?.label
+    );
+    console.log('res listado de tramites', res);
+    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
 
     //* se limpian los otros controles para no crear conflictos
     dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
@@ -81,18 +106,13 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   const searchSubmitOtros = async () => {
     const { radicado, estado_actual_solicitud, fecha_inicio, fecha_fin } =
       watch_busqueda_panel_ventanilla;
+
     const res = await getGrilladoSolicitudesOtrosfPanelVentanilla(
       estado_actual_solicitud?.label,
       radicado,
       fecha_inicio,
       fecha_fin,
       handleSecondLoading
-    );
-
-    showAlert(
-      'Estimado usuario!',
-      'Esta funcionalidad de OTROS se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
-      'warning'
     );
     dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
     //* se limpian los otros controles para no crear conflictos
@@ -101,28 +121,23 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
   };
 
   const searchSubmitopas = async () => {
-    /*   const {
+    const {
       nombre_titular,
       radicado,
       nombre_proyecto,
       estado_actual_solicitud,
       fecha_inicio,
       fecha_fin,
-    } = watch_busqueda_panel_ventanilla;*/
+    } = watch_busqueda_panel_ventanilla;
 
-    showAlert(
-      'Estimado usuario!',
-      'Esta funcionalidad de OPAS se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
-      'warning'
-    );
     const res = await getOpasPanVen(
       handleSecondLoading,
-      '', //fecha_inicio,
-      '', // fecha_fin,
-      '', // nombre_proyecto
-      '', // estado_actual_solicitud?.label,
-      '', //radicado,
-      '' // nombre_titular,
+      fecha_inicio,
+      fecha_fin,
+      nombre_proyecto,
+      estado_actual_solicitud?.label,
+      radicado,
+      nombre_titular
     );
 
     dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));

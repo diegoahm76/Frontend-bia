@@ -27,6 +27,9 @@ import { DownloadButton } from '../../../../../../../utils/DownloadButton/DownLo
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useAppSelector } from '../../../../../../../hooks';
 import { formatDate } from '../../../../../../../utils/functions/formatDate';
+import { getAnexosOpa } from '../../../../toolkit/thunks/opas/anexos/getAnexoByIdOpa.service';
+import { getArchivoAnexoOpa } from '../../../../toolkit/thunks/opas/archivo/getArchivoAnexoOpas.service';
+import { getMetadatosOpa } from '../../../../toolkit/thunks/opas/metadatos/getMetadatosByAnexoOpas.service';
 
 export const ModalOpa = () => {
   // ? redux states use
@@ -44,59 +47,24 @@ export const ModalOpa = () => {
   const [infoAnexos, setInfoAnexos] = useState<any>([]);
 
   //* use effect para cargar los datos de los anexos
-
   useEffect(() => {
-    // ! PENDIENTE DE GENERAR LAS INTERACCIONES CON LOS SERVICIOS DE BACKEND
-    // ? se obtiene la informacion de los anexos
-    // ? se debe cambiar por la informacion de la opa
-    const anexos = [
-      {
-        id: 1,
-        nombre_archivo: 'archivo1',
-        descripcion: 'descripcion1',
-        fecha_creacion: 'fecha1',
-        fecha_modificacion: 'fecha1',
-        usuario_creacion: 'usuario1',
-        usuario_modificacion: 'usuario1',
-        tipo_archivo: 'tipo1',
-        origen_archivo: 'origen1',
-        nombre_tipologia_documental: 'tipologia1',
-        asunto: 'asunto1',
-        palabras_clave_doc: ['palabra1', 'palabra2'],
-      },
-      {
-        id: 2,
-        nombre_archivo: 'archivo2',
-        descripcion: 'descripcion2',
-        fecha_creacion: 'fecha2',
-        fecha_modificacion: 'fecha2',
-        usuario_creacion: 'usuario2',
-        usuario_modificacion: 'usuario2',
-        tipo_archivo: 'tipo2',
-        origen_archivo: 'origen2',
-        nombre_tipologia_documental: 'tipologia2',
-        asunto: 'asunto2',
-        palabras_clave_doc: ['palabra1', 'palabra2'],
-      },
-    ];
-    setInfoAnexos(anexos);
-  }, []);
+    if (!openModalOne) return;
+
+    (async () => {
+      try {
+        const res = await getAnexosOpa(
+          currentElementPqrsdComplementoTramitesYotros.id_solicitud_tramite
+        );
+        setInfoAnexos(res);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [openModalOne]);
 
   const columns = [
     ...columnsModalOpas,
-    {
-      headerName: 'Archivo',
-      field: 'archivo',
-      width: 110,
-      renderCell: (params: any) => (
-        //* revisar el nombre del archivo, y las demas opciones
-        <DownloadButton
-          fileUrl={params.row.archivo}
-          fileName={params.row.nombre_archivo}
-          condition={false}
-        />
-      ),
-    },
     {
       headerName: 'Ver metadatos anexo',
       field: 'Detalle',
@@ -105,19 +73,22 @@ export const ModalOpa = () => {
         <Tooltip title="Ver metadatos del anexo">
           <IconButton
             onClick={async () => {
-              handleOpenModalTwo(true);
-              /* await getMetadatosByAnexo(params.row.id_anexo, handleOpenModalTwo).then((res) => {
-                console.log(params.row)
-
-                setInfoMetadatos(res);
-              }).catch((err) => {
+              try {
+                handleOpenModalTwo(true);
+                const [resArchivoOpa, resMetadataOpa] = await Promise.all([
+                  getArchivoAnexoOpa(params.row.id_anexo),
+                  getMetadatosOpa(params.row.id_anexo),
+                ]);
+                console.log('resByAnexo', resArchivoOpa);
+                console.log('resPqrsdf', resMetadataOpa);
+                setInfoMetadatos({
+                  ...resArchivoOpa,
+                  ...resMetadataOpa,
+                }); // or use resPqrsdf based on your requirement
+              } catch (err) {
                 console.log(err);
                 handleOpenModalTwo(false);
               }
-              );*/
-              // handleOpenModalOne(true); //* open modal
-              // await getInfoSolicitud(params);
-              setInfoMetadatos(params.row);
             }}
           >
             <Avatar
@@ -172,12 +143,12 @@ export const ModalOpa = () => {
               <Grid item xs={12} sm={8}>
                 <TextField
                   fullWidth
-                  label="Asunto"
+                  label="Nombre del titular"
                   disabled
                   size="small"
                   variant="outlined"
                   value={
-                    currentElementPqrsdComplementoTramitesYotros?.asunto ??
+                    currentElementPqrsdComplementoTramitesYotros?.nombre_completo_titular ??
                     'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
@@ -189,13 +160,13 @@ export const ModalOpa = () => {
                   fullWidth
                   disabled
                   type="text"
-                  label="Fecha de solicitud"
+                  label="Fecha de radicado de OPA"
                   size="small"
                   variant="outlined"
                   //* se debe poner la condicional del reset
                   value={
                     formatDate(
-                      currentElementPqrsdComplementoTramitesYotros?.fecha_ini_estado_actual
+                      currentElementPqrsdComplementoTramitesYotros?.fecha_radicado
                     ) ?? 'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
@@ -214,13 +185,11 @@ export const ModalOpa = () => {
                 <TextField
                   fullWidth
                   disabled
-                  multiline
-                  rows={3}
-                  label="Tipo de permiso ambiental"
+                  label="Estado actual de la OPA"
                   size="small"
                   variant="outlined"
                   value={
-                    currentElementPqrsdComplementoTramitesYotros?.tipo_permiso_ambiental ??
+                    currentElementPqrsdComplementoTramitesYotros?.estado_actual ??
                     'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
@@ -263,11 +232,11 @@ export const ModalOpa = () => {
                 <TextField
                   fullWidth
                   disabled
-                  label="Tipo de operación de trámite"
+                  label="Nombre del proyecto OPA"
                   size="small"
                   variant="outlined"
                   value={
-                    currentElementPqrsdComplementoTramitesYotros?.tipo_operacion_tramite ??
+                    currentElementPqrsdComplementoTramitesYotros?.nombre_proyecto ??
                     'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
@@ -301,36 +270,47 @@ export const ModalOpa = () => {
 
               {/*segund parte - anexos que sse han puesto en la solicitud */}
 
-              {infoAnexos.length > 0 ? (
+              {infoAnexos.length > 0 && (
                 <RenderDataGrid
                   title="Anexos de la OPA"
                   rows={[...infoAnexos]}
                   columns={columns ?? []}
                 />
-              ) : (
-                <Box
-                  sx={{
-                    justifyContent: 'center',
-                    display: 'flex',
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      mt: '1.5rem',
-                      mb: '1.5rem',
-                    }}
-                    variant="h6"
-                    align="center"
-                  >
-                    No hay anexos para esta OPA
-                  </Typography>
-                </Box>
               )}
 
               {/*tercera parte, metadatos de cada archivo establecido*/}
 
               {openModalTwo ? (
                 <>
+                  <>
+                    <Title title={`Archivo anexo`} />
+                    <Grid
+                      container
+                      spacing={2}
+                      sx={{
+                        mt: '1.5rem',
+                        mb: '2rem',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        sx={{
+                          textAlign: 'center',
+                        }}
+                      >
+                        <DownloadButton
+                          fileName={`archivo anexo ${infoMetadatos?.nombre_de_Guardado}}`}
+                          fileUrl={infoMetadatos?.ruta_archivo ?? ''}
+                          condition={false}
+                        />
+                      </Grid>
+                    </Grid>
+                  </>
+
                   <Grid
                     item
                     xs={12}
@@ -346,9 +326,7 @@ export const ModalOpa = () => {
                       label="Origen del archivo"
                       size="small"
                       variant="outlined"
-                      value={
-                        'ejeje siuu' /*infoMetadatos?.origen_archivo ?? 'N/A'*/
-                      }
+                      value={infoMetadatos?.origen_archivo ?? 'N/A'}
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
                     />
@@ -370,8 +348,7 @@ export const ModalOpa = () => {
                       size="small"
                       variant="outlined"
                       value={
-                        'jejej siuu'
-                        /* infoMetadatos?.nombre_tipologia_documental ?? 'N/A'*/
+                        infoMetadatos?.nombre_tipologia_documental ?? 'N/A'
                       }
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
@@ -392,7 +369,7 @@ export const ModalOpa = () => {
                       label="Asunto"
                       size="small"
                       variant="outlined"
-                      value={'jeje siuu' /*infoMetadatos?.asunto ?? 'N/A'*/}
+                      value={infoMetadatos?.asunto ?? 'N/A'}
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 50 }}
                     />
@@ -415,9 +392,7 @@ export const ModalOpa = () => {
                       label="Descripción"
                       size="small"
                       variant="outlined"
-                      value={
-                        'jeje siuu ' /*infoMetadatos?.descripcion ?? 'N/A'*/
-                      }
+                      value={infoMetadatos?.descripcion ?? 'N/A'}
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ maxLength: 255 }}
                     />
@@ -430,18 +405,14 @@ export const ModalOpa = () => {
                     sx={{ mt: '1.2rem', mb: '1.2rem' }}
                   >
                     <Autocomplete
-                      value={
-                        [
-                          'jajeje',
-                        ] /*infoMetadatos?.palabras_clave_doc ?? ['N/A']*/
-                      }
+                      value={infoMetadatos?.palabras_clave_doc ?? ['N/A']}
                       disabled
                       multiple
                       id="tags-filled"
                       options={
-                        /*infoMetadatos?.palabras_clave_doc
+                        infoMetadatos?.palabras_clave_doc
                           ? infoMetadatos?.palabras_clave_doc
-                          : */ []
+                          : ['N/A']
                       }
                       freeSolo
                       renderTags={(value: readonly string[], getTagProps) =>
@@ -494,7 +465,7 @@ export const ModalOpa = () => {
             >
               <Button
                 color="error"
-                variant="outlined"
+                variant="contained"
                 onClick={() => {
                   handleOpenModalOne(false);
                   handleOpenModalTwo(false);

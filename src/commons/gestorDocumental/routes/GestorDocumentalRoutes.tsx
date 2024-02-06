@@ -46,6 +46,10 @@ import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/Consult
 import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
 import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
 import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
+import { Radicado_Email_Routes } from '../radicadoEmail/routes/RadicadoEmail';
+import { ConsecutivoConfi } from '../configuracionConsecutivo/routes/ConsecutivoConfi';
+import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
+import { RutasCentralDigitalizacionOtros } from '../centraldigitalizacionOtros/routes/RutasCentralDigitalizacionOtros';
  
 const routes = [
   {
@@ -197,9 +201,14 @@ const routes = [
     component: () => <CentralDigitalizacionRoutes />,
   },
   {
-    path: 'rutesworkFlowpqrs/',
-    name: 'rutesworkFlowpqrs',
+    path: 'busqueda/',
+    name: 'busqueda',
     component: () => <RutesWorkFlowPQRSDF />,
+  },
+  {
+    path: 'indicadores_pqrsdf/',
+    name: 'indicadores_pqrsdf',
+    component: () => <RutesIndicadores />,
   },
   {
     path: 'solicitudes_otros/',
@@ -217,7 +226,17 @@ const routes = [
     name: 'complementos_pqrsdf',
     component: () => <ComplementoPqrsdfRoutes />,
   },
-
+  {
+    path: 'radicado_email/',
+    name: 'radicado_email',
+    component: () => <Radicado_Email_Routes />,
+  },
+  {
+    path: 'consecutivo_configuracion/',
+    name: 'consecutivo_configuracion',
+    component: () => <ConsecutivoConfi />,
+  },
+  
   {
     path: 'Reportes_PQRSDF/',
     name: 'Reportes_PQRSDF',
@@ -255,6 +274,11 @@ const routes = [
     name: 'Eliminacion_Documental',
     component: () => <DeleteDocumental_Routes />,
   },
+  {
+    path: 'central_digitalizacion_otros/',
+    name: 'central_digitalizacion_otros',
+    component: () => <RutasCentralDigitalizacionOtros />,
+  }
 
 ];
 

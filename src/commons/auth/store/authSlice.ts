@@ -42,9 +42,12 @@ export const auth_slice = createSlice({
       state.permisos = payload.permisos;
       state.representante_legal = payload.representante_legal;
       state.apoderados = payload.apoderados;
-      state.representacion_legal = {
-        cod_relacion_con_el_titular: 'MP',
-      };
+      state.representacion_legal = payload.representacion_legal
+        ? payload.representacion_legal
+        : {
+            cod_relacion_con_el_titular: 'MP',
+            tipo_sesion: 'I',
+          };
       state.tamagno_archivos = payload.tamagno_archivos;
     },
     logout: (state, { payload }) => {

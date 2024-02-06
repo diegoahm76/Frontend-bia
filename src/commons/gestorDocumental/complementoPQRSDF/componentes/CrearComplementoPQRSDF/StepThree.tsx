@@ -46,8 +46,10 @@ interface IProps {
 const StepThree = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const { exhibits, metadata, exhibit, storage_mediums, type_applicant } =
     useAppSelector((state) => state.complemento_pqrsdf_slice);
+  const { file_fisico } = useAppSelector((state) => state.pqrsdf_slice);
   const {
     control: control_form,
     handleSubmit: handle_submit_exhibit,
@@ -63,12 +65,10 @@ const StepThree = () => {
   const [cual_medio_view, set_cual_medio_view] = useState<boolean>(false);
 
   const on_submit_exhibit = (data: IObjExhibit): void => {
-    console.log(data, metadata);
     const exhibit_aux: IObjExhibit | undefined = exhibits.find(
       (p: IObjExhibit) => p.nombre_anexo === data.nombre_anexo
     );
     if (exhibit_aux === undefined) {
-      console.log(data);
       dispatch(
         set_exhibits([
           ...exhibits,
@@ -93,11 +93,10 @@ const StepThree = () => {
   };
 
   useEffect(() => {
-    console.log(exhibit);
     reset({
       ...exhibit,
       cod_medio_almacenamiento:
-        (type_applicant.key ?? null) === null
+        representacion_legal.tipo_sesion === 'E'
           ? 'Na'
           : exhibit.cod_medio_almacenamiento,
     });
@@ -164,6 +163,35 @@ const StepThree = () => {
   }, [file]);
 
   useEffect(() => {
+    if (file_fisico !== null) {
+      if ('name' in file_fisico) {
+        set_file_name(file_fisico.name);
+        dispatch(
+          set_exhibit({
+            ...exhibit,
+            nombre_anexo: get_values('nombre_anexo'),
+            orden_anexo_doc: get_values('orden_anexo_doc'),
+            medio_almacenamiento: get_values('medio_almacenamiento'),
+            cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
+            medio_almacenamiento_otros_cual: get_values(
+              'medio_almacenamiento_otros_cual'
+            ),
+            numero_folios: 1,
+            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+            exhibit_link: file_fisico,
+            metadatos:
+              exhibit.id_anexo === null
+                ? metadata.asunto ?? null !== null
+                  ? metadata
+                  : null
+                : metadata,
+          })
+        );
+      }
+    }
+  }, [file_fisico]);
+
+  useEffect(() => {
     console.log(metadata);
     // if (metadata !== null) {
     //   if (metadata.asunto !== null && metadata.asunto !== '') {
@@ -222,7 +250,26 @@ const StepThree = () => {
   }, [metadata]);
 
   const add_metadata_form = (): void => {
-    set_add_metadata_is_active(true);
+    const nombre_anexo = get_values('nombre_anexo') ?? '';
+    const medio_almacenamiento_otros_cual =
+      get_values('medio_almacenamiento_otros_cual') ?? '';
+    const cod_medio_almacenamiento =
+      get_values('cod_medio_almacenamiento') ?? '';
+    if (nombre_anexo !== '' && cod_medio_almacenamiento !== '') {
+      if (cod_medio_almacenamiento === 'Ot') {
+        if (medio_almacenamiento_otros_cual !== '') {
+          set_add_metadata_is_active(true);
+        } else {
+          control_error('Debe ingresar el nombre del medio de almacenamiento');
+        }
+      } else {
+        set_add_metadata_is_active(true);
+      }
+    } else {
+      control_error(
+        'Debe ingresar el nombre del anexo y el medio de almacenamiento'
+      );
+    }
   };
 
   const columns_list: GridColDef[] = [
@@ -394,7 +441,7 @@ const StepThree = () => {
                 required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Documento',
-              disabled: false,
+              disabled: exhibit.metadatos?.cod_origen_archivo === 'F',
               helper_text: '',
               set_value: set_file,
               file_name,
@@ -427,7 +474,7 @@ const StepThree = () => {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: (type_applicant.key ?? null) === null,
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
@@ -464,7 +511,7 @@ const StepThree = () => {
               },
               label: 'Número de folios',
               type: 'number',
-              disabled: false,
+              disabled: exhibit.metadatos?.cod_origen_archivo === 'F',
               helper_text: '',
               step_number: '1',
             },
@@ -478,6 +525,7 @@ const StepThree = () => {
               variant_button: 'contained',
               on_click_function: add_metadata_form,
               color_button: 'warning',
+              hidden_text: representacion_legal.tipo_sesion === 'E',
             },
           ]}
         />
@@ -510,6 +558,7 @@ const StepThree = () => {
         <MetadataFormDialog
           is_modal_active={add_metadata_is_active}
           set_is_modal_active={set_add_metadata_is_active}
+          get_values_anexo={get_values}
         />
       </Grid>
     </>

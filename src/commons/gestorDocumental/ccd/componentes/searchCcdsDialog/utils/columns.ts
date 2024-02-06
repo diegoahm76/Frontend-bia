@@ -2,13 +2,13 @@ export const columns = [
   {
     headerName: 'Nombre',
     field: 'nombre',
-    minWidth: 170,
-    maxWidth: 200
+    minWidth: 300,
+    maxWidth: 350
   },
   {
     headerName: 'Versión',
     field: 'version',
-    minWidth: 170,
-    maxWidth: 200
+    minWidth: 200,
+    maxWidth: 240
   }
 ];

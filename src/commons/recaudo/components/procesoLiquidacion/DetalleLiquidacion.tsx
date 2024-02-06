@@ -204,7 +204,17 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
   useEffect(() => {
       cargarLiquidacion(setLiquidacion);
   }, []);
+  const handleClick = () => {
+    console.log(opcion_liquidacion);
+    console.log("2222222");
 
+  };
+  useEffect(() => {
+    if (opcion_liquidacion && opcion_liquidacion.variables) {
+      set_variables_datos(opcion_liquidacion.variables);
+    }
+  }, [opcion_liquidacion]);
+  
   return (
     <>
     
@@ -258,7 +268,9 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
               />
             </Grid>
           </Grid>
-
+          {/* <div>
+            <button onClick={handleClick}>consola  </button>
+          </div> */}
           <Box component={'form'} sx={{ width: '100%' }} onSubmit={handle_form_submit}>
             {opcion_liquidacion && (
               <Grid container justifyContent={'center'} spacing={2}>
@@ -270,7 +282,21 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
                     </div>
                   ))}
                 </Grid>
-
+ {/* <Grid item>
+      <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
+      {Object.keys(opcion_liquidacion.variables).map((key, index) => (
+        <div key={index}>
+          <TextField
+            type="number"
+            sx={{ p: '10px' }}
+            size="small"
+            value={opcion_liquidacion.variables[key]}
+            required
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handle_variables_change(event, key) }}
+          />
+        </div>
+      ))}
+    </Grid> */}
                 <Grid item>
                   <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
                   {Object.keys(opcion_liquidacion?.variables).map((key, index) => (

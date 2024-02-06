@@ -26,6 +26,7 @@ import {
 const SeleccionTipoPersona = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const { control: control_seleccion_tipo_persona, reset } = useForm<any>();
   const {
     list_applicant_types,
@@ -83,7 +84,7 @@ const SeleccionTipoPersona = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'A nombre de',
-              disabled: false,
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: list_applicant_types,
               option_label: 'label',
@@ -112,7 +113,7 @@ const SeleccionTipoPersona = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'En representación de',
-              disabled: false,
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: list_on_behalf_of,
               option_label: 'label',

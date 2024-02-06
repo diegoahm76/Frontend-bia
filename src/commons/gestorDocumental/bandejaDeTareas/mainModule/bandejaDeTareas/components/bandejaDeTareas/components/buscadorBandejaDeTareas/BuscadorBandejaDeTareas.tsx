@@ -79,7 +79,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     }
   };
 
-  const searchTramitesYservicios = () => {
+  const searchTramitesYservicios = async () => {
     try {
       console.log('submit , buscando coincidencias de tramites y servicios');
       showAlert(
@@ -226,12 +226,12 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
               ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                  ?.label === 'Otros' ? (
+                  ?.label === 'Responder Otro' ? (
                 <BuscadorOtros
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
               ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                  ?.label === 'OPAS' ? (
+                  ?.label === 'Responder OPA' ? (
                 <BuscadorOpas
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
@@ -304,7 +304,6 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                 />
               </Grid>
               {/* tambien se debe agregar la opción de otros */}
-
               {/* Otros */}
               {/* Tramites y servicios  */}
             </Grid>

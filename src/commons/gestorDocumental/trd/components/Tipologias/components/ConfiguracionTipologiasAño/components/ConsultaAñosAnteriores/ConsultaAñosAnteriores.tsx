@@ -214,7 +214,7 @@ export const ConsultaAñosAnteriores = () => {
         <>
             <Grid item xs={12} sm={5} md={3.6} lg={2.5}>
                 <Button
-                    startIcon={<ClearIcon />}
+                    startIcon={<SearchIcon/>}
                     fullWidth
                     style={{ width: "90%", marginTop: 15, backgroundColor: "orange" }}
                     variant="contained"

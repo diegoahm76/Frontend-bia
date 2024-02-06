@@ -58,8 +58,8 @@ export const CatalogoSeriesYSubseries = () => {
     {
       headerName: 'Nombre serie',
       field: 'nombre_serie',
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 350,
+      maxWidth: 400,
       flex: 1
     },
     {
@@ -72,8 +72,8 @@ export const CatalogoSeriesYSubseries = () => {
     {
       headerName: 'Nombre subserie',
       field: 'nombre_subserie',
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 350,
+      maxWidth: 400,
       flex: 1
     },
     {
@@ -104,7 +104,6 @@ export const CatalogoSeriesYSubseries = () => {
                 return;
               }
 
-              // //  console.log('')('params', params);
               delete_independente_series(params.row.id_catalogo_serie);
             }}
           >
@@ -128,7 +127,7 @@ export const CatalogoSeriesYSubseries = () => {
     <Dialog
       open={modalSeriesAndSubseries}
       onClose={closeModalModalSeriesAndSubseries}
-      maxWidth="md"
+      maxWidth="lg"
     >
       <DialogTitle>
         <Title title="Catálogo de series y subseries" />

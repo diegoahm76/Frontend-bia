@@ -52,7 +52,6 @@ export const FormParte1 = ({
 
   //* navigate declaration
   const navigate = useNavigate();
-
   //* redux state
   const currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = useAppSelector(
     (state: any) =>
@@ -101,6 +100,7 @@ export const FormParte1 = ({
       const url = `/gestor/pqr/get_pqrsdf-panel/${+currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf}/`;
       const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
       const respuestaPqrsdf = res.data.data;
+      console.log(respuestaPqrsdf, 'respuestaPqrsdf')
       setRespuestaPqrs(respuestaPqrsdf);
       // console.log('respuesta a una solicitud', respuestaPqrsdf);
     } catch (error) {

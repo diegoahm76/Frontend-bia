@@ -11,7 +11,7 @@ interface Metadatos {
   label: string;
 }
 
-interface Anexo {
+export interface Anexo {
   asunto: string;
   descripcion_de_la_solicitud: string;
   id: string;
