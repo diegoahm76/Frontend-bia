@@ -66,6 +66,10 @@ export const EstacionesRoutes: React.FC = () => {
       <Route path="valor_regional/*" element={<ValorRegional />} />
 
 
+
+
+
+
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );

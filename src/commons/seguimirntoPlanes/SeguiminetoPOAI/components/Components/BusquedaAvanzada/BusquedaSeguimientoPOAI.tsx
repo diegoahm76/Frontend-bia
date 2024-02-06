@@ -32,75 +32,142 @@ import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import {
-  set_current_banco,
+  set_current_seguimiento_paoi,
   set_current_mode_planes,
 } from '../../../../store/slice/indexPlanes';
-import { IBusquedaBancoProyecto } from './types';
-import { search_banco_proyecto } from '../../../../DetalleInversionCuentas/services/services';
+import { IBusquedaSeguiminetoPOAI } from './types';
+import { search_seguimiento_poai } from '../../../../DetalleInversionCuentas/services/services';
 import { DataContextSeguimientoPOAI } from '../../../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaBanco: React.FC = () => {
+export const BusquedaSeguimientoPOAI: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre_proyecto',
-      headerName: 'Nombre del Proyecto',
+      field: 'nombre_programa',
+      headerName: 'NOMBRE PROGRAMA',
       sortable: true,
-      width: 350,
+      width: 250,
+    },
+    {
+      field: 'nombre_proyecto',
+      headerName: 'NOMBRE PROYECTO',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'nombre_producto',
+      headerName: 'NOMBRE PRODUCTO',
+      sortable: true,
+      width: 250,
     },
     {
       field: 'nombre_actividad',
-      headerName: 'Nombre de la Actividad',
+      headerName: 'NOMBRE ACTIVIDAD',
       sortable: true,
-      width: 350,
+      width: 250,
+    },
+    {
+      field: 'nombre_unidad',
+      headerName: 'NOMBRE UNIDAD',
+      sortable: true,
+      width: 250,
     },
     {
       field: 'nombre_indicador',
-      headerName: 'Nombre del Indicador',
+      headerName: 'NOMBRE INDICADOR',
       sortable: true,
       width: 250,
     },
     {
       field: 'nombre_meta',
-      headerName: 'Nombre de la Meta',
-      sortable: true,
-      width: 150,
-    },
-    {
-      field: 'rubro',
-      headerName: 'Rubro',
+      headerName: 'NOMBRE META',
       sortable: true,
       width: 250,
     },
     {
+      field: 'codigo_modalidad',
+      headerName: 'CODIGO MODALIDAD',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'concepto',
+      headerName: 'CONCEPTO',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'sector',
+      headerName: 'SECTOR',
+      sortable: true,
+      width: 150,
+    },
+    {
       field: 'nombre_fuente',
-      headerName: 'Nombre de la Fuente',
+      headerName: 'NOMBRE FUENTE',
       sortable: true,
       width: 250,
     },
     {
       field: 'objeto_contrato',
-      headerName: 'Objeto del Contrato',
+      headerName: 'OBJETO CONTRATO',
       sortable: true,
       width: 250,
     },
     {
-      field: 'banco_valor',
-      headerName: 'BANCO VALOR',
+      field: 'ubicacion',
+      headerName: 'UBICACION',
+      sortable: true,
+      width: 250,
+    },
+    {
+      field: 'porcentaje_pto',
+      headerName: 'PORCENTAJE PTO',
       sortable: true,
       width: 150,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        const inversion = Number(params.value); // Convertir a número
-        const formattedInversion = inversion.toLocaleString('es-AR', {
+    },
+    {
+      field: 'valor_total',
+      headerName: 'VALOR TOTAL',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params) => {
+        const valorTotal = Number(params.value);
+        return valorTotal.toLocaleString('es-AR', {
           style: 'currency',
           currency: 'ARS',
           minimumFractionDigits: 0,
           maximumFractionDigits: 2,
         });
-
-        return formattedInversion;
+      },
+    },
+    {
+      field: 'numero_cdp_paa',
+      headerName: 'NUMERO CDP PAA',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'numero_rp_paa',
+      headerName: 'NUMERO RP PAA',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'valor_seguimiento_banco_paa',
+      headerName: 'VALOR SEGUIMIENTO BANCO PAA',
+      sortable: true,
+      width: 150,
+      valueFormatter: (params) => {
+        const valorSeguimiento = Number(params.value);
+        return valorSeguimiento.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
       },
     },
     {
@@ -122,6 +189,13 @@ export const BusquedaBanco: React.FC = () => {
               set_id_actividad(params.row.id_actividad);
               set_id_indicador(params.row.id_indicador);
               set_id_meta(params.row.id_meta);
+              set_nombre_plan(params.row.nombre_plan);
+              set_nombre_programa(params.row.nombre_programa);
+              set_nombre_proyecto(params.row.nombre_proyecto);
+              set_nombre_producto(params.row.nombre_producto);
+              set_nombre_actividad(params.row.nombre_actividad);
+              set_nombre_indicador(params.row.nombre_indicador);
+              set_nombre_meta(params.row.nombre_meta);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -129,13 +203,20 @@ export const BusquedaBanco: React.FC = () => {
                   editar: true,
                 })
               );
-              dispatch(set_current_banco(params.row));
+              dispatch(set_current_seguimiento_paoi(params.row));
               reset({
-                objeto_contrato: params.row.objeto_contrato,
+                nombre_plan: params.row.nombre_plan,
+                nombre_programa: params.row.nombre_programa,
                 nombre_proyecto: params.row.nombre_proyecto,
+                nombre_producto: params.row.nombre_producto,
                 nombre_actividad: params.row.nombre_actividad,
                 nombre_indicador: params.row.nombre_indicador,
                 nombre_meta: params.row.nombre_meta,
+                nombre: params.row.nombre,
+                concepto: params.row.concepto,
+                cuenta: params.row.cuenta,
+                objeto_contrato: params.row.objeto_contrato,
+                codigo_modalidad: params.row.codigo_modalidad,
               });
               handle_close();
             }}
@@ -170,17 +251,24 @@ export const BusquedaBanco: React.FC = () => {
     control,
   } = useForm({
     defaultValues: {
-      objeto_contrato: '',
+      nombre_plan: '',
+      nombre_programa: '',
       nombre_proyecto: '',
+      nombre_producto: '',
       nombre_actividad: '',
       nombre_indicador: '',
       nombre_meta: '',
+      nombre: '',
+      concepto: '',
+      cuenta: '',
+      objeto_contrato: '',
+      codigo_modalidad: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaBancoProyecto[]>([]);
+  const [rows, set_rows] = useState<IBusquedaSeguiminetoPOAI[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -195,23 +283,37 @@ export const BusquedaBanco: React.FC = () => {
 
   const on_submit_advance = handle_submit(
     async ({
-      objeto_contrato,
-      nombre_meta,
+      nombre_plan,
+      nombre_programa,
       nombre_proyecto,
+      nombre_producto,
       nombre_actividad,
       nombre_indicador,
+      nombre_meta,
+      nombre,
+      concepto,
+      cuenta,
+      objeto_contrato,
+      codigo_modalidad,
     }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_banco_proyecto({
-          objeto_contrato,
-          nombre_meta,
+        } = await search_seguimiento_poai({
+          nombre_plan,
+          nombre_programa,
           nombre_proyecto,
+          nombre_producto,
           nombre_actividad,
           nombre_indicador,
+          nombre_meta,
+          nombre,
+          concepto,
+          cuenta,
+          objeto_contrato,
+          codigo_modalidad,
         });
 
         if (data?.length > 0) {
@@ -235,6 +337,13 @@ export const BusquedaBanco: React.FC = () => {
     set_id_actividad,
     set_id_indicador,
     set_id_meta,
+    set_nombre_plan,
+    set_nombre_programa,
+    set_nombre_proyecto,
+    set_nombre_producto,
+    set_nombre_actividad,
+    set_nombre_indicador,
+    set_nombre_meta,
   } = useContext(DataContextSeguimientoPOAI);
 
   useEffect(() => {
@@ -273,8 +382,198 @@ export const BusquedaBanco: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avazada banco proyecto" />
+            <Title title="Búsqueda avazada seguiimiento POAI" />
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_plan"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre plan"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_programa"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre programa"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_proyecto"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre proyecto"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_producto"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre producto"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_actividad"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre actividad"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_indicador"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre indicador"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre_meta"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre meta"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="nombre"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre Grupo"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="concepto"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Concepto"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="cuenta"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Cuenta"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="objeto_contrato"
@@ -296,14 +595,14 @@ export const BusquedaBanco: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="nombre_proyecto"
+                  name="codigo_modalidad"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre proyecto"
+                      label="Código modalidad"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -313,64 +612,6 @@ export const BusquedaBanco: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_actividad"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre actividad"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_indicador"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre indicador"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="nombre_meta"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre meta"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-
               <Grid item xs={12} sm={6} md={3} container justifyContent="end">
                 <LoadingButton
                   type="submit"
@@ -422,6 +663,7 @@ export const BusquedaBanco: React.FC = () => {
                 </>
               )}
             </Grid>
+
             {/* </form> */}
           </Grid>
         </DialogContent>

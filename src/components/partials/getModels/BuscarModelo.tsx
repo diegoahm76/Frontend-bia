@@ -22,6 +22,7 @@ import FormCheckboxController from '../form/FormCheckboxController';
 import FormButtonGrid from '../form/FormButtonGrid';
 import { Subtitle } from '../../Subtitle';
 import { SubtitleOtros } from '../../SubtitleOtros';
+import FormKeywords from '../form/FormKeywords';
 
 interface IProps {
   form_inputs: any[];
@@ -156,9 +157,7 @@ const BuscarModelo = ({
       );
     } else if (form_input.datum_type === 'title') {
       return <Title title={form_input.title_label}></Title>;
-    } else if (form_input.datum_type === 'subtitleotros') {
-      return <SubtitleOtros title={form_input.title_label}></SubtitleOtros>;
-    }  else if (form_input.datum_type === 'input_file_controller') {
+    } else if (form_input.datum_type === 'input_file_controller') {
       return (
         <FormInputFileController
           xs={form_input.xs}
@@ -278,6 +277,17 @@ const BuscarModelo = ({
           type_button={form_input.type_button ?? null}
           style_button={form_input.style_button ?? null}
           color_button={form_input.color_button ?? null}
+        />
+      );
+    } else if (form_input.datum_type === 'keywords') {
+      return (
+        <FormKeywords
+          initial_values={form_input.initial_values}
+          hidden_text={form_input.hidden_text}
+          character_separator={form_input.character_separator}
+          set_form={form_input.set_form}
+          keywords={form_input.keywords ?? null}
+          disabled={form_input.disabled ?? null}
         />
       );
     }

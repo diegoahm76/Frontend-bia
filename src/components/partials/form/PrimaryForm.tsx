@@ -227,6 +227,7 @@ const PrimaryForm = ({
           character_separator={form_input.character_separator}
           set_form={form_input.set_form}
           keywords={form_input.keywords ?? null}
+          disabled={form_input.disabled ?? null}
         />
       );
     }

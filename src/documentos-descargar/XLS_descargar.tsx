@@ -10,9 +10,9 @@ interface DownloadXLSProps {
 export const download_xls: React.FC<DownloadXLSProps> = ({ nurseries, columns }) => {
 
 
-  console.log(columns);
+  // console.log(columns);
   // console.log('')("---------------------------------");
-  console.log('filas',nurseries);  
+  // console.log('filas',nurseries);  
   const handle_download = (): void => {
     const data: any[][] = [];
 

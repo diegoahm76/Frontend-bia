@@ -60,6 +60,8 @@ export interface UserData {
   tipo_persona: string;
   nombre?: string;
   telefono_celular?:any;
+  tipo_documento?:string;
+  numero_documento?:string;
 }
 
 export interface Tokens {

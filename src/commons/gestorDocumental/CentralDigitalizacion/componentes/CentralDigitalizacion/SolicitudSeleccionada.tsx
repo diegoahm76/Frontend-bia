@@ -29,7 +29,7 @@ interface IProps {
 const SolicitudSeleccionada = ({ control_solicitud, reset }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { digitization_request } = useAppSelector(
+  const { digitization_request, edit_digitization } = useAppSelector(
     (state) => state.central_digitalizacion_slice
   );
   useEffect(() => {
@@ -110,7 +110,7 @@ const SolicitudSeleccionada = ({ control_solicitud, reset }: IProps) => {
               rows_text: 4,
               label: 'Observación de digitalización',
               type: 'text',
-              disabled: false,
+              disabled: !edit_digitization,
               helper_text: '',
             },
           ]}
