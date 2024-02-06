@@ -197,8 +197,6 @@ export const SeleccionLider = (): JSX.Element => {
                   watch_seleccionar_lideres_value?.observaciones_asignacion
               };
 
-              //  console.log('')(data);
-
               const updateDataFunction = {
                 id_lider_unidad_org:
                   asignacion_lideres_current?.id_lider_unidad_org,
