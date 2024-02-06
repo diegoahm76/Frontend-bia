@@ -383,6 +383,7 @@ export const initial_state_consulta_plan: IPlan = {
 
 export const initial_state_seguimineto_poai: ISeguiminetoPOAI = {
   id_seguimiento: null,
+  id: null,
   nombre_plan: '',
   nombre_programa: '',
   nombre_proyecto: '',
@@ -423,6 +424,7 @@ export const initial_state_seguimineto_poai: ISeguiminetoPOAI = {
   numerp_rp: null,
   fecha_rp: '',
   valor_cdp: null,
+  numero_cdp: null,
   fecha_cdp: '',
   observaciones: '',
   id_plan: null,
@@ -440,6 +442,7 @@ export const initial_state_seguimineto_poai: ISeguiminetoPOAI = {
   id_modalidad: null,
   id_ubicacion: null,
   id_clase_tercero: null,
+  id_sector: null,
 };
 
 export const initial_state: IPlanesIndex = {

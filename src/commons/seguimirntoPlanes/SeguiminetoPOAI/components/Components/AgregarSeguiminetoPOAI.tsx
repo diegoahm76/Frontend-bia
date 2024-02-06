@@ -82,25 +82,6 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
   } = useContext(DataContextSeguimientoPOAI);
 
   useEffect(() => {
-    fetch_data_rubros();
-    fetch_data_fuentes();
-    fetch_data_concepto();
-    fetach_data_sector();
-    fetch_data_detalle();
-    fetch_data_ubicacion();
-    fetch_data_unidades_organizaciones();
-    fetch_data_modalidad();
-    fetch_data_banco();
-    set_value_seguimiento('nombre_plan', nombre_plan);
-    set_value_seguimiento('nombre_programa', nombre_programa);
-    set_value_seguimiento('nombre_proyecto', nombre_proyecto);
-    set_value_seguimiento('nombre_producto', nombre_producto);
-    set_value_seguimiento('nombre_actividad', nombre_actividad);
-    set_value_seguimiento('nombre_indicador', nombre_indicador);
-    set_value_seguimiento('nombre_meta', nombre_meta);
-  }, []);
-
-  useEffect(() => {
     if (id_fuente) {
       fetch_data_fuentes_by_id();
     }
@@ -181,6 +162,13 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
         );
         set_fecha_rp(dayjs(seguimiento_poai.fecha_rp) ?? null);
       }
+      if (seguimiento_poai?.fecha_cdp) {
+        set_value_seguimiento(
+          'fecha_cdp',
+          dayjs(seguimiento_poai.fecha_cdp).format('YYYY-MM-DD')
+        );
+        set_fecha_cdp(dayjs(seguimiento_poai.fecha_cdp) ?? null);
+      }
       set_id_proyecto(seguimiento_poai.id_proyecto ?? null);
       set_id_actividad(seguimiento_poai.id_actividad ?? null);
       set_id_indicador(seguimiento_poai.id_indicador ?? null);
@@ -229,6 +217,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
         porcentaje_ejecuta: seguimiento_poai.porcentaje_ejecuta,
         numero_contrato: seguimiento_poai.numero_contrato,
         numerp_rp: seguimiento_poai.numerp_rp,
+        numero_cdp: seguimiento_poai.numero_cdp,
         fecha_rp: seguimiento_poai.fecha_rp,
         valor_cdp: seguimiento_poai.valor_cdp,
         fecha_cdp: seguimiento_poai.fecha_cdp,
@@ -248,9 +237,22 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
         id_modalidad: seguimiento_poai.id_modalidad,
         id_ubicacion: seguimiento_poai.id_ubicacion,
         id_clase_tercero: seguimiento_poai.id_clase_tercero,
+        id_sector: seguimiento_poai.id_sector,
       });
     }
   }, [mode, seguimiento_poai]);
+
+  useEffect(() => {
+    fetch_data_rubros();
+    fetch_data_fuentes();
+    fetch_data_concepto();
+    fetach_data_sector();
+    fetch_data_detalle();
+    fetch_data_ubicacion();
+    fetch_data_unidades_organizaciones();
+    fetch_data_modalidad();
+    fetch_data_banco();
+  }, []);
 
   return (
     <>
@@ -321,7 +323,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                   label="Nombre del plan"
                   variant="outlined"
                   multiline
-                  value={value}
+                  value={nombre_plan}
                   disabled={true}
                   required={true}
                   onChange={onChange}
@@ -330,11 +332,131 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* nombre programa */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_programa"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre del programa"
+                  variant="outlined"
+                  multiline
+                  value={nombre_programa}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
           {/* nombre proyecto */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_proyecto"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre del proyecto"
+                  variant="outlined"
+                  multiline
+                  value={nombre_proyecto}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
           {/* nombre producto */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_producto"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre del producto"
+                  variant="outlined"
+                  multiline
+                  value={nombre_producto}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
           {/* nombre actividad */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_actividad"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre de la actividad"
+                  variant="outlined"
+                  multiline
+                  value={nombre_actividad}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
           {/* nombre indicador */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_indicador"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre del indicador"
+                  variant="outlined"
+                  multiline
+                  value={nombre_indicador}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
           {/* nombre meta */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_meta"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre de la meta"
+                  variant="outlined"
+                  multiline
+                  value={nombre_meta}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
           {/* porcentaje_pto */}
           <Grid item xs={12} sm={6}>
             <Controller
@@ -368,7 +490,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* id_concepto */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={3}>
             <Controller
               name="id_concepto"
               control={control_seguimiento}
@@ -400,8 +522,28 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* nombre_programa */}
-          {/* id_sector */}
           <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_programa"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre del programa"
+                  variant="outlined"
+                  multiline
+                  value={nombre_programa}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
+          {/* id_sector */}
+          <Grid item xs={12} sm={6} md={3}>
             <Controller
               name="id_sector"
               control={control_seguimiento}
@@ -432,9 +574,69 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               )}
             />
           </Grid>
-          {/* nombre_proyecto */}
-          {/* nombre_producto */}
-          {/* nombre_actividad */}
+          {/* nombre proyecto */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_proyecto"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre del proyecto"
+                  variant="outlined"
+                  multiline
+                  value={nombre_proyecto}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
+          {/* nombre producto */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_producto"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre del producto"
+                  variant="outlined"
+                  multiline
+                  value={nombre_producto}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>
+          {/* nombre actividad */}
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="nombre_actividad"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre de la actividad"
+                  variant="outlined"
+                  multiline
+                  value={nombre_actividad}
+                  disabled={true}
+                  required={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Grid>{' '}
           {/* id_detalle_inversion */}
           <Grid item xs={12} sm={6}>
             <Controller
@@ -468,7 +670,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* id_unidad_organizacional */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_unidad_organizacional"
               control={control_seguimiento}
@@ -537,7 +739,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>{' '}
           {/* vano 1 con label de año 1 */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="vano_1"
               control={control_seguimiento}
@@ -567,7 +769,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* vano 2 con label de año 2 */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="vano_2"
               control={control_seguimiento}
@@ -597,7 +799,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* vano 3 con label de año 3 */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="vano_3"
               control={control_seguimiento}
@@ -627,7 +829,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* vano 4 con label de año 4 */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="vano_4"
               control={control_seguimiento}
@@ -657,7 +859,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* valor_total */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_total"
               control={control_seguimiento}
@@ -687,7 +889,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* id_banco */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_banco_proyecto"
               control={control_seguimiento}
@@ -719,7 +921,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* numero_cdp_paa */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="numero_cdp_paa"
               control={control_seguimiento}
@@ -750,7 +952,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* numero_rp_paa */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="numero_rp_paa"
               control={control_seguimiento}
@@ -782,7 +984,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* valor_seguimiento_banco_paa */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_seguimiento_banco_paa"
               control={control_seguimiento}
@@ -812,7 +1014,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* valor_cdp_paa */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_cdp_paa"
               control={control_seguimiento}
@@ -842,7 +1044,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* valor_rp_paa */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_rp_paa"
               control={control_seguimiento}
@@ -872,7 +1074,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* Fecha de terminacion */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de terminación"
@@ -900,7 +1102,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             </LocalizationProvider>
           </Grid>
           {/* duracion debe ser un selECT con dia(s), mes(es), año(s) */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="duracion"
               control={control_seguimiento}
@@ -923,13 +1125,13 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                       : 'ingrese el duracion'
                   }
                 >
-                  <MenuItem key="dia" value="dia">
+                  <MenuItem key="1" value="1">
                     Día(s)
                   </MenuItem>
-                  <MenuItem key="mes" value="mes">
+                  <MenuItem key="2" value="2">
                     Mes(es)
                   </MenuItem>
-                  <MenuItem key="año" value="año">
+                  <MenuItem key="3" value="3">
                     Año(s)
                   </MenuItem>
                 </TextField>
@@ -937,7 +1139,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* valor_mesual_paoi */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_mesual_paoi"
               control={control_seguimiento}
@@ -967,7 +1169,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* id_modalidad */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_modalidad"
               control={control_seguimiento}
@@ -1063,7 +1265,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* valor_pagado */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_pagado"
               control={control_seguimiento}
@@ -1093,7 +1295,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* valor_obligado */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_obligado"
               control={control_seguimiento}
@@ -1123,7 +1325,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* valor_saldo */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_saldo"
               control={control_seguimiento}
@@ -1139,7 +1341,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
                   }}
                   multiline
                   value={value}
-                  disabled={true}
+                  disabled={false}
                   required={false}
                   onChange={onChange}
                   error={!!errors_seguimiento.valor_saldo}
@@ -1153,7 +1355,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* porcentaje_ejecuta */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="porcentaje_ejecuta"
               control={control_seguimiento}
@@ -1185,7 +1387,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* id_ubicacion */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_ubicacion"
               control={control_seguimiento}
@@ -1217,7 +1419,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* numero_contrato */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="numero_contrato"
               control={control_seguimiento}
@@ -1244,7 +1446,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* id_banco */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="id_banco_proyecto"
               control={control_seguimiento}
@@ -1277,7 +1479,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* numerp_rp */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="numerp_rp"
               control={control_seguimiento}
@@ -1304,7 +1506,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* fecha_rp */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha RP"
@@ -1331,8 +1533,35 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
+          {/* numero_cdp */}
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="numero_cdp"
+              control={control_seguimiento}
+              rules={{ required: false }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Número CDP"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={false}
+                  onChange={onChange}
+                  error={!!errors_seguimiento.numero_cdp}
+                  helperText={
+                    errors_seguimiento.numero_cdp
+                      ? 'Es obligatorio ingresar un número'
+                      : 'Ingrese un número'
+                  }
+                />
+              )}
+            />
+          </Grid>
           {/* valor_cdp */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <Controller
               name="valor_cdp"
               control={control_seguimiento}
@@ -1362,7 +1591,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* fecha_cdp */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha CDP"
@@ -1422,7 +1651,7 @@ export const AgregarSeguiminetoPOAI: React.FC = () => {
             />
           </Grid>
           {/* observaciones */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <Controller
               name="observaciones"
               control={control_seguimiento}

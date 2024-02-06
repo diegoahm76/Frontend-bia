@@ -349,6 +349,7 @@ export interface ISeguimientoPAI {
 // Seguimiento POAI
 
 export interface ISeguiminetoPOAI {
+  id?: number | null;
   id_seguimiento?: number | null;
   nombre_plan?: string;
   nombre_programa?: string;
@@ -388,6 +389,7 @@ export interface ISeguiminetoPOAI {
   porcentaje_ejecuta?: number | null;
   numero_contrato?: number | null;
   numerp_rp?: number | null;
+  numero_cdp?: number | null;
   fecha_rp?: string;
   valor_cdp?: number | null;
   fecha_cdp?: string;
@@ -407,8 +409,8 @@ export interface ISeguiminetoPOAI {
   id_modalidad?: number | null;
   id_ubicacion?: number | null;
   id_clase_tercero?: number | null;
+  id_sector?: number | null;
 }
-
 export interface IPlanesIndex {
   plan: IPlanes;
   eje_estrategico: IEjeEstrategico;
