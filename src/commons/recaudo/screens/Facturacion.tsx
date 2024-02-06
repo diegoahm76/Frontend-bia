@@ -26,24 +26,35 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 
 export interface SerieSubserie {
-  id_catserie_unidadorg: number;
+  // id_catserie_unidadorg: number;
+  // id_serie_doc: number;
+  // nombre_serie_doc: string;
+  // id_subserie_doc: number | null;
+  // nombre_subserie_doc: string | null;
+
+
+  id_cat_serie_und: number;
   id_serie_doc: number;
+  cod_serie_doc: string;
   nombre_serie_doc: string;
   id_subserie_doc: number | null;
+  cod_subserie_doc: string | null;
   nombre_subserie_doc: string | null;
 }
+
+
 export interface UnidadOrganizaciona {
   id_unidad_organizacional: number;
-  nombre: string;
-
-
+  nombre: string; 
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Facturacion: React.FC = () => {
   const { userinfo: { nombre_unidad_organizacional, nombre, id_persona } } = useSelector((state: AuthSlice) => state.auth);
   const [visor, setVisor] = useState('');
+  // const [consecutivo, setConsecutivo] = useState<string | null>(null);
 
   const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
+
   const realizarActualizacion = async () => {
     try {
       const url = "/gestor/adminitrador_radicados/config_tipos_radicado_agno/generar_n/";
@@ -55,7 +66,7 @@ export const Facturacion: React.FC = () => {
 
       const res = await api.put(url, payload);
       const data = res.data.data;
-      setConsecutivoActual(data.radicado_nuevo);
+      // setConsecutivoActual(data.radicado_nuevo);
       await generarHistoricoBajas();
     } catch (error) {
       console.error(error);
@@ -259,6 +270,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     // Función para añadir texto con control de páginas
     const addTextWithPageControl = (text: string) => {
       let lines = doc.splitTextToSize(text, doc.internal.pageSize.width - 2 * margin); // Divide el texto en líneas
+
       lines.forEach((line: string | string[]) => {
         if (y > pageHeight - 20) { // 20 es el margen inferior
           doc.addPage();
@@ -305,7 +317,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
   const fetchUnidades = async () => {
     try {
-      const url = "/transversal/organigrama/unidades/get-list/organigrama-actual/";
+      const url = "/gestor/consecutivos-unidades/unidades_organigrama_actual/get/";
       const res = await api.get(url);
       const unidadesData = res.data.data;
       setUnidades(unidadesData);
@@ -322,18 +334,19 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     generarHistoricoBajas();
 
   }, [opcionSeleccionada]);
+
   const handleChange = (event: { target: { name: any; value: any; }; }) => {
     setUnidadSeleccionada(event.target.value as string);
     const selectedId = event.target.value;
     setIdUnidadSeleccionada(selectedId);
   };
 
-  const [seriesSubseries, setSeriesSubseries] = useState<SerieSubserie[]>([]);
   const [selectedSerieSubserie, setSelectedSerieSubserie] = useState('');
-
+  
+  const [seriesSubseries, setSeriesSubseries] = useState<SerieSubserie[]>([]);
   const fetchSeriesSubseries = async () => {
     try {
-      const url = `/gestor/configuracion-tipos-expendientes/serie-subserie-unidad/get/${idUnidadSeleccionada}/`;
+      const url = `/gestor/consecutivos-unidades/serie_subserio_unidad/get/${idUnidadSeleccionada}/`;
       const res = await api.get(url);
       const data = res.data.data;
       setSeriesSubseries(data);
@@ -357,7 +370,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     const selectedValue = event.target.value;
     setSelectedSerieSubserie(selectedValue);
 
-    const selectedElement = seriesSubseries.find((item) => item.id_catserie_unidadorg === selectedValue);
+    const selectedElement = seriesSubseries.find((item) => item.id_cat_serie_und === selectedValue);
 
     if (selectedElement) {
       setNombreSerieSeleccionada(selectedElement.nombre_serie_doc);
@@ -459,7 +472,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
 
   const [lider, set_lider] = useState<UnidadOrganizacional[]>([]);
-  
+
   useEffect(() => {
     const fetch_perfil = async (): Promise<void> => {
       try {
@@ -520,13 +533,9 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
 
   const handle_open_buscar = (): void => {
-    // if (persona?.id_persona === undefined && formData.id_unidad_org_lider === undefined) {
-    //   control_error("Deves de elejir un destinatario ");
-    // } else {
     set_is_buscar(true);
-    realizarActualizacion();
-
-    // }
+    crearConsecutivo()
+    // realizarActualizacion();
   };
 
 
@@ -534,8 +543,45 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     set_is_buscar(false);
     enviarDocumento();
   };
+
+
+  async function crearConsecutivo() {
+    try {
+      const url = `/gestor/consecutivos-unidades/consecutivo/create/`;
+      const data = {
+        id_unidad: unidadSeleccionada,
+        id_cat_serie_und: selectedSerieSubserie,
+        id_persona: 215,
+        fecha_actual: "2024-01-29T15:30:00"
+      };
+      // Asumiendo que `api` es una instancia de Axios o similar para hacer la petición
+      const res = await api.post(url, data);
+      console.log('Consecutivo creado con éxito', res.data);
+      // Actualizar el DOM o el estado para mostrar el valor de consecutivo
+      setConsecutivoActual(res.data?.data?.consecutivo);
+    } catch (error:any) {
+      console.error('Error al crear el consecutivo', error);
+      control_error(error.response.data.detail);
+      // Manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
+    }
+  }
+
+
+  const isButtonDisabled = !unidadSeleccionada || !selectedSerieSubserie;
+
+
   return (
     <>
+
+      {/* <Grid item > 
+        <Button
+          startIcon={<SaveIcon />}
+          color='success'
+          variant='contained'
+          onClick={crearConsecutivo}
+        >Enviar Documento
+        </Button>
+      </Grid> */}
       <Grid
         container
         spacing={2} m={2} p={2}
@@ -628,6 +674,8 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
             </Select>
           </FormControl>
         </Grid>
+
+
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="serie-subserie-select-label">Serie/Subserie</InputLabel>
@@ -639,13 +687,15 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
               onChange={handleChangee}
             >
               {seriesSubseries.map((item) => (
-                <MenuItem key={item.id_catserie_unidadorg} value={item.id_catserie_unidadorg}>
+                <MenuItem key={item.id_cat_serie_und} value={item.id_cat_serie_und}>
                   {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
+
+
         {/* {nombre}
           {nombre_unidad_organizacional} */}
         <Grid item xs={12} sm={4}>
@@ -699,19 +749,19 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
                 value={Fecha_b}
                 onChange={(e) => setFecha_b(e.target.value)}
               />
-            </Grid> 
+            </Grid>
             <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            type="date"
-            size="small"
-            variant="outlined"
-            value={Fecha_entrega}
-            label=" Fecha entrega"
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => setFecha_entrega(e.target.value)}
-          />
-        </Grid>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                value={Fecha_entrega}
+                label=" Fecha entrega"
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_entrega(e.target.value)}
+              />
+            </Grid>
           </>
 
 
@@ -720,7 +770,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
 
 
-       
+
         <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
@@ -774,6 +824,8 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
             color='success'
             variant='contained'
             onClick={handle_open_buscar}
+            disabled={isButtonDisabled}
+
           >Enviar Documento
           </Button>
         </Grid>

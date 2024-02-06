@@ -79,9 +79,7 @@ export const ValorRegional: React.FC = () => {
                         onClick={() => { setEditingRow(params.row.id_sub_zona_hidrica), setIsModalOpen(true) }}
                     >
                         <EditIcon />
-                    </IconButton>
-
-                  
+                    </IconButton> 
 
                 </>
 
