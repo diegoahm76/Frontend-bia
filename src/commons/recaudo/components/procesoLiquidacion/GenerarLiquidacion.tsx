@@ -5809,7 +5809,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         }}
       >
         <Typography color='black' variant="h4">Total de la obligacion</Typography>
-        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>{currency_formatter(form_liquidacion.valor ?? 0, 4)}</Typography>
+        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>{currency_formatter(form_liquidacion.valor ?? 0, 0)}</Typography>
       </Grid>
 
       <Grid container justifyContent={'center'} spacing={3}>
