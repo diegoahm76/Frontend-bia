@@ -128,6 +128,131 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
   };
 
+  /*  const setActionsPQRSDF = (tareaPQRSDF: any) => {
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaPQRSDF));
+    void Swal.fire({
+      icon: 'success',
+      title: 'Elemento seleccionado',
+      text: 'Seleccionaste una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      showConfirmButton: true,
+    });
+
+    const shouldDisable = (actionId: string) => {
+      const isVerInfo = actionId === 'InfoSolictud';
+      const isResponder = actionId === 'RespondeSolicitud';
+      const isReasignar = actionId === 'Reasignar';
+      const isEnviarReq = actionId === 'RequerimientoUsuario';
+      const isVerRespReq =
+        actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario';
+      const isSegRespTarea = actionId === 'SeguimientoARespuesta';
+
+      const isNoSeleccionado = !tareaPQRSDF;
+      const isEstadoAsignacionNoDefinido =
+        tareaPQRSDF.estado_asignacion_tarea
+        === null || tareaPQRSDF.estado_asignacion_tarea
+        === '';
+      const isEstadoAsignacionRechazada =
+        tareaPQRSDF.estado_asignacion_tarea
+        === 'Rechazado';
+      const isEstadoAsignacionAceptada =
+        tareaPQRSDF.estado_asignacion_tarea
+        === 'Aceptado';
+
+//estado_tarea: "En proceso de respuesta"
+      const isEstadoTareaEnProcesoRespuesta =
+        tareaPQRSDF.estado_tarea === "En proceso de respuesta";
+      const isEstadoTareaRespondida =
+        tareaPQRSDF.respondida_por;
+
+      const isEstadoTareaDelegada = tareaPQRSDF.estado_tarea === "Delegada";
+
+      const isEstadoReasignacionEnEspera =
+        tareaPQRSDF.estado_reasignacion_tarea === null || tareaPQRSDF.estado_reasignacion_tarea === '';
+
+      const isEstadoReasignacionRechazada =
+        tareaPQRSDF.estado_reasignacion_tarea === 'Rechazado';
+      const isEstadoReasignacionAceptada =
+        tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado';
+
+      const hasReqPendientes = tareaPQRSDF.requerimientos_pendientes_respuesta;
+
+      // Primer caso
+      if (isNoSeleccionado) {
+        return true;
+      }
+
+      // Segundo caso
+      if (isEstadoAsignacionNoDefinido) {
+        return !isVerInfo;
+      }
+
+      // Tercer caso
+      if (isEstadoAsignacionRechazada) {
+        return !isVerInfo;
+      }
+
+      // Cuarto caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        !hasReqPendientes
+      ) {
+        return false;
+      }
+
+      // Quinto caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        hasReqPendientes
+      ) {
+        return isResponder;
+      }
+
+      // Sexto caso
+      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
+        return false;
+      }
+
+      // Séptimo caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionEnEspera
+      ) {
+        return isResponder || isEnviarReq;
+      }
+
+      // Octavo caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionRechazada
+      ) {
+        return false;
+      }
+
+      // Noveno caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaDelegada &&
+        isEstadoReasignacionAceptada
+      ) {
+        return isResponder || isEnviarReq;
+      }
+
+      // Caso por defecto
+      return true;
+    };
+
+    const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+
+    dispatch(setActionssTareasPQRSDF(actionsPQRSDF));
+  };*/
+
   const setActionsPQRSDF = (tareaPQRSDF: any) => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaPQRSDF));
     void Swal.fire({
@@ -137,50 +262,168 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const shouldDisable = (actionId: string, tareaPQRSDF: any) => {
+    const shouldDisable = (actionId: string) => {
       const isVerInfo = actionId === 'InfoSolictud';
       const isResponder = actionId === 'RespondeSolicitud';
       const isEnviarReq = actionId === 'RequerimientoUsuario';
-  
-      if (!tareaPQRSDF) {
-          return true; // No se ha seleccionado ninguna tarea
-      }
-  
-      switch (tareaPQRSDF.estado_tarea) {
-          case null:
-          case '':
-              return !isVerInfo; // Estado de asignación no definido o rechazado
-          case 'Rechazado':
-              return !isVerInfo; // Estado de asignación rechazado
-          case 'Aceptado':
-              if (!tareaPQRSDF.respondida_por && tareaPQRSDF.requerimientos_pendientes_respuesta) {
-                  return isResponder; // Estado de asignación aceptado y tarea en proceso de respuesta con requerimientos pendientes
-              } else if (tareaPQRSDF.respondida_por && !tareaPQRSDF.tarea_reasignada_a) {
-                  return false; // Tarea ya respondida
-              } else if (tareaPQRSDF.respondida_por && tareaPQRSDF.tarea_reasignada_a && tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado') {
-                  return isResponder || isEnviarReq; // Tarea delegada y estado de reasignación aceptado
-              }
-              break;
-          case 'En proceso de respuesta':
-              if (!tareaPQRSDF.requerimientos_pendientes_respuesta) {
-                  return false; // Tarea en proceso de respuesta sin requerimientos pendientes
-              } else if (tareaPQRSDF.estado_reasignacion_tarea === null || tareaPQRSDF.estado_reasignacion_tarea === '') {
-                  return isResponder || isEnviarReq; // Tarea en proceso de respuesta y estado de reasignación en espera
-              }
-              break;
-      }
-  
-      return true; // Caso por defecto
-  };
-  
-    const actionsDisabled = actionsTareasPQRSDF.map((action: any) => {
-      return {
-        ...action,
-        disabled: shouldDisable(action.id, tareaPQRSDF),
-      };
-    });
+      const isReasignar = actionId === 'Reasignar';
+      const isVerRespReq =
+        actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario';
+      const isSegRespTarea = actionId === 'SeguimientoARespuesta';
 
-    dispatch(setActionssTareasPQRSDF(actionsDisabled));
+      if (!tareaPQRSDF) {
+        return true; // No se ha seleccionado ninguna tarea
+      }
+
+      const isNoSeleccionado = !tareaPQRSDF;
+      const isEstadoAsignacionNoDefinido =
+        tareaPQRSDF.estado_asignacion_tarea === null ||
+        tareaPQRSDF.estado_asignacion_tarea === '';
+      const isEstadoAsignacionRechazada =
+        tareaPQRSDF.estado_asignacion_tarea === 'Rechazado';
+      const isEstadoAsignacionAceptada =
+        tareaPQRSDF.estado_asignacion_tarea === 'Aceptado';
+      const isEstadoTareaEnProcesoRespuesta =
+        tareaPQRSDF.estado_tarea === 'En proceso de respuesta';
+      const isTareaRespondida =
+        tareaPQRSDF.estado_tarea ===
+        'Respondida por el propietario de la bandeja de tareas';
+      const isEstadoTareaRespondida = tareaPQRSDF.respondida_por;
+      const isEstadoTareaDelegada = tareaPQRSDF.estado_tarea === 'Delegada';
+      const isEstadoReasignacionEnEspera =
+        tareaPQRSDF.estado_reasignacion_tarea === null ||
+        tareaPQRSDF.estado_reasignacion_tarea === '' ||
+        tareaPQRSDF.estado_reasignacion_tarea === 'En espera';
+      const isEstadoReasignacionRechazada =
+        tareaPQRSDF.estado_reasignacion_tarea === 'Rechazado';
+      const isEstadoReasignacionAceptada =
+        tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado';
+
+      const hasReqPendientes = tareaPQRSDF.requerimientos_pendientes_respuesta;
+
+      if (isNoSeleccionado) {
+        return true;
+      }
+
+      if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
+        return actionId !== 'InfoSolictud';
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        !hasReqPendientes
+      ) {
+        //* se habilita todo
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        hasReqPendientes
+      ) {
+        //* se deshabilita la opción de responder solicitud
+        return !(
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
+        return true;
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionEnEspera
+      ) {
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario'
+        );
+      }
+
+      if (isEstadoAsignacionAceptada && isTareaRespondida) {
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* septimo caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionAceptada
+      ) {
+        return !(
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* octavo caso
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionRechazada
+      ) {
+        //* se habilitan todos botones -
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* noveno caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaDelegada &&
+        isEstadoReasignacionRechazada
+      ) {
+        //* se habilitan todos botones -
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      return !(actionId === 'InfoSolictud');
+    };
+
+    const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+
+    dispatch(setActionssTareasPQRSDF(actionsPQRSDF));
   };
 
   //* columns -------------------------------------------------------
