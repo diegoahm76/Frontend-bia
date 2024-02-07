@@ -38,7 +38,7 @@ export const AccionesFinales = ({
     useAppSelector((state: any) => state.BandejaTareasSlice);
   console.log('anexosCreados', anexosCreados);
   //* handleSumbit
-
+// console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_tarea_asignada)
   const sendDataByFormData = () => {
     const formData = new FormData();
 
@@ -63,6 +63,7 @@ export const AccionesFinales = ({
         id_pqrsdf:
           +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf,
         asunto: watchFormulario.asunto,
+        id_tarea_asignada:currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
         descripcion: watchFormulario.descripcion_de_la_solicitud,
         cantidad_anexos: +anexosCreados.length,
         nro_folios_totales: +anexosCreados.reduce(
