@@ -19,13 +19,14 @@ import type {
   DatosMigracion,
 } from '../estaciones/interfaces/interfaces';
 import axios from 'axios';
+import { base_urlcam } from '../../auth/api/auth';
 
 export const alertas = axios.create({
   baseURL:
     process.env.NODE_ENV === 'development'
       ? process.env.REACT_APP_BETA_URL ||
         'https://back-end-bia-beta.up.railway.app/api/'
-      : process.env.REACT_APP_PROD_URL || 'https://bia.cormacarena.gov.co/api/',
+      : process.env.REACT_APP_PROD_URL || `${base_urlcam}/api/`,
 });
 export const control_success = (message: ToastContent): any =>
   toast.success(message, {

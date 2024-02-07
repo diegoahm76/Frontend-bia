@@ -8,6 +8,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useRef } from 'react';
 import type { DownloadButtonProps } from './types/types';
 import { baseURL } from '../../api/axios';
+import { base_urlcam } from '../../commons/auth/api/auth';
 
 export const IconButtonDownLoad = ({
   fileUrl,
@@ -35,7 +36,7 @@ export const IconButtonDownLoad = ({
                   ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
                     'https://back-end-bia-beta.up.railway.app'
                   : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                   'https://bia.cormacarena.gov.co'
+                  `${base_urlcam}`
               }${fileUrl}`
         }
         ref={linkRef}
