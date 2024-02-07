@@ -16,11 +16,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import Swal from 'sweetalert2';
 import { LoadingButton } from '@mui/lab';
 import { ModalAndLoadingContext } from '../../../../../../../context/GeneralContext';
-
-import { getAsignacionesOpas } from '../../services/asignaciones/opas/getAsignacionesOpas.service';
-import { postAsignacionGrupoOpas } from '../../services/post/opas/postAsignacionGrupo.service';
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 import { AsignacionGrupoTramiteContext } from '../../context/AsignacionGrupoTramiteContext';
+import { postAsignacionTramiteGrupo } from '../../services/post/tramitesServicios/postAsignacionTramites.service';
+import { getAsignacionesTramites } from '../../services/asignaciones/tramites/getAsignacionesTramites.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -70,19 +69,8 @@ export const AccionesFinales = (): JSX.Element => {
     let res;
 
     switch (tipo) {
-      case 'Tramites y Servicios':
-        // Call the service for Tramites y Servicios
-        /*  res = await postAsignacionGrupoTramitesYServicios(
-          {
-            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-            id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
-          },
-          handleSecondLoading
-        );*/
-        break;
-      case 'OPA':
-        res = await postAsignacionGrupoOpas(
+      case 'TRAMITE':
+        res = await postAsignacionTramiteGrupo(
           {
             id_solicitud_tramite:
               currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
@@ -91,7 +79,6 @@ export const AccionesFinales = (): JSX.Element => {
           },
           handleSecondLoading
         );
-
         break;
       default:
         // Default service call or no service call
@@ -110,15 +97,8 @@ export const AccionesFinales = (): JSX.Element => {
       let asignaciones;
 
       switch (tipo) {
-        case 'Tramites y Servicios':
-          // Fetch the assignments for Tramites y Servicios
-          /*asignaciones = await getAsignacionesTramitesYServicios(
-            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-            handleGeneralLoading
-          );*/
-          break;
-        case 'OPA':
-          asignaciones = await getAsignacionesOpas(
+        case 'TRAMITE':
+          asignaciones = await getAsignacionesTramites(
             currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
             handleGeneralLoading
           );

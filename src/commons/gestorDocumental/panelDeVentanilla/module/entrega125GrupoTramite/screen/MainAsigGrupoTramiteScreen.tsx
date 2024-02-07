@@ -11,8 +11,8 @@ import { SeleccionGrupo } from '../components/SeleccionGrupo/SeleccionGrupo';
 import { Asignaciones } from '../components/Asignaciones/Asginaciones';
 import { AccionesFinales } from '../components/AccionesFinales/AccionesFinales';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
-import { getAsignacionesOpas } from '../services/asignaciones/opas/getAsignacionesOpas.service';
 import { AsignacionGrupoTramiteContext } from '../context/AsignacionGrupoTramiteContext';
+import { getAsignacionesTramites } from '../services/asignaciones/tramites/getAsignacionesTramites.service';
 
 export const MainAsigGrupoTramiteScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -45,25 +45,19 @@ export const MainAsigGrupoTramiteScreen: React.FC = (): JSX.Element => {
       currentElementPqrsdComplementoTramitesYotros?.tipo;
 
     switch (tipo) {
-      case 'Tramites y Servicios':
-        // Call the service for Tramites y Servicios
-        showAlert(
-          'Atención',
-          'No hay servicio aún para ver las asignacion para tramites y servicios, así que no hay asignaciones de tramites y servicios por el momento',
-          'warning'
-        );
-        break;
-      /*case 'OPA':
+      case 'TRAMITE':
         (async () => {
           try {
-            const res = await getAsignacionesOpas(currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite, handleGeneralLoading);
+            const res = await getAsignacionesTramites(
+              currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
+              handleGeneralLoading
+            );
             setListaAsignaciones(res);
           } catch (error) {
             console.error(error);
           }
         })();
-        // Call the service for OPA
-        break;*/
+        break;
       default:
         console.log('No hay tipo de solicitud');
         break;

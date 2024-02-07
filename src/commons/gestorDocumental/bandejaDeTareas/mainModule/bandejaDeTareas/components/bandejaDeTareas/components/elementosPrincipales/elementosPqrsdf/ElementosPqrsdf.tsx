@@ -128,131 +128,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
   };
 
-  /*  const setActionsPQRSDF = (tareaPQRSDF: any) => {
-    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaPQRSDF));
-    void Swal.fire({
-      icon: 'success',
-      title: 'Elemento seleccionado',
-      text: 'Seleccionaste una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
-      showConfirmButton: true,
-    });
-
-    const shouldDisable = (actionId: string) => {
-      const isVerInfo = actionId === 'InfoSolictud';
-      const isResponder = actionId === 'RespondeSolicitud';
-      const isReasignar = actionId === 'Reasignar';
-      const isEnviarReq = actionId === 'RequerimientoUsuario';
-      const isVerRespReq =
-        actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario';
-      const isSegRespTarea = actionId === 'SeguimientoARespuesta';
-
-      const isNoSeleccionado = !tareaPQRSDF;
-      const isEstadoAsignacionNoDefinido =
-        tareaPQRSDF.estado_asignacion_tarea
-        === null || tareaPQRSDF.estado_asignacion_tarea
-        === '';
-      const isEstadoAsignacionRechazada =
-        tareaPQRSDF.estado_asignacion_tarea
-        === 'Rechazado';
-      const isEstadoAsignacionAceptada =
-        tareaPQRSDF.estado_asignacion_tarea
-        === 'Aceptado';
-
-//estado_tarea: "En proceso de respuesta"
-      const isEstadoTareaEnProcesoRespuesta =
-        tareaPQRSDF.estado_tarea === "En proceso de respuesta";
-      const isEstadoTareaRespondida =
-        tareaPQRSDF.respondida_por;
-
-      const isEstadoTareaDelegada = tareaPQRSDF.estado_tarea === "Delegada";
-
-      const isEstadoReasignacionEnEspera =
-        tareaPQRSDF.estado_reasignacion_tarea === null || tareaPQRSDF.estado_reasignacion_tarea === '';
-
-      const isEstadoReasignacionRechazada =
-        tareaPQRSDF.estado_reasignacion_tarea === 'Rechazado';
-      const isEstadoReasignacionAceptada =
-        tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado';
-
-      const hasReqPendientes = tareaPQRSDF.requerimientos_pendientes_respuesta;
-
-      // Primer caso
-      if (isNoSeleccionado) {
-        return true;
-      }
-
-      // Segundo caso
-      if (isEstadoAsignacionNoDefinido) {
-        return !isVerInfo;
-      }
-
-      // Tercer caso
-      if (isEstadoAsignacionRechazada) {
-        return !isVerInfo;
-      }
-
-      // Cuarto caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        !hasReqPendientes
-      ) {
-        return false;
-      }
-
-      // Quinto caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        hasReqPendientes
-      ) {
-        return isResponder;
-      }
-
-      // Sexto caso
-      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
-        return false;
-      }
-
-      // Séptimo caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionEnEspera
-      ) {
-        return isResponder || isEnviarReq;
-      }
-
-      // Octavo caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionRechazada
-      ) {
-        return false;
-      }
-
-      // Noveno caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaDelegada &&
-        isEstadoReasignacionAceptada
-      ) {
-        return isResponder || isEnviarReq;
-      }
-
-      // Caso por defecto
-      return true;
-    };
-
-    const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
-      ...action,
-      disabled: shouldDisable(action.id),
-    }));
-
-    dispatch(setActionssTareasPQRSDF(actionsPQRSDF));
-  };*/
-
   const setActionsPQRSDF = (tareaPQRSDF: any) => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaPQRSDF));
     void Swal.fire({
@@ -263,13 +138,13 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     });
 
     const shouldDisable = (actionId: string) => {
-      const isVerInfo = actionId === 'InfoSolictud';
+     /* const isVerInfo = actionId === 'InfoSolictud';
       const isResponder = actionId === 'RespondeSolicitud';
       const isEnviarReq = actionId === 'RequerimientoUsuario';
       const isReasignar = actionId === 'Reasignar';
       const isVerRespReq =
         actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario';
-      const isSegRespTarea = actionId === 'SeguimientoARespuesta';
+      const isSegRespTarea = actionId === 'SeguimientoARespuesta';*/
 
       if (!tareaPQRSDF) {
         return true; // No se ha seleccionado ninguna tarea

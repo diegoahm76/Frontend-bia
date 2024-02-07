@@ -390,18 +390,10 @@ export const BusqueAsignacionesLiderModal = ({
                     render={({ field: { onChange, value } }) => (
                       <div>
                         <Select
-                          /* isDisabled={
-                            asignacion_lideres_current?.observaciones_asignacion
-                          } */
+
                           value={value}
                           onChange={(selectedOption) => {
-                            /* void get_catalogo_TRD_service(
-                            selectedOption.value
-                          ).then((res) => {
-                            //  console.log('')(res);
-                            dispatch(set_catalog_trd_action(res));
-                          }); */
-                            //  console.log('')(selectedOption);
+
                             onChange(selectedOption);
                           }}
                           options={[
@@ -452,13 +444,13 @@ export const BusqueAsignacionesLiderModal = ({
               </Grid>
             </Grid>
 
-            {busqueda_avanzada_personas_list?.length > 0 && (
+
               <RenderDataGrid
                 title="Resultados de la búsqueda"
                 rows={busqueda_avanzada_personas_list ?? []}
                 columns={columns_busqueda_avanzada_persona ?? []}
               />
-            )}
+      
           </DialogContent>
           <Divider />
           <DialogActions>
