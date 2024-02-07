@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { PlanPago } from './PlanPago';
 import { Documento } from './Documento';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 interface RootStateFacilidades {
   facilidades: {
@@ -41,6 +42,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
   const [idFacilidadSeleccionada, setIdFacilidadSeleccionada] = useState('');
+  const [idFacilidades, setIdFacilidades] = useState('');
 
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
   const handle_open_buscar = (): void => {
@@ -156,12 +158,16 @@ export const TablaFacilidadesAdmin: React.FC = () => {
                 <VisibilityIcon />
               </IconButton>
             )}
+            {params.row.tiene_plan_pago && (
 
             <IconButton onClick={() => {
-handle_open_documento()
+              handle_open_documento()
+              setIdFacilidadSeleccionada(params.row.id_facilidad);
+              setIdFacilidades(params.row)
             }}>
-              documento
+              <DescriptionIcon/>
             </IconButton>
+              )}
           </>
         )
 
@@ -260,6 +266,7 @@ handle_open_documento()
           idFacilidadSeleccionada={idFacilidadSeleccionada}
           is_modal_active_doc={is_modal_active_doc}
           set_doc={set_doc}
+          idFacilidades={idFacilidades}
         />
 
 

@@ -265,7 +265,8 @@ export const Agregarmeta: React.FC = () => {
                     if (val >= 0) {
                       onChange(e);
                     }
-                  }} // error={!!errors_meta.porcentaje_meta}
+                  }}
+                  // error={!!errors_meta.porcentaje_meta}
                   // helperText={
                   //   errors_meta.porcentaje_meta
                   //     ? 'Es obligatorio ingresar un numero'
@@ -574,9 +575,7 @@ export const Agregarmeta: React.FC = () => {
                   ? 'Este campo es requerido'
                   : false,
               }}
-              render={({
-                field: { onChange, value },
-              }) => (
+              render={({ field: { onChange, value } }) => (
                 <FormControl>
                   <FormControlLabel
                     control={

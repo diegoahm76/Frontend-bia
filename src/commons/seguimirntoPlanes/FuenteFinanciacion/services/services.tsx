@@ -10,6 +10,15 @@ export const get_fuente_financiancion = async (): Promise<IFuentes[]> => {
   return response.data.data;
 };
 
+export const get_fuente_financiancion_by_id = async (
+  id_fuente: number
+): Promise<IFuentes> => {
+  const response = await api.get(
+    `seguimiento-planes/consultar-fuentes-financiacion/${id_fuente}/`
+  );
+  return response.data;
+}
+
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
 export const post_fuentes_fiananciacion = async (
   data: IFuentes

@@ -62,7 +62,10 @@ export const BuscadorPqrsdf = (props: any): JSX.Element => {
                     //  console.log('')(selectedOption);
                     onChange(selectedOption);
                   }}
-                  options={request?.estadoAsignacionTarea ?? []}
+                  options={[...request?.estadoAsignacionTarea, {
+                    label: 'PENDIENTE POR CONFIRMAR',
+                    value: 'None', // back lo recibe de esa manera
+                  }] ?? []}
                   placeholder="Seleccionar"
                 />
               )}

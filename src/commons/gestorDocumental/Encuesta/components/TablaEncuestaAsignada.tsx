@@ -114,13 +114,18 @@ export const TablaEncuestaAsignada: React.FC<IProps> = ({ selectedEncuestaId, se
                     fullWidth
                 />
             </Grid>
-            <Grid item marginTop={2} marginLeft={2} xs={12} sm={1.5}>
+            <Grid item marginTop={2}   xs={12} sm={2}>
                 <Button variant="contained" color='primary' startIcon={<SearchIcon />} onClick={handleSearch}>
                     Buscar
                 </Button>
             </Grid>
-            <Grid item xs={5.3}  ></Grid>
-            <Grid item xs={12} sm={2} >
+
+            <Grid item xs={7} container
+                    direction="row"
+                    justifyContent="flex-end"
+                    alignItems="center" >
+
+     <Grid item  >
                 <ButtonGroup style={{ margin: 5, }}>
                     {download_xls({ nurseries: asignaciones, columns })}
                     {download_pdf({
@@ -130,6 +135,9 @@ export const TablaEncuestaAsignada: React.FC<IProps> = ({ selectedEncuestaId, se
                     })}
                 </ButtonGroup>
             </Grid>
+
+            </Grid>
+       
 
             <Divider
                 style={{

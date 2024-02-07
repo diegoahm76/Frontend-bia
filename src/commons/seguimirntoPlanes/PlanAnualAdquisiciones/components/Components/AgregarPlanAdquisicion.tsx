@@ -52,6 +52,7 @@ export const AgregarPlanAdquisicion: React.FC = () => {
     estado_vf_selected,
     unidades_organizaciones_selected,
     ubicacion_selected,
+    rows_paa_codigos,
     set_id_person,
     set_is_limpiar_formulario,
     fetch_data_planes,
@@ -73,6 +74,8 @@ export const AgregarPlanAdquisicion: React.FC = () => {
     fetch_data_ubicacion();
   }, []);
 
+  console.log('rows_paa_codigos', rows_paa_codigos);
+
   useEffect(() => {
     if (mode.crear) {
       limpiar_formulario_adquisiciones();
@@ -92,6 +95,10 @@ export const AgregarPlanAdquisicion: React.FC = () => {
         nombre_unidad: plan_adquisiciones.nombre_unidad,
         nombre_ubicacion: plan_adquisiciones.nombre_ubicacion,
         persona_responsable: plan_adquisiciones.persona_responsable,
+        codigo_modalidad: plan_adquisiciones.codigo_modalidad,
+        email_persona_responsable: plan_adquisiciones.email_persona_responsable,
+        telefono_persona_responsable:
+          plan_adquisiciones.telefono_persona_responsable,
         descripcion: plan_adquisiciones.descripcion,
         mes_inicio: plan_adquisiciones.mes_inicio,
         mes_oferta: plan_adquisiciones.mes_oferta,
@@ -148,26 +155,20 @@ export const AgregarPlanAdquisicion: React.FC = () => {
 
           {mode.editar ? (
             <>
-              {/* <Grid item xs={12} sm={6}>
-                <Controller
-                  name="nombre_sector"
-                  control={control_adquisiciones}
-                  rules={{ required: false }}
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      size="small"
-                      label="Nombre del sector"
-                      variant="outlined"
-                      multiline
-                      value={value}
-                      disabled={true}
-                      required={true}
-                      onChange={onChange}
-                    />
-                  )}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="codigos unspsc"
+                  variant="outlined"
+                  multiline
+                  value={rows_paa_codigos
+                    .map((item) => item.codigo_unsp)
+                    .join(', ')}
+                  disabled={true}
+                  required={true}
                 />
-              </Grid> */}
+              </Grid>
             </>
           ) : null}
           <Grid item xs={12} sm={6} md={4}>
@@ -592,7 +593,7 @@ export const AgregarPlanAdquisicion: React.FC = () => {
 
           {mode.editar ? (
             <>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="persona_responsable"
                   control={control_adquisiciones}
@@ -602,6 +603,46 @@ export const AgregarPlanAdquisicion: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Persona Responsable"
+                      variant="outlined"
+                      multiline
+                      value={value}
+                      disabled={true}
+                      required={true}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="email_persona_responsable"
+                  control={control_adquisiciones}
+                  rules={{ required: false }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Email Persona Responsable"
+                      variant="outlined"
+                      multiline
+                      value={value}
+                      disabled={true}
+                      required={true}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Controller
+                  name="telefono_persona_responsable"
+                  control={control_adquisiciones}
+                  rules={{ required: false }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Telefono Persona Responsable"
                       variant="outlined"
                       multiline
                       value={value}
