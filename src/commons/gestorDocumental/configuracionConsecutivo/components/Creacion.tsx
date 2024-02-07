@@ -11,8 +11,10 @@ import { Title } from "../../../../components";
 import SaveIcon from '@mui/icons-material/Save';
 import { miEstilo } from "../../Encuesta/interfaces/types";
 import { control_error, control_success } from "../../../../helpers";
-import { Button, Dialog, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from "@mui/material";
+import { Button, ButtonGroup, Dialog, Divider, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
+import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
+import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
 
 export interface UnidadOrganizaciona {
     nombre: string;
@@ -58,29 +60,29 @@ export const Creacion: React.FC = () => {
     //     const numericFields = ['agno_consecutivo', 'consecutivo_inicial', 'cantidad_digitos'];
     //     const updatedValue = numericFields.includes(name) ? Number(value) : value;
 
-        
+
     //     setFormData(prevState => ({ ...prevState, [name]: updatedValue }));
     // };
     const handleInputChange = (event: any) => {
         const target = event.target as HTMLInputElement;
         const { name, value } = target;
         const numericFields = ['agno_consecutivo', 'consecutivo_inicial', 'cantidad_digitos'];
-      
+
         // Verifica si el campo es numérico y si el valor es numérico o vacío
         const isNumericField = numericFields.includes(name);
         const isNumericValue = value === '' || /^[0-9\b]+$/.test(value);
-      
+
         if (isNumericField && !isNumericValue) {
-          // No actualizar el estado si el valor no es numérico
-          return;
+            // No actualizar el estado si el valor no es numérico
+            return;
         }
-      
+
         // Convertir a número si el campo es numérico, de lo contrario usar el valor como está
         const updatedValue = isNumericField ? Number(value) : value;
-      
+
         setFormData(prevState => ({ ...prevState, [name]: updatedValue }));
-      };
-      
+    };
+
 
     const crearConfiguracion = async () => {
         try {
@@ -375,7 +377,7 @@ export const Creacion: React.FC = () => {
                 </Grid> */}
 
 
-              
+
 
 
                 <Grid item xs={12} sm={4}>
@@ -417,14 +419,50 @@ export const Creacion: React.FC = () => {
                         label="Implementar"
                     />
                 </Grid>
-                <Grid item >
-                    <Button color='success'
-                        variant='contained'
-                        startIcon={<SaveIcon />} onClick={crearConfiguracion}>
-                        Guardar
-                    </Button>
+                <Grid container
+                    direction="row"
+                    justifyContent="flex-end"
+                    alignItems="center" item xs={12} sm={4}>
+
+                    <Grid item >
+                        <Button color='success'
+                            variant='contained'
+                            startIcon={<SaveIcon />} onClick={crearConfiguracion}>
+                            Guardar
+                        </Button>
+                    </Grid>
+
+
 
                 </Grid>
+                <Divider
+                    style={{
+                        width: '98%',
+                        marginTop: '8px',
+                        marginBottom: '8px',
+                        marginLeft: 'auto',
+                    }}
+                />
+                <Grid container
+                    direction="row"
+                    justifyContent="flex-end"
+                    alignItems="center" item xs={12} sm={12} >
+                    <Grid item  >
+                        <ButtonGroup style={{ margin: 5, }}>
+                            {download_xls({ nurseries: unidadesConfig, columns })}
+                            {download_pdf({
+                                nurseries: unidadesConfig,
+                                columns,
+                                title: 'consecutivo',
+                            })}
+                        </ButtonGroup>
+                    </Grid>
+
+
+                </Grid>
+
+
+
                 <Grid item xs={12} marginTop={2}>
                     <DataGrid
                         autoHeight

@@ -28,6 +28,7 @@ import {
 const TipoPersona = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const {
     control: control_tipo_persona,
     reset: reset_persona,
@@ -169,6 +170,8 @@ const TipoPersona = () => {
           set_models={set_persons}
           reset_values={reset_persona}
           button_submit_label="BUSCAR"
+          button_submit_disabled={representacion_legal.tipo_sesion === 'E'}
+          show_search_button={!(representacion_legal.tipo_sesion === 'E')}
           form_inputs={[
             {
               datum_type: 'title',
@@ -183,7 +186,7 @@ const TipoPersona = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
-              disabled: false,
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: aux_document_types,
               option_label: 'nombre',
@@ -200,7 +203,9 @@ const TipoPersona = () => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento',
               type: 'number',
-              disabled: (document_type.cod_tipo_documento ?? null) === null,
+              disabled:
+                (document_type.cod_tipo_documento ?? null) === null ||
+                representacion_legal.tipo_sesion === 'E',
               helper_text: 'Digite para buscar',
               on_blur_function: search_person,
             },

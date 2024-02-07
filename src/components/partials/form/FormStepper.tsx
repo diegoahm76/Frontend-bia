@@ -97,51 +97,6 @@ const FormStepper = ({
 
   return (
     <Box component="form" sx={{ width: '100%' }} margin={2}>
-      {activeStep === configuration_steps.length ? (
-        <React.Fragment>
-          <Stack direction="row" spacing={1} alignItems={'center'}>
-            <Chip
-              icon={<PlaylistAddCheckCircleIcon />}
-              label={message_success ?? 'Diligenciado con exito!!'}
-              color="success"
-            />
-          </Stack>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          {configuration_steps[activeStep].body ?? null}
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Atras
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Saltar
-              </Button>
-            )}
-            <Button
-              onClick={configuration_steps[activeStep].handle_submit(
-                handleNext
-              )}
-            >
-              {activeStep === configuration_steps.length - 1
-                ? 'Finalizar'
-                : 'Siguiente'}
-            </Button>
-          </Box>
-        </React.Fragment>
-      )}
       <Stepper activeStep={activeStep}>
         {configuration_steps.map((step, index) => {
           const stepProps: { completed?: boolean } = {};
@@ -163,6 +118,60 @@ const FormStepper = ({
           );
         })}
       </Stepper>
+      {activeStep === configuration_steps.length ? (
+        <React.Fragment>
+          <Stack direction="row" spacing={1} alignItems={'center'}>
+            <Chip
+              icon={<PlaylistAddCheckCircleIcon />}
+              label={message_success ?? 'Diligenciado con exito!!'}
+              color="success"
+            />
+          </Stack>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Box sx={{ flex: '1 1 auto' }} />
+
+            <Button variant="contained" onClick={handleReset}>
+              Reset
+            </Button>
+          </Box>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          {configuration_steps[activeStep].body ?? null}
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Button
+              variant="contained"
+              color="inherit"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
+              Atras
+            </Button>
+            <Box sx={{ flex: '1 1 auto' }} />
+            {isStepOptional(activeStep) && (
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleSkip}
+                sx={{ mr: 1 }}
+              >
+                Saltar
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              onClick={configuration_steps[activeStep].handle_submit(
+                handleNext
+              )}
+            >
+              {activeStep === configuration_steps.length - 1
+                ? 'Finalizar'
+                : 'Siguiente'}
+            </Button>
+          </Box>
+        </React.Fragment>
+      )}
     </Box>
   );
 };

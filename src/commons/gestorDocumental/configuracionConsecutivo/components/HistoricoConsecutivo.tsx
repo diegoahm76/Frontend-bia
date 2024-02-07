@@ -11,10 +11,12 @@ import { Title } from "../../../../components";
 import SaveIcon from '@mui/icons-material/Save';
 import { miEstilo } from "../../Encuesta/interfaces/types";
 import { control_error, control_success } from "../../../../helpers";
-import { Button, Dialog, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from "@mui/material";
+import { Button, ButtonGroup, Dialog, Divider, FormControl, FormControlLabel, Grid, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
+import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
+import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
 
 
 interface ConsecutivoData {
@@ -228,7 +230,31 @@ export const HistoricoConsecutivo: React.FC = () => {
                 </Grid>
 
 
+                <Divider
+                    style={{
+                        width: '98%',
+                        marginTop: '8px',
+                        marginBottom: '8px',
+                        marginLeft: 'auto',
+                    }}
+                />
+                <Grid container
+                    direction="row"
+                    justifyContent="flex-end"
+                    alignItems="center" item xs={12} sm={12} >
+                    <Grid item  >
+                        <ButtonGroup style={{ margin: 5, }}>
+                            {download_xls({ nurseries: rows, columns })}
+                            {download_pdf({
+                                nurseries: rows,
+                                columns,
+                                title: 'consecutivo',
+                            })}
+                        </ButtonGroup>
+                    </Grid>
 
+
+                </Grid>
 
 
                 <Grid item xs={12} marginTop={2}>

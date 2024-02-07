@@ -147,7 +147,6 @@ export const BusquedaMetas: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              console.log(params.row, 'params.row');
               set_id_plan(params.row.id_plan);
               set_id_programa(params.row.id_programa);
               set_id_proyecto(params.row.id_proyecto);
@@ -155,6 +154,13 @@ export const BusquedaMetas: React.FC = () => {
               set_id_actividad(params.row.id_actividad);
               set_id_indicador(params.row.id_indicador);
               set_id_meta(params.row.id_meta);
+              set_nombre_plan(params.row.nombre_plan);
+              set_nombre_programa(params.row.nombre_programa);
+              set_nombre_proyecto(params.row.nombre_proyecto);
+              set_nombre_producto(params.row.nombre_producto);
+              set_nombre_actividad(params.row.nombre_actividad);
+              set_nombre_indicador(params.row.nombre_indicador);
+              set_nombre_meta(params.row.nombre_meta);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -276,6 +282,13 @@ export const BusquedaMetas: React.FC = () => {
     set_id_actividad,
     set_id_indicador,
     set_id_meta,
+    set_nombre_plan,
+    set_nombre_programa,
+    set_nombre_proyecto,
+    set_nombre_producto,
+    set_nombre_actividad,
+    set_nombre_indicador,
+    set_nombre_meta,
   } = useContext(DataContextSeguimientoPOAI);
 
   useEffect(() => {

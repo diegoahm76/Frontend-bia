@@ -15,6 +15,7 @@ export interface InterAlertas {
 }
 
 export interface AlertaBandejaAlertaPersona {
+    documento:string;
     id_alerta_bandeja_alerta_persona: number;
     nivel_prioridad: number;
     tipo_alerta: string;

@@ -42,7 +42,7 @@ export const PlanPago: React.FC<BuscarProps> = ({ idFacilidadSeleccionada, is_mo
 
     const fetchPlanPago = async (): Promise<void> => {
         try {
-            const url = "/recaudo/planes-pagos/validacion/59/";
+            const url = `/recaudo/planes-pagos/validacion/${idFacilidadSeleccionada}/`;
             const res = await api.get(url);
             const planPagoData: PlanPagoData = res.data?.data || { plan_pago: {}, cuotas: [] };
             setCuotas(planPagoData?.cuotas);
@@ -50,6 +50,10 @@ export const PlanPago: React.FC<BuscarProps> = ({ idFacilidadSeleccionada, is_mo
             console.error(error);
         }
     };
+    useEffect(() => {
+
+        void fetchPlanPago();
+    }, [idFacilidadSeleccionada]);
 
     useEffect(() => {
         void fetchPlanPago();
