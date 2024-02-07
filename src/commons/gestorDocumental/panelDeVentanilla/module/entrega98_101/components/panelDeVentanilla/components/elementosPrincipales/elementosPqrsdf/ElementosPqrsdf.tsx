@@ -26,7 +26,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
-import  RemoveDoneIcon  from '@mui/icons-material/RemoveDone';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
@@ -100,8 +100,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     });
 
     const shouldDisable = (actionId: string) => {
-      const isAsigGrup = actionId === 'AsigGrup';
-      const isDig = actionId === 'Dig';
       const hasAnexos = pqrsdf.cantidad_anexos > 0;
       const requiresDigitalization = pqrsdf.requiere_digitalizacion;
       const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
@@ -109,35 +107,65 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
         pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
       const isEnVentanillaConPendientes =
         pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+      const isEnGestion = pqrsdf.estado_solicitud === 'EN GESTION';
+
+      // ? revisar este de en gestión para ver si es correcto
+      if (isEnGestion) {
+        return (
+          actionId === 'Dig' ||
+          actionId === 'AsigGrup' ||
+          actionId === 'AsigPer'
+        );
+      }
 
       // Primer caso
-      if (isRadicado && !hasAnexos && isDig) {
-        return true;
+      if (isRadicado && !hasAnexos) {
+        return !(actionId === 'AsigGrup' || actionId === 'AsigPer');
       }
 
       // Segundo caso
       if (isRadicado && hasAnexos && !requiresDigitalization) {
-        return false;
+        //* se habilitan todos
+        return !(
+          actionId === 'Dig' ||
+          actionId === 'AsigGrup' ||
+          actionId === 'AsigPer'
+        );
       }
 
       // Tercer caso
       if (isRadicado && hasAnexos && requiresDigitalization) {
-        return isAsigGrup;
+        return !(
+          actionId === 'Dig' ||
+          // actionId === 'AsigGrup' ||
+          actionId === 'AsigPer'
+        );
       }
 
-      // Cuarto caso
+      // * cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-        return false;
+        return !(
+          actionId === 'Dig' ||
+          actionId === 'AsigGrup' ||
+          actionId === 'AsigPer'
+        );
       }
 
-      // Quinto caso
+      // quinto caso
       if (isEnVentanillaSinPendientes && requiresDigitalization) {
-        return isAsigGrup;
+        return !(
+          actionId === 'Dig' ||
+          // actionId === 'AsigGrup' ||
+          actionId === 'AsigPer'
+        );
       }
 
-      // Sexto caso
       if (isEnVentanillaConPendientes) {
-        return isAsigGrup;
+        return !(
+          actionId === 'Dig' ||
+          // actionId === 'AsigGrup' ||
+          actionId === 'AsigPer'
+        );
       }
 
       // Caso por defecto

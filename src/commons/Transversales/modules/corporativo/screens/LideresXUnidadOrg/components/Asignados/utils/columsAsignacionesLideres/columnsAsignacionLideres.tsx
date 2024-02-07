@@ -3,12 +3,12 @@ export const columnsAsignacionesDeLideres = [
   {
     headerName: 'Nombre Organigrama',
     field: 'nombre_organigrama',
-    width: 200
+    minWidth: 300
   },
   {
     headerName: 'Nombre Unidad Organizacional',
     field: 'nombre_unidad_org',
-    width: 200
+    minWidth: 350
   },
   {
     headerName: 'Cód. Unidad Organizacional',
@@ -18,7 +18,7 @@ export const columnsAsignacionesDeLideres = [
   {
     headerName: 'Nombre Líder',
     field: 'nombre_completo',
-    width: 200
+    minWidth: 400
   },
   {
     headerName: 'Tipo documento',
@@ -31,8 +31,8 @@ export const columnsAsignacionesDeLideres = [
     width: 200
   },
   {
-    headerName: 'Observaciones asignación',
+    headerName: 'Observación asignación',
     field: 'observaciones_asignacion',
-    width: 200
+    minWidth: 500
   }
 ];
