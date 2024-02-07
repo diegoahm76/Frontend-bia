@@ -16,6 +16,7 @@ import {
 import { control_error, control_success } from '../../../helpers';
 import { consultar_datos_persona } from '../request/Request';
 import { get_user_by_id } from '../../../request';
+import { base_urlcam } from '../../auth/api/auth';
 
 export const create_super_user: (
   id_persona: number
@@ -82,7 +83,7 @@ export const get_data_user: (id: number) => any = (
               }${infoResume?.profile_img}`
             : `${
                 process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                'https://bia.cormacarena.gov.co'
+                `${base_urlcam}`
               }${infoResume?.profile_img}`,
       })
     );

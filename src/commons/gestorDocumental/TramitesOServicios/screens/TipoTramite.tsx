@@ -9,6 +9,7 @@ import { DialogGeneradorDeDirecciones } from "../../../../components/DialogGener
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import SearchOutlined from '@mui/icons-material/SearchOutlined';
 import { Geolocalizacion } from "./geolocalizacionScreen";
+import { base_urlcam } from "../../../auth/api/auth";
 interface IProps {
     usuario: any,
     crear_tramite: any,
@@ -34,6 +35,7 @@ const lt_permisos_menor = [{id_permiso_ambiental: 'PFNM', nombre: 'Aprovechamien
 {id_permiso_ambiental: 'OPVPM', nombre: 'Solicitud para la obtención de productos vegetales, producción y movilización del carbón vegetal con fines comerciales'}];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TipoTramite: React.FC<IProps> = (props: IProps) => {
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [lt_tipos_tramites, set_lt_tipos_tramites] = useState<any[]>([]);
     const [lt_tramites_servicios, set_lt_tramites_servicios] = useState<any[]>([]);
@@ -162,79 +164,79 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     const redireccion_url: (opcion: any) => void = (opcion: any) => {
         switch (opcion) {
             case 'DA':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Determinantes_Ambi';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Determinantes_Ambi`);;
                 break;
             case 'DAPP':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/DeterAmbiPP';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/DeterAmbiPP`);
                 break;
             case 'LH':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/LicHidroC';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/LicHidroC`);
                 break;
             case 'LAU':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Lic_Aire_Urb';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Lic_Aire_Urb`);
                 break;
             case 'PFNM':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Aprov_Forestal';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Aprov_Forestal`);
                 break;
             case 'AFAD':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Aprov_Forestal_Arboles_Domesticos';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Aprov_Forestal_Arboles_Domesticos`);
                 break;
             case 'CADV':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/CertDesVehicular';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/CertDesVehicular`);
                 break;
             case 'CDA':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Diagnostico_Motor_CDA';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Diagnostico_Motor_CDA`);
                 break;
             case 'IEPF':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Certimpexp';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Certimpexp`);
                 break;
             case 'CAS':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Aguas_Subte';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Aguas_Subte`);
                 break;
             case 'CASV':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Concesion_Aguas';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Concesion_Aguas`);
                 break;
             case 'ACAL':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Acopaceites';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Acopaceites`);
                 break;
             case 'RCD':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/GestorResiduos';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/GestorResiduos`);
                 break;
             case 'MAPS':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Med_ManAmbien';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Med_ManAmbien`);
                 break;
             case 'EAFF':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Emision_Atmos';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Emision_Atmos`);
                 break;
             case 'OCPL':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/OcupacionCauce';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/OcupacionCauce`);
                 break;
             case 'PEAS':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Prospeccion_explo';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Prospeccion_explo`);
                 break;
             case 'RES':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/PermRecolecEspe';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/PermRecolecEspe`);
                 break;
             case 'PVS':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/VertiASuelos';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/VertiASuelos`);
                 break;
             case 'AFAAPU':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Arboles_Aislados';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Arboles_Aislados`);
                 break;
             case 'CMDHS':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/PlanContDer';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/PlanContDer`);
                 break;
             case 'CMDS':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/PDC';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/PDC`);
                 break;
             case 'PIT':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/Proyec_Industri';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/Proyec_Industri`);
                 break;
             case 'RLO':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/RegisOpera';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/RegisOpera`);
                 break;
             case 'OPVPM':
-                window.location.href = 'https://bia.cormacarena.gov.co/ciudadano/ventanilla/SolObtProdVege';
+                navigate(`${base_urlcam}/ciudadano/ventanilla/SolObtProdVege`);
                 break;
         }
     }
