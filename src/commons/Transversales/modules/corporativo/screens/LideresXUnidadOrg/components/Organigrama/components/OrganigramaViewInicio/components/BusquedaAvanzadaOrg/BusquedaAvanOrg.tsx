@@ -115,8 +115,8 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
     {
       headerName: 'Fecha Terminado',
       field: 'fecha_terminado',
-      minWidth: 180,
-      maxWidth: 220,
+      minWidth: 260,
+      maxWidth: 280,
       renderCell: (params: any) => {
         return (
           <Chip
@@ -134,8 +134,8 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
     {
       headerName: 'Fecha Puesta en Producción',
       field: 'fecha_puesta_produccion',
-      minWidth: 180,
-      maxWidth: 230,
+      minWidth: 260,
+      maxWidth: 280,
       renderCell: (params: any) => {
         return params.row.fecha_puesta_produccion
           ? ((
@@ -162,8 +162,8 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
     {
       headerName: 'Fecha Retiro de producción',
       field: 'fecha_retiro_produccion',
-      minWidth: 180,
-      maxWidth: 220,
+      minWidth: 260,
+      maxWidth: 280,
       renderCell: (params: any) => {
         return params.row.fecha_retiro_produccion
           ? ((
@@ -383,18 +383,6 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
               columns={columns_busqueda_avazada_organigrama_lideres ?? []}
             />
 
-            {/*
-            <DataGrid
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
-              rows={organigramas_list ?? []}
-              columns={columns_busqueda_avazada_organigrama_lideres ?? []}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(_row) => uuidv4()}
-            />*/}
           </DialogContent>
           <Divider />
           <DialogActions>

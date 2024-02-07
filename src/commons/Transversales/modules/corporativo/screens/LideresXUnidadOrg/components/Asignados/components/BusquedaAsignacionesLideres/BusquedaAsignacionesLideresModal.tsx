@@ -106,56 +106,11 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
 
   //* -------- columns declaration -------- *//
   const columns_busqueda_asignaciones_de_lider: GridColDef[] = [
-    /*{
-      headerName: 'Acción',
-      field: 'accion',
-      width: 65,
-      renderCell: (params: any) => (
-        <>
-          <IconButton
-            onClick={() => {
-              //  console.log('')(params.row);
-              //* REVISAR LO DEL ID ORGANIGRAMA
-              // ! ACTUALIZA EL ORGANIGRAMA
-              // dispatch(set_organigrama_lideres_current(params.row));
-              // ! ACTUALIZA LA ASIGNACION DE LIDER
-              // dispatch(set_asignacion_lideres_current(params.row));
-              // ! ACTUALIZA LA LISTA DE UNIDADES ORGANIZACIONALES
-              /*void get_asignaciones_lideres_by_id_organigrama_service(
-                params.row.id_organigrama
-              ).then((data: any) => {
-                dispatch(get_list_asignaciones_lideres(data));
-              });
-*/
-              // ! ACTUALIZA LA LISTA DE ASIGNACIONES DE LIDERES
-              /*
-                .then(() => {
-                    void getAsignacionesLideresByIdOrganigrama(
-                      organigrama_lideres_current?.id_organigrama
-                    ).then((res: any) => {
-                      //  console.log('')(res);
-                      dispatch(get_list_asignaciones_lideres(res));
-                    });
-              */
-              // closeModal();
-       //     }}
-      //    >
-      //      <Avatar sx={AvatarStyles} variant="rounded">
-        //      <VisibilityIcon
-          //      titleAccess="Ver Organigrama"
-               // sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-          //    />
-          //  </Avatar>
-         // </IconButton>
-       // </>
-     // ),
-   // },*/
     ...columnsBusquedaAsignacion,
     {
       headerName: 'Fecha Asignación',
       field: 'fecha_asignacion',
-      minWidth: 180,
-      maxWidth: 220,
+      minWidth: 350,
       renderCell: (params: any) => {
         return (
           <Chip
@@ -169,16 +124,12 @@ export const BusquedaAsignacionesLideresModal: FC = (): JSX.Element => {
     },
     /*
 fecha_retiro_produccion_organigrama
-: 
-"2023-08-26T20:15:58.378540"
+:"2023-08-26T20:15:58.378540"
 fecha_terminado_organigrama
-: 
-"2023-05-29T13:50:56.411681"
-
-
+:"2023-05-29T13:50:56.411681"
   */
     {
-      headerName : 'Fecha de puesta en producción de organigrama',
+      headerName: 'Fecha de puesta en producción de organigrama',
       field: 'fecha_puesta_produccion_organigrama',
       minWidth: 350,
       renderCell: (params: any) => {
@@ -192,9 +143,39 @@ fecha_terminado_organigrama
         ) as JSX.Element;
       },
     },
-
-
-];
+    {
+      headerName: 'Fecha terminado organigrama',
+      field: 'fecha_terminado_organigrama',
+      minWidth: 350,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={`${new Date(params.row.fecha_asignacion).toLocaleString()}`}
+            color="success"
+            variant="outlined"
+          />
+        ) as JSX.Element;
+      },
+    },
+    {
+      headerName: 'Fecha de retiro de producción de organigrama',
+      field: 'fecha_retiro_produccion_organigrama',
+      minWidth: 350,
+      renderCell: (params: any) => {
+        return (
+          <Chip
+            size="small"
+            label={`${
+              new Date(params.row.fecha_asignacion).toLocaleString() ?? 'N/A'
+            }`}
+            color="warning"
+            variant="outlined"
+          />
+        ) as JSX.Element;
+      },
+    },
+  ];
 
   return (
     <>
@@ -209,24 +190,37 @@ fecha_terminado_organigrama
       >
         <Box
           component="form"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            void getAsignacionesLideresByFilter(
-              watch_asignaciones_lider_by_unidad_value?.nombre_organigrama,
-              watch_asignaciones_lider_by_unidad_value?.version_organigrama,
-              watch_asignaciones_lider_by_unidad_value?.codigo_unidad_org,
-              watch_asignaciones_lider_by_unidad_value?.nombre_unidad_org,
-              watch_asignaciones_lider_by_unidad_value?.tipo_documento,
-              watch_asignaciones_lider_by_unidad_value?.numero_documento,
-              watch_asignaciones_lider_by_unidad_value?.primer_nombre,
-              watch_asignaciones_lider_by_unidad_value?.segundo_nombre,
-              watch_asignaciones_lider_by_unidad_value?.primer_apellido,
-              watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
+            const {
+              nombre_organigrama,
+              version_organigrama,
+              codigo_unidad_org,
+              nombre_unidad_org,
+              tipo_documento,
+              numero_documento,
+              primer_nombre,
+              segundo_nombre,
+              primer_apellido,
+              segundo_apellido,
+            } = watch_asignaciones_lider_by_unidad_value || {};
+
+            const data = await getAsignacionesLideresByFilter(
+              nombre_organigrama,
+              version_organigrama,
+              codigo_unidad_org,
+              nombre_unidad_org,
+              tipo_documento,
+              numero_documento,
+              primer_nombre,
+              segundo_nombre,
+              primer_apellido,
+              segundo_apellido,
               setLoadingButton,
               resetFunction
-            ).then((data: any) => {
-              dispatch(get_list_busqueda_avanzada_personas(data));
-            });
+            );
+
+            dispatch(get_list_busqueda_avanzada_personas(data));
           }}
         >
           <DialogTitle>
@@ -339,7 +333,6 @@ fecha_terminado_organigrama
                   name="tipo_documento"
                   control={control_buscar_asignaciones_lideres_por_unidad}
                   defaultValue=""
-                  // rules={{ required: false }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
@@ -363,13 +356,11 @@ fecha_terminado_organigrama
                   name="numero_documento"
                   control={control_buscar_asignaciones_lideres_por_unidad}
                   defaultValue=""
-                  // rules={{ required: false }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
                     <TextField
-                      // margin="dense"
                       fullWidth
                       label="Número de documento"
                       size="small"

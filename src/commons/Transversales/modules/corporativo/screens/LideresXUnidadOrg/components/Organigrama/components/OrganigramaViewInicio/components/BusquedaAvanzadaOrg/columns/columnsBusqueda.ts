@@ -8,11 +8,11 @@ export const columsBusquedaAvanzada: any[] = [
   {
     headerName: 'Versión',
     field: 'version',
-    width: 120,
+    width: 150,
   },
   {
     headerName: 'Descripción',
     field: 'descripcion',
-    minWidth: 400,
+    minWidth: 520,
   },
 ]
