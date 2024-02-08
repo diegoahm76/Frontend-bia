@@ -31,11 +31,17 @@ export const columnsPqrsdf = [
     headerName: 'Asignado por',
     field: 'asignado_por',
     minWidth: 280,
+    renderCell: (params: any) => {
+      return params.value ?? 'Sin asignar';
+    },
   },
   {
     headerName: 'Asignado para',
     field: 'asignado_para',
     minWidth: 280,
+    renderCell: (params: any) => {
+      return params.value ?? 'Sin asignar';
+    },
   },
   {
     headerName: 'Fecha de asignación',
