@@ -7,6 +7,7 @@ import { ComplementosPqrsdf } from './ComplementosPqrsd/ComplementosPqrsdf';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
+import { RequerimientosTramites } from './requerimientosTramites/RequerimientosTramites';
 
 export const SubElementoPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
@@ -47,8 +48,7 @@ export const SubElementoPrincipales: React.FC = (): JSX.Element => {
       return map;
     },
     {
-      'Tramites y Servicios': <>hola trámites y servicios</>,
-      Otros: <>hola otros</>,
+      TRAMITE: <RequerimientosTramites />,
     } as any
   );
   //* la propiedad va a ser tipo por ahora pero se debe asignar a traves de una nueva propiedad que se va a llamar clasificacions
