@@ -4,13 +4,6 @@ import { ReactNode, createContext, useState } from 'react';
 
 export const BandejaTareasContext =
   createContext<any>({
-    // radicado: '',
-    // setRadicado: () => {},
-    // value: 0,
-    // setValue: () => {},
-    //handleChange: () => {},
-    // expanded: false,
-    // setExpanded: () => {},
     anexos: [],
     setAnexos: () => {},
     archivoAnexos: null,
@@ -24,24 +17,12 @@ export const BandejaTareasContext =
   });
 
 export const BandejaTareasProvider = ({ children }: ReactNode | any) => {
-/*  const [radicado, setRadicado] = useState('');
-  //* value de los paneles
-  const [value, setValue] = useState(0);
-  //* expanded de los acordeones
-  const [expanded, setExpanded] = useState<string | boolean>(false);*/
-
   //* almacenar informacion de los anexos
   const [anexos, setAnexos] = useState<any>([]);
   //* archivo anexos
   const [archivoAnexos, setArchivoAnexos] = useState<any>(null);
   //* almacenar informacion de los metadatos
   const [metadatos, setMetadatos] = useState<any>([]);
-
-  //? funciones actualizadoras
-
-/*  const handleChange = (event: React.SyntheticEvent, newValue: number) =>
-    setValue(newValue);*/
-
   // ! -- MANEJO DE DATA DE LA ENTREGA 99 -- ! //
 
   //* estados para el stepper de la entrega 99
@@ -49,21 +30,12 @@ export const BandejaTareasProvider = ({ children }: ReactNode | any) => {
   const [skipped, setSkipped] = useState(new Set<number>());
 
   const valuesToUse = {
-    // ? entrega 99
-    /*radicado,
-    setRadicado,
-    value,
-    setValue,
-    handleChange,
-    expanded,
-    setExpanded,*/
     anexos,
     setAnexos,
     archivoAnexos,
     setArchivoAnexos,
     metadatos,
     setMetadatos,
-    // ? entrega 99
     activeStep,
     setActiveStep,
     skipped,
