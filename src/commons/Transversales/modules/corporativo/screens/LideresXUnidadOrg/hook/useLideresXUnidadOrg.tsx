@@ -24,7 +24,7 @@ export const useLideresXUnidadOrganizacional = ():
     // handleSubmit: handleSubmit_organigrama_lideres_por_unidad,
     //  formState: formState_organigrama_lideres_por_unidad,
     reset: reset_organigrama_lideres_por_unidad,
-    watch: watch_organigrama_lideres_por_unidad
+    watch: watch_organigrama_lideres_por_unidad,
   } = useForm<LideresXUnidadOrganizacional | any>({
     mode: 'onChange',
     defaultValues: {
@@ -32,8 +32,8 @@ export const useLideresXUnidadOrganizacional = ():
       version: '',
       actual: false,
       descripcion: '',
-      fecha_puesta_produccion: ''
-    } as any
+      fecha_puesta_produccion: '',
+    } as any,
   });
   const watch_organigrama_lideres_por_unidad_value =
     watch_organigrama_lideres_por_unidad();
@@ -45,9 +45,8 @@ export const useLideresXUnidadOrganizacional = ():
 
   const {
     control: control_seleccionar_lideres,
-    // handleSubmit: handleSubmit_seleccionar_lideres,
     reset: reset_seleccionar_lideres,
-    watch: watch_seleccionar_lideres
+    watch: watch_seleccionar_lideres,
   } = useForm({
     defaultValues: {
       tipo_documento: '',
@@ -55,34 +54,19 @@ export const useLideresXUnidadOrganizacional = ():
       nombre_persona: '',
       id_persona: '',
       observaciones_asignacion: '',
-      id_unidad_organizacional: ''
-    } as any
+      id_unidad_organizacional: '',
+      primer_nombre: '',
+      segundo_nombre: '',
+      primer_apellido: '',
+      segundo_apellido: '',
+      unidad: '',
+    } as any,
   });
 
   const watch_seleccionar_lideres_value = watch_seleccionar_lideres();
   // //  console.log('')(watch_seleccionar_lideres_value);
 
   // ? use Form to search leader asignations by organizational unit
-
-  const {
-    control: control_buscar_asignaciones_lideres_por_unidad,
-    // handleSubmit: handleSubmit_buscar_asignaciones_lideres_por_unidad,
-    reset: reset_buscar_asignaciones_lideres_por_unidad,
-    watch: watch_buscar_asignaciones_lideres_por_unidad
-  } = useForm({
-    defaultValues: {
-      tipo_documento: '',
-      numero_documento: '',
-      primer_nombre: '',
-      segundo_nombre: '',
-      primer_apellido: '',
-      segundo_apellido: '',
-      id_unidad_organizacional_actual: ''
-    }
-  });
-  const watch_asignaciones_lider_by_unidad_value =
-    watch_buscar_asignaciones_lideres_por_unidad();
- // //  console.log('')(watch_asignaciones_lider_by_unidad_value);
 
   // ! ----------- USE EFFECTS THAT I'LL USE IN COMPONENTS ----------- ! //
 
@@ -101,10 +85,5 @@ export const useLideresXUnidadOrganizacional = ():
     control_seleccionar_lideres,
     watch_seleccionar_lideres_value,
     reset_seleccionar_lideres,
-
-    //* 3 . buscar asignaciones lideres por unidad
-    control_buscar_asignaciones_lideres_por_unidad,
-    reset_buscar_asignaciones_lideres_por_unidad,
-    watch_asignaciones_lider_by_unidad_value
   };
 };

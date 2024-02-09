@@ -5,7 +5,6 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
-import { columnsComplementoPqrsdf } from './columnsComplementoPqrsd/colComplePqrsdf';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import Swal from 'sweetalert2';
@@ -21,7 +20,7 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { getAnexosComplemento } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosComplementos.service';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 
-export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
+export const RequerimientosTramites: React.FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* naviagte declaration
@@ -29,7 +28,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* states from redux store
   const {
     listaComplementosRequerimientosOtros,
-    actionsComplementos,
+    // [], // actionsComplementos, //* se debe reemplazar por actionsRequerimientos
     currentElementPqrsdComplementoTramitesYotros,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
@@ -67,7 +66,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const actionsComplementosPermissions = actionsComplementos.map(
+    const actionsComplementosPermissions = [].map(
       (action: any) => ({
         ...action,
         disabled: shouldDisable(action.id, complemento),
@@ -80,7 +79,8 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
 
   //* columns definition
   const columns = [
-    ...columnsComplementoPqrsdf,
+    //* se debe revisar si el tipo de complemento es pqrsdf o tramite para poder mostrar la información de la manera correcta
+    ...[],
     {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
@@ -144,7 +144,9 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
             <Tooltip title="Ver info complemento asociado">
               <IconButton
                 onClick={() => {
-                  void getAnexosComplemento(
+                  // ? se debe reemplazar los servicios y las rutas de navegación que se han establecido dentro la aplicación
+                  console.log('paramas de la fila', params?.row);
+                 /* void getAnexosComplemento(
                     params?.row?.idComplementoUsu_PQR
                   ).then((res) => {
                     //  console.log('')(res);
@@ -161,7 +163,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                     }
 
                     return;
-                  });
+                  });*/
                 }}
               >
                 <Avatar
@@ -229,7 +231,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
             color="primary"
             endIcon={<RemoveDoneIcon />}
           >
-            Quitar selección de complemento
+            Quitar selección de requerimiento trámite
           </Button>
         ) : null
       }
