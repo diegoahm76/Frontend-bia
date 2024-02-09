@@ -3,21 +3,24 @@ export const columnsModalBusAvanLider = [
   {
     headerName: 'Tipo de Persona',
     field: 'tipo_persona',
-    width: 180
+    minWidth: 180,
+    renderCell: (params: any) => {
+      return params.value === 'N' ? 'Natural' : 'Jurídica';
+    },
   },
   {
     headerName: 'Tipo de documento',
     field: 'tipo_documento',
-    width: 180
+    minWidth: 200,
   },
   {
     headerName: 'Número de documento',
     field: 'numero_documento',
-    width: 180
+    minWidth: 200,
   },
   {
     headerName: 'Nombre',
     field: 'nombre_completo',
-    width: 200
-  }
+    minWidth: 350,
+  },
 ];

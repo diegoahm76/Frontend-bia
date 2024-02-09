@@ -19,7 +19,7 @@ import {
   Divider,
   IconButton,
   Stack,
-  TextField
+  TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -36,18 +36,20 @@ import { useLideresXUnidadOrganizacional } from '../../../../../../hook/useLider
 import { columsBusquedaAvanzada } from './columns/columnsBusqueda';
 import {
   get_asignaciones_lideres_by_id_organigrama_service,
-  get_organigramas_list_lideres_screen_service
+  get_organigramas_list_lideres_screen_service,
 } from '../../../../../../toolkit/LideresThunks/OrganigramaLideresThunks';
 import {
   get_list_asignaciones_lideres,
   get_list_busqueda_organigramas,
-  set_organigrama_lideres_current
+  set_organigrama_lideres_current,
 } from '../../../../../../toolkit/LideresSlices/LideresSlice';
 import {
   useAppDispatch,
-  useAppSelector
+  useAppSelector,
 } from '../../../../../../../../../../../../hooks';
 import { ModalContextLideres } from '../../../../../../context/ModalContextLideres';
+import { RenderDataGrid } from '../../../../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
+import { columns } from './../../../../../../../../../../../seguridad/screens/IndicesElectronicos/utils/colums';
 
 export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
   // * dispatch to use in the component * //
@@ -57,7 +59,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
   const {
     control_organigrama_lideres_por_unidad,
     reset_organigrama_lideres_por_unidad,
-    watch_organigrama_lideres_por_unidad_value
+    watch_organigrama_lideres_por_unidad_value,
   } = useLideresXUnidadOrganizacional();
 
   const { organigramas_list } = useAppSelector((state) => state.lideres_slice);
@@ -68,7 +70,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
     // openModalBusquedaAvanzadaOrganigrama,
     closeModalBusquedaAvanzadaOrganigrama,
     loadingButton,
-    setLoadingButton
+    setLoadingButton,
   } = useContext(ModalContextLideres);
 
   const resetFunction = (): void => {
@@ -76,7 +78,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
     reset_organigrama_lideres_por_unidad({
       nombre: '',
       version: '',
-      actual: false
+      actual: false,
     });
   };
 
@@ -89,14 +91,14 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
   const onSubmitSearchOrganigramas = async ({
     nombre,
     version,
-    actual
+    actual,
   }: any): Promise<any> => {
     try {
       const dataToSearch = {
         nombre,
         version,
         actual: actual.value,
-        setLoadingButton
+        setLoadingButton,
       };
       const dataSearch = await get_organigramas_list_lideres_screen_service(
         dataToSearch
@@ -113,8 +115,8 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
     {
       headerName: 'Fecha Terminado',
       field: 'fecha_terminado',
-      minWidth: 180,
-      maxWidth: 220,
+      minWidth: 260,
+      maxWidth: 280,
       renderCell: (params: any) => {
         return (
           <Chip
@@ -126,14 +128,14 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
             variant="outlined"
           />
         ) as JSX.Element;
-      }
+      },
     },
 
     {
       headerName: 'Fecha Puesta en Producción',
       field: 'fecha_puesta_produccion',
-      minWidth: 180,
-      maxWidth: 230,
+      minWidth: 260,
+      maxWidth: 280,
       renderCell: (params: any) => {
         return params.row.fecha_puesta_produccion
           ? ((
@@ -154,14 +156,14 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 variant="outlined"
               />
             ) as JSX.Element);
-      }
+      },
     },
 
     {
       headerName: 'Fecha Retiro de producción',
       field: 'fecha_retiro_produccion',
-      minWidth: 180,
-      maxWidth: 220,
+      minWidth: 260,
+      maxWidth: 280,
       renderCell: (params: any) => {
         return params.row.fecha_retiro_produccion
           ? ((
@@ -182,7 +184,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 variant="outlined"
               />
             ) as JSX.Element);
-      }
+      },
     },
     {
       headerName: 'Actual',
@@ -203,7 +205,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 variant="outlined"
               />
             ) as JSX.Element);
-      }
+      },
     },
     {
       headerName: 'Acción',
@@ -232,7 +234,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
             </Avatar>
           </IconButton>
         </>
-      )
+      ),
     },
   ];
 
@@ -240,7 +242,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
     <>
       <Dialog
         fullWidth
-        maxWidth="md"
+        maxWidth="lg"
         open={modalBusquedaAvanzadaOrganigrama}
         onClose={closeModal}
       >
@@ -260,7 +262,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
           <DialogContent
             sx={{
               mb: '0px',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <Grid container spacing={2}>
@@ -271,7 +273,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                   defaultValue=""
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -294,7 +296,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                   // rules={{ required: false }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       // margin="dense"
@@ -315,7 +317,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 xs={12}
                 sm={3}
                 sx={{
-                  zIndex: 2
+                  zIndex: 2,
                 }}
               >
                 {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
@@ -323,9 +325,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                   name="actual"
                   control={control_organigrama_lideres_por_unidad}
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <div>
                       <Select
                         value={value}
@@ -335,12 +335,12 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                         options={[
                           {
                             label: 'SI',
-                            value: true
+                            value: true,
                           },
                           {
                             label: 'NO',
-                            value: false
-                          }
+                            value: false,
+                          },
                         ]}
                         placeholder="Seleccionar"
                       />
@@ -351,7 +351,7 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                             fontWeight: 'thin',
                             fontSize: '0.75rem',
                             marginTop: '0.25rem',
-                            marginLeft: '0.25rem'
+                            marginLeft: '0.25rem',
                           }}
                         >
                           ACTUAL
@@ -361,7 +361,11 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3}
+                sx={{
+                  mb: '1rem'
+                }}
+              >
                 <LoadingButton
                   loading={loadingButton}
                   color="primary"
@@ -373,17 +377,12 @@ export const BusquedaAvanOrgModal: FC = (): JSX.Element => {
                 </LoadingButton>
               </Grid>
             </Grid>
-            <DataGrid
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
+            <RenderDataGrid
+              title="Resultados de la búsqueda"
               rows={organigramas_list ?? []}
               columns={columns_busqueda_avazada_organigrama_lideres ?? []}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(_row) => uuidv4()}
             />
+
           </DialogContent>
           <Divider />
           <DialogActions>

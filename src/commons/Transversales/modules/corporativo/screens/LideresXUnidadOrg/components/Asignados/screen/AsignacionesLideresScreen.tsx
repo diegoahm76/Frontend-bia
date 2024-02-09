@@ -81,14 +81,14 @@ export const AsignacionesDeLideresScreen: FC = (): JSX.Element => {
             ? 'Líderes asignados a las unidades organizacionales'
             : 'No hay asignaciones de lideres en las unidades organizacionales '
         }
-        aditionalElement={
+       aditionalElement={
           <Button
             color="primary"
             variant="contained"
             startIcon={<SearchIcon />}
             onClick={openModalBusquedaAvanzadaLideres}
           >
-            BUSCAR ASIGNACIONES DE LÍDERES
+           CONSULTA DE LÍDERES QUE FUERON ASIGNADOS
           </Button>
         }
       />
