@@ -9,6 +9,7 @@ import { postResponderUsuario } from '../../toolkit/thunks/postAsignacionUsuario
 import { useStepperResSolicitudUsuario } from '../../hook/useStepperResSolicitudUsuario';
 import { resetItems } from '../../toolkit/slice/ResSolicitudUsarioSlice';
 import { AuthSlice } from '../../../../../../auth/interfaces';
+import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 
 export const AccionesFinales = ({
   // controlFormulario,
@@ -31,15 +32,13 @@ export const AccionesFinales = ({
     (state) => state.ResSolicitudUsarioSlice
   );
 
-  const { userinfo } = useAppSelector(
-    (state: AuthSlice) => state.auth
-  );
+  const { userinfo } = useAppSelector((state: AuthSlice) => state.auth);
 
   const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
     useAppSelector((state: any) => state.BandejaTareasSlice);
   console.log('anexosCreados', anexosCreados);
   //* handleSumbit
-
+// console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_tarea_asignada)
   const sendDataByFormData = () => {
     const formData = new FormData();
 
@@ -50,17 +49,21 @@ export const AccionesFinales = ({
         formData.append(
           `archivo-create-${anexo.nombre_archivo}`,
           anexo.ruta_soporte
-        ); // Use append method to add multiple values with the same field name
+        );
       }
     });
 
-    formData.append('isCreateForWeb', userinfo?.tipo_usuario === 'I' ? 'False' : 'True'); //? detectar si el usuario logueado es interno o externo
+    formData.append(
+      'isCreateForWeb',
+      userinfo?.tipo_usuario === 'I' ? 'False' : 'True'
+    ); //? detectar si el usuario logueado es interno o externo
     formData.append(
       'respuesta_pqrsdf',
       JSON.stringify({
         id_pqrsdf:
           +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf,
         asunto: watchFormulario.asunto,
+        id_tarea_asignada:currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
         descripcion: watchFormulario.descripcion_de_la_solicitud,
         cantidad_anexos: +anexosCreados.length,
         nro_folios_totales: +anexosCreados.reduce(
@@ -111,6 +114,14 @@ export const AccionesFinales = ({
   };
 
   const handleSubmit = async () => {
+    if (
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
+      'Respondida por el propietario de la bandeja de tareas'
+    ) {
+      showAlert('Opss!', 'Esta PQRSDF ya ha sido respondida', 'warning');
+      return;
+    }
+
     if (anexosCreados.length === 0) {
       Swal.fire({
         title: 'No se ha creado ningún anexo',

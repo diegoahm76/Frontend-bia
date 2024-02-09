@@ -49,6 +49,18 @@ export const AccionesFinales = (): JSX.Element => {
   // ? declaración de las funciones
 
   const handleClick = async () => {
+    if (
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
+      'Respondida por el propietario de la bandeja de tareas'
+    ) {
+      showAlert(
+        'Opss!',
+        'Esta PQRSDF ya ha sido respondida, por lo que no se puede reasignar',
+        'warning'
+      );
+      return;
+    }
+
     if (!Array.isArray(listaAsignaciones)) {
       console.error('listaAsignaciones debe ser un array');
       return;
@@ -58,7 +70,7 @@ export const AccionesFinales = (): JSX.Element => {
       (item: any) =>
         item.hasOwnProperty('estado_asignacion') &&
         (item.estado_asignacion === 'En espera' ||
-         item.estado_asignacion === 'Aceptada')
+          item.estado_asignacion === 'Aceptada')
     );
 
     if (item) {
@@ -81,7 +93,8 @@ export const AccionesFinales = (): JSX.Element => {
       case 'Responder PQRSDF':
         res = await postReAsignacionTarea(
           {
-            id_tarea_asignada: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_tarea_asignada:
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
             id_persona_a_quien_se_reasigna: currentGrupo?.value,
             comentario_reasignacion: comentario,
           },

@@ -197,8 +197,6 @@ export const SeleccionLider = (): JSX.Element => {
                   watch_seleccionar_lideres_value?.observaciones_asignacion
               };
 
-              //  console.log('')(data);
-
               const updateDataFunction = {
                 id_lider_unidad_org:
                   asignacion_lideres_current?.id_lider_unidad_org,
@@ -506,7 +504,11 @@ export const SeleccionLider = (): JSX.Element => {
       </Grid>
 
       {/* modal búsqueda avanzada de lideres */}
-      <BusqueAsignacionesLiderModal />
+      <BusqueAsignacionesLiderModal
+         control_seleccionar_lideres={control_seleccionar_lideres}
+         reset_seleccionar_lideres={reset_seleccionar_lideres}
+         watch_seleccionar_lideres_value={watch_seleccionar_lideres_value}
+      />
       {/* modal búsqueda avanzada de lideres */}
     </>
   );
