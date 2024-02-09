@@ -9,6 +9,7 @@ import SendIcon from '@mui/icons-material/Send';
 import PreviewIcon from '@mui/icons-material/Preview';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { Action } from '../types/toolkit.types';
+import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 // Update import paths in ParteInicial, AccionesFinales, StepperRequerimientoUsuario, FormParte2, RequerimientoUsuarioScreen, FormParte1, ElementosPqrsdf, and FormParte3
 //* todos inicialmente deben tener el disabled en true ya que sobre todos los elementos no se puede permitir ciertas acciones dependiendo lo que incluye el elemento
 
@@ -59,12 +60,84 @@ const actionsTareasPQRSDF: Action[] = [
 
 const actionsTramitesYServicios: Action[] = [
   {
-    id: '--',
-    icon: <></>,
-    name: '---',
+    id: 'InfoSolictud',
+    icon: <ContactPageIcon />,
+    name: 'Ver información resumida de la tarea',
     path: '',
     disabled: false,
   },
+  {
+    id: 'Reasignar',
+    icon: <PersonAddAlt1Icon />,
+    name: 'Reasignar',
+    //* posiblememenet sea la misma ruta que la de pqrsdf
+    path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
+    disabled: false,
+  },
+  {
+    id: 'RequerimientoUsuario',
+    icon: <SendIcon />,
+    name: 'Enviar requerimiento al usuario',
+    //* definir la ruta
+    path: '',
+    disabled: false,
+  },
+  {
+    id: 'VerRespuestasRequerimientosOSolicitudesAlUsuario',
+    icon: <PreviewIcon />,
+    name: 'Ver respuestas a requerimientos o solicitudes al usuario',
+    path: '',
+    disabled: false,
+  },
+];
+
+const actionsOtros: Action[] = [
+  {
+    id: 'InfoSolictud',
+    icon: <ContactPageIcon />,
+    name: 'Ver información resumida de la tarea',
+    path: '',
+    disabled: false,
+  },
+  {
+    id: 'Reasignar',
+    icon: <PersonAddAlt1Icon />,
+    name: 'Reasignar',
+    //* posiblememenet sea la misma ruta que la de pqrsdf
+    path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
+    disabled: false,
+  },
+  {
+    id: 'Archivar',
+    icon: <DriveFileMoveIcon />,
+    name: 'Archivar',
+    path: '',
+    disabled: false,
+  },
+];
+
+const newActions = [
+  {
+    id: 'RespondeSolicitud',
+    icon: <ReplyAllIcon />,
+    name: 'Responder OPA',
+    path: '',
+    disabled: false,
+  },
+  {
+    id: 'RequerimientoUsuario',
+    icon: <SendIcon />,
+    name: 'Enviar requerimiento al usuario sobre OPA',
+    path: '',
+    disabled: false,
+  },
+];
+
+const actionsOpas: Action[] = [
+  ...actionsTareasPQRSDF.filter(
+    (action) => !newActions.find((newAction) => newAction.id === action.id)
+  ),
+  ...newActions,
 ];
 
 const initialState: any = {
@@ -72,6 +145,8 @@ const initialState: any = {
   //* acciones de los botones (tambien se deberán configurar los botones para pqrsdf, trámites y servicios y otros)
   actionsTareasPQRSDF,
   actionsTramitesYServicios,
+  actionsOtros,
+  actionsOpas,
 
   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas: null,
   listaTareasPqrsdfTramitesUotrosUopas: [],
@@ -91,7 +166,15 @@ export const BandejaTareasSlice = createSlice({
     },
 
     setActionsTareasTramites: (state, action: PayloadAction<any>) => {
-      state.Tramites = action.payload;
+      state.actionsTramitesYServicios = action.payload;
+    },
+
+    setActionsTareasOtros: (state, action: PayloadAction<any>) => {
+      state.actionsOtros = action.payload;
+    },
+
+    setActionsTareasOpas: (state, action: PayloadAction<any>) => {
+      state.actionsOpas = action.payload;
     },
 
     //* realizar en su momento las funciones para los otros y para las OPAS

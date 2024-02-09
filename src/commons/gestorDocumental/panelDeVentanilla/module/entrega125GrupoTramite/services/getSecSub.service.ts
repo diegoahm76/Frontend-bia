@@ -9,7 +9,7 @@ export const getSecSubAsiGrupo = async (
 ) => {
   try {
     setLoading(true);
-    const url = 'gestor/panel_ventanilla/asginar-opas/seccion-subseccion/get/';
+    const url = 'gestor/panel_ventanilla/asignar-tramites/seccion-subseccion/get/';
     const { data } = await api.get(url);
 
     if (data?.data?.length > 0) {

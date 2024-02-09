@@ -4,13 +4,14 @@ import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const getAsignacionesOpas = async (
+export const getAsignacionesTramites = async (
   id: string,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   try {
     setLoading(true);
-    const url = `gestor/panel_ventanilla/asignacion-opas/get/${id}/`;
+    //{{url}}/api/gestor/panel_ventanilla/asignar-tramites/historico-asignacion/get/5/
+    const url = `gestor/panel_ventanilla/asignar-tramites/historico-asignacion/get/${id}/`;
     const { data } = await api.get(url);
 
     if (data?.data?.length === 0) {
@@ -25,7 +26,7 @@ export const getAsignacionesOpas = async (
       'Atención',
       'Sin asignaciones realizadas para este elemento',
       'info'
-    )
+    );
     return [];
   } finally {
     setLoading(false);

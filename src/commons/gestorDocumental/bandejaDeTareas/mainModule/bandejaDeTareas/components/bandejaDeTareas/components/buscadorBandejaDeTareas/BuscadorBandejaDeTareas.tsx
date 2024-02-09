@@ -92,7 +92,31 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     }
   };
 
-  //* se deben agregar las funciones para los demas tipos de tareas (otros y opas)
+  const searchOtros = async () => {
+    try {
+      showAlert(
+        'Estimado usuario!',
+        'Esta funcionalidad de Responder Otros no está disponible ',
+        'warning'
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const searchOpas = async () => {
+    try {
+      showAlert(
+        'Estimado usuario!',
+        'Esta funcionalidad de Responder OPA no está disponible ',
+        'warning'
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+
 
   const unifiedSearchSubmit = async () => {
     const tipoDeTarea =
@@ -117,13 +141,13 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         await searchTramitesYservicios();
         break;
 
-      // case 'Otros':
-      //   console.log('submit , buscando coincidencias de otros');
-      //   break;
+      case 'Responder Otro':
+        await searchOtros();
+        break;
 
-      // case 'OPAS':
-      //   console.log('submit , buscando coincidencias de opas');
-      //   break;
+      case 'Responder OPA':
+        await searchOpas();
+        break;
 
       default:
         showAlert(
@@ -215,7 +239,8 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
               {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
                 ?.label === 'Responder PQRSDF' ||
               !controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                ?.label || controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                ?.label ||
+              controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
                 ?.label === 'RESPONDER PQRSDF' ? (
                 <BuscadorPqrsdf
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
