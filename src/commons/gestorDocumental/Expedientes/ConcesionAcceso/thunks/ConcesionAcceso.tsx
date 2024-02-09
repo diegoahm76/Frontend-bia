@@ -51,7 +51,7 @@ export const obtener_personas: any = (tipo_documento: string,numero_documento: s
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      return error as AxiosError;
+      // return error as AxiosError;
     }
   };
 };
@@ -64,7 +64,7 @@ export const obtener_persona_cc_nro: any = (tipo_documento: string, nro_document
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      return error as AxiosError;
+      // return error as AxiosError;
     }
   };
 };

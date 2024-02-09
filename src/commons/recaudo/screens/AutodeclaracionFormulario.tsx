@@ -20,7 +20,11 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-
+import { BuscadorPersona } from '../../../components/BuscadorPersona';
+interface CoordenadasSitioCaptacion {
+    cordenadaX: any;
+    cordenadaY: any;
+}
 interface FuenteAbastecimiento {
     tipo: string | any;
     numero: number | any;
@@ -31,24 +35,28 @@ interface FuenteAbastecimiento {
     cordenadaY: number | any;
 }
 
-interface CoordenadasSitioCaptacion {
-    cordenadaX: number | null;
-    cordenadaY: number | null;
-}
+export interface Persona {
+    id_persona: number;
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+    tipo_usuario:string;
+};
  
 interface FactoresUtilizacion {
-    numeroBovinos: number | null;
-    numeroPorcinos: number | null;
-    numeroUsuarios: number | null;
-    numeroHectareas: number | null;
-    consumoNumeroUsuarios: number | null;
+    numeroBovinos: any;
+    numeroPorcinos: any;
+    numeroUsuarios: any;
+    numeroHectareas: any;
+    consumoNumeroUsuarios: any;
     consumoNumeroBovinos: any;
     consumoNumeroPorcinos: any;
     consumoNumeroHectareas: any;
 }
 interface Campo {
     nombre: string;
-    valor: any;  // 'any' se usa aquí para permitir cualquier tipo, puedes ajustarlo según tus necesidades
+    valor: any;  
 }
 interface CaptacionMensualAgua {
     mes: number | any;
@@ -58,19 +66,21 @@ interface CaptacionMensualAgua {
     volumenAguaCaptada: number | any;
 }
 
-interface FormData {
-    cc: number | null;
-    nit: number | null;
+interface Data {
+    id_archivo_sistema:any;
+
+    cc: any;
+    nit: any;
     fax: string;
     telefono: string;
     otrotipo: string;
     direccion: string;
     municipio: string;
-    expediente: number | null;
-    codigoCIIU: number | null;
+    expediente: any;
+    codigoCIIU: any;
     razonSocial: string;
     tipoUsuario: string;
-    numConcesion: number | null;
+    numConcesion: any;
     fechaCreacion: string;
     actividadEconomica: string;
     nombreRepresentanteLegal: string;
@@ -98,7 +108,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
         // set_type_direction
     ] = useState('');
 
-    const initialFormData: FormData = {
+    const initialFormData: Data = {
+        id_archivo_sistema:null,
         nit: null,
         cc: null,
         fax: "",
@@ -129,7 +140,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
         captacionesMensualesAgua: []
     };
 
-    const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [Data, setFormData] = useState<Data>(initialFormData);
     const handleInputChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | SelectChangeEvent<string>
     ) => {
@@ -170,19 +181,20 @@ export const AutodeclaracionFormulario: React.FC = () => {
     const crearFormulario = async () => {
         try {
             const url = "/recaudo/formulario/crear_formulario/";
-            const res = await api.post(url, formData);
-            // Manejar la respuesta aquí, por ejemplo, mostrar un mensaje de éxito
+            const res = await api.post(url, Data);
             console.log('Formulario creado con éxito', res.data);
             control_success("Formulario creado con éxito")
             setFormData(initialFormData);
         } catch (error: any) {
-            // Manejar el error aquí, por ejemplo, mostrar un mensaje de error
             console.error('Error al crear el formulario', error);
             control_error(error.response.data.detail);
-
         }
     };
 
+
+
+
+    
     const [currentCaptacion, setCurrentCaptacion] = useState({
         periodoUso: "",
         tiempoUso: "",
@@ -215,7 +227,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
     const agregarCaptacion = () => {
         // Verificar si el mes ya existe en los datos
-        const mesYaExiste = formData.captacionesMensualesAgua.some(captacion => captacion.mes === currentCaptacion.mes);
+        const mesYaExiste = Data.captacionesMensualesAgua.some(captacion => captacion.mes === currentCaptacion.mes);
         const campoFaltante = verificarDatosCaptacion();
         if (campoFaltante) {
             control_error(`Falta agregar dato: ${campoFaltante}`);
@@ -372,6 +384,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
     ];
 
     ///
+    const [persona, set_persona] = useState<Persona | undefined>();
+
+    const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
 
     return (
         <>
@@ -389,8 +404,14 @@ export const AutodeclaracionFormulario: React.FC = () => {
             >
                 <Title title="Formulario auto declaración  " />
 
-
-
+                <Grid item xs={12}>
+                    <BuscadorPersona
+                        onResult={(data) => {
+                            void on_result(data);
+                        }}
+                    />
+                </Grid>
+{persona?.primer_nombre}
             </Grid>
             {/* 222
             {direccion_generada} */}
@@ -415,7 +436,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                                 label="Tipo de Usuario"
                                 name="tipoUsuario"
                                 onChange={handleInputChange}
-                                value={formData.tipoUsuario}
+                                value={Data.tipoUsuario}
                             >
                                 <MenuItem value="EMPRESARIAL">Empresarial</MenuItem>
                                 <MenuItem value="DOMESTICO">Doméstico</MenuItem>
@@ -441,7 +462,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             name="razonSocial"
                             onChange={handleInputChange}
 
-                            value={formData.razonSocial}
+                            value={Data.razonSocial}
                         />
                     </Grid>
 
@@ -452,7 +473,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Nit"
                             name="nit"
-                            value={formData.nit}
+                            value={Data.nit}
                             onChange={handleInputChange}
 
                         />
@@ -464,7 +485,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Nombre representante legal "
                             name="nombreRepresentanteLegal"
-                            value={formData.nombreRepresentanteLegal}
+                            value={Data.nombreRepresentanteLegal}
                             onChange={handleInputChange}
 
                         />
@@ -478,7 +499,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="CC"
                             name="cc"
-                            value={formData.cc}
+                            value={Data.cc}
                             onChange={handleInputChange}
 
                         />
@@ -490,7 +511,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Actividad económica"
                             name="actividadEconomica"
-                            value={formData.actividadEconomica}
+                            value={Data.actividadEconomica}
                             onChange={handleInputChange}
                         />
                     </Grid>
@@ -502,7 +523,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Teléfono"
                             name="telefono"
-                            value={formData.telefono}
+                            value={Data.telefono}
                             onChange={handleInputChange}
 
                         />
@@ -514,7 +535,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Fax"
                             name="fax"
-                            value={formData.fax}
+                            value={Data.fax}
                             onChange={handleInputChange}
 
                         />
@@ -526,7 +547,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Código CIIU"
                             name="codigoCIIU"
-                            value={formData.codigoCIIU}
+                            value={Data.codigoCIIU}
                             onChange={handleInputChange}
 
                         />
@@ -538,7 +559,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             <Select
                                 name="municipio"
                                 label="municipio"
-                                value={formData.municipio}
+                                value={Data.municipio}
                                 onChange={handleInputChange}
                                 labelId="municipio-select-label"
                             >
@@ -557,7 +578,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             label="Expediente "
                             name="expediente"
                             variant="standard"
-                            value={formData.expediente}
+                            value={Data.expediente}
                             onChange={handleInputChange}
                         />
                     </Grid>
@@ -569,7 +590,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="N Concesión"
                             name="numConcesion"
-                            value={formData.numConcesion}
+                            value={Data.numConcesion}
                             onChange={handleInputChange}
 
                         />
@@ -583,7 +604,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Dirección"
                             name="direccion"
-                            value={formData.direccion}
+                            value={Data.direccion}
                         />
                     </Grid>
 
@@ -609,41 +630,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         >
                             Generar dirección
                         </Button>
-                    </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    </Grid> 
                     <Grid item xs={12} sm={4}>
                     </Grid>
                 </Grid>
-            </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
+            </Grid> 
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -747,7 +738,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label="Coordenada X"
                         name="cordenadaX"
-                        value={formData.coordenadasSitioCaptacion.cordenadaX}
+                        value={Data.coordenadasSitioCaptacion.cordenadaX}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -766,7 +757,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label="Coordenada Y"
                         name="cordenadaY"
-                        value={formData.coordenadasSitioCaptacion.cordenadaY}
+                        value={Data.coordenadasSitioCaptacion.cordenadaY}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -799,7 +790,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         columns={columnas}
                         density="compact"
                         rowsPerPageOptions={[10]}
-                        rows={formData.informacionFuentesAbastecimiento.map((row, index) => ({ ...row, id: index }))}
+                        rows={Data.informacionFuentesAbastecimiento.map((row, index) => ({ ...row, id: index }))}
                         getRowId={(row) => row.id}
                     />
 
@@ -831,7 +822,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label="Número  de Usuarios "
                         name="numeroUsuarios"
-                        value={formData.factoresUtilizacion.numeroUsuarios}
+                        value={Data.factoresUtilizacion.numeroUsuarios}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -850,7 +841,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label=" consumo de Usuarios (lt/hab-dia) "
                         name="consumoNumeroUsuarios"
-                        value={formData.factoresUtilizacion.consumoNumeroUsuarios}
+                        value={Data.factoresUtilizacion.consumoNumeroUsuarios}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -874,7 +865,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label="Número  de bovinos "
                         name="numeroBovinos"
-                        value={formData.factoresUtilizacion.numeroBovinos}
+                        value={Data.factoresUtilizacion.numeroBovinos}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -893,7 +884,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label=" consumo de bovinos (lt/hab-dia) "
                         name="consumoNumeroBovinos "
-                        value={formData.factoresUtilizacion.consumoNumeroBovinos}
+                        value={Data.factoresUtilizacion.consumoNumeroBovinos}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -917,7 +908,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label="Número de Porcinos "
                         name="numeroPorcinos"
-                        value={formData.factoresUtilizacion.numeroPorcinos}
+                        value={Data.factoresUtilizacion.numeroPorcinos}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -936,7 +927,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label=" consumo de porcinos (lt/hab-dia) "
                         name="consumoNumeroPorcinos"
-                        value={formData.factoresUtilizacion.consumoNumeroPorcinos}
+                        value={Data.factoresUtilizacion.consumoNumeroPorcinos}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -958,7 +949,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label="Número hectáreas "
                         name="numeroHectareas"
-                        value={formData.factoresUtilizacion.numeroHectareas}
+                        value={Data.factoresUtilizacion.numeroHectareas}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -977,7 +968,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         variant="standard"
                         label=" consumo de hectareas (lt/hab-dia) "
                         name="consumoNumeroHectareas"
-                        value={formData.factoresUtilizacion.consumoNumeroHectareas}
+                        value={Data.factoresUtilizacion.consumoNumeroHectareas}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -989,32 +980,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
-
-
-
             </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -1025,9 +991,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-
                 <Title title=" Captación mensual de agua" />
-
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -1113,7 +1077,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         columns={columnas_captacion}
                         density="compact"
                         rowsPerPageOptions={[10]}
-                        rows={formData.captacionesMensualesAgua.map((row, index) => ({ ...row, id: index }))}
+                        rows={Data.captacionesMensualesAgua.map((row, index) => ({ ...row, id: index }))}
                         getRowId={(row) => row.id}
                     />
                 </Grid>
@@ -1191,7 +1155,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="fechaCreacion"
                             name="fechaCreacion"
-                            value={formData.fechaCreacion}
+                            value={Data.fechaCreacion}
                         />
                     </Grid>  
                     <Grid item xs={12} sm={4}>
@@ -1201,7 +1165,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="otrotipo"
                             name="otrotipo"
-                            value={formData.otrotipo}
+                            value={Data.otrotipo}
                             onChange={handleInputChange}
                         />
                     </Grid>
@@ -1244,7 +1208,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         <Select
                             labelId="municipio-select-label"
                             id="municipio-select"
-                            value={formData.municipio_v}
+                            value={Data.municipio_v}
                             label="municipio"
                             onChange={handleInputChange}
                             name="municipio_v"
