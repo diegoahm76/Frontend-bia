@@ -170,6 +170,12 @@ export const ConsultaEstadoPQR: React.FC = () => {
           <Title title="Filtro de búsqueda" />
         </Grid>
 
+        {/* filtros para pqrsdf */}
+        {/* filtros para pqrsdf */}
+        {/* filtros para pqrsdf */}
+        {/* filtros para pqrsdf */}
+        {/* filtros para pqrsdf */}
+        {/* filtros para pqrsdf */}
 
         {/* espacio para los inputs de busqueda */}
 
