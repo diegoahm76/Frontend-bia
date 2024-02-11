@@ -75,7 +75,7 @@ const fetchSpqrs = async ({ setpqrs }: { setpqrs: any }): Promise<any> => {
   }
 };*/
 
-const fetchTipoPQRSDF = async ({
+const fetchTipoSolicitud = async ({
   setTipoPQRSDF,
 }: {
   setTipoPQRSDF: any;
@@ -113,7 +113,7 @@ const cargarestado = async ({
 export {
   fetchSpqrs,
   cargarestado,
-  fetchTipoPQRSDF,
+  fetchTipoSolicitud,
   // cargarorganigrama,
   cargarAsignaciones,
 };
