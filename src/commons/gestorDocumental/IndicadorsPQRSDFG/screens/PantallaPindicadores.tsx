@@ -222,14 +222,14 @@ const Activador_funciones=()=>{
 
   const primer_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[0]?.nombre_medio_solicitud;
   const segunda_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[2]?.nombre_medio_solicitud;
-  const tercera_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[3]?.nombre_medio_solicitud;
+  const tercera_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[4]?.nombre_medio_solicitud;
   const cuarta_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[5]?.nombre_medio_solicitud;
 
 
 
   const primer_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[0]?.cantidad_pqrsdf;
   const segunda_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[2]?.cantidad_pqrsdf;
-  const tercera_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[3]?.cantidad_pqrsdf;
+  const tercera_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[4]?.cantidad_pqrsdf;
   const cuarta_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[5]?.cantidad_pqrsdf;
 
   const total = dataPeriodicidad?.total_pqrsdf;
