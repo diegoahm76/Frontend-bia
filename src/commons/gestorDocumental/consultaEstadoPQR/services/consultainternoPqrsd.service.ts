@@ -8,7 +8,7 @@ import { control_error, control_success } from '../../../../helpers';
 const API_URLS = {
   ASIGNACIONES: '/gestor/pqr/consulta-estado-pqrsdf/',
   SPQRS: '/gestor/choices/cod-tipo-pqrs/',
-  ORGANIGRAMA: '/transversal/organigrama/unidades/get-list/organigrama-actual/',
+  // ORGANIGRAMA: '/transversal/organigrama/unidades/get-list/organigrama-actual/',
   TIPO_PQRSDF: '/gestor/choices/tipo-solicitud-pqrsdf/',
   ESTADO: '/gestor/pqr/get-estado-solicitud/',
 };
@@ -59,7 +59,7 @@ const fetchSpqrs = async ({ setpqrs }: { setpqrs: any }): Promise<any> => {
   }
 };
 
-const cargarorganigrama = async ({
+/*const cargarorganigrama = async ({
   setorganigrama,
 }: {
   setorganigrama: any;
@@ -73,7 +73,7 @@ const cargarorganigrama = async ({
     console.error('Error al cargar las organigrama', error);
     control_error(error.response.data.detail);
   }
-};
+};*/
 
 const fetchTipoPQRSDF = async ({
   setTipoPQRSDF,
@@ -100,13 +100,13 @@ const cargarestado = async ({
   setestado: any;
 }): Promise<any> => {
   try {
-    const response = await api.get(API_URLS.ESTADO);
-    if (response.data.success) {
-      setestado(response.data.data);
+    const response = await api.get(API_URLS?.ESTADO);
+    if (response?.data?.success) {
+      setestado(response?.data?.data);
     }
   } catch (error: any) {
     console.error('Error al cargar las estado', error);
-    control_error(error.response.data.detail);
+    control_error(error?.response?.data?.detail);
   }
 };
 
@@ -114,6 +114,6 @@ export {
   fetchSpqrs,
   cargarestado,
   fetchTipoPQRSDF,
-  cargarorganigrama,
+  // cargarorganigrama,
   cargarAsignaciones,
 };

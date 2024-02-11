@@ -16,7 +16,6 @@ import {
   estado,
   Pqr,
   TipoPQRSDF,
-  organigrama,
   AsignacionEncuesta,
   FormData,
 } from '../interface/types';
@@ -30,11 +29,11 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import {
   cargarAsignaciones,
   cargarestado,
-  cargarorganigrama,
   fetchSpqrs,
   fetchTipoPQRSDF,
 } from '../services/consultainternoPqrsd.service';
@@ -64,7 +63,6 @@ export const ConsultaEstadoPQR: React.FC = () => {
 
   const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
   const [formData, setFormData] = useState(initialFormData);
-  const [organigrama, setorganigrama] = useState<organigrama[]>([]);
   const [estado, setestado] = useState<estado[]>([]);
   const [tipoPQRSDF, setTipoPQRSDF] = useState<TipoPQRSDF[]>([]);
 
@@ -75,13 +73,6 @@ export const ConsultaEstadoPQR: React.FC = () => {
       [name]: value,
     }));
   };
-  /* useEffect(() => {
-    cargarAsignaciones({
-      setAsignaciones: setAsignaciones,
-      formData: formData,
-      id_persona: id_persona,
-    });
-  }, []);*/
 
   // Efecto para cargar los datos del pqrs
   const [pqrss, setpqrs] = useState<Pqr[]>([]);
@@ -89,11 +80,6 @@ export const ConsultaEstadoPQR: React.FC = () => {
     fetchSpqrs({ setpqrs });
   }, []);
 
-  //Organigrama
-
-  useEffect(() => {
-    cargarorganigrama({ setorganigrama });
-  }, []);
   //Tipo de PQRSDF
 
   useEffect(() => {
@@ -122,16 +108,24 @@ export const ConsultaEstadoPQR: React.FC = () => {
       width: 200,
       flex: 1,
       renderCell: (params: any) => (
-        <DownloadButton
-          condition={params.row.URL_Documento === null}
-          fileUrl={params.row.Archivo.ruta_archivo}
-          fileName={params?.value?.Id_PQRSDF}
-        />
+        <Tooltip
+          title={
+            params.row.URL_Documento === null
+              ? 'No hay documento disponible para descargar' // si no hay documento
+              : 'Descargar documento' // si hay documento
+          }
+        >
+          <DownloadButton
+            condition={params.row.URL_Documento === null}
+            fileUrl={params.row.Archivo.ruta_archivo}
+            fileName={params?.value?.Id_PQRSDF}
+          />
+        </Tooltip>
       ),
     },
   ];
 
-  //* columsn for the data grid in tramites
+  //* columns for the data grid in tramites
 
   //* columns for the datagrid in otros
 
@@ -154,8 +148,6 @@ export const ConsultaEstadoPQR: React.FC = () => {
         </Grid>
       </Grid>
 
-
-
       <Grid
         container
         item
@@ -171,17 +163,14 @@ export const ConsultaEstadoPQR: React.FC = () => {
         </Grid>
 
         {/* filtros para pqrsdf */}
-        {/* filtros para pqrsdf */}
-        {/* filtros para pqrsdf */}
-        {/* filtros para pqrsdf */}
-        {/* filtros para pqrsdf */}
-        {/* filtros para pqrsdf */}
 
         {/* espacio para los inputs de busqueda */}
 
         {/* filtros para pqrsdf */}
 
         {/* el tipo de solicitud va a seguir como una constante, no va a cambiar en ninguna de las vistas */}
+
+        {/* constantes */}
         <Grid item xs={12} sm={3}>
           <FormControl size="small" fullWidth>
             <InputLabel>Tipos de solicitud</InputLabel>
@@ -204,44 +193,6 @@ export const ConsultaEstadoPQR: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} sm={3}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>PQRS</InputLabel>
-            <Select
-              onChange={handleInputChange}
-              value={formData.pqrs}
-              name="pqrs"
-              label="PQRS"
-            >
-              {pqrss.map((pqrs) => (
-                <MenuItem key={pqrs.value} value={pqrs.value}>
-                  {pqrs.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>Organigrama</InputLabel>
-            <Select
-              label="Organigrama"
-              onChange={handleInputChange}
-              name="organigrama"
-              value={formData.organigrama}
-            >
-              {organigrama.map((organigrama) => (
-                <MenuItem
-                  key={organigrama.id_unidad_organizacional}
-                  value={organigrama.id_unidad_organizacional}
-                >
-                  {organigrama.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={3}>
           <TextField
             label="radicado"
             name="radicado"
@@ -251,27 +202,6 @@ export const ConsultaEstadoPQR: React.FC = () => {
             onChange={handleInputChange}
             value={formData.radicado}
           />
-        </Grid>
-
-        <Grid item xs={12} sm={3}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>estado</InputLabel>
-            <Select
-              label="estado"
-              onChange={handleInputChange}
-              name="estado"
-              value={formData.estado}
-            >
-              {estado.map((estado) => (
-                <MenuItem
-                  key={estado.id_estado_solicitud}
-                  value={estado.nombre}
-                >
-                  {estado.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
         </Grid>
         <Grid item xs={12} sm={3}>
           <TextField
@@ -303,16 +233,51 @@ export const ConsultaEstadoPQR: React.FC = () => {
             }}
           />
         </Grid>
+        {/* constantes */}
 
+        {/* filtros para pqrsdf */}
 
+        <Grid item xs={12} sm={3}>
+          <FormControl size="small" fullWidth>
+            <InputLabel>PQRS</InputLabel>
+            <Select
+              onChange={handleInputChange}
+              value={formData.pqrs}
+              name="pqrs"
+              label="PQRS"
+            >
+              {pqrss.map((pqrs) => (
+                <MenuItem key={pqrs.value} value={pqrs.value}>
+                  {pqrs.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <FormControl size="small" fullWidth>
+            <InputLabel>estado</InputLabel>
+            <Select
+              label="estado"
+              onChange={handleInputChange}
+              name="estado"
+              value={formData.estado}
+            >
+              {estado.map((estado) => (
+                <MenuItem
+                  key={estado.id_estado_solicitud}
+                  value={estado.nombre}
+                >
+                  {estado.nombre}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
 
+        {/* filtros para pqrsdf */}
 
-
-
-
-
-
-       {/* botones de interacción con el usuario */}
+        {/* botones de interacción con el usuario */}
 
         <Grid item>
           <Button
@@ -341,14 +306,13 @@ export const ConsultaEstadoPQR: React.FC = () => {
               });
             }}
           >
-            BUSCAR ELEMENTO
+            BUSCAR
           </Button>
         </Grid>
       </Grid>
 
-
-
       {/* listado de opciones, render de datos para cada busqueda */}
+
       <Grid item xs={12} sm={12}>
         <RenderDataGrid
           title="Resultado de la búsqueda"
