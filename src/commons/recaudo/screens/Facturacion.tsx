@@ -306,6 +306,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     yFinal += 10;
     doc.text(`Contratista Grupo: ${nombre_unidad_organizacional}`, 10, yFinal);
     setVisor(doc.output('datauristring'));
+    
   };
 
 
@@ -538,11 +539,23 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     // realizarActualizacion();
   };
 
-
+  const [consecutivo_error , setconsecutivo_error ] = useState<any>(null);
+  
+  // const handle_close = (): void => {
+  //   set_is_buscar(false);
+  //   enviarDocumento();
+  // };
   const handle_close = (): void => {
     set_is_buscar(false);
-    enviarDocumento();
+    setConsecutivoActual(null);
+    if (!consecutivo_error) {
+      enviarDocumento();
+      setconsecutivo_error("Documento no enviado ")
+
+    }
+    setconsecutivo_error(null);
   };
+  
 
 
   async function crearConsecutivo() {
@@ -562,6 +575,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     } catch (error:any) {
       console.error('Error al crear el consecutivo', error);
       control_error(error.response.data.detail);
+      setconsecutivo_error(error.response.data.detail)
       // Manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
     }
   }

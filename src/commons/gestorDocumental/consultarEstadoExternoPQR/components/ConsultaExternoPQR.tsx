@@ -58,7 +58,7 @@ export const ConsultaExternoPQR: React.FC = () => {
                 return formattedDate;
             },
         },
-        { field: 'Persona Que Radicó', headerName: 'Persona Que Radicó  ', width: 220, flex: 1, },
+        { field: 'Persona Que Radicó', headerName: 'Persona Que Radicó  ', minWidth: 300, flex: 1, },
         { field: 'Tiempo Para Respuesta', headerName: 'Tiempo Para Respuesta', width: 220, flex: 1, },
         { field: 'Estado', headerName: 'Estado', width: 220, flex: 1, },
         {
