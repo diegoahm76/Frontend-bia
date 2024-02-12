@@ -120,14 +120,17 @@ export const checking_anonimous_authentication: (
 
    
       dispatch(get_persmisions_user(data?.userinfo.id_usuario ?? 0, 'C'));
-      dispatch(setRepresentacionLegal({
-        "cod_relacion_con_el_titular": "MP"
-    }));
+      
     // dispatch(set_authenticated());
     
 
     // Enviamos los datos del usuario al store del login
+    console.log(data)
     dispatch(login(data));
+    dispatch(setRepresentacionLegal({
+      "cod_relacion_con_el_titular": "MP",
+      "tipo_sesion": "E"
+  }));
   };
 };
 

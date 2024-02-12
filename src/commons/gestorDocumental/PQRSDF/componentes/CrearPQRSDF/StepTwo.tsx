@@ -104,7 +104,7 @@ const StepTwo = () => {
     reset({
       ...exhibit,
       cod_medio_almacenamiento:
-        representacion_legal.tipo_sesion === 'E'
+        representacion_legal?.tipo_sesion === 'E'
           ? 'Na'
           : exhibit.cod_medio_almacenamiento,
     });
@@ -482,7 +482,7 @@ const StepTwo = () => {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: representacion_legal.tipo_sesion === 'E',
+              disabled: representacion_legal?.tipo_sesion === 'E',
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
@@ -533,7 +533,7 @@ const StepTwo = () => {
               variant_button: 'contained',
               on_click_function: add_metadata_form,
               color_button: 'warning',
-              hidden_text: representacion_legal.tipo_sesion === 'E',
+              hidden_text: representacion_legal?.tipo_sesion === 'E',
             },
           ]}
         />
