@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
+import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
@@ -6,10 +6,15 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import SaveIcon from '@mui/icons-material/Save';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import ClearIcon from '@mui/icons-material/Clear';
+import { props_solicitar_viaje } from '../interfaces/types';
+import ViajeAgendado from './ViajeAgendado';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const SolicitarViaje: React.FC = () => {
+const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_viaje}) => {
   const [switch_expediente_asociado, set_switch_expediente_asociado] = useState<boolean>(false);
   const [departamento, set_departamento] = useState<string>('');
   const [msj_error_departamento, set_msj_error_departamento] = useState<string>('');
@@ -278,8 +283,8 @@ const SolicitarViaje: React.FC = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Desde:"
-                value={fecha_retorno}
-                onChange={(newValue) => { cambio_fecha_retorno(newValue); }}
+                value={fecha_salida}
+                onChange={(newValue) => { cambio_fecha_salida(newValue); }}
                 renderInput={(params) => (
                   <TextField
                     required
@@ -344,8 +349,8 @@ const SolicitarViaje: React.FC = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Desde:"
-                value={fecha_salida}
-                onChange={(newValue) => { cambio_fecha_salida(newValue); }}
+                value={fecha_retorno}
+                onChange={(newValue) => { cambio_fecha_retorno(newValue); }}
                 renderInput={(params) => (
                   <TextField
                     required
@@ -410,7 +415,59 @@ const SolicitarViaje: React.FC = () => {
             />
           </Grid>
         </Grid>
+
+        <Grid item xs={12} sx={{
+          display:'flex',
+          justifyContent: 'center',
+          alignItems:'center',
+          marginTop:'20px',
+          gap:4
+          }} >
+            <Button
+              color='success'
+              variant='contained'
+              startIcon={<SaveIcon />}
+              onClick={()=>{}}
+            >
+              {'Guardar'}
+            </Button>
+            <Button
+              color='inherit'
+              variant="contained"
+              startIcon={<CleanIcon />}
+              onClick={()=>{}}
+            >
+              Limpiar
+            </Button>
+            <Button
+              color='error'
+              variant='contained'
+              startIcon={<ClearIcon />}
+              onClick={()=>{set_mostrar_solicitud_viaje(false)}}
+            >
+              Salir
+            </Button>
+          </Grid>
       </Grid>
+
+      <ViajeAgendado />
+
+      <Grid item xs={12} sx={{
+        display:'flex',
+        justifyContent: 'center',
+        alignItems:'center',
+        gap:4
+        }} >
+        <Button
+          color='error'
+          variant='contained'
+          startIcon={<ClearIcon />}
+          onClick={()=>{set_mostrar_solicitud_viaje(false)}}
+        >
+          Salir
+        </Button>
+      </Grid>
+
     </Grid>
   );
 };
