@@ -363,7 +363,7 @@ const SolicitarViaje: React.FC = () => {
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
-                  label="Seleccionar horaaa"
+                  label="Seleccionar hora"
                   openTo="hours"
                   value={selected_time}
                   onChange={handle_time_change}

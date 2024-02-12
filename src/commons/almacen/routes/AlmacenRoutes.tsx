@@ -17,6 +17,7 @@ import RechazoSolicitudScreen from '../registroSolicitudesAlmacen/despacho/scree
 import EntregaScreen from '../gestionDeInventario/movimientos/screens/entregasOtrasScreen';
 import { ControlDeInventariosRoutes } from '../controlDeInventario/routes/ControlDeInventariosRoutes';
 import { TablerosControlAlmacenRoutes } from '../tablerosControlAlmacen/routes/TablerosControlAlmacenRoutes';
+import SolicitudViaje from '../solicitudDeViaje/screens/SolicitudViaje';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -79,6 +80,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="rechazo_solicitudes/*"
         element={<RechazoSolicitudScreen />}
+      />
+      <Route
+        path="solicitud_viajes/*"
+        element={<SolicitudViaje />}
       />
       <Route
         path="otras_entregas/*"
