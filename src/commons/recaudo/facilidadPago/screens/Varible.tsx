@@ -26,6 +26,7 @@ interface TipoRenta {
     id_tipo_renta: number;
     nombre_tipo_renta: string;
     tipo_cobro_asociado: any;
+    tipo_renta_asociado:any
 }
 interface TipoCobro {
     id_tipo_cobro: number;
@@ -272,10 +273,7 @@ export const Varible: React.FC = () => {
                             value={formValues.tipo_cobro}
                         >
                             {tiposCobro
-                                .filter((tipoCobro) => {
-                                    const tipoRentaSeleccionado = tiposRenta.find(tipoRenta => tipoRenta.id_tipo_renta === Number(formValues.tipo_renta));
-                                    return tipoCobro.id_tipo_cobro === tipoRentaSeleccionado?.tipo_cobro_asociado;
-                                })
+                              
                                 .map((tipoCobro) => (
                                     <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
                                         {tipoCobro.nombre_tipo_cobro}
@@ -283,6 +281,10 @@ export const Varible: React.FC = () => {
                                 ))}
                         </TextField>
                     </Grid>
+
+
+
+                    
                     <Grid item xs={12} sm={4}>
                         <TextField
                             required

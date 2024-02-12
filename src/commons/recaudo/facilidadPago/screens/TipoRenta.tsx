@@ -15,12 +15,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 
-interface ConfiguracionBasica {
-    id_tipo_renta: any;
-    nombre_tipo_renta: any;
-    nombre_cobro:any;
-    tipo_cobro_asociado: any;
- }
+
 
 
 interface ConfiguracionBasicaa {
@@ -28,32 +23,39 @@ interface ConfiguracionBasicaa {
     nombre_tipo_cobro: any;
     valor_tipo_cobro: any;
 }
-
+interface renta {
+    id_tipo_renta: any;
+    nombre_tipo_renta: any;
+    nombre_cobro:any;
+    tipo_cobro_asociado: any;
+ }
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TipoRenta: React.FC = () => {
-    const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
+    const [selectedConfiguracion, setSelectedConfiguracion] = useState<renta | null>(null);
 
 
-    const [Renta, setRenta] = useState<ConfiguracionBasica[]>([]);
+    const [Renta, setRenta] = useState<renta[]>([]);
     const fetchRenta = async (): Promise<void> => {
         try {
             const url = "/recaudo/configuracion_baisca/tiporenta/get/";
             const res = await api.get(url);
-            const RentaData: ConfiguracionBasica[] = res.data?.data || [];
+            const RentaData: renta[] = res.data?.data || [];
             setRenta(RentaData);
         } catch (error) {
             console.error(error);
         }
     };
-    const handleAbrirEditar = (configuracion: ConfiguracionBasica) => {
-        setSelectedConfiguracion(configuracion);
-        // setIsBuscarActivo(true);
-    };
+    
     useEffect(() => {
         void fetchRenta();
     }, []);
 
+
+const handleAbrirEditar = (configuracion: renta) => {
+        setSelectedConfiguracion(configuracion);
+        // setIsBuscarActivo(true);
+    };
     const handleEliminarConfiguracion = async (id_tipo_renta: number) => {
         try {
             const url = `/recaudo/configuracion_baisca/tiporenta/delete/${id_tipo_renta}/`;
@@ -75,7 +77,7 @@ export const TipoRenta: React.FC = () => {
     const columns = [
         // { field: 'id_tipo_renta', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'nombre_tipo_renta', headerName: 'Tipo renta', width: 130, flex: 1 },
-        { field: 'nombre_cobro', headerName: 'Tipo de cobro asociado ', width: 130, flex: 1 },
+        // { field: 'nombre_cobro', headerName: 'Tipo de cobro asociado ', width: 130, flex: 1 },
 
         // { field: 'tipo_cobro_asociado', headerName: 'Valor de tipo de renta', width: 130, flex: 1 },
 
@@ -107,7 +109,7 @@ export const TipoRenta: React.FC = () => {
 
 
     //// editar tipos de cobro 
-    const [formValues, setFormValues] = useState<ConfiguracionBasica>({
+    const [formValues, setFormValues] = useState<renta>({
         nombre_tipo_renta: selectedConfiguracion?.nombre_tipo_renta || "",
         id_tipo_renta: selectedConfiguracion?.id_tipo_renta || "",
         tipo_cobro_asociado: selectedConfiguracion?.tipo_cobro_asociado || "",
@@ -229,7 +231,7 @@ export const TipoRenta: React.FC = () => {
                             value={formValues.tipo_cobro_asociado}
                         />
                     </Grid> */}
-                    <Grid item xs={12} sm={4}>
+                    {/* <Grid item xs={12} sm={4}>
                     <FormControl fullWidth size="small">
                         <InputLabel id="configuracion-select-label">Tipo de Cobro</InputLabel>
                         <Select
@@ -246,7 +248,7 @@ export const TipoRenta: React.FC = () => {
                             ))}
                         </Select>
                     </FormControl>
-                    </Grid>
+                    </Grid> */}
                   
                     <Grid item xs={12} sm={4}>
                         <Button

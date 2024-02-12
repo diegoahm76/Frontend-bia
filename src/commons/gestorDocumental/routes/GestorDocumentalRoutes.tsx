@@ -50,6 +50,7 @@ import { Radicado_Email_Routes } from '../radicadoEmail/routes/RadicadoEmail';
 import { ConsecutivoConfi } from '../configuracionConsecutivo/routes/ConsecutivoConfi';
 import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
 import { RutasCentralDigitalizacionOtros } from '../centraldigitalizacionOtros/routes/RutasCentralDigitalizacionOtros';
+import { RutasTransferenciaDocumental } from '../transferenciaDocumental/routes/RutasTransferenciaDocumental';
  
 const routes = [
   {
@@ -248,8 +249,8 @@ const routes = [
     component: () => <Consulta_AnonimoPQR_Routes />,
   },
   {
-    path: 'consulta_estadopqr/',
-    name: 'consulta_estadopqr',
+    path: 'consulta_estado/',
+    name: 'consulta_estado',
     component: () => <Consulta_estadoPQR_Routes />,
   },
   {
@@ -278,6 +279,11 @@ const routes = [
     path: 'central_digitalizacion_otros/',
     name: 'central_digitalizacion_otros',
     component: () => <RutasCentralDigitalizacionOtros />,
+  },
+  {
+    path: 'transferencia_documental/',
+    name: 'transferencia_documental',
+    component: () => <RutasTransferenciaDocumental />,
   }
 
 ];

@@ -3,23 +3,19 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState, useEffect } from 'react';
-import { Divider, Button, Grid, Dialog, ButtonGroup, TextField, FormControl, InputLabel, Select, MenuItem, } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-// import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
-import Chip from '@mui/material/Chip';
+import { useEffect, useState } from 'react';
 import { api } from '../../../../api/axios';
-import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import { miEstilo } from '../../../gestorDocumental/Encuesta/interfaces/types';
 import { Title } from '../../../../components';
-import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
-import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { control_success } from '../../requets/Request';
+import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 import { control_error } from '../../../../helpers';
+import SearchIcon from '@mui/icons-material/Search';
+import { control_success } from '../../requets/Request';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { miEstilo } from '../../../gestorDocumental/Encuesta/interfaces/types';
+import { Button, ButtonGroup, Dialog, Divider, Grid, TextField } from '@mui/material';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -40,7 +36,43 @@ export const ValorRegional: React.FC = () => {
         setIsModalOpen(false)
         setvalor_regional('');
     };
-    const [valor_regional, setvalor_regional] = useState<string>('');
+    const [valor_regional, setvalor_regional] = useState<any>('');
+
+    const [variable_ce, setvariable_ce] = useState<any>('');
+    const [variable_ck, setvariable_ck] = useState<any>('');
+    const [variable_cs, setvariable_cs] = useState<any>('');
+    const [variable_cu, setvariable_cu] = useState<any>('');
+
+    const [sumaVariables, setSumaVariables] = useState<number>(0);
+
+
+    // useEffect(() => { 
+    //     const ce = Number(variable_ce);
+    //     const ck = Number(variable_ck);
+    //     const cs = Number(variable_cs);
+    //     const cu = Number(variable_cu); 
+
+    //     const resultado = (1 + ((ck + ce) * cs)) * cu; 
+    //     setSumaVariables(resultado);
+    // }, [variable_ce, variable_ck, variable_cs, variable_cu]); 
+
+
+    const calcularOperacion = () => {
+        const ce = Number(variable_ce);
+        const ck = Number(variable_ck);
+        const cs = Number(variable_cs);
+        const cu = Number(variable_cu);
+
+        // Realizando la operación especificada: 1+((ck+ce)*cs)*cu
+        const resultado = (1 + ((ck + ce) * cs)) * cu;
+        setSumaVariables(resultado);
+        setvalor_regional(resultado.toString());
+    };
+
+    const [fecha_inicio, setfecha_inicio] = useState<string>('');
+    const [fecha_fin, setfecha_fin] = useState<string>('');
+
+
 
     const actualizarValorRegional = async () => {
         try {
@@ -81,8 +113,6 @@ export const ValorRegional: React.FC = () => {
                         <EditIcon />
                     </IconButton>
 
-                  
-
                 </>
 
             ),
@@ -107,7 +137,7 @@ export const ValorRegional: React.FC = () => {
         fetchData();
     }, []);
 
-    
+
     const [searchTerm, setSearchTerm] = useState<string>('');
 
     const handleSearch = (): void => {
@@ -117,7 +147,7 @@ export const ValorRegional: React.FC = () => {
         }
         const filteredEncuestas = data.filter(encuesta =>
             encuesta.nombre_sub_zona_hidrica.toLowerCase().includes(searchTerm.toLowerCase())
-            
+
         );
 
         setData(filteredEncuestas);
@@ -132,39 +162,146 @@ export const ValorRegional: React.FC = () => {
                 sx={miEstilo}
             >
 
-<Dialog
-                        keepMounted
-                        aria-describedby="alert-dialog-slide-description"
-                        open={isModalOpen}
-                        onClose={handle_close}
-                        maxWidth="xl"
+                <Dialog
+                    keepMounted
+                    aria-describedby="alert-dialog-slide-description"
+                    open={isModalOpen}
+                    onClose={handle_close}
+                    maxWidth="xl"
+                >
+
+                    <Grid
+                        container spacing={2}
+                        sx={{
+                            position: 'relative',
+                            background: '#FAFAFA',
+                            borderRadius: '15px',
+                            p: '20px',
+                            mb: '20px',
+                            boxShadow: '0px 3px 6px #042F4A26'
+                        }}
                     >
-
-                        <Grid
-                            container spacing={2}
-                            sx={{
-                                position: 'relative',
-                                background: '#FAFAFA',
-                                borderRadius: '15px',
-                                p: '20px',
-                                mb: '20px',
-                                boxShadow: '0px 3px 6px #042F4A26'
-                            }}
-                        >
+                        <Grid item xs={12} sm={12}>
                             <Title title="Ingresar valor regional    " />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                type="date"
+                                size="small"
+                                name="fecha_inicio"
+                                variant="outlined"
+                                label="fecha inicio"
+                                value={fecha_inicio}
+                                InputLabelProps={{ shrink: true }}
+                                // onChange={setfecha_inicio}
+                                onChange={(e) => setfecha_inicio(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                type="date"
+                                size="small"
+                                name="fecha_fin"
+                                variant="outlined"
+                                label="fecha fin"
+                                value={fecha_fin}
+                                InputLabelProps={{ shrink: true }}
+                                // onChange={setfecha_inicio}
+                                onChange={(e) => setfecha_fin(e.target.value)}
+                            />
+                        </Grid>
 
 
-                            <Grid item xs={12} marginTop={2} sm={12}>
+
+
+
+
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                variant="outlined"
+                                label="Ce"
+                                size="small"
+                                fullWidth
+                                value={variable_ce}
+                                onChange={(e) => setvariable_ce(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                variant="outlined"
+                                label="Ck"
+                                size="small"
+                                fullWidth
+                                value={variable_ck}
+                                onChange={(e) => setvariable_ck(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                variant="outlined"
+                                label="Cs"
+                                size="small"
+                                fullWidth
+                                value={variable_cs}
+                                onChange={(e) => setvariable_cs(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                variant="outlined"
+                                label="Cu"
+                                size="small"
+                                fullWidth
+                                value={variable_cu}
+                                onChange={(e) => setvariable_cu(e.target.value)}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center" >
+                            <Grid item xs={12} sm={4}>
                                 <TextField
                                     variant="outlined"
                                     label="Valor regional"
                                     size="small"
+                                    disabled
                                     fullWidth
                                     value={valor_regional}
                                     onChange={(e) => setvalor_regional(e.target.value)}
                                 />
                             </Grid>
-                            <Grid item marginTop={2} >
+
+
+                        </Grid>
+                        <Grid
+                            item
+                            xs={12}
+                            container
+                            spacing={2}
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                             >
+
+                            <Grid item >
+                                <Button
+                                    startIcon={<SearchIcon />}
+                                    variant="contained"
+                                    color='primary'
+                                    onClick={calcularOperacion}
+                                >
+                                    calcular
+                                </Button>
+                            </Grid>
+                            {/* {sumaVariables} */}
+
+
+                            <Grid item   >
                                 <Button
                                     color='success'
                                     variant='contained'
@@ -175,9 +312,15 @@ export const ValorRegional: React.FC = () => {
                                     Guardar
                                 </Button>
                             </Grid>
+
                         </Grid>
 
-                    </Dialog>
+
+
+
+                    </Grid>
+
+                </Dialog>
                 <Title title="Factor regional recurso hídrico " />
 
 
@@ -192,9 +335,17 @@ export const ValorRegional: React.FC = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </Grid>
+                {/* <button onClick={calcularOperacion}>Calcular Operación</button> */}
+
+
 
                 <Grid item marginTop={2} marginLeft={2} xs={12} sm={1.5}>
-                    <Button variant="contained" color='primary' onClick={handleSearch}>
+                    <Button
+                        startIcon={<SearchIcon />}
+                        variant="contained"
+                        color='primary'
+                        onClick={handleSearch}
+                    >
                         Buscar
                     </Button>
                 </Grid>
@@ -239,11 +390,7 @@ export const ValorRegional: React.FC = () => {
 
 
 
-            {/* <RenderDataGrid
-                title=''
-                columns={columns ?? []}
-                rows={data ?? []}
-            /> */}
+
         </>
     );
 };

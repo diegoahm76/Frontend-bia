@@ -5,7 +5,7 @@ import { api } from '../../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import { Title } from '../../../../components';
-import { Divider, Button, Grid, TextField, } from '@mui/material';
+import { Divider, Button, Grid, TextField, FormControl, InputLabel, MenuItem, Select, } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,17 +16,22 @@ import SaveIcon from '@mui/icons-material/Save';
 interface ConfiguracionBasica {
     id_tipo_cobro: any;
     nombre_tipo_cobro: any;
-    valor_tipo_cobro: any;
+    tipo_renta_asociado: any;
 }
 
-
+interface renta {
+    id_tipo_renta: any;
+    nombre_tipo_renta: any;
+    nombre_cobro: any;
+    tipo_cobro_asociado: any;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TiposCobro: React.FC = () => {
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
 
-    
+
     const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
     const fetchConfiguraciones = async (): Promise<void> => {
         try {
@@ -65,10 +70,10 @@ export const TiposCobro: React.FC = () => {
     };
 
     const columns = [
-        
+
         { field: 'id_tipo_cobro', headerName: ' Numero ', width: 130, flex: 1 },
         { field: 'nombre_tipo_cobro', headerName: 'Tipo cobro', width: 130, flex: 1 },
-        // { field: 'valor_tipo_cobro', headerName: ' valor_tipo_cobro ', width: 130, flex: 1 },
+        // { field: 'tipo_renta_asociado', headerName: ' tipo_renta_asociado ', width: 130, flex: 1 },
 
         {
             field: 'Acciones',
@@ -101,7 +106,7 @@ export const TiposCobro: React.FC = () => {
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         nombre_tipo_cobro: selectedConfiguracion?.nombre_tipo_cobro || "",
         id_tipo_cobro: selectedConfiguracion?.id_tipo_cobro || "",
-        valor_tipo_cobro: selectedConfiguracion?.valor_tipo_cobro || "",
+        tipo_renta_asociado: selectedConfiguracion?.tipo_renta_asociado || "",
 
     });
 
@@ -111,7 +116,7 @@ export const TiposCobro: React.FC = () => {
         }
     }, [selectedConfiguracion]);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: any) => {
         const { name, value } = event.target;
         setFormValues({ ...formValues, [name]: value });
     };
@@ -121,7 +126,7 @@ export const TiposCobro: React.FC = () => {
             const url = `/recaudo/configuracion_baisca/tipoCobro/put/${formValues.id_tipo_cobro}/`;
             const dataToUpdate = {
                 nombre_tipo_cobro: formValues.nombre_tipo_cobro,
-                valor_tipo_cobro: formValues.valor_tipo_cobro
+                tipo_renta_asociado: formValues.tipo_renta_asociado
             };
             await api.put(url, dataToUpdate);
             fetchConfiguraciones();
@@ -129,7 +134,7 @@ export const TiposCobro: React.FC = () => {
                 ...formValues,
                 id_tipo_cobro: "",
                 nombre_tipo_cobro: "",
-                valor_tipo_cobro: "",
+                tipo_renta_asociado: "",
             });
             control_success("Editado  exitosamente");
         } catch (error: any) {
@@ -149,7 +154,7 @@ export const TiposCobro: React.FC = () => {
                 ...formValues,
                 id_tipo_cobro: "",
                 nombre_tipo_cobro: "",
-                valor_tipo_cobro: "",
+                tipo_renta_asociado: "",
             });
         } catch (error: any) {
             // console.error("Error al crear la configuración básica", error);
@@ -158,6 +163,23 @@ export const TiposCobro: React.FC = () => {
         }
     };
 
+
+
+    const [Renta, setRenta] = useState<renta[]>([]);
+    const fetchRenta = async (): Promise<void> => {
+        try {
+            const url = "/recaudo/configuracion_baisca/tiporenta/get/";
+            const res = await api.get(url);
+            const RentaData: renta[] = res.data?.data || [];
+            setRenta(RentaData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        void fetchRenta();
+    }, []);
 
     return (
         <>
@@ -175,7 +197,9 @@ export const TiposCobro: React.FC = () => {
             >
                 <Title title="Tipos  de cobro " />
                 <Grid container item xs={12} spacing={2} marginTop={2}>
+           
 
+                  
 
 
                     <Grid item xs={12} sm={4}>
@@ -197,13 +221,32 @@ export const TiposCobro: React.FC = () => {
                             fullWidth
                             size="small"
                             variant="outlined"
-                            name="valor_tipo_cobro"
+                            name="tipo_renta_asociado"
                             onChange={handleInputChange}
-                            label="valor de tipo de cobro"
-                            value={formValues.valor_tipo_cobro}
+                            label="tipo_renta_asociado"
+                            value={formValues.tipo_renta_asociado}
                         />
                     </Grid> */}
 
+     <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small" variant="outlined">
+                        <InputLabel id="tipo-renta-asociado-label">Tipo Renta Asociado</InputLabel>
+                        <Select
+                            name="tipo_renta_asociado"
+
+                            labelId="tipo-renta-asociado-label"
+                            value={formValues.tipo_renta_asociado}
+                            onChange={handleInputChange}
+                            label="Tipo Renta Asociado"
+                        >
+                            {Renta.map((option) => (
+                                <MenuItem key={option.id_tipo_renta} value={option.id_tipo_renta}>
+                                    {option.nombre_tipo_renta}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>  
+                </Grid>
 
 
                     <Grid item xs={12} sm={4}>

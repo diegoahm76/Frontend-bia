@@ -67,7 +67,6 @@ export const Asignaciones = (): JSX.Element => {
           <Button
             variant="contained"
             color="primary"
-            // endIcon={<RemoveDoneIcon />}
           >
             {`La solicitud de OPA ha sido asignada automáticamente por el sistema al lider de la unidad ${
               listaAsignaciones.find(

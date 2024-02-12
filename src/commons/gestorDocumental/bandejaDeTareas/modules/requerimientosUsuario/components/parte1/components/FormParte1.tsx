@@ -28,6 +28,7 @@ import {
   getDetalleSolicitud,
 } from '../../../services/afterCreatedUserRequest.service';
 import { ModalInfoSolicitudReq } from './ModalInfoSolicitud/ModalInfoSolicitudReq';
+import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 
 export const FormParte1 = ({
   controlFormulario,
@@ -40,11 +41,9 @@ export const FormParte1 = ({
   const { handleNext, handleReset } = useStepperRequerimiento();
 
   //* context declaration
-  const {
-    secondLoading,
-    handleFifthLoading,
-    handleOpenModalOne,
-  } = useContext(ModalAndLoadingContext);
+  const { secondLoading, handleFifthLoading, handleOpenModalOne } = useContext(
+    ModalAndLoadingContext
+  );
   const {
     setInfoInicialUsuario,
     infoInicialUsuario,
@@ -61,8 +60,9 @@ export const FormParte1 = ({
         .currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas
   );
 
-  const { handleGeneralLoading, handleSecondLoading } =
-    useContext(ModalAndLoadingContext);
+  const { handleGeneralLoading, handleSecondLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   useEffect(() => {
     if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) {
@@ -84,8 +84,14 @@ export const FormParte1 = ({
 
   const getInfoSolicitud = async (params: any) => {
     const [detalleSolicitud, anexos] = await Promise.all([
-      getDetalleSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf, handleFifthLoading),
-      getAnexosSolicitud(params?.row?.id_solicitud_al_usuario_sobre_pqrsdf, handleFifthLoading),
+      getDetalleSolicitud(
+        params?.row?.id_solicitud_al_usuario_sobre_pqrsdf,
+        handleFifthLoading
+      ),
+      getAnexosSolicitud(
+        params?.row?.id_solicitud_al_usuario_sobre_pqrsdf,
+        handleFifthLoading
+      ),
     ]);
 
     const data = {
@@ -104,29 +110,29 @@ export const FormParte1 = ({
       field: 'accion',
       renderCell: (params: any) => (
         <>
-        <Tooltip title="Ver solicitud de requerimiento realizada">
-          <IconButton
-            onClick={async () => {
-              handleOpenModalOne(true); //* open modal
-              await getInfoSolicitud(params); // ? modificar solicitud
-              console.log('params', params);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+          <Tooltip title="Ver solicitud de requerimiento realizada">
+            <IconButton
+              onClick={async () => {
+                handleOpenModalOne(true); //* open modal
+                await getInfoSolicitud(params); // ? modificar solicitud
+                console.log('params', params);
               }}
-              variant="rounded"
             >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <VisibilityIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },
@@ -316,7 +322,18 @@ export const FormParte1 = ({
             startIcon={<SaveAsIcon />}
             onClick={() => {
               //* hacer validaciones previas antes de permitir el next, para el paso 2
-              console.log('jeje next')
+              console.log('jeje next');
+              if (
+                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
+                'Respondida por el propietario de la bandeja de tareas'
+              ) {
+                showAlert(
+                  'Opss!',
+                  'Esta PQRSDF ya ha sido respondida, por lo tanto, no es posible realizar un nuevo requerimiento al usuario; solo se puede acceder al historial de estas solicitudes.',
+                  'warning'
+                );
+                return;
+              }
               handleNext();
             }}
             sx={{

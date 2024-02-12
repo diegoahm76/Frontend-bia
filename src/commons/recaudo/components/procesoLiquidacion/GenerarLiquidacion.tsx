@@ -20,101 +20,101 @@ import { jsPDF } from 'jspdf';
 import { useState } from "react";
 
 interface IProps {
-  form_liquidacion: FormLiquidacion;
-  nombre_deudor: string;
-  rows_detalles: RowDetalles[];
-  expedientes_deudor: Expediente[];
-  estado_expediente: EstadoExpediente;
-  fecha_liquidacion: dayjs.Dayjs;
-  fecha_vencimiento: dayjs.Dayjs;
-  id_liquidacion_pdf: string;
-  detalles_ciclos: string[];
-  periodos: string[];
-  tamano_detalles: boolean;
-  handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
-  handle_submit_liquidacion: () => void;
-  set_fecha_liquidacion: Dispatch<SetStateAction<dayjs.Dayjs>>;
-  set_fecha_vencimiento: Dispatch<SetStateAction<dayjs.Dayjs>>;
+    form_liquidacion: FormLiquidacion;
+    nombre_deudor: string;
+    rows_detalles: RowDetalles[];
+    expedientes_deudor: Expediente[];
+    estado_expediente: EstadoExpediente;
+    fecha_liquidacion: dayjs.Dayjs;
+    fecha_vencimiento: dayjs.Dayjs;
+    id_liquidacion_pdf: string;
+    detalles_ciclos: string[];
+    periodos: string[];
+    tamano_detalles: boolean;
+    handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
+    handle_submit_liquidacion: () => void;
+    set_fecha_liquidacion: Dispatch<SetStateAction<dayjs.Dayjs>>;
+    set_fecha_vencimiento: Dispatch<SetStateAction<dayjs.Dayjs>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GenerarLiquidacion: React.FC<IProps> = ({
-  form_liquidacion,
-  nombre_deudor,
-  rows_detalles,
-  expedientes_deudor,
-  estado_expediente,
-  fecha_liquidacion,
-  fecha_vencimiento,
-  id_liquidacion_pdf,
-  detalles_ciclos,
-  periodos,
-  tamano_detalles,
-  handle_input_form_liquidacion_change,
-  handle_select_form_liquidacion_change,
-  handle_submit_liquidacion,
-  set_fecha_liquidacion,
-  set_fecha_vencimiento,
+    form_liquidacion,
+    nombre_deudor,
+    rows_detalles,
+    expedientes_deudor,
+    estado_expediente,
+    fecha_liquidacion,
+    fecha_vencimiento,
+    id_liquidacion_pdf,
+    detalles_ciclos,
+    periodos,
+    tamano_detalles,
+    handle_input_form_liquidacion_change,
+    handle_select_form_liquidacion_change,
+    handle_submit_liquidacion,
+    set_fecha_liquidacion,
+    set_fecha_vencimiento,
 }: IProps) => {
 
-  const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
-    if (date !== null) {
-      set_fecha_liquidacion(date);
-    }
-  };
-
-  const cambio_fecha_vencimiento = (date: Dayjs | null): void => {
-    if (date !== null) {
-      set_fecha_vencimiento(date);
-    }
-  };
-
-
-
-  const [visor, setVisor] = useState('');
-
-  const generarHistoricoBajas = () => {
-    const doc = new jsPDF();
-    const anchoPagina = doc.internal.pageSize.width;
-    const agregarEncabezado = () => {
-      doc.setFontSize(22);
-      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
-      doc.setFontSize(12);
+    const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
+        if (date !== null) {
+            set_fecha_liquidacion(date);
+        }
     };
-    agregarEncabezado();
-    doc.setFontSize(12);
-    let y = 30;
-    setVisor(doc.output('datauristring'));
-  };
+
+    const cambio_fecha_vencimiento = (date: Dayjs | null): void => {
+        if (date !== null) {
+            set_fecha_vencimiento(date);
+        }
+    };
 
 
-  const [pdfUrl, setPdfUrl] = useState('');
 
-  const handleOpenPdf = () => {
-    // Aquí estableces la URL del PDF que deseas mostrar
-    setPdfUrl(`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`);
-  };
+    const [visor, setVisor] = useState('');
+
+    const generarHistoricoBajas = () => {
+        const doc = new jsPDF();
+        const anchoPagina = doc.internal.pageSize.width;
+        const agregarEncabezado = () => {
+            doc.setFontSize(22);
+            doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
+            doc.setFontSize(12);
+        };
+        agregarEncabezado();
+        doc.setFontSize(12);
+        let y = 30;
+        setVisor(doc.output('datauristring'));
+    };
 
 
-  // const [unidades, setUnidades] = useState<any>();
+    const [pdfUrl, setPdfUrl] = useState('');
 
-  // const fetchUnidades = async () => {
-  //   try {
-  //     const url = "/gestor/configuracion-tipos-expendientes/seccion-subseccion/get/";
-  //     const res = await api.get(url);
-  //     const unidadesData = res.data.data;
-  //     setUnidades(unidadesData);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+    const handleOpenPdf = () => {
+        // Aquí estableces la URL del PDF que deseas mostrar
+        setPdfUrl(`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`);
+    };
 
-  // useEffect(() => {
-  //   fetchUnidades();
-  // }, []);
 
-  const htmlContent = `<!DOCTYPE html>
+    // const [unidades, setUnidades] = useState<any>();
+
+    // const fetchUnidades = async () => {
+    //   try {
+    //     const url = "/gestor/configuracion-tipos-expendientes/seccion-subseccion/get/";
+    //     const res = await api.get(url);
+    //     const unidadesData = res.data.data;
+    //     setUnidades(unidadesData);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
+
+    // useEffect(() => {
+    //   fetchUnidades();
+    // }, []);
+
+    const htmlContent = `<!DOCTYPE html>
 <!-- Created by pdf2htmlEX (https://github.com/pdf2htmlEX/pdf2htmlEX) -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -5672,21 +5672,21 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
 `; // tu contenido HTML
 
-  return (
-    <>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label='Deudor'
-            value={nombre_deudor}
-            size="small"
-            fullWidth
-            disabled
-            onChange={handle_input_form_liquidacion_change}
-          />
-        </Grid>
+    return (
+        <>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        label='Deudor'
+                        value={nombre_deudor}
+                        size="small"
+                        fullWidth
+                        disabled
+                        onChange={handle_input_form_liquidacion_change}
+                    />
+                </Grid>
 
-        {/* <Grid item xs={12} sm={8}>
+                {/* <Grid item xs={12} sm={8}>
             <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </Grid> */}
 
@@ -5812,48 +5812,48 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>{currency_formatter(form_liquidacion.valor ?? 0, 4)}</Typography>
       </Grid>
 
-      <Grid container justifyContent={'center'} spacing={3}>
-        {estado_expediente?.toLowerCase() === 'activo' && (
-          <Grid item xs={12} sm={3}>
-            <Button
-              color="primary"
-              variant="contained"
-              startIcon={<SaveIcon />}
-              fullWidth
-              disabled={
-                form_liquidacion.id_deudor === '' ||
-                form_liquidacion.id_expediente === '' ||
-                fecha_liquidacion.toString() === '' ||
-                fecha_vencimiento.toString() === '' ||
-                form_liquidacion.periodo_liquidacion === '' ||
-                rows_detalles.length === 0 ||
-                tamano_detalles
-              }
-              onClick={handle_submit_liquidacion}
-            >
-              Guardar
-            </Button>
-          </Grid>
-        )}
-        {estado_expediente?.toLowerCase() === 'guardado' && (
-          <>
-            <Grid item xs={12} sm={3}>
-              <Button
-                color="primary"
-                variant="contained"
-                fullWidth
-                startIcon={<PrintIcon />}
-                href={`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Imprimir recibo
-              </Button>
-            </Grid>
-{/* {id_liquidacion_pdf} */}
-            {/* {id_liquidacion_pdf} */}
+            <Grid container justifyContent={'center'} spacing={3}>
+                {estado_expediente?.toLowerCase() === 'activo' && (
+                    <Grid item xs={12} sm={3}>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            startIcon={<SaveIcon />}
+                            fullWidth
+                            disabled={
+                                form_liquidacion.id_deudor === '' ||
+                                form_liquidacion.id_expediente === '' ||
+                                fecha_liquidacion.toString() === '' ||
+                                fecha_vencimiento.toString() === '' ||
+                                form_liquidacion.periodo_liquidacion === '' ||
+                                rows_detalles.length === 0 ||
+                                tamano_detalles
+                            }
+                            onClick={handle_submit_liquidacion}
+                        >
+                            Guardar
+                        </Button>
+                    </Grid>
+                )}
+                {estado_expediente?.toLowerCase() === 'guardado' && (
+                    <>
+                        <Grid item xs={12} sm={3}>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                fullWidth
+                                startIcon={<PrintIcon />}
+                                href={`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`}
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
+                                Imprimir recibo
+                            </Button>
+                        </Grid>
+                        {/* {id_liquidacion_pdf} */}
+                        {/* {id_liquidacion_pdf} */}
 
-            {/* <div>
+                        {/* <div>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={3}>
                   <Button
@@ -5868,7 +5868,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   {/* Aquí es donde se mostrará el PDF */}
-                 {/* pdfUrl && (
+                        {/* pdfUrl && (
                     <iframe
                       src={pdfUrl}
                       width="100%"
@@ -5877,7 +5877,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                   )
                 </Grid>
               </Grid> */}
-            {/* </div> */} 
+                        {/* </div> */}
 
 
 
@@ -5886,30 +5886,30 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
 
 
-            <Grid item xs={12} sm={3}>
-              <Button
-                color="primary"
-                variant="contained"
-                startIcon={<RequestQuoteIcon />}
-                fullWidth
-              >
-                Liquidar
-              </Button>
+                        <Grid item xs={12} sm={3}>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                startIcon={<RequestQuoteIcon />}
+                                fullWidth
+                            >
+                                Liquidar
+                            </Button>
+                        </Grid>
+                    </>
+                )}
+                {estado_expediente?.toLowerCase() === 'liquidado' && (
+                    <Grid item xs={12} sm={3}>
+                        <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
+                    </Grid>
+                )}
             </Grid>
-          </>
-        )}
-        {estado_expediente?.toLowerCase() === 'liquidado' && (
-          <Grid item xs={12} sm={3}>
-            <Typography variant="h5" color={'green'} sx={{ textAlign: 'center', mb: '20px' }}>Expediente ya liquidado</Typography>
-          </Grid>
-        )}
-      </Grid>
 
 
 
 
 
-      
-    </>
-  )
+
+        </>
+    )
 }
