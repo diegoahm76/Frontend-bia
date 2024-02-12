@@ -11,7 +11,7 @@ import { FormControl } from '@material-ui/core';
 import SaveIcon from '@mui/icons-material/Save';
 import React, { useEffect, useState } from 'react';
 import { AuthSlice } from '../../../auth/interfaces';
-import { control_success } from '../../../../helpers';
+import { control_error, control_success } from '../../../../helpers';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Persona } from '../../../../interfaces/globalModels';
@@ -369,8 +369,9 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
       console.log('Consecutivo creado con éxito', res.data);
       // Actualizar el DOM o el estado para mostrar el valor de consecutivo
       setConsecutivoActual(res.data?.data?.consecutivo);
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error al crear el consecutivo', error);
+      control_error(error.response.data.detail);
       // Manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
     }
   }

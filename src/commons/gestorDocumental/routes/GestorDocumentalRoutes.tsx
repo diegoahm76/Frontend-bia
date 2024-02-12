@@ -249,8 +249,8 @@ const routes = [
     component: () => <Consulta_AnonimoPQR_Routes />,
   },
   {
-    path: 'consulta_estadopqr/',
-    name: 'consulta_estadopqr',
+    path: 'consulta_estado/',
+    name: 'consulta_estado',
     component: () => <Consulta_estadoPQR_Routes />,
   },
   {
