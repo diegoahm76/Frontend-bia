@@ -151,17 +151,7 @@ export const UserProviderFuentesFinanciacion = ({
       if (response?.length > 0) {
         const data_fuentes: IFuentesFinanciacion[] = response.map(
           (item: IFuentesFinanciacion) => ({
-            id_fuente: item.id_fuente,
-            nombre_fuente: item.nombre_fuente,
-            nombre_indicador: item.nombre_indicador,
-            nombre_cuenca: item.nombre_cuenca,
-            vano_1: item.vano_1,
-            vano_2: item.vano_2,
-            vano_3: item.vano_3,
-            vano_4: item.vano_4,
-            valor_total: item.valor_total,
-            id_cuenca: item.id_cuenca,
-            id_indicador: item.id_indicador,
+            ...item,
           })
         );
 
@@ -283,7 +273,7 @@ export const UserProviderFuentesFinanciacion = ({
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
-    
+
     // * select
     cuencas_selected,
     set_cuencas_selected,
