@@ -342,7 +342,7 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
                 );
               }}
             >
-              Agregar Plan Anueal De Adquisiciones
+              Agregar PAA
             </Button>
           </Grid>
         </Grid>
