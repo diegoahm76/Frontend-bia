@@ -7,6 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import SolicitarViaje from './SolicitarViaje';
+import ViajeAgendado from './ViajeAgendado';
 
 
 
@@ -158,7 +159,7 @@ const SolicitudViaje: React.FC = () => {
       </Grid>
 
       {mostrar_solicitud_viaje && 
-        <SolicitarViaje />
+        <SolicitarViaje set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje}/>
       }
     </>
   );
