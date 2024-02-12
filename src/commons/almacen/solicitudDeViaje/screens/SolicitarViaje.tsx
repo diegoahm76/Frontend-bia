@@ -21,8 +21,10 @@ const SolicitarViaje: React.FC = () => {
   const [msj_error_fecha_salida, set_msj_error_fecha_salida] = useState<string>("");
   const [fecha_retorno, set_fecha_retorno] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_retorno, set_msj_error_fecha_retorno] = useState<string>("");
-  const [selected_time, set_selected_time] = useState<Date | null>(new Date());
+  const [hora_salida, set_hora_salida] = useState<Date | null>(new Date());
+  const [hora_retorno, set_hora_retorno] = useState<Date | null>(new Date());
   const [switch_requiere_carga, set_switch_requiere_carga] = useState<boolean>(false);
+  const [switch_requiere_acompanamiento_militar, set_switch_requiere_acompanamiento_militar] = useState<boolean>(false);
 
 
   const cambio_fecha_salida = (date: Dayjs | null): void => {
@@ -36,10 +38,10 @@ const SolicitarViaje: React.FC = () => {
 
   const cambio_fecha_retorno = (date: Dayjs | null): void => {
     if (date !== null) {
-      set_fecha_salida(date);
-      set_msj_error_fecha_salida("");
+      set_fecha_retorno(date);
+      set_msj_error_fecha_retorno("");
     } else {
-      set_msj_error_fecha_salida("El campo Fecha inicio es obligatorio.");
+      set_msj_error_fecha_retorno("El campo Fecha inicio es obligatorio.");
     }
   };
 
@@ -61,8 +63,12 @@ const SolicitarViaje: React.FC = () => {
       set_mensaje_error_numero_pasajeros("");
   };
 
-  const handle_time_change = (newTime: Date | null) => {
-    set_selected_time(newTime);
+  const cambio_hora_salida = (newTime: Date | null) => {
+    set_hora_salida(newTime);
+  };
+
+  const cambio_hora_retorno = (newTime: Date | null) => {
+    set_hora_retorno(newTime);
   };
 
   return (
@@ -272,8 +278,8 @@ const SolicitarViaje: React.FC = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Desde:"
-                value={fecha_salida}
-                onChange={(newValue) => { cambio_fecha_salida(newValue); }}
+                value={fecha_retorno}
+                onChange={(newValue) => { cambio_fecha_retorno(newValue); }}
                 renderInput={(params) => (
                   <TextField
                     required
@@ -299,8 +305,8 @@ const SolicitarViaje: React.FC = () => {
                 <MobileTimePicker
                   label="Seleccionar hora"
                   openTo="hours"
-                  value={selected_time}
-                  onChange={handle_time_change}
+                  value={hora_salida}
+                  onChange={cambio_hora_salida}
                   renderInput={(params) => (
                     <TextField {...params} variant="standard" helperText="" />
                   )}
@@ -313,10 +319,10 @@ const SolicitarViaje: React.FC = () => {
               alignItems:'center',
               justifyContent:'center'
             }}>
-            <FormLabel htmlFor='expediente_asociado'>
+            <FormLabel htmlFor='requiere_recarga'>
               ¿Requiere Carga?
             </FormLabel>
-            <Switch id='expediente_asociado' checked={switch_requiere_carga} onChange={()=>set_switch_requiere_carga(!switch_requiere_carga)} />
+            <Switch id='requiere_recarga' checked={switch_requiere_carga} onChange={()=>set_switch_requiere_carga(!switch_requiere_carga)} />
           </Grid>
         </Grid>
 
@@ -333,7 +339,7 @@ const SolicitarViaje: React.FC = () => {
             alignItems:'center'
             }}>
             <FormLabel style={{width:'70%'}}>
-              Fecha de salida*:
+              Fecha de retorno*:
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
@@ -365,8 +371,8 @@ const SolicitarViaje: React.FC = () => {
                 <MobileTimePicker
                   label="Seleccionar hora"
                   openTo="hours"
-                  value={selected_time}
-                  onChange={handle_time_change}
+                  value={hora_retorno}
+                  onChange={cambio_hora_retorno}
                   renderInput={(params) => (
                     <TextField {...params} variant="standard" helperText="" />
                   )}
@@ -379,10 +385,29 @@ const SolicitarViaje: React.FC = () => {
               alignItems:'center',
               justifyContent:'center'
             }}>
-            <FormLabel htmlFor='expediente_asociado'>
-              ¿Requiere Carga?
+            <FormLabel htmlFor='requiere_compania_militar'>
+              ¿Requiere acompañamiento Militar?
             </FormLabel>
-            <Switch id='expediente_asociado' checked={switch_requiere_carga} onChange={()=>set_switch_requiere_carga(!switch_requiere_carga)} />
+            <Switch id='requiere_compania_militar' checked={switch_requiere_acompanamiento_militar} onChange={()=>set_switch_requiere_acompanamiento_militar(!switch_requiere_acompanamiento_militar)} />
+          </Grid>
+        </Grid>
+
+        <Grid item xs={11} sx={{
+          display:'flex',
+          justifyContent: 'center',
+          alignItems:'center',
+          marginTop:'20px',
+          gap:2
+          }} >
+          <FormLabel htmlFor='consideraciones_adicionales'>
+            Consideraciones adicionales:
+          </FormLabel>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              id='consideraciones_adicionales'
+              size="small"
+            />
           </Grid>
         </Grid>
       </Grid>
