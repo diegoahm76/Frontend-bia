@@ -6,7 +6,7 @@ import { ConsultaEstadoPQR } from '../components/ConsultaEstadoPQR';
 export const Consulta_estadoPQR_Routes: React.FC = () => {
     return (
         <Routes>
-            <Route path="/consulta_estadopqr" element={<  ConsultaEstadoPQR />} />
+            <Route path="/consulta_estado_solicitudes_usuario_interno" element={<  ConsultaEstadoPQR />} />
             <Route path="/*" element={<Navigate to={'/'} />} />
         </Routes>
     );
