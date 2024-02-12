@@ -82,9 +82,14 @@ export const useFuenteFinanciacionHook = (): any => {
     try {
       //  console.log('')(data, 'data');
       data.id_indicador = id_indicador;
-      data.id_cuenca = id_producto;
+      data.id_producto = id_producto;
       data.id_proyecto = id_proyecto;
       data.id_actividad = id_actividad;
+      data.valor_total = Number(data.valor_total);
+      data.vano_1 = Number(data.vano_1);
+      data.vano_2 = Number(data.vano_2);
+      data.vano_3 = Number(data.vano_3);
+      data.vano_4 = Number(data.vano_4);
       set_is_saving_fuente(true);
       await post_fuentes_fiananciacion(data as IFuentesFinanciacion);
       control_success('Se creó correctamente');
@@ -107,9 +112,14 @@ export const useFuenteFinanciacionHook = (): any => {
       //  console.log('')(data, 'data');
       set_is_saving_fuente(true);
       data.id_indicador = id_indicador;
-      data.id_cuenca = id_producto;
+      data.id_producto = id_producto;
       data.id_proyecto = id_proyecto;
       data.id_actividad = id_actividad;
+      data.valor_total = Number(data.valor_total);
+      data.vano_1 = Number(data.vano_1);
+      data.vano_2 = Number(data.vano_2);
+      data.vano_3 = Number(data.vano_3);
+      data.vano_4 = Number(data.vano_4);
       await put_fuentes_fiananciacion(
         (id_fuente as number) ?? 0,
         data as IFuentesFinanciacion
