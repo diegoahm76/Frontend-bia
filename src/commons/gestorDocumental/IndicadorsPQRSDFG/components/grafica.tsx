@@ -6,9 +6,12 @@ interface PQRSDFDataa {
   valor_uno: any;
   valor_dos: any;
   tipo_porcentaje: any;
+  titulo:any;
 }
 
-export const Graficapiegraficaindicadores: React.FC<PQRSDFDataa> = ({ valor_uno, valor_dos, tipo_porcentaje }: PQRSDFDataa) => {
+export const Graficapiegraficaindicadores: React.FC<PQRSDFDataa> = ({ valor_uno, valor_dos, tipo_porcentaje ,titulo}: PQRSDFDataa) => {
+
+  const value_titlle=titulo;
 
   // Verificar si valor_uno y valor_dos están definidos
   if (valor_uno !== undefined && valor_dos !== undefined) {
@@ -49,6 +52,13 @@ export const Graficapiegraficaindicadores: React.FC<PQRSDFDataa> = ({ valor_uno,
           },
         },
       ],
+      title: {
+        text: value_titlle, // Aquí puedes establecer el título que desees
+        align: "center", // Centra el título
+        style: {
+          fontSize: "18px",
+        },
+      },
     };
 
     return <ReactApexChart options={chartData} series={chartData.series} type="pie" height={280} />;

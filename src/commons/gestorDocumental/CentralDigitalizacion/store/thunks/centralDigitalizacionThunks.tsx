@@ -133,13 +133,13 @@ export const get_file_typology_service = (): any => {
     }
   };
 };
-
+//gestor/central-digitalizacion/get-solicitudes-pendientes/
 // obtener personas filtro
 export const get_digitalization_requests_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `gestor/central-digitalizacion/get-solicitudes-pendientes/`,
+        `gestor/central-digitalizacion/otros/get-solicitudes-pendientes/`,
         { params }
       );
       console.log(data);

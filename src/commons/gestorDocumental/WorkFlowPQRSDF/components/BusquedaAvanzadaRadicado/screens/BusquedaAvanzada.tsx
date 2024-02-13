@@ -228,7 +228,7 @@ export const ConsultarRadicadosTable = () => {
                     </Grid>
                 )}
 
-                <Grid item xs={9} style={{ marginTop: 0 }}>
+                <Grid item xs={9} style={{ marginTop: 25 }}>
   
                 <BuscadorPerzonasStiven onResultt={handleResult} />
                   </Grid>

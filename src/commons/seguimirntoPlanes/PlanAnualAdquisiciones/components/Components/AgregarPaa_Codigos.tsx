@@ -1,15 +1,23 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  CircularProgress,
+  Grid,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { set_current_mode_paa_codigos } from '../../../store/slice/indexPlanes';
 import { usePaaCodigosHook } from '../../hooks/usePaaCodigosHook';
 import { DataContextAdquisiciones } from '../../context/context';
+import React from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarPaa_Codigos: React.FC = () => {
@@ -17,6 +25,9 @@ export const AgregarPaa_Codigos: React.FC = () => {
     control_paa_codidos,
     errors_paa_codidos,
     reset_paa_codidos,
+    data_watch_paa_codidos,
+    watch_paa_codidos,
+    set_value_paa_codidos,
 
     onsubmit_paa_codidos,
     onsubmit_editar,
@@ -34,6 +45,22 @@ export const AgregarPaa_Codigos: React.FC = () => {
   const { codigos_unspsc_selected, fetch_data_codigos_unspsc } = useContext(
     DataContextAdquisiciones
   );
+
+  const id_codigo = watch_paa_codidos('id_codigo');
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id_codigo === 0 || id_codigo === null) {
+      set_value_paa_codidos('id_codigo', null);
+    }
+  }, [id_codigo, set_value_paa_codidos]);
+
+  useEffect(() => {
+    fetch_data_codigos_unspsc().then(() => {
+      setLoading(false);
+    });
+  }, []);
 
   useEffect(() => {
     fetch_data_codigos_unspsc();
@@ -117,34 +144,51 @@ export const AgregarPaa_Codigos: React.FC = () => {
             <Controller
               name="id_codigo"
               control={control_paa_codidos}
-              defaultValue=""
+              defaultValue={null}
               rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  size="small"
-                  margin="dense"
-                  disabled={false}
-                  fullWidth
-                  required
-                  error={!!errors_paa_codidos.id_codigo}
-                  helperText={
-                    errors_paa_codidos?.id_codigo?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : 'ingrese codigo unspsc'
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <Autocomplete
+                  options={codigos_unspsc_selected}
+                  getOptionLabel={(option) =>
+                    option && option.value !== 0 && option.value !== null
+                      ? option.label
+                      : 'Seleccione un código'
                   }
-                >
-                  {codigos_unspsc_selected.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  value={
+                    value
+                      ? codigos_unspsc_selected.find(
+                          (option) => option.value === value
+                        )
+                      : null
+                  }
+                  onChange={(_, data) => onChange(data ? data.value : null)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      error={!!error}
+                      helperText={error ? error.message : null}
+                      required
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <React.Fragment>
+                            {loading ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </React.Fragment>
+                        ),
+                      }}
+                      disabled={loading}
+                    />
+                  )}
+                />
               )}
             />
-          </Grid>
-
+          </Grid>{' '}
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
               <Button
@@ -170,7 +214,11 @@ export const AgregarPaa_Codigos: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_saving_paa_codidos}
+                disabled={
+                  is_saving_paa_codidos ||
+                  data_watch_paa_codidos.id_codigo === 0 ||
+                  data_watch_paa_codidos.id_codigo === null
+                }
                 startIcon={<SaveIcon />}
                 loading={is_saving_paa_codidos}
               >
