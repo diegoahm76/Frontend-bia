@@ -18,6 +18,7 @@ import EntregaScreen from '../gestionDeInventario/movimientos/screens/entregasOt
 import { ControlDeInventariosRoutes } from '../controlDeInventario/routes/ControlDeInventariosRoutes';
 import { TablerosControlAlmacenRoutes } from '../tablerosControlAlmacen/routes/TablerosControlAlmacenRoutes';
 import SolicitudViaje from '../solicitudDeViaje/screens/SolicitudViaje';
+import AsignacionVehiculos from '../asignacionDeVehiculos/screens/AsignacionVehiculos';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -84,6 +85,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="solicitud_viajes/*"
         element={<SolicitudViaje />}
+      />
+      <Route
+        path="asignacion_vehiculos/*"
+        element={<AsignacionVehiculos />}
       />
       <Route
         path="otras_entregas/*"
