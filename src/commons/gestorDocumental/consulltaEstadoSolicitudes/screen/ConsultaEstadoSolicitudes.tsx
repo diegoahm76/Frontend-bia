@@ -25,23 +25,27 @@ import {
   Tooltip,
 } from '@mui/material';
 import {
-  // cargarAsignaciones,
-  cargarestado,
-  fetchSpqrs,
+  cargarAsignaciones,
   fetchTipoSolicitud,
-} from '../services/consultainternoPqrsd.service';
+} from '../services/PQRSDF/consultainternoPqrsd.service';
 import { COLUMS_PQRSDF } from '../utils/columnsPqrsdf';
 import { RenderDataGrid } from '../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { LoadingButton } from '@mui/lab';
 import { useConsultaEstadoSol } from '../hooks/useConsultaEstadoSol';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
+import { BuscadorPqrsdf } from '../components/buscadoresSolicitudes/BuscadorPqrsdf';
+import { control_success } from '../../../../helpers';
+import { BuscadorOtros } from '../components/buscadoresSolicitudes/BuscadorOtros';
+import { cargarAsignacionesOtros } from '../services/otros/consultaInternoOtros.service';
+import { columnsOtros } from '../utils/columnsOtros';
+import { BuscadorTramites } from '../components/buscadoresSolicitudes/BuscadorTramites';
+import { getTramitesConsulta } from '../services/consultaTramites/getConsultaTramites.service';
+import { columnsTramites } from '../utils/columnsTramites';
+import { BuscadorOpas } from '../components/buscadoresSolicitudes/BuscadorOpas';
+import { getOpasConsulta } from '../services/opas/getOpas.service';
 
-export const ConsultaEstadoPQR: React.FC = () => {
-  /*  const {
-    userinfo: { id_persona },
-  } = useSelector((state: AuthSlice) => state.auth);*/
-
+export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
   //* hook importations
   const {
     control_consulta_estado_sol,
@@ -52,20 +56,12 @@ export const ConsultaEstadoPQR: React.FC = () => {
   //* ESTADOS NECESARIOS PARA EL FUNCIONAMIENTO DEL COMPONENTE
 
   const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
-  // const [estado, setestado] = useState<estado[]>([]);
   const [tipoPQRSDF, setTipoPQRSDF] = useState<TipoPQRSDF[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Efecto para cargar los datos del pqrs
-  //const [pqrss, setpqrs] = useState<Pqr[]>([]);
   useEffect(() => {
     (async () => {
-      //await fetchSpqrs({ setpqrs });
       await fetchTipoSolicitud({ setTipoPQRSDF });
-      //await cargarestado({ setestado });
-
-      //console.log('pqrs', pqrss);
-      console.log('tipo', tipoPQRSDF);
-      //console.log('estado', estado);
     })();
   }, []);
 
@@ -76,8 +72,7 @@ export const ConsultaEstadoPQR: React.FC = () => {
     {
       field: 'ruta_archivo',
       headerName: 'Archivo',
-      width: 200,
-      flex: 1,
+      minWidth: 200,
       renderCell: (params: any) => (
         <Tooltip
           title={
@@ -96,11 +91,94 @@ export const ConsultaEstadoPQR: React.FC = () => {
     },
   ];
 
+  const columnsTramitesServicios = [
+    ...columnsTramites,
+    {
+      field: 'documento',
+      headerName: 'Archivo',
+      minWidth: 200,
+      renderCell: (params: any) => (
+        <Tooltip
+          title={
+            params.row.documento === null
+              ? 'No hay documento disponible para descargar' // si no hay documento
+              : 'Descargar documento' // si hay documento
+          }
+        >
+          <DownloadButton
+            condition={params.row.documento === null}
+            fileUrl={params.row.documento}
+            fileName={params?.value?.Id_PQRSDF}
+          />
+        </Tooltip>
+      ),
+    },
+    {
+      field: 'tiempo_respuesta',
+      headerName: 'Tiempo de respuesta',
+      minWidth: 270,
+      renderCell: (params: any) =>
+        params.value < 0
+          ? 'Tiempo de respuesta vencido'
+          : `${params.value} días`,
+    },
+  ];
+
   //* columns for the data grid in tramites
 
   //* columns for the datagrid in otros
 
   //* columns for the datagrid in OPAS
+
+  const handleSubmit = async () => {
+    switch (
+      control_consulta_estado_sol?._formValues?.tipo_de_solicitud?.label
+    ) {
+      case 'PQRSDF':
+        await cargarAsignaciones(setAsignaciones, setLoading, {
+          pqrs:
+            control_consulta_estado_sol?._formValues?.tipo_pqrsdf?.label[0].toUpperCase() ??
+            '',
+          radicado: control_consulta_estado_sol?._formValues?.radicado ?? '',
+          fecha_inicio:
+            control_consulta_estado_sol?._formValues?.fecha_inicio ?? '',
+          fecha_fin: control_consulta_estado_sol?._formValues?.fecha_fin ?? '',
+          estado: control_consulta_estado_sol?._formValues?.estado ?? '',
+        });
+        break;
+      case 'Tramites y servicios':
+        await getTramitesConsulta(setAsignaciones, setLoading, {
+          radicado: control_consulta_estado_sol?._formValues?.radicado ?? '',
+          fecha_inicio:
+            control_consulta_estado_sol?._formValues?.fecha_inicio ?? '',
+          fecha_fin: control_consulta_estado_sol?._formValues?.fecha_fin ?? '',
+          estado_actual_solicitud:
+            control_consulta_estado_sol?._formValues?.estado?.label ?? '',
+        });
+        break;
+      case 'Otros':
+        await cargarAsignacionesOtros(setAsignaciones, setLoading, {
+          radicado: control_consulta_estado_sol?._formValues?.radicado ?? '',
+          fecha_inicio:
+            control_consulta_estado_sol?._formValues?.fecha_inicio ?? '',
+          fecha_fin: control_consulta_estado_sol?._formValues?.fecha_fin ?? '',
+          estado: control_consulta_estado_sol?._formValues?.estado?.label ?? '',
+        });
+        break;
+      case 'OPAS':
+        await getOpasConsulta(setAsignaciones, setLoading, {
+          radicado: control_consulta_estado_sol?._formValues?.radicado ?? '',
+          fecha_inicio:
+            control_consulta_estado_sol?._formValues?.fecha_inicio ?? '',
+          fecha_fin: control_consulta_estado_sol?._formValues?.fecha_fin ?? '',
+          estado: control_consulta_estado_sol?._formValues?.estado?.label ?? '',
+        });
+        break;
+      default:
+        console.log('No hay elemento');
+        break;
+    }
+  };
 
   return (
     <>
@@ -133,20 +211,10 @@ export const ConsultaEstadoPQR: React.FC = () => {
       >
         <Grid item xs={12}>
           <Title title="Buscar elemento" />
-          {/* filtros para pqrsdf */}
-
-          {/* espacio para los inputs de busqueda */}
-
-          {/* filtros para pqrsdf */}
-
-          {/* el tipo de solicitud va a seguir como una constante, no va a cambiar en ninguna de las vistas */}
-
-          {/* constantes */}
-
           <form
-            onSubmit={(w) => {
-              w.preventDefault();
-              // handleSubmit();
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
             }}
             style={{
               marginTop: '2.2rem',
@@ -174,13 +242,14 @@ export const ConsultaEstadoPQR: React.FC = () => {
                         onChange={(selectedOption) => {
                           //  console.log('')(selectedOption);
                           onChange(selectedOption);
+                          setAsignaciones([]);
                         }}
                         options={
                           tipoPQRSDF.length > 0
                             ? tipoPQRSDF.map((item) => {
                                 return {
                                   value: item?.descripcion,
-                                  label: item.codigo + ' - ' + item.descripcion,
+                                  label: item.descripcion,
                                 };
                               })
                             : []
@@ -213,14 +282,12 @@ export const ConsultaEstadoPQR: React.FC = () => {
                     <TextField
                       fullWidth
                       label="Radicado"
-                      type="date"
+                      type="text"
                       size="small"
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
+                      onChange={onChange}
                     />
                   )}
                 />
@@ -239,9 +306,7 @@ export const ConsultaEstadoPQR: React.FC = () => {
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
+                      onChange={onChange}
                     />
                   )}
                 />
@@ -260,66 +325,57 @@ export const ConsultaEstadoPQR: React.FC = () => {
                       variant="outlined"
                       value={value}
                       InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
+                      onChange={onChange}
                     />
                   )}
                 />
               </Grid>
-              {/* constantes */}
-
-              {/*definir los cuatro componentes para la busqueda (PQRSD), (OTROS), (OPAS) (TRAMITES)*/}
-
               {control_consulta_estado_sol?._formValues?.tipo_de_solicitud
                 ?.label === 'PQRSDF' ||
               !control_consulta_estado_sol?._formValues?.tipo_de_solicitud
                 ?.label ? (
-                <>
-                  Opciones de búsqueda pqrsdf
-                  {/*<BuscadorPqrsdf
-                    control_busqueda_panel_ventanilla={control_consulta_estado_sol}
-                />*/}
-                </>
+                <BuscadorPqrsdf
+                  control_consulta_estado_sol={control_consulta_estado_sol}
+                />
               ) : control_consulta_estado_sol?._formValues?.tipo_de_solicitud
                   ?.label === 'Tramites y servicios' ? (
-                <>
-                  Opciones de búsqueda tramites y servicios
-                  {/*<BuscadorTramitesYservicios
-                    control_busqueda_panel_ventanilla={control_consulta_estado_sol}
-                />*/}
-                </>
+                <BuscadorTramites
+                  control_consulta_estado_sol={control_consulta_estado_sol}
+                />
               ) : control_consulta_estado_sol?._formValues?.tipo_de_solicitud
                   ?.label === 'Otros' ? (
-                <>
-                  Opciones de búsqueda otros
-                  {/*<BuscadorOtros
-                    control_busqueda_panel_ventanilla={control_consulta_estado_sol}
-                />*/}
-                </>
+                <BuscadorOtros
+                  control_consulta_estado_sol={control_consulta_estado_sol}
+                />
               ) : control_consulta_estado_sol?._formValues?.tipo_de_solicitud
                   ?.label === 'OPAS' ? (
-                <>
-                  Opciones de búsqueda OPA
-                  {/*<BuscadorOpas
-                    control_busqueda_panel_ventanilla={control_consulta_estado_sol}
-                />*/}
-                </>
+                <BuscadorOpas
+                  control_consulta_estado_sol={control_consulta_estado_sol}
+                />
               ) : (
                 <>No hay elemento</>
               )}
-
-              {/* filtros para pqrsdf */}
-
-              {/* botones de interacción con el usuario */}
-
               <Grid item>
                 <Button
                   variant="outlined"
                   startIcon={<CleanIcon />}
                   onClick={() => {
-                    console.log('limpiando campos');
-                    // handleResetForm();
+                    reset_consulta_estado_sol(
+                      {
+                        tipo_de_solicitud: '',
+                        tipo_pqrsdf: '',
+                        radicado: '',
+                        fecha_inicio: '',
+                        fecha_fin: '',
+                        estado_pqrsdf: '',
+                      },
+                      {
+                        keepValues: false,
+                        keepDefaultValues: false,
+                      }
+                    );
+                    setAsignaciones([]);
+                    control_success('Se han limpiado los campos');
                   }}
                 >
                   LIMPIAR CAMPOS
@@ -327,7 +383,7 @@ export const ConsultaEstadoPQR: React.FC = () => {
               </Grid>
               <Grid item>
                 <LoadingButton
-                  loading={false}
+                  loading={loading}
                   type="submit"
                   color="primary"
                   variant="contained"
@@ -342,11 +398,27 @@ export const ConsultaEstadoPQR: React.FC = () => {
           </form>
         </Grid>
       </Grid>
-      <RenderDataGrid
-        title="Resultado de la búsqueda"
-        columns={[]} // se debe realizar condicionales para las columnas, ya que por cada busqueda se llaman servicios diferentes
-        rows={[]} // en las rows se debe realizar condicionales para las columnas, ya que por cada busqueda se llaman servicios diferentes
-      />
+      {asignaciones?.length > 0 && (
+        <RenderDataGrid
+          title="Resultado de la búsqueda"
+          columns={
+            control_consulta_estado_sol?._formValues?.tipo_de_solicitud
+              ?.label === 'PQRSDF'
+              ? columns
+              : control_consulta_estado_sol?._formValues?.tipo_de_solicitud
+                  ?.label === 'Tramites y servicios'
+              ? columnsTramitesServicios
+              : control_consulta_estado_sol?._formValues?.tipo_de_solicitud
+                  ?.label === 'Otros'
+              ? columnsOtros
+              : control_consulta_estado_sol?._formValues?.tipo_de_solicitud
+                  ?.label === 'OPAS'
+              ? []
+              : []
+          } // se debe realizar condicionales para las columnas, ya que por cada busqueda se llaman servicios diferentes
+          rows={asignaciones ?? []}
+        />
+      )}
     </>
   );
 };
