@@ -7,11 +7,94 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import SolicitarViaje from './SolicitarViaje';
-
+import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
+import { data_solicitud_viaje } from '../interfaces/types';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SolicitudViaje: React.FC = () => {
+  const [data_solicitudes_viajes, set_data_solicitudes_viajes] = useState<data_solicitud_viaje[]>([
+    {
+      estado: "Respondida",
+      fechaSolicitud: "2024-02-13",
+      numPasajeros: 3,
+      fechaSalida: "2024-02-20",
+      fechaRetorno: "2024-02-25",
+      municipioDestino: "Medellín"
+    },
+    {
+      estado: "Finalizada",
+      fechaSolicitud: "2024-02-15",
+      numPasajeros: 2,
+      fechaSalida: "2024-03-10",
+      fechaRetorno: "2024-03-15",
+      municipioDestino: "Bogotá"
+    },
+    {
+      estado: "En Espera",
+      fechaSolicitud: "2024-02-18",
+      numPasajeros: 1,
+      fechaSalida: "2024-03-05",
+      fechaRetorno: "2024-03-08",
+      municipioDestino: "Cali"
+    },
+    {
+      estado: "Rechazada",
+      fechaSolicitud: "2024-02-20",
+      numPasajeros: 4,
+      fechaSalida: "2024-04-01",
+      fechaRetorno: "2024-04-10",
+      municipioDestino: "Cartagena"
+    },
+    {
+      estado: "Respondida",
+      fechaSolicitud: "2024-02-22",
+      numPasajeros: 2,
+      fechaSalida: "2024-03-15",
+      fechaRetorno: "2024-03-20",
+      municipioDestino: "Barranquilla"
+    },
+    {
+      estado: "Finalizada",
+      fechaSolicitud: "2024-02-25",
+      numPasajeros: 5,
+      fechaSalida: "2024-03-20",
+      fechaRetorno: "2024-03-25",
+      municipioDestino: "Pereira"
+    },
+    {
+      estado: "En Espera",
+      fechaSolicitud: "2024-03-01",
+      numPasajeros: 1,
+      fechaSalida: "2024-03-10",
+      fechaRetorno: "2024-03-15",
+      municipioDestino: "Manizales"
+    },
+    {
+      estado: "Rechazada",
+      fechaSolicitud: "2024-03-05",
+      numPasajeros: 3,
+      fechaSalida: "2024-04-05",
+      fechaRetorno: "2024-04-15",
+      municipioDestino: "Santa Marta"
+    },
+    {
+      estado: "Respondida",
+      fechaSolicitud: "2024-03-08",
+      numPasajeros: 2,
+      fechaSalida: "2024-04-10",
+      fechaRetorno: "2024-04-18",
+      municipioDestino: "Ibagué"
+    },
+    {
+      estado: "Finalizada",
+      fechaSolicitud: "2024-03-12",
+      numPasajeros: 4,
+      fechaSalida: "2024-04-15",
+      fechaRetorno: "2024-04-20",
+      municipioDestino: "Cúcuta"
+    }
+  ])
   const [fecha_inicio, set_fecha_inicio] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
   const [fecha_fin, set_fecha_fin] = useState<Dayjs>(dayjs());
@@ -48,6 +131,14 @@ const SolicitudViaje: React.FC = () => {
       set_msj_error_estado("");
   }
 
+  const columns = [
+    {field: 'estado', headerName:'Estado', width:150, flex:1},
+    {field: 'fechaSolicitud', headerName:'Fecha Solicitud', width:150, flex:1},
+    {field: 'numPasajeros', headerName:'N° Pasajeros', width:150, flex:1},
+    {field: 'fechaSalida', headerName:'Fecha Salida', width:150, flex:1},
+    {field: 'fechaRetorno', headerName:'Fecha Retorno', width:150, flex:1},
+    {field: 'municipioDestino', headerName:'Municipio Destino', width:150, flex:1}
+  ]
 
   return (
     <>
@@ -139,7 +230,7 @@ const SolicitudViaje: React.FC = () => {
           </Grid>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>
-            Aqui va la tabla con los resultados
+            <RenderDataGrid columns={columns} title='Titulo tabla' rows={data_solicitudes_viajes}  />
           </Grid>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>
