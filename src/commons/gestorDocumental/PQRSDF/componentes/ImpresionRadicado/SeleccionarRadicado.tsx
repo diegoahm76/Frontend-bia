@@ -117,6 +117,7 @@ const SeleccionarRadicado = () => {
     const agno_radicado = get_values('agno_radicado') ?? '';
     const nro_radicado = get_values('nro_radicado') ?? '';
     const fecha_radicado = get_values('fecha_radicado') ?? '';
+
     const params: any = {};
 
     if (cod_tipo_radicado !== '') {
@@ -136,7 +137,16 @@ const SeleccionarRadicado = () => {
     }
 
     if (fecha_radicado !== '') {
-      params.fecha_radicado = fecha_radicado;
+      const fecha_start = new Date(fecha_radicado ?? ''); // Obtén el valor de fecha_start del objeto enviado por el formulario
+      const year_start = fecha_start.getFullYear(); // Obtén el año
+      const month_start = fecha_start.getMonth() + 1; // Obtén el mes (se suma 1 porque los meses comienzan en 0)
+      const day_start = fecha_start.getDate(); // Obtén el día
+      const fecha_desde = `${year_start}-${month_start
+        .toString()
+        .padStart(2, '0')}-${day_start.toString().padStart(2, '0')}`;
+      console.log(fecha_desde);
+
+      params.fecha_radicado = fecha_desde;
     }
 
     void dispatch(get_filings_service(params));

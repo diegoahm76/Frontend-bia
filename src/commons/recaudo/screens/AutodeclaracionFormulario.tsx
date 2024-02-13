@@ -21,18 +21,12 @@ import { DialogGeneradorDeDirecciones } from '../../../components/DialogGenerado
 import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete'; // Icono para quitar el archivo
 interface CoordenadasSitioCaptacion {
     cordenadaX: any;
     cordenadaY: any;
-}
-interface FuenteAbastecimiento {
-    tipo: string | any;
-    numero: number | any;
-    nombreFuente: string | any;
-    caudalConcesionado: string | any;
-    sistemaMedicionAguaCaptada: string | any;
-    cordenadaX: number | any;
-    cordenadaY: number | any;
 }
 
 export interface Persona {
@@ -65,6 +59,15 @@ interface CaptacionMensualAgua {
     caudalUtilizado: number | any;
     volumenAguaCaptada: number | any;
 }
+interface FuenteAbastecimiento {
+    tipo: string | any;
+    numero: number | any;
+    nombreFuente: string | any;
+    caudalConcesionado: string | any;
+    sistemaMedicionAguaCaptada: string | any;
+    cordenadaX: number | any;
+    cordenadaY: number | any;
+}
 
 interface Data {
     id_archivo_sistema:any;
@@ -90,7 +93,11 @@ interface Data {
     informacionFuentesAbastecimiento: FuenteAbastecimiento[];
 }
 
+
 export const AutodeclaracionFormulario: React.FC = () => {
+
+    const [formmmm, set_form] = useState<{archivo: null | any}>({ archivo: null });
+
     const { userinfo: { telefono_celular } } = useSelector((state: AuthSlice) => state.auth);
     const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
     const [
@@ -141,6 +148,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
     };
 
     const [Data, setFormData] = useState<Data>(initialFormData);
+    console.log("data",Data)
     const handleInputChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | SelectChangeEvent<string>
     ) => {
@@ -178,6 +186,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
         fetchDepartamentos();
     }, []);
 
+
+
+
     const crearFormulario = async () => {
         try {
             const url = "/recaudo/formulario/crear_formulario/";
@@ -192,7 +203,132 @@ export const AutodeclaracionFormulario: React.FC = () => {
     };
 
 
+    const fetch_Crear_archivo_digital = async () => {
+        try {
+            const url = `/recaudo/formulario/crear_formulario/`;
+            const formData = new FormData();
+    
+            // Agregar los campos de la interfaz Data al objeto FormData
+           formData.append('nit', '123456789');
+            formData.append('cc', '987654321');
+            formData.append('fax', "0987654321");
+            formData.append('telefono', "1234567890");
+            formData.append('otrotipo', "Otro tipo");
+            formData.append('direccion', "Dirección de la empresa");
+            formData.append('municipio', "Nombre del municipio");
+            formData.append('expediente', '987');
+            formData.append('codigoCIIU', '12345');
+            formData.append('razonSocial', "\"Nombre de la empresa\"");
+            formData.append('tipoUsuario', "EMPRESARIAL");
+            formData.append('numConcesion','654');
+            formData.append('fechaCreacion', "2024-02-09T04:45:56.337326");
+            formData.append('actividadEconomica', "Actividad económica");
+            formData.append('nombreRepresentanteLegal', "Nombre del representante legal");
 
+            // formData.append('nit', Data.nit);
+            // formData.append('cc',Data.cc);
+            // formData.append('fax', Data.fax);
+            // formData.append('telefono', Data.telefono);
+            // formData.append('otrotipo',Data.otrotipo);
+            // formData.append('direccion',Data.direccion);
+            // formData.append('municipio', Data.municipio);
+            // formData.append('expediente', Data.expediente);
+            // formData.append('codigoCIIU', Data.codigoCIIU);
+            // formData.append('razonSocial', Data.razonSocial);
+            // formData.append('tipoUsuario', Data.tipoUsuario);
+            // formData.append('numConcesion',Data.numConcesion);
+            // formData.append('fechaCreacion', Data.fechaCreacion);
+            // formData.append('actividadEconomica',Data.actividadEconomica);
+            // formData.append('nombreRepresentanteLegal', Data.nombreRepresentanteLegal);
+    
+            // Agregar los campos de factoresUtilizacion al objeto FormData
+            formData.append('factoresUtilizacion', JSON.stringify({
+                "id": 17,
+                "numeroUsuarios": 100,
+                "numeroBovinos": 50,
+                "numeroPorcinos": 30,
+                "numeroHectareas": 200,
+                "consumoNumeroUsuarios": 150,
+                "consumoNumeroBovinos": 10,
+                "consumoNumeroPorcinos": 10,
+                "consumoNumeroHectareas": 10
+            }));
+    
+            // Agregar las captacionesMensualesAgua al objeto FormData
+            formData.append('captacionesMensualesAgua', JSON.stringify([
+                {
+                    "id": 34,
+                    "periodoUso": "Periodo 1",
+                    "tiempoUso": 10,
+                    "caudalUtilizado": 50,
+                    "volumenAguaCaptada": 100,
+                    "mes": 1
+                },
+                {
+                    "id": 35,
+                    "periodoUso": "Periodo 2",
+                    "tiempoUso": 8,
+                    "caudalUtilizado": 40,
+                    "volumenAguaCaptada": 80,
+                    "mes": 3
+                },
+                {
+                    "id": 36,
+                    "periodoUso": "Periodo 3",
+                    "tiempoUso": 12,
+                    "caudalUtilizado": 60,
+                    "volumenAguaCaptada": 120,
+                    "mes": 5
+                }
+            ]));
+    
+            // Agregar las informacionFuentesAbastecimiento al objeto FormData
+            formData.append('informacionFuentesAbastecimiento', JSON.stringify([
+                {
+                    "id": 25,
+                    "numero": 1,
+                    "tipo": "Tipo 1",
+                    "nombreFuente": "Fuente 1",
+                    "caudalConcesionado": "Caudal 1",
+                    "sistemaMedicionAguaCaptada": "Sistema 1",
+                    "cordenadaX": 123.456,
+                    "cordenadaY": 789.012
+                },
+                {
+                    "id": 26,
+                    "numero": 2,
+                    "tipo": "Tipo 2",
+                    "nombreFuente": "Fuente 2",
+                    "caudalConcesionado": "Caudal 2",
+                    "sistemaMedicionAguaCaptada": "Sistema 2",
+                    "cordenadaX": 123.456,
+                    "cordenadaY": 789.012
+                }
+            ]));
+            // formData.append('id_archivo_sistema', formmmm.archivo as File);
+            if (formmmm.archivo) {
+                formData.append('id_archivo_sistema', formmmm.archivo);
+              }
+
+            // Realizar la solicitud POST
+            const res = await api.post(url, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
+            if (res.data) {
+                // La solicitud fue exitosa
+                control_success("se creo correctamente");
+            } else {
+                // La solicitud falló
+                console.error('Error en la solicitud:', res.statusText);
+            }
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+        }
+    };
+    
 
     
     const [currentCaptacion, setCurrentCaptacion] = useState({
@@ -388,6 +524,73 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
     const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
 
+
+
+
+
+    const [fileExtension, setFileExtension] = useState<string | null>(null);
+    const [file_nombre, set_file_nombre] = useState<string | null>(null);
+
+
+
+
+
+    const VisuallyHiddenInput = styled('input')`
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    white-space: nowrap;
+    width: 1px;
+  `;
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const fileInput = event.target;
+    if (fileInput?.files?.length) {
+      const fileName = fileInput.files[0].name;
+      const selectedFile = fileInput.files[0];
+   
+      
+      // Verificar si selectedFile no es null antes de asignarlo a set_form
+ 
+        set_form({ archivo: selectedFile });
+   
+      const extension = fileName.split('.').pop();
+      if (extension) {
+        setFileExtension(extension);
+        set_file_nombre(fileName);
+      } else {
+        console.error('No se pudo determinar la extensión del archivo.');
+        setFileExtension('Desconocido');
+        set_file_nombre('Desconocido');
+      }
+    } else {
+      console.warn('Ningún archivo seleccionado.');
+      setFileExtension(null);
+      set_file_nombre(null);
+    }
+  };
+
+
+
+
+  const handleRemoveFile = () => {
+    // Limpia la selección actual del archivo
+    set_form({
+      
+      archivo: null,
+    });
+    setFileExtension(null);
+    set_file_nombre(null);
+  };
+
+
+
+
+
     return (
         <>
 
@@ -415,6 +618,46 @@ export const AutodeclaracionFormulario: React.FC = () => {
             </Grid>
             {/* 222
             {direccion_generada} */}
+
+<Button onClick={fetch_Crear_archivo_digital}>xxxxxx</Button>
+<Grid
+          container
+          style={{ display: 'flex', justifyContent: 'flex-end', marginRight: 50 }}
+        >
+
+          <Button
+            style={{ marginTop: 10, width: 180 }}
+            fullWidth
+            component="label"
+            variant="outlined"
+            startIcon={<CloudUploadIcon />}
+            htmlFor="file-upload"
+          >
+            {formmmm.archivo ? (
+              <>
+                Quitar
+                <IconButton
+                  size="small"
+                  onClick={handleRemoveFile}
+                  sx={{ marginLeft: '8px' }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </>
+            ) : (
+              'Seleccionar Documento'
+            )}
+            <VisuallyHiddenInput
+              type="file"
+              id="file-upload"
+              onChange={handleFileChange}
+            />
+          </Button>
+
+        </Grid>
+
+
+
 
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}

@@ -28,11 +28,11 @@ const COLUMS_PQRSDF = [
     headerName: 'Persona Que Radicó  ',
     minWidth: 220,
   },
-  { field: 'Estado', headerName: 'Estado', width: 220, flex: 1 },
+  { field: 'Estado', headerName: 'Estado', minWidth: 300 },
   {
     field: 'Ubicacion en la corporacion',
     headerName: 'Ubicacion en la corporacion',
-    minWidth: 220,
+    minWidth: 300,
   },
 ];
 
