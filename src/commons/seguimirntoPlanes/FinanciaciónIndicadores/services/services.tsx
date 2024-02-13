@@ -3,6 +3,7 @@ import type { Cuenca } from '../../configuraciones/interfaces/interfaces';
 import type {
   IActividades,
   IFuentesFinanciacion,
+  IMetaIndicador,
   IProductos,
   IProyectos,
 } from '../../types/types';
@@ -45,6 +46,16 @@ export const get_actividades_id_producto = async (
   );
   return response.data.data;
 };
+
+export const get_metas_id_indicador = async (
+  id_indicador: number
+): Promise<IMetaIndicador[]> => {
+  const response = await api.get(
+    `seguimiento/planes/consultar-metas-id-indicadores/${id_indicador}/`
+  );
+  return response.data.data;
+};
+
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
 export const post_fuentes_fiananciacion = async (
   data: IFuentesFinanciacion
