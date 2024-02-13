@@ -62,10 +62,10 @@ export const PantallaPindicadores = () => {
 
   const consultarDatosAtencionDerechosPeticion = async (): Promise<void> => {
     try {
-        const url = `/gestor/pqr/indicadores/indicador-derechos-peticion/?fecha_radicado_desde=${fecha_radicado_desde}&fecha_radicado_hasta=${fecha_radicado_hasta}`;
-        const res = await api.get(url);
-        const dataConsulta = res.data.data;
-        setDataAtencionDerechosPeticion(dataConsulta);
+      const url = `/gestor/pqr/indicadores/indicador-derechos-peticion/?fecha_radicado_desde=${fecha_radicado_desde}&fecha_radicado_hasta=${fecha_radicado_hasta}`;
+      const res = await api.get(url);
+      const dataConsulta = res.data.data;
+      setDataAtencionDerechosPeticion(dataConsulta);
     } catch (error) {
       console.error("Error al consultar datos de atención a derechos de petición:", error);
     }
@@ -78,6 +78,8 @@ export const PantallaPindicadores = () => {
       let url = `/gestor/pqr/indicadores/indicador-atencion-pqrsdf/?fecha_radicado_desde=${fecha_radicado_desde}&fecha_radicado_hasta=${fecha_radicado_hasta}`;
       const res = await api.get(url);
       const Data_consulta = res.data.data;
+      const titulo_unononono = res.data.detail;
+      console.log(titulo_unononono)
       SET_P_AtencionAPQRSDF(Data_consulta);
     } catch (error) {
       console.error(error);
@@ -195,21 +197,21 @@ export const PantallaPindicadores = () => {
       console.error(error);
     }
   };
-const Activador_funciones=()=>{
-  consultarDatosAtencionQuejas()
-  AtencionAPQRSDF()
-  consultarDatosAtencionDerechosPeticion()
-  consultarDatosAtencionReclamos()
-  consultarDatosSugerenciasRadicadas()
-  consultarDatosPqrsdfContestadasOportunamente()
-  consultarDatosPeticionesContestadasOportunamente()
-  consultarDatosQuejasContestadasOportunamente()
-  consultarDatosReclamosOportunamente()
-  consultarDatosDenunciasContestadasOportunamente()
-  consultarDatosPQRSDFVencidas()
-  consultarDatosPeriodicidad()
+  const Activador_funciones = () => {
+    consultarDatosAtencionQuejas()
+    AtencionAPQRSDF()
+    consultarDatosAtencionDerechosPeticion()
+    consultarDatosAtencionReclamos()
+    consultarDatosSugerenciasRadicadas()
+    consultarDatosPqrsdfContestadasOportunamente()
+    consultarDatosPeticionesContestadasOportunamente()
+    consultarDatosQuejasContestadasOportunamente()
+    consultarDatosReclamosOportunamente()
+    consultarDatosDenunciasContestadasOportunamente()
+    consultarDatosPQRSDFVencidas()
+    consultarDatosPeriodicidad()
 
-}
+  }
 
   useEffect(() => {
     Activador_funciones()
@@ -222,15 +224,17 @@ const Activador_funciones=()=>{
 
   const primer_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[0]?.nombre_medio_solicitud;
   const segunda_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[2]?.nombre_medio_solicitud;
-  const tercera_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[3]?.nombre_medio_solicitud;
-  const cuarta_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[5]?.nombre_medio_solicitud;
+  const tercera_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[4]?.nombre_medio_solicitud;
+  const cuarta_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[6]?.nombre_medio_solicitud;
+  const quinta_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud[7]?.nombre_medio_solicitud;
 
 
 
   const primer_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[0]?.cantidad_pqrsdf;
   const segunda_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[2]?.cantidad_pqrsdf;
-  const tercera_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[3]?.cantidad_pqrsdf;
-  const cuarta_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[5]?.cantidad_pqrsdf;
+  const tercera_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[4]?.cantidad_pqrsdf;
+  const cuarta_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[6]?.cantidad_pqrsdf;
+  const quinta_grafica_value = dataPeriodicidad?.indicadores_por_medio_solicitud[7]?.cantidad_pqrsdf;
 
   const total = dataPeriodicidad?.total_pqrsdf;
 
@@ -258,20 +262,26 @@ const Activador_funciones=()=>{
         </Grid>
 
 
-        <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
           <BasicDemo titulo={primer_grafica || ""} value={primer_grafica_value} />
         </Grid>
 
-        <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
           <BasicDemo titulo={segunda_grafica || ""} value={segunda_grafica_value} />
         </Grid>
-        <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
 
           <BasicDemo titulo={tercera_grafica || ""} value={tercera_grafica_value} />
         </Grid>
 
-        <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
           <BasicDemo titulo={cuarta_grafica || ""} value={cuarta_grafica_value} />
+        </Grid>
+
+
+
+        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+          <BasicDemo titulo={quinta_grafica || ""} value={quinta_grafica_value} />
         </Grid>
 
       </Grid>
@@ -298,80 +308,140 @@ const Activador_funciones=()=>{
         </Grid>
 
         <Grid item xs={12} >
-          <Grid container justifyContent="center" alignItems="center"  style={{marginTop:15,marginRight:15}}>
-            <Button variant="contained" onClick={()=>{set_activador(!activador)}} startIcon={<SearchIcon/>}>
+          <Grid container justifyContent="center" alignItems="center" style={{ marginTop: 15, marginRight: 15 }}>
+            <Button variant="contained" onClick={() => { set_activador(!activador) }} startIcon={<SearchIcon />}>
               Consultar
             </Button>
           </Grid>
         </Grid>
 
         <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={P_AtencionAPQRSDF.porcentaje_respondidos} valor_dos={P_AtencionAPQRSDF.porcentaje_no_respondidos} tipo_porcentaje={P_AtencionAPQRSDF.rango_cumplimiento} />
+          <Graficapiegraficaindicadores
+            valor_uno={P_AtencionAPQRSDF.porcentaje_respondidos}
+            valor_dos={P_AtencionAPQRSDF.porcentaje_no_respondidos}
+            tipo_porcentaje={P_AtencionAPQRSDF.rango_cumplimiento}
+            titulo="Atención a PQRSDF"
+          />
 
         </Grid>
 
         <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataAtencionDerechosPeticion.porcentaje_respondidos} valor_dos={dataAtencionDerechosPeticion.porcentaje_no_respondidos} tipo_porcentaje={dataAtencionDerechosPeticion.rango_cumplimiento} />
+          <Graficapiegraficaindicadores
+            valor_uno={dataAtencionDerechosPeticion.porcentaje_respondidos}
+            valor_dos={dataAtencionDerechosPeticion.porcentaje_no_respondidos}
+            tipo_porcentaje={dataAtencionDerechosPeticion.rango_cumplimiento}
+            titulo={"Derechos de Peticion"}
+          />
 
         </Grid>
 
         <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataAtencionQuejas.num_quejas_respondidas} valor_dos={dataAtencionQuejas.porcentaje_no_respondidas} tipo_porcentaje={dataAtencionQuejas.rango_cumplimiento} />
-
-        </Grid>
-
-
-        <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataAtencionReclamos.porcentaje_respondidos} valor_dos={dataAtencionReclamos.porcentaje_no_respondidos} tipo_porcentaje={dataAtencionReclamos.rango_cumplimiento} />
-
-        </Grid>
-
-
-        <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataSugerenciasRadicadas.porcentaje_sugerencias_radicadas} valor_dos={dataSugerenciasRadicadas.porcentaje_sugerencias_no_radicadas} tipo_porcentaje={dataSugerenciasRadicadas.rango_cumplimiento} />
-
-        </Grid>
-
-
-        <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataPqrsdfContestadasOportunamente.porcentaje_contestados_oportunamente} valor_dos={dataPqrsdfContestadasOportunamente.porcentaje_contestados_inoportunamente} tipo_porcentaje={dataPqrsdfContestadasOportunamente.rango_cumplimiento} />
+          <Graficapiegraficaindicadores
+            valor_uno={dataAtencionQuejas.num_quejas_respondidas}
+            valor_dos={dataAtencionQuejas.porcentaje_no_respondidas}
+            tipo_porcentaje={dataAtencionQuejas.rango_cumplimiento}
+            titulo="Quejas"     
+                 />
 
         </Grid>
 
 
         <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataPeticionesContestadasOportunamente.porcentaje_contestadas_oportunamente} valor_dos={dataPeticionesContestadasOportunamente.porcentaje_contestadas_inoportunamente} tipo_porcentaje={dataPeticionesContestadasOportunamente.rango_cumplimiento} />
-
-        </Grid>
-
-        <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataQuejasContestadasOportunamente.porcentaje_contestadas_oportunamente} valor_dos={dataQuejasContestadasOportunamente.porcentaje_contestadas_inoportunamente} tipo_porcentaje={dataQuejasContestadasOportunamente.rango_cumplimiento} />
-
-        </Grid>
-
-
-
-        <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataReclamosOportunamente.porcentaje_contestados_oportunamente} valor_dos={dataReclamosOportunamente.porcentaje_no_contestados_inoportunamente} tipo_porcentaje={dataReclamosOportunamente.rango_cumplimiento} />
+          <Graficapiegraficaindicadores
+            valor_uno={dataAtencionReclamos.porcentaje_respondidos}
+            valor_dos={dataAtencionReclamos.porcentaje_no_respondidos}
+            tipo_porcentaje={dataAtencionReclamos.rango_cumplimiento} 
+            titulo="Reclamos"
+            />
 
         </Grid>
 
 
+        <Grid item xs={4} >
+          <Graficapiegraficaindicadores
+            valor_uno={dataSugerenciasRadicadas.porcentaje_sugerencias_radicadas}
+            valor_dos={dataSugerenciasRadicadas.porcentaje_sugerencias_no_radicadas}
+            tipo_porcentaje={dataSugerenciasRadicadas.rango_cumplimiento}
+            titulo="Sugerencias"
+          />
+
+        </Grid>
+
 
         <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataDenunciasContestadasOportunamente.porcentaje_contestadas_oportunamente} valor_dos={dataDenunciasContestadasOportunamente.porcentaje_no_contestadas_oportunamente} tipo_porcentaje={dataDenunciasContestadasOportunamente.rango_cumplimiento} />
+          <Graficapiegraficaindicadores
+            valor_uno={dataPqrsdfContestadasOportunamente.porcentaje_contestados_oportunamente}
+            valor_dos={dataPqrsdfContestadasOportunamente.porcentaje_contestados_inoportunamente}
+            tipo_porcentaje={dataPqrsdfContestadasOportunamente.rango_cumplimiento}
+            titulo="PQRSDF contestados Oportunamente"
+          />
+
+        </Grid>
+
+
+        <Grid item xs={4} >
+          <Graficapiegraficaindicadores
+            valor_uno={dataPeticionesContestadasOportunamente.porcentaje_contestadas_oportunamente}
+            valor_dos={dataPeticionesContestadasOportunamente.porcentaje_contestadas_inoportunamente}
+            tipo_porcentaje={dataPeticionesContestadasOportunamente.rango_cumplimiento}
+            titulo="Peticiones contestadas oportunamente"
+          />
+
+        </Grid>
+
+        <Grid item xs={4} >
+          <Graficapiegraficaindicadores
+            valor_uno={dataQuejasContestadasOportunamente.porcentaje_contestadas_oportunamente}
+            valor_dos={dataQuejasContestadasOportunamente.porcentaje_contestadas_inoportunamente}
+            tipo_porcentaje={dataQuejasContestadasOportunamente.rango_cumplimiento}
+            titulo="Quejas contestadas oportunamente"
+          />
 
         </Grid>
 
 
 
         <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataPQRSDFVencidas.porcentaje_oportunas} valor_dos={dataPQRSDFVencidas.porcentaje_vencidas} tipo_porcentaje={dataPQRSDFVencidas.rango_cumplimiento} />
+          <Graficapiegraficaindicadores
+            valor_uno={dataReclamosOportunamente.porcentaje_contestados_oportunamente}
+            valor_dos={dataReclamosOportunamente.porcentaje_no_contestados_inoportunamente}
+            tipo_porcentaje={dataReclamosOportunamente.rango_cumplimiento}
+            titulo="Reclamos Contestados oportunamente"
+          />
+
+        </Grid>
+
+
+
+        <Grid item xs={4} >
+          <Graficapiegraficaindicadores
+            valor_uno={dataDenunciasContestadasOportunamente.porcentaje_contestadas_oportunamente}
+            valor_dos={dataDenunciasContestadasOportunamente.porcentaje_no_contestadas_oportunamente}
+            tipo_porcentaje={dataDenunciasContestadasOportunamente.rango_cumplimiento}
+            titulo="Denuncias Contestadas oportunamente"
+          />
+
+        </Grid>
+
+
+
+        <Grid item xs={4} >
+          <Graficapiegraficaindicadores
+            valor_uno={dataPQRSDFVencidas.porcentaje_oportunas}
+            valor_dos={dataPQRSDFVencidas.porcentaje_vencidas}
+            tipo_porcentaje={dataPQRSDFVencidas.rango_cumplimiento}
+            titulo="PQRSDF Vencidas"
+          />
         </Grid>
 
 
         <Grid item xs={4} >
-          <Graficapiegraficaindicadores valor_uno={dataPQRSDFVencidas.porcentaje_oportunas} valor_dos={dataPQRSDFVencidas.porcentaje_vencidas} tipo_porcentaje={dataPQRSDFVencidas.rango_cumplimiento} />
+          <Graficapiegraficaindicadores
+            valor_uno={dataPQRSDFVencidas.porcentaje_oportunas}
+            valor_dos={dataPQRSDFVencidas.porcentaje_vencidas}
+            tipo_porcentaje={dataPQRSDFVencidas.rango_cumplimiento} 
+            titulo="estados vencidos"
+            />
 
         </Grid>
       </Grid>

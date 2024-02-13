@@ -177,17 +177,17 @@ const DigitalizacionesPendientes = () => {
       } = {};
 
       // Verificar y agregar propiedad al objeto solo si el valor no es una cadena vacía
-      if (tipo_solicitud !== '') {
-        params.tipo_solicitud = tipo_solicitud;
-      }
+      // if (tipo_solicitud !== '') {
+      //   params.tipo_solicitud = tipo_solicitud;
+      // }
 
-      if (estado_solicitud !== '') {
-        params.estado_solicitud = estado_solicitud;
-      }
+      // if (estado_solicitud !== '') {
+      //   params.estado_solicitud = estado_solicitud;
+      // }
 
-      if (numero_radicado !== '') {
-        params.numero_radicado = numero_radicado;
-      }
+      // if (numero_radicado !== '') {
+      //   params.numero_radicado = numero_radicado;
+      // }
       void dispatch(get_digitalization_requests_service(params));
     }
   };

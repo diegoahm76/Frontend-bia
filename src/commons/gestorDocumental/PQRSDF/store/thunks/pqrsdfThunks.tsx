@@ -777,6 +777,43 @@ export const radicar_pqrsdf_service = (
   };
 };
 
+// obtener raduiucado por id
+export const get_filed_id_service = (id: string | number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/radicados/get-radicado-by-id/${id}`
+      );
+      console.log(data);
+
+      if ('data' in data) {
+        dispatch(
+          set_filed({
+            ...data.data,
+            numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
+            nombre_tipo_radicado:
+              data.data.cod_tipo_radicado === 'E'
+                ? 'Entrada'
+                : data.data.cod_tipo_radicado === 'S'
+                ? 'Salidad'
+                : data.data.cod_tipo_radicado === 'I'
+                ? 'Interno'
+                : data.data.cod_tipo_radicado === 'U'
+                ? 'Unico'
+                : '',
+            titular: data.data.persona_titular,
+          })
+        );
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_pqrsdf_id_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // obtener radicados filtro pqrsdf
 export const get_filings_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -785,6 +822,11 @@ export const get_filings_service = (params: any): any => {
         params,
       });
       dispatch(set_filings(data.data));
+      if (data.data.length > 0) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón radicados con la busquedad ingresada');
+      }
       return data;
     } catch (error: any) {
       console.log('get_filings_service');

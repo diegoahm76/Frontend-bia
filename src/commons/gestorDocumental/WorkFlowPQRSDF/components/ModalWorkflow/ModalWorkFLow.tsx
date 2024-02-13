@@ -170,7 +170,7 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
                 }}
             >
                 <Grid item xs={12}>
-                    <Title title="Consultar Años Anteriores" />
+                    <Title title="WordFlow" />
                 </Grid>
 
                 {/* Contenido */}
