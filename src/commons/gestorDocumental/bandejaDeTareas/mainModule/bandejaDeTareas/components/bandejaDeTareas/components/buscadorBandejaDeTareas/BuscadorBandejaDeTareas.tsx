@@ -26,6 +26,7 @@ import {
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../toolkit/store/BandejaDeTareasStore';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -94,11 +95,30 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
   const searchOtros = async () => {
     try {
-      showAlert(
-        'Estimado usuario!',
-        'Esta funcionalidad de Responder Otros no está disponible ',
-        'warning'
+      const {
+        tipo_de_tarea,
+        estado_asignacion_de_tarea,
+        estado_de_la_tarea,
+        fecha_inicio,
+        fecha_fin,
+        radicado,
+      } = watchBusquedaBandejaDeTareas;
+      console.log
+
+     const res = await getListadoTareaasOtrosByPerson(
+        id_persona,
+        handleSecondLoading,
+        tipo_de_tarea?.value,
+        estado_asignacion_de_tarea?.value,
+        estado_de_la_tarea?.value,
+        fecha_inicio,
+        fecha_fin,
+        radicado
       );
+
+      console.log(res);
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
     } catch (error) {
       console.error('Error:', error);
     }
@@ -115,8 +135,6 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
       console.error('Error:', error);
     }
   };
-
-
 
   const unifiedSearchSubmit = async () => {
     const tipoDeTarea =

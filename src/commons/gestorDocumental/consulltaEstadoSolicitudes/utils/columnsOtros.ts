@@ -21,7 +21,7 @@ export const columnsOtros = [
   {
     headerName: 'Titular',
     field: 'Titular',
-    minWidth: 350,
+    minWidth: 450,
     renderCell: (params: any) => params.value || 'N/A',
   },
   {
@@ -47,19 +47,19 @@ export const columnsOtros = [
   {
     headerName: 'Persona que radicó',
     field: 'Persona Que Radicó',
-    minWidth: 350,
+    minWidth: 550,
     renderCell: (params: any) => params.value || 'N/A',
   },
   {
     headerName: 'Estado',
     field: 'Estado',
-    minWidth: 200,
+    minWidth: 350,
     renderCell: (params: any) => params.value || 'N/A',
   },
   {
     headerName: 'Ubicación en la corporación',
     field: 'Ubicacion en la corporacion',
-    minWidth: 150,
+    minWidth: 250,
     renderCell: (params: any) => params.value || 'N/A',
   },
 ];
