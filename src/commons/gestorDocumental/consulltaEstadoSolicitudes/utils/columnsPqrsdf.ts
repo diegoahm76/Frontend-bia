@@ -26,7 +26,7 @@ const COLUMS_PQRSDF = [
   {
     field: 'Persona Que Radicó',
     headerName: 'Persona Que Radicó  ',
-    minWidth: 220,
+    minWidth: 350,
   },
   { field: 'Estado', headerName: 'Estado', minWidth: 300 },
   {

@@ -75,7 +75,7 @@ export const BuscadorOpas = (props: any): JSX.Element => {
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
               fullWidth
-              label="Nombre proyecto OPA"
+              label="Nombre OPA"
               size="small"
               variant="outlined"
               value={value}
@@ -83,7 +83,7 @@ export const BuscadorOpas = (props: any): JSX.Element => {
               onChange={(e) => {
                 onChange(e.target.value);
               }}
-              inputProps={{ maxLength: 50 }}
+              inputProps={{ maxLength: 150 }}
             />
           )}
         />
