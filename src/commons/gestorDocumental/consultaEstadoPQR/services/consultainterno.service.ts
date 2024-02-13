@@ -18,7 +18,7 @@ const cargarAsignaciones = async ({
     id_persona:any,
 }): Promise<any> => {
     try {
-        const response = await api.get(`/gestor/pqr/consulta-estado-pqrsdf/?tipo_solicitud=${formData.tipo_solicitud}&tipo_pqrsdf=${formData.pqrs}&radicado=${formData.radicado}&fecha_radicado_desde=${formData.fecha_desde}&fecha_radicado_hasta=${formData.fecha_hasta}&estado_solicitud=${formData.estado}&id_persona_titular=${id_persona}`);
+        const response = await api.get(`/gestor/pqr/consulta-estado-pqrsdf/?tipo_solicitud=${formData.tipo_solicitud}&tipo_pqrsdf=${formData.pqrs}&radicado=${formData.radicado}&fecha_radicado_desde=${formData.fecha_desde}&fecha_radicado_hasta=${formData.fecha_hasta}&estado_solicitud=${formData.estado}&id_persona_titular=`);
         if (response.data.success) {
             setAsignaciones(response?.data?.data);
 

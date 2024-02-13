@@ -142,10 +142,7 @@ export const BandejaEmail: React.FC<IProps> = ({ handleEnd, handleBack, steps, a
             )
         },
     ];
-    const handleClick = () => {
-        console.log(Email);
-        console.log("2222222");
-    };
+ 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handle_close = (): void => {
