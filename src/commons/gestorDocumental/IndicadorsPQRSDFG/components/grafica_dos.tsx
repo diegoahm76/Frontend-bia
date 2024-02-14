@@ -13,6 +13,9 @@ interface Props {
   value?: number;
 }
 export const BasicDemo: React.FC<Props> = ({ titulo = '', value }: Props) => {
+
+
+
   const exportToPDF = () => {
     const content = document.getElementById('basic-demo-container');
 
@@ -22,9 +25,12 @@ export const BasicDemo: React.FC<Props> = ({ titulo = '', value }: Props) => {
         const pdf = new jsPDF();
         pdf.addImage(imgData, 'PNG', 10, 10, 190, 120);
         pdf.save('grafica.pdf');
+        console.log("value", imgData);
       });
+      console.log("content",content);
     }
   };
+
 
   return (
     <div id="basic-demo-container" style={{ textAlign: 'center' }}>

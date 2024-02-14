@@ -1,4 +1,4 @@
-import { type Dispatch } from 'react';
+import { useContext, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
 import {
@@ -20,6 +20,7 @@ import {
 } from '../slice/centralDigitalizacionSlice';
 import { api } from '../../../../../api/axios';
 import { IObjListType } from '../../interfaces/central_digitalizacion';
+import { OpcionOtrosContext } from '../../context/BusquedaOtrosDigitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -129,13 +130,35 @@ export const get_file_typology_service = (): any => {
     } catch (error: any) {
       //  console.log('')('get_file_typology_service');
       control_error(error.response.data.detail);
-      return error as AxiosError;
+      return error as AxiosError;            
     }
   };
 };
 //gestor/central-digitalizacion/get-solicitudes-pendientes/
-// obtener personas filtro
+// gestor/central-digitalizacion/otros/get-solicitudes-pendientes/
+// const {opcion_otros}=useContext(OpcionOtrosContext)
+
 export const get_digitalization_requests_service = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/central-digitalizacion/get-solicitudes-pendientes/`,
+        { params }
+      );
+      console.log(data);
+      if (data.success) {
+        dispatch(set_digitization_requests(data.data));
+        control_success(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      //  console.log('')('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+export const get_digitalization_requests_service_otros = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(

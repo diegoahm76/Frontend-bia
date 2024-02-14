@@ -22,6 +22,7 @@ import {
 import {
   control_error,
   get_digitalization_requests_service,
+  get_digitalization_requests_service_otros,
 } from '../../store/thunks/centralDigitalizacionThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -176,18 +177,28 @@ const DigitalizacionesPendientes = () => {
         numero_radicado?: string;
       } = {};
 
-      // Verificar y agregar propiedad al objeto solo si el valor no es una cadena vacía
-      // if (tipo_solicitud !== '') {
-      //   params.tipo_solicitud = tipo_solicitud;
-      // }
+      //Verificar y agregar propiedad al objeto solo si el valor no es una cadena vacía
+  
+    
 
-      // if (estado_solicitud !== '') {
-      //   params.estado_solicitud = estado_solicitud;
-      // }
+      if (estado_solicitud !== '') {
+        params.estado_solicitud = estado_solicitud;
+      }
 
-      // if (numero_radicado !== '') {
-      //   params.numero_radicado = numero_radicado;
-      // }
+      if (numero_radicado !== '') {
+        params.numero_radicado = numero_radicado;
+      }
+
+      if (tipo_solicitud === "OTROS") {
+        void dispatch(get_digitalization_requests_service_otros(params));
+        // console.log("si se pudo");
+        return;
+      }
+      if (tipo_solicitud !== '') {
+        params.tipo_solicitud = tipo_solicitud;
+        console.log(params, tipo_solicitud, params.tipo_solicitud);
+      }
+
       void dispatch(get_digitalization_requests_service(params));
     }
   };
