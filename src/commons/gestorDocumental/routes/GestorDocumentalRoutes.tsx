@@ -215,7 +215,12 @@ const routes = [
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
   },
-
+  // {
+  //   path: 'digitalizacion_opas/',
+  //   name: 'digitalizacion_opas',
+  //   component: () => <Digitalizacion_opas_Routes />,
+  // },
+  
   {
     path: 'Pqrsdf/complementos/',
     name: 'complementos_pqrsdf',

@@ -40,7 +40,16 @@ import {
 } from '../services/consultaExterno.service';
 import { RenderDataGrid } from '../../tca/Atom/RenderDataGrid/RenderDataGrid';
 
-export const ConsultaExternoPQR: React.FC = () => {
+
+
+export interface props {
+  handleInputChange:any;
+  formData:any;
+  setFormData:any;
+  estado:any;
+  setestado:any;
+};
+export const ConsultaExternoPQR: React.FC<props> = ({setestado, estado,setFormData, handleInputChange,formData}) => {
   const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
 
   const initialFormData: FormData = {
@@ -54,14 +63,14 @@ export const ConsultaExternoPQR: React.FC = () => {
     tipo_solicitud: '',
     estado_solicitud: '',
   };
-  const [formData, setFormData] = useState(initialFormData);
-  const handleInputChange = (event: any) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  // const [formData, setFormData] = useState(initialFormData);
+  // const handleInputChange = (event: any) => {
+  //   const { name, value } = event.target;
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
   useEffect(() => {
     cargarAsignaciones({
       setAsignaciones: setAsignaciones,
@@ -73,23 +82,20 @@ export const ConsultaExternoPQR: React.FC = () => {
     {
       field: 'Tipo de Solicitud',
       headerName: 'Tipo de Solicitud',
-      width: 220,
-      flex: 1,
+      minWidth: 150,
     },
     {
       field: 'tipo_pqrsdf_descripcion',
       headerName: 'Tipo de PQRSDF',
-      width: 220,
-      flex: 1,
+      minWidth: 200,
     },
-    { field: 'Titular', headerName: 'Titular', width: 220, flex: 1 },
-    { field: 'Asunto', headerName: 'Asunto', width: 220, flex: 1 },
-    { field: 'Radicado', headerName: 'Radicado', width: 220, flex: 1 },
+    { field: 'Titular', headerName: 'Titular', minWidth: 450, },
+    { field: 'Asunto', headerName: 'Asunto', minWidth: 300, },
+    { field: 'Radicado', headerName: 'Radicado', minWidth: 200, },
     {
       field: 'Fecha de Radicado',
       headerName: 'Fecha de Radicado',
-      width: 220,
-      flex: 1,
+      minWidth: 200,
       valueFormatter: (params: { value: string | number | Date }) => {
         const date = new Date(params.value);
         const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(
@@ -103,21 +109,18 @@ export const ConsultaExternoPQR: React.FC = () => {
     {
       field: 'Persona Que Radicó',
       headerName: 'Persona Que Radicó  ',
-      minWidth: 300,
-      flex: 1,
+      minWidth: 450,
     },
     {
       field: 'Tiempo Para Respuesta',
       headerName: 'Tiempo Para Respuesta',
-      width: 220,
-      flex: 1,
+      minWidth: 200,
     },
-    { field: 'Estado', headerName: 'Estado', width: 220, flex: 1 },
+    { field: 'Estado', headerName: 'Estado',      minWidth: 250, },
     {
       field: 'ruta_archivo',
       headerName: 'Archivo',
-      width: 200,
-      flex: 1,
+      minWidth: 100,
       renderCell: (params: any) => (
         <DownloadButton
           condition={params.row.URL_Documento === null}
@@ -144,7 +147,7 @@ export const ConsultaExternoPQR: React.FC = () => {
     fetchTipoPQRSDF({ setTipoPQRSDF });
   }, []);
   //Estado
-  const [estado, setestado] = useState<estado[]>([]);
+  // const [estado, setestado] = useState<estado[]>([]);
   useEffect(() => {
     cargarestado({ setestado });
   }, []);
@@ -158,56 +161,8 @@ export const ConsultaExternoPQR: React.FC = () => {
   };
   return (
     <>
-      <Grid
-        container
-        item
-        xs={12}
-        marginLeft={2}
-        marginRight={2}
-        marginTop={3}
-        spacing={2}
-        sx={miEstilo}
-      >
-        <Grid item xs={12} sm={12}>
-          <Title title="externo Consultar estado de una solicitud - PQRSDF " />
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        item
-        xs={12}
-        marginLeft={2}
-        marginRight={2}
-        marginTop={3}
-        spacing={2}
-        sx={miEstilo}
-      >
-        <Grid item xs={12} sm={12}>
-          <Title title="Filtro de búsqueda    " />
-        </Grid>
-
-        <Grid item xs={12} sm={3}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>Tipos de solicitud</InputLabel>
-            <Select
-              onChange={handleInputChange}
-              value={formData.tipo_solicitud}
-              name="tipo_solicitud"
-              label="tipo_solicitud"
-            >
-              {tipoPQRSDF.map((tipo_solicitud) => (
-                <MenuItem
-                  key={tipo_solicitud.codigo}
-                  value={tipo_solicitud.codigo}
-                >
-                  {tipo_solicitud.descripcion}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={3}>
+     
+     <Grid item xs={12} sm={3}>
           <FormControl size="small" fullWidth>
             <InputLabel>PQRS</InputLabel>
             <Select
@@ -223,89 +178,6 @@ export const ConsultaExternoPQR: React.FC = () => {
               ))}
             </Select>
           </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>Organigrama</InputLabel>
-            <Select
-              label="Organigrama"
-              onChange={handleInputChange}
-              name="organigrama"
-              value={formData.organigrama}
-            >
-              {organigrama.map((organigrama) => (
-                <MenuItem
-                  key={organigrama.id_unidad_organizacional}
-                  value={organigrama.id_unidad_organizacional}
-                >
-                  {organigrama.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={3}>
-          <TextField
-            label="radicado"
-            name="radicado"
-            variant="outlined"
-            size="small"
-            fullWidth
-            onChange={handleInputChange}
-            value={formData.radicado}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={3}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>estado</InputLabel>
-            <Select
-              label="estado"
-              onChange={handleInputChange}
-              name="estado"
-              value={formData.estado}
-            >
-              {estado.map((estado) => (
-                <MenuItem
-                  key={estado.id_estado_solicitud}
-                  value={estado.nombre}
-                >
-                  {estado.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <TextField
-            fullWidth
-            label="Fecha desde  "
-            type="date"
-            size="small"
-            name="fecha_desde"
-            variant="outlined"
-            value={formData.fecha_desde}
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => {
-              handleInputChange(e);
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <TextField
-            fullWidth
-            label=" Fecha hasta  "
-            type="date"
-            size="small"
-            name="fecha_hasta"
-            variant="outlined"
-            value={formData.fecha_hasta}
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => {
-              handleInputChange(e);
-            }}
-          />
         </Grid>
         <Grid item>
           <Button
@@ -333,42 +205,19 @@ export const ConsultaExternoPQR: React.FC = () => {
             buscar
           </Button>
         </Grid>
+
+
+     
+       
+     
         <RenderDataGrid
           title="Resultados de la busqueda"
           rows={asignaciones}
           columns={columns}
         />
-        {/* <Grid item xs={12} sm={11} ></Grid>
-                <Grid item  >
-                    <ButtonGroup style={{ margin: 5, }}>
-                        {download_xls({ nurseries: asignaciones, columns })}
-                        {download_pdf({
-                            nurseries: asignaciones,
-                            columns,
-                            title: 'Mis alertas',
-                        })}
-                    </ButtonGroup>
-                </Grid>
-                <Divider
-                    style={{
-                        width: '98%',
-                        marginTop: '8px',
-                        marginBottom: '8px',
-                        marginLeft: 'auto',
-                    }}
-                />
-                <Grid item xs={12} sm={12}>
-                    <DataGrid
-                        autoHeight
-                        pageSize={10}
-                        columns={columns}
-                        density="compact"
-                        rowsPerPageOptions={[10]}
-                        rows={asignaciones || []}
-                        getRowId={(row) => row.Id_PQRSDF}
-                    />
-                </Grid>*/}
-      </Grid>
+         
+         
+      
     </>
   );
 };

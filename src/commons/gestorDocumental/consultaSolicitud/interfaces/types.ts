@@ -4,6 +4,7 @@ export interface organigrama {
     item_ya_usado: boolean;
 };
 export interface AsignacionEncuesta {
+    Id_PQRSDF: any;
     id_pqrsdf: any;
     tipo_pqrsdf: any;
     medio_solicitud: any;
