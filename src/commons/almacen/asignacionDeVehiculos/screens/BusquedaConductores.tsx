@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { Button, FormControl, FormLabel, Grid, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
+import { DataGrid } from '@mui/x-data-grid';
+import { v4 as uuidv4 } from 'uuid';
+import { data_busqueda_conductor } from '../interfaces/types';
+import TableBusquedaConductores from '../tables/TableBusquedaCondutores';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const BusquedaConductores: React.FC = () => {
   const [tipo_conductor, set_tipo_conductor] = useState<string>('');
   const [msj_error_tipo_conductor, set_msj_error_tipo_conductor] = useState<string>('');
-
 
   const cambio_tipo_conductor: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_conductor(e.target.value);
@@ -19,7 +22,6 @@ const BusquedaConductores: React.FC = () => {
   return (
     <Grid
       container
-      spacing={2}
       marginTop={2}
       sx={{
         position: 'relative',
@@ -33,7 +35,8 @@ const BusquedaConductores: React.FC = () => {
       <Title title='Búsqueda de Conductores' />
       <Grid item container xs={12} sx={{
           display:'flex',
-          gap:'10px'
+          gap:'10px',
+          marginTop: '15px'
         }}>
           <Grid item xs={4}
             sx={{
@@ -99,7 +102,7 @@ const BusquedaConductores: React.FC = () => {
           display:'flex',
           justifyContent:'center'
         }}>
-        Aqui va tabla con resultados
+        <TableBusquedaConductores />
       </Grid>
     </Grid>
   );

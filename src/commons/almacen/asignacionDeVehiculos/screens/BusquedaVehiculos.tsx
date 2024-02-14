@@ -4,12 +4,16 @@ import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import { busqueda_vehiculos } from '../interfaces/types';
 import BusquedaConductores from './BusquedaConductores';
+import { DataGrid } from '@mui/x-data-grid';
+import { v4 as uuidv4 } from 'uuid';
+import TableBusquedaVehiculos from '../tables/TableBusquedaVehiculos';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const BusquedaVehiculos: React.FC<busqueda_vehiculos> = ({set_mostrar_busqueda_vehiculos}) => {
   const [tipo_vehiculo, set_tipo_vehiculo] = useState<string>('');
   const [msj_error_tipo_vehiculo, set_msj_error_tipo_vehiculo] = useState<string>('');
+
 
   const cambio_tipo_vehiculo: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_vehiculo(e.target.value);
@@ -28,6 +32,8 @@ const BusquedaVehiculos: React.FC<busqueda_vehiculos> = ({set_mostrar_busqueda_v
       borderRadius: '15px',
       p: '20px',
       mb: '20px',
+      margin:'10px auto',
+      width:'100%',
       boxShadow: '0px 3px 6px #042F4A26',
     }}
     >
@@ -42,7 +48,7 @@ const BusquedaVehiculos: React.FC<busqueda_vehiculos> = ({set_mostrar_busqueda_v
         >
         <Grid item container xs={12} sx={{
             display:'flex',
-            gap:'10px'
+            gap:'10px',
           }}>
           <Grid item xs={3}
             sx={{
@@ -124,11 +130,12 @@ const BusquedaVehiculos: React.FC<busqueda_vehiculos> = ({set_mostrar_busqueda_v
         </Grid>
       </Grid>
 
-      <Grid item container xs={12} sx={{
+      <Grid container sx={{
           display:'flex',
-          justifyContent:'center'
+          justifyContent:'center',
+          width:'100%'
         }}>
-        Aqui va tabla con resultados
+        <TableBusquedaVehiculos />
       </Grid>
 
       <BusquedaConductores />

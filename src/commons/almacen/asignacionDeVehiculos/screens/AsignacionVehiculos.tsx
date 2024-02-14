@@ -4,6 +4,7 @@ import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import BusquedaVehiculos from './BusquedaVehiculos';
+import TableAsignacionVehiculos from '../tables/TableAsignacionVehiculos';
 
 
 
@@ -34,10 +35,12 @@ const AsignacionVehiculos: React.FC = () => {
         container
         spacing={2}
         marginTop={2}
+        width={'100%'}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
+          margin: 'auto',
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
@@ -50,7 +53,7 @@ const AsignacionVehiculos: React.FC = () => {
           sx={{
             marginTop: '10px'
           }}
-          spacing={2}
+          spacing={1}
           >
             <Grid item container xs={12} sx={{
               display:'flex',
@@ -63,7 +66,7 @@ const AsignacionVehiculos: React.FC = () => {
                   justifyContent:'center'
                 }}
                 >
-                <FormLabel sx={{marginRight:'10px'}}>
+                <FormLabel sx={{marginRight:'5px'}}>
                   Tipo de Conductor:
                 </FormLabel>
                 <Grid item xs={6}>
@@ -104,7 +107,7 @@ const AsignacionVehiculos: React.FC = () => {
                 </Grid>
               </Grid>
 
-              <Grid item xs={2} sx={{
+              <Grid item xs={1.5} sx={{
                 display:'flex',
                 justifyContent: 'center',
                 alignItems:'center',
@@ -113,7 +116,7 @@ const AsignacionVehiculos: React.FC = () => {
                 <FormLabel htmlFor='placa'>
                   Placa:
                 </FormLabel>
-                <Grid item xs={6}>
+                <Grid item xs={7}>
                   <TextField
                     fullWidth
                     id='placa'
@@ -121,7 +124,6 @@ const AsignacionVehiculos: React.FC = () => {
                     size="small"
                   />
                 </Grid>
-                <SearchIcon style={{width:'40px',cursor:'pointer'}}/>
               </Grid>
 
               <Grid item xs={2.5} sx={{
@@ -141,7 +143,6 @@ const AsignacionVehiculos: React.FC = () => {
                     size="small"
                   />
                 </Grid>
-                <SearchIcon style={{width:'40px',cursor:'pointer'}}/>
               </Grid>
 
               <Grid item xs={1} sx={{
@@ -165,13 +166,13 @@ const AsignacionVehiculos: React.FC = () => {
               display:'flex',
               justifyContent:'center'
             }}>
-              Aqui va tabla con resultados
-            </Grid>
-
+              
             <Grid item container xs={12} sx={{
               display:'flex',
               justifyContent:'center'
             }}>
+              <TableAsignacionVehiculos />
+            </Grid>
             
             {!mostrar_busqueda_vehiculos &&
               <Button
@@ -185,8 +186,8 @@ const AsignacionVehiculos: React.FC = () => {
             }
           </Grid>
         </Grid>
-
       </Grid>
+
 
       {mostrar_busqueda_vehiculos &&
         <BusquedaVehiculos set_mostrar_busqueda_vehiculos={set_mostrar_busqueda_vehiculos}/>

@@ -418,7 +418,7 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
 
         <Grid item xs={12} sx={{
           display:'flex',
-          justifyContent: 'center',
+          justifyContent: 'end',
           alignItems:'center',
           marginTop:'20px',
           gap:4
@@ -432,20 +432,20 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
               {'Guardar'}
             </Button>
             <Button
-              color='inherit'
-              variant="contained"
-              startIcon={<CleanIcon />}
-              onClick={()=>{}}
-            >
-              Limpiar
-            </Button>
-            <Button
               color='error'
               variant='contained'
               startIcon={<ClearIcon />}
               onClick={()=>{set_mostrar_solicitud_viaje(false)}}
             >
               Salir
+            </Button>
+            <Button
+              color='inherit'
+              variant="outlined"
+              startIcon={<CleanIcon />}
+              onClick={()=>{}}
+            >
+              Limpiar
             </Button>
           </Grid>
       </Grid>
