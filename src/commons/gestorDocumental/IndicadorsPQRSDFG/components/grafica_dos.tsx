@@ -37,17 +37,16 @@ export const BasicDemo = ({ id = uuidv4(), titulo = '', value }: any) => {
 
   return (
     <>
-      <div id={id} style={{ textAlign: 'center' }} className="container-pdf">
+      <div id={id} style={{ textAlign: 'center' }} >
         <h2>{titulo ? titulo.toString() : ''}</h2>
-        <Knob value={value || 0} size={150} disabled />
+        <Knob value={value || 0} size={200} disabled />
         <Button onClick={exportToPDF} variant="contained" color="primary">
           <PictureAsPdfIcon />
         </Button>
       </div>
-      <Button onClick={exportAll} variant="contained" color="primary">
+      {/* <Button onClick={exportAll} variant="contained" color="primary">
         <PictureAsPdfIcon />
-        <PictureAsPdfIcon />
-      </Button>
+      </Button> */}
     </>
   );
 };
