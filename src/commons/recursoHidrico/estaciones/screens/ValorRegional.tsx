@@ -22,62 +22,53 @@ import { Button, ButtonGroup, Dialog, Divider, Grid, TextField } from '@mui/mate
 interface DataRow {
     codigo_rio: number;
     nuevo_dato?: string;
-    nombre_sub_zona_hidrica: any;
     nombre_zona_hidirca: any;
+    nombre_sub_zona_hidrica: any;
     nombre_zona_hidrica_macrocuenca: any;
 }
 
 export const ValorRegional: React.FC = () => {
 
     const [editingRow, setEditingRow] = useState<number | null>(null);
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const handle_close = (): void => {
-        setIsModalOpen(false)
-        setvalor_regional('');
-    };
+    const [sumaVariables, setSumaVariables] = useState<number>(0);
     const [valor_regional, setvalor_regional] = useState<any>('');
-
+    const [fecha_inicio, setfecha_inicio] = useState<string>('');
+    const [searchTerm, setSearchTerm] = useState<string>('');
     const [variable_ce, setvariable_ce] = useState<any>('');
     const [variable_ck, setvariable_ck] = useState<any>('');
     const [variable_cs, setvariable_cs] = useState<any>('');
     const [variable_cu, setvariable_cu] = useState<any>('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [fecha_fin, setfecha_fin] = useState<string>('');
+    const [data, setData] = useState<DataRow[]>([]);
 
-    const [sumaVariables, setSumaVariables] = useState<number>(0);
-
-
-    // useEffect(() => { 
-    //     const ce = Number(variable_ce);
-    //     const ck = Number(variable_ck);
-    //     const cs = Number(variable_cs);
-    //     const cu = Number(variable_cu); 
-
-    //     const resultado = (1 + ((ck + ce) * cs)) * cu; 
-    //     setSumaVariables(resultado);
-    // }, [variable_ce, variable_ck, variable_cs, variable_cu]); 
-
+    const handle_close = (): void => {
+        setvalor_regional('');
+        setIsModalOpen(false);
+        setvariable_ce("");
+        setvariable_ck("");
+        setvariable_cs("");
+        setvariable_cu("");
+    };
 
     const calcularOperacion = () => {
         const ce = Number(variable_ce);
         const ck = Number(variable_ck);
         const cs = Number(variable_cs);
         const cu = Number(variable_cu);
-
-        // Realizando la operación especificada: 1+((ck+ce)*cs)*cu
         const resultado = (1 + ((ck + ce) * cs)) * cu;
-        setSumaVariables(resultado);
         setvalor_regional(resultado.toString());
     };
-
-    const [fecha_inicio, setfecha_inicio] = useState<string>('');
-    const [fecha_fin, setfecha_fin] = useState<string>('');
-
 
 
     const actualizarValorRegional = async () => {
         try {
             const response = await api.put(`/hidrico/zonas-hidricas/sub_zona_hidrica/update/${editingRow}/`, {
-                valor_regional: valor_regional
+                valor_regional: valor_regional,
+                fecha_inicio: fecha_inicio,
+                fecha_fin: fecha_fin,
+
+
             });
             console.log('Respuesta del servidor:', response.data);
             control_success("Valor regional agregado  ");
@@ -93,11 +84,17 @@ export const ValorRegional: React.FC = () => {
 
 
     const columns = [
+        { field: 'id_sub_zona_hidrica', headerName: '   id_sub_zona_hidrica  ', width: 130, flex: 1 },
+
+        
         { field: 'nombre_zona_hidrica_macrocuenca', headerName: ' Zona hidrica macrocuenca  ', width: 130, flex: 1 },
         { field: 'nombre_zona_hidirca', headerName: ' Zona hidirca  ', width: 130, flex: 1 },
         { field: 'nombre_sub_zona_hidrica', headerName: ' Zub zona hidrica  ', width: 130, flex: 1 },
-        { field: 'codigo_rio', headerName: 'codigo rio  ', width: 130, flex: 1 },
+        { field: 'codigo_rio', headerName: 'Codigo rio  ', width: 130, flex: 1 },
         { field: 'valor_regional', headerName: 'Factor regional', width: 130, flex: 1 },
+        { field: 'fecha_inicio', headerName: 'Fecha de inicio   ', width: 130, flex: 1 },
+        { field: 'fecha_fin', headerName: 'Fecha de fin', width: 130, flex: 1 },
+
         {
             field: 'acciones',
             headerName: 'Acciones',
@@ -120,11 +117,6 @@ export const ValorRegional: React.FC = () => {
 
     ];
 
-
-
-
-
-    const [data, setData] = useState<DataRow[]>([]);
     const fetchData = async () => {
         try {
             const response = await api.get('/hidrico/zonas-hidricas/data_rios_completa/');
@@ -138,7 +130,6 @@ export const ValorRegional: React.FC = () => {
     }, []);
 
 
-    const [searchTerm, setSearchTerm] = useState<string>('');
 
     const handleSearch = (): void => {
         if (!searchTerm.trim()) {
@@ -149,9 +140,12 @@ export const ValorRegional: React.FC = () => {
             encuesta.nombre_sub_zona_hidrica.toLowerCase().includes(searchTerm.toLowerCase())
 
         );
-
         setData(filteredEncuestas);
     };
+
+
+
+
     return (
         <>
             {/* <div>
@@ -161,7 +155,6 @@ export const ValorRegional: React.FC = () => {
                 item xs={12} spacing={2} marginLeft={2} marginRight={2} marginTop={3}
                 sx={miEstilo}
             >
-
                 <Dialog
                     keepMounted
                     aria-describedby="alert-dialog-slide-description"
@@ -169,7 +162,6 @@ export const ValorRegional: React.FC = () => {
                     onClose={handle_close}
                     maxWidth="xl"
                 >
-
                     <Grid
                         container spacing={2}
                         sx={{
@@ -184,7 +176,6 @@ export const ValorRegional: React.FC = () => {
                         <Grid item xs={12} sm={12}>
                             <Title title="Ingresar valor regional    " />
                         </Grid>
-
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
@@ -195,7 +186,6 @@ export const ValorRegional: React.FC = () => {
                                 label="fecha inicio"
                                 value={fecha_inicio}
                                 InputLabelProps={{ shrink: true }}
-                                // onChange={setfecha_inicio}
                                 onChange={(e) => setfecha_inicio(e.target.value)}
                             />
                         </Grid>
@@ -209,16 +199,9 @@ export const ValorRegional: React.FC = () => {
                                 label="fecha fin"
                                 value={fecha_fin}
                                 InputLabelProps={{ shrink: true }}
-                                // onChange={setfecha_inicio}
                                 onChange={(e) => setfecha_fin(e.target.value)}
                             />
                         </Grid>
-
-
-
-
-
-
                         <Grid item xs={12} sm={3}>
                             <TextField
                                 variant="outlined"
@@ -267,7 +250,7 @@ export const ValorRegional: React.FC = () => {
                             <Grid item xs={12} sm={4}>
                                 <TextField
                                     variant="outlined"
-                                    label="Valor regional"
+                                    label="Factor regional"
                                     size="small"
                                     disabled
                                     fullWidth
@@ -286,7 +269,7 @@ export const ValorRegional: React.FC = () => {
                             direction="row"
                             alignItems="center"
                             justifyContent="center"
-                             >
+                        >
 
                             <Grid item >
                                 <Button

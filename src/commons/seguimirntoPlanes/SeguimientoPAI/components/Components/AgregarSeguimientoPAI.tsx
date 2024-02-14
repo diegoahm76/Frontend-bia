@@ -998,7 +998,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de creación del PAI"
@@ -1024,7 +1024,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 )}
               />
             </LocalizationProvider>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
               Documentos Anexos

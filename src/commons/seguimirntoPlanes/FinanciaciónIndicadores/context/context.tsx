@@ -8,6 +8,7 @@ import type {
   IActividades,
   IProductos,
   IProyectos,
+  IMetaIndicador,
 } from '../../types/types';
 import { control_error } from '../../../../helpers';
 // import { useAppSelector } from '../../../../hooks';
@@ -17,6 +18,7 @@ import {
   get_producto_id_proyecto,
   get_actividades_id_producto,
   get_proyectos,
+  get_metas_id_indicador,
 } from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import type { Cuenca } from '../../configuraciones/interfaces/interfaces';
@@ -40,6 +42,8 @@ interface UserContext {
   // * rows
   rows_fuentes: IFuentesFinanciacion[];
   set_rows_fuentes: (value: IFuentesFinanciacion[]) => void;
+  rows_metas: IMetaIndicador[];
+  set_rows_metas: (value: IMetaIndicador[]) => void;
 
   // * select
   cuencas_selected: ValueProps[];
@@ -62,6 +66,7 @@ interface UserContext {
   fetch_data_proyectos: () => Promise<void>;
   fetch_data_productos: () => Promise<void>;
   fetch_data_actividades: () => Promise<void>;
+  fetch_data_metas_id_indicador: () => Promise<void>;
 }
 
 export const DataContextFuentesFinanciacion = createContext<UserContext>({
@@ -80,6 +85,8 @@ export const DataContextFuentesFinanciacion = createContext<UserContext>({
   set_id_indicador: () => {},
   rows_fuentes: [],
   set_rows_fuentes: () => {},
+  rows_metas: [],
+  set_rows_metas: () => {},
 
   cuencas_selected: [],
   set_cuencas_selected: () => {},
@@ -98,6 +105,7 @@ export const DataContextFuentesFinanciacion = createContext<UserContext>({
   fetch_data_proyectos: async () => {},
   fetch_data_productos: async () => {},
   fetch_data_actividades: async () => {},
+  fetch_data_metas_id_indicador: async () => {},
 });
 
 export const UserProviderFuentesFinanciacion = ({
@@ -137,6 +145,8 @@ export const UserProviderFuentesFinanciacion = ({
     IFuentesFinanciacion[]
   >([]);
 
+  const [rows_metas, set_rows_metas] = React.useState<IMetaIndicador[]>([]);
+
   // * info
 
   // * fetch
@@ -151,17 +161,7 @@ export const UserProviderFuentesFinanciacion = ({
       if (response?.length > 0) {
         const data_fuentes: IFuentesFinanciacion[] = response.map(
           (item: IFuentesFinanciacion) => ({
-            id_fuente: item.id_fuente,
-            nombre_fuente: item.nombre_fuente,
-            nombre_indicador: item.nombre_indicador,
-            nombre_cuenca: item.nombre_cuenca,
-            vano_1: item.vano_1,
-            vano_2: item.vano_2,
-            vano_3: item.vano_3,
-            vano_4: item.vano_4,
-            valor_total: item.valor_total,
-            id_cuenca: item.id_cuenca,
-            id_indicador: item.id_indicador,
+            ...item,
           })
         );
 
@@ -269,6 +269,25 @@ export const UserProviderFuentesFinanciacion = ({
     }
   };
 
+  const fetch_data_metas_id_indicador = async (): Promise<void> => {
+    try {
+      set_rows_metas([]);
+      const response = await get_metas_id_indicador(id_indicador!);
+      if (response?.length > 0) {
+        const data_metas: IMetaIndicador[] = response.map(
+          (item: IMetaIndicador) => ({
+            ...item,
+          })
+        );
+        set_rows_metas(data_metas);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
   const value: UserContext = {
     // * id
     id_plan,
@@ -283,7 +302,7 @@ export const UserProviderFuentesFinanciacion = ({
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
-    
+
     // * select
     cuencas_selected,
     set_cuencas_selected,
@@ -299,6 +318,8 @@ export const UserProviderFuentesFinanciacion = ({
     // * rows
     rows_fuentes,
     set_rows_fuentes,
+    rows_metas,
+    set_rows_metas,
 
     // * info
 
@@ -309,6 +330,7 @@ export const UserProviderFuentesFinanciacion = ({
     fetch_data_proyectos,
     fetch_data_productos,
     fetch_data_actividades,
+    fetch_data_metas_id_indicador,
   };
 
   return (

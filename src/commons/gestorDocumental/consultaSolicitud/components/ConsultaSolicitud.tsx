@@ -52,7 +52,11 @@ export const ConsultaSolucitud: React.FC = () => {
 
     const cargarAsignaciones = async () => {
         try {
-            const response = await api.get(`/gestor/pqr/busqueda-avanzada-reportes/?id_persona_titular=${persona?.id_persona}&cod_tipo_PQRSDF=${formData.pqrs}&id_und_org_seccion_asignada=${formData.organigrama}&fecha_desde=${formData.fecha_desde}&fecha_hasta=${formData.fecha_hasta}`);
+            const respone = await api.get(`/gestor/pqr/busqueda-avanzada-reportes/?id_persona_titular=${persona?.id_persona}&cod_tipo_PQRSDF=${formData.pqrs}&id_und_org_seccion_asignada=${formData.organigrama}&fecha_desde=${formData.fecha_desde}&fecha_hasta=${formData.fecha_hasta}`);
+            const response = await api.get(`/gestor/pqr/busqueda-avanzada-reportes/?id_persona_titular=${persona?.id_persona}&id_estado_actual_solicitud=&tipo_solicitud=${formData.pqrs}&id_und_org_seccion_asignada=${formData.organigrama}&fecha_desde=${formData.fecha_desde}&fecha_hasta=${formData.fecha_hasta}
+            `);
+
+         
             if (response.data.success) {
                 setAsignaciones(response?.data?.data);
 
@@ -69,20 +73,20 @@ export const ConsultaSolucitud: React.FC = () => {
         cargarAsignaciones();
     }, []);
     const columns = [
-        { field: 'tipo_pqrsdf_descripcion', headerName: 'Tipo de PQESDF', width: 220, flex: 1, },
-        { field: 'medio_solicitud', headerName: 'Medio de solicitud', width: 220, flex: 1, },
-        { field: 'sucursal_recepcion', headerName: 'Sucursal de recepción', width: 220, flex: 1, },
-        { field: 'numero_radicado', headerName: 'Número radicado', width: 220, flex: 1, },
+        { field: 'tipo_pqrsdf_descripcion', headerName: 'Tipo de PQESDF',  minWidth: 250, },
+        { field: 'medio_solicitud', headerName: 'Medio de solicitud',  minWidth: 260, },
+        { field: 'sucursal_recepcion', headerName: 'Sucursal de recepción',  minWidth: 260, },
+        { field: 'numero_radicado', headerName: 'Número radicado',  minWidth: 250, },
         {
-            field: 'fecha_radicado', headerName: 'Fecha radicado', width: 220, flex: 1, valueFormatter: (params: { value: string | number | Date; }) => {
+            field: 'fecha_radicado', headerName: 'Fecha radicado',  minWidth: 250, valueFormatter: (params: { value: string | number | Date; }) => {
                 const date = new Date(params.value);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
                 return formattedDate;
             },
         },
-        { field: 'persona_recibe', headerName: 'Persona que recibe', width: 220, flex: 1, },
+        { field: 'persona_recibe', headerName: 'Persona que recibe',  minWidth: 250, },
         {
-            field: 'fecha_solicitud', headerName: 'Fecha de solicitud  ', width: 220, flex: 1, valueFormatter: (params: { value: string | number | Date; }) => {
+            field: 'fecha_solicitud', headerName: 'Fecha de solicitud  ', minWidth: 250, valueFormatter: (params: { value: string | number | Date; }) => {
                 const date = new Date(params.value);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
                 return formattedDate;
@@ -182,7 +186,7 @@ export const ConsultaSolucitud: React.FC = () => {
                         variant="outlined"
                         size="small"
                         fullWidth
-                        required
+                        
                         disabled
                         InputLabelProps={{
                             shrink: true,
@@ -191,7 +195,7 @@ export const ConsultaSolucitud: React.FC = () => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                    <FormControl required size="small" fullWidth>
+                    <FormControl  size="small" fullWidth>
                         <InputLabel >PQRS</InputLabel>
                         <Select
                             onChange={handleInputChange}
@@ -208,10 +212,10 @@ export const ConsultaSolucitud: React.FC = () => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                    <FormControl required size="small" fullWidth>
-                        <InputLabel   >Organigrama</InputLabel>
+                    <FormControl  size="small" fullWidth>
+                        <InputLabel   >Unidad Organizacional</InputLabel>
                         <Select
-                            label="Organigrama"
+                            label="Unidad Organizacional"
                             onChange={handleInputChange}
                             name="organigrama"
                             value={formData.organigrama}
@@ -225,8 +229,8 @@ export const ConsultaSolucitud: React.FC = () => {
                     </FormControl>
                 </Grid>
 
-                <Grid item xs={12} sm={3}>
-                    <FormControl required size="small" fullWidth>
+                {/* <Grid item xs={12} sm={3}>
+                    <FormControl  size="small" fullWidth>
                         <InputLabel   >estado</InputLabel>
                         <Select
                             label="estado"
@@ -241,7 +245,7 @@ export const ConsultaSolucitud: React.FC = () => {
                             ))}
                         </Select>
                     </FormControl>
-                </Grid>
+                </Grid> */}
                 {/* <Grid item xs={12} sm={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -257,7 +261,7 @@ export const ConsultaSolucitud: React.FC = () => {
                             // onChange={handleInputChange}
                             renderInput={(params) => (
                                 <TextField
-                                    required
+                                    
                                     fullWidth
                                     size="small"
                                     {...params}
@@ -323,7 +327,7 @@ export const ConsultaSolucitud: React.FC = () => {
                             // onChange={handleInputChange}
                             renderInput={(params) => (
                                 <TextField
-                                    required
+                                    
                                     fullWidth
                                     size="small"
                                     {...params}

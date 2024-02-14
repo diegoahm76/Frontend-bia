@@ -1,12 +1,12 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { ConsultaEstadoPQR } from '../components/ConsultaEstadoPQR';
-  
+import { DigitalizacionOpas } from '../components/DigitalizacionOpas';
+    
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const Consulta_estadoPQR_Routes: React.FC = () => {
+export const Digitalizacion_opas_Routes: React.FC = () => {
     return (
         <Routes>
-            <Route path="/consulta_estadopqr" element={<  ConsultaEstadoPQR />} />
+            <Route path="/digitalizacion_opas" element={<  DigitalizacionOpas />} />
             <Route path="/*" element={<Navigate to={'/'} />} />
         </Routes>
     );
