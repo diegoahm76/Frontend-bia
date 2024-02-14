@@ -23,7 +23,7 @@ import {
   type ILevelFather,
   type ILevelUnity,
   type IObjCreateOrganigram as FormValuesOrganigram,
-  type ITypeUnity
+  type ITypeUnity,
   // IObjUnitys,
 } from '../interfaces/organigrama';
 // Hooks
@@ -35,7 +35,7 @@ import {
   get_mold_organigrams_service,
   get_unitys_service,
   update_levels_service,
-  update_unitys_service
+  update_unitys_service,
 } from '../store/thunks/organigramThunks';
 import { type FormValues } from '../componentes/DialogCrearOrganigrama/types/type';
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
@@ -56,8 +56,8 @@ const use_editar_organigrama = () => {
     {
       label: '',
       value: '',
-      orden: ''
-    }
+      orden: '',
+    },
   ]);
   const [option_unidad_padre, set_option_unidad_padre] = useState<
     ILevelFather[]
@@ -66,15 +66,15 @@ const use_editar_organigrama = () => {
       label: '',
       value: '',
       id_nivel_organigrama: 0,
-      isDisabled: false
-    }
+      isDisabled: false,
+    },
   ]);
   const [options_tipo_unidad, set_option_tipo_unidad] = useState<ITypeUnity[]>([
     {
       label: '',
       value: null,
-      isDisabled: false
-    }
+      isDisabled: false,
+    },
   ]);
   const [options_agrupacion_d, set_option_agrupacion_d] = useState<
     IDocumentaryGroup[]
@@ -86,13 +86,13 @@ const use_editar_organigrama = () => {
 
   const option_raiz = [
     { label: 'Si', value: true },
-    { label: 'No', value: false }
+    { label: 'No', value: false },
   ];
   const initial_state_levels: FormValuesLevels = {
     id_nivel_organigrama: '',
     id_organigrama: '',
     orden_nivel: 0,
-    nombre: ''
+    nombre: '',
   };
   // Estado Inicial de las unidades
   const initial_state_unitys: FormValuesUnitys = {
@@ -101,31 +101,31 @@ const use_editar_organigrama = () => {
     id_unidad_organizacional: '',
     unidad_raiz: {
       label: 'si',
-      value: true
+      value: true,
     },
     codigo: '',
     nombre: '',
     tipo_unidad: {
       label: '',
       value: null,
-      isDisabled: false
+      isDisabled: false,
     },
     nivel_unidad: {
       label: '',
       value: null,
-      orden: ''
+      orden: '',
     },
     agrupacion_documental: {
       label: '',
       value: null,
-      isDisabled: false
+      isDisabled: false,
     },
     nivel_padre: {
       label: '',
       value: null,
       id_nivel_organigrama: 0,
-      isDisabled: false
-    }
+      isDisabled: false,
+    },
   };
 
   // configuración de tabla por defecto
@@ -138,7 +138,7 @@ const use_editar_organigrama = () => {
     resizable: true,
     initialWidth: 200,
     autoHeaderHeight: true,
-    suppressMovable: true
+    suppressMovable: true,
   };
 
   // ------> useForm <------ //
@@ -148,7 +148,7 @@ const use_editar_organigrama = () => {
     control: control_organigrama,
     handleSubmit: handle_submit_organigrama,
     reset: reset_organigrama,
-    formState: { errors: errors_organigrama }
+    formState: { errors: errors_organigrama },
   } = useForm<FormValuesOrganigram>();
 
   // useForm Nivel
@@ -156,7 +156,7 @@ const use_editar_organigrama = () => {
     control: control_nivel,
     handleSubmit: handle_submit_nivel,
     reset: reset_nivel,
-    formState: { errors: errors_nivel }
+    formState: { errors: errors_nivel },
   } = useForm<FormValuesLevels>({ defaultValues: initial_state_levels });
 
   // useForm Unidades
@@ -167,7 +167,7 @@ const use_editar_organigrama = () => {
     reset: reset_unidades,
     watch: watch_unidades,
     setValue: set_value_unidades,
-    formState: { errors: errors_unidades }
+    formState: { errors: errors_unidades },
   } = useForm<FormValuesUnitys>({ defaultValues: initial_state_unitys });
   const datos_unidades = watch_unidades();
 
@@ -175,21 +175,21 @@ const use_editar_organigrama = () => {
     control: control_organigrama_creacion,
     handleSubmit: handle_submit,
     reset: reset_creacion_organigrama,
-    watch: watch_creacion_organigrama
+    watch: watch_creacion_organigrama,
   } = useForm<FormValues>({
     defaultValues: {
       nombre: '',
       version: '',
       descripcion: '',
-      ruta_resolucion: ''
-    }
+      ruta_resolucion: '',
+    },
   });
 
   const {
     control: control_edit__value_activo,
     // handleSubmit: handle_submit_edit_value_activo,
     reset: reset_edit_value_activo,
-    watch: watch_edit_value_activo
+    watch: watch_edit_value_activo,
   } = useForm({});
 
   const edit_value_activo = watch_edit_value_activo();
@@ -239,7 +239,7 @@ const use_editar_organigrama = () => {
                 width: 24,
                 height: 24,
                 background: '#fff',
-                border: '2px solid'
+                border: '2px solid',
               }}
               variant="rounded"
             >
@@ -268,7 +268,7 @@ const use_editar_organigrama = () => {
                 width: 24,
                 height: 24,
                 background: '#fff',
-                border: '2px solid'
+                border: '2px solid',
               }}
               variant="rounded"
             >
@@ -279,8 +279,8 @@ const use_editar_organigrama = () => {
             </Avatar>
           </IconButton>
         </>
-      )
-    }
+      ),
+    },
   ];
   const columns_unidades: GridColDef[] = [
     {
@@ -288,13 +288,13 @@ const use_editar_organigrama = () => {
       field: 'codigo',
       headerAlign: 'center',
       minWidth: 100,
-      maxWidth: 100
+      maxWidth: 100,
     },
     {
       headerName: 'Nombre',
       field: 'nombre',
       headerAlign: 'center',
-      minWidth: 250
+      minWidth: 250,
     },
     {
       headerName: 'Tipo unidad',
@@ -311,7 +311,7 @@ const use_editar_organigrama = () => {
         if (params.row.cod_tipo_unidad === 'AS') {
           return 'Asesor';
         }
-      }
+      },
     },
     {
       headerName: 'Agrupacion documental',
@@ -329,7 +329,7 @@ const use_editar_organigrama = () => {
         if (!Boolean(params.value)) {
           return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
-      }
+      },
     },
     {
       headerName: 'Unidad raíz',
@@ -347,7 +347,7 @@ const use_editar_organigrama = () => {
         ) : (
           <Chip size="small" label="No" color="error" variant="outlined" />
         );
-      }
+      },
     },
     {
       headerName: 'Ítem activo',
@@ -360,7 +360,7 @@ const use_editar_organigrama = () => {
         ) : (
           <Chip size="small" label="No" color="error" variant="outlined" />
         );
-      }
+      },
     },
     {
       headerName: 'Acciones',
@@ -400,14 +400,14 @@ const use_editar_organigrama = () => {
                         label: option_raiz.filter(
                           (item) => item.value === params.row.unidad_raiz
                         )[0].label,
-                        value: params.row.unidad_raiz
+                        value: params.row.unidad_raiz,
                       },
                       tipo_unidad: {
                         label: options_tipo_unidad.filter(
                           (tipo) => tipo.value === params.row.cod_tipo_unidad
                         )[0].label,
                         value: params.row.cod_tipo_unidad,
-                        isDisabled: false
+                        isDisabled: false,
                       },
                       nivel_unidad: {
                         label: option_nivel.filter(
@@ -418,7 +418,7 @@ const use_editar_organigrama = () => {
                         orden: option_nivel.filter(
                           (nivel) =>
                             nivel.value === params.row.id_nivel_organigrama
-                        )[0].orden
+                        )[0].orden,
                       },
                       agrupacion_documental: {
                         label:
@@ -430,7 +430,7 @@ const use_editar_organigrama = () => {
                               )[0].label
                             : '',
                         value: params.row.cod_agrupacion_documental,
-                        isDisabled: false
+                        isDisabled: false,
                       },
                       nivel_padre: {
                         label:
@@ -442,8 +442,8 @@ const use_editar_organigrama = () => {
                               )[0].label
                             : '',
                         value: params.row.cod_unidad_org_padre,
-                        isDisabled: false
-                      }
+                        isDisabled: false,
+                      },
                     });
                     set_title_unidades('Editar Unidad');
                   }}
@@ -453,7 +453,7 @@ const use_editar_organigrama = () => {
                       width: 24,
                       height: 24,
                       background: '#fff',
-                      border: '2px solid'
+                      border: '2px solid',
                     }}
                     variant="rounded"
                   >
@@ -462,7 +462,7 @@ const use_editar_organigrama = () => {
                       sx={{
                         color: 'primary.main',
                         width: '18px',
-                        height: '18px'
+                        height: '18px',
                       }}
                     />
                   </Avatar>
@@ -477,7 +477,7 @@ const use_editar_organigrama = () => {
                       width: 24,
                       height: 24,
                       background: '#fff',
-                      border: '2px solid'
+                      border: '2px solid',
                     }}
                     variant="rounded"
                   >
@@ -534,7 +534,7 @@ const use_editar_organigrama = () => {
                     width: 24,
                     height: 24,
                     background: '#fff',
-                    border: '2px solid'
+                    border: '2px solid',
                   }}
                   variant="rounded"
                 >
@@ -542,7 +542,7 @@ const use_editar_organigrama = () => {
                     sx={{
                       color: params.row.item_usado ? 'gray' : 'red',
                       width: '18px',
-                      height: '18px'
+                      height: '18px',
                     }}
                   />
                 </Avatar>
@@ -577,8 +577,8 @@ const use_editar_organigrama = () => {
 
           {/* para el organigrama actual debe haber un checkbox de activar o desactivar unidades  y uno para eliminar los grupos del organigrama actual */}
         </>
-      )
-    }
+      ),
+    },
   ];
 
   // ------> useEffects <------ //
@@ -601,21 +601,21 @@ const use_editar_organigrama = () => {
       levels_organigram.map((item: any) => ({
         label: item.nombre,
         value: item.id_nivel_organigrama,
-        orden: item.orden_nivel
+        orden: item.orden_nivel,
       }))
     );
   }, [levels_organigram]);
 
   useEffect(() => {
     reset_unidades({
-      unidadRaiz: { label: 'Si', value: true }
+      unidadRaiz: { label: 'Si', value: true },
     });
     set_option_unidad_padre(
       unity_organigram.map((item: any) => ({
         label: item.nombre,
         value: item.codigo,
         id_nivel_organigrama: item.id_nivel_organigrama,
-        isDisabled: false
+        isDisabled: false,
       }))
     );
   }, [unity_organigram]);
@@ -631,13 +631,13 @@ const use_editar_organigrama = () => {
                 label: item.nombre,
                 value: item.codigo,
                 id_nivel_organigrama: item.id_nivel_organigrama,
-                isDisabled: false
+                isDisabled: false,
               }
             : {
                 label: item.nombre,
                 value: item.codigo,
                 id_nivel_organigrama: item.id_nivel_organigrama,
-                isDisabled: true
+                isDisabled: true,
               }
         )
       );
@@ -645,7 +645,7 @@ const use_editar_organigrama = () => {
         label: '',
         value: null,
         id_nivel_organigrama: 0,
-        isDisabled: false
+        isDisabled: false,
       });
     }
   }, [datos_unidades.nivel_unidad, unity_organigram]);
@@ -703,13 +703,13 @@ const use_editar_organigrama = () => {
         set_option_agrupacion_d(
           agrupacion_documental_format.map((item: any) => ({
             ...item,
-            isDisabled: false
+            isDisabled: false,
           }))
         );
         set_option_tipo_unidad(
           tipo_unidad_format.map((item: any) => ({
             ...item,
-            isDisabled: false
+            isDisabled: false,
           }))
         );
       } catch (err) {
@@ -733,8 +733,8 @@ const use_editar_organigrama = () => {
           id_organigrama: organigram_current?.id_organigrama,
           orden_nivel,
           nombre: data.nombre,
-          id_nivel_organigrama: null
-        }
+          id_nivel_organigrama: null,
+        },
       ];
     } else {
       new_niveles = levels_organigram.map((item: any) => {
@@ -745,7 +745,7 @@ const use_editar_organigrama = () => {
       set_title_nivel('Agregar');
     }
     reset_nivel({
-      nombre: ''
+      nombre: '',
     });
     void dispatch(
       update_levels_service(
@@ -765,31 +765,31 @@ const use_editar_organigrama = () => {
       id_unidad_organizacional: '',
       unidad_raiz: {
         label: 'si',
-        value: true
+        value: true,
       },
       codigo: '',
       nombre: '',
       tipo_unidad: {
         label: '',
         value: null,
-        isDisabled: false
+        isDisabled: false,
       },
       nivel_unidad: {
         label: '',
         value: null,
-        orden: ''
+        orden: '',
       },
       agrupacion_documental: {
         label: '',
         value: null,
-        isDisabled: false
+        isDisabled: false,
       },
       nivel_padre: {
         label: '',
         value: null,
         id_nivel_organigrama: 0,
-        isDisabled: false
-      }
+        isDisabled: false,
+      },
     });
     // //  console.log('')('clean_unitys');
     set_title_unidades('Agregar');
@@ -808,7 +808,7 @@ const use_editar_organigrama = () => {
     unidad_raiz,
     nivel_unidad,
     id_unidad_organizacional,
-    codigoExtra
+    codigoExtra,
   }: FormValuesUnitys) => {
     const newUnidad = {
       id_nivel_organigrama: nivel_unidad!.value!,
@@ -816,20 +816,12 @@ const use_editar_organigrama = () => {
       codigo,
       activo,
       cod_tipo_unidad: tipo_unidad!.value,
-      cod_agrupacion_documental: agrupacion_documental!.value,
+      cod_agrupacion_documental: agrupacion_documental!.value === '' ? null : agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
       id_organigrama: organigram_current?.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null,
-      id_unidad_organizacional
+      id_unidad_organizacional,
     };
-
-    //  console.log('')(codigoExtra, 'codigoExtra');
-
-    /* const newUnidades = unity_organigram.map((unidad: any) =>
-      unidad.id_unidad_organizacional === id_unidad_organizacional
-        ? newUnidad
-        : unidad
-    ); */
 
     const newUnidades = unity_organigram.map((unidad: any) => {
       if (unidad.id_unidad_organizacional === id_unidad_organizacional) {
@@ -838,12 +830,12 @@ const use_editar_organigrama = () => {
           cod_unidad_org_padre:
             unidad.cod_unidad_org_padre === codigoExtra
               ? codigo
-              : unidad.cod_unidad_org_padre
+              : unidad.cod_unidad_org_padre,
         };
       } else if (unidad.cod_unidad_org_padre === codigoExtra) {
         return {
           ...unidad,
-          cod_unidad_org_padre: codigo
+          cod_unidad_org_padre: codigo,
         };
       } else {
         return unidad;
@@ -870,23 +862,26 @@ const use_editar_organigrama = () => {
     tipo_unidad,
     agrupacion_documental,
     unidad_raiz,
-    nivel_unidad
+    nivel_unidad,
   }: FormValuesUnitys) => {
     const newUnidad = {
       id_nivel_organigrama: nivel_unidad!.value!,
       nombre,
       codigo,
       cod_tipo_unidad: tipo_unidad!.value,
-      cod_agrupacion_documental: agrupacion_documental!.value,
+      cod_agrupacion_documental:
+        agrupacion_documental!.value === ''
+          ? null
+          : agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
       id_organigrama: organigram_current?.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null,
-      activo: true
+      activo: true,
     };
     //  console.log('')(newUnidad, 'newUnidad');
 
     const newUnidades = [...unity_organigram, newUnidad];
-
+    console.log('nuevas unidade', newUnidades);
     set_title_unidades('Agregar');
     dispatch(
       update_unitys_service(
@@ -910,7 +905,7 @@ const use_editar_organigrama = () => {
     agrupacion_documental,
     unidad_raiz,
     nivel_unidad,
-    activo
+    activo,
   }: FormValuesUnitys) => {
     const newUnidad = {
       id_unidad_organizacional: null,
@@ -918,14 +913,16 @@ const use_editar_organigrama = () => {
       nombre,
       codigo,
       cod_tipo_unidad: tipo_unidad!.value,
-      cod_agrupacion_documental: agrupacion_documental!.value,
+      cod_agrupacion_documental:
+        agrupacion_documental!.value === ' '
+          ? null
+          : agrupacion_documental!.value,
       unidad_raiz: unidad_raiz!.value,
       id_organigrama: organigram_current?.id_organigrama,
       cod_unidad_org_padre: nivel_padre?.value ?? null,
-      activo: true
+      activo: true,
     };
-    //  console.log('')(newUnidad, 'newUnidad');
-
+    console.log(newUnidad, 'newUnidad');
     const newUnidades = [...unity_organigram, newUnidad];
 
     set_title_unidades('Agregar');
@@ -996,7 +993,7 @@ const use_editar_organigrama = () => {
     id_organigrama,
     version,
     descripcion,
-    ruta_resolucion
+    ruta_resolucion,
   }: any) => {
     const formData = new FormData();
 
@@ -1058,7 +1055,7 @@ const use_editar_organigrama = () => {
     reset_edit_value_activo,
     edit_value_activo,
     loadingLevels,
-    dataloading
+    dataloading,
   };
 };
 
@@ -1069,7 +1066,7 @@ export default use_editar_organigrama;
 export function textChoiseAdapter(dataArray: string[]) {
   const data_new_format = dataArray.map((dataOld) => ({
     label: dataOld[1],
-    value: dataOld[0]
+    value: dataOld[0],
   }));
   return data_new_format;
 }

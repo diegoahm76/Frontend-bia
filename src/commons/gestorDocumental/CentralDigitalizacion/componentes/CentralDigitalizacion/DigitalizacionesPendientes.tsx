@@ -17,6 +17,7 @@ import {
   set_digitization_request,
   set_request_status,
   set_request_type,
+  set_edit_digitization,
 } from '../../store/slice/centralDigitalizacionSlice';
 import {
   control_error,
@@ -133,6 +134,7 @@ const DigitalizacionesPendientes = () => {
             <IconButton
               onClick={() => {
                 //  console.log('')(params);
+                dispatch(set_edit_digitization(true));
                 dispatch(set_digitization_request(params.row));
               }}
               href={`/#/app/gestor_documental/central_digitalizacion/anexos/${params.row.id_solicitud_de_digitalizacion}`}
@@ -175,17 +177,17 @@ const DigitalizacionesPendientes = () => {
       } = {};
 
       // Verificar y agregar propiedad al objeto solo si el valor no es una cadena vacía
-      if (tipo_solicitud !== '') {
-        params.tipo_solicitud = tipo_solicitud;
-      }
+      // if (tipo_solicitud !== '') {
+      //   params.tipo_solicitud = tipo_solicitud;
+      // }
 
-      if (estado_solicitud !== '') {
-        params.estado_solicitud = estado_solicitud;
-      }
+      // if (estado_solicitud !== '') {
+      //   params.estado_solicitud = estado_solicitud;
+      // }
 
-      if (numero_radicado !== '') {
-        params.numero_radicado = numero_radicado;
-      }
+      // if (numero_radicado !== '') {
+      //   params.numero_radicado = numero_radicado;
+      // }
       void dispatch(get_digitalization_requests_service(params));
     }
   };

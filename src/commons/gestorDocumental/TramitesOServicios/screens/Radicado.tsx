@@ -72,12 +72,12 @@ export const Radicado: React.FC<IProps> = (props: IProps) => {
                 <Typography textAlign={'center'} sx={{fontWeight:410}}>Número de radicación</Typography>
                     <Paper elevation={1} sx={{ marginTop: '4px', background: '#afafaf' }}>
                         <Typography variant="h5" gutterBottom textAlign={'center'}>
-                            {props.radicado?.nro_radicado}
+                            {props?.radicado?.radicado_nuevo ?? ''}
                         </Typography>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                <Typography textAlign={'center'}>Se envia copia al correo <strong>{props.usuario_cache.email}</strong>, si no ha llegado puedes volver a enviarlo haciendo clic en el botón volver a enviar.</Typography>
+                <Typography textAlign={'center'}>Se envia copia al correo <strong>{props?.usuario_cache?.email ?? ''}</strong>, si no ha llegado puedes volver a enviarlo haciendo clic en el botón volver a enviar.</Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} textAlign={'center'}>
                 <Button variant="contained" onClick={() => { volver_enviar_correo() }}>

@@ -13,6 +13,7 @@ import { IBusquedaDetalleInversion } from '../components/Components/BusquedaAvan
 import { IBusquedaBancoProyecto } from '../../BancoProyecto/components/Components/BusquedaAvanzada/types';
 import { IBusquedaConceptoPOAI } from '../../ConceptoPOAI/components/Components/BusquedaAvanzada/types';
 import { IBusquedaFuente } from '../../FuenteFinanciacion/components/Components/BusquedaAvanzada/types';
+import { IBusquedaSeguiminetoPOAI } from '../../SeguiminetoPOAI/components/Components/BusquedaAvanzada/types';
 
 // ! detalle de inversion cuentas
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
@@ -116,6 +117,41 @@ export const search_fuente = async ({
     nombre_fuente ?? ''
   )}&concepto=${String(concepto ?? '')}`;
   return await api.get<ResponseServer<IBusquedaFuente[]>>(url);
+};
+
+// IBusquedaSeguiminetoPOAI
+// Busqueda avanzada de seguimiento POAI por nombre plan, nombre programa, nombre proyecto, nombre producto, nombre actividad, nombre indicador, nombre meta, nombre, concepto, cuenta, objeto_contrato, codigo_modalidad,
+
+export const search_seguimiento_poai = async ({
+  nombre_plan,
+  nombre_programa,
+  nombre_proyecto,
+  nombre_producto,
+  nombre_actividad,
+  nombre_indicador,
+  nombre_meta,
+  nombre,
+  concepto,
+  cuenta,
+  objeto_contrato,
+  codigo_modalidad,
+}: any): Promise<
+  AxiosResponse<ResponseServer<IBusquedaSeguiminetoPOAI[]>>
+> => {
+  const url = `seguimiento-planes/consultar-seguimiento-poai-avanzado/?nombre_plan=${String(
+    nombre_plan ?? ''
+  )}&nombre_programa=${String(nombre_programa ?? '')}&nombre_proyecto=${String(
+    nombre_proyecto ?? ''
+  )}&nombre_producto=${String(nombre_producto ?? '')}&nombre_actividad=${String(
+    nombre_actividad ?? ''
+  )}&nombre_indicador=${String(nombre_indicador ?? '')}&nombre_meta=${String(
+    nombre_meta ?? ''
+  )}&nombre=${String(nombre ?? '')}&concepto=${String(
+    concepto ?? ''
+  )}&cuenta=${String(cuenta ?? '')}&objeto_contrato=${String(
+    objeto_contrato ?? ''
+  )}&codigo_modalidad=${String(codigo_modalidad ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaSeguiminetoPOAI[]>>(url);
 };
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------

@@ -16,6 +16,7 @@ import {
 import {
   close_dialog_entorno,
   close_dialog_representado,
+  close_dialog_representado_app,
   setRepresentacionLegal,
   set_authenticated,
 } from '../../store';
@@ -40,6 +41,7 @@ export const DialogRepresentantes: React.FC = () => {
     console.log(value);
     dispatch(setRepresentacionLegal(value));
     dispatch(set_authenticated());
+    dispatch(close_dialog_representado_app());
   };
 
   const renderSelect = (placeholder: string, options: any, onChange: any) => (
@@ -85,7 +87,9 @@ export const DialogRepresentantes: React.FC = () => {
         variant="subtitle1"
         sx={{ padding: '10px' }}
       >
-        <Typography>Seleccione como ingresará al sistema</Typography>
+        <Typography>
+          Seleccione la representación con la que ingresará al sistema
+        </Typography>
       </DialogTitle>
 
       <List
@@ -96,74 +100,76 @@ export const DialogRepresentantes: React.FC = () => {
         {options.map((option) => (
           <>
             {option.label !== 'En representación de una empresa' &&
-            option.label !== 'En representación de una persona' && (
-              <ListItem key={option.label} disableGutters alignItems="center">
-                <ListItemButton
-                  autoFocus
-                  onClick={() => {
-                    select_representado({
-                      cod_relacion_con_el_titular: option.value,
-                    });
-                  }}
-                >
-                  <ListItemIcon>
-                    <BoyIcon
-                      fontSize='large'
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={option.label} />
-                </ListItemButton>
-              </ListItem>
-            )}
+              option.label !== 'En representación de una persona' && (
+                <ListItem key={option.label} disableGutters alignItems="center">
+                  <ListItemButton
+                    autoFocus
+                    onClick={() => {
+                      select_representado({
+                        cod_relacion_con_el_titular: option.value,
+                        tipo_sesion: 'E',
+                      });
+                    }}
+                  >
+                    <ListItemIcon>
+                      <BoyIcon fontSize="large" />
+                    </ListItemIcon>
+                    <ListItemText primary={option.label} />
+                  </ListItemButton>
+                </ListItem>
+              )}
 
             {option.label === 'En representación de una empresa' &&
-            representante_legal?.length > 0 && (
-              <ListItem key={option.label} disableGutters alignItems="center">
-                <ListItemButton autoFocus>
-                  <ListItemIcon>
-                    <EmojiTransportationIcon
-                      fontSize='large'
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={option.label} />
-                  {renderSelect(
-                    'Seleccione una empresa',
-                    [...representante_legal].map((representante) => ({
-                      representacion: representante,
-                      value: representante?.razon_social,
-                      label: representante?.razon_social || 'Sin razón social',
-                    })),
-                    select_representado
-                  )}
-                </ListItemButton>
-              </ListItem>
-            )}
+              representante_legal?.length > 0 && (
+                <ListItem key={option.label} disableGutters alignItems="center">
+                  <ListItemButton autoFocus>
+                    <ListItemIcon>
+                      <EmojiTransportationIcon fontSize="large" />
+                    </ListItemIcon>
+                    <ListItemText primary={option.label} />
+                    {renderSelect(
+                      'Seleccione una empresa',
+                      [...representante_legal].map((representante) => ({
+                        representacion: representante,
+                        cod_relacion_con_el_titular:
+                          representante?.cod_relacion_con_el_titular,
+                        value: representante?.razon_social,
+                        label:
+                          representante?.razon_social || 'Sin razón social',
+                        tipo_sesion: 'E',
+                      })),
+                      select_representado
+                    )}
+                  </ListItemButton>
+                </ListItem>
+              )}
 
             {option.label === 'En representación de una persona' &&
-            apoderados?.length > 0 && (
-              <ListItem key={option.label} disableGutters alignItems="center">
-                <ListItemButton autoFocus>
-                  <ListItemIcon>
-                    <PersonIcon
-                      fontSize='large'
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={option.label} />
-                  {renderSelect(
-                    'Seleccione una persona',
-                    [...apoderados].map((apoderado) => ({
-                      representacion: apoderado,
-                      value: apoderado?.id_apoderados_persona,
-                      label: apoderado?.nombre_persona_poderdante || 'Sin nombre',
-                    })),
-                    select_representado
-                  )}
-                </ListItemButton>
-              </ListItem>
-            )}
+              apoderados?.length > 0 && (
+                <ListItem key={option.label} disableGutters alignItems="center">
+                  <ListItemButton autoFocus>
+                    <ListItemIcon>
+                      <PersonIcon fontSize="large" />
+                    </ListItemIcon>
+                    <ListItemText primary={option.label} />
+                    {renderSelect(
+                      'Seleccione una persona',
+                      [...apoderados].map((apoderado) => ({
+                        representacion: apoderado,
+                        cod_relacion_con_el_titular:
+                          apoderado?.cod_relacion_con_el_titular,
+                        value: apoderado?.id_apoderados_persona,
+                        label:
+                          apoderado?.nombre_persona_poderdante || 'Sin nombre',
+                        tipo_sesion: 'E',
+                      })),
+                      select_representado
+                    )}
+                  </ListItemButton>
+                </ListItem>
+              )}
           </>
         ))}
-
       </List>
     </Dialog>
   );

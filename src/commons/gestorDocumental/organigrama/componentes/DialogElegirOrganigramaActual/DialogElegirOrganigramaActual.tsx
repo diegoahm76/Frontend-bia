@@ -128,8 +128,6 @@ const DialogElegirOrganigramaActual = () => {
   set_loading(true);
   try {
     const response_org_actual = await dispatch(get_organigrama_actual());
-    //  console.log('')(response_org_actual);
-
     if (response_org_actual.data) {
       set_organigrama_actual(response_org_actual.data);
       const response_orgs = await dispatch(get_organigramas_posibles());
@@ -139,7 +137,7 @@ const DialogElegirOrganigramaActual = () => {
       const response_orgs = await dispatch(get_organigramas_posibles());
       const res_organigramas_adapter: IList[] = await organigramas_choise_adapter(response_orgs.data);
       set_list_organigrams(res_organigramas_adapter);
-      control_error('Sin organigramas disponibles para activación');
+      control_error('No hay organigrama actual');
     }
   } catch (err) {
     control_error(err);

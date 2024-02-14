@@ -26,6 +26,7 @@ import {
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../toolkit/store/BandejaDeTareasStore';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -48,11 +49,6 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
   // ? ----- FUNCIONES A USAR DENTRO DEL MODULO DEL BUSCADOR DEL PANEL DE VENTANILLA-----
   const searchPqrsdf = async () => {
-    showAlert(
-      'Estimado usuario!',
-      'Esta funcionalidad de Bandeja De tareas (Responder PQRSDF) se encuentra en construcción',
-      'warning'
-    );
     try {
       const {
         tipo_de_tarea,
@@ -61,6 +57,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         fecha_inicio,
         fecha_fin,
         mostrar_respuesta_con_req_pendientes,
+        radicado,
       } = watchBusquedaBandejaDeTareas;
 
       const res = await getListadoTareasByPerson(
@@ -71,7 +68,8 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         estado_de_la_tarea?.value,
         fecha_inicio,
         fecha_fin,
-        mostrar_respuesta_con_req_pendientes?.value
+        mostrar_respuesta_con_req_pendientes?.value,
+        radicado
       );
 
       console.log(res);
@@ -82,7 +80,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     }
   };
 
-  const searchTramitesYservicios = () => {
+  const searchTramitesYservicios = async () => {
     try {
       console.log('submit , buscando coincidencias de tramites y servicios');
       showAlert(
@@ -95,7 +93,48 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     }
   };
 
-  //* se deben agregar las funciones para los demas tipos de tareas (otros y opas)
+  const searchOtros = async () => {
+    try {
+      const {
+        tipo_de_tarea,
+        estado_asignacion_de_tarea,
+        estado_de_la_tarea,
+        fecha_inicio,
+        fecha_fin,
+        radicado,
+      } = watchBusquedaBandejaDeTareas;
+      console.log
+
+     const res = await getListadoTareaasOtrosByPerson(
+        id_persona,
+        handleSecondLoading,
+        tipo_de_tarea?.value,
+        estado_asignacion_de_tarea?.value,
+        estado_de_la_tarea?.value,
+        fecha_inicio,
+        fecha_fin,
+        radicado
+      );
+
+      console.log(res);
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const searchOpas = async () => {
+    try {
+      showAlert(
+        'Estimado usuario!',
+        'Esta funcionalidad de Responder OPA no está disponible ',
+        'warning'
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const unifiedSearchSubmit = async () => {
     const tipoDeTarea =
@@ -112,6 +151,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
     switch (tipoDeTarea) {
       case 'Responder PQRSDF':
+      case 'RESPONDER PQRSDF':
         await searchPqrsdf();
         break;
 
@@ -119,13 +159,13 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         await searchTramitesYservicios();
         break;
 
-      // case 'Otros':
-      //   console.log('submit , buscando coincidencias de otros');
-      //   break;
+      case 'Responder Otro':
+        await searchOtros();
+        break;
 
-      // case 'OPAS':
-      //   console.log('submit , buscando coincidencias de opas');
-      //   break;
+      case 'Responder OPA':
+        await searchOpas();
+        break;
 
       default:
         showAlert(
@@ -178,9 +218,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                   name="tipo_de_tarea"
                   control={controlBusquedaBandejaTareas}
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <div>
                       <Select
                         required
@@ -219,7 +257,9 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
               {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
                 ?.label === 'Responder PQRSDF' ||
               !controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                ?.label ? (
+                ?.label ||
+              controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                ?.label === 'RESPONDER PQRSDF' ? (
                 <BuscadorPqrsdf
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
@@ -229,12 +269,12 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
               ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                  ?.label === 'Otros' ? (
+                  ?.label === 'Responder Otro' ? (
                 <BuscadorOtros
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
               ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
-                  ?.label === 'OPAS' ? (
+                  ?.label === 'Responder OPA' ? (
                 <BuscadorOpas
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
@@ -244,12 +284,32 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
               <Grid item xs={12} sm={4}>
                 <Controller
+                  name="radicado"
+                  control={controlBusquedaBandejaTareas}
+                  defaultValue=""
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      label="Radicado"
+                      type="text"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Controller
                   name="fecha_inicio"
                   control={controlBusquedaBandejaTareas}
                   defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       label="Fecha inicio"
@@ -270,9 +330,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                   name="fecha_fin"
                   control={controlBusquedaBandejaTareas}
                   defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       label="Fecha final"
@@ -289,7 +347,6 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                 />
               </Grid>
               {/* tambien se debe agregar la opción de otros */}
-
               {/* Otros */}
               {/* Tramites y servicios  */}
             </Grid>

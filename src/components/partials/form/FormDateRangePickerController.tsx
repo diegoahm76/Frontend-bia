@@ -68,8 +68,14 @@ const FormDateRangePickerController = ({
             defaultValue={default_value}
             rules={{
               validate: (value) => {
-                if (value === null || value[0] === null || value[1] === null) {
-                  return 'Debes seleccionar un rango de fechas';
+                if (rules.required_rule?.rule) {
+                  if (
+                    value === null ||
+                    value[0] === null ||
+                    value[1] === null
+                  ) {
+                    return 'Debes seleccionar un rango de fechas';
+                  }
                 }
                 if (value[0] > value[1]) {
                   return 'La fecha de inicio debe ser anterior a la fecha de fin';

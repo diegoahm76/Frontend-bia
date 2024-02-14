@@ -290,7 +290,7 @@ const use_ccd = () => {
 
     set_list_unitys(
       filteredUnityOrganigram
-        .filter((item: any) => item.activo)
+        .filter((item: any) => item.activo && item.cod_agrupacion_documental)
         .map((item: any) => ({
           label: item?.nombre,
           value: item.id_unidad_organizacional!,
@@ -334,15 +334,22 @@ const use_ccd = () => {
 
   useEffect(() => {
     set_list_sries_asignacion(
-      seriesAndSubseries.map((item: any) => ({
-        item,
-        label: `${item.codigo_serie ? item.codigo_serie : ''} - ${
-          item.nombre_serie ? item.nombre_serie : ''
-        } - ${
-          item.nombre_subserie ? item.nombre_subserie : '(serie independiente)'
-        } - ${item.codigo_subserie ? item.codigo_subserie : ''}`,
-        value: `${item.id_serie_doc} - ${item.id_catalogo_serie}`,
-      }))
+      seriesAndSubseries
+        /*        .filter(
+          (el: { cod_agrupacion_documental: string }) =>
+            el.cod_agrupacion_documental
+        )*/
+        ?.map((item: any) => ({
+          item,
+          label: `${item.codigo_serie ? item.codigo_serie : ''} - ${
+            item.nombre_serie ? item.nombre_serie : ''
+          } - ${
+            item.nombre_subserie
+              ? item.nombre_subserie
+              : '(serie independiente)'
+          } - ${item.codigo_subserie ? item.codigo_subserie : ''}`,
+          value: `${item.id_serie_doc} - ${item.id_catalogo_serie}`,
+        }))
     );
   }, [seriesAndSubseries]);
 
@@ -543,17 +550,10 @@ const use_ccd = () => {
 
   const columns_asignacion: GridColDef[] = [
     {
-      headerName: 'ID Un. Org',
-      field: 'id_unidad_organizacional',
-      minWidth: 90,
-      maxWidth: 100,
-      hide: true,
-    },
-    {
       headerName: 'Unidad Organizacional',
       field: 'nombreUnidad',
-      minWidth: 210,
-      maxWidth: 220,
+      minWidth: 350,
+      maxWidth: 400,
     },
     {
       headerName: 'Cód. Serie',
@@ -564,8 +564,8 @@ const use_ccd = () => {
     {
       headerName: 'Serie',
       field: 'nombre_serie',
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 350,
+      maxWidth: 400,
     },
     {
       headerName: 'Cód. Subserie',
@@ -576,7 +576,8 @@ const use_ccd = () => {
     {
       headerName: 'Subserie',
       field: 'nombre_subserie',
-      minWidth: 150,
+      minWidth: 420,
+      maxWidth: 520,
     },
     {
       headerName: 'Acciones',

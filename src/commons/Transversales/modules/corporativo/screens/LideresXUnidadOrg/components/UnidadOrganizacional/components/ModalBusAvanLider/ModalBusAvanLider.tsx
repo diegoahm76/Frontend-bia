@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 //! libraries or frameworks
-import { useContext, type FC } from 'react';
+import { useContext, type FC, useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -18,7 +18,7 @@ import {
   Divider,
   IconButton,
   Stack,
-  TextField
+  TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
@@ -35,62 +35,85 @@ import Select from 'react-select';
 import { columnsModalBusAvanLider } from './columns/columsBusAvanLider';
 import {
   useAppDispatch,
-  useAppSelector
+  useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { getPersonaByFilter } from '../../../../toolkit/LideresThunks/UnidadOrganizacionalThunks';
 import { ModalContextLideres } from '../../../../context/ModalContextLideres';
 import {
   get_list_busqueda_avanzada_personas,
-  set_asignacion_lideres_current
+  set_asignacion_lideres_current,
 } from '../../../../toolkit/LideresSlices/LideresSlice';
+import { getTipoDocumento } from '../SeleccionLider/services/getTipoDocumento.service';
+import { ISeleccionLideresProps } from '../SeleccionLider/types/seleccionLideres.types';
+import { RenderDataGrid } from '../../../../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 
-export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
+export const BusqueAsignacionesLiderModal = ({
+  control_seleccionar_lideres,
+  reset_seleccionar_lideres,
+  watch_seleccionar_lideres_value,
+}: {
+  control_seleccionar_lideres: any;
+  reset_seleccionar_lideres: any;
+  watch_seleccionar_lideres_value: any;
+}): JSX.Element => {
   // * dispatch to use in the component * //
   const dispatch = useAppDispatch();
 
   //* -------- hook declaration -------- *//
-  const {
-    control_buscar_asignaciones_lideres_por_unidad,
-    reset_buscar_asignaciones_lideres_por_unidad,
-    watch_asignaciones_lider_by_unidad_value
-  } = useLideresXUnidadOrganizacional();
 
   //* -------- use selector declaration -------- *//
   const {
     organigrama_lideres_current,
     unidad_current,
     busqueda_avanzada_personas_list,
-    asignacion_lideres_current
+    asignacion_lideres_current,
   } = useAppSelector((state) => state.lideres_slice);
+
+  // ? ------- use states declarations -------
+  const [tiposDocumentos, setTiposDocumentos] = useState<
+    ISeleccionLideresProps[]
+  >([]);
+
+  useEffect(() => {
+    void getTipoDocumento()
+      .then((res) => {
+        const filterDocumentos = res?.filter(
+          (item: ISeleccionLideresProps) => item.value !== 'NT'
+        );
+        setTiposDocumentos(filterDocumentos);
+      })
+      .catch((error) => {
+        console.error(error);
+        // Handle the error here
+      });
+  }, []);
 
   // ? useContext declaration
   const {
     modalBusquedaPersona,
     closeModalBusquedaPersona,
     loadingButton,
-    setLoadingButton
+    setLoadingButton,
   } = useContext(ModalContextLideres);
 
   const resetFunction = (): void => {
-    //  console.log('')('cleaning fields of the form');
-    reset_buscar_asignaciones_lideres_por_unidad({
-      tipo_documento: '',
-      numero_documento: '',
+    reset_seleccionar_lideres({
+      ...watch_seleccionar_lideres_value,
       primer_nombre: '',
       segundo_nombre: '',
       primer_apellido: '',
       segundo_apellido: '',
       id_unidad_organizacional_actual: {
         value: null,
-        label: 'Seleccionar'
-      }
+        label: 'Seleccionar',
+      },
     });
   };
 
   const closeModal = (): any => {
     closeModalBusquedaPersona();
     dispatch(get_list_busqueda_avanzada_personas([]));
-    resetFunction();
+    // resetFunction();
     //  console.log('')('Im the close function');
   };
 
@@ -111,7 +134,13 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               //  dispatch(set_organigrama_lideres_current(params.row));
 
               // ! ACTUALIZA LA ASIGNACION DE LIDER
-              dispatch(set_asignacion_lideres_current(params.row));
+              console.log(params.row);
+              dispatch(
+                set_asignacion_lideres_current({
+                  ...asignacion_lideres_current,
+                  ...params.row,
+                })
+              );
 
               // ! ACTUALIZA LA LISTA DE UNIDADES ORGANIZACIONALES
               /* void get_asignaciones_lideres_by_id_organigrama_service(52).then(
@@ -143,74 +172,101 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
             </Avatar>
           </IconButton>
         </>
-      )
+      ),
     },
-    ...columnsModalBusAvanLider
+    ...columnsModalBusAvanLider,
   ];
 
   return (
     <>
       <Dialog
         fullWidth
-        maxWidth="md"
+        maxWidth="lg"
         open={modalBusquedaPersona}
         onClose={closeModal}
+        sx={{
+          minHeight: '600px'
+        }}
       >
         <Box
           component="form"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-
-            //  console.log('')(watch_asignaciones_lider_by_unidad_value);
-            //  console.log('')(unidad_current);
-            void getPersonaByFilter(
-              watch_asignaciones_lider_by_unidad_value?.tipo_documento,
-              watch_asignaciones_lider_by_unidad_value?.numero_documento,
-              watch_asignaciones_lider_by_unidad_value?.primer_nombre,
-              watch_asignaciones_lider_by_unidad_value?.segundo_nombre,
-              watch_asignaciones_lider_by_unidad_value?.primer_apellido,
-              watch_asignaciones_lider_by_unidad_value?.segundo_apellido,
-              watch_asignaciones_lider_by_unidad_value
-                ?.id_unidad_organizacional_actual?.value
+            const {
+              tipo_documento,
+              numero_documento,
+              primer_nombre,
+              segundo_nombre,
+              primer_apellido,
+              segundo_apellido,
+              id_unidad_organizacional_actual,
+            } = watch_seleccionar_lideres_value || {};
+            //watch_asignaciones_lider_by_unidad_value
+            try {
+              const unidad = id_unidad_organizacional_actual?.value
                 ? unidad_current?.value ||
-                    asignacion_lideres_current?.id_unidad_organizacional
-                : '',
-              setLoadingButton,
-              resetFunction
-            ).then((data: any) => {
+                  asignacion_lideres_current?.id_unidad_organizacional
+                : '';
+
+              const data = await getPersonaByFilter(
+                tipo_documento?.value || '',
+                numero_documento || '',
+                primer_nombre || '',
+                segundo_nombre || '',
+                primer_apellido || '',
+                segundo_apellido || '',
+                unidad || '',
+                setLoadingButton || '',
+                () => {}
+                // resetFunction ()=>ñ
+              );
+
               dispatch(get_list_busqueda_avanzada_personas(data));
-            });
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
           }}
         >
           <DialogTitle>
-            <Title title="Búsqueda de asignaciones de líderes Unidades Organizacionales" />
+            <Title title="Búsqueda avanzada de personas para líderes unidades organizacionales" />
           </DialogTitle>
           <Divider />
           <DialogContent
             sx={{
               mb: '0px',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 5,
+                }}
+              >
                 <Controller
                   name="tipo_documento"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
-                    field: { onChange, value },
-                    fieldState: { error }
+                    field: { onChange, value, ref },
+                    fieldState: { error },
                   }) => (
-                    <TextField
-                      fullWidth
-                      label="Tipo de documento"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
+                    <Select
+                      //inputRef={ref}
+                      options={tiposDocumentos} // options should be an array of objects with 'value' and 'label' properties
+                      value={value} // set selected value
+                      onChange={onChange} // update value when option is selected
+                      isSearchable
+                      placeholder="Tipo de documento"
+                      styles={{
+                        control: (provided, state) => ({
+                          ...provided,
+                          borderColor: error ? 'red' : provided.borderColor,
+                        }),
+                      }}
                     />
                   )}
                 />
@@ -218,11 +274,11 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="numero_documento"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -240,11 +296,11 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="primer_nombre"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -262,11 +318,11 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="segundo_nombre"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -284,11 +340,11 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="primer_apellido"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -306,11 +362,11 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="segundo_apellido"
-                  control={control_buscar_asignaciones_lideres_por_unidad}
+                  control={control_seleccionar_lideres}
                   defaultValue=""
                   render={({
                     field: { onChange, value },
-                    fieldState: { error }
+                    fieldState: { error },
                   }) => (
                     <TextField
                       fullWidth
@@ -329,40 +385,30 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                 <Grid item xs={12} sm={3} zIndex={5}>
                   <Controller
                     name="id_unidad_organizacional_actual"
-                    control={control_buscar_asignaciones_lideres_por_unidad}
+                    control={control_seleccionar_lideres}
                     rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                    }) => (
+                    render={({ field: { onChange, value } }) => (
                       <div>
                         <Select
-                          /* isDisabled={
-                            asignacion_lideres_current?.observaciones_asignacion
-                          } */
+
                           value={value}
                           onChange={(selectedOption) => {
-                            /* void get_catalogo_TRD_service(
-                            selectedOption.value
-                          ).then((res) => {
-                            //  console.log('')(res);
-                            dispatch(set_catalog_trd_action(res));
-                          }); */
-                            //  console.log('')(selectedOption);
+
                             onChange(selectedOption);
                           }}
                           options={[
                             {
                               value: null,
-                              label: 'Seleccionar'
+                              label: 'Seleccionar',
                             },
                             {
                               value: true,
-                              label: 'SI'
+                              label: 'SI',
                             },
                             {
                               value: false,
-                              label: 'NO'
-                            }
+                              label: 'NO',
+                            },
                           ]}
                           placeholder="Seleccionar"
                         />
@@ -373,7 +419,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                               fontWeight: 'thin',
                               fontSize: '0.75rem',
                               marginTop: '0.25rem',
-                              marginLeft: '0.25rem'
+                              marginLeft: '0.25rem',
                             }}
                           >
                             Unidad Organizacional Actual
@@ -388,7 +434,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <LoadingButton
                   loading={loadingButton}
-                  variant="outlined"
+                  variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
                   color="primary"
@@ -397,17 +443,14 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                 </LoadingButton>
               </Grid>
             </Grid>
-            <DataGrid
-              sx={{ mt: '15px' }}
-              density="compact"
-              autoHeight
-              rows={busqueda_avanzada_personas_list ?? []}
-              columns={columns_busqueda_avanzada_persona ?? []}
-              pageSize={5}
-              rowsPerPageOptions={[7]}
-              experimentalFeatures={{ newEditingApi: true }}
-              getRowId={(_row) => uuidv4()}
-            />
+
+
+              <RenderDataGrid
+                title="Resultados de la búsqueda"
+                rows={busqueda_avanzada_personas_list ?? []}
+                columns={columns_busqueda_avanzada_persona ?? []}
+              />
+      
           </DialogContent>
           <Divider />
           <DialogActions>
@@ -417,7 +460,6 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
               sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
               <Button
-               
                 variant="outlined"
                 onClick={() => {
                   resetFunction();
@@ -427,7 +469,7 @@ export const BusqueAsignacionesLiderModal: FC = (): JSX.Element => {
                 LIMPIAR BÚSQUEDA
               </Button>
               <Button
-                 variant="contained"
+                variant="contained"
                 color="error"
                 onClick={closeModal}
                 startIcon={<CloseIcon />}

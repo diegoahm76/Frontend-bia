@@ -28,6 +28,8 @@ const initial_state: IUserInfo | any = {
   entorno: 'C',
   is_blocked: false,
   representacion_legal: 'MP',
+  is_loading: false,
+  tamagno_archivos: [],
 };
 
 export const auth_slice = createSlice({
@@ -40,9 +42,13 @@ export const auth_slice = createSlice({
       state.permisos = payload.permisos;
       state.representante_legal = payload.representante_legal;
       state.apoderados = payload.apoderados;
-      state.representacion_legal = {
-        cod_relacion_con_el_titular: 'MP',
-      };
+      state.representacion_legal = payload.representacion_legal
+        ? payload.representacion_legal
+        : {
+            cod_relacion_con_el_titular: 'MP',
+            tipo_sesion: 'I',
+          };
+      state.tamagno_archivos = payload.tamagno_archivos;
     },
     logout: (state, { payload }) => {
       state.user_sesion = '';
@@ -85,6 +91,9 @@ export const auth_slice = createSlice({
       state.status = 'not-authenticated';
       state.error_message = '';
     },
+    close_dialog_representado_app: (state) => {
+      state.dialog_representante = false;
+    },
     change_entorno: (state, { payload }) => {
       state.entorno = payload;
     },
@@ -96,6 +105,14 @@ export const auth_slice = createSlice({
     },
     setRepresentacionLegal: (state, { payload }) => {
       state.representacion_legal = payload;
+    },
+
+    set_files: (state, { payload }) => {
+      state.tamagno_archivos = payload;
+    },
+
+    set_is_loading: (state, { payload }) => {
+      state.is_loading = payload;
     },
   },
 });
@@ -112,6 +129,9 @@ export const {
   set_authenticated,
   open_dialog_representado,
   close_dialog_representado,
+  close_dialog_representado_app,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   setRepresentacionLegal,
+  set_files,
+  set_is_loading,
 } = auth_slice.actions;

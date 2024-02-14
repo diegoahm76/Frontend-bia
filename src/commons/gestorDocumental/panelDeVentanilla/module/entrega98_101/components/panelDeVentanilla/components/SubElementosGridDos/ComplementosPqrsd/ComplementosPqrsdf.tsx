@@ -19,6 +19,7 @@ import TaskIcon from '@mui/icons-material/Task';
 import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { getAnexosComplemento } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosComplementos.service';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 
 export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* dispatch declaration
@@ -33,44 +34,28 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
   //* context declaration
-  const {
-    setAnexos,
-  } = useContext(PanelVentanillaContext);
+  const { setAnexos } = useContext(PanelVentanillaContext);
 
   const {
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
   } = useContext(ModalAndLoadingContext);
 
-  // ? states
-  //* loader button simulacion
-  /*const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
-    {}
-  );*/
-
   // ? se va a tener que modificar esta función con la nueva propiedad que se agrega. si la pqr ya fue asignada a grupo, no se puede volver a asignar (constinuar asig grup)
   const shouldDisable = (actionId: string, complemento: any) => {
-    const isDig = actionId === 'Dig';
-    const isContinuarAsigGrup = actionId === 'ContinuarAsigGrup';
     const requiresDigitalization = complemento.requiere_digitalizacion;
     const isComplementoAsignadoUnidad = complemento.complemento_asignado_unidad;
 
-    // Primer caso: Complemento requiere digitalización
     if (requiresDigitalization) {
-      return !isDig;
+      return !(actionId === 'Dig');
     }
 
-    // Segundo caso: Complemento NO requiere digitalización
-    if (!requiresDigitalization) {
-      // Si complemento_asignado_unidad es true, deshabilita el botón de "Continuar con asignación a grupo"
-      // Si el botón es "Dig", también se deshabilita
-      if (isComplementoAsignadoUnidad || isDig) {
-        return true;
-      }
-      // Si complemento_asignado_unidad es false, habilita únicamente el botón de "Continuar con asignación a grupo"
-      if (!isComplementoAsignadoUnidad) {
-        return !isContinuarAsigGrup;
-      }
+    if (!requiresDigitalization && !isComplementoAsignadoUnidad) {
+      return !(actionId === 'Dig' || actionId === 'ContinuarAsigGrup');
+    }
+
+    if (!requiresDigitalization && isComplementoAsignadoUnidad) {
+      return !(actionId === 'Dig');
     }
   };
   const setActionsComplementos = (complemento: any) => {
@@ -78,15 +63,19 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
-      text: 'Has seleccionado un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
 
-    const actionsComplementosPermissions = actionsComplementos.map((action: any) => ({
-      ...action,
-      disabled: shouldDisable(action.id, complemento),
-    }));
-    dispatch(setActionssToManagePermissionsComplementos(actionsComplementosPermissions));
+    const actionsComplementosPermissions = actionsComplementos.map(
+      (action: any) => ({
+        ...action,
+        disabled: shouldDisable(action.id, complemento),
+      })
+    );
+    dispatch(
+      setActionssToManagePermissionsComplementos(actionsComplementosPermissions)
+    );
   };
 
   //* columns definition
@@ -227,11 +216,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
 
   return (
     <RenderDataGrid
-      rows={
-        [
-          ...listaComplementosRequerimientosOtros,
-        ] ?? []
-      }
+      rows={[...listaComplementosRequerimientosOtros] ?? []}
       columns={columns ?? []}
       title="Complementos del elemento seleccionado"
       aditionalElement={
@@ -242,6 +227,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
             }}
             variant="contained"
             color="primary"
+            endIcon={<RemoveDoneIcon />}
           >
             Quitar selección de complemento
           </Button>

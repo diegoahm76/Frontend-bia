@@ -1,21 +1,24 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
+import { getRequestStatesOpas } from '../services/getRequestStatesOpas.service';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BuscadorOpas = (props: any): JSX.Element => {
   const { control_busqueda_panel_ventanilla } = props;
 
   // ? useState Necesario
-  // const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
+  const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
 
   //* se debe establecer un useEffect ya que cada vez que se recargeue el elemento se deben filtrar de diferente manera los elementos
-  /* useEffect(() => {
-    void getRequestStates().then((res: any) => {
+  useEffect(() => {
+    void getRequestStatesOpas().then((res: any) => {
       //  console.log('')(res);
       setRequestStatuses(res);
     });
-  }, []);*/
+  }, []);
 
   // ?
 
@@ -72,7 +75,7 @@ export const BuscadorOpas = (props: any): JSX.Element => {
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
               fullWidth
-              label="Nombre proyecto OPA"
+              label="Nombre OPA"
               size="small"
               variant="outlined"
               value={value}
@@ -80,7 +83,7 @@ export const BuscadorOpas = (props: any): JSX.Element => {
               onChange={(e) => {
                 onChange(e.target.value);
               }}
-              inputProps={{ maxLength: 50 }}
+              inputProps={{ maxLength: 150 }}
             />
           )}
         />
@@ -102,10 +105,9 @@ export const BuscadorOpas = (props: any): JSX.Element => {
               <Select
                 value={value}
                 onChange={(selectedOption) => {
-                  //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
-                options={[] as any[]}
+                options={requestStatuses as any[]}
                 placeholder="Seleccionar"
               />
               <label>

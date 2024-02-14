@@ -45,6 +45,7 @@ interface IProps {
 const StepTwo = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const {
     exhibits,
     metadata,
@@ -103,7 +104,7 @@ const StepTwo = () => {
     reset({
       ...exhibit,
       cod_medio_almacenamiento:
-        (type_applicant.key ?? null) === null
+        representacion_legal?.tipo_sesion === 'E'
           ? 'Na'
           : exhibit.cod_medio_almacenamiento,
     });
@@ -481,7 +482,7 @@ const StepTwo = () => {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: (type_applicant.key ?? null) === null,
+              disabled: representacion_legal?.tipo_sesion === 'E',
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
@@ -532,7 +533,7 @@ const StepTwo = () => {
               variant_button: 'contained',
               on_click_function: add_metadata_form,
               color_button: 'warning',
-              hidden_text: (type_applicant.key ?? null) === null,
+              hidden_text: representacion_legal?.tipo_sesion === 'E',
             },
           ]}
         />

@@ -32,6 +32,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     const [sub_serie, set_sub_serie] = useState<any>("");
     const [persona_titular, set_persona_titular] = useState<any>("");
     const [palabras_clave, set_palabras_clave] = useState<any>("");
+    const [consecutivo, set_consecutivo] = useState<any>("");
 
     useEffect(() => {
         if (props.serie !== ""){
@@ -65,6 +66,9 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     const cambio_palabras_clave: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_palabras_clave(e.target.value);
     };
+    const cambio_consecutivo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_consecutivo(e.target.value);
+    };
 
     const columns: GridColDef[] = [
         {
@@ -72,6 +76,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
             headerName: 'CÓDIGO',
             sortable: true,
             width: 150,
+            valueGetter: (params) => params.row.codigo_exp_und_serie_subserie + '.' +  params.row.codigo_exp_Agno + (params.row.codigo_exp_consec_por_agno !== null ? '.' +  params.row.codigo_exp_consec_por_agno : "")
         },
         {
             field: 'nombre_trd_origen',
@@ -133,7 +138,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
     }
 
     const mostrar_busqueda_expediente: any = async () => {
-        dispatch(buscar_expediente(tdr_fecha,año_apertura,serie,sub_serie,palabras_clave,titulo,cod_und_series,persona_titular)).then(((response: any) =>{
+        dispatch(buscar_expediente(tdr_fecha,año_apertura,serie,sub_serie,palabras_clave,titulo,cod_und_series,persona_titular,consecutivo)).then(((response: any) =>{
             if(response.data !== null && response.data !== undefined)
                 set_expedientes(response.data);
             else
@@ -251,7 +256,20 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={2} sx={{ mt: '1px'}}>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12} sm={4}>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        fullWidth
+                                        size="small"
+                                        label="Consecutivo"
+                                        variant="outlined"
+                                        value={consecutivo}
+                                        onChange={cambio_consecutivo}
+
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
                                     <TextField
                                         autoFocus
                                         margin="dense"
@@ -264,7 +282,7 @@ const BuscarExpediente: React.FC<IProps> = (props: IProps) => {
 
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12} sm={4}>
                                     <TextField
                                         autoFocus
                                         margin="dense"

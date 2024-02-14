@@ -30,7 +30,7 @@
     "../@types"
   ],
 
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/commons/gestorDocumental/transferenciaDocumental/components/Parte_Uno"],
   "exclude": ["node_modules", "dist"]
 }
 

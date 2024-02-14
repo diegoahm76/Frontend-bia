@@ -31,11 +31,17 @@ export const columnsPqrsdf = [
     headerName: 'Asignado por',
     field: 'asignado_por',
     minWidth: 280,
+    renderCell: (params: any) => {
+      return params.value ?? 'Sin asignar';
+    },
   },
   {
     headerName: 'Asignado para',
     field: 'asignado_para',
     minWidth: 280,
+    renderCell: (params: any) => {
+      return params.value ?? 'Sin asignar';
+    },
   },
   {
     headerName: 'Fecha de asignación',
@@ -59,14 +65,6 @@ export const columnsPqrsdf = [
     minWidth: 220,
     renderCell: (params: any) => {
       return formatDate(params?.value);
-    },
-  },
-  {
-    headerName: 'Requerimientos pendientes de respuesta',
-    field: 'requerimientos_pendientes_respuesta',
-    minWidth: 280,
-    renderCell: (params: any) => {
-      return params.value ? 'SI' : 'NO';
     },
   },
   {
@@ -109,4 +107,14 @@ export const columnsPqrsdf = [
       return params.value ?? 'Sin estado de reasignación';
     },
   },
+  {
+    headerName: 'Estado de la de tarea',
+    field: 'estado_tarea',
+    minWidth: 280,
+    renderCell: (params: any) => {
+      return params.value ?? 'N/A';
+    },
+  },
+
+
 ];

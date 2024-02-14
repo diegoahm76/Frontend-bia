@@ -79,6 +79,7 @@ const MetadataFormDialog = ({
     digitization_request,
     storage_mediums,
     file_fisico,
+    edit_digitization,
   } = useAppSelector((state) => state.central_digitalizacion_slice);
 
   const {
@@ -326,7 +327,7 @@ const MetadataFormDialog = ({
       const fecha_registro = new Date(data.fecha_creacion_doc ?? '');
       const diferencia_ms = fecha_actual.getTime() - fecha_registro.getTime();
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
-      if (diferencia_dias <= 30) {
+      if (diferencia_dias <= 100) {
         form_data.append('data_digitalizacion', JSON.stringify(data_edit));
         console.log(exhibit, pdfFile);
 
@@ -469,7 +470,8 @@ const MetadataFormDialog = ({
                   },
                   label: 'Número de folios',
                   type: 'number',
-                  disabled: watch('cod_origen_archivo') === 'F',
+                  disabled:
+                    watch('cod_origen_archivo') === 'F' || !edit_digitization,
                   helper_text: '',
                   step_number: '1',
                 },
@@ -484,7 +486,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Categoria de archivo',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   select_options: file_categories,
                   option_label: 'label',
@@ -501,7 +503,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Origen del archivo',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   select_options: aux_origen_archivos,
                   option_label: 'label',
@@ -516,7 +518,7 @@ const MetadataFormDialog = ({
                   default_value: metadata.es_version_original ?? true,
                   rules: {},
                   label: 'Versión original',
-                  disabled: true,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
                 {
@@ -530,7 +532,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Tiene réplica física',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   checked: checked_tiene_replica_fisica,
                   set_checked: set_checked_tiene_replica_fisica,
@@ -548,7 +550,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Tiene tipología relacionada',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   checked: checked_tiene_tipologia,
                   set_checked: set_checked_tiene_tipologia,
@@ -565,7 +567,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: false, message: 'Requerido' },
                   },
                   label: 'Tipología relacionada',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                   select_options: file_typologies,
                   option_label: 'label',
@@ -583,7 +585,7 @@ const MetadataFormDialog = ({
                     required_rule: { rule: false, message: 'Requerido' },
                   },
                   label: '¿Cual?',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
 
@@ -599,7 +601,7 @@ const MetadataFormDialog = ({
                   },
                   label: 'Asunto',
                   type: 'text',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
                 {
@@ -614,7 +616,7 @@ const MetadataFormDialog = ({
                   rows_text: 4,
                   label: 'Descripción',
                   type: 'text',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
                 {
@@ -624,6 +626,7 @@ const MetadataFormDialog = ({
                   character_separator: '|',
                   set_form: setValue,
                   keywords: 'palabras_clave_doc',
+                  disabled: !edit_digitization
                 },
                 {
                   datum_type: 'input_controller',
@@ -637,7 +640,7 @@ const MetadataFormDialog = ({
                   rows_text: 4,
                   label: 'Observación',
                   type: 'text',
-                  disabled: false,
+                  disabled: !edit_digitization,
                   helper_text: '',
                 },
               ]}
@@ -651,23 +654,27 @@ const MetadataFormDialog = ({
             spacing={2}
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
-            <Button
-              color="success"
-              variant="contained"
-              onClick={handle_submit(on_submit)}
-              startIcon={<SaveIcon />}
-            >
-              Guardar
-            </Button>
-            {metadata.id_metadatos_anexo_tmp !== null && (
-              <Button
-                color="error"
-                variant="outlined"
-                onClick={delete_metadata}
-                startIcon={<DeleteIcon />}
-              >
-                Eliminar
-              </Button>
+            {edit_digitization && (
+              <>
+                <Button
+                  color="success"
+                  variant="contained"
+                  onClick={handle_submit(on_submit)}
+                  startIcon={<SaveIcon />}
+                >
+                  Guardar
+                </Button>
+                {metadata.id_metadatos_anexo_tmp !== null && (
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={delete_metadata}
+                    startIcon={<DeleteIcon />}
+                  >
+                    Eliminar
+                  </Button>
+                )}
+              </>
             )}
             <Button
               color="error"

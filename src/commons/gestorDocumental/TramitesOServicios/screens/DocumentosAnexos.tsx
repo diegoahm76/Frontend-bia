@@ -29,13 +29,13 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
     const dispatch = useAppDispatch();
-    const [descripcion, set_descripcion] = useState<any>("");
-    const [error_descripcion, set_error_descripcion] = useState<any>("");
-    const [error_file_name, set_error_file_name] = useState<any>("");
-    const [tamaño, set_tamaño] = useState('');
+    const [descripcion, set_descripcion] = useState<string | any>("");
+    const [error_descripcion, set_error_descripcion] = useState<string | any>("");
+    const [error_file_name, set_error_file_name] = useState<string | any>("");
+    const [tamaño, set_tamaño] = useState<string | any>('');
     const [file, set_file] = useState<File | null>(null);
-    const [file_name, set_file_name] = useState('');
-    const [archivos, set_archivos] = useState<any>([]);
+    const [file_name, set_file_name] = useState<string | any>('');
+    const [archivos, set_archivos] = useState<any[]>([]);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const columns: GridColDef[] = [
         {

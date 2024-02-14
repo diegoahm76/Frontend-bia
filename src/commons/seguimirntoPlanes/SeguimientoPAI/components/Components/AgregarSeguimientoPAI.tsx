@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Alert,
@@ -21,7 +22,7 @@ import { useContext, useEffect, useState } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useSeguimientoPAIHook } from '../../hooks/useSeguimientoPAIHook';
 import { DataContextSeguimientoPAI } from '../../context/context';
-import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
+// import { NumericFormatCustom } from '../../../components/inputs/NumericInput';
 import InfoIcon from '@mui/icons-material/Info';
 import { meses_selected } from '../../../PlanAnualAdquisiciones/choices/selects';
 import type { Dayjs } from 'dayjs';
@@ -32,6 +33,7 @@ import { FileDocs } from '../../../components/FileDocs';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { IconButtonDownLoad } from '../../../../../utils/DownloadButton/IconButtonDownLoad';
 import { v4 as uuidv4 } from 'uuid';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarSeguimientoPAI: React.FC = () => {
   const columns_anexos: GridColDef[] = [
@@ -79,7 +81,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
     id_programa,
     id_proyecto,
     id_producto,
-    id_indicador,
+    // id_indicador,
     set_id_programa,
     set_id_proyecto,
     set_id_producto,
@@ -996,7 +998,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de creación del PAI"
@@ -1022,7 +1024,7 @@ export const AgregarSeguimientoPAI: React.FC = () => {
                 )}
               />
             </LocalizationProvider>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
               Documentos Anexos

@@ -43,6 +43,7 @@ export interface IUserInfo {
   apoderados: any[];
   is_blocked: boolean;
   profile_img?: any;
+  is_loading?: boolean;
 }
 
 export interface UserData {
@@ -59,6 +60,8 @@ export interface UserData {
   tipo_persona: string;
   nombre?: string;
   telefono_celular?:any;
+  tipo_documento?:string;
+  numero_documento?:string;
 }
 
 export interface Tokens {

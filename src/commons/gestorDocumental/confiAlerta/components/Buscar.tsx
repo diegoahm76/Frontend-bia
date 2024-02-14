@@ -140,10 +140,10 @@ export const Buscar: React.FC<BuscarProps> = ({ handleClear, setSelectedEncuesta
                     <DataGrid
                         density="compact"
                         autoHeight
-                        columns={columns}
-                        rows={encuestas}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
+                        columns={columns}
+                        rows={encuestas}
                         getRowId={(row) => row.id_encabezado_encuesta}
                     />
                 </Grid>

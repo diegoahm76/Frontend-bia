@@ -4,71 +4,100 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useState } from 'react';
-import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
-import { Title } from '../../../components/Title';
+import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
-import { AuthSlice } from '../../auth/interfaces';
 import { api } from '../../../api/axios';
-import SaveIcon from '@mui/icons-material/Save';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { DataGrid } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
+import { Title } from '../../../components/Title';
+import { AuthSlice } from '../../auth/interfaces';
 import { control_error } from '../alertas/store/thunks/alertas';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { control_success } from '../../recursoHidrico/requets/Request';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
-
-interface FuenteAbastecimiento {
-    tipo: string | null;
-    numero: number | null;
-    nombreFuente: string | null;
-    caudalConcesionado: string | null;
-    sistemaMedicionAguaCaptada: string | null;
-}
-
+import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import { BuscadorPersona } from '../../../components/BuscadorPersona';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete'; // Icono para quitar el archivo
 interface CoordenadasSitioCaptacion {
-    cordenadaX: number | null;
-    cordenadaY: number | null;
+    cordenadaX: any;
+    cordenadaY: any;
 }
 
+export interface Persona {
+    id_persona: number;
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+    tipo_usuario:string;
+};
+ 
 interface FactoresUtilizacion {
-    numeroBovinos: number | null;
-    numeroPorcinos: number | null;
-    numeroUsuarios: number | null;
-    numeroHectareas: number | null;
-    consumoNumeroUsuarios: number | null;
+    numeroBovinos: any;
+    numeroPorcinos: any;
+    numeroUsuarios: any;
+    numeroHectareas: any;
+    consumoNumeroUsuarios: any;
+    consumoNumeroBovinos: any;
+    consumoNumeroPorcinos: any;
+    consumoNumeroHectareas: any;
 }
-
+interface Campo {
+    nombre: string;
+    valor: any;  
+}
 interface CaptacionMensualAgua {
-    mes: number | null;
-    tiempoUso: number | null;
-    periodoUso: string | null;
-    caudalUtilizado: number | null;
-    volumenAguaCaptada: number | null;
+    mes: number | any;
+    tiempoUso: number | any;
+    periodoUso: string | any;
+    caudalUtilizado: number | any;
+    volumenAguaCaptada: number | any;
+}
+interface FuenteAbastecimiento {
+    tipo: string | any;
+    numero: number | any;
+    nombreFuente: string | any;
+    caudalConcesionado: string | any;
+    sistemaMedicionAguaCaptada: string | any;
+    cordenadaX: number | any;
+    cordenadaY: number | any;
 }
 
-interface FormData {
-    cc: number| null;
-    nit: number| null;
+interface Data {
+    id_archivo_sistema:any;
+
+    cc: any;
+    nit: any;
     fax: string;
     telefono: string;
     otrotipo: string;
     direccion: string;
     municipio: string;
-    expediente: number| null;
-    codigoCIIU: number| null;
+    expediente: any;
+    codigoCIIU: any;
     razonSocial: string;
     tipoUsuario: string;
-    numConcesion: number| null;
+    numConcesion: any;
     fechaCreacion: string;
     actividadEconomica: string;
     nombreRepresentanteLegal: string;
     factoresUtilizacion: FactoresUtilizacion;
     captacionesMensualesAgua: CaptacionMensualAgua[];
-    coordenadasSitioCaptacion: CoordenadasSitioCaptacion;
+    // coordenadasSitioCaptacion: CoordenadasSitioCaptacion;
     informacionFuentesAbastecimiento: FuenteAbastecimiento[];
 }
 
+
 export const AutodeclaracionFormulario: React.FC = () => {
+
+    const [formmmm, set_form] = useState<{archivo: null | any}>({ archivo: null });
+
     const { userinfo: { telefono_celular } } = useSelector((state: AuthSlice) => state.auth);
     const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
     const [
@@ -85,14 +114,15 @@ export const AutodeclaracionFormulario: React.FC = () => {
     const [type_directionn,
         // set_type_direction
     ] = useState('');
-    
-    const initialFormData: FormData = {
+
+    const initialFormData: Data = {
+        id_archivo_sistema:null,
         nit: null,
         cc: null,
         fax: "",
         municipio: "",
         numConcesion: null,
-        tipoUsuario: "EMPRESARIAL",
+        tipoUsuario: "",
         otrotipo: "",
         razonSocial: "",
         nombreRepresentanteLegal: "",
@@ -103,21 +133,22 @@ export const AutodeclaracionFormulario: React.FC = () => {
         expediente: null,
         fechaCreacion: "",
         informacionFuentesAbastecimiento: [],
-        coordenadasSitioCaptacion: {
-            cordenadaX: null,
-            cordenadaY: null,
-        },
+
         factoresUtilizacion: {
             numeroUsuarios: null,
             numeroBovinos: null,
             numeroPorcinos: null,
             numeroHectareas: null,
             consumoNumeroUsuarios: null,
+            consumoNumeroBovinos: null,
+            consumoNumeroPorcinos: null,
+            consumoNumeroHectareas: null,
         },
         captacionesMensualesAgua: []
     };
 
-    const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [Data, setFormData] = useState<Data>(initialFormData);
+    console.log("data",Data)
     const handleInputChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | SelectChangeEvent<string>
     ) => {
@@ -125,6 +156,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
         const { name, value } = target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
+
+
+
     const set_value_direction = (direccion_notificacion: any): void => {
         setdireccion_generadaa(direccion_notificacion);
         set_direccion_generada_activaa(true);
@@ -152,28 +186,157 @@ export const AutodeclaracionFormulario: React.FC = () => {
         fetchDepartamentos();
     }, []);
 
+
+
+
     const crearFormulario = async () => {
         try {
             const url = "/recaudo/formulario/crear_formulario/";
-            const res = await api.post(url, formData);
-            // Manejar la respuesta aquí, por ejemplo, mostrar un mensaje de éxito
+            const res = await api.post(url, Data);
             console.log('Formulario creado con éxito', res.data);
             control_success("Formulario creado con éxito")
-
+            setFormData(initialFormData);
         } catch (error: any) {
-            // Manejar el error aquí, por ejemplo, mostrar un mensaje de error
             console.error('Error al crear el formulario', error);
             control_error(error.response.data.detail);
-
         }
     };
 
+
+    const fetch_Crear_archivo_digital = async () => {
+        try {
+            const url = `/recaudo/formulario/crear_formulario/`;
+            const formData = new FormData();
+    
+            // Agregar los campos de la interfaz Data al objeto FormData
+           formData.append('nit', '123456789');
+            formData.append('cc', '987654321');
+            formData.append('fax', "0987654321");
+            formData.append('telefono', "1234567890");
+            formData.append('otrotipo', "Otro tipo");
+            formData.append('direccion', "Dirección de la empresa");
+            formData.append('municipio', "Nombre del municipio");
+            formData.append('expediente', '987');
+            formData.append('codigoCIIU', '12345');
+            formData.append('razonSocial', "\"Nombre de la empresa\"");
+            formData.append('tipoUsuario', "EMPRESARIAL");
+            formData.append('numConcesion','654');
+            formData.append('fechaCreacion', "2024-02-09T04:45:56.337326");
+            formData.append('actividadEconomica', "Actividad económica");
+            formData.append('nombreRepresentanteLegal', "Nombre del representante legal");
+
+            // formData.append('nit', Data.nit);
+            // formData.append('cc',Data.cc);
+            // formData.append('fax', Data.fax);
+            // formData.append('telefono', Data.telefono);
+            // formData.append('otrotipo',Data.otrotipo);
+            // formData.append('direccion',Data.direccion);
+            // formData.append('municipio', Data.municipio);
+            // formData.append('expediente', Data.expediente);
+            // formData.append('codigoCIIU', Data.codigoCIIU);
+            // formData.append('razonSocial', Data.razonSocial);
+            // formData.append('tipoUsuario', Data.tipoUsuario);
+            // formData.append('numConcesion',Data.numConcesion);
+            // formData.append('fechaCreacion', Data.fechaCreacion);
+            // formData.append('actividadEconomica',Data.actividadEconomica);
+            // formData.append('nombreRepresentanteLegal', Data.nombreRepresentanteLegal);
+    
+            // Agregar los campos de factoresUtilizacion al objeto FormData
+            formData.append('factoresUtilizacion', JSON.stringify({
+                "id": 17,
+                "numeroUsuarios": 100,
+                "numeroBovinos": 50,
+                "numeroPorcinos": 30,
+                "numeroHectareas": 200,
+                "consumoNumeroUsuarios": 150,
+                "consumoNumeroBovinos": 10,
+                "consumoNumeroPorcinos": 10,
+                "consumoNumeroHectareas": 10
+            }));
+    
+            // Agregar las captacionesMensualesAgua al objeto FormData
+            formData.append('captacionesMensualesAgua', JSON.stringify([
+                {
+                    "id": 34,
+                    "periodoUso": "Periodo 1",
+                    "tiempoUso": 10,
+                    "caudalUtilizado": 50,
+                    "volumenAguaCaptada": 100,
+                    "mes": 1
+                },
+                {
+                    "id": 35,
+                    "periodoUso": "Periodo 2",
+                    "tiempoUso": 8,
+                    "caudalUtilizado": 40,
+                    "volumenAguaCaptada": 80,
+                    "mes": 3
+                },
+                {
+                    "id": 36,
+                    "periodoUso": "Periodo 3",
+                    "tiempoUso": 12,
+                    "caudalUtilizado": 60,
+                    "volumenAguaCaptada": 120,
+                    "mes": 5
+                }
+            ]));
+    
+            // Agregar las informacionFuentesAbastecimiento al objeto FormData
+            formData.append('informacionFuentesAbastecimiento', JSON.stringify([
+                {
+                    "id": 25,
+                    "numero": 1,
+                    "tipo": "Tipo 1",
+                    "nombreFuente": "Fuente 1",
+                    "caudalConcesionado": "Caudal 1",
+                    "sistemaMedicionAguaCaptada": "Sistema 1",
+                    "cordenadaX": 123.456,
+                    "cordenadaY": 789.012
+                },
+                {
+                    "id": 26,
+                    "numero": 2,
+                    "tipo": "Tipo 2",
+                    "nombreFuente": "Fuente 2",
+                    "caudalConcesionado": "Caudal 2",
+                    "sistemaMedicionAguaCaptada": "Sistema 2",
+                    "cordenadaX": 123.456,
+                    "cordenadaY": 789.012
+                }
+            ]));
+            // formData.append('id_archivo_sistema', formmmm.archivo as File);
+            if (formmmm.archivo) {
+                formData.append('id_archivo_sistema', formmmm.archivo);
+              }
+
+            // Realizar la solicitud POST
+            const res = await api.post(url, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
+            if (res.data) {
+                // La solicitud fue exitosa
+                control_success("se creo correctamente");
+            } else {
+                // La solicitud falló
+                console.error('Error en la solicitud:', res.statusText);
+            }
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+        }
+    };
+    
+
+    
     const [currentCaptacion, setCurrentCaptacion] = useState({
         periodoUso: "",
-        tiempoUso: 0,
-        caudalUtilizado: 0,
-        volumenAguaCaptada: 0,
-        mes: 1
+        tiempoUso: "",
+        caudalUtilizado: "",
+        volumenAguaCaptada: "",
+        mes: ""
     });
 
     const handleCurrentCaptacionChange = (event: { target: { name: any; value: any; }; }) => {
@@ -181,47 +344,252 @@ export const AutodeclaracionFormulario: React.FC = () => {
         setCurrentCaptacion(prevState => ({ ...prevState, [name]: value }));
     };
 
+    const verificarDatosCaptacion = () => {
+        const campos = [
+            { nombre: 'periodo de Uso', valor: currentCaptacion.periodoUso },
+            { nombre: 'Tiempo de Uso', valor: currentCaptacion.tiempoUso },
+            { nombre: 'Caudal utilizado', valor: currentCaptacion.caudalUtilizado },
+            { nombre: 'Volumen de agua captada', valor: currentCaptacion.volumenAguaCaptada },
+            { nombre: 'Mes', valor: currentCaptacion.mes },
+        ];
+
+        for (let campo of campos) {
+            if (campo.valor === null || campo.valor === '') {
+                return campo.nombre;
+            }
+        }
+        return null;
+    };
+
     const agregarCaptacion = () => {
-        setFormData(prevState => ({
-            ...prevState,
-            captacionesMensualesAgua: [...prevState.captacionesMensualesAgua, currentCaptacion]
-        }));
-        setCurrentCaptacion({
-            periodoUso: "",
-            tiempoUso: 0,
-            caudalUtilizado: 0,
-            volumenAguaCaptada: 0,
-            mes: 1
-        });
+        // Verificar si el mes ya existe en los datos
+        const mesYaExiste = Data.captacionesMensualesAgua.some(captacion => captacion.mes === currentCaptacion.mes);
+        const campoFaltante = verificarDatosCaptacion();
+        if (campoFaltante) {
+            control_error(`Falta agregar dato: ${campoFaltante}`);
+            return;
+        }
+
+        const camposRequeridos = {
+            periodoUso: 'Periodo de Uso',
+            tiempoUso: 'Tiempo de Uso',
+            caudalUtilizado: 'Caudal Utilizado',
+            volumenAguaCaptada: 'Volumen de Agua Captada',
+            mes: 'Mes'
+        };
+
+
+        if (mesYaExiste) {
+            // Mostrar una alerta si el mes ya fue agregado
+            control_error("Mes ya agregado ");
+
+        }
+
+
+        else {
+            // Proceder a agregar la captación si el mes no existe
+            setFormData(prevState => ({
+                ...prevState,
+                captacionesMensualesAgua: [...prevState.captacionesMensualesAgua, currentCaptacion]
+            }));
+
+            // Reiniciar el estado de currentCaptacion
+            setCurrentCaptacion({
+                periodoUso: "",
+                caudalUtilizado: "",
+                tiempoUso: "",
+                volumenAguaCaptada: "",
+                mes: ""
+            });
+        }
     };
 
 
+
+    const eliminarcaptacion = (id: number) => {
+        setFormData(prevState => ({
+            ...prevState,
+            captacionesMensualesAgua: prevState.captacionesMensualesAgua.filter((item, index) => index !== id)
+        }));
+    };
+    const columnas_captacion = [
+        { field: 'periodoUso', headerName: 'Periodo de uso', width: 220 },
+        { field: 'tiempoUso', headerName: 'Tiempo de uso', width: 220 },
+        { field: 'caudalUtilizado', headerName: 'Caudal utilizado', width: 220 },
+        { field: 'volumenAguaCaptada', headerName: 'Volumen de agua Captada', width: 220 },
+        { field: 'mes', headerName: 'Mes', width: 210 },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            sortable: false,
+            width: 150,
+            renderCell: (params: { id: any; }) => {
+                return (
+                    <IconButton color='error' onClick={() => eliminarcaptacion(params.id)}>
+                        <DeleteForeverIcon />
+                    </IconButton>
+                );
+            }
+        },
+    ];
+    //fuente 
+
     const [currentFuente, setCurrentFuente] = useState({
-        numero: 0,
+        numero: "",
         tipo: "",
         nombreFuente: "",
         caudalConcesionado: "",
-        sistemaMedicionAguaCaptada: ""
+        sistemaMedicionAguaCaptada: "",
+        cordenadaX: "",
+        cordenadaY: "",
     });
     const handleCurrentFuenteChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;
         setCurrentFuente(prevState => ({ ...prevState, [name]: value }));
     };
+
+    const verificarDatosFuente = () => {
+        const campos: Campo[] = [
+            { nombre: 'Numero', valor: currentFuente.numero },
+            { nombre: 'Tipo', valor: currentFuente.tipo },
+            { nombre: 'Nombre de fuente', valor: currentFuente.nombreFuente },
+            { nombre: 'Caudal concesionado', valor: currentFuente.caudalConcesionado },
+            { nombre: 'Sistema de medicion de agua captada', valor: currentFuente.sistemaMedicionAguaCaptada },
+            { nombre: 'Cordenada X', valor: currentFuente.cordenadaX },
+            { nombre: 'Cordenada Y', valor: currentFuente.cordenadaY },
+        ];
+
+        for (let campo of campos) {
+            if (campo.valor === null || campo.valor === '' || (typeof campo.valor === 'number' && isNaN(campo.valor))) {
+                return campo.nombre;
+            }
+        }
+        return null;
+    };
+
     const agregarFuente = () => {
+        const campoFaltante = verificarDatosFuente();
+        if (campoFaltante) {
+            control_error(`Falta agregar dato: ${campoFaltante}`);
+            return;
+        }
         setFormData(prevState => ({
             ...prevState,
             informacionFuentesAbastecimiento: [...prevState.informacionFuentesAbastecimiento, currentFuente]
+
         }));
-        // Reiniciar currentFuente
         setCurrentFuente({
-            numero: 0,
+            numero: "",
             tipo: "",
             nombreFuente: "",
             caudalConcesionado: "",
-            sistemaMedicionAguaCaptada: ""
+            sistemaMedicionAguaCaptada: "",
+            cordenadaX: "",
+            cordenadaY: "",
+
         });
     };
+    const eliminarFuente = (id: number) => {
+        setFormData(prevState => ({
+            ...prevState,
+            informacionFuentesAbastecimiento: prevState.informacionFuentesAbastecimiento.filter((item, index) => index !== id)
+        }));
+    };
+    const columnas = [
+        { field: 'numero', headerName: 'Número', width: 220 },
+        { field: 'tipo', headerName: 'Tipo', width: 220 },
+        { field: 'nombreFuente', headerName: 'Nombre de la Fuente', width: 220 },
+        { field: 'caudalConcesionado', headerName: 'Caudal Concesionado', width: 220 },
+        { field: 'cordenadaX', headerName: 'CordenadaX  ', width: 220 },
+        { field: 'cordenadaY', headerName: 'CordenadaY', width: 220 },
+
+        { field: 'sistemaMedicionAguaCaptada', headerName: 'Sistema de Medición', width: 220 },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            sortable: false,
+            width: 150,
+            renderCell: (params: { id: any; }) => {
+                return (
+                    <IconButton color='error' onClick={() => eliminarFuente(params.id)}>
+                        <DeleteForeverIcon />
+                    </IconButton>
+                );
+            }
+        },
+    ];
+
     ///
+    const [persona, set_persona] = useState<Persona | undefined>();
+
+    const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
+
+
+
+
+
+    const [fileExtension, setFileExtension] = useState<string | null>(null);
+    const [file_nombre, set_file_nombre] = useState<string | null>(null);
+
+
+
+
+
+    const VisuallyHiddenInput = styled('input')`
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    white-space: nowrap;
+    width: 1px;
+  `;
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const fileInput = event.target;
+    if (fileInput?.files?.length) {
+      const fileName = fileInput.files[0].name;
+      const selectedFile = fileInput.files[0];
+   
+      
+      // Verificar si selectedFile no es null antes de asignarlo a set_form
+ 
+        set_form({ archivo: selectedFile });
+   
+      const extension = fileName.split('.').pop();
+      if (extension) {
+        setFileExtension(extension);
+        set_file_nombre(fileName);
+      } else {
+        console.error('No se pudo determinar la extensión del archivo.');
+        setFileExtension('Desconocido');
+        set_file_nombre('Desconocido');
+      }
+    } else {
+      console.warn('Ningún archivo seleccionado.');
+      setFileExtension(null);
+      set_file_nombre(null);
+    }
+  };
+
+
+
+
+  const handleRemoveFile = () => {
+    // Limpia la selección actual del archivo
+    set_form({
+      
+      archivo: null,
+    });
+    setFileExtension(null);
+    set_file_nombre(null);
+  };
+
+
+
+
 
     return (
         <>
@@ -239,9 +607,57 @@ export const AutodeclaracionFormulario: React.FC = () => {
             >
                 <Title title="Formulario auto declaración  " />
 
+                <Grid item xs={12}>
+                    <BuscadorPersona
+                        onResult={(data) => {
+                            void on_result(data);
+                        }}
+                    />
+                </Grid>
+{persona?.primer_nombre}
             </Grid>
             {/* 222
             {direccion_generada} */}
+
+<Button onClick={fetch_Crear_archivo_digital}>xxxxxx</Button>
+<Grid
+          container
+          style={{ display: 'flex', justifyContent: 'flex-end', marginRight: 50 }}
+        >
+
+          <Button
+            style={{ marginTop: 10, width: 180 }}
+            fullWidth
+            component="label"
+            variant="outlined"
+            startIcon={<CloudUploadIcon />}
+            htmlFor="file-upload"
+          >
+            {formmmm.archivo ? (
+              <>
+                Quitar
+                <IconButton
+                  size="small"
+                  onClick={handleRemoveFile}
+                  sx={{ marginLeft: '8px' }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </>
+            ) : (
+              'Seleccionar Documento'
+            )}
+            <VisuallyHiddenInput
+              type="file"
+              id="file-upload"
+              onChange={handleFileChange}
+            />
+          </Button>
+
+        </Grid>
+
+
+
 
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
@@ -263,7 +679,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                                 label="Tipo de Usuario"
                                 name="tipoUsuario"
                                 onChange={handleInputChange}
-                                value={formData.tipoUsuario}
+                                value={Data.tipoUsuario}
                             >
                                 <MenuItem value="EMPRESARIAL">Empresarial</MenuItem>
                                 <MenuItem value="DOMESTICO">Doméstico</MenuItem>
@@ -289,7 +705,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             name="razonSocial"
                             onChange={handleInputChange}
 
-                            value={formData.razonSocial}
+                            value={Data.razonSocial}
                         />
                     </Grid>
 
@@ -300,7 +716,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Nit"
                             name="nit"
-                            value={formData.nit}
+                            value={Data.nit}
                             onChange={handleInputChange}
 
                         />
@@ -312,7 +728,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Nombre representante legal "
                             name="nombreRepresentanteLegal"
-                            value={formData.nombreRepresentanteLegal}
+                            value={Data.nombreRepresentanteLegal}
                             onChange={handleInputChange}
 
                         />
@@ -326,7 +742,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="CC"
                             name="cc"
-                            value={formData.cc}
+                            value={Data.cc}
                             onChange={handleInputChange}
 
                         />
@@ -338,7 +754,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Actividad económica"
                             name="actividadEconomica"
-                            value={formData.actividadEconomica}
+                            value={Data.actividadEconomica}
                             onChange={handleInputChange}
                         />
                     </Grid>
@@ -350,7 +766,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Teléfono"
                             name="telefono"
-                            value={formData.telefono}
+                            value={Data.telefono}
                             onChange={handleInputChange}
 
                         />
@@ -362,7 +778,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Fax"
                             name="fax"
-                            value={formData.fax}
+                            value={Data.fax}
                             onChange={handleInputChange}
 
                         />
@@ -374,7 +790,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Código CIIU"
                             name="codigoCIIU"
-                            value={formData.codigoCIIU}
+                            value={Data.codigoCIIU}
                             onChange={handleInputChange}
 
                         />
@@ -386,7 +802,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             <Select
                                 name="municipio"
                                 label="municipio"
-                                value={formData.municipio}
+                                value={Data.municipio}
                                 onChange={handleInputChange}
                                 labelId="municipio-select-label"
                             >
@@ -405,8 +821,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             label="Expediente "
                             name="expediente"
                             variant="standard"
-                            value={formData.expediente}
-                            onChange={handleInputChange} 
+                            value={Data.expediente}
+                            onChange={handleInputChange}
                         />
                     </Grid>
 
@@ -417,7 +833,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="N Concesión"
                             name="numConcesion"
-                            value={formData.numConcesion}
+                            value={Data.numConcesion}
                             onChange={handleInputChange}
 
                         />
@@ -431,7 +847,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="Dirección"
                             name="direccion"
-                            value={formData.direccion}
+                            value={Data.direccion}
                         />
                     </Grid>
 
@@ -457,41 +873,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         >
                             Generar dirección
                         </Button>
-                    </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    </Grid> 
                     <Grid item xs={12} sm={4}>
                     </Grid>
                 </Grid>
-            </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
+            </Grid> 
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -508,9 +894,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     <TextField
                         fullWidth
                         size="small"
-                        variant="standard"
-                        label="Número"
                         name="numero"
+                        label="Número"
+                        variant="standard"
                         value={currentFuente.numero}
                         onChange={handleCurrentFuenteChange}
                     />
@@ -529,7 +915,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         onChange={handleCurrentFuenteChange}
                     />
                 </Grid>
-              
+
 
 
 
@@ -538,7 +924,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="nombreFuente"
+                        label="Nombre de fuente"
                         name="nombreFuente"
                         value={currentFuente.nombreFuente}
                         onChange={handleCurrentFuenteChange}
@@ -549,7 +935,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="caudalConcesionado"
+                        label="Caudal concesionado"
                         name="caudalConcesionado"
                         value={currentFuente.caudalConcesionado}
                         onChange={handleCurrentFuenteChange}
@@ -560,7 +946,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="sistemaMedicionAguaCaptada"
+                        label="Sistema de medicion de agua captada"
                         name="sistemaMedicionAguaCaptada"
                         value={currentFuente.sistemaMedicionAguaCaptada}
                         onChange={handleCurrentFuenteChange}
@@ -571,9 +957,31 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
+                        label="Cordenada X"
+                        name="cordenadaX"
+                        value={currentFuente.cordenadaX}
+                        onChange={handleCurrentFuenteChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Cordenada Y"
+                        name="cordenadaY"
+                        value={currentFuente.cordenadaY}
+                        onChange={handleCurrentFuenteChange}
+                    />
+                </Grid>
+                {/* <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
                         label="Coordenada X"
                         name="cordenadaX"
-                        value={formData.coordenadasSitioCaptacion.cordenadaX}
+                        value={Data.coordenadasSitioCaptacion.cordenadaX}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -584,15 +992,15 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             }));
                         }}
                     />
-                </Grid>
-                <Grid item xs={12} sm={4}>
+                </Grid> */}
+                {/* <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
                         size="small"
                         variant="standard"
                         label="Coordenada Y"
                         name="cordenadaY"
-                        value={formData.coordenadasSitioCaptacion.cordenadaY}
+                        value={Data.coordenadasSitioCaptacion.cordenadaY}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -603,7 +1011,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             }));
                         }}
                     />
-                </Grid>
+                </Grid> */}
 
 
 
@@ -613,14 +1021,23 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 <Grid item >
                     <Button color='success'
                         variant='contained'
-                        startIcon={<AddIcon />} onClick={agregarFuente}>
+                        startIcon={<AddIcon />}
+                        onClick={agregarFuente}>
                         Agregar Fuente
                     </Button>
                 </Grid>
+                <Grid item xs={12} sm={12} marginTop={2}  >
+                    <DataGrid
+                        autoHeight
+                        pageSize={10}
+                        columns={columnas}
+                        density="compact"
+                        rowsPerPageOptions={[10]}
+                        rows={Data.informacionFuentesAbastecimiento.map((row, index) => ({ ...row, id: index }))}
+                        getRowId={(row) => row.id}
+                    />
 
-
-
-
+                </Grid>
             </Grid>
 
 
@@ -646,9 +1063,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="numeroUsuarios "
+                        label="Número  de Usuarios "
                         name="numeroUsuarios"
-                        value={formData.factoresUtilizacion.numeroUsuarios}
+                        value={Data.factoresUtilizacion.numeroUsuarios}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -660,15 +1077,38 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label=" consumo de Usuarios (lt/hab-dia) "
+                        name="consumoNumeroUsuarios"
+                        value={Data.factoresUtilizacion.consumoNumeroUsuarios}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroUsuarios: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+
+                </Grid>
+
 
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="numeroBovinos "
+                        label="Número  de bovinos "
                         name="numeroBovinos"
-                        value={formData.factoresUtilizacion.numeroBovinos}
+                        value={Data.factoresUtilizacion.numeroBovinos}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -685,9 +1125,33 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="numeroPorcinos "
+                        label=" consumo de bovinos (lt/hab-dia) "
+                        name="consumoNumeroBovinos "
+                        value={Data.factoresUtilizacion.consumoNumeroBovinos}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroBovinos: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Número de Porcinos "
                         name="numeroPorcinos"
-                        value={formData.factoresUtilizacion.numeroPorcinos}
+                        value={Data.factoresUtilizacion.numeroPorcinos}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -704,9 +1168,31 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         fullWidth
                         size="small"
                         variant="standard"
-                        label="numeroHectareas "
+                        label=" consumo de porcinos (lt/hab-dia) "
+                        name="consumoNumeroPorcinos"
+                        value={Data.factoresUtilizacion.consumoNumeroPorcinos}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroPorcinos: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Número hectáreas "
                         name="numeroHectareas"
-                        value={formData.factoresUtilizacion.numeroHectareas}
+                        value={Data.factoresUtilizacion.numeroHectareas}
                         onChange={(event) => {
                             setFormData(prevState => ({
                                 ...prevState,
@@ -719,47 +1205,25 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            label="consumoNumeroUsuarios "
-                            name="consumoNumeroUsuarios"
-                            value={formData.factoresUtilizacion.consumoNumeroUsuarios}
-                            onChange={(event) => {
-                                setFormData(prevState => ({
-                                    ...prevState,
-                                    factoresUtilizacion: {
-                                        ...prevState.factoresUtilizacion,
-                                        consumoNumeroUsuarios: parseFloat(event.target.value) || 0
-                                    }
-                                }));
-                            }}
-                        />
-                    </Grid>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label=" consumo de hectareas (lt/hab-dia) "
+                        name="consumoNumeroHectareas"
+                        value={Data.factoresUtilizacion.consumoNumeroHectareas}
+                        onChange={(event) => {
+                            setFormData(prevState => ({
+                                ...prevState,
+                                factoresUtilizacion: {
+                                    ...prevState.factoresUtilizacion,
+                                    consumoNumeroHectareas: parseFloat(event.target.value) || 0
+                                }
+                            }));
+                        }}
+                    />
+                </Grid>
             </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -770,81 +1234,97 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <>
-                    <Title title=" Captación mensual de agua" />
+                <Title title=" Captación mensual de agua" />
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        name="periodoUso"
+                        variant="standard"
+                        label="Periodo de Uso"
+                        value={currentCaptacion.periodoUso}
+                        onChange={handleCurrentCaptacionChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        name="tiempoUso"
+                        variant="standard"
+                        label="Tiempo de Uso"
+                        value={currentCaptacion.tiempoUso}
+                        onChange={handleCurrentCaptacionChange}
+                    />
+                </Grid>
 
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            name="periodoUso"
-                            variant="standard"
-                            label="Periodo de Uso"
-                            value={currentCaptacion.periodoUso}
-                            onChange={handleCurrentCaptacionChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            name="tiempoUso"
-                            variant="standard"
-                            label="tiempo de Uso"
-                            value={currentCaptacion.tiempoUso}
-                            onChange={handleCurrentCaptacionChange}
-                        />
-                    </Grid>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        name="caudalUtilizado"
+                        label="Caudal utilizado"
+                        value={currentCaptacion.caudalUtilizado}
+                        onChange={handleCurrentCaptacionChange}
+                    />
+                </Grid>
 
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            name="caudalUtilizado"
-                            label="caudalUtilizado"
-                            value={currentCaptacion.caudalUtilizado}
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="standard"
+                        label="Volumen de agua captada"
+                        name="volumenAguaCaptada"
+                        value={currentCaptacion.volumenAguaCaptada}
+                        onChange={handleCurrentCaptacionChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small" variant="standard">
+                        <InputLabel>Mes</InputLabel>
+                        <Select
+                            label="Mes"
+                            name="mes"
+                            value={currentCaptacion.mes}
                             onChange={handleCurrentCaptacionChange}
-                        />
-                    </Grid>
+                        >
+                            <MenuItem value={1}>Enero</MenuItem>
+                            <MenuItem value={2}>Febrero</MenuItem>
+                            <MenuItem value={3}>Marzo</MenuItem>
+                            <MenuItem value={4}>Abril</MenuItem>
+                            <MenuItem value={5}>Mayo</MenuItem>
+                            <MenuItem value={6}>Junio</MenuItem>
+                            <MenuItem value={7}>Julio</MenuItem>
+                            <MenuItem value={8}>Agosto</MenuItem>
+                            <MenuItem value={9}>Septiembre</MenuItem>
+                            <MenuItem value={10}>Octubre</MenuItem>
+                            <MenuItem value={11}>Noviembre</MenuItem>
+                            <MenuItem value={12}>Diciembre</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item >
+                    <Button color='success'
+                        variant='contained'
+                        startIcon={<AddIcon />} onClick={agregarCaptacion}>
+                        Agregar Captación
+                    </Button>
+                </Grid>
 
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            label="volumenAguaCaptada"
-                            name="volumenAguaCaptada"
-                            value={currentCaptacion.volumenAguaCaptada}
-                            onChange={handleCurrentCaptacionChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <FormControl fullWidth size="small" variant="standard">
-                            <InputLabel>Mes</InputLabel>
-                            <Select
-                                label="Mes"
-                                name="mes"
-                                value={currentCaptacion.mes}
-                                onChange={handleCurrentCaptacionChange}
-                            >
-                                <MenuItem value={1}>Enero</MenuItem>
-                                <MenuItem value={2}>Febrero</MenuItem>
-                                <MenuItem value={3}>Marzo</MenuItem>
-                                <MenuItem value={4}>Abril</MenuItem>
-                                <MenuItem value={5}>Mayo</MenuItem>
-                                <MenuItem value={6}>Junio</MenuItem>
-                                <MenuItem value={7}>Julio</MenuItem>
-                                <MenuItem value={8}>Agosto</MenuItem>
-                                <MenuItem value={9}>Septiembre</MenuItem>
-                                <MenuItem value={10}>Octubre</MenuItem>
-                                <MenuItem value={11}>Noviembre</MenuItem>
-                                <MenuItem value={12}>Diciembre</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    {/* 
+                <Grid item xs={12} sm={12} marginTop={2} >
+                    <DataGrid
+                        autoHeight
+                        pageSize={10}
+                        columns={columnas_captacion}
+                        density="compact"
+                        rowsPerPageOptions={[10]}
+                        rows={Data.captacionesMensualesAgua.map((row, index) => ({ ...row, id: index }))}
+                        getRowId={(row) => row.id}
+                    />
+                </Grid>
+                {/* 
                     <Grid item >
 
 
@@ -868,7 +1348,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
  */}
 
 
-                    {/* 
+                {/* 
 
 
                     <Grid item xs={12} sm={4}>
@@ -910,7 +1390,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
                         />
                     </Grid> */}
-                    {/* <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
                             size="small"
@@ -918,7 +1398,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="fechaCreacion"
                             name="fechaCreacion"
-                            value={formData.fechaCreacion}
+                            value={Data.fechaCreacion}
                         />
                     </Grid>  
                     <Grid item xs={12} sm={4}>
@@ -928,24 +1408,17 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             variant="standard"
                             label="otrotipo"
                             name="otrotipo"
-                            value={formData.otrotipo}
+                            value={Data.otrotipo}
                             onChange={handleInputChange}
                         />
                     </Grid>
                   
  */}
-                    <Grid item >
-                        <Button color='success'
-                            variant='contained'
-                            startIcon={<AddIcon />} onClick={agregarCaptacion}>
-                            Agregar Captación
-                        </Button>
-
-                    </Grid>
 
 
 
-                </>
+
+
             </Grid>
 
 
@@ -978,7 +1451,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         <Select
                             labelId="municipio-select-label"
                             id="municipio-select"
-                            value={formData.municipio_v}
+                            value={Data.municipio_v}
                             label="municipio"
                             onChange={handleInputChange}
                             name="municipio_v"

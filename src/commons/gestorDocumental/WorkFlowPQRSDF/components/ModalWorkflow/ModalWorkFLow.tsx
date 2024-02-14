@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Grid, Dialog } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Title } from "../../../../../components/Title";
@@ -18,99 +18,220 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { api } from "../../../../../api/axios";
+import './ModalWorkFlow.css';
 
-const steps = [
-    { label: 'GUARDADO', value: 0 },
-    {
-        label: 'RADICADO',
-        value: 0,
-        subSteps: [
-            { label: 'RADICADO INTERNO', value: 0 },
-            // Agrega otros pasos específicos de la subrama aquí si es necesario
-        ],
-    },
-    { label: 'EN VENTANILLA CON PENDIENTES', value: 0 },
-    { label: 'EN VENTANILLA SIN PENDIENTES', value: 0 },
-    { label: 'EN GESTION', value: 0 },
-    { label: 'RESPONDIDA', value: 0 },
-    { label: 'NOTIFICADA', value: 0 },
-];
+interface SubStep {
+    label: string;
+    value?: number;
+}
 
-export const ModalFlujoDeTrabajo = () => {
-    const [estaModalAbierta, setEstaModalAbierta] = useState(false);
+interface StepData {
+    label: string;
+    value: number;
+    subSteps?: SubStep[];
+}
+
+interface Iconsultadostres {
+    primer_nombre?: string;
+
+}
+
+interface Iconsultados {
+    solicitud: string;
+    fecha_registro: string;
+    fecha_radicado?: string | null; // Añadido el tipo correcto aquí
+    persona_asignada: Iconsultadostres[];
+}
+
+interface Iconsulta {
+    arbol_solicitudes: Iconsultados[];
+}
+
+interface ModalFlujoDeTrabajoProps {
+    data: any;
+    onClose: () => void;
+}
+
+
+export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, onClose }) => {
+
+    const [estadoWordFlow, set_estadoWordFlow] = useState<Iconsulta>({ arbol_solicitudes: [] });
+
+    const seEncontroGUARDADO = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "GUARDADO");
+    const guardadoFechaRegistro = seEncontroGUARDADO ? estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "GUARDADO")?.fecha_registro || 0 : 0;
+
+    const seEncontroRADICADO = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "RADICADO");
+    const guardadoFechaRegistroRADICADO = seEncontroRADICADO
+        ? estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "RADICADO")?.fecha_radicado || ""
+        : "";
+
+    const seEncontroENVENTANILLACONPENDIENTES = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN VENTANILLA CON PENDIENTES");
+    const seEncontroENVENTANILLASINPENDIENTES = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN VENTANILLA SIN PENDIENTES");
+
+
+    const seEncontroENGESTION = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "EN GESTION");
+    const guardadoFechaRegistroENGESTION = seEncontroENGESTION
+        ? (estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "EN GESTION")?.persona_asignada?.[0]?.primer_nombre || "")
+        : "";
+
+
+
+    const seEncontroRESPONDIDA = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "RESPONDIDA");
+
+    const cantidadTrue = [
+        seEncontroGUARDADO,
+        seEncontroRADICADO,
+        seEncontroENVENTANILLACONPENDIENTES,
+        seEncontroENVENTANILLASINPENDIENTES,
+        seEncontroENGESTION,
+        seEncontroRESPONDIDA
+    ].filter(Boolean).length;
+
+    console.log("guardadoFechaRegistro", guardadoFechaRegistro);
+
+    console.log("variable_poso", seEncontroGUARDADO, seEncontroRADICADO, seEncontroENVENTANILLACONPENDIENTES, seEncontroENVENTANILLASINPENDIENTES, seEncontroENGESTION, seEncontroRESPONDIDA);
+    const variable_poso = cantidadTrue - 1;
+
+
+
+    const steps = [
+        { label: 'GUARDADO', value: guardadoFechaRegistro.toString() },
+        {
+            label: 'RADICADO',
+            value: guardadoFechaRegistroRADICADO.toString(),
+        },
+        {
+            label: 'EN VENTANILLA CON PENDIENTES', value: null, subSteps: [
+                {
+                    label: 'RADICADO INTERNO',
+                    value: 0,
+                    subSteps: [
+                        { label: 'NUEVO SUBPASO', value: 0 },
+                    ],
+                },
+            ],
+        },
+        { label: 'EN VENTANILLA SIN PENDIENTES', value: 0 },
+        {
+            label: 'EN GESTION', value: 0, subSteps: [
+                {
+                    label: 'RADICADO INTERNO',
+                    value: guardadoFechaRegistroENGESTION.toString(),
+                    subSteps: [
+                        { label: 'NUEVO SUBPASO', value: 0 },
+                    ],
+                },
+            ],
+        },
+        { label: 'RESPONDIDA', value: 0 },
+        { label: 'NOTIFICADA', value: 0 },
+    ];
+
+
+    console.log("estadoWordFlow", estadoWordFlow.arbol_solicitudes);
+    console.log("data", guardadoFechaRegistroENGESTION);
+
+    const consulta_estado_word_flow = async (): Promise<void> => {
+        try {
+            let url = `gestor/pqr/listar_informacion_arbol/${+data}/`;
+            const res = await api.get(url);
+            const Data_consulta = res.data;
+            set_estadoWordFlow(Data_consulta);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const cerrarModal = () => {
-        setEstaModalAbierta(false);
+        onClose();
     };
 
 
-    const varaible_poso=2;
+
+
+
+    useEffect(() => {
+
+        consulta_estado_word_flow();
+    }, []);
+
     return (
-        <>
-            <Grid item xs={12} sm={5} md={3.6} lg={2.5}>
-                <Button
-                    startIcon={<ClearIcon />}
-                    fullWidth
-                    style={{ width: "90%", marginTop: 15, backgroundColor: "orange" }}
-                    variant="contained"
-                    onClick={() => { setEstaModalAbierta(true) }} >
-                    Consultar
-                </Button>
-            </Grid>
+        <Dialog open={true} fullWidth maxWidth="xl" onClose={cerrarModal}>
+            <Grid
+                container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                <Grid item xs={12}>
+                    <Title title="WordFlow" />
+                </Grid>
 
-            <Dialog open={estaModalAbierta} fullWidth maxWidth="xl" onClose={cerrarModal}>
-                <Grid
-                    container
-                    sx={{
-                        position: 'relative',
-                        background: '#FAFAFA',
-                        borderRadius: '15px',
-                        p: '20px',
-                        mb: '20px',
-                        boxShadow: '0px 3px 6px #042F4A26',
-                    }}
-                >
-                    <Grid item xs={12}>
-                        <Title title="Consultar Años Anteriores" />
-                    </Grid>
+                {/* Contenido */}
+                <Box sx={{ width: '100%', marginTop: 5 }}>
+                    <Stepper activeStep={variable_poso} alternativeLabel>
+                        {steps.map((step, index) => (
+                            <Step key={step.label}>
+                                <StepLabel
+                                    icon={getStepIcon(index)}
+                                    sx={{
+                                        color: index === variable_poso ? 'green' : 'inherit',
+                                        position: 'relative',
+                                    }}
+                                >
+                                    {step.label}
+                                    <div style={{ marginTop: 0 }}>{` ${step.value}`}</div>
+                                    {step.subSteps && (
+                                        <Stepper activeStep={0} alternativeLabel style={{ marginTop: 12 }}>
+                                            {step.subSteps.map((subStep, subIndex) => (
+                                                <Step key={subStep.label}>
+                                                    <StepLabel
+                                                        icon={getSubStepIcon(subIndex, 'RADICADO INTERNO')}
+                                                        sx={{
+                                                            color: subIndex === 2 ? 'blue' : 'inherit',
+                                                            position: 'relative',
+                                                        }}
+                                                    >
+                                                        <div style={{ marginTop: 5 }}>{`${index + 1}.${subIndex + 1}`}</div>
+                                                        {subStep.label}
+                                                        <div style={{ marginTop: 5 }}>{`${subStep.value}`}</div>
+                                                        {subIndex > 0 && (
+                                                            <div className="stepper-line-vertical" style={{ top: '-12px' }} />
+                                                        )}
+                                                    </StepLabel>
+                                                    {subStep.label === 'RADICADO INTERNO' && (
+                                                        <Step>
+                                                            <StepLabel
+                                                                icon={getSubStepIcon(subIndex, 'OTRO SUBPASO')}
+                                                                sx={{
+                                                                    color: subIndex === 2 ? 'blue' : 'inherit',
+                                                                    position: 'relative',
+                                                                }}
+                                                            >
+                                                                <div style={{ marginTop: 5 }}>{`${index + 1}.${subIndex + 2}`}</div>
+                                                                {'OTRO SUBPASO'}
+                                                                <div className="stepper-line" style={{ top: '-12px' }} />
+                                                            </StepLabel>
+                                                        </Step>
+                                                    )}
+                                                </Step>
+                                            ))}
+                                        </Stepper>
+                                    )}
+                                </StepLabel>
+                            </Step>
+                        ))}
 
-                    {/* Contenido */}
-                    <Box sx={{ width: '100%', marginTop: 5 }}>
-                        <Stepper activeStep={varaible_poso} alternativeLabel>
-                            {steps.map(({ label, value, subSteps }, index) => (
-                                <Step key={label}>
-                                    <StepLabel
-                                        icon={getStepIcon(index)}
-                                        sx={{
-                                            color: index === varaible_poso ? 'green' : 'inherit',
-                                        }}
-                                    >
-                                        {label}
-                                        <div style={{ marginTop: 5 }}>{` ${value}`}</div>
-                                        {subSteps && (
-                                            <Stepper activeStep={0} alternativeLabel style={{ marginTop: 12 }}>
-                                                {subSteps.map(({ label: subLabel, value: subValue }, subIndex) => (
-                                                    <Step key={subLabel}>
-                                                        <StepLabel
-                                                            icon={getSubStepIcon(subIndex)}
-                                                            sx={{
-                                                                color: subIndex === 2 ? 'blue' : 'inherit',
-                                                            }}
-                                                        >
-                                                            <div style={{ marginTop: 5 }}>{`${index + 1}.${subIndex + 1}`}</div>
-                                                            {subLabel}
-                                                            <div style={{ marginTop: 5 }}>{`${subValue}`}</div>
-                                                        </StepLabel>
-                                                    </Step>
-                                                ))}
-                                            </Stepper>
-                                        )}
-                                    </StepLabel>
-                                </Step>
-                            ))}
-                        </Stepper>
-                    </Box>
+                    </Stepper>
+                </Box>
 
+                <Grid container spacing={2} justifyContent="flex-end">
                     <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
                         <Button
                             startIcon={<ClearIcon />}
@@ -124,12 +245,13 @@ export const ModalFlujoDeTrabajo = () => {
                         </Button>
                     </Grid>
                 </Grid>
-            </Dialog>
-        </>
+
+            </Grid>
+        </Dialog>
     );
 };
 
-const getStepIcon = (index:any) => {
+const getStepIcon = (index: any) => {
     switch (index) {
         case 0:
             return <SaveOutlinedIcon />;
@@ -150,7 +272,20 @@ const getStepIcon = (index:any) => {
     }
 };
 
-const getSubStepIcon = (subIndex:any) => {
+const getSubStepIcon = (subIndex: any, parentLabel: any) => {
+    if (parentLabel === 'RADICADO INTERNO') {
+        switch (subIndex) {
+            case 0:
+                return <NotificationsIcon />; // Ícono original para "RADICADO INTERNO"
+            case 1:
+                return <SettingsIcon />; // Nuevo ícono adicional para "RADICADO INTERNO"
+            // Agrega más casos según sea necesario
+            default:
+                return null;
+        }
+    }
+
+    // Si no, asigna íconos según el subíndice
     switch (subIndex) {
         case 0:
             return <CheckIcon />;

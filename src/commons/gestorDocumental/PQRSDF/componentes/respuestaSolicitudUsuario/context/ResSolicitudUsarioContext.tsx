@@ -154,10 +154,10 @@ export const ResSolicitudUsuarioProvider = ({ children }: any): JSX.Element => {
   const [infoInicialUsuario, setInfoInicialUsuario] =useState<any>([]);
 
     const [respuestaPqrs, setRespuestaPqrs] = useState<RespuestaPQRS>(valoresIniciales);
-    const [respuestaPqrsdfMade, setrespuestaPqrsdfMade] = useState(null)
+    const [respuestaPqrsdfMade, setrespuestaPqrsdfMade] = useState<RespuestaPQRS | null>(null);
 
 console.log('stivencontext', respuestaPqrs)
-
+console.log('Anexos de respuestaPqrsdfMade:', respuestaPqrsdfMade?.anexos);
 
   const value = {
     infoInicialUsuario,

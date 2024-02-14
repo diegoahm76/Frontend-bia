@@ -25,6 +25,7 @@ import use_editar_organigrama from '../../hooks/useEditarOrganigrama';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
 import { Title } from '../../../../../components';
+import { useFiles } from '../../../../../hooks/useFiles/useFiles';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCrearOrganigrama = ({
@@ -45,6 +46,8 @@ const DialogCrearOrganigrama = ({
     reset_creacion_organigrama,
     creacion_organigrama_values
   } = use_editar_organigrama();
+
+  const {controlar_tamagno_archivos} = useFiles()
 
   const handle_close_crear_organigrama = (): void => {
     set_is_modal_active(false);
@@ -215,26 +218,11 @@ const DialogCrearOrganigrama = ({
                   <input
                     style={{ display: 'none' }}
                     type="file"
-                    accept="application/pdf"
                     onChange={(e) => {
                       const files = (e.target as HTMLInputElement).files;
                       if (files && files.length > 0) {
                         const file = files[0];
-                        if (file.type !== 'application/pdf') {
-                          control_warning(
-                            'Precaución: Solo es admitido archivos en formato pdf'
-                          );
-                        } else if (file.size > FILEWEIGHT.PDF) {
-                          const MAX_FILE_SIZE_MB = (
-                            FILEWEIGHT.PDF /
-                            (1024 * 1024)
-                          ).toFixed(1);
-                          control_warning(
-                            `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                          );
-                        } else {
-                          onChange(file);
-                        }
+                        controlar_tamagno_archivos(file, onChange)
                       }
                     }}
                   />

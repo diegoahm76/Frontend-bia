@@ -47,6 +47,7 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
 
     switch (tipo) {
+      case 'RESPONDER PQRSDF':
       case 'Responder PQRSDF':
         void getReAsignacionesTareasPqrsdf(
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
@@ -54,11 +55,11 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         ).then((res) => {
           setListaAsignaciones(res);
         });
-        showAlert(
+        /*showAlert(
           'Atención',
           'No hay servicio para ver reasignaciones de las (RESPUESTAS A PQRSDF),',
           'warning'
-        );
+        );*/
         break;
       case 'Responder Trámite':
         // Call the service for Tramites y Servicios

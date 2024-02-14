@@ -48,6 +48,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a lo
 import './style.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useFiles } from '../../../../../../../../hooks/useFiles/useFiles';
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -75,6 +76,8 @@ export const FormParte3 = ({
   const [tipologiasDocumentales, setTipologiasDocumentales] = useState<
     TipologiaDocumental[]
   >([]);
+
+  const {controlar_tamagno_archivos} = useFiles()
 
   const {
     resetManejoMetadatosModalFunction,
@@ -342,27 +345,11 @@ export const FormParte3 = ({
                     <input
                       style={{ display: 'none' }}
                       type="file"
-                      accept="application/pdf"
-                      // disabled={ccd_current?.actual}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
                           const file = files[0];
-                          if (file.type !== 'application/pdf') {
-                            control_warning(
-                              'Precaución: Solo es admitido archivos en formato pdf'
-                            );
-                          } else if (file.size > FILEWEIGHT.PDF) {
-                            const MAX_FILE_SIZE_MB = (
-                              FILEWEIGHT.PDF /
-                              (1024 * 1024)
-                            ).toFixed(1);
-                            control_warning(
-                              `Precaución: El archivo es demasiado grande. El tamaño máximo permitido es ${MAX_FILE_SIZE_MB} MB.`
-                            );
-                          } else {
-                            onChange(file);
-                          }
+                          controlar_tamagno_archivos(file, onChange)
                         }
                       }}
                     />

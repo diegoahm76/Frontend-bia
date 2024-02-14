@@ -15,13 +15,18 @@ import { Title } from '../../../../components';
 import { PanelVentanillaContext } from '../context/PanelVentanillaContext';
 import { getHistoricoByRadicado } from '../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
 import { ModalAndLoadingContext } from '../../../../context/GeneralContext';
-import { setListaHistoricoSolicitudes } from '../toolkit/store/PanelVentanillaStore';
+import {
+  resetParcial,
+  setListaHistoricoSolicitudes,
+} from '../toolkit/store/PanelVentanillaStore';
 import { useAppDispatch } from '../../../../hooks';
 import { PanelDeVentanillaScreen } from '../module/entrega98_101/screen/panelDeVentanilla/PanelDeVentanillaScreen';
 import { HistoricoSolicitudesScreen } from '../module/entrega98_101/screen/historicoSolicitudes/HistoricoSolicitudesScreen';
 import { showAlert } from '../../../../utils/showAlert/ShowAlert';
 import { HisSolOpasScreen } from '../module/entrega98_101/screen/historicoSolicitudesOPAS/HistSolOpasScrenn';
 import { HisSolOtrosScreen } from '../module/entrega98_101/screen/historicoSolicitudesOtros/HisSolOtrosScreen';
+import { getHistoricoOtrosByRadicado } from '../toolkit/thunks/otros/getHistoricoOtrosByRadicado.service';
+import { getHistoricoByRadicadoOPAS } from '../toolkit/thunks/opas/getHistoricoByRadicadoOPAS.service';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   // * dispatch declaration
@@ -34,8 +39,8 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
 
   const handleRequestRadicado = async () => {
+    dispatch(resetParcial());
     const historico = await getHistoricoByRadicado('', handleGeneralLoading);
-
     dispatch(setListaHistoricoSolicitudes(historico));
   };
 
@@ -46,25 +51,21 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
   // ? -----------------------------------------------------------------------
 
   const handleRequestRadicadoOpas = async () => {
-    showAlert(
-      'Estimado usuario',
-      'Actualmente estamos trabajando en el desarrollo de esta funcionalidad para ver el histórico de OPAS. Por el momento, no se han establecido servicios específicos, pero puede interactuar de manera simulada.',
-      'warning'
+    dispatch(resetParcial());
+    const historico = await getHistoricoByRadicadoOPAS(
+      '',
+      handleGeneralLoading
     );
-
-    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
 
     dispatch(setListaHistoricoSolicitudes(historico));
   };
 
   const handleRequestRadicadoOtros = async () => {
-    showAlert(
-      'Estimado usuario',
-      'Actualmente estamos trabajando en el desarrollo de esta funcionalidad para ver el histórico de los OTROS. Por el momento, no se han establecido servicios específicos, pero puede interactuar de manera simulada.',
-      'warning'
+    dispatch(resetParcial());
+    const historico = await getHistoricoOtrosByRadicado(
+      '',
+      handleGeneralLoading
     );
-
-    const historico = await getHistoricoByRadicado('', handleGeneralLoading);
 
     dispatch(setListaHistoricoSolicitudes(historico));
   };
@@ -73,11 +74,20 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
     <Grid container sx={containerStyles}>
       <Title title="Panel de ventanilla" />
       <Box sx={{ width: '100%', mt: '1.5rem' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box
+          sx={{
+            borderBottom: 1,
+            borderColor: 'divider',
+            width: '100%',
+            overflow: 'hidden',
+            overflowX: 'auto',
+          }}
+        >
           <Tabs
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
+            variant="fullWidth"
           >
             <Tab
               onClick={() => {
@@ -97,7 +107,7 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
               label="Histórico de solicitudes OPAS"
               {...a11yProps(2)}
             />
-             <Tab
+            <Tab
               onClick={handleRequestRadicadoOtros}
               label="Histórico de solicitudes OTROS"
               {...a11yProps(3)}

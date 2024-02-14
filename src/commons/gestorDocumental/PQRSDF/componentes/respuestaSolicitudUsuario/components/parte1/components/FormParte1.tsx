@@ -52,7 +52,6 @@ export const FormParte1 = ({
 
   //* navigate declaration
   const navigate = useNavigate();
-
   //* redux state
   const currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = useAppSelector(
     (state: any) =>
@@ -79,14 +78,14 @@ export const FormParte1 = ({
       </Grid>
     );
   }
-
+//trae la data  de al a respuestac 
   const getPqrsdfResponse = async () => {
     try {
       const url = `/gestor/pqr/get_respuesta_pqrsdf-panel/${+currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf}/`;
       const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
       const respuestaPqrsdf = res.data.data;
       setrespuestaPqrsdfMade(respuestaPqrsdf);
-      console.log('respuesta a una solicitud', respuestaPqrsdf);
+      // console.log('respuesta a una solicitud', respuestaPqrsdf);
     } catch (error) {
       console.error('Error al obtener datos:', error);
     }
@@ -101,8 +100,9 @@ export const FormParte1 = ({
       const url = `/gestor/pqr/get_pqrsdf-panel/${+currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf}/`;
       const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
       const respuestaPqrsdf = res.data.data;
+      console.log(respuestaPqrsdf, 'respuestaPqrsdf')
       setRespuestaPqrs(respuestaPqrsdf);
-      console.log('respuesta a una solicitud', respuestaPqrsdf);
+      // console.log('respuesta a una solicitud', respuestaPqrsdf);
     } catch (error) {
       console.error('Error al obtener datos:', error);
     }
@@ -166,7 +166,7 @@ export const FormParte1 = ({
               disabled
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.detallePQRSDF?.data?.radicado ?? 'N/A'}
+              value={respuestaPqrsdfMade?.numero_radicado_entrada?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>

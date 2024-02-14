@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -8,6 +9,7 @@ import {
   Button,
   FormControl,
   Grid,
+  Dialog,
   IconButton,
   MenuItem,
   Select,
@@ -28,19 +30,29 @@ import { PruebasLiquidacionModal } from "./modal/PruebasLiquidacionModal";
 import type { OpcionLiquidacion } from "../../interfaces/liquidacion";
 import { api } from "../../../../api/axios";
 import { Add, Build, Save } from "@mui/icons-material";
-
+import SaveIcon from '@mui/icons-material/Save';
 import { NotificationModal } from "../NotificationModal";
 import Blockly from 'blockly';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import EditIcon from '@mui/icons-material/Edit';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
 import './AgregarEditarOpciones.css';
+import { Title } from "../../../../components";
+import { control_success } from "../../../../helpers";
 
 interface Rows {
   id: number;
   nombre: string;
 }
-
+interface Variable {
+  id_valores_variables: number;
+  variables: string;
+  nombre_variable: string;
+  tipo_cobro: number;
+  tipo_renta: number;
+  valor: any;
+}
 interface IProps {
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
@@ -162,6 +174,7 @@ export const AgregarEditarOpciones = ({
       variable: ''
     }));
 
+
     set_variables([
       ...Array.from(new Set([...variables, form_data.variable.replace(/\s/g, '_')]))
     ]);
@@ -236,8 +249,12 @@ export const AgregarEditarOpciones = ({
         funcion: generateCode(),
         estado: form_data.estado,
         variables: variables.reduce((acumulador, valor) => {
+          if (selectedVariableNames.includes(valor)) {
+            return { ...acumulador, [valor]: selectedVariable };
+          }
           return { ...acumulador, [valor]: '' };
         }, {}),
+
         bloques: JSON.stringify(json),
       })
         .then((response) => {
@@ -256,6 +273,9 @@ export const AgregarEditarOpciones = ({
         funcion: generateCode(),
         estado: form_data.estado,
         variables: variables.reduce((acumulador, valor) => {
+          if (selectedVariableNames.includes(valor)) {
+            return { ...acumulador, [valor]: selectedVariable };
+          }
           return { ...acumulador, [valor]: '' };
         }, {}),
         bloques: JSON.stringify(json),
@@ -270,7 +290,6 @@ export const AgregarEditarOpciones = ({
           set_open_notification_modal(true);
         });
     }
-
   }
 
   const column: GridColDef[] = [
@@ -279,6 +298,7 @@ export const AgregarEditarOpciones = ({
       headerName: 'Nombre',
       width: 200
     },
+
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -307,16 +327,153 @@ export const AgregarEditarOpciones = ({
               />
             </Avatar>
           </IconButton>
+          <IconButton
+            color="primary"
+            aria-label="Ver"
+            onClick={() => handleOpenModal(params.row.nombre)}
+          >
+            <PlaylistAddCheckIcon />
+          </IconButton>
         </>
       ),
     },
   ];
+
+
+  //
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVariableName, setSelectedVariableName] = useState("");
+  
+  // const handleOpenModal = (variableName: any) => {
+  //   setSelectedVariableName(variableName);
+  //   setIsModalOpen(true);
+  // };
+  const [selectedVariableNames, setSelectedVariableNames] = useState<string[]>([]);
+
+  const handleSave = () => {
+    setSelectedVariableNames((prevSelected) => {
+      // Agrega la variable seleccionada si no está ya en la lista
+      if (!prevSelected.includes(selectedVariableName)) {
+        return [...prevSelected, selectedVariableName];
+      }
+      return prevSelected;
+    });
+    control_success("Variable asignada ");
+    setIsModalOpen(false);
+
+    // Aquí puedes cerrar el modal o realizar otras acciones necesarias
+  };
+
+  const handleOpenModal = (variableName: any) => {
+    setSelectedVariableName(variableName); // Asumiendo que tienes una función para esto
+    setIsModalOpen(true);
+  };
+
+
+
+  const [valores, setvalores] = useState<Variable[]>([]);
+  const [selectedVariable, setSelectedVariable] = useState<any>(null);
+
+  const handleSelectChange = (event: SelectChangeEvent<number>) => {
+    setSelectedVariable(event.target.value as number);
+  };
+
+  const fetchVariables = async () => {
+    try {
+      const res = await api.get("/recaudo/configuracion_baisca/valoresvariables/get/");
+      setvalores(res.data.data);
+    } catch (error) {
+      console.error("Error al obtener las variables", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchVariables();
+  }, []);
+
+  const handleClick = () => {
+    console.log(row);
+    console.log("2222222");
+
+  };
+
+  const [is_buscar, set_is_buscar] = useState<boolean>(true);
+  const handle_open_buscar = (): void => {
+    set_is_buscar(true);
+  };
+  const handle_close = (): void => {
+    set_is_buscar(false);
+    setIsModalOpen(false)
+
+    // control_success("Variable asignada ");
+
+  };
 
   return (
     <>
       <>
         {/* INICIO TEST */}
         <Grid container spacing={2} sx={{ my: '10px' }}>
+
+          {/* <div>
+            <button onClick={handleClick}>consola  </button>
+          </div>  */}
+          <Dialog
+            keepMounted
+            aria-describedby="alert-dialog-slide-description"
+            open={isModalOpen}
+            onClose={handle_close}
+            maxWidth="xl"
+          >
+
+            <Grid
+              container spacing={2}
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26'
+              }}
+            >
+              {/* <Grid item xs={12} sm={12}>
+                <Title title="Asignar variable ${selectedVariableName}" />
+              </Grid> */}
+              <Grid item xs={12} sm={12}>
+                <Title title={`Asignar variable ${selectedVariableName} `} />
+              </Grid>
+
+              {/* <h2>{selectedVariableName}</h2> */}
+              <Grid item xs={12} sm={12}>
+                <FormControl size="small" fullWidth>
+                  <InputLabel>Selecciona opción variable</InputLabel>
+                  <Select
+                    value={selectedVariable}
+                    onChange={handleSelectChange}
+                    label="Selecciona opción variable"
+                  >
+                    {valores.map((variable) => (
+                      <MenuItem key={variable.id_valores_variables} value={variable.valor}>
+                        {variable.nombre_variable}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <Button color='success'
+                  variant='contained'
+                  startIcon={<SaveIcon />}
+                  onClick={handleSave}>Guardar</Button>
+              </Grid>
+
+            </Grid>
+
+          </Dialog>
+
+
           <Grid item xs={12} sm={4.5}>
             <FormControl size="small" fullWidth>
               <InputLabel>Selecciona opción liquidación</InputLabel>
@@ -341,6 +498,9 @@ export const AgregarEditarOpciones = ({
               </Select>
             </FormControl>
           </Grid>
+
+
+
           <Grid item xs={12} sm={4.5}>
             <TextField
               label="Ingresa una variable"
@@ -457,7 +617,7 @@ export const AgregarEditarOpciones = ({
               startIcon={edit_opcion ? <EditIcon /> : <Save />}
               fullWidth
             >
-              {edit_opcion ? 'Editar ': 'Guardar '}opción liquidación
+              {edit_opcion ? 'Editar ' : 'Guardar '}opción liquidación
 
             </Button>
           </Grid>
@@ -485,6 +645,10 @@ export const AgregarEditarOpciones = ({
         set_open_notification_modal={set_open_notification_modal}
         notification_info={notification_info}
       />
+
+
+
+
     </>
   )
 }

@@ -9,6 +9,10 @@ import { VistaComplemento } from '../module/entrega98_101/components/vistaComple
 import { MainAsigGrupoScreen } from '../module/entrega102/screen/MainAsigGrupoScreen';
 import { AsignacionGrupoProvider } from '../module/entrega102/context/AsignacionGrupoContext';
 import { SolicitudAlUsuarioProvider } from '../module/entrega99/context/SolicitudUsarioContext';
+import { MainAsigGrupoOpaScreen } from '../module/entrega122GrupoOpa/screen/MainAsigGrupoOpaScreen';
+import { AsignacionGrupoOpaProvider } from '../module/entrega122GrupoOpa/context/AsignacionGrupoOpaContext';
+import { AsignacionGrupoTramiteProvider } from '../module/entrega125GrupoTramite/context/AsignacionGrupoTramiteContext';
+import { MainAsigGrupoTramiteScreen } from '../module/entrega125GrupoTramite/screen/MainAsigGrupoTramiteScreen';
 
 const routes = [
   {
@@ -33,6 +37,26 @@ const routes = [
         <AsignacionGrupoProvider>
           <MainAsigGrupoScreen />
         </AsignacionGrupoProvider>
+      </>
+    ),
+  },
+  {
+    path: 'asignar_a_grupo_tramite_opa/',
+    component: () => (
+      <>
+        <AsignacionGrupoOpaProvider>
+          <MainAsigGrupoOpaScreen />
+        </AsignacionGrupoOpaProvider>
+      </>
+    ),
+  },
+  {
+    path: 'asignar_tramite_a_unidad/',
+    component: () => (
+      <>
+        <AsignacionGrupoTramiteProvider>
+          <MainAsigGrupoTramiteScreen />
+        </AsignacionGrupoTramiteProvider>
       </>
     ),
   },

@@ -83,21 +83,24 @@ export const ConceptoPago: React.FC = () => {
         { field: 'descripccion', headerName: 'Descripción', width: 200, flex: 1 },
 
         { field: 'nombre_variable', headerName: 'varible', width: 130, flex: 1 },
-        {
-            field: 'Estado',
-            headerName: 'Estado',
-            width: 130,
-            flex: 1,
+        // { field: 'estado', headerName: 'estado', width: 130, flex: 1 },
 
-            renderCell: (params: any) => (
-                <Chip
-                    size="small"
-                    label={params.value ? 'Activo' : 'Inactivo'}
-                    color={params.value ? 'success' : 'error'}
-                    variant="outlined"
-                />
-            )
-        },
+        // estado
+        // {
+        //     field: 'Estado',
+        //     headerName: 'Estado',
+        //     width: 130,
+        //     flex: 1,
+
+        //     renderCell: (params: any) => (
+        //         <Chip
+        //             size="small"
+        //             label={params.value ? 'Activo' : 'Inactivo'}
+        //             color={params.value ? 'success' : 'error'}
+        //             variant="outlined"
+        //         />
+        //     )
+        // },
         { field: 'fecha_inicio', headerName: 'fecha inicio', width: 130, flex: 1 },
         { field: 'fecha_fin', headerName: 'Fecha fin', width: 130, flex: 1 },
 
@@ -167,7 +170,7 @@ export const ConceptoPago: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                <Title title="Concepto de pago " />
+                <Title title="Concepto de pago. " />
                 <Grid item xs={3} sm={2} marginTop={2} >
                     <Button startIcon={<AddIcon />} onClick={handle_open_buscar} fullWidth variant="outlined"    >
                         Crear
@@ -208,14 +211,15 @@ export const ConceptoPago: React.FC = () => {
                 <Title title="Configuracion " />
 
                 <Grid container item xs={12} spacing={2} marginTop={2}  >
+                   <Grid item xs={4} sm={4}>
+                        <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de renta")}>Tipos de renta</Button>
+                    </Grid> 
                     <Grid item xs={4} sm={4}>
-                        <Button variant="contained" onClick={() => handleButtonClick("Tipos de cobro")}>Tipos de cobro</Button>
+                        <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de cobro")}>Tipos de cobro</Button>
                     </Grid>
+                    
                     <Grid item xs={4} sm={4}>
-                        <Button variant="contained" onClick={() => handleButtonClick("Tipos de renta")}>Tipos de renta</Button>
-                    </Grid>
-                    <Grid item xs={4} sm={4}>
-                        <Button variant="contained" onClick={() => handleButtonClick("Variable")}>Variable</Button>
+                        <Button fullWidth variant="contained" onClick={() => handleButtonClick("Variable")}>Variable</Button>
                     </Grid>
                 </Grid>
 

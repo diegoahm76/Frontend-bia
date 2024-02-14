@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useAppSelector } from '../../../../../../../../../hooks';
+import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { ButtonsTareaOpas } from './buttonsOpas/ButtonsOpas';
+import { ButtonsTareaOtros } from './buttonsOtros/buttonsOtros';
 import { ButtonsPqrsdf } from './buttonsPqrsdf/ButtonsPqrsdf';
+import { ButtonsTareaTramites } from './buttonsTramitesYServicios/ButtonsTramites';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
@@ -16,30 +20,13 @@ import { ButtonsPqrsdf } from './buttonsPqrsdf/ButtonsPqrsdf';
 const renderPQRSDF = () => <ButtonsPqrsdf />;
 
 // ? se debe cambiar por la definicion de los buttons de las acciones de tramites y servicios en un módulo aparte tal como se realiza con pqrsdf
+const renderOtros = () => <ButtonsTareaOtros />;
 
-/*const renderTramitesYServicios = () => (
-  <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-    <>Botones de Tramites y Servicios </>
-  </Box>
-);
+const renderOpas = () => <ButtonsTareaOpas />;
 
-
-const renderOtros = () => (
-  <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-    <>Botones de Otros </>
-  </Box>
-);
-
-const renderOpas = () => (
-  <Box sx={{ height: 100, transform: 'translateZ(0px)', flexGrow: 1 }}>
-    <>Botones de OPAS </>
-  </Box>
-);*/
+const renderTramitesYServicios = () => <ButtonsTareaTramites />;
 
 export const ButtonsBandejaDeTareas = (): JSX.Element => {
-  //* navigate declaration
-  // const navigate = useNavigate();
-
   const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
     useAppSelector((state) => state.BandejaTareasSlice);
 
@@ -52,19 +39,18 @@ export const ButtonsBandejaDeTareas = (): JSX.Element => {
 
         switch (tipo) {
           case 'Responder PQRSDF':
+          case 'RESPONDER PQRSDF':
             return renderPQRSDF();
-        /*  case 'Tramites y Servicios':
-            return renderTramitesYServicios(actionsTramitesYServicios);*/
-          /* case 'Otros':
-        return renderOtros();
-      case 'Complemento de PQRSDF':
-      case 'Complemento de PQRSDF - Respuesta a solicitud':
-      case 'Complemento de PQRSDF - Respuesta a requerimiento':
-        return renderComplementoPQRSDF();
-      case 'OPAS':
-        return renderOPAS();*/
+          case 'Responder Trámite':
+            return renderTramitesYServicios();
+          case 'Responder Otro':
+            return renderOtros();
+          case 'Responder OPA':
+            return renderOpas();
           default:
-            return null;
+            return console.error(
+              'No se ha encontrado el tipo de tarea para la selección de botones'
+            );
         }
       })()}
     </>

@@ -15,11 +15,20 @@ import {
     MenuItem,
     Select
 } from '@mui/material';
-import { SerieSubserie, UnidadOrganizaciona } from '../../../recaudo/screens/Facturacion';
 import { api } from '../../../../api/axios';
 import { Title } from '../../../../components';
 import { buscar_expediente, buscar_expediente_id } from '../../Expedientes/aperturaExpedientes/thunks/aperturaExpedientes';
-
+export interface SerieSubserie {
+    id_catserie_unidadorg: number;
+    id_serie_doc: number;
+    nombre_serie_doc: string;
+    id_subserie_doc: number | null;
+    nombre_subserie_doc: string | null; 
+  }
+  export interface UnidadOrganizaciona {
+    id_unidad_organizacional: number;
+    nombre: string; 
+  }
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,

@@ -7,23 +7,18 @@ import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
 import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
-
 import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
-
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasConfiguracionTiposPQR';
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes as Encuesta } from '../Encuesta/routes/Encuasta_Routes';
-
 import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { Reubicacion_Expediantes_Routes } from '../ReubicacionExpediente/routes/Reubicacion_Routes';
-
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
-import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
 import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
 import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
@@ -32,7 +27,6 @@ import { Encuasta_Routess as EncuestaRoutes } from '../encuestaAsignacion/routes
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
 import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
-// import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
 import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
@@ -40,12 +34,18 @@ import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/Complemento
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
 import { RutesWorkFlowPQRSDF } from '../WorkFlowPQRSDF/routes/RutesWorkFlowPQRSDF';
 import { Consulta_Solicitud_Routes } from '../consultaSolicitud/routes/ConsultaSolicitud';
-import { Consulta_estadoPQR_Routes } from '../consultaEstadoPQR/routes/ConsultaEstadoPQR';
 import { Consulta_ExternoPQR_Routes } from '../consultarEstadoExternoPQR/routes/ConsultaExternoPQR';
 import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/ConsultaAnonimo';
 import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
 import { Consulta_OtrosExterno_Routes } from '../consltaOtrosExterno/routes/ConsultarOtrosEterno';
-
+import { DeleteDocumental_Routes } from '../eliminacionDocumental/routes/DeleteDocuemtal_Routes';
+import { Radicado_Email_Routes } from '../radicadoEmail/routes/RadicadoEmail';
+import { ConsecutivoConfi } from '../configuracionConsecutivo/routes/ConsecutivoConfi';
+import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
+import { RutasCentralDigitalizacionOtros } from '../centraldigitalizacionOtros/routes/RutasCentralDigitalizacionOtros';
+import { RutasTransferenciaDocumental } from '../transferenciaDocumental/routes/RutasTransferenciaDocumental';
+import { ConsultaEstadoSolicitudes } from '../consulltaEstadoSolicitudes/routes/ConsultaEstadoSolicitudes.routes';
+ 
 const routes = [
   {
     path: 'organigrama/',
@@ -148,11 +148,7 @@ const routes = [
     component: () => <EncuestaRoutes />,
   },
 
-  {
-    path: 'Reportes_PQRSDF/',
-    name: 'Reportes_PQRSDF',
-    component: () => <Consulta_Solicitud_Routes />,
-  },
+
   {
     path: 'Interno_encuesta/',
     name: 'Interno_encuesta',
@@ -199,7 +195,16 @@ const routes = [
     name: 'central_digitalizacion',
     component: () => <CentralDigitalizacionRoutes />,
   },
-
+  {
+    path: 'busqueda/',
+    name: 'busqueda',
+    component: () => <RutesWorkFlowPQRSDF />,
+  },
+  {
+    path: 'indicadores_pqrsdf/',
+    name: 'indicadores_pqrsdf',
+    component: () => <RutesIndicadores />,
+  },
   {
     path: 'solicitudes_otros/',
     name: 'solicitudes_otros',
@@ -216,6 +221,65 @@ const routes = [
     name: 'complementos_pqrsdf',
     component: () => <ComplementoPqrsdfRoutes />,
   },
+  {
+    path: 'radicado_email/',
+    name: 'radicado_email',
+    component: () => <Radicado_Email_Routes />,
+  },
+  {
+    path: 'consecutivo_configuracion/',
+    name: 'consecutivo_configuracion',
+    component: () => <ConsecutivoConfi />,
+  },
+  
+  {
+    path: 'Reportes_PQRSDF/',
+    name: 'Reportes_PQRSDF',
+    component: () => <Consulta_Solicitud_Routes />,
+  },
+   {
+    path: 'Consulta_AnonimoPQR/',
+    name: 'Consulta_AnonimoPQR',
+    component: () => <Consulta_AnonimoPQR_Routes />,
+  },
+  {
+    path: 'consulta_estado/',
+    name: 'consulta_estado',
+    component: () => <ConsultaEstadoSolicitudes />,
+  },
+  {
+    path: 'ConsultaExternoPQR/',
+    name: 'ConsultaExternoPQR',
+    component: () => <Consulta_ExternoPQR_Routes />,
+  },
+ 
+  {
+    path: 'ConsultaOtros/',
+    name: 'ConsultaOtros',
+    component: () => <Consulta_Otros_Routes />,
+  },
+  {
+    path: 'ConsultaOtrosExterno/',
+    name: 'ConsultaOtrosExterno',
+    component: () => <Consulta_OtrosExterno_Routes />,
+  },
+  
+  {
+    path: 'Eliminacion_Documental/',
+    name: 'Eliminacion_Documental',
+    component: () => <DeleteDocumental_Routes />,
+  },
+  {
+    path: 'central_digitalizacion_otros/',
+    name: 'central_digitalizacion_otros',
+    component: () => <RutasCentralDigitalizacionOtros />,
+  },
+  {
+    path: 'transferencia_documental/',
+    name: 'transferencia_documental',
+    component: () => <RutasTransferenciaDocumental />,
+  }
+
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

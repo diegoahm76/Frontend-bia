@@ -13,9 +13,9 @@ export const ReasignacionesGrid = (): JSX.Element => {
   const { generalLoading } = useContext(ModalAndLoadingContext);
 
   const estadoMapping: any = {
-    'EN ESPERA': { label: 'En espera', color: 'warning' },
-    ACEPTADA: { label: 'Aceptada', color: 'success' },
-    RECHAZADA: { label: 'Rechazada', color: 'error' },
+    'En espera': { label: 'En espera', color: 'warning' },
+    Aceptada: { label: 'Aceptada', color: 'success' },
+    Rechazada: { label: 'Rechazada', color: 'error' },
   };
 
   const columns = [
@@ -26,9 +26,7 @@ export const ReasignacionesGrid = (): JSX.Element => {
       minWidth: 200,
       renderCell: (params: any) => {
         const estado =
-          estadoMapping[params.row.estado_asignacion] ||
-          estadoMapping['EN ESPERA'];
-
+          estadoMapping[params.row.estado_asignacion]
         return <Chip label={estado.label} size="small" color={estado.color} />;
       },
     },

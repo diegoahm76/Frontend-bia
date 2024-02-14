@@ -8,14 +8,14 @@ export const getMetadatosPqrsdf = async (
 ): Promise<any> => {
   try {
     //gestor/panel_ventanilla/pqrsdf/anexo-documento/meta-data/get/4/
-    handleOpenInfoMetadatos!(true);
+    handleOpenInfoMetadatos?.(true);
     const url = `gestor/panel_ventanilla/pqrsdf/anexo-documento/meta-data/get/${id_anexo}/`;
     const { data } = await api.get(url);
     control_success('Metadatos del archivo obtenidos con éxito');
     //  console.log('')(data?.data);
     return data?.data;
   } catch (err: any) {
-    handleOpenInfoMetadatos!(false);
+    handleOpenInfoMetadatos?.(false);
     control_error('No hay metadata para este archivo');
   }
 };

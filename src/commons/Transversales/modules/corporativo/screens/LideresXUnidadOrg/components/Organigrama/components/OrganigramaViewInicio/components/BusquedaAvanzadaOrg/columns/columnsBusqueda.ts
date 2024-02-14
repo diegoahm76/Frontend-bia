@@ -3,16 +3,16 @@ export const columsBusquedaAvanzada: any[] = [
   {
     headerName: 'Nombre',
     field: 'nombre',
-    width: 200,
+    minWidth: 300,
   },
   {
     headerName: 'Versión',
     field: 'version',
-    width: 120,
+    width: 150,
   },
   {
     headerName: 'Descripción',
     field: 'descripcion',
-    width: 220,
+    minWidth: 520,
   },
 ]

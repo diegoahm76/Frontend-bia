@@ -107,7 +107,17 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
                   //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
-                options={[] as any[]}
+                options={[
+                  {
+                    label: 'Si',
+                    value: true,
+
+                  },
+                  {
+                    label: 'No',
+                    value: false,
+                  },
+                ] as any[]}
                 placeholder="Seleccionar"
               />
               <label>

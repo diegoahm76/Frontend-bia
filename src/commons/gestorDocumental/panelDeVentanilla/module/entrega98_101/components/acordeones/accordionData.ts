@@ -52,7 +52,7 @@ export const consultaColumns = [
   },
   {
     headerName: 'Fecha respuesta de la solicitud',
-    field: 'fecha_respuesta',
+    field: 'fecha_rta_solicitud',
     minWidth: 300,
     renderCell: (params: any) => {
       const validDate = formatDate(params.value);
@@ -63,11 +63,50 @@ export const consultaColumns = [
     headerName: 'Estado de la digitalización',
     field: 'estado_digitalizacion',
     minWidth: 255,
+    renderCell: (params: any) => {
+      return params.value ? params?.value : 'N/A';
+    }
+  },
+  {
+    headerName: 'Observación',
+    field: 'observacio',
+    minWidth: 360,
+    renderCell: (params: any) => {
+      return params.value || 'Sin observaciones';
+    },
+  },
+];
+
+export const consultaColumnsOtros = [
+  {
+    headerName: 'Acción - Estado',
+    field: 'accion',
+    minWidth: 300,
+  },
+  {
+    headerName: 'Fecha respuesta de la solicitud',
+    field: 'fecha_rta_solicitud',
+    minWidth: 300,
+    renderCell: (params: any) => {
+      const validDate = formatDate(params.value);
+      return validDate || 'Sin fecha';
+    },
+  },
+  {
+    headerName: 'Digitalización completa',
+    field: 'digitalizacion_completada',
+    minWidth: 255,
+    renderCell: (params: any) => {
+      return params.value ? 'Si' : 'No';
+    },
   },
   {
     headerName: 'Observaciones',
     field: 'observaciones',
     minWidth: 360,
+    renderCell: (params: any) => {
+      return params.value || 'Sin observaciones';
+    }
   },
 ];
 

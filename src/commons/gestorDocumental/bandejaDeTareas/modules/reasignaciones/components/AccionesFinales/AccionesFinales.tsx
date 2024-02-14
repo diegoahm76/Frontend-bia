@@ -49,11 +49,28 @@ export const AccionesFinales = (): JSX.Element => {
   // ? declaración de las funciones
 
   const handleClick = async () => {
+    if (
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
+      'Respondida por el propietario de la bandeja de tareas'
+    ) {
+      showAlert(
+        'Opss!',
+        'Esta PQRSDF ya ha sido respondida, por lo que no se puede reasignar',
+        'warning'
+      );
+      return;
+    }
+
+    if (!Array.isArray(listaAsignaciones)) {
+      console.error('listaAsignaciones debe ser un array');
+      return;
+    }
 
     const item = listaAsignaciones.find(
       (item: any) =>
-        item.estado_asignacion === 'En espera' ||
-        item.estado_asignacion === 'Aceptada'
+        item.hasOwnProperty('estado_asignacion') &&
+        (item.estado_asignacion === 'En espera' ||
+          item.estado_asignacion === 'Aceptada')
     );
 
     if (item) {
@@ -65,7 +82,6 @@ export const AccionesFinales = (): JSX.Element => {
       });
       return;
     }
-
     const tipo =
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
@@ -73,10 +89,12 @@ export const AccionesFinales = (): JSX.Element => {
     let res;
 
     switch (tipo) {
+      case 'RESPONDER PQRSDF':
       case 'Responder PQRSDF':
         res = await postReAsignacionTarea(
           {
-            id_tarea_asignada: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_tarea_asignada:
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
             id_persona_a_quien_se_reasigna: currentGrupo?.value,
             comentario_reasignacion: comentario,
           },
@@ -137,6 +155,7 @@ export const AccionesFinales = (): JSX.Element => {
       let asignaciones;
 
       switch (tipo) {
+        case 'RESPONDER PQRSDF':
         case 'Responder PQRSDF':
           asignaciones = await getReAsignacionesTareasPqrsdf(
             // para pqrsdf
