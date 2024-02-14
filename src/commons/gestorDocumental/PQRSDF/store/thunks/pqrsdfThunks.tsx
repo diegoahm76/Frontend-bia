@@ -804,7 +804,7 @@ export const add_other_service = (
   otro: any,
 
   // eslint-disable-next-line no-unused-vars
-  navigate: NavigateFunction
+ // navigate: NavigateFunction
 
 ): any => {
   return async (dispatch: Dispatch<any>) => {
