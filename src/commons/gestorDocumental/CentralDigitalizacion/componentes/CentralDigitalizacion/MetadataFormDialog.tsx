@@ -156,7 +156,7 @@ const MetadataFormDialog = ({
       '(Buscar en carpeta física)',
       (doc.internal.pageSize.width -
         doc.getTextWidth('(Buscar en carpeta física)')) /
-        2,
+      2,
       10
     );
     doc.text(
@@ -175,31 +175,27 @@ const MetadataFormDialog = ({
     );
     doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
     doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
-    const linea_uno = `Nombre del anexo: ${
-      get_values_anexo('nombre_anexo') ?? ''
-    }               Medio de almacenamiento: ${
-      get_values_anexo('cod_medio_almacenamiento') === 'Ot'
+    const linea_uno = `Nombre del anexo: ${get_values_anexo('nombre_anexo') ?? ''
+      }               Medio de almacenamiento: ${get_values_anexo('cod_medio_almacenamiento') === 'Ot'
         ? get_values_anexo('medio_almacenamiento_otros_cual')
         : storage_mediums.find(
-            (objeto) =>
-              objeto.key === get_values_anexo('cod_medio_almacenamiento')
-          )?.label
-    }`;
+          (objeto) =>
+            objeto.key === get_values_anexo('cod_medio_almacenamiento')
+        )?.label
+      }`;
     const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
     const x_linea_uno =
       (doc.internal.pageSize.width - ancho_texto_linea_uno) / 2;
     doc.text(linea_uno, x_linea_uno, 45);
 
-    const linea_dos = `Categoría de archivo: ${
-      file_categories.find(
-        (objeto) => objeto.key === data.cod_categoria_archivo
-      )?.label
-    }           Tipología documental: ${
-      data.id_tipologia_doc !== null
+    const linea_dos = `Categoría de archivo: ${file_categories.find(
+      (objeto) => objeto.key === data.cod_categoria_archivo
+    )?.label
+      }           Tipología documental: ${data.id_tipologia_doc !== null
         ? file_typologies.find((objeto) => objeto.key === data.id_tipologia_doc)
-            ?.label
+          ?.label
         : data.tipologia_no_creada_en_TRD
-    }`;
+      }`;
     const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
     const x_linea_dos =
       (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
@@ -232,7 +228,7 @@ const MetadataFormDialog = ({
         '(Buscar en carpeta física)',
         (doc.internal.pageSize.width -
           doc.getTextWidth('(Buscar en carpeta física)')) /
-          2,
+        2,
         10
       );
       doc.text(
@@ -251,32 +247,28 @@ const MetadataFormDialog = ({
       );
       doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
       doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
-      const linea_uno = `Nombre del anexo: ${
-        get_values_anexo('nombre_anexo') ?? ''
-      }               Medio de almacenamiento: ${
-        get_values_anexo('cod_medio_almacenamiento') === 'Ot'
+      const linea_uno = `Nombre del anexo: ${get_values_anexo('nombre_anexo') ?? ''
+        }               Medio de almacenamiento: ${get_values_anexo('cod_medio_almacenamiento') === 'Ot'
           ? get_values_anexo('medio_almacenamiento_otros_cual')
           : storage_mediums.find(
-              (objeto) =>
-                objeto.key === get_values_anexo('cod_medio_almacenamiento')
-            )?.label
-      }`;
+            (objeto) =>
+              objeto.key === get_values_anexo('cod_medio_almacenamiento')
+          )?.label
+        }`;
       const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
       const x_linea_uno =
         (doc.internal.pageSize.width - ancho_texto_linea_uno) / 2;
       doc.text(linea_uno, x_linea_uno, 45);
 
-      const linea_dos = `Categoría de archivo: ${
-        file_categories.find(
-          (objeto) => objeto.key === data.cod_categoria_archivo
-        )?.label
-      }           Tipología documental: ${
-        data.id_tipologia_doc !== null
+      const linea_dos = `Categoría de archivo: ${file_categories.find(
+        (objeto) => objeto.key === data.cod_categoria_archivo
+      )?.label
+        }           Tipología documental: ${data.id_tipologia_doc !== null
           ? file_typologies.find(
-              (objeto) => objeto.key === data.id_tipologia_doc
-            )?.label
+            (objeto) => objeto.key === data.id_tipologia_doc
+          )?.label
           : data.tipologia_no_creada_en_TRD
-      }`;
+        }`;
       const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
       const x_linea_dos =
         (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
@@ -383,6 +375,11 @@ const MetadataFormDialog = ({
           form_data,
           digitization_request.id_solicitud_de_digitalizacion ?? 0
         )
+        // add_metadata_service(
+        //   form_data,
+        //   digitization_request.id_solicitud_de_digitalizacion ?? 0
+        // )
+
       );
     }
     set_is_modal_active(false);
@@ -449,8 +446,8 @@ const MetadataFormDialog = ({
                     metadata.fecha_creacion_doc ?? null === null
                       ? new Date()
                       : metadata.fecha_creacion_doc ?? '' === ''
-                      ? new Date()
-                      : '2023-12-12',
+                        ? new Date()
+                        : '2023-12-12',
                   rules: {
                     required_rule: { rule: true, message: 'Requerido' },
                   },

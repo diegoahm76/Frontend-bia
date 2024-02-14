@@ -247,9 +247,14 @@ export const PantallaPindicadores = () => {
     Activador_funciones();
   }, [activador]);
 
-  const primer_grafica =
-    dataPeriodicidad?.indicadores_por_medio_solicitud[0]
-      ?.nombre_medio_solicitud;
+  // const primer_grafica =
+  //   dataPeriodicidad?.indicadores_por_medio_solicitud[0]
+  //     ?.nombre_medio_solicitud;
+  const primer_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud.find(indicador =>
+    indicador.nombre_medio_solicitud === "Redes Sociales"
+  );
+  const primer_grafica_nombre = primer_grafica ? primer_grafica.nombre_medio_solicitud : null;
+
   const segunda_grafica =
     dataPeriodicidad?.indicadores_por_medio_solicitud[2]
       ?.nombre_medio_solicitud;
@@ -297,54 +302,51 @@ export const PantallaPindicadores = () => {
         <Grid item xs={12} sx={{ textAlign: 'center' }}>
           <h2>Total de PQRSDF: {total}</h2>
         </Grid>
-<div id = "container-pdf-unico">
-        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <BasicDemo
-            id={6}
-            titulo={primer_grafica || ''}
-            value={primer_grafica_value}
-          />
-        </Grid>
+        <div id="container-pdf-unico">
+        <Grid container >
 
-        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <BasicDemo
-            id={1}
-            titulo={segunda_grafica || ''}
-            value={segunda_grafica_value}
-          />
-        </Grid>
+          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+            <BasicDemo
+              id={6}
+              titulo={primer_grafica_nombre || ''}
+              value={primer_grafica_value}
+            />
+          </Grid>
 
-        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <BasicDemo
-            id={2}
-            titulo={tercera_grafica || ''}
-            value={tercera_grafica_value}
-          />
-        </Grid>
+          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+            <BasicDemo
+              id={1}
+              titulo={segunda_grafica || ''}
+              value={segunda_grafica_value}
+            />
+          </Grid>
 
-        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <BasicDemo
-            id={3}
-            titulo={cuarta_grafica || ''}
-            value={cuarta_grafica_value}
-          />
-        </Grid>
+          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+            <BasicDemo
+              id={2}
+              titulo={tercera_grafica || ''}
+              value={tercera_grafica_value}
+              />
+          </Grid>
 
-        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <BasicDemo
-            id={4}
-            titulo={quinta_grafica || ''}
-            value={quinta_grafica_value}
-          />
-        </Grid>
+          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+            <BasicDemo
+              id={3}
+              titulo={cuarta_grafica || ''}
+              value={cuarta_grafica_value}
+              />
+          </Grid>
 
-        <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <BasicDemo
-            id={5}
-            titulo={quinta_grafica || ''}
-            value={quinta_grafica_value}
-          />
-        </Grid>
+          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+            <BasicDemo
+              id={4}
+              titulo={quinta_grafica || ''}
+              value={quinta_grafica_value}
+              />
+          </Grid>
+
+        
+      </Grid>
         </div>
       </Grid>
 
