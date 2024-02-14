@@ -6,11 +6,6 @@ export interface TipoPQRSDF {
     codigo: string;
     descripcion: string;
 };
-export interface organigrama {
-    id_unidad_organizacional: number;
-    nombre: string;
-    item_ya_usado: boolean;
-};
 export interface AsignacionEncuesta {
     Id_PQRSDF: any;
     tipo_pqrsdf: any;

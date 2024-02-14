@@ -112,11 +112,10 @@ export const useSeguimientoPAIHook = (): any => {
   const onsubmit_seguimiento_pai = handleSubmit_seguimiento_pai(
     async (data) => {
       try {
-        data.fecha_creacion = dayjs(data.fecha_creacion).format('YYYY-MM-DD');
-
+        set_is_saving_seguimiento_pai(true);
+        data.fecha_creacion = currentDate;
         console.log('data', data);
         const datos_documentos = new FormData();
-
         archivos.forEach((archivo: any) => {
           if (archivo != null) {
             datos_documentos.append(`archivo`, archivo);
@@ -124,7 +123,6 @@ export const useSeguimientoPAIHook = (): any => {
         });
         data.fecha_registro_avance = currentDate;
         // data.id_indicador = id_indicador;
-        set_is_saving_seguimiento_pai(true);
         await post_seguimiento_pai(
           data as ISeguimientoPAI,
           datos_documentos,
