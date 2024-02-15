@@ -7,8 +7,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
-import TarjetaInspeccion from "../components/TarjetaInspeccion";
 import ElementosInspeccionar from "../components/ElementosInspeccionar";
 import { cambio_input_radio } from "../thunsk/cambio_input_radio";
 
@@ -48,9 +46,9 @@ const InspeccionVehiculos = () => {
         position: 'relative',
         background: '#FAFAFA',
         borderRadius: '15px',
+        boxShadow: '0px 3px 6px #042F4A26',
         p: '20px',
         mb: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
       }}
       >
       <Title title="Inspección de vehículos" />
