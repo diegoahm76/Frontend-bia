@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { Button, FormControl, FormLabel, Grid, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
-import { DataGrid } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
-import { data_busqueda_conductor } from '../interfaces/types';
 import TableBusquedaConductores from '../tables/TableBusquedaCondutores';
 
 
@@ -29,7 +26,7 @@ const BusquedaConductores: React.FC = () => {
         borderRadius: '15px',
         p: '10px',
         mb: '10px',
-        border: 'solid 1px #e5e5e5'
+        boxShadow: '0px 3px 6px #042F4A26',
       }}
       >
       <Title title='Búsqueda de Conductores' />
