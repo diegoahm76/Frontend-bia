@@ -15,10 +15,11 @@ const TarjetaInspeccion: React.FC<Props> = ({children, title}) => {
       alignItems:'start',
       borderRadius: '10px',
       border: '1px solid #e5e5e5',
-      background:'#fff',
+      background: '#FAFAFA',
+      boxShadow: '0px 3px 6px #042F4A26',
       paddingX:'20px',
       paddingY:'10px',
-      marginY: '20px'
+      margin:'20px 0px'
       }}>
       <Grid item sx={{
         width:'100%',
