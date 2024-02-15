@@ -19,6 +19,7 @@ import { ControlDeInventariosRoutes } from '../controlDeInventario/routes/Contro
 import { TablerosControlAlmacenRoutes } from '../tablerosControlAlmacen/routes/TablerosControlAlmacenRoutes';
 import SolicitudViaje from '../solicitudDeViaje/screens/SolicitudViaje';
 import AsignacionVehiculos from '../asignacionDeVehiculos/screens/AsignacionVehiculos';
+import InspeccionVehiculos from '../inspeccionVehiculos/screens/InspeccionVehiculos';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -89,6 +90,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="asignacion_vehiculos/*"
         element={<AsignacionVehiculos />}
+      />
+      <Route
+        path="inspeccion_vehiculos/*"
+        element={<InspeccionVehiculos />}
       />
       <Route
         path="otras_entregas/*"
