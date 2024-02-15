@@ -370,15 +370,30 @@ const MetadataFormDialog = ({
         }
       }
 
-      void dispatch(
+      // void dispatch(
+      //   add_metadata_service(
+      //     {
+      //       "id_metadatos_anexo_tmp": 343,
+      //       "id_archivo_sistema": 984,
+      //       "id_solicitud_de_digitalizacion": 45,
+      //       "id_anexo": 195,
+      //       "nro_folios_documento": 1,
+      //       "asunto": "asunto metadato editado archivo cambiado",
+      //       "cod_origen_archivo": "F",
+      //       "cod_categoria_archivo": "Tx",
+      //       "tiene_replica_fisica": true,
+      //       "tipologia_no_creada_TRD": null,
+      //       "id_tipologia_doc": 1,
+      //       "palabras_clave_doc": "palabra4|palabra22",
+      //       "descripcion": "descripción metadato editado archivo cambiado",
+      //       "observacion_digitalizacion": "Observacion edicion 2"
+      //     },
+      //     digitization_request.id_solicitud_de_digitalizacion ?? 0
+      //   )
         add_metadata_service(
           form_data,
           digitization_request.id_solicitud_de_digitalizacion ?? 0
-        )
-        // add_metadata_service(
-        //   form_data,
-        //   digitization_request.id_solicitud_de_digitalizacion ?? 0
-        // )
+        
 
       );
     }
