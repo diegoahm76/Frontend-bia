@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { data_asignacion_vehiculos, data_busqueda_conductor } from '../interfaces/types';
-import { DataGrid } from '@mui/x-data-grid';
+import { data_busqueda_conductor } from '../interfaces/types';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
+interface CustomColumn extends GridColDef {
+  renderCell?: (params: { row: data_busqueda_conductor }) => React.ReactNode;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const TableBusquedaConductores: React.FC = () => {
@@ -60,10 +64,23 @@ const TableBusquedaConductores: React.FC = () => {
     }
   ]);
 
-  const columns = [
+  const asignar_conductor = (params: data_busqueda_conductor) => {
+    console.log(params);
+  }
+
+  const columns: CustomColumn[] = [
     {field: 'tipoConductor', headerName:'Tipo de conductor', width:150, flex:1},
     {field: 'nombres', headerName:'Nombres', width:150, flex:1},
     {field: 'numeroDocumento', headerName:'Numero de documento', width:150, flex:1},
+    {
+      field: 'asignar',
+      headerName: 'Asignar',
+      width: 80,
+      align: 'center',
+      renderCell: (params) => (
+        <AddCircleOutlineIcon sx={{cursor:'pointer', fontSize:'32px'}} onClick={() => asignar_conductor(params.row)} />
+      )
+    },
   ]
 
   return (

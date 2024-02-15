@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { data_busqueda_vehiculos } from '../interfaces/types';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
+
+interface CustomColumn extends GridColDef {
+  renderCell?: (params: { row: data_busqueda_vehiculos }) => React.ReactNode;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const TableBusquedaVehiculos: React.FC = () => {
@@ -66,12 +71,25 @@ const TableBusquedaVehiculos: React.FC = () => {
     },
   ]);
 
-  const columns = [
+  const asignar_vehiculo = (params: data_busqueda_vehiculos) => {
+    console.log(params);
+  }
+
+  const columns: CustomColumn[] = [
     {field: 'tipoVehiculo', headerName:'Tipo de vehiculo', width:150, flex:1},
     {field: 'marca', headerName:'Marca', width:150, flex:1},
     {field: 'placa', headerName:'Placa', width:150, flex:1},
     {field: 'capacidadPasajeros', headerName:'Cantidad de pasajeros', width:150, flex:1},
     {field: 'tienePlaton', headerName:'¿Tiene platon?', width:150, flex:1},
+    {
+      field: 'asignar',
+      headerName: 'Asignar',
+      width: 80,
+      align: 'center',
+      renderCell: (params) => (
+        <AddCircleOutlineIcon sx={{cursor:'pointer', fontSize:'32px'}} onClick={() => asignar_vehiculo(params.row)} />
+      )
+    },
   ]
 
   return (

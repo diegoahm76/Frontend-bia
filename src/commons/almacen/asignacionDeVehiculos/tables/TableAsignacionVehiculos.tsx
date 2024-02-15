@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { data_asignacion_vehiculos } from '../interfaces/types';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
+interface CustomColumn extends GridColDef {
+  renderCell?: (params: { row: data_asignacion_vehiculos }) => React.ReactNode;
+}
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -110,16 +115,32 @@ const AsignacionVehiculos: React.FC = () => {
     }
   ]);
 
-  const columns = [
-    {field: 'tipoVehiculo', headerName:'Tipo de vehiculos', flex:1},
-    {field: 'marca', headerName:'Marca', flex:1},
-    {field: 'placa', headerName:'Placa', flex:1},
-    {field: 'tipoConductor', headerName:'Tipo de conductor', flex:1},
-    {field: 'nombres', headerName:'Nombres', flex:1},
-    {field: 'numeroDocumento', headerName:'Numero de documento', flex:1},
-    {field: 'fechaInicio', headerName:'Fecha inicio', flex:1},
-    {field: 'fechaFinal', headerName:'Fecha Final', flex:1},
-  ]
+  const borrar_asignacion = (params: data_asignacion_vehiculos) => {
+    console.log(params);
+  }
+
+  const columns: CustomColumn[] = [
+    { field: 'tipoVehiculo', headerName: 'Tipo de vehiculos', minWidth: 120, flex: 1 },
+    { field: 'marca', headerName: 'Marca', minWidth: 120, flex: 1 },
+    { field: 'placa', headerName: 'Placa', minWidth: 120, flex: 1 },
+    { field: 'tipoConductor', headerName: 'Tipo de conductor', minWidth: 120, flex: 1 },
+    { field: 'nombres', headerName: 'Nombres', minWidth: 120, flex: 1 },
+    { field: 'numeroDocumento', headerName: 'Numero de documento', minWidth: 120, flex: 1 },
+    { field: 'fechaInicio', headerName: 'Fecha inicio', minWidth: 120, flex: 1 },
+    { field: 'fechaFinal', headerName: 'Fecha Final', minWidth: 120, flex: 1 },
+    {
+      field: 'asignar',
+      headerName: 'Asignar',
+      width: 80,
+      align: 'center',
+      renderCell: (params) => (
+        <DeleteForeverIcon
+          sx={{ cursor: 'pointer', fontSize: '32px' }}
+          onClick={() => borrar_asignacion(params.row)}
+        />
+      ),
+    }
+  ];
 
   return (
     <DataGrid
