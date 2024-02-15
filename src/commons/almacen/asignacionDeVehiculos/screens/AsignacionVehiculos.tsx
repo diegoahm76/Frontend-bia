@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import BusquedaVehiculos from './BusquedaVehiculos';
 import TableAsignacionVehiculos from '../tables/TableAsignacionVehiculos';
+import BusquedaConductores from './BusquedaConductores';
 
 
 
@@ -39,11 +40,11 @@ const AsignacionVehiculos: React.FC = () => {
         sx={{
           position: 'relative',
           background: '#FAFAFA',
+          boxShadow: '0px 3px 6px #042F4A26',
           borderRadius: '15px',
           margin: 'auto',
           p: '20px',
           mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
         }}
         >
         <Title title='Vehículos Asignados' />
@@ -189,9 +190,14 @@ const AsignacionVehiculos: React.FC = () => {
       </Grid>
 
 
-      {mostrar_busqueda_vehiculos &&
-        <BusquedaVehiculos set_mostrar_busqueda_vehiculos={set_mostrar_busqueda_vehiculos}/>
+      {mostrar_busqueda_vehiculos && 
+        <>
+          <BusquedaVehiculos />
+          <BusquedaConductores />
+        </>
       }
+
+
     </>
   );
 }
