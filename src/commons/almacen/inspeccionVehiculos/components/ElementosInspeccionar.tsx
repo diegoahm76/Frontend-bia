@@ -6,6 +6,8 @@ import { Title } from "../../../../components";
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
+import ContenedorInput from "./ContenedorInput";
+import { estilo_radio } from "../thunsk/estilo_radio";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -72,7 +74,9 @@ const ElementosInspeccionar = () => {
       botiquin_completo,
       pito
     ];
+    //Si hay por lo menos un estado malo, entoces devuelve true
     const hay_fallo = estados_individuales.some(estado => estado === 'false');
+    
     set_tiene_observaciones(hay_fallo ? true : false);
   }, [direcionales_delanteras,
     direcionales_traseras,
@@ -112,994 +116,406 @@ const ElementosInspeccionar = () => {
       flexWrap:'wrap'
     }}>
       <TarjetaInspeccion title="Direccionales">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Direccionales delanteras</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',direcionales_delanteras,set_direcionales_delanteras)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',direcionales_delanteras,set_direcionales_delanteras)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Direccionales Traseras</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',direcionales_traseras,set_direcionales_traseras)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+              sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',direcionales_traseras,set_direcionales_traseras)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+              sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Limpiabrisas">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Limpiabrisas delantero</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',limpiabrisas_delantero,set_limpiabrisas_delantero)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',limpiabrisas_delantero,set_limpiabrisas_delantero)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Limpiabrisas trasero</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',limpiabrisas_trasero,set_limpiabrisas_trasero)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',limpiabrisas_trasero,set_limpiabrisas_trasero)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Aceite">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Nivel de aceite</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',nivel_aceite,set_nivel_aceite)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',nivel_aceite,set_nivel_aceite)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Frenos">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Nivel de frenos</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',nivel_frenos,set_nivel_frenos)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',nivel_frenos,set_nivel_frenos)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Frenos principales</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',frenos_generales,set_frenos_generales)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',frenos_generales,set_frenos_generales)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Frenos de emergencia</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',frenos_emergencia,set_frenos_emergencia)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',frenos_emergencia,set_frenos_emergencia)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Refrigerante">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Nivel de refrigerante</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',nivel_refrigerante,set_nivel_refrigerante)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',nivel_refrigerante,set_nivel_refrigerante)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Apoya cabezas">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Apoya cabezas del piloto</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',apoyacabezas_piloto,set_apoyacabezas_piloto)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',apoyacabezas_piloto,set_apoyacabezas_piloto)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Apoya cabeza del copiloto</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',apoyacabezas_copiloto,set_apoyacabezas_copiloto)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',apoyacabezas_copiloto,set_apoyacabezas_copiloto)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Apoya cabezas traseros</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',apoyacabezas_traseros,set_apoyacabezas_traseros)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',apoyacabezas_traseros,set_apoyacabezas_traseros)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Llantas">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Llantas delanteras</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',llantas_delanteras,set_llantas_delanteras)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',llantas_delanteras,set_llantas_delanteras)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Llantas traseras</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',llantas_traseras,set_llantas_traseras)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',llantas_traseras,set_llantas_traseras)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Llanta de repuesto</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',llanta_repuesto,set_llanta_repuesto)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',llanta_repuesto,set_llanta_repuesto)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Espejos">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Espejos laterales</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',espejos_laterales,set_espejos_laterales)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',espejos_laterales,set_espejos_laterales)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Espejo retrovisor</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',espejos_retrovisor,set_espejos_retrovisor)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',espejos_retrovisor,set_espejos_retrovisor)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Cinturones">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Cinturones delanteros</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',cinturones_delanteros,set_cinturones_delanteros)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',cinturones_delanteros,set_cinturones_delanteros)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Cinturones traseros</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',cinturones_traseros,set_cinturones_traseros)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',cinturones_traseros,set_cinturones_traseros)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Luces">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Luces altas</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',luces_altas,set_luces_altas)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',luces_altas,set_luces_altas)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Luces Medias</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',luces_medias,set_luces_medias)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',luces_medias,set_luces_medias)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Luces bajas</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',luces_bajas,set_luces_bajas)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',luces_bajas,set_luces_bajas)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Luces freno</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',luces_parada,set_luces_parada)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',luces_parada,set_luces_parada)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Luces parqueo</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',luces_parqueo,set_luces_parqueo)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',luces_parqueo,set_luces_parqueo)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        </ContenedorInput>
+        <ContenedorInput>
           <FormLabel>Luces reversa</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',luces_reversa,set_luces_reversa)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',luces_reversa,set_luces_reversa)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Herramientas">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Kit de herramientas</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',kit_herramientas,set_kit_herramientas)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',kit_herramientas,set_kit_herramientas)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Botiquin">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Botiquin</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',botiquin_completo,set_botiquin_completo)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',botiquin_completo,set_botiquin_completo)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       <TarjetaInspeccion title="Pito">
-        <Grid item sx={{
-          width:'100%',
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'space-between'
-          }}>
+        <ContenedorInput>
           <FormLabel>Pito</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
               {...cambio_input_radio('true',pito,set_pito)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#27b355',
-                    '&.Mui-checked': {
-                      color: '#27b355',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#27b355',28)}
             />
             <Radio
               {...cambio_input_radio('false',pito,set_pito)}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    color: '#e23a3a',
-                    '&.Mui-checked': {
-                      color: '#e23a3a',
-                    },
-                    fontSize: 28,
-                  },
-              }}
+                sx={estilo_radio('#e23a3a',28)}
             />
           </Grid>
-        </Grid>
+        </ContenedorInput>
       </TarjetaInspeccion>
 
       {tiene_observaciones &&
