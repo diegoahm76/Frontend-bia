@@ -2,15 +2,11 @@ import { Button, FormControl, FormLabel, Grid, MenuItem, Select, SelectChangeEve
 import React, { useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
-import { busqueda_vehiculos } from '../interfaces/types';
-import BusquedaConductores from './BusquedaConductores';
-import { DataGrid } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
 import TableBusquedaVehiculos from '../tables/TableBusquedaVehiculos';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const BusquedaVehiculos: React.FC<busqueda_vehiculos> = ({set_mostrar_busqueda_vehiculos}) => {
+const BusquedaVehiculos: React.FC = () => {
   const [tipo_vehiculo, set_tipo_vehiculo] = useState<string>('');
   const [msj_error_tipo_vehiculo, set_msj_error_tipo_vehiculo] = useState<string>('');
 
@@ -137,8 +133,6 @@ const BusquedaVehiculos: React.FC<busqueda_vehiculos> = ({set_mostrar_busqueda_v
         }}>
         <TableBusquedaVehiculos />
       </Grid>
-
-      <BusquedaConductores />
     </Grid>
   );
 }
