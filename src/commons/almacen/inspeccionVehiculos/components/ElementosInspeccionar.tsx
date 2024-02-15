@@ -1,7 +1,11 @@
-import { Grid, Radio, FormLabel } from "@mui/material";
+import { Grid, Radio, FormLabel, TextField, Button } from "@mui/material";
 import TarjetaInspeccion from "./TarjetaInspeccion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cambio_input_radio } from "../thunsk/cambio_input_radio";
+import { Title } from "../../../../components";
+import SaveIcon from '@mui/icons-material/Save';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import ClearIcon from '@mui/icons-material/Clear';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -34,6 +38,70 @@ const ElementosInspeccionar = () => {
   const [kit_herramientas, set_kit_herramientas] = useState<string>('true');
   const [botiquin_completo, set_botiquin_completo] = useState<string>('true');
   const [pito, set_pito] = useState<string>('true');
+
+  const [tiene_observaciones, set_tiene_observaciones] = useState<boolean>(false);
+
+  useEffect(() => {
+    const estados_individuales = [
+      direcionales_delanteras,
+      direcionales_traseras,
+      limpiabrisas_delantero,
+      limpiabrisas_trasero,
+      nivel_aceite,
+      nivel_frenos,
+      frenos_generales,
+      frenos_emergencia,
+      nivel_refrigerante,
+      apoyacabezas_piloto,
+      apoyacabezas_copiloto,
+      apoyacabezas_traseros,
+      llantas_delanteras,
+      llantas_traseras,
+      llanta_repuesto,
+      espejos_laterales,
+      espejos_retrovisor,
+      cinturones_delanteros,
+      cinturones_traseros,
+      luces_altas,
+      luces_medias,
+      luces_bajas,
+      luces_parada,
+      luces_parqueo,
+      luces_reversa,
+      kit_herramientas,
+      botiquin_completo,
+      pito
+    ];
+    const hay_fallo = estados_individuales.some(estado => estado === 'false');
+    set_tiene_observaciones(hay_fallo ? true : false);
+  }, [direcionales_delanteras,
+    direcionales_traseras,
+    limpiabrisas_delantero,
+    limpiabrisas_trasero,
+    nivel_aceite,
+    nivel_frenos,
+    frenos_generales,
+    frenos_emergencia,
+    nivel_refrigerante,
+    apoyacabezas_piloto,
+    apoyacabezas_copiloto,
+    apoyacabezas_traseros,
+    llantas_delanteras,
+    llantas_traseras,
+    llanta_repuesto,
+    espejos_laterales,
+    espejos_retrovisor,
+    cinturones_delanteros,
+    cinturones_traseros,
+    luces_altas,
+    luces_medias,
+    luces_bajas,
+    luces_parada,
+    luces_parqueo,
+    luces_reversa,
+    kit_herramientas,
+    botiquin_completo,
+    pito]);
 
   console.log(luces_medias === 'true' ? true : false);
 
@@ -1033,6 +1101,59 @@ const ElementosInspeccionar = () => {
           </Grid>
         </Grid>
       </TarjetaInspeccion>
+
+      {tiene_observaciones &&
+        <Grid item container xs={12}>
+          <Title title="Observaciones" />
+          <TextField
+            style={{margin:'20px 0px'}}
+            id="observaciones"
+            required
+            fullWidth
+            placeholder="Escriba aqui sus observaciones"
+            size="small"
+            multiline
+            rows={2}
+          />
+        </Grid>
+      }
+
+      <Grid
+          item
+          xs={12}
+          sx={{
+            display: "flex",
+            justifyContent: "end",
+            alignItems: "center",
+            marginTop: "20px",
+            gap: 4,
+          }}
+        >
+          <Button
+            color="success"
+            variant="contained"
+            startIcon={<SaveIcon />}
+            onClick={() => {}}
+          >
+            {"Guardar"}
+          </Button>
+          <Button
+            color="error"
+            variant="contained"
+            startIcon={<ClearIcon />}
+            onClick={() => {}}
+          >
+            Salir
+          </Button>
+          <Button
+            color="inherit"
+            variant="outlined"
+            startIcon={<CleanIcon />}
+            onClick={() => {}}
+          >
+            Limpiar
+          </Button>
+        </Grid>
     </Grid>
   );
 }
