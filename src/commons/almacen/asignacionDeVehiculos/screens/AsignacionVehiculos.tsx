@@ -6,6 +6,13 @@ import AddIcon from '@mui/icons-material/Add';
 import BusquedaVehiculos from './BusquedaVehiculos';
 import TableAsignacionVehiculos from '../tables/TableAsignacionVehiculos';
 import BusquedaConductores from './BusquedaConductores';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import SaveIcon from "@mui/icons-material/Save";
+import CleanIcon from "@mui/icons-material/CleaningServices";
+import ClearIcon from "@mui/icons-material/Clear"; 
 
 
 
@@ -16,7 +23,10 @@ const AsignacionVehiculos: React.FC = () => {
   const [msj_error_tipo_conductor, set_msj_error_tipo_conductor] = useState<string>('');
   const [tipo_vehiculo, set_tipo_vehiculo] = useState<string>('');
   const [msj_error_tipo_vehiculo, set_msj_error_tipo_vehiculo] = useState<string>('');
-
+  const [fecha_salida, set_fecha_salida] = useState<Dayjs>(dayjs());
+  const [msj_error_fecha_salida, set_msj_error_fecha_salida] = useState<string>("");
+  const [fecha_retorno, set_fecha_retorno] = useState<Dayjs>(dayjs());
+  const [msj_error_fecha_retorno, set_msj_error_fecha_retorno] = useState<string>("");
 
   const cambio_tipo_conductor: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_conductor(e.target.value);
@@ -29,6 +39,24 @@ const AsignacionVehiculos: React.FC = () => {
     if (e.target.value !== null && e.target.value !== "")
     set_msj_error_tipo_vehiculo("");
   }
+
+  const cambio_fecha_salida = (date: Dayjs | null): void => {
+    if (date !== null) {
+      set_fecha_salida(date);
+      set_msj_error_fecha_salida("");
+    } else {
+      set_msj_error_fecha_salida("El campo Fecha inicio es obligatorio.");
+    }
+  };
+
+  const cambio_fecha_retorno = (date: Dayjs | null): void => {
+    if (date !== null) {
+      set_fecha_retorno(date);
+      set_msj_error_fecha_retorno("");
+    } else {
+      set_msj_error_fecha_retorno("El campo Fecha inicio es obligatorio.");
+    }
+  };
 
   return (
     <>
@@ -194,9 +222,141 @@ const AsignacionVehiculos: React.FC = () => {
         <>
           <BusquedaVehiculos />
           <BusquedaConductores />
+          <Grid
+            container
+            spacing={2}
+            marginTop={2}
+            width={'100%'}
+            sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              boxShadow: '0px 3px 6px #042F4A26',
+              borderRadius: '15px',
+              margin: 'auto',
+              p: '20px',
+              mb: '20px',
+              display:'flex',
+              justifyContent:'center',
+              alignItems:'center',
+              gap:'20px'
+            }}
+          > 
+            <Title title="Vehículos y conductores asignados" />
+            <Grid
+              container
+              spacing={1}
+              marginTop={2}
+              width={'100%'}
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                boxShadow: '0px 3px 6px #042F4A26',
+                borderRadius: '10px',
+                margin: 'auto',
+                p: '20px',
+                mb: '20px',
+                display:'flex',
+                justifyContent:'space-between',
+                alignItems:'center',
+                gap:'15px'
+              }}
+              >
+                <Grid>
+                  <b>Vehículo:</b>
+                  <p>DAS - 12D</p>
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  >
+                  <FormLabel style={{ width: "70%" }}>Fecha de salida*:</FormLabel>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    value={fecha_salida}
+                    onChange={(newValue) => {
+                      cambio_fecha_salida(newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField required fullWidth size="small" {...params} />
+                    )}
+                      minDate={dayjs()}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  >
+                  <FormLabel style={{ width: "70%" }}>Fecha de retorno*:</FormLabel>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      value={fecha_retorno}
+                      onChange={(newValue) => {
+                        cambio_fecha_retorno(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField required fullWidth size="small" {...params} />
+                      )}
+                      minDate={dayjs()}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid>
+                  <b>Conductor:</b>
+                  <p>1124818945</p>
+                </Grid>
+                <DeleteForeverIcon sx={{fontSize:'40px'}}/>                                         
+            </Grid>
+            
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                justifyContent: "end",
+                alignItems: "center",
+                marginTop: "20px",
+                gap: 4,
+              }}
+            >
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<SaveIcon />}
+                onClick={() => {}}
+              >
+                {"Guardar"}
+              </Button>
+              <Button
+                color="error"
+                variant="contained"
+                startIcon={<ClearIcon />}
+                onClick={() => {}}
+              >
+                Salir
+              </Button>
+              <Button
+                color="inherit"
+                variant="outlined"
+                startIcon={<CleanIcon />}
+                onClick={() => {}}
+              >
+                Limpiar
+              </Button>
+            </Grid>
+          </Grid>
         </>
       }
-
 
     </>
   );
