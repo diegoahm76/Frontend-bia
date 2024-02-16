@@ -27,6 +27,8 @@ import { HisSolOpasScreen } from '../module/entrega98_101/screen/historicoSolici
 import { HisSolOtrosScreen } from '../module/entrega98_101/screen/historicoSolicitudesOtros/HisSolOtrosScreen';
 import { getHistoricoOtrosByRadicado } from '../toolkit/thunks/otros/getHistoricoOtrosByRadicado.service';
 import { getHistoricoByRadicadoOPAS } from '../toolkit/thunks/opas/getHistoricoByRadicadoOPAS.service';
+import { HisSolTramitesScreen } from '../module/entrega98_101/screen/hisSolicitudesTramites/HistoricoSolicitudesTramites';
+import { getHistoricoTramitesByRadicado } from '../toolkit/thunks/TramitesyServiciosyRequerimientos/getHistoricoTramitesByRadicado.service';
 
 export const MainViewPanelVentanilla = (): JSX.Element => {
   // * dispatch declaration
@@ -70,6 +72,23 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
     dispatch(setListaHistoricoSolicitudes(historico));
   };
 
+  
+  const handleRequestRadicadoTramites = async () => {
+    showAlert(
+      'En desarrollo',
+      'Esta funcionalidad está en desarrollo, se realiza la consulta de historico de solicitudes de trámites y servicios de manera simulada',
+      'info'
+      );
+    dispatch(resetParcial());
+    const historico = await getHistoricoTramitesByRadicado(
+      '',
+      handleGeneralLoading
+    );
+
+    dispatch(setListaHistoricoSolicitudes(historico));
+  };
+
+
   return (
     <Grid container sx={containerStyles}>
       <Title title="Panel de ventanilla" />
@@ -112,11 +131,15 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
               label="Histórico de solicitudes OTROS"
               {...a11yProps(3)}
             />
+            <Tab
+              onClick={handleRequestRadicadoTramites}
+              label="Histórico de solicitudes Trámites y Servicios"
+              {...a11yProps(4)}
+            />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
           <PanelDeVentanillaScreen />
-          {/* se debe reemplazar por el inicio del componente de la parte 1 */}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <HistoricoSolicitudesScreen />
@@ -126,6 +149,9 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
           <HisSolOtrosScreen />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={4}>
+          <HisSolTramitesScreen />
         </CustomTabPanel>
       </Box>
     </Grid>
