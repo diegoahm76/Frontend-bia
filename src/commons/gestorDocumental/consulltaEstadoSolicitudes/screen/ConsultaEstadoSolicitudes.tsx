@@ -43,7 +43,8 @@ import { BuscadorTramites } from '../components/buscadoresSolicitudes/BuscadorTr
 import { getTramitesConsulta } from '../services/consultaTramites/getConsultaTramites.service';
 import { columnsTramites } from '../utils/columnsTramites';
 import { BuscadorOpas } from '../components/buscadoresSolicitudes/BuscadorOpas';
-import { getOpasConsulta } from '../services/opas/getOpas.service';
+import { getOpasConsulta } from '../services/opas/getRequestElementsOpas.service';
+import { columnsConsultaOpas } from '../utils/columnsOpas';
 
 export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
   //* hook importations
@@ -415,7 +416,7 @@ export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
               ? columnsOtros
               : control_consulta_estado_sol?._formValues?.tipo_de_solicitud
                   ?.label === 'OPAS'
-              ? []
+              ? columnsConsultaOpas
               : []
           } // se debe realizar condicionales para las columnas, ya que por cada busqueda se llaman servicios diferentes
           rows={asignaciones ?? []}
