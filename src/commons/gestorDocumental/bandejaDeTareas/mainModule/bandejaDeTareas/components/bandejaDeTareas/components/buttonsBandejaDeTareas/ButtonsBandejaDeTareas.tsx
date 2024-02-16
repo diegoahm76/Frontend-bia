@@ -42,10 +42,13 @@ export const ButtonsBandejaDeTareas = (): JSX.Element => {
           case 'RESPONDER PQRSDF':
             return renderPQRSDF();
           case 'Responder Trámite':
+          case 'RESPONDER TRÁMITE':
             return renderTramitesYServicios();
           case 'Responder Otro':
+          case 'RESPODER OTRO':
             return renderOtros();
           case 'Responder OPA':
+          case 'RESPONDER OPA':
             return renderOpas();
           default:
             return console.error(
