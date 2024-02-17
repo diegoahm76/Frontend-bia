@@ -3,12 +3,39 @@ export interface props_solicitar_viaje{
 }
 
 export interface data_solicitud_viaje {
-  estado: string;
-  fechaSolicitud: string;
-  numPasajeros: number;
-  fechaSalida: string;
-  fechaRetorno: string;
-  municipioDestino: string;
+  id_solicitud_viaje: number
+  fecha_solicitud: string
+  tiene_expediente_asociado: boolean
+  motivo_viaje: string
+  direccion: string
+  indicaciones_destino: string
+  nro_pasajeros: number
+  requiere_carga: boolean
+  fecha_partida: string
+  hora_partida: string
+  fecha_retorno: string
+  hora_retorno: string
+  requiere_compagnia_militar: boolean
+  consideraciones_adicionales: string
+  fecha_aprobacion_responsable: any
+  fecha_rechazo: any
+  justificacion_rechazo: any
+  estado_solicitud: string
+  id_persona_solicita: number
+  id_unidad_org_solicita: number
+  id_expediente_asociado: number
+  cod_municipio: string
+  id_persona_responsable: any
+  id_unidad_org_responsable: any
+}
+
+export interface data_row_solicitud_viaje {
+  fecha_solicitud: string
+  nro_pasajeros: number
+  fecha_partida: string
+  fecha_retorno: string
+  estado_solicitud: string
+  cod_municipio: string
 }
 
 export interface interface_solicitar_viaje {
