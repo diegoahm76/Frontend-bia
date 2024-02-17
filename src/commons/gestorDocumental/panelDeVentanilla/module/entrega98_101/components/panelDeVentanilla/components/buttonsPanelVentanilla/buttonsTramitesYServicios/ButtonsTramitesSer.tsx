@@ -27,9 +27,9 @@ export const ButtonsTramites: React.FC = (): JSX.Element => {
   // ? MANEJO DE ACCIONES PARA OPAS ----------------------
 
   const sendDigitalizationRequest = async () => {
-   /* const { id_solicitud_tramite } =
+   const { id_solicitud_tramite } =
       currentElementPqrsdComplementoTramitesYotros;
-    await postDigitalizacionOpas(id_solicitud_tramite);*/
+    await postDigitalizacionOpas(id_solicitud_tramite);
   };
 
   const handleDigitalizacion = withValidation(async () => {
