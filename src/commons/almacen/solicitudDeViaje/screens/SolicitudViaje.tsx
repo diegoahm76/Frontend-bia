@@ -7,7 +7,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import SolicitarViaje from './SolicitarViaje';
-import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import TableSolicitudViajes from '../tables/TableSolicitudViajes';
 
 
@@ -84,10 +83,10 @@ const SolicitudViaje: React.FC = () => {
                 onChange={cambio_estado}
                 error={msj_error_estado !== ""}
               >
-                  <MenuItem value={'En espera'}>En Espera</MenuItem>
-                  <MenuItem value={'Respondida'}>Respondida</MenuItem>
-                  <MenuItem value={'Rechazada'}>Rechazada</MenuItem>
-                  <MenuItem value={'Finalizada'}>Finalizada</MenuItem>
+                  <MenuItem value={'ES'}>En Espera</MenuItem>
+                  <MenuItem value={'RE'}>Respondida</MenuItem>
+                  <MenuItem value={'RC'}>Rechazada</MenuItem>
+                  <MenuItem value={'FN'}>Finalizada</MenuItem>
               </Select>
             </FormControl>
           </Grid>
