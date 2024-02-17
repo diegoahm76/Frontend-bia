@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
@@ -130,13 +131,10 @@ export const get_file_typology_service = (): any => {
     } catch (error: any) {
       //  console.log('')('get_file_typology_service');
       control_error(error.response.data.detail);
-      return error as AxiosError;            
+      return error as AxiosError;
     }
   };
 };
-//gestor/central-digitalizacion/get-solicitudes-pendientes/
-// gestor/central-digitalizacion/otros/get-solicitudes-pendientes/
-// const {opcion_otros}=useContext(OpcionOtrosContext)
 
 export const get_digitalization_requests_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -158,6 +156,7 @@ export const get_digitalization_requests_service = (params: any): any => {
     }
   };
 };
+//stiven_funcion_otros
 export const get_digitalization_requests_service_otros = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -200,12 +199,19 @@ export const get_digitalization_responses_service = (params: any): any => {
   };
 };
 
-// obtener personas filtro
+
+
+
+
+
+
+
+//stiven_funcion_otros
 export const get_digitalization_request_id_service = (id: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `/gestor/central-digitalizacion/get-solicitudes-by-id/${id}`
+        `/gestor/central-digitalizacion/otros/get-solicitudes-by-id/${id}`
       );
       console.log(data);
       if (data.success) {
@@ -220,6 +226,31 @@ export const get_digitalization_request_id_service = (id: any): any => {
     }
   };
 };
+
+
+
+
+
+// obtener personas filtro
+// export const get_digitalization_request_id_service = (id: any): any => {
+//   return async (dispatch: Dispatch<any>) => {
+//     try {
+//       const { data } = await api.get(
+//         `/gestor/central-digitalizacion/get-solicitudes-by-id/${id}`
+//       );
+//       console.log(data);
+//       if (data.success) {
+//         dispatch(set_digitization_request(data.data));
+//         // control_success(data.detail);
+//       }
+//       return data;
+//     } catch (error: any) {
+//       console.log('get_digitalization_requests_service');
+//       control_error(error.response.data.detail);
+//       return error as AxiosError;
+//     }
+//   };
+// };
 
 // Obtener medios almacenamientos
 export const get_storage_mediums_service = (): any => {
@@ -267,14 +298,19 @@ export const get_file_origin_service = (): any => {
   };
 };
 
-// crear metadata
-export const add_metadata_service = (metadata: any, id: number): any => {
+
+//stiven_funcion_otros
+export const add_metadata_service = (id: number,archivo:any,datos_totales:any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      //  console.log('')(metadata);
+      const formData = new FormData();
+
+      formData.append('data_digitalizacion', JSON.stringify(datos_totales));
+      formData.append(`archivo`, archivo);
+
       const { data } = await api.post(
-        `gestor/central-digitalizacion/crear-digitalizacion/`,
-        metadata
+        `gestor/central-digitalizacion/otros/crear-digitalizacion/`,
+        formData
       );
       //  console.log('')(data);
 
@@ -290,28 +326,86 @@ export const add_metadata_service = (metadata: any, id: number): any => {
   };
 };
 
-// editar metadata
-export const edit_metadata_service = (metadata: any, id: number): any => {
+
+// // crear metadata funcional  
+// export const add_metadata_service = (metadata: any, id: number): any => {
+//   return async (dispatch: Dispatch<any>) => {
+//     try {
+//       //  console.log('')(metadata);
+//       const { data } = await api.post(
+//         `gestor/central-digitalizacion/crear-digitalizacion/`,
+//         metadata
+//       );
+//       //  console.log('')(data);
+
+//       control_success(data.detail);
+//       dispatch(get_digitalization_request_id_service(id));
+//       // dispatch(set_pqr(data.data));
+//       return data;
+//     } catch (error: any) {
+//       //  console.log('')('add_metadata_service');
+//       control_error(error.response.data.detail);
+//       return error as AxiosError;
+//     }
+//   };
+// };
+
+//stiven_funcion_otros
+export const edit_metadata_service = ( id: number, archivo: any, datos_totales: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(
-        `gestor/central-digitalizacion/actualizar-digitalizacion/`,
-        metadata
-      );
-      //  console.log('')(data);
+      const formData = new FormData();
 
+      formData.append('data_digitalizacion', JSON.stringify(datos_totales));
+      formData.append(`archivo`, archivo);
+
+      // Realiza la solicitud a la API utilizando los datos preparados
+      const { data } = await api.put(
+        `gestor/central-digitalizacion/otros/actualizar-digitalizacion/`,
+        formData
+      );
+      // Maneja el éxito de la solicitud
       control_success(data.detail);
+
+      // Despacha una acción para obtener la solicitud de digitalización actualizada
       dispatch(get_digitalization_request_id_service(id));
 
-      // dispatch(set_pqr(data.data));
       return data;
     } catch (error: any) {
-      //  console.log('')('edit_metadata_service');
+      // Maneja los errores de la solicitud
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
+
+
+
+
+
+
+// // editar metadata_esta es la que funcina y d ebo dejar
+// export const edit_metadata_service = (metadata: any, id: number): any => {
+//   return async (dispatch: Dispatch<any>) => {
+//     try {
+//       const { data } = await api.put(
+//         `gestor/central-digitalizacion/actualizar-digitalizacion/`,
+//         metadata
+//       );
+//       //  console.log('')(data);
+
+//       control_success(data.detail);
+//       dispatch(get_digitalization_request_id_service(id));
+
+//       // dispatch(set_pqr(data.data));
+//       return data;
+//     } catch (error: any) {
+//       //  console.log('')('edit_metadata_service');
+//       control_error(error.response.data.detail);
+//       return error as AxiosError;
+//     }
+//   };
+// };
 
 // editar metadata
 export const delete_metadata_service = (params: any): any => {
