@@ -114,7 +114,7 @@ export interface IObjMetaData {
   tiene_replica_fisica?: boolean | null;
 
   tiene_tipologia?: boolean | null;
-
+  ya_digitalizado?: boolean | null;
   nro_folios_documento?: number | null;
   origen_archivo?: string | null;
   cod_origen_archivo?: string | number | null;
@@ -124,6 +124,8 @@ export interface IObjMetaData {
   medio_almacenamiento?: string | null;
   palabras_clave_doc?: string | null;
   id_archivo_en_sistema?: number | null;
+  id_archivo_sistema?: number | null;
+
   archivo?: IObjFile | null;
 
   id_tipologia_doc?: number | null;
