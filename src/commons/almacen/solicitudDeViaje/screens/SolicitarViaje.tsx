@@ -11,7 +11,7 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
 import { interface_solicitar_viaje, props_solicitar_viaje } from '../interfaces/types';
 import ViajeAgendado from './ViajeAgendado';
-import { control_error, control_success } from '../../../../helpers';
+import { control_error } from '../../../../helpers';
 import Swal from 'sweetalert2';
 
 
@@ -205,8 +205,6 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        control_success('Se ha enviado la solicitud de viaje correctamente');
-        limpiar_formulario_solicitar_viaje();
         return true;
       } else if(result.isDenied){
         return false;
@@ -216,16 +214,15 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
 
 
 
-  const enviar_solicitud_viaje = async () => {
-    
+  const btn_enviar_solicitud_viaje = async () => {
     const validacion = await validar_datos();
-    console.log(validacion);
     
     if(validacion){
+      //enviar_solicitud_viaje(datos_solicitar_viaje);
       console.log(datos_solicitar_viaje);
+      limpiar_formulario_solicitar_viaje();
     } else if(validacion === false) {
       console.log('No se han enviado los datos');
-      
     }
   }
   return (
@@ -664,7 +661,7 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
             color="success"
             variant="contained"
             startIcon={<SaveIcon />}
-            onClick={enviar_solicitud_viaje}
+            onClick={btn_enviar_solicitud_viaje}
           >
             {"Guardar"}
           </Button>
