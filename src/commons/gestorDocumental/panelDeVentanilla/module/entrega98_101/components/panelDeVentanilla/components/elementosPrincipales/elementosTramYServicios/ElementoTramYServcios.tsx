@@ -29,6 +29,9 @@ import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/Pqrs
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import { columnsTramites } from './columnsTramites/columnsTramites';
 
+import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { ModalTramitesServicio } from '../../../../../Atom/modalTramiteServicios/ModalTramitesServicio';
+
 export const ListaElementosTramites = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -41,14 +44,7 @@ export const ListaElementosTramites = (): JSX.Element => {
 
     // setAnexos,
   } = useContext(PanelVentanillaContext);
-  const {
-    handleGeneralLoading,
-    //handleThirdLoading,
-
-    //handleOpenModalOne: handleOpenInfoAnexos,
-    //handleOpenModalTwo: handleOpenInfoMetadatos,
-  } = useContext(ModalAndLoadingContext);
-
+  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
 /*  const handleRequestRadicado = async (radicado: string) => {
     try {
       const historico = await getHistoricoByRadicado('', handleGeneralLoading);
@@ -80,7 +76,7 @@ export const ListaElementosTramites = (): JSX.Element => {
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
   // ? functions
-  const setActionsPQRSDF = (pqrsdf: any) => {
+  const setActionsTramites = (pqrsdf: any) => {
     if (pqrsdf.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
@@ -270,12 +266,12 @@ export const ListaElementosTramites = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-            <Tooltip title="Ver info trámite">
+            <Tooltip title="Ver información asociada a trámite">
               <IconButton
                 onClick={() => {
-                  console.log(params.row);
-
-                  /* void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                  setActionsTramites(params?.row);
+                  handleOpenModalOne(true);
+                 /* void getAnexosPqrsdf(params?.row?.id_solicitud_tramite).then((res) => {
                     //  console.log('')(res);
                     setActionsPQRSDF(params?.row);
                     navigate(
@@ -314,18 +310,18 @@ export const ListaElementosTramites = (): JSX.Element => {
             <Tooltip title="Seleccionar trámite para procesos">
               <IconButton
                 onClick={() => {
-                  /* if (params?.row?.estado_asignacion_grupo === 'EN GESTION') {
+                  if (params?.row?.estado_asignacion_grupo === 'EN GESTION') {
                     control_warning(
                       'No se pueden seleccionar esta pqrsdf ya que ha sido asignada a un grupo'
                     );
                     return;
-                  }*/
+                  }
                   console.log(params.row);
                   dispatch(
                     setListaElementosComplementosRequerimientosOtros([])
                   );
 
-                  setActionsPQRSDF(params?.row);
+                  setActionsTramites(params?.row);
                 }}
               >
                 <Avatar
@@ -378,6 +374,9 @@ export const ListaElementosTramites = (): JSX.Element => {
           ) : null
         }
       />
+       {/*modal para ver la información de la solicitud de otro seleccionada*/}
+       <ModalTramitesServicio />
+      {/*modal para ver la información de la solicitud de otro seleccionada*/}
     </>
   );
 };

@@ -107,6 +107,7 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
             onChange={handleChange}
             aria-label="basic tabs example"
             variant="fullWidth"
+            scrollButtons="auto"
           >
             <Tab
               onClick={() => {
