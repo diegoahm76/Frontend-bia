@@ -189,6 +189,7 @@ const SolicitudViaje: React.FC = () => {
                     <TextField
                       required
                       fullWidth
+                      error={msj_error_fecha_inicio !== ''}
                       size="small"
                       {...params}
                     />
@@ -206,6 +207,7 @@ const SolicitudViaje: React.FC = () => {
                   renderInput={(params) => (
                     <TextField
                       required
+                      error={msj_error_fecha_fin !== ''}
                       fullWidth
                       size="small"
                       {...params}
