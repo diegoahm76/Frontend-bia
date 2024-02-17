@@ -11,7 +11,7 @@ import {
   Chip,
   Tooltip,
   CircularProgress,
-  ButtonGroup
+  ButtonGroup,
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
@@ -30,7 +30,7 @@ import DialogDelegarOrganigrama from '../DialogDelegarOrganigrama/DialogDelegarO
 // Slices
 import {
   current_organigram,
-  set_special_edit
+  set_special_edit,
 } from '../../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
 import { type IObjOrganigram } from '../../interfaces/organigrama';
@@ -38,6 +38,7 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { Link } from 'react-router-dom';
 import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { RenderDataGrid } from '../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -49,7 +50,7 @@ const control_error = (message: ToastContent) =>
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: 'light'
+    theme: 'light',
   });
 
 interface IProps {
@@ -58,7 +59,7 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function ListOrganigramas({
-  set_position_tab_organigrama
+  set_position_tab_organigrama,
 }: IProps): JSX.Element {
   const dispatch = useAppDispatch();
   const { organigram } = useAppSelector((state) => state.organigram);
@@ -77,7 +78,7 @@ export function ListOrganigramas({
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
         </div>
-      )
+      ),
     },
     {
       field: 'descripcion',
@@ -88,12 +89,12 @@ export function ListOrganigramas({
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
         </div>
-      )
+      ),
     },
     {
       field: 'version',
       headerName: 'Versión',
-      width: 100
+      width: 100,
     },
     {
       field: 'usado',
@@ -116,7 +117,7 @@ export function ListOrganigramas({
             <Chip size="small" label="No" color="error" variant="outlined" />
           );
         }
-      }
+      },
     },
     {
       field: 'fecha_terminado',
@@ -129,7 +130,7 @@ export function ListOrganigramas({
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      }
+      },
     },
     {
       field: 'fecha_puesta_produccion',
@@ -142,7 +143,7 @@ export function ListOrganigramas({
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      }
+      },
     },
     {
       field: 'fecha_retiro_produccion',
@@ -154,12 +155,12 @@ export function ListOrganigramas({
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      }
+      },
     },
     {
       field: 'justificacion_nueva_version',
       headerName: 'Justificacion nueva versión',
-      width: 200
+      width: 200,
       /* renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -186,7 +187,7 @@ export function ListOrganigramas({
                     width: 24,
                     height: 24,
                     background: '#fff',
-                    border: '2px solid'
+                    border: '2px solid',
                   }}
                   variant="rounded"
                 >
@@ -194,7 +195,7 @@ export function ListOrganigramas({
                     sx={{
                       color: 'primary.main',
                       width: '18px',
-                      height: '18px'
+                      height: '18px',
                     }}
                   />
                 </Avatar>
@@ -218,7 +219,7 @@ export function ListOrganigramas({
                       params.row.id_persona_cargo !== userinfo.id_persona
                         ? ''
                         : '#fff',
-                    border: '2px solid'
+                    border: '2px solid',
                   }}
                   variant="rounded"
                 >
@@ -229,7 +230,7 @@ export function ListOrganigramas({
                           ? ''
                           : 'primary.main',
                       width: '18px',
-                      height: '18px'
+                      height: '18px',
                     }}
                   />
                 </Avatar>
@@ -261,7 +262,7 @@ export function ListOrganigramas({
                     width: 24,
                     height: 24,
                     background: '#fff',
-                    border: '2px solid'
+                    border: '2px solid',
                   }}
                   variant="rounded"
                 >
@@ -269,7 +270,7 @@ export function ListOrganigramas({
                     sx={{
                       color: 'primary.main',
                       width: '18px',
-                      height: '18px'
+                      height: '18px',
                     }}
                   />
                 </Avatar>
@@ -298,7 +299,7 @@ export function ListOrganigramas({
                     height: 24,
                     background: '#fff',
                     border: '2px solid',
-                    boxShadow: '0px 0px 5px 0px rgba(105, 105, 105, 0.2)'
+                    boxShadow: '0px 0px 5px 0px rgba(105, 105, 105, 0.2)',
                   }}
                   variant="rounded"
                 >
@@ -306,7 +307,7 @@ export function ListOrganigramas({
                     sx={{
                       color: 'primary.main',
                       width: '18px',
-                      height: '18px'
+                      height: '18px',
                     }}
                   />
                 </Avatar>
@@ -314,8 +315,8 @@ export function ListOrganigramas({
             </Tooltip>
           )}
         </>
-      )
-    }
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -324,28 +325,47 @@ export function ListOrganigramas({
 
   return (
     <>
-      <Stack direction="row" spacing={2} sx={{ mb: '20px' }}>
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            set_crear_organigrama_is_active(true);
-          }}
-        >
-          CREAR ORGANIGRAMA
-        </Button>
-        <Link to="/app/transversal/procesos/cambio_organigrama_actual">
-          <Button variant="outlined" startIcon={<AssignmentTurnedInIcon />}>
-            ELEGIR ORGANIGRAMA ACTUAL
+      <Grid
+        container
+        spacing={2}
+        sx={{ mb: '20px', justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Grid item xs={12} sm={4}>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<AddIcon />}
+            onClick={() => {
+              set_crear_organigrama_is_active(true);
+            }}
+            fullWidth
+          >
+            CREAR ORGANIGRAMA
           </Button>
-        </Link>
-        <Link to="/app/gestor_documental/activacion_instrumentos_archivisticos">
-          <Button variant="outlined" startIcon={<AssignmentTurnedInIcon />}>
-            ACTIVACIÓN DE INSTRUMENTOS ARCHIVISTICOS
-          </Button>
-        </Link>
-      </Stack>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Link to="/app/transversal/procesos/cambio_organigrama_actual">
+            <Button
+              variant="outlined"
+              startIcon={<AssignmentTurnedInIcon />}
+              fullWidth
+            >
+              ELEGIR ORGANIGRAMA
+            </Button>
+          </Link>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Link to="/app/gestor_documental/activacion_instrumentos_archivisticos">
+            <Button
+              variant="outlined"
+              startIcon={<AssignmentTurnedInIcon />}
+              fullWidth
+            >
+              ACTIVAR INSTRUMENTOS
+            </Button>
+          </Link>
+        </Grid>
+      </Grid>
       <Grid item>
         {organigram.length === 0 ? (
           <Box
@@ -353,29 +373,17 @@ export function ListOrganigramas({
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              height: '100vh'
+              height: '100vh',
             }}
           >
             <CircularProgress size={80} />
           </Box>
         ) : (
-          <Box sx={{ width: '100%' }}>
-              <ButtonGroup
-                style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}
-              >
-                {download_xls({ nurseries: organigram, columns })}
-                {download_pdf({ nurseries: organigram, columns, title: 'Organigramas' })}
-              </ButtonGroup>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={organigram}
-              columns={columns}
-              pageSize={17}
-              rowsPerPageOptions={[15]}
-              getRowId={(row) => row.id_organigrama}
-            />
-          </Box>
+          <RenderDataGrid
+            title="Listado de organigramas"
+            rows={organigram ?? []}
+            columns={columns ?? []}
+          />
         )}
       </Grid>
       <DialogCrearOrganigrama

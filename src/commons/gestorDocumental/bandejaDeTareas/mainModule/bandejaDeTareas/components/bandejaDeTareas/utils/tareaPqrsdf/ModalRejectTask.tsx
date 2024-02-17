@@ -34,14 +34,18 @@ import { putRechazarTarea } from '../../../../services/servicesStates/pqrsdf/rec
 import { getListadoTareasByPerson } from '../../../../../../toolkit/thunks/Pqrsdf/getListadoTareasByPerson.service';
 import { AuthSlice } from '../../../../../../../../auth/interfaces';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { putRechazarTareaOtros } from '../../../../../../toolkit/thunks/otros/putRechazarTareaOtros.service';
+import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 
 export const ModalRejectTask: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   //* redux states
-  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
-    useAppSelector((state) => state.BandejaTareasSlice);
+  const {
+    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
+    listaTareasPqrsdfTramitesUotrosUopas,
+  } = useAppSelector((state) => state.BandejaTareasSlice);
   const {
     userinfo: { id_persona },
   } = useAppSelector((state: AuthSlice) => state.auth);
@@ -56,28 +60,83 @@ export const ModalRejectTask: FC = (): JSX.Element => {
     reset_justificacion({
       justificacion_rechazo: '',
     });
+    setLoading(false);
   };
 
+  const TASK_TYPES: Record<
+    string,
+    {
+      rejectTask: (
+        id_tarea_asignada: number,
+        justificacion_rechazo: string,
+        setLoading: React.Dispatch<React.SetStateAction<boolean>>
+      ) => Promise<any>;
+      getListadoTareas: (
+        idPersona: number,
+        setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+        tipo_de_tarea?: string,
+        estado_asignacion_de_tarea?: string,
+        estado_de_la_tarea?: string,
+        fecha_inicio?: string,
+        fecha_fin?: string
+      ) => Promise<any>;
+      listadoTareasType: string;
+    }
+  > = {
+    'RESPONDER PQRSDF': {
+      rejectTask: putRechazarTarea,
+      getListadoTareas: getListadoTareasByPerson,
+      listadoTareasType: 'Rpqr',
+    },
+    'RESPONDER OTRO': {
+      rejectTask: putRechazarTareaOtros,
+      getListadoTareas: getListadoTareaasOtrosByPerson,
+      listadoTareasType: 'ROtros',
+    },
+    'RESPONDER TRÁMITE': {
+      rejectTask: putRechazarTarea, // se debe modiificar de acuerdo a los tramites
+      getListadoTareas: getListadoTareasByPerson, // se debe modiificar de acuerdo a los tramites
+      listadoTareasType: 'Tramites', // se debe modiificar de acuerdo a los tramites
+    },
+    // Agrega aquí los nuevos tipos de tareas
+    //* agregar luego para tramites y para opas
+  } as const;
+
   const handleSubsmit = async () => {
-    if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas)
-      return control_error('No se ha seleccionado una tarea para rechazar');
-    if (!exe_watch_justificacion?.justificacion_rechazo)
-      return control_warning(
+    setLoading(true);
+
+    if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) {
+      control_error('No se ha seleccionado una tarea para rechazar');
+      return;
+    }
+
+    if (!exe_watch_justificacion?.justificacion_rechazo) {
+      control_warning(
         'Debe ingresar una justificación de rechazo para la tarea'
       );
+      return;
+    }
 
     try {
-      const rejectTask = await putRechazarTarea(
+      const { tipo_tarea } = listaTareasPqrsdfTramitesUotrosUopas[0] || {};
+      const taskType = TASK_TYPES[tipo_tarea];
+
+      if (!taskType) {
+        console.error('Tipo de tarea no reconocido:', tipo_tarea);
+        return;
+      }
+
+      const rejectedTask = await taskType.rejectTask(
         currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_tarea_asignada,
         exe_watch_justificacion?.justificacion_rechazo,
         setLoading
       );
 
-      if (rejectTask?.status === 200) {
-        const listadoTareas = await getListadoTareasByPerson(
+      if (rejectedTask?.status === 200 || rejectedTask?.success) {
+        const listadoTareas = await taskType.getListadoTareas(
           id_persona,
           handleSecondLoading,
-          'Rpqr'
+          taskType.listadoTareasType
         );
 
         dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));

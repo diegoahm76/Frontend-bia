@@ -34,7 +34,6 @@ export const ModalInfoTarea = (): JSX.Element => {
         open={thirdLoading}
         onClose={() => {
           handleThirdLoading(false);
-          // setInfoDenuncia(null);
         }}
       >
         <Box component="form">
@@ -98,21 +97,6 @@ export const ModalInfoTarea = (): JSX.Element => {
                   inputProps={{ maxLength: 255 }}
                 />
               </Grid>
-              {/*<Grid item xs={12} sm={3}>
-                <TextField
-                  disabled
-                  fullWidth
-                  label="Dirección de localización del hecho"
-                  size="small"
-                  variant="outlined"
-                  value={'infoDenuncia?.direccion_localizacion' ?? 'N/A'}
-                  InputLabelProps={{ shrink: true }}
-                  inputProps={{ maxLength: 255 }}
-                />
-              </Grid>*/}
-
-              {/*SEGUNDA FILA DE INFORMACIÓN*/}
-
               <Grid
                 item
                 xs={12}
@@ -179,7 +163,7 @@ export const ModalInfoTarea = (): JSX.Element => {
                   value={
                     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.requerimientos_pendientes_respuesta
                       ? 'SI'
-                      : 'NO'
+                      : 'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}

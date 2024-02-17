@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { api } from '../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../helpers';
 
-export const getHistoricoOtrosByRadicado = (
+export const getHistoricoOtrosByRadicado = async (
   radicado: string = '',
   handleLoading: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<any> => {

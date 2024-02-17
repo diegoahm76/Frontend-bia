@@ -156,7 +156,7 @@ const MetadataFormDialog = ({
       '(Buscar en carpeta física)',
       (doc.internal.pageSize.width -
         doc.getTextWidth('(Buscar en carpeta física)')) /
-        2,
+      2,
       10
     );
     doc.text(
@@ -175,31 +175,27 @@ const MetadataFormDialog = ({
     );
     doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
     doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
-    const linea_uno = `Nombre del anexo: ${
-      get_values_anexo('nombre_anexo') ?? ''
-    }               Medio de almacenamiento: ${
-      get_values_anexo('cod_medio_almacenamiento') === 'Ot'
+    const linea_uno = `Nombre del anexo: ${get_values_anexo('nombre_anexo') ?? ''
+      }               Medio de almacenamiento: ${get_values_anexo('cod_medio_almacenamiento') === 'Ot'
         ? get_values_anexo('medio_almacenamiento_otros_cual')
         : storage_mediums.find(
-            (objeto) =>
-              objeto.key === get_values_anexo('cod_medio_almacenamiento')
-          )?.label
-    }`;
+          (objeto) =>
+            objeto.key === get_values_anexo('cod_medio_almacenamiento')
+        )?.label
+      }`;
     const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
     const x_linea_uno =
       (doc.internal.pageSize.width - ancho_texto_linea_uno) / 2;
     doc.text(linea_uno, x_linea_uno, 45);
 
-    const linea_dos = `Categoría de archivo: ${
-      file_categories.find(
-        (objeto) => objeto.key === data.cod_categoria_archivo
-      )?.label
-    }           Tipología documental: ${
-      data.id_tipologia_doc !== null
+    const linea_dos = `Categoría de archivo: ${file_categories.find(
+      (objeto) => objeto.key === data.cod_categoria_archivo
+    )?.label
+      }           Tipología documental: ${data.id_tipologia_doc !== null
         ? file_typologies.find((objeto) => objeto.key === data.id_tipologia_doc)
-            ?.label
+          ?.label
         : data.tipologia_no_creada_en_TRD
-    }`;
+      }`;
     const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
     const x_linea_dos =
       (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
@@ -232,7 +228,7 @@ const MetadataFormDialog = ({
         '(Buscar en carpeta física)',
         (doc.internal.pageSize.width -
           doc.getTextWidth('(Buscar en carpeta física)')) /
-          2,
+        2,
         10
       );
       doc.text(
@@ -251,32 +247,28 @@ const MetadataFormDialog = ({
       );
       doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
       doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
-      const linea_uno = `Nombre del anexo: ${
-        get_values_anexo('nombre_anexo') ?? ''
-      }               Medio de almacenamiento: ${
-        get_values_anexo('cod_medio_almacenamiento') === 'Ot'
+      const linea_uno = `Nombre del anexo: ${get_values_anexo('nombre_anexo') ?? ''
+        }               Medio de almacenamiento: ${get_values_anexo('cod_medio_almacenamiento') === 'Ot'
           ? get_values_anexo('medio_almacenamiento_otros_cual')
           : storage_mediums.find(
-              (objeto) =>
-                objeto.key === get_values_anexo('cod_medio_almacenamiento')
-            )?.label
-      }`;
+            (objeto) =>
+              objeto.key === get_values_anexo('cod_medio_almacenamiento')
+          )?.label
+        }`;
       const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
       const x_linea_uno =
         (doc.internal.pageSize.width - ancho_texto_linea_uno) / 2;
       doc.text(linea_uno, x_linea_uno, 45);
 
-      const linea_dos = `Categoría de archivo: ${
-        file_categories.find(
-          (objeto) => objeto.key === data.cod_categoria_archivo
-        )?.label
-      }           Tipología documental: ${
-        data.id_tipologia_doc !== null
+      const linea_dos = `Categoría de archivo: ${file_categories.find(
+        (objeto) => objeto.key === data.cod_categoria_archivo
+      )?.label
+        }           Tipología documental: ${data.id_tipologia_doc !== null
           ? file_typologies.find(
-              (objeto) => objeto.key === data.id_tipologia_doc
-            )?.label
+            (objeto) => objeto.key === data.id_tipologia_doc
+          )?.label
           : data.tipologia_no_creada_en_TRD
-      }`;
+        }`;
       const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
       const x_linea_dos =
         (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
@@ -317,7 +309,6 @@ const MetadataFormDialog = ({
         pdfFile === null ? Number(data.nro_folios_documento) : 1,
     };
     //  console.log('')(data_edit);
-
     const form_data: any = new FormData();
     if (
       data.id_metadatos_anexo_tmp !== null &&
@@ -329,7 +320,6 @@ const MetadataFormDialog = ({
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
       if (diferencia_dias <= 100) {
         form_data.append('data_digitalizacion', JSON.stringify(data_edit));
-        console.log(exhibit, pdfFile);
 
         if (pdfFile !== null) {
           form_data.append(`archivo`, pdfFile);
@@ -344,16 +334,99 @@ const MetadataFormDialog = ({
               form_data.append(
                 `archivo`,
                 pdfFile === null ? exhibit.exhibit_link : pdfFile
+
               );
             }
           }
         }
-        void dispatch(
-          edit_metadata_service(
-            form_data,
-            digitization_request.id_solicitud_de_digitalizacion ?? 0
+
+
+
+
+
+
+        const datos_totales_actualizar = {
+          id_metadatos_anexo_tmp: metadata.id_metadatos_anexo_tmp,
+          id_archivo_sistema: data.id_archivo_sistema,
+          // id_archivo_sistema_dos: metadata.id_archivo_sistema,
+          id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
+          id_anexo: metadata.id_anexo,
+          nro_folios_documento: data.nro_folios_documento,
+          asunto: data.asunto,
+          cod_origen_archivo: metadata.cod_origen_archivo,
+          cod_categoria_archivo: data.cod_categoria_archivo,
+          tiene_replica_fisica: data.tiene_replica_fisica,
+          tipologia_no_creada_TRD: checked_tiene_tipologia ? null : data.tipologia_no_creada_en_TRD,
+          id_tipologia_doc: data.id_tipologia_doc,
+          palabras_clave_doc: data.palabras_clave_doc,
+          descripcion: data.descripcion,
+          observacion_digitalizacion: data.observacion_digitalizacion
+        };
+        const datos_totales_creacion = {
+          id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
+          id_anexo: metadata.id_anexo,
+          nro_folios_documento: data.nro_folios_documento,
+          asunto: data.asunto,
+          cod_origen_archivo: metadata.cod_origen_archivo,
+          cod_categoria_archivo: data.cod_categoria_archivo,
+          tiene_replica_fisica: checked_tiene_tipologia ? data.id_tipologia_doc : null,
+          tipologia_no_creada_TRD: checked_tiene_tipologia ? null : data.tipologia_no_creada_en_TRD,
+          id_tipologia_doc: data.id_tipologia_doc,
+          palabras_clave_doc: data.palabras_clave_doc,
+          descripcion: data.descripcion,
+          observacion_digitalizacion: data.observacion_digitalizacion,
+
+        };
+
+
+
+        {
+          exhibit.ya_digitalizado === true && (
+
+            void dispatch(
+              edit_metadata_service(
+                digitization_request.id_solicitud_de_digitalizacion ?? 0,
+                pdfFile === null ? exhibit.exhibit_link : pdfFile,
+                datos_totales_actualizar
+              )
+            )
           )
-        );
+        }
+
+
+
+        {
+          exhibit.ya_digitalizado === false && (
+
+            void dispatch(
+              add_metadata_service(
+                digitization_request.id_solicitud_de_digitalizacion ?? 0,
+                pdfFile === null ? exhibit.exhibit_link : pdfFile,
+                datos_totales_creacion
+              )
+            )
+          )
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //funcion original  
+
+        // edit_metadata_service(
+        //   form_data,
+        //   digitization_request.id_solicitud_de_digitalizacion ?? 0
+        // )
+
       } else {
         control_error(
           'Solo se pueden editar metadatos hasta 30 dias despues de la fecha de creación'
@@ -378,12 +451,35 @@ const MetadataFormDialog = ({
         }
       }
 
-      void dispatch(
-        add_metadata_service(
-          form_data,
-          digitization_request.id_solicitud_de_digitalizacion ?? 0
-        )
-      );
+      const datos_totales = {
+        // id_metadatos_anexo_tmp: metadata.id_metadatos_anexo_tmp,
+        // id_archivo_sistema: data.id_archivo_sistema,
+        // id_archivo_sistema_dos: metadata.id_archivo_sistema,
+        id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
+        id_anexo: metadata.id_anexo,
+        nro_folios_documento: data.nro_folios_documento,
+        asunto: data.asunto,
+        cod_origen_archivo: metadata.cod_origen_archivo,
+        cod_categoria_archivo: data.cod_categoria_archivo,
+        tiene_replica_fisica: checked_tiene_replica_fisica,
+        tipologia_no_creada_TRD: data.tipologia_no_creada_TRD,
+        id_tipologia_doc: data.id_tipologia_doc,
+        palabras_clave_doc: data.palabras_clave_doc,
+        descripcion: data.descripcion,
+        observacion_digitalizacion: data.observacion_digitalizacion
+      }
+
+
+      // add_metadata_service(
+      //   digitization_request.id_solicitud_de_digitalizacion ?? 0,
+      //   pdfFile,
+      //   datos_totales
+      //   );
+
+      // add_metadata_service(
+      //   form_data,
+      //   digitization_request.id_solicitud_de_digitalizacion ?? 0
+      // );
     }
     set_is_modal_active(false);
     dispatch(set_exhibit(initial_state_exhibit));
@@ -449,8 +545,8 @@ const MetadataFormDialog = ({
                     metadata.fecha_creacion_doc ?? null === null
                       ? new Date()
                       : metadata.fecha_creacion_doc ?? '' === ''
-                      ? new Date()
-                      : '2023-12-12',
+                        ? new Date()
+                        : '2023-12-12',
                   rules: {
                     required_rule: { rule: true, message: 'Requerido' },
                   },
@@ -662,7 +758,7 @@ const MetadataFormDialog = ({
                   onClick={handle_submit(on_submit)}
                   startIcon={<SaveIcon />}
                 >
-                  Guardar
+                   {exhibit.ya_digitalizado === true ? 'Actualizar' : 'Guardar'}
                 </Button>
                 {metadata.id_metadatos_anexo_tmp !== null && (
                   <Button

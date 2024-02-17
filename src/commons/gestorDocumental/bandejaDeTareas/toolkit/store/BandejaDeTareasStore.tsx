@@ -222,6 +222,7 @@ export const BandejaTareasSlice = createSlice({
 
 export const {
   setActionssTareasPQRSDF,
+  setActionsTareasOtros,
   // setActionsTareasTramites,
 
   // ? lista de las tareas tras la busqueda

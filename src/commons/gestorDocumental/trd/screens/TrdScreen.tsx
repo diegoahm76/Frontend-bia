@@ -260,53 +260,63 @@ export const TrdScreen: FC = (): JSX.Element => {
                 />
               </Grid>
             </Grid>
-
-            <Stack
-              direction="row"
+            <Grid
+              container
               justifyContent="flex-end"
               spacing={2}
               sx={{ mb: '20px', mt: '20px' }}
             >
-              <Button
-                color="warning"
-                variant="contained"
-                startIcon={<VisibilityIcon />}
-                onClick={openModalCCDUsados}
-              >
-                {`VER CCD'S USADOS`}
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                startIcon={<SearchIcon />}
-                onClick={openModalModalSearchTRD}
-              >
-                BUSCAR TRD
-              </Button>
-              <LoadingButton
-                loading={createTRDLoadingButton}
-                type="submit"
-                color="success"
-                variant="contained"
-                startIcon={trd_current != null ? <SyncIcon /> : <SaveIcon />}
-              >
-                {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
-              </LoadingButton>
-
-              <Button
-                color="primary"
-                variant="outlined"
-                startIcon={<CleanIcon />}
-                onClick={() => {
-                  reset_all_trd();
-                  // dispatch(set_selected_item_from_catalogo_trd_action(null));
-                  // //  console.log('')('reset_create_trd_modal');
-                  // setTrdCurrent(null);
-                }}
-              >
-                LIMPIAR CAMPOS
-              </Button>
-            </Stack>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  color="warning"
+                  variant="contained"
+                  startIcon={<VisibilityIcon />}
+                  onClick={openModalCCDUsados}
+                  fullWidth
+                >
+                  VER CCDs USADOS
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                  onClick={openModalModalSearchTRD}
+                  fullWidth
+                >
+                  BUSCAR TRD
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <LoadingButton
+                  loading={createTRDLoadingButton}
+                  type="submit"
+                  color="success"
+                  variant="contained"
+                  startIcon={trd_current != null ? <SyncIcon /> : <SaveIcon />}
+                  fullWidth
+                >
+                  {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
+                </LoadingButton>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={() => {
+                    reset_all_trd();
+                    // dispatch(set_selected_item_from_catalogo_trd_action(null));
+                    // //  console.log('')('reset_create_trd_modal');
+                    // setTrdCurrent(null);
+                  }}
+                  fullWidth
+                >
+                  LIMPIAR CAMPOS
+                </Button>
+              </Grid>
+            </Grid>
           </form>
         </Grid>
       </Grid>
