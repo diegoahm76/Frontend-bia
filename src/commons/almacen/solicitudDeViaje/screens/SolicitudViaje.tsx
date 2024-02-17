@@ -131,8 +131,7 @@ const SolicitudViaje: React.FC = () => {
   }
   
   useEffect( ()=>{
-    obtener_solicitudes_fc();
-    console.log('hola');    
+    obtener_solicitudes_fc(); 
   },[]);
 
   return (
