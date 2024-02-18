@@ -45,7 +45,7 @@ import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
 import { RutasCentralDigitalizacionOtros } from '../centraldigitalizacionOtros/routes/RutasCentralDigitalizacionOtros';
 import { RutasTransferenciaDocumental } from '../transferenciaDocumental/routes/RutasTransferenciaDocumental';
 import { ConsultaEstadoSolicitudes } from '../consulltaEstadoSolicitudes/routes/ConsultaEstadoSolicitudes.routes';
-import { EjemploResponsive } from './components/EjemploResponsive';
+import { Ejemplo } from './components/Ejemplo';
  
 const routes = [
   {
@@ -285,11 +285,12 @@ const routes = [
     name: 'transferencia_documental',
     component: () => <RutasTransferenciaDocumental />,
   },
-    {
-      path: 'ejemplo/',
-      name: 'ejemplo',
-      component: () => <EjemploResponsive />,
-    }
+  {
+    path: 'ejemploResponsive/',
+    name: 'ejemploResponsive',
+    component: () => <Ejemplo />,
+  }
+
 
 ];
 
