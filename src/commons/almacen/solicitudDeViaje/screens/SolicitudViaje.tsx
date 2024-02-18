@@ -25,7 +25,13 @@ const SolicitudViaje: React.FC = () => {
   const [msj_error_estado, set_msj_error_estado] = useState<string>("");
   const [mostrar_solicitud_viaje,set_mostrar_solicitud_viaje] = useState<boolean>(false);
   const [data_solicitudes_viajes, set_data_solicitudes_viajes] = useState<data_solicitud_viaje[]>([]);
+  const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
 
+    /**
+  * Gestiona el cambio de la fecha de inicio.
+  * @param date - Objeto de tipo Dayjs que representa la nueva fecha de fin o null.
+  * @returns void
+  */
   const cambio_fecha_inicio = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_inicio(date);
@@ -35,6 +41,11 @@ const SolicitudViaje: React.FC = () => {
     }
   };
 
+  /**
+  * Gestiona el cambio de la fecha de fin.
+  * @param date - Objeto de tipo Dayjs que representa la nueva fecha de fin o null.
+  * @returns void
+  */
   const cambio_fecha_fin = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_fin(date);
@@ -44,12 +55,24 @@ const SolicitudViaje: React.FC = () => {
     }
   };
 
+  /**
+   * Gestiona el cambio de estado a través de un evento de selección.
+   * 
+   * @param event - Objeto que representa el evento de cambio de selección.
+   * @returns void
+   */
   const cambio_estado: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_estado(e.target.value);
     if (e.target.value === null && e.target.value === "")
       set_msj_error_estado("Selecciona un estado");
   }
 
+
+  /**
+  * Obtiene las solicitudes de viaje y actualiza el estado local con la información obtenida.
+  * 
+  * @returns void
+  */
   const obtener_solicitudes_fc: () => void = () => {
     dispatch(obtener_solicitudes()).then((response: any) => {
       set_data_solicitudes_viajes(
@@ -69,11 +92,21 @@ const SolicitudViaje: React.FC = () => {
           fecha_partida: dayjs(solicitud.fecha_partida).format('DD/MM/YYYY'),
           fecha_retorno: dayjs(solicitud.fecha_retorno).format('DD/MM/YYYY'),
           cod_municipio: solicitud.cod_municipio === '05001' && 'Villavicencio',
+          eliminar: solicitud.id_solicitud_viaje,
         }))
       );
     })
   }
 
+
+  /**
+   * Obtiene las solicitudes de viaje con parámetros específicos y actualiza el estado local con la información obtenida.
+   * 
+   * @returns void
+   * @param estado - Estado de las solicitudes de viaje a obtener.
+   * @param fecha_inicio - Fecha de inicio del rango temporal en formato 'YYYY-MM-DDT00:00:ss.SSSSSS'.
+   * @param fecha_fin - Fecha de fin del rango temporal en formato 'YYYY-MM-DDT23:59:59.SSSSSS'.
+   */
   const obtener_solicitudes_params_fc: () => void = () => {
     dispatch(obtener_solicitudes_params(
       estado,
@@ -102,7 +135,11 @@ const SolicitudViaje: React.FC = () => {
     })
   }
 
-  
+  /**
+  * Realiza la validación del formulario y devuelve una promesa con un valor booleano.
+  * 
+  * @returns Promise<boolean | undefined>
+  */
   const validacion_formulario: ()=>  Promise<boolean | undefined> = async() => {
     const fecha_manana = dayjs().add(0, 'day');
 
@@ -122,6 +159,12 @@ const SolicitudViaje: React.FC = () => {
     return true;
   }
 
+  /**
+  * Maneja la acción de envío del formulario, realizando una validación previa.
+  * 
+  * @param e - Objeto que representa el evento de envío del formulario.
+  * @returns void
+  */
   const handle_submit: (e: React.FormEvent) => void = async(e) => {
     e.preventDefault();
     const formulario_valido = await validacion_formulario();
@@ -130,10 +173,14 @@ const SolicitudViaje: React.FC = () => {
     }
   }
   
+  /**
+  * Efecto secundario que se ejecuta al cambiar el estado de 'refrescar_tabla'.
+  */
   useEffect( ()=>{
     obtener_solicitudes_fc(); 
-  },[]);
-
+    console.log(refrescar_tabla);
+  },[refrescar_tabla]);
+  
   return (
     <>
       <Grid
@@ -230,7 +277,7 @@ const SolicitudViaje: React.FC = () => {
           </form>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>
-            <TableSolicitudViajes data_row_solicitud_viaje={data_solicitudes_viajes}/>
+            <TableSolicitudViajes set_refrescar_tabla={set_refrescar_tabla} refrescar_tabla={refrescar_tabla}  data_row_solicitud_viaje={data_solicitudes_viajes} obtener_solicitudes_fc={obtener_solicitudes_fc}/>
           </Grid>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>

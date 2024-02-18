@@ -27,6 +27,7 @@ export interface data_solicitud_viaje {
   cod_municipio: string
   id_persona_responsable: any
   id_unidad_org_responsable: any
+  eliminar?: number
 }
 
 export interface data_row_solicitud_viaje {
@@ -36,6 +37,7 @@ export interface data_row_solicitud_viaje {
   fecha_retorno: string
   estado_solicitud: string
   cod_municipio: string
+  eliminar: number
 }
 
 export interface interface_solicitar_viaje {
