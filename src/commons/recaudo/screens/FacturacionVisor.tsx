@@ -19,6 +19,7 @@ interface LiquidacionResponse {
     detail: string;
     data: {
         rp: number;
+        volumenMeses:any;
         limite_pago: string;
         doc_cobro: string;
         ley: string;
@@ -39,12 +40,14 @@ interface LiquidacionResponse {
         fr: number;
         tt: number;
         numero_cuota: string;
-        valor_cuota: number;
+        montopagarMeses:any;
+        valor_cuota: any;
         codigo_barras: string;
         factor_costo_oportunidad: number;
     };
 }
 interface BuscarProps {
+    rows_detalles:any
     is_modal_active: any;
     set_is_modal_active: any;
     form_liquidacion: any,
@@ -53,8 +56,134 @@ interface BuscarProps {
     handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
 
 }
-export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, handle_select_form_liquidacion_change, expedientes_deudor, form_liquidacion, is_modal_active, set_is_modal_active }) => {
+export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liquidacion_pdf, handle_select_form_liquidacion_change, expedientes_deudor, form_liquidacion, is_modal_active, set_is_modal_active }) => {
+
     const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+    const getDaysInMonth = (month: number, year: number) => {
+        return new Date(year, month, 0).getDate();
+    };
+    const [diasEnero, setDiasEnero] = useState(0);
+    const [diasFebrero, setDiasFebrero] = useState(0);
+    const [diasMarzo, setDiasMarzo] = useState(0);
+    const [diasAbril, setDiasAbril] = useState(0);
+    const [diasMayo, setDiasMayo] = useState(0);
+    const [diasJunio, setDiasJunio] = useState(0);
+    const [diasJulio, setDiasJulio] = useState(0);
+    const [diasAgosto, setDiasAgosto] = useState(0);
+    const [diasSeptiembre, setDiasSeptiembre] = useState(0);
+    const [diasOctubre, setDiasOctubre] = useState(0);
+    const [diasNoviembre, setDiasNoviembre] = useState(0);
+    const [diasDiciembre, setDiasDiciembre] = useState(0);
+
+
+    const [valorEnero, setValorEnero] = useState<any>('');
+
+    const [valorFebrero, setValorFebrero] = useState<any>('');
+
+    const [valorMarzo, setValorMarzo] = useState<any>('');
+
+    const [valorAbril, setValorAbril] = useState<any>('');
+
+    const [valorMayo, setValorMayo] = useState<any>('');
+
+    const [valorJunio, setValorJunio] = useState<any>('');
+
+    const [valorJulio, setValorJulio] = useState<any>('');
+
+    const [valorAgosto, setValorAgosto] = useState<any>('');
+
+    const [valorSeptiembre, setValorSeptiembre] = useState<any>('');
+
+    const [valorOctubre, setValorOctubre] = useState<any>('');
+
+    const [valorNoviembre, setValorNoviembre] = useState<any>('');
+
+    const [valorDiciembre, setValorDiciembre] = useState<any>('');
+
+    const [sumaResultados, setSumaResultados] = useState<number>(0);
+
+    
+    useEffect(() => {
+        if (liquidacion?.data.anio) {
+            const year = liquidacion.data.anio;
+            const enero = getDaysInMonth(1, year);
+            const febrero = getDaysInMonth(2, year);
+            const marzo = getDaysInMonth(3, year);
+            const abril = getDaysInMonth(4, year);
+            const mayo = getDaysInMonth(5, year);
+            const junio = getDaysInMonth(6, year);
+            const julio = getDaysInMonth(7, year);
+            const agosto = getDaysInMonth(8, year);
+            const septiembre = getDaysInMonth(9, year);
+            const octubre = getDaysInMonth(10, year);
+            const noviembre = getDaysInMonth(11, year);
+            const diciembre = getDaysInMonth(12, year);
+
+            setDiasEnero(enero);
+            setDiasFebrero(febrero);
+            setDiasMarzo(marzo);
+            setDiasAbril(abril);
+            setDiasMayo(mayo);
+            setDiasJunio(junio);
+            setDiasJulio(julio);
+            setDiasAgosto(agosto);
+            setDiasSeptiembre(septiembre);
+            setDiasOctubre(octubre);
+            setDiasNoviembre(noviembre);
+            setDiasDiciembre(diciembre);
+            //         const resultado = ( 226368 * octubre )   ;
+            // setvalor_octubre(resultado.toString());
+
+
+            const resultadoEnero =( (86.4 * liquidacion?.data.caudal_consecionado)* enero ).toFixed(3);;
+            setValorEnero(resultadoEnero.toString());
+
+            const resultadoFebrero = ((86.4 * liquidacion?.data.caudal_consecionado)* febrero).toFixed(3);
+            setValorFebrero(resultadoFebrero.toString());
+
+            const resultadoMarzo =( (86.4 * liquidacion?.data.caudal_consecionado)* marzo).toFixed(3);;
+            setValorMarzo(resultadoMarzo.toString());
+
+            const resultadoAbril = ((86.4 * liquidacion?.data.caudal_consecionado)* abril).toFixed(3);;
+            setValorAbril(resultadoAbril.toString());
+
+            const resultadoMayo = ((86.4 * liquidacion?.data.caudal_consecionado)* mayo).toFixed(3);
+            setValorMayo(resultadoMayo.toString());
+
+            const resultadoJunio = ((86.4 * liquidacion?.data.caudal_consecionado)* junio).toFixed(3);
+            setValorJunio(resultadoJunio.toString());
+
+            const resultadoJulio = ((86.4 * liquidacion?.data.caudal_consecionado)* julio).toFixed(3);
+            setValorJulio(resultadoJulio.toString());
+
+            const resultadoAgosto = ((86.4 * liquidacion?.data.caudal_consecionado)* agosto).toFixed(3);
+            setValorAgosto(resultadoAgosto.toString());
+
+            const resultadoSeptiembre = ((86.4 * liquidacion?.data.caudal_consecionado)* septiembre).toFixed(3);
+            setValorSeptiembre(resultadoSeptiembre.toString());
+
+            const resultadoOctubre = ((86.4 * liquidacion?.data.caudal_consecionado)* octubre).toFixed(3);
+            setValorOctubre(resultadoOctubre.toString());
+
+            const resultadoNoviembre = ((86.4 * liquidacion?.data.caudal_consecionado)* noviembre).toFixed(3);
+            setValorNoviembre(resultadoNoviembre.toString());
+
+            const resultadoDiciembre = ((86.4 * liquidacion?.data.caudal_consecionado)* diciembre).toFixed(3);
+            setValorDiciembre(resultadoDiciembre.toString());
+
+            const suma = parseFloat(resultadoEnero) + parseFloat(resultadoFebrero)       + parseFloat(resultadoMarzo) + parseFloat(resultadoAbril)       + parseFloat(resultadoMayo)      + parseFloat(resultadoJunio)     + parseFloat(resultadoJulio)    + parseFloat(resultadoAgosto)     + parseFloat(resultadoSeptiembre)    + parseFloat(resultadoOctubre)     + parseFloat(resultadoNoviembre)   + parseFloat(resultadoDiciembre)          ;
+            const sumaa = parseFloat(liquidacion?.data?.valor_cuota) / 12 ;
+
+            setSumaResultados(sumaa);
+
+            {}
+
+        }
+
+
+    }, [liquidacion?.data.anio]); // Dependencia del efecto es el año de la liquidación
+
+  
 
     const htmlContent = `<!DOCTYPE html>
     <!-- Created by pdf2htmlEX (https://github.com/pdf2htmlEX/pdf2htmlEX) -->
@@ -4994,10 +5123,10 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m1 xd h8 yd ff1 fs3 fc0 sc0 ls34 ws4d">FECH<span class="_ _2"></span>A LIMIT<span class="_ _2"></span>E<span class="ls5"> <span class="ls16 wsb">DE<span
                             class="_ _1"></span><span class="ls5 ws4d"> <span class="ls38 wsc">PA<span class="_ _2"></span>G<span class="_ _2"></span>O</span></span></span></span></div>
                     <div class="t m0 xe h8 yd ff1 fs3 fc0 sc0 ls2e ws4d"></div>
-                </div>
+                </div> 
                 <div class="c x7 ye w6 hb">
                     <div class="t m2 xf h9 yf ff1 fs4 fc2 sc0 ls36 wsa">
-                    ${liquidacion?.data.cedula}
+                    ${liquidacion?.data.limite_pago}
                     <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x10 h9 yf ff1 fs4 fc0 sc0 ls2e ws4d"></div>
                 </div>
@@ -5009,7 +5138,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                 <div class="c xa y3 w5 hc">
                     <div class="t m2 x13 h9 y11 ff1 fs4 fc0 sc0 ls7 ws4d"><span
                             class="ls36 wsa"><span class="_ _2"></span>${liquidacion?.data.doc_cobro}
-                            <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></span></div><div class="t m0 x12 h9 y11 ff1 fs4 fc0 sc0 ls2e ws4d"> </div></div><div class="c x1 y12 w2 hd"><div class="t m0 x14 he y13 ff3 fs5 fc0 sc0 ls3a wse">{{ ley }}<span
+                            <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></span></div><div class="t m0 x12 h9 y11 ff1 fs4 fc0 sc0 ls2e ws4d"> </div></div><div class="c x1 y12 w2 hd"><div class="t m0 x14 he y13 ff3 fs5 fc0 sc0 ls3a wse">$${liquidacion?.data.ley}<span
                             class="ls2e ws4d"> </span></div>
                     <div class="t m0 x14 he y14 ff3 fs5 fc0 sc0 ls2e ws4d"></div>
                 </div>
@@ -5068,11 +5197,14 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 x17 h8 y2 ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x18 y19 w7 ha">
-                    <div class="t m3 x9 h10 y1a ff4 fs3 fc0 sc0 ls49 ws4d">
-                        ${liquidacion?.data.fecha_impresion}
-<span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div>
-                    <div class="t m0 x19 h10 y1a ff4 fs3 fc0 sc0 ls2e ws4d"></div>
+                <div class="t m3 x9 h10 y1a ff4 fs3 fc0 sc0 ls49 ws4d" style="position: relative; top: -20px; left: -20px;">
+                    ${liquidacion?.data.fecha_impresion}
+                    <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span>
                 </div>
+                <div class="t m0 x19 h10 y1a ff4 fs3 fc0 sc0 ls2e ws4d"></div>
+            </div>
+            
+            
                 <div class="c x1a y19 w8 ha">
                     <div class="t m4 x14 h8 y2 ff1 fs3 fc0 sc0 ls12 ws1f">PERIOD<span class="_ _2"></span>O</div>
                     <div class="t m0 x1b h8 y2 ff1 fs3 fc0 sc0 ls2e ws4d"></div>
@@ -5099,7 +5231,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                 </div>
                 <div class="c x18 y1b wc h11">
                     <div class="t m6 x14 h12 y1d ff1 fs6 fc0 sc0 ls4c ws4d"><span class="_ _2"></span> ${liquidacion?.data.titular}
-                    <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span>r <span
+                    <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span
                             class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x1b h12 y1d ff1 fs6 fc0 sc0 ls2e ws4d"></div>
                 </div>
@@ -5108,8 +5240,9 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                             class="ls11 ws4d"> <span class="ls39 wsd">LE<span class="_ _3"></span>GAL</span></span></div>
                     <div class="t m0 x23 h8 y1f ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
+                
                 <div class="c x18 y1e wc h13">
-                    <div class="t m3 x14 h10 y1f ff4 fs3 fc0 sc0 ls49 ws4d">
+                    <div class="t m3 x14 h10 y1f ff4 fs3 fc0 sc0 ls49 ws4d"style="position: relative; top: -20px; ">
                          <span class="ls3e ws12">${liquidacion?.data.representante_legal}
                          <span class="_ _3"></span><span class="_ _3"></span><span class="_ _0"></span><span class="_ _3"></span><span class="ls2e ws4d"> <span class="ls49"></span></span></span></div>
                     <div class="t m0 xf h10 y1f ff4 fs3 fc0 sc0 ls2e ws4d"></div>
@@ -5146,7 +5279,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                 <div class="c x29 y25 w12 ha">
                     <div class="t m3 x24 h10 y26 ff4 fs3 fc0 sc0 ls49 ws4d">
                         <span class="_ _4"></span>p<span class="_ _2"></span><span class="_ _4"></span>${liquidacion?.data.exp_resolucion}
-                        <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div><div class="t m0 x2a h10 y26 ff4 fs3 fc0 sc0 ls2e ws4d"> </div></div><div class="c x1 y27 w5 ha"><div class="t m1 x14 h8 y28 ff1 fs3 fc0 sc0 ls21 ws8">NOM<span class="_ _2"></span>BR<span class="_ _2"></span>E<span class="ls11 ws4d"> <span class="ls16 wsb">DE<span class="_ _1"></span><span class="ls5 ws4d"> <span class="ls34">LA F<span class="_ _2"></span>U<span class="_ _2"></span>ENTE</span></span></span></span></div><div class="t m0 x2b h8 y28 ff1 fs3 fc0 sc0 ls2e ws4d"> </div></div><div class="c x19 y27 w13 ha"><div class="t m3 x14 h10 y28 ff4 fs3 fc0 sc0 ls49 ws4d"><span class="_ _2"></span>o<span class="_ _2"></span>${liquidacion?.data.nombre_fuente}
+                        <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div><div class="t m0 x2a h10 y26 ff4 fs3 fc0 sc0 ls2e ws4d"> </div></div><div class="c x1 y27 w5 ha"><div class="t m1 x14 h8 y28 ff1 fs3 fc0 sc0 ls21 ws8">NOM<span class="_ _2"></span>BR<span class="_ _2"></span>E<span class="ls11 ws4d"> <span class="ls16 wsb">DE<span class="_ _1"></span><span class="ls5 ws4d"> <span class="ls34">LA F<span class="_ _2"></span>U<span class="_ _2"></span>ENTE</span></span></span></span></div><div class="t m0 x2b h8 y28 ff1 fs3 fc0 sc0 ls2e ws4d"> </div></div><div class="c x19 y27 w13 ha"><div class="t m3 x14 h10 y28 ff4 fs3 fc0 sc0 ls49 ws4d"><span class="_ _2"></span><span class="_ _2"></span>${liquidacion?.data.nombre_fuente}
                         <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 xc h10 y28 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
@@ -5163,8 +5296,9 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m4 x14 h8 y2c ff1 fs3 fc0 sc0 ls4d ws25">MUNI<span class="_ _2"></span>CIPIO</div>
                     <div class="t m0 x2e h8 y2c ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
+
                 <div class="c x2d y2b w16 h13">
-                    <div class="t m3 x14 h10 y2d ff4 fs3 fc0 sc0 ls49 ws24">
+                    <div class="t m3 x14 h10 y2d ff4 fs3 fc0 sc0 ls49 ws24" style="position: relative; top: -20px;  ">
                         <span class="_ _2"></span>${liquidacion?.data.municipio}
                         <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="ls2e ws4d"> </span></div><div class="t m0 x2f h10 y2d ff4 fs3 fc0 sc0 ls2e ws4d"> </div></div><div class="c x30 y2e w4 h17"><div class="t m1 x31 h8 y2f ff1 fs3 fc0 sc0 ls34 ws22">FACTOR<span class="ls6 ws4d"> <span class="ls16 wsb">RE<span class="_ _3"></span>GIO<span class="_ _0"></span>N<span class="_ _0"></span>A<span class="_ _0"></span>L<span class="_ _0"></span><span class="ls2e ws4d"> </span></span></span></div><div class="t m4 x1b h8 y30 ff1 fs3 fc0 sc0 ls4e ws26">(Fr<span class="_ _2"></span>)</div><div class="t m0 x1d h8 y30 ff1 fs3 fc0 sc0 ls2e ws4d"> </div></div><div class="c x32 y2e w4 h17"><div class="t m1 x31 h8 y2f ff1 fs3 fc0 sc0 ls34 ws22">TARIF<span class="_ _2"></span>A<span class="ls11 ws4d"> <span class="ls16">DE<span class="_ _3"></span> LA<span class="_ _3"></span><span class="ls11"> <span class="ls39 wsd">TAS<span class="_ _0"></span>A</span></span></span></span></div><div class="t m0 x2d h8 y2f ff1 fs3 fc0 sc0 ls2e ws4d"> </div><div class="t m1 x33 h8 y30 ff1 fs3 fc0 sc0 ls4f ws27">$/<span class="_ _2"></span>m<span class="_ _2"></span>3<span class="ls2e ws4d"> <span class="_ _0"></span><span class="ls50 ws28">:T<span class="_ _2"></span>UA<span class="_ _2"></span>2<span class="_ _2"></span>022</span></span></div><div class="t m0 x34 h8 y30 ff1 fs3 fc0 sc0 ls2e ws4d"> </div></div><div class="c x1 y2e w17 h18"><div class="t m1 x14 h8 y31 ff1 fs3 fc0 sc0 ls21 ws4d">CAU<span class="_ _2"></span>DAL <span class="_ _2"></span>CON<span class="_ _2"></span>CE<span class="_ _2"></span>SIONA<span class="_ _2"></span>DO<span class="ls11"> <span class="ls50">(Q<span class="_ _2"></span>) <span class="_ _2"></span>L/s<span class="_ _2"></span>g</span></span></div><div class="t m0 x35 h8 y31 ff1 fs3 fc0 sc0 ls2e ws4d"> </div></div><div class="c x3 y2e w18 h18"><div class="t m5 x14 h10 y32 ff4 fs3 fc0 sc0 ls4b ws23"><span class="_ _2"></span><span class="_ _2"></span>${liquidacion?.data.caudal_consecionado}
 <span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div>
@@ -5226,27 +5360,27 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 xc h8 y3d ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x18 y3b w19 h19">
-                    <div class="t m5 x3f h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">81,22<span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x3f h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">${liquidacion?.data.volumenMeses[0]}<span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x38 h10 y3e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3a y3b wb h19">
-                    <div class="t m5 x3f h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">73,36<span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x3f h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">${liquidacion?.data.volumenMeses[1]}<span class="_ _2"></span><span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x38 h10 y3e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1a y3b w1a h19">
-                    <div class="t m5 x3d h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">81,22<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x3d h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">${liquidacion?.data.volumenMeses[2]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x38 h10 y3e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3c y3b w1b h19">
-                    <div class="t m5 x40 h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">78,6<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x40 h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">${liquidacion?.data.volumenMeses[3]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x41 h10 y3e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1e y3b w19 h19">
-                    <div class="t m5 x40 h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">81,22<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x40 h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">${liquidacion?.data.volumenMeses[4]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x41 h10 y3e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3e y3b w1c h19">
-                    <div class="t m5 x40 h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">78,6<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x40 h10 y3e ff4 fs3 fc0 sc0 ls55 ws2d">${liquidacion?.data.volumenMeses[5]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x41 h10 y3e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1 y3f w5 h19">
@@ -5256,27 +5390,27 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 x42 h8 y41 ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x18 y3f w19 h19">
-                    <div class="t m5 x1 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x1 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x25 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3a y3f wb h19">
-                    <div class="t m5 x2c h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x2c h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x24 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1a y3f w1a h19">
-                    <div class="t m5 x2c h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x2c h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x43 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3c y3f w1b h19">
-                    <div class="t m5 x44 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x44 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x24 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1e y3f w19 h19">
-                    <div class="t m5 x44 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x44 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x24 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3e y3f w1c h19">
-                    <div class="t m5 x44 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x44 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x24 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1 y42 w5 hb">
@@ -5286,40 +5420,34 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 xc h8 y44 ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x18 y42 w19 hb">
-                    <div class="t m8 x43 h10 y45 ff4 fs3 fc0 sc0 ls57 ws30">$.89,34<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m8 x43 h10 y45 ff4 fs3 fc0 sc0 ls57 ws30">$${liquidacion?.data.montopagarMeses[0]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x46 h10 y45 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3a y42 wb hb">
-                    <div class="t m3 x43 h10 y45 ff4 fs3 fc0 sc0 lsf ws13">$.80,7<span class="_ _0"></span><span class="_ _3"></span></div>
+                    <div class="t m3 x43 h10 y45 ff4 fs3 fc0 sc0 lsf ws13">$${liquidacion?.data.montopagarMeses[1]}<span class="_ _0"></span><span class="_ _3"></span></div>
                     <div class="t m0 x12 h10 y45 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1a y42 w1a hb">
-                    <div class="t m5 x1d h10 y45 ff4 fs3 fc0 sc0 ls55 ws2d">$.89,34<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x1d h10 y45 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[2]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 xf h10 y45 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3c y42 w1b hb">
-                    <div class="t m5 x37 h10 y45 ff4 fs3 fc0 sc0 ls55 ws2d">$.86,46<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x37 h10 y45 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[3]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x12 h10 y45 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1e y42 w19 hb">
-                    <div class="t m5 x37 h10 y45 ff4 fs3 fc0 sc0 ls55 ws2d">$.89,34<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x37 h10 y45 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[4]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x12 h10 y45 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3e y42 w1c hb">
-                    <div class="t m5 x47 h10 y45 ff4 fs3 fc0 sc0 ls55 ws2d">$.86,46<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x47 h10 y45 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[5]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 xf h10 y45 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1 y46 w1d ha">
                     <div class="t m0 x0 h1a y47 ff2 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
-                <div class="c x1e y46 w19 ha">
-                    <div class="t m9 x48 h1b y48 ff1 fs5 fc3 sc0 ls58 ws31">SUBT<span class="_ _2"></span>OTAL<span class="ls17 ws4d"> <span class="ls59 ws32">1er<span class="_ _0"></span><span
-                            class="ls17 ws4d"> <span class="ls58 ws31">Seme<span class="_ _2"></span>stre</span></span></span></span></div>
-                    <div class="t m0 x46 h1b y48 ff1 fs5 fc0 sc0 ls2e ws4d"></div>
-                </div>
-                <div class="c x3e y46 w1c ha">
-                    <div class="t m0 x2e h8 y49 ff1 fs3 fc1 sc0 ls19 ws33">UUUUUU<span class="_ _2"></span><span class="_ _2"></span><span class="fc0 ls2e ws4d"> </span></div>
-                </div>
+                 
+              
                 <div class="c x1 y4a w5 ha">
                     <div class="t m1 x3f h8 y3d ff1 fs3 fc0 sc0 ls53 ws4d">MES<span class="_ _2"></span>ES <span class="_ _2"></span>DEL<span class="ls11"> <span class="ls16 wsb">AÑO</span></span></div>
                     <div class="t m0 x22 h8 y3d ff1 fs3 fc0 sc0 ls2e ws4d"></div>
@@ -5355,27 +5483,27 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 xc h8 y41 ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x18 y4b w19 h19">
-                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{volumenMeses.6}}<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">  ${liquidacion?.data.volumenMeses[6]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x41 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3a y4b wb h19">
-                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{volumenMeses.7}}<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">  ${liquidacion?.data.volumenMeses[7]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x41 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1a y4b w1a h19">
-                    <div class="t m5 x3d h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{volumenMeses.8}}<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x3d h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">  ${liquidacion?.data.volumenMeses[8]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x38 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3c y4b w1b h19">
-                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{volumenMeses.9}}<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">  ${liquidacion?.data.volumenMeses[9]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x41 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1e y4b w19 h19">
-                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{volumenMeses.10}}<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">  ${liquidacion?.data.volumenMeses[10]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x41 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3e y4b w1c h19">
-                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">{{volumenMeses.11}}<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x40 h10 yf ff4 fs3 fc0 sc0 ls55 ws2d">  ${liquidacion?.data.volumenMeses[11]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x41 h10 yf ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1 y4c w5 h19">
@@ -5385,27 +5513,27 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 x42 h8 y2c ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x18 y4c w19 h19">
-                    <div class="t m5 x1 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x1 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x25 h10 y4e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3a y4c wb h19">
-                    <div class="t m5 x44 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x44 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x24 h10 y4e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1a y4c w1a h19">
-                    <div class="t m5 x2c h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x2c h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x43 h10 y4e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3c y4c w1b h19">
-                    <div class="t m5 x44 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x44 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x24 h10 y4e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1e y4c w19 h19">
-                    <div class="t m5 x44 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x44 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x24 h10 y4e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3e y4c w1c h19">
-                    <div class="t m5 x44 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">{{fco}}<span class="_ _2"></span>0</div>
+                    <div class="t m5 x44 h10 y4e ff4 fs3 fc0 sc0 ls55 ws2d">1,00<span class="_ _2"></span></div>
                     <div class="t m0 x24 h10 y4e ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1 y4f w5 h19">
@@ -5416,41 +5544,32 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 xc h8 y51 ff1 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x18 y4f w19 h19">
-                    <div class="t m5 x43 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$.89,34<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x43 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[6]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x12 h10 y52 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3a y4f wb h19">
-                    <div class="t m5 x37 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$.89,34<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x37 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[7]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x12 h10 y52 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1a y4f w1a h19">
-                    <div class="t m5 x1d h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$.86,46<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x1d h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[8]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 xf h10 y52 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3c y4f w1b h19">
-                    <div class="t m5 x37 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$.89,34<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x37 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[9]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x12 h10 y52 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1e y4f w19 h19">
-                    <div class="t m5 x37 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$.86,46<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x37 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[10]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 x12 h10 y52 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x3e y4f w1c h19">
-                    <div class="t m5 x47 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$.89,34<span class="_ _2"></span><span class="_ _2"></span></div>
+                    <div class="t m5 x47 h10 y52 ff4 fs3 fc0 sc0 ls55 ws2d">$${liquidacion?.data.montopagarMeses[11]}<span class="_ _2"></span><span class="_ _2"></span></div>
                     <div class="t m0 xf h10 y52 ff4 fs3 fc0 sc0 ls2e ws4d"></div>
                 </div>
                 <div class="c x1 y53 w1d h7">
                     <div class="t m0 x0 h1a y54 ff2 fs3 fc0 sc0 ls2e ws4d"></div>
-                </div>
-                <div class="c x1e y53 w19 h7">
-                    <div class="t m9 x13 h1b y55 ff1 fs5 fc3 sc0 ls58 ws31">SUBT<span class="_ _2"></span>OTAL<span class="ls17 ws4d"> <span class="ls5b ws36">2d<span class="_ _2"></span>o<span
-                            class="_ _2"></span></span> </span>Sem<span class="_ _2"></span>est<span class="_ _3"></span>r<span class="_ _2"></span>e
-                    </div>
-                    <div class="t m0 x46 h1b y55 ff1 fs5 fc0 sc0 ls2e ws4d"></div>
-                </div>
-                <div class="c x3e y53 w1c h7">
-                    <div class="t m0 x43 h8 yd ff1 fs3 fc1 sc0 ls19 ws33">$.530,28<span class="_ _2"></span><span class="fc0 ls2e ws4d"> </span></div>
-                </div>
+                </div> 
                 <div class="c x1 y56 w1e ha">
                     <div class="t m4 x4b h8 y57 ff1 fs3 fc0 sc0 ls10 ws21">DESCRIP<span class="_ _0"></span>CION</div>
                     <div class="t m0 x4c h8 y57 ff1 fs3 fc0 sc0 ls2e ws4d"></div>
@@ -5484,7 +5603,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 x51 h8 y49 ff1 fs3 fc0 sc0 ls2e ws4d"><span class="fc4 sc0"> </span></div>
                 </div>
                 <div class="c x1a y60 w1f ha">
-                    <div class="t m0 x35 h8 y61 ff1 fs3 fc0 sc0 ls19 ws33">$.1051,92<span class="_ _2"></span><span class="_ _2"></span><span class="ls2e ws4d"> </span></div>
+                    <div class="t m0 x35 h8 y61 ff1 fs3 fc0 sc0 ls19 ws33">$${liquidacion?.data?.valor_cuota}<span class="_ _2"></span><span class="_ _2"></span><span class="ls2e ws4d"> </span></div>
                 </div>
                 <div class="c x1 y62 w1e h2">
                     <div class="t m4 x4 h8 y63 ff1 fs3 fc0 sc0 ls10 ws21">DESCUENT<span class="_ _3"></span>O</div>
@@ -5499,7 +5618,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 x51 h8 y66 ff1 fs3 fc0 sc0 ls2e ws4d"><span class="fc4 sc0"> </span></div>
                 </div>
                 <div class="c x1a y65 w1f h13">
-                    <div class="t m0 x35 h8 y67 ff1 fs3 fc0 sc0 ls19 ws33">$.1051,92<span class="_ _2"></span><span class="_ _2"></span><span class="ls2e ws4d"> </span></div>
+                    <div class="t m0 x35 h8 y67 ff1 fs3 fc0 sc0 ls19 ws33">$${liquidacion?.data?.valor_cuota}<span class="_ _2"></span><span class="_ _2"></span><span class="ls2e ws4d"> </span></div>
                 </div>
                 <div class="c x1 y58 w1e h1e">
                     <div class="t m2 x2f h9 y68 ff1 fs4 fc0 sc0 ls35 ws9">TOT<span class="_ _2"></span>AL<span class="ls1f ws4d"> A<span class="_ _5"></span> <span class="ls5d ws3b">PA<span
@@ -5507,7 +5626,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                     <div class="t m0 x51 h9 y68 ff1 fs4 fc0 sc0 ls2e ws4d"><span class="fc4 sc0"> </span></div>
                 </div>
                 <div class="c x1a y58 w1f h1e">
-                    <div class="t m0 x53 h9 y68 ff1 fs4 fc1 sc0 ls20 ws3c">$.1051,92 TOT<span class="_ _0"></span><span class="fc0 ls2e ws4d"> </span></div>
+                    <div class="t m0 x53 h9 y68 ff1 fs4 fc1 sc0 ls20 ws3c">$${liquidacion?.data?.valor_cuota}<span class="_ _0"></span><span class="fc0 ls2e ws4d"> </span></div>
                 </div>
                 <div class="c x1 y69 w5 hd">
                     <div class="t m1 x21 h8 y6a ff1 fs3 fc0 sc0 ls34 ws4d">TOTAL <span class="_ _2"></span>A PAG<span class="_ _2"></span>AR</div>
@@ -5657,22 +5776,42 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
     }, [id_liquidacion_pdf]);
 
 
+   
+        const handleClick = () => {
+            console.log("1111111111111111111");
+
+            console.log(rows_detalles);
+        };
+
 
 
     return (
         <>
-            <Dialog open={is_modal_active} onClose={handle_close}
-            //  maxWidth="xl"  
-            sx={{
-                '& .MuiDialog-paper': { // Esta clase se aplica al papel de diálogo
-                    width: '100%', // Ancho del diálogo
-                    maxWidth: 'xl', // Máximo ancho
-                    height: '100%', // Altura del diálogo
 
-                    maxHeight:'xl',
-                },
-            }}
+            <Dialog open={is_modal_active} onClose={handle_close}
+                //  maxWidth="xl"  
+                sx={{
+                    '& .MuiDialog-paper': { // Esta clase se aplica al papel de diálogo
+                        width: '100%', // Ancho del diálogo
+                        maxWidth: 'xl', // Máximo ancho
+                        height: '100%', // Altura del diálogo
+
+                        maxHeight: 'xl',
+                    },
+                }}
             >
+
+                {/* {liquidacion?.data.anio} */}
+
+                {/* <h1>{liquidacion?.data.montopagarMeses[0]}</h1> */}
+                  {/* <h1>{rows_detalles[0]?.valor_liquidado}</h1>
+
+                 <button onClick={handleClick}>Click me</button>
+                 {rows_detalles.map((detalle:any, index:any) => (
+        <Grid item xs={12} key={index}>
+          <h1>{detalle.valor_liquidado}</h1>
+        </Grid>
+      ))} */}
                 <Grid container
                     item xs={12} marginLeft={2} marginRight={2} marginTop={3}
                     sx={{
@@ -5686,10 +5825,10 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
                         boxShadow: '0px 3px 6px #042F4A26',
                     }}
                 >
-
                     <Grid container item xs={12} spacing={2} marginTop={2}>
 
-
+               
+{/* {sumaResultados} */}
 
                         {/* {id_liquidacion_pdf}
                         {liquidacion?.data.cedula} */}
@@ -5762,11 +5901,11 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
 
 
                         {/* {form_liquidacion.id_expediente && ( */}
-                            <Grid item xs={12} sm={12} marginTop={-33}>
-                                <embed src={dataUri} type="text/html"
-                                    width="100%" height="100%"
-                                />
-                            </Grid>
+                        <Grid item xs={12} sm={12} marginTop={-33}>
+                            <embed src={dataUri} type="text/html"
+                                width="100%" height="100%"
+                            />
+                        </Grid>
                         {/* )} */}
 
                     </Grid>
@@ -5776,7 +5915,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ id_liquidacion_pdf, ha
 
             </Dialog>
 
-
+           
 
 
         </>

@@ -248,12 +248,11 @@ export const AgregarEditarOpciones = ({
         nombre: form_data.nombre_opcion_liquidacion,
         funcion: generateCode(),
         estado: form_data.estado,
-        variables: variables.reduce((acumulador, valor) => {
-          if (selectedVariableNames.includes(valor)) {
-            return { ...acumulador, [valor]: selectedVariable };
-          }
-          return { ...acumulador, [valor]: '' };
-        }, {}),
+        variables: Object.keys(selectedVariables).reduce((acumulador, nombreVariable) => ({
+          ...acumulador,
+          [nombreVariable]: selectedVariables[nombreVariable],
+        }), {}),
+        
 
         bloques: JSON.stringify(json),
       })
@@ -272,12 +271,11 @@ export const AgregarEditarOpciones = ({
         nombre: form_data.nombre_opcion_liquidacion,
         funcion: generateCode(),
         estado: form_data.estado,
-        variables: variables.reduce((acumulador, valor) => {
-          if (selectedVariableNames.includes(valor)) {
-            return { ...acumulador, [valor]: selectedVariable };
-          }
-          return { ...acumulador, [valor]: '' };
-        }, {}),
+        variables: Object.keys(selectedVariables).reduce((acumulador, nombreVariable) => ({
+          ...acumulador,
+          [nombreVariable]: selectedVariables[nombreVariable],
+        }), {}),
+        
         bloques: JSON.stringify(json),
       })
         .then((response) => {
@@ -370,14 +368,45 @@ export const AgregarEditarOpciones = ({
     setIsModalOpen(true);
   };
 
+// Estado para almacenar las variables seleccionadas y sus valores
+// const [selectedVariables, setSelectedVariables] = useState<{[key: string]: string}>({});
 
 
   const [valores, setvalores] = useState<Variable[]>([]);
   const [selectedVariable, setSelectedVariable] = useState<any>(null);
 
-  const handleSelectChange = (event: SelectChangeEvent<number>) => {
-    setSelectedVariable(event.target.value as number);
-  };
+  // const handleSelectChange = (event: SelectChangeEvent<number>) => {
+  //   setSelectedVariable(event.target.value as number);
+  // };
+
+  // const handleSelectChange = (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>, variableName: string) => {
+  //   const value = event.target.value as string; // Asegúrate de manejar correctamente el tipo
+  
+  //   setSelectedVariables(prev => ({
+  //     ...prev,
+  //     [variableName]: value, // Actualiza el valor de la variable seleccionada
+  //   }));
+  // };
+  // Ajusta el tipo de evento a SelectChangeEvent de Material-UI
+  const [selectedVariables, setSelectedVariables] = useState<{ [key: string]: string | null }>(
+    variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {})
+  );
+
+  useEffect(() => {
+    setSelectedVariables(variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {}));
+  }, [variables]); 
+
+  
+const handleSelectChange = (event: SelectChangeEvent) => {
+  const value = event.target.value; // El valor que el usuario asigna a la variable seleccionada
+  setSelectedVariables(prev => ({
+    ...prev,
+    [selectedVariableName]: value,
+  }));
+};
+
+  
+
 
   const fetchVariables = async () => {
     try {
@@ -409,10 +438,15 @@ export const AgregarEditarOpciones = ({
     // control_success("Variable asignada ");
 
   };
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   return (
     <>
       <>
+
+       {/* <Button color='success'
+                  variant='contained'
+                  onClick={handleClick}>CONSOLE </Button> */}
         {/* INICIO TEST */}
         <Grid container spacing={2} sx={{ my: '10px' }}>
 
@@ -450,8 +484,14 @@ export const AgregarEditarOpciones = ({
                 <FormControl size="small" fullWidth>
                   <InputLabel>Selecciona opción variable</InputLabel>
                   <Select
-                    value={selectedVariable}
-                    onChange={handleSelectChange}
+                    // value={selectedVariable}
+                    value={searchTerm}
+
+                    // onChange={handleSelectChange}
+                    onChange={(event) => {
+                      handleSelectChange(event);
+                      setSearchTerm(event.target.value as string);
+                    }}
                     label="Selecciona opción variable"
                   >
                     {valores.map((variable) => (

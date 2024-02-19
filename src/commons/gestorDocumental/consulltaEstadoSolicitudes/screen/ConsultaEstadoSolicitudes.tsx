@@ -43,7 +43,8 @@ import { BuscadorTramites } from '../components/buscadoresSolicitudes/BuscadorTr
 import { getTramitesConsulta } from '../services/consultaTramites/getConsultaTramites.service';
 import { columnsTramites } from '../utils/columnsTramites';
 import { BuscadorOpas } from '../components/buscadoresSolicitudes/BuscadorOpas';
-import { getOpasConsulta } from '../services/opas/getOpas.service';
+import { getOpasConsulta } from '../services/opas/getRequestElementsOpas.service';
+import { columnsConsultaOpas } from '../utils/columnsOpas';
 
 export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
   //* hook importations
@@ -137,13 +138,13 @@ export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
       case 'PQRSDF':
         await cargarAsignaciones(setAsignaciones, setLoading, {
           pqrs:
-            control_consulta_estado_sol?._formValues?.tipo_pqrsdf?.label[0].toUpperCase() ??
+            control_consulta_estado_sol?._formValues?.tipo_pqrsdf?.label?.[0]?.toUpperCase() ??
             '',
           radicado: control_consulta_estado_sol?._formValues?.radicado ?? '',
           fecha_inicio:
             control_consulta_estado_sol?._formValues?.fecha_inicio ?? '',
           fecha_fin: control_consulta_estado_sol?._formValues?.fecha_fin ?? '',
-          estado: control_consulta_estado_sol?._formValues?.estado ?? '',
+          estado: control_consulta_estado_sol?._formValues?.estado?.label ?? '',
         });
         break;
       case 'Tramites y servicios':
@@ -240,7 +241,6 @@ export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
                         required
                         value={value}
                         onChange={(selectedOption) => {
-                          //  console.log('')(selectedOption);
                           onChange(selectedOption);
                           setAsignaciones([]);
                         }}
@@ -368,6 +368,9 @@ export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
                         fecha_inicio: '',
                         fecha_fin: '',
                         estado_pqrsdf: '',
+                        estado: '',
+                        estado_solicitud: '',
+                        estado_actual_solicitud: '',
                       },
                       {
                         keepValues: false,
@@ -413,7 +416,7 @@ export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
               ? columnsOtros
               : control_consulta_estado_sol?._formValues?.tipo_de_solicitud
                   ?.label === 'OPAS'
-              ? []
+              ? columnsConsultaOpas
               : []
           } // se debe realizar condicionales para las columnas, ya que por cada busqueda se llaman servicios diferentes
           rows={asignaciones ?? []}
@@ -422,3 +425,6 @@ export const ConsultaEstadoSolicitudesScreen: React.FC = () => {
     </>
   );
 };
+
+
+

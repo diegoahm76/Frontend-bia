@@ -17,10 +17,12 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
 import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
 import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
+import { DownloadButton } from "../../../../utils/DownloadButton/DownLoadButton";
 
 
 interface ConsecutivoData {
     id_unidad: number;
+    ruta_archivo:any;
     id_catalogo: number;
     consecutivo: string;
     id_serie_doc: number;
@@ -95,6 +97,22 @@ export const HistoricoConsecutivo: React.FC = () => {
         { field: 'nombre_serie_doc', headerName: 'Nombre serie', width: 200, flex: 1 },
         { field: 'nombre_subserie_doc', headerName: 'Nombre subserie', width: 200, flex: 1 },
         { field: 'fecha_consecutivo', headerName: 'Fecha consecutivo  ', width: 200, flex: 1 },
+        // { field: 'ruta_archivo', headerName: '  ruta_archivo  ', width: 200, flex: 1 },
+
+        {
+            field: 'ruta_archivo',
+            headerName: 'ruta_archivo',
+            width: 200,
+            flex: 1,
+            renderCell: (params: any) => (
+                <DownloadButton
+                    condition={false}
+                    fileUrl={params.row.ruta_archivo}
+                    fileName={params.row.id_consecutivo}
+                />
+            )
+        }, 
+
     ];
 
 
@@ -141,29 +159,7 @@ export const HistoricoConsecutivo: React.FC = () => {
             >
 
                 <Title title="Historial   de consecutivos " />
-
-
-                {/* <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small">
-                        <InputLabel id="unidad-organizacional-select-label">Unidad Organizacional</InputLabel>
-                        <Select
-                            labelId="unidad-organizacional-select-label"
-                            id="unidad-organizacional-select"
-                            value={formData.unidad}
-                            name="unidad"
-
-                            label="Unidad Organizacional"
-                            onChange={handleInputChange}
-                        >
-                            {unidades.map((unidad) => (
-                                <MenuItem key={unidad.id_unidad_organizacional} value={unidad.id_unidad_organizacional}>
-                                    {unidad.nombre}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid> */}
-
+ 
 
                 <Grid item xs={12} sm={4}>
                     <TextField
