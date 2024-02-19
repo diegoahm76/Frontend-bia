@@ -15,7 +15,7 @@ export const postDigitalizacionOpas = async (idOpa: any
       id_solicitud_tramite: idOpa,
     })
 
-    if (response.data.success) {
+    if (response?.data.success) {
       showAlert(
         'Solicitud de digitalización de OPA exitosa',
         'Se ha enviado correctamente la solicitud de digitalización de otros',

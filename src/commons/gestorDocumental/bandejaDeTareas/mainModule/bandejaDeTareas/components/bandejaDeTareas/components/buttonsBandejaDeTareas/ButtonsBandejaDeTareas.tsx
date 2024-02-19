@@ -45,7 +45,7 @@ export const ButtonsBandejaDeTareas = (): JSX.Element => {
           case 'RESPONDER TRÁMITE':
             return renderTramitesYServicios();
           case 'Responder Otro':
-          case 'RESPODER OTRO':
+          case 'RESPONDER OTRO':
             return renderOtros();
           case 'Responder OPA':
           case 'RESPONDER OPA':

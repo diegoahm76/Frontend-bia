@@ -31,6 +31,7 @@ import { putAceptarTarea } from '../../../../../../../toolkit/thunks/Pqrsdf/putA
 import { getListadoTareaasOtrosByPerson } from '../../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { putAceptarTareaOtros } from '../../../../../../../toolkit/thunks/otros/putAceptarTareaOtros.service';
+import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
 
 export const ElementosOtros = (): JSX.Element => {
   //* dispatch declaration
@@ -440,7 +441,7 @@ export const ElementosOtros = (): JSX.Element => {
       {/*se genera un espacio para el modal que rechaza la tarea*/}
       <ModalRejectTask />
       {/*se genera un espacio para el modal que muestra el comentario de rechazo de la tarea*/}
-      {/*<ModalSeeRejectedTask />*/}
+      <ModalSeeRejectedTask />
       <RenderDataGrid
         rows={
           listaTareasPqrsdfTramitesUotrosUopas/*.filter(

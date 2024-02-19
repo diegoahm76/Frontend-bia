@@ -200,7 +200,7 @@ export const ModalRejectTask: FC = (): JSX.Element => {
           <DialogTitle>
             <Title
               title={`Rechazar tarea con radicado: ${
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.radicado ??
+                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.radicado ||
                 'N/A'
               }`}
             />
