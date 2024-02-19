@@ -392,33 +392,33 @@ const MetadataFormDialog = ({
 
 
 
-        {
-          exhibit.ya_digitalizado === true && (
+        // {
+        //   exhibit.ya_digitalizado === true && (
 
-            void dispatch(
-              edit_metadata_service(
-                digitization_request.id_solicitud_de_digitalizacion ?? 0,
-                pdfFile === null ? exhibit.exhibit_link : pdfFile,
-                datos_totales_actualizar
-              )
-            )
-          )
-        }
+        //     void dispatch(
+        //       edit_metadata_service(
+        //         digitization_request.id_solicitud_de_digitalizacion ?? 0,
+        //         pdfFile === null ? exhibit.exhibit_link : pdfFile,
+        //         datos_totales_actualizar
+        //       )
+        //     )
+        //   )
+        // }
 
 
 
-        {
-          exhibit.ya_digitalizado === false && (
+        // {
+        //   exhibit.ya_digitalizado === false && (
 
-            void dispatch(
-              add_metadata_service(
-                digitization_request.id_solicitud_de_digitalizacion ?? 0,
-                pdfFile === null ? exhibit.exhibit_link : pdfFile,
-                datos_totales_creacion
-              )
-            )
-          )
-        }
+        //     void dispatch(
+        //       add_metadata_service(
+        //         digitization_request.id_solicitud_de_digitalizacion ?? 0,
+        //         pdfFile === null ? exhibit.exhibit_link : pdfFile,
+        //         // datos_totales_creacion
+        //       )
+        //     )
+        //   )
+        // }
 
 
 
