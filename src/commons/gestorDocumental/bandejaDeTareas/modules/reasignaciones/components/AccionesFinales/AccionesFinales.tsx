@@ -172,14 +172,14 @@ export const AccionesFinales = (): JSX.Element => {
           break;
         case 'Otros':
         // Fetch the assignments for Otros
-        /* asignaciones = await getAsignacionesOtros(
+       /* asignaciones = await getReasignacionesTareasOtros(
             currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
             handleGeneralLoading
           );*/
         case 'OPA':
           showAlert(
             'Atención',
-            'No hay servicio aún para ver las asignaciones de las OPA, así que no hay asignaciones de opa por el momento',
+            'No hay servicio aún para ver las re-asignaciones de las OPA, así que no hay asignaciones de opa por el momento',
             'warning'
           );
           // Fetch the assignments for OOpas
