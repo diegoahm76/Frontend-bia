@@ -9,14 +9,23 @@ import dayjs, { Dayjs } from 'dayjs';
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
-import { interface_solicitar_viaje, props_solicitar_viaje } from '../interfaces/types';
+import { interface_solicitar_viaje } from '../interfaces/types';
 import ViajeAgendado from './ViajeAgendado';
-import { control_error } from '../../../../helpers';
+import { control_error, control_success } from '../../../../helpers';
 import Swal from 'sweetalert2';
+import { useAppDispatch } from '../../../../hooks';
+import { enviar_solicitud_viaje } from '../thunks/viajes';
+import BusquedaExpediente from './BusquedaExpediente';
 
+interface props {
+  set_mostrar_solicitud_viaje: React.Dispatch<React.SetStateAction<boolean>>;
+  set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
+  refrescar_tabla: boolean;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_viaje}) => {
+const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refrescar_tabla,refrescar_tabla}) => {
+  const dispatch = useAppDispatch();
   const [motivo_viaje, set_motivo_viaje] = useState<string>('');
   const [switch_expediente_asociado, set_switch_expediente_asociado] = useState<boolean>(false);
   const [direccion, set_direccion] = useState<string>('');
@@ -31,6 +40,9 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
   const [switch_requiere_carga, set_switch_requiere_carga] = useState<boolean>(false);
   const [switch_requiere_acompanamiento_militar, set_switch_requiere_acompanamiento_militar] = useState<boolean>(false);
   const [consideraciones_adicionales, set_consideraciones_adicionales] = useState<string>('');
+  const [id_expediente, set_id_expediente] = useState<number>(0);
+  const [mostrar_busqueda_expediente, set_mostrar_busqueda_expediente] = useState<boolean>(false)
+
 
   const [msj_error_expediente_asociado, set_msj_error_expediente_asociado] = useState<string>("");
   const [msj_error_departamento, set_msj_error_departamento] = useState<string>("");
@@ -46,6 +58,8 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
   const [msj_error_indicadores_destino, set_msj_error_indicadores_destino] = useState<string>("");
   const [msj_error_consideraciones_adicionales, set_msj_error_consideraciones_adicionales] = useState<string>("");
   const [msj_error_motivo_viaje, set_msj_error_motivo_viaje] = useState<string>("");
+  const [msj_error_id_expediente, set_msj_error_id_expediente] = useState<string>("");
+  
 
 
   const [datos_solicitar_viaje, set_datos_solicitar_viaje] = useState<interface_solicitar_viaje>();
@@ -55,14 +69,14 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
       motivo_viaje_solicitado: motivo_viaje,  // Motivo del viaje
       cod_municipio: municipio,  // Código del municipio de destino
       cod_departamento: departamento,  // Código del departamento de destino
-      tiene_expediente_asociado: switch_expediente_asociado,  // Indica si tiene un expediente asociado
-      id_expediente_asociado: 0,  // ID del expediente asociado, si corresponde
+      tiene_expediente_asociado: switch_expediente_asociado,
+      ...(switch_expediente_asociado && { id_expediente_asociado: id_expediente }),
       direccion: direccion,  // Dirección del destino
       nro_pasajeros: numero_pasajeros,  // Número de pasajeros
       fecha_partida: fecha_salida.format('YYYY-MM-DD'),  // Fecha de partida
-      hora_partida: dayjs(hora_salida).format('hh:mm A'),  // Hora de partida
+      hora_partida: dayjs(hora_salida).format('HH:mm'),  // Hora de partida
       fecha_retorno: fecha_retorno.format('YYYY-MM-DD'),  // Fecha de retorno
-      hora_retorno: dayjs(hora_retorno).format('hh:mm A'),  // Hora de retorno
+      hora_retorno: dayjs(hora_retorno).format('HH:mm'),  // Hora de retorno
       req_compagnia_militar: switch_requiere_acompanamiento_militar,  // Indica si se requiere compañía militar
       consideraciones_adicionales: consideraciones_adicionales,
       indicaciones_destino: indicadores_destino 
@@ -83,11 +97,17 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
     direccion,
     indicadores_destino,
     consideraciones_adicionales,
-    motivo_viaje
+    motivo_viaje,
+    id_expediente
   ]);
 
     
-
+  /**
+   * Maneja el cambio de la fecha de salida.
+   * 
+   * @param {Dayjs | null} date - Objeto que representa la fecha seleccionada.
+   * @returns {void}
+   */
   const cambio_fecha_salida = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_salida(date);
@@ -97,6 +117,12 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
     }
   };
 
+  /**
+   * Maneja el cambio de la fecha de retorno.
+   * 
+   * @param {Dayjs | null} date - Objeto que representa la fecha seleccionada.
+   * @returns {void}
+   */
   const cambio_fecha_retorno = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_retorno(date);
@@ -106,6 +132,13 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
     }
   };
 
+
+  /**
+   * Maneja el cambio en el número de pasajeros.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Objeto que representa el evento de cambio en el input.
+   * @returns {void}
+   */
   const cambio_numero_pasajeros: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_numero_pasajeros(Number(e.target.value));
     if (e.target.value !== null && e.target.value !== "")
@@ -125,6 +158,7 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
     //Se limpian los datos de envio a la API
     
     //Se limpiam los estados de los inputs
+    set_id_expediente(0);
     set_motivo_viaje('');
     set_switch_expediente_asociado(false);
     set_direccion('');
@@ -154,8 +188,14 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
     set_msj_error_indicadores_destino('');
     set_msj_error_consideraciones_adicionales('');
     set_msj_error_motivo_viaje('');
+    set_msj_error_id_expediente('')
   }
   
+  /**
+   * Valida los datos del formulario antes de enviar la solicitud.
+   * 
+   * @returns {Promise<boolean | undefined>} - Una promesa que resuelve a `true` si la validación es exitosa, de lo contrario, retorna `false`.
+   */
   const validar_datos: ()=>  Promise<boolean | undefined> = async () => {
     let fecha_hoy = dayjs();
 
@@ -163,6 +203,10 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
       control_error('Escriba el motivo del viaje');
       set_msj_error_motivo_viaje('Escriba el motivo del viaje');
       return false;
+    } else if(switch_expediente_asociado && id_expediente === 0){
+      set_msj_error_id_expediente('Selecciona un expediente en el campo de buscar expediente');
+      control_error('Selecciona un expediente en el campo de buscar expediente');
+      return false
     } else if(direccion.trim() === ''){
       set_msj_error_direccion('Escriba una dirección');
       control_error('Escriba una dirección');
@@ -193,8 +237,16 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
       set_msj_error_fecha_retorno('La fecha de salida es invalida');
       control_error('La fecha de salida es invalida');
       return false
-    }
-    Swal.fire({
+    } else if(indicadores_destino.trim() === ''){
+      set_msj_error_fecha_retorno('El campo indicadores de destino no puede estar vacío');
+      control_error('El campo indicadores de destino no puede estar vacío');
+      return false
+    } 
+    /**
+    * Muestra un modal de confirmación para enviar la solicitud.
+    * @returns {Promise<boolean>} - Una promesa que resuelve a `true` si se confirma, de lo contrario, resuelve a `false`.
+    */
+    const modal_confirmar = await Swal.fire({
       title: '¿Está seguro que desea enviar la solicitud?',
       showDenyButton: true,
       confirmButtonText: `Si`,
@@ -210,21 +262,52 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
         return false;
       }
     });
+
+    return modal_confirmar ? true : false;
   }
 
+  /**
+   * Efecto secundario que se ejecuta al cambiar el ID del expediente.
+   * Limpia el mensaje de error relacionado con el ID del expediente si este no es igual a 0.
+   */
+  useEffect(()=>{
+    if(id_expediente !== 0){
+      set_msj_error_id_expediente('');
+    }
+  },[id_expediente])
 
 
-  const btn_enviar_solicitud_viaje = async () => {
+  /**
+   * Maneja la acción de enviar la solicitud de viaje.
+   * Realiza una validación de los datos antes de enviar la solicitud.
+   * @returns {void}
+   */
+  const btn_enviar_solicitud_viaje:()=>void = async () => {
     const validacion = await validar_datos();
     
     if(validacion){
-      //enviar_solicitud_viaje(datos_solicitar_viaje);
-      console.log(datos_solicitar_viaje);
+      dispatch(enviar_solicitud_viaje(datos_solicitar_viaje)).then((response: { success: boolean, detail: string, data: any }) => {
+        if (response.detail) {
+          set_refrescar_tabla(!refrescar_tabla);
+          return;
+        }
+      })
       limpiar_formulario_solicitar_viaje();
-    } else if(validacion === false) {
-      console.log('No se han enviado los datos');
     }
   }
+
+  /**
+   * Maneja la acción de buscar expedientes.
+   * Muestra la búsqueda de expedientes si el interruptor de expediente asociado está activado.
+   * 
+   * @returns {void}
+   */
+  const btn_buscar_expediente = () => {
+    if (switch_expediente_asociado) {
+      set_mostrar_busqueda_expediente(true);
+    }
+  }
+
   return (
     <Grid
       container
@@ -239,6 +322,12 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
         boxShadow: "0px 3px 6px #042F4A26",
       }}
     >
+      <BusquedaExpediente 
+        set_mostrar_busqueda_expediente={set_mostrar_busqueda_expediente} 
+        mostrar_busqueda_expediente={mostrar_busqueda_expediente}
+        set_id_expediente={set_id_expediente}
+        id_expediente={id_expediente}
+      />
       
       <Title title="Solicitar viaje" />
       <Grid
@@ -286,9 +375,10 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
             <Switch
               id="expediente_asociado"
               checked={switch_expediente_asociado}
-              onChange={() =>
+              onChange={() =>{
+                set_msj_error_id_expediente('')
                 set_switch_expediente_asociado(!switch_expediente_asociado)
-              }
+              }}
             />
           </Grid>
 
@@ -302,19 +392,28 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
               gap: 1,
             }}
           >
-            <FormLabel htmlFor="buscar_expediente">
+            <FormLabel error={msj_error_id_expediente !== ''} htmlFor="buscar_expediente">
               Buscar expediente:
             </FormLabel>
             <Grid item xs={4}>
               <TextField
+                disabled
                 fullWidth
                 id="buscar_expediente"
                 required
-                placeholder="Buscar"
                 size="small"
+                error={msj_error_id_expediente !== ''}
+                value={id_expediente === 0 ? '' : id_expediente}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
+                  set_msj_error_id_expediente('');
+                  set_id_expediente(Number(e.target.value))
+                }}
               />
             </Grid>
-            <SearchIcon style={{ width: "40px", cursor: "pointer" }} />
+            <SearchIcon
+              onClick={btn_buscar_expediente}
+              style={{ width: "40px", cursor: switch_expediente_asociado ? 'pointer' : 'default'}} 
+            />
           </Grid>
 
           <Grid
@@ -374,7 +473,7 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
                 error={msj_error_departamento !== ''}
                 onChange={(e: SelectChangeEvent<string>)=>{set_msj_error_departamento(''),set_departamento(e.target.value)}}
               >
-                <MenuItem value={'50'}>Meta</MenuItem>
+                <MenuItem value={'05'}>Meta</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -397,7 +496,7 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
                 onChange={(e: SelectChangeEvent<string>)=>{set_msj_error_municipio(''),set_municipio(e.target.value)}}
                 error={msj_error_municipio !== ""}
               >
-                <MenuItem value={"001"}>Villavicencio</MenuItem>
+                <MenuItem value={"05001"}>Villavicencio</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -413,12 +512,17 @@ const SolicitarViaje: React.FC<props_solicitar_viaje> = ({set_mostrar_solicitud_
             }}
           >
             <FormLabel htmlFor="indicadores_destino">
-              Idicadores de destino:
+              Idicadores de destino*:
             </FormLabel>
             <Grid item xs={6}>
               <TextField
+                required
                 value={indicadores_destino}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_indicadores_destino(e.target.value)}
+                error={msj_error_indicadores_destino !== ''}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
+                  set_msj_error_indicadores_destino('');
+                  set_indicadores_destino(e.target.value);
+                }}
                 fullWidth 
                 id="indicadores_destino" 
                 size="small" />
