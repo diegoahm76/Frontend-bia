@@ -33,7 +33,11 @@ const OrganigramVisual = () => {
                 color: '#fff',
               }}
             >
+<<<<<<< HEAD
                {node.codigo} - {node.title}
+=======
+              {node.codigo} - {node.title}
+>>>>>>> fix/organigrama
             </div>
           }
         >
@@ -64,7 +68,11 @@ const OrganigramVisual = () => {
                 color: '#fff',
               }}
             >
+<<<<<<< HEAD
                {node.codigo} - {node.title}
+=======
+              {node.codigo} - {node.title}
+>>>>>>> fix/organigrama
             </div>
           }
         >
@@ -92,7 +100,11 @@ const OrganigramVisual = () => {
               padding: '.4rem',
             }}
           >
+<<<<<<< HEAD
              {node.codigo} - {node.title}
+=======
+            {node.codigo} - {node.title}{' '}
+>>>>>>> fix/organigrama
           </div>
         }
       >
