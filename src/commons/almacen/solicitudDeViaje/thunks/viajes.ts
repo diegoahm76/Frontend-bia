@@ -3,18 +3,6 @@ import { control_error, control_success } from "../../../../helpers";
 import { interface_solicitar_viaje } from "../interfaces/types";
 import { api } from "../../../../api/axios";
 
-export const enviar_solicitud_viaje: any = (form_data: interface_solicitar_viaje) => {
-  return async () => {
-    try {
-      const { data } = await api.post('/almacen/vehiculos/registrar/vehiculo/arrendado/create/', form_data);
-      control_success('El arriendo de vehículo se creo correctamente');
-      return data;
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
 
 export const obtener_solicitudes: any = () => {
   return async () => {
@@ -56,3 +44,28 @@ export const elimiar_solicitud_viaje: any = (id_solicitud: number) => {
     }
   }
 }
+
+export const enviar_solicitud_viaje: any = (form_data: interface_solicitar_viaje) => {
+  return async () => {
+    try {
+      const { data } = await api.post('/almacen/vehiculos/solicitar-viaje/create/', form_data);
+      control_success('La solicitud de viaje se creo correctamente');
+      return data;
+    } catch (error: any) {
+      control_error('Hubo un error al intentar crear la solicitud de viaje');
+      return error as AxiosError;
+    }
+  };
+};
+
+export const buscar_expediente: any = (titulo_expediente: string,fecha_inicio_expediente: string,fecha_fin_expediente: string,palabras_clave: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expedientes/?titulo_expediente=${titulo_expediente}&fecha_inicio_expediente=${fecha_inicio_expediente}&fecha_fin_expediente=${fecha_fin_expediente}&palabras_clave_expediente=${palabras_clave}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
