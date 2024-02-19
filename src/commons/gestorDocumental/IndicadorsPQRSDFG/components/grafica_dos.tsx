@@ -6,19 +6,24 @@ import { Knob } from 'primereact/knob';
 import { Button } from '@mui/material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
-export const BasicDemo = ({ id = uuidv4(), titulo = '', value }: any) => {
-  const exportAll = () => {
-    const content = document.getElementById('container-pdf-unico');
 
-    if (content) {
-      html2canvas(content).then((canvas: any) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'PNG', 10, 10, 100, 100, `grafica-report`);
-        pdf.save(`grafica-.pdf`);
-      });
-    }
-  };
+
+export const exportAll = () => {
+  const content = document.getElementById('container-pdf-unico');
+
+  if (content) {
+    html2canvas(content).then((canvas: any) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 200, 100, `grafica-report`);
+      pdf.save(`grafica-.pdf`);
+    });
+  }
+};
+export const BasicDemo = ({ id = uuidv4(), titulo = '', value }: any) => {
+
+
+ 
 
   const exportToPDF = () => {
     const content = document.getElementById(id);

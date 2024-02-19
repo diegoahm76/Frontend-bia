@@ -27,6 +27,7 @@ import {
 } from '../../../../../../toolkit/store/BandejaDeTareasStore';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
+import { control_info } from '../../../../../../../alertasgestor/utils/control_error_or_success';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -103,9 +104,9 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         fecha_fin,
         radicado,
       } = watchBusquedaBandejaDeTareas;
-      console.log
+      console.log;
 
-     const res = await getListadoTareaasOtrosByPerson(
+      const res = await getListadoTareaasOtrosByPerson(
         id_persona,
         handleSecondLoading,
         tipo_de_tarea?.value,
@@ -177,7 +178,12 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     }
   };
 
-  const resetForm = () => reset_search_form();
+  const resetForm = () => {
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+    // dispatch(setListaTareasPqrsdfTramitesUotrosUopas([]));
+    reset_search_form();
+    control_info('Se han limpiado los campos de búsqueda y se ha deseleccionado la tarea actual');
+  };
 
   return (
     <>

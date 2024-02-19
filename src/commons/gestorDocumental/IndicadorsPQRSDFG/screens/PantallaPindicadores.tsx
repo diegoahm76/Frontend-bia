@@ -5,9 +5,10 @@ import { Title } from '../../../../components/Title';
 import { Graficapiegraficaindicadores } from '../components/grafica';
 import { api } from '../../../../api/axios';
 import { useContext, useEffect, useState } from 'react';
-import { BasicDemo } from '../components/grafica_dos';
+import { BasicDemo, exportAll } from '../components/grafica_dos';
 import { ConfiguracionFechas } from '../components/configuracionFechas';
 import SearchIcon from '@mui/icons-material/Search';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 import {
   PQRSDFDataAtencionaQqrsdf,
@@ -250,10 +251,9 @@ export const PantallaPindicadores = () => {
   // const primer_grafica =
   //   dataPeriodicidad?.indicadores_por_medio_solicitud[0]
   //     ?.nombre_medio_solicitud;
-  const primer_grafica = dataPeriodicidad?.indicadores_por_medio_solicitud.find(indicador =>
+  const primer_grafica_nombre = dataPeriodicidad?.indicadores_por_medio_solicitud.find(indicador =>
     indicador.nombre_medio_solicitud === "Redes Sociales"
-  );
-  const primer_grafica_nombre = primer_grafica ? primer_grafica.nombre_medio_solicitud : null;
+  )?.nombre_medio_solicitud || null;
 
   const segunda_grafica =
     dataPeriodicidad?.indicadores_por_medio_solicitud[2]
@@ -303,50 +303,69 @@ export const PantallaPindicadores = () => {
           <h2>Total de PQRSDF: {total}</h2>
         </Grid>
         <div id="container-pdf-unico">
-        <Grid container >
+          <Grid container >
 
-          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-            <BasicDemo
-              id={6}
-              titulo={primer_grafica_nombre || ''}
-              value={primer_grafica_value}
-            />
-          </Grid>
-
-          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-            <BasicDemo
-              id={1}
-              titulo={segunda_grafica || ''}
-              value={segunda_grafica_value}
-            />
-          </Grid>
-
-          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-            <BasicDemo
-              id={2}
-              titulo={tercera_grafica || ''}
-              value={tercera_grafica_value}
+            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+              <BasicDemo
+                id={6}
+                titulo={primer_grafica_nombre || ''}
+                value={primer_grafica_value}
               />
-          </Grid>
+            </Grid>
 
-          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-            <BasicDemo
-              id={3}
-              titulo={cuarta_grafica || ''}
-              value={cuarta_grafica_value}
+            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+              <BasicDemo
+                id={1}
+                titulo={segunda_grafica || ''}
+                value={segunda_grafica_value}
               />
-          </Grid>
+            </Grid>
 
-          <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-            <BasicDemo
-              id={4}
-              titulo={quinta_grafica || ''}
-              value={quinta_grafica_value}
+            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+              <BasicDemo
+                id={2}
+                titulo={tercera_grafica || ''}
+                value={tercera_grafica_value}
               />
-          </Grid>
+            </Grid>
 
-        
-      </Grid>
+            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+              <BasicDemo
+                id={3}
+                titulo={cuarta_grafica || ''}
+                value={cuarta_grafica_value}
+              />
+            </Grid>
+
+            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+              <BasicDemo
+                id={4}
+                titulo={quinta_grafica || ''}
+                value={quinta_grafica_value}
+              />
+            </Grid>
+
+            {/* <Grid container justifyContent="flex-start" alignItems="center" spacing={3}> */}
+            <Grid
+              container
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item xs={2}>
+                <Button
+                  startIcon={<PictureAsPdfIcon />}
+                  variant='contained'
+                  onClick={exportAll}
+                  fullWidth
+                >
+                  Imprimir Todas
+                </Button>
+              </Grid>
+            </Grid>
+
+
+
+          </Grid>
         </div>
       </Grid>
 

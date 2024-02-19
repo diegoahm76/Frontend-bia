@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect, useState } from 'react';
-import { listaEstadosTramite } from '../../services/consultaTramites/listaEstadosTramite.service';
+import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
-import { cargarestado } from '../../services/PQRSDF/consultainternoPqrsd.service';
 import { estado } from '../../interface/types';
+import { getEstadoOpas } from '../../services/opas/getEstadoOpas.service';
 
 export const BuscadorOpas = (props: any): JSX.Element => {
   const { control_consulta_estado_sol } = props;
 
   // ? useState necearios
-  const [estado, setestado] = useState<estado[]>([]);
+  const [estado, setEstado] = useState<estado[]>([]);
 
   useEffect(() => {
     (async () => {
-      await cargarestado({ setestado });
+      await getEstadoOpas(setEstado);
     })();
   }, []);
 
@@ -30,7 +29,6 @@ export const BuscadorOpas = (props: any): JSX.Element => {
         }}
       >
         <Controller
-          //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
           name="estado"
           control={control_consulta_estado_sol}
           render={({ field: { onChange, value } }) => (
@@ -40,13 +38,7 @@ export const BuscadorOpas = (props: any): JSX.Element => {
                 onChange={(selectedOption) => {
                   onChange(selectedOption);
                 }}
-                options={
-                  estado.map((item) => ({
-                    ...item,
-                    label: item.nombre,
-                    value: item.id_estado_solicitud,
-                  })) || []
-                }
+                options={estado || []}
                 placeholder="Seleccionar"
               />
               <label>

@@ -385,6 +385,34 @@ export const edit_metadata_service = (metadata: any, id: number): any => {
   };
 };
 
+
+
+
+
+
+// // editar metadata_esta es la que funcina y d ebo dejar
+// export const edit_metadata_service = (metadata: any, id: number): any => {
+//   return async (dispatch: Dispatch<any>) => {
+//     try {
+//       const { data } = await api.put(
+//         `gestor/central-digitalizacion/actualizar-digitalizacion/`,
+//         metadata
+//       );
+//       //  console.log('')(data);
+
+//       control_success(data.detail);
+//       dispatch(get_digitalization_request_id_service(id));
+
+//       // dispatch(set_pqr(data.data));
+//       return data;
+//     } catch (error: any) {
+//       //  console.log('')('edit_metadata_service');
+//       control_error(error.response.data.detail);
+//       return error as AxiosError;
+//     }
+//   };
+// };
+
 // editar metadata
 export const delete_metadata_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
