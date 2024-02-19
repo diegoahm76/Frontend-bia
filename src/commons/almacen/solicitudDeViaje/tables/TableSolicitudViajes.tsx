@@ -22,7 +22,7 @@ interface props_table {
   obtener_solicitudes_fc: ()=> void;
 }
 
-interface CustomColumn extends GridColDef {
+interface custom_column extends GridColDef {
   renderCell?: (params: { row: data_solicitud_viaje }) => React.ReactNode;
 }
 
@@ -35,8 +35,6 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
   }
 
   const eliminar_solicitud = async(params: data_solicitud_viaje) => {
-    console.log(params.eliminar);
-    
     const modal_confirmar_eliminacion = await Swal.fire({
       title: '¿Está seguro que desea eliminar esta solicitud?',
       showDenyButton: true,
@@ -64,7 +62,7 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
     }    
   }
 
-  const columns: CustomColumn[] = [
+  const columns: custom_column[] = [
     {field: 'estado_solicitud', headerName:'Estado', width:150, flex:1},
     {field: 'fecha_solicitud', headerName:'Fecha Solicitud', width:150, flex:1},
     {field: 'nro_pasajeros', headerName:'N° Pasajeros', width:150, flex:1},
@@ -77,12 +75,12 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
       width: 80,
       align: 'center',
       headerAlign: 'center',
-      renderCell: (params) => (
-        <DeleteForeverIcon
-          sx={{ cursor: 'pointer', fontSize: '28px' }}
+      renderCell: ((params) => {
+        return <DeleteForeverIcon
+          sx={{ cursor: 'pointer', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizado' ? 'none' : 'inline-block' }}
           onClick={() => eliminar_solicitud(params.row)}
         />
-      ),
+      }),
     },
     {
       field: 'ver',
@@ -92,7 +90,7 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
       headerAlign: 'center',
       renderCell: (params) => (
         <VisibilityIcon
-          sx={{ cursor: 'pointer', fontSize: '28px' }}
+          sx={{ cursor: 'pointer', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizada' || params.row.estado_solicitud === 'Respondida' ? 'inline-block' : 'none'}}
           onClick={() => ver_solicitud(params.row)}
         />
       ),
@@ -105,7 +103,7 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
       headerAlign: 'center',
       renderCell: (params) => (
         <SaveAsIcon
-          sx={{ cursor: 'pointer', fontSize: '28px' }}
+          sx={{ cursor: 'pointer', fontSize: '28px', display: params.row.estado_solicitud === 'Rechazada' ? 'inline-block' : 'none' }}
           onClick={() => ver_solicitud(params.row)}
         />
       ),
