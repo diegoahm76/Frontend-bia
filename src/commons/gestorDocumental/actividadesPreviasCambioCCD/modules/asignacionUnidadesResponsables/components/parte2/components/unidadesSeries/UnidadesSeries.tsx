@@ -189,7 +189,7 @@ export const UnidadesSeries = (): JSX.Element => {
       ) : (
         <>
           <RenderDataGrid
-            title={`Cátalogo asociado - ( ${
+            title={`Cátalogo de serieres asociado a la unidad - ( ${
               seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
                 ?.nombre ||
               seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada

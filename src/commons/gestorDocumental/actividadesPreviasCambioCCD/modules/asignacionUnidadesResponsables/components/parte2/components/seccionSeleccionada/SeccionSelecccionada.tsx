@@ -180,11 +180,16 @@ export const SeccionSelecccionada = (): JSX.Element => {
     }
   };
 
-  if (!seriesSeccionSeleccionadaSinResponsable?.coincidencias?.length)
+ if (!seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada)
     return <></>;
   {
-    /* también se debe establecer la validación de la carga del componente para el loader */
   }
+
+  // ? revisar si se debe dejar esta validación en vez de la nueva
+/* if (!seriesSeccionSeleccionadaSinResponsable?.coinciencias?.length)
+ return <></>;
+{
+}*/
 
   return (
     <>
@@ -267,8 +272,7 @@ export const SeccionSelecccionada = (): JSX.Element => {
                     // dispatch(setCurrentUnidadAsociada(selectedOption));
                   }}
                   options={
-                    unidadCcdAsociado.map((unidad: any) => ({
-                      // ...unidad,
+                    unidadCcdAsociado?.map((unidad: any) => ({
                       codigo: unidad.codigo,
                       nom_unidad_actual:
                         seriesSeccionSeleccionadaSinResponsable
@@ -296,7 +300,7 @@ export const SeccionSelecccionada = (): JSX.Element => {
                       marginLeft: '0.25rem',
                     }}
                   >
-                    Sección de nuevo CCD responsable
+                    Sección de nueva unidad responsable
                   </small>
                 </label>
               </div>
