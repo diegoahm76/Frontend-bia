@@ -71,7 +71,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       radicado,
       fecha_inicio,
       fecha_fin,
-
       nombre_titular,
       asunto_proyecto,
       pago_tramite,
@@ -89,7 +88,6 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       fecha_inicio,
       fecha_fin,
       nombre_titular,
-      radicado,
       asunto_proyecto,
       pago_tramite?.value,
       expediente,
