@@ -45,7 +45,7 @@ export interface interface_solicitar_viaje {
   cod_municipio: string,  // Código del municipio de destino
   cod_departamento: string,  // Código del departamento de destino
   tiene_expediente_asociado: boolean,  // Indica si tiene un expediente asociado
-  id_expediente_asociado: number,  // ID del expediente asociado, si corresponde
+  id_expediente_asociado?: number,  // ID del expediente asociado, si corresponde
   direccion: string,  // Dirección del destino
   nro_pasajeros: number,  // Número de pasajeros
   fecha_partida: string,  // Fecha de partida
