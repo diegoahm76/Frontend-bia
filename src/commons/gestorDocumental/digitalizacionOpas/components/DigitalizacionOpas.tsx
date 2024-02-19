@@ -193,7 +193,7 @@ export const DigitalizacionOpas: React.FC = () => {
         switch (step) {
             case 0:
                 return <>
-                    <TareasDigitalizacion />
+                    <SolicitudOpas />
                 </>
                     ;
             case 1:
@@ -216,7 +216,7 @@ export const DigitalizacionOpas: React.FC = () => {
                 item xs={12} marginLeft={2} marginRight={2} marginTop={3} spacing={2}
                 sx={miEstilo}
             >
-                <Title title="Radicación de Email    " />
+                <Title title="POPAS    " />
                 {/* <Grid item xs={12} sm={12} marginTop={3}>
                     <Stack sx={{ width: '100%' }} spacing={4}>
                         <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>

@@ -477,6 +477,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         </Button> */}
 
         <FacturacionVisor
+          rows_detalles={rows_detalles}
           is_modal_active={is_modal_active}
           set_is_modal_active={set_is_buscar}
           form_liquidacion={form_liquidacion}

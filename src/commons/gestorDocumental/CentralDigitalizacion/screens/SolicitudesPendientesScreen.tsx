@@ -48,7 +48,7 @@ export function SolicitudesPendientesScreen(): JSX.Element {
         <DigitalizacionesPendientes />
 
         <Grid container direction="row" padding={2} spacing={2}>
-          <Grid item xs={12} md={3}>
+          <Grid item >
             <FormButton
               href={`/#/app/gestor_documental/central_digitalizacion/solicitudes_respondidas/`}
               variant_button="contained"
@@ -61,7 +61,7 @@ export function SolicitudesPendientesScreen(): JSX.Element {
             />
           </Grid>
 
-          <Grid item xs={12} md={3}>
+          <Grid item >
             <Limpiar
               dispatch={dispatch}
               reset_state={reset_state}

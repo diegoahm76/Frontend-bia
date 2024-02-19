@@ -41,6 +41,7 @@ import {
   control_success,
   delete_metadata_service,
   edit_metadata_service,
+  edit_metadata_opas_service,
   get_file_categories_service,
   get_file_origin_service,
   get_file_typology_service,
@@ -340,6 +341,17 @@ const MetadataFormDialog = ({
           }
         }
 
+   
+  
+      
+          // void dispatch(
+          //   edit_metadata_opas_service(
+          //     form_data,
+          //     digitization_request.id_solicitud_de_digitalizacion ?? 0
+          //   )
+          // ),
+
+
 
 
 
@@ -380,33 +392,33 @@ const MetadataFormDialog = ({
 
 
 
-        {
-          exhibit.ya_digitalizado === true && (
+        // {
+        //   exhibit.ya_digitalizado === true && (
 
-            void dispatch(
-              edit_metadata_service(
-                digitization_request.id_solicitud_de_digitalizacion ?? 0,
-                pdfFile === null ? exhibit.exhibit_link : pdfFile,
-                datos_totales_actualizar
-              )
-            )
-          )
-        }
+        //     void dispatch(
+        //       edit_metadata_service(
+        //         digitization_request.id_solicitud_de_digitalizacion ?? 0,
+        //         pdfFile === null ? exhibit.exhibit_link : pdfFile,
+        //         datos_totales_actualizar
+        //       )
+        //     )
+        //   )
+        // }
 
 
 
-        {
-          exhibit.ya_digitalizado === false && (
+        // {
+        //   exhibit.ya_digitalizado === false && (
 
-            void dispatch(
-              add_metadata_service(
-                digitization_request.id_solicitud_de_digitalizacion ?? 0,
-                pdfFile === null ? exhibit.exhibit_link : pdfFile,
-                datos_totales_creacion
-              )
-            )
-          )
-        }
+        //     void dispatch(
+        //       add_metadata_service(
+        //         digitization_request.id_solicitud_de_digitalizacion ?? 0,
+        //         pdfFile === null ? exhibit.exhibit_link : pdfFile,
+        //         // datos_totales_creacion
+        //       )
+        //     )
+        //   )
+        // }
 
 
 
@@ -436,7 +448,7 @@ const MetadataFormDialog = ({
       form_data.append('data_digitalizacion', JSON.stringify(data_edit));
       console.log(exhibit, pdfFile);
       if (pdfFile !== null) {
-        form_data.append(`archivo`, pdfFile);
+        form_data.append(`archiv`, pdfFile);
       } else {
         if (exhibit.exhibit_link !== exhibit.metadatos?.archivo?.ruta_archivo) {
           if (
@@ -789,3 +801,4 @@ const MetadataFormDialog = ({
 
 // eslint-disable-next-line no-restricted-syntax
 export default MetadataFormDialog;
+
