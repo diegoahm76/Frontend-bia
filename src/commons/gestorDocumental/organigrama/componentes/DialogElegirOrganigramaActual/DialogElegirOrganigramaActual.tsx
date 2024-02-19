@@ -100,28 +100,11 @@ const DialogElegirOrganigramaActual = () => {
 
     const info2 = 'La modificación en la estructura organizativa es un proceso que no se puede revertir, por lo tanto, es necesario ser cauteloso al seleccionar la información. Además, es importante tener en cuenta que al cambiar la estructura organizativa, se heredan los permisos de la estructura anterior.';
 
-
-    showAlert('Ten en cuenta!', info2, 'info').then((result: any) => {
-      if (result.isConfirmed) {
-        showAlert('Ten en cuenta!', info2, 'info');
-      }
+    showAlert('Información!', info, 'info').then(() => {
+      showAlert('Ten en cuenta!', info2, 'info');
     });
 
-    (async (): Promise<void> => {
-      await get_data_selects();
-      showAlert('Información!', info, 'info').then((result: any) => {
-        if (result.isConfirmed) {
-          showAlert('Ten en cuenta!', info2, 'info');
-        }
-      });
-    })();
-
-    /*
-    (async (): Promise<void> => {
-    }
-    )();*/
   }, []);
-
   const get_data_selects = async (): Promise<void> => {
     set_loading(true);
     try {

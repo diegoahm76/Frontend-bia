@@ -325,7 +325,6 @@ export function ListOrganigramas({
 
   return (
     <>
-<<<<<<< HEAD
       <Grid
         container
         spacing={2}
@@ -367,30 +366,6 @@ export function ListOrganigramas({
           </Link>
         </Grid>
       </Grid>
-=======
-      <Stack direction="row" spacing={2} sx={{ mb: '20px' }}>
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            set_crear_organigrama_is_active(true);
-          }}
-        >
-          CREAR ORGANIGRAMA
-        </Button>
-        <Link to="/app/transversal/procesos/cambio_organigrama_actual">
-          <Button variant="contained" startIcon={<AssignmentTurnedInIcon />}>
-            ELEGIR ORGANIGRAMA ACTUAL
-          </Button>
-        </Link>
-        <Link to="/app/gestor_documental/activacion_instrumentos_archivisticos">
-          <Button variant="contained" startIcon={<AssignmentTurnedInIcon />}>
-            ACTIVAR INSTRUMENTOS ARCHIVISTICOS (CCD - TRD - TCA)
-          </Button>
-        </Link>
-      </Stack>
->>>>>>> fix/organigrama
       <Grid item>
         {organigram.length === 0 ? (
           <Box

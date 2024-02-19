@@ -420,14 +420,11 @@ export const get_organigrama_actual: any = () => {
       // const old_url = 'transversal/organigrama/get-organigrama-actual/';
       const new_url = `transversal/organigrama/activacion/get-organigrama-actual/`;
       const { data } = await api.get(new_url);
-<<<<<<< HEAD
-=======
 
       if (data?.success) {
         control_success(data.detail);
       }
 
->>>>>>> fix/organigrama
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

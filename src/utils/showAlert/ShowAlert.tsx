@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import Swal from "sweetalert2";
+import Swal, { SweetAlertResult } from "sweetalert2";
 
 /**
  * Muestra una alerta al usuario.
@@ -14,9 +14,9 @@ export const showAlert = (
   text: string,
   icon: 'success' | 'info' | 'error' | 'warning',
   showConfirmButton: boolean = true
-) => {
+): Promise<SweetAlertResult<any>> => {
   try {
-    void Swal.fire({
+    return Swal.fire({
       title,
       text,
       icon,
@@ -25,5 +25,6 @@ export const showAlert = (
     });
   } catch (error) {
     console.error('Error al mostrar la alerta:', error);
+    return Promise.reject(error);
   }
 };
