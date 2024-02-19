@@ -178,7 +178,6 @@ const SolicitudViaje: React.FC = () => {
   */
   useEffect( ()=>{
     obtener_solicitudes_fc(); 
-    console.log(refrescar_tabla);
   },[refrescar_tabla]);
   
   return (
@@ -296,7 +295,7 @@ const SolicitudViaje: React.FC = () => {
       </Grid>
 
       {mostrar_solicitud_viaje && 
-        <SolicitarViaje set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje}/>
+        <SolicitarViaje set_refrescar_tabla={set_refrescar_tabla} refrescar_tabla={refrescar_tabla} set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje}/>
       }
     </>
   );
