@@ -362,7 +362,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
                                         color='primary'
                                         variant='contained'
                                         startIcon={<ManageSearchIcon />}
-                                        onClick={() => { }}
+                                        onClick={() => {}}
                                     >
                                         Ver vinculaciones anteriores
                                     </Button>

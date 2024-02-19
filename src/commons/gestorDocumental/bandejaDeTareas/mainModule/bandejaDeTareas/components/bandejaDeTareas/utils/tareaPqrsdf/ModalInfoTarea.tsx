@@ -50,7 +50,15 @@ export const ModalInfoTarea = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                sx={{
+                  mt: '1rem',
+                  mb: '1rem',
+                }}
+              >
                 <TextField
                   fullWidth
                   label="Asignado para:"
@@ -65,7 +73,15 @@ export const ModalInfoTarea = (): JSX.Element => {
                   inputProps={{ maxLength: 50 }}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                sx={{
+                  mt: '1rem',
+                  mb: '1rem',
+                }}
+              >
                 <TextField
                   fullWidth
                   disabled
@@ -82,7 +98,15 @@ export const ModalInfoTarea = (): JSX.Element => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={4}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                sx={{
+                  mt: '1rem',
+                  mb: '1rem',
+                }}
+              >
                 <TextField
                   fullWidth
                   disabled
@@ -90,7 +114,7 @@ export const ModalInfoTarea = (): JSX.Element => {
                   size="small"
                   variant="outlined"
                   value={
-                    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.radicado ??
+                    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.radicado ||
                     'N/A'
                   }
                   InputLabelProps={{ shrink: true }}
@@ -100,10 +124,10 @@ export const ModalInfoTarea = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-                sm={4}
+                sm={6}
                 sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
+                  mt: '1rem',
+                  mb: '1rem',
                   zIndex: 5,
                 }}
               >
@@ -121,54 +145,60 @@ export const ModalInfoTarea = (): JSX.Element => {
                   inputProps={{ maxLength: 255 }}
                 />
               </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
-                }}
-              >
-                <TextField
-                  disabled
-                  fullWidth
-                  label="Días para respuesta"
-                  size="small"
-                  variant="outlined"
-                  value={
-                    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.dias_para_respuesta ??
-                    'N/A'
-                  }
-                  InputLabelProps={{ shrink: true }}
-                  inputProps={{ maxLength: 50 }}
-                />
-              </Grid>
 
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
-                }}
-              >
-                <TextField
-                  disabled
-                  fullWidth
-                  label="¿Tiene requerimientos pendientes por respuesta?"
-                  size="small"
-                  variant="outlined"
-                  value={
-                    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.requerimientos_pendientes_respuesta
-                      ? 'SI'
-                      : 'N/A'
-                  }
-                  InputLabelProps={{ shrink: true }}
-                  inputProps={{ maxLength: 255 }}
-                />
-              </Grid>
+              {currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea !==
+                'RESPONDER OTRO' ? (
+                <>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{
+                      mt: '1rem',
+                      mb: '1rem',
+                    }}
+                  >
+                    <TextField
+                      disabled
+                      fullWidth
+                      label="Días para respuesta"
+                      size="small"
+                      variant="outlined"
+                      value={
+                        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.dias_para_respuesta ??
+                        'N/A'
+                      }
+                      InputLabelProps={{ shrink: true }}
+                      inputProps={{ maxLength: 50 }}
+                    />
+                  </Grid>
+
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    sx={{
+                      mt: '1rem',
+                      mb: '1rem',
+                    }}
+                  >
+                    <TextField
+                      disabled
+                      fullWidth
+                      label="¿Tiene requerimientos pendientes por respuesta?"
+                      size="small"
+                      variant="outlined"
+                      value={
+                        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.requerimientos_pendientes_respuesta
+                          ? 'SI'
+                          : 'N/A'
+                      }
+                      InputLabelProps={{ shrink: true }}
+                      inputProps={{ maxLength: 255 }}
+                    />
+                  </Grid>
+                </>
+              ): (<></>)}
 
               {/*TERCER FILA DE INFORMACIÓN*/}
 
@@ -177,15 +207,15 @@ export const ModalInfoTarea = (): JSX.Element => {
                 xs={12}
                 sm={12}
                 sx={{
-                  mt: '1.2rem',
-                  mb: '1.2rem',
+                  mt: '1rem',
+                  mb: '1rem',
                 }}
               >
                 <TextField
                   disabled
                   fullWidth
                   multiline
-                  rows={3}
+                  rows={5}
                   label="Comentario de asignacion"
                   size="small"
                   variant="outlined"

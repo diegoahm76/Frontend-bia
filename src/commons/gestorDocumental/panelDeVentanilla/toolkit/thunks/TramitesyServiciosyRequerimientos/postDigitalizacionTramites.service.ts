@@ -1,40 +1,40 @@
-import { api } from "../../../../../../api/axios";
-import { showAlert } from "../../../../../../utils/showAlert/ShowAlert";
-import { control_warning } from "../../../../../almacen/configuracion/store/thunks/BodegaThunks";
+import { api } from '../../../../../../api/axios';
+import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const postDigitalizacionTramites = async (idTramite: any) => {
-  if (!idTramite) {
-    console.error('Debe seleccionar una trámite para digitalizar');
-    return;
-  }
-
+export const postDigitalizacionTramites = async (idTramite: string | number): Promise<any> => {
   if (!idTramite) {
     control_warning('No se ha seleccionado ninguna OPA para digitalizar');
     return;
   }
 
+  const url = `gestor/panel_ventanilla/tramites/solicitud_digitalizacion/create/`;
+
   try {
-    const url = `gestor/panel_ventanilla/opas/solicitud_digitalizacion/create/`;
     const response = await api.post(url, {
       id_solicitud_tramite: idTramite,
     });
 
     if (!response.data) {
-      console.error('No se recibieron datos');
+      showAlert(
+        'Oppss!',
+        'No se recibieron datos, al enviar la solicitud de digitalización de trámite, ha ocurrido un error',
+        'error'
+      );
       return;
     }
 
-    if (response.data.success) {
+    if (response.data.succes) {
       showAlert(
-        'Solicitud de digitalización de OPA exitosa',
-        'Se ha enviado correctamente la solicitud de digitalización de otros',
+        'Solicitud de digitalización de trámite exitosa',
+        'Se ha enviado correctamente la solicitud de digitalización de trámite',
         'success'
       );
     }
 
     return response;
   } catch (err: any) {
-    showAlert('Opps...', `${err?.response?.data?.detail}`, 'error');
+    showAlert('Opps...', `${err?.response?.data?.detail ?? 'Ocurrió un error al enviar la solicitud de digitalización de trámite.'}`, 'error');
   }
 };

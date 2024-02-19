@@ -57,7 +57,7 @@ const actionsTramitesYServicios: any[] = [
     id: 'Jurídica',
     icon: <BalanceIcon />,
     name: 'Revisión jurídica',
-    path: '', // pendiente por definir
+    path: '/app/gestor_documental/panel_ventanilla/revision_juridica_tramite', // pendiente por definir
     disabled: false,
   },
   {
@@ -95,7 +95,7 @@ const actionsOpas: any[] = [
     id: 'Jurídica',
     icon: <BalanceIcon />,
     name: 'Revisión jurídica',
-    path: '', // pendiente por definir
+    path: '/app/gestor_documental/panel_ventanilla/revision_juridica_opa', // pendiente por definir
     disabled: false,
   },
 ];
