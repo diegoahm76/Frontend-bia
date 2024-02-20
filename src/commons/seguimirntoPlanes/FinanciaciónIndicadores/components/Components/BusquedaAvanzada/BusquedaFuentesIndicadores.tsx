@@ -165,6 +165,7 @@ export const BusquedaFuentesIndicadores: React.FC = () => {
               set_id_producto(params.row.id_producto);
               set_id_actividad(params.row.id_actividad);
               set_id_indicador(params.row.id_indicador);
+              set_id_meta(params.row.id_meta);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -277,6 +278,7 @@ export const BusquedaFuentesIndicadores: React.FC = () => {
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
+    set_id_meta,
   } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {

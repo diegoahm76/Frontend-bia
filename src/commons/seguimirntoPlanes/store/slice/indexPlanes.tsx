@@ -126,6 +126,7 @@ export const initial_state_indicadores: Indicadores = {
   nombre_plan: '',
   nombre_indicador: '',
   nombre_proyecto: '',
+  numero_indicador: '',
   linea_base: '',
   medida: '',
   tipo_indicador: '',
@@ -202,6 +203,7 @@ export const initial_state_fuentes_fianciacion: IFuentesFinanciacion = {
   nombre_proyecto: '',
   nombre_actividad: '',
   nombre_producto: '',
+  nombre_meta: '',
   vano_1: null,
   vano_2: null,
   vano_3: null,
@@ -212,6 +214,7 @@ export const initial_state_fuentes_fianciacion: IFuentesFinanciacion = {
   id_proyecto: null,
   id_actividad: null,
   id_producto: null,
+  id_meta: null,
 };
 
 export const initial_state_detalle_inversion: IDetalleCuentas = {

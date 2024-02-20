@@ -106,6 +106,7 @@ export interface Indicadores {
   nombre_indicador: string;
   nombre_proyecto?: string;
   nombre_programa?: string;
+  numero_indicador: string;
   tipo_indicador?: string;
   linea_base: string;
   medida: string;
@@ -182,6 +183,7 @@ export interface IFuentesFinanciacion {
   nombre_proyecto?: string;
   nombre_actividad?: string;
   nombre_producto?: string;
+  nombre_meta: string;
   vano_1: number | null;
   vano_2: number | null;
   vano_3: number | null;
@@ -192,6 +194,7 @@ export interface IFuentesFinanciacion {
   id_proyecto?: number | null;
   id_actividad?: number | null;
   id_producto?: number | null;
+  id_meta: number | null;
 }
 // Detalle Inversion Cuentas
 export interface IDetalleCuentas {
