@@ -91,9 +91,8 @@ export const SeccionSelecccionada = (): JSX.Element => {
     if (!id_unidad_seccion_nueva)
       return control_warning('El campo de selección no puede estar vacío');
 
-   /* if (!seccionSeleccionada?.nom_unidad_actual)
+    /* if (!seccionSeleccionada?.nom_unidad_actual)
       return control_warning('debe seleccionar una unidad para proceder');*/
-
 
     if (currentUnidadAsociada) {
       const elementToAddWithValidation = listadoDeAsignaciones
@@ -133,7 +132,8 @@ export const SeccionSelecccionada = (): JSX.Element => {
             id_unidad_seccion_actual &&
             (id_unidad_seccion_actual === id_unidad_organizacional ||
               id_unidad_seccion_actual ===
-                currentUnidadAsociada?.id_unidad_seccion_actual || seccionSeleccionada?.id_unidad_seccion_actual)
+                currentUnidadAsociada?.id_unidad_seccion_actual ||
+              seccionSeleccionada?.id_unidad_seccion_actual)
           );
         })
       : false;
@@ -150,11 +150,17 @@ export const SeccionSelecccionada = (): JSX.Element => {
           ? [
               ...listadoDeAsignaciones,
               {
-                cod_unidad_actual: cod_unidad_actual || seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada?.cod_unidad_actual,
+                cod_unidad_actual:
+                  cod_unidad_actual ||
+                  seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+                    ?.cod_unidad_actual,
                 cod_unidad_nueva,
                 id_unidad_seccion_nueva,
                 id_unidad_seccion_actual: id_unidad_organizacional,
-                nom_unidad_actual: nom_unidad_actual || seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada?.nom_unidad_actual,
+                nom_unidad_actual:
+                  nom_unidad_actual ||
+                  seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada
+                    ?.nom_unidad_actual,
                 nom_unidad_nueva,
               },
             ].filter(
@@ -180,16 +186,16 @@ export const SeccionSelecccionada = (): JSX.Element => {
     }
   };
 
- if (!seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada)
+  /* if (!seriesSeccionSeleccionadaSinResponsable?.seccionSeleccionada)
+    return <></>;
+  {
+  }*/
+
+  // ? revisar si se debe dejar esta validación en vez de la nueva
+  if (!seriesSeccionSeleccionadaSinResponsable?.coincidencias?.length)
     return <></>;
   {
   }
-
-  // ? revisar si se debe dejar esta validación en vez de la nueva
-/* if (!seriesSeccionSeleccionadaSinResponsable?.coinciencias?.length)
- return <></>;
-{
-}*/
 
   return (
     <>

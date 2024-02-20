@@ -98,17 +98,20 @@ const DialogElegirOrganigramaActual = () => {
     const info =
       'Este módulo puede operar de dos formas: 1. Si no hay un organigrama actual, es necesario elegir uno para activarlo como el actual.2. Si ya existe un organigrama actual, se debe seleccionar uno nuevo para establecerlo como el actual. Además, se debe elegir un cuadro de clasificación documental vinculado a ese organigrama.';
 
-    const info2 = 'La modificación en la estructura organizativa es un proceso que no se puede revertir, por lo tanto, es necesario ser cauteloso al seleccionar la información. Además, es importante tener en cuenta que al cambiar la estructura organizativa, se heredan los permisos de la estructura anterior.';
+    const info2 =
+      'La modificación en la estructura organizativa es un proceso que no se puede revertir, por lo tanto, es necesario ser cauteloso al seleccionar la información. Además, es importante tener en cuenta que al cambiar la estructura organizativa, se heredan los permisos de la estructura anterior.';
 
     showAlert('Información!', info, 'info').then(() => {
       showAlert('Ten en cuenta!', info2, 'info');
     });
-
   }, []);
+
   const get_data_selects = async (): Promise<void> => {
+    console.log('ejecutando funcion');
     set_loading(true);
     try {
       const response_org_actual = await dispatch(get_organigrama_actual());
+      console.log('response_org_actual', response_org_actual.data);
       if (response_org_actual.data) {
         set_organigrama_actual(response_org_actual.data);
         const response_orgs = await dispatch(get_organigramas_posibles());
@@ -129,15 +132,6 @@ const DialogElegirOrganigramaActual = () => {
     }
   };
 
-  // 2. Seleccionar organigrama
-  useEffect(() => {
-    if (organigram_selected !== undefined && organigram_selected !== '') {
-      // Traer listado de ccds segun organigrama seleccionado
-      void get_data_selects();
-      void get_list_ccds(organigram_selected);
-    }
-  }, [organigram_selected]);
-
   // 3. Traer ccds segun organigrama seleccionado
   const get_list_ccds = async (
     id_organigram: string | number
@@ -149,6 +143,14 @@ const DialogElegirOrganigramaActual = () => {
     );
     set_list_ccds(res_ccds_adapter);
   };
+
+  // 2. Seleccionar organigrama
+  useEffect(() => {
+    // if (organigram_selected !== undefined && organigram_selected !== '') {
+      void get_data_selects();
+      void get_list_ccds(organigram_selected);
+    //}
+  }, [organigram_selected]);
 
   // 4. Filtrar ccd seleccionado para mostrar datos de trd y tca
   useEffect(() => {
