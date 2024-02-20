@@ -83,13 +83,13 @@ export const ListarSubprograma: React.FC = () => {
     },
   ];
 
-  const { rows_subprogramas, fetch_data_subprogramas } = useContext(
+  const { rows_subprogramas, id_programa, fetch_data_subprogramas } = useContext(
     DataContextSubprogramas
   );
 
-  const {
-    programa: { id_programa },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   programa: { id_programa },
+  // } = useAppSelector((state) => state.planes);
 
   //  console.log('')('id_programa', id_programa);
 

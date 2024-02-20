@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
@@ -17,90 +18,54 @@ import {
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridValueFormatterParams,
+  type GridColDef,
+} from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import EditIcon from '@mui/icons-material/Edit';
+// import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { useAppDispatch } from '../../../../../../hooks';
-import { control_error } from '../../../../../../helpers';
-import { Title } from '../../../../../../components/Title';
-import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
-import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
+import { useAppDispatch } from '../../../../../hooks';
+import { control_error } from '../../../../../helpers';
+import { Title } from '../../../../../components/Title';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { DataContextSubprogramas } from '../../context/context';
 import {
-  set_current_actividad,
   set_current_mode_planes,
-} from '../../../../store/slice/indexPlanes';
-import { DataContextActividades } from '../../../context/context';
-import { IBusquedaAvanzadaActividad } from '../../../../Indicadores/components/Programas/BusquedaAvanzada/types';
-import { search_actividades } from '../../../../Indicadores/services/services';
+  set_current_subprograma,
+} from '../../../store/slice/indexPlanes';
+import EditIcon from '@mui/icons-material/Edit';
+import { search_subprogramas } from '../../../Indicadores/services/services';
+import { IBusquedaSubprograma } from './types';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaActividad: React.FC = () => {
+export const BusquedaSubprograma: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre_plan',
-      headerName: 'Nombre del Plan',
+      field: 'nombre_subprograma',
+      headerName: 'NOMBRE SUBPROGRAMA',
       sortable: true,
-      width: 250,
+      width: 200,
     },
     {
       field: 'nombre_programa',
-      headerName: 'Nombre del Programa',
+      headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
-      width: 250,
+      width: 300,
     },
     {
-      field: 'nombre_proyecto',
-      headerName: 'Nombre del Proyecto',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'nombre_producto',
-      headerName: 'Nombre del Producto',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'numero_producto',
-      headerName: 'Número de Producto',
-      sortable: true,
-      width: 100,
-    },
-    {
-      field: 'numero_actividad',
-      headerName: 'Número de Actividad',
-      sortable: true,
-      width: 100,
-    },
-    {
-      field: 'nombre_actividad',
-      headerName: 'Nombre de la Actividad',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'fecha_creacion',
-      headerName: 'Fecha de Creación',
-      sortable: true,
-      width: 150,
-    },
-    {
-      field: 'cumplio',
-      headerName: '¿Cumplió?',
-      sortable: true,
-      width: 100,
-      renderCell: (params) => (params.value ? 'Sí' : 'No'),
-    },
-    {
-      field: 'ACCIONES',
+      field: 'acciones',
       headerName: 'ACCIONES',
-      width: 250,
+      sortable: true,
+      width: 200,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -108,16 +73,7 @@ export const BusquedaActividad: React.FC = () => {
             onClick={() => {
               set_id_plan(params.row.id_plan);
               set_id_programa(params.row.id_programa);
-              set_id_proyecto(params.row.id_proyecto);
-              set_id_producto(params.row.id_producto);
-              set_id_actividad(params.row.id_actividad);
-              reset({
-                nombre_plan: params.row.nombre_plan,
-                nombre_programa: params.row.nombre_programa,
-                nombre_proyecto: params.row.nombre_proyecto,
-                nombre_producto: params.row.nombre_producto,
-                nombre_actividad: params.row.nombre_actividad,
-              });
+              set_id_subprograma(params.row.id_subprograma);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -125,9 +81,12 @@ export const BusquedaActividad: React.FC = () => {
                   editar: true,
                 })
               );
+              dispatch(set_current_subprograma(params.row));
+              reset({
+                nombre_programa: params.row.nombre_programa,
+                nombre_subprograma: params.row.nombre_subprograma,
+              });
               handle_close();
-              dispatch(set_current_actividad(params.row));
-              /* Agrega la lógica que desees */
             }}
           >
             <Avatar
@@ -140,7 +99,7 @@ export const BusquedaActividad: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
-                titleAccess="Editar actividad"
+                titleAccess="Editar"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -162,17 +121,14 @@ export const BusquedaActividad: React.FC = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      nombre_plan: '',
       nombre_programa: '',
-      nombre_proyecto: '',
-      nombre_producto: '',
-      nombre_actividad: '',
+      nombre_subprograma: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaAvanzadaActividad[]>([]);
+  const [rows, set_rows] = useState<IBusquedaSubprograma[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -186,24 +142,15 @@ export const BusquedaActividad: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
-    async ({
-      nombre_plan,
-      nombre_programa,
-      nombre_proyecto,
-      nombre_producto,
-      nombre_actividad,
-    }) => {
+    async ({ nombre_programa, nombre_subprograma }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_actividades({
-          nombre_plan,
+        } = await search_subprogramas({
           nombre_programa,
-          nombre_proyecto,
-          nombre_producto,
-          nombre_actividad,
+          nombre_subprograma,
         });
 
         if (data?.length > 0) {
@@ -219,13 +166,9 @@ export const BusquedaActividad: React.FC = () => {
     }
   );
 
-  const {
-    set_id_plan,
-    set_id_programa,
-    set_id_proyecto,
-    set_id_producto,
-    set_id_actividad,
-  } = useContext(DataContextActividades);
+  const { set_id_plan, set_id_programa, set_id_subprograma } = useContext(
+    DataContextSubprogramas
+  );
 
   useEffect(() => {
     reset();
@@ -263,7 +206,7 @@ export const BusquedaActividad: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada actividades" />
+            <Title title="Búsqueda avanzada Subprograma" />
             {/* <form
               onSubmit={(e) => {
                 void on_submit_advance(e);
@@ -277,7 +220,7 @@ export const BusquedaActividad: React.FC = () => {
               }}
             > */}
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={4}>
+              {/* <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre_plan"
                   control={control}
@@ -295,8 +238,8 @@ export const BusquedaActividad: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+              </Grid> */}
+              <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre_programa"
                   control={control}
@@ -315,16 +258,16 @@ export const BusquedaActividad: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={3}>
                 <Controller
-                  name="nombre_proyecto"
+                  name="nombre_subprograma"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre proyecto"
+                      label="Nombre subprograma"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -334,45 +277,6 @@ export const BusquedaActividad: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="nombre_producto"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre producto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="nombre_actividad"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre actividad"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-
               <Grid item xs={12} sm={6} md={3} container justifyContent="end">
                 <LoadingButton
                   type="submit"
@@ -413,8 +317,8 @@ export const BusquedaActividad: React.FC = () => {
                       <DataGrid
                         density="compact"
                         autoHeight
-                        rows={rows}
-                        columns={columns}
+                        rows={rows ?? []}
+                        columns={columns ?? []}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}

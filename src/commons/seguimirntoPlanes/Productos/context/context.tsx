@@ -88,15 +88,7 @@ export const UserProviderProductos = ({
       if (response?.length > 0) {
         const data_producto: IProductos[] = response.map(
           (item: IProductos) => ({
-            id_producto: item.id_producto,
-            numero_producto: item.numero_producto,
-            nombre_producto: item.nombre_producto,
-            id_proyecto: item.id_proyecto,
-            nombre_proyecto: item.nombre_proyecto,
-            id_programa: item.id_programa,
-            id_plan: item.id_plan,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
         set_rows_producto(data_producto);

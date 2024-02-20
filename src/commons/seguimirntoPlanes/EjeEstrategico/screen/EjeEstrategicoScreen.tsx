@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { ListarPlanes } from '../components/EjeEstrategico/ListarPlanes';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { AgregarEjeEstrategico } from '../components/EjeEstrategico/AgregarEjeEstrategico';
 import { useEffect } from 'react';
 import { ListarEjeEstrategico } from '../components/EjeEstrategico/ListarEjeEstrategico';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaPrograma } from '../components/EjeEstrategico/BusquedaAvanzada/BusquedaPrograma';
+import { BusquedaEje } from '../components/EjeEstrategico/BusquedaAvanzada/BusquedaEje';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EjeEstrategicoScreen: React.FC = () => {
@@ -46,7 +47,7 @@ export const EjeEstrategicoScreen: React.FC = () => {
           <Title title="Eje Estrategico" />
         </Grid>
       </Grid>
-      <ListarPlanes />
+      <BusquedaPrograma />
       {/* <ListarEjeEstrategico /> */}
       {mode.ver ? <ListarEjeEstrategico /> : null}
       {mode.crear || mode.editar ? <AgregarEjeEstrategico /> : null}
@@ -66,6 +67,7 @@ export const EjeEstrategicoScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaEje />
         <Grid item>
           <ButtonSalir />
         </Grid>

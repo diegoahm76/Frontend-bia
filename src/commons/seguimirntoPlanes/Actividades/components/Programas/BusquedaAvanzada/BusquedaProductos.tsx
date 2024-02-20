@@ -102,6 +102,7 @@ export const BusquedaProductos: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              console.log('params', params.row);
               set_id_plan(params.row.id_plan);
               set_id_programa(params.row.id_programa);
               set_id_proyecto(params.row.id_proyecto);
