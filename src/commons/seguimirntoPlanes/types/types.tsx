@@ -23,6 +23,8 @@ export interface IEjeEstrategico {
   nombre_tipo_eje?: string;
   nombre: string;
   id_plan?: number | null;
+  id_programa: number | null;
+  nombre_programa: string;
   id_tipo_eje?: number | null;
 }
 // Objetivo
@@ -37,6 +39,7 @@ export interface IProgramas {
   id_programa?: number | null;
   nombre_plan?: string;
   nombre_programa: string;
+  numero_programa: string;
   porcentaje_1: number | null;
   porcentaje_2: number | null;
   porcentaje_3: number | null;
@@ -44,11 +47,12 @@ export interface IProgramas {
   cumplio: boolean;
   fecha_creacion: string;
   id_plan?: number | null;
+  id_sector: number | null;
 }
 // Proyectos
 export interface IProyectos {
   id_proyecto?: number | null;
-  numero_proyecto: number | null;
+  numero_proyecto: string;
   nombre_programa?: string;
   nombre_plan?: string;
   pondera_1: number | null;
@@ -68,7 +72,7 @@ export interface IProductos {
   nombre_producto: string;
   nombre_plan?: string;
   id_proyecto?: number | null;
-  numero_producto?: number | null;
+  numero_producto? : string;
   id_programa: number | null;
   id_plan: number | null;
   fecha_creacion: string;
@@ -80,7 +84,8 @@ export interface IActividades {
   nombre_producto?: string;
   nombre_actividad?: string;
   id_producto?: number | null;
-  numero_actividad?: number | null;
+  numero_actividad?: string;
+  numero_producto: string;
   id_plan?: number | null;
   nombre_plan?: string;
   nombre_proyecto?: string;
@@ -101,6 +106,7 @@ export interface Indicadores {
   nombre_indicador: string;
   nombre_proyecto?: string;
   nombre_programa?: string;
+  numero_indicador: string;
   tipo_indicador?: string;
   linea_base: string;
   medida: string;
@@ -165,6 +171,7 @@ export interface ISubprogramas {
   id_subprograma?: number | null;
   nombre_subprograma: string;
   nombre_programa?: string;
+  numero_subprograma: string;
   id_programa?: number | null;
 }
 // Fuentes de financiacion indicadores
@@ -176,6 +183,7 @@ export interface IFuentesFinanciacion {
   nombre_proyecto?: string;
   nombre_actividad?: string;
   nombre_producto?: string;
+  nombre_meta: string;
   vano_1: number | null;
   vano_2: number | null;
   vano_3: number | null;
@@ -186,6 +194,7 @@ export interface IFuentesFinanciacion {
   id_proyecto?: number | null;
   id_actividad?: number | null;
   id_producto?: number | null;
+  id_meta: number | null;
 }
 // Detalle Inversion Cuentas
 export interface IDetalleCuentas {

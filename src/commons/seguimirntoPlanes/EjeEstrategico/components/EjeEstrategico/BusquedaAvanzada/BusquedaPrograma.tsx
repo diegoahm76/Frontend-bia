@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,7 +20,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import EditIcon from '@mui/icons-material/Edit';
+// import EditIcon from '@mui/icons-material/Edit';
 import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -30,15 +31,20 @@ import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import {
-  set_current_actividad,
   set_current_mode_planes,
+  set_current_programa,
 } from '../../../../store/slice/indexPlanes';
-import { DataContextActividades } from '../../../context/context';
-import { IBusquedaAvanzadaActividad } from '../../../../Indicadores/components/Programas/BusquedaAvanzada/types';
-import { search_actividades } from '../../../../Indicadores/services/services';
+import EditIcon from '@mui/icons-material/Edit';
+import {
+  search_plan,
+  search_programas,
+} from '../../../../Indicadores/services/services';
+import { IBusquedaProgramas } from '../../../../Programas/components/Programas/BusquedaAvanzada/types';
+import { DataContextEjeEstrategico } from '../../../context/context';
+import React from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaActividad: React.FC = () => {
+export const BusquedaPrograma: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -52,55 +58,51 @@ export const BusquedaActividad: React.FC = () => {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 250,
+      width: 350,
     },
     {
-      field: 'nombre_proyecto',
-      headerName: 'Nombre del Proyecto',
+      field: 'porcentaje_1',
+      headerName: 'Porcentaje 1',
       sortable: true,
-      width: 250,
+      width: 120,
     },
     {
-      field: 'nombre_producto',
-      headerName: 'Nombre del Producto',
+      field: 'porcentaje_2',
+      headerName: 'Porcentaje 2',
       sortable: true,
-      width: 250,
+      width: 120,
     },
     {
-      field: 'numero_producto',
-      headerName: 'Número de Producto',
+      field: 'porcentaje_3',
+      headerName: 'Porcentaje 3',
       sortable: true,
-      width: 100,
+      width: 120,
     },
     {
-      field: 'numero_actividad',
-      headerName: 'Número de Actividad',
+      field: 'porcentaje_4',
+      headerName: 'Porcentaje 4',
       sortable: true,
-      width: 100,
-    },
-    {
-      field: 'nombre_actividad',
-      headerName: 'Nombre de la Actividad',
-      sortable: true,
-      width: 250,
-    },
-    {
-      field: 'fecha_creacion',
-      headerName: 'Fecha de Creación',
-      sortable: true,
-      width: 150,
+      width: 120,
     },
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 100,
+      width: 120,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
-      field: 'ACCIONES',
+      field: 'fecha_creacion',
+      headerName: 'Fecha de Creación',
+      sortable: true,
+      width: 180,
+    },
+    {
+      field: 'acciones',
       headerName: 'ACCIONES',
+      sortable: true,
       width: 250,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -108,26 +110,19 @@ export const BusquedaActividad: React.FC = () => {
             onClick={() => {
               set_id_plan(params.row.id_plan);
               set_id_programa(params.row.id_programa);
-              set_id_proyecto(params.row.id_proyecto);
-              set_id_producto(params.row.id_producto);
-              set_id_actividad(params.row.id_actividad);
-              reset({
-                nombre_plan: params.row.nombre_plan,
-                nombre_programa: params.row.nombre_programa,
-                nombre_proyecto: params.row.nombre_proyecto,
-                nombre_producto: params.row.nombre_producto,
-                nombre_actividad: params.row.nombre_actividad,
-              });
               dispatch(
                 set_current_mode_planes({
                   ver: true,
                   crear: false,
-                  editar: true,
+                  editar: false,
                 })
               );
+              dispatch(set_current_programa(params.row));
+              reset({
+                nombre_plan: params.row.nombre_plan,
+                nombre_programa: params.row.nombre_programa,
+              });
               handle_close();
-              dispatch(set_current_actividad(params.row));
-              /* Agrega la lógica que desees */
             }}
           >
             <Avatar
@@ -139,8 +134,8 @@ export const BusquedaActividad: React.FC = () => {
               }}
               variant="rounded"
             >
-              <EditIcon
-                titleAccess="Editar actividad"
+              <ChecklistOutlinedIcon
+                titleAccess="Editar plan"
                 sx={{
                   color: 'primary.main',
                   width: '18px',
@@ -164,15 +159,12 @@ export const BusquedaActividad: React.FC = () => {
     defaultValues: {
       nombre_plan: '',
       nombre_programa: '',
-      nombre_proyecto: '',
-      nombre_producto: '',
-      nombre_actividad: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaAvanzadaActividad[]>([]);
+  const [rows, set_rows] = useState<IBusquedaProgramas[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -186,24 +178,15 @@ export const BusquedaActividad: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
-    async ({
-      nombre_plan,
-      nombre_programa,
-      nombre_proyecto,
-      nombre_producto,
-      nombre_actividad,
-    }) => {
+    async ({ nombre_plan, nombre_programa }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_actividades({
+        } = await search_programas({
           nombre_plan,
           nombre_programa,
-          nombre_proyecto,
-          nombre_producto,
-          nombre_actividad,
         });
 
         if (data?.length > 0) {
@@ -219,13 +202,7 @@ export const BusquedaActividad: React.FC = () => {
     }
   );
 
-  const {
-    set_id_plan,
-    set_id_programa,
-    set_id_proyecto,
-    set_id_producto,
-    set_id_actividad,
-  } = useContext(DataContextActividades);
+  const { set_id_plan, set_id_programa } = useContext(DataContextEjeEstrategico);
 
   useEffect(() => {
     reset();
@@ -235,17 +212,101 @@ export const BusquedaActividad: React.FC = () => {
 
   return (
     <>
-      <Grid item>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<SearchIcon />}
-          onClick={() => {
-            handle_click_open();
-          }}
-        >
-          Buscar
-        </Button>
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Title title="Busqueda Programas" />
+        </Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <Controller
+            name="nombre_plan"
+            control={control}
+            render={(
+              { field: { onChange, value } } // formState: { errors }
+            ) => (
+              <TextField
+                fullWidth
+                label="Nombre plan"
+                value={value}
+                onChange={onChange}
+                size="small"
+                margin="dense"
+                disabled={true}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <Controller
+            name="nombre_programa"
+            control={control}
+            render={(
+              { field: { onChange, value } } // formState: { errors }
+            ) => (
+              <TextField
+                fullWidth
+                label="Nombre programa"
+                value={value}
+                onChange={onChange}
+                size="small"
+                margin="dense"
+                disabled={true}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<SearchIcon />}
+            onClick={() => {
+              handle_click_open();
+            }}
+          >
+            Buscar
+          </Button>
+        </Grid>
+        {/* {id_deposito && (
+          <>
+            <Grid container spacing={2} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    // set_id_deposito(null);
+                    dispatch(
+                      set_current_mode_estantes({
+                        ver: false,
+                        crear: true,
+                        editar: false,
+                      })
+                    );
+                  }}
+                >
+                  Agregar estante
+                </Button>
+              </Grid>
+            </Grid>
+          </>
+        )} */}
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
@@ -263,7 +324,7 @@ export const BusquedaActividad: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada actividades" />
+            <Title title="Búsqueda avanzada programas" />
             {/* <form
               onSubmit={(e) => {
                 void on_submit_advance(e);
@@ -315,64 +376,6 @@ export const BusquedaActividad: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="nombre_proyecto"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre proyecto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="nombre_producto"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre producto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="nombre_actividad"
-                  control={control}
-                  render={(
-                    { field: { onChange, value } } // formState: { errors }
-                  ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre actividad"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
-                  )}
-                />
-              </Grid>
-
               <Grid item xs={12} sm={6} md={3} container justifyContent="end">
                 <LoadingButton
                   type="submit"
@@ -413,8 +416,8 @@ export const BusquedaActividad: React.FC = () => {
                       <DataGrid
                         density="compact"
                         autoHeight
-                        rows={rows}
-                        columns={columns}
+                        rows={rows ?? []}
+                        columns={columns ?? []}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}
