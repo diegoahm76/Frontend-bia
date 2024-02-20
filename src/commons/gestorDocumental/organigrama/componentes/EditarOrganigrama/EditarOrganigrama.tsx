@@ -637,48 +637,49 @@ export const EditarOrganigrama = ({
                   <Typography className="label_selects">Nivel padre</Typography>
                 </Grid>
               </Grid>
-              <Stack
-                direction="row"
+              <Grid
+                container
                 justifyContent="flex-end"
                 spacing={2}
                 sx={{ mb: '20px', mt: '20px' }}
               >
-                <Button
-                  // type="submit"
-                  color="primary"
-                  variant="outlined"
-                  // disabled={organigram_current.fecha_terminado !== null}
-                  onClick={clean_unitys}
-                  startIcon={<CleanIcon />}
-                >
-                  LIMPIAR CAMPOS
-                </Button>
-                <LoadingButton
-                  loading={loadingLevels}
-                  type="submit"
-                  color="success"
-                  variant="contained"
-                  startIcon={
-                    title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />
-                  }
-                >
-                  {title_unidades === 'Agregar'
-                    ? 'AGREGAR UNIDAD'
-                    : 'EDITAR UNIDAD'}
-                </LoadingButton>
-                <Button
-                  onClick={() => {
-                    // void dispatch(set_special_edit(false));
-                    //  console.log('')('editando unidades propiedad activo');
-                    edit_prop_activo_unidad_org(unity_organigram);
-                  }}
-                  color="success"
-                  variant="outlined"
-                  startIcon={<ToggleOnIcon />}
-                >
-                  DESACTIVAR / ACTIVAR UNIDADES
-                </Button>
-              </Stack>
+                <Grid item xs={12} sm={4}>
+                  <Button
+                    color="primary"
+                    variant="outlined"
+                    onClick={clean_unitys}
+                    startIcon={<CleanIcon />}
+                    fullWidth
+                  >
+                    LIMPIAR CAMPOS
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <LoadingButton
+                    loading={loadingLevels}
+                    type="submit"
+                    color="success"
+                    variant="contained"
+                    startIcon={title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />}
+                    fullWidth
+                  >
+                    {title_unidades === 'Agregar' ? 'AGREGAR UNIDAD' : 'EDITAR UNIDAD'}
+                  </LoadingButton>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Button
+                    onClick={() => {
+                      edit_prop_activo_unidad_org(unity_organigram);
+                    }}
+                    color="success"
+                    variant="outlined"
+                    startIcon={<ToggleOnIcon />}
+                    fullWidth
+                  >
+                    DESACTIVAR-ACTIVAR UNIDADES
+                  </Button>
+                </Grid>
+              </Grid>
             </Box>
           )}
         </Box>
@@ -864,59 +865,50 @@ export const EditarOrganigrama = ({
                 <Typography className="label_selects">Nivel padre</Typography>
               </Grid>
             </Grid>
-            <Stack
-              direction="row"
+            <Grid
+              container
               justifyContent="flex-end"
               spacing={2}
               sx={{ mb: '20px', mt: '20px' }}
             >
-              <Button
-                color="primary"
-                variant="outlined"
-                onClick={clean_unitys}
-                startIcon={<CleanIcon />}
-              >
-                LIMPIAR CAMPOS
-              </Button>
-              <Button
-                type="submit"
-                color="success"
-                variant="contained"
-                startIcon={<AddIcon />}
-              >
-                AGREGAR UNIDAD (GRUPO)
-              </Button>
-              <Button
-                onClick={() => {
-                  // void dispatch(set_special_edit(false));
-                  //  console.log('')('editando unidades propiedad activo');
-                  edit_prop_activo_unidad_org(unity_organigram);
-                }}
-                color="success"
-                variant="outlined"
-                startIcon={<ToggleOnIcon />}
-              >
-                DESACTIVAR / ACTIVAR UNIDADES (GRUPO)
-              </Button>
-            </Stack>
+              <Grid item xs={12} sm={4}>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  onClick={clean_unitys}
+                  startIcon={<CleanIcon />}
+                  fullWidth
+                >
+                  LIMPIAR CAMPOS
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Button
+                  type="submit"
+                  color="success"
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  fullWidth
+                >
+                  AGREGAR UNIDAD (GRUPO)
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Button
+                  onClick={() => {
+                    edit_prop_activo_unidad_org(unity_organigram);
+                  }}
+                  color="success"
+                  variant="outlined"
+                  startIcon={<ToggleOnIcon />}
+                  fullWidth
+                >
+                  DESACTIVAR / ACTIVAR UNIDADES (GRUPO)
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
         )}
-
-        {/*        {organigram_current?.fecha_terminado && !organigram_current?.actual && (
-          <Button
-            onClick={() => {
-              // void dispatch(set_special_edit(false));
-              //  console.log('')('editando unidades propiedad activo');
-              edit_prop_activo_unidad_org(unity_organigram);
-            }}
-            color="success"
-            variant="outlined"
-            startIcon={<ToggleOnIcon />}
-          >
-            DESACTIVAR / ACTIVAR UNIDADES (GRUPO)
-          </Button>
-        )}
-*/}
         <Grid item>
           <Box sx={{ width: '100%' }}>
             {dataloading ? (
@@ -939,53 +931,62 @@ export const EditarOrganigrama = ({
         <Grid item>
           <Box sx={{ width: '100%' }}></Box>
         </Grid>
-
-        <Stack
-          direction="row"
+        <Grid
+          container
           justifyContent="flex-end"
           spacing={2}
           sx={{ mt: '20px' }}
         >
-          <Button
-            color="primary"
-            variant="outlined"
-            startIcon={<ArrowBackIcon />}
-            onClick={handle_to_go_back}
-          >
-            VOLVER
-          </Button>
-          <Button
-            disabled={mold_organigram.length === 0}
-            color="warning"
-            variant="contained"
-            startIcon={<VisibilityIcon />}
-            onClick={() => {
-              dispatch(set_special_edit(false));
-              set_view_organigram(true);
-            }}
-          >
-            VISUALIZAR ORGANIGRAMA
-          </Button>
-          {!organigram_current?.fecha_terminado && (
+          <Grid item xs={12} sm={3}>
             <Button
-              color="success"
-              variant="contained"
-              startIcon={<SaveIcon />}
-              onClick={() => {
-                void dispatch(
-                  to_finalize_organigram_service(
-                    String(organigram_current?.id_organigrama),
-                    set_position_tab_organigrama
-                  )
-                );
-              }}
+              color="primary"
+              variant="outlined"
+              startIcon={<ArrowBackIcon />}
+              onClick={handle_to_go_back}
+              fullWidth
             >
-              FINALIZAR
+              VOLVER
             </Button>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Button
+              disabled={mold_organigram.length === 0}
+              color="warning"
+              variant="contained"
+              startIcon={<VisibilityIcon />}
+              onClick={() => {
+                dispatch(set_special_edit(false));
+                set_view_organigram(true);
+              }}
+              fullWidth
+            >
+              VISUALIZAR ORGANIGRAMA
+            </Button>
+          </Grid>
+          {!organigram_current?.fecha_terminado && (
+            <Grid item xs={12} sm={3}>
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<SaveIcon />}
+                onClick={() => {
+                  void dispatch(
+                    to_finalize_organigram_service(
+                      String(organigram_current?.id_organigrama),
+                      set_position_tab_organigrama
+                    )
+                  );
+                }}
+                fullWidth
+              >
+                FINALIZAR
+              </Button>
+            </Grid>
           )}
           {organigram_current?.fecha_terminado !== null &&
             organigram_current?.id_persona_cargo === null &&
             !organigram_current?.usado && (
+            <Grid item xs={12} sm={3}>
               <Button
                 color="success"
                 variant="contained"
@@ -999,11 +1000,13 @@ export const EditarOrganigrama = ({
                     )
                   );
                 }}
+                fullWidth
               >
                 REANUDAR
               </Button>
-            )}
-        </Stack>
+            </Grid>
+          )}
+        </Grid>
 
         <OrganigramVisualizerDialog
           is_modal_active={view_organigram}

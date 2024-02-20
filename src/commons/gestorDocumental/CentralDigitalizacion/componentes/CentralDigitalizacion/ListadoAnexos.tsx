@@ -39,6 +39,7 @@ interface IProps {
 const ListadoAnexos = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+
   const {
     exhibits,
     metadata,
@@ -63,7 +64,9 @@ const ListadoAnexos = () => {
     useState<boolean>(false);
 
   useEffect(() => {
-    //  console.log('')(digitization_request);
+    console.log("11111111111111111111");
+
+     console.log(digitization_request);
     if (
       digitization_request.id_solicitud_de_digitalizacion !== null &&
       digitization_request.anexos !== undefined
@@ -71,6 +74,8 @@ const ListadoAnexos = () => {
       dispatch(set_exhibits(digitization_request.anexos));
     }
   }, [digitization_request]);
+
+ 
 
   useEffect(() => {
     //  console.log('')(exhibit);

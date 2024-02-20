@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Title } from '../../../../components/Title';
 import { EncabezadoSolicitud } from '../componentes/EncabezadoSolicitud';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
@@ -16,6 +17,7 @@ import { deudores, get_datos_deudor_amortizacion } from '../slices/DeudoresSlice
 import { datos_facilidad } from '../slices/FacilidadesSlice';
 import { get_datos_amortizacion } from '../slices/PlanPagosSlice';
 import { control_error } from '../../../../helpers';
+import { api } from '../../../../api/axios';
 
 interface RootState {
   solicitud_facilidad: {
@@ -75,10 +77,31 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
   };
 
   useEffect(() => {
-    if(respuesta_registro !== undefined){
+    if (respuesta_registro !== undefined) {
       set_modal(true);
     }
   }, [respuesta_registro])
+  const [correo, setCorreo] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [asunto, setAsunto] = useState('');
+  const [mensaje, setMensaje] = useState('');
+
+  const enviarCorreo = async () => {
+    try {
+      const datos = {
+        correo,
+        nombre,
+        asunto,
+        mensaje
+      };
+      const response = await api.post('/hidrico/zonas-hidricas/enviar_correo/', datos);
+      console.log('Correo enviado con éxito', response.data);
+      // Aquí puedes agregar una notificación o mensaje de éxito
+    } catch (error) {
+      console.error('Error al enviar el correo', error);
+      // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje al usuario
+    }
+  };
 
   return (
     <>
@@ -98,7 +121,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
-               <Title title='Gestionar Solicitud de Facilidad de Pago'/>
+              <Title title='Gestionar Solicitud de Facilidad de Pago' />
               <h3>Datos de la Solicitud</h3>
               <Grid item xs={12}>
                 <Box
@@ -123,10 +146,10 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
-                 <Grid item xs={12}  >
-                    <Title title={`Respuesta a la Solicitud `} />
-                </Grid>
-            
+              <Grid item xs={12}  >
+                <Title title={`Respuesta a la Solicitud `} />
+              </Grid>
+
               <Grid item marginTop={2} xs={12}>
                 <Box
                   component="form"
@@ -178,20 +201,20 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         startIcon={<CloudUpload />}
                       >
                         {file_name !== '' ? file_name : 'Informe BDME'}
-                          <input
-                            hidden
-                            type="file"
-                            required
-                            autoFocus
-                            style={{ opacity: 0 }}
-                            name='consulta_dbme'
-                            onChange={handle_file_selected}
-                          />
+                        <input
+                          hidden
+                          type="file"
+                          required
+                          autoFocus
+                          style={{ opacity: 0 }}
+                          name='consulta_dbme'
+                          onChange={handle_file_selected}
+                        />
                       </Button>
                     </Grid>
                     <Grid item xs={12} sm={3.5}>
                       <FormControlLabel
-                        control={ <Checkbox
+                        control={<Checkbox
                           name='reportado_dbme'
                           onChange={(event: check) => {
                             const { checked } = event.target
@@ -220,7 +243,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         <Select
                           defaultValue={''}
                           label="¿Crear plan de pagos?"
-                          onChange={(event: event)=>{
+                          onChange={(event: event) => {
                             const { value } = event.target
                             set_plan_pagos_pregunta(value)
                           }}
@@ -286,7 +309,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                             <Select
                               defaultValue={''}
                               label="¿Crear Resolución?"
-                              onChange={(event: event)=>{
+                              onChange={(event: event) => {
                                 const { value } = event.target
                                 set_resolucion_pregunta(value)
                               }}
@@ -385,7 +408,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                     maxWidth="lg"
                   >
                     <Box component="form"
-                      onSubmit={()=>{}}>
+                      onSubmit={() => { }}>
                       <DialogTitle><Title title='Liquidación de la Facilidad de Pago - Usuario Cormacarena' /></DialogTitle>
                       <DialogActions>
                         <Stack
@@ -413,7 +436,69 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         </Stack>
                       </DialogActions>
                     </Box>
+
+
                   </Dialog>
+
+                  <Grid container marginTop={2} spacing={2}>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Correo Electrónico"
+                        size="small"
+
+                        fullWidth
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Nombre"
+                        size="small"
+
+                        fullWidth
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Asunto"
+                        size="small"
+
+                        fullWidth
+                        value={asunto}
+                        onChange={(e) => setAsunto(e.target.value)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Mensaje"
+                        size="small"
+
+                        fullWidth
+                        // multiline
+                        rows={4}
+                        value={mensaje}
+                        onChange={(e) => setMensaje(e.target.value)}
+                      />
+                    </Grid>
+
+                    <Grid item >
+                      <Button variant="contained" color="primary" onClick={enviarCorreo}>
+                        Enviar Correo
+                      </Button>
+                    </Grid>
+
+
+                  </Grid>
+
+
+
+
+
+
                   <Stack
                     direction="row"
                     justifyContent="right"

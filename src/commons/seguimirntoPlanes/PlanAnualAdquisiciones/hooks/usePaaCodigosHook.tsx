@@ -30,6 +30,7 @@ export const usePaaCodigosHook = (): any => {
 
   // limpiar formulario
   const limpiar_formulario_paa_codidos = async () => {
+    set_value_paa_codidos("id_codigo", null);
     reset_paa_codidos({
       nombre_paa: '',
       nombre_producto_unsp: '',
@@ -55,8 +56,8 @@ export const usePaaCodigosHook = (): any => {
   const onsubmit_paa_codidos = handleSubmit_paa_codidos(async (data) => {
     try {
       //  console.log('')(data, 'data');
-      data.id_plan = id_plan_anual;
       set_is_saving_paa_codidos(true);
+      data.id_plan = id_plan_anual;
       await post_paa_codigos(data as IUnspsc);
       control_success('Se creó correctamente');
       await limpiar_formulario_paa_codidos();

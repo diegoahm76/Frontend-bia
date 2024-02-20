@@ -57,7 +57,6 @@ interface ModalFlujoDeTrabajoProps {
 export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, onClose }) => {
 
     const [estadoWordFlow, set_estadoWordFlow] = useState<Iconsulta>({ arbol_solicitudes: [] });
-
     const seEncontroGUARDADO = estadoWordFlow.arbol_solicitudes.some(item => item.solicitud === "GUARDADO");
     const guardadoFechaRegistro = seEncontroGUARDADO ? estadoWordFlow.arbol_solicitudes.find(item => item.solicitud === "GUARDADO")?.fecha_registro || 0 : 0;
 
@@ -88,10 +87,9 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
         seEncontroRESPONDIDA
     ].filter(Boolean).length;
 
-    console.log("guardadoFechaRegistro", guardadoFechaRegistro);
 
     console.log("variable_poso", seEncontroGUARDADO, seEncontroRADICADO, seEncontroENVENTANILLACONPENDIENTES, seEncontroENVENTANILLASINPENDIENTES, seEncontroENGESTION, seEncontroRESPONDIDA);
-    const variable_poso = cantidadTrue - 1;
+    const variable_poso = cantidadTrue-1;
 
 
 
@@ -130,7 +128,7 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
 
 
     console.log("estadoWordFlow", estadoWordFlow.arbol_solicitudes);
-    console.log("data", guardadoFechaRegistroENGESTION);
+
 
     const consulta_estado_word_flow = async (): Promise<void> => {
         try {
@@ -170,7 +168,7 @@ export const ModalFlujoDeTrabajo: React.FC<ModalFlujoDeTrabajoProps> = ({ data, 
                 }}
             >
                 <Grid item xs={12}>
-                    <Title title="Consultar Años Anteriores" />
+                    <Title title="WordFlow" />
                 </Grid>
 
                 {/* Contenido */}

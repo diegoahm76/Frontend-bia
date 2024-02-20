@@ -17,3 +17,8 @@ const useConsultaEstadoSol = () => {
     EXE_CONSULTA_ESTADO_SOL,
   };
 };
+
+
+export {
+  useConsultaEstadoSol,
+}
