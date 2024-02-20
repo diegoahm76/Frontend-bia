@@ -35,7 +35,7 @@ import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
 import { getDetalleDeTarea } from '../../../../../services/servicesStates/pqrsdf/detalleDeTarea/getDetalleDeTarea.service';
 
-const iconStyles = {
+export const iconStyles = {
   color: 'white',
   width: '25px',
   height: '25px',
@@ -138,14 +138,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     });
 
     const shouldDisable = (actionId: string) => {
-     /* const isVerInfo = actionId === 'InfoSolictud';
-      const isResponder = actionId === 'RespondeSolicitud';
-      const isEnviarReq = actionId === 'RequerimientoUsuario';
-      const isReasignar = actionId === 'Reasignar';
-      const isVerRespReq =
-        actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario';
-      const isSegRespTarea = actionId === 'SeguimientoARespuesta';*/
-
       if (!tareaPQRSDF) {
         return true; // No se ha seleccionado ninguna tarea
       }
@@ -547,7 +539,11 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea
+              Quitar selección de Tarea ({' '}
+              {
+                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
+              }
+              )
             </Button>
           ) : null
         }

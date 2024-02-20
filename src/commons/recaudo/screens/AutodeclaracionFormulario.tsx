@@ -1,62 +1,54 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
+
+
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
 import { api } from '../../../api/axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
+import { styled } from '@mui/material/styles';
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from '../../../components/Title';
+import IconButton from '@mui/material/IconButton';
 import { AuthSlice } from '../../auth/interfaces';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_error } from '../alertas/store/thunks/alertas';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import { control_success } from '../../recursoHidrico/requets/Request';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import { BuscadorPersona } from '../../../components/BuscadorPersona';
-interface CoordenadasSitioCaptacion {
-    cordenadaX: any;
-    cordenadaY: any;
-}
-interface FuenteAbastecimiento {
-    tipo: string | any;
-    numero: number | any;
-    nombreFuente: string | any;
-    caudalConcesionado: string | any;
-    sistemaMedicionAguaCaptada: string | any;
-    cordenadaX: number | any;
-    cordenadaY: number | any;
-}
+
 
 export interface Persona {
     id_persona: number;
+    tipo_usuario: string;
     primer_nombre: string;
+    numero_documento: any;
     segundo_nombre: string;
     primer_apellido: string;
     segundo_apellido: string;
-    tipo_usuario:string;
 };
- 
+
 interface FactoresUtilizacion {
     numeroBovinos: any;
     numeroPorcinos: any;
     numeroUsuarios: any;
     numeroHectareas: any;
-    consumoNumeroUsuarios: any;
     consumoNumeroBovinos: any;
+    consumoNumeroUsuarios: any;
     consumoNumeroPorcinos: any;
     consumoNumeroHectareas: any;
 }
 interface Campo {
     nombre: string;
-    valor: any;  
+    valor: any;
 }
 interface CaptacionMensualAgua {
     mes: number | any;
@@ -65,34 +57,90 @@ interface CaptacionMensualAgua {
     caudalUtilizado: number | any;
     volumenAguaCaptada: number | any;
 }
+interface FuenteAbastecimiento {
+    tipo: any;
+    numero: any;
+    cordenadaX: any;
+    cordenadaY: any;
+    nombreFuente: any;
+    caudalConcesionado: any;
+    sistemaMedicionAguaCaptada: any;
+}
 
 interface Data {
-    id_archivo_sistema:any;
-
     cc: any;
     nit: any;
     fax: string;
-    telefono: string;
-    otrotipo: string;
-    direccion: string;
-    municipio: string;
     expediente: any;
     codigoCIIU: any;
+    otrotipo: string;
+    telefono: string;
+    direccion: string;
+    numConcesion: any;
+    municipio: string;
     razonSocial: string;
     tipoUsuario: string;
-    numConcesion: any;
     fechaCreacion: string;
+    id_archivo_sistema: any; 
     actividadEconomica: string;
     nombreRepresentanteLegal: string;
     factoresUtilizacion: FactoresUtilizacion;
     captacionesMensualesAgua: CaptacionMensualAgua[];
-    // coordenadasSitioCaptacion: CoordenadasSitioCaptacion;
     informacionFuentesAbastecimiento: FuenteAbastecimiento[];
 }
 
+
 export const AutodeclaracionFormulario: React.FC = () => {
+
     const { userinfo: { telefono_celular } } = useSelector((state: AuthSlice) => state.auth);
+
+    const initialFormData: Data = {
+        nit: null,
+        cc: null,
+        fax: ``,
+        otrotipo: ``,
+        municipio: ``,
+        direccion: ``,
+        razonSocial: ``,
+        tipoUsuario: ``,
+        codigoCIIU: null,
+        expediente: null,
+        fechaCreacion: ``,
+        numConcesion: null,
+        actividadEconomica: ``,
+        id_archivo_sistema: null,
+        nombreRepresentanteLegal: ``,
+        telefono: `${telefono_celular}`,
+        informacionFuentesAbastecimiento: [],
+        factoresUtilizacion: {
+            numeroUsuarios: null,
+            numeroBovinos: null,
+            numeroPorcinos: null,
+            numeroHectareas: null,
+            consumoNumeroBovinos: null,
+            consumoNumeroPorcinos: null,
+            consumoNumeroUsuarios: null,
+            consumoNumeroHectareas: null,
+        },
+        captacionesMensualesAgua: []
+    };
+    const [formmmm, set_form] = useState<{ archivo: null | any }>({ archivo: null });
+    const [Data, setFormData] = useState<Data>(initialFormData);
+
     const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
+    const [persona, set_persona] = useState<Persona | undefined>();
+
+    useEffect(() => {
+        if (persona?.primer_nombre) {
+            setFormData(prevState => ({
+                ...prevState,
+                nombreRepresentanteLegal: persona.primer_nombre,
+                cc: persona.numero_documento,
+            }));
+        }
+    }, [persona]);
+
+
     const [
         ,
         // direccionGeneradaActiva
@@ -108,39 +156,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
         // set_type_direction
     ] = useState('');
 
-    const initialFormData: Data = {
-        id_archivo_sistema:null,
-        nit: null,
-        cc: null,
-        fax: "",
-        municipio: "",
-        numConcesion: null,
-        tipoUsuario: "",
-        otrotipo: "",
-        razonSocial: "",
-        nombreRepresentanteLegal: "",
-        actividadEconomica: "",
-        telefono: `${telefono_celular}`,
-        codigoCIIU: null,
-        direccion: ``,
-        expediente: null,
-        fechaCreacion: "",
-        informacionFuentesAbastecimiento: [],
 
-        factoresUtilizacion: {
-            numeroUsuarios: null,
-            numeroBovinos: null,
-            numeroPorcinos: null,
-            numeroHectareas: null,
-            consumoNumeroUsuarios: null,
-            consumoNumeroBovinos: null,
-            consumoNumeroPorcinos: null,
-            consumoNumeroHectareas: null,
-        },
-        captacionesMensualesAgua: []
-    };
-
-    const [Data, setFormData] = useState<Data>(initialFormData);
+    console.log("data", Data)
     const handleInputChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | SelectChangeEvent<string>
     ) => {
@@ -148,9 +165,6 @@ export const AutodeclaracionFormulario: React.FC = () => {
         const { name, value } = target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
-
-
-
     const set_value_direction = (direccion_notificacion: any): void => {
         setdireccion_generadaa(direccion_notificacion);
         set_direccion_generada_activaa(true);
@@ -159,7 +173,6 @@ export const AutodeclaracionFormulario: React.FC = () => {
             direccion: direccion_notificacion, // Establece la dirección igual a direccion_notificacion
         }));
     };
-
     const [municipios, setMunicipios] = useState<Array<[string, string]>>([]);
     const [municipios_v, setMunicipios_v] = useState<Array<[string, string]>>([]);
 
@@ -176,8 +189,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
     };
     useEffect(() => {
         fetchDepartamentos();
-    }, []);
-
+    }, [])
     const crearFormulario = async () => {
         try {
             const url = "/recaudo/formulario/crear_formulario/";
@@ -190,11 +202,70 @@ export const AutodeclaracionFormulario: React.FC = () => {
             control_error(error.response.data.detail);
         }
     };
+    const fetch_Crear_archivo_digital = async () => {
+        try {
+            const url = `/recaudo/formulario/crear_formulario/`;
+            const formData = new FormData();
+
+            formData.append('nit', `${Data.nit}`);
+            formData.append('cc', ` ${Data.cc}`);
+            formData.append('fax', ` ${Data.fax}`);
+            formData.append('telefono', `${Data.telefono}`);
+            formData.append('otrotipo', `${Data.otrotipo}`);
+            formData.append('direccion', `${Data.direccion}`);
+            formData.append('municipio', `${Data.municipio}`);
+            formData.append('codigoCIIU', `${Data.codigoCIIU}`);
+            formData.append('expediente', `${Data.expediente}`);
+            formData.append('razonSocial', `${Data.razonSocial}`);
+            formData.append('tipoUsuario', `${Data.tipoUsuario}`);
+            formData.append('numConcesion', `${Data.numConcesion}`);
+            formData.append('actividadEconomica', `${Data.actividadEconomica}`);
+            formData.append('nombreRepresentanteLegal', `${Data.nombreRepresentanteLegal}`);
+
+            // Agregar los campos de factoresUtilizacion al objeto FormData
+            formData.append('factoresUtilizacion', JSON.stringify({
+                "numeroBovinos": `${Data.factoresUtilizacion.numeroBovinos}`,
+                "numeroPorcinos": `${Data.factoresUtilizacion.numeroPorcinos}`,
+                "numeroUsuarios": `${Data.factoresUtilizacion.numeroUsuarios}`,
+                "numeroHectareas": `${Data.factoresUtilizacion.numeroHectareas}`,
+                "consumoNumeroBovinos": `${Data.factoresUtilizacion.consumoNumeroBovinos}`,
+                "consumoNumeroPorcinos": `${Data.factoresUtilizacion.consumoNumeroPorcinos}`,
+                "consumoNumeroUsuarios": `${Data.factoresUtilizacion.consumoNumeroUsuarios}`,
+                "consumoNumeroHectareas": `${Data.factoresUtilizacion.consumoNumeroHectareas}`,
+            }));
+
+            // Agregar las captacionesMensualesAgua al objeto FormData
+            formData.append('captacionesMensualesAgua', JSON.stringify(Data.captacionesMensualesAgua.map((row, index) => ({ ...row, id: index }))
+            ));
+
+            // Agregar las informacionFuentesAbastecimiento al objeto FormData
+            formData.append('informacionFuentesAbastecimiento', JSON.stringify(Data.informacionFuentesAbastecimiento.map((row, index) => ({ ...row, id: index }))));
+            // formData.append('id_archivo_sistema', formmmm.archivo as File);
+            if (formmmm.archivo) {
+                formData.append('id_archivo_sistema', formmmm.archivo);
+            }
+
+            // Realizar la solicitud POST
+            const res = await api.post(url, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (res.data) {
+                // La solicitud fue exitosa
+                control_success("se creo correctamente");
+            } else {
+                // La solicitud falló
+                console.error('Error en la solicitud:', res.statusText);
+            }
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+        }
+    };
 
 
 
-
-    
     const [currentCaptacion, setCurrentCaptacion] = useState({
         periodoUso: "",
         tiempoUso: "",
@@ -233,23 +304,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
             control_error(`Falta agregar dato: ${campoFaltante}`);
             return;
         }
-
-        const camposRequeridos = {
-            periodoUso: 'Periodo de Uso',
-            tiempoUso: 'Tiempo de Uso',
-            caudalUtilizado: 'Caudal Utilizado',
-            volumenAguaCaptada: 'Volumen de Agua Captada',
-            mes: 'Mes'
-        };
-
-
         if (mesYaExiste) {
             // Mostrar una alerta si el mes ya fue agregado
             control_error("Mes ya agregado ");
 
         }
-
-
         else {
             // Proceder a agregar la captación si el mes no existe
             setFormData(prevState => ({
@@ -267,9 +326,6 @@ export const AutodeclaracionFormulario: React.FC = () => {
             });
         }
     };
-
-
-
     const eliminarcaptacion = (id: number) => {
         setFormData(prevState => ({
             ...prevState,
@@ -384,14 +440,70 @@ export const AutodeclaracionFormulario: React.FC = () => {
     ];
 
     ///
-    const [persona, set_persona] = useState<Persona | undefined>();
 
     const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
 
+
+
+
+
+    const [fileExtension, setFileExtension] = useState<string | null>(null);
+    const [file_nombre, set_file_nombre] = useState<string | null>(null);
+
+
+
+
+
+    const VisuallyHiddenInput = styled('input')`
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    white-space: nowrap;
+    width: 1px;
+  `;
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const fileInput = event.target;
+        if (fileInput?.files?.length) {
+            const fileName = fileInput.files[0].name;
+            const selectedFile = fileInput.files[0];
+
+
+            // Verificar si selectedFile no es null antes de asignarlo a set_form
+
+            set_form({ archivo: selectedFile });
+
+            const extension = fileName.split('.').pop();
+            if (extension) {
+                setFileExtension(extension);
+                set_file_nombre(fileName);
+            } else {
+                console.error('No se pudo determinar la extensión del archivo.');
+                setFileExtension('Desconocido');
+                set_file_nombre('Desconocido');
+            }
+        } else {
+            console.warn('Ningún archivo seleccionado.');
+            setFileExtension(null);
+            set_file_nombre(null);
+        }
+    }; 
+    const handleRemoveFile = () => {
+        // Limpia la selección actual del archivo
+        set_form({
+
+            archivo: null,
+        });
+        setFileExtension(null);
+        set_file_nombre(null);
+    };
+ 
     return (
-        <>
-
-
+        <> 
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -402,8 +514,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <Title title="Formulario auto declaración  " />
-
+                <Title title="Formulario auto declaración  " /> 
                 <Grid item xs={12}>
                     <BuscadorPersona
                         onResult={(data) => {
@@ -411,11 +522,10 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
-{persona?.primer_nombre}
+                {/* {persona?.primer_nombre} */}
             </Grid>
             {/* 222
-            {direccion_generada} */}
-
+            {direccion_generada} */} 
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -427,8 +537,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 }}
             >
                 <Title title="Información general del usuario" />
-                <Grid container item xs={12} spacing={2} marginTop={2}>
-
+                <Grid container item xs={12} spacing={2} marginTop={2}> 
                     <Grid item xs={12} sm={4}>
                         <FormControl fullWidth size="small" variant="standard">
                             <InputLabel>Tipo de Usuario</InputLabel>
@@ -446,13 +555,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                                 <MenuItem value="OTRO">Otro</MenuItem>
                             </Select>
                         </FormControl>
-                    </Grid>
-
-                    {/* <Button variant="contained" onClick={crearFormulario}>
-                        Crear
-                    </Button> */}
-
-
+                    </Grid> 
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
@@ -489,9 +592,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             onChange={handleInputChange}
 
                         />
-                    </Grid>
-
-
+                    </Grid> 
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
@@ -551,8 +652,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             onChange={handleInputChange}
 
                         />
-                    </Grid>
-
+                    </Grid> 
                     <Grid item xs={12} sm={4}>
                         <FormControl variant="standard" size="small" fullWidth>
                             <InputLabel >Municipio</InputLabel>
@@ -581,8 +681,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             value={Data.expediente}
                             onChange={handleInputChange}
                         />
-                    </Grid>
-
+                    </Grid> 
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
@@ -606,21 +705,13 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             name="direccion"
                             value={Data.direccion}
                         />
-                    </Grid>
-
-
-
+                    </Grid> 
                     <DialogGeneradorDeDirecciones
                         open={opengeneradordireccioness}
                         openDialog={setopengeneradordireccioness}
                         onChange={set_value_direction}
                         type={type_directionn}
-                    />
-
-
-
-
-
+                    /> 
                     <Grid item xs={4}>
                         <Button
                             variant="contained"
@@ -630,11 +721,11 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         >
                             Generar dirección
                         </Button>
-                    </Grid> 
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                     </Grid>
                 </Grid>
-            </Grid> 
+            </Grid>
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -645,8 +736,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <Title title="Información de fuentes de abastecimiento.  " />
-
+                <Title title="Información de fuentes de abastecimiento.  " /> 
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -657,10 +747,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         value={currentFuente.numero}
                         onChange={handleCurrentFuenteChange}
                     />
-                </Grid>
-
-
-
+                </Grid> 
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -671,11 +758,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         value={currentFuente.tipo}
                         onChange={handleCurrentFuenteChange}
                     />
-                </Grid>
-
-
-
-
+                </Grid> 
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -795,11 +878,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     />
 
                 </Grid>
-            </Grid>
-
-
-
-
+            </Grid> 
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -809,12 +888,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
-            >
-
-                <Title title=" Factores de utilización " />
-
-
-
+            > 
+                <Title title=" Factores de utilización " /> 
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -853,11 +928,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-
-                </Grid>
-
-
+                <Grid item xs={12} sm={4}>       </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -896,11 +967,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
-
-                <Grid item xs={12} sm={4}>
-
-                </Grid>
-
+                <Grid item xs={12} sm={4}>  </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -941,7 +1008,6 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                 </Grid>
-
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -1014,7 +1080,6 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         onChange={handleCurrentCaptacionChange}
                     />
                 </Grid>
-
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -1026,7 +1091,6 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         onChange={handleCurrentCaptacionChange}
                     />
                 </Grid>
-
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -1081,104 +1145,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         getRowId={(row) => row.id}
                     />
                 </Grid>
-                {/* 
-                    <Grid item >
-
-
-                        Yo, _____________________________________ identificado con C.C. No. __________________ de _________________ en calidad de representante legal de _____________________________, en cumplimiento de lo estipulado en el decreto 155/04, en el artículo 6 me permito presentar el reporte de agua captada durante el periodo. Declaro que tengo a disposición de CORMACARENA los registros sustento de los resultados presentados.
-
-                        Nota: Este formulario deberá ser regresado a la autoridad ambiental en un plazo máximo de 15 días calendario contados a partir del vencimiento del período de cobro de acuerdo con la Resolución PS-GJ 1.2.6.21.0293 del 08 de abril de 2021. «POR MEDIO DE LA CUAL SE FIJAN LAS CONDICIONES PARA EL COBRO DE LA TASA POR UTILIZACION DE AGUA EN EL AREA JURISDICCION DEL DEPARTAMENTO DEL META Y SE DICTAN OTRAS
-                        DISPOSICIONES».
-
-                        FIRMA_____________________________C.C__________________DE_____________________
-
-                        Para uso exclusivo de la Corporación
-
-                        Radicado de Cormacarena No. ____________________________ del _________________
-
-
-                        Anexos:
-                        Certificado de calibración - Mantenimiento
-                        Bitácoras – Registros de consumo
-
-                    </Grid>
- */}
-
-
-                {/* 
-
-
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            disabled
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            label=" Nombre de usuario"
-                            name="Nombre de usuario "
-                            value={nombre_de_usuario}
-                            onChange={handleInputChange}
-
-                        />
-                    </Grid> 
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            disabled
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            label="email"
-                            name="email"
-                            value={email}
-                            onChange={handleInputChange}
-
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            disabled
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            label="nombre_unidad_organizacional"
-                            name="nombre_unidad_organizacional"
-                            value={nombre_unidad_organizacional}
-                            onChange={handleInputChange}
-
-                        />
-                    </Grid> */}
-                {/* <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            onChange={handleInputChange} 
-                            variant="standard"
-                            label="fechaCreacion"
-                            name="fechaCreacion"
-                            value={Data.fechaCreacion}
-                        />
-                    </Grid>  
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            size="small"
-                            variant="standard"
-                            label="otrotipo"
-                            name="otrotipo"
-                            value={Data.otrotipo}
-                            onChange={handleInputChange}
-                        />
-                    </Grid>
-                  
- */}
-
-
-
-
-
             </Grid>
-
-
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -1193,38 +1160,48 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 <Grid item >
                     <Button color='success'
                         variant='contained'
-                        startIcon={<SaveIcon />} onClick={crearFormulario}>
-                        Crear
+                        startIcon={<SaveIcon />} onClick={fetch_Crear_archivo_digital}>
+                        guardar
                     </Button>
 
                 </Grid>
 
+                <Grid
+                    item
+                //   container
+                //   style={{ display: 'flex', justifyContent: 'flex-end', marginRight: 50 }}
+                >
 
+                    <Button
+                        // style={{ marginTop: 10, width: 180 }}
+                        fullWidth
+                        component="label"
+                        variant="outlined"
+                        startIcon={<CloudUploadIcon />}
+                        htmlFor="file-upload"
+                    >
+                        {formmmm.archivo ? (
+                            <>
+                                Quitar
+                                <IconButton
+                                    size="small"
+                                    onClick={handleRemoveFile}
+                                    sx={{ marginLeft: '8px' }}
+                                >
+                                    <DeleteIcon fontSize="small" />
+                                </IconButton>
+                            </>
+                        ) : (
+                            'Seleccionar Documento'
+                        )}
+                        <VisuallyHiddenInput
+                            type="file"
+                            id="file-upload"
+                            onChange={handleFileChange}
+                        />
+                    </Button>
 
-                {/* 
-                <Grid item xs={12} marginLeft={3} sm={3}>
-                    <FormControl  variant="standard" size="small" fullWidth>
-                        <InputLabel id="municipio-select-label">municipio</InputLabel>
-                        <Select
-                            labelId="municipio-select-label"
-                            id="municipio-select"
-                            value={Data.municipio_v}
-                            label="municipio"
-                            onChange={handleInputChange}
-                            name="municipio_v"
-                        >
-                            {municipios_v.map((municipio) => (
-                                <MenuItem key={municipio[0]} value={municipio[0]}>
-                                    {municipio[1]}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid> */}
-
-
-
-
+                </Grid>
             </Grid>
 
 

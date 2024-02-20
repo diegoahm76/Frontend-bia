@@ -44,8 +44,10 @@ export interface SerieSubserie {
 
 
 export interface UnidadOrganizaciona {
+  codigo: any;
+  nombre: string;
+  tiene_configuracion: any;
   id_unidad_organizacional: number;
-  nombre: string; 
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Facturacion: React.FC = () => {
@@ -54,6 +56,7 @@ export const Facturacion: React.FC = () => {
   // const [consecutivo, setConsecutivo] = useState<string | null>(null);
 
   const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
+  const [consecutivo_id, setConsecutivo_id] = useState<number | null>(null);
 
   const realizarActualizacion = async () => {
     try {
@@ -306,7 +309,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     yFinal += 10;
     doc.text(`Contratista Grupo: ${nombre_unidad_organizacional}`, 10, yFinal);
     setVisor(doc.output('datauristring'));
-    
+
   };
 
 
@@ -343,7 +346,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
   };
 
   const [selectedSerieSubserie, setSelectedSerieSubserie] = useState('');
-  
+
   const [seriesSubseries, setSeriesSubseries] = useState<SerieSubserie[]>([]);
   const fetchSeriesSubseries = async () => {
     try {
@@ -435,6 +438,10 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
       const formData = new FormData();
 
       formData.append("radicado", `${consecutivoActual}`);
+
+
+      formData.append("id_consecutivo", `${consecutivo_id}`);
+
       formData.append("ids_destinatarios_personas", `${persona?.id_persona}`);
       formData.append("ids_destinatarios_unidades", `${miVariable}`);
 
@@ -539,15 +546,15 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     // realizarActualizacion();
   };
 
-  const [consecutivo_error , setconsecutivo_error ] = useState<any>(null);
-  
+  const [consecutivo_error, setconsecutivo_error] = useState<any>(null);
+
   // const handle_close = (): void => {
   //   set_is_buscar(false);
   //   enviarDocumento();
   // };
   const handle_close = (): void => {
     set_is_buscar(false);
-    setConsecutivoActual(null);
+    // setConsecutivoActual(null);
     if (!consecutivo_error) {
       enviarDocumento();
       setconsecutivo_error("Documento no enviado ")
@@ -555,7 +562,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     }
     setconsecutivo_error(null);
   };
-  
+
 
 
   async function crearConsecutivo() {
@@ -572,7 +579,9 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
       console.log('Consecutivo creado con éxito', res.data);
       // Actualizar el DOM o el estado para mostrar el valor de consecutivo
       setConsecutivoActual(res.data?.data?.consecutivo);
-    } catch (error:any) {
+      setConsecutivo_id(res.data?.data?.id_consecutivo);
+
+    } catch (error: any) {
       console.error('Error al crear el consecutivo', error);
       control_error(error.response.data.detail);
       setconsecutivo_error(error.response.data.detail)
@@ -627,7 +636,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
               onChange={handleChangeee}
             >
               <MenuItem value="1">Plantilla 1</MenuItem>
-              <MenuItem value="2">Plantilla 2</MenuItem>
+              {/* <MenuItem value="2">Plantilla 2</MenuItem> */}
               <MenuItem value="3">Vacio</MenuItem>
             </Select>
           </FormControl>
@@ -670,6 +679,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
         {/* miguel
         {id_persona} */}
         {/* {idUnidadSeleccionada} */}
+
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="unidad-organizacional-select-label">Unidad Organizacional</InputLabel>
@@ -681,7 +691,11 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
               onChange={handleChange}
             >
               {unidades.map((unidad) => (
-                <MenuItem key={unidad.id_unidad_organizacional} value={unidad.id_unidad_organizacional}>
+                <MenuItem
+                  key={unidad.id_unidad_organizacional}
+                  value={unidad.id_unidad_organizacional}
+                  disabled={!unidad.tiene_configuracion} // Deshabilita el MenuItem si tiene_configuracion es false
+                >
                   {unidad.nombre}
                 </MenuItem>
               ))}

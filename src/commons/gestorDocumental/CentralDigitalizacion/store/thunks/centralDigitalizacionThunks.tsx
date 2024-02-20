@@ -1,4 +1,5 @@
-import { type Dispatch } from 'react';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { useContext, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
 import {
@@ -20,6 +21,7 @@ import {
 } from '../slice/centralDigitalizacionSlice';
 import { api } from '../../../../../api/axios';
 import { IObjListType } from '../../interfaces/central_digitalizacion';
+import { OpcionOtrosContext } from '../../context/BusquedaOtrosDigitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -129,17 +131,62 @@ export const get_file_typology_service = (): any => {
     } catch (error: any) {
       //  console.log('')('get_file_typology_service');
       control_error(error.response.data.detail);
-      return error as AxiosError;
+      return error as AxiosError;            
     }
   };
 };
+//gestor/central-digitalizacion/get-solicitudes-pendientes/
+// gestor/central-digitalizacion/otros/get-solicitudes-pendientes/
+// const {opcion_otros}=useContext(OpcionOtrosContext)
 
-// obtener personas filtro
 export const get_digitalization_requests_service = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
         `gestor/central-digitalizacion/get-solicitudes-pendientes/`,
+        { params }
+      );
+      console.log(data);
+      if (data.success) {
+        dispatch(set_digitization_requests(data.data));
+        control_success(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      //  console.log('')('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+export const get_digitalization_requests_service_otros = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/central-digitalizacion/otros/get-solicitudes-pendientes/`,
+        { params }
+      );
+      console.log(data);
+      if (data.success) {
+        dispatch(set_digitization_requests(data.data));
+        control_success(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      //  console.log('')('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+export const get_Opas = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `/gestor/central-digitalizacion/opas/get-solicitudes-pendientes/`,
         { params }
       );
       console.log(data);
@@ -183,6 +230,28 @@ export const get_digitalization_request_id_service = (id: any): any => {
     try {
       const { data } = await api.get(
         `/gestor/central-digitalizacion/get-solicitudes-by-id/${id}`
+      );
+      console.log(data);
+      if (data.success) {
+        dispatch(set_digitization_request(data.data));
+        // control_success(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+//opas
+export const get_digitalization_opas = (id: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `/gestor/central-digitalizacion/opas/get-solicitudes-by-id/${id}`
       );
       console.log(data);
       if (data.success) {
@@ -267,6 +336,32 @@ export const add_metadata_service = (metadata: any, id: number): any => {
   };
 };
 
+
+// editar metadata OPAS 
+export const edit_metadata_opas_service = (metadata: any, id: number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `/gestor/central-digitalizacion/opas/actualizar-digitalizacion/`,
+        metadata
+      );
+      //  console.log('')(data);
+
+      control_success(data.detail);
+      dispatch(get_digitalization_request_id_service(id));
+      dispatch(get_digitalization_opas(id));
+
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      //  console.log('')('edit_metadata_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
 // editar metadata
 export const edit_metadata_service = (metadata: any, id: number): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -289,6 +384,34 @@ export const edit_metadata_service = (metadata: any, id: number): any => {
     }
   };
 };
+
+
+
+
+
+
+// // editar metadata_esta es la que funcina y d ebo dejar
+// export const edit_metadata_service = (metadata: any, id: number): any => {
+//   return async (dispatch: Dispatch<any>) => {
+//     try {
+//       const { data } = await api.put(
+//         `gestor/central-digitalizacion/actualizar-digitalizacion/`,
+//         metadata
+//       );
+//       //  console.log('')(data);
+
+//       control_success(data.detail);
+//       dispatch(get_digitalization_request_id_service(id));
+
+//       // dispatch(set_pqr(data.data));
+//       return data;
+//     } catch (error: any) {
+//       //  console.log('')('edit_metadata_service');
+//       control_error(error.response.data.detail);
+//       return error as AxiosError;
+//     }
+//   };
+// };
 
 // editar metadata
 export const delete_metadata_service = (params: any): any => {

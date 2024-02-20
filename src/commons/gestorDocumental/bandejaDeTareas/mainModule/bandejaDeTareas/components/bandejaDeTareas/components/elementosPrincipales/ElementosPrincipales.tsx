@@ -6,6 +6,7 @@ import { ListaElementosPqrsdf } from './elementosPqrsdf/ElementosPqrsdf';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
+import { ElementosOtros } from './elementosOtros/ElementosOtros';
 
 export const ElementosPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
@@ -14,9 +15,7 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
   );
 
   //* context declaration
-  const { secondLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const { secondLoading } = useContext(ModalAndLoadingContext);
 
   if (secondLoading)
     return (
@@ -39,16 +38,13 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
     'RESPONDER PQRSDF': <ListaElementosPqrsdf />,
     'Responder PQRSDF': <ListaElementosPqrsdf />,
     'Responder Trámite': <>hola trámites y servicios siuuuuuuuuuuuuuu</>,
-    // Otros: <ElementosOtros />,
-    // Opas: <ElementosOPAS/>,
+    'RESPONDER OTRO': <ElementosOtros />,
+    'Responder Otro': <ElementosOtros />,
+    'Responder OPA': <>hola OPA</>,
   } as const;
 
   const tipoDeTarea = listaTareasPqrsdfTramitesUotrosUopas[0]?.tipo_tarea;
   const Componente: any = tipoTarea[tipoDeTarea];
 
-  return (
-    <>
-      {Componente || <></>}
-    </>
-  );
+  return <>{Componente || <></>}</>;
 };
