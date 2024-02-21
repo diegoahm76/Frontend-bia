@@ -80,6 +80,12 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       width: 250,
     },
     {
+      field: 'numero_indicador',
+      headerName: 'Número del Indicador',
+      sortable: true,
+      width: 250,
+    },
+    {
       field: 'nombre_medicion',
       headerName: 'Nombre de Medición',
       sortable: true,

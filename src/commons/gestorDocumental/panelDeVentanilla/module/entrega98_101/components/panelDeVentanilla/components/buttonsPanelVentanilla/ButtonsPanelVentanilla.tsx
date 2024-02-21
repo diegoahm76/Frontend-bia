@@ -12,6 +12,8 @@ import { ButtonsComplementos } from './buttonsPqrsdf/buttonsComplementos/Buttons
 import { ButtonsOpas } from './buttonsOpas/ButtonsOpas';
 import { ButtonsOtros } from './buttonsOtros/ButtonsOtros';
 import { ButtonsTramites } from './buttonsTramitesYServicios/ButtonsTramitesSer';
+import { render } from '@testing-library/react';
+import { ButtonsComplementosTramites } from './buttonsTramitesYServicios/buttonComplementosTramites/ButtonsComplementosTramites';
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
@@ -25,10 +27,11 @@ import { ButtonsTramites } from './buttonsTramitesYServicios/ButtonsTramitesSer'
 }
 
 const renderPQRSDF = () => <ButtonsPqrsdf />;
-const renderTramitesYServicios = () => <ButtonsTramites/>;
-const renderOtros = () => <ButtonsOtros/>
+const renderTramitesYServicios = () => <ButtonsTramites />;
+const renderOtros = () => <ButtonsOtros />;
 const renderComplementoPQRSDF = () => <ButtonsComplementos />;
 const renderOPAS = () => <ButtonsOpas />;
+const renderComplementosTramites = () => <ButtonsComplementosTramites />;
 
 export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
@@ -58,8 +61,12 @@ export const ButtonsPanelVentanilla = (): JSX.Element => {
           case 'Complemento de PQRSDF':
           case 'Complemento de PQRSDF - Respuesta a solicitud':
           case 'Complemento de PQRSDF - Respuesta a requerimiento':
-            return renderComplementoPQRSDF();
-
+            return renderComplementoPQRSDF(); // sirve para complementos de pqrsdf y trámites
+          case 'Complemento de trámite':
+          case 'Complemento de Trámite - Respuesta a Requerimiento':
+          case 'Complementos trámite – Respuestas a solicitudes':
+          case 'Complementos trámite – Respuestas a requerimientos':
+            return renderComplementosTramites();
           case 'OPA':
             return renderOPAS();
 

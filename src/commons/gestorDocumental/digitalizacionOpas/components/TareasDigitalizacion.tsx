@@ -17,6 +17,9 @@ import { Button, ButtonGroup, Divider, FormControl, Grid, InputLabel, MenuItem, 
 import { control_error, control_success } from '../../../../helpers';
 import { api } from '../../../../api/axios';
 import { showAlert } from '../../../../utils/showAlert/ShowAlert';
+import { useAppSelector } from '../../../../hooks';
+import { useForm } from 'react-hook-form';
+import { IObjExhibit } from '../../CentralDigitalizacion/interfaces/central_digitalizacion';
 // import { cargarAsignaciones, cargarestado, cargarorganigrama, fetchSpqrs, fetchTipoPQRSDF } from '../services/consultaExterno.service';
 
 
@@ -29,7 +32,7 @@ export interface IProps {
     selectedEmail: any;
     setSelectedEmail: any;
 }
-interface Email {
+interface opas {
     anexos: any[];
     titular: string;
     asunto: string | null;
@@ -44,36 +47,55 @@ interface Email {
 
  
 export const TareasDigitalizacion: React.FC = () => {
-    const [Email, setEmail] = useState<Email[]>([]);
-    const [mensaje, setMensaje] = useState('');
+    const [opas, setOpas] = useState<opas[]>([]); 
 
-
-    const [totalPaginas, setTotalPaginas] = useState(0); // Estado para el total de páginas
-
-    const [currentNumber, setCurrentNumber] = useState(1);
-
-
-    const fetchEmail = async (): Promise<void> => {
+    const fetchOopas = async (): Promise<void> => {
         try {
             const url = `/gestor/central-digitalizacion/opas/get-solicitudes-pendientes/`;
             const res = await api.get(url);
-            const EmailData: Email[] = res.data?.data || [];
-            setTotalPaginas(res.data?.total_páginas || 0);
-
-            setEmail(EmailData);
+            const EmailData: opas[] = res.data?.data || [];
+            setOpas(EmailData);
             control_success("Correos esncontrados");
-
         } catch (error) {
             console.error(error);
         }
     };
+    useEffect(() => {
+        void fetchOopas();
+    }, []);
+
+
+    const {
+        exhibits,
+        metadata,
+        exhibit,
+        storage_mediums,
+        digitization_request,
+        file_fisico,
+        edit_digitization,
+      } = useAppSelector((state) => state.central_digitalizacion_slice);
+      const {
+        control: control_form,
+        handleSubmit: handle_submit_exhibit,
+        reset,
+        getValues: get_values,
+      } = useForm<IObjExhibit>();
 
     useEffect(() => {
-        void fetchEmail();
-    }, [currentNumber]);
-    // const [mensajeSeleccionado, setMensajeSeleccionado] = useState('');
-
-     
+        //  console.log('')(digitization_request);
+        if (
+          digitization_request.id_solicitud_de_digitalizacion !== null &&
+          digitization_request.anexos !== undefined
+        ) {
+        //   dispatch(set_exhibits(digitization_request.anexos));
+        }
+      }, []);
+      useEffect(() => {
+        console.log("2222222222");
+    
+         console.log(digitization_request);
+        
+      }, []);
 
     const columns = [
         { field: 'nombre_tipo_solicitud', headerName: 'nombre_tipo_solicitud', width: 130, flex: 1 },
@@ -82,7 +104,6 @@ export const TareasDigitalizacion: React.FC = () => {
         { field: 'titular', headerName: 'titular', width: 130, flex: 1 },
         { field: 'numero_anexos', headerName: 'numero_anexos', width: 130, flex: 1 },
         { field: 'estado_digitalizacion', headerName: 'estado_digitalizacion', width: 130, flex: 1 },
-       
     ];
    
     return (
@@ -96,6 +117,7 @@ export const TareasDigitalizacion: React.FC = () => {
                 <Grid item xs={12} sm={12}>
                     <Title title="  Tareas de digitalizacion" />
                 </Grid> 
+                {digitization_request.id_solicitud_de_digitalizacion }
                 <Grid item xs={12} sm={12}>
                     <DataGrid
                         autoHeight
@@ -103,7 +125,7 @@ export const TareasDigitalizacion: React.FC = () => {
                         columns={columns}
                         density="compact"
                         rowsPerPageOptions={[10]}
-                        rows={Email || []}
+                        rows={opas || []}
                         getRowId={(row) => row.id_solicitud_de_digitalizacion}
 
                     />

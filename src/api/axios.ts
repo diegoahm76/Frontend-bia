@@ -7,7 +7,6 @@ import {
 } from './functions/axios.functions';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-
 export const baseURL =
   process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_BETA_URL ||

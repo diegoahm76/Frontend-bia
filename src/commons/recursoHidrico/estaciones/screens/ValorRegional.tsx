@@ -84,7 +84,7 @@ export const ValorRegional: React.FC = () => {
 
 
     const columns = [
-        { field: 'id_sub_zona_hidrica', headerName: '   id_sub_zona_hidrica  ', width: 130, flex: 1 },
+        // { field: 'id_sub_zona_hidrica', headerName: '   id_sub_zona_hidrica  ', width: 130, flex: 1 },
 
         
         { field: 'nombre_zona_hidrica_macrocuenca', headerName: ' Zona hidrica macrocuenca  ', width: 130, flex: 1 },
