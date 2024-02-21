@@ -10,6 +10,7 @@ import { ReasignacionProvider } from '../modules/reasignaciones/context/Reasigna
 import { MainReasignacionesScreen } from '../modules/reasignaciones/screen/MainReasignacionesScreen';
 import { VistaComplementoTarea } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaComplementoTarea';
 import { MainScreenSeguimientoTarea } from '../modules/seguimientoTarea/screen/MainScreenSeguimientoTarea';
+import { VistaTareasOtros } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/otros/VistaTareasOtros';
 
 const routes = [
   {
@@ -55,6 +56,12 @@ const routes = [
   {
     path: 'info_complemento/:id_complemento_usu_pqr',
     component: () => <VistaComplementoTarea />,
+  },
+
+  // tarea de solicitude de otros
+  {
+    path: 'info_tarea_otros/:id_OTROS',
+    component: () => <VistaTareasOtros />,
   },
 ];
 

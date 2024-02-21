@@ -11,6 +11,7 @@ import { get_series_service } from './seriesThunks';
 // import { get_subseries_service } from './subseriesThunks';
 import { type DataCambioCCDActual } from '../../interfaces/ccd';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { showAlert } from '../../../../../utils/showAlert/ShowAlert';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (message: ToastContent) =>
@@ -257,14 +258,14 @@ export const get_ccds_posibles: any = (id_organigrama: string) => {
 export const cambio_ccd_actual: any = (data_cambio: DataCambioCCDActual) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(
-        'gestor/activar/instrumentos-archivisticos/',
-        data_cambio
-      );
+      const new_url = `gestor/ccd/activacion/activar-ccd/`;
+      // const old_url = 'gestor/activar/instrumentos-archivisticos/';
+      const { data } = await api.put(new_url, data_cambio);
       control_success('El cambio del CCD fue exitoso');
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      showAlert('Atención!!', error.response.data.detail, 'warning');
+      // control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
