@@ -21,11 +21,13 @@ export const useprogramaHook = (): any => {
     defaultValues: {
       nombre_plan: '',
       nombre_programa: '',
+      numero_programa: '',
       porcentaje_1: 0,
       porcentaje_2: 0,
       porcentaje_3: 0,
       porcentaje_4: 0,
       id_plan: null,
+      id_sector: null,
       fecha_creacion: '',
       cumplio: false,
     },
@@ -38,11 +40,13 @@ export const useprogramaHook = (): any => {
     reset_programa({
       nombre_plan: '',
       nombre_programa: '',
+      numero_programa: '',
       porcentaje_1: 0,
       porcentaje_2: 0,
       porcentaje_3: 0,
       porcentaje_4: 0,
       id_plan: null,
+      id_sector: null,
       fecha_creacion: '',
       cumplio: false,
     });

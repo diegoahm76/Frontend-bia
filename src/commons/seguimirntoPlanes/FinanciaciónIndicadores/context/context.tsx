@@ -32,12 +32,14 @@ interface UserContext {
   id_producto: number | null;
   id_actividad: number | null;
   id_indicador: number | null;
+  id_meta: number | null;
   set_id_plan: (value: number | null) => void;
   set_id_programa: (value: number | null) => void;
   set_id_proyecto: (value: number | null) => void;
   set_id_producto: (value: number | null) => void;
   set_id_actividad: (value: number | null) => void;
   set_id_indicador: (value: number | null) => void;
+  set_id_meta: (value: number | null) => void;
 
   // * rows
   rows_fuentes: IFuentesFinanciacion[];
@@ -77,12 +79,16 @@ export const DataContextFuentesFinanciacion = createContext<UserContext>({
   id_producto: null,
   id_actividad: null,
   id_indicador: null,
+  id_meta: null,
+
   set_id_plan: () => {},
   set_id_programa: () => {},
   set_id_proyecto: () => {},
   set_id_producto: () => {},
   set_id_actividad: () => {},
   set_id_indicador: () => {},
+  set_id_meta: () => {},
+
   rows_fuentes: [],
   set_rows_fuentes: () => {},
   rows_metas: [],
@@ -120,6 +126,7 @@ export const UserProviderFuentesFinanciacion = ({
   const [id_producto, set_id_producto] = React.useState<number | null>(null);
   const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
   const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
+  const [id_meta, set_id_meta] = React.useState<number | null>(null);
   // * select
   const [cuencas_selected, set_cuencas_selected] = React.useState<ValueProps[]>(
     []
@@ -296,12 +303,14 @@ export const UserProviderFuentesFinanciacion = ({
     id_producto,
     id_actividad,
     id_indicador,
+    id_meta,
     set_id_plan,
     set_id_programa,
     set_id_proyecto,
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
+    set_id_meta,
 
     // * select
     cuencas_selected,
