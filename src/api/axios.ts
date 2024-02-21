@@ -7,16 +7,11 @@ import {
 } from './functions/axios.functions';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-
-/*export const baseURL =
+export const baseURL =
   process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_BETA_URL ||
       'https://back-end-bia-beta.up.railway.app/api/'
     : process.env.REACT_APP_PROD_URL || 'https://bia.cormacarena.gov.co/api/';
-*/
-
-// export const baseURL = `https://d21vd2b3-8000.use.devtunnels.ms/api/`
-export const baseURL = `https://back-end-bia-beta.up.railway.app/api/`
 
 export const api = axios.create({
   baseURL,

@@ -1,13 +1,13 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, /*useState*/ } from 'react';
+import { useContext, useState /*useState*/ } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 //import { useNavigate } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 //import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 /*import { LoadingButton } from '@mui/lab';
-*/
+ */
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import TaskIcon from '@mui/icons-material/Task';
@@ -31,6 +31,10 @@ import { columnsTramites } from './columnsTramites/columnsTramites';
 
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { ModalTramitesServicio } from '../../../../../Atom/modalTramiteServicios/ModalTramitesServicio';
+import { getHistoricoTramitesByRadicado } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getHistoricoTramitesByRadicado.service';
+import { LoadingButton } from '@mui/lab';
+import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
+import { getComplementosAsociadosTramite } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getComplementosTramites.service';
 
 export const ListaElementosTramites = (): JSX.Element => {
   //* dispatch declaration
@@ -41,32 +45,12 @@ export const ListaElementosTramites = (): JSX.Element => {
   const {
     //setRadicado,
     //setValue,
-
     // setAnexos,
+    // handleGeneralLoading,
   } = useContext(PanelVentanillaContext);
-  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
-/*  const handleRequestRadicado = async (radicado: string) => {
-    try {
-      const historico = await getHistoricoByRadicado('', handleGeneralLoading);
-
-      const historicoFiltrado = historico.filter(
-        (element: any) => element?.cabecera?.radicado === radicado
-      );
-
-      dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
-    } catch (error) {
-      console.error('Error handling request radicado: ', error);
-    }
-  };*/
-
-/*  //* loader button simulacion
-  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
-    {}
+  const { handleOpenModalOne, handleThirdLoading } = useContext(
+    ModalAndLoadingContext
   );
-  //* loader button simulacion
-  const [loadingStatesUser, setLoadingStatesUser] = useState<
-    Record<string, boolean>
-  >({});*/
 
   //* redux states
   const {
@@ -207,7 +191,6 @@ export const ListaElementosTramites = (): JSX.Element => {
         );
       },
     },
-
     {
       headerName: 'Acciones',
       field: 'Acciones',
@@ -219,32 +202,23 @@ export const ListaElementosTramites = (): JSX.Element => {
               title={`Ver requerimientos asociados a trámite con radicado ${params?.row?.radicado}`}
             >
               <IconButton
-                sx={{
-                 /* color: !params?.row?.tiene_complementos
-                    ? 'disabled'
-                    : 'info.main',*/
-                }}
                 onClick={() => {
-                /*  if (!params.row.tiene_complementos) {
-                    void Swal.fire({
-                      title: 'Opps...',
-                      icon: 'error',
-                      text: `Esta PQRSDF no tiene complementos asociados`,
-                      showConfirmButton: true,
-                    });
-                    dispatch(
-                      setListaElementosComplementosRequerimientosOtros([])
-                    );
-                  } else {
-                    void getComplementosAsociadosPqrsdf(
-                      params.row.id_PQRSDF,
-                      handleThirdLoading
-                    ).then((res) => {
+                  (async () => {
+                    try {
+                      const res = await getComplementosAsociadosTramite(
+                        params.row.id_solicitud_tramite,
+                        handleThirdLoading
+                      );
                       dispatch(
                         setListaElementosComplementosRequerimientosOtros(res)
                       );
-                    });
-                  }*/
+                    } catch (error) {
+                      console.error(
+                        'Error al obtener los complementos asociados al trámite:',
+                        error
+                      );
+                    }
+                  })();
                 }}
               >
                 <Avatar
@@ -271,21 +245,6 @@ export const ListaElementosTramites = (): JSX.Element => {
                 onClick={() => {
                   setActionsTramites(params?.row);
                   handleOpenModalOne(true);
-                 /* void getAnexosPqrsdf(params?.row?.id_solicitud_tramite).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
                 }}
               >
                 <Avatar
@@ -374,8 +333,8 @@ export const ListaElementosTramites = (): JSX.Element => {
           ) : null
         }
       />
-       {/*modal para ver la información de la solicitud de otro seleccionada*/}
-       <ModalTramitesServicio />
+      {/*modal para ver la información de la solicitud de otro seleccionada*/}
+      <ModalTramitesServicio />
       {/*modal para ver la información de la solicitud de otro seleccionada*/}
     </>
   );

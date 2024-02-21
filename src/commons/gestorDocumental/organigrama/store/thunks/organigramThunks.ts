@@ -76,7 +76,7 @@ export const get_organigrams_service = (): any => {
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      return error as AxiosError;
+      return [];
     }
   };
 };
@@ -400,15 +400,23 @@ export const cambio_organigrama_actual: any = (
       // const old_url = 'transversal/organigrama/change-actual-organigrama/'
       const { data } = await api.put(new_url, data_cambio);
       control_success('Proceso exitoso');
-      control_warning(
-        'No olvides asignar los líderes a las unidades organizacionales del nuevo organigrama actual'
-      );
-      control_warning('')
+
+      showAlert(
+        'Atención!!',
+        'El organigrama actual ha sido cambiado',
+        'success'
+      ).then(() => {
+        showAlert(
+          'Atención!!',
+          '1.Recuerda asignar los líderes a las unidades del nuevo organigrama, 2.Recuerde trasladar las personas del organigrama anterior al actual, (si ya realizó el proceso omite el mensaje)',
+          'info'
+        );
+      });
       dispatch(get_organigrams_service());
       return data;
     } catch (error: any) {
-      console.log(error?.response?.data)
-      showAlert('Atención!!', error.response.data.detail, 'warning')
+      console.log(error?.response?.data);
+      showAlert('Atención!!', error.response.data.detail, 'warning');
       // control_error(error.response.data.detail);
       return error as AxiosError;
     }

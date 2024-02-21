@@ -16,10 +16,12 @@ const handleRequest = async (request: AxiosRequestConfig | any) => {
     if (token) {
       request.headers = request.headers || {}; // Asegúrate de que 'headers' exista
       request.headers.Authorization = `Bearer ${token}`;
-      console.log(
-        `%c ${request?.method?.toUpperCase()} ${request.url}`,
-        'color: blue; font-weight: bold;'
-      );
+
+      process.env.NODE_ENV === 'development' &&
+        console.log(
+          `%c ${request?.method?.toUpperCase()} ${request.url}`,
+          'color: blue; font-weight: bold;'
+        );
     }
   } catch (e) {
     console.error(e);
