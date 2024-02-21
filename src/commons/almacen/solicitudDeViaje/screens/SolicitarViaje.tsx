@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
+import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,28 +9,59 @@ import dayjs, { Dayjs } from 'dayjs';
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
-import { interface_solicitar_viaje } from '../interfaces/types';
+import { data_solicitud_viaje, interface_solicitar_viaje } from '../interfaces/types';
 import ViajeAgendado from './ViajeAgendado';
-import { control_error, control_success } from '../../../../helpers';
+import { control_error } from '../../../../helpers';
 import Swal from 'sweetalert2';
 import { useAppDispatch } from '../../../../hooks';
-import { enviar_solicitud_viaje } from '../thunks/viajes';
+import { editar_solicitud_viaje, enviar_solicitud_viaje, listar_departamentos, listar_municipios, obtener_solicitudes } from '../thunks/viajes';
 import BusquedaExpediente from './BusquedaExpediente';
 
 interface props {
   set_mostrar_solicitud_viaje: React.Dispatch<React.SetStateAction<boolean>>;
   set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
   refrescar_tabla: boolean;
+  accion: string;
+  id_solicitud_editar: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refrescar_tabla,refrescar_tabla}) => {
+const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refrescar_tabla,refrescar_tabla,accion,id_solicitud_editar}) => {
   const dispatch = useAppDispatch();
+  const [editar_datos_solicitar_viaje, set_editar_datos_solicitar_viaje] = useState<data_solicitud_viaje>({
+    id_solicitud_viaje: 0,
+    fecha_solicitud: '',
+    tiene_expediente_asociado: false,
+    motivo_viaje: '',
+    direccion: '',
+    indicaciones_destino: '',
+    nro_pasajeros: 0,
+    requiere_carga: false,
+    fecha_partida: '',
+    hora_partida: '',
+    fecha_retorno: '',
+    hora_retorno: '',
+    requiere_compagnia_militar: false,
+    consideraciones_adicionales: '',
+    fecha_aprobacion_responsable: '',
+    fecha_rechazo: '',
+    justificacion_rechazo: '',
+    estado_solicitud: '',
+    id_persona_solicita: 0,
+    id_unidad_org_solicita: 0,
+    id_expediente_asociado: 0,
+    cod_municipio: '',
+    cod_departamento: '',
+    id_persona_responsable: '',
+    id_unidad_org_responsable: '',
+    id_solicitud: 0,
+  });
+
   const [motivo_viaje, set_motivo_viaje] = useState<string>('');
   const [switch_expediente_asociado, set_switch_expediente_asociado] = useState<boolean>(false);
   const [direccion, set_direccion] = useState<string>('');
   const [departamento, set_departamento] = useState<string>('');
-  const [municipio, set_municipio] = useState<string>("");
+  const [municipio, set_municipio] = useState<string>('');
   const [indicadores_destino, set_indicadores_destino] = useState<string>('');
   const [numero_pasajeros, set_numero_pasajeros] = useState<number>(0);
   const [fecha_salida, set_fecha_salida] = useState<Dayjs>(dayjs());
@@ -41,32 +72,33 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
   const [switch_requiere_acompanamiento_militar, set_switch_requiere_acompanamiento_militar] = useState<boolean>(false);
   const [consideraciones_adicionales, set_consideraciones_adicionales] = useState<string>('');
   const [id_expediente, set_id_expediente] = useState<number>(0);
-  const [mostrar_busqueda_expediente, set_mostrar_busqueda_expediente] = useState<boolean>(false)
+  const [mostrar_busqueda_expediente, set_mostrar_busqueda_expediente] = useState<boolean>(false);
+  const [municipios, set_municipios] = useState<any>();
+  const [departamentos, set_departamentos] = useState<any>();
+  const [departamento_editar, set_departamento_editar] = useState<string>('73');
+  const [municipio_editar, set_municipio_editar] = useState<string>('73001');
 
 
-  const [msj_error_expediente_asociado, set_msj_error_expediente_asociado] = useState<string>("");
-  const [msj_error_departamento, set_msj_error_departamento] = useState<string>("");
+  const [msj_error_departamento, set_msj_error_departamento] = useState<string>('');
   const [msj_error_municipio, set_msj_error_municipio] = useState<string>("");
   const [msj_error_numero_pasajeros, set_msj_error_numero_pasajeros] = useState<string>("");
   const [msj_error_fecha_salida, set_msj_error_fecha_salida] = useState<string>("");
   const [msj_error_fecha_retorno, set_msj_error_fecha_retorno] = useState<string>("");
   const [msj_error_hora_salida, set_msj_error_hora_salida] = useState<string>("");
   const [msj_error_hora_retorno, set_msj_error_hora_retorno] = useState<string>("");
-  const [msj_error_switch_requiere_carga, set_msj_error_switch_requiere_carga] = useState<string>("");
-  const [msj_error_acompanamiento_militar, set_msj_error_acompanamiento_militar] = useState<string>("");
   const [msj_error_direccion, set_msj_error_direccion] = useState<string>("");
   const [msj_error_indicadores_destino, set_msj_error_indicadores_destino] = useState<string>("");
-  const [msj_error_consideraciones_adicionales, set_msj_error_consideraciones_adicionales] = useState<string>("");
   const [msj_error_motivo_viaje, set_msj_error_motivo_viaje] = useState<string>("");
   const [msj_error_id_expediente, set_msj_error_id_expediente] = useState<string>("");
   
 
 
   const [datos_solicitar_viaje, set_datos_solicitar_viaje] = useState<interface_solicitar_viaje>();
+  
 
   useEffect(()=>{
     set_datos_solicitar_viaje({
-      motivo_viaje_solicitado: motivo_viaje,  // Motivo del viaje
+      ...(accion === 'crear' ? { motivo_viaje_solicitado: motivo_viaje } : accion === 'editar' && { motivo_viaje: motivo_viaje }),
       cod_municipio: municipio,  // Código del municipio de destino
       cod_departamento: departamento,  // Código del departamento de destino
       tiene_expediente_asociado: switch_expediente_asociado,
@@ -78,6 +110,7 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
       fecha_retorno: fecha_retorno.format('YYYY-MM-DD'),  // Fecha de retorno
       hora_retorno: dayjs(hora_retorno).format('HH:mm'),  // Hora de retorno
       req_compagnia_militar: switch_requiere_acompanamiento_militar,  // Indica si se requiere compañía militar
+      requiere_carga: switch_requiere_carga,  // Indica si se requiere compañía militar
       consideraciones_adicionales: consideraciones_adicionales,
       indicaciones_destino: indicadores_destino 
     });
@@ -145,18 +178,16 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
       set_msj_error_numero_pasajeros("");
   };
 
-  const cambio_hora_salida = (newTime: Date | null) => {
-    set_hora_salida(newTime);
+  const cambio_hora_salida = (newTime: dayjs.Dayjs | null) => {
+    set_hora_salida(newTime?.toDate() || null);
   };
 
 
-  const cambio_hora_retorno = (newTime: Date | null) => {
-    set_hora_retorno(newTime);
+  const cambio_hora_retorno = (newTime:  dayjs.Dayjs | null) => {
+    set_hora_retorno(newTime?.toDate() || null);
   };
   
-  const limpiar_formulario_solicitar_viaje = () => {
-    //Se limpian los datos de envio a la API
-    
+  const limpiar_formulario_solicitar_viaje = () => {  
     //Se limpiam los estados de los inputs
     set_id_expediente(0);
     set_motivo_viaje('');
@@ -164,6 +195,8 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     set_direccion('');
     set_departamento('');
     set_municipio('');
+    set_departamento_editar('');
+    set_municipio_editar('');
     set_indicadores_destino('');
     set_numero_pasajeros(0);
     set_fecha_salida(dayjs());
@@ -174,7 +207,6 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     set_switch_requiere_acompanamiento_militar(false);
     set_consideraciones_adicionales('');
     //Se limpian los estaos de las propiedades de error de los inputs
-    set_msj_error_expediente_asociado('');
     set_msj_error_departamento('');
     set_msj_error_municipio('');
     set_msj_error_numero_pasajeros('');
@@ -182,13 +214,10 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     set_msj_error_fecha_retorno('');
     set_msj_error_hora_salida('');
     set_msj_error_hora_retorno('');
-    set_msj_error_switch_requiere_carga('');
-    set_msj_error_acompanamiento_militar('');
     set_msj_error_direccion('');
     set_msj_error_indicadores_destino('');
-    set_msj_error_consideraciones_adicionales('');
     set_msj_error_motivo_viaje('');
-    set_msj_error_id_expediente('')
+    set_msj_error_id_expediente('');
   }
   
   /**
@@ -211,21 +240,40 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
       set_msj_error_direccion('Escriba una dirección');
       control_error('Escriba una dirección');
       return false;
-    } else if(departamento === '' || departamento === null){
+    } else if(accion === 'crear'){
+      if(departamento === '' || departamento === null){
       set_msj_error_departamento('Seleccione un departamento');
       control_error('Seleccione un departamento');
       return false;
-    } else if(municipio === '' || municipio === null){
-      set_msj_error_municipio('Seleccione un municipio');
-      control_error('Seleccione un municipio')
+      }
+    } else if(accion === 'editar'){
+      if(departamento_editar === '' || departamento_editar === null){
+      set_msj_error_departamento('Seleccione un departamento');
+      control_error('Seleccione un departamento');
       return false;
+      }
+    } else if(accion === 'crear'){
+      if(municipio === '' || municipio === null){
+        set_msj_error_municipio('Seleccione un municipio');
+        control_error('Seleccione un municipio')
+        return false;
+      }
+    } else if(accion === 'editar'){
+      if(municipio_editar === '' || municipio_editar === null){
+        set_msj_error_municipio('Seleccione un municipio');
+        control_error('Seleccione un municipio')
+        return false;
+      }
     } else if(numero_pasajeros <= 0){
       set_msj_error_numero_pasajeros('El número de pasajeros no puede ser menor o igual a 0');
       control_error('El número de pasajeros no puede ser menor o igual a 0');
       return false;
-    } else if(fecha_salida.isBefore(fecha_hoy, 'day')){
-      set_msj_error_fecha_salida('La fecha de salida no puede ser anterior a la de hoy');
-      control_error('La fecha de salida no puede ser anterior a la de hoy');
+    } else if(accion === 'crear'){
+      if(fecha_salida.isBefore(fecha_hoy, 'day')){
+        set_msj_error_fecha_salida('La fecha de salida no puede ser anterior a la de hoy');
+        control_error('La fecha de salida no puede ser anterior a la de hoy');        
+        return false;
+      }
     } else if(fecha_salida.isValid() === false){
       set_msj_error_fecha_salida('La fecha de salida es invalida');
       control_error('La fecha de salida es invalida');
@@ -284,7 +332,6 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
    */
   const btn_enviar_solicitud_viaje:()=>void = async () => {
     const validacion = await validar_datos();
-    
     if(validacion){
       dispatch(enviar_solicitud_viaje(datos_solicitar_viaje)).then((response: { success: boolean, detail: string, data: any }) => {
         if (response.detail) {
@@ -296,6 +343,46 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     }
   }
 
+
+  /**
+   * Maneja la acción de editar una solicitud de viaje.
+   * Realiza una validación de los datos antes de realizar la edición.
+   * 
+   * @returns {void}
+   */
+  const btn_editar_solicitud_viaje:()=>void = async () => {
+    const validacion = await validar_datos();
+    if(validacion){
+      dispatch(editar_solicitud_viaje(datos_solicitar_viaje,id_solicitud_editar)).then((response: { success: boolean, detail: string, data: any }) => {          
+        if (response.detail) {
+          set_refrescar_tabla(!refrescar_tabla);
+          return;
+        }
+      })
+      set_mostrar_solicitud_viaje(false);
+      limpiar_formulario_solicitar_viaje();
+    }
+  }
+
+
+  /**
+   * Maneja la acción de enviar o editar el formulario de solicitud de viaje.
+   * Llama a la función correspondiente según la acción actual.
+   * 
+   * @returns {void}
+   */
+  const submit_fomulario = () => {
+    console.log(datos_solicitar_viaje);
+    if(accion === 'editar'){
+      btn_editar_solicitud_viaje();
+      return;
+    } else if(accion === 'crear'){
+      btn_enviar_solicitud_viaje();
+      return;
+    }
+  }
+
+
   /**
    * Maneja la acción de buscar expedientes.
    * Muestra la búsqueda de expedientes si el interruptor de expediente asociado está activado.
@@ -303,10 +390,157 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
    * @returns {void}
    */
   const btn_buscar_expediente = () => {
-    if (switch_expediente_asociado) {
-      set_mostrar_busqueda_expediente(true);
+    if(accion !== 'ver'){
+      if (switch_expediente_asociado) {
+        set_mostrar_busqueda_expediente(true);
+      }
     }
   }
+
+  /**
+   * Obtiene las solicitudes de viaje y, si se está editando una solicitud específica, establece los datos para editar.
+   * 
+   * @returns {void}
+   */
+  const obtener_solicitudes_fc: () => void = () => {
+    dispatch(obtener_solicitudes()).then((response: any) => {
+    const solicitud_editar_encontrada = response.data.find((solicitud: data_solicitud_viaje) => id_solicitud_editar === solicitud.id_solicitud_viaje);
+    
+    if (solicitud_editar_encontrada) {
+      // Si se encuentra la solicitud, establece los datos para editar
+      set_editar_datos_solicitar_viaje(solicitud_editar_encontrada);
+    }
+    })
+  }
+
+
+  /**
+   * Obtiene la lista de departamentos y actualiza el estado correspondiente.
+   * 
+   * @returns {void}
+   */
+  const obtener_departamentos: ()=>void = async () => {
+    dispatch(listar_departamentos()).then((response: { success: boolean, detail: string, data: any }) => {        
+      set_departamentos(response);
+      return;
+    })
+  }
+
+  /**
+   * Obtiene la lista de municipios y actualiza el estado correspondiente.
+   * 
+   * @returns {void}
+   */
+  const obtener_municipios: ()=>void = async () => {
+    dispatch(listar_municipios()).then((response: { success: boolean, detail: string, data: any }) => {
+        set_municipios(response);
+        return;
+    })
+  }
+  
+  /**
+   * Efecto secundario que se ejecuta al montar el componente y cuando cambian ciertos valores.
+   * Obtiene la lista de departamentos, municipios y las solicitudes de viaje si se está editando o viendo una solicitud.
+   */
+  useEffect( ()=>{
+    obtener_departamentos();
+    obtener_municipios();
+    if(accion === 'editar' || accion === 'ver'){
+      obtener_solicitudes_fc();
+    }
+  },[id_solicitud_editar,accion]);
+
+
+  /**
+   * Efecto secundario que se ejecuta al cambiar el estado de `editar_datos_solicitar_viaje` o `id_solicitud_editar`.
+   * Actualiza los estados del formulario con los datos de la solicitud de viaje a editar o ver.
+   */
+  useEffect(()=>{
+    function parseHora(hora: string): dayjs.Dayjs {
+      const [horas, minutos] = hora.split(':');
+      return dayjs().set('hour', parseInt(horas)).set('minute', parseInt(minutos));
+    }
+
+    if(accion === 'editar' || accion === 'ver'){
+      const motivo_viaje = editar_datos_solicitar_viaje.motivo_viaje
+        ? editar_datos_solicitar_viaje.motivo_viaje
+        : editar_datos_solicitar_viaje.motivo_viaje_solicitado;
+      if(editar_datos_solicitar_viaje.id_expediente_asociado){
+        set_id_expediente(editar_datos_solicitar_viaje.id_expediente_asociado)
+      } else{
+        set_id_expediente(0);
+      }
+      if(motivo_viaje !== undefined){
+        set_motivo_viaje(motivo_viaje);
+      }
+      set_switch_expediente_asociado(editar_datos_solicitar_viaje.tiene_expediente_asociado);
+      set_direccion(editar_datos_solicitar_viaje.direccion);
+      set_indicadores_destino(editar_datos_solicitar_viaje.indicaciones_destino);
+      set_numero_pasajeros(editar_datos_solicitar_viaje.nro_pasajeros);
+      set_switch_requiere_carga(editar_datos_solicitar_viaje.requiere_carga);
+      set_switch_requiere_acompanamiento_militar(editar_datos_solicitar_viaje.requiere_compagnia_militar);
+      set_consideraciones_adicionales(editar_datos_solicitar_viaje.consideraciones_adicionales);
+      cambio_fecha_salida(dayjs(editar_datos_solicitar_viaje.fecha_partida));
+      cambio_fecha_retorno(dayjs(editar_datos_solicitar_viaje.fecha_retorno));
+      cambio_hora_salida(parseHora(editar_datos_solicitar_viaje.hora_partida));
+      cambio_hora_retorno(parseHora(editar_datos_solicitar_viaje.hora_retorno));
+      set_municipio_editar(editar_datos_solicitar_viaje.cod_municipio);
+      set_departamento_editar(editar_datos_solicitar_viaje.cod_departamento);
+      set_municipio(editar_datos_solicitar_viaje.cod_municipio);
+      set_departamento(editar_datos_solicitar_viaje.cod_departamento);
+    }
+  },[editar_datos_solicitar_viaje,id_solicitud_editar])
+
+  
+  /**
+   * Obtiene el departamento seleccionado en base al código del departamento a editar.
+   */
+  const departamento_seleccionado = departamentos &&  departamentos.find(
+    ([codigoDepartamento]: string) => departamento_editar.startsWith(codigoDepartamento)
+  );
+
+  /**
+   * Filtra los municipios basándose en el departamento seleccionado.
+   */
+  const municipios_filtrados = municipios && municipios.filter(
+    ([codigoMunicipio, nombre]: [string, string]) => codigoMunicipio.startsWith(departamento_seleccionado && departamento_seleccionado[0])
+  );
+
+  /**
+   * Maneja el cambio en el departamento.
+   * Actualiza el estado correspondiente dependiendo de la acción (crear o editar).
+   * 
+   * @param {SelectChangeEvent<string>} e - Objeto que representa el evento de cambio en la selección del departamento.
+   * @returns {void}
+   */
+  const cambio_departamento:(e: SelectChangeEvent<string>)=>void = (e) => {
+    if(accion === 'crear'){
+      set_msj_error_departamento('');
+      set_departamento(e.target.value);
+    } else if(accion === 'editar'){
+      set_departamento_editar(e.target.value);
+      set_departamento(e.target.value);
+    }
+  }
+
+
+  /**
+   * Maneja el cambio en el municipio.
+   * Actualiza el estado correspondiente dependiendo de la acción (crear o editar).
+   * 
+   * @param {SelectChangeEvent<string>} e - Objeto que representa el evento de cambio en la selección del municipio.
+   * @returns {void}
+   */
+  const cambio_municipio:(e: SelectChangeEvent<string>)=>void = (e) => {
+    if(accion === 'crear'){
+      set_msj_error_municipio('');
+      set_municipio(e.target.value);
+    } else if(accion === 'editar'){
+      set_municipio_editar(e.target.value);
+      set_municipio(e.target.value);
+    }
+  }
+  
 
   return (
     <Grid
@@ -332,20 +566,23 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
       <Title title="Solicitar viaje" />
       <Grid
         container
+        rowSpacing={2}
         sx={{
           marginTop: "10px",
         }}
-        spacing={2}
       >
-        <Grid item xs={12} sx={{
+        <Grid 
+          item 
+          xs={12} 
+          sx={{
           display:'flex',
           flexDirection:'column',
           alignItems:'start'
         }}>
-          <FormLabel error={msj_error_motivo_viaje !== ''} htmlFor="motivo_viaje">Motivo del viaje*:</FormLabel>
           <TextField
-            id="motivo_viaje"
+            label='Motivo de viaje'
             required
+            disabled={accion === 'ver'}
             error={msj_error_motivo_viaje !== ''}
             value={motivo_viaje}
             onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {
@@ -366,15 +603,16 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
           xs={12}
           display={"flex"}
           justifyContent={"center"}
-          margin={"10px 0px"}
+          spacing={1}
         >
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <FormLabel htmlFor="expediente_asociado">
               ¿Tiene expediente asociado?
             </FormLabel>
             <Switch
               id="expediente_asociado"
               checked={switch_expediente_asociado}
+              disabled={accion === 'ver'}
               onChange={() =>{
                 set_msj_error_id_expediente('')
                 set_switch_expediente_asociado(!switch_expediente_asociado)
@@ -384,24 +622,25 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
 
           <Grid
             item
-            xs={5}
+            container
+            spacing={1}
+            xs={12}
+            md={4}
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              gap: 1,
             }}
           >
-            <FormLabel error={msj_error_id_expediente !== ''} htmlFor="buscar_expediente">
-              Buscar expediente:
-            </FormLabel>
-            <Grid item xs={4}>
+            <Grid item xs={12} md={4}>
               <TextField
+                fullWidth              
+                label='Id'
+                sx={{cursor: switch_expediente_asociado ? 'pointer' : 'default'}}
                 disabled
-                fullWidth
-                id="buscar_expediente"
                 required
                 size="small"
+                onClick={btn_buscar_expediente}
                 error={msj_error_id_expediente !== ''}
                 value={id_expediente === 0 ? '' : id_expediente}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
@@ -410,15 +649,25 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
                 }}
               />
             </Grid>
-            <SearchIcon
-              onClick={btn_buscar_expediente}
-              style={{ width: "40px", cursor: switch_expediente_asociado ? 'pointer' : 'default'}} 
-            />
+            <Grid item xs={12} md={8}>
+              <Button
+                fullWidth
+                disabled={switch_expediente_asociado && accion !== 'ver' ? false : true}
+                color='primary'
+                onClick={btn_buscar_expediente}
+                variant='contained'
+                startIcon={<SearchIcon />}
+                type='submit'
+              >
+                Buscar expediente
+              </Button>
+            </Grid>
           </Grid>
 
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={5}
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -426,21 +675,20 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
               gap: 1,
             }}
           >
-            <FormLabel htmlFor="buscar_expediente" error={msj_error_direccion !== ''}>Dirección*:</FormLabel>
-            <Grid item xs={10}>
-              <TextField
-                fullWidth
-                value={direccion}
-                error={msj_error_direccion !== ''}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
-                  set_msj_error_direccion('')
-                  set_direccion(e.target.value)
-                }}
-                id="buscar_expediente"
-                required
-                size="small"
-                />
-            </Grid>
+            <TextField
+              label='Dirección: '
+              fullWidth
+              value={direccion}
+              disabled={accion === 'ver'}
+              error={msj_error_direccion !== ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
+                set_msj_error_direccion('')
+                set_direccion(e.target.value)
+              }}
+              id="buscar_expediente"
+              required
+              size="small"
+              />
           </Grid>
         </Grid>
 
@@ -448,16 +696,17 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
           item
           container
           xs={12}
+          spacing={1}
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "20px",
           }}
         >
           <Grid
             item
-            xs={2}
+            xs={12}
+            md={3}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -467,20 +716,25 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
             <FormControl required size="small" fullWidth>
               <InputLabel error={msj_error_departamento !== ''}>Departamento</InputLabel>
               <Select
-                label="Estado"
-                value={departamento}
+                fullWidth
+                disabled={accion === 'ver'}
+                label="Departamento"
+                value={accion === 'crear' ? departamento : accion === 'editar' ? departamento_editar : departamento}
                 required
                 error={msj_error_departamento !== ''}
-                onChange={(e: SelectChangeEvent<string>)=>{set_msj_error_departamento(''),set_departamento(e.target.value)}}
+                onChange={cambio_departamento}
               >
-                <MenuItem value={'05'}>Meta</MenuItem>
+                {departamentos && departamentos.map((dept:any)=>{
+                  return <MenuItem key={dept[0]} value={dept[0]}>{dept[1]}</MenuItem>
+                })}
               </Select>
             </FormControl>
           </Grid>
 
           <Grid
             item
-            xs={2}
+            xs={12}
+            md={3}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -490,20 +744,49 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
             <FormControl required size="small" fullWidth>
               <InputLabel>Municipio</InputLabel>
               <Select
+                fullWidth
                 label="Estado"
-                value={municipio}
+                disabled={accion === 'ver'}
+                value={accion === 'crear' ? municipio : accion === 'editar' ? municipio_editar : municipio}
                 required
-                onChange={(e: SelectChangeEvent<string>)=>{set_msj_error_municipio(''),set_municipio(e.target.value)}}
+                onChange={cambio_municipio}
                 error={msj_error_municipio !== ""}
               >
-                <MenuItem value={"05001"}>Villavicencio</MenuItem>
+                {accion === 'crear' ? departamento ? municipios &&
+                  municipios.filter(([codigoMunicipio]: [string]) => {
+                    return codigoMunicipio.startsWith(departamento);
+                  })
+                  .map(([codigoMunicipio, nombre]: [string, string]) => (
+                    <MenuItem key={codigoMunicipio} value={codigoMunicipio}>
+                      {nombre}
+                    </MenuItem>
+                  ))
+                  :
+                  <MenuItem value=''>
+                    Seleccione un departamento
+                  </MenuItem>
+                  : accion === 'editar' ?
+                    municipios_filtrados && municipios_filtrados.map(([codigoMunicipio, nombre]:[string,string]) => (
+                      <MenuItem key={codigoMunicipio} value={codigoMunicipio}>
+                        {nombre}
+                      </MenuItem>
+                    ))
+                  : accion === 'ver' &&
+                    municipios_filtrados && municipios_filtrados.map(([codigoMunicipio, nombre]:[string,string]) => (
+                      <MenuItem key={codigoMunicipio} value={codigoMunicipio}>
+                        {nombre}
+                      </MenuItem>
+                    ))
+                }
+
               </Select>
             </FormControl>
           </Grid>
 
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={4}
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -511,45 +794,40 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
               gap: 1,
             }}
           >
-            <FormLabel htmlFor="indicadores_destino">
-              Idicadores de destino*:
-            </FormLabel>
-            <Grid item xs={6}>
-              <TextField
-                required
-                value={indicadores_destino}
-                error={msj_error_indicadores_destino !== ''}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
-                  set_msj_error_indicadores_destino('');
-                  set_indicadores_destino(e.target.value);
-                }}
-                fullWidth 
-                id="indicadores_destino" 
-                size="small" />
-            </Grid>
+            <TextField
+              required
+              label='Indicadores de destino'
+              disabled={accion === 'ver'}
+              value={indicadores_destino}
+              error={msj_error_indicadores_destino !== ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
+                set_msj_error_indicadores_destino('');
+                set_indicadores_destino(e.target.value);
+              }}
+              fullWidth 
+              size="small" />
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={12}
+            md={2}
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <FormLabel 
-              error={msj_error_numero_pasajeros !== ''}    
-              sx={{ marginRight: "10px" }} 
-              htmlFor="numero_pasajeros">
-              Número de pasajeros*:
-            </FormLabel>
-            <OutlinedInput
-              sx={{ width: "60px" }}
-              id="numero_pasajeros"
+            <TextField
+              fullWidth
+              label='Número de pasajeros*:'
               type={"number"}
+              disabled={accion === 'ver'}
               value={numero_pasajeros}
               error={msj_error_numero_pasajeros !== ''}
               size="small"
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={cambio_numero_pasajeros}
             />
           </Grid>
@@ -558,57 +836,60 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
         <Grid
           item
           container
-          xs={11}
+          columnSpacing={2}
+          rowSpacing={1}
+          xs={12}
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "20px",
-            marginX: "auto",
           }}
         >
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={5}
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <FormLabel style={{ width: "70%" }}>Fecha de salida*:</FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                label='Fecha de salida: '
                 value={fecha_salida}
+                disabled={accion === 'ver'}
                 onChange={(newValue) => {
                   cambio_fecha_salida(newValue);
                 }}
                 renderInput={(params) => (
-                  <TextField required fullWidth size="small" {...params} />
+                  <TextField disabled={accion === 'ver'} required fullWidth size="small" {...params} />
                 )}
-                minDate={dayjs()}
+                minDate={accion === 'crear' ? dayjs() : null}
               />
             </LocalizationProvider>
           </Grid>
 
           <Grid
             item
-            xs={2}
+            xs={12}
+            md={3}
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <FormLabel style={{ marginRight: "10px" }}>Hora*:</FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileTimePicker
-                label="Seleccionar hora"
+                label="Seleccionar hora de salida"
                 openTo="hours"
                 value={hora_salida}
+                disabled={accion === 'ver'}
                 onChange={cambio_hora_salida}
                 renderInput={(params) => (
-                  <TextField {...params} variant="standard" helperText="" />
+                  <TextField fullWidth {...params} disabled={accion === 'ver'} variant="standard" helperText="" />
                 )}
               />
             </LocalizationProvider>
@@ -616,14 +897,15 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
 
           <Grid
             item
-            xs={3.5}
+            xs={12}
+            md={4}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <Grid item xs={6} sx={{
+            <Grid item sx={{
               display:'flex',
               justifyContent:'start'
             }}>
@@ -632,6 +914,7 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
             <Switch
               id="requiere_recarga"
               checked={switch_requiere_carga}
+              disabled={accion === 'ver'}
               onChange={() => set_switch_requiere_carga(!switch_requiere_carga)}
             />
           </Grid>
@@ -640,57 +923,60 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
         <Grid
           item
           container
-          xs={11}
+          columnSpacing={2}
+          rowSpacing={1}
+          xs={12}
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "20px",
-            marginX: "auto",
           }}
         >
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={5}
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "space-between",
               alignItems: "center",
             }}
           >
-            <FormLabel style={{ width: "70%" }}>Fecha de retorno*:</FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                label='Fecha de retorno: '
+                disabled={accion === 'ver'}
                 value={fecha_retorno}
                 onChange={(newValue) => {
                   cambio_fecha_retorno(newValue);
                 }}
                 renderInput={(params) => (
-                  <TextField required fullWidth size="small" {...params} />
+                  <TextField required disabled={accion === 'ver'} fullWidth size="small" {...params} />
                 )}
-                minDate={dayjs()}
+                minDate={accion === 'crear' ? dayjs() : null}
               />
             </LocalizationProvider>
           </Grid>
 
           <Grid
             item
-            xs={2}
+            xs={12}
+            md={3}
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <FormLabel style={{ marginRight: "10px" }}>Hora*:</FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileTimePicker
-                label="Seleccionar hora"
+                label="Seleccionar hora de retorno"
                 openTo="hours"
+                disabled={accion === 'ver'}
                 value={hora_retorno}
                 onChange={cambio_hora_retorno}
                 renderInput={(params) => (
-                  <TextField {...params} variant="standard" helperText="" />
+                  <TextField fullWidth {...params} disabled={accion === 'ver'} variant="standard" helperText="" />
                 )}
               />
             </LocalizationProvider>
@@ -698,14 +984,15 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
 
           <Grid
             item
-            xs={3.5}
+            xs={12}
+            md={4}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <Grid item xs={12} sx={{
+            <Grid item sx={{
               display:'flex',
               justifyContent:'start'
             }}>
@@ -715,11 +1002,10 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
             </Grid>
             <Switch
               id="requiere_compania_militar"
+              disabled={accion === 'ver'}
               checked={switch_requiere_acompanamiento_militar}
               onChange={() =>
-                set_switch_requiere_acompanamiento_militar(
-                  !switch_requiere_acompanamiento_militar
-                )
+                set_switch_requiere_acompanamiento_militar(!switch_requiere_acompanamiento_militar)
               }
             />
           </Grid>
@@ -732,24 +1018,63 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "20px",
-            gap: 2,
           }}
         >
-          <FormLabel htmlFor="consideraciones_adicionales">
-            Consideraciones adicionales:
-          </FormLabel>
-          <Grid item xs={9.5}>
-            <TextField
-              fullWidth
-              id="consideraciones_adicionales"
-              size="small"
-              value={consideraciones_adicionales}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_consideraciones_adicionales(e.target.value)}
-            />
-          </Grid>
+          <TextField
+            label='Consideraciones adicionales'
+            disabled={accion === 'ver'}
+            fullWidth
+            size="small"
+            value={consideraciones_adicionales}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_consideraciones_adicionales(e.target.value)}
+          />
         </Grid>
 
+        {accion !== 'ver' &&
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "end",
+              alignItems: "center",
+              marginTop: "20px",
+              gap: 4,
+            }}
+            >
+            <Button
+              color="success"
+              variant="contained"
+              startIcon={<SaveIcon />}
+              onClick={submit_fomulario}
+            >
+              {accion === 'crear' ? "Guardar" : 'Actualizar'}
+            </Button>
+            <Button
+              color="error"
+              variant="contained"
+              startIcon={<ClearIcon />}
+              onClick={() => {
+                set_mostrar_solicitud_viaje(false);
+              }}
+            >
+              Salir
+            </Button>
+            <Button
+              color="inherit"
+              variant="outlined"
+              startIcon={<CleanIcon />}
+              onClick={limpiar_formulario_solicitar_viaje}
+            >
+              Limpiar
+            </Button>
+          </Grid>
+        } 
+      </Grid>
+
+      { accion === 'ver' && 
+      <>
+        <ViajeAgendado /> 
         <Grid
           item
           xs={12}
@@ -757,60 +1082,20 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
             display: "flex",
             justifyContent: "end",
             alignItems: "center",
-            marginTop: "20px",
             gap: 4,
           }}
         >
           <Button
-            color="success"
-            variant="contained"
-            startIcon={<SaveIcon />}
-            onClick={btn_enviar_solicitud_viaje}
-          >
-            {"Guardar"}
-          </Button>
-          <Button
             color="error"
             variant="contained"
             startIcon={<ClearIcon />}
-            onClick={() => {
-              set_mostrar_solicitud_viaje(false);
-            }}
+            onClick={()=>{set_mostrar_solicitud_viaje(false)}}
           >
             Salir
           </Button>
-          <Button
-            color="inherit"
-            variant="outlined"
-            startIcon={<CleanIcon />}
-            onClick={limpiar_formulario_solicitar_viaje}
-          >
-            Limpiar
-          </Button>
         </Grid>
-      </Grid>
-
-      <ViajeAgendado />
-
-      <Grid
-        item
-        xs={12}
-        sx={{
-          display: "flex",
-          justifyContent: "end",
-          alignItems: "center",
-          gap: 4,
-        }}
-      >
-        <Button
-          color="error"
-          variant="contained"
-          startIcon={<ClearIcon />}
-          onClick={()=>{set_mostrar_solicitud_viaje(false)}}
-        >
-          Salir
-        </Button>
-      </Grid>
+      </>
+      }
     </Grid>
   );
 };
