@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import Swal from 'sweetalert2';
-import { control_success } from '../../../../../../helpers';
 import { api } from '../../../../../../api/axios';
+import { control_success } from '../../../../../../helpers';
 
-export const getComplementosAsociadosPqrsdf = async (
-  idPqrsd: string,
+/* eslint-disable @typescript-eslint/naming-convention */
+export const getComplementosAsociadosTramite = async (
+  idSolicitudTramite: string,
   handleThirdLoading: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<any[]> => {
   try {
     handleThirdLoading(true);
-    const url = `gestor/panel_ventanilla/complementos/get/${encodeURIComponent(
-      idPqrsd
-    )}`;
+    const url = `gestor/panel_ventanilla/tramites/complementos/get/${idSolicitudTramite}/`;
     const { data } = await api.get(url);
     if (data?.data?.length) {
       //  console.log('')(data.data);
@@ -19,10 +17,10 @@ export const getComplementosAsociadosPqrsdf = async (
       return data?.data;
     }
 
-    void Swal.fire({
+    await Swal.fire({
       title: 'Opps...',
       icon: 'warning',
-      text: 'No se encontraron complementos relacionados a la PQRSDF',
+      text: 'No se encontraron complementos relacionados a la solicitud de trámite seleccionada',
       showConfirmButton: true,
     });
     return [];
@@ -30,10 +28,9 @@ export const getComplementosAsociadosPqrsdf = async (
     void Swal.fire({
       title: 'Opps...',
       icon: 'error',
-      text: `${e?.response?.data?.detail} de complementos asociados a la PQRSDF seleccionada`,
+      text: `${e?.response?.data?.detail} de complementos asociados a la solicitud de trámite seleccionada`,
       showConfirmButton: true,
     });
-    console.error(e);
     return [];
   } finally {
     handleThirdLoading(false);
