@@ -58,10 +58,47 @@ export const enviar_solicitud_viaje: any = (form_data: interface_solicitar_viaje
   };
 };
 
+export const editar_solicitud_viaje: any = (form_data: interface_solicitar_viaje, id_solicitud: number) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`almacen/vehiculos/editar-solicitudes-viajes/${id_solicitud}/`, form_data);
+      control_success('Se editó y se envió la solicitud correctamente');
+      return data;
+    } catch (error: any) { 
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 export const buscar_expediente: any = (titulo_expediente: string,fecha_inicio_expediente: string,fecha_fin_expediente: string,palabras_clave: string) => {
   return async () => {
     try {
       const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expedientes/?titulo_expediente=${titulo_expediente}&fecha_inicio_expediente=${fecha_inicio_expediente}&fecha_fin_expediente=${fecha_fin_expediente}&palabras_clave_expediente=${palabras_clave}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const listar_municipios: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('choices/municipios/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const listar_departamentos: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('choices/departamentos/');     
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
