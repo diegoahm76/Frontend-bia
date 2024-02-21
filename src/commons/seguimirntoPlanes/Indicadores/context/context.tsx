@@ -168,25 +168,7 @@ export const UserProviderIndicador = ({
       if (response?.length > 0) {
         const data_indicador: Indicadores[] = response.map(
           (item: Indicadores) => ({
-            id_indicador: item.id_indicador,
-            nombre_indicador: item.nombre_indicador,
-            linea_base: item.linea_base,
-            medida: item.medida,
-            id_medicion: item.id_medicion,
-            id_tipo: item.id_tipo,
-            id_producto: item.id_producto,
-            id_actividad: item.id_actividad,
-            id_plan: item.id_plan,
-            id_proyecto: item.id_proyecto,
-            tipo_indicador: item.tipo_indicador,
-            nombre_medicion: item.nombre_medicion,
-            nombre_tipo: item.nombre_tipo,
-            nombre_producto: item.nombre_producto,
-            nombre_actividad: item.nombre_actividad,
-            nombre_plan: item.nombre_plan,
-            id_programa: item.id_programa,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
         // dispatch(
@@ -216,25 +198,7 @@ export const UserProviderIndicador = ({
       if (response?.length > 0) {
         const data_indicador: Indicadores[] = response.map(
           (item: Indicadores) => ({
-            id_indicador: item.id_indicador,
-            nombre_indicador: item.nombre_indicador,
-            linea_base: item.linea_base,
-            medida: item.medida,
-            id_medicion: item.id_medicion,
-            id_tipo: item.id_tipo,
-            id_producto: item.id_producto,
-            id_actividad: item.id_actividad,
-            id_plan: item.id_plan,
-            id_proyecto: item.id_proyecto,
-            tipo_indicador: item.tipo_indicador,
-            nombre_medicion: item.nombre_medicion,
-            nombre_tipo: item.nombre_tipo,
-            nombre_producto: item.nombre_producto,
-            nombre_actividad: item.nombre_actividad,
-            nombre_plan: item.nombre_plan,
-            id_programa: item.id_programa,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
         // dispatch(

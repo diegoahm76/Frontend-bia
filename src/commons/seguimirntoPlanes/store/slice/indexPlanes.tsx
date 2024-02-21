@@ -46,8 +46,10 @@ export const initial_state_eje_estrategico: IEjeEstrategico = {
   id_eje_estrategico: null,
   nombre_plan: '',
   nombre_tipo_eje: '',
+  nombre_programa: '',
   nombre: '',
   id_plan: null,
+  id_programa: null,
   id_tipo_eje: null,
 };
 
@@ -61,19 +63,21 @@ export const initial_state_objetivo_plan: IObjetivo = {
 export const initial_state_programa: IProgramas = {
   id_programa: null,
   nombre_plan: '',
+  numero_programa: '',
   porcentaje_1: null,
   porcentaje_2: null,
   porcentaje_3: null,
   porcentaje_4: null,
   nombre_programa: '',
   id_plan: null,
+  id_sector: null,
   fecha_creacion: '',
   cumplio: false,
 };
 
 export const initial_state_proyecto: IProyectos = {
   id_proyecto: null,
-  numero_proyecto: null,
+  numero_proyecto: '',
   nombre_programa: '',
   pondera_1: null,
   pondera_2: null,
@@ -91,7 +95,7 @@ export const initial_state_productos: IProductos = {
   nombre_proyecto: '',
   nombre_producto: '',
   id_proyecto: null,
-  numero_producto: null,
+  numero_producto: '',
   id_plan: null,
   id_programa: null,
   fecha_creacion: '',
@@ -103,7 +107,8 @@ export const initial_state_actividades: IActividades = {
   nombre_producto: '',
   nombre_actividad: '',
   id_producto: null,
-  numero_actividad: null,
+  numero_actividad: '',
+  numero_producto: '',
   id_plan: null,
   nombre_plan: '',
   id_proyecto: null,
@@ -121,6 +126,7 @@ export const initial_state_indicadores: Indicadores = {
   nombre_plan: '',
   nombre_indicador: '',
   nombre_proyecto: '',
+  numero_indicador: '',
   linea_base: '',
   medida: '',
   tipo_indicador: '',
@@ -185,6 +191,7 @@ export const initial_state_subprogramas: ISubprogramas = {
   id_subprograma: null,
   nombre_programa: '',
   nombre_subprograma: '',
+  numero_subprograma: '',
   id_programa: null,
 };
 
@@ -196,6 +203,7 @@ export const initial_state_fuentes_fianciacion: IFuentesFinanciacion = {
   nombre_proyecto: '',
   nombre_actividad: '',
   nombre_producto: '',
+  nombre_meta: '',
   vano_1: null,
   vano_2: null,
   vano_3: null,
@@ -206,6 +214,7 @@ export const initial_state_fuentes_fianciacion: IFuentesFinanciacion = {
   id_proyecto: null,
   id_actividad: null,
   id_producto: null,
+  id_meta: null,
 };
 
 export const initial_state_detalle_inversion: IDetalleCuentas = {

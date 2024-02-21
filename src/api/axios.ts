@@ -8,7 +8,6 @@ import {
 import { base_urlcam } from '../commons/auth/api/auth';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-
 export const baseURL =
   process.env.NODE_ENV === 'production'
     ? process.env.REACT_APP_BETA_URL ||

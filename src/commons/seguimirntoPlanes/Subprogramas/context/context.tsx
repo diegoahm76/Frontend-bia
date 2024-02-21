@@ -10,6 +10,12 @@ import { get_programas, get_subprograma_id } from '../services/services';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
+  id_programa: number | null;
+  set_id_programa: (value: number | null) => void;
+  id_subprograma: number | null;
+  set_id_subprograma: (value: number | null) => void;
 
   // * rows
   rows_subprogramas: ISubprogramas[];
@@ -30,6 +36,15 @@ interface UserContext {
 }
 
 export const DataContextSubprogramas = createContext<UserContext>({
+  // * id
+  id_plan: null,
+  set_id_plan: () => {},
+  id_programa: null,
+  set_id_programa: () => {},
+  id_subprograma: null,
+  set_id_subprograma: () => {},
+
+  // * rows
   rows_subprogramas: [],
   set_rows_subprogramas: () => {},
   rows_programa: [],
@@ -48,6 +63,9 @@ export const UserProviderSubprogramas = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
+  const [id_subprograma, set_id_subprograma] = React.useState<number | null>(null);
 
   // * select
   const [tipo_eje_selected, set_tipo_eje_selected] = React.useState<
@@ -57,15 +75,17 @@ export const UserProviderSubprogramas = ({
 
   // * rows
 
-  const [rows_subprogramas, set_rows_subprogramas] = React.useState<ISubprogramas[]>([]);
+  const [rows_subprogramas, set_rows_subprogramas] = React.useState<
+    ISubprogramas[]
+  >([]);
 
   // * info
 
   // * fetch
   //* declaracion context
-  const {
-    programa: { id_programa },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   programa: { id_programa },
+  // } = useAppSelector((state) => state.planes);
 
   const fetch_data_subprogramas = async (): Promise<void> => {
     try {
@@ -74,10 +94,7 @@ export const UserProviderSubprogramas = ({
       if (response?.length > 0) {
         const data_subprogramas: ISubprogramas[] = response.map(
           (item: ISubprogramas) => ({
-            id_programa: item.id_programa,
-            id_subprograma: item.id_subprograma,
-            nombre_subprograma: item.nombre_subprograma,
-            nombre_programa: item.nombre_programa,
+            ...item,
           })
         );
 
@@ -97,16 +114,7 @@ export const UserProviderSubprogramas = ({
       if (response?.length > 0) {
         const data_programa: IProgramas[] = response.map(
           (item: IProgramas) => ({
-            id_programa: item.id_programa,
-            nombre_plan: item.nombre_plan,
-            nombre_programa: item.nombre_programa,
-            porcentaje_1: item.porcentaje_1,
-            porcentaje_2: item.porcentaje_2,
-            porcentaje_3: item.porcentaje_3,
-            porcentaje_4: item.porcentaje_4,
-            id_plan: item.id_plan,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
 
@@ -121,6 +129,12 @@ export const UserProviderSubprogramas = ({
 
   const value: UserContext = {
     // * id
+    id_plan,
+    set_id_plan,
+    id_programa,
+    set_id_programa,
+    id_subprograma,
+    set_id_subprograma,
 
     // * select
     tipo_eje_selected,

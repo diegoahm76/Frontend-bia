@@ -34,6 +34,12 @@ export const ListarEjeEstrategico: React.FC = () => {
       width: 300,
     },
     {
+      field: 'nombre_programa',
+      headerName: 'NOMBRE DEL PROGRAMA',
+      sortable: true,
+      width: 300,
+    },
+    {
       field: 'nombre_tipo_eje',
       headerName: 'TIPO DE EJE ESTRATEGICO',
       sortable: true,
@@ -91,14 +97,15 @@ export const ListarEjeEstrategico: React.FC = () => {
   ];
 
   const {
+    id_plan,
     rows_eje_estrategico,
     fetch_data_tipo_eje,
     fetch_data_eje_estrategico,
   } = useContext(DataContextEjeEstrategico);
 
-  const {
-    plan: { id_plan },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   plan: { id_plan },
+  // } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
 

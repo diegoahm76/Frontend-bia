@@ -22,6 +22,8 @@ import { IBusquedaProgramas } from '../../Programas/components/Programas/Busqued
 import { IBusquedaProyecto } from '../../Proyectos/components/Proyectos/BusquedaAvanzada/types';
 import { IBusquedaProductos } from '../../Productos/components/Programas/BusquedaAvanzada/types';
 import { IBusquedaFuenteIndicador } from '../../FinanciaciónIndicadores/components/Components/BusquedaAvanzada/types';
+import { IBusquedaEjeEstrategico } from '../../EjeEstrategico/components/EjeEstrategico/BusquedaAvanzada/types';
+import { IBusquedaSubprograma } from '../../Subprogramas/components/BusquedaAvanzada copy/types';
 
 // ! Indicadores
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
@@ -35,7 +37,9 @@ export const get_indicadores = async (): Promise<Indicadores[]> => {
 export const get_indicadores_id_actividad = async (
   id_actividad: number
 ): Promise<Indicadores[]> => {
-  const response = await api.get(`seguimiento/planes/consultar-indicadores-id-actividad/${id_actividad}/`);
+  const response = await api.get(
+    `seguimiento/planes/consultar-indicadores-id-actividad/${id_actividad}/`
+  );
   return response.data.data;
 };
 
@@ -170,6 +174,33 @@ export const search_proyectos = async ({
   return await api.get<ResponseServer<IBusquedaProyecto[]>>(url);
 };
 
+//  Busqueda Avanzada eje por nombre plan, y nombre
+
+export const search_eje = async ({
+  nombre_plan,
+  nombre,
+  nombre_programa,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaEjeEstrategico[]>>> => {
+  const url = `/seguimiento/planes/busqueda-avanzada-ejes/?nombre_plan=${String(
+    nombre_plan ?? ''
+  )}&nombre=${String(nombre ?? '')}&nombre_programa=${String(
+    nombre_programa ?? ''
+  )}`;
+  return await api.get<ResponseServer<IBusquedaEjeEstrategico[]>>(url);
+};
+
+// Busqueda Avanzada subprogramas por nombre programa y nombre subprograma
+
+export const search_subprogramas = async ({
+  nombre_programa,
+  nombre_subprograma,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaSubprograma[]>>> => {
+  const url = `seguimiento/planes/busqueda-avanzada-subprogramas/?nombre_programa=${String(
+    nombre_programa ?? ''
+  )}&nombre_subprograma=${String(nombre_subprograma ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaSubprograma[]>>(url);
+};
+
 // Busqueda Avanzada Productos por nombre plan, nombre programa, nombre proyecto y nombre producto
 
 export const search_productos = async ({
@@ -186,7 +217,7 @@ export const search_productos = async ({
   return await api.get<ResponseServer<IBusquedaProductos[]>>(url);
 };
 
-// IBusquedaFuenteIndicador 
+// IBusquedaFuenteIndicador
 // Busqueda avanzada de fuentes de financiacion indicadores por nombre fuente, nombre proyecto, nombre producto, nombre actividad, nombre indicador
 
 export const search_fuentes_indicadores = async ({
@@ -200,7 +231,9 @@ export const search_fuentes_indicadores = async ({
     nombre_fuente ?? ''
   )}&nombre_proyecto=${String(nombre_proyecto ?? '')}&nombre_producto=${String(
     nombre_producto ?? ''
-  )}&nombre_actividad=${String(nombre_actividad ?? '')}&nombre_indicador=${String(nombre_indicador ?? '')}`;
+  )}&nombre_actividad=${String(
+    nombre_actividad ?? ''
+  )}&nombre_indicador=${String(nombre_indicador ?? '')}`;
   return await api.get<ResponseServer<IBusquedaFuenteIndicador[]>>(url);
 };
 
