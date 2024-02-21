@@ -8,26 +8,31 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import SolicitarViaje from './SolicitarViaje';
 import TableSolicitudViajes from '../tables/TableSolicitudViajes';
-import { data_solicitud_viaje } from '../interfaces/types';
+import { data_solicitud_viaje, interface_solicitar_viaje } from '../interfaces/types';
 import { useAppDispatch } from '../../../../hooks';
-import { obtener_solicitudes, obtener_solicitudes_params } from '../thunks/viajes';
+import { listar_municipios, obtener_solicitudes, obtener_solicitudes_params } from '../thunks/viajes';
 import { control_error } from '../../../../helpers';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SolicitudViaje: React.FC = () => {
   const dispatch = useAppDispatch();
+  const [mostrar_solicitud_viaje,set_mostrar_solicitud_viaje] = useState<boolean>(false);
   const [fecha_inicio, set_fecha_inicio] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
   const [fecha_fin, set_fecha_fin] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_fin, set_msj_error_fecha_fin] = useState<string>("");
   const [estado, set_estado] = useState<string>("");
   const [msj_error_estado, set_msj_error_estado] = useState<string>("");
-  const [mostrar_solicitud_viaje,set_mostrar_solicitud_viaje] = useState<boolean>(false);
-  const [data_solicitudes_viajes, set_data_solicitudes_viajes] = useState<data_solicitud_viaje[]>([]);
   const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
+  const [accion, set_accion ] = useState<string>('');
+  const [municipios, set_municipios] = useState<any>([])
+  
 
-    /**
+  const [data_solicitudes_viajes, set_data_solicitudes_viajes] = useState<data_solicitud_viaje[]>([]);
+  const [id_solicitud_editar, set_id_solicitud_editar] = useState<number>(0);
+
+  /**
   * Gestiona el cambio de la fecha de inicio.
   * @param date - Objeto de tipo Dayjs que representa la nueva fecha de fin o null.
   * @returns void
@@ -69,6 +74,25 @@ const SolicitudViaje: React.FC = () => {
 
 
   /**
+   * Obtiene la lista de municipios del servidor y actualiza el estado correspondiente.
+   * 
+   * @returns {void}
+   */
+  const obtener_municipios: ()=>void = async () => {
+    dispatch(listar_municipios()).then((response: { success: boolean, detail: string, data: any }) => {
+        set_municipios(response);
+        return;
+    })
+  }
+
+  // Efecto secundario que se ejecuta al montar el componente para obtener la lista de municipios
+  useEffect(()=>{
+    obtener_municipios();
+  },[])
+ 
+
+
+  /**
   * Obtiene las solicitudes de viaje y actualiza el estado local con la información obtenida.
   * 
   * @returns void
@@ -76,7 +100,13 @@ const SolicitudViaje: React.FC = () => {
   const obtener_solicitudes_fc: () => void = () => {
     dispatch(obtener_solicitudes()).then((response: any) => {
       set_data_solicitudes_viajes(
-        response.data.map((solicitud: data_solicitud_viaje) => ({
+        response.data.map((solicitud: data_solicitud_viaje) => {
+          const municipio_encontrado = municipios.find(
+            ([codigo]: any) => codigo === solicitud.cod_municipio
+          );
+          const nombre_municipio = municipio_encontrado ? municipio_encontrado[1] : '';
+          
+          return {
           estado_solicitud:
             solicitud.estado_solicitud === 'ES'
               ? 'En espera'
@@ -91,9 +121,9 @@ const SolicitudViaje: React.FC = () => {
           nro_pasajeros: solicitud.nro_pasajeros,
           fecha_partida: dayjs(solicitud.fecha_partida).format('DD/MM/YYYY'),
           fecha_retorno: dayjs(solicitud.fecha_retorno).format('DD/MM/YYYY'),
-          cod_municipio: solicitud.cod_municipio === '05001' && 'Villavicencio',
-          eliminar: solicitud.id_solicitud_viaje,
-        }))
+          cod_municipio: nombre_municipio,
+          id_solicitud: solicitud.id_solicitud_viaje,
+        }})
       );
     })
   }
@@ -129,7 +159,7 @@ const SolicitudViaje: React.FC = () => {
           nro_pasajeros: solicitud.nro_pasajeros,
           fecha_partida: dayjs(solicitud.fecha_partida).format('DD/MM/YYYY'),
           fecha_retorno: dayjs(solicitud.fecha_retorno).format('DD/MM/YYYY'),
-          cod_municipio: solicitud.cod_municipio === '05001' && 'Villavicencio',
+          cod_municipio: municipios && municipios.find(([codigo, name]:any) => codigo === solicitud.cod_municipio && name),
         }))
       );
     })
@@ -178,7 +208,8 @@ const SolicitudViaje: React.FC = () => {
   */
   useEffect( ()=>{
     obtener_solicitudes_fc(); 
-  },[refrescar_tabla]);
+  },[refrescar_tabla,municipios]);
+
   
   return (
     <>
@@ -276,7 +307,15 @@ const SolicitudViaje: React.FC = () => {
           </form>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>
-            <TableSolicitudViajes set_refrescar_tabla={set_refrescar_tabla} refrescar_tabla={refrescar_tabla}  data_row_solicitud_viaje={data_solicitudes_viajes} obtener_solicitudes_fc={obtener_solicitudes_fc}/>
+            <TableSolicitudViajes 
+              set_accion={set_accion}
+              set_refrescar_tabla={set_refrescar_tabla} 
+              refrescar_tabla={refrescar_tabla}  
+              data_row_solicitud_viaje={data_solicitudes_viajes} 
+              obtener_solicitudes_fc={obtener_solicitudes_fc}
+              set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje}
+              set_id_solicitud_editar={set_id_solicitud_editar}
+              />
           </Grid>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>
@@ -285,7 +324,11 @@ const SolicitudViaje: React.FC = () => {
                 color='success'
                 variant='contained'
                 startIcon={<AddIcon />}
-                onClick={()=>set_mostrar_solicitud_viaje(true)}
+                onClick={()=>{
+                  set_accion('crear')
+                  set_mostrar_solicitud_viaje(true)
+                  }
+                }
               >
                 Crear nueva solicitud
               </Button>
@@ -295,7 +338,12 @@ const SolicitudViaje: React.FC = () => {
       </Grid>
 
       {mostrar_solicitud_viaje && 
-        <SolicitarViaje set_refrescar_tabla={set_refrescar_tabla} refrescar_tabla={refrescar_tabla} set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje}/>
+        <SolicitarViaje
+          id_solicitud_editar={id_solicitud_editar}
+          accion={accion}
+          set_refrescar_tabla={set_refrescar_tabla} 
+          refrescar_tabla={refrescar_tabla} 
+          set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje}/>
       }
     </>
   );
