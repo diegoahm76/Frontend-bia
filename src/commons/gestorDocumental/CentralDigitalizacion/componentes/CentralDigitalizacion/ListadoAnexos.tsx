@@ -123,7 +123,8 @@ const ListadoAnexos = () => {
               'medio_almacenamiento_otros_cual'
             ),
             numero_folios: get_values('numero_folios'),
-            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+             ya_digitalizado: exhibit?.ya_digitalizado,
+            // ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
             exhibit_link: file,
             metadatos:
               exhibit.id_anexo === null
@@ -151,7 +152,8 @@ const ListadoAnexos = () => {
               'medio_almacenamiento_otros_cual'
             ),
             numero_folios: 1,
-            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+            // ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+            ya_digitalizado: exhibit?.ya_digitalizado,
             exhibit_link: file_fisico,
             metadatos:
               exhibit.id_anexo === null
@@ -198,7 +200,7 @@ const ListadoAnexos = () => {
           {(params.row.metadatos?.archivo?.ruta_archivo ?? null) !== '' &&
             (params.row.metadatos?.archivo?.ruta_archivo ?? null) !== null &&
             typeof (params.row.metadatos?.archivo?.ruta_archivo ?? null) ===
-              'string' && (
+            'string' && (
               <Tooltip title="Ver archivo">
                 <Grid item xs={0.5} md={0.5}>
                   <DownloadButton
@@ -252,6 +254,7 @@ const ListadoAnexos = () => {
         </div>
       ),
     },
+    
     {
       field: 'observacion_digitalizacion',
       headerName: 'Observación',
