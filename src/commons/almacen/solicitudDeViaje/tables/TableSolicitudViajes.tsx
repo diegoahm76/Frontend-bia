@@ -3,15 +3,15 @@
 import { Grid } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from 'uuid';
-import { data_solicitud_viaje } from "../interfaces/types";
+import { data_solicitud_viaje, interface_solicitar_viaje } from "../interfaces/types";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import SaveAsIcon from '@mui/icons-material/SaveAs';
-import { elimiar_solicitud_viaje } from "../thunks/viajes";
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import { elimiar_solicitud_viaje, listar_municipios } from "../thunks/viajes";
 import { useAppDispatch } from "../../../../hooks";
 import { control_success } from "../../../../helpers";
 import Swal from "sweetalert2";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 
 
 
@@ -20,20 +20,58 @@ interface props_table {
   set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
   refrescar_tabla: boolean;
   obtener_solicitudes_fc: ()=> void;
+  set_accion: React.Dispatch<React.SetStateAction<string>>;
+  set_mostrar_solicitud_viaje: React.Dispatch<React.SetStateAction<boolean>>;
+  set_id_solicitud_editar: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface custom_column extends GridColDef {
   renderCell?: (params: { row: data_solicitud_viaje }) => React.ReactNode;
 }
 
-const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_solicitud_viaje,set_refrescar_tabla,refrescar_tabla}) => {
+const TableSolicitudViajes: FC<props_table> = ({
+  obtener_solicitudes_fc,
+  data_row_solicitud_viaje,
+  set_refrescar_tabla,
+  refrescar_tabla,
+  set_accion,
+  set_mostrar_solicitud_viaje,
+  set_id_solicitud_editar
+}) => {
   const dispatch = useAppDispatch();
 
 
+  /**
+   * Muestra la solicitud de viaje en modo de visualización.
+   * 
+   * @param {data_solicitud_viaje} params - Objeto que representa los parámetros de la solicitud de viaje.
+   * @returns {void}
+   */
   const ver_solicitud = (params: data_solicitud_viaje) => {
-    console.log(params)
+    set_mostrar_solicitud_viaje(true);
+    set_id_solicitud_editar(Number(params.id_solicitud));
+    set_accion('ver');
   }
 
+  /**
+   * Inicia la edición de la solicitud de viaje.
+   * 
+   * @param {data_solicitud_viaje} params - Objeto que contiene los parámetros de la solicitud de viaje a editar.
+   * @returns {void}
+   */
+  const editar_solicitar = (params: data_solicitud_viaje) => {
+    set_mostrar_solicitud_viaje(true);
+    set_id_solicitud_editar(Number(params.id_solicitud));
+    set_accion('editar');
+  }
+
+  /**
+   * Inicia el proceso de eliminación de una solicitud de viaje.
+   * Muestra un modal de confirmación antes de realizar la eliminación.
+   * 
+   * @param {data_solicitud_viaje} params - Objeto que contiene los parámetros de la solicitud de viaje a eliminar.
+   * @returns {Promise<void>} - Una promesa que resuelve después de la confirmación y, si procede, la eliminación de la solicitud.
+   */
   const eliminar_solicitud = async(params: data_solicitud_viaje) => {
     const modal_confirmar_eliminacion = await Swal.fire({
       title: '¿Está seguro que desea eliminar esta solicitud?',
@@ -46,7 +84,8 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        dispatch(elimiar_solicitud_viaje(params.eliminar)).then((response: { success: boolean, detail: string, data: any }) => {
+        set_mostrar_solicitud_viaje(false);
+        dispatch(elimiar_solicitud_viaje(params.id_solicitud)).then((response: { success: boolean, detail: string, data: any }) => {
           if (response.success) {
             control_success('Se elimino la solicitud correctamente');
           }
@@ -61,6 +100,7 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
       set_refrescar_tabla(!refrescar_tabla);
     }    
   }
+
 
   const columns: custom_column[] = [
     {field: 'estado_solicitud', headerName:'Estado', width:150, flex:1},
@@ -77,7 +117,7 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
       headerAlign: 'center',
       renderCell: ((params) => {
         return <DeleteForeverIcon
-          sx={{ cursor: 'pointer', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizado' ? 'none' : 'inline-block' }}
+          sx={{ cursor: 'pointer', color:'#e72929', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizada' ? 'none' : 'inline-block' }}
           onClick={() => eliminar_solicitud(params.row)}
         />
       }),
@@ -102,9 +142,9 @@ const TableSolicitudViajes: FC<props_table> = ({obtener_solicitudes_fc,data_row_
       align: 'center',
       headerAlign: 'center',
       renderCell: (params) => (
-        <SaveAsIcon
-          sx={{ cursor: 'pointer', fontSize: '28px', display: params.row.estado_solicitud === 'Rechazada' ? 'inline-block' : 'none' }}
-          onClick={() => ver_solicitud(params.row)}
+        <ModeEditIcon
+          sx={{ cursor: 'pointer', color:'#138bda',fontSize: '28px', display:params.row.estado_solicitud === 'Rechazada' ? 'inline-block' : 'none' }}
+          onClick={() => editar_solicitar(params.row)}
         />
       ),
     }
