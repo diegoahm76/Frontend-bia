@@ -403,6 +403,7 @@ export const cambio_organigrama_actual: any = (
       control_warning(
         'No olvides asignar los líderes a las unidades organizacionales del nuevo organigrama actual'
       );
+      control_warning('')
       dispatch(get_organigrams_service());
       return data;
     } catch (error: any) {

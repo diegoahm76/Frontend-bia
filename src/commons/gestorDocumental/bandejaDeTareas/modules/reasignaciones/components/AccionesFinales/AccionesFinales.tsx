@@ -21,6 +21,8 @@ import { ReasignacionContext } from '../../context/ReasignacionContext';
 import { resetBandejaDeTareasFull } from '../../../../toolkit/store/BandejaDeTareasStore';
 import { postReAsignacionTarea } from '../../services/post/pqrsdf/postReAsignacionTarea.service';
 import { getReAsignacionesTareasPqrsdf } from '../../services/reasignaciones/pqrsdf/getReAsignacionesTaskPqrsdf.service';
+import { getReAsignacionesTareasOtros } from '../../services/reasignaciones/otros/getReasignacionesTareasOtros.service';
+import { postReAsignacionTareaOtros } from '../../services/post/otros/postReasignacionTareaOtros.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -50,12 +52,24 @@ export const AccionesFinales = (): JSX.Element => {
 
   const handleClick = async () => {
     if (
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_asignacion_tarea ===
+      'Rechazado'
+    ) {
+      showAlert(
+        'Opss!',
+        'Una tarea rechazada no se puede reasignar',
+        'warning'
+      );
+      return;
+    }
+
+    if (
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
       'Respondida por el propietario de la bandeja de tareas'
     ) {
       showAlert(
         'Opss!',
-        'Esta PQRSDF ya ha sido respondida, por lo que no se puede reasignar',
+        'Esta solicitud de otros ya ha sido respondida, por lo que no se puede reasignar',
         'warning'
       );
       return;
@@ -112,16 +126,20 @@ export const AccionesFinales = (): JSX.Element => {
           handleSecondLoading
         );*/
         break;
-      case 'Otros':
+      case 'RESPONDER OTRO':
+      case 'RESPONDER OTROS':
+      case 'Responder Otros':
+      case 'Responder Otro':
         // Call the service for Otros
-        /*  res = await postAsignacionGrupoOtros(
+        res = await postReAsignacionTareaOtros(
           {
-            id_pqrsdf: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
-            id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_tarea_asignada:
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_persona_a_quien_se_reasigna: currentGrupo?.value,
+            comentario_reasignacion: comentario,
           },
           handleSecondLoading
-        );*/
+        );
         break;
       case 'OPA':
         // Call the service for OPA
@@ -170,12 +188,14 @@ export const AccionesFinales = (): JSX.Element => {
             handleGeneralLoading
           );*/
           break;
-        case 'Otros':
-        // Fetch the assignments for Otros
-       /* asignaciones = await getReasignacionesTareasOtros(
-            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
+        case 'RESPONDER OTRO':
+        case 'RESPONDER OTROS':
+        case 'Responder Otros':
+          asignaciones = await getReAsignacionesTareasOtros(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
             handleGeneralLoading
-          );*/
+          );
+          break;
         case 'OPA':
           showAlert(
             'Atención',
