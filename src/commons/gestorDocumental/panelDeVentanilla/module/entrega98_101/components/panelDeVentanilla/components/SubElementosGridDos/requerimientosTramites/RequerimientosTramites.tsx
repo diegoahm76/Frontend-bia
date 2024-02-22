@@ -37,7 +37,7 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
   //* context declaration
   const { setAnexos } = useContext(PanelVentanillaContext);
 
-  const { handleOpenModalOne, handleOpenModalTwo: handleOpenInfoMetadatos } =
+  const { handleFifthLoading, handleOpenModalTwo: handleOpenInfoMetadatos } =
     useContext(ModalAndLoadingContext);
 
   // ? se va a tener que modificar esta función con la nueva propiedad que se agrega. si la pqr ya fue asignada a grupo, no se puede volver a asignar (constinuar asig grup)
@@ -145,7 +145,7 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
               <IconButton
                 onClick={() => {
                   setActionsComplementos(params?.row);
-                  handleOpenModalOne(true);
+                  handleFifthLoading(true);
                 }}
               >
                 <Avatar
