@@ -18,6 +18,7 @@ import {
   get_list_request_status_service,
   get_request_types_service,
   response_request_service,
+  response_request_opas_service,
 } from '../store/thunks/centralDigitalizacionThunks';
 import SolicitudSeleccionada from '../componentes/CentralDigitalizacion/SolicitudSeleccionada';
 import ListadoAnexos from '../componentes/CentralDigitalizacion/ListadoAnexos';
@@ -43,7 +44,7 @@ export function ListadoAnexosScreen(): JSX.Element {
 
   const { id } = useParams();
 
-  const initial_values = (): void => {};
+  const initial_values = (): void => { };
 
   useEffect(() => {
     if (digitization_request.nombre_tipo_solicitud === "OPAS") {
@@ -52,7 +53,7 @@ export function ListadoAnexosScreen(): JSX.Element {
       void dispatch(get_digitalization_request_id_service(id));
     }
 
-    
+
     void dispatch(get_request_types_service());
     void dispatch(get_list_request_status_service());
   }, []);
@@ -80,8 +81,13 @@ export function ListadoAnexosScreen(): JSX.Element {
       digitalizacion_completada: true,
       id_persona_digitalizo: userinfo.id_persona,
     };
+    if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-    void dispatch(response_request_service(params));
+      void dispatch(response_request_opas_service(params));
+    } else {
+
+      void dispatch(response_request_service(params));
+    }
   };
   const responder_digitalizacion_incompleta = (): void => {
     const observacion = get_values('observacion_digitalización') ?? '';
@@ -95,8 +101,13 @@ export function ListadoAnexosScreen(): JSX.Element {
         digitalizacion_completada: false,
         id_persona_digitalizo: userinfo.id_persona,
       };
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-      void dispatch(response_request_service(params));
+        void dispatch(response_request_opas_service(params));
+      } else {
+
+        void dispatch(response_request_service(params));
+      }
     }
   };
 

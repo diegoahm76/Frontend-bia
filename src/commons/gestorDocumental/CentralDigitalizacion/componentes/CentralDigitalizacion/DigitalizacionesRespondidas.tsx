@@ -22,6 +22,7 @@ import {
 import {
   control_error,
   get_digitalization_responses_service,
+  get_digitalization_opas_responses_service
 } from '../../store/thunks/centralDigitalizacionThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -225,7 +226,15 @@ const DigitalizacionesRespondidas = () => {
       if (fecha_hasta !== '') {
         params.fecha_hasta = fecha_hasta;
       }
-      void dispatch(get_digitalization_responses_service(params));
+
+      if (tipo_solicitud === "OPAS") {
+        void dispatch(get_digitalization_opas_responses_service(params));
+
+      }else {
+
+        void dispatch(get_digitalization_responses_service(params));
+      }
+
     }
   };
 

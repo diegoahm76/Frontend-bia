@@ -37,9 +37,11 @@ import {
 } from '../../store/slice/centralDigitalizacionSlice';
 import {
   add_metadata_service,
+  add_metadata_opas_service,
   control_error,
   control_success,
   delete_metadata_service,
+  delete_metadata_opas_service,
   edit_metadata_service,
   edit_metadata_opas_service,
   get_file_categories_service,
@@ -57,6 +59,7 @@ interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   get_values_anexo: any;
+  selectedExhibit: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -65,6 +68,7 @@ const MetadataFormDialog = ({
   is_modal_active,
   set_is_modal_active,
   get_values_anexo,
+  selectedExhibit,
 }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -342,22 +346,25 @@ const MetadataFormDialog = ({
           }
         }
 
-   
-  
-      
-          // void dispatch(
-          //   edit_metadata_opas_service(
-          //     form_data,
-          //     digitization_request.id_solicitud_de_digitalizacion ?? 0
-          //   )
-          // ),
+        if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-        void dispatch(
-          edit_metadata_service(
-            form_data,
-            digitization_request.id_solicitud_de_digitalizacion ?? 0
-          )
-        );
+          if (selectedExhibit?.ya_digitalizado === true) {
+            void dispatch(
+              edit_metadata_opas_service(
+                form_data,
+                digitization_request.id_solicitud_de_digitalizacion ?? 0
+              )
+            );
+          }
+        } else {
+         
+        }
+ void dispatch(
+            edit_metadata_service(
+              form_data,
+              digitization_request.id_solicitud_de_digitalizacion ?? 0
+            )
+          );
       } else {
         control_error(
           'Solo se pueden editar metadatos hasta 30 dias despues de la fecha de creación'
@@ -382,17 +389,30 @@ const MetadataFormDialog = ({
         }
       }
 
-      void dispatch(
-        add_metadata_service(
-          form_data,
-          digitization_request.id_solicitud_de_digitalizacion ?? 0
-        )
-        // add_metadata_service(
-        //   form_data,
-        //   digitization_request.id_solicitud_de_digitalizacion ?? 0
-        // )
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
+        void dispatch(
+          add_metadata_opas_service(
+            form_data,
+            digitization_request.id_solicitud_de_digitalizacion ?? 0
+          )
 
-      );
+        );
+      } else {
+
+        void dispatch(
+          add_metadata_service(
+            form_data,
+            digitization_request.id_solicitud_de_digitalizacion ?? 0
+          )
+          // add_metadata_service(
+          //   form_data,
+          //   digitization_request.id_solicitud_de_digitalizacion ?? 0
+          // )
+
+        );
+      }
+
+
     }
     set_is_modal_active(false);
     dispatch(set_exhibit(initial_state_exhibit));
@@ -408,7 +428,15 @@ const MetadataFormDialog = ({
           digitization_request.id_solicitud_de_digitalizacion,
       };
 
-      void dispatch(delete_metadata_service(params));
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
+
+        void dispatch(delete_metadata_opas_service(params));
+
+      } else {
+
+        void dispatch(delete_metadata_service(params));
+      }
+
       set_is_modal_active(false);
       dispatch(set_exhibit(initial_state_exhibit));
       dispatch(set_file_fisico(null));
@@ -420,12 +448,18 @@ const MetadataFormDialog = ({
   }, [file_origins]);
   useEffect(() => {
     if (exhibit.cod_medio_almacenamiento === 'Pa') {
-      const arrayNuevo = file_origins.filter((objeto) => objeto.key !== 'Pa');
+      const arrayNuevo = file_origins.filter((objeto: any) => objeto.key !== 'Pa');
       set_aux_origen_archivos(arrayNuevo);
     } else {
       set_aux_origen_archivos(file_origins);
     }
   }, [exhibit]);
+  const handleClick = () => {
+    console.log(selectedExhibit);
+    console.log("11111111111111111");
+
+    console.log(selectedExhibit?.ya_digitalizado);
+  };
 
   return (
     <Dialog
@@ -434,9 +468,11 @@ const MetadataFormDialog = ({
       onClose={handle_close_add_bien}
       fullWidth
     >
+      <button onClick={handleClick}>Mostrar Digitalizado</button>
       <Box component="form">
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
           <Title title={'Metadatos del archivo'} />
+          {/* {selectedExhibit?.ya_digitalizado} */}
         </Grid>
         <DialogTitle></DialogTitle>
         <Divider />

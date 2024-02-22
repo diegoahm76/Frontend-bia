@@ -31,6 +31,7 @@ interface TipoRenta {
 interface TipoCobro {
     id_tipo_cobro: number;
     nombre_tipo_cobro: string;
+    tipo_renta_asociado:any;
 }
 
 
@@ -129,6 +130,7 @@ export const Varible: React.FC = () => {
         setFormValues({ ...formValues, [name]: value });
     };
 
+    
     useEffect(() => {
         if (selectedConfiguracion) {
             setFormValues(selectedConfiguracion);
@@ -272,8 +274,7 @@ export const Varible: React.FC = () => {
                             onChange={handleInputChange}
                             value={formValues.tipo_cobro}
                         >
-                            {tiposCobro
-                              
+                            {tiposCobro 
                                 .map((tipoCobro) => (
                                     <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
                                         {tipoCobro.nombre_tipo_cobro}

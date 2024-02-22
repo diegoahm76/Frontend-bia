@@ -308,7 +308,8 @@ export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_moda
                   } else if(selected.length === 0){
                     handle_open(2);
                   } else {
-                    navigate('../registro');
+                    // navigate('../registro');
+                    navigate('../facilidades_pago/registro');
                     void handle_submit();
                   }
                 }}

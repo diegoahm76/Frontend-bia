@@ -484,7 +484,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         onChange={(e) => setMensaje(e.target.value)}
                       />
                     </Grid>
-
+                 {solicitud_facilidad.deudor.email}
                     <Grid item >
                       <Button variant="contained" color="primary" onClick={enviarCorreo}>
                         Enviar Correo
