@@ -38,7 +38,7 @@ export const ModalComplementoTraSer = (): JSX.Element => {
   );
 
   // ? context necesario
-  const { openModalOne, openModalTwo, handleOpenModalOne, handleOpenModalTwo } =
+  const { fifthLoading, openModalTwo, handleFifthLoading , handleOpenModalTwo } =
     useContext(ModalAndLoadingContext);
 
   // ? state para almacenar la informacion de los metadatos
@@ -48,7 +48,7 @@ export const ModalComplementoTraSer = (): JSX.Element => {
 
   //* use effect para cargar los datos de los anexos
   useEffect(() => {
-    if (!openModalOne) return;
+    if (!fifthLoading) return;
 
     (async () => {
       try {
@@ -61,7 +61,7 @@ export const ModalComplementoTraSer = (): JSX.Element => {
         console.error(error);
       }
     })();
-  }, [openModalOne]);
+  }, [fifthLoading]);
 
   const columns = [
     ...columnsModalOpas,
@@ -115,9 +115,9 @@ export const ModalComplementoTraSer = (): JSX.Element => {
       <Dialog
         fullWidth
         maxWidth="lg"
-        open={openModalOne}
+        open={fifthLoading}
         onClose={() => {
-          handleOpenModalOne(false);
+          handleFifthLoading(false);
           handleOpenModalTwo(false);
         }}
       >
@@ -416,7 +416,7 @@ export const ModalComplementoTraSer = (): JSX.Element => {
                 color="error"
                 variant="contained"
                 onClick={() => {
-                  handleOpenModalOne(false);
+                  handleFifthLoading(false);
                   handleOpenModalTwo(false);
                 }}
                 startIcon={<CloseIcon />}
