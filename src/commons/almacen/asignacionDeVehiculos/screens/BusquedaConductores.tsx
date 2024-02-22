@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, FormControl, FormLabel, Grid, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import TableBusquedaConductores from '../tables/TableBusquedaCondutores';
@@ -30,24 +30,24 @@ const BusquedaConductores: React.FC = () => {
       }}
       >
       <Title title='Búsqueda de Conductores' />
-      <Grid item container xs={12} sx={{
+      <Grid item container spacing={1}  xs={12} sx={{
           display:'flex',
-          gap:'10px',
           marginTop: '15px'
         }}>
-          <Grid item xs={4}
+          <Grid item xs={12} md={3}
             sx={{
               display:'flex',
               alignItems:'center',
               justifyContent:'center'
             }}
             >
-            <FormLabel sx={{marginRight:'10px'}}>
-              Tipo de Conductor:
-            </FormLabel>
-            <Grid item xs={6}>
               <FormControl required size='small' fullWidth>
+                <InputLabel>
+                  Tipo de Conductor:
+                </InputLabel>
                 <Select
+                  label='Tipo de Conductor:'
+                  fullWidth
                   value={tipo_conductor}
                   onChange={cambio_tipo_conductor}
                   error={msj_error_tipo_conductor !== ""}
@@ -56,35 +56,28 @@ const BusquedaConductores: React.FC = () => {
                     <MenuItem value={'externo'}>Externo</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
           </Grid>
 
-          <Grid item xs={2} sx={{
+          <Grid item xs={12} md={3} sx={{
             display:'flex',
             justifyContent: 'center',
             alignItems:'center',
-            gap:1
             }} >
-            <FormLabel htmlFor='conductor'>
-              Conductor:
-            </FormLabel>
-            <Grid item xs={8}>
-              <TextField
-                fullWidth
-                id='conductor'
-                placeholder='Buscar'
-                size="small"
-              />
-            </Grid>
+            <TextField
+              fullWidth
+              label='Conductor:'
+              placeholder='Buscar'
+              size="small"
+            />
           </Grid>
 
-          <Grid item xs={1} sx={{
+          <Grid item xs={12} md={2} sx={{
             display:'flex',
             justifyContent: 'center',
             alignItems:'center',
-            gap:1
             }} >
             <Button
+              fullWidth
               color='primary'
               variant='contained'
               startIcon={<SearchIcon />}
