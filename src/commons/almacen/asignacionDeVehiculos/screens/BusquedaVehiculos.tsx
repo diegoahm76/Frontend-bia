@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Grid, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
@@ -40,81 +40,65 @@ const BusquedaVehiculos: React.FC = () => {
         sx={{
           marginTop: '10px'
         }}
-        spacing={2}
+        spacing={1}
         >
-        <Grid item container xs={12} sx={{
-            display:'flex',
-            gap:'10px',
-          }}>
-          <Grid item xs={3}
+          <Grid item xs={12} md={3}
             sx={{
               display:'flex',
               alignItems:'center',
               justifyContent:'center'
             }}
             >
-            <FormLabel sx={{marginRight:'10px'}}>
-              Tipo de Vehículo:
-            </FormLabel>
-            <Grid item xs={6}>
-              <FormControl required size='small' fullWidth>
-                <Select
-                  value={tipo_vehiculo}
-                  onChange={cambio_tipo_vehiculo}
-                  error={msj_error_tipo_vehiculo !== ""}
-                >
-                    <MenuItem value={'carro'}>Carro</MenuItem>
-                    <MenuItem value={'moto'}>Moto</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+            <FormControl required size='small' fullWidth>
+              <InputLabel>
+                Tipo de Vehículo:
+              </InputLabel>
+              <Select
+                fullWidth
+                label='Tipo de Vehículo:'
+                value={tipo_vehiculo}
+                onChange={cambio_tipo_vehiculo}
+                error={msj_error_tipo_vehiculo !== ""}
+              >
+                  <MenuItem value={'carro'}>Carro</MenuItem>
+                  <MenuItem value={'moto'}>Moto</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
 
-          <Grid item xs={2} sx={{
+          <Grid item xs={12} md={3} sx={{
             display:'flex',
             justifyContent: 'center',
             alignItems:'center',
-            gap:1
             }} >
-            <FormLabel htmlFor='marca'>
-              Marca:
-            </FormLabel>
-            <Grid item xs={11}>
               <TextField
+                label='Marca:'
                 fullWidth
-                id='marca'
                 placeholder='Buscar'
                 size="small"
               />
-            </Grid>
           </Grid>
 
-          <Grid item xs={2} sx={{
+          <Grid item xs={12} md={3} sx={{
             display:'flex',
             justifyContent: 'center',
             alignItems:'center',
-            gap:1
             }} >
-            <FormLabel htmlFor='placa'>
-              Placa:
-            </FormLabel>
-            <Grid item xs={8}>
               <TextField
+                label='Placa:'
                 fullWidth
-                id='placa'
                 placeholder='Buscar'
                 size="small"
               />
-            </Grid>
           </Grid>
           
-          <Grid item xs={1} sx={{
+          <Grid item xs={12} md={3} sx={{
             display:'flex',
             justifyContent: 'center',
-            alignItems:'center',
-            gap:1
+            alignItems:'center'
             }} >
             <Button
+              fullWidth
               color='primary'
               variant='contained'
               startIcon={<SearchIcon />}
@@ -123,7 +107,6 @@ const BusquedaVehiculos: React.FC = () => {
               Buscar
             </Button>
           </Grid>
-        </Grid>
       </Grid>
 
       <Grid container sx={{
