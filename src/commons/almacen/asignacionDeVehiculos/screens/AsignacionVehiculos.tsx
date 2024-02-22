@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Grid, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Box, Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,6 +13,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SaveIcon from "@mui/icons-material/Save";
 import CleanIcon from "@mui/icons-material/CleaningServices";
 import ClearIcon from "@mui/icons-material/Clear"; 
+import { data_asignacion_vehiculos } from '../interfaces/types';
 
 
 
@@ -27,6 +28,7 @@ const AsignacionVehiculos: React.FC = () => {
   const [msj_error_fecha_salida, set_msj_error_fecha_salida] = useState<string>("");
   const [fecha_retorno, set_fecha_retorno] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_retorno, set_msj_error_fecha_retorno] = useState<string>("");
+
 
   const cambio_tipo_conductor: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_conductor(e.target.value);
@@ -58,13 +60,17 @@ const AsignacionVehiculos: React.FC = () => {
     }
   };
 
+  const consultar_vehiculos_asignados:(e: React.FormEvent<Element>)=>void = (e) => {
+    e.preventDefault();
+
+  }
+
   return (
     <>
       <Grid
         container
-        spacing={2}
+        spacing={1}
         marginTop={2}
-        width={'100%'}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
@@ -77,114 +83,103 @@ const AsignacionVehiculos: React.FC = () => {
         >
         <Title title='Vehículos Asignados' />
 
-        <Grid
-          container
-          sx={{
-            marginTop: '10px'
-          }}
-          spacing={1}
+        <Box
+          component="form"
+          onSubmit={consultar_vehiculos_asignados}
+          noValidate
+          autoComplete="off"
+          sx={{width:'100%', mt:'20px'}}
           >
             <Grid item container xs={12} sx={{
               display:'flex',
               gap:'10px'
             }}>
-              <Grid item xs={3}
+              <Grid item xs={12} md={2.5}
                 sx={{
                   display:'flex',
                   alignItems:'center',
                   justifyContent:'center'
                 }}
                 >
-                <FormLabel sx={{marginRight:'5px'}}>
-                  Tipo de Conductor:
-                </FormLabel>
-                <Grid item xs={6}>
-                  <FormControl required size='small' fullWidth>
-                    <Select
-                      value={tipo_conductor}
-                      onChange={cambio_tipo_conductor}
-                      error={msj_error_tipo_conductor !== ""}
-                    >
-                        <MenuItem value={'interno'}>Interno</MenuItem>
-                        <MenuItem value={'externo'}>Externo</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
+                <FormControl required size='small' fullWidth>
+                  <InputLabel>Tipo de conductor: </InputLabel>
+                  <Select
+                    label='Tipo de conductor: '
+                    fullWidth
+                    value={tipo_conductor}
+                    onChange={cambio_tipo_conductor}
+                    error={msj_error_tipo_conductor !== ""}
+                  >
+                      <MenuItem value={'interno'}>Interno</MenuItem>
+                      <MenuItem value={'externo'}>Externo</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
 
-              <Grid item xs={3}
+              <Grid item xs={12} md={2.5}
                 sx={{
                   display:'flex',
                   alignItems:'center',
                   justifyContent:'center'
                 }}
                 >
-                <FormLabel sx={{marginRight:'10px'}}>
-                  Tipo de Vehículo:
-                </FormLabel>
-                <Grid item xs={6}>
-                  <FormControl required size='small' fullWidth>
-                    <Select
-                      value={tipo_vehiculo}
-                      onChange={cambio_tipo_vehiculo}
-                      error={msj_error_tipo_vehiculo !== ""}
-                    >
-                        <MenuItem value={'carro'}>Carro</MenuItem>
-                        <MenuItem value={'moto'}>Moto</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
+                <FormControl required size='small' fullWidth>
+                <InputLabel>Tipo de Vehículo: </InputLabel>
+                  <Select
+                    label='Tipo de Vehículo: '
+                    fullWidth
+                    value={tipo_vehiculo}
+                    onChange={cambio_tipo_vehiculo}
+                    error={msj_error_tipo_vehiculo !== ""}
+                  >
+                      <MenuItem value={'carro'}>Carro</MenuItem>
+                      <MenuItem value={'moto'}>Moto</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
 
-              <Grid item xs={1.5} sx={{
+              <Grid item xs={12} md={1.5} sx={{
                 display:'flex',
                 justifyContent: 'center',
                 alignItems:'center',
                 gap:1
                 }} >
-                <FormLabel htmlFor='placa'>
-                  Placa:
-                </FormLabel>
-                <Grid item xs={7}>
-                  <TextField
-                    fullWidth
-                    id='placa'
-                    placeholder='Buscar'
-                    size="small"
-                  />
-                </Grid>
+                <TextField
+                  label='Placa: '
+                  fullWidth
+                  placeholder='Buscar'
+                  size="small"
+                />
               </Grid>
 
-              <Grid item xs={2.5} sx={{
+              <Grid item xs={12} md={2} sx={{
                 display:'flex',
                 justifyContent: 'center',
                 alignItems:'center',
                 gap:1
                 }} >
-                <FormLabel htmlFor='conductor'>
-                  Conductor:
-                </FormLabel>
-                <Grid item xs={7}>
-                  <TextField
-                    fullWidth
-                    id='conductor'
-                    placeholder='Buscar'
-                    size="small"
-                  />
-                </Grid>
+                <TextField
+                  label='conductor'
+                  fullWidth
+                  id='conductor'
+                  placeholder='Buscar'
+                  size="small"
+                />
               </Grid>
 
-              <Grid item xs={1} sx={{
+              <Grid item xs={12} md={3} sx={{
                 display:'flex',
                 justifyContent: 'center',
                 alignItems:'center',
                 gap:1
                 }} >
                 <Button
+                  fullWidth
                   color='primary'
                   variant='contained'
                   startIcon={<SearchIcon />}
-                  onClick={() => {}}
+                  type='submit'
+                  onClick={consultar_vehiculos_asignados}
                 >
                   Buscar
                 </Button>
@@ -214,7 +209,7 @@ const AsignacionVehiculos: React.FC = () => {
               </Button>
             }
           </Grid>
-        </Grid>
+        </Box>
       </Grid>
 
 
@@ -246,7 +241,6 @@ const AsignacionVehiculos: React.FC = () => {
               container
               spacing={1}
               marginTop={2}
-              width={'100%'}
               sx={{
                 position: 'relative',
                 background: '#FAFAFA',
@@ -257,49 +251,50 @@ const AsignacionVehiculos: React.FC = () => {
                 mb: '20px',
                 display:'flex',
                 justifyContent:'space-between',
-                alignItems:'center',
-                gap:'15px'
+                alignItems:'center'
               }}
               >
-                <Grid>
+                <Grid xs={12} md={2}>
                   <b>Vehículo:</b>
                   <p>DAS - 12D</p>
                 </Grid>
                 <Grid
                   item
-                  xs={4}
+                  xs={12}
+                  md={3}
                   sx={{
                   display: "flex",
                   justifyContent: "center",
                     alignItems: "center",
                   }}
                   >
-                  <FormLabel style={{ width: "70%" }}>Fecha de salida*:</FormLabel>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    value={fecha_salida}
-                    onChange={(newValue) => {
-                      cambio_fecha_salida(newValue);
-                    }}
-                    renderInput={(params) => (
-                      <TextField required fullWidth size="small" {...params} />
-                    )}
-                      minDate={dayjs()}
-                    />
+                    <DatePicker
+                      label='Fecha de salida*:'
+                      value={fecha_salida}
+                      onChange={(newValue) => {
+                        cambio_fecha_salida(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField required fullWidth size="small" {...params} />
+                      )}
+                        minDate={dayjs()}
+                      />
                   </LocalizationProvider>
                 </Grid>
                 <Grid
                   item
-                  xs={4}
+                  xs={12}
+                  md={3}
                   sx={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                   >
-                  <FormLabel style={{ width: "70%" }}>Fecha de retorno*:</FormLabel>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
+                      label='Fecha de retorno*:'
                       value={fecha_retorno}
                       onChange={(newValue) => {
                         cambio_fecha_retorno(newValue);
@@ -311,7 +306,7 @@ const AsignacionVehiculos: React.FC = () => {
                     />
                   </LocalizationProvider>
                 </Grid>
-                <Grid>
+                <Grid xs={12} md={2}>
                   <b>Conductor:</b>
                   <p>1124818945</p>
                 </Grid>
