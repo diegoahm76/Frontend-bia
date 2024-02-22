@@ -26,6 +26,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UpdateIcon from '@mui/icons-material/Update';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { editar_datos_acceso } from '../request/seguridadRequest';
+import { base_urlcam } from '../../auth/api/auth';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosAccesoScreen: React.FC = () => {
@@ -233,7 +234,7 @@ export const DatosAccesoScreen: React.FC = () => {
                             }${image_url}`
                           : `${
                               process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                              'https://bia.cormacarena.gov.co'
+                              `${base_urlcam}`
                             }${image_url}`
                         : image_url != null
                         ? image_url
