@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useState } from 'react';
 import { data_busqueda_vehiculos } from '../interfaces/types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -9,78 +11,28 @@ interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: data_busqueda_vehiculos }) => React.ReactNode;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const TableBusquedaVehiculos: React.FC = () => {
+interface props {
+  data_busqueda_vehiculos: data_busqueda_vehiculos[];
+  set_id_hoja_vida_vehiculo:React.Dispatch<React.SetStateAction<number>>
+  set_vehiculo_placa:React.Dispatch<React.SetStateAction<string>>
+}
 
-  const [data_busqueda_vehiculos, set_data_busqueda_vehiculos] = useState<data_busqueda_vehiculos[]>([
-    {
-      tipoVehiculo: 'Carro',
-      marca: 'Chevrolet',
-      placa: 'DEF456',
-      capacidadPasajeros: 4,
-      tienePlaton: 'Sí'
-    },
-    {
-      tipoVehiculo: 'Moto',
-      marca: 'Yamaha',
-      placa: 'GHI789',
-      capacidadPasajeros: 1,
-      tienePlaton: 'No'
-    },
-    {
-      tipoVehiculo: 'Carro',
-      marca: 'Ford',
-      placa: 'JKL012',
-      capacidadPasajeros: 5,
-      tienePlaton: 'No'
-    },
-    {
-      tipoVehiculo: 'Moto',
-      marca: 'Suzuki',
-      placa: 'MNO345',
-      capacidadPasajeros: 1,
-      tienePlaton: 'Sí'
-    },
-    {
-      tipoVehiculo: 'Carro',
-      marca: 'Hyundai',
-      placa: 'PQR678',
-      capacidadPasajeros: 4,
-      tienePlaton: 'Sí'
-    },
-    {
-      tipoVehiculo: 'Moto',
-      marca: 'Kawasaki',
-      placa: 'STU901',
-      capacidadPasajeros: 1,
-      tienePlaton: 'No'
-    },
-    {
-      tipoVehiculo: 'Carro',
-      marca: 'Nissan',
-      placa: 'VWX234',
-      capacidadPasajeros: 6,
-      tienePlaton: 'No'
-    },
-    {
-      tipoVehiculo: 'Moto',
-      marca: 'Ducati',
-      placa: 'YZA567',
-      capacidadPasajeros: 1,
-      tienePlaton: 'Sí'
-    },
-  ]);
+
+const TableBusquedaVehiculos: React.FC<props> = ({data_busqueda_vehiculos, set_id_hoja_vida_vehiculo,set_vehiculo_placa}) => {
 
   const asignar_vehiculo = (params: data_busqueda_vehiculos) => {
-    console.log(params);
+    set_vehiculo_placa(params.vehiculo_placa)
+    set_id_hoja_vida_vehiculo(params.id_hoja_de_vida);
   }
 
   const columns: CustomColumn[] = [
-    {field: 'tipoVehiculo', headerName:'Tipo de vehiculo', width:150, flex:1},
-    {field: 'marca', headerName:'Marca', width:150, flex:1},
-    {field: 'placa', headerName:'Placa', width:150, flex:1},
-    {field: 'capacidadPasajeros', headerName:'Cantidad de pasajeros', width:150, flex:1},
-    {field: 'tienePlaton', headerName:'¿Tiene platon?', width:150, flex:1},
+    {field: 'tipo_vehiculo', headerName:'Tipo de vehiculo', minWidth:130, flex:1},
+    {field: 'marca_nombre', headerName:'Marca', minWidth:190, flex:1},
+    {field: 'vehiculo_placa', headerName:'Placa', minWidth:120, flex:1},
+    {field: 'capacidad_pasajeros', headerName:'Cantidad de pasajeros', minWidth:150, flex:1},
+    {field: 'tiene_platon', headerName:'¿Tiene platon?', minWidth:110, flex:1,
+      renderCell: (params)=>(params.row.tiene_platon ? 'Si' : 'No')
+    },
     {
       field: 'asignar',
       headerName: 'Asignar',
