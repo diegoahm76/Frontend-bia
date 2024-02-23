@@ -1,33 +1,51 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid, TextField } from "@mui/material";
-import { Title } from "../../../../components";
+import { Button, Grid, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useEffect, useState } from "react";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { interface_vehiculo_agendado_conductor } from "../interfaces/types";
+import AddIcon from '@mui/icons-material/Add';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import { control_error, control_success } from "../../../../helpers";
+
 
 interface props {
   vehiculo_placa: string;
   nro_documento: string;
+  set_nro_documento: React.Dispatch<React.SetStateAction<string>>
+  set_vehiculo_placa: React.Dispatch<React.SetStateAction<string>>
   id_persona_conductor:number;
   id_hoja_vida_vehiculo:number;
   set_vehiculo_agendado_conductor: React.Dispatch<React.SetStateAction<interface_vehiculo_agendado_conductor[]>>;
+  set_id_hoja_vida_vehiculo: React.Dispatch<React.SetStateAction<number>>;
+  set_id_persona_conductor: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const VehiculosConductoresAsignados: React.FC<props> = ({vehiculo_placa, nro_documento,id_persona_conductor,id_hoja_vida_vehiculo,set_vehiculo_agendado_conductor}) => {
+const VehiculosConductoresAsignados: React.FC<props> = ({
+    vehiculo_placa, 
+    nro_documento,
+    id_persona_conductor,
+    id_hoja_vida_vehiculo,
+    set_vehiculo_agendado_conductor,
+    set_nro_documento,
+    set_vehiculo_placa,
+    set_id_hoja_vida_vehiculo,
+    set_id_persona_conductor
+  }) => {
   const [fecha_salida, set_fecha_salida] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_salida, set_msj_error_fecha_salida] = useState<string>("");
   const [fecha_retorno, set_fecha_retorno] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_retorno, set_msj_error_fecha_retorno] = useState<string>("");
-  const [placa_vehiculo, set_placa_vehiculo] = useState<string>(vehiculo_placa);
-  const [documento_coductor, set_documento_coductor] = useState<string>(nro_documento);
+  const [placa_vehiculo, set_placa_vehiculo] = useState<string>();
+  const [documento_coductor, set_documento_coductor] = useState<string>();
 
+  
 
   const [vehiculo_agendado_temp, set_vehiculo_agendado_temp] = useState<interface_vehiculo_agendado_conductor>({
+    vehiculo_placa:'',
+    nro_documento:'',
     id_hoja_vida_vehiculo: 0,
     id_persona_conductor: 0,
     fecha_inicio_asignacion: '',
@@ -36,12 +54,14 @@ const VehiculosConductoresAsignados: React.FC<props> = ({vehiculo_placa, nro_doc
 
   useEffect(()=>{
     set_vehiculo_agendado_temp({
+      vehiculo_placa: vehiculo_placa,
+      nro_documento: nro_documento,
       id_hoja_vida_vehiculo: id_hoja_vida_vehiculo,
       id_persona_conductor: id_persona_conductor,
       fecha_inicio_asignacion: fecha_salida.format('DD/MM/YYYY'),
       fecha_final_asignacion: fecha_retorno.format('DD/MM/YYYY'),
     })
-  },[id_hoja_vida_vehiculo,id_persona_conductor,nro_documento,vehiculo_placa])
+  },[id_hoja_vida_vehiculo,id_persona_conductor,nro_documento,vehiculo_placa,fecha_retorno,fecha_salida])
 
   const cambio_fecha_salida = (date: Dayjs | null): void => {
     if (date !== null) {
@@ -63,6 +83,8 @@ const VehiculosConductoresAsignados: React.FC<props> = ({vehiculo_placa, nro_doc
 
   const limpiar_agendamiento_temp = () => {
     set_vehiculo_agendado_temp({
+      vehiculo_placa:'',
+      nro_documento:'',
       id_hoja_vida_vehiculo: 0,
       id_persona_conductor: 0,
       fecha_inicio_asignacion: '',
@@ -70,45 +92,59 @@ const VehiculosConductoresAsignados: React.FC<props> = ({vehiculo_placa, nro_doc
     });
     set_placa_vehiculo('')
     set_documento_coductor('');
+    set_nro_documento('');
+    set_vehiculo_placa('');
+    set_id_hoja_vida_vehiculo(0);
+    set_id_persona_conductor(0);
+    set_fecha_salida(dayjs());
+    set_fecha_retorno(dayjs());
   }
 
-  const enviar_agendamiento_permanente = () => {
-    set_vehiculo_agendado_conductor((prev:any) => [
-      ...prev,
-      vehiculo_agendado_temp
-    ]);
-    limpiar_agendamiento_temp();
+  const validar_asignacion:()=> Promise<boolean> = async() => {
+    if(fecha_salida.isValid() === false){
+      control_error('Ingrese una fecha de salida válida');
+      return false;
+    } else if(fecha_retorno.isValid() === false){
+      control_error('Ingrese una fecha de retorno válida');
+      return false;
+    } else if(fecha_salida.isAfter(fecha_retorno)){
+      control_error('La fecha de retorno no puede ser anterior a la fecha de salida');
+      return false;
+    } else if(id_hoja_vida_vehiculo === 0 || vehiculo_placa.trim() === ''){
+      control_error('Seleccione un vehículo a asignar');
+      return false;
+    } else if(id_persona_conductor === 0 || nro_documento?.trim() === ''){
+      control_error('Seleccione un conductor a asignar');
+      return false;
+    }
+    return true;
   }
+
+  const enviar_agendamiento_permanente = async() => {
+    const asignacion_validada = await validar_asignacion();
+    if(asignacion_validada){
+      set_vehiculo_agendado_conductor((prev:any) => [
+        ...prev,
+        vehiculo_agendado_temp
+      ]);
+      limpiar_agendamiento_temp();
+      control_success('Se agregó a la lista de asignaciones');
+    }
+  }
+
+
 
   useEffect(()=>{
     console.log(vehiculo_agendado_temp);    
-  },[])
+    set_placa_vehiculo(vehiculo_placa);
+    set_documento_coductor(nro_documento);
+  },[vehiculo_placa,nro_documento])
 
   return (
     <>
       <Grid
-        container
-        spacing={2}
-        marginTop={2}
-        width={'100%'}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          boxShadow: '0px 3px 6px #042F4A26',
-          borderRadius: '15px',
-          margin: 'auto',
-          p: '20px',
-          mb: '20px',
-          display:'flex',
-          justifyContent:'center',
-          alignItems:'center',
-          gap:'20px'
-        }}
-      > 
-        <Title title="Vehículos y conductores asignados" />
-        <Grid
           container
-          spacing={1}
+          columnSpacing={2}
           marginTop={2}
           sx={{
             position: 'relative',
@@ -116,21 +152,23 @@ const VehiculosConductoresAsignados: React.FC<props> = ({vehiculo_placa, nro_doc
             boxShadow: '0px 3px 6px #042F4A26',
             borderRadius: '10px',
             margin: 'auto',
-            p: '20px',
+            py: '40px',
+            px: '20px',
             mb: '20px',
             display:'flex',
             justifyContent:'space-between',
             alignItems:'center'
           }}
           >
-            <Grid xs={12} md={2}>
+            <Grid item xs={12} md={2} display={'flex'} flexDirection={'column'}>
               <b>Vehículo:</b>
-              <p>{placa_vehiculo}</p>
+              <span>{placa_vehiculo}</span>
             </Grid>
+
             <Grid
               item
               xs={12}
-              md={3}
+              md={2.5}
               sx={{
               display: "flex",
               justifyContent: "center",
@@ -151,10 +189,11 @@ const VehiculosConductoresAsignados: React.FC<props> = ({vehiculo_placa, nro_doc
                   />
               </LocalizationProvider>
             </Grid>
+
             <Grid
               item
               xs={12}
-              md={3}
+              md={2.5}
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -175,15 +214,35 @@ const VehiculosConductoresAsignados: React.FC<props> = ({vehiculo_placa, nro_doc
                 />
               </LocalizationProvider>
             </Grid>
-            <Grid xs={12} md={2}>
+
+            <Grid item xs={12} md={2} display={'flex'} flexDirection={'column'}>
               <b>Conductor:</b>
-              <p>{documento_coductor}</p>
+              <span>{documento_coductor}</span>
             </Grid>
-            <CheckCircleOutlineIcon 
-              onClick={enviar_agendamiento_permanente}
-              sx={{fontSize:'40px', color:'#2e7d32', cursor:'pointer'}}/>                                         
-            <DeleteForeverIcon sx={{fontSize:'40px', color:'#d32f2f', cursor:'pointer'}}/>                                         
-        </Grid>
+
+            <Grid item xs={12} md={1.2} >
+              <Button
+                fullWidth
+                onClick={enviar_agendamiento_permanente}
+                color="success"
+                variant="contained"
+                startIcon={<AddIcon />}
+              >
+                Agregar
+              </Button>
+            </Grid>
+            
+            <Grid item xs={12} md={1.2} >
+              <Button
+                fullWidth
+                color="inherit"
+                variant="outlined"
+                startIcon={<CleanIcon />}
+                onClick={limpiar_agendamiento_temp}
+              >
+                Limpiar
+              </Button>                                    
+            </Grid>
       </Grid>
     </>
   );

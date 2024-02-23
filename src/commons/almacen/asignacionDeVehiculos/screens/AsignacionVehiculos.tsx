@@ -14,6 +14,7 @@ import { control_error } from '../../../../helpers';
 import SaveIcon from "@mui/icons-material/Save";
 import CleanIcon from "@mui/icons-material/CleaningServices";
 import ClearIcon from "@mui/icons-material/Clear"; 
+import VehiculoAgendadoView from './VehiculoAgendadoView';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -36,7 +37,6 @@ const AsignacionVehiculos: React.FC = () => {
   const [vehiculo_placa, set_vehiculo_placa] = useState<string>('');
 
   const [vehiculo_agendado_conductor, set_vehiculo_agendado_conductor] = useState<interface_vehiculo_agendado_conductor[]>([]);
-
   
   const [data_asignacion_vehiculos, set_data_asignacion_vehiculos] = useState<data_asignacion_vehiculos[]>([]);
 
@@ -291,51 +291,80 @@ const AsignacionVehiculos: React.FC = () => {
             set_nro_documento={set_nro_documento}
             set_id_persona_conductor={set_id_persona_conductor}
           />
-          <VehiculosConductoresAsignados
-            set_vehiculo_agendado_conductor={set_vehiculo_agendado_conductor}
-            nro_documento={nro_documento}
-            vehiculo_placa={vehiculo_placa}
-            id_hoja_vida_vehiculo={id_hoja_vida_vehiculo}
-            id_persona_conductor={id_persona_conductor}
-          />
+
+          <Grid
+            container
+            spacing={2}
+            marginTop={2}
+            width={'100%'}
+            sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              boxShadow: '0px 3px 6px #042F4A26',
+              borderRadius: '15px',
+              margin: 'auto',
+              p: '20px',
+              mb: '20px',
+              display:'flex',
+              justifyContent:'center',
+              alignItems:'center',
+              gap:'20px'
+            }}
+          > 
+            <Title title="Vehículos y conductores asignados" />
+            <VehiculosConductoresAsignados
+              set_vehiculo_agendado_conductor={set_vehiculo_agendado_conductor}
+              nro_documento={nro_documento}
+              vehiculo_placa={vehiculo_placa}
+              id_hoja_vida_vehiculo={id_hoja_vida_vehiculo}
+              id_persona_conductor={id_persona_conductor}
+              set_nro_documento={set_nro_documento}
+              set_vehiculo_placa={set_vehiculo_placa}
+              set_id_hoja_vida_vehiculo={set_id_hoja_vida_vehiculo}
+              set_id_persona_conductor={set_id_persona_conductor}
+            />
+
+            {vehiculo_agendado_conductor?.map((agendacion, index)=>(
+              <VehiculoAgendadoView
+                key={index}
+                fecha_inicio_input={agendacion.fecha_inicio_asignacion}
+                fecha_fin_input={agendacion.fecha_final_asignacion}
+                vehiculo_placa={agendacion.vehiculo_placa}
+                nro_documento={agendacion.nro_documento}
+              />
+            ))}
+            
+            <Grid
+                item
+                xs={12}
+                sx={{
+                  display: "flex",
+                  justifyContent: "end",
+                  alignItems: "center",
+                  marginTop: "20px",
+                  gap: 4,
+                }}
+              >
+                <Button
+                  color="success"
+                  variant="contained"
+                  startIcon={<SaveIcon />}
+                  onClick={() => {}}
+                >
+                  {"Guardar"}
+                </Button>
+                <Button
+                  color="error"
+                  variant="contained"
+                  startIcon={<ClearIcon />}
+                  onClick={() => {}}
+                >
+                  Salir
+                </Button>
+              </Grid>
+          </Grid>
         </>
       }
-      <Grid
-          item
-          xs={12}
-          sx={{
-            display: "flex",
-            justifyContent: "end",
-            alignItems: "center",
-            marginTop: "20px",
-            gap: 4,
-          }}
-        >
-          <Button
-            color="success"
-            variant="contained"
-            startIcon={<SaveIcon />}
-            onClick={() => {}}
-          >
-            {"Guardar"}
-          </Button>
-          <Button
-            color="error"
-            variant="contained"
-            startIcon={<ClearIcon />}
-            onClick={() => {}}
-          >
-            Salir
-          </Button>
-          <Button
-            color="inherit"
-            variant="outlined"
-            startIcon={<CleanIcon />}
-            onClick={() => {}}
-          >
-            Limpiar
-          </Button>
-        </Grid>
 
     </>
   );

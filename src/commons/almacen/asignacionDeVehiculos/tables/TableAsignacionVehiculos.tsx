@@ -90,7 +90,7 @@ const AsignacionVehiculos: React.FC<props> = ({data_asignacion_vehiculos,set_ref
       columns={columns ?? []}
       pageSize={5}
       rowHeight={75}
-      rowsPerPageOptions={[10]}
+      rowsPerPageOptions={[5]}
       experimentalFeatures={{ newEditingApi: true }}
       getRowId={() => {
         try {

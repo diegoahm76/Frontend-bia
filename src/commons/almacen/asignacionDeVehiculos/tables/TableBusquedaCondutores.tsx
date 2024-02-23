@@ -48,7 +48,7 @@ const TableBusquedaConductores: React.FC<props> = ({data_busqueda_conductores, s
       columns={columns ?? []}
       pageSize={5}
       rowHeight={75}
-      rowsPerPageOptions={[10]}
+      rowsPerPageOptions={[5]}
       experimentalFeatures={{ newEditingApi: true }}
       getRowId={() => {
         try {
