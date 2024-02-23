@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import { interface_vehiculo_agendado_conductor } from "../interfaces/types";
 import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { control_error, control_success } from "../../../../helpers";
+import { control_error } from "../../../../helpers";
+import { v4 as uuidv4 } from 'uuid';
 
 
 interface props {
@@ -44,6 +45,7 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
   
 
   const [vehiculo_agendado_temp, set_vehiculo_agendado_temp] = useState<interface_vehiculo_agendado_conductor>({
+    id_borrar:'',
     vehiculo_placa:'',
     nro_documento:'',
     id_hoja_vida_vehiculo: 0,
@@ -54,12 +56,13 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
 
   useEffect(()=>{
     set_vehiculo_agendado_temp({
+      id_borrar: uuidv4(),
       vehiculo_placa: vehiculo_placa,
       nro_documento: nro_documento,
       id_hoja_vida_vehiculo: id_hoja_vida_vehiculo,
       id_persona_conductor: id_persona_conductor,
-      fecha_inicio_asignacion: fecha_salida.format('DD/MM/YYYY'),
-      fecha_final_asignacion: fecha_retorno.format('DD/MM/YYYY'),
+      fecha_inicio_asignacion: fecha_salida.format('YYYY-MM-DD'),
+      fecha_final_asignacion: fecha_retorno.format('YYYY-MM-DD'),
     })
   },[id_hoja_vida_vehiculo,id_persona_conductor,nro_documento,vehiculo_placa,fecha_retorno,fecha_salida])
 
@@ -83,6 +86,7 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
 
   const limpiar_agendamiento_temp = () => {
     set_vehiculo_agendado_temp({
+      id_borrar: '',
       vehiculo_placa:'',
       nro_documento:'',
       id_hoja_vida_vehiculo: 0,
@@ -128,14 +132,12 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
         vehiculo_agendado_temp
       ]);
       limpiar_agendamiento_temp();
-      control_success('Se agregó a la lista de asignaciones');
     }
   }
 
 
 
-  useEffect(()=>{
-    console.log(vehiculo_agendado_temp);    
+  useEffect(()=>{  
     set_placa_vehiculo(vehiculo_placa);
     set_documento_coductor(nro_documento);
   },[vehiculo_placa,nro_documento])
