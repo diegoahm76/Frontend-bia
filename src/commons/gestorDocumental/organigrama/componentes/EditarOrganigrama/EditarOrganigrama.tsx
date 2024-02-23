@@ -331,11 +331,20 @@ export const EditarOrganigrama = ({
               />
             </Grid>
             <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
+              {/*<QRCode
+                value={`${
+                  process.env.NODE_ENV === 'development'
+                    ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+                      'https://back-end-bia-beta.up.railway.app'
+                    : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+                      'https://bia.cormacarena.gov.co'
+                }${organigram_current?.ruta_resolucion}`}
+              />*/}
               <DownloadButton
                 fileName="ruta_soporte"
                 condition={!control_organigrama._formValues?.ruta_resolucion}
                 fileUrl={organigram_current?.ruta_resolucion}
-                /* fileUrl={`${`/${control_organigrama._formValues?.ruta_resolucion?.name}` ||  organigram_current?.ruta_resolucion}`} */
+               
               />
             </Grid>
           </Grid>
@@ -660,10 +669,14 @@ export const EditarOrganigrama = ({
                     type="submit"
                     color="success"
                     variant="contained"
-                    startIcon={title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />}
+                    startIcon={
+                      title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />
+                    }
                     fullWidth
                   >
-                    {title_unidades === 'Agregar' ? 'AGREGAR UNIDAD' : 'EDITAR UNIDAD'}
+                    {title_unidades === 'Agregar'
+                      ? 'AGREGAR UNIDAD'
+                      : 'EDITAR UNIDAD'}
                   </LoadingButton>
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -986,26 +999,26 @@ export const EditarOrganigrama = ({
           {organigram_current?.fecha_terminado !== null &&
             organigram_current?.id_persona_cargo === null &&
             !organigram_current?.usado && (
-            <Grid item xs={12} sm={3}>
-              <Button
-                color="success"
-                variant="contained"
-                startIcon={<SaveIcon />}
-                onClick={() => {
-                  void dispatch(
-                    to_resume_organigram_service(
-                      String(organigram_current?.id_organigrama),
-                      set_position_tab_organigrama,
-                      clean_unitys
-                    )
-                  );
-                }}
-                fullWidth
-              >
-                REANUDAR
-              </Button>
-            </Grid>
-          )}
+              <Grid item xs={12} sm={3}>
+                <Button
+                  color="success"
+                  variant="contained"
+                  startIcon={<SaveIcon />}
+                  onClick={() => {
+                    void dispatch(
+                      to_resume_organigram_service(
+                        String(organigram_current?.id_organigrama),
+                        set_position_tab_organigrama,
+                        clean_unitys
+                      )
+                    );
+                  }}
+                  fullWidth
+                >
+                  REANUDAR
+                </Button>
+              </Grid>
+            )}
         </Grid>
 
         <OrganigramVisualizerDialog
