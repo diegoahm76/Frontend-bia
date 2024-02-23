@@ -78,10 +78,18 @@ export interface data_busqueda_conductores {
 }
 
 export interface interface_vehiculo_agendado_conductor {
-  vehiculo_placa: string
-  nro_documento: string
-  id_hoja_vida_vehiculo: number
-  id_persona_conductor: number
-  fecha_inicio_asignacion: string
-  fecha_final_asignacion: string
+  id_borrar: string;
+  vehiculo_placa: string;
+  nro_documento: string;
+  id_hoja_vida_vehiculo: number;
+  id_persona_conductor: number;
+  fecha_inicio_asignacion: string;
+  fecha_final_asignacion: string;
+}
+
+export interface interface_crear_vehiculo_agendado_conductor {
+  id_hoja_vida_vehiculo: number;
+  id_persona_conductor: number;
+  fecha_inicio_asignacion: string;
+  fecha_final_asignacion: string;
 }
