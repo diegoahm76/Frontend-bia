@@ -12,7 +12,6 @@ import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import {
   setActionsTareasOtros,
   setCurrentTareaPqrsdfTramitesUotrosUopas,
-  setInfoTarea,
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
@@ -28,12 +27,11 @@ import { BandejaTareasContext } from '../../../../../../context/BandejaTareasCon
 import { GridCellParams, GridValueGetterParams } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
+import { putAceptarTarea } from '../../../../../../../toolkit/thunks/Pqrsdf/putAceptarTarea.service';
 import { getListadoTareaasOtrosByPerson } from '../../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { putAceptarTareaOtros } from '../../../../../../../toolkit/thunks/otros/putAceptarTareaOtros.service';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
-import { getDetalleDeTareaOtro } from '../../../../../services/servicesStates/otros/detalleTareasOtros/getInfoTareaOtro.service';
-import { getAnexosOtros } from '../../../../../services/servicesStates/otros/anexos/getAnexosTareaOtros.service';
 
 export const ElementosOtros = (): JSX.Element => {
   //* dispatch declaration
@@ -118,6 +116,7 @@ export const ElementosOtros = (): JSX.Element => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
   };
 
+
   const setActionsOtros = (tareaOtros: any) => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaOtros));
     void Swal.fire({
@@ -133,7 +132,7 @@ export const ElementosOtros = (): JSX.Element => {
       }
 
       const isNoSeleccionado = !tareaOtros;
-      /*  const isEstadoAsignacionNoDefinido =
+    /*  const isEstadoAsignacionNoDefinido =
       tareaOtros.estado_asignacion_tarea === null ||
       tareaOtros.estado_asignacion_tarea === '';
       const isEstadoAsignacionRechazada =
@@ -158,7 +157,7 @@ export const ElementosOtros = (): JSX.Element => {
         return true;
       }
 
-      /*   if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
+   /*   if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
         return actionId !== 'InfoSolictud';
       }
 
@@ -280,6 +279,7 @@ export const ElementosOtros = (): JSX.Element => {
     dispatch(setActionsTareasOtros(actionsOtrosValue));
   };
 
+
   // ? FUNCIONES PARA EL COMPONENTE ---------------
 
   //* columnas necesarias para la interacción
@@ -357,18 +357,21 @@ export const ElementosOtros = (): JSX.Element => {
                 onClick={() => {
                   // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
                   //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-                  (async () => {
+                  console.log(params.row);
+                  alert('VIENDO INFORMACION DE LA TAREA');
+
+                  /* (async () => {
                     try {
-                      const idOtros = params?.row?.id_otro;
-                      const [detalleTarea, anexosOtros] = await Promise.all([
-                        getDetalleDeTareaOtro(idOtros, navigate),
-                        getAnexosOtros(idOtros),
+                      const idPqrsdf = params?.row?.id_pqrsdf;
+                      const [detalleTarea, anexosPqrsdf] = await Promise.all([
+                        getDetalleDeTarea(idPqrsdf, navigate),
+                        getAnexosPqrsdf(idPqrsdf),
                       ]);
                       dispatch(setInfoTarea(detalleTarea));
-                      setAnexos(anexosOtros);
-                      if (detalleTarea || anexosOtros.length > 0) {
+                      setAnexos(anexosPqrsdf);
+                      if (detalleTarea || anexosPqrsdf.length > 0) {
                         navigate(
-                          `/app/gestor_documental/bandeja_tareas/info_tarea_otros/${idOtros}`
+                          `/app/gestor_documental/bandeja_tareas/info_tarea/${idPqrsdf}`
                         );
                         handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                         //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
@@ -378,7 +381,7 @@ export const ElementosOtros = (): JSX.Element => {
                       console.error(error);
                       // Handle the error appropriately here
                     }
-                  })();
+                  })();*/
                 }}
               >
                 <Avatar
@@ -441,7 +444,7 @@ export const ElementosOtros = (): JSX.Element => {
       <ModalSeeRejectedTask />
       <RenderDataGrid
         rows={
-          listaTareasPqrsdfTramitesUotrosUopas /*.filter(
+          listaTareasPqrsdfTramitesUotrosUopas/*.filter(
             (el: { radicado: string }) => el.radicado
           )*/ ?? []
         }

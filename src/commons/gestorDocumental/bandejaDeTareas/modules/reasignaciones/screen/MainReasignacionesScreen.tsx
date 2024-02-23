@@ -13,7 +13,6 @@ import { SeleccionarUsuario } from '../components/seleccionarUsuario/Seleccionar
 import { getUnidadesHijasById } from '../services/getUnidadesHijas.service';
 import { getReAsignacionesTareasPqrsdf } from '../services/reasignaciones/pqrsdf/getReAsignacionesTaskPqrsdf.service';
 import { ReasignacionesGrid } from '../components/reasignacionesGrid/ReasignacionesGrid';
-import { getReAsignacionesTareasOtros } from '../services/reasignaciones/otros/getReasignacionesTareasOtros.service';
 
 export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -70,16 +69,13 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
           'warning'
         );
         break;
-      case 'RESPONDER OTRO':
-      case 'RESPONDER OTROS':
-      case 'Responder Otros':
-      case 'Responder Otro':
-        void getReAsignacionesTareasOtros(
-          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
-          handleGeneralLoading
-        ).then((res) => {
-          setListaAsignaciones(res);
-        });
+      case 'Otros': // ? se debe mirar el tipo de tarea a establecer ---------------
+        // Call the service for Otros
+        showAlert(
+          'Atención',
+          'No hay servicio aún para ver las asignacion para los otros, así que no hay asignaciones de OTROS por el momento',
+          'warning'
+        );
 
         break;
       /*      case 'Complemento de PQRSDF':

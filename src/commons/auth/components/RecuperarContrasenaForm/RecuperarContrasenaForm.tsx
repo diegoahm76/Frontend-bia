@@ -24,13 +24,10 @@ import { control_success } from '../../../recursoHidrico/requets/Request';
 import { recover_password } from '../../request/authRequest';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Email, Sms, Close, Send } from '@mui/icons-material';
-import { DEFAULT_AUTH_URL_BETA, DEFAULT_AUTH_URL_PROD } from '../../../../api/axios';
+import { auth_url } from '../../api/auth';
 
 const redirect_url =
-(process.env.NODE_ENV === 'development'
-  ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
-  : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
-) + '/auth/activacion_cuenta';
+`${auth_url}/auth/cambiar_contrasena`;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecuperarContrasena: React.FC = () => {

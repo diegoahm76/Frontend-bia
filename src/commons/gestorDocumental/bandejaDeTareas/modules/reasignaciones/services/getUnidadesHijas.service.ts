@@ -33,7 +33,7 @@ if (data?.data?.length > 0) {
       return dataToReturn;
     }
 
-  await Swal.fire({
+  void Swal.fire({
       icon: 'warning',
       title: 'NO SE PUEDE USAR ESTE MÓDULO',
       text: 'No hay unidades disponibles para realizar la reasignación de la tarea.',

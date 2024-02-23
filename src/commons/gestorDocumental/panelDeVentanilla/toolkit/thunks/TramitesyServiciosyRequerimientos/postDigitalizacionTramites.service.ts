@@ -38,28 +38,3 @@ export const postDigitalizacionTramites = async (idTramite: string | number): Pr
     showAlert('Opps...', `${err?.response?.data?.detail ?? 'Ocurrió un error al enviar la solicitud de digitalización de trámite.'}`, 'error');
   }
 };
-
-
-export const postDigitalizacionComplementosTramites = async (data: any) => {
-  try {
-    if (!data) {
-      control_warning(
-        'No se ha seleccionado ningún complemento para digitalizar'
-      );
-    }
-    const url = `gestor/panel_ventanilla/tramites/complementos/digitalizacion/create/`;
-    const response = await api.post(url, {
-      id_complemento_usu_pqr: data,
-    });
-
-    if (response.data.succes) {
-      showAlert(
-        'Solicitud de digitalización exitosa',
-        'Se ha enviado correctamente la solicitud de digitalización',
-        'success'
-      );
-    }
-  } catch (err: any) {
-    showAlert('Opps...', `${err.response.data.detail}`, 'error');
-  }
-};

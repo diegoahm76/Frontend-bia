@@ -43,17 +43,14 @@ export const SeccionesQuePersistiranNuevoCcd = (): JSX.Element => {
     );
   }
 
-  if (!seccionesPersistentesCcdNuevo?.length) {
+  if (!seccionesPersistentesCcdNuevo.length) {
     return <></>;
   }
 
   return (
     <>
-      <Grid container sx={{
-        ...containerStyles,
-        mt: '1.2rem',
-      }}>
-        <Title title="Secciones que persistirán en CCD nuevo, persistencia realizada" />
+      <Grid container sx={containerStyles}>
+        <Title title="Secciones que persistirán en CCD nuevo" />
         <RenderDataGrid
           title="Éstas secciones continuarán con los consecutivos y permisos de su predecesor ( CCD ACTUAL / CCD NUEVO )"
           columns={columns || []}

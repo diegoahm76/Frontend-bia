@@ -36,28 +36,21 @@ export const SubElementoPrincipales: React.FC = (): JSX.Element => {
   // if (!listaComplementosRequerimientosOtros?.length) return <></>;
 
   // ? se debe modificar en la en consecuencia de la nueva propiedad "clasificacion" que se va a establecer en el servicio por parte de backend
-  const complementosPqrsdfKeys: any = [
+  const complementosPqrsdfKeys = [
     'Complemento de PQRSDF',
     'Complemento de PQRSD – Respuesta a requerimiento',
     'Complementos PQRSDF – Respuestas a solicitudes',
-  ] as any;
+  ];
 
-  const complementosTramitesKeys: any = [
-    'Complemento de trámite',
-    'Complemento de Trámite - Respuesta a Requerimiento',
-    'Complementos trámite – Respuestas a solicitudes',
-  ] as any;
-
-  const tipoSolicitudComponentMap = {
-    ...complementosPqrsdfKeys.reduce((map: any, key: number) => {
+  const tipoSolicitudComponentMap = complementosPqrsdfKeys.reduce(
+    (map, key) => {
       map[key] = <ComplementosPqrsdf />;
       return map;
-    }, {}) as any,
-    ...complementosTramitesKeys.reduce((map: any, key: number) => {
-      map[key] = <RequerimientosTramites />;
-      return map;
-    }, {}) as any,
-  };
+    },
+    {
+      TRAMITE: <RequerimientosTramites />,
+    } as any
+  );
   //* la propiedad va a ser tipo por ahora pero se debe asignar a traves de una nueva propiedad que se va a llamar clasificacions
   const clasificacion = listaComplementosRequerimientosOtros[0]?.tipo;
   const Componente: any = tipoSolicitudComponentMap[clasificacion];

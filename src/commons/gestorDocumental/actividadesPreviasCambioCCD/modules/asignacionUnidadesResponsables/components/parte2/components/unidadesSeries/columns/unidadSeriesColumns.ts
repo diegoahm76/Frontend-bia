@@ -8,7 +8,7 @@ export const unidadSeriesColumns = [
   {
     field: 'nombre',
     headerName: 'Nombre unidad organizacional',
-    minWidth: 400,
+    minWidth: 250,
   },
 ];
 
@@ -34,7 +34,7 @@ export const columnsseriesSeccionSeleccionadSinResp = [
   {
     field: 'nombre_serie',
     headerName: 'Nombre serie documental',
-    minWidth: 400,
+    minWidth: 250,
   },
   {
     field: 'cod_subserie',
@@ -47,7 +47,7 @@ export const columnsseriesSeccionSeleccionadSinResp = [
   {
     field: 'nombre_subserie',
     headerName: 'Nombre subserie documental',
-    minWidth: 400,
+    minWidth: 250,
     renderCell: (params: any) => {
       return params?.row?.nombre_subserie ? params?.row?.nombre_subserie : 'N/A';
     }
