@@ -146,6 +146,7 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
     <>
       <Grid
           container
+          rowSpacing={1}
           columnSpacing={2}
           marginTop={2}
           sx={{
@@ -162,9 +163,13 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
             alignItems:'center'
           }}
           >
-            <Grid item xs={12} md={2} display={'flex'} flexDirection={'column'}>
-              <b>Vehículo:</b>
-              <span>{placa_vehiculo}</span>
+            <Grid container item xs={12} md={2}>
+              <Grid item xs={4} md={12}>
+                <b style={{width:'100%'}}>Vehículo:</b>
+              </Grid>
+              <Grid item xs={4} md={12}>
+                <span style={{width:'100%'}}>{placa_vehiculo}</span>
+              </Grid>
             </Grid>
 
             <Grid
@@ -217,9 +222,13 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
               </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={12} md={2} display={'flex'} flexDirection={'column'}>
-              <b>Conductor:</b>
-              <span>{documento_coductor}</span>
+            <Grid container item xs={12} md={2}>
+              <Grid item xs={4} md={12}>
+                <b style={{width:'100%'}}>Conductor:</b>
+              </Grid>
+              <Grid item xs={4} md={12}>
+                <span style={{width:'100%'}}>{documento_coductor}</span>
+              </Grid>
             </Grid>
 
             <Grid item xs={12} md={1.2} >

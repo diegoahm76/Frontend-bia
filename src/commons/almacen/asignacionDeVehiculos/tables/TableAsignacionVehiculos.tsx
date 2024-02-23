@@ -19,10 +19,18 @@ interface props {
   set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
   refrescar_tabla: boolean;
   obtener_asignaciones_vehiculos: () => void;
+  refrescar_tabla_conductores: boolean;
+  set_refrescar_tabla_conductores: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
-const AsignacionVehiculos: React.FC<props> = ({data_asignacion_vehiculos,set_refrescar_tabla,refrescar_tabla,obtener_asignaciones_vehiculos}) => {
+const AsignacionVehiculos: React.FC<props> = ({
+  data_asignacion_vehiculos,
+  set_refrescar_tabla,
+  refrescar_tabla,
+  obtener_asignaciones_vehiculos,
+  set_refrescar_tabla_conductores,
+  refrescar_tabla_conductores}) => {
   const dispatch = useAppDispatch();
 
 
@@ -37,13 +45,13 @@ const AsignacionVehiculos: React.FC<props> = ({data_asignacion_vehiculos,set_ref
       icon: 'question',
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        console.log('eliminando...')        
+      if (result.isConfirmed) {  
         dispatch(elimiar_asignacion_vehiculo(params.id_asignacion)).then((response: { success: boolean, detail: string, data: any }) => {
           if (response.success) {
+            set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
             control_success('Se elimino la solicitud correctamente');
           }
-        })
+        });
         return true;
       } else if(result.isDenied){
         return false;

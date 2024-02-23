@@ -57,7 +57,7 @@ const AsignacionVehiculos: React.FC = () => {
           )
         )
       )
-    ).then((response: any) => {
+    ).catch((response: any) => {
       console.log(response);
     });
     set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
@@ -300,6 +300,8 @@ const AsignacionVehiculos: React.FC = () => {
                 refrescar_tabla={refrescar_tabla}
                 set_refrescar_tabla={set_refrescar_tabla}
                 data_asignacion_vehiculos={data_asignacion_vehiculos}
+                refrescar_tabla_conductores={refrescar_tabla_conductores}
+                set_refrescar_tabla_conductores={set_refrescar_tabla_conductores}
               />
             </Grid>
 
@@ -376,6 +378,8 @@ const AsignacionVehiculos: React.FC = () => {
             ))}
 
             <Grid
+              container
+              spacing={1}
               item
               xs={12}
               sx={{
@@ -383,29 +387,34 @@ const AsignacionVehiculos: React.FC = () => {
                 justifyContent: "end",
                 alignItems: "center",
                 marginTop: "20px",
-                gap: 4,
               }}
             >
-              <Button
-                color="success"
-                variant="contained"
-                startIcon={<SaveIcon />}
-                onClick={enviar_asiganacion_a_conductor}
-              >
-                {"Guardar"}
-              </Button>
-              <Button
-                color="error"
-                variant="contained"
-                startIcon={<ClearIcon />}
-                onClick={() => {
-                  set_vehiculo_agendado_conductor([]);
-                  set_mostrar_busqueda_vehiculos(false);
-                }}
-              >
-                Salir
-              </Button>
-              <Grid item xs={12} md={1.2} >
+              <Grid item xs={12} md={1.5} >
+                <Button
+                  fullWidth
+                  color="success"
+                  variant="contained"
+                  startIcon={<SaveIcon />}
+                  onClick={enviar_asiganacion_a_conductor}
+                >
+                  {"Guardar"}
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={1.5} >
+                <Button
+                  fullWidth
+                  color="error"
+                  variant="contained"
+                  startIcon={<ClearIcon />}
+                  onClick={() => {
+                    set_vehiculo_agendado_conductor([]);
+                    set_mostrar_busqueda_vehiculos(false);
+                  }}
+                >
+                  Salir
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={1.5} >
                 <Button
                   fullWidth
                   color="inherit"

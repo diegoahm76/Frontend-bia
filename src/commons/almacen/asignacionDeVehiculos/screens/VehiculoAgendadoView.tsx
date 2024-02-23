@@ -63,10 +63,15 @@ const VehiculoAgendadoView: React.FC<props> = ({vehiculo_placa, nro_documento, f
           alignItems:'center'
         }}
         >
-          <Grid item xs={12} md={2}>
-            <b>Vehículo:</b>
-            <p>{vehiculo_placa}</p>
+          <Grid container item xs={12} md={2}>
+            <Grid item xs={4} md={12}>
+              <b style={{width:'100%'}}>Vehículo:</b>
+            </Grid>
+            <Grid item xs={4} md={12}>
+              <span style={{width:'100%'}}>{vehiculo_placa}</span>
+            </Grid>
           </Grid>
+
           <Grid
             item
             xs={12}
@@ -115,14 +120,21 @@ const VehiculoAgendadoView: React.FC<props> = ({vehiculo_placa, nro_documento, f
               />
             </LocalizationProvider>
           </Grid>
-          <Grid item xs={12} md={2}>
-            <b>Conductor:</b>
-            <p>{nro_documento}</p>
+
+          <Grid container item xs={12} md={2}>
+            <Grid item xs={4} md={12}>
+              <b style={{width:'100%'}}>Vehículo:</b>
+            </Grid>
+            <Grid item xs={4} md={12}>
+              <span style={{width:'100%'}}>{nro_documento}</span>
+            </Grid>
           </Grid>
-                              
-          <DeleteForeverIcon 
-            onClick={eliminar_asignacion_temp}
-            sx={{fontSize:'40px', color:'#d32f2f', cursor:'pointer'}}/>                                         
+
+          <Grid item xs={12} md={0.5} sx={{display:'flex', justifyContent:'end'}}>
+            <DeleteForeverIcon 
+              onClick={eliminar_asignacion_temp}
+              sx={{fontSize:'40px', color:'#d32f2f', cursor:'pointer'}}/>                                         
+          </Grid>              
       </Grid>
     </>
   );
