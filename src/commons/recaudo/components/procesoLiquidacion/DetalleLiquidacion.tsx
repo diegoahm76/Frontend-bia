@@ -88,13 +88,18 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
     set_concepto(event.target.value);
   };
 
-  const handle_variables_change = (event: React.ChangeEvent<HTMLInputElement>, key: string): void => {
-    const { value } = event.target;
-    set_variables_datos((prevInputs) => ({
-      ...prevInputs,
-      [key]: value,
-    }));
-  };
+const handle_variables_change = (event: React.ChangeEvent<HTMLInputElement>, key: string): void => {
+  let { value } = event.target;
+  // Si la clave es 'T', establece el valor en 8 en lugar del valor ingresado
+  // if (key === 'T') {
+  //   value = '8';
+  // }
+  set_variables_datos((prevInputs) => ({
+    ...prevInputs,
+    [key]: value,
+  }));
+};
+
 
   const handle_agregar_detalle = (): void => {
     add_new_row_detalles(get_calculated_variables(opcion_liquidacion.funcion, variables_datos), variables_datos, opcion_liquidacion, id_opcion_liquidacion, concepto);
@@ -149,6 +154,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
           <List dense>
             {Object.entries(params.value).map((entry) => {
               const [key, value] = entry;
+              
               return (
                 <ListItemText key={`${params.row.id}-${key}`}>
                   <Stack direction={'row'} spacing={2} alignItems={'center'}>
@@ -183,7 +189,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ rows_detalles, estado_exp
       }
     },
   ]
-
+console.log("rows_detalles",rows_detalles,estado_expediente);
 //codigo miguel para visor de factura 
   const encodedHtml = encodeURIComponent(htmlContent);
   const dataUri = 'data:text/html;charset=utf-8,' + encodedHtml;

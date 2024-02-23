@@ -314,7 +314,6 @@ const MetadataFormDialog = ({
         pdfFile === null ? Number(data.nro_folios_documento) : 1,
     };
     //  console.log('')(data_edit);
-
     const form_data: any = new FormData();
     if (
       data.id_metadatos_anexo_tmp !== null &&
@@ -326,7 +325,6 @@ const MetadataFormDialog = ({
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
       if (diferencia_dias <= 100) {
         form_data.append('data_digitalizacion', JSON.stringify(data_edit));
-        console.log(exhibit, pdfFile);
 
         if (pdfFile !== null) {
           form_data.append(`archivo`, pdfFile);
@@ -341,6 +339,7 @@ const MetadataFormDialog = ({
               form_data.append(
                 `archivo`,
                 pdfFile === null ? exhibit.exhibit_link : pdfFile
+
               );
             }
           }
@@ -707,7 +706,7 @@ const MetadataFormDialog = ({
                   onClick={handle_submit(on_submit)}
                   startIcon={<SaveIcon />}
                 >
-                  Guardar
+                   {exhibit.ya_digitalizado === true ? 'Actualizar' : 'Guardar'}
                 </Button>
                 {metadata.id_metadatos_anexo_tmp !== null && (
                   <Button
