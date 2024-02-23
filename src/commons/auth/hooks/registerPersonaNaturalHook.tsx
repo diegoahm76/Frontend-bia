@@ -22,10 +22,7 @@ import { crear_persona_natural_and_user } from '../request/authRequest';
 import type { DataRegisterPersonaN, keys_object } from '../interfaces';
 import type { AxiosError } from 'axios';
 import type { SelectChangeEvent } from '@mui/material';
-import {
-  DEFAULT_AUTH_URL_BETA,
-  DEFAULT_AUTH_URL_PROD,
-} from '../../../api/axios';
+import { auth_url } from '../api/auth';
 
 interface RegisterPersonHook {
   error_email: boolean;
@@ -237,11 +234,8 @@ export const use_register_persona_n = ({
     set_is_saving(true);
     try {
       values.redirect_url =
-        (process.env.NODE_ENV === 'development'
-          ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
-          : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
-        ) + '/auth/activacion_cuenta';
-      values.telefono_celular = `+57${values.telefono_celular as string}`;
+        `${auth_url}/auth/activacion_cuenta`;
+      values.telefono_celular = `57${values.telefono_celular as string}`;
       const { data } = await crear_persona_natural_and_user(
         values as DataRegisterPersonaN
       );

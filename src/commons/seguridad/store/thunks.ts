@@ -8,6 +8,7 @@ import {
 import {
   delegate_superuser_role,
   set_data_legal_person,
+  set_data_user_search,
   set_persons,
   set_user_info,
   set_users,
@@ -15,7 +16,6 @@ import {
 import { control_error, control_success } from '../../../helpers';
 import { consultar_datos_persona } from '../request/Request';
 import { get_user_by_id } from '../../../request';
-import { DEFAULT_BETA_DOWNLOAD_FILES_URL, DEFAULT_PROD_DOWNLOAD_FILES_URL } from '../../../api/axios';
 
 export const create_super_user: (
   id_persona: number
@@ -78,11 +78,11 @@ export const get_data_user: (id: number) => any = (
           process.env.NODE_ENV === 'development'
             ? `${
                 process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
+                'https://back-end-bia-beta.up.railway.app'
               }${infoResume?.profile_img}`
             : `${
                 process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                `${DEFAULT_PROD_DOWNLOAD_FILES_URL}`
+                'https://bia.cormacarena.gov.co'
               }${infoResume?.profile_img}`,
       })
     );

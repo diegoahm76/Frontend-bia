@@ -26,10 +26,6 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UpdateIcon from '@mui/icons-material/Update';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { editar_datos_acceso } from '../request/seguridadRequest';
-import {
-  DEFAULT_BETA_DOWNLOAD_FILES_URL,
-  DEFAULT_PROD_DOWNLOAD_FILES_URL,
-} from '../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosAccesoScreen: React.FC = () => {
@@ -67,9 +63,7 @@ export const DatosAccesoScreen: React.FC = () => {
       if (!validFileTypes.includes(selected_file.type)) {
         //set_file_name('');
         //set_image_url(null);
-        seterrorfilesize(
-          'El archivo no es un formato de imagen válido (jpg, jpeg, png)'
-        );
+        seterrorfilesize('El archivo no es un formato de imagen válido (jpg, jpeg, png)');
         return;
       } else if (selected_file.size > maxSize) {
         //set_file_name('');
@@ -135,7 +129,7 @@ export const DatosAccesoScreen: React.FC = () => {
       set_loading_natural(true);
 
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { data: dataUser } = await get_user_by_id(userinfo.id_usuario);
+      const {data: dataUser} = await get_user_by_id(userinfo.id_usuario);
 
       const datos_persona = new FormData();
 
@@ -192,6 +186,8 @@ export const DatosAccesoScreen: React.FC = () => {
     }
   }, [datos]);
 
+
+
   return (
     <>
       {datos !== undefined && (
@@ -233,11 +229,11 @@ export const DatosAccesoScreen: React.FC = () => {
                         ? process.env.NODE_ENV === 'development'
                           ? `${
                               process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                              `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
+                              'https://back-end-bia-beta.up.railway.app'
                             }${image_url}`
                           : `${
                               process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                              `${DEFAULT_PROD_DOWNLOAD_FILES_URL}`
+                              'https://bia.cormacarena.gov.co'
                             }${image_url}`
                         : image_url != null
                         ? image_url

@@ -74,6 +74,11 @@ export const MainViewPanelVentanilla = (): JSX.Element => {
 
   
   const handleRequestRadicadoTramites = async () => {
+    showAlert(
+      'En desarrollo',
+      'Esta funcionalidad está en desarrollo, se realiza la consulta de historico de solicitudes de trámites y servicios de manera simulada',
+      'info'
+      );
     dispatch(resetParcial());
     const historico = await getHistoricoTramitesByRadicado(
       '',

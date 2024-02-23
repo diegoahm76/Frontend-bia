@@ -239,7 +239,7 @@ export const ModalBusquedaCcdOrganigrama = (params: any): JSX.Element => {
   return (
     <Dialog
       fullWidth
-      maxWidth="lg"
+      maxWidth="md"
       open={modalSeleccionCCD_PSD}
       onClose={() => {
         setccdList([]);

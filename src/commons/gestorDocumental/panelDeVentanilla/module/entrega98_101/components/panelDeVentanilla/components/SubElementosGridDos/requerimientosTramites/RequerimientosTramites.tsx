@@ -19,8 +19,6 @@ import { control_info } from '../../../../../../../../alertasgestor/utils/contro
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { getAnexosComplemento } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosComplementos.service';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
-import { columnsRequerimientosTramites } from './columsRequerimientosTramites/columnsRequerimientosTramites';
-import { ModalComplementoTraSer } from '../../../../../Atom/modalComplementosTraSer/ModalComplementoTraSer';
 
 export const RequerimientosTramites: React.FC = (): JSX.Element => {
   //* dispatch declaration
@@ -30,15 +28,17 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
   //* states from redux store
   const {
     listaComplementosRequerimientosOtros,
-    actionsComplementos,
+    // [], // actionsComplementos, //* se debe reemplazar por actionsRequerimientos
     currentElementPqrsdComplementoTramitesYotros,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
   //* context declaration
   const { setAnexos } = useContext(PanelVentanillaContext);
 
-  const { handleFifthLoading, handleOpenModalTwo: handleOpenInfoMetadatos } =
-    useContext(ModalAndLoadingContext);
+  const {
+    handleOpenModalOne: handleOpenInfoAnexos,
+    handleOpenModalTwo: handleOpenInfoMetadatos,
+  } = useContext(ModalAndLoadingContext);
 
   // ? se va a tener que modificar esta función con la nueva propiedad que se agrega. si la pqr ya fue asignada a grupo, no se puede volver a asignar (constinuar asig grup)
   const shouldDisable = (actionId: string, complemento: any) => {
@@ -66,7 +66,7 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    /* const actionsComplementosPermissions = [].map(
+    const actionsComplementosPermissions = [].map(
       (action: any) => ({
         ...action,
         disabled: shouldDisable(action.id, complemento),
@@ -74,13 +74,13 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
     );
     dispatch(
       setActionssToManagePermissionsComplementos(actionsComplementosPermissions)
-    );*/
+    );
   };
 
   //* columns definition
   const columns = [
     //* se debe revisar si el tipo de complemento es pqrsdf o tramite para poder mostrar la información de la manera correcta
-    ...columnsRequerimientosTramites,
+    ...[],
     {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
@@ -127,7 +127,7 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
             color="info"
             onClick={() => {
               control_info(
-                `Actualmente tienes ${params.value} solicitudes de digitalización para este complemento`
+                `Actualmente tienes ${params.value} solicitudes de digitalización para este radicado`
               );
             }}
           />
@@ -144,8 +144,26 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
             <Tooltip title="Ver info complemento asociado">
               <IconButton
                 onClick={() => {
-                  setActionsComplementos(params?.row);
-                  handleFifthLoading(true);
+                  // ? se debe reemplazar los servicios y las rutas de navegación que se han establecido dentro la aplicación
+                  console.log('paramas de la fila', params?.row);
+                 /* void getAnexosComplemento(
+                    params?.row?.idComplementoUsu_PQR
+                  ).then((res) => {
+                    //  console.log('')(res);
+
+                    if (res.length > 0) {
+                      setAnexos(res);
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      setActionsComplementos(params?.row);
+                      navigate(
+                        `/app/gestor_documental/panel_ventanilla/complemento_info/${params.row.idComplementoUsu_PQR}`
+                      );
+                      return;
+                    }
+
+                    return;
+                  });*/
                 }}
               >
                 <Avatar
@@ -199,29 +217,24 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
   ];
 
   return (
-    <>
-      <RenderDataGrid
-        rows={[...listaComplementosRequerimientosOtros] ?? []}
-        columns={columns ?? []}
-        title="Complementos del elemento seleccionado"
-        aditionalElement={
-          currentElementPqrsdComplementoTramitesYotros?.tipo ? (
-            <Button
-              onClick={() => {
-                dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-              }}
-              variant="contained"
-              color="primary"
-              endIcon={<RemoveDoneIcon />}
-            >
-              Quitar selección de complemento trámite
-            </Button>
-          ) : null
-        }
-      />
-      {/*modal para ver la información de la solicitud de otro seleccionada*/}
-      <ModalComplementoTraSer />
-      {/*modal para ver la información de la solicitud de otro seleccionada*/}
-    </>
+    <RenderDataGrid
+      rows={[...listaComplementosRequerimientosOtros] ?? []}
+      columns={columns ?? []}
+      title="Complementos del elemento seleccionado"
+      aditionalElement={
+        currentElementPqrsdComplementoTramitesYotros?.tipo ? (
+          <Button
+            onClick={() => {
+              dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
+            }}
+            variant="contained"
+            color="primary"
+            endIcon={<RemoveDoneIcon />}
+          >
+            Quitar selección de requerimiento trámite
+          </Button>
+        ) : null
+      }
+    />
   );
 };

@@ -15,7 +15,7 @@ import {
 import { type AxiosError } from 'axios';
 import { create_user } from '../request/authRequest';
 import { control_success } from '../../../helpers';
-import { DEFAULT_AUTH_URL_BETA, DEFAULT_AUTH_URL_PROD } from '../../../api/axios';
+import { auth_url } from '../api/auth';
 
 export const use_register = (): ReisterHookNew => {
   const {
@@ -152,10 +152,7 @@ export const use_register = (): ReisterHookNew => {
         persona,
         password,
         redirect_url:
-        (process.env.NODE_ENV === 'development'
-          ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
-          : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
-        ) + '/auth/activacion_cuenta',
+          `${auth_url}/auth/activacion_cuenta`,
       });
       control_success(data.detail);
       window.location.href = '#/app/auth/login';
