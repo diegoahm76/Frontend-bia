@@ -19,6 +19,7 @@ import { get_obligaciones_id } from '../facilidadPago/slices/ObligacionesSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import { TablaObligacionesUsuarioConsulta } from '../facilidadPago/componentes/TablaObligacionesUsuarioConsulta';
+import {  Article } from '@mui/icons-material';
 
 
 const detalles_ciclos: string[] = [
@@ -438,6 +439,45 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       }
     },
     {
+      field: 'Deudores',
+      headerName: 'Deudores',
+      width: 150,
+      renderCell: (params) => {
+       
+          return <>
+          <Tooltip title="Ver">
+            <IconButton
+              onClick={() => {
+                try {
+                  void dispatch(get_obligaciones_id(params.row.identificacion));
+                  set_obligaciones_module(true);
+                  handle_open_buscarr();
+                } catch (error: any) {
+                  // Manejo del error
+                  control_error(error.response.data.detail);
+                }
+              } }
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                 <Article
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        </>;
+       
+      },
+    },
+    {
       field: 'acciones',
       headerName: 'Acciones',
       minWidth: 100,
@@ -487,48 +527,17 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         );
       }
     },
-    {
-      field: 'accioness',
-      headerName: 'Accións',
-      width: 150,
-      renderCell: (params) => {
-       
-          return <>
-          <Tooltip title="Ver">
-            <IconButton
-              onClick={() => {
-                try {
-                  void dispatch(get_obligaciones_id(params.row.identificacion));
-                  set_obligaciones_module(true);
-                  set_is_buscar(true);
-                } catch (error: any) {
-                  // Manejo del error
-                  control_error(error.response.data.detail);
-                }
-              } }
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                dddd
-              </Avatar>
-            </IconButton>
-          </Tooltip>
-        </>;
-       
-      },
-    },
+   
 
   ];
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
   const handle_open_buscar = (): void => {
     set_is_buscar(true);
+  };
+
+  const [is_modal_activee, set_is_buscarr] = useState<boolean>(false);
+  const handle_open_buscarr = (): void => {
+    set_is_buscarr(true);
   };
   return (
     <>
@@ -622,7 +631,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 obligaciones.length !== 0 ? (
                   <>
 
-                    <TablaObligacionesUsuarioConsulta  is_modal_active={is_modal_active}  set_is_modal_active={set_is_buscar}/>
+                    <TablaObligacionesUsuarioConsulta  is_modal_active={is_modal_activee}  set_is_modal_active={set_is_buscarr}/>
                   </>
                 ): <p>.</p>
               }
