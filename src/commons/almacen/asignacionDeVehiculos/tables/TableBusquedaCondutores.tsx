@@ -12,8 +12,8 @@ interface CustomColumn extends GridColDef {
 
 interface props {
   data_busqueda_conductores: data_busqueda_conductores[];
-  set_id_persona_conductor:React.Dispatch<React.SetStateAction<number>>
-  set_nro_documento:React.Dispatch<React.SetStateAction<string>>
+  set_id_persona_conductor:React.Dispatch<React.SetStateAction<number>>;
+  set_nro_documento:React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TableBusquedaConductores: React.FC<props> = ({data_busqueda_conductores, set_id_persona_conductor,set_nro_documento}) => {

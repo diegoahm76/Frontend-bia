@@ -12,10 +12,11 @@ import { control_error } from '../../../../helpers';
 interface props {
   set_id_persona_conductor:React.Dispatch<React.SetStateAction<number>>;
   set_nro_documento:React.Dispatch<React.SetStateAction<string>>;
+  refrescar_tabla_conductores:boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro_documento}) => {
+const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro_documento,refrescar_tabla_conductores}) => {
   const dispatch = useAppDispatch();
   const [tipo_conductor, set_tipo_conductor] = useState<string>('');
   const [nombre_conductor, set_nombre_conductor] = useState<string>('');
@@ -39,7 +40,7 @@ const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro
 
   useEffect(()=>{
     obtener_conductores();
-  },[])
+  },[refrescar_tabla_conductores])
 
   const cambio_tipo_conductor: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_conductor(e.target.value);

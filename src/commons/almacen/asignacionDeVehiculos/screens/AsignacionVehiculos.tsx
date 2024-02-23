@@ -31,6 +31,8 @@ const AsignacionVehiculos: React.FC = () => {
   const [conductor, set_conductor] = useState<string>('');
   const [msj_error_conductor, set_msj_error_conductor] = useState<string>('');
   const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
+  const [refrescar_tabla_conductores, set_refrescar_tabla_conductores] = useState<boolean>(false);
+
 
   const [id_hoja_vida_vehiculo, set_id_hoja_vida_vehiculo] = useState<number>(0);
   const [id_persona_conductor, set_id_persona_conductor] = useState<number>(0);
@@ -42,8 +44,8 @@ const AsignacionVehiculos: React.FC = () => {
   const [data_asignacion_vehiculos, set_data_asignacion_vehiculos] = useState<data_asignacion_vehiculos[]>([]);
 
 
-  const enviar_asiganacion_a_conductor_fc: () => void = () => {
-    dispatch(
+  const enviar_asiganacion_a_conductor_fc: () => void = async() => {
+   await  dispatch(
       enviar_asignacion_vehiculo(
         vehiculo_agendado_conductor.map(
           (asignacion: interface_crear_vehiculo_agendado_conductor) => ({
@@ -58,6 +60,8 @@ const AsignacionVehiculos: React.FC = () => {
     ).then((response: any) => {
       console.log(response);
     });
+    set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
+    set_refrescar_tabla(!refrescar_tabla);
   };
 
 
@@ -79,7 +83,7 @@ const AsignacionVehiculos: React.FC = () => {
 
   useEffect(() => {
     obtener_asignaciones_vehiculos();
-  }, [])
+  }, [refrescar_tabla,refrescar_tabla_conductores])
 
   const cambio_tipo_conductor: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_conductor(e.target.value);
@@ -321,6 +325,7 @@ const AsignacionVehiculos: React.FC = () => {
             set_id_hoja_vida_vehiculo={set_id_hoja_vida_vehiculo}
           />
           <BusquedaConductores
+            refrescar_tabla_conductores={refrescar_tabla_conductores}
             set_nro_documento={set_nro_documento}
             set_id_persona_conductor={set_id_persona_conductor}
           />
