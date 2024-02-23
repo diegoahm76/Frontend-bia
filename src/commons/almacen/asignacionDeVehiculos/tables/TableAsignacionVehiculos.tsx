@@ -38,6 +38,7 @@ const AsignacionVehiculos: React.FC<props> = ({data_asignacion_vehiculos,set_ref
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
+        console.log('eliminando...')        
         dispatch(elimiar_asignacion_vehiculo(params.id_asignacion)).then((response: { success: boolean, detail: string, data: any }) => {
           if (response.success) {
             control_success('Se elimino la solicitud correctamente');
