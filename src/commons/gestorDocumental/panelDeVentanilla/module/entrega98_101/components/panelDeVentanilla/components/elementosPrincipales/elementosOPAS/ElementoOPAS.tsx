@@ -38,15 +38,14 @@ export const ElementoOPAS = (): JSX.Element => {
   // ? set actions OPAS, button selected
 
   const setActionsOpas = (opa: any) => {
-
     if (
-      opa?.estado_actual_solicitud === 'EN GESTION' ||
+      opa?.estado_actual === 'EN GESTION' ||
       opa?.estado_asignacion_grupo === 'ACEPTADO'
     ) {
       void Swal.fire({
         title: 'Opps...',
         icon: 'error',
-        text: `Esta OPA ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
+        text: `Esta OPA ya se encuentra en gestión y / o asignada a líder de unidad, no se pueden hacer acciones sobre ella`,
         showConfirmButton: true,
       });
       return;
@@ -59,56 +58,107 @@ export const ElementoOPAS = (): JSX.Element => {
       text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
-/*
+
+    /*
+    {
+    "tipo_solicitud": "OPA",
+    "nombre_proyecto": "Opción 2",
+    "nombre_opa": "Aprovechamiento forestal de árboles en riesgo",
+    "nombre_completo_titular": "SeguridadNombre  SeguridadApellido ",
+    "costo_proyecto": 0,
+    "pagado": false,
+    "cantidad_predios": null,
+    "cantidad_anexos": 0,
+    "radicado": "UNICO-2023-00256",
+    "fecha_radicado": "2023-12-22T16:34:14.674486",
+    "sede": null,
+    "requiere_digitalizacion": true,
+    "estado_actual": "EN VENTANILLA CON PENDIENTES",
+    "estado_asignacion_grupo": null,
+    "persona_asignada": null,
+    "unidad_asignada": null,
+    "tiene_anexos": false
+}
+    */
+
+    /*
+
+const actionsOpas: any[] = [
+  {
+    id: 'Dig',
+  },
+  {
+    id: 'AsigGrup'
+  },
+  {
+    id: 'Jurídica'
+  },
+];
+*/
+
     const shouldDisable = (actionId: string) => {
+      const isNoSeleccionado = !opa;
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
+      const isJuridica = actionId === 'Jurídica';
+
       const hasAnexos = opa.cantidad_anexos > 0;
       const requiresDigitalization = opa.requiere_digitalizacion;
-      const isRadicado = opa.estado_solicitud === 'RADICADO';
+
+      const isRadicado = opa.estado_actual === 'RADICADO';
       const isEnVentanillaSinPendientes =
-        opa.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+        opa.estado_actual === 'EN VENTANILLA SIN PENDIENTES';
       const isEnVentanillaConPendientes =
-        opa.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+        opa.estado_actual === 'EN VENTANILLA CON PENDIENTES';
+      const isGestion = opa.estado_actual === 'EN GESTION';
 
-      // Primer caso
+      if (isNoSeleccionado) {
+        return true;
+      }
+
+      //?  primer cas
       if (isRadicado && !hasAnexos) {
-        return isDig;
+        return !(actionId === 'Jurídica' || actionId === 'AsigGrup');
       }
-
-      // Segundo caso
+      // ? segundo caso
       if (isRadicado && hasAnexos && !requiresDigitalization) {
-        return false;
+        return !(
+          actionId === 'Jurídica' ||
+          actionId === 'AsigGrup' ||
+          actionId === 'Dig'
+        );
       }
-
-      // Tercer caso
+      // ? tercer caso
       if (isRadicado && hasAnexos && requiresDigitalization) {
-        return isAsigGrup;
+        return !(actionId === 'Jurídica' || actionId === 'Dig');
       }
-
-      // Cuarto caso
+      // ? cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-        return false;
+        return !(
+          actionId === 'Jurídica' ||
+          actionId === 'Dig' ||
+          actionId === 'AsigGrup'
+        );
       }
-
-      // Quinto caso
+      // ? quinto caso
       if (isEnVentanillaSinPendientes && requiresDigitalization) {
-        return isAsigGrup;
+        return !(actionId === 'Dig');
       }
 
-      // Sexto caso
+      // ? sexto caso
       if (isEnVentanillaConPendientes) {
-        return isAsigGrup;
+        return !(actionId === 'Dig' || actionId === 'Jurídica');
       }
 
-      // Caso por defecto
-      return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
+      if (isGestion) {
+        return true;
+      }
     };
     const actionsOPAS = actionsOpas.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
     }));
-    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));*/
+    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));
   };
 
   //* const columns with actions
@@ -127,7 +177,7 @@ export const ElementoOPAS = (): JSX.Element => {
             color="primary"
           />
         );
-      }
+      },
     },
     {
       headerName: 'Requiere digitalización',
