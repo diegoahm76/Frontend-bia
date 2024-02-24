@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
-  Grid,
-  TextField,
-  Box,
-  Button,
+	Grid,
+	TextField,
+	Box,
+	Button,
 	Dialog,
 	DialogContent,
 } from '@mui/material';
@@ -23,88 +23,84 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { control_error, control_success } from '../../../../helpers';
 
 interface IProps {
-  set_mostrar_busqueda_expediente: React.Dispatch<React.SetStateAction<boolean>>;
+	set_mostrar_busqueda_expediente: React.Dispatch<React.SetStateAction<boolean>>;
 	mostrar_busqueda_expediente: boolean;
 	set_id_expediente: React.Dispatch<React.SetStateAction<number>>;
 	id_expediente: number;
 }
 
-
-const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,mostrar_busqueda_expediente,set_id_expediente,id_expediente}) => {
-  const dispatch = useAppDispatch();
-  const [expedientes, set_expedientes] = useState<any>([]);
+const BusquedaExpediente: React.FC<IProps> = ({ set_mostrar_busqueda_expediente, mostrar_busqueda_expediente, set_id_expediente, id_expediente }) => {
+	const dispatch = useAppDispatch();
+	const [expedientes, set_expedientes] = useState<any>([]);
 	const [fecha_inicio, set_fecha_inicio] = useState<Dayjs | null>(null);
-  const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
-  const [fecha_fin, set_fecha_fin] = useState<Dayjs | null>(null);
-  const [msj_error_fecha_fin, set_msj_error_fecha_fin] = useState<string>("");
+	const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
+	const [fecha_fin, set_fecha_fin] = useState<Dayjs | null>(null);
+	const [msj_error_fecha_fin, set_msj_error_fecha_fin] = useState<string>("");
 	const [titulo_expediente, set_titulo_expediente] = useState<string>('');
-  const [msj_error_titulo_expediente, set_msj_error_titulo_expediente] = useState<string>("");
+	const [msj_error_titulo_expediente, set_msj_error_titulo_expediente] = useState<string>("");
 	const [palabras_clave, set_palabras_clave] = useState<string>('');
-  const [msj_error_palabras_clave, set_msj_error_palabras_clave] = useState<string>("");
-	const [id_selecionado_grid, set_id_selecionado_grid] = useState<number>();
+	const [msj_error_palabras_clave, set_msj_error_palabras_clave] = useState<string>("");
 
-	
 	/**
 	* Definición de columnas para la visualización de datos en una tabla o grid.
 	* Cada columna tiene propiedades específicas como campo (field), encabezado (headerName),
 	* ancho (width), y funciones para obtener valores (valueGetter).
 	* @type {GridColDef[]}
 	*/
-  const columns: GridColDef[] = [
+	const columns: GridColDef[] = [
 		{
 			field: 'nombre_persona_titular',
-      headerName: 'PERSONA TITULAR',
-      width: 200,
-      valueGetter: (params) => params.row.nombre_persona_titular ?? 'N/A',
-    },
+			headerName: 'PERSONA TITULAR',
+			width: 200,
+			valueGetter: (params) => params.row.nombre_persona_titular ?? 'N/A',
+		},
 		{
 			field: 'fecha_apertura_expediente',
 			headerName: 'Fecha expediente',
 			width: 200,
 			valueGetter: (params) => dayjs(params.row.fecha_apertura_expediente).format('DD/MM/YYYY') ?? 'N/A',
 		},
-    {
-      field: 'codigo_exp_und_serie_subserie',
-      headerName: 'CÓDIGO',
-      sortable: true,
-      width: 200,
-      valueGetter: (params) =>
-        params.row.codigo_exp_und_serie_subserie +
-        '.' +
-        params.row.codigo_exp_Agno +
-        (params.row.codigo_exp_consec_por_agno !== null
-          ? '.' + params.row.codigo_exp_consec_por_agno
-          : ''),
-    },
-    {
-      field: 'nombre_trd_origen',
-      headerName: 'TRD',
-      sortable: true,
-      width: 200,
-    },
-    {
-      field: 'titulo_expediente',
-      headerName: 'TITULO',
-      width: 200,
-    },
-    {
-      field: 'nombre_unidad_org',
-      headerName: 'UNIDAD ORGANIZACIONAL',
-      width: 200,
-    },
-    {
-      field: 'nombre_serie_origen',
-      headerName: 'SERIE',
-      width: 200,
-    },
-    {
-      field: 'nombre_subserie_origen',
-      headerName: 'SUBSERIE',
-      width: 200,
-      valueGetter: (params) => params.row.nombre_subserie_origen ?? 'N/A',
-    },
-  ];
-
+		{
+			field: 'codigo_exp_und_serie_subserie',
+			headerName: 'CÓDIGO',
+			sortable: true,
+			width: 200,
+			valueGetter: (params) =>
+				params.row.codigo_exp_und_serie_subserie +
+				'.' +
+				params.row.codigo_exp_Agno +
+				(params.row.codigo_exp_consec_por_agno !== null
+					? '.' + params.row.codigo_exp_consec_por_agno
+					: ''),
+		},
+		{
+			field: 'nombre_trd_origen',
+			headerName: 'TRD',
+			sortable: true,
+			width: 200,
+		},
+		{
+			field: 'titulo_expediente',
+			headerName: 'TITULO',
+			width: 200,
+		},
+		{
+			field: 'nombre_unidad_org',
+			headerName: 'UNIDAD ORGANIZACIONAL',
+			width: 200,
+		},
+		{
+			field: 'nombre_serie_origen',
+			headerName: 'SERIE',
+			width: 200,
+		},
+		{
+			field: 'nombre_subserie_origen',
+			headerName: 'SUBSERIE',
+			width: 200,
+			valueGetter: (params) => params.row.nombre_subserie_origen ?? 'N/A',
+		},
+	];
 
 	/**
 	* Maneja el cambio de la fecha de inicio.
@@ -113,13 +109,13 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 	* @returns {void}
 	*/
 	const cambio_fecha_inicio = (date: Dayjs | null): void => {
-    if (date !== null) {
-      set_fecha_inicio(date);
-      set_msj_error_fecha_inicio("");
-    } else {
-      set_msj_error_fecha_inicio("El campo Fecha inicio es obligatorio.");
-    }
-  };
+		if (date !== null) {
+			set_fecha_inicio(date);
+			set_msj_error_fecha_inicio("");
+		} else {
+			set_msj_error_fecha_inicio("El campo Fecha inicio es obligatorio.");
+		}
+	};
 
 	/**
 	* Maneja el cambio de la fecha de fin.
@@ -128,25 +124,25 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 	* @returns {void}
 	*/
 	const cambio_fecha_fin = (date: Dayjs | null): void => {
-    if (date !== null) {
-      set_fecha_fin(date);
-      set_msj_error_fecha_fin("");
-    } else {
-      set_msj_error_fecha_fin("El campo Fecha inicio es obligatorio");
-    }
-  };
+		if (date !== null) {
+			set_fecha_fin(date);
+			set_msj_error_fecha_fin("");
+		} else {
+			set_msj_error_fecha_fin("El campo Fecha inicio es obligatorio");
+		}
+	};
 
 	/**
 	 * Valida el formulario de búsqueda de expedientes.
 	 * 
 	 * @returns {Promise<boolean | void>} - Una promesa que resuelve a `true` si la validación es exitosa, de lo contrario, retorna `false`.
 	 */
-	const validar_form_busqueda_expediente: ()=> Promise<boolean | void> = async() => {
-		if(fecha_inicio?.isValid() === false){
+	const validar_form_busqueda_expediente: () => Promise<boolean | void> = async () => {
+		if (fecha_inicio?.isValid() === false) {
 			control_error('Ingrese una fecha de inicio válida');
 			set_msj_error_fecha_inicio('Ingrese una fecha de inicio válida');
 			return false;
-		} else if (fecha_fin?.isValid() === false){
+		} else if (fecha_fin?.isValid() === false) {
 			control_error('Ingrese una fecha fin de expediente válida');
 			set_msj_error_fecha_fin('Ingrese una fecha fin de expediente válida');
 			return;
@@ -160,10 +156,10 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 	 * @param {React.FormEvent} e - Objeto que representa el evento de formulario.
 	 * @returns {void}
 	 */
-  const expedientes_por_filtros_fc: (e: React.FormEvent) => void = async(e) => {
+	const expedientes_por_filtros_fc: (e: React.FormEvent) => void = async (e) => {
 		e.preventDefault();
 		const form_valido = await validar_form_busqueda_expediente();
-		if(form_valido){
+		if (form_valido) {
 			dispatch(
 				buscar_expediente(
 					titulo_expediente,
@@ -172,13 +168,12 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 					palabras_clave)
 			).then((response: any) => {
 				set_expedientes(response.data);
-			}).catch((err: any)=>{
+			}).catch((err: any) => {
 				set_expedientes([]);
 				console.log(err);
 			});
 		}
-  };
-
+	};
 
 	/**
 	 * Maneja la selección de expedientes en una cuadrícula o tabla.
@@ -186,9 +181,9 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 	 * @param {any} params - Parámetros de la selección del expediente.
 	 * @returns {void}
 	 */
-  const seleccion_expediente_grid = (params: any): void => {
-    set_id_expediente(params[0]);
-  };
+	const seleccion_expediente_grid = (params: any): void => {
+		set_id_expediente(params[0]);
+	};
 
 	/**
 	 * Maneja la acción de seleccionar un expediente.
@@ -199,7 +194,7 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 	 * @returns {void}
 	 */
 	const gtn_seleccionar = () => {
-		if(id_expediente === 0){
+		if (id_expediente === 0) {
 			control_error('Seleccione una fila de la tabla');
 		} else {
 			set_mostrar_busqueda_expediente(false);
@@ -219,37 +214,38 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 		set_msj_error_palabras_clave('');
 	}
 
-	
 	/**
 	 * Efecto secundario que se ejecuta al montar el componente.
-	 * Realiza una búsqueda inicial de expedientes para mostrar en la tabla y actualiza el estado correspondiente.
+	 * Realiza una búsqueda inicial de expedientes para mostrar en la tabla
+	 * y actualiza el estado correspondiente solo cuabndo la tabla esta es un estao visible.
 	 */
-	useEffect(()=>{
-		dispatch(
-      buscar_expediente('','','','')
-    ).then((response: any) => {
-      set_expedientes(response.data);
-    }).catch((err: any)=>{
-			set_expedientes([]);
-			console.error(err);
-		});
-	},[])
-	
+	useEffect(() => {
+		if (mostrar_busqueda_expediente) {
+			dispatch(
+				buscar_expediente('', '', '', '')
+			).then((response: any) => {
+				set_expedientes(response.data);
+			}).catch((err: any) => {
+				set_expedientes([]);
+				console.error(err);
+			});
+		}
+	}, [mostrar_busqueda_expediente])
 
-  return (
-    <>
-      <Dialog 
+	return (
+		<>
+			<Dialog
 				open={mostrar_busqueda_expediente}
-				onClose={()=>{
+				onClose={() => {
 					set_id_expediente(0)
 					set_mostrar_busqueda_expediente(false)
 				}}
 				fullWidth maxWidth="lg" >
 				<DialogContent>
 					<Grid item md={12} xs={12} sx={{
-							p: "10px",
-							mb: "20px",
-						}}>
+						p: "10px",
+						mb: "20px",
+					}}>
 						<Title title="Búsqueda de expedientes" />
 						<Box
 							component="form"
@@ -265,30 +261,30 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 										fullWidth
 										value={titulo_expediente}
 										error={msj_error_titulo_expediente !== ''}
-										onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
+										onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 											set_msj_error_titulo_expediente('')
 											set_titulo_expediente(e.target.value)
 										}}
 										size="small"
 									/>
 								</Grid>
-								
+
 								<Grid item xs={12} md={2}>
-										<LocalizationProvider dateAdapter={AdapterDayjs}>
-											<DatePicker
-												label="Inicio expediente"
-												value={fecha_inicio}
-												onChange={(newValue) => { cambio_fecha_inicio(newValue); }}
-												renderInput={(params) => (
-													<TextField
-														fullWidth
-														error={msj_error_fecha_inicio !== ''}
-														size="small"
-														{...params}
-													/>
-												)}
-											/>
-										</LocalizationProvider>
+									<LocalizationProvider dateAdapter={AdapterDayjs}>
+										<DatePicker
+											label="Inicio expediente"
+											value={fecha_inicio}
+											onChange={(newValue) => { cambio_fecha_inicio(newValue); }}
+											renderInput={(params) => (
+												<TextField
+													fullWidth
+													error={msj_error_fecha_inicio !== ''}
+													size="small"
+													{...params}
+												/>
+											)}
+										/>
+									</LocalizationProvider>
 								</Grid>
 
 								<Grid item xs={12} md={2}>
@@ -315,7 +311,7 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 										fullWidth
 										value={palabras_clave}
 										error={msj_error_palabras_clave !== ''}
-										onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{
+										onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 											set_msj_error_palabras_clave('')
 											set_palabras_clave(e.target.value)
 										}}
@@ -366,7 +362,7 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 										color="error"
 										variant="contained"
 										startIcon={<ClearIcon />}
-										onClick={()=>{
+										onClick={() => {
 											set_id_expediente(0)
 											set_mostrar_busqueda_expediente(false)
 										}}
@@ -389,9 +385,9 @@ const BusquedaExpediente: React.FC<IProps> = ({set_mostrar_busqueda_expediente,m
 						</Box>
 					</Grid>
 				</DialogContent>
-      </Dialog>
-    </>
-  );
+			</Dialog>
+		</>
+	);
 };
 
 // eslint-disable-next-line no-restricted-syntax
