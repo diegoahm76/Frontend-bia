@@ -28,34 +28,6 @@ interface props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refrescar_tabla,refrescar_tabla,accion,id_solicitud_editar}) => {
   const dispatch = useAppDispatch();
-  const [editar_datos_solicitar_viaje, set_editar_datos_solicitar_viaje] = useState<data_solicitud_viaje>({
-    id_solicitud_viaje: 0,
-    fecha_solicitud: '',
-    tiene_expediente_asociado: false,
-    motivo_viaje: '',
-    direccion: '',
-    indicaciones_destino: '',
-    nro_pasajeros: 0,
-    requiere_carga: false,
-    fecha_partida: '',
-    hora_partida: '',
-    fecha_retorno: '',
-    hora_retorno: '',
-    requiere_compagnia_militar: false,
-    consideraciones_adicionales: '',
-    fecha_aprobacion_responsable: '',
-    fecha_rechazo: '',
-    justificacion_rechazo: '',
-    estado_solicitud: '',
-    id_persona_solicita: 0,
-    id_unidad_org_solicita: 0,
-    id_expediente_asociado: 0,
-    cod_municipio: '',
-    cod_departamento: '',
-    id_persona_responsable: '',
-    id_unidad_org_responsable: '',
-    id_solicitud: 0,
-  });
 
   const [motivo_viaje, set_motivo_viaje] = useState<string>('');
   const [switch_expediente_asociado, set_switch_expediente_asociado] = useState<boolean>(false);
@@ -92,7 +64,34 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
   const [msj_error_id_expediente, set_msj_error_id_expediente] = useState<string>("");
   
 
-
+  const [editar_datos_solicitar_viaje, set_editar_datos_solicitar_viaje] = useState<data_solicitud_viaje>({
+    id_solicitud_viaje: 0,
+    fecha_solicitud: '',
+    tiene_expediente_asociado: false,
+    motivo_viaje: '',
+    direccion: '',
+    indicaciones_destino: '',
+    nro_pasajeros: 0,
+    requiere_carga: false,
+    fecha_partida: '',
+    hora_partida: '',
+    fecha_retorno: '',
+    hora_retorno: '',
+    requiere_compagnia_militar: false,
+    consideraciones_adicionales: '',
+    fecha_aprobacion_responsable: '',
+    fecha_rechazo: '',
+    justificacion_rechazo: '',
+    estado_solicitud: '',
+    id_persona_solicita: 0,
+    id_unidad_org_solicita: 0,
+    id_expediente_asociado: 0,
+    cod_municipio: '',
+    cod_departamento: '',
+    id_persona_responsable: '',
+    id_unidad_org_responsable: '',
+    id_solicitud: 0,
+  });
   const [datos_solicitar_viaje, set_datos_solicitar_viaje] = useState<interface_solicitar_viaje>();
   
 
@@ -445,7 +444,7 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
   useEffect( ()=>{
     obtener_departamentos();
     obtener_municipios();
-    if(accion === 'editar' || accion === 'ver'){
+    if(accion === 'editar' || accion === 'ver'){   
       obtener_solicitudes_fc();
     }
   },[id_solicitud_editar,accion]);

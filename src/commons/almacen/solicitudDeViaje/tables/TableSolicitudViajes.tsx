@@ -40,6 +40,9 @@ const TableSolicitudViajes: FC<props_table> = ({
 }) => {
   const dispatch = useAppDispatch();
 
+  useEffect(()=>{
+    //console.log(data_row_solicitud_viaje);    
+  },[])
 
   /**
    * Muestra la solicitud de viaje en modo de visualización.
@@ -48,6 +51,7 @@ const TableSolicitudViajes: FC<props_table> = ({
    * @returns {void}
    */
   const ver_solicitud = (params: data_solicitud_viaje) => {
+    console.log(params);    
     set_mostrar_solicitud_viaje(true);
     set_id_solicitud_editar(Number(params.id_solicitud));
     set_accion('ver');

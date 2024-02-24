@@ -1,32 +1,89 @@
-import { Button, FormControl, FormLabel, Grid, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import BusquedaVehiculos from './BusquedaVehiculos';
 import TableAsignacionVehiculos from '../tables/TableAsignacionVehiculos';
 import BusquedaConductores from './BusquedaConductores';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs, { Dayjs } from 'dayjs';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { data_asignacion_vehiculos, interface_crear_vehiculo_agendado_conductor, interface_vehiculo_agendado_conductor } from '../interfaces/types';
+import { useAppDispatch } from '../../../../hooks';
+import { buscar_vehiculos_asignados, enviar_asignacion_vehiculo } from '../thunks/asignacion_vehiculos';
+import VehiculosConductoresAsignados from './VehiculosConductoresAsignados';
+import { control_error } from '../../../../helpers';
 import SaveIcon from "@mui/icons-material/Save";
 import CleanIcon from "@mui/icons-material/CleaningServices";
-import ClearIcon from "@mui/icons-material/Clear"; 
-
+import ClearIcon from "@mui/icons-material/Clear";
+import VehiculoAgendadoView from './VehiculoAgendadoView';
+import Swal from 'sweetalert2';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const AsignacionVehiculos: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [mostrar_busqueda_vehiculos, set_mostrar_busqueda_vehiculos] = useState<boolean>(false);
   const [tipo_conductor, set_tipo_conductor] = useState<string>('');
   const [msj_error_tipo_conductor, set_msj_error_tipo_conductor] = useState<string>('');
   const [tipo_vehiculo, set_tipo_vehiculo] = useState<string>('');
   const [msj_error_tipo_vehiculo, set_msj_error_tipo_vehiculo] = useState<string>('');
-  const [fecha_salida, set_fecha_salida] = useState<Dayjs>(dayjs());
-  const [msj_error_fecha_salida, set_msj_error_fecha_salida] = useState<string>("");
-  const [fecha_retorno, set_fecha_retorno] = useState<Dayjs>(dayjs());
-  const [msj_error_fecha_retorno, set_msj_error_fecha_retorno] = useState<string>("");
+  const [placa, set_placa] = useState<string>('');
+  const [msj_error_placa, set_msj_error_placa] = useState<string>('');
+  const [conductor, set_conductor] = useState<string>('');
+  const [msj_error_conductor, set_msj_error_conductor] = useState<string>('');
+  const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
+  const [refrescar_tabla_conductores, set_refrescar_tabla_conductores] = useState<boolean>(false);
+
+
+  const [id_hoja_vida_vehiculo, set_id_hoja_vida_vehiculo] = useState<number>(0);
+  const [id_persona_conductor, set_id_persona_conductor] = useState<number>(0);
+  const [nro_documento, set_nro_documento] = useState<string>('');
+  const [vehiculo_placa, set_vehiculo_placa] = useState<string>('');
+
+  const [vehiculo_agendado_conductor, set_vehiculo_agendado_conductor] = useState<interface_vehiculo_agendado_conductor[]>([]);
+
+  const [data_asignacion_vehiculos, set_data_asignacion_vehiculos] = useState<data_asignacion_vehiculos[]>([]);
+
+
+  const enviar_asiganacion_a_conductor_fc: () => void = async() => {
+   await  dispatch(
+      enviar_asignacion_vehiculo(
+        vehiculo_agendado_conductor.map(
+          (asignacion: interface_crear_vehiculo_agendado_conductor) => ({
+              id_hoja_vida_vehiculo: asignacion.id_hoja_vida_vehiculo,
+              id_persona_conductor: asignacion.id_persona_conductor,
+              fecha_inicio_asignacion: asignacion.fecha_inicio_asignacion,
+              fecha_final_asignacion: asignacion.fecha_final_asignacion,
+            }  
+          )
+        )
+      )
+    ).catch((response: any) => {
+      console.log(response);
+    });
+    set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
+    set_refrescar_tabla(!refrescar_tabla);
+  };
+
+
+  const obtener_asignaciones_vehiculos: () => void = () => {
+    dispatch(buscar_vehiculos_asignados(
+      tipo_vehiculo,
+      tipo_conductor,
+      placa,
+      conductor,))
+      .then((response: any) => {
+        if (response.data.length === 0) {
+          control_error('No se encontraron asignaciones con los filtros seleccionados');
+          set_data_asignacion_vehiculos([]);
+        } else {
+          set_data_asignacion_vehiculos(response.data);
+        }
+      })
+  }
+
+  useEffect(() => {
+    obtener_asignaciones_vehiculos();
+  }, [refrescar_tabla,refrescar_tabla_conductores])
 
   const cambio_tipo_conductor: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_conductor(e.target.value);
@@ -37,34 +94,58 @@ const AsignacionVehiculos: React.FC = () => {
   const cambio_tipo_vehiculo: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_vehiculo(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
-    set_msj_error_tipo_vehiculo("");
+      set_msj_error_tipo_vehiculo("");
   }
 
-  const cambio_fecha_salida = (date: Dayjs | null): void => {
-    if (date !== null) {
-      set_fecha_salida(date);
-      set_msj_error_fecha_salida("");
-    } else {
-      set_msj_error_fecha_salida("El campo Fecha inicio es obligatorio.");
-    }
-  };
+  const limpiar_form_asignacion = () => {
+    set_conductor('');
+    set_placa('');
+    set_tipo_vehiculo('');
+    set_tipo_conductor('');
+    set_msj_error_tipo_vehiculo('');
+    set_msj_error_tipo_conductor('');
+    set_msj_error_placa('');
+    set_msj_error_conductor('');
+  }
 
-  const cambio_fecha_retorno = (date: Dayjs | null): void => {
-    if (date !== null) {
-      set_fecha_retorno(date);
-      set_msj_error_fecha_retorno("");
+  const consultar_vehiculos_asignados: (e: React.FormEvent<Element>) => void = async (e) => {
+    e.preventDefault();
+    obtener_asignaciones_vehiculos();
+
+  }
+
+  const enviar_asiganacion_a_conductor = () => {
+    if(vehiculo_agendado_conductor.length === 0){
+      control_error('Agregue por lo menos una asignación');
+      return;
     } else {
-      set_msj_error_fecha_retorno("El campo Fecha inicio es obligatorio.");
+      Swal.fire({
+        title: '¿Está seguro de enviar las asignaciones?',
+        showDenyButton: true,
+        confirmButtonText: `Si`,
+        denyButtonText: `Cancelar`,
+        confirmButtonColor: '#042F4A',
+        cancelButtonColor: '#DE1616',
+        icon: 'question',
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          set_vehiculo_agendado_conductor([]);
+          enviar_asiganacion_a_conductor_fc();
+          return true;
+        } else if(result.isDenied){
+          return false;
+        }
+      });
     }
-  };
+  }
 
   return (
     <>
       <Grid
         container
-        spacing={2}
+        spacing={1}
         marginTop={2}
-        width={'100%'}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
@@ -74,154 +155,183 @@ const AsignacionVehiculos: React.FC = () => {
           p: '20px',
           mb: '20px',
         }}
-        >
+      >
         <Title title='Vehículos Asignados' />
 
-        <Grid
-          container
-          sx={{
-            marginTop: '10px'
-          }}
-          spacing={1}
-          >
-            <Grid item container xs={12} sx={{
-              display:'flex',
-              gap:'10px'
-            }}>
-              <Grid item xs={3}
-                sx={{
-                  display:'flex',
-                  alignItems:'center',
-                  justifyContent:'center'
-                }}
+        <Box
+          component="form"
+          onSubmit={consultar_vehiculos_asignados}
+          noValidate
+          autoComplete="off"
+          sx={{ width: '100%', mt: '20px' }}
+        >
+          <Grid item container xs={12} sx={{
+            display: 'flex',
+            gap: '10px'
+          }}>
+            <Grid item xs={12} md={2}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <FormControl required size='small' fullWidth>
+                <InputLabel>Tipo de conductor: </InputLabel>
+                <Select
+                  label='Tipo de conductor: '
+                  fullWidth
+                  value={tipo_conductor}
+                  onChange={cambio_tipo_conductor}
+                  error={msj_error_tipo_conductor !== ""}
                 >
-                <FormLabel sx={{marginRight:'5px'}}>
-                  Tipo de Conductor:
-                </FormLabel>
-                <Grid item xs={6}>
-                  <FormControl required size='small' fullWidth>
-                    <Select
-                      value={tipo_conductor}
-                      onChange={cambio_tipo_conductor}
-                      error={msj_error_tipo_conductor !== ""}
-                    >
-                        <MenuItem value={'interno'}>Interno</MenuItem>
-                        <MenuItem value={'externo'}>Externo</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={3}
-                sx={{
-                  display:'flex',
-                  alignItems:'center',
-                  justifyContent:'center'
-                }}
-                >
-                <FormLabel sx={{marginRight:'10px'}}>
-                  Tipo de Vehículo:
-                </FormLabel>
-                <Grid item xs={6}>
-                  <FormControl required size='small' fullWidth>
-                    <Select
-                      value={tipo_vehiculo}
-                      onChange={cambio_tipo_vehiculo}
-                      error={msj_error_tipo_vehiculo !== ""}
-                    >
-                        <MenuItem value={'carro'}>Carro</MenuItem>
-                        <MenuItem value={'moto'}>Moto</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={1.5} sx={{
-                display:'flex',
-                justifyContent: 'center',
-                alignItems:'center',
-                gap:1
-                }} >
-                <FormLabel htmlFor='placa'>
-                  Placa:
-                </FormLabel>
-                <Grid item xs={7}>
-                  <TextField
-                    fullWidth
-                    id='placa'
-                    placeholder='Buscar'
-                    size="small"
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid item xs={2.5} sx={{
-                display:'flex',
-                justifyContent: 'center',
-                alignItems:'center',
-                gap:1
-                }} >
-                <FormLabel htmlFor='conductor'>
-                  Conductor:
-                </FormLabel>
-                <Grid item xs={7}>
-                  <TextField
-                    fullWidth
-                    id='conductor'
-                    placeholder='Buscar'
-                    size="small"
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid item xs={1} sx={{
-                display:'flex',
-                justifyContent: 'center',
-                alignItems:'center',
-                gap:1
-                }} >
-                <Button
-                  color='primary'
-                  variant='contained'
-                  startIcon={<SearchIcon />}
-                  onClick={() => {}}
-                >
-                  Buscar
-                </Button>
-              </Grid>
+                  <MenuItem value={'IN'}>Interno</MenuItem>
+                  <MenuItem value={'EX'}>Externo</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
 
-            <Grid item container xs={12} sx={{
-              display:'flex',
-              justifyContent:'center'
-            }}>
-              
-            <Grid item container xs={12} sx={{
-              display:'flex',
-              justifyContent:'center'
-            }}>
-              <TableAsignacionVehiculos />
+            <Grid item xs={12} md={2}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <FormControl required size='small' fullWidth>
+                <InputLabel>Tipo de Vehículo: </InputLabel>
+                <Select
+                  label='Tipo de Vehículo: '
+                  fullWidth
+                  value={tipo_vehiculo}
+                  onChange={cambio_tipo_vehiculo}
+                  error={msj_error_tipo_vehiculo !== ""}
+                >
+                  <MenuItem value={'C'}>Carro</MenuItem>
+                  <MenuItem value={'M'}>Moto</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
-            
+
+            <Grid item xs={12} md={1} sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 1
+            }} >
+              <TextField
+                label='Placa: '
+                fullWidth
+                placeholder='Buscar'
+                size="small"
+                error={msj_error_placa !== ''}
+                value={placa}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  set_msj_error_placa('')
+                  set_placa(e.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={2} sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 1
+            }} >
+              <TextField
+                label='conductor'
+                fullWidth
+                placeholder='Buscar'
+                size="small"
+                error={msj_error_conductor !== ''}
+                value={conductor}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  set_msj_error_conductor('')
+                  set_conductor(e.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={2} sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }} >
+              <Button
+                fullWidth
+                color='primary'
+                variant='contained'
+                startIcon={<SearchIcon />}
+                type='submit'
+                onClick={consultar_vehiculos_asignados}
+              >
+                Buscar
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={2} sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }} >
+              <Button
+                fullWidth
+                color="inherit"
+                variant="outlined"
+                startIcon={<CleanIcon />}
+                onClick={limpiar_form_asignacion}
+              >
+                Limpiar
+              </Button>
+            </Grid>
+          </Grid>
+
+          <Grid item container xs={12} sx={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}>
+
+            <Grid item container xs={12} sx={{
+              display: 'flex',
+              justifyContent: 'center'
+            }}>
+              <TableAsignacionVehiculos
+                obtener_asignaciones_vehiculos={obtener_asignaciones_vehiculos}
+                refrescar_tabla={refrescar_tabla}
+                set_refrescar_tabla={set_refrescar_tabla}
+                data_asignacion_vehiculos={data_asignacion_vehiculos}
+                refrescar_tabla_conductores={refrescar_tabla_conductores}
+                set_refrescar_tabla_conductores={set_refrescar_tabla_conductores}
+              />
+            </Grid>
+
             {!mostrar_busqueda_vehiculos &&
               <Button
                 color='success'
                 variant='contained'
                 startIcon={<AddIcon />}
-                onClick={()=>set_mostrar_busqueda_vehiculos(true)}
+                onClick={() => set_mostrar_busqueda_vehiculos(true)}
               >
                 Asignar Vehículo
               </Button>
             }
           </Grid>
-        </Grid>
+        </Box>
       </Grid>
 
 
-      {mostrar_busqueda_vehiculos && 
+      {mostrar_busqueda_vehiculos &&
         <>
-          <BusquedaVehiculos />
-          <BusquedaConductores />
+          <BusquedaVehiculos
+            set_vehiculo_placa={set_vehiculo_placa}
+            set_id_hoja_vida_vehiculo={set_id_hoja_vida_vehiculo}
+          />
+          <BusquedaConductores
+            refrescar_tabla_conductores={refrescar_tabla_conductores}
+            set_nro_documento={set_nro_documento}
+            set_id_persona_conductor={set_id_persona_conductor}
+          />
+
           <Grid
             container
             spacing={2}
@@ -235,90 +345,41 @@ const AsignacionVehiculos: React.FC = () => {
               margin: 'auto',
               p: '20px',
               mb: '20px',
-              display:'flex',
-              justifyContent:'center',
-              alignItems:'center',
-              gap:'20px'
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '20px'
             }}
-          > 
+          >
             <Title title="Vehículos y conductores asignados" />
+            <VehiculosConductoresAsignados
+              set_vehiculo_agendado_conductor={set_vehiculo_agendado_conductor}
+              nro_documento={nro_documento}
+              vehiculo_placa={vehiculo_placa}
+              id_hoja_vida_vehiculo={id_hoja_vida_vehiculo}
+              id_persona_conductor={id_persona_conductor}
+              set_nro_documento={set_nro_documento}
+              set_vehiculo_placa={set_vehiculo_placa}
+              set_id_hoja_vida_vehiculo={set_id_hoja_vida_vehiculo}
+              set_id_persona_conductor={set_id_persona_conductor}
+            />
+
+            {vehiculo_agendado_conductor?.map((agendacion, index) => (
+              <VehiculoAgendadoView
+                key={index}
+                set_vehiculo_agendado_conductor={set_vehiculo_agendado_conductor}
+                vehiculo_agendado_conductor={vehiculo_agendado_conductor}
+                fecha_inicio_input={agendacion.fecha_inicio_asignacion}
+                fecha_fin_input={agendacion.fecha_final_asignacion}
+                vehiculo_placa={agendacion.vehiculo_placa}
+                nro_documento={agendacion.nro_documento}
+                id_borrar={agendacion.id_borrar}
+              />
+            ))}
+
             <Grid
               container
               spacing={1}
-              marginTop={2}
-              width={'100%'}
-              sx={{
-                position: 'relative',
-                background: '#FAFAFA',
-                boxShadow: '0px 3px 6px #042F4A26',
-                borderRadius: '10px',
-                margin: 'auto',
-                p: '20px',
-                mb: '20px',
-                display:'flex',
-                justifyContent:'space-between',
-                alignItems:'center',
-                gap:'15px'
-              }}
-              >
-                <Grid>
-                  <b>Vehículo:</b>
-                  <p>DAS - 12D</p>
-                </Grid>
-                <Grid
-                  item
-                  xs={4}
-                  sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  >
-                  <FormLabel style={{ width: "70%" }}>Fecha de salida*:</FormLabel>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    value={fecha_salida}
-                    onChange={(newValue) => {
-                      cambio_fecha_salida(newValue);
-                    }}
-                    renderInput={(params) => (
-                      <TextField required fullWidth size="small" {...params} />
-                    )}
-                      minDate={dayjs()}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-                <Grid
-                  item
-                  xs={4}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  >
-                  <FormLabel style={{ width: "70%" }}>Fecha de retorno*:</FormLabel>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      value={fecha_retorno}
-                      onChange={(newValue) => {
-                        cambio_fecha_retorno(newValue);
-                      }}
-                      renderInput={(params) => (
-                        <TextField required fullWidth size="small" {...params} />
-                      )}
-                      minDate={dayjs()}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-                <Grid>
-                  <b>Conductor:</b>
-                  <p>1124818945</p>
-                </Grid>
-                <DeleteForeverIcon sx={{fontSize:'40px'}}/>                                         
-            </Grid>
-            
-            <Grid
               item
               xs={12}
               sx={{
@@ -326,33 +387,44 @@ const AsignacionVehiculos: React.FC = () => {
                 justifyContent: "end",
                 alignItems: "center",
                 marginTop: "20px",
-                gap: 4,
               }}
             >
-              <Button
-                color="success"
-                variant="contained"
-                startIcon={<SaveIcon />}
-                onClick={() => {}}
-              >
-                {"Guardar"}
-              </Button>
-              <Button
-                color="error"
-                variant="contained"
-                startIcon={<ClearIcon />}
-                onClick={() => {}}
-              >
-                Salir
-              </Button>
-              <Button
-                color="inherit"
-                variant="outlined"
-                startIcon={<CleanIcon />}
-                onClick={() => {}}
-              >
-                Limpiar
-              </Button>
+              <Grid item xs={12} md={1.5} >
+                <Button
+                  fullWidth
+                  color="success"
+                  variant="contained"
+                  startIcon={<SaveIcon />}
+                  onClick={enviar_asiganacion_a_conductor}
+                >
+                  {"Guardar"}
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={1.5} >
+                <Button
+                  fullWidth
+                  color="error"
+                  variant="contained"
+                  startIcon={<ClearIcon />}
+                  onClick={() => {
+                    set_vehiculo_agendado_conductor([]);
+                    set_mostrar_busqueda_vehiculos(false);
+                  }}
+                >
+                  Salir
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={1.5} >
+                <Button
+                  fullWidth
+                  color="inherit"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={() => set_vehiculo_agendado_conductor([])}
+                >
+                  Limpiar
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </>

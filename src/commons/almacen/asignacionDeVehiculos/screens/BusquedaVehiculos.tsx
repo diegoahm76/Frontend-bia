@@ -1,20 +1,65 @@
-import { Button, FormControl, FormLabel, Grid, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import TableBusquedaVehiculos from '../tables/TableBusquedaVehiculos';
+import { useAppDispatch } from '../../../../hooks';
+import { data_busqueda_vehiculos } from '../interfaces/types';
+import { buscar_vehiculos } from '../thunks/asignacion_vehiculos';
+import { control_error } from '../../../../helpers';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
+interface props {
+  set_id_hoja_vida_vehiculo:React.Dispatch<React.SetStateAction<number>>
+  set_vehiculo_placa:React.Dispatch<React.SetStateAction<string>>
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const BusquedaVehiculos: React.FC = () => {
+const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehiculo_placa}) => {
+  const dispatch = useAppDispatch();
   const [tipo_vehiculo, set_tipo_vehiculo] = useState<string>('');
   const [msj_error_tipo_vehiculo, set_msj_error_tipo_vehiculo] = useState<string>('');
+  const [marca, set_marca] = useState<string>('');
+  const [placa, set_placa] = useState<string>('');
 
+
+  const [data_busqueda_vehiculos, set_data_busqueda_vehiculos] = useState<data_busqueda_vehiculos[]>([]);
+
+  const obtener_vehiculos: () => void = () => {
+    dispatch(buscar_vehiculos(
+      tipo_vehiculo,
+      marca,
+      placa,))
+      .then((response: any) => {
+        if (response.data.length === 0) {
+          control_error('No se encontraron vehículos con los filtros seleccionados');
+          set_data_busqueda_vehiculos([]);
+        } else {
+          set_data_busqueda_vehiculos(response.data);
+        }
+      })
+  }
+
+  useEffect(()=>{
+    obtener_vehiculos();
+  },[])
 
   const cambio_tipo_vehiculo: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_vehiculo(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
     set_msj_error_tipo_vehiculo("");
+  }
+
+  const limpiar_form_vehiculos = () => {
+    set_marca('');
+    set_placa('');
+    set_tipo_vehiculo('');
+    set_msj_error_tipo_vehiculo('');
+  }
+
+  const consultar_vehiculos = (e: React.FormEvent<Element>) => {
+    e.preventDefault();
+    obtener_vehiculos();
   }
 
   return (
@@ -35,103 +80,118 @@ const BusquedaVehiculos: React.FC = () => {
     >
       <Title title='Búsqueda de Vehículos' />
 
-      <Grid
-        container
-        sx={{
-          marginTop: '10px'
-        }}
-        spacing={2}
+      <Box
+        component="form"
+        onSubmit={consultar_vehiculos}
+        noValidate
+        autoComplete="off"
+        sx={{width:'100%', mt:'20px'}}
         >
-        <Grid item container xs={12} sx={{
-            display:'flex',
-            gap:'10px',
-          }}>
-          <Grid item xs={3}
-            sx={{
-              display:'flex',
-              alignItems:'center',
-              justifyContent:'center'
-            }}
-            >
-            <FormLabel sx={{marginRight:'10px'}}>
-              Tipo de Vehículo:
-            </FormLabel>
-            <Grid item xs={6}>
+        <Grid
+          container
+          sx={{
+            marginTop: '10px'
+          }}
+          spacing={1}
+          >
+            <Grid item xs={12} md={3}
+              sx={{
+                display:'flex',
+                alignItems:'center',
+                justifyContent:'center'
+              }}
+              >
               <FormControl required size='small' fullWidth>
+                <InputLabel>
+                  Tipo de Vehículo:
+                </InputLabel>
                 <Select
+                  fullWidth
+                  label='Tipo de Vehículo:'
                   value={tipo_vehiculo}
                   onChange={cambio_tipo_vehiculo}
                   error={msj_error_tipo_vehiculo !== ""}
                 >
-                    <MenuItem value={'carro'}>Carro</MenuItem>
-                    <MenuItem value={'moto'}>Moto</MenuItem>
+                    <MenuItem value={'C'}>Carro</MenuItem>
+                    <MenuItem value={'M'}>Moto</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-          </Grid>
 
-          <Grid item xs={2} sx={{
-            display:'flex',
-            justifyContent: 'center',
-            alignItems:'center',
-            gap:1
-            }} >
-            <FormLabel htmlFor='marca'>
-              Marca:
-            </FormLabel>
-            <Grid item xs={11}>
-              <TextField
-                fullWidth
-                id='marca'
-                placeholder='Buscar'
-                size="small"
-              />
+            <Grid item xs={12} md={1.8} sx={{
+              display:'flex',
+              justifyContent: 'center',
+              alignItems:'center',
+              }} >
+                <TextField
+                  label='Marca:'
+                  fullWidth
+                  placeholder='Buscar'
+                  value={marca}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_marca(e.target.value)}
+                  size="small"
+                />
             </Grid>
-          </Grid>
 
-          <Grid item xs={2} sx={{
-            display:'flex',
-            justifyContent: 'center',
-            alignItems:'center',
-            gap:1
-            }} >
-            <FormLabel htmlFor='placa'>
-              Placa:
-            </FormLabel>
-            <Grid item xs={8}>
-              <TextField
-                fullWidth
-                id='placa'
-                placeholder='Buscar'
-                size="small"
-              />
+            <Grid item xs={12} md={1.8} sx={{
+              display:'flex',
+              justifyContent: 'center',
+              alignItems:'center',
+              }} >
+                <TextField
+                  label='Placa:'
+                  fullWidth
+                  value={placa}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_placa(e.target.value)}
+                  placeholder='Buscar'
+                  size="small"
+                />
             </Grid>
-          </Grid>
-          
-          <Grid item xs={1} sx={{
-            display:'flex',
-            justifyContent: 'center',
-            alignItems:'center',
-            gap:1
-            }} >
-            <Button
-              color='primary'
-              variant='contained'
-              startIcon={<SearchIcon />}
-              onClick={() => {}}
-            >
-              Buscar
-            </Button>
-          </Grid>
+            
+            <Grid item xs={12} md={3} sx={{
+              display:'flex',
+              justifyContent: 'center',
+              alignItems:'center'
+              }} >
+              <Button
+                fullWidth
+                color='primary'
+                variant='contained'
+                startIcon={<SearchIcon />}
+                type='submit'
+              >
+                Buscar
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={2} sx={{
+              display:'flex',
+              justifyContent: 'center',
+              alignItems:'center',
+              }} >
+              <Button
+                fullWidth
+                color="inherit"
+                variant="outlined"
+                startIcon={<CleanIcon />}
+                onClick={limpiar_form_vehiculos}
+              >
+                Limpiar
+              </Button>
+            </Grid>
         </Grid>
-      </Grid>
+      </Box>
+
 
       <Grid container sx={{
           display:'flex',
           justifyContent:'center',
           width:'100%'
         }}>
-        <TableBusquedaVehiculos />
+        <TableBusquedaVehiculos
+          set_vehiculo_placa={set_vehiculo_placa}
+          set_id_hoja_vida_vehiculo={set_id_hoja_vida_vehiculo}
+          data_busqueda_vehiculos={data_busqueda_vehiculos}
+        />
       </Grid>
     </Grid>
   );
