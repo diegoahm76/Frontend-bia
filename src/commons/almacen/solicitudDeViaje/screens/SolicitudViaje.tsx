@@ -17,7 +17,7 @@ import { control_error } from '../../../../helpers';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SolicitudViaje: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [mostrar_solicitud_viaje,set_mostrar_solicitud_viaje] = useState<boolean>(false);
+  const [mostrar_solicitud_viaje, set_mostrar_solicitud_viaje] = useState<boolean>(false);
   const [fecha_inicio, set_fecha_inicio] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
   const [fecha_fin, set_fecha_fin] = useState<Dayjs>(dayjs());
@@ -25,9 +25,9 @@ const SolicitudViaje: React.FC = () => {
   const [estado, set_estado] = useState<string>("");
   const [msj_error_estado, set_msj_error_estado] = useState<string>("");
   const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
-  const [accion, set_accion ] = useState<string>('');
+  const [accion, set_accion] = useState<string>('');
   const [municipios, set_municipios] = useState<any>([])
-  
+
 
   const [data_solicitudes_viajes, set_data_solicitudes_viajes] = useState<data_solicitud_viaje[]>([]);
   const [id_solicitud_editar, set_id_solicitud_editar] = useState<number>(0);
@@ -78,18 +78,18 @@ const SolicitudViaje: React.FC = () => {
    * 
    * @returns {void}
    */
-  const obtener_municipios: ()=>void = async () => {
+  const obtener_municipios: () => void = async () => {
     dispatch(listar_municipios()).then((response: { success: boolean, detail: string, data: any }) => {
-        set_municipios(response);
-        return;
+      set_municipios(response);
+      return;
     })
   }
 
   // Efecto secundario que se ejecuta al montar el componente para obtener la lista de municipios
-  useEffect(()=>{
+  useEffect(() => {
     obtener_municipios();
-  },[])
- 
+  }, [])
+
 
 
   /**
@@ -99,32 +99,35 @@ const SolicitudViaje: React.FC = () => {
   */
   const obtener_solicitudes_fc: () => void = () => {
     dispatch(obtener_solicitudes()).then((response: any) => {
-      set_data_solicitudes_viajes(
-        response.data.map((solicitud: data_solicitud_viaje) => {
-          const municipio_encontrado = municipios.find(
-            ([codigo]: any) => codigo === solicitud.cod_municipio
-          );
-          const nombre_municipio = municipio_encontrado ? municipio_encontrado[1] : '';
-          
-          return {
-          estado_solicitud:
-            solicitud.estado_solicitud === 'ES'
-              ? 'En espera'
-              : solicitud.estado_solicitud === 'RE'
-              ? 'Respondida'
-              : solicitud.estado_solicitud === 'RC'
-              ? 'Rechazada'
-              : solicitud.estado_solicitud === 'FN' && 'Finalizada',
-          fecha_solicitud: dayjs(solicitud.fecha_solicitud).format(
-            'DD/MM/YYYY'
-          ),
-          nro_pasajeros: solicitud.nro_pasajeros,
-          fecha_partida: dayjs(solicitud.fecha_partida).format('DD/MM/YYYY'),
-          fecha_retorno: dayjs(solicitud.fecha_retorno).format('DD/MM/YYYY'),
-          cod_municipio: nombre_municipio,
-          id_solicitud: solicitud.id_solicitud_viaje,
-        }})
-      );
+      if (response.data.length !== 0) {
+        set_data_solicitudes_viajes(
+          response.data.map((solicitud: data_solicitud_viaje) => {
+            const municipio_encontrado = municipios.find(
+              ([codigo]: any) => codigo === solicitud.cod_municipio
+            );
+            const nombre_municipio = municipio_encontrado ? municipio_encontrado[1] : '';
+
+            return {
+              estado_solicitud:
+                solicitud.estado_solicitud === 'ES'
+                  ? 'En espera'
+                  : solicitud.estado_solicitud === 'RE'
+                    ? 'Respondida'
+                    : solicitud.estado_solicitud === 'RC'
+                      ? 'Rechazada'
+                      : solicitud.estado_solicitud === 'FN' && 'Finalizada',
+              fecha_solicitud: dayjs(solicitud.fecha_solicitud).format(
+                'DD/MM/YYYY'
+              ),
+              nro_pasajeros: solicitud.nro_pasajeros,
+              fecha_partida: dayjs(solicitud.fecha_partida).format('DD/MM/YYYY'),
+              fecha_retorno: dayjs(solicitud.fecha_retorno).format('DD/MM/YYYY'),
+              cod_municipio: nombre_municipio,
+              id_solicitud: solicitud.id_solicitud_viaje,
+            }
+          })
+        );
+      }
     })
   }
 
@@ -143,26 +146,40 @@ const SolicitudViaje: React.FC = () => {
       fecha_inicio.format('YYYY-MM-DDT00:00:ss.SSSSSS'),
       fecha_fin.format('YYYY-MM-DDT23:59:59.SSSSSS')))
       .then((response: any) => {
-      set_data_solicitudes_viajes(
-        response.data.map((solicitud: data_solicitud_viaje) => ({
-          estado_solicitud:
-            solicitud.estado_solicitud === 'ES'
-              ? 'En espera'
-              : solicitud.estado_solicitud === 'RE'
-              ? 'Respondida'
-              : solicitud.estado_solicitud === 'RC'
-              ? 'Rechazada'
-              : solicitud.estado_solicitud === 'FN' && 'Finalizada',
-          fecha_solicitud: dayjs(solicitud.fecha_solicitud).format(
-            'DD/MM/YYYY'
-          ),
-          nro_pasajeros: solicitud.nro_pasajeros,
-          fecha_partida: dayjs(solicitud.fecha_partida).format('DD/MM/YYYY'),
-          fecha_retorno: dayjs(solicitud.fecha_retorno).format('DD/MM/YYYY'),
-          cod_municipio: municipios && municipios.find(([codigo, name]:any) => codigo === solicitud.cod_municipio && name),
-        }))
-      );
-    })
+        console.log(response);
+        if (response.data.length === 0) {
+          control_error('No se encontraron solicitudes con filtros seleccionados');
+          set_data_solicitudes_viajes([]);
+        } else {
+          set_data_solicitudes_viajes(
+            response.data.map((solicitud: data_solicitud_viaje) => {
+              const municipio_encontrado = municipios.find(
+                ([codigo]: any) => codigo === solicitud.cod_municipio
+              );
+              const nombre_municipio = municipio_encontrado ? municipio_encontrado[1] : '';
+
+              return ({
+                estado_solicitud:
+                  solicitud.estado_solicitud === 'ES'
+                    ? 'En espera'
+                    : solicitud.estado_solicitud === 'RE'
+                      ? 'Respondida'
+                      : solicitud.estado_solicitud === 'RC'
+                        ? 'Rechazada'
+                        : solicitud.estado_solicitud === 'FN' && 'Finalizada',
+                fecha_solicitud: dayjs(solicitud.fecha_solicitud).format(
+                  'DD/MM/YYYY'
+                ),
+                nro_pasajeros: solicitud.nro_pasajeros,
+                fecha_partida: dayjs(solicitud.fecha_partida).format('DD/MM/YYYY'),
+                fecha_retorno: dayjs(solicitud.fecha_retorno).format('DD/MM/YYYY'),
+                cod_municipio: nombre_municipio,
+                id_solicitud: solicitud.id_solicitud_viaje,
+              })
+            })
+          );
+        }
+      })
   }
 
   /**
@@ -170,18 +187,18 @@ const SolicitudViaje: React.FC = () => {
   * 
   * @returns Promise<boolean | undefined>
   */
-  const validacion_formulario: ()=>  Promise<boolean | undefined> = async() => {
+  const validacion_formulario: () => Promise<boolean | undefined> = async () => {
     const fecha_manana = dayjs().add(0, 'day');
 
-    if(fecha_inicio.isValid() === false){
+    if (fecha_inicio.isValid() === false) {
       set_msj_error_fecha_inicio('Ingrese una fecha de inicio válida');
       control_error('Ingrese una fecha de inicio válida')
       return false;
-    } else if (fecha_inicio.isAfter(fecha_manana)){
+    } else if (fecha_inicio.isAfter(fecha_manana)) {
       set_msj_error_fecha_inicio('La fecha de inicio no puede ser mayor a la de hoy');
       control_error('La fecha de inicio no pude ser mayor a la de hoy');
       return false;
-    } else if(fecha_fin.isBefore(fecha_inicio)){
+    } else if (fecha_fin.isBefore(fecha_inicio)) {
       set_msj_error_fecha_inicio('La fecha final no puede ser menor a la fecha inicio');
       control_error('La fecha final no puede ser menor a la fecha inicio');
       return false;
@@ -195,22 +212,22 @@ const SolicitudViaje: React.FC = () => {
   * @param e - Objeto que representa el evento de envío del formulario.
   * @returns void
   */
-  const handle_submit: (e: React.FormEvent) => void = async(e) => {
+  const handle_submit: (e: React.FormEvent) => void = async (e) => {
     e.preventDefault();
     const formulario_valido = await validacion_formulario();
-    if(formulario_valido){
+    if (formulario_valido) {
       obtener_solicitudes_params_fc();
     }
   }
-  
+
   /**
   * Efecto secundario que se ejecuta al cambiar el estado de 'refrescar_tabla'.
   */
-  useEffect( ()=>{
-    obtener_solicitudes_fc(); 
-  },[refrescar_tabla,municipios]);
+  useEffect(() => {
+    obtener_solicitudes_fc();
+  }, [refrescar_tabla, municipios]);
 
-  
+
   return (
     <>
       <Grid
@@ -227,15 +244,15 @@ const SolicitudViaje: React.FC = () => {
         }}
       >
         <Title title='Solicitudes de viajes' />
-        <Grid 
-          container 
+        <Grid
+          container
           sx={{
             marginTop: '10px'
           }}
           spacing={2}
         >
           <form
-            style={{width:'100%',display:'flex', gap:'20px', margin:'10px 15px 0px'}}
+            style={{ width: '100%', display: 'flex', gap: '20px', margin: '10px 15px 0px' }}
             onSubmit={handle_submit}
           >
             <Grid item xs={12} sm={2}>
@@ -248,10 +265,10 @@ const SolicitudViaje: React.FC = () => {
                   onChange={cambio_estado}
                   error={msj_error_estado !== ""}
                 >
-                    <MenuItem value={'ES'}>En Espera</MenuItem>
-                    <MenuItem value={'RE'}>Respondida</MenuItem>
-                    <MenuItem value={'RC'}>Rechazada</MenuItem>
-                    <MenuItem value={'FN'}>Finalizada</MenuItem>
+                  <MenuItem value={'ES'}>En Espera</MenuItem>
+                  <MenuItem value={'RE'}>Respondida</MenuItem>
+                  <MenuItem value={'RC'}>Rechazada</MenuItem>
+                  <MenuItem value={'FN'}>Finalizada</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -274,7 +291,7 @@ const SolicitudViaje: React.FC = () => {
                 />
               </LocalizationProvider>
             </Grid>
-        
+
             <Grid item xs={12} sm={2}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
@@ -307,15 +324,15 @@ const SolicitudViaje: React.FC = () => {
           </form>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>
-            <TableSolicitudViajes 
+            <TableSolicitudViajes
               set_accion={set_accion}
-              set_refrescar_tabla={set_refrescar_tabla} 
-              refrescar_tabla={refrescar_tabla}  
-              data_row_solicitud_viaje={data_solicitudes_viajes} 
+              set_refrescar_tabla={set_refrescar_tabla}
+              refrescar_tabla={refrescar_tabla}
+              data_row_solicitud_viaje={data_solicitudes_viajes}
               obtener_solicitudes_fc={obtener_solicitudes_fc}
               set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje}
               set_id_solicitud_editar={set_id_solicitud_editar}
-              />
+            />
           </Grid>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>
@@ -324,10 +341,10 @@ const SolicitudViaje: React.FC = () => {
                 color='success'
                 variant='contained'
                 startIcon={<AddIcon />}
-                onClick={()=>{
+                onClick={() => {
                   set_accion('crear')
                   set_mostrar_solicitud_viaje(true)
-                  }
+                }
                 }
               >
                 Crear nueva solicitud
@@ -337,17 +354,17 @@ const SolicitudViaje: React.FC = () => {
         </Grid>
       </Grid>
 
-      {mostrar_solicitud_viaje && 
+      {mostrar_solicitud_viaje &&
         <SolicitarViaje
           id_solicitud_editar={id_solicitud_editar}
           accion={accion}
-          set_refrescar_tabla={set_refrescar_tabla} 
-          refrescar_tabla={refrescar_tabla} 
-          set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje}/>
+          set_refrescar_tabla={set_refrescar_tabla}
+          refrescar_tabla={refrescar_tabla}
+          set_mostrar_solicitud_viaje={set_mostrar_solicitud_viaje} />
       }
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default SolicitudViaje;
