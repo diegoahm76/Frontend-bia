@@ -7,6 +7,10 @@ import { Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useRef } from 'react';
 import type { DownloadButtonProps } from './types/types';
+import {
+  DEFAULT_BETA_DOWNLOAD_FILES_URL,
+  DEFAULT_PROD_DOWNLOAD_FILES_URL,
+} from '../../api/axios';
 
 export const DownloadButton = ({
   fileUrl,
@@ -30,14 +34,18 @@ export const DownloadButton = ({
           fileUrl &&
           fileUrl.includes(
             process.env.NODE_ENV === 'development'
-              ? process.env.REACT_APP_DOWNLOAD_FILES_BETA || 'https://back-end-bia-beta.up.railway.app'
-              : process.env.REACT_APP_DOWNLOAD_FILES_PROD || 'https://bia.cormacarena.gov.co'
+              ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+                  `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
+              : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+                  `${DEFAULT_PROD_DOWNLOAD_FILES_URL}`
           )
             ? fileUrl
             : `${
                 process.env.NODE_ENV === 'development'
-                  ? process.env.REACT_APP_DOWNLOAD_FILES_BETA || 'https://back-end-bia-beta.up.railway.app'
-                  : process.env.REACT_APP_DOWNLOAD_FILES_PROD || 'https://bia.cormacarena.gov.co'
+                  ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
+                    `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
+                  : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
+                    `${DEFAULT_PROD_DOWNLOAD_FILES_URL}`
               }${fileUrl}`
         }
         ref={linkRef}
@@ -55,9 +63,6 @@ export const DownloadButton = ({
     </>
   );
 };
-
-
-
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */

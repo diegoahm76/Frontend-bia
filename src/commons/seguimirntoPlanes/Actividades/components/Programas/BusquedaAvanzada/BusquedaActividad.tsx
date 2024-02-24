@@ -67,6 +67,12 @@ export const BusquedaActividad: React.FC = () => {
       width: 250,
     },
     {
+      field: 'numero_producto',
+      headerName: 'Número de Producto',
+      sortable: true,
+      width: 100,
+    },
+    {
       field: 'numero_actividad',
       headerName: 'Número de Actividad',
       sortable: true,

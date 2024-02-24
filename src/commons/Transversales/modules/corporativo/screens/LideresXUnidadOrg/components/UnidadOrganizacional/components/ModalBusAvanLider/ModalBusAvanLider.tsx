@@ -254,9 +254,10 @@ export const BusqueAsignacionesLiderModal = ({
                     field: { onChange, value, ref },
                     fieldState: { error },
                   }) => (
+                    <div>
                     <Select
                       //inputRef={ref}
-                      options={tiposDocumentos} // options should be an array of objects with 'value' and 'label' properties
+                      options={tiposDocumentos} // options should be an array of objects with 'value' and
                       value={value} // set selected value
                       onChange={onChange} // update value when option is selected
                       isSearchable
@@ -268,6 +269,20 @@ export const BusqueAsignacionesLiderModal = ({
                         }),
                       }}
                     />
+                    <label>
+                    <small
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 'thin',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        marginLeft: '0.25rem',
+                      }}
+                    >
+                      Tipo de documento
+                    </small>
+                  </label>
+                </div>
                   )}
                 />
               </Grid>

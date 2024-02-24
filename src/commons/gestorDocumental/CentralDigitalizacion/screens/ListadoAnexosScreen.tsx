@@ -15,6 +15,7 @@ import {
   control_error,
   get_digitalization_request_id_service,
   get_digitalization_request_id_service_otros,
+  get_digitalization_opas,
   get_list_request_status_service,
   get_request_types_service,
   response_request_service,
@@ -49,8 +50,6 @@ export function ListadoAnexosScreen(): JSX.Element {
   const initial_values = (): void => { };
 
   useEffect(() => {
-
-
     if (id !== null && id !== undefined) {
 
 
@@ -61,13 +60,12 @@ export function ListadoAnexosScreen(): JSX.Element {
       
         return ;
       } 
-
+      
+    if (digitization_request.nombre_tipo_solicitud === "OPAS") {
+      void dispatch(get_digitalization_opas(id));
+    } else if (id !== null && id !== undefined) {
       void dispatch(get_digitalization_request_id_service(id));
     }
-
-
-    
-
     void dispatch(get_request_types_service());
     void dispatch(get_list_request_status_service());
   }, []);
@@ -188,7 +186,6 @@ return
             title={`Digitalización de ${digitization_request.nombre_tipo_solicitud} - N° Radicado ${digitization_request.numero_radicado}`}
           ></Title>
         </Grid>
-
         {digitization_request.id_solicitud_de_digitalizacion !== null && (
           <SolicitudSeleccionada
             control_solicitud={control_solicitud}

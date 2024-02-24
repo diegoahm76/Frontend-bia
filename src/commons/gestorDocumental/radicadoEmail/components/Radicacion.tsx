@@ -28,14 +28,14 @@ export const Radicacion: React.FC<IProps> = ({ handleExit, activeStep, handleBac
 
     const [opcionesRadicacion, setOpcionesRadicacion] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
-  const fetchOpcionesRadicacion = async () => {
-            try {
-                const response = await api.get('/gestor/choices/radicacion-correos/');
-                setOpcionesRadicacion(response.data);
-            } catch (error) {
-                console.error('Error al obtener las opciones de radicación:', error);
-            }
-        };
+    const fetchOpcionesRadicacion = async () => {
+        try {
+            const response = await api.get('/gestor/choices/radicacion-correos/');
+            setOpcionesRadicacion(response.data);
+        } catch (error) {
+            console.error('Error al obtener las opciones de radicación:', error);
+        }
+    };
 
 
     useEffect(() => {
@@ -81,7 +81,7 @@ export const Radicacion: React.FC<IProps> = ({ handleExit, activeStep, handleBac
                             </Select>
                         </FormControl>
                     </Grid>
-
+                    {/* {selectedOption} */}
                     <Grid item xs={12} sm={12}>
 
                     </Grid>
@@ -99,7 +99,7 @@ export const Radicacion: React.FC<IProps> = ({ handleExit, activeStep, handleBac
                         </Button>
 
                     </Grid>
-                    <Grid item xs={4} sm={2}>
+                    {/* <Grid item xs={4} sm={2}>
                         <Button
                             color='success'
                             variant='contained'
@@ -107,11 +107,33 @@ export const Radicacion: React.FC<IProps> = ({ handleExit, activeStep, handleBac
                             fullWidth
                             onClick={() => {
                                 navigate('/app/gestor_documental/pqrsdf/crear_pqrsdf/');
+                                navigate(' /gestor_documental/solicitudes_otros');
+
+                               
                             }} >
                             aceptar
                         </Button>
+                    </Grid> */}
+                    <Grid item xs={4} sm={2}>
+                        <Button
+                            color='success'
+                            variant='contained'
+                            startIcon={<SaveIcon />}
+                            fullWidth
+                            onClick={() => {
+                                if (selectedOption === 'PQ') {
+                                    navigate('/app/gestor_documental/pqrsdf/crear_pqrsdf/');
+                                } else if (selectedOption === 'OT') {
+                                    navigate('/app/gestor_documental/solicitudes_otros');
+                                }
+                            }}
+                        >
+                            aceptar
+                        </Button>
+
                     </Grid>
-                 
+
+
 
 
 

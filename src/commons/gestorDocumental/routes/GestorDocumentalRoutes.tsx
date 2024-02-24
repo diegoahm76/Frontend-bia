@@ -45,6 +45,8 @@ import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
 import { RutasCentralDigitalizacionOtros } from '../centraldigitalizacionOtros/routes/RutasCentralDigitalizacionOtros';
 import { RutasTransferenciaDocumental } from '../transferenciaDocumental/routes/RutasTransferenciaDocumental';
 import { ConsultaEstadoSolicitudes } from '../consulltaEstadoSolicitudes/routes/ConsultaEstadoSolicitudes.routes';
+import { Digitalizacion_opas_Routes } from '../digitalizacionOpas/routes/OpasRutes';
+import { Ejemplo } from './components/Ejemplo';
  
 const routes = [
   {
@@ -215,11 +217,11 @@ const routes = [
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
   },
-  // {
-  //   path: 'digitalizacion_opas/',
-  //   name: 'digitalizacion_opas',
-  //   component: () => <Digitalizacion_opas_Routes />,
-  // },
+  {
+    path: 'digitalizacion_opas/',
+    name: 'digitalizacion_opas',
+    component: () => <Digitalizacion_opas_Routes />,
+  },
   
   {
     path: 'Pqrsdf/complementos/',
@@ -283,7 +285,13 @@ const routes = [
     path: 'transferencia_documental/',
     name: 'transferencia_documental',
     component: () => <RutasTransferenciaDocumental />,
+  },
+  {
+    path: 'ejemploResponsive/',
+    name: 'ejemploResponsive',
+    component: () => <Ejemplo />,
   }
+
 
 ];
 

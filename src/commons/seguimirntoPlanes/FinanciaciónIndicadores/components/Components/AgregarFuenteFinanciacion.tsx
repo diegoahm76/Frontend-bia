@@ -103,18 +103,6 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
     set_value_fuente('valor_total', valor_total);
   }, [valor_total]);
 
-  // valiacion de que el valor total no super la sumatoria del array de rows_metas que es un array de objetos y la propiedad valor_meta es un number
-  const [valorTotalValido, setValorTotalValido] = useState(true);
-
-  useEffect(() => {
-    // Calcula la suma de los valores_meta de las rows_metas
-    const sumaValoresMeta = rows_metas.reduce(
-      (acc, row: any) => acc + (row.valor_meta || 0),
-      0
-    );
-    // Compara la suma con el valor total del formulario
-    setValorTotalValido(sumaValoresMeta >= data_watch_fuente.valor_total);
-  }, [rows_metas, data_watch_fuente.valor_total]);
 
   return (
     <>
@@ -438,7 +426,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
               )}
             />
           </Grid>
-          {valorTotalValido ? (
+          {/* {valorTotalValido ? (
             <Grid item xs={12}>
               <Grid container justifyContent="center" textAlign="center">
                 <Alert icon={false} severity="error">
@@ -448,7 +436,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 </Alert>
               </Grid>
             </Grid>
-          ) : null}
+          ) : null} */}
           {/* <Grid item xs={12} sm={6}>
             <Controller
               name="id_indicador"
@@ -536,7 +524,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
                 variant="contained"
                 color="success"
                 type="submit"
-                disabled={is_savingd_fuente || !valorTotalValido}
+                disabled={is_savingd_fuente}
                 startIcon={<SaveIcon />}
                 loading={is_savingd_fuente}
               >

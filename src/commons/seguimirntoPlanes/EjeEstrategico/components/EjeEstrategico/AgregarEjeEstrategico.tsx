@@ -49,6 +49,8 @@ export const AgregarEjeEstrategico: React.FC = () => {
         nombre_plan: eje_estrategico.nombre_plan,
         nombre_tipo_eje: eje_estrategico.nombre_tipo_eje,
         nombre: eje_estrategico.nombre,
+        nombre_programa: eje_estrategico.nombre_programa,
+        id_programa: eje_estrategico.id_programa,
         id_plan: eje_estrategico.id_plan,
         id_tipo_eje: eje_estrategico.id_tipo_eje,
       });

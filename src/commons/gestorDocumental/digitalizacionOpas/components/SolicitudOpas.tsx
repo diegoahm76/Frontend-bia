@@ -6,16 +6,18 @@ import type React from 'react';
 import { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Title } from '../../../../components';
-import SearchIcon from '@mui/icons-material/Search';
 import { miEstilo } from '../../Encuesta/interfaces/types';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
-import { Button, ButtonGroup, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, } from '@mui/material';
-import { control_error, control_success } from '../../../../helpers';
+import { Button, ButtonGroup, Divider, Grid, TextField, } from '@mui/material';
+import { control_success } from '../../../../helpers';
 import { api } from '../../../../api/axios';
 import { showAlert } from '../../../../utils/showAlert/ShowAlert';
+import { useAppSelector } from '../../../../hooks';
+import { useForm } from 'react-hook-form';
+import { IObjExhibit } from '../../CentralDigitalizacion/interfaces/central_digitalizacion';
+// import { cargarAsignaciones, cargarestado, cargarorganigrama, fetchSpqrs, fetchTipoPQRSDF } from '../services/consultaExterno.service';
+
 
 
 export interface organigrama {
@@ -59,6 +61,39 @@ export interface FormData {
 
 
 export const SolicitudOpas: React.FC = () => {
+
+
+
+
+    const { 
+        digitization_request, 
+    } = useAppSelector((state) => state.central_digitalizacion_slice);
+    const {
+    } = useForm<IObjExhibit>();
+
+
+    useEffect(() => {
+        console.log("2222222222");
+        console.log(digitization_request);
+    }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
     const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
 
     const initialFormData: FormData = {
@@ -79,7 +114,6 @@ export const SolicitudOpas: React.FC = () => {
 
     const columns = [
         // { field: 'Id_PQRSDF', headerName: 'Id_PQRSDF  ', width: 220, flex: 1, },
-        { field: 'Tipo de Solicitud', headerName: 'Tipo de Solicitud', width: 220, flex: 1, },
         { field: 'tipo_pqrsdf_descripcion', headerName: 'Tipo de PQRSDF', width: 220, flex: 1, },
         { field: 'Titular', headerName: 'Titular', width: 220, flex: 1, },
         { field: 'Asunto', headerName: 'Asunto', width: 220, flex: 1, },
@@ -100,11 +134,12 @@ export const SolicitudOpas: React.FC = () => {
             width: 200,
             flex: 1,
             renderCell: (params: any) => (
-                <DownloadButton
-                    condition={params.row.URL_Documento === null}
-                    fileUrl={params.row.Archivo.ruta_archivo}
-                    fileName={params?.value?.Id_PQRSDF}
-                />
+                <Button
+                    color='info'
+                    variant='contained'
+                >
+                    .
+                </Button>
             )
         },
     ];
@@ -154,49 +189,49 @@ export const SolicitudOpas: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="tutular"
+                        label="Titular"
                         name="tutular"
                         variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleInputChange}
-                        value={formData.tutular}
+                        value={digitization_request.titular}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="fecha_solicitud"
+                        label="Fecha de solicitud"
                         name="fecha_solicitud"
                         variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleInputChange}
-                        value={formData.fecha_solicitud}
+                        value={digitization_request.fecha_solicitud}
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="n_anexos"
+                        label="N anexos"
                         name="n_anexos"
                         variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleInputChange}
-                        value={formData.n_anexos}
+                        value={digitization_request.numero_anexos}
                     />
                 </Grid>
 
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="nombre_opa"
+                        label="Nombre de OPA"
                         name="nombre_opa"
                         variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleInputChange}
-                        value={formData.nombre_opa}
+                        value={digitization_request.nombre_tipo_solicitud}
                     />
                 </Grid>
 
@@ -249,36 +284,37 @@ export const SolicitudOpas: React.FC = () => {
 
 
 
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <Button
                         color='success'
                         variant='contained'
                     >
-                        Digitalizacion incompleta 
+                        Digitalizacion incompleta
                     </Button>
                 </Grid>
 
-                <Grid item xs={12} sm={4}>
-
-                    <Button
-                        color='success'
-                        variant='contained'
-                    >
-                        Responder digitalizacion 
-                    </Button>
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
 
                     <Button
                         color='success'
                         variant='contained'
                     >
-                        Responder digitalizacion incompleta 
+                        Responder digitalizacion
                     </Button>
                 </Grid>
 
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
+
+                    <Button
+
+                        color='success'
+                        variant='contained'
+                    >
+                        Responder digitalizacion incompleta
+                    </Button>
+                </Grid>
+
+                <Grid item xs={12} sm={3}>
 
                     <Button
                         color='error'
@@ -286,7 +322,7 @@ export const SolicitudOpas: React.FC = () => {
 
 
                     >
-                        Salir 
+                        Salir
                     </Button>
                 </Grid>
 
@@ -294,3 +330,6 @@ export const SolicitudOpas: React.FC = () => {
         </>
     );
 };
+
+
+
