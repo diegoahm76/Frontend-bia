@@ -50,24 +50,23 @@ export function ListadoAnexosScreen(): JSX.Element {
   const initial_values = (): void => { };
 
   useEffect(() => {
+
     if (id !== null && id !== undefined) {
-
-
-
       if (digitization_request.nombre_tipo_solicitud === "OTROS") {
         void dispatch(get_digitalization_request_id_service_otros(id));
-
-      
         return ;
       } 
       
+
+
     if (digitization_request.nombre_tipo_solicitud === "OPAS") {
       void dispatch(get_digitalization_opas(id));
     } else if (id !== null && id !== undefined) {
       void dispatch(get_digitalization_request_id_service(id));
-    }
+    };
     void dispatch(get_request_types_service());
     void dispatch(get_list_request_status_service());
+  }
   }, []);
 
   useEffect(() => {

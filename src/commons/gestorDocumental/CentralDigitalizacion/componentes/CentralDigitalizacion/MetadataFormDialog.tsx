@@ -401,7 +401,7 @@ const MetadataFormDialog = ({
               void dispatch(
                 edit_metadata_service_otros(
                   digitization_request.id_solicitud_de_digitalizacion ?? 0,
-                  pdfFile === null ? exhibit.exhibit_link : pdfFile,
+                  pdfFile === null ? exhibit.exhibit_link : null,
                   datos_totales_actualizar
                 )
               )
