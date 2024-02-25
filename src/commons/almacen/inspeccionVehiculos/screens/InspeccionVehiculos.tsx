@@ -2,22 +2,48 @@ import { Button, FormLabel, Grid, OutlinedInput, Radio, TextField } from "@mui/m
 import { Title } from "../../../../components";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ElementosInspeccionar from "../components/ElementosInspeccionar";
 import { cambio_input_radio } from "../thunsk/cambio_input_radio";
+import { useAppDispatch } from "../../../../hooks";
+import { obtener_nombres_conductor } from "../thunsk/inspeccion_vehiculos";
+import { control_error } from "../../../../helpers";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const InspeccionVehiculos = () => {
+  const dispatch = useAppDispatch();
   const [fecha_inspeccion, set_fecha_inspeccion] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_inspeccion, set_msj_error_fecha_inspeccion] = useState<string>("");
   const [vehiculo_agendable, set_vehiculo_agendable] = useState<string>('true');
   const [kilometraje, set_kilometraje] = useState<string>("");
   const [mensaje_error_kilometraje, set_mensaje_error_kilometraje] = useState<string>("");
+  const [nombres_conductor, set_nombres_conductor] = useState<string>('');
+
+  const obtener_nombres_conductor_fc: () => void = () => {
+    dispatch(obtener_nombres_conductor())
+      .then((response: any) => {
+        if (!response.success) {
+          control_error('No se encontraron los nombres del conductor');
+          set_nombres_conductor('');
+        } else {
+          console.log(response);          
+          set_nombres_conductor(response.data.nombre_completo);
+        }
+      })
+  }
+
+  useEffect(() => {
+    obtener_nombres_conductor_fc();
+  }, [])
+
+  useEffect(() => {
+    console.log(nombres_conductor);    
+  }, [nombres_conductor])
 
 
   const cambio_fecha_inspeccion = (date: Dayjs | null): void => {
@@ -71,10 +97,10 @@ const InspeccionVehiculos = () => {
           <Grid item xs={8}>
             <TextField
               fullWidth
+              value={nombres_conductor}
               id="nombres_conductor"
               required
               disabled
-              defaultValue="Juan Felipe Rodriguez"
               size="small"
             />
           </Grid>
