@@ -24,6 +24,8 @@ export const useEjeEstrategicoHook = (): any => {
       nombre_plan: '',
       nombre_tipo_eje: '',
       nombre: '',
+      nombre_programa: '',
+      id_programa: null,
       id_tipo_eje: null,
     },
   });
@@ -37,6 +39,8 @@ export const useEjeEstrategicoHook = (): any => {
       nombre_plan: '',
       nombre_tipo_eje: '',
       nombre: '',
+      nombre_programa: '',
+      id_programa: null,
       id_plan: null,
       id_tipo_eje: null,
     });
@@ -47,19 +51,20 @@ export const useEjeEstrategicoHook = (): any => {
     useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_eje_estrategico } = useContext(DataContextEjeEstrategico);
+  const { id_plan, id_programa, fetch_data_eje_estrategico } = useContext(DataContextEjeEstrategico);
 
   // declaracion redux
   const {
-    plan: { id_plan }, eje_estrategico: { id_eje_estrategico },
+    eje_estrategico: { id_eje_estrategico },
   } = useAppSelector((state) => state.planes);
 
   const onsubmit_eje_estrategico = handleSubmit_eje_estrategico(
     async (data) => {
       try {
+        set_is_saving_eje_estrategico(true);
         //  console.log('')(data, 'data');
         data.id_plan = id_plan;
-        set_is_saving_eje_estrategico(true);
+        data.id_programa = id_programa;
         await post_eje_estrategico(data as IEjeEstrategico);
         control_success('Se creó correctamente');
         await limpiar_formulario_eje_estrategico();

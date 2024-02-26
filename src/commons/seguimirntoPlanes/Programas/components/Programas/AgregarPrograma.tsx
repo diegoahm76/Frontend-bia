@@ -6,6 +6,7 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
+  MenuItem,
   TextField,
   Tooltip,
   Typography,
@@ -16,7 +17,7 @@ import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useprogramaHook } from '../../hooks/useprogramaHook';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 //* FECHAS
@@ -26,6 +27,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import InfoIcon from '@mui/icons-material/Info';
 import dayjs from 'dayjs';
+import { DataContextprograma } from '../../context/context';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarPrograma: React.FC = () => {
@@ -49,9 +51,16 @@ export const AgregarPrograma: React.FC = () => {
     handle_change_fecha_creacion,
   } = useprogramaHook();
 
+  const { sector_selected, fetch_data_sector } =
+    useContext(DataContextprograma);
+
   const dispatch = useAppDispatch();
 
   const { mode, programa } = useAppSelector((state) => state.planes);
+
+  useEffect(() => {
+    fetch_data_sector();
+  }, []);
 
   useEffect(() => {
     if (mode.crear) {
@@ -67,10 +76,12 @@ export const AgregarPrograma: React.FC = () => {
         id_programa: programa.id_programa,
         nombre_plan: programa.nombre_plan,
         nombre_programa: programa.nombre_programa,
+        numero_programa: programa.numero_programa,
         porcentaje_1: programa.porcentaje_1,
         porcentaje_2: programa.porcentaje_2,
         porcentaje_3: programa.porcentaje_3,
         porcentaje_4: programa.porcentaje_4,
+        id_sector: programa.id_sector,
         id_plan: programa.id_plan,
         fecha_creacion: programa.fecha_creacion,
         cumplio: programa.cumplio,
@@ -147,7 +158,7 @@ export const AgregarPrograma: React.FC = () => {
               <Grid item xs={12} sm={6}></Grid>
             </>
           ) : null}
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <Controller
               name="nombre_programa"
               control={control_programa}
@@ -168,6 +179,31 @@ export const AgregarPrograma: React.FC = () => {
                     errors_programa.nombre_programa
                       ? 'Es obligatorio ingresar un nombre'
                       : 'Ingrese un nombre'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="numero_programa"
+              control={control_programa}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Número del programa"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  error={!!errors_programa.nombre_programa}
+                  helperText={
+                    errors_programa.nombre_programa
+                      ? 'Es obligatorio ingresar un número de programa'
+                      : 'Ingrese un número de programa'
                   }
                 />
               )}
@@ -297,6 +333,37 @@ export const AgregarPrograma: React.FC = () => {
               )}
             />
           </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <Controller
+              name="id_sector"
+              control={control_programa}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Sector"
+                  size="small"
+                  margin="dense"
+                  select
+                  fullWidth
+                  required={true}
+                  error={!!errors_programa.id_sector}
+                  helperText={
+                    errors_programa.id_sector
+                      ? 'Es obligatorio ingresar un sector'
+                      : 'Ingrese un sector'
+                  }
+                >
+                  {sector_selected.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
           <Grid
             sx={{
               marginBottom: '10px',
@@ -305,6 +372,7 @@ export const AgregarPrograma: React.FC = () => {
             item
             xs={12}
             sm={6}
+            md={4}
           >
             <Controller
               name="cumplio"

@@ -190,12 +190,12 @@ export const AgregarProyecto: React.FC = () => {
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  // error={!!errors_proyecto.numero_proyecto}
-                  // helperText={
-                  //   errors_proyecto.numero_proyecto
-                  //     ? 'Es obligatorio ingresar un nombre'
-                  //     : 'Ingrese un nombre'
-                  // }
+                  error={!!errors_proyecto.numero_proyecto}
+                  helperText={
+                    errors_proyecto.numero_proyecto
+                      ? 'Es obligatorio ingresar un número de proyecto'
+                      : 'Ingrese un número de proyecto'
+                  }
                 />
               )}
             />

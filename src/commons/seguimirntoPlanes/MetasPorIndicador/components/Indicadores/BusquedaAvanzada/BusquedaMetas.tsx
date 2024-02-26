@@ -112,12 +112,12 @@ export const BusquedaMetas: React.FC = () => {
       sortable: true,
       width: 200,
     },
-    {
-      field: 'avance_fisico',
-      headerName: 'Avance Físico',
-      sortable: true,
-      width: 150,
-    },
+    // {
+    //   field: 'avance_fisico',
+    //   headerName: 'Avance Físico',
+    //   sortable: true,
+    //   width: 150,
+    // },
     {
       field: 'valor_meta',
       headerName: 'VALOR META',

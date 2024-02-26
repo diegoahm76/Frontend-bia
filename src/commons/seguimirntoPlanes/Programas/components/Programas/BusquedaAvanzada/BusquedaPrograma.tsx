@@ -61,6 +61,12 @@ export const BusquedaPrograma: React.FC = () => {
       width: 350,
     },
     {
+      field: 'numero_programa',
+      headerName: 'Número del Programa',
+      sortable: true,
+      width: 150,
+    },
+    {
       field: 'porcentaje_1',
       headerName: 'Porcentaje 1',
       sortable: true,

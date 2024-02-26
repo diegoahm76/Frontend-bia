@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { api } from '../../../../../api/axios';
 import { type Persona } from '../../../../../interfaces/globalModels';
@@ -26,9 +26,12 @@ import {
   get_Opas
 } from '../../store/thunks/centralDigitalizacionThunks';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { OpcionOtrosContext } from '../../context/BusquedaOtrosDigitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DigitalizacionesPendientes = () => {
+
+  const { set_opcion_otros } = useContext(OpcionOtrosContext)
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const {
@@ -245,6 +248,7 @@ const DigitalizacionesPendientes = () => {
 
       if (tipo_solicitud === "OTROS") {
         void dispatch(get_digitalization_requests_service_otros(params));
+        set_opcion_otros(tipo_solicitud)
         // console.log("si se pudo");
         return;
       }
