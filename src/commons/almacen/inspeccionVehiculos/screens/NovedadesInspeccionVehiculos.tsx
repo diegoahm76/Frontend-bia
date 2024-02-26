@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/naming-convention */
 import VehiculosSinNovedad from "./VehiculosSinNovedad";
 import VehiculoConNovedad from "../components/VehiculoConNovedad";
 import RowVehiculo from "../components/RowVehiculo";
@@ -7,7 +9,6 @@ import { interface_vehiculos_sin_novedad } from "../interfaces/types";
 import { useAppDispatch } from "../../../../hooks";
 import { obtener_vehiculos_sin_novedad } from "../thunks/inspeccion_vehiculos";
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const NovedadesInspeccionVehiculo = () => {
   const dispatch = useAppDispatch();
 

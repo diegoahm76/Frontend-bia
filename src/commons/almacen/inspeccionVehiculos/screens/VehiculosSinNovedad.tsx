@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid } from "@mui/material";
 import { Title } from "../../../../components";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -12,7 +14,7 @@ interface props {
   data_vehiculos_sin_novedad: interface_vehiculos_sin_novedad[];
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 const VehiculosSinNovedad: React.FC<props> = ({data_vehiculos_sin_novedad}) => {
 
 /*
