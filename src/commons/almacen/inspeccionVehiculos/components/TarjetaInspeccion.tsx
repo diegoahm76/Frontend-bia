@@ -9,7 +9,7 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 const TarjetaInspeccion: React.FC<Props> = ({children, title}) => {
   return (
-    <Grid item xs={5} sx={{
+    <Grid item xs={12} md={5.9} sx={{
       display:'flex',
       flexDirection:'column',
       alignItems:'start',
@@ -19,7 +19,6 @@ const TarjetaInspeccion: React.FC<Props> = ({children, title}) => {
       boxShadow: '0px 3px 6px #042F4A26',
       paddingX:'20px',
       paddingY:'10px',
-      margin:'20px 0px'
       }}>
       <Grid item sx={{
         width:'100%',
