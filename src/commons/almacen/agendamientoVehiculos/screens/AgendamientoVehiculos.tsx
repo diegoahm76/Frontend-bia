@@ -56,6 +56,7 @@ const AgendamientoVehiculos: React.FC = () => {
   const [mostrar_buscar_vehiculo, set_mostrar_buscar_vehiculo] = useState<boolean>(false);
   const [mostrar_vehiculo_agregado, set_mostrar_vehiculo_agregado] = useState<boolean>(false);
   const [mostrar_agendamiento_vehiculo, set_mostrar_agendamiento_vehiculo] = useState<boolean>(false);
+  const [mostrar_vehiculos_agendados, set_mostrar_vehiculos_agendados] = useState<boolean>(false);
 
 
   const [vehiculo_encontrado, set_vehiculo_encontrado] = useState<data_buscar_vehiculo>(Object);
@@ -103,6 +104,7 @@ const AgendamientoVehiculos: React.FC = () => {
   const optener_detalles_vehiculos_agendados: () => void = () => {
     dispatch(buscar_detalles_vehiculos_agendados())
       .then((response: response_detalles_vehiculos_agendados) => {
+        console.log(response);        
         if (response.data?.length === 0) {
           set_data_detalles_vehiculos_agendados([]);
         } else {
@@ -270,6 +272,7 @@ const AgendamientoVehiculos: React.FC = () => {
           })).then((response: { success: boolean, detail: string, data: any }) => {
             if(response?.success){
               control_success('Se aprobó la solicitud correctamente');
+              set_mostrar_vehiculos_agendados(true);
               set_refrescar_tabla(!refrescar_tabla);
               return;
             } else if (response?.detail) {
@@ -277,7 +280,6 @@ const AgendamientoVehiculos: React.FC = () => {
               return;
             }
           })
-          set_mostrar_agendamiento_vehiculo(false);
           return;
         } else if(result.isDenied){
           return;
@@ -547,9 +549,11 @@ const AgendamientoVehiculos: React.FC = () => {
 
           <Title title='Agendar viaje con vehículo' />
 
-          <TablaVehiculosAgendados 
-            data_detalles_vehiculos_agendados={data_detalles_vehiculos_agendados}
-          />
+          {mostrar_vehiculos_agendados &&
+            <TablaVehiculosAgendados 
+              data_detalles_vehiculos_agendados={data_detalles_vehiculos_agendados}
+            />
+          }
 
 
           <Grid container spacing={1} item xs={12}>
@@ -643,6 +647,7 @@ const AgendamientoVehiculos: React.FC = () => {
               <Button
                 fullWidth
                 color='success'
+                disabled={Object.keys(vehiculo_encontrado).length === 0}
                 variant='contained'
                 startIcon={<AddIcon />}
                 onClick={agregar_vehiculo}

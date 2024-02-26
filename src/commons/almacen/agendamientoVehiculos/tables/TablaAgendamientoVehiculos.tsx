@@ -54,8 +54,12 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
     {field: 'cod_municipio', headerName:'Municipio de destino', minWidth:150, flex:1},
     {field: 'direccion', headerName:'Dirección', minWidth:150, flex:1},
     {field: 'nro_pasajeros', headerName:'Número de pasajeros', minWidth:150, flex:1},
-    {field: 'fecha_partida', headerName:'Fecha de salida', minWidth:120, flex:1},
-    {field: 'fecha_retorno', headerName:'Fecha de retorno', minWidth:120, flex:1},
+    {field: 'fecha_partida', headerName:'Fecha de salida', minWidth:120, flex:1,
+      renderCell: ((res)=>(dayjs(res.row.fecha_partida).format('DD/MM/YYYY')))
+    },
+    {field: 'fecha_retorno', headerName:'Fecha de retorno', minWidth:120, flex:1,
+      renderCell: ((res)=>(dayjs(res.row.fecha_retorno).format('DD/MM/YYYY')))
+    },
     {field: 'requiere_compagnia_militar', headerName:'¿Req. Compañia militar?', minWidth:170, flex:1,
       renderCell: ((res)=>(res.row.requiere_compagnia_militar ? 'Si' : 'No'))
     },
