@@ -2,7 +2,7 @@
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
-import { setCurrentTareaPqrsdfTramitesUotrosUopas } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
+import { setActionsTareasTramites, setCurrentTareaPqrsdfTramitesUotrosUopas } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import {
   useAppDispatch,
   useAppSelector,
@@ -15,6 +15,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import { GridCellParams, GridValueGetterParams } from '@mui/x-data-grid';
+import Swal from 'sweetalert2';
 
 export const ElementosTramitesYServicios = (): JSX.Element => {
   //* dispatch declaration
@@ -28,6 +29,171 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
   } = useAppSelector((state) => state.BandejaTareasSlice);
 
   // ? ------------------------ DEFINICION DE FUNCIONES PARA EL COMPONENTE
+
+  const setActionsTareas = (tareaTramite: any) => {
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaTramite));
+    void Swal.fire({
+      icon: 'success',
+      title: 'Elemento seleccionado',
+      text: 'Seleccionaste una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      showConfirmButton: true,
+    });
+
+    const shouldDisable = (actionId: string) => {
+      if (!tareaTramite) {
+        return true; // No se ha seleccionado ninguna tarea
+      }
+
+      const isNoSeleccionado = !tareaTramite;
+      /*  const isEstadoAsignacionNoDefinido =
+      tareaOtros.estado_asignacion_tarea === null ||
+      tareaOtros.estado_asignacion_tarea === '';
+      const isEstadoAsignacionRechazada =
+      tareaOtros.estado_asignacion_tarea === 'Rechazado';
+      const isEstadoAsignacionAceptada =
+      tareaOtros.estado_asignacion_tarea === 'Aceptado';
+      const isEstadoTareaEnProcesoRespuesta =
+      tareaOtros.estado_tarea === 'En proceso de respuesta';
+      const isEstadoTareaDelegada = tareaOtros.estado_tarea === 'Delegada';
+      const isEstadoReasignacionEnEspera =
+      tareaOtros.estado_reasignacion_tarea === null ||
+      tareaOtros.estado_reasignacion_tarea === '' ||
+      tareaOtros.estado_reasignacion_tarea === 'En espera';
+      const isEstadoReasignacionRechazada =
+      tareaOtros.estado_reasignacion_tarea === 'Rechazado';
+      const isEstadoReasignacionAceptada =
+      tareaOtros.estado_reasignacion_tarea === 'Aceptado';
+
+      const hasReqPendientes = tareaOtros.requerimientos_pendientes_respuesta;*/
+
+      if (isNoSeleccionado) {
+        return true;
+      }
+
+      /*   if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
+        return actionId !== 'InfoSolictud';
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        !hasReqPendientes
+      ) {
+        //* se habilita todo
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        hasReqPendientes
+      ) {
+        //* se deshabilita la opción de responder solicitud
+        return !(
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
+        return true;
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionEnEspera
+      ) {
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario'
+        );
+      }
+
+      if (isEstadoAsignacionAceptada && isTareaRespondida) {
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* septimo caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionAceptada
+      ) {
+        return !(
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* octavo caso
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionRechazada
+      ) {
+        //* se habilitan todos botones -
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* noveno caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaDelegada &&
+        isEstadoReasignacionRechazada
+      ) {
+        //* se habilitan todos botones -
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      return !(actionId === 'InfoSolictud');
+      */
+    };
+
+   /* const actionsOtrosValue = actionsTramitesYServicios.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+
+    dispatch(setActionsTareasTramites(actionsOtrosValue));*/
+  };
+
+
+
   // ? ------------------------ DEFINICION DE COLUMNAS PAA EL DATA GRID
   /*
 {
@@ -162,7 +328,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
             <Tooltip title="Seleccionar tarea para procesos">
               <IconButton
                 onClick={() => {
-                  // setActionsOtros(params?.row);
+                  setActionsTareas(params?.row);
                 }}
               >
                 <Avatar
