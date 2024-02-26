@@ -116,7 +116,7 @@ export const ConsultaExternoPQR: React.FC<props> = ({setestado, estado,setFormDa
       headerName: 'Tiempo Para Respuesta',
       minWidth: 200,
     },
-    { field: 'Estado', headerName: 'Estado',      minWidth: 250, },
+    // { field: 'Estado', headerName: 'Estado',      minWidth: 250, },
     {
       field: 'ruta_archivo',
       headerName: 'Archivo',

@@ -148,7 +148,7 @@ export const ConsultaExterno: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={3}>
+        {/* <Grid item xs={12} sm={3}>
           <FormControl size="small" fullWidth>
             <InputLabel>estado</InputLabel>
             <Select
@@ -167,7 +167,7 @@ export const ConsultaExterno: React.FC = () => {
               ))}
             </Select>
           </FormControl>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} sm={3}>
           <TextField

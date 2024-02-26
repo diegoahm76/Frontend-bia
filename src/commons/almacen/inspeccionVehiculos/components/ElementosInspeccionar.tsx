@@ -1,17 +1,34 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Radio, FormLabel, TextField, Button } from "@mui/material";
 import TarjetaInspeccion from "./TarjetaInspeccion";
 import { useEffect, useState } from "react";
-import { cambio_input_radio } from "../thunsk/cambio_input_radio";
+import { cambio_input_radio } from "../thunks/cambio_input_radio";
 import { Title } from "../../../../components";
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
 import ContenedorInput from "./ContenedorInput";
-import { estilo_radio } from "../thunsk/estilo_radio";
+import { estilo_radio } from "../thunks/estilo_radio";
+import { create_inspeccion_vehiculo } from "../interfaces/types";
+import { useAppDispatch } from "../../../../hooks";
+import { enviar_inspeccion_vehiculo } from "../thunks/inspeccion_vehiculos";
+
+interface props {
+  set_data_inspeccion_vehiculo: React.Dispatch<React.SetStateAction<create_inspeccion_vehiculo>>;
+  data_inspeccion_vehiculo: create_inspeccion_vehiculo;
+  set_kilometraje: React.Dispatch<React.SetStateAction<number>>
+  set_id_hoja_vida_vehiculo: React.Dispatch<React.SetStateAction<number>>
+}
 
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const ElementosInspeccionar = () => {
+const ElementosInspeccionar: React.FC<props> = ({
+  set_data_inspeccion_vehiculo,
+  data_inspeccion_vehiculo,
+  set_kilometraje,
+  set_id_hoja_vida_vehiculo
+}) => {
+  const dispatch = useAppDispatch();
   const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('true');
   const [direcionales_traseras, set_direcionales_traseras] = useState<string>('true');
   const [limpiabrisas_delantero, set_limpiabrisas_delantero] = useState<string>('true');
@@ -41,7 +58,82 @@ const ElementosInspeccionar = () => {
   const [botiquin_completo, set_botiquin_completo] = useState<string>('true');
   const [pito, set_pito] = useState<string>('true');
 
+  const [observaciones, set_observaciones] = useState<string>('');
   const [tiene_observaciones, set_tiene_observaciones] = useState<boolean>(false);
+
+  useEffect(()=>{
+    set_data_inspeccion_vehiculo((prev)=>{
+      const nuevos_datos = {
+        dir_llantas_delanteras: direcionales_delanteras === 'true' ? true : false,
+        dir_llantas_traseras: direcionales_traseras === 'true' ? true : false,
+        limpiabrisas_delantero: limpiabrisas_delantero === 'true' ? true : false,
+        limpiabrisas_traseros: limpiabrisas_trasero === 'true' ? true : false,
+        nivel_aceite: nivel_aceite === 'true' ? true : false,
+        estado_frenos: nivel_frenos === 'true' ? true : false,
+        nivel_refrigerante: nivel_refrigerante === 'true' ? true : false,
+        apoyo_cabezas_piloto: apoyacabezas_piloto === 'true' ? true : false,
+        apoyo_cabezas_copiloto: apoyacabezas_copiloto === 'true' ? true : false,
+        apoyo_cabezas_traseros: apoyacabezas_traseros === 'true' ? true : false,
+        frenos_generales: frenos_generales === 'true' ? true : false,
+        freno_emergencia: frenos_emergencia === 'true' ? true : false,
+        llantas_delanteras: llantas_delanteras === 'true' ? true : false,
+        llantas_traseras: llantas_traseras === 'true' ? true : false,
+        llanta_repuesto: llanta_repuesto === 'true' ? true : false,
+        espejos_laterales: espejos_laterales === 'true' ? true : false,
+        espejo_retrovisor: espejos_retrovisor === 'true' ? true : false,
+        cinturon_seguridad_delantero: cinturones_delanteros === 'true' ? true : false,
+        cinturon_seguridad_trasero: cinturones_traseros === 'true' ? true : false,
+        luces_altas: luces_altas === 'true' ? true : false,
+        luces_media: luces_medias === 'true' ? true : false,
+        luces_bajas: luces_bajas === 'true' ? true : false,
+        luces_parada: luces_parada === 'true' ? true : false,
+        luces_parqueo: luces_parqueo === 'true' ? true : false,
+        luces_reversa: luces_reversa === 'true' ? true : false,
+        kit_herramientas: kit_herramientas === 'true' ? true : false,
+        botiquin_completo: botiquin_completo === 'true' ? true : false,
+        pito: pito === 'true' ? true : false,
+        ...(tiene_observaciones && { observaciones: observaciones }),
+      }
+
+      /**validamos si todos los elementos estan bien, eliminamos la clave 'observaciones' de los datos
+       * y de los datos traidos por '..prev'
+      */
+      if (!tiene_observaciones) {
+        delete nuevos_datos.observaciones;
+        delete prev.observaciones;
+      }
+      return { ...prev, ...nuevos_datos };
+      }
+    )
+  },[direcionales_delanteras,
+    direcionales_traseras,
+    limpiabrisas_delantero,
+    limpiabrisas_trasero,
+    nivel_aceite,
+    nivel_frenos,
+    frenos_generales,
+    frenos_emergencia,
+    nivel_refrigerante,
+    apoyacabezas_piloto,
+    apoyacabezas_copiloto,
+    apoyacabezas_traseros,
+    llantas_delanteras,
+    llantas_traseras,
+    llanta_repuesto,
+    espejos_laterales,
+    espejos_retrovisor,
+    cinturones_delanteros,
+    cinturones_traseros,
+    luces_altas,
+    luces_medias,
+    luces_bajas,
+    luces_parada,
+    luces_parqueo,
+    luces_reversa,
+    kit_herramientas,
+    botiquin_completo,
+    pito,
+    tiene_observaciones,observaciones])
 
   useEffect(() => {
     const estados_individuales = [
@@ -75,8 +167,7 @@ const ElementosInspeccionar = () => {
       pito
     ];
     //Si hay por lo menos un estado malo, entoces devuelve true
-    const hay_fallo = estados_individuales.some(estado => estado === 'false');
-    
+    const hay_fallo = estados_individuales.some(estado => estado === 'false');  
     set_tiene_observaciones(hay_fallo ? true : false);
   }, [direcionales_delanteras,
     direcionales_traseras,
@@ -107,13 +198,54 @@ const ElementosInspeccionar = () => {
     botiquin_completo,
     pito]);
 
-  console.log(luces_medias === 'true' ? true : false);
+  const limpiar_inspeccion = () => {
+    set_direcionales_delanteras('true');
+    set_direcionales_traseras('true');
+    set_limpiabrisas_delantero('true');
+    set_limpiabrisas_trasero('true');
+    set_nivel_aceite('true');
+    set_nivel_frenos('true');
+    set_frenos_generales('true');
+    set_frenos_emergencia('true');
+    set_nivel_refrigerante('true');
+    set_apoyacabezas_piloto('true');
+    set_apoyacabezas_copiloto('true');
+    set_apoyacabezas_traseros('true');
+    set_llantas_delanteras('true');
+    set_llantas_traseras('true');
+    set_llanta_repuesto('true');
+    set_espejos_laterales('true');
+    set_espejos_retrovisor('true');
+    set_cinturones_delanteros('true');
+    set_cinturones_traseros('true');
+    set_luces_altas('true');
+    set_luces_medias('true');
+    set_luces_bajas('true');
+    set_luces_parada('true');
+    set_luces_parqueo('true');
+    set_luces_reversa('true');
+    set_kit_herramientas('true');
+    set_botiquin_completo('true');
+    set_pito('true');
+    set_kilometraje(0);
+    set_id_hoja_vida_vehiculo(0);
+  }
+
+  const enviar_asignacion_vehiculo = () => {
+    dispatch(enviar_inspeccion_vehiculo(data_inspeccion_vehiculo)).then((response: { success: boolean, detail: string, data: any }) => {
+      if (response) {
+        console.log(response);        
+        return;
+      }
+    })
+    limpiar_inspeccion();
+  }
 
   return (
-    <Grid item xs={12} sx={{
+    <Grid container item xs={12} sx={{
       display:'flex',
       justifyContent:'space-between',
-      flexWrap:'wrap'
+      gap:2
     }}>
       <TarjetaInspeccion title="Direccionales">
         <ContenedorInput>
@@ -524,6 +656,8 @@ const ElementosInspeccionar = () => {
           <TextField
             style={{margin:'20px 0px'}}
             id="observaciones"
+            value={observaciones}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_observaciones(e.target.value)}
             required
             fullWidth
             placeholder="Escriba aqui sus observaciones"
@@ -549,7 +683,7 @@ const ElementosInspeccionar = () => {
             color="success"
             variant="contained"
             startIcon={<SaveIcon />}
-            onClick={() => {}}
+            onClick={enviar_asignacion_vehiculo}
           >
             {"Guardar"}
           </Button>
@@ -565,7 +699,7 @@ const ElementosInspeccionar = () => {
             color="inherit"
             variant="outlined"
             startIcon={<CleanIcon />}
-            onClick={() => {}}
+            onClick={limpiar_inspeccion}
           >
             Limpiar
           </Button>

@@ -50,7 +50,7 @@ export const getListadoTareasByPerson = async (
     showAlert(
       'Opps...',
       'Ha ocurrido un error al buscar las tareas y/o no hay tareas asignadas a este usuario',
-      'error'
+      'warning'
     );
     return [];
   } finally {

@@ -26,11 +26,12 @@ interface TipoRenta {
     id_tipo_renta: number;
     nombre_tipo_renta: string;
     tipo_cobro_asociado: any;
-    tipo_renta_asociado:any
+    tipo_renta_asociado: any
 }
 interface TipoCobro {
     id_tipo_cobro: number;
     nombre_tipo_cobro: string;
+    tipo_renta_asociado: any;
 }
 
 
@@ -128,6 +129,7 @@ export const Varible: React.FC = () => {
         const { name, value } = event.target;
         setFormValues({ ...formValues, [name]: value });
     };
+
 
     useEffect(() => {
         if (selectedConfiguracion) {
@@ -260,6 +262,28 @@ export const Varible: React.FC = () => {
                         </TextField>
                     </Grid>
 
+                    {/* <Grid item xs={12} sm={4}>
+                        <TextField
+                            select
+                            required
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            label="Tipo cobro"
+                            name="tipo_cobro"
+                            onChange={handleInputChange}
+                            value={formValues.tipo_cobro}
+                        >
+                            {tiposCobro 
+                                .map((tipoCobro) => (
+                                    <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
+                                        {tipoCobro.nombre_tipo_cobro}
+                                    </MenuItem>
+                                ))}
+                        </TextField>
+                    </Grid> */}
+
+
                     <Grid item xs={12} sm={4}>
                         <TextField
                             select
@@ -273,18 +297,18 @@ export const Varible: React.FC = () => {
                             value={formValues.tipo_cobro}
                         >
                             {tiposCobro
-                              
+                                .filter(tipoCobro => tipoCobro.tipo_renta_asociado === formValues.tipo_renta) // Filtrado basado en la selección de tipo_renta
                                 .map((tipoCobro) => (
                                     <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
                                         {tipoCobro.nombre_tipo_cobro}
                                     </MenuItem>
                                 ))}
                         </TextField>
+
+
                     </Grid>
 
 
-
-                    
                     <Grid item xs={12} sm={4}>
                         <TextField
                             required

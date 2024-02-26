@@ -3,27 +3,28 @@ import { useState, createContext, type SetStateAction, ReactNode } from "react";
 
 
 interface inter_opcion_otros {
-    opcion_otros: number,
-    set_opcion_otros: React.Dispatch<SetStateAction<number>>
+    opcion_otros: string,
+    set_opcion_otros: React.Dispatch<SetStateAction<string>>
 }
 
 export const OpcionOtrosContext = createContext<inter_opcion_otros>({
-    opcion_otros: 0,
+    opcion_otros: "",
     set_opcion_otros: () => { }
 });
 
-interface Inter_Son{
+interface Inter_Son {
     children: ReactNode;
 }
 
-export const OpcionOtrosProvider = ({children}:Inter_Son): JSX.Element => {
+export const OpcionOtrosProvider = ({ children }: Inter_Son): JSX.Element => {
 
-    const [opcion_otros, set_opcion_otros] = useState<number>(5)
+    const [opcion_otros, set_opcion_otros] = useState<string>("")
+    console.log("opcion_otros", opcion_otros)
+
 
     const valueAlertas = {
         opcion_otros,
         set_opcion_otros
-
     }
 
     return (
