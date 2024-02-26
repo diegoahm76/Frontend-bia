@@ -34,6 +34,8 @@ const DigitalizacionesRespondidas = () => {
     reset,
     handleSubmit: handle_submit,
     getValues: get_values,
+
+    
   } = useForm<any>();
   const { request_types, list_request_status, person, digitization_requests } =
     useAppSelector((state) => state.central_digitalizacion_slice);
