@@ -231,6 +231,24 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ is_mod
         </div>
       ),
     },
+
+    {
+      field: 'calculo_interes_mora',
+      headerName: 'Interés por Mora',
+      width: 180,
+      renderCell: (params) => {
+        const interes = params.row.valor_intereses * 0.0007; // 0.07% de valor_intereses
+        const interesMora = interes * params.row.dias_mora;
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {new Intl.NumberFormat("es-ES", {
+              style: "currency",
+              currency: "COP",
+            }).format(interesMora)}
+          </div>
+        );
+      },
+    },
   ];
   const handle_closee = (): void => {
     set_is_modal_active(false);
