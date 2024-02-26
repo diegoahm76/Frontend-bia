@@ -15,6 +15,13 @@ import { TiposEjes } from '../../configuraciones/interfaces/interfaces';
 
 interface UserContext {
   // * id
+  id_plan: number | null;
+  set_id_plan: (value: number | null) => void;
+  id_programa: number | null;
+  set_id_programa: (value: number | null) => void;
+  id_eje_estrategico: number | null;
+  set_id_eje_estrategico: (value: number | null) => void;
+
 
   // * rows
   rows_eje_estrategico: IEjeEstrategico[];
@@ -34,6 +41,14 @@ interface UserContext {
 }
 
 export const DataContextEjeEstrategico = createContext<UserContext>({
+  // * id
+  id_plan: null,
+  set_id_plan: () => {},
+  id_programa: null,
+  set_id_programa: () => {},
+  id_eje_estrategico: null,
+  set_id_eje_estrategico: () => {},
+
   rows_eje_estrategico: [],
   set_rows_eje_estrategico: () => {},
 
@@ -51,6 +66,11 @@ export const UserProviderEjeEstrategico = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
+  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_programa, set_id_programa] = React.useState<number | null>(null);
+  const [id_eje_estrategico, set_id_eje_estrategico] = React.useState<number | null>(
+    null
+  );
 
   // * select
   const [tipo_eje_selected, set_tipo_eje_selected] = React.useState<
@@ -67,9 +87,9 @@ export const UserProviderEjeEstrategico = ({
 
   // * fetch
   //* declaracion context
-  const {
-    plan: { id_plan },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   plan: { id_plan },
+  // } = useAppSelector((state) => state.planes);
 
   const fetch_data_eje_estrategico = async (): Promise<void> => {
     set_rows_eje_estrategico([]);
@@ -78,12 +98,7 @@ export const UserProviderEjeEstrategico = ({
       if (response?.length > 0) {
         const data_eje_estrategico: IEjeEstrategico[] = response.map(
           (item: IEjeEstrategico) => ({
-            id_eje_estrategico: item.id_eje_estrategico,
-            nombre_plan: item.nombre_plan,
-            nombre_tipo_eje: item.nombre_tipo_eje,
-            nombre: item.nombre,
-            id_plan: item.id_plan,
-            id_tipo_eje: item.id_tipo_eje,
+            ...item,
           })
         );
 
@@ -139,6 +154,12 @@ export const UserProviderEjeEstrategico = ({
   };
   const value: UserContext = {
     // * id
+    id_plan,
+    set_id_plan,
+    id_programa,
+    set_id_programa,
+    id_eje_estrategico,
+    set_id_eje_estrategico,
 
     // * select
     tipo_eje_selected,

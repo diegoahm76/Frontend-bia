@@ -276,7 +276,7 @@ export const Agregarmeta: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          {/* <Grid item xs={12} sm={6} md={3}>
             <Controller
               name="avance_fisico"
               control={control_meta}
@@ -305,7 +305,7 @@ export const Agregarmeta: React.FC = () => {
                 />
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6}>
             <Controller
               name="valor_meta"
@@ -340,7 +340,7 @@ export const Agregarmeta: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Controller
               name="valor_ejecutado_compromiso"
               control={control_meta}
@@ -373,8 +373,8 @@ export const Agregarmeta: React.FC = () => {
                 />
               )}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </Grid> */}
+          {/* <Grid item xs={12} sm={6}>
             <Controller
               name="valor_ejecutado_obligado"
               control={control_meta}
@@ -407,8 +407,8 @@ export const Agregarmeta: React.FC = () => {
                 />
               )}
             />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          </Grid> */}
+          {/* <Grid item xs={12} sm={6} md={3}>
             <Controller
               name="agno_1"
               control={control_meta}
@@ -522,7 +522,7 @@ export const Agregarmeta: React.FC = () => {
                 />
               )}
             />
-          </Grid>
+          </Grid> */}
           {isGuardarDisabled ? (
             <Grid item xs={12}>
               <Grid container justifyContent="center" textAlign="center">
@@ -534,7 +534,7 @@ export const Agregarmeta: React.FC = () => {
               </Grid>
             </Grid>
           ) : null}
-          {isAgno1Disabled ? (
+          {/* {isAgno1Disabled ? (
             <Grid item xs={12}>
               <Grid container justifyContent="center" textAlign="center">
                 <Alert icon={false} severity="error">
@@ -556,7 +556,7 @@ export const Agregarmeta: React.FC = () => {
                 </Alert>
               </Grid>
             </Grid>
-          ) : null}
+          ) : null} */}
           <Grid
             sx={{
               marginBottom: '10px',
@@ -678,9 +678,9 @@ export const Agregarmeta: React.FC = () => {
                 color="success"
                 type="submit"
                 disabled={
-                  isValorEjecutadoDisabled ||
+                  // isValorEjecutadoDisabled ||
                   isGuardarDisabled ||
-                  isAgno1Disabled ||
+                  // isAgno1Disabled ||
                   is_savingd_meta
                 }
                 startIcon={<SaveIcon />}

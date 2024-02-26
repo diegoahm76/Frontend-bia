@@ -7,7 +7,7 @@ import { Avatar, IconButton } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useRef } from 'react';
 import type { DownloadButtonProps } from './types/types';
-import { baseURL } from '../../api/axios';
+import { DEFAULT_BETA_DOWNLOAD_FILES_URL, DEFAULT_PROD_DOWNLOAD_FILES_URL, baseURL } from '../../api/axios';
 
 export const IconButtonDownLoad = ({
   fileUrl,
@@ -33,9 +33,9 @@ export const IconButtonDownLoad = ({
             : `${
                 process.env.NODE_ENV === 'development'
                   ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                    'https://back-end-bia-beta.up.railway.app'
+                    `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
                   : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                   'https://bia.cormacarena.gov.co'
+                  `${DEFAULT_PROD_DOWNLOAD_FILES_URL}`
               }${fileUrl}`
         }
         ref={linkRef}

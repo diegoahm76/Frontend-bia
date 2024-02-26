@@ -173,7 +173,7 @@ export const MostrarEditables: React.FC = () => {
                                 disabled
                                 className="p-inputtext-sm"
                                 placeholder={ModificadorFormatoFecha(fecha_inicio_dir_actual)}
-                                style={{ margin: 0, height: 15, width: 80 }}
+                                style={{ margin: 0, height: 15, width: 90 }}
                             />
                         </Box>
                     </Grid>
@@ -204,7 +204,7 @@ export const MostrarEditables: React.FC = () => {
                                 disabled
                                 className="p-inputtext-sm"
                                 placeholder={ModificadorFormatoFecha(fecha_inicio_coord_alm_actual)}
-                                style={{ margin: 0, height: 15, width: 80 }}
+                                style={{ margin: 0, height: 15, width: 90 }}
                             />
                         </Box>
                     </Grid>
@@ -236,7 +236,7 @@ export const MostrarEditables: React.FC = () => {
                                 disabled
                                 className="p-inputtext-sm"
                                 placeholder={ModificadorFormatoFecha(fecha_inicio_coord_viv_actual)}
-                                style={{ margin: 0, height: 15, width: 80 }}
+                                style={{ margin: 0, height: 15, width: 90 }}
                             />
                         </Box>
                     </Grid>
@@ -268,7 +268,7 @@ export const MostrarEditables: React.FC = () => {
                                 className="p-inputtext-sm"
                                 disabled
                                 placeholder={ModificadorFormatoFecha(fecha_inicio_respon_trans_actual)}
-                                style={{ margin: 0, height: 15, width: 80 }}
+                                style={{ margin: 0, height: 15, width: 90 }}
                             />
                         </Box>
                     </Grid>
@@ -296,7 +296,7 @@ export const MostrarEditables: React.FC = () => {
                                 className="p-inputtext-sm"
                                 disabled
                                 placeholder={ModificadorFormatoFecha(fecha_inicio_almacenista)}
-                                style={{ margin: 0, height: 15, width: 80 }}
+                                style={{ margin: 0, height: 15, width: 90 }}
                             />
                         </Box>
                     </Grid>

@@ -57,9 +57,6 @@ export const getOficinas = async ({
     return [];
   } catch (error: any) {
     control_error('No se pudieron obtener las oficinas, o no hay oficinas disponibles en la unidad organizacional actual');
-    /* error?.response?.data?.detail ||
-        'Ha ocurrido un error al obtener las oficinas'
-    );*/
     throw error;
   } finally {
     setLoading?.(false);

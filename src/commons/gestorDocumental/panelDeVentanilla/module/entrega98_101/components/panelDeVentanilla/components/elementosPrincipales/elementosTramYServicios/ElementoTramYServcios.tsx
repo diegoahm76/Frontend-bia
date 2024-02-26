@@ -1,17 +1,18 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, /*useState*/ } from 'react';
+import { useContext, useState /*useState*/ } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 //import { useNavigate } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 //import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 /*import { LoadingButton } from '@mui/lab';
-*/
+ */
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import TaskIcon from '@mui/icons-material/Task';
 import {
+  setActionssToManagePermissionsTramitesYServicios,
   // setActionssToManagePermissions,
   setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,
@@ -31,6 +32,8 @@ import { columnsTramites } from './columnsTramites/columnsTramites';
 
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { ModalTramitesServicio } from '../../../../../Atom/modalTramiteServicios/ModalTramitesServicio';
+import { getHistoricoTramitesByRadicado } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getHistoricoTramitesByRadicado.service';
+import { getComplementosAsociadosTramite } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getComplementosTramites.service';
 
 export const ListaElementosTramites = (): JSX.Element => {
   //* dispatch declaration
@@ -41,53 +44,85 @@ export const ListaElementosTramites = (): JSX.Element => {
   const {
     //setRadicado,
     //setValue,
-
     // setAnexos,
+    // handleGeneralLoading,
   } = useContext(PanelVentanillaContext);
-  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
-/*  const handleRequestRadicado = async (radicado: string) => {
-    try {
-      const historico = await getHistoricoByRadicado('', handleGeneralLoading);
-
-      const historicoFiltrado = historico.filter(
-        (element: any) => element?.cabecera?.radicado === radicado
-      );
-
-      dispatch(setListaHistoricoSolicitudes(historicoFiltrado));
-    } catch (error) {
-      console.error('Error handling request radicado: ', error);
-    }
-  };*/
-
-/*  //* loader button simulacion
-  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
-    {}
+  const { handleOpenModalOne, handleThirdLoading } = useContext(
+    ModalAndLoadingContext
   );
-  //* loader button simulacion
-  const [loadingStatesUser, setLoadingStatesUser] = useState<
-    Record<string, boolean>
-  >({});*/
 
   //* redux states
   const {
     listaElementosPqrsfTramitesUotros,
-    actions,
+    actionsTramitesYServicios,
     currentElementPqrsdComplementoTramitesYotros,
   } = useAppSelector((state) => state.PanelVentanillaSlice);
 
   // ? functions
-  const setActionsTramites = (pqrsdf: any) => {
-    if (pqrsdf.estado_solicitud === 'EN GESTION') {
+  const setActionsTramites = (tramite: any) => {
+    if (tramite.estado_solicitud === 'EN GESTION') {
       void Swal.fire({
         title: 'Opps...',
         icon: 'error',
-        text: `Esta PQRSDF ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
+        text: `Este trámite ya se encuentra en gestión, no se pueden hacer acciones sobre él`,
         showConfirmButton: true,
       });
       return;
     }
 
-    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(pqrsdf));
+    /*
+    const actionsTramitesYServicios: any[] = [
+  {
+    id: 'Jurídica',
+  },
+  {
+    id: 'AsigGrup',
+  },
+  {
+    id: 'Dig',
+  },
+];
+
+
+{
+    "nombre_cod_tipo_operacion_tramite": "Nuevo",
+    "nombre_cod_relacion_con_el_titular": "Misma persona",
+    "estado_actual_solicitud": "EN VENTANILLA CON PENDIENTES",
+    "nombre_sucursal": null,
+    "medio_solicitud": "Portal Web",
+    "nombre_completo_titular": "1121889493",
+    "radicado": "UNICO-2024-00092",
+    "tipo_solicitud": "TRAMITE",
+    "nombre_tramite": null,
+    "cantidad_anexos": 2,
+    "estado_asignacion_grupo": "Aceptado",
+    "persona_asignada": "Fernando  Rueda Londoño",
+    "unidad_asignada": "Planeación",
+    "cod_relacion_con_el_titular": "MP",
+    "cod_tipo_operacion_tramite": "N",
+    "nombre_proyecto": "test",
+    "costo_proyecto": "0.00",
+    "pago": false,
+    "fecha_registro": "2024-02-16T15:18:32.413039",
+    "fecha_envio_solicitud": null,
+    "fecha_finalizada_solicitud": null,
+    "cantidad_predios": null,
+    "solicitud_enviada": false,
+    "fecha_radicado": "2024-02-16T15:18:32.394795",
+    "fecha_expediente": null,
+    "fecha_inicio": null,
+    "requiere_digitalizacion": true,
+    "fecha_envio_definitivo_a_digitalizacion": "2024-02-19T00:48:05.734156",
+    "fecha_digitalizacion_completada": null,
+    "fecha_rta_final_gestion": null,
+    "fecha_ini_estado_actual": "2024-02-16T15:18:32.399441",
+}
+
+
+
+    */
+
+    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(tramite));
     void Swal.fire({
       icon: 'success',
       title: 'Elemento seleccionado',
@@ -95,58 +130,65 @@ export const ListaElementosTramites = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    /*  const shouldDisable = (actionId: string) => {
+   /* const shouldDisable = (actionId: string) => {
+      const isNoSeleccionado = !tramite;
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
-      const hasAnexos = pqrsdf.cantidad_anexos > 0;
-      const requiresDigitalization = pqrsdf.requiere_digitalizacion;
-      const isRadicado = pqrsdf.estado_solicitud === 'RADICADO';
+      const hasAnexos = tramite.cantidad_anexos > 0;
+      const requiresDigitalization = tramite.requiere_digitalizacion;
+      const isRadicado = tramite.estado_solicitud === 'RADICADO';
       const isEnVentanillaSinPendientes =
-        pqrsdf.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+      tramite.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
       const isEnVentanillaConPendientes =
-        pqrsdf.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+      tramite.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
 
-      // Primer caso
-      if (isRadicado && !hasAnexos && isDig) {
+    
+
+      if (isNoSeleccionado) {
         return true;
       }
 
-      // Segundo caso
+      //?  primer caso
+      if (isRadicado && !hasAnexos) {
+        return !(actionId === 'AsigGrupOtro');
+      }
+      // ? segundo caso
       if (isRadicado && hasAnexos && !requiresDigitalization) {
-        return false;
+        return !(actionId === 'AsigGrupOtro' || actionId === 'DigOtro');
       }
-
-      // Tercer caso
+      // ? tercer caso
       if (isRadicado && hasAnexos && requiresDigitalization) {
-        return isAsigGrup;
+        return !(actionId === 'DigOtro');
       }
-
-      // Cuarto caso
+      // ? cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-        return false;
+        return !(actionId === 'DigOtro' || actionId === 'AsigGrupOtro');
       }
-
-      // Quinto caso
+      // ? quinto caso
       if (isEnVentanillaSinPendientes && requiresDigitalization) {
-        return isAsigGrup;
+        return !(actionId === 'DigOtro');
       }
 
-      // Sexto caso
+      // ? sexto caso
       if (isEnVentanillaConPendientes) {
-        return isAsigGrup;
+        return !(actionId === 'DigOtro');
       }
 
-      // Caso por defecto
-      return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
-    };
+      if (isEnGestion) {
+        return true;
+      }
 
-    const actionsPQRSDF = actions.map((action: any) => ({
+
+
+
+    const actionsTramites = actionsTramitesYServicios.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
     }));
 
-    dispatch(setActionssToManagePermissions(actionsPQRSDF));*/
-  };
+   dispatch(setActionssToManagePermissionsTramitesYServicios(actionsTramites));
+  };*/
+};
 
   //* espacio para la definición de las columnas
   const columns = [
@@ -207,7 +249,6 @@ export const ListaElementosTramites = (): JSX.Element => {
         );
       },
     },
-
     {
       headerName: 'Acciones',
       field: 'Acciones',
@@ -219,32 +260,23 @@ export const ListaElementosTramites = (): JSX.Element => {
               title={`Ver requerimientos asociados a trámite con radicado ${params?.row?.radicado}`}
             >
               <IconButton
-                sx={{
-                 /* color: !params?.row?.tiene_complementos
-                    ? 'disabled'
-                    : 'info.main',*/
-                }}
                 onClick={() => {
-                /*  if (!params.row.tiene_complementos) {
-                    void Swal.fire({
-                      title: 'Opps...',
-                      icon: 'error',
-                      text: `Esta PQRSDF no tiene complementos asociados`,
-                      showConfirmButton: true,
-                    });
-                    dispatch(
-                      setListaElementosComplementosRequerimientosOtros([])
-                    );
-                  } else {
-                    void getComplementosAsociadosPqrsdf(
-                      params.row.id_PQRSDF,
-                      handleThirdLoading
-                    ).then((res) => {
+                  (async () => {
+                    try {
+                      const res = await getComplementosAsociadosTramite(
+                        params.row.id_solicitud_tramite,
+                        handleThirdLoading
+                      );
                       dispatch(
                         setListaElementosComplementosRequerimientosOtros(res)
                       );
-                    });
-                  }*/
+                    } catch (error) {
+                      console.error(
+                        'Error al obtener los complementos asociados al trámite:',
+                        error
+                      );
+                    }
+                  })();
                 }}
               >
                 <Avatar
@@ -271,21 +303,6 @@ export const ListaElementosTramites = (): JSX.Element => {
                 onClick={() => {
                   setActionsTramites(params?.row);
                   handleOpenModalOne(true);
-                 /* void getAnexosPqrsdf(params?.row?.id_solicitud_tramite).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
                 }}
               >
                 <Avatar
@@ -374,8 +391,8 @@ export const ListaElementosTramites = (): JSX.Element => {
           ) : null
         }
       />
-       {/*modal para ver la información de la solicitud de otro seleccionada*/}
-       <ModalTramitesServicio />
+      {/*modal para ver la información de la solicitud de otro seleccionada*/}
+      <ModalTramitesServicio />
       {/*modal para ver la información de la solicitud de otro seleccionada*/}
     </>
   );

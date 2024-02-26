@@ -85,6 +85,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
     const [value, setValue] = useState<string>("");
     const [emailMismatch, setEmailMismatch] = useState<boolean>(false);
     const [dataEntidad, setDataEntidad] = useState<ISucursalEmpresa>(initialState);
+    console.log(dataEntidad)
     const codigo = cod;
 
     const on_result = async (info_persona: Persona): Promise<void> => {
@@ -132,7 +133,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         switch (codigo) {
             case 1:
                 updatedDataEntidad = {
-                    ...updatedDataEntidad,
+                    ...dataEntidad,
                     id_persona_director_actual: id_personaa,
                     observaciones_de_cambio_director: value,
                 };
@@ -141,7 +142,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
             case 2:
                 updatedDataEntidad = {
-                    ...updatedDataEntidad,
+                    ...dataEntidad,
                     id_persona_coord_almacen_actual: id_personaa,
                     observaciones_de_cambio_coord_almacen: value,
                 };
@@ -150,7 +151,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
             case 4:
                 updatedDataEntidad = {
-                    ...updatedDataEntidad,
+                    ...dataEntidad,
                     id_persona_coord_viveros_actual: id_personaa,
                     observaciones_de_cambio_coord_viveros: value,
                 };
@@ -159,7 +160,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
             case 3:
                 updatedDataEntidad = {
-                    ...updatedDataEntidad,
+                    ...dataEntidad,
                     id_persona_respon_transporte_actual: id_personaa,
                     observaciones_de_cambio_respon_transporte: value,
                 };
@@ -168,7 +169,7 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
 
             case 5:
                 updatedDataEntidad = {
-                    ...updatedDataEntidad,
+                    ...dataEntidad,
                     id_persona_almacenista: id_personaa,
                     observaciones_de_cambio_almacenista: value,
                 };
@@ -190,15 +191,16 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 const updatedEmail = response.data.id_persona_almacenista;
                 // eslint-disable-next-line @typescript-eslint/naming-convention
-                const datosActualizados: ISucursalEmpresa = {
-                    ...updatedDataEntidad,
-                    id_persona_almacenista: updatedEmail,
-                };
-                setDataEntidad(datosActualizados);
+                // const datosActualizados: ISucursalEmpresa = {
+                //     ...updatedDataEntidad,
+                //     id_persona_almacenista: updatedEmail,
+                // };
+                // setDataEntidad(datosActualizados);
                 control_success("Cargo actualizado correctamente");
                 setValue("");
                 set_persona(undefined);
                 setVisible(false);
+                onClick();
             })
             .catch((error: any) => {
 
@@ -209,6 +211,10 @@ export const ModalEditarCargo: React.FC<ModalEditarCargoProps> = ({ name, fecha,
         fetchDataGet();
     
         };
+        
+        useEffect(() => {
+            fetchDataGet()
+        },[])
 
     return (
         <div>

@@ -48,7 +48,7 @@ export const columnsPqrsdf = [
     field: 'fecha_asignacion',
     minWidth: 220,
     renderCell: (params: any) => {
-      return formatDate(params?.value);
+      return formatDate(params?.value) ?? 'Sin fecha';
     },
   },
   {
@@ -56,7 +56,7 @@ export const columnsPqrsdf = [
     field: 'radicado',
     minWidth: 220,
     rencerCell: (params: any) => {
-      return params.value ?? 'Sin radicado'
+      return params.value ?? 'Sin radicado';
     },
   },
   {
@@ -64,7 +64,7 @@ export const columnsPqrsdf = [
     field: 'fecha_radicado',
     minWidth: 220,
     renderCell: (params: any) => {
-      return formatDate(params?.value);
+      return formatDate(params?.value) ?? 'Sin fecha';
     },
   },
   {
@@ -86,7 +86,7 @@ export const columnsPqrsdf = [
   {
     headerName: 'Tarea reasignada a',
     field: 'tarea_reasignada_a',
-    minWidth: 280,
+    minWidth: 450,
     renderCell: (params: any) => {
       return params.value ?? 'Sin reasignar';
     },
@@ -94,7 +94,7 @@ export const columnsPqrsdf = [
   {
     headerName: 'Unidad organizacional de destino',
     field: 'unidad_org_destino',
-    minWidth: 280,
+    minWidth: 320,
     renderCell: (params: any) => {
       return params.value ?? 'Sin unidad organizacional de destino';
     },
@@ -102,7 +102,7 @@ export const columnsPqrsdf = [
   {
     headerName: 'Estado de reasignación de tarea',
     field: 'estado_reasignacion_tarea',
-    minWidth: 280,
+    minWidth: 350,
     renderCell: (params: any) => {
       return params.value ?? 'Sin estado de reasignación';
     },
@@ -110,11 +110,9 @@ export const columnsPqrsdf = [
   {
     headerName: 'Estado de la de tarea',
     field: 'estado_tarea',
-    minWidth: 280,
+    minWidth: 350,
     renderCell: (params: any) => {
       return params.value ?? 'N/A';
     },
   },
-
-
 ];

@@ -47,6 +47,7 @@ import { RutasTransferenciaDocumental } from '../transferenciaDocumental/routes/
 import { ConsultaEstadoSolicitudes } from '../consulltaEstadoSolicitudes/routes/ConsultaEstadoSolicitudes.routes';
 import { Digitalizacion_opas_Routes } from '../digitalizacionOpas/routes/OpasRutes';
 import { Ejemplo } from './components/Ejemplo';
+import { RutesTramitesServicos } from '../TramitesServicios/routes/RutasTramitesServicos';
  
 const routes = [
   {
@@ -201,6 +202,11 @@ const routes = [
     path: 'busqueda/',
     name: 'busqueda',
     component: () => <RutesWorkFlowPQRSDF />,
+  },
+  {
+    path: 'tramites/',
+    name: 'tramites',
+    component: () => <RutesTramitesServicos />,
   },
   {
     path: 'indicadores_pqrsdf/',

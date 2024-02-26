@@ -547,6 +547,185 @@ export const response_request_service = (params: any): any => {
     }
   };
 };
+//stiven_funcion_otros
+export const response_request_service_otros = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `gestor/central-digitalizacion/otros/responder-digitalizacion/`,
+        params
+      );
+      console.log(data);
+
+      control_success(data.detail);
+      dispatch(
+        get_digitalization_request_id_service_otros(
+          params.id_solicitud_de_digitalizacion
+        )
+      );
+
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('response_request_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+
+
+//stiven_funcion_otros
+export const get_digitalization_request_id_service_otros = (id: any): any => {
+
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `/gestor/central-digitalizacion/otros/get-solicitudes-by-id/${id}`
+      );
+      console.log(data);
+      if (data.success) {
+        dispatch(set_digitization_request(data.data));
+        // control_success(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+//stiven_funcion_otros
+export const add_metadata_service_otros = (id: number, archivo: any, datos_totales: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const formData = new FormData();
+
+      formData.append('data_digitalizacion', JSON.stringify(datos_totales));
+      if (archivo !== null) {
+        formData.append(`archivo`, archivo);
+      }
+
+
+      const { data } = await api.post(
+        `gestor/central-digitalizacion/otros/crear-digitalizacion/`,
+        formData
+      );
+      //  console.log('')(data);
+
+      control_success(data.detail);
+      dispatch(get_digitalization_request_id_service_otros(id));
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      //  console.log('')('add_metadata_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+
+
+
+//stiven_funcion_otros
+
+export const delete_metadata_service_otros = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/central-digitalizacion/otros/eliminar-digitalizacion/`,
+        { params }
+      );
+      console.log(data);
+
+      control_success(data.detail);
+      dispatch(
+        get_digitalization_request_id_service_otros(
+          params.id_solicitud_de_digitalizacion
+        )
+      );
+
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('delete_metadata_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+
+
+
+//stiven_funcion_otros
+export const edit_metadata_service_otros = (id: number, archivo: any, datos_totales: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const formData = new FormData();
+
+      formData.append('data_digitalizacion', JSON.stringify(datos_totales));
+       if (archivo !== null) {
+        formData.append(`archivo`, archivo);
+       }
+
+      // Realiza la solicitud a la API utilizando los datos preparados
+      const { data } = await api.put(
+        `gestor/central-digitalizacion/otros/actualizar-digitalizacion/`,
+        formData
+      );
+      // Maneja el éxito de la solicitud
+      control_success(data.detail);
+
+      // Despacha una acción para obtener la solicitud de digitalización actualizada
+      dispatch(get_digitalization_request_id_service_otros(id));
+
+      return data;
+    } catch (error: any) {
+      // Maneja los errores de la solicitud
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+//stiven_funcion_otros
+export const get_digitalization_responses_service_otros = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/central-digitalizacion/otros/get-solicitudes-respondidas/`,
+        { params }
+      );
+      console.log(data);
+      if (data.success) {
+        dispatch(set_digitization_requests(data.data));
+        control_success(data.detail);
+      }
+      return data;
+    } catch (error: any) {
+      //  console.log('')('get_digitalization_requests_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+
+
+
+
 
 
 // editar metadata OPAS

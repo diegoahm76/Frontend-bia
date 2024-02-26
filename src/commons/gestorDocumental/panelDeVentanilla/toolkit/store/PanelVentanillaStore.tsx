@@ -150,12 +150,12 @@ export const PanelVentanillaSlice = createSlice({
       state.actionsComplementos = action.payload;
     },
     //* mandejo de acciones para tramites y servicios
-    /* setActionssToManagePermissionsTramitesYServicios: (
+    setActionssToManagePermissionsTramitesYServicios: (
       state,
       action: PayloadAction<any>
     ) => {
       state.actionsTramitesYServicios = action.payload;
-    },*/
+    },
     //* mandejo de acciones para opas
     setActionssToManagePermissionsOpas: (state, action: PayloadAction<any>) => {
       state.actionsOpas = action.payload;
@@ -216,6 +216,8 @@ export const {
   setActionssToManagePermissionsOpas,
   // ? acciones sobre lo botones de otros
   setActionsOtros,
+  // tramites
+  setActionssToManagePermissionsTramitesYServicios,
   // ? acciones sobre lista de elementos de pqrsdf, trámites y servicios y otros
   setListaElementosPqrsfTramitesUotrosBusqueda,
   // ? acciones sobre lista de complementos, derequerimientos y otros

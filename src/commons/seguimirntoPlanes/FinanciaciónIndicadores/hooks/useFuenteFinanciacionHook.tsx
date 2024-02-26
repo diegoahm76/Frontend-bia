@@ -26,6 +26,7 @@ export const useFuenteFinanciacionHook = (): any => {
       nombre_cuenca: '',
       nombre_proyecto: '',
       nombre_actividad: '',
+      nombre_meta: '',
       vano_1: 0,
       vano_2: 0,
       vano_3: 0,
@@ -35,6 +36,7 @@ export const useFuenteFinanciacionHook = (): any => {
       id_cuenca: 0,
       id_proyecto: 0,
       id_actividad: 0,
+      id_meta: 0,
     },
   });
 
@@ -48,6 +50,7 @@ export const useFuenteFinanciacionHook = (): any => {
       nombre_cuenca: '',
       nombre_proyecto: '',
       nombre_actividad: '',
+      nombre_meta: '',
       vano_1: 0,
       vano_2: 0,
       vano_3: 0,
@@ -57,6 +60,7 @@ export const useFuenteFinanciacionHook = (): any => {
       id_cuenca: 0,
       id_proyecto: 0,
       id_actividad: 0,
+      id_meta: 0,
     });
   };
 
@@ -69,6 +73,7 @@ export const useFuenteFinanciacionHook = (): any => {
     id_producto,
     id_actividad,
     id_indicador,
+    id_meta,
     fetch_data_fuente_financiacion,
   } = useContext(DataContextFuentesFinanciacion);
 
@@ -85,6 +90,7 @@ export const useFuenteFinanciacionHook = (): any => {
       data.id_producto = id_producto;
       data.id_proyecto = id_proyecto;
       data.id_actividad = id_actividad;
+      data.id_meta = id_meta;
       data.valor_total = Number(data.valor_total);
       data.vano_1 = Number(data.vano_1);
       data.vano_2 = Number(data.vano_2);
@@ -115,6 +121,7 @@ export const useFuenteFinanciacionHook = (): any => {
       data.id_producto = id_producto;
       data.id_proyecto = id_proyecto;
       data.id_actividad = id_actividad;
+      data.id_meta = id_meta;
       data.valor_total = Number(data.valor_total);
       data.vano_1 = Number(data.vano_1);
       data.vano_2 = Number(data.vano_2);
