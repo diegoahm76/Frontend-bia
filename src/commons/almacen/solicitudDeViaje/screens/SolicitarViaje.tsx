@@ -371,7 +371,6 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
    * @returns {void}
    */
   const submit_fomulario = () => {
-    console.log(datos_solicitar_viaje);
     if(accion === 'editar'){
       btn_editar_solicitud_viaje();
       return;
