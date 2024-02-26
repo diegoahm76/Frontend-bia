@@ -53,3 +53,16 @@ export const enviar_inspeccion_vehiculo: any = (form_data: create_inspeccion_veh
     }
   };
 };
+
+
+export const obtener_vehiculos_sin_novedad: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('/almacen/vehiculos/novedades-vehiculo/get/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};

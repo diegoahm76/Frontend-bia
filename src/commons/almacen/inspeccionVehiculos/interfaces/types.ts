@@ -44,6 +44,7 @@ export interface data_busqueda_vehiculos {
   empresa_contratista: string;
   tiene_hoja_de_vida: boolean;
   id_marca: number;
+  id_hoja_vida_vehiculo: number;
 }
 
 export interface create_inspeccion_vehiculo {
@@ -112,4 +113,29 @@ export interface get_inspeccion_vehiculo {
   botiquin_completo: boolean;
   pito: boolean;
   observaciones?: string;
+}
+
+export interface response_vehiculos_inspeccionados {
+  success: boolean
+  detail: string
+  data: data_vehiculos_inspeccionados
+}
+
+export interface data_vehiculos_inspeccionados {
+  vehiculos_sin_novedad: interface_vehiculos_sin_novedad[]
+  vehiculos_con_novedad: interface_vehiculos_con_novedad[]
+}
+
+export interface interface_vehiculos_sin_novedad {
+  id_inspeccion_vehiculo: number
+  id_hoja_de_vida: number
+  placa: string
+  marca: string
+}
+
+export interface interface_vehiculos_con_novedad {
+  id_inspeccion_vehiculo: number
+  id_hoja_de_vida: number
+  placa_marca: string
+  novedad: string
 }

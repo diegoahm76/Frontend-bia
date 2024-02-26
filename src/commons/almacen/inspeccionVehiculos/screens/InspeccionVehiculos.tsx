@@ -42,6 +42,7 @@ const InspeccionVehiculos = () => {
   const obtener_vehiculo_logueado_fc: () => void = () => {
     dispatch(obtener_vehiculo_logueado())
       .then((response: response_vehiculo_logueado) => {
+        console.log(response);        
         if (!response.success) {
           control_error('No se encontraron los nombres del conductor');
           set_vehiculo_seleccionado('');
@@ -104,7 +105,7 @@ const InspeccionVehiculos = () => {
   }
 
   const pasar_a_seleccionado = () => {
-    set_id_hoja_vida_vehiculo(vehiculo_arrendado_encontrado.id_vehiculo_arrendado);
+    set_id_hoja_vida_vehiculo(vehiculo_arrendado_encontrado.id_hoja_vida_vehiculo);
     set_vehiculo_seleccionado(Object.keys(vehiculo_arrendado_encontrado).length !== 0 ?
     vehiculo_arrendado_encontrado.placa + ' - ' + vehiculo_arrendado_encontrado.nombre_marca
     : '');
@@ -116,8 +117,9 @@ const InspeccionVehiculos = () => {
       ...prev,
       id_hoja_vida_vehiculo: id_hoja_vida_vehiculo,
       kilometraje: kilometraje,
+      es_agendable: vehiculo_agendable === 'true' ? true : false,
     }))
-  },[kilometraje,id_hoja_vida_vehiculo])
+  },[kilometraje,id_hoja_vida_vehiculo,vehiculo_seleccionado])
 
 
   return (
