@@ -19,6 +19,7 @@ import {
   get_list_request_status_service,
   get_request_types_service,
   response_request_service,
+  response_request_opas_service,
   response_request_service_otros,
 } from '../store/thunks/centralDigitalizacionThunks';
 import SolicitudSeleccionada from '../componentes/CentralDigitalizacion/SolicitudSeleccionada';
@@ -113,8 +114,13 @@ export function ListadoAnexosScreen(): JSX.Element {
       digitalizacion_completada: true,
       id_persona_digitalizo: userinfo.id_persona,
     };
+    if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-    void dispatch(response_request_service(params));
+      void dispatch(response_request_opas_service(params));
+    } else {
+
+      void dispatch(response_request_service(params));
+    }
   };
 
 
@@ -153,8 +159,13 @@ return
         digitalizacion_completada: false,
         id_persona_digitalizo: userinfo.id_persona,
       };
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-      void dispatch(response_request_service(params));
+        void dispatch(response_request_opas_service(params));
+      } else {
+
+        void dispatch(response_request_service(params));
+      }
     }
   };
 

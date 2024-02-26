@@ -81,10 +81,17 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
       set_modal(true);
     }
   }, [respuesta_registro])
-  const [correo, setCorreo] = useState('');
-  const [nombre, setNombre] = useState('');
-  const [asunto, setAsunto] = useState('');
-  const [mensaje, setMensaje] = useState('');
+
+  useEffect(() => {
+    if (solicitud_facilidad && solicitud_facilidad.deudor && solicitud_facilidad.deudor.email) {
+      setCorreo(solicitud_facilidad.deudor.email);
+    }
+  }, [solicitud_facilidad]); // Ejecutar efecto cuando cambie solicitud_facilidad
+
+  const [correo, setCorreo] = useState(` `);
+  const [nombre, setNombre] = useState(' ');
+  const [asunto, setAsunto] = useState(' ');
+  const [mensaje, setMensaje] = useState(' ');
 
   const enviarCorreo = async () => {
     try {
@@ -478,18 +485,25 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                         size="small"
 
                         fullWidth
-                        // multiline
                         rows={4}
                         value={mensaje}
                         onChange={(e) => setMensaje(e.target.value)}
                       />
                     </Grid>
-
+                    {/* {solicitud_facilidad.deudor.email} */}
+                    {/* <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => setCorreo(solicitud_facilidadd.deudor.email)}
+                    >
+                      Mismo Correo
+                    </Button> */}
+{/*                     
                     <Grid item >
                       <Button variant="contained" color="primary" onClick={enviarCorreo}>
                         Enviar Correo
                       </Button>
-                    </Grid>
+                    </Grid> */}
 
 
                   </Grid>
@@ -511,6 +525,8 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                       startIcon={<Save />}
                       sx={{ marginTop: '30px' }}
                       onClick={() => {
+
+                        
                         const post_registro = async (): Promise<void> => {
                           try {
                             const { data: { data: res_registro } } = await post_respuesta_fac_pago({
@@ -521,6 +537,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                               informe_dbme: file,
                             })
                             set_respuesta_registro(res_registro ?? {});
+                            enviarCorreo
                           } catch (error: any) {
                             // throw new Error(error);
                             control_error(error.response.data.detail);

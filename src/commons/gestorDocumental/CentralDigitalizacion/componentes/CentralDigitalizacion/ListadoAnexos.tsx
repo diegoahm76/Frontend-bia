@@ -32,6 +32,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { control_error } from '../../store/thunks/centralDigitalizacionThunks';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Title } from '../../../../../components/Title';
+import React from 'react';
 interface IProps {
   control_form: any | null;
 }
@@ -194,7 +195,17 @@ const ListadoAnexos = () => {
       );
     }
   };
+  const [selectedExhibit, setSelectedExhibit] = React.useState(null);
 
+  const selectExhibit = (rowData:any) => {
+    setSelectedExhibit(rowData);
+  };
+  
+  const handleClick = () => {
+    console.log(selectedExhibit);
+  };
+
+  
   const columns_list: GridColDef[] = [
     {
       field: 'descargar',
@@ -282,6 +293,8 @@ const ListadoAnexos = () => {
             <IconButton
               onClick={() => {
                 select_exhibit(params.row);
+                selectExhibit(params.row);
+
               }}
             >
               <Avatar
@@ -336,6 +349,7 @@ const ListadoAnexos = () => {
           <Box sx={{ width: '80%' }}>
             <Grid item xs={12} marginY={2}>
               <Title title="Listado de anexos"></Title>
+              {/* <button onClick={handleClick}>Mostrar Digitalizado</button> */}
             </Grid>
             <Grid item xs={12} md={12} marginTop={2}>
               <DataGrid
@@ -466,6 +480,7 @@ const ListadoAnexos = () => {
           is_modal_active={add_metadata_is_active}
           set_is_modal_active={set_add_metadata_is_active}
           get_values_anexo={get_values}
+          selectedExhibit={selectedExhibit}
         />
       </Grid>
     </>
