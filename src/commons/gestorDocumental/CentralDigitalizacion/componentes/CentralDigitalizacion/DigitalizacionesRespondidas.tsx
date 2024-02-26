@@ -23,6 +23,7 @@ import {
   control_error,
   get_digitalization_responses_service,
   get_digitalization_responses_service_otros,
+  get_digitalization_opas_responses_service
 } from '../../store/thunks/centralDigitalizacionThunks';
 import { OpcionOtrosContext } from '../../context/BusquedaOtrosDigitalizacion';
 
@@ -37,6 +38,8 @@ const DigitalizacionesRespondidas = () => {
     reset,
     handleSubmit: handle_submit,
     getValues: get_values,
+
+    
   } = useForm<any>();
   const { request_types, list_request_status, person, digitization_requests,digitization_request } =
     useAppSelector((state) => state.central_digitalizacion_slice);
@@ -230,6 +233,12 @@ const DigitalizacionesRespondidas = () => {
         params.fecha_hasta = fecha_hasta;
       }
 
+      if (tipo_solicitud === "OPAS") {
+        void dispatch(get_digitalization_opas_responses_service(params));
+
+      }else {
+
+  
       if (tipo_solicitud === "OTROS") {
         void dispatch(get_digitalization_responses_service_otros(params));
         return
@@ -238,6 +247,8 @@ const DigitalizacionesRespondidas = () => {
 
 
       void dispatch(get_digitalization_responses_service(params));
+      }
+
     }
   };
 

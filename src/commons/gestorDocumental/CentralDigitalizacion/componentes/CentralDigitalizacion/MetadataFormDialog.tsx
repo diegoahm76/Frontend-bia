@@ -37,10 +37,12 @@ import {
 } from '../../store/slice/centralDigitalizacionSlice';
 import {
   add_metadata_service,
+  add_metadata_opas_service,
   add_metadata_service_otros,
   control_error,
   control_success,
   delete_metadata_service,
+  delete_metadata_opas_service,
   delete_metadata_service_otros,
   edit_metadata_service,
   edit_metadata_service_otros,
@@ -61,6 +63,7 @@ interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   get_values_anexo: any;
+  selectedExhibit: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -69,6 +72,7 @@ const MetadataFormDialog = ({
   is_modal_active,
   set_is_modal_active,
   get_values_anexo,
+  selectedExhibit,
 }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -346,78 +350,25 @@ const MetadataFormDialog = ({
           }
         }
 
-        // console.log(metadata,data)
-        // console.log(exhibit.ya_digitalizado)
-        if (opcion_otros === "OTROS") {
+        if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-          const datos_totales_creacion = {
-            id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
-            id_anexo: exhibit.id_anexo,
-            nro_folios_documento: data.nro_folios_documento,
-            asunto: data.asunto,
-            cod_origen_archivo: data.cod_origen_archivo,
-            cod_categoria_archivo: data.cod_categoria_archivo,
-            tiene_replica_fisica: checked_tiene_tipologia ? data.id_tipologia_doc : null,
-            tipologia_no_creada_TRD: checked_tiene_tipologia ? null : data.tipologia_no_creada_en_TRD,
-            id_tipologia_doc: data.id_tipologia_doc,
-            palabras_clave_doc: data.palabras_clave_doc,
-            descripcion: data.descripcion,
-            observacion_digitalizacion: data.observacion_digitalizacion,
-
-          };
-          const datos_totales_actualizar = {
-            id_metadatos_anexo_tmp: metadata.id_metadatos_anexo_tmp,
-            id_archivo_sistema: data.id_archivo_sistema,
-            // id_archivo_sistema_dos: metadata.id_archivo_sistema,
-            id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
-            id_anexo: metadata.id_anexo,
-            nro_folios_documento: data.nro_folios_documento,
-            asunto: data.asunto,
-            cod_origen_archivo: metadata.cod_origen_archivo,
-            cod_categoria_archivo: data.cod_categoria_archivo,
-            tiene_replica_fisica: data.tiene_replica_fisica,
-            tipologia_no_creada_TRD: checked_tiene_tipologia ? null : data.tipologia_no_creada_en_TRD,
-            id_tipologia_doc: data.id_tipologia_doc,
-            palabras_clave_doc: data.palabras_clave_doc,
-            descripcion: data.descripcion,
-            observacion_digitalizacion: data.observacion_digitalizacion
-          };
-
-          {
-            exhibit.ya_digitalizado === false && (
-              void dispatch(
-                add_metadata_service_otros(
-                  digitization_request.id_solicitud_de_digitalizacion ?? 0,
-                  pdfFile === null ? exhibit.exhibit_link : pdfFile,
-                  datos_totales_creacion
-                )
+          if (selectedExhibit?.ya_digitalizado === true) {
+            void dispatch(
+              edit_metadata_opas_service(
+                form_data,
+                digitization_request.id_solicitud_de_digitalizacion ?? 0
               )
-            )
+            );
           }
-
-          {
-            exhibit.ya_digitalizado === true && (
-
-              void dispatch(
-                edit_metadata_service_otros(
-                  digitization_request.id_solicitud_de_digitalizacion ?? 0,
-                  pdfFile === null ? exhibit.exhibit_link : null,
-                  datos_totales_actualizar
-                )
-              )
-            )
-          }
-          return;
+        } else {
+         
         }
-
-
-
-        void dispatch(
-          edit_metadata_service(
-            form_data,
-            digitization_request.id_solicitud_de_digitalizacion ?? 0
-          ))
-
+ void dispatch(
+            edit_metadata_service(
+              form_data,
+              digitization_request.id_solicitud_de_digitalizacion ?? 0
+            )
+          );
       } else {
         control_error(
           'Solo se pueden editar metadatos hasta 30 dias despues de la fecha de creación'
@@ -442,46 +393,28 @@ const MetadataFormDialog = ({
         }
       }
 
-
-
-      if (opcion_otros === "OTROS") {
-
-        const datos_totales_creacion = {
-          id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
-          id_anexo: exhibit.id_anexo,
-          nro_folios_documento: data.nro_folios_documento,
-          asunto: data.asunto,
-          cod_origen_archivo: data.cod_origen_archivo,
-          cod_categoria_archivo: data.cod_categoria_archivo,
-          tiene_replica_fisica: data.tiene_replica_fisica,
-          tipologia_no_creada_TRD: checked_tiene_tipologia ? null : data.tipologia_no_creada_en_TRD,
-          id_tipologia_doc: checked_tiene_tipologia ? data.id_tipologia_doc : null,
-          palabras_clave_doc: data.palabras_clave_doc,
-          descripcion: data.descripcion,
-          observacion_digitalizacion: data.observacion_digitalizacion,
-
-        };
-        {
-          exhibit.ya_digitalizado === false && (
-            void dispatch(
-              add_metadata_service_otros(
-                digitization_request.id_solicitud_de_digitalizacion ?? 0,
-                pdfFile === null ? exhibit.exhibit_link : pdfFile,
-                datos_totales_creacion
-              )
-            )
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
+        void dispatch(
+          add_metadata_opas_service(
+            form_data,
+            digitization_request.id_solicitud_de_digitalizacion ?? 0
           )
-          return;
-        }
 
+        );
+      } else {
+
+        void dispatch(
+          add_metadata_service(
+            form_data,
+            digitization_request.id_solicitud_de_digitalizacion ?? 0
+          )
+          // add_metadata_service(
+          //   form_data,
+          //   digitization_request.id_solicitud_de_digitalizacion ?? 0
+          // )
+
+        );
       }
-
-
-
-      add_metadata_service(
-        form_data,
-        digitization_request.id_solicitud_de_digitalizacion ?? 0
-      );
 
 
     }
@@ -516,7 +449,15 @@ const MetadataFormDialog = ({
             digitization_request.id_solicitud_de_digitalizacion,
         };
 
-        void dispatch(delete_metadata_service(params));
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
+
+        void dispatch(delete_metadata_opas_service(params));
+
+      } else {
+
+          void dispatch(delete_metadata_service(params));
+      }
+
 
 
 
@@ -532,12 +473,18 @@ const MetadataFormDialog = ({
     }, [file_origins]);
     useEffect(() => {
       if (exhibit.cod_medio_almacenamiento === 'Pa') {
-        const arrayNuevo = file_origins.filter((objeto) => objeto.key !== 'Pa');
+        const arrayNuevo = file_origins.filter((objeto: any) => objeto.key !== 'Pa');
         set_aux_origen_archivos(arrayNuevo);
       } else {
         set_aux_origen_archivos(file_origins);
       }
     }, [exhibit]);
+  const handleClick = () => {
+    console.log(selectedExhibit);
+    console.log("11111111111111111");
+
+    console.log(selectedExhibit?.ya_digitalizado);
+  };
 
     return (
       <Dialog

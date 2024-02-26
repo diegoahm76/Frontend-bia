@@ -213,7 +213,7 @@ export const ConsultaSolucitud: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <FormControl  size="small" fullWidth>
-                        <InputLabel   >Unidad Organizacional</InputLabel>
+                        <InputLabel   >Organigrama</InputLabel>
                         <Select
                             label="Unidad Organizacional"
                             onChange={handleInputChange}

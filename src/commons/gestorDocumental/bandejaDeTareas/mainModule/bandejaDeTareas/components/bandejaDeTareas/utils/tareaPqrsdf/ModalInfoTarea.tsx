@@ -161,11 +161,12 @@ export const ModalInfoTarea = (): JSX.Element => {
                     <TextField
                       disabled
                       fullWidth
-                      label="Días para respuesta"
+                      label="Días para respuesta / Tiempo de respuesta"
                       size="small"
                       variant="outlined"
                       value={
                         currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.dias_para_respuesta ??
+                        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tiempo_respuesta ??
                         'N/A'
                       }
                       InputLabelProps={{ shrink: true }}

@@ -17,10 +17,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-import { getAnexosComplemento } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosComplementos.service';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
-import { columnsRequerimientosTramites } from './columsRequerimientosTramites/columnsRequerimientosTramites';
 import { ModalComplementoTraSer } from '../../../../../Atom/modalComplementosTraSer/ModalComplementoTraSer';
+import { columnsReqTra } from './columsReqTra/columnsReqTra';
 
 export const RequerimientosTramites: React.FC = (): JSX.Element => {
   //* dispatch declaration
@@ -80,7 +79,7 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
   //* columns definition
   const columns = [
     //* se debe revisar si el tipo de complemento es pqrsdf o tramite para poder mostrar la información de la manera correcta
-    ...columnsRequerimientosTramites,
+    ...columnsReqTra,
     {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',

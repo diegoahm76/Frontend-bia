@@ -161,7 +161,7 @@ export const buscar_expediente_id: any = (id_expediente: number) => {
 export const buscar_expediente: any = (trd_nombre: string,fecha_apertura_expediente: string,id_serie_origen: string,id_subserie_origen: string,palabras_clave_expediente: string,titulo_expediente: string,codigos_uni_serie_subserie: string,id_persona_titular_exp_complejo: string,codigo_exp_consec_por_agno: string) => {
   return async () => {
     try {
-      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expediente-abierto/?trd_nombre=${trd_nombre}&fecha_apertura_expediente=${fecha_apertura_expediente}&id_serie_origen=${id_serie_origen}&id_subserie_origen=${id_subserie_origen}&palabras_clave_expediente=${palabras_clave_expediente}&titulo_expediente=${titulo_expediente}&codigos_uni_serie_subserie=${codigos_uni_serie_subserie}&id_persona_titular_exp_complejo=${id_persona_titular_exp_complejo}&codigo_exp_consec_por_agno=${codigo_exp_consec_por_agno}`);
+      const { data } = await api.get(`gestor/expedientes-archivos/expedientes/buscar-expediente-abierto/?trd_nombre=${trd_nombre}&fecha_apertura_expediente=${fecha_apertura_expediente}&id_serie_origen=${id_serie_origen}&id_subserie_origen=${id_subserie_origen}&palabras_clave_expediente=${palabras_clave_expediente}&titulo_expediente=${titulo_expediente}&codigos_uni_serie_subserie=${codigos_uni_serie_subserie}&id_persona_titular_exp_complejo=${id_persona_titular_exp_complejo}&codigo_exp_consec_por_agno=`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

@@ -25,11 +25,11 @@ const DEFAULT_BETA_DOWNLOAD_FILES_URL: string =
 
 // ? default urls for the app - api connection & download files (production)
 const DEFAULT_PROD_URL: string = 'https://bia.cormacarena.gov.co/api/';
-const DEFAULT_PROD_DOWNLOAD_FILES_URL: string =
+const DEFAULT_PROD_DOWNLOAD_FILES_URL =
   'https://bia.cormacarena.gov.co';
 
 export const baseURL: string =
-  process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_BETA_URL || DEFAULT_BETA_URL
     : process.env.REACT_APP_PROD_URL || DEFAULT_PROD_URL;
 

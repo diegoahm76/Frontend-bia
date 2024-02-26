@@ -14,6 +14,14 @@ import dayjs, { type Dayjs } from 'dayjs';
 import type { DetallePeriodo, DetallesPeriodos } from '../interfaces/proceso';
 import { FacturacionVisor } from './FacturacionVisor';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { control_error } from '../../../helpers';
+import { get_obligaciones_id } from '../facilidadPago/slices/ObligacionesSlice';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { useSelector, useDispatch } from 'react-redux';
+import { TablaObligacionesUsuarioConsulta } from '../facilidadPago/componentes/TablaObligacionesUsuarioConsulta';
+import {  Article } from '@mui/icons-material';
+
+
 const detalles_ciclos: string[] = [
   'diario',
   'mensual',
@@ -21,7 +29,31 @@ const detalles_ciclos: string[] = [
   'semestral',
   'anual',
 ];
+export interface Obligacion {
+  id: number;
+  nombre: string;
+  inicio: string;
+  nro_expediente: number;
+  nro_resolucion: string;
+  monto_inicial: string;
+  valor_intereses: string;
+  dias_mora: number;
+  valor_capital_intereses: number;
+}
+export interface ObligacionesUsuario {
+  id_deudor: number;
+  nombre_completo: string;
+  numero_identificacion: string;
+  email: string;
+  obligaciones: Obligacion[];
+  tiene_facilidad: boolean;
+}
 
+interface RootStateObligaciones {
+  obligaciones: {
+    obligaciones: ObligacionesUsuario[];
+  }
+}
 const detalles_periodos: DetallesPeriodos = {
   diario: {
     tamano: 1,
@@ -368,6 +400,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         set_open_notification_modal(true);
       });
   };
+  const [obligaciones_module, set_obligaciones_module] = useState(false);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
 
   const columns_deudores: GridColDef[] = [
     {
@@ -402,6 +437,45 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       valueGetter: (params) => {
         return `${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`;
       }
+    },
+    {
+      field: 'Deudores',
+      headerName: 'Deudores',
+      width: 150,
+      renderCell: (params) => {
+       
+          return <>
+          <Tooltip title="Ver">
+            <IconButton
+              onClick={() => {
+                try {
+                  void dispatch(get_obligaciones_id(params.row.identificacion));
+                  set_obligaciones_module(true);
+                  handle_open_buscarr();
+                } catch (error: any) {
+                  // Manejo del error
+                  control_error(error.response.data.detail);
+                }
+              } }
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                 <Article
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        </>;
+       
+      },
     },
     {
       field: 'acciones',
@@ -452,11 +526,18 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           </>
         );
       }
-    }
+    },
+   
+
   ];
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
   const handle_open_buscar = (): void => {
     set_is_buscar(true);
+  };
+
+  const [is_modal_activee, set_is_buscarr] = useState<boolean>(false);
+  const handle_open_buscarr = (): void => {
+    set_is_buscarr(true);
   };
   return (
     <>
@@ -524,6 +605,41 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                     }
                   }}
                 />
+
+
+{
+        obligaciones_module ? (
+        <Grid
+          container
+          sx={{
+            position: 'relative',
+            // background: '#FAFAFA',
+            borderRadius: '15px',
+            mb: '20px',
+            mt: '20px',
+            p: '20px',
+            // boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
+          <Grid item xs={12}>
+            <Box
+              component="form"
+              noValidate
+              autoComplete="off"
+            >
+              {
+                obligaciones.length !== 0 ? (
+                  <>
+
+                    <TablaObligacionesUsuarioConsulta  is_modal_active={is_modal_activee}  set_is_modal_active={set_is_buscarr}/>
+                  </>
+                ): <p>.</p>
+              }
+            </Box>
+          </Grid>
+        </Grid>
+        ) : null
+      }
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
