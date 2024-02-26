@@ -42,6 +42,8 @@ export const Datos: React.FC = () => {
       console.error(error);
     }
   };
+
+  
   useEffect(() => {
     fetchReporteTiposUsuario();
   }, [selectedEncuestaId]);
@@ -230,7 +232,7 @@ export const Datos: React.FC = () => {
           sx={miEstilo}
         >
           <Grid item xs={12} marginTop={2} sm={6}>
-            <ReactApexChart options={chartDataTiposUsuario} series={seriesTiposUsuario} type="bar" height={330} />
+            < ReactApexChart options={chartDataTiposUsuario} series={seriesTiposUsuario} type="bar" height={330} />
           </Grid>
           <Grid item xs={12} marginTop={4} sm={6}>
             <Graficapie selectedEncuestaId={selectedEncuestaId} />            {/* Renderiza la gráfica torta */}

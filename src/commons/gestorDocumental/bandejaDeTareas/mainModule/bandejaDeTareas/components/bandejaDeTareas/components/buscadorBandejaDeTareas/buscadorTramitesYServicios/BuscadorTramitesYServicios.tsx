@@ -42,27 +42,6 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
 
   return (
     <>
-      <Grid item xs={12} sm={4}>
-        <Controller
-          name="expediente"
-          control={controlBusquedaBandejaTareas}
-          defaultValue=""
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <TextField
-              fullWidth
-              label="Expediente"
-              size="small"
-              variant="outlined"
-              value={value}
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => {
-                onChange(e.target.value);
-              }}
-              inputProps={{ maxLength: 50 }}
-            />
-          )}
-        />
-      </Grid>
       <Grid
         item
         xs={12}
@@ -85,7 +64,15 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
                     //  console.log('')(selectedOption);
                     onChange(selectedOption);
                   }}
-                  options={request?.estadoAsignacionTarea ?? []}
+                  options={
+                    [
+                      ...request?.estadoAsignacionTarea,
+                      {
+                        label: 'PENDIENTE POR CONFIRMAR',
+                        value: 'None', // back lo recibe de esa manera
+                      },
+                    ] ?? []
+                  }
                   placeholder="Seleccionar"
                 />
               )}
@@ -107,7 +94,8 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
         />
       </Grid>
 
-      {controlBusquedaBandejaTareas?._formValues?.estado_asignacion_de_tarea
+{/*COMENTAR ING RICHAR PARA AÑADIR EL CAMPO EN LA BÚSQUEDA BACKEND */ }
+      {/*{controlBusquedaBandejaTareas?._formValues?.estado_asignacion_de_tarea
         ?.value === 'Ac' &&
         controlBusquedaBandejaTareas?._formValues
           ?.estado_asignacion_de_tarea && (
@@ -150,8 +138,8 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
               )}
             />
           </Grid>
-        )}
-      <Grid
+        )}*/}
+      {/*  <Grid
         item
         xs={12}
         sm={4}
@@ -189,7 +177,7 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
             </div>
           )}
         />
-      </Grid>
+      </Grid>*/}
     </>
   );
 };

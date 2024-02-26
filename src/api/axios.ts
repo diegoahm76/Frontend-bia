@@ -25,7 +25,7 @@ const DEFAULT_BETA_DOWNLOAD_FILES_URL: string =
 
 // ? default urls for the app - api connection & download files (production)
 const DEFAULT_PROD_URL: string = 'https://bia.cormacarena.gov.co/api/';
-const DEFAULT_PROD_DOWNLOAD_FILES_URL: string =
+const DEFAULT_PROD_DOWNLOAD_FILES_URL =
   'https://bia.cormacarena.gov.co';
 
 export const baseURL: string =

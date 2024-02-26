@@ -12,8 +12,8 @@ import { ButtonsComplementos } from './buttonsPqrsdf/buttonsComplementos/Buttons
 import { ButtonsOpas } from './buttonsOpas/ButtonsOpas';
 import { ButtonsOtros } from './buttonsOtros/ButtonsOtros';
 import { ButtonsTramites } from './buttonsTramitesYServicios/ButtonsTramitesSer';
-import { render } from '@testing-library/react';
-import { ButtonsComplementosTramites } from './buttonsTramitesYServicios/buttonComplementosTramites/ButtonsComplementosTramites';
+import { ButtonsCompTram } from './buttonsTramitesYServicios/buttonCompTra/ButtonsComTram';
+
 
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
@@ -31,7 +31,7 @@ const renderTramitesYServicios = () => <ButtonsTramites />;
 const renderOtros = () => <ButtonsOtros />;
 const renderComplementoPQRSDF = () => <ButtonsComplementos />;
 const renderOPAS = () => <ButtonsOpas />;
-const renderComplementosTramites = () => <ButtonsComplementosTramites />;
+const renderComplementosTramites = () => <ButtonsCompTram />;
 
 export const ButtonsPanelVentanilla = (): JSX.Element => {
   //* navigate declaration
