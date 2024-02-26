@@ -198,7 +198,7 @@ export const get_digitalization_responses_service = (params: any): any => {
   };
 };
 
-//stiven_funcion_otros_Stiven
+//stiven_funcion_otros
 export const get_digitalization_responses_service_otros = (params: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
