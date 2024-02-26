@@ -5,31 +5,23 @@ import TarjetaInspeccion from "./TarjetaInspeccion";
 import { useEffect, useState } from "react";
 import { cambio_input_radio } from "../thunks/cambio_input_radio";
 import { Title } from "../../../../components";
-import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import ClearIcon from '@mui/icons-material/Clear';
 import ContenedorInput from "./ContenedorInput";
 import { estilo_radio } from "../thunks/estilo_radio";
-import { create_inspeccion_vehiculo } from "../interfaces/types";
 import { useAppDispatch } from "../../../../hooks";
-import { enviar_inspeccion_vehiculo } from "../thunks/inspeccion_vehiculos";
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
+import CloseIcon from '@mui/icons-material/Close';
+import { get_inspeccion_vehiculo } from "../interfaces/types";
 
 interface props {
-  set_data_inspeccion_vehiculo: React.Dispatch<React.SetStateAction<create_inspeccion_vehiculo>>;
-  data_inspeccion_vehiculo: create_inspeccion_vehiculo;
-  set_kilometraje: React.Dispatch<React.SetStateAction<number>>
-  set_id_hoja_vida_vehiculo: React.Dispatch<React.SetStateAction<number>>
+  set_mostrar_view_inpeccion: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
-const ElementosInspeccionar: React.FC<props> = ({
-  set_data_inspeccion_vehiculo,
-  data_inspeccion_vehiculo,
-  set_kilometraje,
-  set_id_hoja_vida_vehiculo
-}) => {
+const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccion}) => {
   const dispatch = useAppDispatch();
-  const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('true');
+
+  const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('false');
   const [direcionales_traseras, set_direcionales_traseras] = useState<string>('true');
   const [limpiabrisas_delantero, set_limpiabrisas_delantero] = useState<string>('true');
   const [limpiabrisas_trasero, set_limpiabrisas_trasero] = useState<string>('true');
@@ -61,201 +53,115 @@ const ElementosInspeccionar: React.FC<props> = ({
   const [observaciones, set_observaciones] = useState<string>('');
   const [tiene_observaciones, set_tiene_observaciones] = useState<boolean>(false);
 
+  const [data_vehiculo_inspeccionado, set_vehiculo_inspeccionado] = useState<get_inspeccion_vehiculo>({
+    id_hoja_vida_vehiculo: 0,
+    kilometraje: 0,
+    dir_llantas_delanteras: true,
+    dir_llantas_traseras: true,
+    limpiabrisas_delantero: true,
+    limpiabrisas_traseros: true,
+    nivel_aceite: true,
+    estado_frenos: true,
+    nivel_refrigerante: true,
+    apoyo_cabezas_piloto: true,
+    apoyo_cabezas_copiloto: true,
+    apoyo_cabezas_traseros: true,
+    frenos_generales: true,
+    freno_emergencia: true,
+    llantas_delanteras: true,
+    llantas_traseras: true,
+    llanta_repuesto: true,
+    espejos_laterales: true,
+    espejo_retrovisor: true,
+    cinturon_seguridad_delantero: true,
+    cinturon_seguridad_trasero: true,
+    luces_altas: true,
+    luces_media: true,
+    luces_bajas: true,
+    luces_parada: true,
+    luces_parqueo: true,
+    luces_reversa: true,
+    kit_herramientas: true,
+    botiquin_completo: true,
+    pito: true,
+    observaciones: 'Se encontro llanda derecha delantera defectuosa',
+  })
+
   useEffect(()=>{
-    set_data_inspeccion_vehiculo((prev)=>{
-      const nuevos_datos = {
-        dir_llantas_delanteras: direcionales_delanteras === 'true' ? true : false,
-        dir_llantas_traseras: direcionales_traseras === 'true' ? true : false,
-        limpiabrisas_delantero: limpiabrisas_delantero === 'true' ? true : false,
-        limpiabrisas_traseros: limpiabrisas_trasero === 'true' ? true : false,
-        nivel_aceite: nivel_aceite === 'true' ? true : false,
-        estado_frenos: nivel_frenos === 'true' ? true : false,
-        nivel_refrigerante: nivel_refrigerante === 'true' ? true : false,
-        apoyo_cabezas_piloto: apoyacabezas_piloto === 'true' ? true : false,
-        apoyo_cabezas_copiloto: apoyacabezas_copiloto === 'true' ? true : false,
-        apoyo_cabezas_traseros: apoyacabezas_traseros === 'true' ? true : false,
-        frenos_generales: frenos_generales === 'true' ? true : false,
-        freno_emergencia: frenos_emergencia === 'true' ? true : false,
-        llantas_delanteras: llantas_delanteras === 'true' ? true : false,
-        llantas_traseras: llantas_traseras === 'true' ? true : false,
-        llanta_repuesto: llanta_repuesto === 'true' ? true : false,
-        espejos_laterales: espejos_laterales === 'true' ? true : false,
-        espejo_retrovisor: espejos_retrovisor === 'true' ? true : false,
-        cinturon_seguridad_delantero: cinturones_delanteros === 'true' ? true : false,
-        cinturon_seguridad_trasero: cinturones_traseros === 'true' ? true : false,
-        luces_altas: luces_altas === 'true' ? true : false,
-        luces_media: luces_medias === 'true' ? true : false,
-        luces_bajas: luces_bajas === 'true' ? true : false,
-        luces_parada: luces_parada === 'true' ? true : false,
-        luces_parqueo: luces_parqueo === 'true' ? true : false,
-        luces_reversa: luces_reversa === 'true' ? true : false,
-        kit_herramientas: kit_herramientas === 'true' ? true : false,
-        botiquin_completo: botiquin_completo === 'true' ? true : false,
-        pito: pito === 'true' ? true : false,
-        ...(tiene_observaciones && { observaciones: observaciones }),
-      }
+    set_direcionales_delanteras(data_vehiculo_inspeccionado.dir_llantas_delanteras.toString());
+    set_direcionales_traseras(data_vehiculo_inspeccionado.dir_llantas_traseras.toString());
+    set_limpiabrisas_delantero(data_vehiculo_inspeccionado.limpiabrisas_delantero.toString());
+    set_limpiabrisas_trasero(data_vehiculo_inspeccionado.limpiabrisas_traseros.toString());
+    set_nivel_aceite(data_vehiculo_inspeccionado.nivel_aceite.toString());
+    set_nivel_frenos(data_vehiculo_inspeccionado.estado_frenos.toString());
+    set_nivel_refrigerante(data_vehiculo_inspeccionado.nivel_refrigerante.toString());
+    set_apoyacabezas_piloto(data_vehiculo_inspeccionado.apoyo_cabezas_piloto.toString());
+    set_apoyacabezas_copiloto(data_vehiculo_inspeccionado.apoyo_cabezas_copiloto.toString());
+    set_apoyacabezas_traseros(data_vehiculo_inspeccionado.apoyo_cabezas_traseros.toString());
+    set_frenos_generales(data_vehiculo_inspeccionado.frenos_generales.toString());
+    set_frenos_emergencia(data_vehiculo_inspeccionado.freno_emergencia.toString());
+    set_llantas_delanteras(data_vehiculo_inspeccionado.llantas_delanteras.toString());
+    set_llantas_traseras(data_vehiculo_inspeccionado.llantas_traseras.toString());
+    set_llanta_repuesto(data_vehiculo_inspeccionado.llanta_repuesto.toString());
+    set_espejos_laterales(data_vehiculo_inspeccionado.espejos_laterales.toString());
+    set_espejos_retrovisor(data_vehiculo_inspeccionado.espejo_retrovisor.toString());
+    set_cinturones_delanteros(data_vehiculo_inspeccionado.cinturon_seguridad_delantero.toString());
+    set_cinturones_traseros(data_vehiculo_inspeccionado.cinturon_seguridad_trasero.toString());
+    set_luces_altas(data_vehiculo_inspeccionado.luces_altas.toString());
+    set_luces_medias(data_vehiculo_inspeccionado.luces_media.toString());
+    set_luces_bajas(data_vehiculo_inspeccionado.luces_bajas.toString());
+    set_luces_parada(data_vehiculo_inspeccionado.luces_parada.toString());
+    set_luces_parqueo(data_vehiculo_inspeccionado.luces_parqueo.toString());
+    set_luces_reversa(data_vehiculo_inspeccionado.luces_reversa.toString());
+    set_kit_herramientas(data_vehiculo_inspeccionado.kit_herramientas.toString());
+    set_botiquin_completo(data_vehiculo_inspeccionado.botiquin_completo.toString());
+    set_pito(data_vehiculo_inspeccionado.pito.toString());
+  },[data_vehiculo_inspeccionado]);
 
-      /**validamos si todos los elementos estan bien, eliminamos la clave 'observaciones' de los datos
-       * y de los datos traidos por '..prev'
-      */
-      if (!tiene_observaciones) {
-        delete nuevos_datos.observaciones;
-        delete prev.observaciones;
-      }
-      return { ...prev, ...nuevos_datos };
-      }
-    )
-  },[direcionales_delanteras,
-    direcionales_traseras,
-    limpiabrisas_delantero,
-    limpiabrisas_trasero,
-    nivel_aceite,
-    nivel_frenos,
-    frenos_generales,
-    frenos_emergencia,
-    nivel_refrigerante,
-    apoyacabezas_piloto,
-    apoyacabezas_copiloto,
-    apoyacabezas_traseros,
-    llantas_delanteras,
-    llantas_traseras,
-    llanta_repuesto,
-    espejos_laterales,
-    espejos_retrovisor,
-    cinturones_delanteros,
-    cinturones_traseros,
-    luces_altas,
-    luces_medias,
-    luces_bajas,
-    luces_parada,
-    luces_parqueo,
-    luces_reversa,
-    kit_herramientas,
-    botiquin_completo,
-    pito,
-    tiene_observaciones,observaciones])
+  useEffect(()=>{
+    if('observaciones' in data_vehiculo_inspeccionado){
+      set_tiene_observaciones(true);
+      set_observaciones(data_vehiculo_inspeccionado.observaciones ?? '')
+    }
+  },[data_vehiculo_inspeccionado])
 
-  useEffect(() => {
-    const estados_individuales = [
-      direcionales_delanteras,
-      direcionales_traseras,
-      limpiabrisas_delantero,
-      limpiabrisas_trasero,
-      nivel_aceite,
-      nivel_frenos,
-      frenos_generales,
-      frenos_emergencia,
-      nivel_refrigerante,
-      apoyacabezas_piloto,
-      apoyacabezas_copiloto,
-      apoyacabezas_traseros,
-      llantas_delanteras,
-      llantas_traseras,
-      llanta_repuesto,
-      espejos_laterales,
-      espejos_retrovisor,
-      cinturones_delanteros,
-      cinturones_traseros,
-      luces_altas,
-      luces_medias,
-      luces_bajas,
-      luces_parada,
-      luces_parqueo,
-      luces_reversa,
-      kit_herramientas,
-      botiquin_completo,
-      pito
-    ];
-    //Si hay por lo menos un estado malo, entoces devuelve true
-    const hay_fallo = estados_individuales.some(estado => estado === 'false');  
-    set_tiene_observaciones(hay_fallo ? true : false);
-  }, [direcionales_delanteras,
-    direcionales_traseras,
-    limpiabrisas_delantero,
-    limpiabrisas_trasero,
-    nivel_aceite,
-    nivel_frenos,
-    frenos_generales,
-    frenos_emergencia,
-    nivel_refrigerante,
-    apoyacabezas_piloto,
-    apoyacabezas_copiloto,
-    apoyacabezas_traseros,
-    llantas_delanteras,
-    llantas_traseras,
-    llanta_repuesto,
-    espejos_laterales,
-    espejos_retrovisor,
-    cinturones_delanteros,
-    cinturones_traseros,
-    luces_altas,
-    luces_medias,
-    luces_bajas,
-    luces_parada,
-    luces_parqueo,
-    luces_reversa,
-    kit_herramientas,
-    botiquin_completo,
-    pito]);
-
-  const limpiar_inspeccion = () => {
-    set_direcionales_delanteras('true');
-    set_direcionales_traseras('true');
-    set_limpiabrisas_delantero('true');
-    set_limpiabrisas_trasero('true');
-    set_nivel_aceite('true');
-    set_nivel_frenos('true');
-    set_frenos_generales('true');
-    set_frenos_emergencia('true');
-    set_nivel_refrigerante('true');
-    set_apoyacabezas_piloto('true');
-    set_apoyacabezas_copiloto('true');
-    set_apoyacabezas_traseros('true');
-    set_llantas_delanteras('true');
-    set_llantas_traseras('true');
-    set_llanta_repuesto('true');
-    set_espejos_laterales('true');
-    set_espejos_retrovisor('true');
-    set_cinturones_delanteros('true');
-    set_cinturones_traseros('true');
-    set_luces_altas('true');
-    set_luces_medias('true');
-    set_luces_bajas('true');
-    set_luces_parada('true');
-    set_luces_parqueo('true');
-    set_luces_reversa('true');
-    set_kit_herramientas('true');
-    set_botiquin_completo('true');
-    set_pito('true');
-    set_kilometraje(0);
-    set_id_hoja_vida_vehiculo(0);
-  }
-
-  const enviar_asignacion_vehiculo = () => {
-    dispatch(enviar_inspeccion_vehiculo(data_inspeccion_vehiculo)).then((response: { success: boolean, detail: string, data: any }) => {
-      if (response) {
-        console.log(response);        
-        return;
-      }
-    })
-    limpiar_inspeccion();
-  }
+  useEffect(()=>{
+    console.log(
+      data_vehiculo_inspeccionado.dir_llantas_delanteras.toString()
+    );
+  },[])
+  
 
   return (
-    <Grid container item xs={12} sx={{
-      display:'flex',
-      justifyContent:'space-between',
-      gap:2
-    }}>
+    <Grid
+      container
+      spacing={2}
+      marginTop={2}
+      sx={{
+        position: 'relative',
+        background: '#FAFAFA',
+        borderRadius: '15px',
+        boxShadow: '0px 3px 6px #042F4A26',
+        p: '20px',
+        mb: '20px',
+        display:'flex',
+        justifyContent:'space-between',
+        gap: 2
+      }}
+      >
+      <Title title="Elementos a inspeccionar" />
+
       <TarjetaInspeccion title="Direccionales">
         <ContenedorInput>
           <FormLabel>Direccionales delanteras</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',direcionales_delanteras,set_direcionales_delanteras)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',direcionales_delanteras,set_direcionales_delanteras)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -265,10 +171,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Direccionales Traseras</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',direcionales_traseras,set_direcionales_traseras)}
               sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',direcionales_traseras,set_direcionales_traseras)}
               sx={estilo_radio('#e23a3a',28)}
             />
@@ -281,10 +189,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Limpiabrisas delantero</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',limpiabrisas_delantero,set_limpiabrisas_delantero)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',limpiabrisas_delantero,set_limpiabrisas_delantero)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -294,10 +204,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Limpiabrisas trasero</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',limpiabrisas_trasero,set_limpiabrisas_trasero)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',limpiabrisas_trasero,set_limpiabrisas_trasero)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -310,10 +222,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Nivel de aceite</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',nivel_aceite,set_nivel_aceite)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',nivel_aceite,set_nivel_aceite)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -326,10 +240,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Nivel de frenos</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',nivel_frenos,set_nivel_frenos)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',nivel_frenos,set_nivel_frenos)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -339,10 +255,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Frenos principales</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',frenos_generales,set_frenos_generales)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',frenos_generales,set_frenos_generales)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -352,10 +270,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Frenos de emergencia</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',frenos_emergencia,set_frenos_emergencia)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',frenos_emergencia,set_frenos_emergencia)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -368,10 +288,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Nivel de refrigerante</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',nivel_refrigerante,set_nivel_refrigerante)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',nivel_refrigerante,set_nivel_refrigerante)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -384,10 +306,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Apoya cabezas del piloto</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',apoyacabezas_piloto,set_apoyacabezas_piloto)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',apoyacabezas_piloto,set_apoyacabezas_piloto)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -397,10 +321,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Apoya cabeza del copiloto</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',apoyacabezas_copiloto,set_apoyacabezas_copiloto)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',apoyacabezas_copiloto,set_apoyacabezas_copiloto)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -410,10 +336,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Apoya cabezas traseros</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',apoyacabezas_traseros,set_apoyacabezas_traseros)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',apoyacabezas_traseros,set_apoyacabezas_traseros)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -426,10 +354,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Llantas delanteras</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',llantas_delanteras,set_llantas_delanteras)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',llantas_delanteras,set_llantas_delanteras)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -439,10 +369,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Llantas traseras</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',llantas_traseras,set_llantas_traseras)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',llantas_traseras,set_llantas_traseras)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -452,10 +384,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Llanta de repuesto</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',llanta_repuesto,set_llanta_repuesto)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',llanta_repuesto,set_llanta_repuesto)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -468,10 +402,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Espejos laterales</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',espejos_laterales,set_espejos_laterales)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',espejos_laterales,set_espejos_laterales)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -481,10 +417,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Espejo retrovisor</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',espejos_retrovisor,set_espejos_retrovisor)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',espejos_retrovisor,set_espejos_retrovisor)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -497,10 +435,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Cinturones delanteros</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',cinturones_delanteros,set_cinturones_delanteros)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',cinturones_delanteros,set_cinturones_delanteros)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -510,10 +450,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Cinturones traseros</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',cinturones_traseros,set_cinturones_traseros)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',cinturones_traseros,set_cinturones_traseros)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -526,10 +468,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Luces altas</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',luces_altas,set_luces_altas)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',luces_altas,set_luces_altas)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -539,10 +483,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Luces Medias</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',luces_medias,set_luces_medias)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',luces_medias,set_luces_medias)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -552,10 +498,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Luces bajas</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',luces_bajas,set_luces_bajas)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',luces_bajas,set_luces_bajas)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -565,10 +513,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Luces freno</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',luces_parada,set_luces_parada)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',luces_parada,set_luces_parada)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -578,10 +528,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Luces parqueo</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',luces_parqueo,set_luces_parqueo)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',luces_parqueo,set_luces_parqueo)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -591,10 +543,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Luces reversa</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',luces_reversa,set_luces_reversa)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',luces_reversa,set_luces_reversa)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -607,10 +561,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Kit de herramientas</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',kit_herramientas,set_kit_herramientas)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',kit_herramientas,set_kit_herramientas)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -623,10 +579,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Botiquin</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',botiquin_completo,set_botiquin_completo)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',botiquin_completo,set_botiquin_completo)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -639,10 +597,12 @@ const ElementosInspeccionar: React.FC<props> = ({
           <FormLabel>Pito</FormLabel>
           <Grid item sx={{display:'flex',gap:2}}>
             <Radio
+              disabled
               {...cambio_input_radio('true',pito,set_pito)}
                 sx={estilo_radio('#27b355',28)}
             />
             <Radio
+              disabled
               {...cambio_input_radio('false',pito,set_pito)}
                 sx={estilo_radio('#e23a3a',28)}
             />
@@ -682,26 +642,18 @@ const ElementosInspeccionar: React.FC<props> = ({
           <Button
             color="success"
             variant="contained"
-            startIcon={<SaveIcon />}
-            onClick={enviar_asignacion_vehiculo}
+            startIcon={<SettingsApplicationsIcon />}
+            onClick={()=>{}}
           >
-            {"Guardar"}
+            Mantenimiento
           </Button>
           <Button
             color="error"
             variant="contained"
-            startIcon={<ClearIcon />}
-            onClick={() => {}}
+            startIcon={<CloseIcon />}
+            onClick={()=>{set_mostrar_view_inpeccion(false)}}
           >
             Salir
-          </Button>
-          <Button
-            color="inherit"
-            variant="outlined"
-            startIcon={<CleanIcon />}
-            onClick={limpiar_inspeccion}
-          >
-            Limpiar
           </Button>
         </Grid>
     </Grid>
@@ -709,4 +661,4 @@ const ElementosInspeccionar: React.FC<props> = ({
 }
  
 // eslint-disable-next-line no-restricted-syntax
-export default ElementosInspeccionar;
+export default ElementosInspeccionadosView;
