@@ -28,6 +28,7 @@ import {
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 import { control_info } from '../../../../../../../alertasgestor/utils/control_error_or_success';
+import { getListadoTramitesByPerson } from '../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -83,12 +84,26 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
   const searchTramitesYservicios = async () => {
     try {
-      console.log('submit , buscando coincidencias de tramites y servicios');
-      showAlert(
-        'Estimado usuario!',
-        'Esta funcionalidad de Responder trámite no está disponible ',
-        'warning'
+      const {
+        estado_asignacion_de_tarea,
+        fecha_inicio,
+        fecha_fin,
+        radicado,
+      } = watchBusquedaBandejaDeTareas;
+      console.log;
+
+      const res = await getListadoTramitesByPerson(
+        id_persona,
+        handleSecondLoading,
+        estado_asignacion_de_tarea?.value,
+        fecha_inicio,
+        fecha_fin,
+        radicado
       );
+
+      console.log(res);
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
     } catch (error) {
       console.error('Error:', error);
     }
@@ -156,7 +171,9 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         await searchPqrsdf();
         break;
 
+      case 'RESPONDER TRÁMITE':
       case 'Responder Trámite':
+      case 'RESPONDER TRAMITE':
         await searchTramitesYservicios();
         break;
 

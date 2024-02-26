@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -37,10 +37,15 @@ import {
 } from '../../store/slice/centralDigitalizacionSlice';
 import {
   add_metadata_service,
+  add_metadata_opas_service,
+  add_metadata_service_otros,
   control_error,
   control_success,
   delete_metadata_service,
+  delete_metadata_opas_service,
+  delete_metadata_service_otros,
   edit_metadata_service,
+  edit_metadata_service_otros,
   edit_metadata_opas_service,
   get_file_categories_service,
   get_file_origin_service,
@@ -52,11 +57,13 @@ import { type AuthSlice } from '../../../../auth/interfaces';
 import { jsPDF } from 'jspdf';
 import logo_cormacarena_h from '../images/26_logocorma2_200x200.png';
 import dayjs from 'dayjs';
+import { OpcionOtrosContext } from '../../context/BusquedaOtrosDigitalizacion';
 interface IProps {
   action?: string;
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   get_values_anexo: any;
+  selectedExhibit: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -65,9 +72,11 @@ const MetadataFormDialog = ({
   is_modal_active,
   set_is_modal_active,
   get_values_anexo,
+  selectedExhibit,
 }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { opcion_otros } = useContext(OpcionOtrosContext)
 
   const {
     pqr,
@@ -341,104 +350,25 @@ const MetadataFormDialog = ({
           }
         }
 
-   
-  
-      
-          // void dispatch(
-          //   edit_metadata_opas_service(
-          //     form_data,
-          //     digitization_request.id_solicitud_de_digitalizacion ?? 0
-          //   )
-          // ),
+        if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-
-
-
-
-
-
-        const datos_totales_actualizar = {
-          id_metadatos_anexo_tmp: metadata.id_metadatos_anexo_tmp,
-          id_archivo_sistema: data.id_archivo_sistema,
-          // id_archivo_sistema_dos: metadata.id_archivo_sistema,
-          id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
-          id_anexo: metadata.id_anexo,
-          nro_folios_documento: data.nro_folios_documento,
-          asunto: data.asunto,
-          cod_origen_archivo: metadata.cod_origen_archivo,
-          cod_categoria_archivo: data.cod_categoria_archivo,
-          tiene_replica_fisica: data.tiene_replica_fisica,
-          tipologia_no_creada_TRD: checked_tiene_tipologia ? null : data.tipologia_no_creada_en_TRD,
-          id_tipologia_doc: data.id_tipologia_doc,
-          palabras_clave_doc: data.palabras_clave_doc,
-          descripcion: data.descripcion,
-          observacion_digitalizacion: data.observacion_digitalizacion
-        };
-        const datos_totales_creacion = {
-          id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
-          id_anexo: metadata.id_anexo,
-          nro_folios_documento: data.nro_folios_documento,
-          asunto: data.asunto,
-          cod_origen_archivo: metadata.cod_origen_archivo,
-          cod_categoria_archivo: data.cod_categoria_archivo,
-          tiene_replica_fisica: checked_tiene_tipologia ? data.id_tipologia_doc : null,
-          tipologia_no_creada_TRD: checked_tiene_tipologia ? null : data.tipologia_no_creada_en_TRD,
-          id_tipologia_doc: data.id_tipologia_doc,
-          palabras_clave_doc: data.palabras_clave_doc,
-          descripcion: data.descripcion,
-          observacion_digitalizacion: data.observacion_digitalizacion,
-
-        };
-
-
-
-        // {
-        //   exhibit.ya_digitalizado === true && (
-
-        //     void dispatch(
-        //       edit_metadata_service(
-        //         digitization_request.id_solicitud_de_digitalizacion ?? 0,
-        //         pdfFile === null ? exhibit.exhibit_link : pdfFile,
-        //         datos_totales_actualizar
-        //       )
-        //     )
-        //   )
-        // }
-
-
-
-        // {
-        //   exhibit.ya_digitalizado === false && (
-
-        //     void dispatch(
-        //       add_metadata_service(
-        //         digitization_request.id_solicitud_de_digitalizacion ?? 0,
-        //         pdfFile === null ? exhibit.exhibit_link : pdfFile,
-        //         // datos_totales_creacion
-        //       )
-        //     )
-        //   )
-        // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //funcion original  
-
-        // edit_metadata_service(
-        //   form_data,
-        //   digitization_request.id_solicitud_de_digitalizacion ?? 0
-        // )
-
+          if (selectedExhibit?.ya_digitalizado === true) {
+            void dispatch(
+              edit_metadata_opas_service(
+                form_data,
+                digitization_request.id_solicitud_de_digitalizacion ?? 0
+              )
+            );
+          }
+        } else {
+         
+        }
+ void dispatch(
+            edit_metadata_service(
+              form_data,
+              digitization_request.id_solicitud_de_digitalizacion ?? 0
+            )
+          );
       } else {
         control_error(
           'Solo se pueden editar metadatos hasta 30 dias despues de la fecha de creación'
@@ -463,35 +393,30 @@ const MetadataFormDialog = ({
         }
       }
 
-      const datos_totales = {
-        // id_metadatos_anexo_tmp: metadata.id_metadatos_anexo_tmp,
-        // id_archivo_sistema: data.id_archivo_sistema,
-        // id_archivo_sistema_dos: metadata.id_archivo_sistema,
-        id_solicitud_de_digitalizacion: digitization_request.id_solicitud_de_digitalizacion,
-        id_anexo: metadata.id_anexo,
-        nro_folios_documento: data.nro_folios_documento,
-        asunto: data.asunto,
-        cod_origen_archivo: metadata.cod_origen_archivo,
-        cod_categoria_archivo: data.cod_categoria_archivo,
-        tiene_replica_fisica: checked_tiene_replica_fisica,
-        tipologia_no_creada_TRD: data.tipologia_no_creada_TRD,
-        id_tipologia_doc: data.id_tipologia_doc,
-        palabras_clave_doc: data.palabras_clave_doc,
-        descripcion: data.descripcion,
-        observacion_digitalizacion: data.observacion_digitalizacion
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
+        void dispatch(
+          add_metadata_opas_service(
+            form_data,
+            digitization_request.id_solicitud_de_digitalizacion ?? 0
+          )
+
+        );
+      } else {
+
+        void dispatch(
+          add_metadata_service(
+            form_data,
+            digitization_request.id_solicitud_de_digitalizacion ?? 0
+          )
+          // add_metadata_service(
+          //   form_data,
+          //   digitization_request.id_solicitud_de_digitalizacion ?? 0
+          // )
+
+        );
       }
 
 
-      // add_metadata_service(
-      //   digitization_request.id_solicitud_de_digitalizacion ?? 0,
-      //   pdfFile,
-      //   datos_totales
-      //   );
-
-      // add_metadata_service(
-      //   form_data,
-      //   digitization_request.id_solicitud_de_digitalizacion ?? 0
-      // );
     }
     set_is_modal_active(false);
     dispatch(set_exhibit(initial_state_exhibit));
@@ -499,306 +424,340 @@ const MetadataFormDialog = ({
   };
 
   const delete_metadata = (): void => {
-    if (exhibit.id_anexo !== null && exhibit.id_anexo !== undefined) {
-      const params = {
-        id_anexo: exhibit.id_anexo,
-        id_persona_digitalizo: userinfo.id_persona,
-        id_solicitud_de_digitalizacion:
-          digitization_request.id_solicitud_de_digitalizacion,
-      };
 
-      void dispatch(delete_metadata_service(params));
-      set_is_modal_active(false);
-      dispatch(set_exhibit(initial_state_exhibit));
-      dispatch(set_file_fisico(null));
+
+    if (opcion_otros === "OTROS") {
+
+      if (exhibit.id_anexo !== null && exhibit.id_anexo !== undefined) {
+        const params = {
+          id_anexo: exhibit.id_anexo,
+          id_solicitud_de_digitalizacion:
+            digitization_request.id_solicitud_de_digitalizacion,
+        };
+
+        void dispatch(delete_metadata_service_otros(params));
+
+        return ;
+      }
     }
+
+      if (exhibit.id_anexo !== null && exhibit.id_anexo !== undefined) {
+        const params = {
+          id_anexo: exhibit.id_anexo,
+          id_persona_digitalizo: userinfo.id_persona,
+          id_solicitud_de_digitalizacion:
+            digitization_request.id_solicitud_de_digitalizacion,
+        };
+
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
+
+        void dispatch(delete_metadata_opas_service(params));
+
+      } else {
+
+          void dispatch(delete_metadata_service(params));
+      }
+
+
+
+
+
+        set_is_modal_active(false);
+        dispatch(set_exhibit(initial_state_exhibit));
+        dispatch(set_file_fisico(null));
+      }
+    };
+
+    useEffect(() => {
+      set_aux_origen_archivos(file_origins);
+    }, [file_origins]);
+    useEffect(() => {
+      if (exhibit.cod_medio_almacenamiento === 'Pa') {
+        const arrayNuevo = file_origins.filter((objeto: any) => objeto.key !== 'Pa');
+        set_aux_origen_archivos(arrayNuevo);
+      } else {
+        set_aux_origen_archivos(file_origins);
+      }
+    }, [exhibit]);
+  const handleClick = () => {
+    console.log(selectedExhibit);
+    console.log("11111111111111111");
+
+    console.log(selectedExhibit?.ya_digitalizado);
   };
 
-  useEffect(() => {
-    set_aux_origen_archivos(file_origins);
-  }, [file_origins]);
-  useEffect(() => {
-    if (exhibit.cod_medio_almacenamiento === 'Pa') {
-      const arrayNuevo = file_origins.filter((objeto) => objeto.key !== 'Pa');
-      set_aux_origen_archivos(arrayNuevo);
-    } else {
-      set_aux_origen_archivos(file_origins);
-    }
-  }, [exhibit]);
-
-  return (
-    <Dialog
-      maxWidth="xl"
-      open={is_modal_active}
-      onClose={handle_close_add_bien}
-      fullWidth
-    >
-      <Box component="form">
-        <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title={'Metadatos del archivo'} />
-        </Grid>
-        <DialogTitle></DialogTitle>
-        <Divider />
-        <DialogContent sx={{ mb: '0px' }}>
-          <Grid container>
-            <PrimaryForm
-              show_button={false}
-              on_submit_form={null}
-              button_submit_label=""
-              button_submit_icon_class={null}
-              form_inputs={[
-                {
-                  datum_type: 'date_picker_controller',
-                  xs: 12,
-                  md: 2,
-                  control_form: control_metadata,
-                  control_name: 'fecha_creacion_doc_',
-                  default_value:
-                    metadata.fecha_creacion_doc ?? null === null
-                      ? new Date()
-                      : metadata.fecha_creacion_doc ?? '' === ''
-                        ? new Date()
-                        : '2023-12-12',
-                  rules: {
-                    required_rule: { rule: true, message: 'Requerido' },
-                  },
-                  label: 'Fecha creación',
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 2,
-                  control_form: control_metadata,
-                  control_name: 'nro_folios_documento',
-                  default_value: '',
-                  rules: {
-                    required_rule: { rule: true, message: 'Requerido' },
-                  },
-                  label: 'Número de folios',
-                  type: 'number',
-                  disabled:
-                    watch('cod_origen_archivo') === 'F' || !edit_digitization,
-                  helper_text: '',
-                  step_number: '1',
-                },
-                {
-                  datum_type: 'select_controller',
-                  xs: 12,
-                  md: 3,
-                  control_form: control_metadata,
-                  control_name: 'cod_categoria_archivo',
-                  default_value: '',
-                  rules: {
-                    required_rule: { rule: true, message: 'Requerido' },
-                  },
-                  label: 'Categoria de archivo',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                  select_options: file_categories,
-                  option_label: 'label',
-                  option_key: 'key',
-                },
-                {
-                  datum_type: 'select_controller',
-                  xs: 12,
-                  md: 3,
-                  control_form: control_metadata,
-                  control_name: 'cod_origen_archivo',
-                  default_value: '',
-                  rules: {
-                    required_rule: { rule: true, message: 'Requerido' },
-                  },
-                  label: 'Origen del archivo',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                  select_options: aux_origen_archivos,
-                  option_label: 'label',
-                  option_key: 'key',
-                },
-                {
-                  datum_type: 'checkbox_controller',
-                  xs: 12,
-                  md: 2,
-                  control_form: control_metadata,
-                  control_name: 'es_version_original',
-                  default_value: metadata.es_version_original ?? true,
-                  rules: {},
-                  label: 'Versión original',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'checkbox_controller',
-                  xs: 12,
-                  md: 3,
-                  control_form: control_metadata,
-                  control_name: 'tiene_replica_fisica',
-                  default_value: checked_tiene_replica_fisica,
-                  rules: {
-                    required_rule: { rule: true, message: 'Requerido' },
-                  },
-                  label: 'Tiene réplica física',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                  checked: checked_tiene_replica_fisica,
-                  set_checked: set_checked_tiene_replica_fisica,
-                },
-
-                {
-                  datum_type: 'checkbox_controller',
-                  xs: 12,
-                  md: 3,
-                  control_form: control_metadata,
-                  control_name: 'tiene_tipologia',
-                  default_value: checked_tiene_tipologia,
-
-                  rules: {
-                    required_rule: { rule: true, message: 'Requerido' },
-                  },
-                  label: 'Tiene tipología relacionada',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                  checked: checked_tiene_tipologia,
-                  set_checked: set_checked_tiene_tipologia,
-                },
-                {
-                  datum_type: 'select_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_metadata,
-                  control_name: 'id_tipologia_doc',
-                  default_value: '',
-                  hidden_text: !checked_tiene_tipologia,
-                  rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
-                  },
-                  label: 'Tipología relacionada',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                  select_options: file_typologies,
-                  option_label: 'label',
-                  option_key: 'key',
-                },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 3,
-                  control_form: control_metadata,
-                  control_name: 'tipologia_no_creada_en_TRD',
-                  hidden_text: checked_tiene_tipologia,
-                  default_value: '',
-                  rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
-                  },
-                  label: '¿Cual?',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                },
-
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 12,
-                  control_form: control_metadata,
-                  control_name: 'asunto',
-                  default_value: '',
-                  rules: {
-                    required_rule: { rule: false, message: 'Requerido' },
-                  },
-                  label: 'Asunto',
-                  type: 'text',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 12,
-                  control_form: control_metadata,
-                  control_name: 'descripcion',
-                  default_value: '',
-                  rules: {},
-                  multiline_text: true,
-                  rows_text: 4,
-                  label: 'Descripción',
-                  type: 'text',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'keywords',
-                  initial_values: keywords_object,
-                  hidden_text: false,
-                  character_separator: '|',
-                  set_form: setValue,
-                  keywords: 'palabras_clave_doc',
-                  disabled: !edit_digitization
-                },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 12,
-                  control_form: control_metadata,
-                  control_name: 'observacion_digitalizacion',
-                  default_value: '',
-                  rules: {},
-                  multiline_text: true,
-                  rows_text: 4,
-                  label: 'Observación',
-                  type: 'text',
-                  disabled: !edit_digitization,
-                  helper_text: '',
-                },
-              ]}
-            />
+    return (
+      <Dialog
+        maxWidth="xl"
+        open={is_modal_active}
+        onClose={handle_close_add_bien}
+        fullWidth
+      >
+        <Box component="form">
+          <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
+            <Title title={'Metadatos del archivo'} />
           </Grid>
-        </DialogContent>
-        <Divider />
-        <DialogActions>
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-          >
-            {edit_digitization && (
-              <>
-                <Button
-                  color="success"
-                  variant="contained"
-                  onClick={handle_submit(on_submit)}
-                  startIcon={<SaveIcon />}
-                >
-                   {exhibit.ya_digitalizado === true ? 'Actualizar' : 'Guardar'}
-                </Button>
-                {metadata.id_metadatos_anexo_tmp !== null && (
-                  <Button
-                    color="error"
-                    variant="outlined"
-                    onClick={delete_metadata}
-                    startIcon={<DeleteIcon />}
-                  >
-                    Eliminar
-                  </Button>
-                )}
-              </>
-            )}
-            <Button
-              color="error"
-              variant="contained"
-              onClick={handle_close_add_bien}
-              startIcon={<CloseIcon />}
+          <DialogTitle></DialogTitle>
+          <Divider />
+          <DialogContent sx={{ mb: '0px' }}>
+            <Grid container>
+              <PrimaryForm
+                show_button={false}
+                on_submit_form={null}
+                button_submit_label=""
+                button_submit_icon_class={null}
+                form_inputs={[
+                  {
+                    datum_type: 'date_picker_controller',
+                    xs: 12,
+                    md: 2,
+                    control_form: control_metadata,
+                    control_name: 'fecha_creacion_doc_',
+                    default_value:
+                      metadata.fecha_creacion_doc ?? null === null
+                        ? new Date()
+                        : metadata.fecha_creacion_doc ?? '' === ''
+                          ? new Date()
+                          : '2023-12-12',
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
+                    },
+                    label: 'Fecha creación',
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 2,
+                    control_form: control_metadata,
+                    control_name: 'nro_folios_documento',
+                    default_value: '',
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
+                    },
+                    label: 'Número de folios',
+                    type: 'number',
+                    disabled:
+                      watch('cod_origen_archivo') === 'F' || !edit_digitization,
+                    helper_text: '',
+                    step_number: '1',
+                  },
+                  {
+                    datum_type: 'select_controller',
+                    xs: 12,
+                    md: 3,
+                    control_form: control_metadata,
+                    control_name: 'cod_categoria_archivo',
+                    default_value: '',
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
+                    },
+                    label: 'Categoria de archivo',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                    select_options: file_categories,
+                    option_label: 'label',
+                    option_key: 'key',
+                  },
+                  {
+                    datum_type: 'select_controller',
+                    xs: 12,
+                    md: 3,
+                    control_form: control_metadata,
+                    control_name: 'cod_origen_archivo',
+                    default_value: '',
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
+                    },
+                    label: 'Origen del archivo',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                    select_options: aux_origen_archivos,
+                    option_label: 'label',
+                    option_key: 'key',
+                  },
+                  {
+                    datum_type: 'checkbox_controller',
+                    xs: 12,
+                    md: 2,
+                    control_form: control_metadata,
+                    control_name: 'es_version_original',
+                    default_value: metadata.es_version_original ?? true,
+                    rules: {},
+                    label: 'Versión original',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'checkbox_controller',
+                    xs: 12,
+                    md: 3,
+                    control_form: control_metadata,
+                    control_name: 'tiene_replica_fisica',
+                    default_value: checked_tiene_replica_fisica,
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
+                    },
+                    label: 'Tiene réplica física',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                    checked: checked_tiene_replica_fisica,
+                    set_checked: set_checked_tiene_replica_fisica,
+                  },
+
+                  {
+                    datum_type: 'checkbox_controller',
+                    xs: 12,
+                    md: 3,
+                    control_form: control_metadata,
+                    control_name: 'tiene_tipologia',
+                    default_value: checked_tiene_tipologia,
+
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
+                    },
+                    label: 'Tiene tipología relacionada',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                    checked: checked_tiene_tipologia,
+                    set_checked: set_checked_tiene_tipologia,
+                  },
+                  {
+                    datum_type: 'select_controller',
+                    xs: 12,
+                    md: 4,
+                    control_form: control_metadata,
+                    control_name: 'id_tipologia_doc',
+                    default_value: '',
+                    hidden_text: !checked_tiene_tipologia,
+                    rules: {
+                      required_rule: { rule: false, message: 'Requerido' },
+                    },
+                    label: 'Tipología relacionada',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                    select_options: file_typologies,
+                    option_label: 'label',
+                    option_key: 'key',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 3,
+                    control_form: control_metadata,
+                    control_name: 'tipologia_no_creada_en_TRD',
+                    hidden_text: checked_tiene_tipologia,
+                    default_value: '',
+                    rules: {
+                      required_rule: { rule: false, message: 'Requerido' },
+                    },
+                    label: '¿Cual?',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                  },
+
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 12,
+                    control_form: control_metadata,
+                    control_name: 'asunto',
+                    default_value: '',
+                    rules: {
+                      required_rule: { rule: false, message: 'Requerido' },
+                    },
+                    label: 'Asunto',
+                    type: 'text',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 12,
+                    control_form: control_metadata,
+                    control_name: 'descripcion',
+                    default_value: '',
+                    rules: {},
+                    multiline_text: true,
+                    rows_text: 4,
+                    label: 'Descripción',
+                    type: 'text',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'keywords',
+                    initial_values: keywords_object,
+                    hidden_text: false,
+                    character_separator: '|',
+                    set_form: setValue,
+                    keywords: 'palabras_clave_doc',
+                    disabled: !edit_digitization
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 12,
+                    control_form: control_metadata,
+                    control_name: 'observacion_digitalizacion',
+                    default_value: '',
+                    rules: {},
+                    multiline_text: true,
+                    rows_text: 4,
+                    label: 'Observación',
+                    type: 'text',
+                    disabled: !edit_digitization,
+                    helper_text: '',
+                  },
+                ]}
+              />
+            </Grid>
+          </DialogContent>
+          <Divider />
+          <DialogActions>
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
             >
-              CERRAR
-            </Button>
-          </Stack>
-        </DialogActions>
-      </Box>
-    </Dialog>
-  );
-};
+              {edit_digitization && (
+                <>
+                  <Button
+                    color="success"
+                    variant="contained"
+                    onClick={handle_submit(on_submit)}
+                    startIcon={<SaveIcon />}
+                  >
+                    {exhibit.ya_digitalizado === true ? 'Actualizar' : 'Guardar'}
+                  </Button>
+                  {metadata.id_metadatos_anexo_tmp !== null && (
+                    <Button
+                      color="error"
+                      variant="outlined"
+                      onClick={delete_metadata}
+                      startIcon={<DeleteIcon />}
+                    >
+                      Eliminar
+                    </Button>
+                  )}
+                </>
+              )}
+              <Button
+                color="error"
+                variant="contained"
+                onClick={handle_close_add_bien}
+                startIcon={<CloseIcon />}
+              >
+                CERRAR
+              </Button>
+            </Stack>
+          </DialogActions>
+        </Box>
+      </Dialog>
+    );
+  };
 
 // eslint-disable-next-line no-restricted-syntax
 export default MetadataFormDialog;
-

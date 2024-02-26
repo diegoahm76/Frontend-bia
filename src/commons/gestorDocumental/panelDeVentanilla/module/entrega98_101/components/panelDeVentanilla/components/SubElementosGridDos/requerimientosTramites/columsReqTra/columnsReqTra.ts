@@ -8,7 +8,7 @@
 }
 */
 
-export const columnsRequerimientosTramites = [
+export const columnsReqTra = [
   {
     headerName: 'Tipo',
     field: 'tipo',

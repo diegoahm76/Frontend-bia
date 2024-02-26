@@ -20,6 +20,7 @@ import { ConstructorLiquidacionScreen } from '../screens/ConstructorLiquidacionS
 import { EtapaProcesoProvider } from '../components/GestionCartera/Context/EtapaProcesoContext';
 import { AprovacionAutodeclaracion } from '../screens/AprovacionAutodeclaracion';
 import { ActivacionComponentRoutes } from '../components/aprobarDocumento/routes/ActivacoinDocumento';
+import { Indicadores } from '../screens/Indicadores';
 
 
 
@@ -47,9 +48,10 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="constructor_liquidacion/*" element={<ConstructorLiquidacionScreen />} />
       <Route path="aprobacion_autodeclaracion/*" element={<AprovacionAutodeclaracion/>} />
       <Route path="formulario_auto_declaracion/*" element={<ActivacionComponentRoutes/>} />
+      <Route path="Indicadores/*" element={<Indicadores/>} />
 
       
-
+      
 
       
       <Route path="/*" element={<Page404 />} />

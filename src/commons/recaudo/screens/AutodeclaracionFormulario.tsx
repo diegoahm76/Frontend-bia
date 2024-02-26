@@ -81,7 +81,7 @@ interface Data {
     razonSocial: string;
     tipoUsuario: string;
     fechaCreacion: string;
-    id_archivo_sistema: any; 
+    id_archivo_sistema: any;
     actividadEconomica: string;
     nombreRepresentanteLegal: string;
     factoresUtilizacion: FactoresUtilizacion;
@@ -146,15 +146,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
         // direccionGeneradaActiva
         set_direccion_generada_activaa,
     ] = useState(false);
-    const [
-        direccion_generada
-        ,
-        setdireccion_generadaa,
-    ] = useState('');
+    const [direccion_generada, setdireccion_generadaa,] = useState('');
 
-    const [type_directionn,
-        // set_type_direction
-    ] = useState('');
+    const [type_directionn, set_type_direction] = useState('');
 
 
     console.log("data", Data)
@@ -491,7 +485,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
             setFileExtension(null);
             set_file_nombre(null);
         }
-    }; 
+    };
     const handleRemoveFile = () => {
         // Limpia la selección actual del archivo
         set_form({
@@ -501,9 +495,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
         setFileExtension(null);
         set_file_nombre(null);
     };
- 
+
     return (
-        <> 
+        <>
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -514,7 +508,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <Title title="Formulario auto declaración  " /> 
+                <Title title="Formulario auto declaración  " />
                 <Grid item xs={12}>
                     <BuscadorPersona
                         onResult={(data) => {
@@ -525,7 +519,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 {/* {persona?.primer_nombre} */}
             </Grid>
             {/* 222
-            {direccion_generada} */} 
+            {direccion_generada} */}
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -537,7 +531,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                 }}
             >
                 <Title title="Información general del usuario" />
-                <Grid container item xs={12} spacing={2} marginTop={2}> 
+                <Grid container item xs={12} spacing={2} marginTop={2}>
                     <Grid item xs={12} sm={4}>
                         <FormControl fullWidth size="small" variant="standard">
                             <InputLabel>Tipo de Usuario</InputLabel>
@@ -555,7 +549,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                                 <MenuItem value="OTRO">Otro</MenuItem>
                             </Select>
                         </FormControl>
-                    </Grid> 
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
@@ -592,7 +586,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             onChange={handleInputChange}
 
                         />
-                    </Grid> 
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
@@ -652,7 +646,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             onChange={handleInputChange}
 
                         />
-                    </Grid> 
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                         <FormControl variant="standard" size="small" fullWidth>
                             <InputLabel >Municipio</InputLabel>
@@ -681,7 +675,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             value={Data.expediente}
                             onChange={handleInputChange}
                         />
-                    </Grid> 
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
@@ -705,13 +699,15 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             name="direccion"
                             value={Data.direccion}
                         />
-                    </Grid> 
+                    </Grid>
+
+
                     <DialogGeneradorDeDirecciones
                         open={opengeneradordireccioness}
                         openDialog={setopengeneradordireccioness}
                         onChange={set_value_direction}
                         type={type_directionn}
-                    /> 
+                    />
                     <Grid item xs={4}>
                         <Button
                             variant="contained"
@@ -722,6 +718,12 @@ export const AutodeclaracionFormulario: React.FC = () => {
                             Generar dirección
                         </Button>
                     </Grid>
+
+
+
+
+
+
                     <Grid item xs={12} sm={4}>
                     </Grid>
                 </Grid>
@@ -736,7 +738,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <Title title="Información de fuentes de abastecimiento.  " /> 
+                <Title title="Información de fuentes de abastecimiento.  " />
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -747,7 +749,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         value={currentFuente.numero}
                         onChange={handleCurrentFuenteChange}
                     />
-                </Grid> 
+                </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -758,7 +760,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         value={currentFuente.tipo}
                         onChange={handleCurrentFuenteChange}
                     />
-                </Grid> 
+                </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -878,7 +880,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     />
 
                 </Grid>
-            </Grid> 
+            </Grid>
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -888,8 +890,8 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
-            > 
-                <Title title=" Factores de utilización " /> 
+            >
+                <Title title=" Factores de utilización " />
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth

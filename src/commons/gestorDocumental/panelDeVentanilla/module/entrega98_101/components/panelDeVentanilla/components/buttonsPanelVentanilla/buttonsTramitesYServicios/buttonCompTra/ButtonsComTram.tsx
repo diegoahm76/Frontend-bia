@@ -14,7 +14,7 @@ import { putContinuarAsigGrupoComple } from '../../../../../../../../toolkit/thu
 import { postDigitalizacionComplementosTramites } from '../../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/postDigitalizacionTramites.service';
 import { postContinuarAsigGrupoCompleTramite } from '../../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/postContinuarAsignacionTramite.service';
 
-export const ButtonsComplementosTramites = (): JSX.Element => {
+export const ButtonsCompTram = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* navigate

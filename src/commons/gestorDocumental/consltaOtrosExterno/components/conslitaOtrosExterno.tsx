@@ -78,7 +78,7 @@ export const ConslitaOtrosExterno: React.FC<props> = ({setestado, estado,setForm
         },
         
         { field: 'Persona Que Radicó', headerName: 'Persona Que Radicó  ',  minWidth: 460, },
-        { field: 'Estado', headerName: 'Estado',  minWidth: 300, },
+        // { field: 'Estado', headerName: 'Estado',  minWidth: 300, },
 
 
 
