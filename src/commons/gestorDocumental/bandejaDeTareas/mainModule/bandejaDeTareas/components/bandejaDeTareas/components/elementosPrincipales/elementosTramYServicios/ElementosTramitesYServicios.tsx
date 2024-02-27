@@ -16,6 +16,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import { GridCellParams, GridValueGetterParams } from '@mui/x-data-grid';
 import Swal from 'sweetalert2';
+import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
+import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
+import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { useContext } from 'react';
 
 export const ElementosTramitesYServicios = (): JSX.Element => {
   //* dispatch declaration
@@ -27,6 +31,14 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
     listaTareasPqrsdfTramitesUotrosUopas,
     actionsTramitesYServicios,
   } = useAppSelector((state) => state.BandejaTareasSlice);
+
+  const {
+    handleOpenModalOne: handleOpenInfoAnexos,
+    handleOpenModalTwo: handleOpenInfoMetadatos,
+    handleSecondLoading,
+    handleOpenModalNuevo,
+    handleOpenModalNuevoNumero2,
+  } = useContext(ModalAndLoadingContext);
 
   // ? ------------------------ DEFINICION DE FUNCIONES PARA EL COMPONENTE
 
@@ -194,6 +206,64 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
 
 
 
+    // ? FUNCIONES PARA EL COMPONENTE
+
+/*    const handleAcceptClick = async (row: {
+      id_tarea_asignada: number;
+      tipo_tarea: string;
+    }) => {
+      console.log(row);
+  
+      try {
+        const result = await Swal.fire({
+          title: 'Aceptar tarea',
+          text: `¿Estás seguro que deseas aceptar esta tarea (OTROS)?`,
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Cancelar',
+        });
+  
+        if (result.isConfirmed) {
+          const res = await putAceptarTareaOtros(row.id_tarea_asignada);
+  
+          // cambiar por el get de la bandeja de teareas de otros
+          const listadoTareas = await getListadoTareaasOtrosByPerson(
+            id_persona,
+            handleSecondLoading,
+            'ROtros'
+          );
+  
+          dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+          dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+        } else {
+          await Swal.fire({
+            title: 'La tarea no ha sido aceptada (OTROS)',
+            icon: 'info',
+            showConfirmButton: true,
+          });
+        }
+      } catch (error) {
+        showAlert(
+          'Opps...',
+          'Ha ocurrido un error desconocido, por favor intente de nuevo',
+          'error'
+        );
+        return;
+      }
+    };*/
+  
+    const handleRejectClick = (_row: any) => {
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
+      handleOpenModalNuevo(true);
+    };
+  
+    /*const handleCommentClick = (_row: any) => {
+      handleOpenModalNuevoNumero2(true);
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
+    };
+*/
+
   // ? ------------------------ DEFINICION DE COLUMNAS PAA EL DATA GRID
   /*
 {
@@ -224,7 +294,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
                   <ClearIcon
                     sx={{ ...iconStyles, background: 'red' }}
                     onClick={() =>
-                      /*handleRejectClick(params.row)*/ console.log(params.row)
+                      handleRejectClick(params.row)
                     }
                   />
                 </Tooltip>
@@ -359,9 +429,9 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
   return (
     <>
       {/*se genera un espacio para el modal que rechaza la tarea*/}
-      {/* <ModalRejectTask />*/}
+      <ModalRejectTask />
       {/*se genera un espacio para el modal que muestra el comentario de rechazo de la tarea*/}
-      {/*<ModalSeeRejectedTask />*/}
+      <ModalSeeRejectedTask />
       <RenderDataGrid
         rows={
           listaTareasPqrsdfTramitesUotrosUopas /*.filter(

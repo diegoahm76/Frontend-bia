@@ -21,7 +21,7 @@ import {
 import { getComplementosReqResSolicitudes } from '../../../../../services/servicesStates/pqrsdf/reqResSolicitudes/getReqResSolicitudes.service';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { GridValueGetterParams } from '@mui/x-data-grid';
-import { columnsStatic } from './columns/columns';
+import { columnsTramites } from './columns/columns';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { VistaComplementoTarea } from '../../../components/vistaAtoms/VistaComplementoTarea';
 import { getDetalleComplemento } from '../../../../../services/servicesStates/pqrsdf/complementos/getDetalleComplemento.service';
@@ -30,18 +30,16 @@ import { useNavigate } from 'react-router-dom';
 import { getAnexosComplemento } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosComplementos.service';
 import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
 import { getAnexosComplementoBandejaTareas } from '../../../../../services/servicesStates/pqrsdf/complementos/getAnexosComplementos.service';
+import { getComplementosRequerimientosRespuestaSolicitudesTramites } from '../../../../../services/servicesStates/tramites/reqRespuestaSolTramites/getReqResSolTramites.service';
 
-export const ModalRespuestaReqReasigna = (): JSX.Element => {
+export const ModalRespuestaReqTramites = (): JSX.Element => {
   //* redux states
   const dispatch = useAppDispatch();
 
   const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
     useAppSelector((state) => state.BandejaTareasSlice);
 
-  const { fourthLoading, handleFourthLoading } = useContext(
-    ModalAndLoadingContext
-  );
-
+    const { sixthLoading, handleSixthLoading} = useContext(ModalAndLoadingContext);
   //* navigate
   const navigate = useNavigate();
 
@@ -51,21 +49,21 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
   //* useeffect para llamar un servicio con la informacion, solo se llama el servicio cuando handleThirdLoading es true
 
   useEffect(() => {
-    if (fourthLoading) {
+    if (sixthLoading) {
       (async () => {
-        getComplementosReqResSolicitudes(
+        getComplementosRequerimientosRespuestaSolicitudesTramites(
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
         ).then((data) => {
           setDataComplementos(data);
         });
       })();
     }
-  }, [fourthLoading]);
+  }, [sixthLoading]);
 
   const [dataComplementos, setDataComplementos] = useState<any[]>([]);
 
   const columns = [
-    ...columnsStatic,
+    ...columnsTramites,
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -77,7 +75,7 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
               //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
               console.log(params.row);
 
-              (async () => {
+              /*(async () => {
                 try {
                   const idComplemento = params?.row?.id_complemento_usu_pqr;
                   const [detalleTarea, anexosPqrsdf] = await Promise.all([
@@ -94,7 +92,7 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
                 } catch (error) {
                   console.error(error);
                 }
-              })();
+              })();*/
             }}
           >
             <Avatar
@@ -125,9 +123,9 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
       <Dialog
         fullWidth
         maxWidth="lg"
-        open={fourthLoading}
+        open={sixthLoading}
         onClose={() => {
-          handleFourthLoading(false);
+          handleSixthLoading(false);
           setDataComplementos([]);
         }}
       >
@@ -138,9 +136,7 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
             <RenderDataGrid
               title="Respuesta de requerimientos o solicitudes al usuario"
               columns={columns ?? []}
-              rows={[
-                ...dataComplementos,
-              ]}
+              rows={[...dataComplementos]}
             />
           ) : (
             <Box
@@ -175,7 +171,7 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
                 color="error"
                 variant="contained"
                 onClick={() => {
-                  handleFourthLoading(false);
+                  handleSixthLoading(false);
                   setDataComplementos([]);
                 }}
                 startIcon={<CloseIcon />}
