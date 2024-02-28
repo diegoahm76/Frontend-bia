@@ -2,7 +2,11 @@
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
-import { setActionsTareasTramites, setCurrentTareaPqrsdfTramitesUotrosUopas } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
+import {
+  setActionsTareasTramites,
+  setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setInfoTarea,
+} from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import {
   useAppDispatch,
   useAppSelector,
@@ -20,10 +24,20 @@ import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { useContext } from 'react';
+import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
+import { useNavigate } from 'react-router-dom';
+import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
+import { getDetalleDeTareaOtro } from '../../../../../services/servicesStates/otros/detalleTareasOtros/getInfoTareaOtro.service';
+import { getAnexosOtros } from '../../../../../services/servicesStates/otros/anexos/getAnexosTareaOtros.service';
+import { getDetalleDeTareaTramites } from '../../../../../services/servicesStates/tramites/detalleTareaTramites/getDetalleTareaTramites.service';
+import { getAnexosTramites } from '../../../../../services/servicesStates/tramites/anexos/getAnexosTramites.service';
 
 export const ElementosTramitesYServicios = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
+
+  //* navigate 
+  const navigate = useNavigate();
 
   //* redux states
   const {
@@ -31,6 +45,9 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
     listaTareasPqrsdfTramitesUotrosUopas,
     actionsTramitesYServicios,
   } = useAppSelector((state) => state.BandejaTareasSlice);
+
+  //* context declaration
+  const { setAnexos } = useContext(BandejaTareasContext);
 
   const {
     handleOpenModalOne: handleOpenInfoAnexos,
@@ -196,7 +213,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
       */
     };
 
-   /* const actionsOtrosValue = actionsTramitesYServicios.map((action: any) => ({
+    /* const actionsOtrosValue = actionsTramitesYServicios.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
     }));
@@ -204,65 +221,63 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
     dispatch(setActionsTareasTramites(actionsOtrosValue));*/
   };
 
+  // ? FUNCIONES PARA EL COMPONENTE
 
+  const handleAcceptClick = async (row: {
+    id_tarea_asignada: number;
+    tipo_tarea: string;
+  }) => {
+    console.log(row);
 
-    // ? FUNCIONES PARA EL COMPONENTE
+    try {
+      const result = await Swal.fire({
+        title: 'Aceptar tarea',
+        text: `¿Estás seguro que deseas aceptar esta tarea (TRÁMITES Y SERVICIOS)?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+      });
 
-/*    const handleAcceptClick = async (row: {
-      id_tarea_asignada: number;
-      tipo_tarea: string;
-    }) => {
-      console.log(row);
-  
-      try {
-        const result = await Swal.fire({
-          title: 'Aceptar tarea',
-          text: `¿Estás seguro que deseas aceptar esta tarea (OTROS)?`,
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Aceptar',
-          cancelButtonText: 'Cancelar',
-        });
-  
-        if (result.isConfirmed) {
-          const res = await putAceptarTareaOtros(row.id_tarea_asignada);
-  
-          // cambiar por el get de la bandeja de teareas de otros
-          const listadoTareas = await getListadoTareaasOtrosByPerson(
+      if (result.isConfirmed) {
+        alert('aceptando tarea bro');
+        //const res = await putAceptarTareaOtros(row.id_tarea_asignada);
+
+        // cambiar por el get de la bandeja de teareas de otros
+        /* const listadoTareas = await getListadoTareaasOtrosByPerson(
             id_persona,
             handleSecondLoading,
             'ROtros'
-          );
-  
-          dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
-          dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
-        } else {
-          await Swal.fire({
-            title: 'La tarea no ha sido aceptada (OTROS)',
-            icon: 'info',
-            showConfirmButton: true,
-          });
-        }
-      } catch (error) {
-        showAlert(
-          'Opps...',
-          'Ha ocurrido un error desconocido, por favor intente de nuevo',
-          'error'
-        );
-        return;
+          );*/
+
+        //dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+        //dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+      } else {
+        await Swal.fire({
+          title: 'La tarea no ha sido aceptada (TRÁMITES Y SERVICIOS)',
+          icon: 'info',
+          showConfirmButton: true,
+        });
       }
-    };*/
-  
-    const handleRejectClick = (_row: any) => {
-      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
-      handleOpenModalNuevo(true);
-    };
-  
-    /*const handleCommentClick = (_row: any) => {
-      handleOpenModalNuevoNumero2(true);
-      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
-    };
-*/
+    } catch (error) {
+      showAlert(
+        'Opps...',
+        'Ha ocurrido un error desconocido, por favor intente de nuevo',
+        'error'
+      );
+      return;
+    }
+  };
+
+  const handleRejectClick = (_row: any) => {
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
+    handleOpenModalNuevo(true);
+  };
+
+  const handleCommentClick = (_row: any) => {
+    handleOpenModalNuevoNumero2(true);
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
+  };
 
   // ? ------------------------ DEFINICION DE COLUMNAS PAA EL DATA GRID
   /*
@@ -285,17 +300,13 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
                 <Tooltip title="Aceptar tarea">
                   <DownloadDoneIcon
                     sx={{ ...iconStyles, background: 'green' }}
-                    onClick={() =>
-                      /*handleAcceptClick(params.row)*/ console.log(params.row)
-                    }
+                    onClick={() => handleAcceptClick(params.row)}
                   />
                 </Tooltip>
                 <Tooltip title="Rechazar tarea">
                   <ClearIcon
                     sx={{ ...iconStyles, background: 'red' }}
-                    onClick={() =>
-                      handleRejectClick(params.row)
-                    }
+                    onClick={() => handleRejectClick(params.row)}
                   />
                 </Tooltip>
               </>
@@ -325,9 +336,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
                       color: 'primary.main',
                       background: undefined,
                     }}
-                    onClick={() =>
-                      /*handleCommentClick(params.row)*/ console.log(params.row)
-                    }
+                    onClick={() => handleCommentClick(params.row)}
                   />
                 </Tooltip>
               </>
@@ -350,18 +359,18 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
                   alert('viendo info de la tarea');
                   // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
                   //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-                  /* (async () => {
+                  (async () => {
                     try {
-                      const idOtros = params?.row?.id_otro;
-                      const [detalleTarea, anexosOtros] = await Promise.all([
-                        getDetalleDeTareaOtro(idOtros, navigate),
-                        getAnexosOtros(idOtros),
+                      const idTramite = params?.row?.id_tramite;
+                      const [detalleTarea, anexosTramites] = await Promise.all([
+                        getDetalleDeTareaTramites(idTramite, navigate),
+                        getAnexosTramites(idTramite),
                       ]);
                       dispatch(setInfoTarea(detalleTarea));
-                      setAnexos(anexosOtros);
-                      if (detalleTarea || anexosOtros.length > 0) {
+                      setAnexos(anexosTramites);
+                      if (detalleTarea || anexosTramites.length > 0) {
                         navigate(
-                          `/app/gestor_documental/bandeja_tareas/info_tarea_otros/${idOtros}`
+                          `/app/gestor_documental/bandeja_tareas/info_tarea_tramite/${idTramite}`
                         );
                         handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                         //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
@@ -371,7 +380,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
                       console.error(error);
                       // Handle the error appropriately here
                     }
-                  })();*/
+                  })();
                 }}
               >
                 <Avatar
