@@ -8,8 +8,9 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../../../../../../../../../hooks';
 import { ModuleInfoTareaTramites } from '../../../../../Atom/ModuleInfoTareaTramites';
+import { ModuleInfoTareaTramComplemento } from '../../../../../Atom/ModuleInfoTareaTramComplemento';
 
-export const VistaTareasTramites = (): JSX.Element => {
+export const VistaTareaComplementoTramite = (): JSX.Element => {
   //* params from react router dom, esta información se va a recibir del params.row en el momento en el que se necesite
 
   //* redux states selected
@@ -31,8 +32,8 @@ export const VistaTareasTramites = (): JSX.Element => {
   return (
     <>
       {/* va a ser necesario que reciba una nueva propiedad llamada infoDetalle, para poder llamar los elementos del detalle con el servicio respectivo para mostrar la información */}
-      <ModuleInfoTareaTramites
-        infoTitle={`Información de la tarea`}
+      <ModuleInfoTareaTramComplemento
+        infoTitle={`Información de la tarea (Complemento)`}
         titleOpcion={`Listado de anexos del elemento seleccionado`}
       />
     </>

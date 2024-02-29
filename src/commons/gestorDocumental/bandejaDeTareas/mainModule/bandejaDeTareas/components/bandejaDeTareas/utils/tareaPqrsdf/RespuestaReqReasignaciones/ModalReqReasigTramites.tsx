@@ -31,6 +31,8 @@ import { getAnexosComplemento } from '../../../../../../../../panelDeVentanilla/
 import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
 import { getAnexosComplementoBandejaTareas } from '../../../../../services/servicesStates/pqrsdf/complementos/getAnexosComplementos.service';
 import { getComplementosRequerimientosRespuestaSolicitudesTramites } from '../../../../../services/servicesStates/tramites/reqRespuestaSolTramites/getReqResSolTramites.service';
+import { getDetalleComplementoTramite } from '../../../../../services/servicesStates/tramites/complementos/detalleComplemento/getDetalleCompleTramite.service';
+import { getAnexosComplementoBandejaTareasTramites } from '../../../../../services/servicesStates/tramites/complementos/anexosComplementos/getAnexComTramite.service';
 
 export const ModalRespuestaReqTramites = (): JSX.Element => {
   //* redux states
@@ -71,28 +73,24 @@ export const ModalRespuestaReqTramites = (): JSX.Element => {
         <Tooltip title="Ver info del complemento">
           <IconButton
             onClick={() => {
-              // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
-              //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-              console.log(params.row);
-
-              /*(async () => {
+              (async () => {
                 try {
-                  const idComplemento = params?.row?.id_complemento_usu_pqr;
-                  const [detalleTarea, anexosPqrsdf] = await Promise.all([
-                    getDetalleComplemento(idComplemento, navigate),
-                    getAnexosComplementoBandejaTareas(idComplemento),
+                  const idComplemento = params?.row?.idComplementoUsu_PQR;
+                  const [detalleTarea, anexosTramite] = await Promise.all([
+                    getDetalleComplementoTramite(idComplemento, navigate),
+                    getAnexosComplementoBandejaTareasTramites(idComplemento),
                   ]);
                   dispatch(setInfoTarea(detalleTarea));
-                  setAnexos(anexosPqrsdf);
-                  if (detalleTarea || anexosPqrsdf.length > 0) {
+                  setAnexos(anexosTramite);
+                  if (detalleTarea || anexosTramite.length > 0) {
                     navigate(
-                      `/app/gestor_documental/bandeja_tareas/info_complemento/${idComplemento}`
+                      `/app/gestor_documental/bandeja_tareas/info_tarea_complemento_tramite/${idComplemento}`
                     );
                   }
                 } catch (error) {
                   console.error(error);
                 }
-              })();*/
+              })();
             }}
           >
             <Avatar
@@ -134,7 +132,7 @@ export const ModalRespuestaReqTramites = (): JSX.Element => {
 
           {dataComplementos && dataComplementos.length > 0 ? (
             <RenderDataGrid
-              title="Respuesta de requerimientos o solicitudes al usuario"
+              title="Respuesta de requerimientos al usuario"
               columns={columns ?? []}
               rows={[...dataComplementos]}
             />

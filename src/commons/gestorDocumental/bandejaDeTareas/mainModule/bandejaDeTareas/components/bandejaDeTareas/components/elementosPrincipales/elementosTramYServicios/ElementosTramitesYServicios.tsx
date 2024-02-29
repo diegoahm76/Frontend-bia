@@ -356,9 +356,6 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
             <Tooltip title="Ver info de la tarea">
               <IconButton
                 onClick={() => {
-                  alert('viendo info de la tarea');
-                  // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
-                  //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
                   (async () => {
                     try {
                       const idTramite = params?.row?.id_tramite;

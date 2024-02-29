@@ -26,17 +26,13 @@ import { Title } from '../../../../../../components';
 import { formatDate } from '../../../../../../utils/functions/formatDate';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
-import { getMetadatosPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
-import { getMetadatoComplemento } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
 import InfoIcon from '@mui/icons-material/Info';
 import { getArchivoAnexoPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
-import { getArchivoAnexoComplemento } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
-import { getInfoDenuncia } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/denuncia/getInfoDenuncia.service';
 import { useAppSelector } from '../../../../../../hooks';
 import { ModuleInfoDenuncia } from './ModuleInfoDenuncia';
 import { getMetadatosOtro } from '../services/servicesStates/otros/metadatos/getMetadatosOtro.service';
 
-export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
+export const ModuleInfoTareaTramComplemento = (props: any): JSX.Element => {
   //* redux states selected
   const { infoTarea } = useAppSelector((state) => state.BandejaTareasSlice);
 
@@ -74,8 +70,8 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
             <Tooltip title="Ver anexo">
               <IconButton
                 onClick={async () => {
-                  console.log(params.row, 'viendo anexo y abriendo modal');
-                  let archivo;
+                  alert('cargando archivo y anexos');
+                  /* let archivo;
                   // * reemplazar por el servicio de anexos de otros
                   archivo = await getArchivoAnexoPqrsdf(
                     params.row.id_anexo,
@@ -87,7 +83,7 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
                     anexoActual: params.row,
                     archivo: archivo?.ruta_archivo,
                     infoArchivo: archivo,
-                  });
+                  });*/
                 }}
               >
                 <Avatar
@@ -132,10 +128,35 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
               <TextField
                 fullWidth
                 disabled
-                label="Radicado"
+                label="Radiado"
                 size="small"
                 variant="outlined"
-                value={infoTarea?.radicado || 'N/A'}
+                value={infoTarea?.radicado ?? 'N/A'}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                disabled
+                label="Asunto"
+                size="small"
+                variant="outlined"
+                value={infoTarea?.asunto ?? 'N/A'}
+                InputLabelProps={{ shrink: true }}
+                style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
+              />
+            </Grid>
+            {/*2*/}
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                disabled
+                label="Cantidad de anexos"
+                size="small"
+                variant="outlined"
+                value={infoTarea?.cantidad_anexos ?? 'N/A'}
                 InputLabelProps={{ shrink: true }}
                 style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
               />
@@ -145,10 +166,10 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
               <TextField
                 fullWidth
                 disabled
-                label="Costo del proyecto"
+                label="¿Complemento asignado a unidad?"
                 size="small"
                 variant="outlined"
-                value={`$${infoTarea?.costo_proyecto || '0'}`}
+                value={infoTarea?.complemento_asignado_unidad ? 'SI' : 'NO'}
                 InputLabelProps={{ shrink: true }}
                 style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
               />
@@ -158,10 +179,10 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
               <TextField
                 fullWidth
                 disabled
-                label="Nombre del proyecto"
+                label="Descripción"
                 size="small"
                 variant="outlined"
-                value={infoTarea?.nombre_proyecto ?? 'N/A'}
+                value={infoTarea?.descripcion ?? 'N/A'}
                 InputLabelProps={{ shrink: true }}
                 style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
               />
@@ -171,23 +192,10 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
               <TextField
                 fullWidth
                 disabled
-                label="Tipo de operación"
+                label="Medio de solicitud"
                 size="small"
                 variant="outlined"
-                value={infoTarea?.tipo_operacion ?? 'N/A'}
-                InputLabelProps={{ shrink: true }}
-                style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                disabled
-                label="Nombre de la sucursal"
-                size="small"
-                variant="outlined"
-                value={infoTarea?.nombre_sucursal ?? 'N/A'}
+                value={infoTarea?.medio_solicitud ?? 'N/A'}
                 InputLabelProps={{ shrink: true }}
                 style={{ textTransform: 'uppercase', fontSize: '1.2rem' }}
               />
@@ -200,19 +208,7 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
                 label="Títular"
                 size="small"
                 variant="outlined"
-                value={infoTarea?.nombre_completo_titular ?? 'N/A'}
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                disabled
-                label="Fecha de registro"
-                size="small"
-                variant="outlined"
-                value={formatDate(infoTarea?.fecha_registro) ?? 'N/A'}
+                value={infoTarea?.nombre_completo_titular ?? ''}
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -224,7 +220,7 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
                 label="Fecha de radicado"
                 size="small"
                 variant="outlined"
-                value={formatDate(infoTarea?.fecha_radicado) ?? 'N/A'}
+                value={formatDate(infoTarea?.radicado) ?? 'N/A'}
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -233,24 +229,44 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
               <TextField
                 fullWidth
                 disabled
-                label="Medio de solicitud"
+                label="Fecha de complemento"
                 size="small"
                 variant="outlined"
-                value={infoTarea?.medio_solicitud ?? 'n/A'}
+                value={formatDate(infoTarea?.fecha_complemento) ?? 'N/A'}
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
                 disabled
-                multiline
-                rows={2}
-                label="Asunto"
+                label="Número de folios totales"
                 size="small"
                 variant="outlined"
-                value={infoTarea?.nombre_tramite ?? 'N/A'}
+                value={infoTarea?.nro_folios_totales ?? '0'}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                disabled
+                label="Tipo"
+                size="small"
+                variant="outlined"
+                value={infoTarea?.tipo ?? 'N/A'}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                disabled
+                label="Requiere digitalización"
+                size="small"
+                variant="outlined"
+                value={infoTarea?.requiere_digitalizacion ? 'SI' : 'NO'}
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>

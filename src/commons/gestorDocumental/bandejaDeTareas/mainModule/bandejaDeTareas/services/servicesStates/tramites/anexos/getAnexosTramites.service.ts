@@ -13,7 +13,7 @@ export const getAnexosTramites = async (idTramite: any) => {
 
     if (data.data.length > 0) {
       control_success(
-        data?.detail || 'Se obtuvieron los anexos de la PQRSDF correctamente.'
+        data?.detail || 'Se obtuvieron los anexos del trámite correctamente.'
       );
       return data.data;
     } else {
@@ -25,7 +25,7 @@ export const getAnexosTramites = async (idTramite: any) => {
       'Opps...',
       err?.response?.data.detail ||
         err.message ||
-        'No se encontraron anexos para la PQRSDF.',
+        'No se encontraron anexos para el trámite.',
       'error'
     );
     return [];

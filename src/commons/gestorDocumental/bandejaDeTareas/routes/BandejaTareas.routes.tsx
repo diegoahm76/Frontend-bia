@@ -68,6 +68,10 @@ const routes = [
     path: 'info_tarea_tramite/:id_tramite',
     component: () => <VistaTareasTramites />,
   },
+  {
+    path: 'info_tarea_complemento_tramite/:idComplementoUsu_PQR',
+    component: () => <VistaTareasTramites />,
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
