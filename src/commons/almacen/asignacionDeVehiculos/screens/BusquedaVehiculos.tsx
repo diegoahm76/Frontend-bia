@@ -25,19 +25,21 @@ const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehi
 
   const [data_busqueda_vehiculos, set_data_busqueda_vehiculos] = useState<data_busqueda_vehiculos[]>([]);
 
-  const obtener_vehiculos: () => void = () => {
-    dispatch(buscar_vehiculos(
+  const obtener_vehiculos: () => Promise<boolean> = async() => {
+    const validado = await dispatch(buscar_vehiculos(
       tipo_vehiculo,
       marca,
       placa,))
       .then((response: any) => {
-        if (response.data.length === 0) {
-          control_error('No se encontraron vehículos con los filtros seleccionados');
+        if (response?.data.length === 0) {
           set_data_busqueda_vehiculos([]);
+          return false;
         } else {
           set_data_busqueda_vehiculos(response.data);
+          return true;
         }
       })
+    return validado;
   }
 
   useEffect(()=>{
@@ -57,9 +59,12 @@ const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehi
     set_msj_error_tipo_vehiculo('');
   }
 
-  const consultar_vehiculos = (e: React.FormEvent<Element>) => {
+  const consultar_vehiculos = async(e: React.FormEvent<Element>) => {
     e.preventDefault();
-    obtener_vehiculos();
+    const envio_consulta = await obtener_vehiculos();
+    if(!envio_consulta){
+      control_error('No se encontraron vehículos con los filtros seleccionados');
+    }
   }
 
   return (
