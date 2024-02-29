@@ -17,8 +17,6 @@ interface props {
 
 
 const TableBusquedaVehiculos: React.FC<props> = ({data_busqueda_vehiculos, set_vehiculo_arrendado_temp}) => {
-  console.log(data_busqueda_vehiculos);
-  
   const handle_id_hoja_vida = (newSelectionModel: GridSelectionModel) => {
     if (newSelectionModel.length > 0) {
       const vehiculo_seleccionado = data_busqueda_vehiculos.find(row => row.id_marca === newSelectionModel[0]);

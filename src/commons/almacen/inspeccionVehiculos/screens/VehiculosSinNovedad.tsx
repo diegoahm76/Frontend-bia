@@ -54,7 +54,7 @@ const VehiculosSinNovedad: React.FC<props> = ({data_vehiculos_sin_novedad}) => {
         rowHeight={75}
         rowsPerPageOptions={[5]}
         experimentalFeatures={{ newEditingApi: true }}
-        getRowId={(row) => row.id_hoja_de_vida ?? uuidv4()}
+        getRowId={() => uuidv4()}
       />
     </Grid>
   );

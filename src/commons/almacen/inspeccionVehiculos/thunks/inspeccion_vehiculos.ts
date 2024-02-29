@@ -55,10 +55,22 @@ export const enviar_inspeccion_vehiculo: any = (form_data: create_inspeccion_veh
 };
 
 
-export const obtener_vehiculos_sin_novedad: any = () => {
+export const obtener_vehiculos_inspeccionados: any = () => {
   return async () => {
     try {
       const { data } = await api.get('/almacen/vehiculos/novedades-vehiculo/get/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_verificar_inspeccion: any = (id_inspeccion_vehiculo: string) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/vehiculos/revisar-vehiculo/${id_inspeccion_vehiculo}/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
