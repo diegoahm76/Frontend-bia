@@ -24,6 +24,7 @@ import { getInfoTareaRechazada } from '../../../../services/servicesStates/pqrsd
 import { control_success } from '../../../../../../../../../helpers';
 import { getInfoTareaRechazadaOtros } from '../../../../services/servicesStates/otros/getInfoTaskRejectedOtros.service';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { getInfoTareaRechazadaTramites } from '../../../../services/servicesStates/tramites/getInfoRejectedTaskTramite.service';
 
 export const ModalSeeRejectedTask: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -57,9 +58,9 @@ export const ModalSeeRejectedTask: FC = (): JSX.Element => {
     'RESPONDER OTRO': {
       getInfoRejectedTask: getInfoTareaRechazadaOtros,
     },
-    // 'RESPONDER TRÁMITE': {
-    //   rejectTask: putRechazarTarea, // se debe modiificar de acuerdo a los tramites
-    // },
+     'RESPONDER TRÁMITE': {
+      getInfoRejectedTask: getInfoTareaRechazadaTramites,
+     },
     // Agrega aquí los nuevos tipos de tareas
     // agregar luego para tramites y para opas
   };
