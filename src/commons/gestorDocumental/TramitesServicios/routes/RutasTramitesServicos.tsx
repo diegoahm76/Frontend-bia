@@ -9,9 +9,11 @@ export const RutesTramitesServicos = (): ReactElement => {
       <Routes>
         <Route
           path="/servicios"
-          element={<MenuPantallaPrincipalScreem/>}
+          element={<MenuPantallaPrincipalScreem />}
+
         />
-     
+      
+
         <Route path="/*" element={<Page404 />} />
       </Routes>
   );

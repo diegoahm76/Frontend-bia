@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { RenderDataGrid } from "../../../../tca/Atom/RenderDataGrid/RenderDataGrid";
-import { api } from "../../../../../../api/axios";
-import { Title } from "../../../../../../components/Title";
+import { RenderDataGrid } from "../../../tca/Atom/RenderDataGrid/RenderDataGrid";
+import { api } from "../../../../../api/axios";
+import { Title } from "../../../../../components/Title";
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
-import { RequerimientosTramiteScreen } from "../RequerimientosTramite/RequerimientosTramiteScreen";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { VistaCompleta } from "../VIistaCompleta/VistaCompleta";
 
 export const BuscarTramitesProcesoScreen = () => {
     // Estado inicial y funciones para manejar cambios en el formulario
@@ -21,6 +21,7 @@ export const BuscarTramitesProcesoScreen = () => {
         Expediente: '',
         Estado: '',
     }
+
     const [form, setForm] = useState(initialDataBusqueda);
     const [choicesPago, setChoicesPago] = useState([{ value: "", label: "" }]);
     const [choicesEstado, setChoicesEstado] = useState([{ value: "", label: "" }]);
@@ -78,7 +79,7 @@ export const BuscarTramitesProcesoScreen = () => {
             field: "acciones",
             headerName: "Acciones",
             flex: 1,
-            renderCell: (params:any) => (
+            renderCell: (params: any) => (
                 <>
                     <Button>
                         <VisibilityIcon />
@@ -232,10 +233,10 @@ export const BuscarTramitesProcesoScreen = () => {
                         />
                     </Grid>
                 </Grid>
+
             </Grid>
 
-            <RequerimientosTramiteScreen />
-
+            <VistaCompleta />
         </>
     );
 }
