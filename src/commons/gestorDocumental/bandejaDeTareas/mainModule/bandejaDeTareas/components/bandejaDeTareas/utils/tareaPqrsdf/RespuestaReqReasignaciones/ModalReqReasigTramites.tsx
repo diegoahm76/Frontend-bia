@@ -21,7 +21,7 @@ import {
 import { getComplementosReqResSolicitudes } from '../../../../../services/servicesStates/pqrsdf/reqResSolicitudes/getReqResSolicitudes.service';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { GridValueGetterParams } from '@mui/x-data-grid';
-import { columnsStatic } from './columns/columns';
+import { columnsTramites } from './columns/columns';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { VistaComplementoTarea } from '../../../components/vistaAtoms/VistaComplementoTarea';
 import { getDetalleComplemento } from '../../../../../services/servicesStates/pqrsdf/complementos/getDetalleComplemento.service';
@@ -30,18 +30,18 @@ import { useNavigate } from 'react-router-dom';
 import { getAnexosComplemento } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosComplementos.service';
 import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
 import { getAnexosComplementoBandejaTareas } from '../../../../../services/servicesStates/pqrsdf/complementos/getAnexosComplementos.service';
+import { getComplementosRequerimientosRespuestaSolicitudesTramites } from '../../../../../services/servicesStates/tramites/reqRespuestaSolTramites/getReqResSolTramites.service';
+import { getDetalleComplementoTramite } from '../../../../../services/servicesStates/tramites/complementos/detalleComplemento/getDetalleCompleTramite.service';
+import { getAnexosComplementoBandejaTareasTramites } from '../../../../../services/servicesStates/tramites/complementos/anexosComplementos/getAnexComTramite.service';
 
-export const ModalRespuestaReqReasigna = (): JSX.Element => {
+export const ModalRespuestaReqTramites = (): JSX.Element => {
   //* redux states
   const dispatch = useAppDispatch();
 
   const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
     useAppSelector((state) => state.BandejaTareasSlice);
 
-  const { fourthLoading, handleFourthLoading } = useContext(
-    ModalAndLoadingContext
-  );
-
+    const { sixthLoading, handleSixthLoading} = useContext(ModalAndLoadingContext);
   //* navigate
   const navigate = useNavigate();
 
@@ -51,21 +51,21 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
   //* useeffect para llamar un servicio con la informacion, solo se llama el servicio cuando handleThirdLoading es true
 
   useEffect(() => {
-    if (fourthLoading) {
+    if (sixthLoading) {
       (async () => {
-        getComplementosReqResSolicitudes(
+        getComplementosRequerimientosRespuestaSolicitudesTramites(
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
         ).then((data) => {
           setDataComplementos(data);
         });
       })();
     }
-  }, [fourthLoading]);
+  }, [sixthLoading]);
 
   const [dataComplementos, setDataComplementos] = useState<any[]>([]);
 
   const columns = [
-    ...columnsStatic,
+    ...columnsTramites,
     {
       headerName: 'Acciones',
       field: 'acciones',
@@ -73,22 +73,18 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
         <Tooltip title="Ver info del complemento">
           <IconButton
             onClick={() => {
-              // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
-              //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-              console.log(params.row);
-
               (async () => {
                 try {
-                  const idComplemento = params?.row?.id_complemento_usu_pqr;
-                  const [detalleTarea, anexosPqrsdf] = await Promise.all([
-                    getDetalleComplemento(idComplemento, navigate),
-                    getAnexosComplementoBandejaTareas(idComplemento),
+                  const idComplemento = params?.row?.idComplementoUsu_PQR;
+                  const [detalleTarea, anexosTramite] = await Promise.all([
+                    getDetalleComplementoTramite(idComplemento, navigate),
+                    getAnexosComplementoBandejaTareasTramites(idComplemento),
                   ]);
                   dispatch(setInfoTarea(detalleTarea));
-                  setAnexos(anexosPqrsdf);
-                  if (detalleTarea || anexosPqrsdf.length > 0) {
+                  setAnexos(anexosTramite);
+                  if (detalleTarea || anexosTramite.length > 0) {
                     navigate(
-                      `/app/gestor_documental/bandeja_tareas/info_complemento/${idComplemento}`
+                      `/app/gestor_documental/bandeja_tareas/info_tarea_complemento_tramite/${idComplemento}`
                     );
                   }
                 } catch (error) {
@@ -125,9 +121,9 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
       <Dialog
         fullWidth
         maxWidth="lg"
-        open={fourthLoading}
+        open={sixthLoading}
         onClose={() => {
-          handleFourthLoading(false);
+          handleSixthLoading(false);
           setDataComplementos([]);
         }}
       >
@@ -136,11 +132,9 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
 
           {dataComplementos && dataComplementos.length > 0 ? (
             <RenderDataGrid
-              title="Respuesta de requerimientos o solicitudes al usuario"
+              title="Respuesta de requerimientos al usuario"
               columns={columns ?? []}
-              rows={[
-                ...dataComplementos,
-              ]}
+              rows={[...dataComplementos]}
             />
           ) : (
             <Box
@@ -175,7 +169,7 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
                 color="error"
                 variant="contained"
                 onClick={() => {
-                  handleFourthLoading(false);
+                  handleSixthLoading(false);
                   setDataComplementos([]);
                 }}
                 startIcon={<CloseIcon />}

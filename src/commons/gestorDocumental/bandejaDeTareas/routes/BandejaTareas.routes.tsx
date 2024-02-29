@@ -11,6 +11,7 @@ import { MainReasignacionesScreen } from '../modules/reasignaciones/screen/MainR
 import { VistaComplementoTarea } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaComplementoTarea';
 import { MainScreenSeguimientoTarea } from '../modules/seguimientoTarea/screen/MainScreenSeguimientoTarea';
 import { VistaTareasOtros } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/otros/VistaTareasOtros';
+import { VistaTareasTramites } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/tramites/VistaTareaTramites';
 
 const routes = [
   {
@@ -62,6 +63,14 @@ const routes = [
   {
     path: 'info_tarea_otros/:id_OTROS',
     component: () => <VistaTareasOtros />,
+  },
+  {
+    path: 'info_tarea_tramite/:id_tramite',
+    component: () => <VistaTareasTramites />,
+  },
+  {
+    path: 'info_tarea_complemento_tramite/:idComplementoUsu_PQR',
+    component: () => <VistaTareasTramites />,
   },
 ];
 
