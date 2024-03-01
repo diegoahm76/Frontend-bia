@@ -44,7 +44,7 @@ export interface data_busqueda_vehiculos {
   empresa_contratista: string;
   tiene_hoja_de_vida: boolean;
   id_marca: number;
-  id_hoja_vida_vehiculo: number;
+  id_hoja_de_vida: number;
 }
 
 export interface create_inspeccion_vehiculo {
@@ -137,5 +137,56 @@ export interface interface_vehiculos_con_novedad {
   id_inspeccion_vehiculo: number
   id_hoja_de_vida: number
   placa_marca: string
-  novedad: string
+  verificacion_superior_realizada: boolean
+  novedad?: string
+  cantidad_novedades?: number
+}
+
+
+export interface response_put_revisar_vehiculo {
+  success?: boolean
+  detail?: string
+  error?: string
+  data: interface_put_revisar_vehiculo
+}
+
+export interface interface_put_revisar_vehiculo {
+  id_inspeccion_vehiculo: number
+  dia_inspeccion: string
+  fecha_registro: string
+  kilometraje: number
+  dir_llantas_delanteras: boolean
+  dir_llantas_Traseras: boolean
+  limpiabrisas_delantero: boolean
+  limpiabrisas_traseros: boolean
+  nivel_aceite: boolean
+  estado_frenos: boolean
+  nivel_refrigerante: boolean
+  apoyo_cabezas_piloto: boolean
+  apoyo_cabezas_copiloto: boolean
+  apoyo_cabezas_traseros: boolean
+  frenos_generales: boolean
+  freno_emergencia: boolean
+  llantas_delanteras: boolean
+  llantas_traseras: boolean
+  llanta_repuesto: boolean
+  espejos_laterales: boolean
+  espejo_retrovisor: boolean
+  cinturon_seguridad_delantero: boolean
+  cinturon_seguridad_trasero: boolean
+  luces_altas: boolean
+  luces_media: boolean
+  luces_bajas: boolean
+  luces_parada: boolean
+  luces_parqueo: boolean
+  luces_reversa: boolean
+  kit_herramientas: boolean
+  botiquin_completo: boolean
+  pito: boolean
+  observaciones: string
+  requiere_verificacion: boolean
+  verificacion_superior_realizada: boolean
+  id_hoja_vida_vehiculo: number
+  id_persona_inspecciona: number
+  id_persona_que_verifica: number
 }

@@ -18,10 +18,11 @@ interface props {
   mostrar_buscar_vehiculo: boolean;
   set_mostrar_buscar_vehiculo: React.Dispatch<React.SetStateAction<boolean>>;
   set_vehiculo_encontrado: React.Dispatch<React.SetStateAction<data_buscar_vehiculo>>;
+  refrescar_tabla: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_buscar_vehiculo,set_vehiculo_encontrado}) => {
+const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_buscar_vehiculo,set_vehiculo_encontrado,refrescar_tabla}) => {
   const dispatch = useAppDispatch();
 
   const [placa, set_placa] = useState<string>('');
@@ -46,6 +47,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
   tiene_platon: string,
   arrendado: string,
 */
+
 
   const obtener_vehiculos: () => void = () => {
     dispatch(buscar_vehiculos_general(
@@ -86,7 +88,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
 
   useEffect(()=>{
     obtener_vehiculos();
-  },[]);
+  },[refrescar_tabla]);
 
   const limpiar_form_vehiculos = () => {
     set_marca('');

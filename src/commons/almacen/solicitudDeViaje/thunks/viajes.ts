@@ -2,7 +2,12 @@ import { AxiosError } from "axios";
 import { control_error, control_success } from "../../../../helpers";
 import { interface_solicitar_viaje } from "../interfaces/types";
 import { api } from "../../../../api/axios";
+import dayjs from "dayjs";
 
+export function parseHora(hora: string): dayjs.Dayjs {
+  const [horas, minutos] = hora?.split(':');
+  return dayjs().set('hour', parseInt(horas)).set('minute', parseInt(minutos));
+}
 
 export const obtener_solicitudes: any = () => {
   return async () => {
@@ -102,6 +107,17 @@ export const listar_departamentos: any = () => {
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+ 
+export const obtener_agendamiento_solicitud: any = (id_solicitud_respondida: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/vehiculos/obtener-agendamiento-viajes/${id_solicitud_respondida}/`);
+      return data;
+    } catch (error: any) {
       return error as AxiosError;
     }
   };

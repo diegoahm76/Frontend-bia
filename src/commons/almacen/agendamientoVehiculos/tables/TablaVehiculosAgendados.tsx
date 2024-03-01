@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { GridColDef } from "@mui/x-data-grid";
 import { FC } from "react";
-import { interface_detalles_vehiculos_agendados } from "../interfaces/types";
+import { interface_data_agendamiento_vehiculos, interface_detalles_vehiculos_agendados } from "../interfaces/types";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { RenderDataGrid } from "../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid";
 
@@ -13,10 +13,17 @@ interface custom_column extends GridColDef {
 
 interface props_table {
   data_detalles_vehiculos_agendados: interface_detalles_vehiculos_agendados[];
+  set_accion: React.Dispatch<React.SetStateAction<string>>;
+  set_data_editar_agendamiento: React.Dispatch<React.SetStateAction<interface_detalles_vehiculos_agendados>>;
+  set_data_solicitud_a_aprobar: React.Dispatch<React.SetStateAction<interface_data_agendamiento_vehiculos>>
 }
 
 
-const TablaVehiculosAgendados: FC<props_table> = ({data_detalles_vehiculos_agendados,}) => {
+const TablaVehiculosAgendados: FC<props_table> = ({
+  data_detalles_vehiculos_agendados,
+  set_accion,set_data_editar_agendamiento,
+  set_data_solicitud_a_aprobar
+}) => {
 
     /*
     "id_viaje_agendado": 4,
@@ -50,8 +57,11 @@ const TablaVehiculosAgendados: FC<props_table> = ({data_detalles_vehiculos_agend
 
     */
 
-  const editar_detalle_vehiculo_agendado = (params: interface_detalles_vehiculos_agendados) => {
+  const editar_detalle_vehiculo_agendado = (params: interface_detalles_vehiculos_agendados | interface_data_agendamiento_vehiculos) => {
+    set_accion('editar_agendamiento');
     console.log(params);
+    set_data_editar_agendamiento(params);
+    set_data_solicitud_a_aprobar(params);
   }
 
   const columns: custom_column[] = [

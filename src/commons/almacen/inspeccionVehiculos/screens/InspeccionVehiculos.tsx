@@ -41,14 +41,15 @@ const InspeccionVehiculos = () => {
 
   const obtener_vehiculo_logueado_fc: () => void = () => {
     dispatch(obtener_vehiculo_logueado())
-      .then((response: response_vehiculo_logueado) => {
-        console.log(response);        
-        if (!response.success) {
+      .then((response: response_vehiculo_logueado) => {     
+        if (!response?.success) {
           control_error('No se encontraron los nombres del conductor');
           set_vehiculo_seleccionado('');
         } else {
-          set_vehiculo_seleccionado(response.data[0][0].placa + ' - ' + response.data[0][0].marca);
-          set_id_hoja_vida_vehiculo(response.data[0][0].id_hoja_vida_vehiculo);
+          if (response?.data && response?.data[0] && response?.data[0][0]) {
+            set_vehiculo_seleccionado(response.data[0][0]?.placa + ' - ' + response.data[0][0]?.marca);
+            set_id_hoja_vida_vehiculo(response.data[0][0]?.id_hoja_vida_vehiculo);
+          }
         }
       })
   }
@@ -80,8 +81,8 @@ const InspeccionVehiculos = () => {
   }, [])
 
   useEffect(() => {
-    console.log(data_inspeccion_vehiculo);    
-  }, [data_inspeccion_vehiculo])
+    console.log(vehiculo_arrendado_encontrado);    
+  }, [vehiculo_arrendado_encontrado])
 
 
   const cambio_fecha_inspeccion = (date: Dayjs | null): void => {
@@ -105,7 +106,7 @@ const InspeccionVehiculos = () => {
   }
 
   const pasar_a_seleccionado = () => {
-    set_id_hoja_vida_vehiculo(vehiculo_arrendado_encontrado.id_hoja_vida_vehiculo);
+    set_id_hoja_vida_vehiculo(vehiculo_arrendado_encontrado.id_hoja_de_vida);
     set_vehiculo_seleccionado(Object.keys(vehiculo_arrendado_encontrado).length !== 0 ?
     vehiculo_arrendado_encontrado.placa + ' - ' + vehiculo_arrendado_encontrado.nombre_marca
     : '');
@@ -147,19 +148,17 @@ const InspeccionVehiculos = () => {
 
         <Title title="Inspección de vehículos" />
 
-        <Grid item container xs={11.8} sx={{
+        <Grid item container spacing={1} xs={11.8} sx={{
           padding:'0',
           display:'flex',
-          justifyContent:'center',
+          justifyContent:'space-between',
           marginX:'auto',
         }}>
           <Title title="Datos básicos del conductor" />
-          <Grid item xs={7} sx={{
+          <Grid item xs={12} md={7} sx={{
             display:'flex',
             alignItems:'center',
-            marginTop:'20px'
           }}>
-            <Grid item xs={8}>
               <TextField
                 fullWidth
                 label='Nombres del conductor:'
@@ -169,34 +168,32 @@ const InspeccionVehiculos = () => {
                 disabled
                 size="small"
               />
-            </Grid>
           </Grid>
 
           <Grid
             item
-            xs={5}
+            xs={12}
+            md={3}
             sx={{
               display: "flex",
               justifyContent: "end",
               alignItems: "center",
             }}
           >
-            <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  disabled
-                  label='Fecha de inspeccion:'
-                  value={fecha_inspeccion}
-                  onChange={(newValue) => {
-                    cambio_fecha_inspeccion(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField  required fullWidth size="small" {...params} />
-                  )}
-                  minDate={dayjs()}
-                />
-              </LocalizationProvider>
-            </Grid>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled
+                label='Fecha de inspeccion:'
+                value={fecha_inspeccion}
+                onChange={(newValue) => {
+                  cambio_fecha_inspeccion(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField  required fullWidth size="small" {...params} />
+                )}
+                minDate={dayjs()}
+              />
+            </LocalizationProvider>
           </Grid>
         </Grid>
 
@@ -212,16 +209,17 @@ const InspeccionVehiculos = () => {
             display:'flex',
             justifyContent:'center',
             alignItems:'start',
-            gap:'90px',
+            gap:'40px',
             marginY:'20px'
             }}>
-            <Grid item container xs={2.4} md={3.7} sx={{
+            <Grid item container xs={12} md={4.5} sx={{
               display:'flex',
               flexDirection:'column',
               alignItems:'start'
             }}>
               <b>Vehículo Seleccionado</b>
               <TextField
+                fullWidth
                 label='Placa y nombre:'
                 required
                 disabled
@@ -230,6 +228,7 @@ const InspeccionVehiculos = () => {
                 size="small"
               />
               <Button
+                fullWidth
                 sx={{marginTop:'10px'}}
                 color='primary'
                 variant='contained'
@@ -245,19 +244,16 @@ const InspeccionVehiculos = () => {
               sx={{fontSize:'40px', cursor:'pointer', alignSelf:'center'}}
             />
 
-            <Grid item container xs={3.5} sx={{
+            <Grid item container xs={12} md={4.5} sx={{
               width:'100%',
               display:'flex',
               flexDirection:'column',
               alignItems:'start'
             }}>
               <b>Vehículo Buscado</b>
-              <Grid item sx={{
-                display:'flex',
-                justifyContent:'space-between',
-                gap:2
-              }}>
+
                 <TextField
+                  fullWidth
                   label='Placa y nombre:'
                   required
                   disabled
@@ -266,14 +262,15 @@ const InspeccionVehiculos = () => {
                   size="small"
                 />
                 <Button
+                  fullWidth
                   color='primary'
                   variant='contained'
+                  sx={{marginTop:'10px'}}
                   startIcon={<SearchIcon />}
                   onClick={()=>set_mostrar_busqueda_vehiculo(true)}
                   >
                     Buscar
                 </Button>
-              </Grid>
             </Grid>
           </Grid>
           
