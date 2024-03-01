@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import BusquedaVehiculos from './BusquedaVehiculos';
 import TableAsignacionVehiculos from '../tables/TableAsignacionVehiculos';
 import BusquedaConductores from './BusquedaConductores';
-import { data_asignacion_vehiculos, interface_crear_vehiculo_agendado_conductor, interface_vehiculo_agendado_conductor } from '../interfaces/types';
+import { data_asignacion_vehiculos, interface_crear_vehiculo_agendado_conductor, interface_vehiculo_agendado_conductor, response_asignacion_vehiculo } from '../interfaces/types';
 import { useAppDispatch } from '../../../../hooks';
 import { buscar_vehiculos_asignados, enviar_asignacion_vehiculo } from '../thunks/asignacion_vehiculos';
 import VehiculosConductoresAsignados from './VehiculosConductoresAsignados';
@@ -44,8 +44,8 @@ const AsignacionVehiculos: React.FC = () => {
   const [data_asignacion_vehiculos, set_data_asignacion_vehiculos] = useState<data_asignacion_vehiculos[]>([]);
 
 
-  const enviar_asiganacion_a_conductor_fc: () => void = async() => {
-   await  dispatch(
+  const enviar_asiganacion_a_conductor_fc: () => Promise<boolean> = async() => {
+   const validado = await  dispatch(
       enviar_asignacion_vehiculo(
         vehiculo_agendado_conductor.map(
           (asignacion: interface_crear_vehiculo_agendado_conductor) => ({
@@ -57,28 +57,39 @@ const AsignacionVehiculos: React.FC = () => {
           )
         )
       )
-    ).catch((response: any) => {
-      console.log(response);
+    ).then((response: response_asignacion_vehiculo)=>{
+      if(response?.success === false){
+        control_error('Hay un vehículo que ya está asignado a otro conductor');
+        return false;
+      } else {
+        set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
+        set_refrescar_tabla(!refrescar_tabla);
+        return true;
+      }
+    })
+    .catch((response: any) => {
+      console.error(response);
     });
-    set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
-    set_refrescar_tabla(!refrescar_tabla);
+    return validado;
   };
 
 
-  const obtener_asignaciones_vehiculos: () => void = () => {
-    dispatch(buscar_vehiculos_asignados(
+  const obtener_asignaciones_vehiculos: ()=> Promise<boolean> = async() => {
+    const validado =  await dispatch(buscar_vehiculos_asignados(
       tipo_vehiculo,
       tipo_conductor,
       placa,
       conductor,))
       .then((response: any) => {
         if (response.data.length === 0) {
-          control_error('No se encontraron asignaciones con los filtros seleccionados');
           set_data_asignacion_vehiculos([]);
+          return false;
         } else {
           set_data_asignacion_vehiculos(response.data);
+          return true;
         }
       })
+    return validado;    
   }
 
   useEffect(() => {
@@ -110,11 +121,13 @@ const AsignacionVehiculos: React.FC = () => {
 
   const consultar_vehiculos_asignados: (e: React.FormEvent<Element>) => void = async (e) => {
     e.preventDefault();
-    obtener_asignaciones_vehiculos();
-
+    const envio_datos = await obtener_asignaciones_vehiculos();
+    if(!envio_datos){
+      control_error('No se encontraron asignaciones con los filtros seleccionados');
+    }
   }
 
-  const enviar_asiganacion_a_conductor = () => {
+  const enviar_asiganacion_a_conductor = async() => {
     if(vehiculo_agendado_conductor.length === 0){
       control_error('Agregue por lo menos una asignación');
       return;
@@ -127,14 +140,16 @@ const AsignacionVehiculos: React.FC = () => {
         confirmButtonColor: '#042F4A',
         cancelButtonColor: '#DE1616',
         icon: 'question',
-      }).then((result) => {
+      }).then(async(result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          set_vehiculo_agendado_conductor([]);
-          enviar_asiganacion_a_conductor_fc();
-          return true;
+          const enviado = await enviar_asiganacion_a_conductor_fc();
+          if(enviado){
+            set_vehiculo_agendado_conductor([]);
+          }
+          return;
         } else if(result.isDenied){
-          return false;
+          return;
         }
       });
     }

@@ -23,6 +23,8 @@ import { postReAsignacionTarea } from '../../services/post/pqrsdf/postReAsignaci
 import { getReAsignacionesTareasPqrsdf } from '../../services/reasignaciones/pqrsdf/getReAsignacionesTaskPqrsdf.service';
 import { getReAsignacionesTareasOtros } from '../../services/reasignaciones/otros/getReasignacionesTareasOtros.service';
 import { postReAsignacionTareaOtros } from '../../services/post/otros/postReasignacionTareaOtros.service';
+import { getReAsignacionesTareasTramites } from '../../services/reasignaciones/tramitesServicios/getReasignaTram.service';
+import { postReAsignacionTareaTramite } from '../../services/post/tramitesServicios/postReasTram.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -116,15 +118,18 @@ export const AccionesFinales = (): JSX.Element => {
         );
         break;
       case 'Responder Trámite':
-        // Call the service for Tramites y Servicios
-        /*  res = await postAsignacionGrupoTramitesYServicios(
+      case 'Responder Tramite':
+      case 'RESPONDER TRÁMITE':
+      case 'RESPONDER TRAMITE':
+        res = await postReAsignacionTareaTramite(
           {
-            id_pqrsdf: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
-            id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_tarea_asignada:
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_persona_a_quien_se_reasigna: currentGrupo?.value,
+            comentario_reasignacion: comentario,
           },
           handleSecondLoading
-        );*/
+        );
         break;
       case 'RESPONDER OTRO':
       case 'RESPONDER OTROS':
@@ -182,11 +187,13 @@ export const AccionesFinales = (): JSX.Element => {
           );
           break;
         case 'Responder Trámite':
-          // Fetch the assignments for Tramites y Servicios
-          /*asignaciones = await getAsignacionesTramitesYServicios(
-            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
+        case 'Responder Tramite':
+        case 'RESPONDER TRÁMITE':
+        case 'RESPONDER TRAMITE':
+          asignaciones = await getReAsignacionesTareasTramites(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
             handleGeneralLoading
-          );*/
+          );
           break;
         case 'RESPONDER OTRO':
         case 'RESPONDER OTROS':

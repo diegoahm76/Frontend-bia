@@ -1,44 +1,61 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormLabel, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../components';
 import { DatePicker, LocalizationProvider, MobileTimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
+import { viajes_agendados } from '../interfaces/types';
+import { parseHora } from '../thunks/viajes';
+
+interface props {
+  solicitud_respondida: viajes_agendados;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const ViajeAgendado: React.FC = () => {
+const ViajeAgendado: React.FC<props> = ({solicitud_respondida}) => {
   const [fecha_salida, set_fecha_salida] = useState<Dayjs>(dayjs());
-  const [msj_error_fecha_salida, set_msj_error_fecha_salida] = useState<string>("");
   const [fecha_retorno, set_fecha_retorno] = useState<Dayjs>(dayjs());
-  const [msj_error_fecha_retorno, set_msj_error_fecha_retorno] = useState<string>("");
   const [hora_salida, set_hora_salida] = useState<Date | null>(new Date());
   const [hora_retorno, set_hora_retorno] = useState<Date | null>(new Date());
+  const [conductor, set_conductor] = useState<string>('');
+  const [vehiculo, set_vehiculo] = useState<string>('');
+
 
   const cambio_fecha_salida = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_salida(date);
-      set_msj_error_fecha_salida("");
-    } else {
-      set_msj_error_fecha_salida("El campo Fecha inicio es obligatorio.");
     }
   };
 
   const cambio_fecha_retorno = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_retorno(date);
-      set_msj_error_fecha_retorno("");
-    } else {
-      set_msj_error_fecha_retorno("El campo Fecha inicio es obligatorio.");
     }
   };
 
-  const cambio_hora_salida = (newTime: Date | null) => {
-    set_hora_salida(newTime);
+  const cambio_hora_salida = (newTime: dayjs.Dayjs | null) => {
+    set_hora_salida(newTime?.toDate() || null);
   };
 
-  const cambio_hora_retorno = (newTime: Date | null) => {
-    set_hora_retorno(newTime);
+
+  const cambio_hora_retorno = (newTime:  dayjs.Dayjs | null) => {
+    set_hora_retorno(newTime?.toDate() || null);
   };
+
+  useEffect(()=>{
+    console.log(solicitud_respondida);
+  },[solicitud_respondida])
+  
+  useEffect(()=>{
+    if(Object.keys(solicitud_respondida).length !== 0){
+      cambio_fecha_salida(dayjs(solicitud_respondida.fecha_partida_asignada));
+      cambio_fecha_retorno(dayjs(solicitud_respondida.fecha_retorno_asignada));
+      cambio_hora_salida(parseHora(solicitud_respondida.hora_partida));
+      cambio_hora_retorno(parseHora(solicitud_respondida.hora_retorno));
+      set_conductor(solicitud_respondida.apellido_conductor + ' ' + solicitud_respondida.nombre_conductor);
+      set_vehiculo(solicitud_respondida.marca + ' - ' + solicitud_respondida.placa);
+    }
+  },[solicitud_respondida])
 
   return (
     <Grid
@@ -80,7 +97,14 @@ const ViajeAgendado: React.FC = () => {
             Conductor:
           </FormLabel>
           <Grid item xs={6}>
-            <TextField fullWidth id="conductor" size="small" />
+            <TextField 
+              fullWidth 
+              id="conductor" 
+              size="small"
+              disabled
+              value={conductor}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_conductor(e.target.value)}
+              />
           </Grid>
         </Grid>
         <Grid
@@ -97,7 +121,14 @@ const ViajeAgendado: React.FC = () => {
             Vehículo:
           </FormLabel>
           <Grid item xs={6}>
-            <TextField fullWidth id="vehiculo" size="small" />
+            <TextField 
+              fullWidth 
+              id="vehiculo" 
+              size="small"
+              disabled
+              value={vehiculo}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_vehiculo(e.target.value)}
+            />
           </Grid>
         </Grid>
       </Grid>
@@ -124,6 +155,7 @@ const ViajeAgendado: React.FC = () => {
           <Grid item xs={5}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                disabled
                 label="Desde:"
                 value={fecha_salida}
                 onChange={(newValue) => { cambio_fecha_salida(newValue); }}
@@ -135,7 +167,6 @@ const ViajeAgendado: React.FC = () => {
                     {...params}
                   />
                 )}
-                minDate={dayjs()}
               />
             </LocalizationProvider>
           </Grid>
@@ -151,6 +182,7 @@ const ViajeAgendado: React.FC = () => {
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
+                  disabled
                   label="Seleccionar hora"
                   openTo="hours"
                   value={hora_salida}
@@ -185,6 +217,7 @@ const ViajeAgendado: React.FC = () => {
           <Grid item xs={5}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                disabled
                 label="Desde:"
                 value={fecha_retorno}
                 onChange={(newValue) => { cambio_fecha_retorno(newValue); }}
@@ -196,7 +229,6 @@ const ViajeAgendado: React.FC = () => {
                     {...params}
                   />
                 )}
-                minDate={dayjs()}
               />
             </LocalizationProvider>
           </Grid>
@@ -212,6 +244,7 @@ const ViajeAgendado: React.FC = () => {
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileTimePicker
+                  disabled
                   label="Seleccionar hora"
                   openTo="hours"
                   value={hora_retorno}

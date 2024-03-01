@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { ModalInfoTarea } from '../../../utils/tareaPqrsdf/ModalInfoTarea';
 import { ModalRespuestaReqReasigna } from '../../../utils/tareaPqrsdf/RespuestaReqReasignaciones/ModalRespuestaReqReasigna';
+import { ModalRespuestaReqTramites } from '../../../utils/tareaPqrsdf/RespuestaReqReasignaciones/ModalReqReasigTramites';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ButtonsTareaTramites: React.FC = (): JSX.Element => {
@@ -28,9 +29,12 @@ export const ButtonsTareaTramites: React.FC = (): JSX.Element => {
   const navigate = useNavigate();
 
   //* context declaration
-  const { handleThirdLoading, handleFourthLoading } = useContext(
+  const { handleThirdLoading, handleSixthLoading } = useContext(
     ModalAndLoadingContext
   );
+
+ 
+
 
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
   // ? MANEJO DE ACCIONES PARA PQRSDF ----------------------
@@ -50,7 +54,9 @@ export const ButtonsTareaTramites: React.FC = (): JSX.Element => {
   const handleVerRespuestasRequerimientosOSolicitudesAlUsuario = withValidation(
     () => {
       // console.log('Ver respuestas a requerimientos o solicitudes al usuario')
-      handleFourthLoading(true);
+      handleSixthLoading(true);
+
+      
     }
   );
 
@@ -82,7 +88,7 @@ export const ButtonsTareaTramites: React.FC = (): JSX.Element => {
       {/*se acomoda el modal para ver la información resumida de la tarea*/}
       {/* se acomoda el modal para ver las respuestas de los requerimientos y las reasignaciones */}
       {/* se debe cambiar este modal o analizar si el de pqrsdf funciona, pero con condicionales en el llamado de los servicios */}
-      {/*<ModalRespuestaReqReasigna />*/}
+      <ModalRespuestaReqTramites />
       {/* se acomoda el modal para ver las respuestas de los requerimientos y las reasignaciones */}
 
       <Box sx={{ height: 70, transform: 'translateZ(0px)', flexGrow: 1 }}>

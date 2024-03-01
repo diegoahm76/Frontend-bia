@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { api } from "../../../../api/axios";
-import { control_error, control_success } from "../../../../helpers";
-import { crear_aprobacion_viaje, interface_data_agendamiento_vehiculos, interface_rechazo_solicitud } from "../interfaces/types";
+import { control_error } from "../../../../helpers";
+import { crear_aprobacion_viaje, interface_rechazo_solicitud } from "../interfaces/types";
 
 export const buscar_solicitudes_agendamientos: any = (
   fecha_solicitud_desde: string,
@@ -88,7 +88,30 @@ export const enviar_aprobacion_viaje: any = (form_data: crear_aprobacion_viaje) 
       const { data } = await api.post('/almacen/vehiculos/aprobar-solicitud-viaje/create/', form_data);
       return data;
     } catch (error: any) {
-      control_error('Hubo un error al intentar enviar el rechazo de solicitud');
+      control_error('Hubo un error al intentar enviar el la aprobación de solicitud');
+      return error as AxiosError;
+    }
+  };
+};
+
+export const obtener_ver_agendamiento: any = (id_solicitud_viaje: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/vehiculos/obtener-agendamiento-viajes/${id_solicitud_viaje}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const editar_aprobacion_viaje: any = (id_viaje_agendado: number, form_data: {id_vehiculo_conductor: number}) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/vehiculos/viajes-agendados/${id_viaje_agendado}/`,form_data);
+      return data;
+    } catch (error: any) {
+      control_error('Hubo un error al intentar editar el agendamiento');
       return error as AxiosError;
     }
   };

@@ -8,6 +8,7 @@ import { control_error, control_success } from '../../../../helpers';
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
+import Swal from 'sweetalert2';
 
 interface props {
   id_solicitud_viaje: number;
@@ -43,8 +44,6 @@ const RechazoSolicitud: React.FC<props> = ({id_solicitud_viaje, set_mostrar_inpu
     });
   }, [id_solicitud_viaje,observacion_rechazo])
 
-
-
   
   const validar_form_rechazo:() => Promise<boolean> = async() => {
     if(observacion_rechazo.trim() === ''){
@@ -57,12 +56,29 @@ const RechazoSolicitud: React.FC<props> = ({id_solicitud_viaje, set_mostrar_inpu
 
   const btn_enviar_rechazo_solicitud_viaje = async() => {
     const form_validado = await validar_form_rechazo();
+
     if(form_validado){
-      control_success('Reprobación de la petición creada exitosamente');
-      enviar_rechazo_solicitud_viaje_fc();
-      set_observacion_rechazo('');
-      set_mostrar_input_no_aprobado(false);
-      set_refrescar_tabla(!refrescar_tabla);
+    Swal.fire({
+      title: '¿Está seguro que desea reprobar esta solicitud?',
+      showDenyButton: true,
+      confirmButtonText: `Si`,
+      denyButtonText: `No`,
+      confirmButtonColor: '#042F4A',
+      cancelButtonColor: '#DE1616',
+      icon: 'question',
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+          control_success('Reprobación de la petición creada exitosamente');
+          enviar_rechazo_solicitud_viaje_fc();
+          set_observacion_rechazo('');
+          set_mostrar_input_no_aprobado(false);
+          set_refrescar_tabla(!refrescar_tabla);
+          return true;
+        } else if(result.isDenied){
+          return false;
+        }
+      });
     }
   }
 

@@ -21,7 +21,7 @@ export const columnsTareasTramites = [
     field: 'asignado_para',
     minWidth: 280,
     renderCell: (params: any) => {
-      return params.value ?? 'Sin asignar';
+      return params.value || 'Sin asignar';
     },
   },
   {
@@ -37,7 +37,7 @@ export const columnsTareasTramites = [
     field: 'radicado',
     minWidth: 220,
     rencerCell: (params: any) => {
-      return params.value ?? 'Sin radicado';
+      return params.value || 'N/A';
     },
   },
   {
