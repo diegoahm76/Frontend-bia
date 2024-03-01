@@ -40,9 +40,4 @@ export const columnsAtom = [
       return params.value ? 'Si' : 'No';
     },
   },
-  {
-    headerName: 'Observación de digitalización',
-    field: 'observacion_digitalizacion',
-    minWidth: 400,
-  },
 ];

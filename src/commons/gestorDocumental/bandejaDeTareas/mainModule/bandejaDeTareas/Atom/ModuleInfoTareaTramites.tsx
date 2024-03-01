@@ -26,15 +26,11 @@ import { Title } from '../../../../../../components';
 import { formatDate } from '../../../../../../utils/functions/formatDate';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
-import { getMetadatosPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosPqrsdf.service';
-import { getMetadatoComplemento } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/metadatos/getMetadatosComplemento.service';
 import InfoIcon from '@mui/icons-material/Info';
-import { getArchivoAnexoPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
-import { getArchivoAnexoComplemento } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAneComp.service';
-import { getInfoDenuncia } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/denuncia/getInfoDenuncia.service';
 import { useAppSelector } from '../../../../../../hooks';
 import { ModuleInfoDenuncia } from './ModuleInfoDenuncia';
-import { getMetadatosOtro } from '../services/servicesStates/otros/metadatos/getMetadatosOtro.service';
+import { getArchivoAnexoTramite } from '../../../../panelDeVentanilla/toolkit/thunks/TramitesyServiciosyRequerimientos/archivo/getArchivoTramite.service';
+import { getMetadatosTramite } from '../services/servicesStates/tramites/metadatos/getMetadatosArchivoAnexo.service';
 
 export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
   //* redux states selected
@@ -48,7 +44,6 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
 
   //* se debe traer de un context el estado de los anexos y de los metadatos
   const {
-    handleGeneralLoading,
     openModalOne: infoAnexos,
     openModalTwo: infoMetadatos,
     handleOpenModalOne: handleOpenInfoAnexos,
@@ -74,10 +69,9 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
             <Tooltip title="Ver anexo">
               <IconButton
                 onClick={async () => {
-                  console.log(params.row, 'viendo anexo y abriendo modal');
                   let archivo;
                   // * reemplazar por el servicio de anexos de otros
-                  archivo = await getArchivoAnexoPqrsdf(
+                  archivo = await getArchivoAnexoTramite(
                     params.row.id_anexo,
                     handleOpenInfoAnexos,
                     handleOpenInfoMetadatos
@@ -334,14 +328,12 @@ export const ModuleInfoTareaTramites = (props: any): JSX.Element => {
                   variant="outlined"
                   onClick={async () => {
                     let metadatos;
-                    metadatos = await getMetadatosOtro(
+                    metadatos = await getMetadatosTramite(
                       archivoAnexos?.anexoActual?.id_anexo,
                       handleOpenInfoMetadatos
                     );
 
                     setMetadatos(metadatos);
-                    //  console.log('')(infoMetadatos);
-                    // handleOpenInfoMetadatos(true);
                   }}
                   startIcon={<InfoIcon />}
                 >

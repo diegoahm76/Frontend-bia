@@ -16,7 +16,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // ? components
-
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { BandejaTareasContext } from '../../context/BandejaTareasContext';
@@ -27,10 +26,10 @@ import { formatDate } from '../../../../../../utils/functions/formatDate';
 import { RenderDataGrid } from '../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
 import InfoIcon from '@mui/icons-material/Info';
-import { getArchivoAnexoPqrsdf } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
 import { useAppSelector } from '../../../../../../hooks';
 import { ModuleInfoDenuncia } from './ModuleInfoDenuncia';
-import { getMetadatosOtro } from '../services/servicesStates/otros/metadatos/getMetadatosOtro.service';
+import { getArchivoAnexoTramite } from '../../../../panelDeVentanilla/toolkit/thunks/TramitesyServiciosyRequerimientos/archivo/getArchivoTramite.service';
+import { getMetadatosTramite } from '../services/servicesStates/tramites/metadatos/getMetadatosArchivoAnexo.service';
 
 export const ModuleInfoTareaTramComplemento = (props: any): JSX.Element => {
   //* redux states selected
@@ -70,10 +69,9 @@ export const ModuleInfoTareaTramComplemento = (props: any): JSX.Element => {
             <Tooltip title="Ver anexo">
               <IconButton
                 onClick={async () => {
-                  alert('cargando archivo y anexos');
-                  /* let archivo;
+                  let archivo;
                   // * reemplazar por el servicio de anexos de otros
-                  archivo = await getArchivoAnexoPqrsdf(
+                  archivo = await getArchivoAnexoTramite(
                     params.row.id_anexo,
                     handleOpenInfoAnexos,
                     handleOpenInfoMetadatos
@@ -83,7 +81,7 @@ export const ModuleInfoTareaTramComplemento = (props: any): JSX.Element => {
                     anexoActual: params.row,
                     archivo: archivo?.ruta_archivo,
                     infoArchivo: archivo,
-                  });*/
+                  });
                 }}
               >
                 <Avatar
@@ -350,14 +348,12 @@ export const ModuleInfoTareaTramComplemento = (props: any): JSX.Element => {
                   variant="outlined"
                   onClick={async () => {
                     let metadatos;
-                    metadatos = await getMetadatosOtro(
+                    metadatos = await getMetadatosTramite(
                       archivoAnexos?.anexoActual?.id_anexo,
                       handleOpenInfoMetadatos
                     );
 
                     setMetadatos(metadatos);
-                    //  console.log('')(infoMetadatos);
-                    // handleOpenInfoMetadatos(true);
                   }}
                   startIcon={<InfoIcon />}
                 >
