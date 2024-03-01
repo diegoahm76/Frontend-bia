@@ -21,6 +21,9 @@ interface props_table {
   set_id_solicitud_viaje: React.Dispatch<React.SetStateAction<number>>;
   set_mostrar_agendamiento_vehiculo: React.Dispatch<React.SetStateAction<boolean>>;
   set_data_solicitud_a_aprobar: React.Dispatch<React.SetStateAction<interface_data_agendamiento_vehiculos>>;
+  set_accion: React.Dispatch<React.SetStateAction<string>>
+  set_mostrar_vehiculo_agregado: React.Dispatch<React.SetStateAction<boolean>>;
+  set_mostrar_vehiculos_agendados: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
@@ -29,17 +32,29 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
   set_mostrar_input_no_aprobado,
   set_id_solicitud_viaje,
   set_mostrar_agendamiento_vehiculo,
-  set_data_solicitud_a_aprobar
+  set_data_solicitud_a_aprobar,
+  set_accion,
+  set_mostrar_vehiculo_agregado,
+  set_mostrar_vehiculos_agendados
 }) => {
+
+  const ver_agendamiento = (params: interface_data_agendamiento_vehiculos) => {
+    set_id_solicitud_viaje(params.id_solicitud_viaje ?? 0);
+    set_mostrar_agendamiento_vehiculo(true);
+    set_mostrar_vehiculo_agregado(true);
+    set_mostrar_vehiculos_agendados(true);
+    set_accion('ver_agendamiento');
+  }
 
   const no_aprobar_solicitud = (params: interface_data_agendamiento_vehiculos) => { 
     set_mostrar_input_no_aprobado(true);
-    set_id_solicitud_viaje(params.id_solicitud_viaje);
+    set_id_solicitud_viaje(params.id_solicitud_viaje ?? 0);
   }
 
   const aprobar_solicitud = (params: interface_data_agendamiento_vehiculos) => {
     set_mostrar_agendamiento_vehiculo(true);
     set_data_solicitud_a_aprobar(params);
+    set_accion('aprobar_agendamiento');
   }
 
 
@@ -84,7 +99,9 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
               size="small"
               color='primary'
               variant='contained'
-              startIcon={<RemoveRedEyeIcon />}
+              onClick={()=>ver_agendamiento(res.row)}
+              startIcon={<RemoveRedEyeIcon/>
+            }
             >Ver agendamiento</Button>
           )
         } else if (res.row.estado_solicitud === 'ES'){
@@ -122,7 +139,7 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
       columns={columns ?? []}
       pageSize={5}
       rowHeight={75}
-      rowsPerPageOptions={[10]}
+      rowsPerPageOptions={[5]}
       experimentalFeatures={{ newEditingApi: true }}
       getRowId={() => {
         try {

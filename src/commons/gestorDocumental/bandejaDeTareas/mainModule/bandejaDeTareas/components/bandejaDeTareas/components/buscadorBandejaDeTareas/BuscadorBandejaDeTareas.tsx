@@ -89,6 +89,8 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         fecha_inicio,
         fecha_fin,
         radicado,
+        estado_de_la_tarea,
+        mostrar_respuesta_con_req_pendientes,
       } = watchBusquedaBandejaDeTareas;
       console.log;
 
@@ -98,7 +100,9 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         estado_asignacion_de_tarea?.value,
         fecha_inicio,
         fecha_fin,
-        radicado
+        radicado,
+        estado_de_la_tarea?.value,
+        mostrar_respuesta_con_req_pendientes?.value
       );
 
       console.log(res);

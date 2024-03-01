@@ -77,8 +77,6 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
               //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
               console.log(params.row);
 
-              // 'info_complemento/:id_complemento_usu_pqr'
-
               (async () => {
                 try {
                   const idComplemento = params?.row?.id_complemento_usu_pqr;
@@ -92,9 +90,6 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
                     navigate(
                       `/app/gestor_documental/bandeja_tareas/info_complemento/${idComplemento}`
                     );
-                    // handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                    //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
-                    //  handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqrsdf que se consulta con el id del anexo
                   }
                 } catch (error) {
                   console.error(error);

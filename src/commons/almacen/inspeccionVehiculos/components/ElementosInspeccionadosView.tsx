@@ -11,15 +11,17 @@ import { estilo_radio } from "../thunks/estilo_radio";
 import { useAppDispatch } from "../../../../hooks";
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import CloseIcon from '@mui/icons-material/Close';
-import { get_inspeccion_vehiculo } from "../interfaces/types";
+import { get_inspeccion_vehiculo, interface_put_revisar_vehiculo } from "../interfaces/types";
+import { useNavigate } from "react-router-dom";
 
 interface props {
   set_mostrar_view_inpeccion: React.Dispatch<React.SetStateAction<boolean>>;
+  data_inspeccion_revisada: interface_put_revisar_vehiculo;
 }
 
 
-const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccion}) => {
-  const dispatch = useAppDispatch();
+const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccion,data_inspeccion_revisada}) => {
+  const navigate = useNavigate();
 
   const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('false');
   const [direcionales_traseras, set_direcionales_traseras] = useState<string>('true');
@@ -53,83 +55,54 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
   const [observaciones, set_observaciones] = useState<string>('');
   const [tiene_observaciones, set_tiene_observaciones] = useState<boolean>(false);
 
-  const [data_vehiculo_inspeccionado, set_vehiculo_inspeccionado] = useState<get_inspeccion_vehiculo>({
-    id_hoja_vida_vehiculo: 0,
-    kilometraje: 0,
-    dir_llantas_delanteras: true,
-    dir_llantas_traseras: true,
-    limpiabrisas_delantero: true,
-    limpiabrisas_traseros: true,
-    nivel_aceite: true,
-    estado_frenos: true,
-    nivel_refrigerante: true,
-    apoyo_cabezas_piloto: true,
-    apoyo_cabezas_copiloto: true,
-    apoyo_cabezas_traseros: true,
-    frenos_generales: true,
-    freno_emergencia: true,
-    llantas_delanteras: true,
-    llantas_traseras: true,
-    llanta_repuesto: true,
-    espejos_laterales: true,
-    espejo_retrovisor: true,
-    cinturon_seguridad_delantero: true,
-    cinturon_seguridad_trasero: true,
-    luces_altas: true,
-    luces_media: true,
-    luces_bajas: true,
-    luces_parada: true,
-    luces_parqueo: true,
-    luces_reversa: true,
-    kit_herramientas: true,
-    botiquin_completo: true,
-    pito: true,
-    observaciones: 'Se encontro llanda derecha delantera defectuosa',
-  })
 
   useEffect(()=>{
-    set_direcionales_delanteras(data_vehiculo_inspeccionado.dir_llantas_delanteras.toString());
-    set_direcionales_traseras(data_vehiculo_inspeccionado.dir_llantas_traseras.toString());
-    set_limpiabrisas_delantero(data_vehiculo_inspeccionado.limpiabrisas_delantero.toString());
-    set_limpiabrisas_trasero(data_vehiculo_inspeccionado.limpiabrisas_traseros.toString());
-    set_nivel_aceite(data_vehiculo_inspeccionado.nivel_aceite.toString());
-    set_nivel_frenos(data_vehiculo_inspeccionado.estado_frenos.toString());
-    set_nivel_refrigerante(data_vehiculo_inspeccionado.nivel_refrigerante.toString());
-    set_apoyacabezas_piloto(data_vehiculo_inspeccionado.apoyo_cabezas_piloto.toString());
-    set_apoyacabezas_copiloto(data_vehiculo_inspeccionado.apoyo_cabezas_copiloto.toString());
-    set_apoyacabezas_traseros(data_vehiculo_inspeccionado.apoyo_cabezas_traseros.toString());
-    set_frenos_generales(data_vehiculo_inspeccionado.frenos_generales.toString());
-    set_frenos_emergencia(data_vehiculo_inspeccionado.freno_emergencia.toString());
-    set_llantas_delanteras(data_vehiculo_inspeccionado.llantas_delanteras.toString());
-    set_llantas_traseras(data_vehiculo_inspeccionado.llantas_traseras.toString());
-    set_llanta_repuesto(data_vehiculo_inspeccionado.llanta_repuesto.toString());
-    set_espejos_laterales(data_vehiculo_inspeccionado.espejos_laterales.toString());
-    set_espejos_retrovisor(data_vehiculo_inspeccionado.espejo_retrovisor.toString());
-    set_cinturones_delanteros(data_vehiculo_inspeccionado.cinturon_seguridad_delantero.toString());
-    set_cinturones_traseros(data_vehiculo_inspeccionado.cinturon_seguridad_trasero.toString());
-    set_luces_altas(data_vehiculo_inspeccionado.luces_altas.toString());
-    set_luces_medias(data_vehiculo_inspeccionado.luces_media.toString());
-    set_luces_bajas(data_vehiculo_inspeccionado.luces_bajas.toString());
-    set_luces_parada(data_vehiculo_inspeccionado.luces_parada.toString());
-    set_luces_parqueo(data_vehiculo_inspeccionado.luces_parqueo.toString());
-    set_luces_reversa(data_vehiculo_inspeccionado.luces_reversa.toString());
-    set_kit_herramientas(data_vehiculo_inspeccionado.kit_herramientas.toString());
-    set_botiquin_completo(data_vehiculo_inspeccionado.botiquin_completo.toString());
-    set_pito(data_vehiculo_inspeccionado.pito.toString());
-  },[data_vehiculo_inspeccionado]);
-
-  useEffect(()=>{
-    if('observaciones' in data_vehiculo_inspeccionado){
-      set_tiene_observaciones(true);
-      set_observaciones(data_vehiculo_inspeccionado.observaciones ?? '')
+    if(Object.keys(data_inspeccion_revisada).length !== 0){
+      set_direcionales_delanteras(data_inspeccion_revisada.dir_llantas_delanteras.toString());
+      set_direcionales_traseras(data_inspeccion_revisada.dir_llantas_Traseras.toString());
+      set_limpiabrisas_delantero(data_inspeccion_revisada.limpiabrisas_delantero.toString());
+      set_limpiabrisas_trasero(data_inspeccion_revisada.limpiabrisas_traseros.toString());
+      set_nivel_aceite(data_inspeccion_revisada.nivel_aceite.toString());
+      set_nivel_frenos(data_inspeccion_revisada.estado_frenos.toString());
+      set_nivel_refrigerante(data_inspeccion_revisada.nivel_refrigerante.toString());
+      set_apoyacabezas_piloto(data_inspeccion_revisada.apoyo_cabezas_piloto.toString());
+      set_apoyacabezas_copiloto(data_inspeccion_revisada.apoyo_cabezas_copiloto.toString());
+      set_apoyacabezas_traseros(data_inspeccion_revisada.apoyo_cabezas_traseros.toString());
+      set_frenos_generales(data_inspeccion_revisada.frenos_generales.toString());
+      set_frenos_emergencia(data_inspeccion_revisada.freno_emergencia.toString());
+      set_llantas_delanteras(data_inspeccion_revisada.llantas_delanteras.toString());
+      set_llantas_traseras(data_inspeccion_revisada.llantas_traseras.toString());
+      set_llanta_repuesto(data_inspeccion_revisada.llanta_repuesto.toString());
+      set_espejos_laterales(data_inspeccion_revisada.espejos_laterales.toString());
+      set_espejos_retrovisor(data_inspeccion_revisada.espejo_retrovisor.toString());
+      set_cinturones_delanteros(data_inspeccion_revisada.cinturon_seguridad_delantero.toString());
+      set_cinturones_traseros(data_inspeccion_revisada.cinturon_seguridad_trasero.toString());
+      set_luces_altas(data_inspeccion_revisada.luces_altas.toString());
+      set_luces_medias(data_inspeccion_revisada.luces_media.toString());
+      set_luces_bajas(data_inspeccion_revisada.luces_bajas.toString());
+      set_luces_parada(data_inspeccion_revisada.luces_parada.toString());
+      set_luces_parqueo(data_inspeccion_revisada.luces_parqueo.toString());
+      set_luces_reversa(data_inspeccion_revisada.luces_reversa.toString());
+      set_kit_herramientas(data_inspeccion_revisada.kit_herramientas.toString());
+      set_botiquin_completo(data_inspeccion_revisada.botiquin_completo.toString());
+      set_pito(data_inspeccion_revisada.pito.toString());
     }
-  },[data_vehiculo_inspeccionado])
+  },[data_inspeccion_revisada]);
 
   useEffect(()=>{
-    console.log(
-      data_vehiculo_inspeccionado.dir_llantas_delanteras.toString()
-    );
+    if('observaciones' in data_inspeccion_revisada){
+      set_tiene_observaciones(true);
+      set_observaciones(data_inspeccion_revisada?.observaciones ?? '')
+    }
+  },[data_inspeccion_revisada])
+
+  useEffect(()=>{
+    console.log(data_inspeccion_revisada);
   },[])
+
+  const redirect_mantenimiento = () => {
+    navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_vehiculos');
+  }
   
 
   return (
@@ -643,7 +616,7 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
             color="success"
             variant="contained"
             startIcon={<SettingsApplicationsIcon />}
-            onClick={()=>{}}
+            onClick={redirect_mantenimiento}
           >
             Mantenimiento
           </Button>

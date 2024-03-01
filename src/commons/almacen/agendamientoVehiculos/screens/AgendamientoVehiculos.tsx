@@ -6,9 +6,9 @@ import { DatePicker, LocalizationProvider, MobileTimePicker } from '@mui/x-date-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import SearchIcon from '@mui/icons-material/Search';
-import { data_buscar_vehiculo, interface_data_agendamiento_vehiculos, interface_detalles_vehiculos_agendados, response_data_agendamiento_vehiculos, response_detalles_vehiculos_agendados } from '../interfaces/types';
+import { data_buscar_vehiculo, interface_data_agendamiento_vehiculos, interface_detalles_vehiculos_agendados, interface_ver_agendamiento, response_data_agendamiento_vehiculos, response_detalles_vehiculos_agendados, response_ver_agendamiento } from '../interfaces/types';
 import TablaAgendamientoVehiculos from '../tables/TablaAgendamientoVehiculos';
-import { buscar_detalles_vehiculos_agendados, buscar_solicitudes_agendamientos, enviar_aprobacion_viaje } from '../thunks/agendamiento_vehiculos';
+import { buscar_detalles_vehiculos_agendados, buscar_solicitudes_agendamientos, editar_aprobacion_viaje, enviar_aprobacion_viaje, obtener_ver_agendamiento } from '../thunks/agendamiento_vehiculos';
 import { control_error, control_success } from '../../../../helpers';
 import RechazoSolicitud from './RechazoSolicitud';
 import TablaVehiculosAgendados from '../tables/TablaVehiculosAgendados';
@@ -19,6 +19,7 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
 import BuscarVehiculo from './BuscarVehiculo';
 import Swal from 'sweetalert2';
+import { parseHora } from '../../solicitudDeViaje/thunks/viajes';
 
 
 
@@ -51,6 +52,8 @@ const AgendamientoVehiculos: React.FC = () => {
 
   const [id_solicitud_viaje, set_id_solicitud_viaje] = useState<number>(0);
 
+  const [accion, set_accion] = useState<string>("");
+
   const [mostrar_input_no_aprobado, set_mostrar_input_no_aprobado] = useState<boolean>(false);
 
   const [mostrar_buscar_vehiculo, set_mostrar_buscar_vehiculo] = useState<boolean>(false);
@@ -64,8 +67,9 @@ const AgendamientoVehiculos: React.FC = () => {
 
   const [data_agendamiento_vehiculo, set_data_agendamiento_vehiculo] = useState<interface_data_agendamiento_vehiculos[]>([]);
   const [data_detalles_vehiculos_agendados, set_data_detalles_vehiculos_agendados] = useState<interface_detalles_vehiculos_agendados[]>([]);
-
-
+  const [data_ver_agendamiento, set_data_ver_agendamiento] = useState<interface_ver_agendamiento>(Object);
+  const [data_editar_agendamiento, set_data_editar_agendamiento] = useState<interface_detalles_vehiculos_agendados>(Object);
+  
 
 
   const obtener_asignaciones_vehiculos_filtros: () => void = () => {
@@ -80,8 +84,8 @@ const AgendamientoVehiculos: React.FC = () => {
       fecha_fin_viaje?.format('YYYY-MM-DD')  ?? '',
       estado_solicitud
       ))
-      .then((response: response_data_agendamiento_vehiculos) => {
-        console.log(response);
+      .catch((error: any) => {
+        console.error(error);
       })
   }
 
@@ -101,10 +105,9 @@ const AgendamientoVehiculos: React.FC = () => {
     obtener_asignaciones_vehiculos();
   }, [refrescar_tabla])
 
-  const optener_detalles_vehiculos_agendados: () => void = () => {
+  const obtener_detalles_vehiculos_agendados: () => void = () => {
     dispatch(buscar_detalles_vehiculos_agendados())
       .then((response: response_detalles_vehiculos_agendados) => {
-        console.log(response);        
         if (response.data?.length === 0) {
           set_data_detalles_vehiculos_agendados([]);
         } else {
@@ -113,9 +116,23 @@ const AgendamientoVehiculos: React.FC = () => {
       })
   }
 
+  const obtener_ver_agendamiento_fc: () => void = async() => {
+    await dispatch(obtener_ver_agendamiento(id_solicitud_viaje))
+      .then((response: response_ver_agendamiento) => {       
+        if (response?.success === true) {       
+          set_data_ver_agendamiento(response.data.viajes_agendados);
+        } else {
+          set_data_ver_agendamiento(Object);
+        }
+      })
+  }
+
   useEffect(() => {
-    optener_detalles_vehiculos_agendados();
-  }, [])
+    if(accion === 'ver_agendamiento'){
+      obtener_ver_agendamiento_fc();
+    }    
+    obtener_detalles_vehiculos_agendados();
+  }, [accion,id_solicitud_viaje, refrescar_tabla])
   
 
   const cambio_numero_pasajeros: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,6 +185,52 @@ const AgendamientoVehiculos: React.FC = () => {
     set_hora_retorno(newTime?.toDate() || null);
   };
 
+  useEffect(()=>{
+    if(accion === 'ver_agendamiento'){
+      if(Object.keys(data_ver_agendamiento).length !== 0){
+        set_conductor(data_ver_agendamiento.apellido_conductor + ' ' + data_ver_agendamiento.nombre_conductor);
+        set_placa_vehiculo(data_ver_agendamiento.placa);
+        set_nombre_vehiculo(data_ver_agendamiento.nombre);
+        set_marca(data_ver_agendamiento.marca);
+        set_placa_vehiculo_agregado(data_ver_agendamiento.placa);
+        set_nombre_vehiculo_agregado(data_ver_agendamiento.nombre);
+        set_marca_agregado(data_ver_agendamiento.marca);
+        set_fecha_salida(dayjs(data_ver_agendamiento.fecha_partida_asignada));
+        set_fecha_retorno(dayjs(data_ver_agendamiento.fecha_retorno_asignada));
+        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida).toDate());
+        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno).toDate());
+      } 
+    }
+    if(accion === 'editar_agendamiento'){
+      if(Object.keys(data_editar_agendamiento).length !== 0){
+        set_conductor(data_editar_agendamiento.persona_conductor ?? '');
+        set_placa_vehiculo(data_ver_agendamiento.placa);
+        set_nombre_vehiculo(data_ver_agendamiento.nombre);
+        set_marca(data_ver_agendamiento.marca);
+        set_placa_vehiculo_agregado(data_ver_agendamiento.placa);
+        set_nombre_vehiculo_agregado(data_ver_agendamiento.nombre);
+        set_marca_agregado(data_ver_agendamiento.marca);
+        set_fecha_salida(dayjs(data_ver_agendamiento.fecha_partida_asignada));
+        set_fecha_retorno(dayjs(data_ver_agendamiento.fecha_retorno_asignada));
+        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida).toDate());
+        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno).toDate());
+      } 
+    }
+  },[data_ver_agendamiento,accion,id_solicitud_viaje])
+
+
+  const salir_agendamiento = () => {
+    eliminar_vehiculo_agregado();
+    set_mostrar_agendamiento_vehiculo(false);
+    set_conductor('')
+    set_placa_vehiculo('')
+    set_nombre_vehiculo('')
+    set_marca('')
+    set_placa_vehiculo_agregado('')
+    set_nombre_vehiculo_agregado('')
+    set_marca_agregado('')
+  }
+
   const limpiar_form_agendamiento = () => {
     set_fecha_solicitud_inicio(dayjs());
     set_fecha_solicitud_fin(dayjs());
@@ -199,20 +262,16 @@ const AgendamientoVehiculos: React.FC = () => {
 
   useEffect(()=>{
     if (Object.keys(vehiculo_encontrado).length !== 0) {
-      set_conductor(vehiculo_encontrado.persona_conductor);
-      set_placa_vehiculo(vehiculo_encontrado.placa);
-      set_nombre_vehiculo(vehiculo_encontrado.nombre);
-      set_marca(vehiculo_encontrado.marca);
+      set_conductor(vehiculo_encontrado.persona_conductor ?? '');
+      set_placa_vehiculo(vehiculo_encontrado.placa ?? '');
+      set_nombre_vehiculo(vehiculo_encontrado.nombre ?? '');
+      set_marca(vehiculo_encontrado.marca ?? '');
     } else {
       set_conductor('');
       set_placa_vehiculo('');
       set_nombre_vehiculo('');
       set_marca('');
     }
-  },[vehiculo_encontrado])
-
-  useEffect(()=>{
-    console.log(vehiculo_encontrado);
   },[vehiculo_encontrado])
 
   const eliminar_vehiculo_agregado = () => {
@@ -229,24 +288,23 @@ const AgendamientoVehiculos: React.FC = () => {
   const limpiar_forms_agendamiento_aprobacion = () => {
     eliminar_vehiculo_agregado();
   }
-  
-  function parseHora(hora: string): dayjs.Dayjs {
-    const [horas, minutos] = hora.split(':');
-    return dayjs().set('hour', parseInt(horas)).set('minute', parseInt(minutos));
-  }
+
+
+  useEffect(()=>{
+    console.log(data_solicitud_a_aprobar);
+  },[data_solicitud_a_aprobar])
 
   const agregar_vehiculo = () => {
     if (Object.keys(vehiculo_encontrado).length !== 0) {
       set_mostrar_vehiculo_agregado(true);
-      set_placa_vehiculo_agregado(vehiculo_encontrado.placa);
-      set_nombre_vehiculo_agregado(vehiculo_encontrado.nombre);
-      set_marca_agregado(vehiculo_encontrado.marca);
+      set_placa_vehiculo_agregado(vehiculo_encontrado.placa ?? '');
+      set_nombre_vehiculo_agregado(vehiculo_encontrado.nombre ?? '');
+      set_marca_agregado(vehiculo_encontrado.marca ?? '');
       if (Object.keys(data_solicitud_a_aprobar).length !== 0) {
-        console.log(parseHora(data_solicitud_a_aprobar.hora_retorno));
         cambio_fecha_salida(dayjs(data_solicitud_a_aprobar.fecha_partida));
         cambio_fecha_retorno(dayjs(data_solicitud_a_aprobar.fecha_retorno));
-        cambio_hora_salida(parseHora(data_solicitud_a_aprobar.hora_partida));
-        cambio_hora_retorno(parseHora(data_solicitud_a_aprobar.hora_retorno));
+        cambio_hora_salida(parseHora(data_solicitud_a_aprobar.hora_partida ?? ''));
+        cambio_hora_retorno(parseHora(data_solicitud_a_aprobar.hora_retorno ?? ''));
       }
     } else {
       control_error('Busque un vehículo antes de agregar')
@@ -256,7 +314,7 @@ const AgendamientoVehiculos: React.FC = () => {
   const enviar_aprobacion_solicitud_viaje = () => {
     if (Object.keys(vehiculo_encontrado).length !== 0 && Object.keys(data_solicitud_a_aprobar).length !== 0){
       Swal.fire({
-        title: '¿Está de aprobar la solicitud?',
+        title: '¿Está de seguro de aprobar la solicitud?',
         showDenyButton: true,
         confirmButtonText: `Si`,
         denyButtonText: `Cancelar`,
@@ -266,20 +324,38 @@ const AgendamientoVehiculos: React.FC = () => {
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          dispatch(enviar_aprobacion_viaje({
-            id_solicitud_viaje: data_solicitud_a_aprobar.id_solicitud_viaje,
-            id_persona_conductor: vehiculo_encontrado.id_vehiculo_conductor
-          })).then((response: { success: boolean, detail: string, data: any }) => {
-            if(response?.success){
-              control_success('Se aprobó la solicitud correctamente');
-              set_mostrar_vehiculos_agendados(true);
-              set_refrescar_tabla(!refrescar_tabla);
-              return;
-            } else if (response?.detail) {
-              set_refrescar_tabla(!refrescar_tabla);
-              return;
-            }
-          })
+          if(accion === 'aprobar_agendamiento'){
+            dispatch(enviar_aprobacion_viaje({
+              id_solicitud_viaje: data_solicitud_a_aprobar.id_solicitud_viaje,
+              id_persona_conductor: vehiculo_encontrado.id_vehiculo_conductor
+            })).then((response: { success: boolean, detail: string, data: any }) => {
+              if(response?.success){
+                control_success('Se aprobó la solicitud correctamente');
+                set_mostrar_vehiculos_agendados(true);
+                set_refrescar_tabla(!refrescar_tabla);
+                return;
+              } else if (response?.detail) {
+                set_refrescar_tabla(!refrescar_tabla);
+                return;
+              }
+            })
+          } else if(accion === 'editar_agendamiento'){
+            console.log(vehiculo_encontrado.id_vehiculo_conductor);
+            
+            dispatch(editar_aprobacion_viaje(data_solicitud_a_aprobar.id_viaje_agendado ,{id_vehiculo_conductor: vehiculo_encontrado.id_vehiculo_conductor}))
+            .then((response: any) => {
+              console.log(response);
+              
+              if(Object.keys(response)?.length !== 0){
+                control_success('Se editó el agendamiento correctamente');
+                set_refrescar_tabla(!refrescar_tabla);
+                return;
+              } else if (response?.detail) {
+                set_refrescar_tabla(!refrescar_tabla);
+                return;
+              }
+            })
+          }
           return;
         } else if(result.isDenied){
           return;
@@ -508,11 +584,14 @@ const AgendamientoVehiculos: React.FC = () => {
 
           {!mostrar_input_no_aprobado && 
             <TablaAgendamientoVehiculos
+              set_accion={set_accion}
               set_data_solicitud_a_aprobar={set_data_solicitud_a_aprobar}
               set_mostrar_agendamiento_vehiculo={set_mostrar_agendamiento_vehiculo}
               set_id_solicitud_viaje={set_id_solicitud_viaje}
               set_mostrar_input_no_aprobado={set_mostrar_input_no_aprobado}
               data_agendamiento_vehiculo={data_agendamiento_vehiculo}
+              set_mostrar_vehiculo_agregado={set_mostrar_vehiculo_agregado}
+              set_mostrar_vehiculos_agendados={set_mostrar_vehiculos_agendados}
             />
           }
         </Grid>
@@ -542,6 +621,7 @@ const AgendamientoVehiculos: React.FC = () => {
           }}
         >
           <BuscarVehiculo
+            refrescar_tabla={refrescar_tabla}
             set_vehiculo_encontrado={set_vehiculo_encontrado}
             mostrar_buscar_vehiculo={mostrar_buscar_vehiculo}
             set_mostrar_buscar_vehiculo={set_mostrar_buscar_vehiculo}
@@ -550,7 +630,10 @@ const AgendamientoVehiculos: React.FC = () => {
           <Title title='Agendar viaje con vehículo' />
 
           {mostrar_vehiculos_agendados &&
-            <TablaVehiculosAgendados 
+            <TablaVehiculosAgendados
+              set_accion={set_accion}
+              set_data_solicitud_a_aprobar={set_data_solicitud_a_aprobar}
+              set_data_editar_agendamiento={set_data_editar_agendamiento}
               data_detalles_vehiculos_agendados={data_detalles_vehiculos_agendados}
             />
           }
@@ -633,6 +716,7 @@ const AgendamientoVehiculos: React.FC = () => {
                 color='primary'
                 variant='contained'
                 startIcon={<SearchIcon />}
+                disabled={accion !== 'aprobar_agendamiento' && accion !== 'editar_agendamiento'}
                 onClick={()=>set_mostrar_buscar_vehiculo(true)}
               >
                 Buscar
@@ -647,8 +731,8 @@ const AgendamientoVehiculos: React.FC = () => {
               <Button
                 fullWidth
                 color='success'
-                disabled={Object.keys(vehiculo_encontrado).length === 0}
                 variant='contained'
+                disabled={Object.keys(vehiculo_encontrado).length === 0 || accion === 'ver_agendamiento'}
                 startIcon={<AddIcon />}
                 onClick={agregar_vehiculo}
               >
@@ -825,19 +909,21 @@ const AgendamientoVehiculos: React.FC = () => {
               gap: 4,
             }}
             >
+
             <Button
               color="success"
               variant="contained"
               startIcon={<SaveIcon />}
+              disabled={accion === 'ver_agendamiento'}
               onClick={enviar_aprobacion_solicitud_viaje}
             >
-              Guardar
+              {accion === 'editar_agendamiento' ? 'Actualizar' : accion === 'aprobar_agendamiento' ? 'Guardar' : 'Actualizar'}
             </Button>
             <Button
               color="error"
               variant="contained"
               startIcon={<ClearIcon />}
-              onClick={()=>set_mostrar_agendamiento_vehiculo(false)}
+              onClick={()=>salir_agendamiento()}
             >
               Salir
             </Button>

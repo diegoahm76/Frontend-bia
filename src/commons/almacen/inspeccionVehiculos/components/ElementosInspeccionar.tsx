@@ -13,6 +13,7 @@ import { estilo_radio } from "../thunks/estilo_radio";
 import { create_inspeccion_vehiculo } from "../interfaces/types";
 import { useAppDispatch } from "../../../../hooks";
 import { enviar_inspeccion_vehiculo } from "../thunks/inspeccion_vehiculos";
+import Swal from "sweetalert2";
 
 interface props {
   set_data_inspeccion_vehiculo: React.Dispatch<React.SetStateAction<create_inspeccion_vehiculo>>;
@@ -228,17 +229,32 @@ const ElementosInspeccionar: React.FC<props> = ({
     set_botiquin_completo('true');
     set_pito('true');
     set_kilometraje(0);
-    set_id_hoja_vida_vehiculo(0);
   }
 
   const enviar_asignacion_vehiculo = () => {
-    dispatch(enviar_inspeccion_vehiculo(data_inspeccion_vehiculo)).then((response: { success: boolean, detail: string, data: any }) => {
-      if (response) {
-        console.log(response);        
-        return;
+    Swal.fire({
+      title: '¿Está seguro que desea enviar la inspección del vehículo?',
+      showDenyButton: true,
+      confirmButtonText: `Si`,
+      denyButtonText: `No`,
+      confirmButtonColor: '#042F4A',
+      cancelButtonColor: '#DE1616',
+      icon: 'question',
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        dispatch(enviar_inspeccion_vehiculo(data_inspeccion_vehiculo)).then((response: { success: boolean, detail: string, data: any }) => {
+          if (response) {
+            console.log(response);        
+            return;
+          }
+        })
+        limpiar_inspeccion();
+        return true;
+      } else if(result.isDenied){
+        return false;
       }
-    })
-    limpiar_inspeccion();
+    });
   }
 
   return (
