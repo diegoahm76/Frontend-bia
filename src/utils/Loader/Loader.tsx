@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Box, CircularProgress } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  LinearProgress,
+  Typography,
+} from '@mui/material';
 import { type FC } from 'react';
 
 export const Loader: FC<any> = (props: any): JSX.Element => {
@@ -11,10 +16,14 @@ export const Loader: FC<any> = (props: any): JSX.Element => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: altura || '100vh'
+        flexDirection:'column',
+        height: altura || '100vh',
       }}
     >
-      <CircularProgress size={70} />
+      <CircularProgress size={65} />
+      <Typography variant="body1" marginTop={6}>
+        Cargando información...
+      </Typography>
     </Box>
   );
 };
