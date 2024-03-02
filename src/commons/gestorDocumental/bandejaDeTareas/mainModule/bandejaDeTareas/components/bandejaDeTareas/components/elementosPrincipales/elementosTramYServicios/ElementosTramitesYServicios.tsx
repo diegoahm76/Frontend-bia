@@ -6,6 +6,7 @@ import {
   setActionsTareasTramites,
   setCurrentTareaPqrsdfTramitesUotrosUopas,
   setInfoTarea,
+  setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import {
   useAppDispatch,
@@ -31,12 +32,17 @@ import { getDetalleDeTareaOtro } from '../../../../../services/servicesStates/ot
 import { getAnexosOtros } from '../../../../../services/servicesStates/otros/anexos/getAnexosTareaOtros.service';
 import { getDetalleDeTareaTramites } from '../../../../../services/servicesStates/tramites/detalleTareaTramites/getDetalleTareaTramites.service';
 import { getAnexosTramites } from '../../../../../services/servicesStates/tramites/anexos/getAnexosTramites.service';
+import { putAceptarTareaOtros } from '../../../../../../../toolkit/thunks/otros/putAceptarTareaOtros.service';
+import { getListadoTareaasOtrosByPerson } from '../../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
+import { putAceptarTareaTramite } from '../../../../../../../toolkit/thunks/tramitesServicios/putAceptarTareaTramite.service';
+import { AuthSlice } from '../../../../../../../../../auth/interfaces';
+import { getListadoTramitesByPerson } from '../../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
 
 export const ElementosTramitesYServicios = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
-  //* navigate 
+  //* navigate
   const navigate = useNavigate();
 
   //* redux states
@@ -45,6 +51,10 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
     listaTareasPqrsdfTramitesUotrosUopas,
     actionsTramitesYServicios,
   } = useAppSelector((state) => state.BandejaTareasSlice);
+
+  const {
+    userinfo: { id_persona },
+  } = useAppSelector((state: AuthSlice) => state.auth);
 
   //* context declaration
   const { setAnexos } = useContext(BandejaTareasContext);
@@ -240,18 +250,16 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
       });
 
       if (result.isConfirmed) {
-        alert('aceptando tarea bro');
-        //const res = await putAceptarTareaOtros(row.id_tarea_asignada);
+        const res = await putAceptarTareaTramite(row.id_tarea_asignada);
 
         // cambiar por el get de la bandeja de teareas de otros
-        /* const listadoTareas = await getListadoTareaasOtrosByPerson(
-            id_persona,
-            handleSecondLoading,
-            'ROtros'
-          );*/
+        const listadoTareas = await getListadoTramitesByPerson(
+          id_persona,
+          handleSecondLoading
+        );
 
-        //dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
-        //dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+        dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
       } else {
         await Swal.fire({
           title: 'La tarea no ha sido aceptada (TRÁMITES Y SERVICIOS)',

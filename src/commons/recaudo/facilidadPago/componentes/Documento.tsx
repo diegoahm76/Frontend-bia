@@ -55,7 +55,7 @@ interface Cuota {
 }
 
 interface PlanPagoData {
-  plan_pago: any; // Ajusta esto según la estructura de tu plan_pago
+  plan_pago: any; 
   cuotas: Cuota[];
 }
 
@@ -69,6 +69,7 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
       const res = await api.get(url);
       const planPagoData: PlanPagoData = res.data?.data || { plan_pago: {}, cuotas: [] };
       setCuotas(planPagoData?.cuotas);
+
     } catch (error) {
       console.error(error);
     }
@@ -76,9 +77,11 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
   useEffect(() => {
 
     void fetchPlanPago();
+    generarHistoricoBajas()
   }, [idFacilidadSeleccionada]);
   useEffect(() => {
     void fetchPlanPago();
+    generarHistoricoBajas()
   }, []);
   const columns: GridColDef[] = [
     { field: 'nro_cuota', headerName: 'No cuota', width: 130, flex: 1 },
@@ -191,29 +194,24 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
     y += 6; doc.text(``, 10, y);
     y += 6;
 
-    let texto1 = ` hola`;
-    let textoPersonalizado =
-
-      `
-        Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los documentos de cobro de la vigencia  ${Fecha_vigencia ? Fecha_vigencia : '__________'} de la tasa por utilización de agua.
-    
-    Cordial Saludo,
-    Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información: 
-    a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${Fecha_a ? Fecha_a : '__________'} .  
-    b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${Fecha_b ? Fecha_b : '__________'} .  
-    Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${Fecha_entrega ? Fecha_entrega : '__________'} , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.
-    
-     
-         `;
+  
 
 
-    let textoAMostrar: string;
+    let textoAMostrar: any;
 
 
 
-
+    let textoCuotas = cuotas.map((cuota, index) => 
+    `-Nro Cuota: ${cuota.nro_cuota},
+    -Fecha Vencimiento: ${cuota.fecha_vencimiento},
+    -Valor Capital: ${cuota.valor_capital},
+    -Valor Interés: ${cuota.valor_interes},
+    -Monto Cuota: ${cuota.monto_cuota},`
+  ).join("\n\n");
+  
     if (opcionSeleccionada === '2') {
       textoAMostrar = ` 
+      
                    «Por medio de la cual se otorga una facilidad de pago en instancia persuasiva a
                      la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion} y 
                                                      se toman otras determinaciones»
@@ -246,21 +244,11 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
      ARTÍCULO PRIMERO: Otorgar facilidad de pago a la señora BLANCA LUCIARAMIREZ TORO identificada con C.C.  ${idFacilidades.identificacion}, con un plazo de nueve (09) cuotas mensuales de igual valor, para el pago de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, incluido valor capital e intereses. PARÁGRAFO PRIMERO: Teniendo en cuenta que el valor capital de la presente facilidad de pago es la suma de UN MILLON SEISCIENTOS OCHENTA Y TRES MIL QUINIENTOS TREINTA Y CINCO PESOS MCTE ($1.683.535) y que la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion}, consignó el día seis (06) de agosto de 2023, la suma de QUINIENTOS QUINCE MIL SEISCIENTOS SESENTA Y SEIS PESOS MCTE ($515.666), el cual se aplicó proporcionalmente a capital por valor de QUINIENTOS CINCO MIL OCHOCIENTOS OCHENTA Y SEIS PESOS MCTE ($505.886) y a intereses de mora por valor de NUEVE MIL SETECIENTOS OCHENTA PESOS MCTE ($9.780).
     
     Conforme a lo anterior, queda un saldo a capital por valor de UN MILLON CIENTO SETENTA Y SIETE MIL SEISCIENTOS CUARENTA Y NUEVE PESOS MCTE ($1.177.649), más los intereses proyectados por el término de la facilidad de pago, es decir, al día cinco (05) de Junio del año 2024, fecha en la que se estima el pago total de las obligaciones, por valor de CIENTO CUARENTA Y DOS MIL CIENTO TRES PESOS MCTE ($142.103), y que arrojan una deuda total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752). ARTICULO SEGUNDO: Autorizar el pago del valor capital más los intereses que sumados arrojan un valor total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752) en nueve (09) cuotas, distribuido de la siguiente manera:
-    
-    
-    
-    No cuota FECHAS DE PAGO CUOTA
-    1  05 de octubre de 2023 146,640
-    2  05 de noviembre de 2023 146,639
-    3  05 de diciembre de 2023 146,639
-    4  05 de enero de 2024 146,639
-    5  05 de febrero de 2024 146,639
-    6  05 de marzo de 2024 146,639
-    7  05 de abril de 2024 146,639
-    8  05 de mayo de 2024 146,639
-    9  05 de junio de 2024 146,639
-    
-    TOTAL 1,319,752
+    ${textoCuotas}
+
+    Valor capital = ${totalValorCapital.toFixed(2)}
+    Valor intereces = ${totalValorInteres.toFixed(2)}
+    Total moto cuota = ${totalMontoCuota.toFixed(2)}
     
     PARÁGRAFO ÚNICO: Si el día acordado para el pago de las cuotas fuere feriado el pago se prorrogará hasta el día siguiente hábil.
     
@@ -473,6 +461,7 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
   };
   useEffect(() => {
     generarHistoricoBajas();
+    generarHistoricoBajas()
 
   }, [consecutivoActual]);
 
@@ -671,7 +660,13 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
 
 
 
-
+            {/* <div>
+      {cuotas.map((cuota, index) => (
+        <h1 key={index}>
+          {`ID: ${cuota.id}, Nro Cuota: ${cuota.nro_cuota}, Monto Cuota: ${cuota.monto_cuota}, ID Plan Pago: ${cuota.id_plan_pago}, ID Tipo Pago: ${cuota.id_tipo_pago}, Valor Capital: ${cuota.valor_capital}, Valor Interés: ${cuota.valor_interes}, Saldo Pendiente: ${cuota.saldo_pendiente}, Fecha Vencimiento: ${cuota.fecha_vencimiento}, Fecha Pago: ${cuota.fecha_pago || ''}, Monto Pagado: ${cuota.monto_pagado || ''}, ID Cuota Anterior: ${cuota.id_cuota_anterior || ''}`}
+        </h1>
+      ))}
+    </div> */}
 
 
             <Grid item xs={12} sm={12}>
@@ -700,15 +695,13 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
 
 
             <Grid item xs={12} sm={12} marginTop={0}>
-              {/* <div style={{ height: 400, width: '100%' }}> */}
-              <DataGrid
+               <DataGrid
                 rows={cuotas}
                 columns={columns}
                 pageSize={5}
                 autoHeight
               />
-              {/* </div> */}
-            </Grid>
+             </Grid>
 
             <Grid item xs={4}>
               <TextField

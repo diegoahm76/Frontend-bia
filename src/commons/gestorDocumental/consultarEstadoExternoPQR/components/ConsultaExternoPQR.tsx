@@ -84,11 +84,11 @@ export const ConsultaExternoPQR: React.FC<props> = ({setestado, estado,setFormDa
       headerName: 'Tipo de Solicitud',
       minWidth: 150,
     },
-    {
-      field: 'tipo_pqrsdf_descripcion',
-      headerName: 'Tipo de PQRSDF',
-      minWidth: 200,
-    },
+    // {
+    //   field: 'tipo_pqrsdf_descripcion',
+    //   headerName: 'Tipo de PQRSDF',
+    //   minWidth: 200,
+    // },
     { field: 'Titular', headerName: 'Titular', minWidth: 450, },
     { field: 'Asunto', headerName: 'Asunto', minWidth: 300, },
     { field: 'Radicado', headerName: 'Radicado', minWidth: 200, },
@@ -111,12 +111,12 @@ export const ConsultaExternoPQR: React.FC<props> = ({setestado, estado,setFormDa
       headerName: 'Persona Que Radicó  ',
       minWidth: 450,
     },
-    {
-      field: 'Tiempo Para Respuesta',
-      headerName: 'Tiempo Para Respuesta',
-      minWidth: 200,
-    },
-    // { field: 'Estado', headerName: 'Estado',      minWidth: 250, },
+    // {
+    //   field: 'Tiempo Para Respuesta',
+    //   headerName: 'Tiempo Para Respuesta',
+    //   minWidth: 200,
+    // },
+    { field: 'Estado', headerName: 'Estado',      minWidth: 250, },
     {
       field: 'ruta_archivo',
       headerName: 'Archivo',
@@ -164,7 +164,7 @@ export const ConsultaExternoPQR: React.FC<props> = ({setestado, estado,setFormDa
      
      <Grid item xs={12} sm={3}>
           <FormControl size="small" fullWidth>
-            <InputLabel>PQRS</InputLabel>
+            <InputLabel>Tipos de PQRS</InputLabel>
             <Select
               onChange={handleInputChange}
               value={formData.pqrs}

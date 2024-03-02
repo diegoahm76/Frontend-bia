@@ -103,8 +103,10 @@ export const Amortizacion: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-            <h3>Datos de Encabezado</h3>
-            <Grid container spacing={2}>
+                      <Title title="Datos de Encabezado" />
+
+            {/* <h3>Datos de Encabezado</h3> */}
+            <Grid container marginTop={2} spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
                   disabled
@@ -156,8 +158,10 @@ export const Amortizacion: React.FC = () => {
                 noValidate
                 autoComplete="off"
               >
-                <h3>1. Datos Base para Liquidación al día de Abono</h3>
-                <Grid container spacing={2}>
+                                      <Title title="1. Datos Base para Liquidación al día de Abono" />
+
+                {/* <h3>1. Datos Base para Liquidación al día de Abono</h3> */}
+                <Grid container marginTop={2} spacing={2}>
                   <Grid item xs={12} sm={3}>
                     <TextField
                       required
