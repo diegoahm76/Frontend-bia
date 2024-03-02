@@ -11,7 +11,6 @@ export const obtener_nombres_conductor: any = () => {
       const { data } = await api.get('/almacen/vehiculos/info-conductor/get/');
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -23,7 +22,6 @@ export const obtener_vehiculo_logueado: any = () => {
       const { data } = await api.get('/almacen/vehiculos/vehiculo-persona-conductor/get/');
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -35,7 +33,6 @@ export const buscar_vehiculos: any = (placa_vehiculo: string, nombre: string, em
       const { data } = await api.get(`/almacen/vehiculos/busqueda/vehiculo/arrendado/?nombre=${nombre}&placa=${placa_vehiculo}&empresa_contratista=${empresa_contratista}&nombre_marca=${nombre_marca}`);
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -61,7 +58,6 @@ export const obtener_vehiculos_inspeccionados: any = () => {
       const { data } = await api.get('/almacen/vehiculos/novedades-vehiculo/get/');
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -73,7 +69,6 @@ export const put_verificar_inspeccion: any = (id_inspeccion_vehiculo: string) =>
       const { data } = await api.put(`/almacen/vehiculos/revisar-vehiculo/${id_inspeccion_vehiculo}/`);
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };

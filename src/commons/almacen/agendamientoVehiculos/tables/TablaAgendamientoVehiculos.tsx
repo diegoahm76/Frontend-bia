@@ -3,12 +3,14 @@
 import { Button, Grid } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from 'uuid';
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { interface_data_agendamiento_vehiculos } from "../interfaces/types";
 import dayjs from "dayjs";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import { listar_municipios } from "../thunks/agendamiento_vehiculos";
+import { useAppDispatch } from "../../../../hooks";
 
 
 interface custom_column extends GridColDef {
@@ -37,6 +39,25 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
   set_mostrar_vehiculo_agregado,
   set_mostrar_vehiculos_agendados
 }) => {
+  const dispatch = useAppDispatch();
+
+  const [municipios, set_municipios] = useState<any>([]);
+
+  const listar_municipios_fc: () => void = () => {
+    dispatch(listar_municipios())
+      .then((response: any) => {       
+        if (!response) {
+          set_municipios([]);
+        } else {
+          set_municipios(response);
+        }
+      })
+  }
+  useEffect(()=>{
+    if (municipios && municipios.length === 0){
+      listar_municipios_fc();
+    }
+  },[])
 
   const ver_agendamiento = (params: interface_data_agendamiento_vehiculos) => {
     set_id_solicitud_viaje(params.id_solicitud_viaje ?? 0);
@@ -66,7 +87,17 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
       renderCell: ((res)=>(dayjs(res.row.fecha_solicitud).format('DD/MM/YYYY')))
     },
     {field: 'motivo_viaje', headerName:'Motivo del viaje', minWidth:300, flex:1},
-    {field: 'cod_municipio', headerName:'Municipio de destino', minWidth:150, flex:1},
+    {field: 'cod_municipio', headerName:'Municipio de destino', minWidth:150, flex:1, 
+      renderCell: ((res)=> {
+        if (municipios && municipios.length > 0) {
+          return municipios.map((municipio: any)=>{
+            if(municipio[0] === res.row.cod_municipio){
+              return municipio[1];
+            }
+          })
+        }
+      })
+    },
     {field: 'direccion', headerName:'Dirección', minWidth:150, flex:1},
     {field: 'nro_pasajeros', headerName:'Número de pasajeros', minWidth:150, flex:1},
     {field: 'fecha_partida', headerName:'Fecha de salida', minWidth:120, flex:1,
@@ -78,7 +109,14 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
     {field: 'requiere_compagnia_militar', headerName:'¿Req. Compañia militar?', minWidth:170, flex:1,
       renderCell: ((res)=>(res.row.requiere_compagnia_militar ? 'Si' : 'No'))
     },
-    {field: 'estado_solicitud', headerName:'Estado de solicitud', minWidth:140, flex:1},
+    {field: 'estado_solicitud', headerName:'Estado de solicitud', minWidth:140, flex:1,
+      renderCell: ((res)=>(
+        res.row.estado_solicitud === 'RC' ? 'Rechazada' 
+        : res.row.estado_solicitud === 'ES' ? 'En Espera'
+        : res.row.estado_solicitud === 'FN' ? 'Finalizada'
+        : res.row.estado_solicitud === 'RE' && 'Respondida'
+      ))
+    },
     {field: 'fecha_aprobacion_responsable', headerName:'Fecha de Aprobacion/Rechazo', minWidth:150, flex:1,
       renderCell: ((res)=>{     
         return res.row.estado_solicitud === 'RE'  ? 
