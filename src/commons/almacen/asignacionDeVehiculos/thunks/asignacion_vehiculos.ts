@@ -62,10 +62,10 @@ export const enviar_asignacion_vehiculo: any = (form_data: interface_vehiculo_ag
     try {
       const { data } = await api.post('/almacen/vehiculos/asignacion-conductor/create/', form_data);
       control_success('Las asignaciones se crearon correctamente');
+      
       return data;
     } catch (error: any) {
-      control_error('Hubo un error al intentar enviar la asignacion');
-      return error as AxiosError;
+      return error.response.data as AxiosError;
     }
   };
 };

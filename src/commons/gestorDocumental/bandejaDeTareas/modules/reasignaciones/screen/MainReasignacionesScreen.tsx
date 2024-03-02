@@ -14,6 +14,7 @@ import { getUnidadesHijasById } from '../services/getUnidadesHijas.service';
 import { getReAsignacionesTareasPqrsdf } from '../services/reasignaciones/pqrsdf/getReAsignacionesTaskPqrsdf.service';
 import { ReasignacionesGrid } from '../components/reasignacionesGrid/ReasignacionesGrid';
 import { getReAsignacionesTareasOtros } from '../services/reasignaciones/otros/getReasignacionesTareasOtros.service';
+import { getReAsignacionesTareasTramites } from '../services/reasignaciones/tramitesServicios/getReasignaTram.service';
 
 export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -63,12 +64,15 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         );*/
         break;
       case 'Responder Trámite':
-        // Call the service for Tramites y Servicios
-        showAlert(
-          'Atención',
-          'No hay servicio para ver reasignaciones de las (RESPUESTAS A TRÁMITES),',
-          'warning'
-        );
+      case 'Responder Tramite':
+      case 'RESPONDER TRÁMITE':
+      case 'RESPONDER TRAMITE':
+        void getReAsignacionesTareasTramites(
+          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+          handleGeneralLoading
+        ).then((res) => {
+          setListaAsignaciones(res);
+        });
         break;
       case 'RESPONDER OTRO':
       case 'RESPONDER OTROS':
@@ -82,17 +86,6 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         });
 
         break;
-      /*      case 'Complemento de PQRSDF':
-      case 'Complemento de PQRSDF - Respuesta a solicitud':
-      case 'Complemento de PQRSDF - Respuesta a requerimiento':
-        // Call the service for Complemento de PQRSDF
-        showAlert(
-          'Atención',
-          'No hay servicio aún para ver las asignacion para OPA, así que no hay asignaciones de opa jeje siu',
-          'warning'
-        );
-
-        break;*/
       case 'OPA': // ? se debe mirar el tipo de tarea a establecer ---------------
         //* se debe llamar el servicio respectivo para las asignaciones de OPA, apenas esté listo
         showAlert(

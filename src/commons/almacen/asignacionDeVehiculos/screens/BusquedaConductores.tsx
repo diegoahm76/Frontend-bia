@@ -24,18 +24,20 @@ const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro
 
   const [data_busqueda_conductores, set_data_busqueda_conductores] = useState<data_busqueda_conductores[]>([]);
 
-  const obtener_conductores: () => void = () => {
-    dispatch(buscar_conductores(
+  const obtener_conductores: () => Promise<boolean> = async() => {
+    const validado = dispatch(buscar_conductores(
       tipo_conductor,
       nombre_conductor))
       .then((response: any) => {
         if (response.data.length === 0) {
-          control_error('No se encontraron vehículos con los filtros seleccionados');
           set_data_busqueda_conductores([]);
+          return false;
         } else {
           set_data_busqueda_conductores(response.data);
+          return true
         }
       })
+      return validado;
   }
 
   useEffect(()=>{
@@ -53,9 +55,12 @@ const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro
     set_nombre_conductor('');
   }
 
-  const consultar_conductores = (e: React.FormEvent<Element>) => {
+  const consultar_conductores = async(e: React.FormEvent<Element>) => {
     e.preventDefault();
-    obtener_conductores();
+    const enviar_consulta = await obtener_conductores();
+    if(!enviar_consulta){
+      control_error('No se encontraron vehículos con los filtros seleccionados');
+    }
   }
 
   return (

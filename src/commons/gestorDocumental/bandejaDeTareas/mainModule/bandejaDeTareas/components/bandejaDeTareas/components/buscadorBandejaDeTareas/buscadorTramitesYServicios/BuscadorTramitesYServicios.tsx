@@ -94,8 +94,8 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
         />
       </Grid>
 
-{/*COMENTAR ING RICHAR PARA AÑADIR EL CAMPO EN LA BÚSQUEDA BACKEND */ }
-      {/*{controlBusquedaBandejaTareas?._formValues?.estado_asignacion_de_tarea
+      {/*COMENTAR ING RICHAR PARA AÑADIR EL CAMPO EN LA BÚSQUEDA BACKEND */}
+      {controlBusquedaBandejaTareas?._formValues?.estado_asignacion_de_tarea
         ?.value === 'Ac' &&
         controlBusquedaBandejaTareas?._formValues
           ?.estado_asignacion_de_tarea && (
@@ -138,8 +138,8 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
               )}
             />
           </Grid>
-        )}*/}
-      {/*  <Grid
+        )}
+      <Grid
         item
         xs={12}
         sm={4}
@@ -177,7 +177,7 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
             </div>
           )}
         />
-      </Grid>*/}
+      </Grid>
     </>
   );
 };

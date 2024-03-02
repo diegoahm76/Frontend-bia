@@ -1,22 +1,20 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useState /*useState*/ } from 'react';
+import { useContext } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
-//import { useNavigate } from 'react-router-dom';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-//import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-/*import { LoadingButton } from '@mui/lab';
- */
+
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import TaskIcon from '@mui/icons-material/Task';
+import PreviewIcon from '@mui/icons-material/Preview';
+import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import {
   setActionssToManagePermissionsTramitesYServicios,
   // setActionssToManagePermissions,
   setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,
-  setListaHistoricoSolicitudes,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import {
   useAppDispatch,
@@ -24,16 +22,12 @@ import {
 } from '../../../../../../../../../../hooks';
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-/*import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';*/
-import { getHistoricoByRadicado } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getHistoByRad.service';
-/*import { getAnexosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';*/
-import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import { columnsTramites } from './columnsTramites/columnsTramites';
 
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { ModalTramitesServicio } from '../../../../../Atom/modalTramiteServicios/ModalTramitesServicio';
-import { getHistoricoTramitesByRadicado } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getHistoricoTramitesByRadicado.service';
 import { getComplementosAsociadosTramite } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getComplementosTramites.service';
+import { ModalDetalleTramite } from '../../../../../Atom/modalDetalleTramite/ModalDetalleTramite';
 
 export const ListaElementosTramites = (): JSX.Element => {
   //* dispatch declaration
@@ -47,9 +41,8 @@ export const ListaElementosTramites = (): JSX.Element => {
     // setAnexos,
     // handleGeneralLoading,
   } = useContext(PanelVentanillaContext);
-  const { handleOpenModalOne, handleThirdLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const { handleOpenModalOne, handleThirdLoading, handleSixthLoading } =
+    useContext(ModalAndLoadingContext);
 
   //* redux states
   const {
@@ -130,7 +123,7 @@ export const ListaElementosTramites = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-   /* const shouldDisable = (actionId: string) => {
+    /* const shouldDisable = (actionId: string) => {
       const isNoSeleccionado = !tramite;
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
@@ -188,7 +181,7 @@ export const ListaElementosTramites = (): JSX.Element => {
 
    dispatch(setActionssToManagePermissionsTramitesYServicios(actionsTramites));
   };*/
-};
+  };
 
   //* espacio para la definición de las columnas
   const columns = [
@@ -257,7 +250,7 @@ export const ListaElementosTramites = (): JSX.Element => {
         return (
           <>
             <Tooltip
-              title={`Ver requerimientos asociados a trámite con radicado ${params?.row?.radicado}`}
+              title={`Ver complementos asociados a trámite con radicado ${params?.row?.radicado}`}
             >
               <IconButton
                 onClick={() => {
@@ -301,7 +294,6 @@ export const ListaElementosTramites = (): JSX.Element => {
             <Tooltip title="Ver información asociada a trámite">
               <IconButton
                 onClick={() => {
-                  setActionsTramites(params?.row);
                   handleOpenModalOne(true);
                 }}
               >
@@ -360,6 +352,32 @@ export const ListaElementosTramites = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+            <Tooltip title="Ver detalle del trámite">
+              <IconButton
+                onClick={() => {
+                  handleSixthLoading(true);
+                  setActionsTramites(params?.row);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <PreviewIcon
+                    sx={{
+                      color: 'success.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           </>
         );
       },
@@ -368,6 +386,10 @@ export const ListaElementosTramites = (): JSX.Element => {
 
   return (
     <>
+      {/*Modal para mostrar el detalle de la información de los trámites que viene desde sasoftco*/}
+      <ModalDetalleTramite />
+      {/*Modal para mostrar el detalle de la información de los trámites que viene desde sasoftco*/}
+
       <RenderDataGrid
         rows={
           listaElementosPqrsfTramitesUotros.filter(

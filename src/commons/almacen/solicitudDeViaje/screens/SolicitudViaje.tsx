@@ -18,9 +18,9 @@ import { control_error } from '../../../../helpers';
 const SolicitudViaje: React.FC = () => {
   const dispatch = useAppDispatch();
   const [mostrar_solicitud_viaje, set_mostrar_solicitud_viaje] = useState<boolean>(false);
-  const [fecha_inicio, set_fecha_inicio] = useState<Dayjs>(dayjs());
+  const [fecha_inicio, set_fecha_inicio] = useState<Dayjs | null>(null);
   const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
-  const [fecha_fin, set_fecha_fin] = useState<Dayjs>(dayjs());
+  const [fecha_fin, set_fecha_fin] = useState<Dayjs | null>(null);
   const [msj_error_fecha_fin, set_msj_error_fecha_fin] = useState<string>("");
   const [estado, set_estado] = useState<string>("");
   const [msj_error_estado, set_msj_error_estado] = useState<string>("");
@@ -143,8 +143,9 @@ const SolicitudViaje: React.FC = () => {
   const obtener_solicitudes_params_fc: () => void = () => {
     dispatch(obtener_solicitudes_params(
       estado,
-      fecha_inicio.format('YYYY-MM-DDT00:00:ss.SSSSSS'),
-      fecha_fin.format('YYYY-MM-DDT23:59:59.SSSSSS')))
+      fecha_inicio?.format('YYYY-MM-DDT00:00:ss.SSSSSS') ?? '',
+      fecha_fin?.format('YYYY-MM-DDT23:59:59.SSSSSS') ?? ''
+      ))
       .then((response: any) => {
         console.log(response);
         if (response.data.length === 0) {
@@ -190,15 +191,15 @@ const SolicitudViaje: React.FC = () => {
   const validacion_formulario: () => Promise<boolean | undefined> = async () => {
     const fecha_manana = dayjs().add(0, 'day');
 
-    if (fecha_inicio.isValid() === false) {
+    if (fecha_inicio?.isValid() === false) {
       set_msj_error_fecha_inicio('Ingrese una fecha de inicio válida');
       control_error('Ingrese una fecha de inicio válida')
       return false;
-    } else if (fecha_inicio.isAfter(fecha_manana)) {
+    } else if (fecha_inicio?.isAfter(fecha_manana)) {
       set_msj_error_fecha_inicio('La fecha de inicio no puede ser mayor a la de hoy');
       control_error('La fecha de inicio no pude ser mayor a la de hoy');
       return false;
-    } else if (fecha_fin.isBefore(fecha_inicio)) {
+    } else if (fecha_fin?.isBefore(fecha_inicio)) {
       set_msj_error_fecha_inicio('La fecha final no puede ser menor a la fecha inicio');
       control_error('La fecha final no puede ser menor a la fecha inicio');
       return false;
@@ -255,13 +256,13 @@ const SolicitudViaje: React.FC = () => {
             style={{ width: '100%', display: 'flex', gap: '20px', margin: '10px 15px 0px' }}
             onSubmit={handle_submit}
           >
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={3}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Estado</InputLabel>
                 <Select
+                  fullWidth
                   label="Estado"
                   value={estado}
-                  required
                   onChange={cambio_estado}
                   error={msj_error_estado !== ""}
                 >
@@ -273,7 +274,7 @@ const SolicitudViaje: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={3}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Desde:"
@@ -281,7 +282,6 @@ const SolicitudViaje: React.FC = () => {
                   onChange={(newValue) => { cambio_fecha_inicio(newValue); }}
                   renderInput={(params) => (
                     <TextField
-                      required
                       fullWidth
                       error={msj_error_fecha_inicio !== ''}
                       size="small"
@@ -292,7 +292,7 @@ const SolicitudViaje: React.FC = () => {
               </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={3}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Hasta:"
@@ -300,7 +300,6 @@ const SolicitudViaje: React.FC = () => {
                   onChange={(newValue) => { cambio_fecha_fin(newValue); }}
                   renderInput={(params) => (
                     <TextField
-                      required
                       error={msj_error_fecha_fin !== ''}
                       fullWidth
                       size="small"
@@ -311,8 +310,9 @@ const SolicitudViaje: React.FC = () => {
               </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={3}>
               <Button
+                fullWidth
                 color='primary'
                 variant='contained'
                 startIcon={<SearchIcon />}
