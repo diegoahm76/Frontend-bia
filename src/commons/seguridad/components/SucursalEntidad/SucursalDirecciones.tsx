@@ -502,7 +502,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl required size="small" fullWidth>
-            <InputLabel shrink={true}>pais</InputLabel>
+            <InputLabel shrink={true}>País</InputLabel>
             <Select
               label="país"
               name="pais_sucursal_exterior"
@@ -594,7 +594,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           <TextField
             variant="outlined"
             size="small"
-            label="dirección  "
+            label="Dirección  "
             fullWidth
             required
             InputLabelProps={{
@@ -609,7 +609,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           <TextField
             variant="outlined"
             size="small"
-            label=" direccion sucursal georeferenciada lat  "
+            label="Dirección sucursal georeferenciada lat  "
             fullWidth
             required
             InputLabelProps={{
@@ -624,7 +624,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           <TextField
             variant="outlined"
             size="small"
-            label=" direccion sucursal georeferenciada lon  "
+            label="Dirección sucursal georeferenciada lon  "
             fullWidth
             required
             InputLabelProps={{
@@ -735,7 +735,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           <TextField
             variant="outlined"
             size="small"
-            label="dirección notificación  "
+            label="Dirección notificación  "
             fullWidth
             InputLabelProps={{
               shrink: true,

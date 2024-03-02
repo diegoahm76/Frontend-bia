@@ -16,6 +16,7 @@ import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 import { Divider, Dialog, } from '@mui/material';
 import { Title } from '../../../../components';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 
 interface RootState {
   obligaciones: {
@@ -25,9 +26,10 @@ interface RootState {
 interface BuscarProps {
   is_modal_active: any;
   set_is_modal_active: any;
+  set_position_tab: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ is_modal_active, set_is_modal_active }) => {
+export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_position_tab, is_modal_active, set_is_modal_active }) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
@@ -280,10 +282,10 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ is_mod
                       {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
                     </p>
                     <Grid item >
-                  <Button onClick={handleSelectAllClick} variant="contained" color="primary">
-                    Selectcionar todo
-                  </Button>
-                </Grid>
+                      <Button onClick={handleSelectAllClick} variant="contained" color="primary">
+                        Selectcionar todo
+                      </Button>
+                    </Grid>
 
                     <DataGrid
                       autoHeight
@@ -329,7 +331,8 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ is_mod
                   </Grid>
                 </Stack>
 
-               
+
+
 
 
                 <Stack
@@ -338,7 +341,21 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ is_mod
                   spacing={2}
                   marginTop={2}
                   sx={{ mb: '20px' }}
+
                 >
+
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    sx={{ marginTop: '30px' }}
+                    startIcon={<RequestQuoteIcon />}
+
+                    onClick={() => {
+                      set_position_tab('2');
+                    }}
+                  >
+                    Liquidar
+                  </Button>
                   <Button
                     color='primary'
                     variant='contained'

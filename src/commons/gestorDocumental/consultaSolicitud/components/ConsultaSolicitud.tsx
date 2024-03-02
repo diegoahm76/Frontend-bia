@@ -52,7 +52,7 @@ export const ConsultaSolucitud: React.FC = () => {
 
     const cargarAsignaciones = async () => {
         try {
-            const respone = await api.get(`/gestor/pqr/busqueda-avanzada-reportes/?id_persona_titular=${persona?.id_persona}&cod_tipo_PQRSDF=${formData.pqrs}&id_und_org_seccion_asignada=${formData.organigrama}&fecha_desde=${formData.fecha_desde}&fecha_hasta=${formData.fecha_hasta}`);
+            // const respone = await api.get(`/gestor/pqr/busqueda-avanzada-reportes/?id_persona_titular=${persona?.id_persona}&cod_tipo_PQRSDF=${formData.pqrs}&id_und_org_seccion_asignada=${formData.organigrama}&fecha_desde=${formData.fecha_desde}&fecha_hasta=${formData.fecha_hasta}`);
             const response = await api.get(`/gestor/pqr/busqueda-avanzada-reportes/?id_persona_titular=${persona?.id_persona}&id_estado_actual_solicitud=&tipo_solicitud=${formData.pqrs}&id_und_org_seccion_asignada=${formData.organigrama}&fecha_desde=${formData.fecha_desde}&fecha_hasta=${formData.fecha_hasta}
             `);
 
@@ -213,7 +213,7 @@ export const ConsultaSolucitud: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <FormControl  size="small" fullWidth>
-                        <InputLabel   >Organigrama</InputLabel>
+                        <InputLabel   >Unidad Organigrama</InputLabel>
                         <Select
                             label="Unidad Organizacional"
                             onChange={handleInputChange}
