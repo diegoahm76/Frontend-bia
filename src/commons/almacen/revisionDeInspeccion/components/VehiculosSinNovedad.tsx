@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid } from "@mui/material";
+import { ButtonGroup, Grid } from "@mui/material";
 import { Title } from "../../../../components";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { interface_vehiculos_sin_novedad } from "../interfaces/types";
 import { v4 as uuidv4 } from 'uuid';
+import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
+import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_vehiculos_sin_novedad }) => React.ReactNode;
@@ -16,13 +18,6 @@ interface props {
 
 
 const VehiculosSinNovedad: React.FC<props> = ({data_vehiculos_sin_novedad}) => {
-
-/*
-   "id_inspeccion_vehiculo": 6,
-    "id_hoja_de_vida": 23,
-    "placa": "test1",
-    "marca": "FORD MILENIUM
-*/
   
   const columns: CustomColumn[] = [
     {field: 'marca', headerName:'Nombre marca', minWidth:190, flex:1},
@@ -38,12 +33,29 @@ const VehiculosSinNovedad: React.FC<props> = ({data_vehiculos_sin_novedad}) => {
         position: 'relative',
         background: '#FAFAFA',
         borderRadius: '15px',
-        boxShadow: '0px 3px 6px #042F4A26',
-        p: '20px',
+        p: '30px',
         mb: '20px',
+        boxShadow: '0px 3px 6px #042F4A26',
       }}
       >
       <Title title="Vehículos sin novedad" />
+
+      <Grid item xs={12} container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center" >
+        <Grid item  >
+          <ButtonGroup style={{ margin: 5, }}>
+              {download_xls({ nurseries: data_vehiculos_sin_novedad, columns })}
+              {download_pdf({
+                  nurseries: data_vehiculos_sin_novedad,
+                  columns,
+                  title: 'Vehículos sin novedad',
+              })}
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+
       <DataGrid
         style={{margin:'15px 0px'}}
         density="compact"

@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, FormLabel, Grid, Radio, TextField } from "@mui/material";
+import { Button, Grid, Radio, TextField } from "@mui/material";
 import { cambio_input_radio } from "../thunks/cambio_input_radio";
 import { estilo_radio } from "../thunks/estilo_radio";
 import React, { useEffect, useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
 import { interface_put_revisar_vehiculo, interface_vehiculos_con_novedad, response_put_revisar_vehiculo } from "../interfaces/types";
-import { put_verificar_inspeccion } from "../thunks/inspeccion_vehiculos";
+import { put_verificar_inspeccion } from "../thunks/revision_inspeccion";
 import { useAppDispatch } from "../../../../hooks";
 
 interface props {

@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField } from "@mui/material";
-import { Title } from "../../../../components";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
@@ -56,7 +55,7 @@ const VehiculoAgendadoView: React.FC<props> = ({vehiculo_placa, nro_documento, f
           boxShadow: '0px 3px 6px #042F4A26',
           borderRadius: '10px',
           margin: 'auto',
-          p: '20px',
+          p: '40px',
           mb: '20px',
           display:'flex',
           justifyContent:'space-between',

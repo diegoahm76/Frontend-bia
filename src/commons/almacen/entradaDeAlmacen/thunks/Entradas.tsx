@@ -209,3 +209,16 @@ export const obtener_articulo_codigo: any = (codigo_bien: number) => {
     }
   };
 };
+
+// Obtener bienes por params
+export const obtener_entradas_filtros: any = (codigo_bien: number,nombre: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/bienes/entradas/search-bienes/?codigo_bien=${codigo_bien}&nombre=${nombre}`);
+      return data;
+    } catch (error: any) {
+      control_error(error?.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};

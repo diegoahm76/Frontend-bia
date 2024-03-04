@@ -14,12 +14,13 @@ import {
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
-import { obtener_bienes } from '../commons/almacen/entradaDeAlmacen/thunks/Entradas';
+import { obtener_bienes, obtener_entradas_filtros } from '../commons/almacen/entradaDeAlmacen/thunks/Entradas';
 import { useAppDispatch } from '../hooks';
 import { Title } from './Title';
 import SearchIcon from '@mui/icons-material/Search';
 import { download_xls_dos } from '../documentos-descargar/XLS_descargar';
 import { download_pdf_dos } from '../documentos-descargar/PDF_descargar';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 
 interface IProps {
   is_modal_active: boolean;
@@ -44,7 +45,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
   };
 
   const accionar_busqueda: any = () => {
-    if (nombre === '' && codigo === '') {
+    /*if (nombre === '' && codigo === '') {
       set_grid_busqueda(grid_busqueda_before);
       return;
     }
@@ -52,9 +53,21 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
       (gv) =>
         Boolean(gv.nombre.includes(nombre)) &&
         gv.codigo_bien.toString().includes(codigo)
+    );*/
+    dispatch(obtener_entradas_filtros(codigo ?? '',nombre ?? '')).then(
+      (response: { success: boolean; detail: string; data: any[] }) => {
+        if (Object.keys(response).length !== 0) {
+          set_grid_busqueda(response.data);
+        }
+      }
     );
-    set_grid_busqueda(data_filter);
   };
+
+  const limpiar_form = () => {
+    set_codigo('');
+    set_nombre('');
+    set_grid_busqueda(grid_busqueda_before);
+  }
 
   const selected_product_grid: any = () => {
     props.articulo(seleccion_articulo);
@@ -117,7 +130,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} lg={4}>
                 <TextField
                   label="Código"
                   helperText="Ingrese código"
@@ -127,7 +140,8 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                   onChange={on_change_codigo}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              
+              <Grid item xs={12} lg={4}>
                 <TextField
                   label="Nombre"
                   helperText="Ingrese nombre"
@@ -137,22 +151,30 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                   onChange={on_change_nombre}
                 />
               </Grid>
-              <Stack
-                direction="row"
-                justifyContent="flex-end"
-                sx={{ mt: '17px' }}
-              >
-                <Grid item xs={12} sm={4}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    startIcon={<SearchIcon />}
-                    onClick={accionar_busqueda}
-                  >
-                    Buscar
-                  </Button>
-                </Grid>
-              </Stack>
+
+              <Grid item xs={12} lg={2}>
+                <Button
+                  fullWidth
+                  color="primary"
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                  onClick={accionar_busqueda}
+                >
+                  Buscar
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} lg={2}>
+                <Button
+                  fullWidth
+                  color="error"
+                  variant="outlined"
+                  startIcon={<CleaningServicesIcon />}
+                  onClick={limpiar_form}
+                >
+                  Limpiar
+                </Button>
+              </Grid>
             </Grid>
             <Grid
               container
