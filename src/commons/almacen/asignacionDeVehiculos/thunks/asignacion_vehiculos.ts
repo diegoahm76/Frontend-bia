@@ -10,7 +10,6 @@ export const buscar_vehiculos_asignados: any = (tipo_vehiculo: string,tipo_coduc
       const { data } = await api.get(`almacen/vehiculos/listar-asignaciones/get/?tipo_vehiculo=${tipo_vehiculo}&tipo_conductor=${tipo_coductor}&placa=${placa}&conductor=${conductor}`);
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -39,7 +38,6 @@ export const buscar_vehiculos: any = (tipo_vehiculo: string,marca: string,placa:
       const { data } = await api.get(`/almacen/vehiculos/busqueda-vehiculos/get/?tipo_vehiculo=${tipo_vehiculo}&placa=${placa}&marca=${marca}`);
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -51,7 +49,6 @@ export const buscar_conductores: any = (tipo_conductor: string,nombre_conductor:
       const { data } = await api.get(`/almacen/vehiculos/busqueda-conductores/get/?conductor_nombre=${nombre_conductor}&tipo_conductor=${tipo_conductor}`);
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -65,7 +62,7 @@ export const enviar_asignacion_vehiculo: any = (form_data: interface_vehiculo_ag
       
       return data;
     } catch (error: any) {
-      return error.response.data as AxiosError;
+      return error?.response.data as AxiosError;
     }
   };
 };

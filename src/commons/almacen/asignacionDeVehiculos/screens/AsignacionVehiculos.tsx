@@ -73,7 +73,6 @@ const AsignacionVehiculos: React.FC = () => {
     return validado;
   };
 
-
   const obtener_asignaciones_vehiculos: ()=> Promise<boolean> = async() => {
     const validado =  await dispatch(buscar_vehiculos_asignados(
       tipo_vehiculo,
@@ -96,16 +95,27 @@ const AsignacionVehiculos: React.FC = () => {
     obtener_asignaciones_vehiculos();
   }, [refrescar_tabla,refrescar_tabla_conductores])
 
+  /**
+   * Maneja el evento de cambio del input de selección del tipo de conductor.
+   * @param event El evento de cambio de selección.
+   */
   const cambio_tipo_conductor: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_conductor(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
       set_msj_error_tipo_conductor("");
   }
 
-  const cambio_tipo_vehiculo: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
-    set_tipo_vehiculo(e.target.value);
-    if (e.target.value !== null && e.target.value !== "")
+  /**
+   * Función que se ejecuta cuando se cambia el tipo de vehículo seleccionado.
+   * 
+   * @param {SelectChangeEvent} event - El evento de cambio de selección.
+   * @returns {void}
+   */
+  const cambio_tipo_vehiculo = (event: SelectChangeEvent): void => {
+    set_tipo_vehiculo(event.target.value);
+    if (event.target.value !== null && event.target.value !== "") {
       set_msj_error_tipo_vehiculo("");
+    }
   }
 
   const limpiar_form_asignacion = () => {
@@ -119,6 +129,12 @@ const AsignacionVehiculos: React.FC = () => {
     set_msj_error_conductor('');
   }
 
+  /**
+   * Función que se ejecuta al consultar los vehículos asignados.
+   * 
+   * @param {React.FormEvent<Element>} e - El evento de formulario.
+   * @returns {void}
+   */
   const consultar_vehiculos_asignados: (e: React.FormEvent<Element>) => void = async (e) => {
     e.preventDefault();
     const envio_datos = await obtener_asignaciones_vehiculos();
@@ -127,11 +143,18 @@ const AsignacionVehiculos: React.FC = () => {
     }
   }
 
+  /**
+   * Función que se ejecuta al enviar la asignación a conductor.
+   * 
+   * @returns {void}
+   */
   const enviar_asiganacion_a_conductor = async() => {
+    // Verifica si no se ha agregado ninguna asignación
     if(vehiculo_agendado_conductor.length === 0){
       control_error('Agregue por lo menos una asignación');
       return;
     } else {
+      // Muestra un mensaje de confirmación al usuario
       Swal.fire({
         title: '¿Está seguro de enviar las asignaciones?',
         showDenyButton: true,
@@ -141,10 +164,12 @@ const AsignacionVehiculos: React.FC = () => {
         cancelButtonColor: '#DE1616',
         icon: 'question',
       }).then(async(result) => {
-        /* Read more about isConfirmed, isDenied below */
+        /* Lee más sobre isConfirmed, isDenied a continuación */
         if (result.isConfirmed) {
+          // Envía la asignación a través de la función enviar_asiganacion_a_conductor_fc
           const enviado = await enviar_asiganacion_a_conductor_fc();
           if(enviado){
+            // Si la asignación se envió correctamente, se limpia el estado vehiculo_agendado_conductor
             set_vehiculo_agendado_conductor([]);
           }
           return;
@@ -167,7 +192,7 @@ const AsignacionVehiculos: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
           borderRadius: '15px',
           margin: 'auto',
-          p: '20px',
+          p: '40px',
           mb: '20px',
         }}
       >
@@ -180,17 +205,9 @@ const AsignacionVehiculos: React.FC = () => {
           autoComplete="off"
           sx={{ width: '100%', mt: '20px' }}
         >
-          <Grid item container xs={12} sx={{
-            display: 'flex',
-            gap: '10px'
-          }}>
-            <Grid item xs={12} md={2}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
+          <Grid item container spacing={1} mb='15px' rowSpacing={2} xs={12}>
+
+            <Grid item xs={12} lg={2}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Tipo de conductor: </InputLabel>
                 <Select
@@ -206,13 +223,7 @@ const AsignacionVehiculos: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={2}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
+            <Grid item xs={12} lg={2}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Tipo de Vehículo: </InputLabel>
                 <Select
@@ -228,12 +239,7 @@ const AsignacionVehiculos: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={1} sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 1
-            }} >
+            <Grid item xs={12} lg={2}>
               <TextField
                 label='Placa: '
                 fullWidth
@@ -248,14 +254,9 @@ const AsignacionVehiculos: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={2} sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 1
-            }} >
+            <Grid item xs={12} lg={2}>
               <TextField
-                label='conductor'
+                label='Conductor:'
                 fullWidth
                 placeholder='Buscar'
                 size="small"
@@ -268,11 +269,7 @@ const AsignacionVehiculos: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={2} sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }} >
+            <Grid item xs={12} lg={2}>
               <Button
                 fullWidth
                 color='primary'
@@ -284,11 +281,7 @@ const AsignacionVehiculos: React.FC = () => {
                 Buscar
               </Button>
             </Grid>
-            <Grid item xs={12} md={2} sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }} >
+            <Grid item xs={12} lg={2}>
               <Button
                 fullWidth
                 color="inherit"

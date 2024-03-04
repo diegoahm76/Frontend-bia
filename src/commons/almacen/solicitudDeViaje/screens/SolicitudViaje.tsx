@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { Title } from '../../../../components';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
@@ -239,7 +239,7 @@ const SolicitudViaje: React.FC = () => {
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
-          p: '20px',
+          p: '30px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
@@ -250,78 +250,81 @@ const SolicitudViaje: React.FC = () => {
           sx={{
             marginTop: '10px'
           }}
-          spacing={2}
         >
-          <form
-            style={{ width: '100%', display: 'flex', gap: '20px', margin: '10px 15px 0px' }}
+
+          <Box
+            component="form"
             onSubmit={handle_submit}
+            sx={{ width: '100%', my: '10px'}}
           >
-            <Grid item xs={12} sm={3}>
-              <FormControl required size='small' fullWidth>
-                <InputLabel>Estado</InputLabel>
-                <Select
-                  fullWidth
-                  label="Estado"
-                  value={estado}
-                  onChange={cambio_estado}
-                  error={msj_error_estado !== ""}
-                >
-                  <MenuItem value={'ES'}>En Espera</MenuItem>
-                  <MenuItem value={'RE'}>Respondida</MenuItem>
-                  <MenuItem value={'RC'}>Rechazada</MenuItem>
-                  <MenuItem value={'FN'}>Finalizada</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} sm={3}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Desde:"
-                  value={fecha_inicio}
-                  onChange={(newValue) => { cambio_fecha_inicio(newValue); }}
-                  renderInput={(params) => (
-                    <TextField
+            <Grid container spacing={1} rowSpacing={2} xs={12}>
+              <Grid item xs={12} md={3}>
+                  <FormControl required size='small' fullWidth>
+                    <InputLabel>Estado</InputLabel>
+                    <Select
                       fullWidth
-                      error={msj_error_fecha_inicio !== ''}
-                      size="small"
-                      {...params}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-            </Grid>
+                      label="Estado"
+                      value={estado}
+                      onChange={cambio_estado}
+                      error={msj_error_estado !== ""}
+                    >
+                      <MenuItem value={'ES'}>En Espera</MenuItem>
+                      <MenuItem value={'RE'}>Respondida</MenuItem>
+                      <MenuItem value={'RC'}>Rechazada</MenuItem>
+                      <MenuItem value={'FN'}>Finalizada</MenuItem>
+                    </Select>
+                  </FormControl>
+              </Grid>
 
-            <Grid item xs={12} sm={3}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Hasta:"
-                  value={fecha_fin}
-                  onChange={(newValue) => { cambio_fecha_fin(newValue); }}
-                  renderInput={(params) => (
-                    <TextField
-                      error={msj_error_fecha_fin !== ''}
-                      fullWidth
-                      size="small"
-                      {...params}
+              <Grid item xs={12} md={3}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Fecha inicio solicitud:"
+                      value={fecha_inicio}
+                      onChange={(newValue) => { cambio_fecha_inicio(newValue); }}
+                      renderInput={(params) => (
+                        <TextField
+                          fullWidth
+                          error={msj_error_fecha_inicio !== ''}
+                          size="small"
+                          {...params}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </LocalizationProvider>
-            </Grid>
+                  </LocalizationProvider>
+              </Grid>
 
-            <Grid item xs={12} sm={3}>
-              <Button
-                fullWidth
-                color='primary'
-                variant='contained'
-                startIcon={<SearchIcon />}
-                type='submit'
-              >
-                Buscar
-              </Button>
+              <Grid item xs={12} md={3}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Fecha fin solicitud:"
+                      value={fecha_fin}
+                      onChange={(newValue) => { cambio_fecha_fin(newValue); }}
+                      renderInput={(params) => (
+                        <TextField
+                          error={msj_error_fecha_fin !== ''}
+                          fullWidth
+                          size="small"
+                          {...params}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                  <Button
+                    fullWidth
+                    color='primary'
+                    variant='contained'
+                    startIcon={<SearchIcon />}
+                    type='submit'
+                  >
+                    Buscar
+                  </Button>
+              </Grid>
             </Grid>
-          </form>
+          </Box>
 
           <Grid item width={'100%'} display={'flex'} justifyContent={'center'}>
             <TableSolicitudViajes

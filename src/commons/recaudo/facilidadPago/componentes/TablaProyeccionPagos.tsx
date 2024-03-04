@@ -15,6 +15,7 @@ import { get_validacion_resolucion } from '../slices/ResolucionSlice';
 import { post_plan_pagos } from '../requests/requests';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
+import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 
 interface RootState {
   plan_pagos: {
@@ -219,8 +220,15 @@ export const TablaProyeccionPagos: React.FC = () => {
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
-                  <h3>Proyección de Pagos</h3>
-                  <DataGrid
+                  {/* <h3>Proyección de Pagos</h3> */}
+
+
+                  <RenderDataGrid
+          title="Proyección de Pagos"
+          rows={lista}
+          columns={columns}
+        />
+                  {/* <DataGrid
                     autoHeight
                     disableSelectionOnClick
                     rows={lista}
@@ -229,7 +237,7 @@ export const TablaProyeccionPagos: React.FC = () => {
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => faker.database.mongodbObjectId()}
-                  />
+                  /> */}
                 </Box>
               </Grid>
               <Stack
