@@ -58,204 +58,153 @@ const ViajeAgendado: React.FC<props> = ({solicitud_respondida}) => {
   },[solicitud_respondida])
 
   return (
-    <Grid
-      container
-      spacing={2}
-      marginTop={2}
-      sx={{
+    <Grid container columnSpacing={2} rowSpacing={4} marginTop={2} sx={{
         position: 'relative',
         background: '#FAFAFA',
         borderRadius: '15px',
-        p: '20px',
-        mb: '20px',
+        p: '30px',
+        my: '40px',
+        mx: '20px',
+        boxShadow: "0px 3px 6px #042F4A26",
         border: 'solid 1px #e5e5e5'
       }}
     >
       <Title title="Viaje agendado" />
-      <Grid
-        item
-        container
-        xs={12}
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '20px',
-        }}
-      >
-        <Grid
-          item
-          xs={5}
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 1,
-          }}
-          >
-          <FormLabel htmlFor="conductor">
-            Conductor:
-          </FormLabel>
-          <Grid item xs={6}>
-            <TextField 
-              fullWidth 
-              id="conductor" 
-              size="small"
-              disabled
-              value={conductor}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_conductor(e.target.value)}
+
+      <Grid item xs={12} lg={2}>
+        <TextField 
+          label="Nombres conductor:"
+          fullWidth 
+          size="small"
+          disabled
+          value={conductor}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_conductor(e.target.value)}
+          />
+      </Grid>
+
+      <Grid item xs={12} lg={2}>
+        <TextField 
+          label="Numero de documento:"
+          fullWidth 
+          size="small"
+          disabled
+          value={conductor}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_conductor(e.target.value)}
+          />
+      </Grid>
+
+      <Grid item xs={12} lg={2}>
+        <TextField 
+          label="Tipo de conductor:"
+          fullWidth 
+          size="small"
+          disabled
+          value={conductor}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_conductor(e.target.value)}
+          />
+      </Grid>
+
+      <Grid item xs={12} lg={2}>
+        <TextField
+          label="Marca de vehículo:"
+          fullWidth 
+          size="small"
+          disabled
+          value={vehiculo}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_vehiculo(e.target.value)}
+        />
+      </Grid>
+
+      <Grid item xs={12} lg={2}>
+        <TextField
+          label="Placa vehículo:"
+          fullWidth 
+          size="small"
+          disabled
+          value={vehiculo}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_vehiculo(e.target.value)}
+        />
+      </Grid>
+
+      <Grid item xs={12} lg={2}>
+        <TextField
+          label="Tipo de vehículo:"
+          fullWidth 
+          size="small"
+          disabled
+          value={vehiculo}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_vehiculo(e.target.value)}
+        />
+      </Grid>
+
+      <Grid item xs={12} lg={4.5}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            disabled
+            label="Fecha de salida:"
+            value={fecha_salida}
+            onChange={(newValue) => { cambio_fecha_salida(newValue); }}
+            renderInput={(params) => (
+              <TextField
+                required
+                fullWidth
+                size="small"
+                {...params}
               />
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          xs={5}
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 1,
-          }}
-          >
-          <FormLabel htmlFor="vehiculo">
-            Vehículo:
-          </FormLabel>
-          <Grid item xs={6}>
-            <TextField 
-              fullWidth 
-              id="vehiculo" 
-              size="small"
+            )}
+          />
+        </LocalizationProvider>
+      </Grid>
+
+      <Grid item xs={12} lg={1.5}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileTimePicker
               disabled
-              value={vehiculo}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_vehiculo(e.target.value)}
+              label="Hora de salida:"
+              openTo="hours"
+              value={hora_salida}
+              onChange={cambio_hora_salida}
+              renderInput={(params) => (
+                <TextField {...params} fullWidth variant="standard" helperText="" />
+              )}
             />
-          </Grid>
-        </Grid>
+        </LocalizationProvider>
       </Grid>
 
-      <Grid
-        item
-        container
-        xs={12}
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '20px',
-        }}
-      >
-        <Grid item xs={5} sx={{
-          display:'flex',
-          justifyContent:'center',
-          alignItems:'center'
-          }}>
-          <FormLabel style={{marginRight:'15px'}}>
-            Fecha de salida*:
-          </FormLabel>
-          <Grid item xs={5}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                disabled
-                label="Desde:"
-                value={fecha_salida}
-                onChange={(newValue) => { cambio_fecha_salida(newValue); }}
-                renderInput={(params) => (
-                  <TextField
-                    required
-                    fullWidth
-                    size="small"
-                    {...params}
-                  />
-                )}
+      <Grid item xs={12} lg={4.5}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            disabled
+            label="Fecha de retorno:"
+            value={fecha_retorno}
+            onChange={(newValue) => { cambio_fecha_retorno(newValue); }}
+            renderInput={(params) => (
+              <TextField
+                required
+                fullWidth
+                size="small"
+                {...params}
               />
-            </LocalizationProvider>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={5} sx={{
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center'
-            }}>
-            <FormLabel style={{marginRight:'10px'}}>
-              Hora*:
-            </FormLabel>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MobileTimePicker
-                  disabled
-                  label="Seleccionar hora"
-                  openTo="hours"
-                  value={hora_salida}
-                  onChange={cambio_hora_salida}
-                  renderInput={(params) => (
-                    <TextField {...params} variant="standard" helperText="" />
-                  )}
-                />
-            </LocalizationProvider>
-          </Grid>
+            )}
+          />
+        </LocalizationProvider>
       </Grid>
 
-      <Grid
-        item
-        container
-        xs={12}
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '20px',
-        }}
-      >
-        <Grid item xs={5} sx={{
-          display:'flex',
-          justifyContent:'center',
-          alignItems:'center'
-          }}>
-          <FormLabel style={{marginRight:'15px'}}>
-            Fecha de retorno*:
-          </FormLabel>
-          <Grid item xs={5}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                disabled
-                label="Desde:"
-                value={fecha_retorno}
-                onChange={(newValue) => { cambio_fecha_retorno(newValue); }}
-                renderInput={(params) => (
-                  <TextField
-                    required
-                    fullWidth
-                    size="small"
-                    {...params}
-                  />
-                )}
-              />
-            </LocalizationProvider>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={5} sx={{
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center'
-            }}>
-            <FormLabel style={{marginRight:'10px'}}>
-              Hora*:
-            </FormLabel>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MobileTimePicker
-                  disabled
-                  label="Seleccionar hora"
-                  openTo="hours"
-                  value={hora_retorno}
-                  onChange={cambio_hora_retorno}
-                  renderInput={(params) => (
-                    <TextField {...params} variant="standard" helperText="" />
-                  )}
-                />
-            </LocalizationProvider>
-          </Grid>
+      <Grid item xs={12} md={1.5} >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileTimePicker
+              disabled
+              label="Hora de retorno:"
+              openTo="hours"
+              value={hora_retorno}
+              onChange={cambio_hora_retorno}
+              renderInput={(params) => (
+                <TextField {...params} fullWidth variant="standard" helperText="" />
+              )}
+            />
+        </LocalizationProvider>
       </Grid>
+
     </Grid>
   );
 };

@@ -107,7 +107,7 @@ const SeleccionarVehiculo = () => {
                             rules: {},
                             label: "Código",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                             on_blur_function: search_vehicle
                         },

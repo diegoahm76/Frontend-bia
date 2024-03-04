@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { type TablasAmortizacion, type Obligacion } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
+import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 
 interface RootState {
   plan_pagos: {
@@ -241,7 +242,13 @@ export const TablaLiquidacion: React.FC = () => {
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
-                  <DataGrid
+                <RenderDataGrid
+                    title="Datos de liquidación"
+                    rows={lista}
+                    columns={columns}
+                  />
+
+                  {/* <DataGrid
                     autoHeight
                     disableSelectionOnClick
                     rows={lista}
@@ -250,7 +257,7 @@ export const TablaLiquidacion: React.FC = () => {
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => faker.database.mongodbObjectId()}
-                  />
+                  /> */}
                 </Box>
               </Grid>
               <Stack

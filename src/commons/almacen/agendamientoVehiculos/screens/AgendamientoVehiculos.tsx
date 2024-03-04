@@ -26,13 +26,13 @@ import { parseHora } from '../../solicitudDeViaje/thunks/viajes';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const AgendamientoVehiculos: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [fecha_solicitud_inicio, set_fecha_solicitud_inicio] = useState<Dayjs>();
-  const [fecha_solicitud_fin, set_fecha_solicitud_fin] = useState<Dayjs>();
+  const [fecha_solicitud_inicio, set_fecha_solicitud_inicio] = useState<Dayjs | null>(null);
+  const [fecha_solicitud_fin, set_fecha_solicitud_fin] = useState<Dayjs | null>(null);
   const [estado_solicitud, set_estado_solicitud] = useState<string>("");
   const [requiere_carga, set_requiere_carga] = useState<string>("");
   const [numero_pasajeros, set_numero_pasajeros] = useState<number>(0);
-  const [fecha_inicio_viaje, set_fecha_inicio_viaje] = useState<Dayjs>();
-  const [fecha_fin_viaje, set_fecha_fin_viaje] = useState<Dayjs>();
+  const [fecha_inicio_viaje, set_fecha_inicio_viaje] = useState<Dayjs | null>(null);
+  const [fecha_fin_viaje, set_fecha_fin_viaje] = useState<Dayjs | null>(null);
 
   const [conductor, set_conductor] = useState<string>('');
   const [placa_vehiculo, set_placa_vehiculo] = useState<string>('');
@@ -78,31 +78,28 @@ const AgendamientoVehiculos: React.FC = () => {
       fecha_solicitud_fin?.format('YYYY-MM-DD')  ?? '',
       /*departamento*/'',
       /*municipio*/'',
-      numero_pasajeros,
+      numero_pasajeros === 0 ? '' : numero_pasajeros,
       requiere_carga,
       fecha_inicio_viaje?.format('YYYY-MM-DD')  ?? '',
       fecha_fin_viaje?.format('YYYY-MM-DD')  ?? '',
       estado_solicitud
       ))
+      .then((response: response_data_agendamiento_vehiculos) => {
+        if ('data' in response) {
+          set_data_agendamiento_vehiculo(response.data);
+        } else {
+          control_error('No se encontraron agendamientos');
+          set_data_agendamiento_vehiculo([]);
+        }
+      })
       .catch((error: any) => {
         console.error(error);
       })
   }
 
-  const obtener_asignaciones_vehiculos: () => void = () => {
-    dispatch(buscar_solicitudes_agendamientos('','','','','','','','',''))
-      .then((response: response_data_agendamiento_vehiculos) => {
-        if (response.data?.length === 0) {
-          control_error('No se encontraron agendamientos');
-          set_data_agendamiento_vehiculo([]);
-        } else {
-          set_data_agendamiento_vehiculo(response.data);
-        }
-      })
-  }
 
   useEffect(() => {
-    obtener_asignaciones_vehiculos();
+    obtener_asignaciones_vehiculos_filtros();
   }, [refrescar_tabla])
 
   const obtener_detalles_vehiculos_agendados: () => void = () => {
@@ -141,25 +138,25 @@ const AgendamientoVehiculos: React.FC = () => {
       set_msj_error_numero_pasajeros("");
   };
 
-  const cambio_fecha_solicitud_inicio = (date?: Dayjs | null): void => {
+  const cambio_fecha_solicitud_inicio = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_solicitud_inicio(date);
     }
   };
 
-  const cambio_fecha_solicitud_fin = (date?: Dayjs | null): void => {
+  const cambio_fecha_solicitud_fin = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_solicitud_fin(date);
     }
   };
 
-  const cambio_fecha_inicio_viaje = (date?: Dayjs | null): void => {
+  const cambio_fecha_inicio_viaje = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_inicio_viaje(date);
     }
   };
 
-  const cambio_fecha_fin_viaje = (date?: Dayjs | null): void => {
+  const cambio_fecha_fin_viaje = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_fin_viaje(date);
     }
@@ -232,13 +229,13 @@ const AgendamientoVehiculos: React.FC = () => {
   }
 
   const limpiar_form_agendamiento = () => {
-    set_fecha_solicitud_inicio(dayjs());
-    set_fecha_solicitud_fin(dayjs());
+    set_fecha_solicitud_inicio(null);
+    set_fecha_solicitud_fin(null);
     set_estado_solicitud('');
     set_requiere_carga('');
     set_numero_pasajeros(0);
-    set_fecha_inicio_viaje(dayjs());
-    set_fecha_fin_viaje(dayjs()); 
+    set_fecha_inicio_viaje(null);
+    set_fecha_fin_viaje(null); 
   }
   
   const validar_form_solicitudes:() => Promise<boolean> = async() => {
@@ -340,8 +337,6 @@ const AgendamientoVehiculos: React.FC = () => {
               }
             })
           } else if(accion === 'editar_agendamiento'){
-            console.log(vehiculo_encontrado.id_vehiculo_conductor);
-            
             dispatch(editar_aprobacion_viaje(data_solicitud_a_aprobar.id_viaje_agendado ,{id_vehiculo_conductor: vehiculo_encontrado.id_vehiculo_conductor}))
             .then((response: any) => {
               console.log(response);
@@ -355,6 +350,7 @@ const AgendamientoVehiculos: React.FC = () => {
                 return;
               }
             })
+            set_accion('ver_agendamiento');
           }
           return;
         } else if(result.isDenied){

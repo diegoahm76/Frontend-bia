@@ -438,16 +438,59 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         return `${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`;
       }
     },
-    {
-      field: 'Deudores',
-      headerName: 'Deudores',
-      width: 150,
-      renderCell: (params) => {
+    // {
+    //   field: 'Deudores',
+    //   headerName: 'Deudores',
+    //   width: 150,
+    //   renderCell: (params) => {
        
-          return <>
-          <Tooltip title="Ver">
+    //       return <>
+    //       <Tooltip title="Ver">
+    //         <IconButton
+    //           onClick={() => {
+    //             set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
+    //             set_nombre_deudor(`${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`);
+    //             try {
+    //               void dispatch(get_obligaciones_id(params.row.identificacion));
+    //               set_obligaciones_module(true);
+    //               handle_open_buscarr();
+    //             } catch (error: any) {
+    //               // Manejo del error
+    //               control_error(error.response.data.detail);
+    //             }
+    //           } }
+    //         >
+    //           <Avatar
+    //             sx={{
+    //               width: 24,
+    //               height: 24,
+    //               background: '#fff',
+    //               border: '2px solid',
+    //             }}
+    //             variant="rounded"
+    //           >
+    //              <Article
+    //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+    //               />
+    //           </Avatar>
+    //         </IconButton>
+    //       </Tooltip>
+    //     </>;
+       
+    //   },
+    // },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      minWidth: 100,
+      flex: 0.2,
+      renderCell: (params) => {
+        return (<>
+        <Tooltip title="Ver">
             <IconButton
               onClick={() => {
+                set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
+                set_nombre_deudor(`${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`);
                 try {
                   void dispatch(get_obligaciones_id(params.row.identificacion));
                   set_obligaciones_module(true);
@@ -473,19 +516,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               </Avatar>
             </IconButton>
           </Tooltip>
-        </>;
-       
-      },
-    },
-    {
-      field: 'acciones',
-      headerName: 'Acciones',
-      minWidth: 100,
-      flex: 0.2,
-      renderCell: (params) => {
-        return (<>
-      
-          <Tooltip title='Liquidar'>
+          {/* <Tooltip title='Liquidar'>
             <IconButton
               onClick={() => {
                 set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
@@ -511,7 +542,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 />
               </Avatar>
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <IconButton
             onClick={() => {
               set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
@@ -631,7 +662,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 obligaciones.length !== 0 ? (
                   <>
 
-                    <TablaObligacionesUsuarioConsulta  is_modal_active={is_modal_activee}  set_is_modal_active={set_is_buscarr}/>
+                    <TablaObligacionesUsuarioConsulta set_position_tab={set_position_tab} is_modal_active={is_modal_activee}  set_is_modal_active={set_is_buscarr}/>
                   </>
                 ): <p>.</p>
               }

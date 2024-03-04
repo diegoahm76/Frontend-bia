@@ -148,26 +148,30 @@ export const ConsultaExterno: React.FC = () => {
           />
         </Grid>
 
-        {/* <Grid item xs={12} sm={3}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>estado</InputLabel>
-            <Select
-              label="estado"
-              onChange={handleInputChange}
-              name="estado"
-              value={formData.estado}
-            >
-              {estado.map((estado) => (
-                <MenuItem
-                  key={estado.id_estado_solicitud}
-                  value={estado.nombre}
-                >
-                  {estado.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid> */}
+        <Grid item xs={12} sm={3}>
+  <FormControl size="small" fullWidth>
+    <InputLabel>estado</InputLabel>
+    <Select
+      label="estado"
+      onChange={handleInputChange}
+      name="estado"
+      value={formData.estado}
+    >
+      {estado
+        .filter(estado => ["RESPONDIDA", "EN GESTION", "RADICADO"].includes(estado.nombre))
+        .map((estado) => (
+          <MenuItem
+            key={estado.id_estado_solicitud}
+            value={estado.nombre}
+          >
+            {estado.nombre}
+          </MenuItem>
+        ))
+      }
+    </Select>
+  </FormControl>
+</Grid>
+
 
         <Grid item xs={12} sm={3}>
           <TextField

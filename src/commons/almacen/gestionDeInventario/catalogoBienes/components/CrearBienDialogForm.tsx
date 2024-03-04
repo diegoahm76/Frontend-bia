@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -59,6 +59,7 @@ const CrearBienDialogForm = ({
   const { marca, unidad_medida, porcentaje_iva, current_nodo, code_bien } = useAppSelector(
     (state) => state.bien
   );
+  const selects_option_realizados = useRef(false);
 
   const {
     control: control_bien,
@@ -101,52 +102,55 @@ const CrearBienDialogForm = ({
   useEffect(() => {
     const get_selects_options: any = async () => {
       try {
-        const { data: tipo_bien_no_format } = await api.get(
-          'almacen/choices/tipo-bien/'
-        );
-        const tipo_bien_format: IList[] =
-          text_choise_adapter(tipo_bien_no_format);
-        set_tipo_bien(tipo_bien_format);
-        const { data: activo_types_no_format } = await api.get(
-          'almacen/choices/tipo-activo/'
-        );
-        const activo_types_format: IList[] = text_choise_adapter(
-          activo_types_no_format
-        );
-        set_activo_types(activo_types_format);
-        const { data: metodo_valoracion_no_format } = await api.get(
-          'almacen/choices/metodo-valoracion-articulo/'
-        );
-        const metodo_valoracion_format: IList[] = text_choise_adapter(
-          metodo_valoracion_no_format
-        );
-        set_metodo_valoracion(metodo_valoracion_format);
-        const { data: depreciacion_types_no_format } = await api.get(
-          'almacen/choices/tipo-depreciacion-activo/'
-        );
-        const depreciacion_types_format: IList[] = text_choise_adapter(
+        const [
+          tipo_bien_no_format,
+          activo_types_no_format,
+          metodo_valoracion_no_format,
           depreciacion_types_no_format
-        );
+        ] = await Promise.all([
+          api.get('almacen/choices/tipo-bien/'),
+          api.get('almacen/choices/tipo-activo/'),
+          api.get('almacen/choices/metodo-valoracion-articulo/'),
+          api.get('almacen/choices/tipo-depreciacion-activo/')
+        ]);
+  
+        const tipo_bien_format: IList[] = text_choise_adapter(tipo_bien_no_format.data);
+        const activo_types_format: IList[] = text_choise_adapter(activo_types_no_format.data);
+        const metodo_valoracion_format: IList[] = text_choise_adapter(metodo_valoracion_no_format.data);
+        const depreciacion_types_format: IList[] = text_choise_adapter(depreciacion_types_no_format.data);
+  
+        set_tipo_bien(tipo_bien_format);
+        set_activo_types(activo_types_format);
+        set_metodo_valoracion(metodo_valoracion_format);
         set_depreciacion_types(depreciacion_types_format);
       } catch (err) {
-        //  console.log('')(err);
+        // Manejar errores aquí si es necesario
       }
     };
-    void get_selects_options();
-    void dispatch(get_marca_service());
-    void dispatch(get_porcentaje_service());
-    void dispatch(get_medida_service());
-  }, []);
+  
+    if (is_modal_active) {
+      if (!selects_option_realizados.current) {
+        selects_option_realizados.current = true;
+        get_selects_options(),
+        dispatch(get_marca_service()),
+        dispatch(get_porcentaje_service()),
+        dispatch(get_medida_service())
+      }
+    }
+  }, [is_modal_active]);
+
   useEffect(() => {
     if (action === 'create_sub') {
       if (current_nodo.data.bien?.nivel_jerarquico !== 5) {
         //  console.log('')(current_nodo.data.bien?.nivel_jerarquico)
-        void dispatch(
-          get_code_bien_service(
-            current_nodo.data.bien?.id_bien,
-            (current_nodo.data.bien?.nivel_jerarquico ?? 0 )+ 1
-          )
-        );
+        if(is_modal_active){
+          void dispatch(
+            get_code_bien_service(
+              current_nodo.data.bien?.id_bien,
+              (current_nodo.data.bien?.nivel_jerarquico ?? 0 )+ 1
+            )
+          );
+        }
       }
       reset_bien({
         ...current_nodo.data.bien,
@@ -163,7 +167,9 @@ const CrearBienDialogForm = ({
             : 'false',
       });
     } else if (action === 'create') {
-      void dispatch(get_code_bien_service(null, 1));
+      if(is_modal_active){
+        void dispatch(get_code_bien_service(null, 1));
+      }
       reset_bien(initial_state_current_nodo.data.bien);
     } else {
       reset_bien({
@@ -184,7 +190,7 @@ const CrearBienDialogForm = ({
       });
     }
     //  console.log('')(current_nodo)
-  }, [current_nodo]);
+  }, [current_nodo,is_modal_active]);
 
   useEffect(() => {
     reset_bien({ ...current_nodo.data.bien, codigo_bien: code_bien });
