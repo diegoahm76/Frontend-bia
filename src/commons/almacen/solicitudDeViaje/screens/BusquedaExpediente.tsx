@@ -202,6 +202,13 @@ const BusquedaExpediente: React.FC<IProps> = ({ set_mostrar_busqueda_expediente,
 		}
 	}
 
+	/**
+	 * Limpia el formulario de búsqueda de expedientes.
+	 * 
+	 * Establece los valores de los estados relacionados con el formulario a sus valores iniciales.
+	 * 
+	 * @returns {void}
+	 */
 	const limpiar_formulario_busqueda = () => {
 		set_id_expediente(0);
 		set_fecha_inicio(null);
