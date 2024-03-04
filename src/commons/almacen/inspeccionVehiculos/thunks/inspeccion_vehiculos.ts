@@ -1,8 +1,7 @@
 import { AxiosError } from "axios";
-import { control_error, control_success } from "../../../../helpers";
 import { api } from "../../../../api/axios";
+import { control_error, control_success } from "../../../../helpers";
 import { create_inspeccion_vehiculo } from "../interfaces/types";
-
 
 
 export const obtener_nombres_conductor: any = () => {
@@ -46,29 +45,6 @@ export const enviar_inspeccion_vehiculo: any = (form_data: create_inspeccion_veh
       return data;
     } catch (error: any) {
       control_error('Hubo un error al intentar crear la solicitud de viaje');
-      return error as AxiosError;
-    }
-  };
-};
-
-
-export const obtener_vehiculos_inspeccionados: any = () => {
-  return async () => {
-    try {
-      const { data } = await api.get('/almacen/vehiculos/novedades-vehiculo/get/');
-      return data;
-    } catch (error: any) {
-      return error as AxiosError;
-    }
-  };
-};
-
-export const put_verificar_inspeccion: any = (id_inspeccion_vehiculo: string) => {
-  return async () => {
-    try {
-      const { data } = await api.put(`/almacen/vehiculos/revisar-vehiculo/${id_inspeccion_vehiculo}/`);
-      return data;
-    } catch (error: any) {
       return error as AxiosError;
     }
   };

@@ -258,10 +258,9 @@ const ElementosInspeccionar: React.FC<props> = ({
   }
 
   return (
-    <Grid container item xs={12} sx={{
+    <Grid container item spacing={1} xs={12} sx={{
       display:'flex',
       justifyContent:'space-between',
-      gap:2
     }}>
       <TarjetaInspeccion title="Direccionales">
         <ContenedorInput>
