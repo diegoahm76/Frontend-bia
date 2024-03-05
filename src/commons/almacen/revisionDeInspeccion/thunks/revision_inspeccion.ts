@@ -18,7 +18,9 @@ export const put_verificar_inspeccion: any = (id_inspeccion_vehiculo: string) =>
       const { data } = await api.put(`/almacen/vehiculos/revisar-vehiculo/${id_inspeccion_vehiculo}/`);
       return data;
     } catch (error: any) {
-      return error as AxiosError;
+      if(error !== undefined && Object.keys(error).length !== 0){
+        return error.response.data as AxiosError;
+      }
     }
   };
 };

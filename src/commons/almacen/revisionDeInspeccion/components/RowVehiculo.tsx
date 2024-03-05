@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, Radio, TextField } from "@mui/material";
+import { Button, FormLabel, Grid, Radio, TextField } from "@mui/material";
 import { cambio_input_radio } from "../thunks/cambio_input_radio";
 import { estilo_radio } from "../thunks/estilo_radio";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import { interface_put_revisar_vehiculo, interface_vehiculos_con_novedad, response_put_revisar_vehiculo } from "../interfaces/types";
 import { put_verificar_inspeccion } from "../thunks/revision_inspeccion";
 import { useAppDispatch } from "../../../../hooks";
+import Swal from "sweetalert2";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 interface props {
   set_mostrar_view_inpeccion: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,18 +26,44 @@ const RowVehiculo: React.FC<props> = ({set_mostrar_view_inpeccion, inspeccion, s
   const [novedades_inspecciones, set_novedades_inspecciones] = useState<string>('');
 
   
-  const put_verificar_inspeccion_fc: () => void = () => {
-    dispatch(put_verificar_inspeccion(inspeccion.id_inspeccion_vehiculo))
+  const put_verificar_inspeccion_fc: () => Promise<boolean> = async() => {
+    await dispatch(put_verificar_inspeccion(inspeccion.id_inspeccion_vehiculo))
       .then((response: response_put_revisar_vehiculo) => {
-       set_data_inspeccion_revisada(response?.data);
-      })
+        if(response !== undefined && Object.keys(response).length !== 0){
+          set_data_inspeccion_revisada(response.data);
+        }
+      }
+    )
+    return true;
   }
 
 
-  const enviar_revisado = () => {
-    set_mostrar_view_inpeccion(true);
-    set_esta_revisado('true');
-    put_verificar_inspeccion_fc();
+  const enviar_revisado = async() => {
+    if(!inspeccion.verificacion_superior_realizada){
+      Swal.fire({
+        title: '¿Está seguro de revisar el vehículo?',
+        showDenyButton: true,
+        confirmButtonColor: '#042F4A',
+        cancelButtonColor: '#DE1616',
+        icon: 'question',
+        confirmButtonText: `Revisar`,
+        denyButtonText: `Cancelar`,
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+          const data = await put_verificar_inspeccion_fc();
+          if(data){
+            set_mostrar_view_inpeccion(true);
+            set_esta_revisado('true');
+          }
+        }
+      });
+    } else {
+      const data = await put_verificar_inspeccion_fc();
+      if(data){
+        set_mostrar_view_inpeccion(true);
+        set_esta_revisado('true');
+      }
+    }
   }
 
   useEffect(()=>{
@@ -112,10 +140,10 @@ const RowVehiculo: React.FC<props> = ({set_mostrar_view_inpeccion, inspeccion, s
             fullWidth
             color='primary'
             variant='contained'
-            startIcon={<SaveIcon/>}
+            startIcon={inspeccion.verificacion_superior_realizada ? <RemoveRedEyeIcon/> : <SaveIcon/>}
             onClick={enviar_revisado}
             >
-              Revisar
+              {inspeccion.verificacion_superior_realizada ? 'Ver Revisión' : 'Revisar'}
           </Button>
         </Grid>
     </Grid>
