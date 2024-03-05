@@ -135,6 +135,21 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
     }
   }
 
+  /*
+  
+  cod_tipo_vehiculo
+  tiene_platon
+  capacidad_pasajeros
+  color
+  ultimo_kilometraje
+  marca_nombre
+  vehiculo_placa
+
+
+  nombre_clase_tercero
+  nombre_persona
+  nro_documento
+  */
 
 
   useEffect(()=>{  
@@ -158,30 +173,18 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
             py: '40px',
             px: '20px',
             mb: '20px',
-            display:'flex',
-            justifyContent:'space-between',
-            alignItems:'center'
           }}
           >
-            <Grid container item xs={12} md={2}>
-              <Grid item xs={4} md={12}>
+            <Grid container item xs={12} lg={2}>
+              <Grid item xs={4} lg={12}>
                 <b style={{width:'100%'}}>Vehículo:</b>
               </Grid>
-              <Grid item xs={4} md={12}>
+              <Grid item xs={4} lg={12}>
                 <span style={{width:'100%'}}>{placa_vehiculo}</span>
               </Grid>
             </Grid>
 
-            <Grid
-              item
-              xs={12}
-              md={2.5}
-              sx={{
-              display: "flex",
-              justifyContent: "center",
-                alignItems: "center",
-              }}
-              >
+            <Grid item xs={12} lg={2.5}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label='Fecha de salida*:'
@@ -197,16 +200,7 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
               </LocalizationProvider>
             </Grid>
 
-            <Grid
-              item
-              xs={12}
-              md={2.5}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              >
+            <Grid item xs={12} lg={2.5}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label='Fecha de retorno*:'
@@ -222,16 +216,16 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
               </LocalizationProvider>
             </Grid>
 
-            <Grid container item xs={12} md={2}>
-              <Grid item xs={4} md={12}>
+            <Grid container item xs={12} lg={2}>
+              <Grid item xs={4} lg={12}>
                 <b style={{width:'100%'}}>Conductor:</b>
               </Grid>
-              <Grid item xs={4} md={12}>
+              <Grid item xs={4} lg={12}>
                 <span style={{width:'100%'}}>{documento_coductor}</span>
               </Grid>
             </Grid>
 
-            <Grid item xs={12} md={1.2} >
+            <Grid item xs={12} lg={1.2} >
               <Button
                 fullWidth
                 onClick={enviar_agendamiento_permanente}
@@ -243,7 +237,7 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
               </Button>
             </Grid>
             
-            <Grid item xs={12} md={1.2} >
+            <Grid item xs={12} lg={1.2} >
               <Button
                 fullWidth
                 color="inherit"

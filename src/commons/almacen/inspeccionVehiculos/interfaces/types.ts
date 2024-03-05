@@ -10,8 +10,13 @@ export interface response_conductor_logueado {
 }
 
 export interface data_conductor_logueado {
-  id_persona_logueada: number;
-  nombre_completo: string;
+  email: string
+  fecha_nacimiento: string
+  id_persona_logueada: number
+  nombre_completo: string
+  numero_documento: string
+  telefono_celular: string
+  tipo_documento: string
 }
 
 export interface response_vehiculo_logueado {

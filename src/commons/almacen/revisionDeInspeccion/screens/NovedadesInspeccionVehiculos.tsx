@@ -36,10 +36,6 @@ const NovedadesInspeccionVehiculos = () => {
     obtener_vehiculos_inspeccionados_fc();
   }, [mostrar_view_inpeccion])
 
-  useEffect(() => {
-    console.log(data_vehiculos_con_novedad);
-  }, [data_vehiculos_con_novedad])
-
   return (
     <>
       <VehiculosSinNovedad
