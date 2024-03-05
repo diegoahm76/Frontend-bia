@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { data_buscar_vehiculo } from '../interfaces/types';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import { ButtonGroup, Grid } from '@mui/material';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 
 interface CustomColumn extends GridColDef {
@@ -27,22 +30,6 @@ const TableBusquedaVehiculos: React.FC<props> = ({data_busqueda_vehiculos, set_v
       set_vehiculo_encontrado_temp(vehiculo_arrendado);
     }
   }
-
-  /*
-    "id_vehiculo_conductor": 17,
-    "id_persona_conductor": 121,
-    "id_hoja_vida_vehiculo": 23,
-    "id_articulo": 7596,
-    "id_vehiculo_arrendado": 20,
-    "tiene_platon": false,
-    "es_arrendado": true,
-    "placa": "test1",
-    "nombre": "test",
-    "marca": "FORD MILENIUM",
-    "id_marca": 296,
-    "empresa_contratista": "test",
-    "persona_conductor": "TEST  TEST "
-  */
   
 
   const columns: CustomColumn[] = [
@@ -61,19 +48,37 @@ const TableBusquedaVehiculos: React.FC<props> = ({data_busqueda_vehiculos, set_v
   ]
 
   return (
-    <DataGrid
-      style={{margin:'15px 0px'}}
-      density="compact"
-      autoHeight
-      rows={data_busqueda_vehiculos ?? []}
-      columns={columns ?? []}
-      pageSize={5}
-      rowHeight={75}
-      rowsPerPageOptions={[5]}
-      experimentalFeatures={{ newEditingApi: true }}
-      onSelectionModelChange={handle_id_hoja_vida}
-      getRowId={(row) => row.id_unico}
-    />
+    <>
+      <Grid item xs={12} container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center" >
+        <Grid item  >
+          <ButtonGroup style={{ margin: 5, }}>
+              {download_xls({ nurseries: data_busqueda_vehiculos, columns })}
+              {download_pdf({
+                  nurseries: data_busqueda_vehiculos,
+                  columns,
+                  title: 'Resultado búsqueda vehículos',
+              })}
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+
+      <DataGrid
+        style={{margin:'15px 0px'}}
+        density="compact"
+        autoHeight
+        rows={data_busqueda_vehiculos ?? []}
+        columns={columns ?? []}
+        pageSize={5}
+        rowHeight={75}
+        rowsPerPageOptions={[5]}
+        experimentalFeatures={{ newEditingApi: true }}
+        onSelectionModelChange={handle_id_hoja_vida}
+        getRowId={(row) => row.id_unico}
+      />
+    </>
   );
 }
 

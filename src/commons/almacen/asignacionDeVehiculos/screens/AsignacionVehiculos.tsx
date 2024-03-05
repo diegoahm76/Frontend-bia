@@ -403,9 +403,10 @@ const AsignacionVehiculos: React.FC = () => {
                   color="success"
                   variant="contained"
                   startIcon={<SaveIcon />}
+                  disabled={vehiculo_agendado_conductor?.length === 0}
                   onClick={enviar_asiganacion_a_conductor}
                 >
-                  {"Guardar"}
+                  Guardar
                 </Button>
               </Grid>
               <Grid item xs={12} md={1.5} >

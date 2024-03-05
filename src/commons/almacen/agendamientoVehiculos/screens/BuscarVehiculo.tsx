@@ -129,12 +129,13 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
         <Grid
         container
         spacing={2}
+        rowSpacing={3}
         marginTop={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
-          p: '10px',
+          p: '30px',
           margin:'10px auto',
           width:'100%',
         }}

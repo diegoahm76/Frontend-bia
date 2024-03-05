@@ -10,7 +10,7 @@ import {
   FormLabel,
   Switch
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Title } from "../../../../components";
 import SearchIcon from "@mui/icons-material/Search";
 import TableBitacoraViajes from "../tables/TableBitacoraViajes";
@@ -60,8 +60,12 @@ const BitacoraViajes: React.FC = () => {
       })
   }
 
+  const agenmientos_bitacora_obtenidos = useRef(false);
   useEffect(()=>{
-    buscar_agendamientos_fc();
+    if (!agenmientos_bitacora_obtenidos.current) {
+      buscar_agendamientos_fc();
+      agenmientos_bitacora_obtenidos.current = true;
+    }
   },[refrescar_tabla])
 
 
@@ -113,7 +117,7 @@ const BitacoraViajes: React.FC = () => {
           boxShadow: "0px 3px 6px #042F4A26",
           borderRadius: "15px",
           margin: "auto",
-          p: "20px",
+          p: "40px",
           mb: "20px",
         }}
       >

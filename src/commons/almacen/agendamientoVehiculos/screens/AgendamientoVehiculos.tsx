@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { useAppDispatch } from '../../../../hooks';
 import { Title } from '../../../../components';
@@ -98,8 +98,12 @@ const AgendamientoVehiculos: React.FC = () => {
   }
 
 
+  const agendamientos_obtenidos = useRef(false);
   useEffect(() => {
-    obtener_asignaciones_vehiculos_filtros();
+    if (!agendamientos_obtenidos.current) {
+      obtener_asignaciones_vehiculos_filtros();
+      agendamientos_obtenidos.current = true;
+    }
   }, [refrescar_tabla])
 
   const obtener_detalles_vehiculos_agendados: () => void = () => {
@@ -194,8 +198,8 @@ const AgendamientoVehiculos: React.FC = () => {
         set_marca_agregado(data_ver_agendamiento.marca);
         set_fecha_salida(dayjs(data_ver_agendamiento.fecha_partida_asignada));
         set_fecha_retorno(dayjs(data_ver_agendamiento.fecha_retorno_asignada));
-        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida).toDate());
-        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno).toDate());
+        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida)?.toDate() || null);
+        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno)?.toDate() || null);
       } 
     }
     if(accion === 'editar_agendamiento'){
@@ -209,8 +213,8 @@ const AgendamientoVehiculos: React.FC = () => {
         set_marca_agregado(data_ver_agendamiento.marca);
         set_fecha_salida(dayjs(data_ver_agendamiento.fecha_partida_asignada));
         set_fecha_retorno(dayjs(data_ver_agendamiento.fecha_retorno_asignada));
-        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida).toDate());
-        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno).toDate());
+        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida)?.toDate() || null);
+        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno)?.toDate() || null);
       } 
     }
   },[data_ver_agendamiento,accion,id_solicitud_viaje])
@@ -380,7 +384,7 @@ const AgendamientoVehiculos: React.FC = () => {
           
           <Title title='Agendamiento de vehículos' />
           
-          <Grid container spacing={1} item xs={12}>
+          <Grid container spacing={3} item xs={12} mt={0.5} mb={2}>
             <Grid item xs={12} md={2} sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -611,7 +615,7 @@ const AgendamientoVehiculos: React.FC = () => {
             position: 'relative',
             background: '#FAFAFA',
             borderRadius: '15px',
-            p: '20px',
+            p: '40px',
             mb: '20px',
             boxShadow: '0px 3px 6px #042F4A26',
           }}
@@ -635,7 +639,14 @@ const AgendamientoVehiculos: React.FC = () => {
           }
 
 
-          <Grid container spacing={1} item xs={12}>
+          <Grid container spacing={1} rowSpacing={3} item xs={12} my={1} sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}>
             <Title title='Seleccionar vehículo' />
 
             <Grid item xs={12} md={1.8} sx={{
