@@ -60,21 +60,56 @@ export interface interface_solicitar_viaje {
   consideraciones_adicionales: string,  // Consideraciones adicionales
   indicaciones_destino: string  // Indicaciones para llegar al destino
 }
-
 export interface response_solicitud_respondida {
   success: boolean
   detail: string
-  data: interface_solicitud_respondida
+  data: data_solicitud_respondida
+}
+
+export interface data_solicitud_respondida {
+  solicitud_viaje: interface_solicitud_viaje
+  viajes_agendados: interface_solicitud_respondida
+}
+
+export interface interface_solicitud_viaje {
+  id_solicitud_viaje: number
+  cod_departamento: string
+  fecha_solicitud: string
+  tiene_expediente_asociado: boolean
+  motivo_viaje: string
+  direccion: string
+  indicaciones_destino: string
+  nro_pasajeros: number
+  requiere_carga: boolean
+  fecha_partida: string
+  hora_partida: string
+  fecha_retorno: string
+  hora_retorno: string
+  requiere_compagnia_militar: boolean
+  consideraciones_adicionales: string
+  fecha_aprobacion_responsable: string
+  fecha_rechazo: any
+  justificacion_rechazo: any
+  estado_solicitud: string
+  id_persona_solicita: number
+  id_unidad_org_solicita: number
+  id_expediente_asociado: number
+  cod_municipio: string
+  id_persona_responsable: number
+  id_unidad_org_responsable: number
 }
 
 export interface interface_solicitud_respondida {
-  viajes_agendados: viajes_agendados
-}
-
-export interface viajes_agendados {
   id_viaje_agendado: number
   nombre_conductor: string
   apellido_conductor: string
+  fecha_nacimiento: string
+  telefono_celular: string
+  telefono_celular_empresa: any
+  email: string
+  email_empresarial: string
+  tipo_documento: string
+  numero_documento: string
   placa: string
   marca: string
   nombre: string
@@ -100,3 +135,4 @@ export interface viajes_agendados {
   cod_municipio_destino: string
   id_persona_autoriza: number
 }
+

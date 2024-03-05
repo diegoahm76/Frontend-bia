@@ -21,7 +21,7 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
   const navigate = useNavigate();
 
   // Estados de los elementos inspeccionados
-  const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('false'); // Direcionales delanteras
+  const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('true'); // Direcionales delanteras
   const [direcionales_traseras, set_direcionales_traseras] = useState<string>('true'); // Direcionales traseras
   const [limpiabrisas_delantero, set_limpiabrisas_delantero] = useState<string>('true'); // Limpiabrisas delantero
   const [limpiabrisas_trasero, set_limpiabrisas_trasero] = useState<string>('true'); // Limpiabrisas trasero
@@ -57,7 +57,7 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
 
   useEffect(()=>{
     // Comentario: Este hook se ejecuta cuando cambia el valor de la variable "data_inspeccion_revisada"
-    if(Object.keys(data_inspeccion_revisada).length !== 0){
+    if(data_inspeccion_revisada !== undefined && Object.keys(data_inspeccion_revisada).length !== 0){
       set_direcionales_delanteras(data_inspeccion_revisada.dir_llantas_delanteras.toString());
       set_direcionales_traseras(data_inspeccion_revisada.dir_llantas_Traseras.toString());
       set_limpiabrisas_delantero(data_inspeccion_revisada.limpiabrisas_delantero.toString());
@@ -90,9 +90,11 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
   },[data_inspeccion_revisada]);
 
   useEffect(()=>{
-    if('observaciones' in data_inspeccion_revisada){
-      set_tiene_observaciones(true);
-      set_observaciones(data_inspeccion_revisada?.observaciones ?? '')
+    if(data_inspeccion_revisada !== undefined && Object.keys(data_inspeccion_revisada).length !== 0){
+      if('observaciones' in data_inspeccion_revisada){
+        set_tiene_observaciones(true);
+        set_observaciones(data_inspeccion_revisada?.observaciones ?? '')
+      }
     }
   },[data_inspeccion_revisada])
 
@@ -119,6 +121,23 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
       }}
       >
       <Title title="Elementos a inspeccionar" />
+
+      <Grid item container xs={12}>
+        <Grid item xs={12} md={2} sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+        }}>
+          <TextField
+            label='Kilometraje'
+            value={data_inspeccion_revisada?.kilometraje ? Number(data_inspeccion_revisada.kilometraje).toLocaleString() : ''}
+            disabled
+            size="small"
+            fullWidth
+          />
+          <FormLabel>KM</FormLabel>
+        </Grid>
+      </Grid>
 
       <TarjetaInspeccion title="Direccionales">
         <ContenedorInput>

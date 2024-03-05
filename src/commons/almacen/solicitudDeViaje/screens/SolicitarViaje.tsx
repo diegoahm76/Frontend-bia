@@ -1,5 +1,5 @@
 import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -9,7 +9,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
-import { data_solicitud_viaje, interface_solicitar_viaje, response_solicitud_respondida, viajes_agendados } from '../interfaces/types';
+import { data_solicitud_viaje, interface_solicitar_viaje, interface_solicitud_respondida, response_solicitud_respondida } from '../interfaces/types';
 import ViajeAgendado from './ViajeAgendado';
 import { control_error } from '../../../../helpers';
 import Swal from 'sweetalert2';
@@ -70,7 +70,7 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
   const [datos_solicitar_viaje, set_datos_solicitar_viaje] = useState<interface_solicitar_viaje>();
 
   // Estado para almacenar la solicitud de viaje respondida
-  const [solicitud_respondida, set_solicitud_respondida] = useState<viajes_agendados>(Object);
+  const [solicitud_respondida, set_solicitud_respondida] = useState<interface_solicitud_respondida>(Object);
   
 
   useEffect(()=>{
@@ -415,18 +415,26 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     })
   }
 
+  const municipio_departamentos_obtenido = useRef(false);
   useEffect(()=>{
-    obtener_departamentos();
-    obtener_municipios();
-  },[])
+    if(!municipio_departamentos_obtenido.current){
+      obtener_departamentos();
+      obtener_municipios();
+      municipio_departamentos_obtenido.current = true;
+    }
+  },[]);
   
   /**
    * Efecto secundario que se ejecuta al montar el componente y cuando cambian ciertos valores.
    * Obtiene la lista de departamentos, municipios y las solicitudes de viaje si se está editando o viendo una solicitud.
    */
+  const solicitudes_obtenidas = useRef(false);
   useEffect( ()=>{
-    if(accion === 'editar' || accion === 'ver'){   
-      obtener_solicitudes_fc();
+    if(!solicitudes_obtenidas.current){
+      if(accion === 'editar' || accion === 'ver'){   
+        obtener_solicitudes_fc();
+      }
+      solicitudes_obtenidas.current = true;
     }
   },[id_solicitud_editar,accion]);
 
