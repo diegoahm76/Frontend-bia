@@ -36,6 +36,8 @@ import { AuthSlice } from '../../../../../../../../auth/interfaces';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 import { putRechazarTareaOtros } from '../../../../../../toolkit/thunks/otros/putRechazarTareaOtros.service';
 import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
+import { getListadoTramitesByPerson } from '../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
+import { putRechazarTareaTramite } from '../../../../services/servicesStates/tramites/rechazarTramite/putRechazarTramite.service';
 
 export const ModalRejectTask: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -94,8 +96,8 @@ export const ModalRejectTask: FC = (): JSX.Element => {
       listadoTareasType: 'ROtros',
     },
     'RESPONDER TRÁMITE': {
-      rejectTask: putRechazarTarea, // se debe modiificar de acuerdo a los tramites
-      getListadoTareas: getListadoTareasByPerson, // se debe modiificar de acuerdo a los tramites
+      rejectTask: putRechazarTareaTramite, // se debe modiificar de acuerdo a los tramites
+      getListadoTareas: getListadoTramitesByPerson, // se debe modiificar de acuerdo a los tramites
       listadoTareasType: 'Tramites', // se debe modiificar de acuerdo a los tramites
     },
     // Agrega aquí los nuevos tipos de tareas

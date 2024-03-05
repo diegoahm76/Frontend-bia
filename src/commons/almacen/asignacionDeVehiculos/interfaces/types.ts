@@ -93,3 +93,20 @@ export interface interface_crear_vehiculo_agendado_conductor {
   fecha_inicio_asignacion: string;
   fecha_final_asignacion: string;
 }
+
+export interface response_asignacion_vehiculo {
+  success?: boolean
+  detail?: string
+  data?: interface_asignacion_vehiculo[]
+  errors?: interface_asignacion_vehiculo[]
+}
+
+export interface interface_asignacion_vehiculo {
+  id_vehiculo_conductor: number
+  fecha_inicio_asignacion: string
+  fecha_final_asignacion: string
+  fecha_registro: string
+  id_hoja_vida_vehiculo: number | string[]
+  id_persona_conductor: number
+  id_persona_que_asigna: number
+}

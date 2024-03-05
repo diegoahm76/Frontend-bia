@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import BusquedaVehiculos from './BusquedaVehiculos';
 import TableAsignacionVehiculos from '../tables/TableAsignacionVehiculos';
 import BusquedaConductores from './BusquedaConductores';
-import { data_asignacion_vehiculos, interface_crear_vehiculo_agendado_conductor, interface_vehiculo_agendado_conductor } from '../interfaces/types';
+import { data_asignacion_vehiculos, interface_crear_vehiculo_agendado_conductor, interface_vehiculo_agendado_conductor, response_asignacion_vehiculo } from '../interfaces/types';
 import { useAppDispatch } from '../../../../hooks';
 import { buscar_vehiculos_asignados, enviar_asignacion_vehiculo } from '../thunks/asignacion_vehiculos';
 import VehiculosConductoresAsignados from './VehiculosConductoresAsignados';
@@ -44,8 +44,8 @@ const AsignacionVehiculos: React.FC = () => {
   const [data_asignacion_vehiculos, set_data_asignacion_vehiculos] = useState<data_asignacion_vehiculos[]>([]);
 
 
-  const enviar_asiganacion_a_conductor_fc: () => void = async() => {
-   await  dispatch(
+  const enviar_asiganacion_a_conductor_fc: () => Promise<boolean> = async() => {
+   const validado = await  dispatch(
       enviar_asignacion_vehiculo(
         vehiculo_agendado_conductor.map(
           (asignacion: interface_crear_vehiculo_agendado_conductor) => ({
@@ -57,44 +57,65 @@ const AsignacionVehiculos: React.FC = () => {
           )
         )
       )
-    ).catch((response: any) => {
-      console.log(response);
+    ).then((response: response_asignacion_vehiculo)=>{
+      if(response?.success === false){
+        control_error('Hay un vehículo que ya está asignado a otro conductor');
+        return false;
+      } else {
+        set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
+        set_refrescar_tabla(!refrescar_tabla);
+        return true;
+      }
+    })
+    .catch((response: any) => {
+      console.error(response);
     });
-    set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
-    set_refrescar_tabla(!refrescar_tabla);
+    return validado;
   };
 
-
-  const obtener_asignaciones_vehiculos: () => void = () => {
-    dispatch(buscar_vehiculos_asignados(
+  const obtener_asignaciones_vehiculos: ()=> Promise<boolean> = async() => {
+    const validado =  await dispatch(buscar_vehiculos_asignados(
       tipo_vehiculo,
       tipo_conductor,
       placa,
       conductor,))
       .then((response: any) => {
         if (response.data.length === 0) {
-          control_error('No se encontraron asignaciones con los filtros seleccionados');
           set_data_asignacion_vehiculos([]);
+          return false;
         } else {
           set_data_asignacion_vehiculos(response.data);
+          return true;
         }
       })
+    return validado;    
   }
 
   useEffect(() => {
     obtener_asignaciones_vehiculos();
   }, [refrescar_tabla,refrescar_tabla_conductores])
 
+  /**
+   * Maneja el evento de cambio del input de selección del tipo de conductor.
+   * @param event El evento de cambio de selección.
+   */
   const cambio_tipo_conductor: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_conductor(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
       set_msj_error_tipo_conductor("");
   }
 
-  const cambio_tipo_vehiculo: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
-    set_tipo_vehiculo(e.target.value);
-    if (e.target.value !== null && e.target.value !== "")
+  /**
+   * Función que se ejecuta cuando se cambia el tipo de vehículo seleccionado.
+   * 
+   * @param {SelectChangeEvent} event - El evento de cambio de selección.
+   * @returns {void}
+   */
+  const cambio_tipo_vehiculo = (event: SelectChangeEvent): void => {
+    set_tipo_vehiculo(event.target.value);
+    if (event.target.value !== null && event.target.value !== "") {
       set_msj_error_tipo_vehiculo("");
+    }
   }
 
   const limpiar_form_asignacion = () => {
@@ -108,17 +129,32 @@ const AsignacionVehiculos: React.FC = () => {
     set_msj_error_conductor('');
   }
 
+  /**
+   * Función que se ejecuta al consultar los vehículos asignados.
+   * 
+   * @param {React.FormEvent<Element>} e - El evento de formulario.
+   * @returns {void}
+   */
   const consultar_vehiculos_asignados: (e: React.FormEvent<Element>) => void = async (e) => {
     e.preventDefault();
-    obtener_asignaciones_vehiculos();
-
+    const envio_datos = await obtener_asignaciones_vehiculos();
+    if(!envio_datos){
+      control_error('No se encontraron asignaciones con los filtros seleccionados');
+    }
   }
 
-  const enviar_asiganacion_a_conductor = () => {
+  /**
+   * Función que se ejecuta al enviar la asignación a conductor.
+   * 
+   * @returns {void}
+   */
+  const enviar_asiganacion_a_conductor = async() => {
+    // Verifica si no se ha agregado ninguna asignación
     if(vehiculo_agendado_conductor.length === 0){
       control_error('Agregue por lo menos una asignación');
       return;
     } else {
+      // Muestra un mensaje de confirmación al usuario
       Swal.fire({
         title: '¿Está seguro de enviar las asignaciones?',
         showDenyButton: true,
@@ -127,14 +163,18 @@ const AsignacionVehiculos: React.FC = () => {
         confirmButtonColor: '#042F4A',
         cancelButtonColor: '#DE1616',
         icon: 'question',
-      }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
+      }).then(async(result) => {
+        /* Lee más sobre isConfirmed, isDenied a continuación */
         if (result.isConfirmed) {
-          set_vehiculo_agendado_conductor([]);
-          enviar_asiganacion_a_conductor_fc();
-          return true;
+          // Envía la asignación a través de la función enviar_asiganacion_a_conductor_fc
+          const enviado = await enviar_asiganacion_a_conductor_fc();
+          if(enviado){
+            // Si la asignación se envió correctamente, se limpia el estado vehiculo_agendado_conductor
+            set_vehiculo_agendado_conductor([]);
+          }
+          return;
         } else if(result.isDenied){
-          return false;
+          return;
         }
       });
     }
@@ -152,7 +192,7 @@ const AsignacionVehiculos: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
           borderRadius: '15px',
           margin: 'auto',
-          p: '20px',
+          p: '40px',
           mb: '20px',
         }}
       >
@@ -165,17 +205,9 @@ const AsignacionVehiculos: React.FC = () => {
           autoComplete="off"
           sx={{ width: '100%', mt: '20px' }}
         >
-          <Grid item container xs={12} sx={{
-            display: 'flex',
-            gap: '10px'
-          }}>
-            <Grid item xs={12} md={2}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
+          <Grid item container spacing={1} mb='15px' rowSpacing={2} xs={12}>
+
+            <Grid item xs={12} lg={2}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Tipo de conductor: </InputLabel>
                 <Select
@@ -191,13 +223,7 @@ const AsignacionVehiculos: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={2}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
+            <Grid item xs={12} lg={2}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Tipo de Vehículo: </InputLabel>
                 <Select
@@ -213,12 +239,7 @@ const AsignacionVehiculos: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={1} sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 1
-            }} >
+            <Grid item xs={12} lg={2}>
               <TextField
                 label='Placa: '
                 fullWidth
@@ -233,14 +254,9 @@ const AsignacionVehiculos: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={2} sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 1
-            }} >
+            <Grid item xs={12} lg={2}>
               <TextField
-                label='conductor'
+                label='Conductor:'
                 fullWidth
                 placeholder='Buscar'
                 size="small"
@@ -253,11 +269,7 @@ const AsignacionVehiculos: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={2} sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }} >
+            <Grid item xs={12} lg={2}>
               <Button
                 fullWidth
                 color='primary'
@@ -269,11 +281,7 @@ const AsignacionVehiculos: React.FC = () => {
                 Buscar
               </Button>
             </Grid>
-            <Grid item xs={12} md={2} sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }} >
+            <Grid item xs={12} lg={2}>
               <Button
                 fullWidth
                 color="inherit"

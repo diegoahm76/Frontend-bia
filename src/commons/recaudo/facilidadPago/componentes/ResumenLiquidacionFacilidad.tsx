@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { type TablasAmortizacion } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 import { useEffect, useState } from 'react';
+import { Title } from '../../../../components';
 
 interface RootState {
   plan_pagos: {
@@ -224,13 +225,16 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
         <Grid item xs={12}>
           <Grid item>
             <Box sx={{ width: '100%' }}>
-              <h3>3. Resumen de la Facilidad</h3>
+              {/* <h3>3. Resumen de la Facilidad</h3> */}
+              <Title title="3. Resumen de la Facilidad " />
+
               <Stack
                 direction="row"
                 justifyContent="space-around"
                 spacing={2}
                 sx={{ mt: '30px' }}
               >
+                
                 <DataGrid
                   autoHeight
                   disableSelectionOnClick

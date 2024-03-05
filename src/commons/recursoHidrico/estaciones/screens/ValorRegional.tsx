@@ -92,8 +92,8 @@ export const ValorRegional: React.FC = () => {
         { field: 'nombre_sub_zona_hidrica', headerName: ' Zub zona hidrica  ', width: 130, flex: 1 },
         { field: 'codigo_rio', headerName: 'Codigo rio  ', width: 130, flex: 1 },
         { field: 'valor_regional', headerName: 'Factor regional', width: 130, flex: 1 },
-        // { field: 'fecha_inicio', headerName: 'Fecha de inicio   ', width: 130, flex: 1 },
-        // { field: 'fecha_fin', headerName: 'Fecha de fin', width: 130, flex: 1 },
+        { field: 'fecha_inicio', headerName: 'Fecha de inicio   ', width: 130, flex: 1 },
+        { field: 'fecha_fin', headerName: 'Fecha de fin', width: 130, flex: 1 },
 
         {
             field: 'acciones',
