@@ -113,7 +113,7 @@ const BitacoraViajes: React.FC = () => {
           boxShadow: "0px 3px 6px #042F4A26",
           borderRadius: "15px",
           margin: "auto",
-          p: "20px",
+          p: "40px",
           mb: "20px",
         }}
       >
