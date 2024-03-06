@@ -3,7 +3,7 @@
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
-import { setCurrentTareaPqrsdfTramitesUotrosUopas, setListaTareasPqrsdfTramitesUotrosUopas } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
+import { setCurrentTareaPqrsdfTramitesUotrosUopas, setInfoTarea, setListaTareasPqrsdfTramitesUotrosUopas } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import {
   useAppDispatch,
   useAppSelector,
@@ -27,6 +27,11 @@ import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
 import { putAceptarTareaOpa } from '../../../../../../../toolkit/thunks/opas/putAceptarTareaOpa.service';
 import { getListadoTareasOpasByPerson } from '../../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
+import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
+import { getDetalleDeTarea } from '../../../../../services/servicesStates/pqrsdf/detalleDeTarea/getDetalleDeTarea.service';
+import { getDetalleDeTareaOpa } from '../../../../../services/servicesStates/opas/detalleTarea/getDetalleTareaOpas.service';
+import { getAnexosPqrsdf } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
+import { getAnexosTramites } from '../../../../../services/servicesStates/tramites/anexos/getAnexosTramites.service';
 
 export const ElementoOPAS = (): JSX.Element => {
   //* dispatch declaration
@@ -46,6 +51,7 @@ export const ElementoOPAS = (): JSX.Element => {
   const navigate = useNavigate();
 
   //* context declaration
+  const { setAnexos } = useContext(BandejaTareasContext);
   const {
     handleOpenModalOne: handleOpenInfoAnexos,
     handleOpenModalTwo: handleOpenInfoMetadatos,
@@ -424,18 +430,18 @@ export const ElementoOPAS = (): JSX.Element => {
                   //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
                   console.log(params.row);
 
-                  /* (async () => {
+                (async () => {
                       try {
-                        const idPqrsdf = params?.row?.id_pqrsdf;
-                        const [detalleTarea, anexosPqrsdf] = await Promise.all([
-                          getDetalleDeTarea(idPqrsdf, navigate),
-                          getAnexosPqrsdf(idPqrsdf),
+                        const idTramite = params?.row?.id_tramite;
+                        const [detalleTarea, anexosOpa] = await Promise.all([
+                          getDetalleDeTareaOpa(idTramite, navigate),
+                          getAnexosTramites(idTramite),
                         ]);
                         dispatch(setInfoTarea(detalleTarea));
-                        setAnexos(anexosPqrsdf);
-                        if (detalleTarea || anexosPqrsdf.length > 0) {
+                        setAnexos(anexosOpa);
+                        if (detalleTarea || anexosOpa.length > 0) {
                           navigate(
-                            `/app/gestor_documental/bandeja_tareas/info_tarea/${idPqrsdf}`
+                            `/app/gestor_documental/bandeja_tareas/info_tarea_opas/${idTramite}`
                           );
                           handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                           //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
@@ -445,7 +451,7 @@ export const ElementoOPAS = (): JSX.Element => {
                         console.error(error);
                         // Handle the error appropriately here
                       }
-                    })();*/
+                    })();
                 }}
               >
                 <Avatar

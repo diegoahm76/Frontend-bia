@@ -120,14 +120,14 @@ const newActions = [
     id: 'RespondeSolicitud',
     icon: <ReplyAllIcon />,
     name: 'Responder OPA',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/respuesta_opas/',
     disabled: false,
   },
   {
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario sobre OPA',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/requerimiento_a_usuario_opas/',
     disabled: false,
   },
 ];
