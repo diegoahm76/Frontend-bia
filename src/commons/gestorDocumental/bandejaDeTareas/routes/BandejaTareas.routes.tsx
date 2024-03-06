@@ -12,6 +12,7 @@ import { VistaComplementoTarea } from '../mainModule/bandejaDeTareas/components/
 import { MainScreenSeguimientoTarea } from '../modules/seguimientoTarea/screen/MainScreenSeguimientoTarea';
 import { VistaTareasOtros } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/otros/VistaTareasOtros';
 import { VistaTareasTramites } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/tramites/VistaTareaTramites';
+import { VistaTareasOpas } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/opas/VistaTareasOpas';
 
 const routes = [
   {
@@ -71,6 +72,29 @@ const routes = [
   {
     path: 'info_tarea_complemento_tramite/:idComplementoUsu_PQR',
     component: () => <VistaTareasTramites />,
+  },
+  {
+    path: 'info_tarea_opas/:id_tramite',
+    component: () => <VistaTareasOpas />,
+  },
+
+
+  //* respuesta y requerimiento opas
+  {
+    path: 'requerimiento_a_usuario_opas/',
+    component: () => (
+      <>
+        <>Requirimiento opas</>
+      </>
+    ),
+  },
+  {
+    path: 'respuesta_opas/',
+    component: () => (
+      <>
+        <>Respuesta opas</>
+      </>
+    ),
   },
 ];
 
