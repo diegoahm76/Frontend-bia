@@ -116,3 +116,14 @@ export const editar_aprobacion_viaje: any = (id_viaje_agendado: number, form_dat
     }
   };
 };
+
+export const listar_municipios: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('choices/municipios/');
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};

@@ -10,7 +10,7 @@ import {
   FormLabel,
   Switch
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Title } from "../../../../components";
 import SearchIcon from "@mui/icons-material/Search";
 import TableBitacoraViajes from "../tables/TableBitacoraViajes";
@@ -18,28 +18,56 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import GenerarBitacora from "./GenerarBitacora";
-import { interface_data_bitacora } from "../interfaces/types";
+import { useAppDispatch } from "../../../../hooks";
+import { data_busqueda_conductores, interface_agendamientos_bitacora, response_agendamientos_bitacora } from "../interfaces/types";
+import { control_error } from "../../../../helpers";
+import { buscar_agendamientos } from "../thunks/bitacora_viajes";
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import BusquedaConductores from "./BusquedaConductores";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const BitacoraViajes: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [mostrar_generar_bitacora, set_mostrar_generar_bitacora] = useState<boolean>(false);
-  const [mostrar_busqueda_vehiculos, set_mostrar_busqueda_vehiculos] = useState<boolean>(false);
-  const [fecha_inicio, set_fecha_inicio] = useState<Dayjs>(dayjs());
-  const [msj_error_fecha_inicio, set_msj_error_fecha_inicio] = useState<string>("");
-  const [fecha_fin, set_fecha_fin] = useState<Dayjs>(dayjs());
-  const [msj_error_fecha_fin, set_msj_error_fecha_fin] = useState<string>("");
+
+  const [fecha_inicio, set_fecha_inicio] = useState<Dayjs | null>(null);
+  const [fecha_fin, set_fecha_fin] = useState<Dayjs | null>(null);
   const [estado, set_estado] = useState<string>("");
   const [msj_error_estado, set_msj_error_estado] = useState<string>("");
-  const [es_conductor_asignado, set_es_conductor_asignado] = useState<boolean>(false);
-  const [dato_fila_tabla, set_dato_fila_tabla] = useState<interface_data_bitacora>({
-    municipioDestino: '',
-    conductorAsignado: '',
-    fechaSalida: '',
-    horaSalida: '',
-    fechaRetorno: '',
-    horaRetorno: ''
-  });
+  const [data_table_bitacora, set_data_table_bitacora] = useState<interface_agendamientos_bitacora[]>(Object);
+   
+  const [data_solicitud_agendada, set_data_solicitud_agendada] = useState<interface_agendamientos_bitacora>(Object);
+
+  const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
+
+  const buscar_agendamientos_fc: () => void = () => {
+    dispatch(buscar_agendamientos(
+      fecha_inicio?.format('YYYY-MM-DD') ?? '',
+      fecha_fin?.format('YYYY-MM-DD')  ?? '',
+      estado
+      ))
+      .then((response: response_agendamientos_bitacora) => {
+        if (response.data.length !== 0) {
+          set_data_table_bitacora(response.data);
+        } else {
+          control_error('No se encontraron agendamientos');
+          set_data_table_bitacora([]);
+        }
+      })
+      .catch((error: any) => {
+        console.error(error);
+      })
+  }
+
+  const agenmientos_bitacora_obtenidos = useRef(false);
+  useEffect(()=>{
+    if (!agenmientos_bitacora_obtenidos.current) {
+      buscar_agendamientos_fc();
+      agenmientos_bitacora_obtenidos.current = true;
+    }
+  },[refrescar_tabla])
+
 
   //Podemos formatear la fecha guardada en el estado de esta manera
   //let fecha_formateada = fecha_inicio.format("YYYY-MM-DD");
@@ -47,18 +75,12 @@ const BitacoraViajes: React.FC = () => {
   const cambio_fecha_inicio = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_inicio(date);
-      set_msj_error_fecha_inicio("");
-    } else {
-      set_msj_error_fecha_inicio("El campo Fecha inicio es obligatorio.");
     }
   };
 
   const cambio_fecha_fin = (date: Dayjs | null): void => {
     if (date !== null) {
       set_fecha_fin(date);
-      set_msj_error_fecha_fin("");
-    } else {
-      set_msj_error_fecha_fin("El campo Fecha inicio es obligatorio.");
     }
   };
 
@@ -69,6 +91,17 @@ const BitacoraViajes: React.FC = () => {
     if (e.target.value !== null && e.target.value !== "")
       set_msj_error_estado("");
   };
+
+  const limpiar_filtros = () => {
+    set_fecha_inicio(null)
+    set_fecha_fin(null)
+    set_estado('')
+  }
+
+  const consultar_solicitudes = () => {
+    buscar_agendamientos_fc();
+  }
+
 
 
   return (
@@ -84,7 +117,7 @@ const BitacoraViajes: React.FC = () => {
           boxShadow: "0px 3px 6px #042F4A26",
           borderRadius: "15px",
           margin: "auto",
-          p: "20px",
+          p: "40px",
           mb: "20px",
         }}
       >
@@ -97,22 +130,23 @@ const BitacoraViajes: React.FC = () => {
           }}
           spacing={1}
         >
-          <Grid item xs={2}>
+          <Grid item xs={12} md={2}>
             <FormControl required size="small" fullWidth>
               <InputLabel>Estado</InputLabel>
               <Select
+                fullWidth
                 label="Estado"
                 value={estado}
                 onChange={cambio_estado}
                 error={msj_error_estado !== ""}
               >
-                <MenuItem value={"activo"}>Activo</MenuItem>
-                <MenuItem value={"finalizado"}>Finalizado</MenuItem>
+                <MenuItem value={"AC"}>Activo</MenuItem>
+                <MenuItem value={"FI"}>Finalizado</MenuItem>
               </Select>
             </FormControl>
           </Grid>
 
-          <Grid item xs={2}>
+          <Grid item xs={12} md={2}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Desde:"
@@ -128,7 +162,7 @@ const BitacoraViajes: React.FC = () => {
             </LocalizationProvider>
           </Grid>
 
-          <Grid item xs={2}>
+          <Grid item xs={12} md={2}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Hasta:"
@@ -144,13 +178,27 @@ const BitacoraViajes: React.FC = () => {
             </LocalizationProvider>
           </Grid>
 
-          <Grid item xs={2}>
+          <Grid item xs={12} md={2}>
             <Button
+              fullWidth
               color="primary"
               variant="contained"
               startIcon={<SearchIcon />}
+              onClick={consultar_solicitudes}
             >
               Buscar
+            </Button>
+          </Grid>
+
+          <Grid item xs={12} md={2}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="outlined"
+              startIcon={<CleaningServicesIcon />}
+              onClick={limpiar_filtros}
+            >
+              Limpiar
             </Button>
           </Grid>
 
@@ -163,14 +211,20 @@ const BitacoraViajes: React.FC = () => {
               justifyContent: "center",
             }}
           >
-            <TableBitacoraViajes 
-              set_dato_fila_tabla={set_dato_fila_tabla}
+            <TableBitacoraViajes
+              set_data_solicitud_agendada={set_data_solicitud_agendada}
+              data_table_bitacora={data_table_bitacora}
               set_mostrar_generar_bitacora={set_mostrar_generar_bitacora}/>
           </Grid>
         </Grid>
 
         {mostrar_generar_bitacora &&
-          <GenerarBitacora dato_fila_tabla={dato_fila_tabla} set_mostrar_generar_bitacora={set_mostrar_generar_bitacora} />
+          <GenerarBitacora
+            refrescar_tabla={refrescar_tabla }
+            set_refrescar_tabla={set_refrescar_tabla}
+            data_solicitud_agendada={data_solicitud_agendada}
+            set_mostrar_generar_bitacora={set_mostrar_generar_bitacora}
+          />
         }
 
       </Grid>

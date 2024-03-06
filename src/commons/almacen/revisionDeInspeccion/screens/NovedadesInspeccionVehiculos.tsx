@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import VehiculosSinNovedad from "./VehiculosSinNovedad";
-import VehiculoConNovedad from "../components/VehiculoConNovedad";
-import RowVehiculo from "../components/RowVehiculo";
 import { useEffect, useState } from "react";
-import ElementosInspeccionadosView from "../components/ElementosInspeccionadosView";
 import { interface_put_revisar_vehiculo, interface_vehiculos_con_novedad, interface_vehiculos_sin_novedad, response_vehiculos_inspeccionados } from "../interfaces/types";
 import { useAppDispatch } from "../../../../hooks";
-import { obtener_vehiculos_inspeccionados } from "../thunks/inspeccion_vehiculos";
+import { obtener_vehiculos_inspeccionados } from "../thunks/revision_inspeccion";
 import { control_error } from "../../../../helpers";
 import { Grid } from "@mui/material";
+import VehiculosSinNovedad from "../components/VehiculosSinNovedad";
+import RowVehiculo from "../components/RowVehiculo";
+import ElementosInspeccionadosView from "../components/ElementosInspeccionadosView";
+import VehiculoConNovedad from "../components/VehiculoConNovedad";
 
-const NovedadesInspeccionVehiculo = () => {
+const NovedadesInspeccionVehiculos = () => {
   const dispatch = useAppDispatch();
 
   const [mostrar_view_inpeccion, set_mostrar_view_inpeccion] = useState<boolean>(false);
@@ -35,10 +35,6 @@ const NovedadesInspeccionVehiculo = () => {
   useEffect(() => {
     obtener_vehiculos_inspeccionados_fc();
   }, [mostrar_view_inpeccion])
-
-  useEffect(() => {
-    console.log(data_vehiculos_con_novedad);
-  }, [data_vehiculos_con_novedad])
 
   return (
     <>
@@ -67,7 +63,7 @@ const NovedadesInspeccionVehiculo = () => {
       }
 
       {mostrar_view_inpeccion && 
-      <ElementosInspeccionadosView 
+      <ElementosInspeccionadosView
         data_inspeccion_revisada={data_inspeccion_revisada}
         set_mostrar_view_inpeccion={set_mostrar_view_inpeccion}
       />}
@@ -76,4 +72,4 @@ const NovedadesInspeccionVehiculo = () => {
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default NovedadesInspeccionVehiculo;
+export default NovedadesInspeccionVehiculos;

@@ -9,6 +9,9 @@ import { control_error, control_success } from '../../../../helpers';
 import Swal from 'sweetalert2';
 import { useAppDispatch } from '../../../../hooks';
 import { elimiar_asignacion_vehiculo } from '../thunks/asignacion_vehiculos';
+import { ButtonGroup, Grid } from '@mui/material';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 interface custom_column extends GridColDef {
   renderCell?: (params: { row: data_asignacion_vehiculos }) => React.ReactNode;
@@ -77,7 +80,7 @@ const AsignacionVehiculos: React.FC<props> = ({
     { field: 'fecha_inicio_asignacion', headerName: 'Fecha inicio', minWidth: 120, flex: 1 },
     { field: 'fecha_final_asignacion', headerName: 'Fecha Final', minWidth: 120, flex: 1 },
     {
-      field: 'id_asignacion',
+      field: 'asignar',
       headerName: 'Asignar',
       width: 80,
       align: 'center',
@@ -91,26 +94,44 @@ const AsignacionVehiculos: React.FC<props> = ({
   ];
 
   return (
-    <DataGrid
-      style={{margin:'15px 0px'}}
-      density="compact"
-      autoHeight
-      rows={data_asignacion_vehiculos ?? []}
-      columns={columns ?? []}
-      pageSize={5}
-      rowHeight={75}
-      rowsPerPageOptions={[5]}
-      experimentalFeatures={{ newEditingApi: true }}
-      getRowId={() => {
-        try {
-          return uuidv4();
-        } catch (error) {
-          console.error(error);
-          //? Genera un ID de respaldo único
-          return `fallback-id-${Date.now()}-${Math.random()}`;
-        }
-      }}
-    />
+    <>
+      <Grid item xs={12} container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center" >
+        <Grid item  >
+          <ButtonGroup style={{ margin: 5, }}>
+              {download_xls({ nurseries: data_asignacion_vehiculos, columns })}
+              {download_pdf({
+                  nurseries: data_asignacion_vehiculos,
+                  columns,
+                  title: 'Asignaciónes de vehículos',
+              })}
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+
+      <DataGrid
+        style={{margin:'15px 0px'}}
+        density="compact"
+        autoHeight
+        rows={data_asignacion_vehiculos ?? []}
+        columns={columns ?? []}
+        pageSize={5}
+        rowHeight={75}
+        rowsPerPageOptions={[5]}
+        experimentalFeatures={{ newEditingApi: true }}
+        getRowId={() => {
+          try {
+            return uuidv4();
+          } catch (error) {
+            console.error(error);
+            //? Genera un ID de respaldo único
+            return `fallback-id-${Date.now()}-${Math.random()}`;
+          }
+        }}
+      />
+    </>
   );
 }
 

@@ -1,5 +1,5 @@
 import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Switch, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -9,7 +9,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
-import { data_solicitud_viaje, interface_solicitar_viaje, interface_solicitud_respondida, response_solicitud_respondida, viajes_agendados } from '../interfaces/types';
+import { data_solicitud_viaje, interface_solicitar_viaje, interface_solicitud_respondida, response_solicitud_respondida } from '../interfaces/types';
 import ViajeAgendado from './ViajeAgendado';
 import { control_error } from '../../../../helpers';
 import Swal from 'sweetalert2';
@@ -53,6 +53,7 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
   const [municipio_editar, set_municipio_editar] = useState<string>('73001');
 
 
+  // Estados de mensajes de error
   const [msj_error_departamento, set_msj_error_departamento] = useState<string>('');
   const [msj_error_municipio, set_msj_error_municipio] = useState<string>("");
   const [msj_error_numero_pasajeros, set_msj_error_numero_pasajeros] = useState<string>("");
@@ -62,12 +63,18 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
   const [msj_error_id_expediente, set_msj_error_id_expediente] = useState<string>("");
   
 
+  // Estado para editar los datos de la solicitud de viaje
   const [editar_datos_solicitar_viaje, set_editar_datos_solicitar_viaje] = useState<data_solicitud_viaje>(Object);
+
+  // Estado para almacenar los datos de la solicitud de viaje
   const [datos_solicitar_viaje, set_datos_solicitar_viaje] = useState<interface_solicitar_viaje>();
-  const [solicitud_respondida, set_solicitud_respondida] = useState<viajes_agendados>(Object);
+
+  // Estado para almacenar la solicitud de viaje respondida
+  const [solicitud_respondida, set_solicitud_respondida] = useState<interface_solicitud_respondida>(Object);
   
 
   useEffect(()=>{
+    // Establece los datos de la solicitud de viaje en el estado correspondiente
     set_datos_solicitar_viaje({
       ...(accion === 'crear' ? { motivo_viaje_solicitado: motivo_viaje } : accion === 'editar' && { motivo_viaje: motivo_viaje }),
       cod_municipio: municipio,  // Código del municipio de destino
@@ -292,7 +299,6 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     }
   },[id_expediente])
 
-
   /**
    * Maneja la acción de enviar la solicitud de viaje.
    * Realiza una validación de los datos antes de enviar la solicitud.
@@ -310,7 +316,6 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
       limpiar_formulario_solicitar_viaje();
     }
   }
-
 
   /**
    * Maneja la acción de editar una solicitud de viaje.
@@ -332,7 +337,6 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     }
   }
 
-
   /**
    * Maneja la acción de enviar o editar el formulario de solicitud de viaje.
    * Llama a la función correspondiente según la acción actual.
@@ -348,7 +352,6 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
       return;
     }
   }
-
 
   /**
    * Maneja la acción de buscar expedientes.
@@ -388,7 +391,6 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     })
   }
 
-
   /**
    * Obtiene la lista de departamentos y actualiza el estado correspondiente.
    * 
@@ -413,18 +415,26 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
     })
   }
 
+  const municipio_departamentos_obtenido = useRef(false);
   useEffect(()=>{
-    obtener_departamentos();
-    obtener_municipios();
-  },[])
+    if(!municipio_departamentos_obtenido.current){
+      obtener_departamentos();
+      obtener_municipios();
+      municipio_departamentos_obtenido.current = true;
+    }
+  },[]);
   
   /**
    * Efecto secundario que se ejecuta al montar el componente y cuando cambian ciertos valores.
    * Obtiene la lista de departamentos, municipios y las solicitudes de viaje si se está editando o viendo una solicitud.
    */
+  const solicitudes_obtenidas = useRef(false);
   useEffect( ()=>{
-    if(accion === 'editar' || accion === 'ver'){   
-      obtener_solicitudes_fc();
+    if(!solicitudes_obtenidas.current){
+      if(accion === 'editar' || accion === 'ver'){   
+        obtener_solicitudes_fc();
+      }
+      solicitudes_obtenidas.current = true;
     }
   },[id_solicitud_editar,accion]);
 
@@ -434,19 +444,26 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
    */
   useEffect(()=>{
     if(Object.keys(editar_datos_solicitar_viaje).length !== 0){
-  
-      if(accion === 'editar' || accion === 'ver'){
+      // Comprueba si la acción es 'editar' o 'ver'
+      if (accion === 'editar' || accion === 'ver') {
+        // Obtiene el motivo de viaje de los datos de edición o solicitud
         const motivo_viaje = editar_datos_solicitar_viaje.motivo_viaje
           ? editar_datos_solicitar_viaje.motivo_viaje
           : editar_datos_solicitar_viaje.motivo_viaje_solicitado;
-        if(editar_datos_solicitar_viaje.id_expediente_asociado){
-          set_id_expediente(editar_datos_solicitar_viaje.id_expediente_asociado)
-        } else{
+
+        // Si hay un expediente asociado, establece el ID del expediente, de lo contrario, establece el ID en 0
+        if (editar_datos_solicitar_viaje.id_expediente_asociado) {
+          set_id_expediente(editar_datos_solicitar_viaje.id_expediente_asociado);
+        } else {
           set_id_expediente(0);
         }
-        if(motivo_viaje !== undefined){
+        
+        // Si hay un motivo de viaje definido, establece el motivo de viaje en el estado correspondiente
+        if (motivo_viaje !== undefined) {
           set_motivo_viaje(motivo_viaje);
         }
+        
+        // Establece los valores de los otros estados con los datos de edición o solicitud
         set_switch_expediente_asociado(editar_datos_solicitar_viaje.tiene_expediente_asociado);
         set_direccion(editar_datos_solicitar_viaje.direccion);
         set_indicadores_destino(editar_datos_solicitar_viaje.indicaciones_destino);
@@ -464,16 +481,19 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
         set_municipio(editar_datos_solicitar_viaje.cod_municipio);
         set_departamento(editar_datos_solicitar_viaje.cod_departamento);
       }
-      if(accion === 'editar'){
+      
+      // Si la acción es 'editar', establece la justificación de rechazo en el estado correspondiente
+      if (accion === 'editar') {
         set_justificacion_rechazo(editar_datos_solicitar_viaje.justificacion_rechazo);
       }
-      if(accion === 'ver'){
+      
+      // Si la acción es 'ver', obtiene el agendamiento de la solicitud de viaje
+      if (accion === 'ver') {
         obtener_agendamiento_solicitud_fc(editar_datos_solicitar_viaje.id_solicitud_viaje);
       }
     }
   },[editar_datos_solicitar_viaje,id_solicitud_editar])
 
-  
   /**
    * Obtiene el departamento seleccionado en base al código del departamento a editar.
    */
@@ -484,7 +504,7 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
   /**
    * Filtra los municipios basándose en el departamento seleccionado.
    */
-  const municipios_filtrados = municipios && municipios.filter(
+  const municipios_filtrados = municipios && municipios?.filter(
     ([codigoMunicipio, nombre]: [string, string]) => codigoMunicipio.startsWith(departamento_seleccionado && departamento_seleccionado[0])
   );
 
@@ -527,13 +547,12 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
   return (
     <Grid
       container
-      spacing={2}
       marginTop={2}
       sx={{
         position: "relative",
         background: "#FAFAFA",
         borderRadius: "15px",
-        p: "20px",
+        p: "40px",
         mb: "20px",
         boxShadow: "0px 3px 6px #042F4A26",
       }}
@@ -548,7 +567,8 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
       <Title title="Solicitar viaje" />
       <Grid
         container
-        rowSpacing={2}
+        spacing={2}
+        rowSpacing={3}
         sx={{
           marginTop: "10px",
         }}
@@ -709,7 +729,7 @@ const SolicitarViaje: React.FC<props> = ({set_mostrar_solicitud_viaje,set_refres
                 error={msj_error_municipio !== ""}
               >
                 {accion === 'crear' ? departamento ? municipios &&
-                  municipios.filter(([codigoMunicipio]: [string]) => {
+                  municipios?.filter(([codigoMunicipio]: [string]) => {
                     return codigoMunicipio.startsWith(departamento);
                   })
                   .map(([codigoMunicipio, nombre]: [string, string]) => (

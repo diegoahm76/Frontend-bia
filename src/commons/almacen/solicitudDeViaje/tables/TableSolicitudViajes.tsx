@@ -1,17 +1,19 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid } from "@mui/material";
+import { ButtonGroup, Grid } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from 'uuid';
-import { data_solicitud_viaje, interface_solicitar_viaje } from "../interfaces/types";
+import { data_solicitud_viaje } from "../interfaces/types";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import { elimiar_solicitud_viaje, listar_municipios } from "../thunks/viajes";
+import { elimiar_solicitud_viaje } from "../thunks/viajes";
 import { useAppDispatch } from "../../../../hooks";
 import { control_success } from "../../../../helpers";
 import Swal from "sweetalert2";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
+import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
+import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
 
 
 
@@ -156,6 +158,22 @@ const TableSolicitudViajes: FC<props_table> = ({
 
   return (
     <Grid container>
+      <Grid item xs={12} container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center" >
+        <Grid item  >
+          <ButtonGroup style={{ margin: 5, }}>
+              {download_xls({ nurseries: data_row_solicitud_viaje, columns })}
+              {download_pdf({
+                  nurseries: data_row_solicitud_viaje,
+                  columns,
+                  title: 'Solicitudes de viajes',
+              })}
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+
       <DataGrid
       style={{margin:'15px 0px'}}
       density="compact"

@@ -5,13 +5,11 @@ import TarjetaInspeccion from "./TarjetaInspeccion";
 import { useEffect, useState } from "react";
 import { cambio_input_radio } from "../thunks/cambio_input_radio";
 import { Title } from "../../../../components";
-import CleanIcon from '@mui/icons-material/CleaningServices';
 import ContenedorInput from "./ContenedorInput";
 import { estilo_radio } from "../thunks/estilo_radio";
-import { useAppDispatch } from "../../../../hooks";
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import CloseIcon from '@mui/icons-material/Close';
-import { get_inspeccion_vehiculo, interface_put_revisar_vehiculo } from "../interfaces/types";
+import { interface_put_revisar_vehiculo } from "../interfaces/types";
 import { useNavigate } from "react-router-dom";
 
 interface props {
@@ -19,45 +17,47 @@ interface props {
   data_inspeccion_revisada: interface_put_revisar_vehiculo;
 }
 
-
 const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccion,data_inspeccion_revisada}) => {
   const navigate = useNavigate();
 
-  const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('false');
-  const [direcionales_traseras, set_direcionales_traseras] = useState<string>('true');
-  const [limpiabrisas_delantero, set_limpiabrisas_delantero] = useState<string>('true');
-  const [limpiabrisas_trasero, set_limpiabrisas_trasero] = useState<string>('true');
-  const [nivel_aceite, set_nivel_aceite] = useState<string>('true');
-  const [nivel_frenos, set_nivel_frenos] = useState<string>('true');
-  const [frenos_generales, set_frenos_generales] = useState<string>('true');
-  const [frenos_emergencia, set_frenos_emergencia] = useState<string>('true');
-  const [nivel_refrigerante, set_nivel_refrigerante] = useState<string>('true');
-  const [apoyacabezas_piloto, set_apoyacabezas_piloto] = useState<string>('true');
-  const [apoyacabezas_copiloto, set_apoyacabezas_copiloto] = useState<string>('true');
-  const [apoyacabezas_traseros, set_apoyacabezas_traseros] = useState<string>('true');
-  const [llantas_delanteras, set_llantas_delanteras] = useState<string>('true');
-  const [llantas_traseras, set_llantas_traseras] = useState<string>('true');
-  const [llanta_repuesto, set_llanta_repuesto] = useState<string>('true');
-  const [espejos_laterales, set_espejos_laterales] = useState<string>('true');
-  const [espejos_retrovisor, set_espejos_retrovisor] = useState<string>('true');
-  const [cinturones_delanteros, set_cinturones_delanteros] = useState<string>('true');
-  const [cinturones_traseros, set_cinturones_traseros] = useState<string>('true');
-  const [luces_altas, set_luces_altas] = useState<string>('true');
-  const [luces_medias, set_luces_medias] = useState<string>('true');
-  const [luces_bajas, set_luces_bajas] = useState<string>('true');
-  const [luces_parada, set_luces_parada] = useState<string>('true');
-  const [luces_parqueo, set_luces_parqueo] = useState<string>('true');
-  const [luces_reversa, set_luces_reversa] = useState<string>('true');
-  const [kit_herramientas, set_kit_herramientas] = useState<string>('true');
-  const [botiquin_completo, set_botiquin_completo] = useState<string>('true');
-  const [pito, set_pito] = useState<string>('true');
+  // Estados de los elementos inspeccionados
+  const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('true'); // Direcionales delanteras
+  const [direcionales_traseras, set_direcionales_traseras] = useState<string>('true'); // Direcionales traseras
+  const [limpiabrisas_delantero, set_limpiabrisas_delantero] = useState<string>('true'); // Limpiabrisas delantero
+  const [limpiabrisas_trasero, set_limpiabrisas_trasero] = useState<string>('true'); // Limpiabrisas trasero
+  const [nivel_aceite, set_nivel_aceite] = useState<string>('true'); // Nivel de aceite
+  const [nivel_frenos, set_nivel_frenos] = useState<string>('true'); // Nivel de frenos
+  const [frenos_generales, set_frenos_generales] = useState<string>('true'); // Frenos generales
+  const [frenos_emergencia, set_frenos_emergencia] = useState<string>('true'); // Frenos de emergencia
+  const [nivel_refrigerante, set_nivel_refrigerante] = useState<string>('true'); // Nivel de refrigerante
+  const [apoyacabezas_piloto, set_apoyacabezas_piloto] = useState<string>('true'); // Apoyacabezas del piloto
+  const [apoyacabezas_copiloto, set_apoyacabezas_copiloto] = useState<string>('true'); // Apoyacabezas del copiloto
+  const [apoyacabezas_traseros, set_apoyacabezas_traseros] = useState<string>('true'); // Apoyacabezas traseros
+  const [llantas_delanteras, set_llantas_delanteras] = useState<string>('true'); // Llantas delanteras
+  const [llantas_traseras, set_llantas_traseras] = useState<string>('true'); // Llantas traseras
+  const [llanta_repuesto, set_llanta_repuesto] = useState<string>('true'); // Llanta de repuesto
+  const [espejos_laterales, set_espejos_laterales] = useState<string>('true'); // Espejos laterales
+  const [espejos_retrovisor, set_espejos_retrovisor] = useState<string>('true'); // Espejo retrovisor
+  const [cinturones_delanteros, set_cinturones_delanteros] = useState<string>('true'); // Cinturones delanteros
+  const [cinturones_traseros, set_cinturones_traseros] = useState<string>('true'); // Cinturones traseros
+  const [luces_altas, set_luces_altas] = useState<string>('true'); // Luces altas
+  const [luces_medias, set_luces_medias] = useState<string>('true'); // Luces medias
+  const [luces_bajas, set_luces_bajas] = useState<string>('true'); // Luces bajas
+  const [luces_parada, set_luces_parada] = useState<string>('true'); // Luces de parada
+  const [luces_parqueo, set_luces_parqueo] = useState<string>('true'); // Luces de parqueo
+  const [luces_reversa, set_luces_reversa] = useState<string>('true'); // Luces de reversa
+  const [kit_herramientas, set_kit_herramientas] = useState<string>('true'); // Kit de herramientas
+  const [botiquin_completo, set_botiquin_completo] = useState<string>('true'); // Botiquín completo
+  const [pito, set_pito] = useState<string>('true'); // Pito
 
+  // Estados de observaciones
   const [observaciones, set_observaciones] = useState<string>('');
   const [tiene_observaciones, set_tiene_observaciones] = useState<boolean>(false);
 
 
   useEffect(()=>{
-    if(Object.keys(data_inspeccion_revisada).length !== 0){
+    // Comentario: Este hook se ejecuta cuando cambia el valor de la variable "data_inspeccion_revisada"
+    if(data_inspeccion_revisada !== undefined && Object.keys(data_inspeccion_revisada).length !== 0){
       set_direcionales_delanteras(data_inspeccion_revisada.dir_llantas_delanteras.toString());
       set_direcionales_traseras(data_inspeccion_revisada.dir_llantas_Traseras.toString());
       set_limpiabrisas_delantero(data_inspeccion_revisada.limpiabrisas_delantero.toString());
@@ -90,21 +90,19 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
   },[data_inspeccion_revisada]);
 
   useEffect(()=>{
-    if('observaciones' in data_inspeccion_revisada){
-      set_tiene_observaciones(true);
-      set_observaciones(data_inspeccion_revisada?.observaciones ?? '')
+    if(data_inspeccion_revisada !== undefined && Object.keys(data_inspeccion_revisada).length !== 0){
+      if('observaciones' in data_inspeccion_revisada){
+        set_tiene_observaciones(true);
+        set_observaciones(data_inspeccion_revisada?.observaciones ?? '')
+      }
     }
   },[data_inspeccion_revisada])
 
-  useEffect(()=>{
-    console.log(data_inspeccion_revisada);
-  },[])
-
+  // Redirige a la página de programación de mantenimiento de vehículos
   const redirect_mantenimiento = () => {
     navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_vehiculos');
   }
   
-
   return (
     <Grid
       container
@@ -123,6 +121,23 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
       }}
       >
       <Title title="Elementos a inspeccionar" />
+
+      <Grid item container xs={12}>
+        <Grid item xs={12} md={2} sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+        }}>
+          <TextField
+            label='Kilometraje'
+            value={data_inspeccion_revisada?.kilometraje ? Number(data_inspeccion_revisada.kilometraje).toLocaleString() : ''}
+            disabled
+            size="small"
+            fullWidth
+          />
+          <FormLabel>KM</FormLabel>
+        </Grid>
+      </Grid>
 
       <TarjetaInspeccion title="Direccionales">
         <ContenedorInput>
