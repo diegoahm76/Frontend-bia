@@ -223,6 +223,7 @@ export const {
   setActionssTareasPQRSDF,
   setActionsTareasOtros,
   setActionsTareasTramites,
+  setActionsTareasOpas,
 
   // ? lista de las tareas tras la busqueda
   setListaTareasPqrsdfTramitesUotrosUopas,
