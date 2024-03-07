@@ -335,7 +335,7 @@ const ListadoPqrsdf = () => {
             on_click_function={null}
             icon_class={null}
             disabled={!(button_option === 'restart')}
-            label="Reaunar PQRSDF"
+            label="Reanudar PQRSDF"
             type_button="button"
             color_button={'secondary'}
           />
