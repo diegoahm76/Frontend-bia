@@ -62,6 +62,7 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
   },[])
 
   const ver_agendamiento = (params: interface_data_agendamiento_vehiculos) => {
+    console.log(params);    
     set_id_solicitud_viaje(params.id_solicitud_viaje ?? 0);
     set_mostrar_agendamiento_vehiculo(true);
     set_mostrar_vehiculo_agregado(true);
