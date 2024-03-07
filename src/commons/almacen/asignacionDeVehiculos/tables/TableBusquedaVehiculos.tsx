@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState } from 'react';
-import { data_busqueda_vehiculos } from '../interfaces/types';
+import { interface_vehiculo_seleccionado } from '../interfaces/types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -11,20 +11,20 @@ import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 
 interface CustomColumn extends GridColDef {
-  renderCell?: (params: { row: data_busqueda_vehiculos }) => React.ReactNode;
+  renderCell?: (params: { row: interface_vehiculo_seleccionado }) => React.ReactNode;
 }
 
 interface props {
-  data_busqueda_vehiculos: data_busqueda_vehiculos[];
+  data_busqueda_vehiculos: interface_vehiculo_seleccionado[];
   set_id_hoja_vida_vehiculo:React.Dispatch<React.SetStateAction<number>>
-  set_vehiculo_placa:React.Dispatch<React.SetStateAction<string>>
+  set_vehiculo_seleccionado:React.Dispatch<React.SetStateAction<interface_vehiculo_seleccionado>>
 }
 
 
-const TableBusquedaVehiculos: React.FC<props> = ({data_busqueda_vehiculos, set_id_hoja_vida_vehiculo,set_vehiculo_placa}) => {
+const TableBusquedaVehiculos: React.FC<props> = ({data_busqueda_vehiculos, set_id_hoja_vida_vehiculo,set_vehiculo_seleccionado}) => {
 
-  const asignar_vehiculo = (params: data_busqueda_vehiculos) => {
-    set_vehiculo_placa(params.vehiculo_placa)
+  const asignar_vehiculo = (params: interface_vehiculo_seleccionado) => {
+    set_vehiculo_seleccionado(params)
     set_id_hoja_vida_vehiculo(params.id_hoja_de_vida);
   }
 
