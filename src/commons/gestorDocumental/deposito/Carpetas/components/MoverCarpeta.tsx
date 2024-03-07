@@ -136,7 +136,7 @@ const MoverCarpeta = ({ control_carpeta_destino, open, handle_close_buscar, get_
                             borderRadius: '15px',
                             p: '20px',
                             mb: '20px',
-                            boxShadow: '0px 3px 6px #042F4A26',
+                           
                             marginTop: '20px',
                             marginLeft: '-5px',
                         }}

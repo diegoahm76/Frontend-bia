@@ -116,7 +116,7 @@ export function CrearOtroScreen(): JSX.Element {
       step_number: 1,
       optional: false,
       skipped: false,
-      step_title: 'Información de PQRSDF',
+      step_title: 'Información de solictudes otros',
       body: StepComponent(1),
       handle_submit: handle_submit_pqrsdf,
       validate: validate,
@@ -400,7 +400,7 @@ export function CrearOtroScreen(): JSX.Element {
       
         <FormStepper
           configuration_steps={configuration_steps}
-          message_success={`Formulario diligenciado correctamente, puede ${action} el PQRSDF`}
+          message_success={`Formulario diligenciado correctamente, puede ${action} la solicitud otros`}
           set_success={set_flag_create}
           step={step}
         />
