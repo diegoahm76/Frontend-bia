@@ -74,13 +74,13 @@ const actionsTramitesYServicios: Action[] = [
     path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
     disabled: false,
   },
-  {
+ /* {
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario',
     path: '',
     disabled: false,
-  },
+  },*/
   {
     id: 'VerRespuestasRequerimientosOSolicitudesAlUsuario',
     icon: <PreviewIcon />,
