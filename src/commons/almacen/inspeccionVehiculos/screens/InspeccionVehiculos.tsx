@@ -179,7 +179,7 @@ const InspeccionVehiculos = () => {
       }}>
         <Title title="Datos básicos del conductor" />
 
-        <Grid item xs={12} lg={3}>
+        <Grid item xs={12} lg={4}>
           <TextField
             fullWidth
             label='Nombres del conductor:'
@@ -191,7 +191,7 @@ const InspeccionVehiculos = () => {
           />
         </Grid>
 
-        <Grid item xs={12} lg={2}>
+        <Grid item xs={12} lg={4}>
           <TextField
             fullWidth
             label='Numero de documento:'
@@ -203,7 +203,7 @@ const InspeccionVehiculos = () => {
           />
         </Grid>
         
-        <Grid item xs={12} lg={2}>
+        <Grid item xs={12} lg={4}>
           <TextField
             fullWidth
             label='Número de celular:'
@@ -215,7 +215,7 @@ const InspeccionVehiculos = () => {
           />
         </Grid>
 
-        <Grid item xs={12} lg={2}>
+        <Grid item xs={12} lg={4}>
           <TextField
             fullWidth
             label='Correo electrónico:'
@@ -227,7 +227,7 @@ const InspeccionVehiculos = () => {
           />
         </Grid>
 
-        <Grid item xs={12} lg={1.5}>
+        <Grid item xs={12} lg={4}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               disabled
@@ -243,7 +243,7 @@ const InspeccionVehiculos = () => {
           </LocalizationProvider>
         </Grid>
 
-        <Grid item xs={12} lg={1.5}>
+        <Grid item xs={12} lg={4}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               disabled
@@ -277,7 +277,7 @@ const InspeccionVehiculos = () => {
         <Title title="Seleccionar vehículo" />
 
         <Grid item container xs={12} rowSpacing={1} columnSpacing={4}>
-          <Grid item container xs={12} md={4}>
+          <Grid item container xs={12} lg={4}>
             <TextField
               fullWidth
               label='Nombre del vehículo asignado:'
@@ -289,7 +289,7 @@ const InspeccionVehiculos = () => {
             />
           </Grid>
 
-          <Grid item container xs={12} md={4}>
+          <Grid item container xs={12} lg={4}>
             <Button
               fullWidth
               color='primary'
@@ -301,7 +301,7 @@ const InspeccionVehiculos = () => {
             </Button>
           </Grid>
 
-          <Grid item container xs={12} md={4}>
+          <Grid item container xs={12} lg={4}>
             <Button
               fullWidth
               color='primary'

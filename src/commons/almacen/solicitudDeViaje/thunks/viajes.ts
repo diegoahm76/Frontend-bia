@@ -5,10 +5,10 @@ import { api } from "../../../../api/axios";
 import dayjs from "dayjs";
 
 export function parseHora(hora: string | null): dayjs.Dayjs | null {
-  if (hora === null) {
+  if (hora === null || hora === '') {
     return null;
   }
-  const [horas, minutos] = hora.split(':');
+  const [horas, minutos] = hora?.split(':');
   const hora_parceada = dayjs().set('hour', parseInt(horas)).set('minute', parseInt(minutos)).toDate();
   return dayjs(hora_parceada);
 }
@@ -116,6 +116,32 @@ export const obtener_agendamiento_solicitud: any = (id_solicitud_respondida: num
       const { data } = await api.get(`almacen/vehiculos/obtener-informacion-viajes/${id_solicitud_respondida}/`);
       return data;
     } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+// Lista Departamentos
+export const get_departamentos: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`listas/departamentos/?pais=CO`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Lista Municipios
+export const get_municipios: any = (departamento: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`listas/municipios/?cod_departamento=${departamento}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
