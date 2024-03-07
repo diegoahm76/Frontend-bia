@@ -10,7 +10,9 @@ import { AuthSlice } from '../../../../../../../../../auth/interfaces';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
 import {
+  setActionsTareasOtros,
   setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setInfoTarea,
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
@@ -24,8 +26,14 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
 
 import { GridCellParams, GridValueGetterParams } from '@mui/x-data-grid';
-import  VisibilityIcon  from '@mui/icons-material/Visibility';
-import  TaskIcon  from '@mui/icons-material/Task';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import TaskIcon from '@mui/icons-material/Task';
+import { getListadoTareaasOtrosByPerson } from '../../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
+import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
+import { putAceptarTareaOtros } from '../../../../../../../toolkit/thunks/otros/putAceptarTareaOtros.service';
+import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
+import { getDetalleDeTareaOtro } from '../../../../../services/servicesStates/otros/detalleTareasOtros/getInfoTareaOtro.service';
+import { getAnexosOtros } from '../../../../../services/servicesStates/otros/anexos/getAnexosTareaOtros.service';
 
 export const ElementosOtros = (): JSX.Element => {
   //* dispatch declaration
@@ -64,7 +72,7 @@ export const ElementosOtros = (): JSX.Element => {
     try {
       const result = await Swal.fire({
         title: 'Aceptar tarea',
-        text: `¿Estás seguro que deseas aceptar esta tarea?`,
+        text: `¿Estás seguro que deseas aceptar esta tarea (OTROS)?`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Aceptar',
@@ -72,21 +80,20 @@ export const ElementosOtros = (): JSX.Element => {
       });
 
       if (result.isConfirmed) {
-        console.log('La tarea ha sido aceptada');
-        //const res = await putAceptarTarea(row.id_tarea_asignada);
-        //console.log(res);
+        const res = await putAceptarTareaOtros(row.id_tarea_asignada);
 
-        /*const listadoTareas = await getListadoTareasByPerson(
+        // cambiar por el get de la bandeja de teareas de otros
+        const listadoTareas = await getListadoTareaasOtrosByPerson(
           id_persona,
           handleSecondLoading,
-          'Rpqr'
-        );*/
+          'ROtros'
+        );
 
-        // dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
-        //dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+        dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
       } else {
         await Swal.fire({
-          title: 'La tarea no ha sido aceptada',
+          title: 'La tarea no ha sido aceptada (OTROS)',
           icon: 'info',
           showConfirmButton: true,
         });
@@ -111,6 +118,167 @@ export const ElementosOtros = (): JSX.Element => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
   };
 
+  const setActionsOtros = (tareaOtros: any) => {
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(tareaOtros));
+    void Swal.fire({
+      icon: 'success',
+      title: 'Elemento seleccionado',
+      text: 'Seleccionaste una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
+      showConfirmButton: true,
+    });
+
+    const shouldDisable = (actionId: string) => {
+      if (!tareaOtros) {
+        return true; // No se ha seleccionado ninguna tarea
+      }
+
+      const isNoSeleccionado = !tareaOtros;
+      /*  const isEstadoAsignacionNoDefinido =
+      tareaOtros.estado_asignacion_tarea === null ||
+      tareaOtros.estado_asignacion_tarea === '';
+      const isEstadoAsignacionRechazada =
+      tareaOtros.estado_asignacion_tarea === 'Rechazado';
+      const isEstadoAsignacionAceptada =
+      tareaOtros.estado_asignacion_tarea === 'Aceptado';
+      const isEstadoTareaEnProcesoRespuesta =
+      tareaOtros.estado_tarea === 'En proceso de respuesta';
+      const isEstadoTareaDelegada = tareaOtros.estado_tarea === 'Delegada';
+      const isEstadoReasignacionEnEspera =
+      tareaOtros.estado_reasignacion_tarea === null ||
+      tareaOtros.estado_reasignacion_tarea === '' ||
+      tareaOtros.estado_reasignacion_tarea === 'En espera';
+      const isEstadoReasignacionRechazada =
+      tareaOtros.estado_reasignacion_tarea === 'Rechazado';
+      const isEstadoReasignacionAceptada =
+      tareaOtros.estado_reasignacion_tarea === 'Aceptado';
+
+      const hasReqPendientes = tareaOtros.requerimientos_pendientes_respuesta;*/
+
+      if (isNoSeleccionado) {
+        return true;
+      }
+
+      /*   if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
+        return actionId !== 'InfoSolictud';
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        !hasReqPendientes
+      ) {
+        //* se habilita todo
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        hasReqPendientes
+      ) {
+        //* se deshabilita la opción de responder solicitud
+        return !(
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
+        return true;
+      }
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionEnEspera
+      ) {
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario'
+        );
+      }
+
+      if (isEstadoAsignacionAceptada && isTareaRespondida) {
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* septimo caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionAceptada
+      ) {
+        return !(
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* octavo caso
+
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaEnProcesoRespuesta &&
+        isEstadoReasignacionRechazada
+      ) {
+        //* se habilitan todos botones -
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      //* noveno caso
+      if (
+        isEstadoAsignacionAceptada &&
+        isEstadoTareaDelegada &&
+        isEstadoReasignacionRechazada
+      ) {
+        //* se habilitan todos botones -
+        return !(
+          actionId === 'RespondeSolicitud' ||
+          actionId === 'RequerimientoUsuario' ||
+          actionId === 'Reasignar' ||
+          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+          actionId === 'SeguimientoARespuesta' ||
+          actionId === 'InfoSolictud'
+        );
+      }
+
+      return !(actionId === 'InfoSolictud');
+      */
+    };
+
+    const actionsOtrosValue = actionsOtros.map((action: any) => ({
+      ...action,
+      disabled: shouldDisable(action.id),
+    }));
+
+    dispatch(setActionsTareasOtros(actionsOtrosValue));
+  };
 
   // ? FUNCIONES PARA EL COMPONENTE ---------------
 
@@ -160,7 +328,7 @@ export const ElementosOtros = (): JSX.Element => {
                   size="small"
                 />
                 <Tooltip title="Ver motivo de rechazo">
-                <CommentIcon
+                  <CommentIcon
                     sx={{
                       ...iconStyles,
                       color: 'primary.main',
@@ -189,21 +357,18 @@ export const ElementosOtros = (): JSX.Element => {
                 onClick={() => {
                   // ? se usará la función de los anexos de la pqrsdf para mostrar la información de la tarea, ya que contiene la información de la tarea (que es la misma que la de la pqrsdf)
                   //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
-                  console.log(params.row);
-                  alert('VIENDO INFORMACION DE LA TAREA')
-
-                 /* (async () => {
+                  (async () => {
                     try {
-                      const idPqrsdf = params?.row?.id_pqrsdf;
-                      const [detalleTarea, anexosPqrsdf] = await Promise.all([
-                        getDetalleDeTarea(idPqrsdf, navigate),
-                        getAnexosPqrsdf(idPqrsdf),
+                      const idOtros = params?.row?.id_otro;
+                      const [detalleTarea, anexosOtros] = await Promise.all([
+                        getDetalleDeTareaOtro(idOtros, navigate),
+                        getAnexosOtros(idOtros),
                       ]);
                       dispatch(setInfoTarea(detalleTarea));
-                      setAnexos(anexosPqrsdf);
-                      if (detalleTarea || anexosPqrsdf.length > 0) {
+                      setAnexos(anexosOtros);
+                      if (detalleTarea || anexosOtros.length > 0) {
                         navigate(
-                          `/app/gestor_documental/bandeja_tareas/info_tarea/${idPqrsdf}`
+                          `/app/gestor_documental/bandeja_tareas/info_tarea_otros/${idOtros}`
                         );
                         handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                         //* la info del anexo en realidad es la parte del archivo, la info del anexo se muestra en un grillado arriba de ese
@@ -213,7 +378,7 @@ export const ElementosOtros = (): JSX.Element => {
                       console.error(error);
                       // Handle the error appropriately here
                     }
-                  })();*/
+                  })();
                 }}
               >
                 <Avatar
@@ -240,9 +405,7 @@ export const ElementosOtros = (): JSX.Element => {
             <Tooltip title="Seleccionar tarea para procesos">
               <IconButton
                 onClick={() => {
-                  //* I have to analize this function, if may we need aditional information
-                  alert('seleccinando tarea')
-                  // setActionsPQRSDF(params?.row);
+                  setActionsOtros(params?.row);
                 }}
               >
                 <Avatar
@@ -273,14 +436,14 @@ export const ElementosOtros = (): JSX.Element => {
   return (
     <>
       {/*se genera un espacio para el modal que rechaza la tarea*/}
-      {/*<ModalRejectTask />*/}
+      <ModalRejectTask />
       {/*se genera un espacio para el modal que muestra el comentario de rechazo de la tarea*/}
-      {/*<ModalSeeRejectedTask />*/}
+      <ModalSeeRejectedTask />
       <RenderDataGrid
         rows={
-          listaTareasPqrsdfTramitesUotrosUopas.filter(
+          listaTareasPqrsdfTramitesUotrosUopas /*.filter(
             (el: { radicado: string }) => el.radicado
-          ) ?? []
+          )*/ ?? []
         }
         columns={columns ?? []}
         title={`Listado de tareas asignadas en otros`}

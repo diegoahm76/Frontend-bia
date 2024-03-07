@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { api } from '../../../../../api/axios';
 import { type Persona } from '../../../../../interfaces/globalModels';
@@ -22,10 +22,15 @@ import {
 import {
   control_error,
   get_digitalization_responses_service,
+  get_digitalization_responses_service_otros,
+  get_digitalization_opas_responses_service
 } from '../../store/thunks/centralDigitalizacionThunks';
+import { OpcionOtrosContext } from '../../context/BusquedaOtrosDigitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DigitalizacionesRespondidas = () => {
+  const { opcion_otros } = useContext(OpcionOtrosContext);
+
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const {
@@ -33,8 +38,10 @@ const DigitalizacionesRespondidas = () => {
     reset,
     handleSubmit: handle_submit,
     getValues: get_values,
+
+    
   } = useForm<any>();
-  const { request_types, list_request_status, person, digitization_requests } =
+  const { request_types, list_request_status, person, digitization_requests,digitization_request } =
     useAppSelector((state) => state.central_digitalizacion_slice);
 
   const on_change_select = (value: any, name: string): void => {
@@ -189,19 +196,19 @@ const DigitalizacionesRespondidas = () => {
         fecha_desde = `${year_start}-${month_start
           .toString()
           .padStart(2, '0')}-${day_start
-          .toString()
-          .padStart(2, '0')} ${hours_start
-          .toString()
-          .padStart(2, '0')}:${minutes_start
-          .toString()
-          .padStart(2, '0')}:${seconds_start.toString().padStart(2, '0')}`;
+            .toString()
+            .padStart(2, '0')} ${hours_start
+              .toString()
+              .padStart(2, '0')}:${minutes_start
+                .toString()
+                .padStart(2, '0')}:${seconds_start.toString().padStart(2, '0')}`;
         fecha_hasta = `${year_end}-${month_end
           .toString()
           .padStart(2, '0')}-${day_end.toString().padStart(2, '0')} ${hours_end
-          .toString()
-          .padStart(2, '0')}:${minutes_end
-          .toString()
-          .padStart(2, '0')}:${seconds_end.toString().padStart(2, '0')}`;
+            .toString()
+            .padStart(2, '0')}:${minutes_end
+              .toString()
+              .padStart(2, '0')}:${seconds_end.toString().padStart(2, '0')}`;
       }
     }
     if (tipo_solicitud === '' && fecha_desde === '' && fecha_hasta === '') {
@@ -225,7 +232,23 @@ const DigitalizacionesRespondidas = () => {
       if (fecha_hasta !== '') {
         params.fecha_hasta = fecha_hasta;
       }
+
+      if (tipo_solicitud === "OPAS") {
+        void dispatch(get_digitalization_opas_responses_service(params));
+
+      }else {
+
+  
+      if (tipo_solicitud === "OTROS") {
+        void dispatch(get_digitalization_responses_service_otros(params));
+        return
+      }
+
+
+
       void dispatch(get_digitalization_responses_service(params));
+      }
+
     }
   };
 

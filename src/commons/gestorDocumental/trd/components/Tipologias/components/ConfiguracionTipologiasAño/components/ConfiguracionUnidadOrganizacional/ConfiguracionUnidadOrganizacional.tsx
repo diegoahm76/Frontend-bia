@@ -324,7 +324,7 @@ console.log(Datos_Return)
                                 <TextField
                                     style={{ marginTop: 20, width: '95%' }}
                                     variant="outlined"
-                                    label="Aignar Prefijo"
+                                    label="Asignar Prefijo"
                                     fullWidth
                                     name="prefijo_consecutivo"
                                     value={form.prefijo_consecutivo}

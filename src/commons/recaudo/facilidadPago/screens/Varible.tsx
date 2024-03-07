@@ -19,18 +19,19 @@ interface ConfiguracionBasica {
     nombre: any;
     tipo_cobro: any;
     tipo_renta: any;
-    valor_varaible: any
+    // valor_varaible: any
 }
 
 interface TipoRenta {
     id_tipo_renta: number;
     nombre_tipo_renta: string;
     tipo_cobro_asociado: any;
-    tipo_renta_asociado:any
+    tipo_renta_asociado: any
 }
 interface TipoCobro {
     id_tipo_cobro: number;
     nombre_tipo_cobro: string;
+    tipo_renta_asociado: any;
 }
 
 
@@ -79,7 +80,7 @@ export const Varible: React.FC = () => {
         { field: 'id_variables', headerName: ' Numero', width: 130, flex: 1 },
         { field: 'nombre', headerName: 'nombre', width: 130, flex: 1 },
 
-        { field: 'valor_varaible', headerName: 'Valor varaible', width: 130, flex: 1 },
+        // { field: 'valor_varaible', headerName: 'Valor varaible', width: 130, flex: 1 },
 
         {
             field: 'Acciones',
@@ -112,7 +113,7 @@ export const Varible: React.FC = () => {
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         nombre: selectedConfiguracion?.nombre || "",
 
-        valor_varaible: selectedConfiguracion?.valor_varaible || "",
+        // valor_varaible: selectedConfiguracion?.valor_varaible || "",
 
 
         id_variables: selectedConfiguracion?.id_variables || "",
@@ -129,6 +130,7 @@ export const Varible: React.FC = () => {
         setFormValues({ ...formValues, [name]: value });
     };
 
+
     useEffect(() => {
         if (selectedConfiguracion) {
             setFormValues(selectedConfiguracion);
@@ -144,7 +146,7 @@ export const Varible: React.FC = () => {
                 nombre: formValues.nombre,
                 tipo_cobro: formValues.tipo_cobro,
                 tipo_renta: formValues.tipo_renta,
-                valor_varaible: formValues.valor_varaible,
+                // valor_varaible: formValues.valor_varaible,
 
 
             };
@@ -156,7 +158,7 @@ export const Varible: React.FC = () => {
                 nombre: "",
                 tipo_cobro: "",
                 tipo_renta: "",
-                valor_varaible: "",
+                // valor_varaible: "",
 
             });
             control_success("Editado  exitosamente");
@@ -177,7 +179,7 @@ export const Varible: React.FC = () => {
                 ...formValues,
                 id_variables: "",
                 nombre: "",
-                valor_varaible: "",
+                // valor_varaible: "",
             });
         } catch (error: any) {
             // console.error("Error al crear la configuración básica", error);
@@ -260,6 +262,28 @@ export const Varible: React.FC = () => {
                         </TextField>
                     </Grid>
 
+                    {/* <Grid item xs={12} sm={4}>
+                        <TextField
+                            select
+                            required
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            label="Tipo cobro"
+                            name="tipo_cobro"
+                            onChange={handleInputChange}
+                            value={formValues.tipo_cobro}
+                        >
+                            {tiposCobro 
+                                .map((tipoCobro) => (
+                                    <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
+                                        {tipoCobro.nombre_tipo_cobro}
+                                    </MenuItem>
+                                ))}
+                        </TextField>
+                    </Grid> */}
+
+
                     <Grid item xs={12} sm={4}>
                         <TextField
                             select
@@ -273,19 +297,19 @@ export const Varible: React.FC = () => {
                             value={formValues.tipo_cobro}
                         >
                             {tiposCobro
-                              
+                                .filter(tipoCobro => tipoCobro.tipo_renta_asociado === formValues.tipo_renta) // Filtrado basado en la selección de tipo_renta
                                 .map((tipoCobro) => (
                                     <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
                                         {tipoCobro.nombre_tipo_cobro}
                                     </MenuItem>
                                 ))}
                         </TextField>
+
+
                     </Grid>
 
 
-
-                    
-                    <Grid item xs={12} sm={4}>
+                    {/* <Grid item xs={12} sm={4}>
                         <TextField
                             required
                             fullWidth
@@ -296,7 +320,7 @@ export const Varible: React.FC = () => {
                             onChange={handleInputChange}
                             value={formValues.valor_varaible}
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12} sm={4}>
                         <TextField
                             required

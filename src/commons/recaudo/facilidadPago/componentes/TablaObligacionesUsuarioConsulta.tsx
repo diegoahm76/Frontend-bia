@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react/prop-types */
 import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
@@ -13,8 +14,9 @@ import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfa
 import { DialogoInformativo } from './DialogoInformativo';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
-import { Divider,  Dialog,   } from '@mui/material';
+import { Divider, Dialog, } from '@mui/material';
 import { Title } from '../../../../components';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 
 interface RootState {
   obligaciones: {
@@ -24,9 +26,10 @@ interface RootState {
 interface BuscarProps {
   is_modal_active: any;
   set_is_modal_active: any;
+  set_position_tab: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_modal_active,set_is_modal_active }) => {
+export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_position_tab, is_modal_active, set_is_modal_active }) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
@@ -46,9 +49,9 @@ export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_moda
 
   const handle_submit = async (): Promise<void> => {
     const arr_registro = []
-    for(let i=0; i<lista_obligaciones.length; i++){
-      for(let j=0; j<selected.length; j++){
-        if(lista_obligaciones[i].nombre === selected[j]){
+    for (let i = 0; i < lista_obligaciones.length; i++) {
+      for (let j = 0; j < selected.length; j++) {
+        if (lista_obligaciones[i].nombre === selected[j]) {
           arr_registro.push(lista_obligaciones[i])
         }
       }
@@ -58,7 +61,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_moda
       void dispatch(get_datos_deudor(obligaciones.id_deudor));
       void dispatch(get_datos_contacto_solicitud(obligaciones.id_deudor));
     } catch (error: any) {
-      throw new Error(error);
+      // throw new Error(error);
     }
   };
 
@@ -103,9 +106,9 @@ export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_moda
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    for(let i=0; i< lista_obligaciones.length; i++){
-      for(let j=0; j< selected.length; j++){
-        if(lista_obligaciones[i].nombre === selected[j]){
+    for (let i = 0; i < lista_obligaciones.length; i++) {
+      for (let j = 0; j < selected.length; j++) {
+        if (lista_obligaciones[i].nombre === selected[j]) {
           sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)
           sub_intereses = sub_intereses + parseFloat(lista_obligaciones[i].valor_intereses)
           set_capital(sub_capital)
@@ -113,12 +116,23 @@ export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_moda
         }
       }
     }
-    if(selected.length === 0){
+    if (selected.length === 0) {
       set_capital(0)
       set_intereses(0)
     }
     set_total(capital + intereses)
   }, [selected, capital, intereses])
+
+
+  const handleSelectAllClick = (): void => {
+    if (selected.length === lista_obligaciones.length) {
+      set_selected([]);
+    } else {
+      const newSelected = lista_obligaciones.map((obligacion) => obligacion.nombre);
+      set_selected(newSelected);
+    }
+  };
+
 
   const columns: GridColDef[] = [
     {
@@ -128,12 +142,14 @@ export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_moda
       renderCell: (params) => {
         return (
           <Checkbox
+            checked={selected.indexOf(params.row.nombre) !== -1}
             onClick={(event) => {
-              handle_click(event, params.row.nombre)
+              handle_click(event, params.row.nombre);
             }}
           />
-        )
+        );
       },
+
     },
     {
       field: 'nombre',
@@ -217,123 +233,167 @@ export const TablaObligacionesUsuarioConsulta: React.FC <BuscarProps>= ({is_moda
         </div>
       ),
     },
+
+    {
+      field: 'calculo_interes_mora',
+      headerName: 'Interés por Mora',
+      width: 180,
+      renderCell: (params) => {
+        const interes = params.row.valor_intereses * 0.0007; // 0.07% de valor_intereses
+        const interesMora = interes * params.row.dias_mora;
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {new Intl.NumberFormat("es-ES", {
+              style: "currency",
+              currency: "COP",
+            }).format(interesMora)}
+          </div>
+        );
+      },
+    },
   ];
   const handle_closee = (): void => {
     set_is_modal_active(false);
-};
+  };
   return (
     <>
-     <Dialog open={is_modal_active} onClose={handle_closee} maxWidth="xl"
-            >
-
-
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
+      <Dialog open={is_modal_active} onClose={handle_closee} maxWidth="xl"
       >
-          <Title title='Listado de pagos pendientes'/>
-        {
-          lista_obligaciones.length !== 0 ? (
-            <Grid item xs={12}>
-              <Grid item>
-                <Box sx={{ width: '100%' }}>
-                  <p>
-                    {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
-                  </p>
-                  <DataGrid
-                    autoHeight
-                    disableSelectionOnClick
-                    rows={lista_obligaciones}
-                    columns={columns}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                    experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => faker.database.mongodbObjectId()}
-                  />
-                </Box>
+
+
+        <Grid
+          container
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
+          <Title title='Listado de pagos pendientes' />
+          {
+            lista_obligaciones.length !== 0 ? (
+              <Grid item xs={12}>
+                <Grid item>
+                  <Box sx={{ width: '100%' }}>
+                    <p>
+                      {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
+                    </p>
+                    <Grid item >
+                      <Button onClick={handleSelectAllClick} variant="contained" color="primary">
+                        Selectcionar todo
+                      </Button>
+                    </Grid>
+
+                    <DataGrid
+                      autoHeight
+                      disableSelectionOnClick
+                      rows={lista_obligaciones}
+                      columns={columns}
+                      pageSize={10}
+                      rowsPerPageOptions={[10]}
+                      experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={(row) => faker.database.mongodbObjectId()}
+                    />
+                  </Box>
+                </Grid>
+                <Stack
+                  direction="row"
+                  justifyContent="right"
+                  spacing={2}
+                  sx={{ mt: '30px' }}
+                >
+                  <Grid item xs={12} sm={2.5}>
+                    <TextField
+                      label="Total Capital"
+                      size="small"
+                      fullWidth
+                      value={capital_cop}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={2.5}>
+                    <TextField
+                      label="Total Intereses"
+                      size="small"
+                      fullWidth
+                      value={intereses_cop}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={2.5}>
+                    <TextField
+                      label={<strong>Gran Total a Deber</strong>}
+                      size="small"
+                      fullWidth
+                      value={total_cop}
+                    />
+                  </Grid>
+                </Stack>
+
+
+
+
+
+                <Stack
+                  direction="row"
+                  justifyContent="right"
+                  spacing={2}
+                  marginTop={2}
+                  sx={{ mb: '20px' }}
+
+                >
+
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    sx={{ marginTop: '30px' }}
+                    startIcon={<RequestQuoteIcon />}
+
+                    onClick={() => {
+                      set_position_tab('2');
+                    }}
+                  >
+                    Liquidar
+                  </Button>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<Add />}
+                    sx={{ marginTop: '30px' }}
+                    onClick={() => {
+                      if (obligaciones.tiene_facilidad) {
+                        handle_open(1);
+                      } else if (selected.length === 0) {
+                        handle_open(2);
+                      } else {
+                        // navigate('../registro');
+                        navigate('../facilidades_pago/registro');
+                        void handle_submit();
+                      }
+                    }}
+                  >
+                    Crear Facilidad de Pago
+                  </Button>
+                </Stack>
               </Grid>
-              <Stack
-                direction="row"
-                justifyContent="right"
-                spacing={2}
-                sx={{ mt: '30px' }}
-              >
-                <Grid item xs={12} sm={2.5}>
-                  <TextField
-                    label="Total Capital"
-                    size="small"
-                    fullWidth
-                    value={capital_cop}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={2.5}>
-                  <TextField
-                    label="Total Intereses"
-                    size="small"
-                    fullWidth
-                    value={intereses_cop}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={2.5}>
-                  <TextField
-                    label={<strong>Gran Total a Deber</strong>}
-                    size="small"
-                    fullWidth
-                    value={total_cop}
-                  />
-                </Grid>
-            </Stack>
-            <Stack
-              direction="row"
-              justifyContent="right"
-              spacing={2}
-              marginTop={2}
-              sx={{ mb: '20px' }}
-            >
-              <Button
-                color='primary'
-                variant='contained'
-                startIcon={<Add />}
-                sx={{ marginTop: '30px' }}
-                onClick={() => {
-                  if(obligaciones.tiene_facilidad){
-                    handle_open(1);
-                  } else if(selected.length === 0){
-                    handle_open(2);
-                  } else {
-                    navigate('../registro');
-                    void handle_submit();
-                  }
-                }}
-              >
-                Crear Facilidad de Pago
-              </Button>
-            </Stack>
-            </Grid>
-          ) : (
-            <p>
-              {`El usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} no tiene obligaciones pendiente por pago.`}
-            </p>
-          )
-        }
-      </Grid>
-      <DialogoInformativo
-        tipo_notificacion={ modal_opcion === 1 ? 'error' : 'warn' }
-        mensaje_notificacion={
-          modal_opcion === 1 ? `El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago` :
-          'Para continuar a la página de registro seleccione al menos una de las obligaciones'
-        }
-        abrir_modal={modal}
-        abrir_dialog={handle_close}
-      />
-      
+            ) : (
+              <p>
+                {`El usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} no tiene obligaciones pendiente por pago.`}
+              </p>
+            )
+          }
+        </Grid>
+        <DialogoInformativo
+          tipo_notificacion={modal_opcion === 1 ? 'error' : 'warn'}
+          mensaje_notificacion={
+            modal_opcion === 1 ? `El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago` :
+              'Para continuar a la página de registro seleccione al menos una de las obligaciones'
+          }
+          abrir_modal={modal}
+          abrir_dialog={handle_close}
+        />
+
       </Dialog>
     </>
   );

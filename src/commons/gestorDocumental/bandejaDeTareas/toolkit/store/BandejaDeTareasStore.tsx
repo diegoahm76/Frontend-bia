@@ -62,14 +62,14 @@ const actionsTramitesYServicios: Action[] = [
   {
     id: 'InfoSolictud',
     icon: <ContactPageIcon />,
-    name: 'Ver información resumida de la tarea',
+    name: 'Ver información resumida de la tarea (trámite o servicio)',
     path: '',
     disabled: false,
   },
   {
     id: 'Reasignar',
     icon: <PersonAddAlt1Icon />,
-    name: 'Reasignar',
+    name: 'Reasignar tarea',
     //* posiblememenet sea la misma ruta que la de pqrsdf
     path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
     disabled: false,
@@ -78,14 +78,13 @@ const actionsTramitesYServicios: Action[] = [
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario',
-    //* definir la ruta
     path: '',
     disabled: false,
   },
   {
     id: 'VerRespuestasRequerimientosOSolicitudesAlUsuario',
     icon: <PreviewIcon />,
-    name: 'Ver respuestas a requerimientos o solicitudes al usuario',
+    name: 'Ver respuestas de requerimientos al usuario',
     path: '',
     disabled: false,
   },
@@ -121,14 +120,14 @@ const newActions = [
     id: 'RespondeSolicitud',
     icon: <ReplyAllIcon />,
     name: 'Responder OPA',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/respuesta_opas/',
     disabled: false,
   },
   {
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario sobre OPA',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/requerimiento_a_usuario_opas/',
     disabled: false,
   },
 ];
@@ -222,7 +221,9 @@ export const BandejaTareasSlice = createSlice({
 
 export const {
   setActionssTareasPQRSDF,
-  // setActionsTareasTramites,
+  setActionsTareasOtros,
+  setActionsTareasTramites,
+  setActionsTareasOpas,
 
   // ? lista de las tareas tras la busqueda
   setListaTareasPqrsdfTramitesUotrosUopas,

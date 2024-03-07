@@ -34,12 +34,15 @@ const cargarAsignaciones = async (
       )}&estado_solicitud=${encodeURIComponent(estado)}`
     );
 
-    if (response.data.success) {
+    if (response.data.success && response?.data?.data && response?.data?.data?.length > 0) {
       setAsignaciones(response.data.data);
       control_success(
         'Se han encontrado los siguiente datos que coinciden con la busqueda'
       );
+      return;
     }
+    showAlert('Opss', 'No se recibieron datos de la solicitud o la respuesta está vacía', 'warning');
+    return []
   } catch (error: any) {
     console.error('Error al cargar las asignaciones de encuesta', error);
     showAlert('Opss', `${error?.response?.data?.detail}`, 'error');

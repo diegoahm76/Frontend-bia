@@ -27,6 +27,7 @@ export const useIndicadorHook = (): any => {
       nombre_plan: '',
       nombre_indicador: '',
       nombre_proyecto: '',
+      numero_indicador: '',
       linea_base: '',
       medida: '',
       tipo_indicador: '',

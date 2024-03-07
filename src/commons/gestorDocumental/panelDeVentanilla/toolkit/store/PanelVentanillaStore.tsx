@@ -57,7 +57,7 @@ const actionsTramitesYServicios: any[] = [
     id: 'Jurídica',
     icon: <BalanceIcon />,
     name: 'Revisión jurídica',
-    path: '', // pendiente por definir
+    path: '/app/gestor_documental/panel_ventanilla/revision_juridica_tramite', // pendiente por definir
     disabled: false,
   },
   {
@@ -95,7 +95,7 @@ const actionsOpas: any[] = [
     id: 'Jurídica',
     icon: <BalanceIcon />,
     name: 'Revisión jurídica',
-    path: '', // pendiente por definir
+    path: '/app/gestor_documental/panel_ventanilla/revision_juridica_opa', // pendiente por definir
     disabled: false,
   },
 ];
@@ -150,12 +150,12 @@ export const PanelVentanillaSlice = createSlice({
       state.actionsComplementos = action.payload;
     },
     //* mandejo de acciones para tramites y servicios
-    /* setActionssToManagePermissionsTramitesYServicios: (
+    setActionssToManagePermissionsTramitesYServicios: (
       state,
       action: PayloadAction<any>
     ) => {
       state.actionsTramitesYServicios = action.payload;
-    },*/
+    },
     //* mandejo de acciones para opas
     setActionssToManagePermissionsOpas: (state, action: PayloadAction<any>) => {
       state.actionsOpas = action.payload;
@@ -216,6 +216,8 @@ export const {
   setActionssToManagePermissionsOpas,
   // ? acciones sobre lo botones de otros
   setActionsOtros,
+  // tramites
+  setActionssToManagePermissionsTramitesYServicios,
   // ? acciones sobre lista de elementos de pqrsdf, trámites y servicios y otros
   setListaElementosPqrsfTramitesUotrosBusqueda,
   // ? acciones sobre lista de complementos, derequerimientos y otros

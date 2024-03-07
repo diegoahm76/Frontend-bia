@@ -19,8 +19,14 @@ import { Button, ButtonGroup, Divider, FormControl, Grid, InputLabel, MenuItem, 
 import {  AsignacionEncuesta, FormData,   estado, TipoPQRSDF } from '../interfaces/types';
 import { cargarAsignaciones, cargarestado,   fetchTipoPQRSDF } from '../services/consultaOtrosExterno.service';
 // import { cargarAsignaciones, cargarestado, cargarorganigrama, fetchSpqrs, fetchTipoPQRSDF } from '../services/consultaExterno.service';
-
-export const ConslitaOtrosExterno: React.FC = () => {
+export interface props {
+    handleInputChange:any;
+    formData:any;
+    setFormData:any;
+    estado:any;
+    setestado:any;
+  };
+export const ConslitaOtrosExterno: React.FC<props> = ({setestado, estado,setFormData, handleInputChange,formData})  => {
     const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
     const initialFormData: FormData = {
         id_persona_alertar: null,
@@ -33,14 +39,14 @@ export const ConslitaOtrosExterno: React.FC = () => {
         tipo_solicitud: "",
         estado_solicitud: "",
     };
-    const [formData, setFormData] = useState(initialFormData);
-    const handleInputChange = (event: any) => {
-        const { name, value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+    // const [formData, setFormData] = useState(initialFormData);
+    // const handleInputChange = (event: any) => {
+    //     const { name, value } = event.target;
+    //     setFormData((prevData) => ({
+    //         ...prevData,
+    //         [name]: value,
+    //     }));
+    // };
     useEffect(() => {
         cargarAsignaciones({
             setAsignaciones: setAsignaciones,
@@ -48,10 +54,10 @@ export const ConslitaOtrosExterno: React.FC = () => {
         });
     }, []);
     const columns = [
-        { field: 'Tipo de Solicitud', headerName: 'Tipo de Solicitud', width: 220, flex: 1, },
-        { field: 'Titular', headerName: 'Titular', width: 220, flex: 1, },
-        { field: 'Asunto', headerName: 'Asunto', width: 220, flex: 1, },
-        { field: 'Radicado', headerName: 'Radicado', width: 220, flex: 1, },
+        { field: 'Tipo de Solicitud', headerName: 'Tipo de Solicitud', minWidth: 300, },
+        { field: 'Titular', headerName: 'Titular',  minWidth: 450, },
+        { field: 'Asunto', headerName: 'Asunto',  minWidth: 300, },
+        { field: 'Radicado', headerName: 'Radicado', minWidth: 300, },
 
         
         // { field: 'Fecha de Radicado', headerName: 'Fecha de Radicado', width: 220, flex: 1, },
@@ -59,8 +65,7 @@ export const ConslitaOtrosExterno: React.FC = () => {
         {
             field: 'Fecha de Radicado',
             headerName: 'Fecha de Radicado',
-            width: 220,
-            flex: 1,
+            minWidth: 300,
             valueFormatter: (params: { value: string | number | Date | null | undefined }) => {
                 if (params.value == null) {
                     return null; // Retorna null para no mostrar nada si el valor es null o undefined
@@ -72,8 +77,8 @@ export const ConslitaOtrosExterno: React.FC = () => {
             },
         },
         
-        { field: 'Persona Que Radicó', headerName: 'Persona Que Radicó  ', width: 220, flex: 1, },
-        { field: 'Estado', headerName: 'Estado', width: 220, flex: 1, },
+        { field: 'Persona Que Radicó', headerName: 'Persona Que Radicó  ',  minWidth: 460, },
+        // { field: 'Estado', headerName: 'Estado',  minWidth: 300, },
 
 
 
@@ -85,7 +90,7 @@ export const ConslitaOtrosExterno: React.FC = () => {
         fetchTipoPQRSDF({ setTipoPQRSDF });
     }, []);
     //Estado 
-    const [estado, setestado] = useState<estado[]>([]);
+    // const [estado, setestado] = useState<estado[]>([]);
     useEffect(() => {
         cargarestado({ setestado });
     }, []);
@@ -100,100 +105,7 @@ export const ConslitaOtrosExterno: React.FC = () => {
     };
     return (
         <>
-            <Grid container
-                item xs={12} marginLeft={2} marginRight={2} marginTop={3} spacing={2}
-                sx={miEstilo}
-            >
-                <Grid item xs={12} sm={12}>
-                    <Title title="Consulta Otros externo   " />
-                </Grid>
-
-            </Grid>
-            <Grid container
-                item xs={12} marginLeft={2} marginRight={2} marginTop={3} spacing={2}
-                sx={miEstilo}
-            >
-                <Grid item xs={12} sm={12}>
-                    <Title title="Filtro de búsqueda    " />
-                </Grid>
-
-                <Grid item xs={12} sm={3}>
-                    <FormControl size="small" fullWidth>
-                        <InputLabel >Tipos de solicitud</InputLabel>
-                        <Select
-                            onChange={handleInputChange}
-                            value={formData.tipo_solicitud}
-                            name="tipo_solicitud"
-                            label="tipo_solicitud"
-                        >
-                            {tipoPQRSDF.map((tipo_solicitud) => (
-                                <MenuItem key={tipo_solicitud.codigo} value={tipo_solicitud.codigo}>
-                                    {tipo_solicitud.descripcion}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="radicado"
-                        name="radicado"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        onChange={handleInputChange}
-                        value={formData.radicado}
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={3}>
-                    <FormControl size="small" fullWidth>
-                        <InputLabel   >estado</InputLabel>
-                        <Select
-                            label="estado"
-                            onChange={handleInputChange}
-                            name="estado"
-                            value={formData.estado}
-                        >
-                            {estado.map(estado => (
-                                <MenuItem key={estado.id_estado_solicitud} value={estado.nombre}>
-                                    {estado.nombre}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        fullWidth
-                        label="Fecha desde  "
-                        type="date"
-                        size="small"
-                        name="fecha_desde"
-                        variant="outlined"
-                        value={formData.fecha_desde}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) => {
-                            handleInputChange(e);
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        fullWidth
-                        label=" Fecha hasta  "
-                        type="date"
-                        size="small"
-                        name="fecha_hasta"
-                        variant="outlined"
-                        value={formData.fecha_hasta}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) => {
-                            handleInputChange(e);
-                        }}
-                    />
-
-                </Grid>
+       
                 <Grid item  >
                     <Button
                         variant="outlined"
@@ -205,6 +117,8 @@ export const ConslitaOtrosExterno: React.FC = () => {
                         Limpiar
                     </Button>
                 </Grid>
+
+ 
                 <Grid item  >
                     <Button
                         color='primary'
@@ -220,6 +134,20 @@ export const ConslitaOtrosExterno: React.FC = () => {
                         buscar
                     </Button>
                 </Grid>
+
+            <Grid container
+                item xs={12} marginLeft={2} marginRight={2} marginTop={3} spacing={2}
+                sx={miEstilo}
+            >
+                <Grid item xs={12} sm={12}>
+                    <Title title="Filtro de búsqueda    " />
+                </Grid>
+
+             
+
+             
+               
+             
                 <Grid item xs={12} sm={11} ></Grid>
                 <Grid item  >
                     <ButtonGroup style={{ margin: 5, }}>

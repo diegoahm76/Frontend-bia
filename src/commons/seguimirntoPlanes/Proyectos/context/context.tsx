@@ -91,18 +91,7 @@ export const UserProviderProyectos = ({
       if (response?.length > 0) {
         const data_proyecto: IProyectos[] = response.map(
           (item: IProyectos) => ({
-            id_proyecto: item.id_proyecto,
-            numero_proyecto: item.numero_proyecto,
-            nombre_proyecto: item.nombre_proyecto,
-            pondera_1: item.pondera_1,
-            pondera_2: item.pondera_2,
-            pondera_3: item.pondera_3,
-            pondera_4: item.pondera_4,
-            id_programa: item.id_programa,
-            nombre_programa: item.nombre_programa,
-            id_plan: item.id_plan,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
 
@@ -122,16 +111,7 @@ export const UserProviderProyectos = ({
       if (response?.length > 0) {
         const data_programa: IProgramas[] = response.map(
           (item: IProgramas) => ({
-            id_programa: item.id_programa,
-            nombre_plan: item.nombre_plan,
-            nombre_programa: item.nombre_programa,
-            porcentaje_1: item.porcentaje_1,
-            porcentaje_2: item.porcentaje_2,
-            porcentaje_3: item.porcentaje_3,
-            porcentaje_4: item.porcentaje_4,
-            id_plan: item.id_plan,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
 

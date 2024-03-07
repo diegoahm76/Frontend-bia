@@ -193,7 +193,7 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
         <TextField
           variant="outlined"
           size="small"
-          label=" email "
+          label="Email "
           fullWidth
           InputLabelProps={{
             shrink: true,
@@ -207,7 +207,7 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
         <TextField
           variant="outlined"
           size="small"
-          label="confirmar email"
+          label="Confirmar email"
           fullWidth
           InputLabelProps={{
             shrink: true,
@@ -241,7 +241,7 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
       </Grid> 
       <Grid item xs={12} sm={3}>
         <FormControl fullWidth size="small">
-          <InputLabel id="demo-simple-select-label">es principal </InputLabel>
+          <InputLabel id="demo-simple-select-label">Es principal </InputLabel>
           <Select
             labelId="es-principal-select-label"
             id="es-principal-select"
@@ -262,7 +262,7 @@ export const SucursalActuaizar: React.FC<Props> = ({setnew_number,fetch_dataget,
       </Grid>
       <Grid item xs={12} sm={3}>
         <FormControl fullWidth size="small" >
-          <InputLabel id="activo">activo</InputLabel>
+          <InputLabel id="activo">Activo</InputLabel>
           <Select
             labelId="activo"
             id="activo"

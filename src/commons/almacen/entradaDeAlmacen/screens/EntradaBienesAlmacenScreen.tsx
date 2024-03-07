@@ -183,10 +183,13 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_msj_error_motivo("");
   };
 
-  const buscar_x_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value !== null && e.target.value !== undefined && e.target.value !== "") {
-      set_codigo_articulo(parseInt(e.target.value));
-      dispatch(obtener_articulo_codigo(e.target.value)).then((response: {success: boolean,detail: string, data: any}) => {
+  const buscar_x_codigo: any = () => {
+    //validar si el campo codigo esta vacio  
+    if(codigo_articulo === '' || codigo_articulo === undefined){
+      control_error("El campo Código es obligatorio.");
+      return;
+    } else {
+      dispatch(obtener_articulo_codigo(codigo_articulo)).then((response: {success: boolean,detail: string, data: any}) => {
         if(response.success){
           set_articulo(response.data);
         }
@@ -746,14 +749,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           <Title title="Detalle" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
-              <Grid item xs={12} sm={5}>
+              <Grid item xs={12} sm={3}>
                 <TextField
                   label="Código"
                   type={'number'}
                   size="small"
                   fullWidth
                   value={codigo_articulo}
-                  onBlur={buscar_x_codigo}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_codigo_articulo(e.target.value)}
                   error={msj_error_articulo !== ""}
                 />
                 {(msj_error_articulo !== "") && (<FormHelperText error >El campo Código es obligatorio.</FormHelperText>)}
@@ -776,14 +779,26 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 />
                 {(msj_error_articulo !== "") && (<FormHelperText error >{msj_error_articulo}</FormHelperText>)}
               </Grid>
-              <Grid item xs={12} sm={2}>
+              <Grid item xs={12} sm={1.5}>
                 <Button
+                  fullWidth
                   color='primary'
                   variant='contained'
                   startIcon={<SearchIcon />}
-                  onClick={() => { set_buscar_articulo_is_active(true) }}
+                  onClick={buscar_x_codigo}
                 >
-                  Buscar articulo
+                  Buscar
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={2.5}>
+                <Button
+                  fullWidth
+                  color='primary'
+                  variant='contained'
+                  startIcon={<SearchIcon />}
+                  onClick={() =>set_buscar_articulo_is_active(true)}
+                >
+                  Búsqueda avanzada
                 </Button>
                 {buscar_articulo_is_active && (
                   <BusquedaArticulos

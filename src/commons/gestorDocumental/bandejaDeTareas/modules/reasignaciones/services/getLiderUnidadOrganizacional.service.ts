@@ -19,7 +19,7 @@ export const getLiderByUnidadOrganizacional = async (
     }
   } catch (error: any) {
     setLiderAsignado(undefined);
-    void Swal.fire({
+    await Swal.fire({
       icon: 'error',
       title: 'Error',
       text: `Esta unidad ${error?.response?.data?.detail} en consecuencia no se puede asignar la PQRSDF`,

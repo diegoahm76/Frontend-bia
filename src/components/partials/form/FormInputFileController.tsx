@@ -113,7 +113,7 @@ const FormInputFileController = ({
                     </Typography>
                     <Input
                       type="file"
-                      disabled={disabled}
+                      // disabled={disabled}
                       style={{
                         opacity: 0,
                         position: 'absolute',
