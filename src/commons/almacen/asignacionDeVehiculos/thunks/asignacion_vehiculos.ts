@@ -38,7 +38,9 @@ export const buscar_vehiculos: any = (tipo_vehiculo: string,marca: string,placa:
       const { data } = await api.get(`/almacen/vehiculos/busqueda-vehiculos/get/?tipo_vehiculo=${tipo_vehiculo}&placa=${placa}&marca=${marca}`);
       return data;
     } catch (error: any) {
-      return error as AxiosError;
+      if(Object.keys(error).length !== 0){
+        return error as AxiosError;
+      }
     }
   };
 };
@@ -49,7 +51,9 @@ export const buscar_conductores: any = (tipo_conductor: string,nombre_conductor:
       const { data } = await api.get(`/almacen/vehiculos/busqueda-conductores/get/?conductor_nombre=${nombre_conductor}&tipo_conductor=${tipo_conductor}`);
       return data;
     } catch (error: any) {
-      return error as AxiosError;
+      if(Object.keys(error).length !== 0){
+        return error as AxiosError;
+      }
     }
   };
 };
