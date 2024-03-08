@@ -24,7 +24,8 @@ import { Persona } from '../../../interfaces/globalModels';
 import { UnidadOrganizacional } from '../../conservacion/solicitudMaterial/interfaces/solicitudVivero';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
-
+import { remicion_viso,constancia_publicacion, constancia_publicacion2} from '../plantillasRecaudo/miguel';
+ 
 export interface SerieSubserie {
   // id_catserie_unidadorg: number;
   // id_serie_doc: number;
@@ -161,7 +162,6 @@ export const Facturacion: React.FC = () => {
     y += 6; doc.text(``, 10, y);
     y += 6;
 
-    let texto1 = ` hola`;
     let textoPersonalizado =
 
       `
@@ -195,72 +195,24 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
     else if (opcionSeleccionada === '2') {
-      textoAMostrar = ` 
-               «Por medio de la cual se otorga una facilidad de pago en instancia persuasiva a
-                 la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396 y 
-                                                 se toman otras determinaciones»
-
-               El Jefe de la Oficina Asesora Jurídica de la Corporación para el Desarrollo
-                 Sostenible del Área de Manejo Especial de la Macarena CORMACARENA, en
-                        uso de sus facultades legales conferidas mediante la Resolución número
-                                                  2.6.05.107 del 31 de enero de 2005
-
-.                                                            CONSIDERANDO:
-
-Que la Constitución Política de Colombia, en su artículo 209 establece que «la función administrativa está al servicio de los intereses generales y se desarrolla con fundamento en los principios de igualdad, moralidad, eficacia, economía, celeridad, imparcialidad y publicidad mediante la descentralización, la delegación y la desconcentración de funciones. Las autoridades administrativas deben coordinar sus actuaciones para el adecuado cumplimiento de los fines del Estado. La administración pública, en todos sus órdenes, tendrá un control interno que se ejercerá en los términos que señale la ley...»
-
-Que de conformidad con la resolución No 2.6.07.073 de fecha quince (15) de febrero de 2007, artículo quinto, numeral 4, facilidades de pago, establece como requisitos y documentos necesarios para el trámite los siguientes          
-
-1. Los deudores no deben encontrarse reportados en el boletín de deudores morosos del estado por incumplimiento de acuerdos de pago
-2. Tener obligaciones a favor de CORMACARENA
-3. Presentar un escrito en el cual solicite el plazo
-4. Ofrecer garantías que respalden el pago de las obligaciones, determinando los usuarios y capacidades de pago de los mismos
-
-Que mediante Resolución No 2.6.08.465 de fecha veintisiete (27) de junio de 2008, se adoptó El Manual de Cobro Persuasivo y coactivo de CORMACARENA, el cual tuvo su última actualización el día siete (07) de febrero de 2023.
-
- 
-Que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, mediante escrito radicado en la Corporación con el número 18922 de fecha veintisiete (27) de julio de 2023 solicitó se le concediera una facilidad de pago para pagar el valor capital e intereses de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, la señora BLANCA LUCIA RAMIREZ TORO, realizó consignación del 30% del valor total de la deuda, capital más intereses, el día seis (06) de agosto de 2023, para dar continuidad al trámite de otorgamiento de la facilidad de pago.
-
-Que una vez revisado el boletín de deudores morosos del estado BDME, a través de la página web de la contaduría general de la nación, se verifico que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, no se encuentra reportada por incumplimiento de acuerdos de pago. En mérito de lo expuesto,
-
-                                                              RESUELVE
-                                                             
- ARTÍCULO PRIMERO: Otorgar facilidad de pago a la señora BLANCA LUCIARAMIREZ TORO identificada con C.C. 32.505.396, con un plazo de nueve (09) cuotas mensuales de igual valor, para el pago de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, incluido valor capital e intereses. PARÁGRAFO PRIMERO: Teniendo en cuenta que el valor capital de la presente facilidad de pago es la suma de UN MILLON SEISCIENTOS OCHENTA Y TRES MIL QUINIENTOS TREINTA Y CINCO PESOS MCTE ($1.683.535) y que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, consignó el día seis (06) de agosto de 2023, la suma de QUINIENTOS QUINCE MIL SEISCIENTOS SESENTA Y SEIS PESOS MCTE ($515.666), el cual se aplicó proporcionalmente a capital por valor de QUINIENTOS CINCO MIL OCHOCIENTOS OCHENTA Y SEIS PESOS MCTE ($505.886) y a intereses de mora por valor de NUEVE MIL SETECIENTOS OCHENTA PESOS MCTE ($9.780).
-
-Conforme a lo anterior, queda un saldo a capital por valor de UN MILLON CIENTO SETENTA Y SIETE MIL SEISCIENTOS CUARENTA Y NUEVE PESOS MCTE ($1.177.649), más los intereses proyectados por el término de la facilidad de pago, es decir, al día cinco (05) de Junio del año 2024, fecha en la que se estima el pago total de las obligaciones, por valor de CIENTO CUARENTA Y DOS MIL CIENTO TRES PESOS MCTE ($142.103), y que arrojan una deuda total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752). ARTICULO SEGUNDO: Autorizar el pago del valor capital más los intereses que sumados arrojan un valor total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752) en nueve (09) cuotas, distribuido de la siguiente manera:
-
-
-
-No cuota FECHAS DE PAGO CUOTA
-1  05 de octubre de 2023 146,640
-2  05 de noviembre de 2023 146,639
-3  05 de diciembre de 2023 146,639
-4  05 de enero de 2024 146,639
-5  05 de febrero de 2024 146,639
-6  05 de marzo de 2024 146,639
-7  05 de abril de 2024 146,639
-8  05 de mayo de 2024 146,639
-9  05 de junio de 2024 146,639
-
-TOTAL 1,319,752
-
-PARÁGRAFO ÚNICO: Si el día acordado para el pago de las cuotas fuere feriado el pago se prorrogará hasta el día siguiente hábil.
-
-ARTÍCULO TERCERO: El pago deberá efectuarse en la cuenta corriente 364190062-66 Bancolombia (convenio 87318) por concepto de multas Ref. 1 C.C. (32505396) y Ref. 2. Resolución facilidad de pago (126223020) a nombre de CORMACARENA; identificada con NIT. 822.000.091-2, a más tardar en la fecha de vencimiento de la respectiva cuota y acreditarlo en la oficina del Grupo Rentas de la Corporación.
-
-ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en relación con el pago de una de las cuotas estipuladas y en las demás obligaciones contenidas en la presente resolución, CORMACARENA
-
-dispondrá la terminación anticipada de la facilidad de pago y se iniciará el trámite del proceso administrativo de cobro coactivo. Parágrafo único: Los saldos de las obligaciones que resulten luego de dar por terminada la facilidad de pago, se continuarán ejecutando por medio del respectivo proceso administrativo de cobro coactivo, hasta cuando se satisfaga la obligación en su totalidad. ARTÍCULO QUINTO: Como consecuencia de lo convenido en la facilidad de pago, las partes acuerdan interrumpir los términos de prescripción de las obligaciones, y se reanudaran en el momento en que se declare el incumplimiento de la presente Resolución. ARTÍCULO SEXTO: Notificar el contenido de la presente resolución a la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396; al correo electrónico jandreitahr21@hotmail.com adjuntando copia de la misma. ARTICULO SEPTIMO: Contra esta decisión no procede recurso alguno, de conformidad con el artículo 833-1 del Estatuto Tributario. ARTICULO OCTAVO: Remitir copia de la presente Resolución a la Subdirección Administrativa y Financiera para lo de su competencia.
-
-                                                             NOTIFÍQUESE Y CÚMPLASE,
-
-
-`;
+      textoAMostrar = `${ remicion_viso(email) } `;
     }
-
     else if (opcionSeleccionada === '3') {
       textoAMostrar = ``
-    } else {
+    } 
+    else if (opcionSeleccionada === '4') {
+      textoAMostrar = `${ constancia_publicacion(email) } `;
+    }
+    else if (opcionSeleccionada === '5') {
+      textoAMostrar = `${ constancia_publicacion2(email) } `;
+    }
+
+    
+    
+    
+    
+    
+    else {
       textoAMostrar = ''; // Valor predeterminado o manejo del caso 'undefined'
     }
     // Configuraciones iniciales
@@ -620,12 +572,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
       >
         <Title title="Generación de documento" />
 
-        {/* <select value={opcionSeleccionada} onChange={handleChangeee}>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-
-        </select> */}
+      
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="opcion-select-label">Plantilla</InputLabel>
@@ -636,7 +583,11 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
               onChange={handleChangeee}
             >
               <MenuItem value="1">Plantilla 1</MenuItem>
-              {/* <MenuItem value="2">Plantilla 2</MenuItem> */}
+              <MenuItem value="2">Plantilla 2</MenuItem>
+              <MenuItem value="4">constancia_publicacion </MenuItem>
+              <MenuItem value="5">constancia_publicacion2 </MenuItem>
+
+
               <MenuItem value="3">Vacio</MenuItem>
             </Select>
           </FormControl>

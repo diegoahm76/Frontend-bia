@@ -25,6 +25,8 @@ import { getReAsignacionesTareasOtros } from '../../services/reasignaciones/otro
 import { postReAsignacionTareaOtros } from '../../services/post/otros/postReasignacionTareaOtros.service';
 import { getReAsignacionesTareasTramites } from '../../services/reasignaciones/tramitesServicios/getReasignaTram.service';
 import { postReAsignacionTareaTramite } from '../../services/post/tramitesServicios/postReasTram.service';
+import { getReAsignacionesTareasOpas } from '../../services/reasignaciones/opas/getReasignacionesTareasOpas.service';
+import { postReAsignacionTareaOpas } from '../../services/post/opas/postReasignacionesOpas.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -146,21 +148,24 @@ export const AccionesFinales = (): JSX.Element => {
           handleSecondLoading
         );
         break;
-      case 'OPA':
+      case 'RESPONDER OPA':
+      case 'Responder Opa':
+      case 'Responder OPA':
         // Call the service for OPA
         showAlert(
           'Estimado usuario:',
           'No hay servicio aún para asignar la OPA, así que no se realiza asignacion por el momento',
           'warning'
         );
-        /*res = await postAsignacionGrupoOPA(
-            {
-              id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-              id_persona_asignada: liderAsignado?.id_persona,
-              id_und_org_seccion_asignada: currentGrupo?.value,
-            },
-            handleSecondLoading
-          );*/
+        res = await postReAsignacionTareaOpas(
+          {
+            id_tarea_asignada:
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_persona_a_quien_se_reasigna: currentGrupo?.value,
+            comentario_reasignacion: comentario,
+          },
+          handleSecondLoading
+        );
         break;
       default:
         // Default service call or no service call
@@ -203,17 +208,13 @@ export const AccionesFinales = (): JSX.Element => {
             handleGeneralLoading
           );
           break;
-        case 'OPA':
-          showAlert(
-            'Atención',
-            'No hay servicio aún para ver las re-asignaciones de las OPA, así que no hay asignaciones de opa por el momento',
-            'warning'
+        case 'RESPONDER OPA':
+        case 'Responder Opa':
+        case 'Responder OPA':
+          asignaciones = await getReAsignacionesTareasOpas(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            handleGeneralLoading
           );
-          // Fetch the assignments for OOpas
-          /* asignaciones = await getAsignacionesOPas(
-              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
-              handleGeneralLoading
-            );*/
           break;
         default:
           // Default fetch call or no fetch call
