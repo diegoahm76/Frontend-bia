@@ -29,7 +29,7 @@ export const useBandejaTareas = () => {
         label: '',
       },
       mostrar_respuesta_con_req_pendientes:{
-        value: true,
+        value: false,
         label: '',
       },
       radicado: '',
@@ -62,7 +62,7 @@ export const useBandejaTareas = () => {
         label: '',
       },
       mostrar_respuesta_con_req_pendientes:{
-        value: true,
+        value: false,
         label: '',
       },
 

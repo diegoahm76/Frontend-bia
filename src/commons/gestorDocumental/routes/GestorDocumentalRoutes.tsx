@@ -48,6 +48,7 @@ import { ConsultaEstadoSolicitudes } from '../consulltaEstadoSolicitudes/routes/
 import { Digitalizacion_opas_Routes } from '../digitalizacionOpas/routes/OpasRutes';
 import { Ejemplo } from './components/Ejemplo';
 import { RutesTramitesServicos } from '../TramitesServicios/routes/RutasTramitesServicos';
+import { ReporGenGestorMainScreen } from '../ReportesGeneralesGestorDocumental/screen/ReporGenGestorMainScreen';
  
 const routes = [
   {
@@ -296,6 +297,14 @@ const routes = [
     path: 'ejemploResponsive/',
     name: 'ejemploResponsive',
     component: () => <Ejemplo />,
+  },
+
+
+  // ? reportes generales del gestor documental
+  {
+    path: 'reportes_generales_gestor_documental/',
+    name: 'reportes_generales_gestor_documental',
+    component: () => <ReporGenGestorMainScreen />,
   }
 
 

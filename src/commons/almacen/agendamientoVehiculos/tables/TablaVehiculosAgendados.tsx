@@ -25,7 +25,7 @@ const TablaVehiculosAgendados: FC<props_table> = ({
   set_data_solicitud_a_aprobar
 }) => {
 
-  const editar_detalle_vehiculo_agendado = (params: interface_detalles_vehiculos_agendados | interface_data_agendamiento_vehiculos) => {
+  const editar_detalle_vehiculo_agendado = (params: any) => {
     set_accion('editar_agendamiento');
     console.log(params);
     set_data_editar_agendamiento(params);

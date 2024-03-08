@@ -12,6 +12,10 @@ import { VistaComplementoTarea } from '../mainModule/bandejaDeTareas/components/
 import { MainScreenSeguimientoTarea } from '../modules/seguimientoTarea/screen/MainScreenSeguimientoTarea';
 import { VistaTareasOtros } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/otros/VistaTareasOtros';
 import { VistaTareasTramites } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/tramites/VistaTareaTramites';
+import { VistaTareasOpas } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/opas/VistaTareasOpas';
+import { RequerimientoAlUsuarioOPASProvider } from '../modules/OPAS/requerimientosUsuarioOpas/context/RequerimientoUsarioOpasContext';
+import { RequerimientoUsuarioOpasScreen } from '../modules/OPAS/requerimientosUsuarioOpas/screen/RequerimientoUsuarioOpasScreen';
+import { RespuestaOpaUsuario } from '../modules/OPAS/respuestaOpaUsuario/screen/RespuestaOpaUsuario';
 
 const routes = [
   {
@@ -71,6 +75,28 @@ const routes = [
   {
     path: 'info_tarea_complemento_tramite/:idComplementoUsu_PQR',
     component: () => <VistaTareasTramites />,
+  },
+  {
+    path: 'info_tarea_opas/:id_tramite',
+    component: () => <VistaTareasOpas />,
+  },
+
+  //* respuesta y requerimiento opas
+  {
+    path: 'requerimiento_a_usuario_opas/',
+    component: () => (
+      <RequerimientoAlUsuarioOPASProvider>
+        <RequerimientoUsuarioOpasScreen />
+      </RequerimientoAlUsuarioOPASProvider>
+    ),
+  },
+  {
+    path: 'respuesta_opas/',
+    component: () => (
+      <RequerimientoAlUsuarioOPASProvider>
+        <RespuestaOpaUsuario />
+      </RequerimientoAlUsuarioOPASProvider>
+    ),
   },
 ];
 

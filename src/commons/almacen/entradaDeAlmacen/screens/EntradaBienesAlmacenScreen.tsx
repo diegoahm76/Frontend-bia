@@ -243,7 +243,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const validar_entrada = (): void => {
     if(validar_formulario()){
-      articulo.cod_tipo_bien === "A" ? set_entrada_af_is_active(true) : carga_info_items();
+      articulo.cod_tipo_bien === "Activo Fijo" ? set_entrada_af_is_active(true) : carga_info_items();
     }
   }
 
