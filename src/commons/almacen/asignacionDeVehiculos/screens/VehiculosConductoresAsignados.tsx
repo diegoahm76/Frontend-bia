@@ -169,7 +169,7 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
   useEffect(()=>{  
     set_nombre_vehiculo(vehiculo_seleccionado.nombre);
     set_placa_vehiculo(vehiculo_seleccionado.placa);
-    set_marca_vehiculo(vehiculo_seleccionado.marca_nombre);
+    set_marca_vehiculo(vehiculo_seleccionado.marca);
     set_tipo_vehiculo(vehiculo_seleccionado.tipo_vehiculo);
     set_capacidad_pasajeros(vehiculo_seleccionado.capacidad_pasajeros);
     set_color_vehiculo(vehiculo_seleccionado.color);

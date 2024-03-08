@@ -30,8 +30,8 @@ const TableBusquedaVehiculos: React.FC<props> = ({data_busqueda_vehiculos, set_i
 
   const columns: CustomColumn[] = [
     {field: 'tipo_vehiculo', headerName:'Tipo de vehiculo', minWidth:130, flex:1},
-    {field: 'marca_nombre', headerName:'Marca', minWidth:190, flex:1},
-    {field: 'vehiculo_placa', headerName:'Placa', minWidth:120, flex:1},
+    {field: 'marca', headerName:'Marca', minWidth:190, flex:1},
+    {field: 'placa', headerName:'Placa', minWidth:120, flex:1},
     {field: 'capacidad_pasajeros', headerName:'Cantidad de pasajeros', minWidth:150, flex:1},
     {field: 'tiene_platon', headerName:'¿Tiene platon?', minWidth:110, flex:1,
       renderCell: (params)=>(params.row.tiene_platon ? 'Si' : 'No')
