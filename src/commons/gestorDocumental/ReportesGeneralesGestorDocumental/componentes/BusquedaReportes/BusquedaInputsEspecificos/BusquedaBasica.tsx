@@ -269,10 +269,10 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
               />
             ) : currentBusquedaReporte?.value === 4 ? (
               <BusquedaReporteTipoCuatro
-              controlBusquedaGeneradoraReporte={
-                controlBusquedaGeneradoraReporte
-              }
-            />
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
             ) : (
               <>No hay elemento</>
             )}

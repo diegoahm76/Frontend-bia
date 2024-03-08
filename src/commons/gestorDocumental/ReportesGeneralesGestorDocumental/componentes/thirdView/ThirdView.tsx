@@ -35,7 +35,7 @@ export const ThirdView = (): JSX.Element => {
     options: {
       chart: {
         type: 'bar',
-        height: 350,
+        height: 500,
         stacked: true,
         /*toolbar: {
           show: true,
@@ -124,7 +124,7 @@ export const ThirdView = (): JSX.Element => {
               series={chartData.series as ApexOptions['series']}
               options={chartData.options as ApexOptions}
               type="bar"
-              height={530}
+              height={500}
             />
           </div>
           <div id="html-dist"></div>
