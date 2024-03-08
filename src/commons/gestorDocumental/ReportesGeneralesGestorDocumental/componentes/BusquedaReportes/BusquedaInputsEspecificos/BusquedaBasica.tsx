@@ -7,6 +7,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { Title } from '../../../../../../components';
 import { useAppSelector } from '../../../../../../hooks';
 import GrainIcon from '@mui/icons-material/Grain';
+import { control_info } from '../../../../alertasgestor/utils/control_error_or_success';
+import { BusquedaReporteTipoUno } from './busquedaTipoReporteUno/BusquedaReporteTipoUno';
+import { BusquedaReporteTipoTres } from './busquedaTipoReporteTres/BusquedaReporteTipoTres';
+import { BusquedaReporteTipoCuatro } from './busquedaTipoReporteCuatro/BusquedaReporteTipoCuatro';
 
 export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
   //* redux states
@@ -18,8 +22,21 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
     control: controlBusquedaGeneradoraReporte,
     handleSubmit: handleSubmitBusquedaGeneradoraReporte,
     reset: resetBusquedaGeneradoraReporte,
-    watch : watchBusquedaGeneradoraReporte,
-  } = useForm();
+    watch: watchBusquedaGeneradoraReporte,
+  } = useForm({
+    defaultValues: {
+      fecha_inicio: '',
+      fecha_fin: '',
+      sede: 'TODAS',
+      numero_expediente: 'TODOS',
+      grupos: 'TODOS',
+      seccion_subseccion: '',
+      serie_subserie: '',
+      grupo: '',
+    },
+  });
+
+  const watchBusquedaGeneradoraReporteExe = watchBusquedaGeneradoraReporte();
 
   /*  const searchSubmitPqrsdf = async () => {
     const {
@@ -154,6 +171,10 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
   };
 */
 
+  const handleSubmit = () => {
+    console.log(watchBusquedaGeneradoraReporteExe, 'siuu');
+  };
+
   if (!currentBusquedaReporte) {
     return <></>;
   }
@@ -171,12 +192,14 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
       }}
     >
       <Grid item xs={12}>
-        <Title title="Búsqueda generadora de reporte" />
+        <Title
+          title={`Búsqueda generadora de reporte ${currentBusquedaReporte?.label}`}
+        />
         <form
           onSubmit={(w) => {
             w.preventDefault();
             console.log('busvando elemento');
-            // handleSubmit();
+            handleSubmit();
           }}
           style={{
             marginTop: '2.2rem',
@@ -226,39 +249,33 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
               />
             </Grid>
 
-            {/*  {control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud
-            ?.label === 'PQRSDF' ||
-          !control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud
-            ?.label ? (
-            <BuscadorPqrsdf
-              control_busqueda_panel_ventanilla={
-                control_busqueda_panel_ventanilla
+            {currentBusquedaReporte?.value === 1 ? (
+              <BusquedaReporteTipoUno
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
+            ) : currentBusquedaReporte?.value === 2 ? (
+              <BusquedaReporteTipoUno
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
+            ) : currentBusquedaReporte?.value === 3 ? (
+              <BusquedaReporteTipoTres
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
+            ) : currentBusquedaReporte?.value === 4 ? (
+              <BusquedaReporteTipoCuatro
+              controlBusquedaGeneradoraReporte={
+                controlBusquedaGeneradoraReporte
               }
             />
-          ) : control_busqueda_panel_ventanilla?._formValues
-              ?.tipo_de_solicitud?.label === 'Tramites y servicios' ? (
-            <BuscadorTramitesYservicios
-              control_busqueda_panel_ventanilla={
-                control_busqueda_panel_ventanilla
-              }
-            />
-          ) : control_busqueda_panel_ventanilla?._formValues
-              ?.tipo_de_solicitud?.label === 'Otros' ? (
-            <BuscadorOtros
-              control_busqueda_panel_ventanilla={
-                control_busqueda_panel_ventanilla
-              }
-            />
-          ) : control_busqueda_panel_ventanilla?._formValues
-              ?.tipo_de_solicitud?.label === 'OPAS' ? (
-            <BuscadorOpas
-              control_busqueda_panel_ventanilla={
-                control_busqueda_panel_ventanilla
-              }
-            />
-          ) : (
-            <>No hay elemento</>
-          )}*/}
+            ) : (
+              <>No hay elemento</>
+            )}
           </Grid>
 
           <Stack
@@ -282,6 +299,9 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
               startIcon={<CleanIcon />}
               onClick={() => {
                 console.log('limpiar campos');
+                control_info(
+                  'Se han limpiado los campos de generación de reporte'
+                );
               }}
             >
               LIMPIAR CAMPOS

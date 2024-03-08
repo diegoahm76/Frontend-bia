@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import React from 'react';
 import { Title } from '../../../../../components';
 import Select from 'react-select';
 import { choicesBusquedaReportes } from '../../utils/choicesListaBusquedaReportes';
 import { setCurrentBusquedaReporte } from '../../toolkit/ReportesGeneralesGestorSlice';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import DoDisturbOffIcon from '@mui/icons-material/DoDisturbOff';
+import { control_info } from '../../../alertasgestor/utils/control_error_or_success';
 
 export const BusquedaGeneral = (): JSX.Element => {
   //* dispatch declaration
@@ -75,6 +77,35 @@ export const BusquedaGeneral = (): JSX.Element => {
           </div>
         </Grid>
       </Grid>
+      {currentBusquedaReporte && (
+        <Grid
+          container
+          spacing={2}
+          sx={{ mb: '20px', justifyContent: 'center', alignItems: 'center' }}
+        >
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{
+              mt: '2rem',
+            }}
+          >
+            <Button
+              variant="contained"
+              color="warning"
+              startIcon={<DoDisturbOffIcon />}
+              onClick={() => {
+                dispatch(setCurrentBusquedaReporte(null));
+                control_info('Módulo reiniciado, se ha quitado la selección');
+              }}
+              fullWidth
+            >
+              QUITAR SELECCIÓN
+            </Button>
+          </Grid>
+        </Grid>
+      )}
     </Grid>
   );
 };

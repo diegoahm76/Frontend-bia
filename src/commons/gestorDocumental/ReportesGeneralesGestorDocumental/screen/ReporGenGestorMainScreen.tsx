@@ -8,6 +8,9 @@ import { ThirdView } from '../componentes/thirdView/ThirdView';
 import { BusquedaGeneral } from '../componentes/BusquedaReportes/BusquedaGeneral';
 import { BusquedaBasicaGeneradoraReporte } from '../componentes/BusquedaReportes/BusquedaInputsEspecificos/BusquedaBasica';
 export const ReporGenGestorMainScreen = (): JSX.Element => {
+  // http://localhost:3000/#/app/gestor_documental/reportes_generales_gestor_documental
+  // http://localhost:3000/#/app/gestor_documental/tramites/respuesta_requerimiento_opa
+  // https://apexcharts.com/react-chart-demos/column-charts/column-with-data-labels/
   return (
     <>
       {/* dependiendo de la selección de la búsqueda general se filtran los campos de búsqueda y el reporte que se va a mostrar */}

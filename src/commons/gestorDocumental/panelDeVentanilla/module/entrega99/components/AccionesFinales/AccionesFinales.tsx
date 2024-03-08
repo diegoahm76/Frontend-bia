@@ -87,12 +87,7 @@ export const AccionesFinales = ({
       setInfoReset({});
       dispatch(resetItems());
 
-      Swal.fire({
-        title: 'Solicitud enviada',
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 1500,
-      });
+    
     });
   };
 
