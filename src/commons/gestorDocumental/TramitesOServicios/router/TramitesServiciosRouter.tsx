@@ -13,6 +13,10 @@ export const TramitesServiciosRouter = (): ReactElement => {
           path="tramites_o_servicios/*"
           element={<TramitesOServiciosScreen />}
         />
+        <Route
+          path="respuesta_requerimiento_opa/*"
+          element={<>Respuesta de requerimiento de una opa</>}
+        />
         <Route path="/*" element={<Page404 />} />
       </Routes>
     </UserProvider>
