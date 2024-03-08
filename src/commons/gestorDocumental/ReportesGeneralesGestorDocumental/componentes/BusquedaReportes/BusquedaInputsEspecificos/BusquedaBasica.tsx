@@ -7,6 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Title } from '../../../../../../components';
 import { useAppSelector } from '../../../../../../hooks';
 import GrainIcon from '@mui/icons-material/Grain';
+import { control_info } from '../../../../alertasgestor/utils/control_error_or_success';
 
 export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
   //* redux states
@@ -282,6 +283,7 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
               startIcon={<CleanIcon />}
               onClick={() => {
                 console.log('limpiar campos');
+                control_info('Se han limpiado los campos de generación de reporte');
               }}
             >
               LIMPIAR CAMPOS
