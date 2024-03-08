@@ -242,6 +242,9 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                         field="cod_tipo_bien"
                         header="Tipo bien"
                         style={{ width: '25%' }}
+                        body={(e) => {  
+                          return e.cod_tipo_bien === 'A' ? 'Activo Fijo' : e.cod_tipo_bien === 'C' && 'Consumo';
+                        }}
                       ></Column>
                     </DataTable>
                   </div>
