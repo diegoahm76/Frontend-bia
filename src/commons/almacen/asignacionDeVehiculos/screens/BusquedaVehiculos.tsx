@@ -36,12 +36,17 @@ const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehi
       placa,
     ))
       .then((response: any) => {
-        if (response?.data.length === 0) {
+        if(Object.keys(response).length !== 0 && response.data !== undefined){
+          if (response?.data.length === 0) {
+            set_data_busqueda_vehiculos([]);
+            return false;
+          } else {
+            set_data_busqueda_vehiculos(response.data);
+            return true;
+          }
+        } else {
           set_data_busqueda_vehiculos([]);
           return false;
-        } else {
-          set_data_busqueda_vehiculos(response.data);
-          return true;
         }
       })
     return validado;
