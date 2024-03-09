@@ -35,7 +35,7 @@ export const ThirdView = (): JSX.Element => {
     options: {
       chart: {
         type: 'bar',
-        height: 350,
+        height: 500,
         stacked: true,
         /*toolbar: {
           show: true,
@@ -106,7 +106,8 @@ export const ThirdView = (): JSX.Element => {
         container
         sx={{
           position: 'relative',
-          background: '#FAFAFA',
+          background: `url('https://i0.wp.com/biocarbono.org/wp-content/uploads/2022/01/tmbnl-cormacarena.png') no-repeat center center, #FAFAFA `,
+          backgroundSize: '55% 55%',
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
@@ -115,7 +116,7 @@ export const ThirdView = (): JSX.Element => {
         }}
       >
         <Grid item xs={12} sx={{ mb: '1rem' }}>
-          <Title title="Reporte de índices de carpetas / expedientes por (sección / subsección / serie - subserie)" />
+          <Title title="Reporte de índices de carpetas / expedientes" />
         </Grid>
         <div style={{ width: '100%', height: '100%' }}>
           <div id="chart" style={{ width: '100%', height: '100%' }}>
@@ -124,7 +125,7 @@ export const ThirdView = (): JSX.Element => {
               series={chartData.series as ApexOptions['series']}
               options={chartData.options as ApexOptions}
               type="bar"
-              height={530}
+              height={500}
             />
           </div>
           <div id="html-dist"></div>
