@@ -9,6 +9,8 @@ import { BusquedaGeneral } from '../componentes/BusquedaReportes/BusquedaGeneral
 import { BusquedaBasicaGeneradoraReporte } from '../componentes/BusquedaReportes/BusquedaInputsEspecificos/BusquedaBasica';
 import { useAppSelector } from '../../../../hooks';
 import { FourhView } from '../componentes/fourthView/FourhView';
+import { FirstView } from '../componentes/firstView/FirstView';
+import { SecondView } from '../componentes/secondView/SecondView';
 export const ReporGenGestorMainScreen = (): JSX.Element => {
   const { currentBusquedaReporte } = useAppSelector(
     (state) => state.ReportesGeneralesGestorSlice
@@ -24,9 +26,9 @@ export const ReporGenGestorMainScreen = (): JSX.Element => {
       {/* se muestra los inputs según la selección inicial, se no se ha seleccionado nada en general no entra a este componente */}
       <BusquedaBasicaGeneradoraReporte />
       {currentBusquedaReporte?.value === 1 ? (
-        <></>
+        <FirstView/>
       ) : currentBusquedaReporte?.value === 2 ? (
-        <></>
+        <SecondView/>
       ) : currentBusquedaReporte?.value === 3 ? (
         <ThirdView/>
       ) : currentBusquedaReporte?.value === 4 ? (

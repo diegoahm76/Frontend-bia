@@ -84,7 +84,8 @@ export const FourhView = (): JSX.Element => {
         container
         sx={{
           position: 'relative',
-          background: '#FAFAFA',
+          background: `url('https://i0.wp.com/biocarbono.org/wp-content/uploads/2022/01/tmbnl-cormacarena.png') no-repeat center center, #FAFAFA `,
+          backgroundSize: '55% 55%',
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
@@ -93,7 +94,7 @@ export const FourhView = (): JSX.Element => {
         }}
       >
         <Grid item xs={12} sx={{ mb: '1rem' }}>
-          <Title title="Reporte de índices de carpetas / expedientes por (sección / subsección / serie - subserie)" />
+          <Title title="Reporte de índices de carpetas / expedientes" />
         </Grid>
         <div style={{ width: '100%', height: '100%' }}>
           <div id="chart" style={{ width: '100%', height: '100%' }}>
