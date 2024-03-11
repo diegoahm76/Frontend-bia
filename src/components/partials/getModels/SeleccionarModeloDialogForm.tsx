@@ -41,7 +41,7 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   get_filters_models: any;
   models: any[];
-  columns_model: GridColDef[];
+  columns_model: GridColDef[] | null;
   row_id: string | number;
   set_current_model: any;
   title_table_modal?: string | null;
@@ -367,10 +367,13 @@ const SeleccionarModeloDialogForm = ({
                 sx={{ marginTop: '6px' }}
               >
                 <ButtonGroup style={{ margin: 7 }}>
-                  {download_xls({ nurseries: models, columns: columns_model })}
+                  {download_xls({
+                    nurseries: models,
+                    columns: columns_model == null ? [] : columns_model,
+                  })}
                   {download_pdf({
                     nurseries: models,
-                    columns: columns_model,
+                    columns: columns_model == null ? [] : columns_model,
                     title: title_table_modal,
                   })}
                 </ButtonGroup>

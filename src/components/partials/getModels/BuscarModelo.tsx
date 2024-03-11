@@ -33,7 +33,7 @@ interface IProps {
   reset_values?: any;
   get_filters_models: any;
   models: any[];
-  columns_model: GridColDef[];
+  columns_model: GridColDef[] | null;
   row_id: string | number;
   set_current_model?: any;
   form_inputs_list?: any[];
