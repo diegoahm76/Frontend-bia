@@ -50,6 +50,8 @@ import { Ejemplo } from './components/Ejemplo';
 import { RutesTramitesServicos } from '../TramitesServicios/routes/RutasTramitesServicos';
 import { ReporGenGestorMainScreen } from '../ReportesGeneralesGestorDocumental/screen/ReporGenGestorMainScreen';
 import { ChartDataProvider } from '../ReportesGeneralesGestorDocumental/context/DataChartContext';
+import { ReportIndicadoresPqrsdf } from '../ReportesIndicadoresPqrsdf/screen/ReportIndicadoresPqrsdf';
+import { ChartDataProviderPQRSDF } from '../ReportesIndicadoresPqrsdf/context/DataChartContext';
 
 const routes = [
   {
@@ -307,6 +309,15 @@ const routes = [
       <ChartDataProvider>
         <ReporGenGestorMainScreen />
       </ChartDataProvider>
+    ),
+  },
+  {
+    path: 'reportes_pqrsdf_gestor_documental/',
+    name: 'reportes_pqrsdf_gestor_documental',
+    component: () => (
+      <ChartDataProviderPQRSDF>
+        <ReportIndicadoresPqrsdf />
+      </ChartDataProviderPQRSDF>
     ),
   },
 ];
