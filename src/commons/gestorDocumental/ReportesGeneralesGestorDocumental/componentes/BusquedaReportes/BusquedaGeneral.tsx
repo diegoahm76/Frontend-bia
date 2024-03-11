@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Title } from '../../../../../components';
 import Select from 'react-select';
 import { choicesBusquedaReportes } from '../../utils/choicesListaBusquedaReportes';
@@ -8,14 +8,24 @@ import { setCurrentBusquedaReporte } from '../../toolkit/ReportesGeneralesGestor
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import DoDisturbOffIcon from '@mui/icons-material/DoDisturbOff';
 import { control_info } from '../../../alertasgestor/utils/control_error_or_success';
+import { ChartDataContext } from '../../context/DataChartContext';
 
-export const BusquedaGeneral = (): JSX.Element => {
+export const BusquedaGeneral = ({
+  controlBusquedaGeneradoraReporte,
+  handleSubmitBusquedaGeneradoraReporte,
+  resetBusquedaGeneradoraReporte,
+  watchBusquedaGeneradoraReporte,
+}: any): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   const { currentBusquedaReporte } = useAppSelector(
     (state) => state.ReportesGeneralesGestorSlice
   );
+
+  //* context declaration
+  const { setIsReportReady } = useContext(ChartDataContext);
+
   return (
     <Grid
       container
@@ -32,7 +42,7 @@ export const BusquedaGeneral = (): JSX.Element => {
       }}
     >
       <Grid item xs={12} sx={{ mb: '2rem' }}>
-        <Title title="Reportes generales de gestor documental" />
+        <Title title="Reportes indicadores gerenciales expedientes / carpetas" />
       </Grid>
       <Grid
         container
@@ -56,6 +66,14 @@ export const BusquedaGeneral = (): JSX.Element => {
               value={currentBusquedaReporte}
               onChange={(selectedOption) => {
                 dispatch(setCurrentBusquedaReporte(selectedOption));
+                setIsReportReady(false);
+                resetBusquedaGeneradoraReporte({
+                  fecha_inicio: '',
+                  fecha_fin: '',
+                  seccion_subseccion: '',
+                  serie_subserie: '',
+                  grupo: '',
+                });
                 console.log(selectedOption);
               }}
               options={choicesBusquedaReportes ?? []}
@@ -97,6 +115,14 @@ export const BusquedaGeneral = (): JSX.Element => {
               startIcon={<DoDisturbOffIcon />}
               onClick={() => {
                 dispatch(setCurrentBusquedaReporte(null));
+                resetBusquedaGeneradoraReporte({
+                  fecha_inicio: '',
+                  fecha_fin: '',
+                  seccion_subseccion: '',
+                  serie_subserie: '',
+                  grupo: '',
+                });
+                setIsReportReady(false);
                 control_info('Módulo reiniciado, se ha quitado la selección');
               }}
               fullWidth

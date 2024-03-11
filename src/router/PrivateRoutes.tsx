@@ -10,7 +10,7 @@ interface Props {
 export const PrivateRoutes: React.FC<Props> = ({ children }: Props) => {
   const { status } = useSelector((state: AuthSlice) => state.auth);
 
-  return status === 'authenticated' ? (
+  return status !== 'authenticated' ? (
     children
   ) : (
     <Navigate to={'/auth/login'} />

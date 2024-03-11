@@ -14,6 +14,7 @@ export const BusquedaReporteTipoUno = ({
           control={controlBusquedaGeneradoraReporte}
           render={({ field: { onChange, value } }) => (
             <TextField
+              required
               disabled
               fullWidth
               label="Sede de la corporación"

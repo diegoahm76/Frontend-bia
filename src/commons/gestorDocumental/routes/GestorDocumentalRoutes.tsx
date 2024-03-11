@@ -49,7 +49,8 @@ import { Digitalizacion_opas_Routes } from '../digitalizacionOpas/routes/OpasRut
 import { Ejemplo } from './components/Ejemplo';
 import { RutesTramitesServicos } from '../TramitesServicios/routes/RutasTramitesServicos';
 import { ReporGenGestorMainScreen } from '../ReportesGeneralesGestorDocumental/screen/ReporGenGestorMainScreen';
- 
+import { ChartDataProvider } from '../ReportesGeneralesGestorDocumental/context/DataChartContext';
+
 const routes = [
   {
     path: 'organigrama/',
@@ -152,7 +153,6 @@ const routes = [
     component: () => <EncuestaRoutes />,
   },
 
-
   {
     path: 'Interno_encuesta/',
     name: 'Interno_encuesta',
@@ -229,7 +229,7 @@ const routes = [
     name: 'digitalizacion_opas',
     component: () => <Digitalizacion_opas_Routes />,
   },
-  
+
   {
     path: 'Pqrsdf/complementos/',
     name: 'complementos_pqrsdf',
@@ -245,13 +245,13 @@ const routes = [
     name: 'consecutivo_configuracion',
     component: () => <ConsecutivoConfi />,
   },
-  
+
   {
     path: 'Reportes_PQRSDF/',
     name: 'Reportes_PQRSDF',
     component: () => <Consulta_Solicitud_Routes />,
   },
-   {
+  {
     path: 'Consulta_AnonimoPQR/',
     name: 'Consulta_AnonimoPQR',
     component: () => <Consulta_AnonimoPQR_Routes />,
@@ -266,7 +266,7 @@ const routes = [
     name: 'ConsultaExternoPQR',
     component: () => <Consulta_ExternoPQR_Routes />,
   },
- 
+
   {
     path: 'ConsultaOtros/',
     name: 'ConsultaOtros',
@@ -277,7 +277,7 @@ const routes = [
     name: 'ConsultaOtrosExterno',
     component: () => <Consulta_OtrosExterno_Routes />,
   },
-  
+
   {
     path: 'Eliminacion_Documental/',
     name: 'Eliminacion_Documental',
@@ -299,29 +299,30 @@ const routes = [
     component: () => <Ejemplo />,
   },
 
-
   // ? reportes generales del gestor documental
   {
     path: 'reportes_generales_gestor_documental/',
     name: 'reportes_generales_gestor_documental',
-    component: () => <ReporGenGestorMainScreen />,
-  }
-
-
+    component: () => (
+      <ChartDataProvider>
+        <ReporGenGestorMainScreen />
+      </ChartDataProvider>
+    ),
+  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-            element={route.component()}
-          />
-        ))}
-        <Route path="/*" element={<Page404 />} />
-      </Routes>
+    <Routes>
+      {routes.map((route) => (
+        <Route
+          key={route.path}
+          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+          element={route.component()}
+        />
+      ))}
+      <Route path="/*" element={<Page404 />} />
+    </Routes>
   );
 };
