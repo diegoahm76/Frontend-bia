@@ -13,6 +13,7 @@ import { FirstView } from '../componentes/firstView/FirstView';
 import { SecondView } from '../componentes/secondView/SecondView';
 import { useIndicadores } from '../hooks/useIndicadores';
 import { ChartDataContextPQRSDF } from '../context/DataChartContext';
+import { FifthView } from '../componentes/fifthView/FifithView';
 
 export const ReportIndicadoresPqrsdf = (): JSX.Element => {
   const { currentBusquedaReporte } = useAppSelector(
@@ -52,23 +53,27 @@ export const ReportIndicadoresPqrsdf = (): JSX.Element => {
       ) : currentBusquedaReporte?.value === 3 ? (
         <ThirdView/>
       ) : currentBusquedaReporte?.value === 4 ? (
-        <></>
+        <FourhView/>
+      ) : currentBusquedaReporte?.value === 5 ? (
+        <FifthView/>
       ) : (
         <></>
       )}
 
-      {/*{isReporteReady &&
+     {/* {isReporteReady &&
         (currentBusquedaReporte?.value === 1 ? (
-          <FirstView />
-        ) : currentBusquedaReporte?.value === 2 ? (
-          <SecondView />
-        ) : currentBusquedaReporte?.value === 3 ? (
-          <ThirdView />
-        ) : currentBusquedaReporte?.value === 4 ? (
-          <FourhView />
-        ) : (
-          <></>
-        ))}*/}
+        <FirstView />
+      ) : currentBusquedaReporte?.value === 2 ? (
+        <SecondView/>
+      ) : currentBusquedaReporte?.value === 3 ? (
+        <ThirdView/>
+      ) : currentBusquedaReporte?.value === 4 ? (
+        <FourhView/>
+      ) : currentBusquedaReporte?.value === 5 ? (
+        <FifthView/>
+      ) : (
+        <></>
+      ))}*/}
     </>
   );
 };

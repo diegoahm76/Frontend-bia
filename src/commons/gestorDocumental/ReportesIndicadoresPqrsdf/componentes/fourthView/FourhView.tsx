@@ -33,16 +33,11 @@ export const FourhView = (): JSX.Element => {
             series={chartDataViewFour?.series as ApexOptions['series'] ?? []}
             options={chartDataViewFour?.options as ApexOptions ?? []}
             type="bar"
-            height={500}
+            height={650}
           />
         </div>
         <div id="html-dist"></div>
       </div>
-      <Grid
-        container
-        spacing={2}
-        sx={{ mb: '20px', justifyContent: 'center', alignItems: 'center' }}
-      ></Grid>
     </Grid>
   );
 };
