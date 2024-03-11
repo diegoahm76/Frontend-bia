@@ -37,7 +37,7 @@ import CloseIcon from '@mui/icons-material/Close';
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function PanelSolicitudNotificacionScreen(): JSX.Element {
+export function VerSolicitudNotificacionScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const columns_pqrs: ColumnProps[] = [
     {
