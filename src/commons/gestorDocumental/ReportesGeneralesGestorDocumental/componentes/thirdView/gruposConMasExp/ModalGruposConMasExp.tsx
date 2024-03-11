@@ -84,7 +84,7 @@ export const ModalGruposConMasExp = (): JSX.Element => {
   return (
     <Dialog
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       open={openModalOne}
       onClose={() => {
         handleOpenModalOne(false);
