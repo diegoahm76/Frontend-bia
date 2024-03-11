@@ -11,168 +11,57 @@ import { control_info } from '../../../../alertasgestor/utils/control_error_or_s
 import { BusquedaReporteTipoUno } from './busquedaTipoReporteUno/BusquedaReporteTipoUno';
 import { BusquedaReporteTipoTres } from './busquedaTipoReporteTres/BusquedaReporteTipoTres';
 import { BusquedaReporteTipoCuatro } from './busquedaTipoReporteCuatro/BusquedaReporteTipoCuatro';
+import { fetchChartData } from '../../../services/getDataCharts.service';
+import { current } from '@reduxjs/toolkit';
+import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
+import { useContext } from 'react';
+import { ChartDataContext } from '../../../context/DataChartContext';
+import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
 
-export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
+export const BusquedaBasicaGeneradoraReporte = ({
+  controlBusquedaGeneradoraReporte,
+  handleSubmitBusquedaGeneradoraReporte,
+  resetBusquedaGeneradoraReporte,
+  watchBusquedaGeneradoraReporte,
+}: any): JSX.Element => {
   //* redux states
   const { currentBusquedaReporte } = useAppSelector(
     (state) => state.ReportesGeneralesGestorSlice
   );
 
-  const {
-    control: controlBusquedaGeneradoraReporte,
-    handleSubmit: handleSubmitBusquedaGeneradoraReporte,
-    reset: resetBusquedaGeneradoraReporte,
-    watch: watchBusquedaGeneradoraReporte,
-  } = useForm({
-    defaultValues: {
-      fecha_inicio: '',
-      fecha_fin: '',
-      sede: 'TODAS',
-      numero_expediente: 'TODOS',
-      grupos: 'TODOS',
-      seccion_subseccion: '',
-      serie_subserie: '',
-      grupo: '',
-    },
-  });
+  //* context declaration
+  const { 
+    generalLoading, 
+    handleGeneralLoading,
+    secondLoading, 
+    handleSecondLoading,
+    thirdLoading, 
+    handleThirdLoading,
+    fourthLoading, 
+    handleFourthLoading
+  } = useContext(ModalAndLoadingContext);
+
+  const {chartDataViewOne, setChartDataViewOne,setChartDataViewTwo,setChartDataViewThree,setChartDataViewFour, setIsReportReady} = useContext(ChartDataContext);
 
   const watchBusquedaGeneradoraReporteExe = watchBusquedaGeneradoraReporte();
 
-  /*  const searchSubmitPqrsdf = async () => {
-    const {
-      radicado,
-      estado_actual_solicitud,
-      fecha_inicio,
-      fecha_fin,
-      tipo_pqrsdf,
-    } = watch_busqueda_panel_ventanilla;
-    const res = await getGrilladoPqrsdfPanelVentanilla(
-      estado_actual_solicitud?.label,
-      radicado,
-      '', //* va marcado manualmente como PQRSDF (tipo_de_solicitud)
-      fecha_inicio,
-      fecha_fin,
-      tipo_pqrsdf?.value,
-      handleSecondLoading
-    );
+  const handleSubmit = () => {
 
-    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
-
-    //* se limpian los otros controles para no crear conflictos
-    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-    dispatch(setListaElementosComplementosRequerimientosOtros([]));
-  };
-  const searchSubmitTramitesYservicios = async () => {
-    const {
-      radicado,
-      fecha_inicio,
-      fecha_fin,
-      nombre_titular,
-      asunto_proyecto,
-      pago_tramite,
-      expediente,
-      estado_actual_solicitud,
-    } = watch_busqueda_panel_ventanilla;
-    const res = await getGrilladoTramitesPanelVentanilla(
-      handleSecondLoading,
-      radicado,
-      fecha_inicio,
-      fecha_fin,
-      nombre_titular,
-      asunto_proyecto,
-      pago_tramite?.value,
-      expediente,
-      estado_actual_solicitud?.label
-    );
-    console.log('res listado de tramites', res);
-    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
-
-    //* se limpian los otros controles para no crear conflictos
-    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-    dispatch(setListaElementosComplementosRequerimientosOtros([]));
-  };
-
-  const searchSubmitOtros = async () => {
-    const { radicado, estado_actual_solicitud, fecha_inicio, fecha_fin } =
-      watch_busqueda_panel_ventanilla;
-
-    const res = await getGrilladoSolicitudesOtrosfPanelVentanilla(
-      estado_actual_solicitud?.label,
-      radicado,
-      fecha_inicio,
-      fecha_fin,
-      handleSecondLoading
-    );
-    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
-    //* se limpian los otros controles para no crear conflictos
-    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-    dispatch(setListaElementosComplementosRequerimientosOtros([]));
-  };
-
-  const searchSubmitopas = async () => {
-    const {
-      nombre_titular,
-      radicado,
-      nombre_proyecto,
-      estado_actual_solicitud,
-      fecha_inicio,
-      fecha_fin,
-    } = watch_busqueda_panel_ventanilla;
-
-    const res = await getOpasPanVen(
-      handleSecondLoading,
-      fecha_inicio,
-      fecha_fin,
-      nombre_proyecto,
-      estado_actual_solicitud?.label,
-      radicado,
-      nombre_titular
-    );
-
-    dispatch(setListaElementosPqrsfTramitesUotrosBusqueda(res));
-
-    //* se limpian los otros controles para no crear conflictos
-    dispatch(setCurrentElementPqrsdComplementoTramitesYotros(null));
-    dispatch(setListaElementosComplementosRequerimientosOtros([]));
-  };*/
-
-  /*  const handleSubmit = () => {
-    const tipoDeSolicitud:
-      | 'PQRSDF'
-      | 'Tramites y servicios'
-      | 'Otros'
-      | 'OPAS'
-      | undefined =
-      control_busqueda_panel_ventanilla?._formValues?.tipo_de_solicitud?.label;
-
-    if (!tipoDeSolicitud) {
-      Swal.fire({
-        title: 'Opps...',
-        text: 'Debe seleccionar un tipo de solicitud para realizar la búsqueda',
-        icon: 'warning',
-        confirmButtonText: 'Aceptar',
-      });
-      return;
-    }
-
-    const searchActions = {
-      PQRSDF: searchSubmitPqrsdf,
-      'Tramites y servicios': searchSubmitTramitesYservicios,
-      Otros: searchSubmitOtros,
-      OPAS: searchSubmitopas,
+    console.log('chartDataViewOne',chartDataViewOne)
+    const chartDataHandlers: any  = {
+      1: { setChartData: setChartDataViewOne, url: 'http://localhost:3001/chartUno', handleLoading: handleGeneralLoading },
+      2: { setChartData: setChartDataViewTwo, url: 'http://localhost:3001/chartDos', handleLoading: handleSecondLoading },
+      3: { setChartData: setChartDataViewThree, url: 'http://localhost:3001/chartTres', handleLoading: handleThirdLoading },
+      4: { setChartData: setChartDataViewFour, url: 'http://localhost:3001/chartCuatro', handleLoading: handleFourthLoading },
     };
 
-    const searchAction = searchActions[tipoDeSolicitud];
+    const handlers = chartDataHandlers[currentBusquedaReporte?.value];
 
-    //* se debe pasar el tema del loading
-    if (searchAction) {
-      searchAction();
+    if (handlers) {
+      fetchChartData(handlers.setChartData, handlers.url, handlers.handleLoading, setIsReportReady)
+    } else {
+      showAlert('Atención', 'Indicador no válido', 'warning');
     }
-  };
-*/
-
-  const handleSubmit = () => {
-    console.log(watchBusquedaGeneradoraReporteExe, 'siuu');
   };
 
   if (!currentBusquedaReporte) {
@@ -193,7 +82,7 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
     >
       <Grid item xs={12}>
         <Title
-          title={`Búsqueda generadora de reporte ${currentBusquedaReporte?.label}`}
+          title={`Búsqueda generadora de indicadores gerenciales para:  ${currentBusquedaReporte?.label}`}
         />
         <form
           onSubmit={(w) => {
@@ -213,6 +102,7 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                   <TextField
+                    // required
                     fullWidth
                     label="Fecha inicio"
                     type="date"
@@ -234,6 +124,7 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                   <TextField
+                    // required
                     fullWidth
                     label="Fecha final"
                     type="date"
@@ -269,10 +160,10 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
               />
             ) : currentBusquedaReporte?.value === 4 ? (
               <BusquedaReporteTipoCuatro
-              controlBusquedaGeneradoraReporte={
-                controlBusquedaGeneradoraReporte
-              }
-            />
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
             ) : (
               <>No hay elemento</>
             )}
@@ -285,7 +176,9 @@ export const BusquedaBasicaGeneradoraReporte = (): JSX.Element => {
             sx={{ mb: '20px', mt: '20px' }}
           >
             <LoadingButton
-              loading={false}
+              loading={
+                generalLoading || secondLoading || thirdLoading || fourthLoading
+              }
               type="submit"
               color="primary"
               variant="contained"
