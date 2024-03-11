@@ -50,12 +50,12 @@ export const ProtectedRoutes: React.FC = () => {
               <Route path="seguridad/*" element={<SeguridadRoutes />} />
             ) : null}
             {/* ---------------- Gestor documental ---------------- */}
-            {allowed_routes.includes('GEST') ? (
+           {  /*{allowed_routes.includes('GEST') ? ( */}
               <Route
                 path="gestor_documental/*"
                 element={<GestorDocumentalRoutes />}
               />
-            ) : null}
+           { /* ) : null} */}
             {/* ---------------- Almacen ---------------- */}
             {allowed_routes.includes('ALMA') ? (
               <Route path="almacen/*" element={<AlmacenRoutes />} />

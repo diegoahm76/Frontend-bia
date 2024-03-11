@@ -2,9 +2,9 @@
 import Swal from 'sweetalert2';
 
 export function handleApiError(error: any) {
-  let errorMessage = 'Ha ocurrido un error';
+  let errorMessage = error.message || 'Ha ocurrido un error';
 
-  if (error.response) {
+  if (!errorMessage && error.response) {
     if (error.response.status === 500) {
       errorMessage = 'Error del servidor, por favor intente nuevamente';
     } else if (error.response.status === 404) {
@@ -12,9 +12,9 @@ export function handleApiError(error: any) {
     } else {
       errorMessage = `Error desconocido, código de estado: ${error.response.status}`;
     }
-  } else if (error.request) {
+  } else if (!errorMessage && error.request) {
     errorMessage = 'No se recibió respuesta del servidor, por favor intente nuevamente';
-  } else {
+  } else if (!errorMessage) {
     errorMessage = 'Error al configurar la solicitud, por favor intente nuevamente';
   }
 
