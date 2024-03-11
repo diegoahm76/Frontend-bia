@@ -18,9 +18,7 @@ import { ApexOptions } from 'apexcharts';
 export const ModalGruposConMasExp = (): JSX.Element => {
   // * context declaration
   //* context declaration
-  const { thirdLoading, handleThirdLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const {openModalOne,  handleOpenModalOne} = useContext(ModalAndLoadingContext);
 
   //* states declaration
   const [chartData, setChartData] = useState({
@@ -110,20 +108,20 @@ export const ModalGruposConMasExp = (): JSX.Element => {
 
   //* use Effect declaration
   useEffect(() => {
-    if (thirdLoading) {
-      console.log('thirdLoading', thirdLoading);
+    if (openModalOne) {
+      console.log('thirdLoading', openModalOne);
     }
 
     return () => {};
-  }, [thirdLoading]);
+  }, [openModalOne]);
 
   return (
     <Dialog
       fullWidth
       maxWidth="sm"
-      open={thirdLoading}
+      open={openModalOne}
       onClose={() => {
-        handleThirdLoading(false);
+        handleOpenModalOne(false);
       }}
     >
       <DialogTitle>
@@ -134,8 +132,8 @@ export const ModalGruposConMasExp = (): JSX.Element => {
         <div style={{ width: '100%', height: '100%' }}>
           <div id="chart" style={{ width: '100%', height: '100%' }}>
             <ReactApexChart
-              series={chartData.series as ApexOptions['series']}
-              options={chartData.options as ApexOptions}
+              series={chartData?.series as ApexOptions['series'] ?? []}
+              options={chartData?.options as ApexOptions ?? []}
               type="bar"
               height={350}
             />
@@ -154,7 +152,7 @@ export const ModalGruposConMasExp = (): JSX.Element => {
             variant="contained"
             color="error"
             onClick={() => {
-              handleThirdLoading(false);
+              handleOpenModalOne(false);
             }}
             startIcon={<CloseIcon />}
           >

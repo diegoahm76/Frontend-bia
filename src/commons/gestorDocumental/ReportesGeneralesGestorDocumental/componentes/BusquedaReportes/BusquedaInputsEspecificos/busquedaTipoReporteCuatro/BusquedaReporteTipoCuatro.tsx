@@ -21,11 +21,11 @@ export const BusquedaReporteTipoCuatro = ({
           //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
           name="seccion_subseccion"
           control={controlBusquedaGeneradoraReporte}
-          rules={{ required: true }}
+          //rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <div>
               <Select
-                required
+                //required
                 value={value}
                 onChange={(selectedOption) => {
                   //  console.log('')(selectedOption);
@@ -63,11 +63,11 @@ export const BusquedaReporteTipoCuatro = ({
           //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
           name="serie_subserie"
           control={controlBusquedaGeneradoraReporte}
-          rules={{ required: true }}
+          //rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <div>
               <Select
-                required
+                //required
                 value={value}
                 onChange={(selectedOption) => {
                   //  console.log('')(selectedOption);
@@ -105,11 +105,11 @@ export const BusquedaReporteTipoCuatro = ({
           //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
           name="grupo"
           control={controlBusquedaGeneradoraReporte}
-          rules={{ required: true }}
+          //rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <div>
               <Select
-                required
+                //required
                 value={value}
                 onChange={(selectedOption) => {
                   //  console.log('')(selectedOption);
