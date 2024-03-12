@@ -13,6 +13,9 @@ import { MainScreenSeguimientoTarea } from '../modules/seguimientoTarea/screen/M
 import { VistaTareasOtros } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/otros/VistaTareasOtros';
 import { VistaTareasTramites } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/tramites/VistaTareaTramites';
 import { VistaTareasOpas } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/opas/VistaTareasOpas';
+import { RequerimientoAlUsuarioOPASProvider } from '../modules/OPAS/requerimientosUsuarioOpas/context/RequerimientoUsarioOpasContext';
+import { RequerimientoUsuarioOpasScreen } from '../modules/OPAS/requerimientosUsuarioOpas/screen/RequerimientoUsuarioOpasScreen';
+import { RespuestaOpaUsuario } from '../modules/OPAS/respuestaOpaUsuario/screen/RespuestaOpaUsuario';
 
 const routes = [
   {
@@ -78,22 +81,21 @@ const routes = [
     component: () => <VistaTareasOpas />,
   },
 
-
   //* respuesta y requerimiento opas
   {
     path: 'requerimiento_a_usuario_opas/',
     component: () => (
-      <>
-        <>Requirimiento opas</>
-      </>
+      <RequerimientoAlUsuarioOPASProvider>
+        <RequerimientoUsuarioOpasScreen />
+      </RequerimientoAlUsuarioOPASProvider>
     ),
   },
   {
     path: 'respuesta_opas/',
     component: () => (
-      <>
-        <>Respuesta opas</>
-      </>
+      <RequerimientoAlUsuarioOPASProvider>
+        <RespuestaOpaUsuario />
+      </RequerimientoAlUsuarioOPASProvider>
     ),
   },
 ];

@@ -43,34 +43,34 @@ export interface response_detalles_vehiculos_agendados {
 }
 
 export interface interface_detalles_vehiculos_agendados {
-  id_viaje_agendado?: number
-  placa?: string
-  nombre?: string
-  marca?: string
-  id_marca?: number
-  empresa_contratista?: string
-  persona_conductor?: string
-  direccion?: string
-  indicaciones_destino?: string
-  nro_total_pasajeros_req?: number
-  requiere_capacidad_carga?: boolean
-  fecha_partida_asignada?: string
-  hora_partida?: string
-  fecha_retorno_asignada?: string
-  hora_retorno?: string
-  requiere_compagnia_militar?: boolean
-  viaje_autorizado?: boolean
-  observacion_autorizacion?: any
-  fecha_no_autorizado?: any
-  fecha_autorizacion?: string
-  ya_inicio?: boolean
-  ya_llego?: boolean
-  multiples_asignaciones?: boolean
-  estado?: string
-  id_vehiculo_conductor?: number
-  id_solicitud_viaje?: number
-  cod_municipio_destino?: string
-  id_persona_autoriza?: number
+  id_viaje_agendado: number
+  placa: string
+  nombre: string
+  marca: string
+  id_marca: number
+  empresa_contratista: string
+  persona_conductor: string
+  direccion: string
+  indicaciones_destino: string
+  nro_total_pasajeros_req: number
+  requiere_capacidad_carga: boolean
+  fecha_partida_asignada: string
+  hora_partida: string
+  fecha_retorno_asignada: string
+  hora_retorno: string
+  requiere_compagnia_militar: boolean
+  viaje_autorizado: boolean
+  observacion_autorizacion: any
+  fecha_no_autorizado: any
+  fecha_autorizacion: string
+  ya_inicio: boolean
+  ya_llego: boolean
+  multiples_asignaciones: boolean
+  estado: string
+  id_vehiculo_conductor: number
+  id_solicitud_viaje: number
+  cod_municipio_destino: string
+  id_persona_autoriza: number
 }
 
 export interface response_buscar_vehiculo {

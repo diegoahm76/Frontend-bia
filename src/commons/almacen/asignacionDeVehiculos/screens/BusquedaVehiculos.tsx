@@ -4,18 +4,18 @@ import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import TableBusquedaVehiculos from '../tables/TableBusquedaVehiculos';
 import { useAppDispatch } from '../../../../hooks';
-import { data_busqueda_vehiculos } from '../interfaces/types';
+import { interface_vehiculo_seleccionado } from '../interfaces/types';
 import { buscar_vehiculos } from '../thunks/asignacion_vehiculos';
 import { control_error } from '../../../../helpers';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 
 interface props {
   set_id_hoja_vida_vehiculo:React.Dispatch<React.SetStateAction<number>>
-  set_vehiculo_placa:React.Dispatch<React.SetStateAction<string>>
+  set_vehiculo_seleccionado:React.Dispatch<React.SetStateAction<interface_vehiculo_seleccionado>>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehiculo_placa}) => {
+const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehiculo_seleccionado}) => {
   const dispatch = useAppDispatch();
   const [tipo_vehiculo, set_tipo_vehiculo] = useState<string>('');
   const [msj_error_tipo_vehiculo, set_msj_error_tipo_vehiculo] = useState<string>('');
@@ -23,7 +23,7 @@ const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehi
   const [placa, set_placa] = useState<string>('');
 
   // Definimos el estado para almacenar los datos de búsqueda de vehículos
-  const [data_busqueda_vehiculos, set_data_busqueda_vehiculos] = useState<data_busqueda_vehiculos[]>([]);
+  const [data_busqueda_vehiculos, set_data_busqueda_vehiculos] = useState<interface_vehiculo_seleccionado[]>([]);
 
   /**
    * Función asincrónica que obtiene los vehículos mediante una llamada a la función buscar_vehiculos.
@@ -36,12 +36,17 @@ const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehi
       placa,
     ))
       .then((response: any) => {
-        if (response?.data.length === 0) {
+        if(Object.keys(response).length !== 0 && response.data !== undefined){
+          if (response?.data.length === 0) {
+            set_data_busqueda_vehiculos([]);
+            return false;
+          } else {
+            set_data_busqueda_vehiculos(response.data);
+            return true;
+          }
+        } else {
           set_data_busqueda_vehiculos([]);
           return false;
-        } else {
-          set_data_busqueda_vehiculos(response.data);
-          return true;
         }
       })
     return validado;
@@ -183,7 +188,7 @@ const BusquedaVehiculos: React.FC<props> = ({set_id_hoja_vida_vehiculo, set_vehi
 
       <Grid container xs={12}>
         <TableBusquedaVehiculos
-          set_vehiculo_placa={set_vehiculo_placa}
+          set_vehiculo_seleccionado={set_vehiculo_seleccionado}
           set_id_hoja_vida_vehiculo={set_id_hoja_vida_vehiculo}
           data_busqueda_vehiculos={data_busqueda_vehiculos}
         />

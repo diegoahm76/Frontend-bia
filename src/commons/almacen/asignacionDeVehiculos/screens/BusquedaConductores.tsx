@@ -4,7 +4,7 @@ import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import TableBusquedaConductores from '../tables/TableBusquedaCondutores';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { data_busqueda_conductores } from '../interfaces/types';
+import { interface_conductor_seleccionado } from '../interfaces/types';
 import { useAppDispatch } from '../../../../hooks';
 import { buscar_conductores } from '../thunks/asignacion_vehiculos';
 import { control_error } from '../../../../helpers';
@@ -12,12 +12,12 @@ import { control_error } from '../../../../helpers';
 
 interface props {
   set_id_persona_conductor: React.Dispatch<React.SetStateAction<number>>;
-  set_nro_documento: React.Dispatch<React.SetStateAction<string>>;
+  set_conductor_seleccionado: React.Dispatch<React.SetStateAction<interface_conductor_seleccionado>>;
   refrescar_tabla_conductores: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro_documento,refrescar_tabla_conductores}) => {
+const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_conductor_seleccionado,refrescar_tabla_conductores}) => {
   const dispatch = useAppDispatch();
 
   const [tipo_conductor, set_tipo_conductor] = useState<string>('');
@@ -25,7 +25,7 @@ const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro
   const [msj_error_tipo_conductor, set_msj_error_tipo_conductor] = useState<string>('');
 
   // Estado para almacenar los datos de búsqueda de conductores
-  const [data_busqueda_conductores, set_data_busqueda_conductores] = useState<data_busqueda_conductores[]>([]);
+  const [data_busqueda_conductores, set_data_busqueda_conductores] = useState<interface_conductor_seleccionado[]>([]);
 
   /**
    * Función asincrónica que obtiene los conductores según los parámetros de búsqueda.
@@ -36,12 +36,17 @@ const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro
       tipo_conductor,
       nombre_conductor))
       .then((response: any) => {
-        if (response.data.length === 0) {
+        if(Object.keys(response).length !== 0 && response.data !== undefined){
+          if (response?.data.length === 0) {
+            set_data_busqueda_conductores([]);
+            return false;
+          } else {
+            set_data_busqueda_conductores(response.data);
+            return true
+          }
+        } else {
           set_data_busqueda_conductores([]);
           return false;
-        } else {
-          set_data_busqueda_conductores(response.data);
-          return true
         }
       })
       return validado;
@@ -166,7 +171,7 @@ const BusquedaConductores: React.FC<props> = ({set_id_persona_conductor, set_nro
 
       <Grid item container xs={12}>
         <TableBusquedaConductores
-          set_nro_documento={set_nro_documento}
+          set_conductor_seleccionado={set_conductor_seleccionado}
           set_id_persona_conductor={set_id_persona_conductor}
           data_busqueda_conductores={data_busqueda_conductores}/>
       </Grid>

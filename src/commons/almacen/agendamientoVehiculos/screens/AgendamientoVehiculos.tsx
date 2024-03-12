@@ -38,6 +38,7 @@ const AgendamientoVehiculos: React.FC = () => {
   const [placa_vehiculo, set_placa_vehiculo] = useState<string>('');
   const [nombre_vehiculo, set_nombre_vehiculo] = useState<string>('');
   const [marca, set_marca] = useState<string>('');
+  const [conductor_agregado, set_conductor_agregado] = useState<string>('');
   const [placa_vehiculo_agregado, set_placa_vehiculo_agregado] = useState<string>('');
   const [nombre_vehiculo_agregado, set_nombre_vehiculo_agregado] = useState<string>('');
   const [marca_agregado, set_marca_agregado] = useState<string>('');
@@ -188,33 +189,37 @@ const AgendamientoVehiculos: React.FC = () => {
 
   useEffect(()=>{
     if(accion === 'ver_agendamiento'){
+      console.log(data_ver_agendamiento);
+      
       if(Object.keys(data_ver_agendamiento).length !== 0){
         set_conductor(data_ver_agendamiento.apellido_conductor + ' ' + data_ver_agendamiento.nombre_conductor);
         set_placa_vehiculo(data_ver_agendamiento.placa);
         set_nombre_vehiculo(data_ver_agendamiento.nombre);
         set_marca(data_ver_agendamiento.marca);
         set_placa_vehiculo_agregado(data_ver_agendamiento.placa);
+        set_conductor_agregado(data_ver_agendamiento.apellido_conductor + ' ' + data_ver_agendamiento.nombre_conductor);
         set_nombre_vehiculo_agregado(data_ver_agendamiento.nombre);
         set_marca_agregado(data_ver_agendamiento.marca);
         set_fecha_salida(dayjs(data_ver_agendamiento.fecha_partida_asignada));
         set_fecha_retorno(dayjs(data_ver_agendamiento.fecha_retorno_asignada));
-        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida)?.toDate() || null);
-        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno)?.toDate() || null);
+        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida ?? '00:00:00')?.toDate() || null);
+        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno ?? '00:00:00')?.toDate() || null);
       } 
     }
     if(accion === 'editar_agendamiento'){
       if(Object.keys(data_editar_agendamiento).length !== 0){
         set_conductor(data_editar_agendamiento.persona_conductor ?? '');
-        set_placa_vehiculo(data_ver_agendamiento.placa);
-        set_nombre_vehiculo(data_ver_agendamiento.nombre);
-        set_marca(data_ver_agendamiento.marca);
-        set_placa_vehiculo_agregado(data_ver_agendamiento.placa);
-        set_nombre_vehiculo_agregado(data_ver_agendamiento.nombre);
-        set_marca_agregado(data_ver_agendamiento.marca);
-        set_fecha_salida(dayjs(data_ver_agendamiento.fecha_partida_asignada));
-        set_fecha_retorno(dayjs(data_ver_agendamiento.fecha_retorno_asignada));
-        set_hora_salida(parseHora(data_ver_agendamiento.hora_partida)?.toDate() || null);
-        set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno)?.toDate() || null);
+        set_placa_vehiculo(data_editar_agendamiento.placa);
+        set_conductor_agregado(data_editar_agendamiento.persona_conductor);
+        set_nombre_vehiculo(data_editar_agendamiento.nombre);
+        set_marca(data_editar_agendamiento.marca);
+        set_placa_vehiculo_agregado(data_editar_agendamiento.placa);
+        set_nombre_vehiculo_agregado(data_editar_agendamiento.nombre);
+        set_marca_agregado(data_editar_agendamiento.marca);
+        set_fecha_salida(dayjs(data_editar_agendamiento.fecha_partida_asignada));
+        set_fecha_retorno(dayjs(data_editar_agendamiento.fecha_retorno_asignada));
+        set_hora_salida(parseHora(data_editar_agendamiento.hora_partida ?? '00:00:00')?.toDate() || null);
+        set_hora_retorno(parseHora(data_editar_agendamiento.hora_retorno ?? '00:00:00')?.toDate() || null);
       } 
     }
   },[data_ver_agendamiento,accion,id_solicitud_viaje])
@@ -223,13 +228,14 @@ const AgendamientoVehiculos: React.FC = () => {
   const salir_agendamiento = () => {
     eliminar_vehiculo_agregado();
     set_mostrar_agendamiento_vehiculo(false);
-    set_conductor('')
-    set_placa_vehiculo('')
-    set_nombre_vehiculo('')
-    set_marca('')
-    set_placa_vehiculo_agregado('')
-    set_nombre_vehiculo_agregado('')
-    set_marca_agregado('')
+    set_conductor('');
+    set_conductor_agregado('');
+    set_placa_vehiculo('');
+    set_nombre_vehiculo('');
+    set_marca('');
+    set_placa_vehiculo_agregado('');
+    set_nombre_vehiculo_agregado('');
+    set_marca_agregado('');
   }
 
   const limpiar_form_agendamiento = () => {
@@ -298,6 +304,7 @@ const AgendamientoVehiculos: React.FC = () => {
   const agregar_vehiculo = () => {
     if (Object.keys(vehiculo_encontrado).length !== 0) {
       set_mostrar_vehiculo_agregado(true);
+      set_conductor_agregado(vehiculo_encontrado.persona_conductor ?? '');
       set_placa_vehiculo_agregado(vehiculo_encontrado.placa ?? '');
       set_nombre_vehiculo_agregado(vehiculo_encontrado.nombre ?? '');
       set_marca_agregado(vehiculo_encontrado.marca ?? '');
@@ -385,7 +392,7 @@ const AgendamientoVehiculos: React.FC = () => {
           <Title title='Agendamiento de vehículos' />
           
           <Grid container spacing={3} item xs={12} mt={0.5} mb={2}>
-            <Grid item xs={12} md={2} sx={{
+            <Grid item xs={12} lg={4} sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -405,7 +412,7 @@ const AgendamientoVehiculos: React.FC = () => {
               </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={12} md={2} sx={{
+            <Grid item xs={12} lg={4} sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -425,7 +432,7 @@ const AgendamientoVehiculos: React.FC = () => {
               </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} lg={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Departamento de destino</InputLabel>
                 <Select
@@ -441,7 +448,7 @@ const AgendamientoVehiculos: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} lg={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Municipio de destino</InputLabel>
                 <Select
@@ -456,7 +463,7 @@ const AgendamientoVehiculos: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={2} sx={{
+            <Grid item xs={12} lg={4} sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -476,7 +483,7 @@ const AgendamientoVehiculos: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} lg={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>¿Requiere carga?</InputLabel>
                 <Select
@@ -492,7 +499,7 @@ const AgendamientoVehiculos: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={2.4} sx={{
+            <Grid item xs={12} lg={4} sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -512,7 +519,7 @@ const AgendamientoVehiculos: React.FC = () => {
               </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={12} md={2.4} sx={{
+            <Grid item xs={12} lg={4} sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -532,7 +539,7 @@ const AgendamientoVehiculos: React.FC = () => {
               </LocalizationProvider>
             </Grid>
 
-            <Grid item xs={12} md={2.4}>
+            <Grid item xs={12} lg={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Estado_solicitud</InputLabel>
                 <Select
@@ -550,35 +557,38 @@ const AgendamientoVehiculos: React.FC = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={2.4} sx={{
-              display:'flex',
-              justifyContent: 'center',
-              alignItems:'center'
-              }} >
-              <Button
-                fullWidth
-                color='primary'
-                variant='contained'
-                startIcon={<SearchIcon />}
-                onClick={obtener_resultados_solicitudes}
-              >
-                Buscar
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={2.4} sx={{
-              display:'flex',
-              justifyContent: 'center',
-              alignItems:'center',
-              }} >
-              <Button
-                fullWidth
-                color="inherit"
-                variant="outlined"
-                startIcon={<CleanIcon />}
-                onClick={limpiar_form_agendamiento}
-              >
-                Limpiar
-              </Button>
+            <Grid item container spacing={2} xs={12} sx={{display:'flex', justifyContent:'end'}} >
+              <Grid item xs={12} lg={4} sx={{
+                display:'flex',
+                justifyContent: 'center',
+                alignItems:'center'
+                }} >
+                <Button
+                  fullWidth
+                  color='primary'
+                  variant='contained'
+                  startIcon={<SearchIcon />}
+                  onClick={obtener_resultados_solicitudes}
+                >
+                  Buscar
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} lg={4} sx={{
+                display:'flex',
+                justifyContent: 'center',
+                alignItems:'center',
+                }} >
+                <Button
+                  fullWidth
+                  color="inherit"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={limpiar_form_agendamiento}
+                >
+                  Limpiar
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
 
@@ -644,12 +654,12 @@ const AgendamientoVehiculos: React.FC = () => {
             background: '#FAFAFA',
             borderRadius: '15px',
             p: '20px',
-            mb: '20px',
+            my: '20px',
             boxShadow: '0px 3px 6px #042F4A26',
           }}>
             <Title title='Seleccionar vehículo' />
 
-            <Grid item xs={12} md={1.8} sx={{
+            <Grid item xs={12} lg={3} sx={{
               display:'flex',
               justifyContent: 'center',
               alignItems:'center',
@@ -665,7 +675,7 @@ const AgendamientoVehiculos: React.FC = () => {
                 />
             </Grid>
 
-            <Grid item xs={12} md={1.8} sx={{
+            <Grid item xs={12} lg={3} sx={{
               display:'flex',
               justifyContent: 'center',
               alignItems:'center',
@@ -681,7 +691,7 @@ const AgendamientoVehiculos: React.FC = () => {
                 />
             </Grid>
 
-            <Grid item xs={12} md={1.8} sx={{
+            <Grid item xs={12} lg={3} sx={{
               display:'flex',
               justifyContent: 'center',
               alignItems:'center',
@@ -697,7 +707,7 @@ const AgendamientoVehiculos: React.FC = () => {
                 />
             </Grid>
 
-            <Grid item xs={12} md={1.8} sx={{
+            <Grid item xs={12} lg={3} sx={{
               display:'flex',
               justifyContent: 'center',
               alignItems:'center',
@@ -713,43 +723,49 @@ const AgendamientoVehiculos: React.FC = () => {
                 />
             </Grid>
 
-            <Grid item xs={12} md={2} sx={{
+            <Grid item container spacing={2} xs={12} sx={{
               display:'flex',
-              justifyContent: 'center',
-              alignItems:'center'
-              }} >
-              <Button
-                fullWidth
-                color='primary'
-                variant='contained'
-                startIcon={<SearchIcon />}
-                disabled={accion !== 'aprobar_agendamiento' && accion !== 'editar_agendamiento'}
-                onClick={()=>set_mostrar_buscar_vehiculo(true)}
-              >
-                Buscar
-              </Button>
+              justifyContent: 'end',
+            }}>
+              <Grid item xs={12} lg={3} sx={{
+                display:'flex',
+                justifyContent: 'center',
+                alignItems:'center'
+                }} >
+                <Button
+                  fullWidth
+                  color='primary'
+                  variant='contained'
+                  startIcon={<SearchIcon />}
+                  disabled={accion !== 'aprobar_agendamiento' && accion !== 'editar_agendamiento'}
+                  onClick={()=>set_mostrar_buscar_vehiculo(true)}
+                >
+                  Buscar
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} lg={3} sx={{
+                display:'flex',
+                justifyContent: 'center',
+                alignItems:'center'
+                }} >
+                <Button
+                  fullWidth
+                  color='success'
+                  variant='contained'
+                  disabled={Object.keys(vehiculo_encontrado).length === 0 || accion === 'ver_agendamiento'}
+                  startIcon={<AddIcon />}
+                  onClick={agregar_vehiculo}
+                >
+                  Agregar
+                </Button>
+              </Grid>
             </Grid>
 
-            <Grid item xs={12} md={2} sx={{
-              display:'flex',
-              justifyContent: 'center',
-              alignItems:'center'
-              }} >
-              <Button
-                fullWidth
-                color='success'
-                variant='contained'
-                disabled={Object.keys(vehiculo_encontrado).length === 0 || accion === 'ver_agendamiento'}
-                startIcon={<AddIcon />}
-                onClick={agregar_vehiculo}
-              >
-                Agregar
-              </Button>
-            </Grid>
           </Grid>
 
           {mostrar_vehiculo_agregado &&
-            <Grid container spacing={1} item xs={12}
+            <Grid container spacing={3} item xs={12}
               sx={{
                 position: 'relative',
                 background: '#FAFAFA',
@@ -762,8 +778,23 @@ const AgendamientoVehiculos: React.FC = () => {
               }}
               >
               <Title title='Vehículo agregado' />
+              <Grid item xs={12} lg={3} sx={{
+                display:'flex',
+                justifyContent: 'center',
+                alignItems:'center',
+                }} >
+                  <TextField
+                    label='Conductor:'
+                    fullWidth
+                    disabled
+                    placeholder='Buscar'
+                    value={conductor_agregado}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_conductor_agregado(e.target.value)}
+                    size="small"
+                  />
+              </Grid>
               
-              <Grid item xs={12} md={1.7} sx={{
+              <Grid item xs={12} lg={3} sx={{
                 display:'flex',
                 justifyContent: 'center',
                 alignItems:'center',
@@ -779,7 +810,7 @@ const AgendamientoVehiculos: React.FC = () => {
                   />
               </Grid>
 
-              <Grid item xs={12} md={1.7} sx={{
+              <Grid item xs={12} lg={3} sx={{
                 display:'flex',
                 justifyContent: 'center',
                 alignItems:'center',
@@ -795,7 +826,7 @@ const AgendamientoVehiculos: React.FC = () => {
                   />
               </Grid>
 
-              <Grid item xs={12} md={1.7} sx={{
+              <Grid item xs={12} lg={3} sx={{
                 display:'flex',
                 justifyContent: 'center',
                 alignItems:'center',
@@ -811,7 +842,7 @@ const AgendamientoVehiculos: React.FC = () => {
                   />
               </Grid>
 
-              <Grid item xs={12} md={2} sx={{
+              <Grid item xs={12} lg={3} sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -832,7 +863,7 @@ const AgendamientoVehiculos: React.FC = () => {
                 </LocalizationProvider>
               </Grid>
 
-              <Grid item xs={12} md={1} sx={{
+              <Grid item xs={12} lg={3} sx={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -852,7 +883,7 @@ const AgendamientoVehiculos: React.FC = () => {
                 </LocalizationProvider>
               </Grid>
 
-              <Grid item xs={12} md={2} sx={{
+              <Grid item xs={12} lg={3} sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -873,7 +904,7 @@ const AgendamientoVehiculos: React.FC = () => {
                 </LocalizationProvider>
               </Grid>
 
-              <Grid item xs={12} md={1} sx={{
+              <Grid item xs={12} lg={3} sx={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -893,16 +924,20 @@ const AgendamientoVehiculos: React.FC = () => {
                 </LocalizationProvider>
               </Grid>
 
-              <Grid item xs={12} md={0.4} sx={{
+              <Grid item xs={12} sx={{
                   display: "flex",
                   justifyContent: "end",
                   alignItems: "center",
                 }}
                 >
-                <DeleteForeverIcon
-                  style={{cursor:'pointer', color:'#e74c3c',fontSize:'40px'}}
-                  onClick={eliminar_vehiculo_agregado}
-                />
+                {accion !== 'ver_agendamiento' &&
+                  <Grid item xs={0.4} >
+                    <DeleteForeverIcon
+                      style={{cursor:'pointer', color:'#e74c3c',fontSize:'40px'}}
+                      onClick={eliminar_vehiculo_agregado}
+                    />
+                  </Grid>
+                }
               </Grid>
             </Grid>
           }
@@ -937,6 +972,7 @@ const AgendamientoVehiculos: React.FC = () => {
             <Button
               color="inherit"
               variant="outlined"
+              disabled={accion === 'ver_agendamiento'}
               startIcon={<CleanIcon />}
               onClick={limpiar_forms_agendamiento_aprobacion}
             >
