@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Title } from '../../../../../components';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
-import { ChartDataContext } from '../../context/DataChartContext';
+import { ChartDataContextPQRSDF } from '../../context/DataChartContext';
 
-export const FourhView = (): JSX.Element => {
+export const FifthView = (): JSX.Element => {
 
-  const {chartDataViewFour} = useContext(ChartDataContext);
+  const {chartDataViewFifth} = useContext(ChartDataContextPQRSDF);
 
   return (
     <Grid
@@ -30,19 +30,14 @@ export const FourhView = (): JSX.Element => {
       <div style={{ width: '100%', height: '100%' }}>
         <div id="chart" style={{ width: '100%', height: '100%' }}>
           <ReactApexChart
-            series={chartDataViewFour?.series as ApexOptions['series'] ?? []}
-            options={chartDataViewFour?.options as ApexOptions ?? []}
+            series={chartDataViewFifth?.series as ApexOptions['series'] ?? []}
+            options={chartDataViewFifth?.options as ApexOptions ?? []}
             type="bar"
             height={650}
           />
         </div>
         <div id="html-dist"></div>
       </div>
-      <Grid
-        container
-        spacing={2}
-        sx={{ mb: '20px', justifyContent: 'center', alignItems: 'center' }}
-      ></Grid>
     </Grid>
   );
 };

@@ -35,7 +35,7 @@ export const FirstView = (): JSX.Element => {
         }}
       >
         <Grid item xs={12} sx={{ mb: '1rem' }}>
-          <Title title="Reporte de índices" />
+          <Title title="Reporte de índices PQRSDF" />
         </Grid>
         <div style={{ width: '100%', height: '100%' }}>
           <div id="chart" style={{ width: '100%', height: '100%' }}>
@@ -43,7 +43,7 @@ export const FirstView = (): JSX.Element => {
               series={chartDataViewOne?.series as ApexOptions['series'] ?? []}
               options={chartDataViewOne?.options as ApexOptions ?? []}
               type="bar"
-              height={500}
+              height={650}
             />
           </div>
           <div id="html-dist" style={{ width: '100%', height: '100%' }}></div>

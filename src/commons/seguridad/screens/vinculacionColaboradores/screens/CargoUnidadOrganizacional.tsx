@@ -309,7 +309,7 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
                       <FormHelperText error>{msj_error_cargo}</FormHelperText>
                     )}
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  {/* <Grid item xs={12} sm={4}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
                         label="Fecha inicio"
@@ -321,7 +321,28 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
                         readOnly={true}
                       />
                     </LocalizationProvider>
+                  </Grid> */}
+                  {/* ll */}
+                  <Grid item xs={12} sm={4}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha inicio"
+                        value={fecha_inicio}
+                        // onChange={(newValue) => {
+                        //   set_fecha_inicio(newValue);
+                        // }}
+                        onChange={(newValue) => {
+                          set_fecha_inicio(newValue ?? dayjs());
+                        }}
+
+                        renderInput={(params) => (
+                          <TextField fullWidth size="small" {...params} />
+                        )}
+                        readOnly={false} // Cambiado a false para permitir la edición, o simplemente quitar esta línea ya que el valor por defecto es editable
+                      />
+                    </LocalizationProvider>
                   </Grid>
+
                   <Grid item xs={12} sm={4}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
@@ -430,7 +451,7 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
                       <DatePicker
                         label="Fecha asignación"
                         value={fecha_asignacion}
-                        onChange={() => {}}
+                        onChange={() => { }}
                         renderInput={(params) => (
                           <TextField fullWidth size="small" {...params} />
                         )}
@@ -512,7 +533,7 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
                         <DatePicker
                           label="Fecha desvinculación"
                           value={fecha_desvinculacion}
-                          onChange={() => {}}
+                          onChange={() => { }}
                           renderInput={(params) => (
                             <TextField
                               required

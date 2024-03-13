@@ -42,7 +42,7 @@ export const ThirdView = (): JSX.Element => {
               series={chartDataViewThree?.series as ApexOptions['series'] ?? []}
               options={chartDataViewThree?.options as ApexOptions ?? []}
               type="bar"
-              height={500}
+              height={650}
             />
           </div>
           <div id="html-dist"></div>
