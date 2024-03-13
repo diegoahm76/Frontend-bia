@@ -83,6 +83,33 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
+      field: 'Resolucion ',
+      headerName: 'Resolucion   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
+    },
+    {
+      field: 'Expediente ',
+      headerName: 'Expediente   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
+    },
+    {
+      field: 'Descuento ',
+      headerName: 'Descuento   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
+    },
+    {
       field: 'id_deudor',
       headerName: 'Nit Deudor',
       minWidth: 200,

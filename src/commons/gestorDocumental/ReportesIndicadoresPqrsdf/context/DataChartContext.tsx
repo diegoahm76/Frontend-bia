@@ -76,7 +76,7 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
       tooltip: {
         y: {
           formatter: function (val: any) {
-            return val + ' expedientes';
+            return val + ' pqrsdf';
           },
         },
       },
@@ -159,15 +159,15 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
     series: [
       {
         name: 'RADICADOS',
-        data: [44, 55, 41, 37, 22, 43, 21],
+        data: [44, 55, 41, 37, 22, 43, 21, ...new Array(25).fill(null).map(() => Math.floor(Math.random() * 100))],
       },
       {
         name: 'EN TRÁMITE',
-        data: [53, 32, 33, 52, 13, 43, 32],
+        data: [53, 32, 33, 52, 13, 43, 32, ...new Array(25).fill(null).map(() => Math.floor(Math.random() * 100))],
       },
       {
         name: 'RESULTADOS',
-        data: [12, 17, 11, 9, 15, 11, 20],
+        data: [12, 17, 11, 9, 15, 11, 20, ...new Array(25).fill(null).map(() => Math.floor(Math.random() * 100))],
       },
     ],
     options: {
@@ -196,13 +196,13 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
         colors: ['#fff'],
       },
       title: {
-        text: 'Fiction Books Sales',
+        text: 'Número de PQRSDF por grupo',
       },
       xaxis: {
-        categories: ['RENTAS', 'ACCIONES JURÍDICAS', 'CONTRATACIÓN', 'GESTIÓN DOCUMENTAL', 'PQRSDF', 'SISTEMAS', 'TIC'],
+        categories: ['RENTAS', 'ACCIONES JURÍDICAS', 'CONTRATACIÓN', 'GESTIÓN DOCUMENTAL', 'PQRSDF', 'SISTEMAS', 'TIC', 'AIRE Y URBANO', 'BIÓTICOS', 'SUELOS', 'AGUA', 'FAUNA', 'FLORA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS'],
         labels: {
           formatter: function (val: any) {
-            return val + 'K';
+            return val;
           },
         },
       },
@@ -214,7 +214,7 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
       tooltip: {
         y: {
           formatter: function (val: any) {
-            return val + 'K';
+            return val;
           },
         },
       },
@@ -229,27 +229,23 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
     },
   });
 
-  /* const [chartDataViewOne, setChartDataViewOne] = useState({
+  const [chartDataViewFour, setChartDataViewFour] = useState({
     series: [
       {
-        name: 'CREADOS',
-        data: [44, 95],
-        total: 139,
+        name: 'SEDE PRINCIPAL',
+        data: [44, 95,10 ,58,78,6],
       },
       {
-        name: 'ABIERTOS',
-        data: [76, 120],
-        total: 196,
+        name: 'SEDE RÍO ARIARI',
+        data: [76, 100 ,78,54,21,65],
       },
       {
-        name: 'CERRADOS',
-        data: [55, 370],
-        total: 425,
+        name: 'SEDE MACARENA',
+        data: [55, 37, 85 ,45 ,23 ,45],
       },
       {
-        name: 'REAPERTURADOS',
-        data: [320, 90],
-        total: 410,
+        name: 'SEDE RÍO META',
+        data: [30, 90, 45, 78, 65, 45],
       },
     ],
     options: {
@@ -277,11 +273,11 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
         colors: ['transparent'],
       },
       xaxis: {
-        categories: ['Simples', 'Complejos'],
+        categories: ['Peticiones', 'Quejas', 'Reclamos', 'Solicitudes', 'Denuncias', 'Felicitaciones'],
       },
       yaxis: {
         title: {
-          text: 'Cantidad de carpetas / expedientes',
+          text: 'Cantidad de PQRSDF',
         },
       },
       fill: {
@@ -290,12 +286,84 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
       tooltip: {
         y: {
           formatter: function (val: any) {
-            return val + ' expedientes';
+            return val + ' PQRSDF';
           },
         },
       },
     },
-  });*/
+  });
+
+  const [chartDataViewFifth, setChartDataViewFifth] = useState({
+    series: [
+      {
+        name: 'PETICIONES',
+        data: [44, 95,10 ,58,78,6],
+      },
+      {
+        name: 'QUEJAS',
+        data: [76, 100 ,78,54,21,65],
+      },
+      {
+        name: 'RECLAMOS',
+        data: [55, 37, 85 ,45 ,23 ,45],
+      },
+      {
+        name: 'SOLICITUDES',
+        data: [30, 90, 45, 78, 65, 45],
+      },
+      {
+        name: 'DENUNCIAS',
+        data: [30, 90, 45, 78, 65, 45],
+      },
+      {
+        name: 'FELICITACIONES',
+        data: [30, 90, 45, 78, 65, 45],
+      },
+    ],
+    options: {
+      chart: {
+        type: 'bar',
+        height: 500,
+        stacked: false,
+        zoom: {
+          enabled: false,
+        },
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '80%',
+          endingShape: 'rounded',
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent'],
+      },
+      xaxis: {
+        categories: ['SUELOS', 'AGUAS', 'GEMA', 'GIEMA', 'ACCIONES JURÍDICAS', 'CONTRATACIÓN'],
+      },
+      yaxis: {
+        title: {
+          text: 'Cantidad de PQRSDF',
+        },
+      },
+      fill: {
+        opacity: 1,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val: any) {
+            return val + ' PQRSDF';
+          },
+        },
+      },
+    },
+  });
 
 
   const [isReporteReady, setIsReportReady] = useState(false);
@@ -309,6 +377,10 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
         setChartDataViewTwo,
         chartDataViewThree,
         setChartDataViewThree,
+        chartDataViewFour,
+        setChartDataViewFour,
+        chartDataViewFifth,
+        setChartDataViewFifth,
         isReporteReady,
         setIsReportReady,
       }}
