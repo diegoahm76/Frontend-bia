@@ -162,6 +162,7 @@ export const BusquedaBasicaGeneradoraReporte = ({
               ) : currentBusquedaReporte?.value === 5 ? (
                 <BusquedaReporteTipoCinco
                   controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
+                  resetBusquedaGeneradoraReporte={resetBusquedaGeneradoraReporte}
                 />
               ) : (
                 <>No hay elemento definido</>
@@ -195,6 +196,15 @@ export const BusquedaBasicaGeneradoraReporte = ({
                 control_info(
                   'Se han limpiado los campos de generación de reporte'
                 );
+                resetBusquedaGeneradoraReporte({
+                  fecha_inicio: '',
+                  fecha_fin: '',
+                  tipo_reporte: '',
+                  estado_pqrsdf: '',
+                  sede: '',
+                  unidad: '',
+                  grupo: '',
+                });
               }}
             >
               LIMPIAR CAMPOS
