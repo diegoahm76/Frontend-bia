@@ -4,7 +4,7 @@
 import 'leaflet/dist/leaflet.css';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
-import { Divider, Button, Grid, TextField, FormControl, InputLabel, Select, MenuItem, } from '@mui/material';
+import { Divider, Button, Grid, TextField, Dialog, InputLabel, Select, MenuItem, } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,9 +14,9 @@ import { Title } from '../../../components/Title';
 import { api } from '../../../api/axios';
 import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { DownloadButton } from '../../../utils/DownloadButton/DownLoadButton';
-import Chip from '@mui/material/Chip';
+import AddIcon from "@mui/icons-material/Add";
 import { miEstilo } from '../../gestorDocumental/Encuesta/interfaces/types';
-  interface Solicitud {
+interface Solicitud {
     id_medio_solicitud: any;
     nombre: any;
     aplica_para_pqrsdf: any;
@@ -31,51 +31,52 @@ export interface SucursalEmpresa {
     numero_sucursal: number;
     descripcion_sucursal: string;
     direccion: string;
-  
+
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 interface Historico {
-    radicado: any;
-    id_documento: any;
-    nombre_completo: any;
-    ruta_archivo: {
-        formato: any;
-        ruta_archivo: string;
-        fecha_creacion_doc: any;
-    };
+    id: number;
+    nivel: number;
+    director: string;
+    tecnicos: string;
+    asesor: string;
+    profesional: string;
+    asistencial: string;
 };
-  interface pqrs {
+
+interface pqrs {
     value: string;
     label: string;
 };
-  interface FormData {
-    id_persona_alertar: any;
-    organigrama: any;
-    fecha_desde: any;
-    fecha_hasta: any;
-    radicado: any;
-    estado_solicitud: any,
-    pqrs: any,
-    sucursal:any,
-    solicitud: any,
-    estado: any,
-    asunto:any,
+interface editar {
+    asistencial: any,
+    profesional: any,
+    asesor: any,
+    tecnicos: any,
+    director: any,
+    nivel: any,
+    id: any
+};
+interface FormData {
+    asistencial: any,
+    profesional: any,
+    asesor: any,
+    tecnicos: any,
+    director: any,
+    nivel: any,
 }
 export const TalentoHumano: React.FC = () => {
+    const [modo, setModo] = useState<"crear" | "editar" | null>(null);
 
 
     const initialFormData: FormData = {
-        id_persona_alertar: null,
-        pqrs: "",
-        sucursal:"",
-        solicitud: "",
-        estado: "",
-        radicado: "",
-        organigrama: "",
-        fecha_desde: "",
-        fecha_hasta: "",
-        estado_solicitud: "",
-        asunto: "",
+
+        asistencial: "",
+        profesional: "",
+        asesor: "",
+        tecnicos: "",
+        director: "",
+        nivel: "",
     };
     const [formData, setFormData] = useState(initialFormData);
     const handleInputChange = (event: any) => {
@@ -86,12 +87,13 @@ export const TalentoHumano: React.FC = () => {
         }));
     };
 
+    // const [editar, seteditar] = useState<editar | null>(null);
 
 
     const [Historico, setHistorico] = useState<Historico[]>([]);
     const fetchHistorico = async (): Promise<void> => {
         try {
-            const url = "/recaudo/formulario/documento_formulario_recuado_get/";
+            const url = "/recaudo/configuracion_baisca/administracionpersonal/";
             const res = await api.get(url);
             const HistoricoData: Historico[] = res.data?.data || [];
             setHistorico(HistoricoData);
@@ -100,38 +102,53 @@ export const TalentoHumano: React.FC = () => {
         }
     };
 
-    const formatDate = (dateString: string | number | Date) => {
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        //   / ${hours}:${minutes}
-        return `${year}-${month}-${day}`;
-    };
+
 
 
     useEffect(() => {
         void fetchHistorico();
     }, []);
+    const [selectid, setselectid] = useState('');
+
+    const seteditar = (rowData: any) => {
+        set_is_tasa(true);
+        setModo("editar");
+        setselectid(rowData.id)
+        setFormData({
+            asistencial: rowData.asistencial,
+            profesional: rowData.profesional,
+            asesor: rowData.asesor,
+            tecnicos: rowData.tecnicos,
+            director: rowData.director,
+            nivel: rowData.nivel,
+        });
+    };
+
     const columns = [
-        { field: 'nombre_completo', headerName: 'Nombre completo', width: 130, flex: 1 },
-        { field: 'radicado', headerName: 'Radicado', width: 130, flex: 1 },
+
+        // { field: 'id', headerName: 'id  ', width: 130, flex: 1 },
+        { field: 'nivel', headerName: 'nivel  ', width: 130, flex: 1 },
+        { field: 'director', headerName: 'director', width: 130, flex: 1 },
+        { field: 'tecnicos', headerName: 'tecnicos', width: 130, flex: 1 },
+        { field: 'asesor', headerName: 'asesor', width: 130, flex: 1 },
+        { field: 'profesional', headerName: 'profesional', width: 130, flex: 1 },
+        { field: 'asistencial', headerName: 'asistencial', width: 130, flex: 1 },
 
         {
-            field: 'fecha_creacion_doc',
-            headerName: 'Fecha Creación',
-            width: 180,
+            field: 'Acciones',
+            headerName: 'Acciones',
+            width: 200,
             flex: 1,
-            valueGetter: (params: any) => formatDate(params.row.ruta_archivo.fecha_creacion_doc),
-        },
-        {
-            field: 'formato',
-            headerName: 'Formato',
-            width: 180,
-            flex: 1,
-            valueGetter: (params: any) => (params.row.ruta_archivo.formato),
+            renderCell: (params: any) => (
+                <>
+                    <IconButton
+                        color="primary"
+                        onClick={() => seteditar(params.row)}
+                    >
+                        <EditIcon />
+                    </IconButton>
+                </>
+            )
         },
 
     ];
@@ -183,17 +200,177 @@ export const TalentoHumano: React.FC = () => {
         fetchsucursal();
     }, []);
 
+
+    const [is_tasa, set_is_tasa] = useState<boolean>(false);
+
+    const handle_open_tasa = (): void => {
+        set_is_tasa(true);
+        setModo("crear");
+    };
+    const handle_close = (): void => {
+        set_is_tasa(false);
+        setFormData(initialFormData)
+    };
+
+
+    const handleSubmitCrear = async () => {
+        try {
+            const url = "/recaudo/configuracion_baisca/administracionpersonal/post/";
+            const response = await api.post(url, formData);
+            control_success("Guardado exitosamente");
+            handle_close();
+            fetchHistorico();
+        } catch (error: any) {
+            //  console.log('')(error.response.data.detail.detail);
+            control_error(error.response.data.detail?.error);
+        }
+    };
+
+
+    // Editar  
+    const handleSubmit = async () => {
+        try {
+            const url = `/recaudo/configuracion_baisca/administracionpersonal/put/${selectid}/`;
+
+            await api.put(url, formData);
+            control_success("Editado  exitosamente");
+            handle_close();
+            fetchHistorico();
+        } catch (error: any) {
+            console.error("Error al actualizar la configuración", error);
+            control_error(error.response.data.detail);
+        }
+    };
     return (
         <>
+
+
+            <Dialog open={is_tasa} onClose={handle_close}   >
+                <Grid container xs={12}
+                    sx={miEstilo}
+                >
+
+                    <Grid container xs={12} spacing={2}    >
+
+                        <Grid item xs={12}>
+                            <Title title={`${modo} profecionales`} />
+                        </Grid>
+                        {/* {modo} */}
+                        <Grid item xs={6}>
+                            <TextField
+                                label="nivel"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                name="nivel"
+                                value={formData.nivel}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="director"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                name="director"
+                                value={formData.director}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="tecnicos"
+                                name="tecnicos"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                value={formData.tecnicos}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="asesor"
+                                name="asesor"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                value={formData.asesor}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                label="profesional"
+                                name="profesional"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                value={formData.profesional}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+
+                        <Grid item xs={6}>
+                            <TextField
+                                label="asistencial"
+                                name="asistencial"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                value={formData.asistencial}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                        <Grid item  >
+                            <Button
+                                color='success'
+                                variant='contained'
+                                startIcon={<SaveIcon />}
+                                fullWidth
+                                onClick={() => {
+                                    if (modo === 'crear') {
+                                        handleSubmitCrear();
+                                    } else if (modo === 'editar') {
+                                        handleSubmit();
+                                    }
+                                }}
+                            >
+                                {modo} profecionales
+                            </Button>
+
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+
+            </Dialog>
+
+
+
+
+
+
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} marginTop={3} spacing={2}
                 sx={miEstilo}
             >
                 <Grid item xs={12} sm={12}>
-                    <Title title="Talento humano   " />
+                    <Title title="Profecionales" />
                 </Grid>
-
-                <Grid item xs={12} sm={3}>
+                <Grid item   >
+                    <Button startIcon={<AddIcon />} onClick={handle_open_tasa} fullWidth variant="outlined"    >
+                        Crear
+                    </Button>
+                </Grid>
+                {/* <Grid item xs={12} sm={3}>
                     <FormControl size="small" fullWidth>
                         <InputLabel > GR    </InputLabel>
                         <Select
@@ -210,7 +387,6 @@ export const TalentoHumano: React.FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
-                {/* solicitud */}
                 <Grid item xs={12} sm={3}>
                     <FormControl size="small" fullWidth>
                         <InputLabel >Tipo    </InputLabel>
@@ -227,31 +403,20 @@ export const TalentoHumano: React.FC = () => {
                             ))}
                         </Select>
                     </FormControl>
-                </Grid>
-                {/* sucursal */}
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Valor de contratacion  "
-                        variant="outlined"
-                        size="small"
-                        fullWidth
+                </Grid> */}
 
-                        disabled
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                
-                    />
-                </Grid>
+
+                {/* sucursal */}
+            
 
             </Grid>
 
 
-                <RenderDataGrid
-                    title='    TalentoHumano'
-                    columns={columns ?? []}
-                    rows={Historico ?? []}
-                />
+            <RenderDataGrid
+                title='Profecionales'
+                columns={columns ?? []}
+                rows={Historico ?? []}
+            />
 
         </>
     );

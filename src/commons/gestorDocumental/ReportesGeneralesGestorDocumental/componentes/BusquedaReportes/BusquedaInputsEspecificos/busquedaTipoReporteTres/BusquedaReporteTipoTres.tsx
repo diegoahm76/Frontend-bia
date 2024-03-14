@@ -1,12 +1,27 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Grid, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
+import { getUnidadesOrgActual } from '../../../../services/getUnidadesOrgActual.service';
 
 export const BusquedaReporteTipoTres = ({
   controlBusquedaGeneradoraReporte,
 }: any): JSX.Element => {
+
+  const [unidades, setUnidades] = useState<any[]>([])
+
+  useEffect(() => {
+    getUnidadesOrgActual()
+      .then((data) => {
+        setUnidades(data);
+      })
+      .catch((error) => {
+        console.error("Failed to get unidades:", error);
+      });
+  }, []);
+
   return (
     <>
       <Grid
@@ -21,17 +36,17 @@ export const BusquedaReporteTipoTres = ({
           //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
           name="seccion_subseccion"
           control={controlBusquedaGeneradoraReporte}
-         // rules={{ required: true }}
+          rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <div>
               <Select
-                // required
+                required
                 value={value}
                 onChange={(selectedOption) => {
                   //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
-                options={[] ?? []}
+                options={unidades ?? []}
                 placeholder="Seleccionar"
               />
               <label>
@@ -51,7 +66,7 @@ export const BusquedaReporteTipoTres = ({
           )}
         />
       </Grid>
-      <Grid
+      {/*      <Grid
         item
         xs={12}
         sm={4}
@@ -92,7 +107,7 @@ export const BusquedaReporteTipoTres = ({
             </div>
           )}
         />
-      </Grid>
+      </Grid>*/}
       <Grid item xs={12} sm={4}>
         <Controller
           name="grupos"
@@ -100,7 +115,7 @@ export const BusquedaReporteTipoTres = ({
           defaultValue=""
           render={() => (
             <TextField
-             required
+              required
               disabled
               fullWidth
               label="Grupos"
