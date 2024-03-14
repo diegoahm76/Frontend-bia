@@ -69,8 +69,10 @@ export const EncuestaInterno: React.FC = () => {
         });
     }, [selected_departamento]);
 
-    const [encuestaData, setEncuestaData] = useState<EncuestaDetalle['data'] | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+
+    
+    const [encuestaData, setEncuestaData] = useState<EncuestaDetalle['data'] | null>(null);
     const fetchEncuestaDetalle = async (): Promise<void> => {
         try {
             const url = `/gestor/encuestas/encabezado_encuesta/get/detalle/${selectedEncuestaId}/`;
