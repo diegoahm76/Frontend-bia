@@ -15,10 +15,21 @@ import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import {
+  initial_state_company,
+  initial_state_filed,
+  initial_state_otro,
+  initial_state_person,
   reset_state,
+  set_attorney,
+  set_company,
   set_exhibits, 
+  set_filed, 
+  set_grantor, 
+  set_on_behalf_of, 
   set_others, 
+  set_person, 
   set_pqr,
+  set_type_applicant,
 } from '../../PQRSDF/store/slice/pqrsdfSlice';
 import FormStepper from '../../../../components/partials/form/FormStepper';
 import {
@@ -30,17 +41,22 @@ import {
     add_other_service,
   control_error,
   delete_pqrsdf_service,
+  edit_otros,
   edit_pqrsdf_service,
+  get_attorney_document_service,
+  get_company_document_service,
   get_file_categories_service,
   get_file_origin_service,
   get_file_typology_service,
   get_media_types_service,
   get_offices_service,
   get_others_service_id,
+  get_person_document_service,
   get_pqr_types_service,
   get_pqrsdf_id_service,
   get_presentation_types_service,
   get_storage_mediums_service,
+  radicar_otro,
   radicar_pqrsdf_service,
 } from '../../PQRSDF/store/thunks/pqrsdfThunks';
 import { useNavigate } from 'react-router-dom';
@@ -49,6 +65,7 @@ import StepOneOtros from '../components/StepOne';
 import PersonaTitularOtros from '../components/PersonaTitular';
 import StepTwOtros from '../components/StepTwo';
 import PersonaInterponeOtros from '../components/PersonaInterpone';
+import { checking_anonimous_authentication, logout } from '../../../auth/store';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearOtroScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -60,7 +77,7 @@ export function CrearOtroScreen(): JSX.Element {
     otro,
     exhibits,
   } = useAppSelector((state) => state.pqrsdf_slice);
-
+  const { representacion_legal } = useAppSelector((state) => state.auth);
   const {
     control: control_pqrsdf,
     handleSubmit: handle_submit_pqrsdf,
@@ -179,6 +196,138 @@ export function CrearOtroScreen(): JSX.Element {
 //       ]);
 //     }
 //   }, [watch('cod_tipo_PQRSDF')]);
+useEffect(() => {
+  dispatch(set_filed(initial_state_filed));
+  if (id !== null && id !== undefined) {
+    void dispatch(get_pqrsdf_id_service(id));
+    set_action('editar');
+  } else {
+    dispatch(set_others([initial_state_otro]));
+    if (status === 'not-authenticated') {
+      dispatch(logout(''));
+      dispatch(
+        checking_anonimous_authentication(
+          'solicitud.anonima',
+          'Anonima12345+'
+        )
+      );
+      dispatch(
+        set_type_applicant({
+          id: 'A',
+          key: 'A',
+          label: 'Anónima',
+        })
+      );
+      dispatch(
+        set_on_behalf_of({
+          id: null,
+          key: null,
+          label: null,
+        })
+      );
+    } else {
+      dispatch(set_others([initial_state_otro]));
+      dispatch(set_exhibits([]));
+      set_action('crear');
+      console.log(userinfo);
+      if (representacion_legal?.tipo_sesion === 'E') {
+        dispatch(
+          set_type_applicant({
+            id: 'T',
+            key: 'T',
+            label: 'Titular',
+          })
+        );
+        if (on_behalf_of.id === null) {
+          if (representacion_legal?.cod_relacion_con_el_titular === 'MP') {
+            dispatch(
+              set_on_behalf_of({
+                id: 'P',
+                key: 'P',
+                label: 'Propia',
+              })
+            );
+            void dispatch(
+              get_person_document_service(
+                userinfo.tipo_documento ?? '',
+                userinfo.numero_documento ?? '',
+                true
+              )
+            );
+          } else if (
+            representacion_legal?.cod_relacion_con_el_titular === 'AP'
+          ) {
+            dispatch(
+              set_on_behalf_of({
+                id: 'A',
+                key: 'A',
+                label: 'Apoderado',
+              })
+            );
+            void dispatch(
+              get_person_document_service(
+                representacion_legal?.representacion.tipo_documento ?? 'CC',
+                representacion_legal?.representacion.numero_documento ?? '',
+                false
+              )
+            );
+            void dispatch(
+              get_attorney_document_service(
+                userinfo.tipo_documento ?? 'CC',
+                userinfo.numero_documento ?? ''
+              )
+            );
+          } else {
+            dispatch(
+              set_on_behalf_of({
+                id: 'E',
+                key: 'E',
+                label: 'Empresa',
+              })
+            );
+            void dispatch(
+              get_company_document_service(
+                representacion_legal?.representacion.tipo_documento ?? 'NIT',
+                representacion_legal?.representacion.numero_documento
+              )
+            );
+          }
+        }
+      } else {
+        if (type_applicant.id !== 'T') {
+          dispatch(
+            set_type_applicant({
+              id: 'A',
+              key: 'A',
+              label: 'Anónimo',
+            })
+          );
+          dispatch(
+            set_on_behalf_of({
+              id: null,
+              key: null,
+              label: null,
+            })
+          );
+          dispatch(set_person(initial_state_person));
+          dispatch(set_attorney(initial_state_person));
+          dispatch(set_grantor(initial_state_person));
+          dispatch(set_company(initial_state_company));
+        }
+      }
+    }
+  }
+  if (status === 'authenticated') {
+    void dispatch(get_pqr_types_service());
+    void dispatch(get_presentation_types_service());
+    void dispatch(get_media_types_service());
+    void dispatch(get_storage_mediums_service());
+    void dispatch(get_file_categories_service());
+    void dispatch(get_file_origin_service());
+    void dispatch(get_file_typology_service());
+    void dispatch(get_offices_service());
+  }
+}, []);
 
   const initial_values = (): void => {
     void dispatch(get_pqr_types_service());
@@ -291,10 +440,10 @@ export function CrearOtroScreen(): JSX.Element {
         });
         form_data.append('isCreateForWeb', 'True');
 
-        void dispatch(edit_pqrsdf_service(form_data, navigate));
+        void dispatch(edit_otros(form_data, navigate));
       } else {
         control_error(
-          'Solo se pueden editar pqrsdf hasta 30 dias despues de la fecha de creación'
+          'Solo se pueden editar otros hasta 30 dias despues de la fecha de creación'
         );
       }
     } else {
@@ -368,7 +517,7 @@ export function CrearOtroScreen(): JSX.Element {
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
       if (diferencia_dias <= 30) {
         void dispatch(
-          radicar_pqrsdf_service(otro.id_otros, userinfo.id_persona ?? 0, true)
+          radicar_otro(otro.id_otros, userinfo.id_persona ?? 0, true)
         );
       } else {
         control_error(

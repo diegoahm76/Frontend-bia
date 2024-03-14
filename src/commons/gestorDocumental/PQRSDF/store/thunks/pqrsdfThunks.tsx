@@ -7,6 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
+  initial_state_otro,
   initial_state_pqr,
   set_areas,
   set_attorney,
@@ -915,6 +916,115 @@ export const get_others_service = (id: string | number): any => {
       return data;
     } catch (error: any) {
       console.log('get_pqrs_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+export const edit_otros = (
+  otros: any,
+  navigate: NavigateFunction
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`gestor/radicados/otros/editar-otros/`, otros);
+      console.log(data);
+
+      control_success(data.detail);
+      navigate(
+        `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      );
+      dispatch(set_others(data.data));
+
+      // if ('data' in data) {
+      //   dispatch(set_pqr(data.data));
+
+      // } else {
+      //   control_error(data.detail);
+      // }
+      return data;
+    } catch (error: any) {
+      console.log('edit_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+
+export const radicar_otro = (
+  id: number | string,
+  id_user: number,
+  is_web: boolean
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const params: any = {
+        id_PQRSDF: id,
+        id_persona_guarda: id_user,
+        isCreateForWeb: is_web,
+      };
+      const { data } = await api.post(`gestor/radicados/otros/radicar-otros/`, params);
+      if (data.success) {
+        control_success(data.detail);
+        void dispatch(get_others_service_id(id));
+        dispatch(
+          set_filed({
+            ...data.data,
+            numero_radicado_completo: `${data.data.prefijo_radicado}-${data.data.agno_radicado}-${data.data.nro_radicado}`,
+            nombre_tipo_radicado:
+              data.data.cod_tipo_radicado === 'E'
+                ? 'Entrada'
+                : data.data.cod_tipo_radicado === 'S'
+                ? 'Salidad'
+                : data.data.cod_tipo_radicado === 'I'
+                ? 'Interno'
+                : data.data.cod_tipo_radicado === 'U'
+                ? 'Unico'
+                : '',
+            titular: data.data.persona_titular,
+          })
+        );
+      }
+      return data;
+    } catch (error: any) {
+      console.log('delete_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+export const delete_otro = (
+  id: number | string,
+  is_web: boolean
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      // eslint-disable-next-line no-unused-vars
+      const params: any = {
+        id_otros: id,
+        isCreateForWeb: is_web,
+      };
+      const { data } = await api.delete(
+        `gestor/radicados/otros/eliminar-otros/?id_PQRSDF=${id}&isCreateForWeb=${
+          is_web ? 'True' : 'False'
+        }`
+      );
+      console.log(data);
+
+      if (data.success) {
+        control_success(data.detail);
+        dispatch(set_others([initial_state_otro]));
+      }
+      return data;
+    } catch (error: any) {
+      console.log('delete_pqrsdf_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
