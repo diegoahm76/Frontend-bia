@@ -48,11 +48,13 @@ export const ReporGenGestorMainScreen = (): JSX.Element => {
 
       {isReporteReady &&
         (currentBusquedaReporte?.value === 1 ? (
-          <FirstView />
-        ) : currentBusquedaReporte?.value === 2 ? (
+          <FirstView /> /*: currentBusquedaReporte?.value === 2 ? (
           <SecondView />
+        )*/
         ) : currentBusquedaReporte?.value === 3 ? (
-          <ThirdView />
+          <ThirdView
+            controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
+          />
         ) : currentBusquedaReporte?.value === 4 ? (
           <FourhView />
         ) : (
