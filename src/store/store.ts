@@ -69,6 +69,7 @@ import { BandejaTareasSlice } from '../commons/gestorDocumental/bandejaDeTareas/
 import { RequerimientoUsarioSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/requerimientosUsuario/toolkit/slice/RequerimientoUsarioSlice';
 import { ResSolicitudUsarioSlice } from '../commons/gestorDocumental/PQRSDF/componentes/respuestaSolicitudUsuario/toolkit/slice/ResSolicitudUsarioSlice';
 import { RequerimientoUsarioOpasSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/OPAS/requerimientosUsuarioOpas/toolkit/slice/RequerimientoUsarioOpasSlice';
+import { ReportesGeneralesGestorSlice } from '../commons/gestorDocumental/ReportesGeneralesGestorDocumental/toolkit/ReportesGeneralesGestorSlice';
 
 
 const persist_config = {
@@ -176,6 +177,8 @@ const app_reducers = combineReducers({
   //* respuesta solciitud usuario
   //* requerimiento al usuario opas
   RequerimientoUsarioOpasSlice: RequerimientoUsarioOpasSlice.reducer,
+  // ? reportes generales gestor slice
+  ReportesGeneralesGestorSlice: ReportesGeneralesGestorSlice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

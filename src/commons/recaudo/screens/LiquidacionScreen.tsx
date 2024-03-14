@@ -21,6 +21,8 @@ export const LiquidacionScreen = (): JSX.Element => {
   const [opciones_liquidaciones, set_opciones_liquidaciones] = useState<OpcionLiquidacion[]>([]);
   const [form_data, set_form_data] = useState({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
+  const [select_variable, set_select_variable] = useState('');
+
   const [refresh_page, set_refresh_page] = useState<boolean>(false);
   const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
@@ -136,6 +138,7 @@ export const LiquidacionScreen = (): JSX.Element => {
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
+                  set_select_variable(params.row.variables);
                   set_edit_opcion(true);
                   set_id_opcion_liquidacion(params.row.id);
                   set_form_data((previousState) => ({ ...previousState, nombre_opcion_liquidacion: params.row.nombre, estado: params.row.estado }));
@@ -278,6 +281,7 @@ export const LiquidacionScreen = (): JSX.Element => {
               </TabPanel>
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <AgregarEditarOpciones
+                select_variable={select_variable}
                   opciones_liquidaciones={opciones_liquidaciones}
                   id_opcion_liquidacion={id_opcion_liquidacion}
                   form_data={form_data}
