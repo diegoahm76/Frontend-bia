@@ -36,7 +36,7 @@ export const BusquedaReporteTipoUno = ({
             <TextField
               disabled
               fullWidth
-              label="Número de expediente"
+              label="Expediente / Carpeta"
               type="text"
               size="small"
               variant="outlined"

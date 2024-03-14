@@ -17,6 +17,7 @@ import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext
 import { useContext } from 'react';
 import { ChartDataContext } from '../../../context/DataChartContext';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
+import { formatDateUse } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
 
 export const BusquedaBasicaGeneradoraReporte = ({
   controlBusquedaGeneradoraReporte,
@@ -30,35 +31,93 @@ export const BusquedaBasicaGeneradoraReporte = ({
   );
 
   //* context declaration
-  const { 
-    generalLoading, 
+  const {
+    generalLoading,
     handleGeneralLoading,
-    secondLoading, 
+    secondLoading,
     handleSecondLoading,
-    thirdLoading, 
+    thirdLoading,
     handleThirdLoading,
-    fourthLoading, 
-    handleFourthLoading
+    fourthLoading,
+    handleFourthLoading,
   } = useContext(ModalAndLoadingContext);
 
-  const {chartDataViewOne, setChartDataViewOne,setChartDataViewTwo,setChartDataViewThree,setChartDataViewFour, setIsReportReady} = useContext(ChartDataContext);
+  const {
+    chartDataViewOne,
+    setChartDataViewOne,
+    setChartDataViewTwo,
+    setChartDataViewThree,
+    setChartDataViewFour,
+    setIsReportReady,
+  } = useContext(ChartDataContext);
 
   const watchBusquedaGeneradoraReporteExe = watchBusquedaGeneradoraReporte();
 
   const handleSubmit = () => {
-
-    console.log('chartDataViewOne',chartDataViewOne)
-    const chartDataHandlers: any  = {
-      1: { setChartData: setChartDataViewOne, url: 'http://localhost:3001/chartUno', handleLoading: handleGeneralLoading },
-      2: { setChartData: setChartDataViewTwo, url: 'http://localhost:3001/chartDos', handleLoading: handleSecondLoading },
-      3: { setChartData: setChartDataViewThree, url: 'http://localhost:3001/chartTres', handleLoading: handleThirdLoading },
-      4: { setChartData: setChartDataViewFour, url: 'http://localhost:3001/chartCuatro', handleLoading: handleFourthLoading },
+    /*  const chartUrlForPrueba = {
+      1: 'http://localhost:3001/chartUno',
+      2: 'http://localhost:3001/chartDos',
+      3: 'http://localhost:3001/chartTres',
+      4: 'http://localhost:3001/chartCuatro',
+    }*/
+    const formattedFechaInicio = controlBusquedaGeneradoraReporte._formValues
+      .fecha_inicio
+      ? encodeURIComponent(
+          formatDateUse(
+            new Date(controlBusquedaGeneradoraReporte._formValues.fecha_inicio)
+          )
+        )
+      : '';
+    const formattedFechaFin = controlBusquedaGeneradoraReporte._formValues
+      .fecha_fin
+      ? encodeURIComponent(
+          formatDateUse(
+            new Date(controlBusquedaGeneradoraReporte._formValues.fecha_fin)
+          )
+        )
+      : '';
+    console.log('chartDataViewOne', chartDataViewOne);
+    // `gestor/reporte_indices_archivos_carpetas/reporte_general/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`
+    const chartDataHandlers: any = {
+      1: {
+        setChartData: setChartDataViewOne,
+        url: `gestor/reporte_indices_archivos_carpetas/reporte_general/get/?fecha_inicio=${
+          formattedFechaInicio ?? ''
+        }&fecha_fin=${formattedFechaFin ?? ''}`,
+        handleLoading: handleGeneralLoading,
+      },
+      /*2: {
+        setChartData: setChartDataViewTwo,
+        url: `gestor/reporte_indices_archivos_carpetas/reporte_unidad/${watchBusquedaGeneradoraReporteExe?.unidad_organizacional?.value ?? 'default'}/get/?fecha_inicio=${
+          formattedFechaInicio ?? ''
+        }&fecha_fin=${formattedFechaFin ?? ''}`,
+        handleLoading: handleSecondLoading,
+      },*/
+      3: {
+        setChartData: setChartDataViewThree,
+        url: `gestor/reporte_indices_archivos_carpetas/reporte_unidad/get/${watchBusquedaGeneradoraReporteExe?.seccion_subseccion?.value ?? 0}?fecha_inicio=${
+          formattedFechaInicio ?? ''
+        }&fecha_fin=${formattedFechaFin ?? ''}`,
+        handleLoading: handleThirdLoading,
+      },
+      4: {
+        setChartData: setChartDataViewFour,
+        url: `gestor/reporte_indices_archivos_carpetas/reporte_unidad_oficina/get/${watchBusquedaGeneradoraReporteExe?.seccion_subseccion?.value ?? 0}/get/?fecha_inicio=${
+          formattedFechaInicio ?? ''
+        }&fecha_fin=${formattedFechaFin ?? ''}`,
+        handleLoading: handleFourthLoading,
+      },
     };
 
     const handlers = chartDataHandlers[currentBusquedaReporte?.value];
 
     if (handlers) {
-      fetchChartData(handlers.setChartData, handlers.url, handlers.handleLoading, setIsReportReady)
+      fetchChartData(
+        handlers.setChartData,
+        handlers.url,
+        handlers.handleLoading,
+        setIsReportReady
+      );
     } else {
       showAlert('Atención', 'Indicador no válido', 'warning');
     }
@@ -110,6 +169,9 @@ export const BusquedaBasicaGeneradoraReporte = ({
                     variant="outlined"
                     value={value}
                     InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      max: new Date().toISOString().split("T")[0],
+                    }}
                     onChange={(e) => {
                       onChange(e.target.value);
                     }}
@@ -132,6 +194,9 @@ export const BusquedaBasicaGeneradoraReporte = ({
                     variant="outlined"
                     value={value}
                     InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      max: new Date().toISOString().split("T")[0],
+                    }}
                     onChange={(e) => {
                       onChange(e.target.value);
                     }}
@@ -146,13 +211,13 @@ export const BusquedaBasicaGeneradoraReporte = ({
                   controlBusquedaGeneradoraReporte
                 }
               />
-            ) : currentBusquedaReporte?.value === 2 ? (
+            ) /*: currentBusquedaReporte?.value === 2 ? (
               <BusquedaReporteTipoUno
                 controlBusquedaGeneradoraReporte={
                   controlBusquedaGeneradoraReporte
                 }
               />
-            ) : currentBusquedaReporte?.value === 3 ? (
+            ) */: currentBusquedaReporte?.value === 3 ? (
               <BusquedaReporteTipoTres
                 controlBusquedaGeneradoraReporte={
                   controlBusquedaGeneradoraReporte
@@ -191,7 +256,10 @@ export const BusquedaBasicaGeneradoraReporte = ({
               variant="outlined"
               startIcon={<CleanIcon />}
               onClick={() => {
-                console.log('limpiar campos');
+                resetBusquedaGeneradoraReporte({
+                  fecha_inicio: '',
+                  fecha_fin: '',
+                });
                 control_info(
                   'Se han limpiado los campos de generación de reporte'
                 );

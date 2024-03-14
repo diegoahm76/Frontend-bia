@@ -1,12 +1,37 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { Grid, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
+import {
+  getOficinasByIdUnidad,
+  getUnidadesOrgActual,
+} from '../../../../services/getUnidadesOrgActual.service';
+import { getSeriesByIdUnidad } from '../../../../services/getSeriesByIdUnidad.service';
 
 export const BusquedaReporteTipoCuatro = ({
   controlBusquedaGeneradoraReporte,
 }: any): JSX.Element => {
+  const [unidades, setUnidades] = useState<any>({
+    unidades: [],
+    series: [],
+    grupos: [],
+  });
+
+  useEffect(() => {
+    getUnidadesOrgActual()
+      .then((data) => {
+        setUnidades({
+          ...unidades,
+          unidades: data,
+        });
+      })
+      .catch((error) => {
+        console.error('Failed to get unidades:', error);
+      });
+  }, []);
+
   return (
     <>
       <Grid
@@ -30,8 +55,14 @@ export const BusquedaReporteTipoCuatro = ({
                 onChange={(selectedOption) => {
                   //  console.log('')(selectedOption);
                   onChange(selectedOption);
+                  getSeriesByIdUnidad(selectedOption.value).then((data) => {
+                    setUnidades({
+                      ...unidades,
+                      series: data,
+                    });
+                  });
                 }}
-                options={[] ?? []}
+                options={unidades?.unidades ?? []}
                 placeholder="Seleccionar"
               />
               <label>
@@ -51,90 +82,111 @@ export const BusquedaReporteTipoCuatro = ({
           )}
         />
       </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={4}
-        sx={{
-          zIndex: 20,
-        }}
-      >
-        <Controller
-          //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
-          name="serie_subserie"
-          control={controlBusquedaGeneradoraReporte}
-          //rules={{ required: true }}
-          render={({ field: { onChange, value } }) => (
-            <div>
-              <Select
-                //required
-                value={value}
-                onChange={(selectedOption) => {
-                  //  console.log('')(selectedOption);
-                  onChange(selectedOption);
-                }}
-                options={[] ?? []}
-                placeholder="Seleccionar"
+
+      {!controlBusquedaGeneradoraReporte?._formValues?.seccion_subseccion
+        ?.value || !unidades?.series ? (
+        <></>
+      ) : (
+        <>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{
+              zIndex: 20,
+            }}
+          >
+            <Controller
+              //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
+              name="serie_subserie"
+              control={controlBusquedaGeneradoraReporte}
+              //rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <div>
+                  <Select
+                    //required
+                    value={value}
+                    onChange={(selectedOption) => {
+                      //  console.log('')(selectedOption);
+                      onChange(selectedOption);
+                      getOficinasByIdUnidad(selectedOption.value).then(
+                        (data) => {
+                          setUnidades({
+                            ...unidades,
+                            grupos: data,
+                          });
+                        }
+                      );
+                    }}
+                    options={unidades?.series ?? []}
+                    placeholder="Seleccionar"
+                  />
+                  <label>
+                    <small
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 'thin',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        marginLeft: '0.25rem',
+                      }}
+                    >
+                      Serie / Subserie
+                    </small>
+                  </label>
+                </div>
+              )}
+            />
+          </Grid>
+          {!controlBusquedaGeneradoraReporte?._formValues?.serie_subserie
+            ?.value || !unidades?.grupos  ? (
+            <></>
+          ) : (
+            <Grid
+              item
+              xs={12}
+              sm={4}
+              sx={{
+                zIndex: 20,
+              }}
+            >
+              <Controller
+                //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
+                name="grupo"
+                control={controlBusquedaGeneradoraReporte}
+                //rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                  <div>
+                    <Select
+                      //required
+                      value={value}
+                      onChange={(selectedOption) => {
+                        //  console.log('')(selectedOption);
+                        onChange(selectedOption);
+                      }}
+                      options={unidades?.grupos ?? []}
+                      placeholder="Seleccionar"
+                    />
+                    <label>
+                      <small
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 'thin',
+                          fontSize: '0.75rem',
+                          marginTop: '0.25rem',
+                          marginLeft: '0.25rem',
+                        }}
+                      >
+                        Grupo
+                      </small>
+                    </label>
+                  </div>
+                )}
               />
-              <label>
-                <small
-                  style={{
-                    color: 'rgba(0, 0, 0, 0.6)',
-                    fontWeight: 'thin',
-                    fontSize: '0.75rem',
-                    marginTop: '0.25rem',
-                    marginLeft: '0.25rem',
-                  }}
-                >
-                  Serie / Subserie
-                </small>
-              </label>
-            </div>
+            </Grid>
           )}
-        />
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={4}
-        sx={{
-          zIndex: 20,
-        }}
-      >
-        <Controller
-          //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
-          name="grupo"
-          control={controlBusquedaGeneradoraReporte}
-          //rules={{ required: true }}
-          render={({ field: { onChange, value } }) => (
-            <div>
-              <Select
-                //required
-                value={value}
-                onChange={(selectedOption) => {
-                  //  console.log('')(selectedOption);
-                  onChange(selectedOption);
-                }}
-                options={[] ?? []}
-                placeholder="Seleccionar"
-              />
-              <label>
-                <small
-                  style={{
-                    color: 'rgba(0, 0, 0, 0.6)',
-                    fontWeight: 'thin',
-                    fontSize: '0.75rem',
-                    marginTop: '0.25rem',
-                    marginLeft: '0.25rem',
-                  }}
-                >
-                  Grupo
-                </small>
-              </label>
-            </div>
-          )}
-        />
-      </Grid>
+        </>
+      )}
     </>
   );
 };

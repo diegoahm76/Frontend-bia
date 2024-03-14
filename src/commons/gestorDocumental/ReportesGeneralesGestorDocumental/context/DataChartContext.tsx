@@ -69,6 +69,11 @@ const ChartDataProvider = ({ children }: any) => {
       },
       xaxis: {
         categories: ['Simples', 'Complejos'],
+        labels: {
+          formatter: function (val: any) {
+            return val;
+          },
+        },
       },
       yaxis: {
         title: {
@@ -159,6 +164,11 @@ const ChartDataProvider = ({ children }: any) => {
           'SEDE MACARENA',
           'SEDE RÍO META',
         ],
+        labels: {
+          formatter: function (val: any) {
+            return val;
+          },
+        },
       },
       legend: {
         position: 'right',
@@ -239,6 +249,11 @@ const ChartDataProvider = ({ children }: any) => {
           'Minería',
           'Hidrocarburos',
         ],
+        labels: {
+          formatter: function (val: any) {
+            return val;
+          },
+        },
       },
       legend: {
         position: 'right',
@@ -295,6 +310,11 @@ const ChartDataProvider = ({ children }: any) => {
       },
       xaxis: {
         categories: ['Grupo aguas'],
+        labels: {
+          formatter: function (val: any) {
+            return val;
+          },
+        },
       },
       yaxis: {
         title: {
