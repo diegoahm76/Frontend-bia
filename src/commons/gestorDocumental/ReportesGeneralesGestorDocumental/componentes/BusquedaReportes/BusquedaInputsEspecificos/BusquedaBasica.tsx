@@ -100,11 +100,13 @@ export const BusquedaBasicaGeneradoraReporte = ({
         }&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleThirdLoading,
       },
+      // serie_subserie
       4: {
+        //gestor/reporte_indices_archivos_carpetas/reporte_unidad_oficina/get/5381/?fecha_inicio=2021-09-01&fecha_fin=2021-09-30&serie_subserie=1
         setChartData: setChartDataViewFour,
-        url: `gestor/reporte_indices_archivos_carpetas/reporte_unidad_oficina/get/${watchBusquedaGeneradoraReporteExe?.seccion_subseccion?.value ?? 0}/get/?fecha_inicio=${
+        url: `gestor/reporte_indices_archivos_carpetas/reporte_unidad_oficina/get/${watchBusquedaGeneradoraReporteExe?.grupo?.value ?? 0}/?fecha_inicio=${
           formattedFechaInicio ?? ''
-        }&fecha_fin=${formattedFechaFin ?? ''}`,
+        }&fecha_fin=${formattedFechaFin ?? ''}&serie_subserie=${watchBusquedaGeneradoraReporteExe?.serie_subserie?.value ?? ''}`,
         handleLoading: handleFourthLoading,
       },
     };
@@ -228,6 +230,7 @@ export const BusquedaBasicaGeneradoraReporte = ({
                 controlBusquedaGeneradoraReporte={
                   controlBusquedaGeneradoraReporte
                 }
+                resetBusquedaGeneradoraReporte={resetBusquedaGeneradoraReporte}
               />
             ) : (
               <>No hay elemento</>
