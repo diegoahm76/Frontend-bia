@@ -9,15 +9,24 @@ import { Title } from '../../../../../components';
 import { ModalAndLoadingContext } from '../../../../../context/GeneralContext';
 import { ChartDataContext } from '../../context/DataChartContext';
 
-export const ThirdView = (): JSX.Element => {
+export const ThirdView = ({
+  controlBusquedaGeneradoraReporte
+}: any): JSX.Element => {
   //* context declaration
   const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
   const {chartDataViewThree} = useContext(ChartDataContext);
 
+  useEffect(() => {
+    handleOpenModalOne(false);
+  }
+  , []);
+
   return (
     <>
       {/* modal grupos con max exp */}
-      <ModalGruposConMasExp />
+      <ModalGruposConMasExp
+        controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
+      />
 
       <Grid
         container

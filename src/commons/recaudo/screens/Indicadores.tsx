@@ -53,10 +53,55 @@ interface ReporteTiposUsuario {
         total: number;
     };
 }
+
+interface FormData {
+    proceso: string;
+    nombre_indicador: string;
+    frecuencia_medicion: string;
+    variable_1: string;
+    variable_2: string;
+    formula_indicador: string;
+    vigencia_reporta: string;
+    dependencia_grupo_regional: string;
+    objetivo_indicador: string;
+    unidad_medicion_reporte: string;
+    descripcion_variable_1: string;
+    descripcion_variable_2: string;
+    origen_datos: string;
+
+}
 export const Indicadores: React.FC = () => {
 
-    const [Historico, setHistorico] = useState<Historico[]>([]);
 
+    const initialFormData: FormData = {
+        proceso: "",
+        nombre_indicador: "",
+        frecuencia_medicion: "",
+        variable_1: "",
+        variable_2: "",
+        formula_indicador: "",
+        vigencia_reporta: "",
+        dependencia_grupo_regional: "",
+        objetivo_indicador: "",
+        unidad_medicion_reporte: "",
+        descripcion_variable_1: "",
+        descripcion_variable_2: "",
+        origen_datos: ""
+    };
+    const [formData, setFormData] = useState(initialFormData);
+    const handleInputChange = (event: any) => {
+        const { name, value } = event.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+
+
+
+    
+    const [Historico, setHistorico] = useState<Historico[]>([]);
     const fetchHistorico = async (): Promise<void> => {
         try {
             const url = "/recaudo/formulario/documento_formulario_recuado_get/";
@@ -177,150 +222,187 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Fecha creación indicador"
-                        helperText='Fecha creación indicador'
+                        
+                        label="proceso"
+                        helperText='proceso'
                         size="small"
                         fullWidth
-
+                        name="proceso"
+                        value={formData.proceso}
+                        onChange={handleInputChange}
                     />
                 </Grid>
 
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Vigencia de reporte"
-                        helperText='Vigencia de reporte'
+                        
+                         label="nombre_indicador"
+                        helperText='nombre_indicador'
                         size="small"
                         fullWidth
+                        name="nombre_indicador"
+                        value={formData.nombre_indicador}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Procesos"
-                        helperText='Procesos'
+                        
+                         label="frecuencia_medicion"
+                        helperText='frecuencia_medicion'
                         size="small"
                         fullWidth
+                        name="frecuencia_medicion"
+                        value={formData.frecuencia_medicion}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
+                        
                         id="outlined-error-helper-text"
-                        label="Dependencia,Grupo"
-                        helperText='Dependencia,Grupo'
+                        label="variable_1"
+                        helperText='variable_1'
                         size="small"
                         fullWidth
+                        name="variable_1"
+                        value={formData.variable_1}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
+                        
                         id="outlined-error-helper-text"
-                        label="Nombre de inicador"
-                        helperText='Nombre de indicador'
+                        label="variable_2"
+                        helperText='variable_2'
                         size="small"
                         fullWidth
+                        name="variable_2"
+                        value={formData.variable_2}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label=" Objetivo del indicador"
-                        helperText='Objetivo del indicador'
+                        
+                        label="formula_indicador"
+                        helperText='formula_indicador'
                         size="small"
                         fullWidth
+                        name="formula_indicador"
+                        value={formData.formula_indicador}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Tipo de indicador"
-                        helperText=' Tipo de indicador'
+                        
+                        label="vigencia_reporta"
+                        helperText='vigencia_reporta'
                         size="small"
                         fullWidth
+                        name="vigencia_reporta"
+                        value={formData.vigencia_reporta}
+                        onChange={handleInputChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Unidad de medición"
-                        helperText='Unidad de medición'
+                        
+                        label="dependencia_grupo_regional"
+                        helperText='dependencia_grupo_regional'
                         size="small"
                         fullWidth
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label=" Frecuencia de medicón  "
-                        helperText='Frecuencia de medicón     '
-                        size="small"
-                        fullWidth
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Responsable de la medición  y reporte"
-                        helperText='Responsable de la medición  y reporte'
-                        size="small"
-                        fullWidth
-                    />
-                </Grid>
-
-
-
-
-
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Variable 1"
-                        helperText='Variable 1'
-                        size="small"
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Variable 2"
-                        helperText='Variable 2'
-                        size="small"
-                        fullWidth
-                    />
-                </Grid>
-
-
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        disabled
-                        id="outlined-error-helper-text"
-                        label="Descripción  de la variable 1"
-                        helperText='Descripción  de la variable 1'
-                        size="small"
-                        fullWidth
+                        name="dependencia_grupo_regional"
+                        value={formData.dependencia_grupo_regional}
+                        onChange={handleInputChange}
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
+                        
+                        label="objetivo_indicador"
+                        helperText='objetivo_indicador'
+                        size="small"
+                        fullWidth
+                        name="objetivo_indicador"
+                        value={formData.objetivo_indicador}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        
+                        id="outlined-error-helper-text"
+                        label="unidad_medicion_reporte"
+                        helperText='unidad_medicion_reporte'
+                        size="small"
+                        fullWidth
+                        name="unidad_medicion_reporte"
+                        value={formData.unidad_medicion_reporte}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
+
+
+
+
+
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        
+                        label="descripcion_variable_1"
+                        helperText='descripcion_variable_1'
+                        size="small"
+                        fullWidth
+                        name="descripcion_variable_1"
+                        value={formData.descripcion_variable_1}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        
+                        id="outlined-error-helper-text"
+                        label="descripcion_variable_2"
+                        helperText='descripcion_variable_2'
+                        size="small"
+                        fullWidth
+                        name="descripcion_variable_2"
+                        value={formData.descripcion_variable_2}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
+
+
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        
+                        label="origen_datos"
+                        helperText='origen_datos'
+                        size="small"
+                        fullWidth
+                        name="origen_datos"
+                        value={formData.origen_datos}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
+
+
+
+
+
+
+
+{/* ////////////////////////////////////7 */}
+
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        
                         id="outlined-error-helper-text"
                         label="Descripción  de la variable 2"
                         helperText='Descripción  de la variable 2'
@@ -331,7 +413,7 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
+                        
                         id="outlined-error-helper-text"
                         label="Fórmula de indicador "
                         helperText='Fórmula de indicador '
@@ -341,7 +423,7 @@ export const Indicadores: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        disabled
+                        
                         id="outlined-error-helper-text"
                         label="Origen o fuente de los datos "
                         helperText='Origen o fuente de los datos '

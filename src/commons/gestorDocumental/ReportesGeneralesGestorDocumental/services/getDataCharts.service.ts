@@ -23,8 +23,9 @@ export const fetchChartData = async (
     const { data } = await api.get(urlApi);
     console.log('soy la data de la API', data)
 
-    if (!data || !Array?.isArray(data?.series) || !Array.isArray(data?.categories)) {
+    if (!Array?.isArray(data?.data?.series) || !Array.isArray(data?.data?.categories)) {
       control_warning('Los datos no son válidos');
+      return [];
     }
 
     data?.series?.forEach((item: any) => {
@@ -34,9 +35,9 @@ export const fetchChartData = async (
     });
 
 
-    if(!data?.series?.length || !data?.categories?.length || !data?.success) {
+    if(!data?.data?.series?.length || !data?.data?.categories?.length || !data?.success) {
       setIsReportReady(false);
-      control_warning('Ha ocurrido un error al cargar los datos, por favor intente de nuevo o contacte al administrador del sistema.');
+      control_warning('Ha ocurrido un error al cargar los datos (posiblemente no hay datos para cargar), por favor intente de nuevo o contacte al administrador del sistema.');
       return setChartData((prevState: any) => ({
         ...prevState ?? {},
         series: [],
@@ -54,12 +55,12 @@ export const fetchChartData = async (
     setIsReportReady(true);
     setChartData((prevState: any) => ({
       ...prevState ?? {},
-      series: data.series ?? [],
+      series: data?.data?.series ?? [],
       options: {
         ...prevState.options ?? {},
         xaxis: {
           ...prevState.options.xaxis ?? {},
-          categories: data.categories ?? [],
+          categories: data?.data?.categories ?? [],
         },
       },
     }));
