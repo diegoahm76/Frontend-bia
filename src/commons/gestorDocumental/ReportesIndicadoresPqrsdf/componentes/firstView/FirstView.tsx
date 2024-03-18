@@ -6,7 +6,6 @@ import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { Indices } from '../indices/Indices';
 import { ModalAndLoadingContext } from '../../../../../context/GeneralContext';
-import { fetchChartData } from '../../services/getDataCharts.service';
 import { ChartDataContextPQRSDF } from '../../context/DataChartContext';
 
 export const FirstView = (): JSX.Element => {

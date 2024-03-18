@@ -2,19 +2,19 @@
 import Swal from 'sweetalert2';
 
 export function handleApiError(error: any) {
-  let errorMessage = 'Ha ocurrido un error';
+  const errorMessages: any = {
+    500: 'Ha ocurrido un error y/o no se han encontrado datos relacionados',
+    404: 'Recurso no encontrado, no hay datos disponibles',
+  };
+
+  const defaultErrorMessage = 'Ha ocurrido un error';
+  let errorMessage: any = defaultErrorMessage;
 
   if (error.response) {
-    if (error.response.status === 500) {
-      errorMessage = 'Ha ocurrido un error y/o no se han encontrado datos relacionados';
-    } else if (error.response.status === 404) {
-      errorMessage = 'Recurso no encontrado, no hay datos disponibles';
-    } else {
-      errorMessage = `Error desconocido, código de estado: ${error.response.status}`;
-    }
-  } else if (!errorMessage && error.request) {
+    errorMessage = errorMessages[error.response.status] || `Error desconocido, código de estado: ${error.response.status}`;
+  } else if (error.request) {
     errorMessage = 'No se recibió respuesta del servidor, por favor intente nuevamente';
-  } else if (!errorMessage) {
+  } else {
     errorMessage = 'Error al configurar la solicitud, por favor intente nuevamente';
   }
 

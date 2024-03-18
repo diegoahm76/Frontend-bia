@@ -11,7 +11,6 @@ import { control_info } from '../../../../alertasgestor/utils/control_error_or_s
 import { BusquedaReporteTipoUno } from './busquedaTipoReporteUno/BusquedaReporteTipoUno';
 import { BusquedaReporteTipoTres } from './busquedaTipoReporteTres/BusquedaReporteTipoTres';
 import { BusquedaReporteTipoCuatro } from './busquedaTipoReporteCuatro/BusquedaReporteTipoCuatro';
-import { fetchChartData } from '../../../services/getDataCharts.service';
 import { current } from '@reduxjs/toolkit';
 import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext';
 import { useContext } from 'react';
@@ -19,6 +18,9 @@ import { useContext } from 'react';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
 import { BusquedaReporteTipoDos } from './busquedaTipoReporteDos/BusquedaReporteTipoDos';
 import { BusquedaReporteTipoCinco } from './busquedaTipoReporteCinco/BusquedaReporteTipoCinco';
+import { ChartDataContextPQRSDF } from '../../../context/DataChartContext';
+import { formatDateUse } from '../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/getPqrsdfPanVen.service';
+import { fetchChartData } from '../../../../ReportesGeneralesGestorDocumental/services/getDataCharts.service';
 
 export const BusquedaBasicaGeneradoraReporte = ({
   controlBusquedaGeneradoraReporte,
@@ -32,39 +34,91 @@ export const BusquedaBasicaGeneradoraReporte = ({
   );
 
   //* context declaration
-  const { 
-    generalLoading, 
+  const {
+    generalLoading,
     handleGeneralLoading,
-    secondLoading, 
+    secondLoading,
     handleSecondLoading,
-    thirdLoading, 
+    thirdLoading,
     handleThirdLoading,
-    fourthLoading, 
-    handleFourthLoading
+    fourthLoading,
+    handleFourthLoading,
+    fifthLoading,
+    handleFifthLoading,
   } = useContext(ModalAndLoadingContext);
 
-  /*const {chartDataViewOne, setChartDataViewOne,setChartDataViewTwo,setChartDataViewThree,setChartDataViewFour, setIsReportReady} = useContext(ChartDataContext);
+  const {
+    chartDataViewOne,
+    setChartDataViewOne,
+    setChartDataViewTwo,
+    setChartDataViewThree,
+    setChartDataViewFour,
+    setIsReportReady,
+    setChartDataViewFifth,
+  } = useContext(ChartDataContextPQRSDF);
 
   const watchBusquedaGeneradoraReporteExe = watchBusquedaGeneradoraReporte();
-*/
-  const handleSubmit = () => {
-    console.log('realizando la búsqueda')
 
-   /* console.log('chartDataViewOne',chartDataViewOne)
-    const chartDataHandlers: any  = {
-      1: { setChartData: setChartDataViewOne, url: 'http://localhost:3001/chartUno', handleLoading: handleGeneralLoading },
-      2: { setChartData: setChartDataViewTwo, url: 'http://localhost:3001/chartDos', handleLoading: handleSecondLoading },
-      3: { setChartData: setChartDataViewThree, url: 'http://localhost:3001/chartTres', handleLoading: handleThirdLoading },
-      4: { setChartData: setChartDataViewFour, url: 'http://localhost:3001/chartCuatro', handleLoading: handleFourthLoading },
+  const handleSubmit = () => {
+    console.log('realizando la búsqueda');
+    const formattedFechaInicio = controlBusquedaGeneradoraReporte._formValues
+    .fecha_inicio
+    ? encodeURIComponent(
+        formatDateUse(
+          new Date(controlBusquedaGeneradoraReporte._formValues.fecha_inicio)
+        )
+      )
+    : '';
+  const formattedFechaFin = controlBusquedaGeneradoraReporte._formValues
+    .fecha_fin
+    ? encodeURIComponent(
+        formatDateUse(
+          new Date(controlBusquedaGeneradoraReporte._formValues.fecha_fin)
+        )
+      )
+    : '';
+
+    // gestor/reporte_indices_pqrsdf/reporte_general/get/?fecha_inicio&fecha_fin
+    const chartDataHandlers: any = {
+      1: {
+        setChartData: setChartDataViewOne,
+        url: `gestor/reporte_indices_pqrsdf/reporte_general/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
+        handleLoading: handleGeneralLoading,
+      },
+      2: {
+        setChartData: setChartDataViewTwo,
+        url: 'http://localhost:3001/chartDos',
+        handleLoading: handleSecondLoading,
+      },
+      3: {
+        setChartData: setChartDataViewThree,
+        url: 'http://localhost:3001/chartTres',
+        handleLoading: handleThirdLoading,
+      },
+      4: {
+        setChartData: setChartDataViewFour,
+        url: 'http://localhost:3001/chartCuatro',
+        handleLoading: handleFourthLoading,
+      },
+      5: {
+        setChartData: setChartDataViewFifth,
+        url: 'http://localhost:3001/chartCinco',
+        handleLoading: handleFifthLoading,
+      },
     };
 
     const handlers = chartDataHandlers[currentBusquedaReporte?.value];
 
     if (handlers) {
-      fetchChartData(handlers.setChartData, handlers.url, handlers.handleLoading, setIsReportReady)
+      fetchChartData(
+        handlers.setChartData,
+        handlers.url,
+        handlers.handleLoading,
+        setIsReportReady
+      );
     } else {
       showAlert('Atención', 'Indicador no válido', 'warning');
-    }*/
+    }
   };
 
   if (!currentBusquedaReporte) {
@@ -113,6 +167,9 @@ export const BusquedaBasicaGeneradoraReporte = ({
                     variant="outlined"
                     value={value}
                     InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      max: new Date().toISOString().split("T")[0],
+                    }}
                     onChange={(e) => {
                       onChange(e.target.value);
                     }}
@@ -135,6 +192,9 @@ export const BusquedaBasicaGeneradoraReporte = ({
                     variant="outlined"
                     value={value}
                     InputLabelProps={{ shrink: true }}
+                    inputProps={{
+                      max: new Date().toISOString().split("T")[0],
+                    }}
                     onChange={(e) => {
                       onChange(e.target.value);
                     }}
@@ -142,32 +202,40 @@ export const BusquedaBasicaGeneradoraReporte = ({
                 )}
               />
             </Grid>
-            {
-              currentBusquedaReporte?.value === 1 ? (
-                <BusquedaReporteTipoUno
-                  controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
-                />
-              ) : currentBusquedaReporte?.value === 2 ? (
-                <BusquedaReporteTipoDos
-                  controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
-                />
-              ) : currentBusquedaReporte?.value === 3 ? (
-                <BusquedaReporteTipoTres
-                  controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
-                />
-              ) : currentBusquedaReporte?.value === 4 ? (
-                <BusquedaReporteTipoCuatro
-                  controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
-                />
-              ) : currentBusquedaReporte?.value === 5 ? (
-                <BusquedaReporteTipoCinco
-                  controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
-                  resetBusquedaGeneradoraReporte={resetBusquedaGeneradoraReporte}
-                />
-              ) : (
-                <>No hay elemento definido</>
-              )
-            }
+            {currentBusquedaReporte?.value === 1 ? (
+              <BusquedaReporteTipoUno
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
+            ) : currentBusquedaReporte?.value === 2 ? (
+              <BusquedaReporteTipoDos
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
+            ) : currentBusquedaReporte?.value === 3 ? (
+              <BusquedaReporteTipoTres
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
+            ) : currentBusquedaReporte?.value === 4 ? (
+              <BusquedaReporteTipoCuatro
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+              />
+            ) : currentBusquedaReporte?.value === 5 ? (
+              <BusquedaReporteTipoCinco
+                controlBusquedaGeneradoraReporte={
+                  controlBusquedaGeneradoraReporte
+                }
+                resetBusquedaGeneradoraReporte={resetBusquedaGeneradoraReporte}
+              />
+            ) : (
+              <>No hay elemento definido</>
+            )}
           </Grid>
 
           <Stack
