@@ -30,6 +30,7 @@ import {
   set_list_pqr_status,
   set_media_types,
   set_municipalities,
+  set_other,
   set_others,
   set_person,
   set_person_types,
@@ -853,12 +854,12 @@ export const get_others_service_id = (id: string | number): any => {
       );
       console.log(data);
 
-      if (data.success === true) {
-        dispatch(set_others(data.data));
+      if ('data' in data) {
+        dispatch(set_other(data.data));
+        // control_success('Se selecciono el pqrsdf ');
       } else {
-        control_error('No se encontrarón otros');
+        control_error(data.detail);
       }
-
       return data;
     } catch (error: any) {
       console.log('get_pqrs_service');
@@ -871,9 +872,8 @@ export const get_others_service_id = (id: string | number): any => {
 
 export const add_other_service = (
   otro: any,
-
-  // eslint-disable-next-line no-unused-vars
-  navigate?: NavigateFunction
+  navigate: NavigateFunction,
+  navigate_flag?: boolean
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -885,11 +885,13 @@ export const add_other_service = (
       console.log(data);
 
       control_success(data.detail);
-      // navigate(
-      //   `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
-      // );
+      if (navigate_flag ?? true) {
+        navigate(
+          `/app/gestor_documental/solicitudes_otros/crear/${data.data.id_otros}`
+        );
+      }
 
-      dispatch(set_others(data.data));
+      dispatch(set_other(data.data));
       return data;
     } catch (error: any) {
       console.log('add_pqrsdf_service');
@@ -907,10 +909,16 @@ export const get_others_service = (id: string | number): any => {
       const { data } = await api.get(`gestor/radicados/otros/get_otros/${id}/`);
       console.log(data);
 
-      if (data.success === true) {
-        dispatch(set_others(data.data));
+      dispatch(set_others(data.data));
+
+      if ('data' in data) {
+        if (data.data.length > 0) {
+          control_success('Se encontraron pqrs');
+        } else {
+          control_error('No se encontrarón pqrs');
+        }
       } else {
-        control_error('No se encontrarón otros');
+        control_error(data.detail);
       }
 
       return data;
@@ -922,21 +930,20 @@ export const get_others_service = (id: string | number): any => {
   };
 };
 
-
-export const edit_otros = (
-  otros: any,
-  navigate: NavigateFunction
-): any => {
+export const edit_otros = (otros: any, navigate: NavigateFunction): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`gestor/radicados/otros/editar-otros/`, otros);
+      const { data } = await api.put(
+        `gestor/radicados/otros/editar-otros/`,
+        otros
+      );
       console.log(data);
 
       control_success(data.detail);
       navigate(
-        `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+        `/app/gestor_documental/solicitudes_otros/crear/${data.data.id.otros}`
       );
-      dispatch(set_others(data.data));
+      dispatch(set_other(data.data));
 
       // if ('data' in data) {
       //   dispatch(set_pqr(data.data));
@@ -947,14 +954,11 @@ export const edit_otros = (
       return data;
     } catch (error: any) {
       console.log('edit_pqrsdf_service');
-      control_error(error.response.data.detail);
+      //control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
-
-
-
 
 export const radicar_otro = (
   id: number | string,
@@ -964,11 +968,14 @@ export const radicar_otro = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const params: any = {
-        id_PQRSDF: id,
+        id_otros: id,
         id_persona_guarda: id_user,
         isCreateForWeb: is_web,
       };
-      const { data } = await api.post(`gestor/radicados/otros/radicar-otros/`, params);
+      const { data } = await api.post(
+        `gestor/radicados/otros/radicar-otros/`,
+        params
+      );
       if (data.success) {
         control_success(data.detail);
         void dispatch(get_others_service_id(id));
@@ -999,11 +1006,7 @@ export const radicar_otro = (
   };
 };
 
-
-export const delete_otro = (
-  id: number | string,
-  is_web: boolean
-): any => {
+export const delete_otro = (id: number | string, is_web: boolean): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       // eslint-disable-next-line no-unused-vars
@@ -1012,7 +1015,7 @@ export const delete_otro = (
         isCreateForWeb: is_web,
       };
       const { data } = await api.delete(
-        `gestor/radicados/otros/eliminar-otros/?id_PQRSDF=${id}&isCreateForWeb=${
+        `gestor/radicados/otros/eliminar-otros/?id_otros=${id}&isCreateForWeb=${
           is_web ? 'True' : 'False'
         }`
       );
@@ -1020,7 +1023,7 @@ export const delete_otro = (
 
       if (data.success) {
         control_success(data.detail);
-        dispatch(set_others([initial_state_otro]));
+        dispatch(set_other(initial_state_otro));
       }
       return data;
     } catch (error: any) {

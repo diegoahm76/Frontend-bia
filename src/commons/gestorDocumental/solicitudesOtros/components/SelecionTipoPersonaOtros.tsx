@@ -27,10 +27,15 @@ import TipoPoderdanteOtros from './TipoPoderdante';
 const SeleccionTipoPersonaOtros = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
+
   const { control: control_seleccion_tipo_persona, reset } = useForm<any>();
-  const { type_applicant, on_behalf_of, list_on_behalf_of } = useAppSelector(
-    (state) => state.pqrsdf_slice
-  );
+  const {
+    type_applicant,
+    on_behalf_of,
+    list_on_behalf_of,
+    list_applicant_types,
+  } = useAppSelector((state) => state.pqrsdf_slice);
 
   const on_change_select = (value: any, name: string): void => {
     dispatch(set_person(initial_state_person));
@@ -48,7 +53,7 @@ const SeleccionTipoPersonaOtros = () => {
       if (value !== undefined) {
         dispatch(set_on_behalf_of(value));
       } else {
-        dispatch(set_on_behalf_of({ id: null, key: null, label: null }));
+        dispatch(set_on_behalf_of({ id: 'null', key: null, label: null }));
       }
     }
   };
@@ -58,8 +63,10 @@ const SeleccionTipoPersonaOtros = () => {
       type_applicant: type_applicant.key,
       on_behalf_of: on_behalf_of.key,
     });
-    //  console.log('')(on_behalf_of);
   }, [type_applicant, on_behalf_of]);
+  useEffect(() => {
+    dispatch(set_type_applicant({ id: 'T', key: 'T', label: 'Titular' }));
+  }, []);
 
   return (
     <>
@@ -84,7 +91,7 @@ const SeleccionTipoPersonaOtros = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'En representación de',
-              disabled: false,
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: list_on_behalf_of,
               option_label: 'label',
@@ -107,10 +114,6 @@ const SeleccionTipoPersonaOtros = () => {
           ]}
         />
       </Grid>
-
-      {on_behalf_of.key === 'P' && <TipoPersonaOtros />}
-      {on_behalf_of.key === 'E' && <TipoEmpresaOtros />}
-      {on_behalf_of.key === 'A' && <TipoPoderdanteOtros />}
     </>
   );
 };

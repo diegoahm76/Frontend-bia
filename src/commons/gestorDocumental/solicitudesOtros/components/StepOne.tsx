@@ -8,8 +8,6 @@ import { AuthSlice } from '../../../auth/interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import PrimaryForm from '../../../../components/partials/form/PrimaryForm';
 
-
-
 interface IProps {
   control_form: any | null;
   reset: any | null;
@@ -18,6 +16,8 @@ interface IProps {
 const StepOneOtros = ({ control_form, reset }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
+
   const {
     presentation_types,
     pqr_types,
@@ -25,6 +25,7 @@ const StepOneOtros = ({ control_form, reset }: IProps) => {
     media_types,
     destination_offices,
     type_applicant,
+    otro,
   } = useAppSelector((state) => state.pqrsdf_slice);
   const [requiere_rta_view, set_requiere_rta_view] = useState<boolean>(false);
 
@@ -41,15 +42,14 @@ const StepOneOtros = ({ control_form, reset }: IProps) => {
   };
   useEffect(() => {
     reset({
-      ...pqr,
+      ...otro,
       cod_forma_presentacion:
-        (type_applicant.key ?? null) === null
+        representacion_legal?.tipo_sesion === 'E'
           ? 'E'
-          : pqr.cod_forma_presentacion,
+          : otro.cod_forma_presentacion,
       id_medio_solicitud:
-        (type_applicant.key ?? null) === null ? 2 : pqr.id_medio_solicitud,
+        representacion_legal?.tipo_sesion === 'E' ? 2 : otro.id_medio_solicitud,
     });
-    console.log(pqr, type_applicant);
   }, []);
 
   return (
@@ -65,21 +65,20 @@ const StepOneOtros = ({ control_form, reset }: IProps) => {
               datum_type: 'title',
               title_label: 'OTROS',
             },
-            
-            
+
             {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 6,
-                control_form: control_form,
-                control_name: 'asunto',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Asunto',
-                type: 'text',
-                disabled: false,
-                helper_text: '',
-              },
+              datum_type: 'input_controller',
+              xs: 12,
+              md: 6,
+              control_form: control_form,
+              control_name: 'asunto',
+              default_value: '',
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
+              label: 'Asunto',
+              type: 'text',
+              disabled: false,
+              helper_text: '',
+            },
             {
               datum_type: 'date_picker_controller',
               xs: 12,
@@ -93,7 +92,7 @@ const StepOneOtros = ({ control_form, reset }: IProps) => {
               helper_text: '',
               format: 'YYYY-MM-DD',
             },
-           
+
             {
               datum_type: 'select_controller',
               xs: 12,
@@ -103,7 +102,7 @@ const StepOneOtros = ({ control_form, reset }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Forma de presentación',
-              disabled: false,
+              disabled: representacion_legal?.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: presentation_types,
               option_label: 'label',
@@ -118,13 +117,13 @@ const StepOneOtros = ({ control_form, reset }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Medio de solicitud',
-              disabled: false,
+              disabled: representacion_legal?.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',
               option_key: 'key',
             },
-           
+
             {
               datum_type: 'input_controller',
               xs: 12,
@@ -141,20 +140,20 @@ const StepOneOtros = ({ control_form, reset }: IProps) => {
               helper_text: '',
             },
             {
-                datum_type: 'select_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_form,
-                control_name: 'id_sucursal_especifica_implicada',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Dirigida a la sucursal',
-                disabled: false,
-                helper_text: 'Debe seleccionar campo',
-                select_options: destination_offices,
-                option_label: 'label',
-                option_key: 'key',
-              },
+              datum_type: 'select_controller',
+              xs: 12,
+              md: 4,
+              control_form: control_form,
+              control_name: 'id_sucursal_especifica_implicada',
+              default_value: '',
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
+              label: 'Dirigida a la sucursal',
+              disabled: false,
+              helper_text: 'Debe seleccionar campo',
+              select_options: destination_offices,
+              option_label: 'label',
+              option_key: 'key',
+            },
           ]}
         />
       </Grid>
