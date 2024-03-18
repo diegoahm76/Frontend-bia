@@ -9,19 +9,67 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { LoadingButton } from '@mui/lab';
 import { DataGrid } from '@mui/x-data-grid';
-import { api } from '../../../../../api/axios';
 import { FC, useEffect, useState } from 'react';
 import SaveIcon from '@mui/icons-material/Save';
-import { Title } from '../../../../../components';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CircularProgress from '@mui/material/CircularProgress';
-import { BuscadorPersona } from '../../../../../components/BuscadorPersona';
-import { control_error, control_success } from '../../utils/control_error_or_success';
-import { Alertas, Persona, Props, SelectItem, UnidadOrganizacional } from '../../interfaces/types';
+// import { BuscadorPersona } from '../../../../../components/BuscadorPersona';
+//  import { Alertas, Persona, Props, SelectItem, UnidadOrganizacional } from '../../interfaces/types';
 import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, } from '@mui/material';
+import { api } from '../../../../api/axios';
+import { Title } from '../../../../components';
+import { control_success, control_error } from '../store/thunks/alertas';
+import { BuscadorPersona } from '../../../../components/BuscadorPersona';
 
 
-export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
+export interface Persona {
+    id_persona: number;
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+};
+export interface Alertas {
+    id_persona_alertar: number;
+    nombre_completo: string;
+    nombre_unidad: string | null;
+    perfil_sistema: string | null;
+    es_responsable_directo: boolean;
+    registro_editable: boolean;
+    cod_clase_alerta: string;
+    id_persona: number;
+    id_unidad_org_lider: number | null;
+    datos_reordenados: {
+        destinatario: string;
+        detalle: string;
+        nombre: string;
+        principal: string;
+    };
+}
+
+ 
+ 
+export interface SelectItem {
+    value: string;
+    label: string;
+}
+export interface UnidadOrganizacional {
+    id_unidad_organizacional: number;
+    nombre: string;
+    codigo: string;
+    cod_tipo_unidad: string;
+    cod_agrupacion_documental: string;
+    unidad_raiz: boolean;
+    item_usado: boolean;
+    activo: boolean;
+    id_organigrama: number;
+    id_nivel_organigrama: number;
+    id_unidad_org_padre: number | null;
+    id_unidad_org_actual_admin_series: number | null;
+}
+
+ 
+export const AlertaDestinatario = (): JSX.Element => {
     const initial_data: Alertas[] = [];
     const [loading, set_loading] = useState(false);
     const [persona, set_persona] = useState<Persona | undefined>();
@@ -164,7 +212,7 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
     const initialFormData = {
         id_persona_alertar: null,
         perfil_sistema: null,
-        cod_clase_alerta: String(selectedOption),
+        cod_clase_alerta: "",
         id_persona: null,
         id_unidad_org_lider: null,
     };

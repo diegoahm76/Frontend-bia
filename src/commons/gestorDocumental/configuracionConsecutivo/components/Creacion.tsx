@@ -26,8 +26,17 @@ interface FormData {
     agno_consecutivo: any;
     cantidad_digitos: any;
     consecutivo_inicial: any;
+    id_catalogo_serie_unidad: any;
 }
-
+export interface SerieSubserie {
+    id_cat_serie_und: number;
+    id_serie_doc: number;
+    cod_serie_doc: string;
+    nombre_serie_doc: string;
+    id_subserie_doc: number | null;
+    cod_subserie_doc: string | null;
+    nombre_subserie_doc: string | null;
+}
 interface UnidadConfiguracion {
     implementar: any;
     agno_consecutivo: number;
@@ -49,6 +58,7 @@ export const Creacion: React.FC = () => {
         agno_consecutivo: "",
         cantidad_digitos: "",
         consecutivo_inicial: "",
+        id_catalogo_serie_unidad: "",
     };
 
 
@@ -66,7 +76,7 @@ export const Creacion: React.FC = () => {
     const handleInputChange = (event: any) => {
         const target = event.target as HTMLInputElement;
         const { name, value } = target;
-        const numericFields = ['agno_consecutivo', 'consecutivo_inicial', 'cantidad_digitos'];
+        const numericFields = ['agno_consecutivo', 'consecutivo_inicial', 'cantidad_digitos','id_catalogo_serie_unidad'];
 
         // Verifica si el campo es numérico y si el valor es numérico o vacío
         const isNumericField = numericFields.includes(name);
@@ -226,6 +236,24 @@ export const Creacion: React.FC = () => {
         const currentYear = new Date().getFullYear();
         return [currentYear, currentYear + 1];
     };
+
+
+    const [seriesSubseries, setSeriesSubseries] = useState<SerieSubserie[]>([]);
+    const fetchSeriesSubseries = async () => {
+        try {
+            const url = `/gestor/consecutivos-unidades/serie_subserio_unidad/get/${formData.id_unidad}/`;
+            const res = await api.get(url);
+            const data = res.data.data;
+            setSeriesSubseries(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSeriesSubseries();
+    }, [formData.id_unidad]);
+
     return (
         <>
             <Grid container
@@ -333,7 +361,25 @@ export const Creacion: React.FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="serie-subserie-select-label">Serie/Subserie</InputLabel>
+                        <Select
+                            labelId="serie-subserie-select-label"
+                            name="id_catalogo_serie_unidad"
+                            label="Serie/Subserie"
+                            value={formData.id_catalogo_serie_unidad}
+                            onChange={handleInputChange}
 
+                        >
+                            {seriesSubseries.map((item) => (
+                                <MenuItem key={item.id_cat_serie_und} value={`${item.id_cat_serie_und}`}>
+                                    {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
                 {/* <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -363,6 +409,15 @@ export const Creacion: React.FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
+
+
+                
+
+
+
+
+
+
                 {/* {formData.agno_consecutivo} */}
                 {/* <Grid item xs={12} sm={4}>
                     <TextField

@@ -127,12 +127,12 @@ export const TalentoHumano: React.FC = () => {
     const columns = [
 
         // { field: 'id', headerName: 'id  ', width: 130, flex: 1 },
-        { field: 'nivel', headerName: 'nivel  ', width: 130, flex: 1 },
-        { field: 'director', headerName: 'director', width: 130, flex: 1 },
-        { field: 'tecnicos', headerName: 'tecnicos', width: 130, flex: 1 },
-        { field: 'asesor', headerName: 'asesor', width: 130, flex: 1 },
-        { field: 'profesional', headerName: 'profesional', width: 130, flex: 1 },
-        { field: 'asistencial', headerName: 'asistencial', width: 130, flex: 1 },
+        { field: 'nivel', headerName: 'Nivel', width: 130, flex: 1 },
+        { field: 'director', headerName: 'Director', width: 130, flex: 1 },
+        { field: 'tecnicos', headerName: 'Tecnicos', width: 130, flex: 1 },
+        { field: 'asesor', headerName: 'Asesor', width: 130, flex: 1 },
+        { field: 'profesional', headerName: 'Profesional', width: 130, flex: 1 },
+        { field: 'asistencial', headerName: 'Asistencial', width: 130, flex: 1 },
 
         {
             field: 'Acciones',
@@ -253,7 +253,7 @@ export const TalentoHumano: React.FC = () => {
                     <Grid container xs={12} spacing={2}    >
 
                         <Grid item xs={12}>
-                            <Title title={`${modo} profecionales`} />
+                            <Title title={`${modo} Profesionales`} />
                         </Grid>
                         {/* {modo} */}
                         <Grid item xs={6}>
@@ -268,6 +268,10 @@ export const TalentoHumano: React.FC = () => {
                                 onChange={handleInputChange}
                             />
                         </Grid>
+
+
+
+
                         <Grid item xs={6}>
                             <TextField
                                 label="director"
@@ -343,7 +347,7 @@ export const TalentoHumano: React.FC = () => {
                                     }
                                 }}
                             >
-                                {modo} profecionales
+                                {modo} Profesionales
                             </Button>
 
                         </Grid>
@@ -363,7 +367,7 @@ export const TalentoHumano: React.FC = () => {
                 sx={miEstilo}
             >
                 <Grid item xs={12} sm={12}>
-                    <Title title="Profecionales" />
+                    <Title title="Profesionales" />
                 </Grid>
                 <Grid item   >
                     <Button startIcon={<AddIcon />} onClick={handle_open_tasa} fullWidth variant="outlined"    >
@@ -413,7 +417,7 @@ export const TalentoHumano: React.FC = () => {
 
 
             <RenderDataGrid
-                title='Profecionales'
+                title='Profesionales'
                 columns={columns ?? []}
                 rows={Historico ?? []}
             />

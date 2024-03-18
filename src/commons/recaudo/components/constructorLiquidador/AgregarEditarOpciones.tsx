@@ -57,7 +57,7 @@ interface Variable {
   valor: any;
 }
 interface IProps {
-  select_variable:any;
+  select_variable: any;
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
   form_data: { variable: string, nombre_opcion_liquidacion: string, estado: string };
@@ -400,8 +400,8 @@ export const AgregarEditarOpciones = ({
                   <Button color='success'
                     variant='contained'
                     startIcon={<SaveIcon />}
-                    onClick={handleSave}> 
-                    </Button>
+                    onClick={handleSave}>
+                  </Button>
                 </Grid>
               </Grid>
             </> : ''}
@@ -415,7 +415,7 @@ export const AgregarEditarOpciones = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVariableName, setSelectedVariableName] = useState("");
 
- 
+
   const [selectedVariableNames, setSelectedVariableNames] = useState<string[]>([]);
 
   const handleSave = () => {
@@ -431,17 +431,17 @@ export const AgregarEditarOpciones = ({
     control_success("Variable asignada ");
     setIsModalOpen(false);
 
-   };
+  };
 
   const handleOpenModal = (variableName: any) => {
     setSelectedVariableName(variableName); // Asumiendo que tienes una función para esto
     // setIsModalOpen(true);
   };
- 
+
 
   const [valores, setvalores] = useState<Variable[]>([]);
   const [selectedVariable, setSelectedVariable] = useState<any>(null);
- 
+
   const [selectedVariables, setSelectedVariables] = useState<{ [key: string]: string | null }>(
     variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {})
   );
@@ -476,9 +476,8 @@ export const AgregarEditarOpciones = ({
   }, []);
 
   const handleClick = () => {
-    console.log(select_variable);
+    console.log(selectedVariables);
     console.log("2222222");
-
   };
 
   const [is_buscar, set_is_buscar] = useState<boolean>(true);
@@ -496,16 +495,16 @@ export const AgregarEditarOpciones = ({
 
   return (
     <>
-     <div>
-          <button onClick={handleClick}>consola  </button>
-        </div>
+      {/* <div>
+        <button onClick={handleClick}>consola  </button>
+      </div> */}
       <>
 
         {/* <Button color='success'
                   variant='contained'
                   onClick={handleClick}>CONSOLE </Button> */}
         {/* INICIO TEST */}
-        
+
         <Grid container spacing={2} sx={{ my: '10px' }}>
 
 
@@ -729,6 +728,7 @@ export const AgregarEditarOpciones = ({
             <Liquidator
               setNotifications={setNotifications}
               variables={variables}
+              selectedVariables={selectedVariables}
               generateCode={generateCode}
               preview
               handle_close={setOpen}

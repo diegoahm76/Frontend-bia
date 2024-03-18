@@ -25,6 +25,7 @@ import { UnidadOrganizacional } from '../../conservacion/solicitudMaterial/inter
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import { remicion_viso, constancia_publicacion, plantila_4, constancia_publicaci5, citacion, documento8 } from '../plantillasRecaudo/miguel';
+import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
 
 export interface SerieSubserie {
   // id_catserie_unidadorg: number;
@@ -148,9 +149,12 @@ export const Facturacion: React.FC = () => {
     doc.setFontSize(12);
     let y = 30; // posición inicial para el texto
     // ${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}
-    doc.text(`${unidadSeleccionada} - ${selectedSerieSubserie}`, 10, y);
-    y += 6;
+    // doc.text(`Serie ${unidadSeleccionada} - Subserie ${selectedSerieSubserie}`, 10, y);
+    // y += 6;
 
+
+    doc.text(`${consecutivoActual}`, 10, y);
+    y += 6;
     doc.text(`Identificación: ${identificacion}`, 10, y);
     y += 6;
     doc.text(`Email: ${email}`, 10, y);
@@ -210,7 +214,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       textoAMostrar = `  ${citacion(opcion_6, numero_6)}  `;
     }
     else if (opcionSeleccionada === '8') {
-      textoAMostrar = `  ${documento8(Fecha_8, empresa_8, nit_8, opcion_8,dias_8)}  `;
+      textoAMostrar = `  ${documento8(Fecha_8, empresa_8, nit_8, opcion_8, dias_8)}  `;
     }
     else if (opcionSeleccionada === '9') {
       textoAMostrar = ``;
@@ -317,6 +321,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchSeriesSubseries();
   }, [idUnidadSeleccionada]);
@@ -594,12 +599,13 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   async function crearConsecutivo() {
     try {
+      const fechaActual = new Date().toISOString();
       const url = `/gestor/consecutivos-unidades/consecutivo/create/`;
       const data = {
         id_unidad: unidadSeleccionada,
         id_cat_serie_und: selectedSerieSubserie,
-        id_persona: 215,
-        fecha_actual: "2024-01-29T15:30:00"
+        id_persona: id_persona,
+        fecha_actual: fechaActual
       };
       // Asumiendo que `api` es una instancia de Axios o similar para hacer la petición
       const res = await api.post(url, data);
@@ -617,7 +623,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   }
 
 
-  const isButtonDisabled = !unidadSeleccionada || !selectedSerieSubserie;
+  const isButtonDisabled = !unidadSeleccionada;
 
 
   return (
@@ -747,13 +753,14 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
               onChange={handleChangee}
             >
               {seriesSubseries.map((item) => (
-                <MenuItem key={item.id_cat_serie_und} value={`${item.id_serie_doc}-${item.id_subserie_doc}`}>
+                <MenuItem key={item.id_cat_serie_und} value={`${item.id_cat_serie_und}`}>
                   {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
+        {/* id_cat_serie_und */}
         {/* {selectedSerieSubserie} */}
 
         {/* {nombre}
@@ -923,7 +930,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
                 onChange={(event) => setempresa_3(event.target.checked)} // Maneja el cambio de estado del Switch y actualiza el estado
               />
             </Grid> */}
-            
+
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth size="small">
                 <InputLabel id="si-no-select-label">Persona / Empresa</InputLabel>
@@ -942,8 +949,8 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
             {empresa_3 === "Si" ? (
-        <>
-         <Grid item xs={12} sm={4}>
+              <>
+                <Grid item xs={12} sm={4}>
                   <TextField
                     fullWidth
                     size="small"
@@ -964,11 +971,11 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
                     onChange={(e) => setcc_3(e.target.value)}
                   />
                 </Grid>
-        
-        </>
-      ) : (
-        <>
-          <Grid item xs={12} sm={4}>
+
+              </>
+            ) : (
+              <>
+                <Grid item xs={12} sm={4}>
                   <TextField
                     fullWidth
                     size="small"
@@ -990,16 +997,16 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
                     onChange={(e) => setnombre_nit_3(e.target.value)}
                   />
                 </Grid>
-        </>
-      )}
+              </>
+            )}
 
             {empresa_3 ? (
               <>
-               
+
               </>
             ) : (
               <>
-              
+
 
 
 
@@ -1284,6 +1291,18 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         </Grid>
       </Grid>
 
+
+
+
+
+
+      <AlertaDestinatario  />
+
+
+
+
+
+
       <Grid
         container
         spacing={2} m={2} p={2}
@@ -1302,7 +1321,6 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         </Grid>
 
       </Grid>
-
 
 
 
