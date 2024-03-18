@@ -398,27 +398,27 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
     series: [
       {
         name: 'PETICIONES',
-        data: [44, 95, 10, 58, 78, 6, 30, 90, 45, 48, 65],
+        data: [44, 95, 10, 58 ],
       },
       {
         name: 'QUEJAS',
-        data: [76, 100, 78, 54, 21, 65, 30, 90, 35, 78, 65],
+        data: [76, 100, 78, 54],
       },
       {
         name: 'RECLAMOS',
-        data: [55, 37, 85, 45, 23, 45, 30, 10, 45, 78, 65],
+        data: [55, 37, 85, 45],
       },
       {
         name: 'SOLICITUDES',
-        data: [30, 90, 45, 78, 65, 45, 30, 90, 45, 78, 25],
+        data: [30, 90, 45, 78],
       },
       {
         name: 'DENUNCIAS',
-        data: [10, 90, 45, 78, 65, 45, 30, 90, 45, 108, 65],
+        data: [10, 90, 45, 78],
       },
       {
         name: 'FELICITACIONES',
-        data: [30, 90, 45, 78, 65, 45, 30, 90, 15, 78, 65],
+        data: [30, 90, 45, 78],
       },
     ],
     options: {
@@ -447,17 +447,10 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
       },
       xaxis: {
         categories: [
-          'SUELOS',
-          'AGUAS',
-          'GEMA',
-          'GIEMA',
-          'ACCIONES JURÍDICAS',
-          'CONTRATACIÓN',
-          'SUELOS',
-          'AGUAS',
-          'GEMA',
-          'GIEMA',
-          'ACCIONES JURÍDICAS',
+          'VILLAVICECIO',
+          'ARIARI',
+          'PTO LOPEZ',
+          'RESTREPO',
         ],
         labels: {
           formatter: function (val: any) {
