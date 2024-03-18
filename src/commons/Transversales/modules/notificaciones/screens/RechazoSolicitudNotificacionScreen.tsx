@@ -305,7 +305,12 @@ export function RechazoSolicitudNotificacionScreen(): JSX.Element {
     DataTableExpandedRows | DataTableValueArray | undefined
   >(undefined);
   const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
-
+  const {
+    control: control_notificacion,
+    handleSubmit: handle_submit_notificacion,
+    reset: reset_notificacion,
+    watch,
+  } = useForm<any>();
   useEffect(() => {
     setExpandedRows(undefined);
     set_button_option('');
@@ -368,7 +373,7 @@ export function RechazoSolicitudNotificacionScreen(): JSX.Element {
                 datum_type: 'input_controller',
                 xs: 12,
                 md: 12,
-                control_form: null,
+                control_form: control_notificacion,
                 control_name: 'type_applicant',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },

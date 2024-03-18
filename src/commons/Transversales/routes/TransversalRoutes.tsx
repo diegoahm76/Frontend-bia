@@ -13,7 +13,7 @@ import { CorporativoRoutes } from '../modules/corporativo/routes/CorporativoRout
 import { PantallaPrincipalAlertas } from '../modules/Alertas/screens/pantallaPrincipal';
 import { ModalProviderLideres } from '../modules/corporativo/screens/LideresXUnidadOrg/context/ModalContextLideres';
 import { Sucursal } from '../../seguridad/components/SucursalEntidad/Sucursal';
-import { NotificacionRoutes } from '../../conservacion/notificacion/routes/NotificacionRoutes';
+import { NotificacionesRoutes } from '../modules/notificaciones/routes/NotificacionesRoutes';
 
 const routes = [
   {
@@ -39,7 +39,7 @@ export const TransversalRoutes: React.FC = () => {
         />
         <Route path="procesos/*" element={<ProcesosRoutes />} />
         <Route path="corporativo/*" element={<CorporativoRoutes />} />
-        <Route path="notificaciones/*" element={<NotificacionRoutes />} />
+        <Route path="notificaciones/*" element={<NotificacionesRoutes />} />
         <Route path="/*" element={<Page404 />} />
       </Routes>
     </ModalProviderLideres>

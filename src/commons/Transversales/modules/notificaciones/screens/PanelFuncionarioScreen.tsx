@@ -17,8 +17,16 @@ import {
 import { type ColumnProps } from 'primereact/column';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import React from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
+import ListadoAnexos from '../../../../gestorDocumental/CentralDigitalizacion/componentes/CentralDigitalizacion/ListadoAnexos';
+import FormButton from '../../../../../components/partials/form/FormButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import CloseIcon from '@mui/icons-material/Close';
+import { DialogNoticacionesComponent } from '../../../../../components/DialogNotificaciones';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { v4 as uuid } from 'uuid';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -33,13 +41,13 @@ import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function PanelSolicitudNotificacionScreen(): JSX.Element {
+export function PanelFuncionarioScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
       field: 'cod_tipo_PQRSDF',
-      header: 'Tipo de documento',
+      header: 'Tipo de notificación',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -50,7 +58,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     {
       headerStyle: { width: '4rem' },
       field: 'fecha_registro',
-      header: 'Asunto',
+      header: 'Funcionario asignado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -62,7 +70,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     {
       headerStyle: { width: '4rem' },
       field: 'fecha_radicado',
-      header: 'Expediente',
+      header: 'fecha de la asignación',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -75,7 +83,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     {
       headerStyle: { width: '4rem' },
       field: 'numero_radicado_entrada',
-      header: 'Grupo solicitante',
+      header: 'Fecha de finalizado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -87,7 +95,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     {
       field: 'nombre_estado_solicitud',
       headerStyle: { width: '4rem' },
-      header: 'Funcionario solicitante',
+      header: 'Dias para finalizar',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -99,7 +107,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     {
       field: 'nombre_estado_solicitud',
       headerStyle: { width: '4rem' },
-      header: 'Fecha de la solicitud',
+      header: 'Estado de la tarea',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -110,7 +118,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     {
       field: 'nombre_estado_solicitud',
       headerStyle: { width: '4rem' },
-      header: 'Fecha de finalizacion',
+      header: 'Estado de asignación de tarea',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -118,50 +126,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
         </div>
       ),
     },
-    {
-      field: 'Dias Faltantes',
-      headerStyle: { width: '4rem' },
-      header: 'Fecha de la solicitud',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
-      headerStyle: { width: '4rem' },
-      header: 'Aceptado',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
-      headerStyle: { width: '4rem' },
-      header: 'Medio de solicitud',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
-      headerStyle: { width: '4rem' },
-      header: 'Estado',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
+
     {
       header: 'Acciones',
       headerStyle: { width: '4rem' },
@@ -194,12 +159,12 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
   const columns_solicitud: ColumnProps[] = [
     {
       field: 'nombre_tipo_oficio',
-      header: 'Tipo de gestión',
+      header: 'Tipo de acción',
       sortable: false,
     },
     {
       field: 'fecha_radicado_salida',
-      header: 'Número de oficio o requerimiento',
+      header: 'Funcionario asignado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -211,7 +176,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     },
     {
       field: 'numero_radicado_salida',
-      header: 'Radicado',
+      header: 'Fecha de la asignación',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -224,7 +189,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
 
     {
       field: 'fecha_solicitud',
-      header: 'Fecha de asignación',
+      header: 'Fecha de finalizada',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -235,12 +200,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
 
     {
       field: 'nombre_und_org_oficina_solicita',
-      header: 'Plazo de entrega',
-      sortable: false,
-    },
-    {
-      field: 'nombre_und_org_oficina_solicita',
-      header: 'Días restantes',
+      header: 'dias para finalizar',
       sortable: false,
     },
     {
@@ -282,14 +242,14 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       column_id: 'id_PQRSDF',
       level: 0,
       columns: columns_pqrs,
-      table_name: 'Solicitudes de notificación',
+      table_name: 'Tareas de notificación asignadas',
       property_name: '',
     },
     {
       column_id: 'id_solicitud_al_usuario_sobre_pqrsdf',
       level: 1,
       columns: columns_solicitud,
-      table_name: 'Registro de notificación por solicitud',
+      table_name: 'Tipo de acción',
       property_name: 'solicitudes_pqr',
     },
   ];
@@ -306,10 +266,46 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     reset: reset_notificacion,
     watch,
   } = useForm<any>();
-  const columns_personas: GridColDef[] = [
+  useEffect(() => {
+    setExpandedRows(undefined);
+    set_button_option('');
+    setSelectedPqr({});
+    set_detail_is_active(false);
+  }, []);
+
+  // Notificaciones
+  const [titulo_notificacion, set_titulo_notificacion] = useState<string>('');
+  const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>('');
+  const [tipo_notificacion, set_tipo_notificacion] = useState<string>('');
+  const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
+  const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] =
+    useState<boolean>(false);
+
+  const generar_notificación_reporte = (
+    titulo: string,
+    tipo: string,
+    mensaje: string,
+    active: boolean
+  ) => {
+    set_titulo_notificacion(titulo);
+    set_tipo_notificacion(tipo);
+    set_mensaje_notificacion(mensaje);
+    set_dialog_notificaciones_is_active(active);
+    set_abrir_modal(active);
+  };
+
+  const reporte_evolucion_lote_fc: () => void = () => {
+    generar_notificación_reporte(
+      'Notificación',
+      'warn',
+      '¿Estas seguro de devolver o rechazar la solicitud?',
+      true
+    );
+  };
+  const columns_list: GridColDef[] = [
     {
       field: 'tipo_documento',
-      headerName: 'Tipo de documento',
+      headerName: 'Funcionario',
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -319,7 +315,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     },
     {
       field: 'numero_documento',
-      headerName: 'Número de documento',
+      headerName: 'Vigencia del contrato',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -329,7 +325,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     },
     {
       field: 'nombre_completo',
-      headerName: 'Nombre completo',
+      headerName: 'Tareas asignadas',
       width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -340,7 +336,17 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
 
     {
       field: 'tipo_persona',
-      headerName: 'Tipo de persona',
+      headerName: 'Tareas resueltas',
+      width: 250,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'tipo_persona_1',
+      headerName: 'Pendientes',
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -349,7 +355,6 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       ),
     },
   ];
-  useEffect(() => {}, []);
   return (
     <>
       <Grid
@@ -364,104 +369,200 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Listado de solicitudes de notificación"></Title>
+          <Title title="Panel de funcionario - Lista de tareas asignadas por notificación"></Title>
+          <Grid container direction="row" padding={2} spacing={2}>
+            <Grid item xs={12} md={12}>
+              <h3>
+                Acciones de publicaciones en página de actos administrativos
+              </h3>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Publicar en página - Gaceta'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Publicar en página - Edictos'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Generar constancia'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row" padding={2} spacing={2}>
+            <Grid item xs={12} md={12}>
+              <h3>Acciones de notificación de actos administrativos</h3>
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Notificación personal'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Notificación por correo electrónico'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Notificación por medio fisico'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Notificación por publicación en pagina'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container direction="row" padding={2} spacing={2}>
+            <Grid item xs={12} md={12}>
+              <h3>Acciones de comunicaciones de actos administrativos</h3>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Comunicar por correo electrónico'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Notificación por medio fisico'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                disabled={false}
+                label={'Generar constancia'}
+                type_button="button"
+                color_button="success"
+              />
+            </Grid>
+          </Grid>
+
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
             button_submit_icon_class={null}
             show_button={false}
             form_inputs={[
-              {
-                datum_type: 'title',
-                title_label: 'Buscador',
-              },
+              { datum_type: 'title', title_label: 'Buscar' },
               {
                 datum_type: 'select_controller',
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'tipo_documento',
+                control_name: 'type_applicant',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Tipo de documento',
+                label: 'Tipo de Tarea',
                 disabled: false,
                 helper_text: '',
                 select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_notificacion,
-                control_name: 'numero_documento',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Radicado',
-                type: 'number',
-                disabled: false,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_notificacion,
-                control_name: 'nombre_completo',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Expediente',
-                type: 'text',
-                disabled: false,
-                helper_text: '',
+                option_label: 'label',
+                option_key: 'key',
               },
               {
                 datum_type: 'select_controller',
                 xs: 12,
                 md: 3,
                 control_form: control_notificacion,
-                control_name: 'tipo_documento',
+                control_name: 'type_applicant',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Grupo solicitante',
+                label: 'Estado de asignación de la tarea',
                 disabled: false,
                 helper_text: '',
                 select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
+                option_label: 'label',
+                option_key: 'key',
               },
               {
                 datum_type: 'select_controller',
                 xs: 12,
                 md: 3,
                 control_form: control_notificacion,
-                control_name: 'tipo_documento',
+                control_name: 'type_applicant',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Estado',
+                label: 'Estado de la tarea',
                 disabled: false,
                 helper_text: '',
                 select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
-              },
-
-              {
-                datum_type: 'button',
-                xs: 12,
-                md: 3,
-                label: 'Descartar',
-                type_button: 'button',
-                disabled: false,
-                variant_button: 'outlined',
-                on_click_function: null,
-                color_button: 'error',
+                option_label: 'label',
+                option_key: 'key',
               },
               {
                 datum_type: 'button',
                 xs: 12,
-                md: 3,
+                md: 2,
                 label: 'Buscar',
                 type_button: 'button',
                 disabled: false,
@@ -471,17 +572,17 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
               },
             ]}
           />
-
-          <TableRowExpansion
-            products={[]}
-            definition_levels={definition_levels}
-            selectedItem={selectedPqr}
-            setSelectedItem={setSelectedPqr}
-            expandedRows={expandedRows}
-            setExpandedRows={setExpandedRows}
-            onRowToggleFunction={null}
-          />
         </Grid>
+
+        <TableRowExpansion
+          products={[]}
+          definition_levels={definition_levels}
+          selectedItem={selectedPqr}
+          setSelectedItem={setSelectedPqr}
+          expandedRows={expandedRows}
+          setExpandedRows={setExpandedRows}
+          onRowToggleFunction={null}
+        />
       </Grid>
     </>
   );

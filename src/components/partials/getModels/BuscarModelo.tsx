@@ -237,7 +237,7 @@ const BuscarModelo = ({
           xs={form_input.xs}
           md={form_input.md}
           margin={form_input.margin}
-          selected_image={form_input.selected_imagen}
+          selected_image={form_input.selected_image}
           width_image={form_input.width_image}
           height_image={form_input.height_image}
         />

@@ -3,13 +3,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { Title } from '../../../../../components/Title';
-import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
-import TableRowExpansion from '../../../../../components/partials/form/TableRowExpansion';
+import { Title } from '../../../../../../components/Title';
+import BuscarModelo from '../../../../../../components/partials/getModels/BuscarModelo';
+import TableRowExpansion from '../../../../../../components/partials/form/TableRowExpansion';
 import {
   DataTableExpandedRows,
   DataTableValueArray,
@@ -17,8 +17,15 @@ import {
 import { type ColumnProps } from 'primereact/column';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import React from 'react';
-import { type GridColDef } from '@mui/x-data-grid';
-import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
+import PrimaryForm from '../../../../../../components/partials/form/PrimaryForm';
+import ListadoAnexos from '../../../../../gestorDocumental/CentralDigitalizacion/componentes/CentralDigitalizacion/ListadoAnexos';
+import FormButton from '../../../../../../components/partials/form/FormButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import CloseIcon from '@mui/icons-material/Close';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { v4 as uuid } from 'uuid';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -33,7 +40,7 @@ import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function PanelSolicitudNotificacionScreen(): JSX.Element {
+export function TiposNotificacionScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const columns_pqrs: ColumnProps[] = [
     {
@@ -306,10 +313,16 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     reset: reset_notificacion,
     watch,
   } = useForm<any>();
-  const columns_personas: GridColDef[] = [
+  useEffect(() => {
+    setExpandedRows(undefined);
+    set_button_option('');
+    setSelectedPqr({});
+    set_detail_is_active(false);
+  }, []);
+  const columns_list: GridColDef[] = [
     {
       field: 'tipo_documento',
-      headerName: 'Tipo de documento',
+      headerName: 'Nombre',
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -319,7 +332,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     },
     {
       field: 'numero_documento',
-      headerName: 'Número de documento',
+      headerName: 'Aplica notificación',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -329,7 +342,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     },
     {
       field: 'nombre_completo',
-      headerName: 'Nombre completo',
+      headerName: 'Aplica correspondencia',
       width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -340,7 +353,47 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
 
     {
       field: 'tipo_persona',
-      headerName: 'Tipo de persona',
+      headerName: 'Días permitidos',
+      width: 250,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'tipo_persona_1',
+      headerName: 'Precargado',
+      width: 250,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'tipo_persona_5',
+      headerName: 'Activo',
+      width: 250,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'tipo_persona_7',
+      headerName: 'Usado',
+      width: 250,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'tipo_persona_6',
+      headerName: 'Acciones',
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -349,7 +402,6 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       ),
     },
   ];
-  useEffect(() => {}, []);
   return (
     <>
       <Grid
@@ -364,7 +416,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Listado de solicitudes de notificación"></Title>
+          <Title title="Tipos de notificaciones y/o correspondencias"></Title>
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
@@ -373,46 +425,60 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
             form_inputs={[
               {
                 datum_type: 'title',
-                title_label: 'Buscador',
+                title_label: 'Nuevo registro',
               },
               {
                 datum_type: 'select_controller',
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'tipo_documento',
-                default_value: '',
+                control_name: 'type_applicant',
+                default_value: [],
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Tipo de documento',
+                label: 'Aplica a:',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
+                multiple: true,
+                select_options: [
+                  { label: 'Notificaciones', key: 'notificaciones' },
+                  { label: 'Correspondencia', key: 'correspondencia' },
+                ],
+                option_label: 'label',
+                option_key: 'key',
               },
               {
                 datum_type: 'input_controller',
                 xs: 12,
-                md: 4,
+                md: 8,
                 control_form: control_notificacion,
-                control_name: 'numero_documento',
+                control_name: 'type_applicant_1',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Radicado',
-                type: 'number',
+                label: 'Nombre',
                 disabled: false,
                 helper_text: '',
               },
               {
                 datum_type: 'input_controller',
                 xs: 12,
-                md: 4,
+                md: 3,
                 control_form: control_notificacion,
-                control_name: 'nombre_completo',
+                control_name: 'type_applicant_2',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Expediente',
-                type: 'text',
+                label: 'Días maximos permitidos',
+                disabled: false,
+                helper_text: '',
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 3,
+                control_form: control_notificacion,
+                control_name: 'type_applicant_4',
+                default_value: '',
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Acto administrativo',
                 disabled: false,
                 helper_text: '',
               },
@@ -421,32 +487,32 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 3,
                 control_form: control_notificacion,
-                control_name: 'tipo_documento',
+                control_name: 'type_applicant_3',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Grupo solicitante',
+                label: 'Aplica a:',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
-              },
-              {
-                datum_type: 'select_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'tipo_documento',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Estado',
-                disabled: false,
-                helper_text: '',
-                select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
+                select_options: [
+                  { label: 'Días habiles', key: 'habiles' },
+                  { label: 'Días calendario', key: 'calendario' },
+                ],
+                option_label: 'label',
+                option_key: 'key',
               },
 
+              {
+                datum_type: 'checkbox_controller',
+                xs: 12,
+                md: 3,
+                control_form: control_notificacion,
+                control_name: 'type_applicant_5',
+                default_value: '',
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Activo',
+                disabled: false,
+                helper_text: '',
+              },
               {
                 datum_type: 'button',
                 xs: 12,
@@ -462,24 +528,28 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 datum_type: 'button',
                 xs: 12,
                 md: 3,
-                label: 'Buscar',
+                label: 'Agregar',
                 type_button: 'button',
                 disabled: false,
                 variant_button: 'contained',
                 on_click_function: null,
-                color_button: 'primary',
+                color_button: 'success',
               },
             ]}
           />
-
-          <TableRowExpansion
-            products={[]}
-            definition_levels={definition_levels}
-            selectedItem={selectedPqr}
-            setSelectedItem={setSelectedPqr}
-            expandedRows={expandedRows}
-            setExpandedRows={setExpandedRows}
-            onRowToggleFunction={null}
+          <DataGrid
+            density="compact"
+            autoHeight
+            rows={[]}
+            columns={columns_list}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            experimentalFeatures={{ newEditingApi: true }}
+            getRowId={(row) =>
+              row['id_notificacion' ?? uuid()] === null
+                ? uuid()
+                : row['id_notificacion' ?? uuid()]
+            }
           />
         </Grid>
       </Grid>

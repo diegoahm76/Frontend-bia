@@ -16,12 +16,21 @@ import Limpiar from '../../../conservacion/componentes/Limpiar';
 import SaveIcon from '@mui/icons-material/Save';
 
 import SeleccionTipoPersonaOtros from '../components/SelecionTipoPersonaOtros';
-import { get_document_types_service, get_list_applicant_types_service, get_list_on_behalf_service, get_person_types_service } from '../../PQRSDF/store/thunks/pqrsdfThunks';
+import {
+  get_document_types_service,
+  get_list_applicant_types_service,
+  get_list_on_behalf_service,
+  get_person_types_service,
+} from '../../PQRSDF/store/thunks/pqrsdfThunks';
 import EstadOtros from '../components/EstadOtros';
 import TipoEmpresaOtros from '../components/TipoEmpresa';
 import TipoPoderdanteOtros from '../components/TipoPoderdante';
 import TipoPersonaOtros from '../components/TipoPersona';
-import { reset_state, set_others, set_pqr_status } from '../../PQRSDF/store/slice/pqrsdfSlice';
+import {
+  reset_state,
+  set_others,
+  set_pqr_status,
+} from '../../PQRSDF/store/slice/pqrsdfSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function SolicitudesOtroScreen(): JSX.Element {
@@ -43,13 +52,13 @@ export function SolicitudesOtroScreen(): JSX.Element {
     // dispatch(get_pqrs_status_aux_service());
   };
 
-   useEffect(() => {
+  useEffect(() => {
     dispatch(get_document_types_service());
     dispatch(get_person_types_service());
-   dispatch(get_list_applicant_types_service());
-     dispatch(get_list_on_behalf_service());
-  //   dispatch(get_pqrs_status_aux_service());
-   }, []);
+    dispatch(get_list_applicant_types_service());
+    dispatch(get_list_on_behalf_service());
+    //   dispatch(get_pqrs_status_aux_service());
+  }, []);
 
   useEffect(() => {
     dispatch(set_pqr_status({ id: null, key: null, label: null }));
@@ -90,7 +99,7 @@ export function SolicitudesOtroScreen(): JSX.Element {
             attorney.id_persona !== null && <EstadOtros />}
         {/* {pqr_status.key === 'ESR' && <ListadoPqrsdf />} */}
         <Grid container direction="row" padding={2} spacing={2}>
-          <Grid item xs={12} md={3}  alignItems={'center'}>
+          <Grid item xs={12} md={3} alignItems={'center'}>
             <FormButton
               href={`/#/app/gestor_documental/solicitudes_otros/crear/`}
               variant_button="contained"
