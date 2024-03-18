@@ -194,12 +194,7 @@ export const ConceptoPago: React.FC = () => {
     const [knobValue, setKnobValue] = useState<number>(2023);
 
     // Manejador para actualizar el valor basado en el "Knob"
-    const handleKnobChange = (newValue: any) => {
-        // Actualizar el valor del "Knob"
-        setKnobValue(newValue);
-        // Convertir el valor del "Knob" al valor real y actualizarlo
-        setValue(2023 + newValue);
-    };
+  
 
     // Manejador para decrementar el valor
     const handleDecrement = () => {
@@ -258,7 +253,7 @@ export const ConceptoPago: React.FC = () => {
 
                 <Grid item xs={3} sm={2} marginTop={2} marginLeft={2} >
                     <Button startIcon={<AddIcon />} onClick={handle_open_tasa} fullWidth variant="outlined"    >
-                        tasa
+                    Interés
                     </Button>
                 </Grid>
 

@@ -497,7 +497,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                                 Imprimir recibo
                             </Button>
                         </Grid>
-                        {/* {id_liquidacion_pdf} */}
+                        {id_liquidacion_pdf}
                         {/* {id_liquidacion_pdf} */}
 
                         {/* <div>
