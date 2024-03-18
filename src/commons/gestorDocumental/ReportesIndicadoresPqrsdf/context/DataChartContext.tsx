@@ -28,14 +28,19 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
         total: 750,
       },
       {
+        name: 'RESUELTOS',
+        data: [1260],
+        total: 425,
+      },
+      {
         name: 'EN TRÁMITE',
         data: [2605],
         total: 196,
       },
       {
-        name: 'RESUELTOS',
-        data: [1260],
-        total: 425,
+        name: 'VENCIDOS',
+        data: [820],
+        total: 458,
       },
     ],
     options: {
@@ -95,12 +100,16 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
         data: [13, 23, 20, 8],
       },
       {
+        name: 'RESUELTOS',
+        data: [44, 55, 41, 67],
+      },
+      {
         name: 'EN TRÁMITE',
         data: [21, 7, 25, 13],
       },
       {
-        name: 'RESUELTOS',
-        data: [44, 55, 41, 67],
+        name: 'VENCIDOS',
+        data: [10, 15, 11, 9],
       },
     ],
     options: {
@@ -159,20 +168,67 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
     },
   });
 
-  
   const [chartDataViewThree, setChartDataViewThree] = useState({
     series: [
       {
         name: 'RADICADOS',
-        data: [44, 55, 41, 37, 22, 43, 21, ...new Array(25).fill(null).map(() => Math.floor(Math.random() * 100))],
-      },
-      {
-        name: 'EN TRÁMITE',
-        data: [53, 32, 33, 52, 13, 43, 32, ...new Array(25).fill(null).map(() => Math.floor(Math.random() * 100))],
+        data: [
+          44,
+          55,
+          41,
+          37,
+          22,
+          43,
+          21,
+          ...new Array(20)
+            .fill(null)
+            .map(() => Math.floor(Math.random() * 100)),
+        ],
       },
       {
         name: 'RESULTADOS',
-        data: [12, 17, 11, 9, 15, 11, 20, ...new Array(25).fill(null).map(() => Math.floor(Math.random() * 100))],
+        data: [
+          12,
+          17,
+          11,
+          9,
+          15,
+          11,
+          20,
+          ...new Array(20)
+            .fill(null)
+            .map(() => Math.floor(Math.random() * 100)),
+        ],
+      },
+      {
+        name: 'EN TRÁMITE',
+        data: [
+          53,
+          32,
+          33,
+          52,
+          13,
+          43,
+          32,
+          ...new Array(20)
+            .fill(null)
+            .map(() => Math.floor(Math.random() * 100)),
+        ],
+      },
+      {
+        name: 'VENCIDOS',
+        data: [
+          12,
+          17,
+          11,
+          9,
+          15,
+          11,
+          20,
+          ...new Array(20)
+            .fill(null)
+            .map(() => Math.floor(Math.random() * 100)),
+        ],
       },
     ],
     options: {
@@ -204,7 +260,35 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
         text: 'Número de PQRSDF por grupo',
       },
       xaxis: {
-        categories: ['RENTAS', 'ACCIONES JURÍDICAS', 'CONTRATACIÓN', 'GESTIÓN DOCUMENTAL', 'PQRSDF', 'SISTEMAS', 'TIC', 'AIRE Y URBANO', 'BIÓTICOS', 'SUELOS', 'AGUA', 'FAUNA', 'FLORA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS', 'GENÉTICA', 'ECOLOGÍA', 'ECOSISTEMAS'],
+        categories: [
+          'RENTAS',
+          'ACCIONES JURÍDICAS',
+          'CONTRATACIÓN',
+          'GESTIÓN DOCUMENTAL',
+          'PQRSDF',
+          'SISTEMAS',
+          'TIC',
+          'AIRE Y URBANO',
+          'BIÓTICOS',
+          'SUELOS',
+          'AGUA',
+          'FAUNA',
+          'FLORA',
+          'ECOSISTEMAS',
+          'GENÉTICA',
+          'ECOLOGÍA',
+          'ECOSISTEMAS',
+          'GENÉTICA',
+          'ECOLOGÍA',
+          'ECOSISTEMAS',
+          'GENÉTICA',
+          'ECOLOGÍA',
+          'ECOSISTEMAS',
+          'GENÉTICA',
+          'ECOLOGÍA',
+          'ECOSISTEMAS',
+          'GENÉTICA',
+        ],
         labels: {
           formatter: function (val: any) {
             return val;
@@ -238,15 +322,15 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
     series: [
       {
         name: 'SEDE PRINCIPAL',
-        data: [44, 95,10 ,58,78,6],
+        data: [44, 95, 10, 58, 78, 6],
       },
       {
         name: 'SEDE RÍO ARIARI',
-        data: [76, 100 ,78,54,21,65],
+        data: [76, 100, 78, 54, 21, 65],
       },
       {
         name: 'SEDE MACARENA',
-        data: [55, 37, 85 ,45 ,23 ,45],
+        data: [55, 37, 85, 45, 23, 45],
       },
       {
         name: 'SEDE RÍO META',
@@ -278,7 +362,14 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
         colors: ['transparent'],
       },
       xaxis: {
-        categories: ['Peticiones', 'Quejas', 'Reclamos', 'Solicitudes', 'Denuncias', 'Felicitaciones'],
+        categories: [
+          'Peticiones',
+          'Quejas',
+          'Reclamos',
+          'Solicitudes',
+          'Denuncias',
+          'Felicitaciones',
+        ],
         labels: {
           formatter: function (val: any) {
             return val;
@@ -307,27 +398,27 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
     series: [
       {
         name: 'PETICIONES',
-        data: [44, 95,10 ,58,78,6, 30, 90, 45, 78, 65, 45, 30, 90, 45, 78, 65, 45],
+        data: [44, 95, 10, 58 ],
       },
       {
         name: 'QUEJAS',
-        data: [76, 100 ,78,54,21,65, 30, 90, 45, 78, 65, 45, 30, 90, 45, 78, 65, 45],
+        data: [76, 100, 78, 54],
       },
       {
         name: 'RECLAMOS',
-        data: [55, 37, 85 ,45 ,23 ,45,30, 90, 45, 78, 65, 45, 30, 90, 45, 78, 65, 45],
+        data: [55, 37, 85, 45],
       },
       {
         name: 'SOLICITUDES',
-        data: [30, 90, 45, 78, 65, 45,30, 90, 45, 78, 65, 45, 30, 90, 45, 78, 65, 45],
+        data: [30, 90, 45, 78],
       },
       {
         name: 'DENUNCIAS',
-        data: [30, 90, 45, 78, 65, 45,30, 90, 45, 78, 65, 45,30, 90, 45, 78, 65, 45],
+        data: [10, 90, 45, 78],
       },
       {
         name: 'FELICITACIONES',
-        data: [30, 90, 45, 78, 65, 45,30, 90, 45, 78, 65, 45,30, 90, 45, 78, 65, 45],
+        data: [30, 90, 45, 78],
       },
     ],
     options: {
@@ -355,7 +446,12 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
         colors: ['transparent'],
       },
       xaxis: {
-        categories: ['SUELOS', 'AGUAS', 'GEMA', 'GIEMA', 'ACCIONES JURÍDICAS', 'CONTRATACIÓN','SUELOS', 'AGUAS', 'GEMA', 'GIEMA', 'ACCIONES JURÍDICAS', 'CONTRATACIÓN','SUELOS', 'AGUAS', 'GEMA', 'GIEMA', 'ACCIONES JURÍDICAS', 'CONTRATACIÓN'],
+        categories: [
+          'VILLAVICECIO',
+          'ARIARI',
+          'PTO LOPEZ',
+          'RESTREPO',
+        ],
         labels: {
           formatter: function (val: any) {
             return val;
@@ -379,7 +475,6 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
       },
     },
   });
-
 
   const [isReporteReady, setIsReportReady] = useState(false);
 
