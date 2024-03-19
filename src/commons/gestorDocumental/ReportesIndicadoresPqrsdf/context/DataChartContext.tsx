@@ -232,6 +232,16 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
       },
     ],
     options: {
+      colors: [
+        '#008FFB', // Azul
+        '#00E396', // Verde
+        '#FEB019', // Naranja
+        '#FF4560', // Rojo
+        '#775DD0', // Púrpura
+        '#000080', // Azul oscuro
+        '#FF007F', // Rosado intenso
+        '#FF7F50', // Naranja claro
+      ],
       chart: {
         type: 'bar',
         height: 350,
@@ -338,6 +348,16 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
       },
     ],
     options: {
+      colors: [
+        '#008FFB', // Azul
+        '#00E396', // Verde
+        '#FEB019', // Naranja
+        '#FF4560', // Rojo
+        '#775DD0', // Púrpura
+        '#000080', // Azul oscuro
+        '#FF007F', // Rosado intenso
+        '#FF7F50', // Naranja claro
+      ],
       chart: {
         type: 'bar',
         height: 500,
@@ -397,7 +417,15 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
   const [chartDataViewFifth, setChartDataViewFifth] = useState({
     series: [
       {
-        name: 'PETICIONES',
+        name: 'PETICIONES GENERALES',
+        data: [44, 95, 10, 58 ],
+      },
+      {
+        name: 'CONSULTA',
+        data: [44, 95, 10, 58 ],
+      },
+      {
+        name: 'DOCUMENTOS',
         data: [44, 95, 10, 58 ],
       },
       {
@@ -422,6 +450,16 @@ const ChartDataProviderPQRSDF = ({ children }: any) => {
       },
     ],
     options: {
+      colors: [
+  '#008FFB', // Azul
+  '#00E396', // Verde
+  '#FEB019', // Naranja
+  '#FF4560', // Rojo
+  '#775DD0', // Púrpura
+  '#000080', // Azul oscuro
+  '#FF007F', // Rosado intenso
+  '#FF7F50', // Naranja claro
+],
       chart: {
         type: 'bar',
         height: 500,
