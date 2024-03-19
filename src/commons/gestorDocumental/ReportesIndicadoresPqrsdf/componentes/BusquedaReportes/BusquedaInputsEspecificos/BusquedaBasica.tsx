@@ -87,22 +87,26 @@ export const BusquedaBasicaGeneradoraReporte = ({
       },
       2: {
         setChartData: setChartDataViewTwo,
-        url: 'http://localhost:3001/chartDos',
+        // gestor/reporte_indices_pqrsdf/reporte_sedes/get/?fecha_inicio&fecha_fin
+        url: `gestor/reporte_indices_pqrsdf/reporte_sedes/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleSecondLoading,
       },
       3: {
         setChartData: setChartDataViewThree,
-        url: 'http://localhost:3001/chartTres',
+        // gestor/reporte_indices_pqrsdf/reporte_unidad/get/?fecha_inicio&fecha_fin
+        url: `gestor/reporte_indices_pqrsdf/reporte_unidad/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleThirdLoading,
       },
       4: {
         setChartData: setChartDataViewFour,
-        url: 'http://localhost:3001/chartCuatro',
+        // gestor/reporte_indices_pqrsdf/reporte/tipos/sedes/get/?fecha_inicio&fecha_fin
+        url: `gestor/reporte_indices_pqrsdf/reporte/tipos/sedes/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleFourthLoading,
       },
       5: {
         setChartData: setChartDataViewFifth,
-        url: 'http://localhost:3001/chartCinco',
+        // gestor/reporte_indices_pqrsdf/reporte/sedes/tipo/get/?fecha_inicio&fecha_fin
+        url: `gestor/reporte_indices_pqrsdf/reporte/sedes/tipo/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleFifthLoading,
       },
     };
@@ -246,7 +250,7 @@ export const BusquedaBasicaGeneradoraReporte = ({
           >
             <LoadingButton
               loading={
-                generalLoading || secondLoading || thirdLoading || fourthLoading
+                generalLoading || secondLoading || thirdLoading || fourthLoading || fifthLoading
               }
               type="submit"
               color="primary"

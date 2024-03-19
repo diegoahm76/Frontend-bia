@@ -54,7 +54,7 @@ export const ReportIndicadoresPqrsdf = (): JSX.Element => {
       {/* se muestra los inputs según la selección inicial, se no se ha seleccionado nada en general no entra a este componente */}
       <BusquedaBasicaGeneradoraReporte {...props} />
 
-      {currentBusquedaReporte?.value === 1 ? (
+     {/* {currentBusquedaReporte?.value === 1 ? (
         <FirstView />
       ) : currentBusquedaReporte?.value === 2 ? (
         <SecondView/>
@@ -66,8 +66,8 @@ export const ReportIndicadoresPqrsdf = (): JSX.Element => {
         <FifthView/>
       ) : (
         <></>
-      )}
-{/*
+      )}*/}
+
      {isReporteReady &&
         (currentBusquedaReporte?.value === 1 ? (
         <FirstView />
@@ -81,7 +81,7 @@ export const ReportIndicadoresPqrsdf = (): JSX.Element => {
         <FifthView/>
       ) : (
         <></>
-      ))}*/}
+      ))}
     </>
   );
 };
