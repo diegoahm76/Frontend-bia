@@ -34,7 +34,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 
 
 interface Historico {
-    proceso: string;
+    proceso: any;
     nombre_indicador: string;
     frecuencia_medicion: string;
     variable_1: string;
@@ -76,7 +76,7 @@ interface ReporteTiposUsuario {
 }
 
 interface FormData {
-    proceso: string;
+    proceso: any;
     nombre_indicador: string;
     frecuencia_medicion: string;
     variable_1: string;
@@ -91,18 +91,18 @@ interface FormData {
     origen_datos: string;
     responsable_creacion: string;
     tipo_indicador: string;
-    enero: number | null;
-    febrero: number | null;
-    marzo: number | null;
-    abril: number | null;
-    mayo: number | null;
-    junio: number | null;
-    julio: number | null;
-    agosto: number | null;
-    septiembre: number | null;
-    octubre: number | null;
-    noviembre: number | null;
-    diciembre: number | null;
+    enero: any | null;
+    febrero: any | null;
+    marzo: any | null;
+    abril: any | null;
+    mayo: any | null;
+    junio: any | null;
+    julio: any | null;
+    agosto: any | null;
+    septiembre: any | null;
+    octubre: any | null;
+    noviembre: any | null;
+    diciembre: any | null;
 
 }
 export const Indicadores: React.FC = () => {
@@ -115,7 +115,7 @@ export const Indicadores: React.FC = () => {
         variable_1: "",
         variable_2: "",
         formula_indicador: "",
-        vigencia_reporta: "2024",
+        vigencia_reporta: "",
         dependencia_grupo_regional: "",
         objetivo_indicador: "",
         unidad_medicion_reporte: "",
@@ -124,18 +124,18 @@ export const Indicadores: React.FC = () => {
         origen_datos: "",
         responsable_creacion: "",
         tipo_indicador: "",
-        enero: null,
-        febrero: null,
-        marzo: null,
-        abril: null,
-        mayo: null,
-        junio: null,
-        julio: null,
-        agosto: null,
-        septiembre: null,
-        octubre: null,
-        noviembre: null,
-        diciembre: null
+        enero: "",
+        febrero: "",
+        marzo: "",
+        abril: "",
+        mayo: "",
+        junio: "",
+        julio: "",
+        agosto: "",
+        septiembre: "",
+        octubre: "",
+        noviembre: "",
+        diciembre: ""
     };
     const [formData, setFormData] = useState(initialFormData);
     const handleInputChange = (event: any) => {
@@ -167,7 +167,7 @@ export const Indicadores: React.FC = () => {
 
 
 
- // const fetchHistorico = async (): Promise<void> => {
+    // const fetchHistorico = async (): Promise<void> => {
     //     try {
     //         const url = "/recaudo/configuracion_baisca/indicadores/2024/";
     //         const res = await api.get(url);
@@ -182,7 +182,7 @@ export const Indicadores: React.FC = () => {
 
 
     const [Historico, setHistorico] = useState<Historico[]>([]);
-   
+
 
     const fetchHistorico = async (): Promise<void> => {
         try {
@@ -190,6 +190,7 @@ export const Indicadores: React.FC = () => {
             const res = await api.get(url);
             const HistoricoData: Historico[] = res.data?.data || [];
             setHistorico(HistoricoData);
+
         } catch (error) {
             console.error(error);
         }
@@ -301,27 +302,93 @@ export const Indicadores: React.FC = () => {
         setValue(value - 1);
     };
     const handleIncrement = () => {
+        setFormData(initialFormData)
+
         setKnobValue(knobValue + 1);
         setValue(value + 1);
     };
 
+    const nombre_indicador = Historico.length > 0 ? Historico[0].nombre_indicador : '';
+    const proceso = Historico.length > 0 ? Historico[0].proceso : '';
+    const frecuencia_medicion = Historico.length > 0 ? Historico[0].frecuencia_medicion : '';
+    const variable_1 = Historico.length > 0 ? Historico[0].variable_1 : '';
+    const variable_2 = Historico.length > 0 ? Historico[0].variable_2 : '';
+    const formula_indicador = Historico.length > 0 ? Historico[0].formula_indicador : '';
+    const vigencia_reporta = Historico.length > 0 ? Historico[0].vigencia_reporta : '';
+    const dependencia_grupo_regional = Historico.length > 0 ? Historico[0].dependencia_grupo_regional : '';
+    const objetivo_indicador = Historico.length > 0 ? Historico[0].objetivo_indicador : '';
+    const unidad_medicion_reporte = Historico.length > 0 ? Historico[0].unidad_medicion_reporte : '';
+    const descripcion_variable_1 = Historico.length > 0 ? Historico[0].descripcion_variable_1 : '';
+    const descripcion_variable_2 = Historico.length > 0 ? Historico[0].descripcion_variable_2 : '';
+    const origen_datos = Historico.length > 0 ? Historico[0].origen_datos : '';
+    const responsable_creacion = Historico.length > 0 ? Historico[0].responsable_creacion : '';
+    const tipo_indicador = Historico.length > 0 ? Historico[0].tipo_indicador : '';
+    const enero = Historico.length > 0 ? Historico[0].enero : '';
+    const febrero = Historico.length > 0 ? Historico[0].febrero : '';
+    const marzo = Historico.length > 0 ? Historico[0].marzo : '';
+    const abril = Historico.length > 0 ? Historico[0].abril : '';
+    const mayo = Historico.length > 0 ? Historico[0].mayo : '';
+    const junio = Historico.length > 0 ? Historico[0].junio : '';
+    const julio = Historico.length > 0 ? Historico[0].julio : '';
+    const agosto = Historico.length > 0 ? Historico[0].agosto : '';
+    const septiembre = Historico.length > 0 ? Historico[0].septiembre : '';
+    const octubre = Historico.length > 0 ? Historico[0].octubre : '';
+    const noviembre = Historico.length > 0 ? Historico[0].noviembre : '';
+    const diciembre = Historico.length > 0 ? Historico[0].diciembre : '';
+
 
     useEffect(() => {
+
         setFormData((prevData) => ({
             ...prevData,
             vigencia_reporta: knobValue,
-
-
-
+            // enero:eneroValue, 
         }))
         fetchHistorico()
     }, [knobValue]);
 
+    useEffect(() => {
+        setFormData(initialFormData)
+        setFormData((prevData) => ({
+            ...prevData,
+            enero: enero,
+            nombre_indicador: nombre_indicador,
+            proceso: proceso,
+            frecuencia_medicion: frecuencia_medicion,
+            variable_1: variable_1,
+            variable_2: variable_2,
+            formula_indicador: formula_indicador,
+            vigencia_reporta: vigencia_reporta,
+            dependencia_grupo_regional: dependencia_grupo_regional,
+            objetivo_indicador: objetivo_indicador,
+            unidad_medicion_reporte: unidad_medicion_reporte,
+            descripcion_variable_1: descripcion_variable_1,
+            descripcion_variable_2: descripcion_variable_2,
+            origen_datos: origen_datos,
+            responsable_creacion: responsable_creacion,
+            tipo_indicador: tipo_indicador,
+            julio: julio,
+            agosto: agosto,
+            septiembre: septiembre,
+            octubre: octubre,
+            noviembre: noviembre,
+            diciembre: diciembre,
+            febrero: febrero,
+            marzo: marzo,
+            abril: abril,
+            mayo: mayo,
+            junio: junio
+        }));
+    }, [enero, nombre_indicador, proceso, frecuencia_medicion, variable_1, variable_2, formula_indicador, vigencia_reporta, dependencia_grupo_regional, objetivo_indicador, unidad_medicion_reporte, descripcion_variable_1, descripcion_variable_2, origen_datos, responsable_creacion, tipo_indicador, julio, agosto, septiembre, octubre, noviembre, diciembre]);
 
     const [empresa_3, setempresa_3] = useState("Si");
     const handleChangeSiNo3 = (event: any) => {
         setempresa_3(event.target.value);
     };
+
+
+
+
     return (
         <>
             <div>
@@ -338,7 +405,6 @@ export const Indicadores: React.FC = () => {
                 }}
             >
                 <Title title=" Datos del indicador " />
-
                 <Grid container
                     direction="row"
                     spacing={2}
@@ -408,7 +474,6 @@ export const Indicadores: React.FC = () => {
                             <MenuItem value="octubre">octubre</MenuItem>
                             <MenuItem value="noviembre">noviembre</MenuItem>
                             <MenuItem value="diciembre">diciembre</MenuItem>
-
                         </Select>
                     </FormControl>
                 </Grid>
@@ -714,7 +779,7 @@ export const Indicadores: React.FC = () => {
                         onChange={handleInputChange}
                     />
                 </Grid>
-                
+
 
 
                 <Grid item xs={12} sm={3}>
@@ -837,7 +902,7 @@ export const Indicadores: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <Title title="Grafica de indicadores " />
+                <Title title="Gráfica  de indicadores " />
 
 
                 <Grid item xs={12} marginTop={2} sm={12}>

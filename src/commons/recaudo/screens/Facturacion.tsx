@@ -26,6 +26,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import { remicion_viso, constancia_publicacion, plantila_4, constancia_publicaci5, citacion, documento8 } from '../plantillasRecaudo/miguel';
 import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
+import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 
 export interface SerieSubserie {
   // id_catserie_unidadorg: number;
@@ -149,12 +150,15 @@ export const Facturacion: React.FC = () => {
     doc.setFontSize(12);
     let y = 30; // posición inicial para el texto
     // ${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}
-    // doc.text(`Serie ${unidadSeleccionada} - Subserie ${selectedSerieSubserie}`, 10, y);
-    // y += 6;
-
-
+    
+    
     doc.text(`${consecutivoActual}`, 10, y);
     y += 6;
+
+    doc.text(`Serie ${unidadSeleccionada} - Subserie ${selectedSerieSubserie}`, 10, y);
+    y += 6;
+
+
     doc.text(`Identificación: ${identificacion}`, 10, y);
     y += 6;
     doc.text(`Email: ${email}`, 10, y);
@@ -302,13 +306,13 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   }, [opcionSeleccionada]);
 
-  const handleChange = (event: { target: { name: any; value: any; }; }) => {
+  const handleChange = (event: any ) => {
     setUnidadSeleccionada(event.target.value as string);
     const selectedId = event.target.value;
     setIdUnidadSeleccionada(selectedId);
   };
 
-  const [selectedSerieSubserie, setSelectedSerieSubserie] = useState('');
+  const [selectedSerieSubserie, setSelectedSerieSubserie] = useState(null);
 
   const [seriesSubseries, setSeriesSubseries] = useState<SerieSubserie[]>([]);
   const fetchSeriesSubseries = async () => {
@@ -336,7 +340,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   const [nombreSubserieSeleccionada, setNombreSubserieSeleccionada] = useState('');
 
   const handleChangee = (event: { target: { name: any; value: any; }; }) => {
-    setSelectedSerieSubserie(event.target.value as string);
+    setSelectedSerieSubserie(event.target.value as any );
 
     const selectedValue = event.target.value;
     setSelectedSerieSubserie(selectedValue);
@@ -625,19 +629,20 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   const isButtonDisabled = !unidadSeleccionada;
 
+  const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
+  const [  type_direction, // set_type_direction
+  ] = useState('');
+  const [Fecha_e, setFecha_e] = useState('');
 
   return (
     <>
 
-      {/* <Grid item > 
-        <Button
-          startIcon={<SaveIcon />}
-          color='success'
-          variant='contained'
-          onClick={crearConsecutivo}
-        >Enviar Documento
-        </Button>
-      </Grid> */}
+      <DialogGeneradorDeDirecciones
+        open={opengeneradordirecciones}
+        openDialog={setopengeneradordirecciones}
+        onChange={setFecha_e} // Pasa la función para mostrar la dirección generada
+        type={type_direction}
+      />
       <Grid
         container
         spacing={2} m={2} p={2}
@@ -652,7 +657,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         }}
       >
         <Title title="Generación de documento" />
-
+{/* {Fecha_e} */}
 
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
@@ -677,6 +682,18 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
             </Select>
           </FormControl>
         </Grid>
+
+        {/* <Grid item xs={4}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setopengeneradordirecciones(true);
+            }}
+          >
+            {' '}
+            Generar dirección
+          </Button>
+        </Grid> */}
 
         <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
           <Grid container
@@ -1296,7 +1313,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
 
-      <AlertaDestinatario  />
+      <AlertaDestinatario />
 
 
 
