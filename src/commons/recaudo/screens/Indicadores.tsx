@@ -28,18 +28,39 @@ import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/R
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import Paper from '@mui/material/Paper';
+import { Knob } from 'primereact/knob';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 
 
 interface Historico {
-    id_documento: any;
-    nombre_completo: any;
-    radicado: any;
-    ruta_archivo: {
-        ruta_archivo: string;
-        fecha_creacion_doc: any;
-        formato: any;
-    };
+    proceso: string;
+    nombre_indicador: string;
+    frecuencia_medicion: string;
+    variable_1: string;
+    variable_2: string;
+    formula_indicador: string;
+    vigencia_reporta: string;
+    dependencia_grupo_regional: string;
+    objetivo_indicador: string;
+    unidad_medicion_reporte: string;
+    descripcion_variable_1: string;
+    descripcion_variable_2: string;
+    origen_datos: string;
+    responsable_creacion: string;
+    tipo_indicador: string;
+    enero: number | null;
+    febrero: number | null;
+    marzo: number | null;
+    abril: number | null;
+    mayo: number | null;
+    junio: number | null;
+    julio: number | null;
+    agosto: number | null;
+    septiembre: number | null;
+    octubre: number | null;
+    noviembre: number | null;
+    diciembre: number | null;
 }
 
 interface ReporteTiposUsuario {
@@ -61,13 +82,27 @@ interface FormData {
     variable_1: string;
     variable_2: string;
     formula_indicador: string;
-    vigencia_reporta: string;
+    vigencia_reporta: any;
     dependencia_grupo_regional: string;
     objetivo_indicador: string;
     unidad_medicion_reporte: string;
     descripcion_variable_1: string;
     descripcion_variable_2: string;
     origen_datos: string;
+    responsable_creacion: string;
+    tipo_indicador: string;
+    enero: number | null;
+    febrero: number | null;
+    marzo: number | null;
+    abril: number | null;
+    mayo: number | null;
+    junio: number | null;
+    julio: number | null;
+    agosto: number | null;
+    septiembre: number | null;
+    octubre: number | null;
+    noviembre: number | null;
+    diciembre: number | null;
 
 }
 export const Indicadores: React.FC = () => {
@@ -75,18 +110,32 @@ export const Indicadores: React.FC = () => {
 
     const initialFormData: FormData = {
         proceso: "",
-        nombre_indicador: "",
+        nombre_indicador: " ",
         frecuencia_medicion: "",
         variable_1: "",
         variable_2: "",
         formula_indicador: "",
-        vigencia_reporta: "",
+        vigencia_reporta: "2024",
         dependencia_grupo_regional: "",
         objetivo_indicador: "",
         unidad_medicion_reporte: "",
         descripcion_variable_1: "",
         descripcion_variable_2: "",
-        origen_datos: ""
+        origen_datos: "",
+        responsable_creacion: "",
+        tipo_indicador: "",
+        enero: null,
+        febrero: null,
+        marzo: null,
+        abril: null,
+        mayo: null,
+        junio: null,
+        julio: null,
+        agosto: null,
+        septiembre: null,
+        octubre: null,
+        noviembre: null,
+        diciembre: null
     };
     const [formData, setFormData] = useState(initialFormData);
     const handleInputChange = (event: any) => {
@@ -99,12 +148,45 @@ export const Indicadores: React.FC = () => {
 
 
 
+    //crear 
+    const handleSubmitCrear = async () => {
+        try {
+            const url = "recaudo/configuracion_baisca/indicadores/post/";
+            const response = await api.post(url, formData)
+            //  console.log('')("Configuración básica creada con éxito", response.data);
+            fetchHistorico()
+            control_success("Guardado exitosamente")
 
-    
+        } catch (error: any) {
+            // console.error("Error al crear la configuración básica", error);
+            //  console.log('')(error.response.data.detail.detail);
+            control_error(error.response.data.detail?.error);
+        }
+    };
+
+
+
+
+ // const fetchHistorico = async (): Promise<void> => {
+    //     try {
+    //         const url = "/recaudo/configuracion_baisca/indicadores/2024/";
+    //         const res = await api.get(url);
+    //         const HistoricoData: Historico[] = res.data?.data || [];
+    //         setHistorico(HistoricoData);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+
+
+
+
     const [Historico, setHistorico] = useState<Historico[]>([]);
+   
+
     const fetchHistorico = async (): Promise<void> => {
         try {
-            const url = "/recaudo/formulario/documento_formulario_recuado_get/";
+            const url = `/recaudo/configuracion_baisca/indicadores/${formData.vigencia_reporta}/`;
             const res = await api.get(url);
             const HistoricoData: Historico[] = res.data?.data || [];
             setHistorico(HistoricoData);
@@ -113,32 +195,31 @@ export const Indicadores: React.FC = () => {
         }
     };
 
-
     useEffect(() => {
         void fetchHistorico();
     }, []);
 
 
+    useEffect(() => {
+        void fetchHistorico();
+    }, [formData.vigencia_reporta]);
+
     const columns = [
-        // { field: 'id_documento', headerName: ' Numero ', width: 130, flex: 1 },
-        { field: 'Mes', headerName: 'Mes ', width: 130, flex: 1 },
-        { field: 'Variable 1', headerName: 'Variable 1 ', width: 130, flex: 1 },
-        { field: 'Variable 2', headerName: 'Variable 2 ', width: 130, flex: 1 },
-        { field: 'Logro', headerName: 'Logro ', width: 130, flex: 1 },
-        { field: 'Meta', headerName: 'Meta ', width: 130, flex: 1 },
-        { field: 'Semaforicacion', headerName: 'Semaforicacion ', width: 130, flex: 1 },
-        { field: 'Mess', headerName: 'Mess ', width: 130, flex: 1 },
-        { field: 'Descripcion', headerName: 'Descripcion ', width: 130, flex: 1 },
 
+        { field: 'nombre_indicador', headerName: 'Nombre indicador', width: 200 },
 
-        {
-            field: 'formato',
-            headerName: 'Formato',
-            width: 180,
-            flex: 1,
-            valueGetter: (params: any) => (params.row.ruta_archivo.formato),
-        },
-
+        { field: 'enero', headerName: 'Enero', width: 130 },
+        { field: 'febrero', headerName: 'Febrero', width: 130 },
+        { field: 'marzo', headerName: 'Marzo', width: 130 },
+        { field: 'abril', headerName: 'Abril', width: 130 },
+        { field: 'mayo', headerName: 'Mayo', width: 130 },
+        { field: 'junio', headerName: 'Junio', width: 130 },
+        { field: 'julio', headerName: 'Julio', width: 130 },
+        { field: 'agosto', headerName: 'Agosto', width: 130 },
+        { field: 'septiembre', headerName: 'Septiembre', width: 130 },
+        { field: 'octubre', headerName: 'Octubre', width: 130 },
+        { field: 'noviembre', headerName: 'Noviembre', width: 130 },
+        { field: 'diciembre', headerName: 'Diciembre', width: 130 },
     ];
     const [reporteTiposUsuario, setReporteTiposUsuario] = useState<ReporteTiposUsuario | null>(null);
     const fetchReporteTiposUsuario = async (): Promise<void> => {
@@ -200,14 +281,52 @@ export const Indicadores: React.FC = () => {
     ];
     const DemoPaper = styled(Paper)(({ theme }) => ({
         ...theme.typography.body2,
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: 60,
-  lineHeight: '60px',
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        height: 60,
+        lineHeight: '60px',
     }));
+
+    const handleClick = () => {
+        console.log(Historico);
+        console.log("2222222");
+    };
+
+
+    const [knobValue, setKnobValue] = useState<number>(2023);
+    const [value, setValue] = useState<number>(2023);
+
+    const handleDecrement = () => {
+        setKnobValue(knobValue - 1);
+        setValue(value - 1);
+    };
+    const handleIncrement = () => {
+        setKnobValue(knobValue + 1);
+        setValue(value + 1);
+    };
+
+
+    useEffect(() => {
+        setFormData((prevData) => ({
+            ...prevData,
+            vigencia_reporta: knobValue,
+
+
+
+        }))
+        fetchHistorico()
+    }, [knobValue]);
+
+
+    const [empresa_3, setempresa_3] = useState("Si");
+    const handleChangeSiNo3 = (event: any) => {
+        setempresa_3(event.target.value);
+    };
     return (
         <>
-
+            <div>
+                <button onClick={handleClick}>consola  </button>
+            </div>
             <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
@@ -220,9 +339,251 @@ export const Indicadores: React.FC = () => {
             >
                 <Title title=" Datos del indicador " />
 
+                <Grid container
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center"
+                    alignItems="center" item xs={12} sm={12} >
+                    <Grid item >
+                        <Button
+                            startIcon={<RemoveIcon />}
+                            color="error"
+                            variant="contained"
+                            onClick={handleDecrement}
+                            disabled={value === 2023}
+                        >
+                            Menos
+                        </Button>
+                    </Grid>
+                    <Grid item >
+                        <Knob value={knobValue} />
+                    </Grid>
+                    <Grid item  >
+                        <Button
+                            startIcon={<AddIcon />}
+                            color="success"
+                            variant="contained"
+                            onClick={handleIncrement}
+                            disabled={value === 2040}
+                        >
+                            Más
+                        </Button>
+                    </Grid>
+                </Grid>
+
+                {/* <Grid item xs={12} sm={3}>
+                    <TextField
+
+                        label="vigencia_reporta"
+                        helperText='vigencia_reporta'
+                        size="small"
+                        fullWidth
+                        name="vigencia_reporta"
+                        value={formData.vigencia_reporta}
+                        onChange={handleInputChange}
+                    />
+                </Grid> */}
+
+
+
+
+                <Grid item xs={12} sm={3}>
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="si-no-select-label">Mes</InputLabel>
+                        <Select
+                            labelId="Mes"
+                            value={empresa_3}
+                            label="Mes"
+                            onChange={handleChangeSiNo3}
+                        >
+                            <MenuItem value="enero">enero</MenuItem>
+                            <MenuItem value="febrero">febrero</MenuItem>
+                            <MenuItem value="marzo">marzo</MenuItem>
+                            <MenuItem value="abril">abril</MenuItem>
+                            <MenuItem value="mayo">mayo</MenuItem>
+                            <MenuItem value="junio">junio</MenuItem>
+                            <MenuItem value="julio">julio</MenuItem>
+                            <MenuItem value="agosto">agosto</MenuItem>
+                            <MenuItem value="septiembre">septiembre</MenuItem>
+                            <MenuItem value="octubre">octubre</MenuItem>
+                            <MenuItem value="noviembre">noviembre</MenuItem>
+                            <MenuItem value="diciembre">diciembre</MenuItem>
+
+                        </Select>
+                    </FormControl>
+                </Grid>
+
+                <>
+                    {empresa_3 === "enero" && (
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="Enero"
+                                helperText="Enero"
+                                size="small"
+                                fullWidth
+                                name="enero"
+                                value={formData.enero}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                    )}
+
+                    {empresa_3 === "febrero" && (
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="Febrero"
+                                helperText="Febrero"
+                                size="small"
+                                fullWidth
+                                name="febrero"
+                                value={formData.febrero}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                    )}
+
+                    {empresa_3 === "marzo" && (
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="Marzo"
+                                helperText="Marzo"
+                                size="small"
+                                fullWidth
+                                name="marzo"
+                                value={formData.marzo}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+                    )}
+                </>
+                {empresa_3 === "abril" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Abril"
+                            helperText="Abril"
+                            size="small"
+                            fullWidth
+                            name="abril"
+                            value={formData.abril}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+
+                {empresa_3 === "mayo" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Mayo"
+                            helperText="Mayo"
+                            size="small"
+                            fullWidth
+                            name="mayo"
+                            value={formData.mayo}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+
+                {empresa_3 === "junio" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Junio"
+                            helperText="Junio"
+                            size="small"
+                            fullWidth
+                            name="junio"
+                            value={formData.junio}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+
+                {empresa_3 === "julio" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Julio"
+                            helperText="Julio"
+                            size="small"
+                            fullWidth
+                            name="julio"
+                            value={formData.julio}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+
+                {empresa_3 === "agosto" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Agosto"
+                            helperText="Agosto"
+                            size="small"
+                            fullWidth
+                            name="agosto"
+                            value={formData.agosto}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+
+                {empresa_3 === "septiembre" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Septiembre"
+                            helperText="Septiembre"
+                            size="small"
+                            fullWidth
+                            name="septiembre"
+                            value={formData.septiembre}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+                {empresa_3 === "octubre" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Octubre"
+                            helperText="Octubre"
+                            size="small"
+                            fullWidth
+                            name="octubre"
+                            value={formData.octubre}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+
+                {empresa_3 === "noviembre" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Noviembre"
+                            helperText="Noviembre"
+                            size="small"
+                            fullWidth
+                            name="noviembre"
+                            value={formData.noviembre}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+
+                {empresa_3 === "diciembre" && (
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Diciembre"
+                            helperText="Diciembre"
+                            size="small"
+                            fullWidth
+                            name="diciembre"
+                            value={formData.diciembre}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                )}
+
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
+
                         label="proceso"
                         helperText='proceso'
                         size="small"
@@ -236,9 +597,9 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                         label="nombre_indicador"
-                        helperText='nombre_indicador'
+
+                        label="Nombre indicador"
+                        helperText='Nombre indicador'
                         size="small"
                         fullWidth
                         name="nombre_indicador"
@@ -248,9 +609,9 @@ export const Indicadores: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                         label="frecuencia_medicion"
-                        helperText='frecuencia_medicion'
+
+                        label="Frecuencia de medicion"
+                        helperText='Frecuencia de medicion'
                         size="small"
                         fullWidth
                         name="frecuencia_medicion"
@@ -260,10 +621,8 @@ export const Indicadores: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        id="outlined-error-helper-text"
-                        label="variable_1"
-                        helperText='variable_1'
+                        label="Variable 1"
+                        helperText='Variable 1'
                         size="small"
                         fullWidth
                         name="variable_1"
@@ -273,10 +632,8 @@ export const Indicadores: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        id="outlined-error-helper-text"
-                        label="variable_2"
-                        helperText='variable_2'
+                        label="Variable 2"
+                        helperText='Variable 2'
                         size="small"
                         fullWidth
                         name="variable_2"
@@ -286,9 +643,9 @@ export const Indicadores: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        label="formula_indicador"
-                        helperText='formula_indicador'
+
+                        label="Formula indicador"
+                        helperText='Formula indicador'
                         size="small"
                         fullWidth
                         name="formula_indicador"
@@ -296,23 +653,12 @@ export const Indicadores: React.FC = () => {
                         onChange={handleInputChange}
                     />
                 </Grid>
+
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        label="vigencia_reporta"
-                        helperText='vigencia_reporta'
-                        size="small"
-                        fullWidth
-                        name="vigencia_reporta"
-                        value={formData.vigencia_reporta}
-                        onChange={handleInputChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        
-                        label="dependencia_grupo_regional"
-                        helperText='dependencia_grupo_regional'
+
+                        label="Dependencia grupo regional"
+                        helperText='Dependencia grupo regional'
                         size="small"
                         fullWidth
                         name="dependencia_grupo_regional"
@@ -323,9 +669,9 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        label="objetivo_indicador"
-                        helperText='objetivo_indicador'
+
+                        label="Objetivo indicador"
+                        helperText='Objetivo indicador'
                         size="small"
                         fullWidth
                         name="objetivo_indicador"
@@ -336,10 +682,8 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        id="outlined-error-helper-text"
-                        label="unidad_medicion_reporte"
-                        helperText='unidad_medicion_reporte'
+                        label="Unidad de medicion reporte"
+                        helperText='Unidad de medicion reporte'
                         size="small"
                         fullWidth
                         name="unidad_medicion_reporte"
@@ -347,16 +691,37 @@ export const Indicadores: React.FC = () => {
                         onChange={handleInputChange}
                     />
                 </Grid>
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        label="Tipo indicador"
+                        helperText='Tipo indicador'
+                        size="small"
+                        fullWidth
+                        name="tipo_indicador"
+                        value={formData.tipo_indicador}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
 
-
-
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        label="Responsable de  creacion"
+                        helperText='Responsable de creacion'
+                        size="small"
+                        fullWidth
+                        name="responsable_creacion"
+                        value={formData.responsable_creacion}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
+                
 
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        label="descripcion_variable_1"
-                        helperText='descripcion_variable_1'
+
+                        label="Descripcion de variable 1"
+                        helperText='Descripcion de variable 1'
                         size="small"
                         fullWidth
                         name="descripcion_variable_1"
@@ -364,12 +729,11 @@ export const Indicadores: React.FC = () => {
                         onChange={handleInputChange}
                     />
                 </Grid>
+
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        id="outlined-error-helper-text"
-                        label="descripcion_variable_2"
-                        helperText='descripcion_variable_2'
+                        label="Descripcion variable 2"
+                        helperText='Descripcion variable 2'
                         size="small"
                         fullWidth
                         name="descripcion_variable_2"
@@ -381,9 +745,9 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        label="origen_datos"
-                        helperText='origen_datos'
+
+                        label="Origen de datos"
+                        helperText='Origen de datos'
                         size="small"
                         fullWidth
                         name="origen_datos"
@@ -398,12 +762,10 @@ export const Indicadores: React.FC = () => {
 
 
 
-{/* ////////////////////////////////////7 */}
+                {/* ////////////////////////////////////7 */}
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        id="outlined-error-helper-text"
                         label="Descripción  de la variable 2"
                         helperText='Descripción  de la variable 2'
                         size="small"
@@ -413,8 +775,6 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        id="outlined-error-helper-text"
                         label="Fórmula de indicador "
                         helperText='Fórmula de indicador '
                         size="small"
@@ -423,23 +783,24 @@ export const Indicadores: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        
-                        id="outlined-error-helper-text"
                         label="Origen o fuente de los datos "
                         helperText='Origen o fuente de los datos '
                         size="small"
                         fullWidth
                     />
                 </Grid>
-
-
-
-
-
-
-
-
-
+                <Grid item >
+                    <Button
+                        color="success"
+                        variant="contained"
+                        startIcon={<SaveIcon />}
+                        onClick={() => {
+                            handleSubmitCrear();
+                        }}
+                    >
+                        Guardar
+                    </Button>
+                </Grid>
             </Grid>
 
 

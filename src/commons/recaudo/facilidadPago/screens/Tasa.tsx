@@ -101,40 +101,40 @@ export const Tasa: React.FC<Propstorta> = ({ is_tasa, handle_close, handleDecrem
 
 
 
-    
-const [configuracionInteres, setConfiguracionInteres] = useState<ConfiguracionInteres[]>([]);
-const fetchConfiguracionInteres = async (): Promise<void> => {
-    try {
-        const url = `/recaudo/configuracion_baisca/configuracioninterres/get/${value}/`;
-        const res = await api.get(url);
-        const configuracionInteresData: ConfiguracionInteres[] = res.data?.data || [];
-        setConfiguracionInteres(configuracionInteresData);
-    } catch (error: any) {
-        control_error(error.response.data.detail);
-    }
-};
 
-useEffect(() => {
-    void fetchConfiguracionInteres(); // Puedes ajustar el año según sea necesario
-}, [value]);
+    const [configuracionInteres, setConfiguracionInteres] = useState<ConfiguracionInteres[]>([]);
+    const fetchConfiguracionInteres = async (): Promise<void> => {
+        try {
+            const url = `/recaudo/configuracion_baisca/configuracioninterres/get/${value}/`;
+            const res = await api.get(url);
+            const configuracionInteresData: ConfiguracionInteres[] = res.data?.data || [];
+            setConfiguracionInteres(configuracionInteresData);
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+        }
+    };
+
+    useEffect(() => {
+        void fetchConfiguracionInteres(); // Puedes ajustar el año según sea necesario
+    }, [value]);
 
 
-useEffect(() => {
-    void fetchConfiguracionInteres(); // Puedes ajustar el año según sea necesario
-}, []);
+    useEffect(() => {
+        void fetchConfiguracionInteres(); // Puedes ajustar el año según sea necesario
+    }, []);
 
-const enero = configuracionInteres.find(config => config.mes === 1);
-const febrero = configuracionInteres.find(config => config.mes === 2);
-const marzo = configuracionInteres.find(config => config.mes === 3);
-const abril = configuracionInteres.find(config => config.mes === 4);
-const mayo = configuracionInteres.find(config => config.mes === 5);
-const junio = configuracionInteres.find(config => config.mes === 6);
-const julio = configuracionInteres.find(config => config.mes === 7);
-const agosto = configuracionInteres.find(config => config.mes === 8);
-const septiembre = configuracionInteres.find(config => config.mes === 9);
-const octubre = configuracionInteres.find(config => config.mes === 10);
-const noviembre = configuracionInteres.find(config => config.mes === 11);
-const diciembre = configuracionInteres.find(config => config.mes === 12);
+    const enero = configuracionInteres.find(config => config.mes === 1);
+    const febrero = configuracionInteres.find(config => config.mes === 2);
+    const marzo = configuracionInteres.find(config => config.mes === 3);
+    const abril = configuracionInteres.find(config => config.mes === 4);
+    const mayo = configuracionInteres.find(config => config.mes === 5);
+    const junio = configuracionInteres.find(config => config.mes === 6);
+    const julio = configuracionInteres.find(config => config.mes === 7);
+    const agosto = configuracionInteres.find(config => config.mes === 8);
+    const septiembre = configuracionInteres.find(config => config.mes === 9);
+    const octubre = configuracionInteres.find(config => config.mes === 10);
+    const noviembre = configuracionInteres.find(config => config.mes === 11);
+    const diciembre = configuracionInteres.find(config => config.mes === 12);
 
     return (
         <>
@@ -146,10 +146,10 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                     >
 
 
-{/* {value} */}
+                        {/* {value} */}
                         <Grid item xs={12}>
-                            <Title title="configuracion de interes " />
-                        </Grid> 
+                            <Title title="Configuración de interés" />
+                        </Grid>
                         <Grid container
                             direction="row"
                             spacing={2}
@@ -212,7 +212,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                     variant="outlined"
                                     size="small"
                                     fullWidth
-                                    value={enero ? enero.valor_interes:""} 
+                                    value={enero ? enero.valor_interes : ""}
                                     required
                                     disabled
                                 />
@@ -221,7 +221,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Febrero"
                                     name="Febrero"
-                                    value={febrero ? febrero.valor_interes:""} 
+                                    value={febrero ? febrero.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -234,7 +234,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Marzo"
                                     name="Marzo"
-                                    value={marzo ? marzo.valor_interes:""} 
+                                    value={marzo ? marzo.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -247,7 +247,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Abril"
                                     name="Abril"
-                                    value={abril ? abril.valor_interes:""} 
+                                    value={abril ? abril.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -260,7 +260,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Mayo"
                                     name="Mayo"
-                                    value={mayo ? mayo.valor_interes:""} 
+                                    value={mayo ? mayo.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -273,7 +273,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Junio"
                                     name="Junio"
-                                    value={junio ? junio.valor_interes:""} 
+                                    value={junio ? junio.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -286,7 +286,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Julio"
                                     name="Julio"
-                                    value={julio ? julio.valor_interes:""} 
+                                    value={julio ? julio.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -299,7 +299,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Agosto"
                                     name="Agosto"
-                                    value={agosto ? agosto.valor_interes:""} 
+                                    value={agosto ? agosto.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -313,7 +313,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                     label="Septiembre"
                                     name="Septiembre"
                                     variant="outlined"
-                                    value={septiembre ? septiembre.valor_interes:""} 
+                                    value={septiembre ? septiembre.valor_interes : ""}
 
                                     size="small"
                                     fullWidth
@@ -325,7 +325,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Octubre"
                                     name="Octubre"
-                                    value={octubre ? octubre.valor_interes:""} 
+                                    value={octubre ? octubre.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -338,7 +338,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Noviembre"
                                     name="Noviembre"
-                                    value={noviembre ? noviembre.valor_interes:""} 
+                                    value={noviembre ? noviembre.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -351,7 +351,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                 <TextField
                                     label="Diciembre"
                                     name="Diciembre"
-                                    value={diciembre ? diciembre.valor_interes:""} 
+                                    value={diciembre ? diciembre.valor_interes : ""}
 
                                     variant="outlined"
                                     size="small"
@@ -381,7 +381,7 @@ const diciembre = configuracionInteres.find(config => config.mes === 12);
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                             
+
                                 <Grid item xs={6}>
                                     <TextField
                                         label={`valor interes`}

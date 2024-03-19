@@ -222,7 +222,7 @@ const routes = [
     component: () => <SolicitudesOtrosRoutes />,
   },
   {
-    path: 'tramites/',
+    path: 'tramites',
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
   },

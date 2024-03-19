@@ -12,6 +12,7 @@ import { getSeriesByIdUnidad } from '../../../../services/getSeriesByIdUnidad.se
 
 export const BusquedaReporteTipoCuatro = ({
   controlBusquedaGeneradoraReporte,
+  resetBusquedaGeneradoraReporte,
 }: any): JSX.Element => {
   const [unidades, setUnidades] = useState<any>({
     unidades: [],
@@ -46,20 +47,37 @@ export const BusquedaReporteTipoCuatro = ({
           //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
           name="seccion_subseccion"
           control={controlBusquedaGeneradoraReporte}
-          //rules={{ required: true }}
+          rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <div>
               <Select
-                //required
+                required
                 value={value}
                 onChange={(selectedOption) => {
-                  //  console.log('')(selectedOption);
+                  // console.log('')(selectedOption);
                   onChange(selectedOption);
-                  getSeriesByIdUnidad(selectedOption.value).then((data) => {
-                    setUnidades({
-                      ...unidades,
-                      series: data,
+                  Promise.all([
+                    getSeriesByIdUnidad(selectedOption.value),
+                    getOficinasByIdUnidad(selectedOption.value)
+                  ])
+                    .then(([seriesData, gruposData]) => {
+                      setUnidades((prevUnidades: any) => ({
+                        ...prevUnidades,
+                        series: seriesData,
+                        grupos: gruposData,
+                      }));
+                    })
+                    .catch((error) => {
+                      console.error("Error fetching data:", error);
+                      // Handle the error appropriately here
                     });
+
+                  resetBusquedaGeneradoraReporte({
+                    fecha_inicio: '',
+                    fecha_fin: '',
+                    seccion_subseccion: selectedOption,
+                    serie_subserie: '',
+                    grupo: '',
                   });
                 }}
                 options={unidades?.unidades ?? []}
@@ -104,19 +122,12 @@ export const BusquedaReporteTipoCuatro = ({
               render={({ field: { onChange, value } }) => (
                 <div>
                   <Select
-                    //required
+                    // required
                     value={value}
                     onChange={(selectedOption) => {
                       //  console.log('')(selectedOption);
                       onChange(selectedOption);
-                      getOficinasByIdUnidad(selectedOption.value).then(
-                        (data) => {
-                          setUnidades({
-                            ...unidades,
-                            grupos: data,
-                          });
-                        }
-                      );
+                     
                     }}
                     options={unidades?.series ?? []}
                     placeholder="Seleccionar"
@@ -138,8 +149,7 @@ export const BusquedaReporteTipoCuatro = ({
               )}
             />
           </Grid>
-          {!controlBusquedaGeneradoraReporte?._formValues?.serie_subserie
-            ?.value || !unidades?.grupos  ? (
+          {!unidades?.grupos  ? (
             <></>
           ) : (
             <Grid
@@ -154,11 +164,11 @@ export const BusquedaReporteTipoCuatro = ({
                 //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
                 name="grupo"
                 control={controlBusquedaGeneradoraReporte}
-                //rules={{ required: true }}
+                rules={{ required: true }}
                 render={({ field: { onChange, value } }) => (
                   <div>
                     <Select
-                      //required
+                      required
                       value={value}
                       onChange={(selectedOption) => {
                         //  console.log('')(selectedOption);

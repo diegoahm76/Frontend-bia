@@ -33,7 +33,7 @@ export const FourhView = (): JSX.Element => {
             series={chartDataViewFour?.series as ApexOptions['series'] ?? []}
             options={chartDataViewFour?.options as ApexOptions ?? []}
             type="bar"
-            height={650}
+            height={775}
           />
         </div>
         <div id="html-dist"></div>
