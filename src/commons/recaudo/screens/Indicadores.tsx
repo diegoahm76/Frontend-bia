@@ -186,7 +186,7 @@ export const Indicadores: React.FC = () => {
 
     const fetchHistorico = async (): Promise<void> => {
         try {
-            const url = `/recaudo/configuracion_baisca/indicadores/${formData.vigencia_reporta}/`;
+            const url = `/recaudo/configuracion_baisca/indicadores/${knobValue}/`;
             const res = await api.get(url);
             const HistoricoData: Historico[] = res.data?.data || [];
             setHistorico(HistoricoData);
@@ -380,6 +380,41 @@ export const Indicadores: React.FC = () => {
             junio: junio
         }));
     }, [enero, nombre_indicador, proceso, frecuencia_medicion, variable_1, variable_2, formula_indicador, vigencia_reporta, dependencia_grupo_regional, objetivo_indicador, unidad_medicion_reporte, descripcion_variable_1, descripcion_variable_2, origen_datos, responsable_creacion, tipo_indicador, julio, agosto, septiembre, octubre, noviembre, diciembre]);
+
+
+    useEffect(() => {
+        setFormData(initialFormData)
+        setFormData((prevData) => ({
+            ...prevData,
+            enero: enero,
+            nombre_indicador: nombre_indicador,
+            proceso: proceso,
+            frecuencia_medicion: frecuencia_medicion,
+            variable_1: variable_1,
+            variable_2: variable_2,
+            formula_indicador: formula_indicador,
+            vigencia_reporta: vigencia_reporta,
+            dependencia_grupo_regional: dependencia_grupo_regional,
+            objetivo_indicador: objetivo_indicador,
+            unidad_medicion_reporte: unidad_medicion_reporte,
+            descripcion_variable_1: descripcion_variable_1,
+            descripcion_variable_2: descripcion_variable_2,
+            origen_datos: origen_datos,
+            responsable_creacion: responsable_creacion,
+            tipo_indicador: tipo_indicador,
+            julio: julio,
+            agosto: agosto,
+            septiembre: septiembre,
+            octubre: octubre,
+            noviembre: noviembre,
+            diciembre: diciembre,
+            febrero: febrero,
+            marzo: marzo,
+            abril: abril,
+            mayo: mayo,
+            junio: junio
+        }));
+    }, []);
 
     const [empresa_3, setempresa_3] = useState("Si");
     const handleChangeSiNo3 = (event: any) => {
@@ -829,31 +864,31 @@ export const Indicadores: React.FC = () => {
 
                 {/* ////////////////////////////////////7 */}
 
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={3}>
                     <TextField
                         label="Descripción  de la variable 2"
                         helperText='Descripción  de la variable 2'
                         size="small"
                         fullWidth
                     />
-                </Grid>
+                </Grid> */}
 
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={3}>
                     <TextField
                         label="Fórmula de indicador "
                         helperText='Fórmula de indicador '
                         size="small"
                         fullWidth
                     />
-                </Grid>
-                <Grid item xs={12} sm={3}>
+                </Grid> */}
+                {/* <Grid item xs={12} sm={3}>
                     <TextField
                         label="Origen o fuente de los datos "
                         helperText='Origen o fuente de los datos '
                         size="small"
                         fullWidth
                     />
-                </Grid>
+                </Grid> */}
                 <Grid item >
                     <Button
                         color="success"
