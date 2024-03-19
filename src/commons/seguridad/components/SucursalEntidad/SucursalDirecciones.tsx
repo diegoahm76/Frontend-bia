@@ -43,8 +43,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
   const [selected_departamento, setselected_departamento] = useState('');
   const [departamentos, set_departamentos] = useState<Departamento[]>([]);
   const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
-  const [opengeneradordirecciones, setopengeneradordirecciones] =
-    useState(false);
+  const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
 
 
   const [selected_departamento_noti, setselected_departamento_noti] =
@@ -374,12 +373,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
 
   const [error] = useState<any>('');
   const is_error = error !== '';
-  const [
-    type_direction,
-    // set_type_direction
+  const [  type_direction, // set_type_direction
   ] = useState('');
   //  console.log('')(is_error);
-  const [  type_directionn,
+  const [type_directionn,
     // set_type_direction
   ] = useState('');
   //  console.log('')(is_error);
@@ -418,9 +415,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
       });
     }
   };
-  const [  ,    setdireccion_generada,  ] = useState('');
+  const [, setdireccion_generada,] = useState('');
 
-  const [  ,  set_direccion_generada_activa,  ] = useState(false);
+  const [, set_direccion_generada_activa,] = useState(false);
 
   const mostrardireccion_generada = (direccion: any): void => {
     setdireccion_generada(direccion);
@@ -647,6 +644,8 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
             Generar dirección
           </Button>
         </Grid>
+
+
       </Grid>
       <Grid
         container
