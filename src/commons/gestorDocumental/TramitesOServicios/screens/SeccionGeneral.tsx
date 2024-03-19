@@ -20,6 +20,7 @@ import { Radicado } from './Radicado';
 import { radicar_opa } from '../thunks/TramitesOServicios';
 import { useAppDispatch } from '../../../../hooks';
 import { TramitesEnProceso } from './TramitesEnProceso';
+import { useNavigate } from 'react-router-dom';
 const class_css = {
   position: 'relative',
   background: '#FAFAFA',
@@ -27,6 +28,8 @@ const class_css = {
   p: '20px',
   mb: '20px',
   boxShadow: '0px 3px 6px #042F4A26',
+  display: 'flex',
+  justifyContent: 'center'
 };
 const class_css_back = {
   position: 'relative',
@@ -49,7 +52,10 @@ const opas = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
+  //* dispatch declaration
   const dispatch = useAppDispatch();
+  //* navigate declaration
+  const navigate = useNavigate();
   const [formulario_paso_uno, set_formulario_paso_uno] = useState<any>(null);
   const [response_paso_1, set_response_paso_1] = useState<any>(null);
   const [radicado, set_radicado] = useState<any>(null);
@@ -197,8 +203,12 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                   textAlign={'center'}
                   sx={{ my: '1rem', display: 'flex', justifyContent: 'center' }}
                 >
-                  <Button variant="contained" color="error" onClick={() => {}}>
-                    Solicitudes y requerimientos
+                  <Button variant="contained" color="error" onClick={() => {
+                    navigate(
+                      `/app/gestor_documental/tramites/respuesta_requerimiento_opa/`
+                    );
+                  }}>
+                    Responder requerimientos
                   </Button>
                 </Grid>
               </Grid>

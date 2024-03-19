@@ -283,7 +283,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_po
                     </p>
                     <Grid item >
                       <Button onClick={handleSelectAllClick} variant="contained" color="primary">
-                        Selectcionar todo
+                      Seleccionar  todo
                       </Button>
                     </Grid>
 

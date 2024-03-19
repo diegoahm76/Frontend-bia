@@ -6,7 +6,6 @@ import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { Indices } from '../indices/Indices';
 import { ModalAndLoadingContext } from '../../../../../context/GeneralContext';
-import { fetchChartData } from '../../services/getDataCharts.service';
 import { ChartDataContextPQRSDF } from '../../context/DataChartContext';
 
 export const FirstView = (): JSX.Element => {
@@ -43,7 +42,7 @@ export const FirstView = (): JSX.Element => {
               series={chartDataViewOne?.series as ApexOptions['series'] ?? []}
               options={chartDataViewOne?.options as ApexOptions ?? []}
               type="bar"
-              height={650}
+              height={750}
             />
           </div>
           <div id="html-dist" style={{ width: '100%', height: '100%' }}></div>

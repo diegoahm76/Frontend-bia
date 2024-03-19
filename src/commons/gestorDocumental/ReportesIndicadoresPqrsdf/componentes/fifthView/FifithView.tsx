@@ -33,7 +33,7 @@ export const FifthView = (): JSX.Element => {
             series={chartDataViewFifth?.series as ApexOptions['series'] ?? []}
             options={chartDataViewFifth?.options as ApexOptions ?? []}
             type="bar"
-            height={650}
+            height={750}
           />
         </div>
         <div id="html-dist"></div>
