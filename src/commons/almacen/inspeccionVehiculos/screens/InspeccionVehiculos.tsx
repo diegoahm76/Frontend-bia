@@ -341,7 +341,7 @@ const InspeccionVehiculos = () => {
             id="kilometraje"
             label='Kilometraje*:'
             type={"number"}
-            value={kilometraje}
+            value={kilometraje === 0 ? '' : kilometraje}
             size="small"
             InputLabelProps={{
               shrink: true,

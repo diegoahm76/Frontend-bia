@@ -23,6 +23,8 @@ import InspeccionVehiculos from '../inspeccionVehiculos/screens/InspeccionVehicu
 import BitacoraViajes from '../bitacoraViaje/screens/BitacoraViajes';
 import AgendamientoVehiculos from '../agendamientoVehiculos/screens/AgendamientoVehiculos';
 import NovedadesInspeccionVehiculos from '../revisionDeInspeccion/screens/NovedadesInspeccionVehiculos';
+import BajaActivos from '../bajaDeActivos/screens/BajaActivos';
+import SolicitudActivos from '../solicitudDeActivos/screens/SolicitudActivos';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -109,6 +111,14 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="revision_inspeccion/*"
         element={<NovedadesInspeccionVehiculos />}
+      />
+      <Route
+        path="baja_activos/*"
+        element={<BajaActivos />}
+      />
+      <Route
+        path="solicitud_activos/*"
+        element={<SolicitudActivos />}
       />
       <Route
         path="otras_entregas/*"
