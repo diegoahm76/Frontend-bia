@@ -35,7 +35,7 @@ export const SecondView = (): JSX.Element => {
               series={chartDataViewTwo?.series as ApexOptions['series'] ?? []}
               options={chartDataViewTwo?.options as ApexOptions ?? []}
               type="bar"
-              height={650}
+              height={750}
             />
           </div>
           <div id="html-dist"></div>
