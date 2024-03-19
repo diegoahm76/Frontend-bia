@@ -78,7 +78,6 @@ export const BusquedaBasicaGeneradoraReporte = ({
       )
     : '';
 
-    // gestor/reporte_indices_pqrsdf/reporte_general/get/?fecha_inicio&fecha_fin
     const chartDataHandlers: any = {
       1: {
         setChartData: setChartDataViewOne,
@@ -87,25 +86,21 @@ export const BusquedaBasicaGeneradoraReporte = ({
       },
       2: {
         setChartData: setChartDataViewTwo,
-        // gestor/reporte_indices_pqrsdf/reporte_sedes/get/?fecha_inicio&fecha_fin
         url: `gestor/reporte_indices_pqrsdf/reporte_sedes/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleSecondLoading,
       },
       3: {
         setChartData: setChartDataViewThree,
-        // gestor/reporte_indices_pqrsdf/reporte_unidad/get/?fecha_inicio&fecha_fin
         url: `gestor/reporte_indices_pqrsdf/reporte_unidad/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleThirdLoading,
       },
       4: {
         setChartData: setChartDataViewFour,
-        // gestor/reporte_indices_pqrsdf/reporte/tipos/sedes/get/?fecha_inicio&fecha_fin
         url: `gestor/reporte_indices_pqrsdf/reporte/tipos/sedes/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleFourthLoading,
       },
       5: {
         setChartData: setChartDataViewFifth,
-        // gestor/reporte_indices_pqrsdf/reporte/sedes/tipo/get/?fecha_inicio&fecha_fin
         url: `gestor/reporte_indices_pqrsdf/reporte/sedes/tipo/get/?fecha_inicio=${formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}`,
         handleLoading: handleFifthLoading,
       },
