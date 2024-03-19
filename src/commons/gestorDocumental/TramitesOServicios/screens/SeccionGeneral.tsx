@@ -208,7 +208,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                       `/app/gestor_documental/tramites/respuesta_requerimiento_opa/`
                     );
                   }}>
-                    Responder requerimientos
+                    Responder solicitudes / requerimientos
                   </Button>
                 </Grid>
               </Grid>

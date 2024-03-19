@@ -95,7 +95,8 @@ export const get_obtener_anexos_opcionales: any = (id_baja_bien: string) => {
 export const delete_anexo_opcional: any = (id_baja_activo: string, form_data: any) => {
   return async () => {
     try {
-      const { data } = await api.delete(`/almacen/activos/eliminar-anexo-opcional/delete/${id_baja_activo}/`,form_data.get('id_anexo_doc_alma'));
+      // const url = `/almacen/activos/eliminar-anexo-opcional/delete/${id_baja_activo}?id_anexo_doc_alma=${form_data.get('id_anexo_doc_alma')}`;
+      const { data } = await api.delete(`/almacen/activos/eliminar-anexo-opcional/delete/${id_baja_activo}/`, form_data);
       return data;
     } catch (error: any) {
       return error as AxiosError;

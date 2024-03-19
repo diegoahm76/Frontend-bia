@@ -23,6 +23,7 @@ export const PqrsdfRoutes: React.FC = () => {
           </ResProvider>
         }
       />
+      <Route path="responder_solicitud/:id?" element={< >Módulo para responder solicitud complemento / requerimiento</>} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );
