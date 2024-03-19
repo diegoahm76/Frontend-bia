@@ -438,6 +438,18 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         return `${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`;
       }
     },
+    {
+      field: 'Estado',
+      headerName: 'Estado',
+      minWidth: 210,
+      flex: 0.1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo estaddo';
+      }
+    },
+
+
+
     // {
     //   field: 'Deudores',
     //   headerName: 'Deudores',

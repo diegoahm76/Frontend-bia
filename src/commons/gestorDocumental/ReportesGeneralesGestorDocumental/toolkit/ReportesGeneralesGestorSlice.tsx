@@ -2,7 +2,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: any = {
-  currentBusquedaReporte: null
+  currentBusquedaReporte: null,
 };
 
 export const ReportesGeneralesGestorSlice = createSlice({
@@ -12,7 +12,6 @@ export const ReportesGeneralesGestorSlice = createSlice({
     setCurrentBusquedaReporte: (state, action: PayloadAction<any>) => {
       state.currentBusquedaReporte = action.payload;
     },
-
   },
 });
 

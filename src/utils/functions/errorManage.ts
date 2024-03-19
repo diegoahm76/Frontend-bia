@@ -2,16 +2,16 @@
 import Swal from 'sweetalert2';
 
 export function handleApiError(error: any) {
-  let errorMessage = 'Ha ocurrido un error';
+  const errorMessages: any = {
+    500: 'Ha ocurrido un error y/o no se han encontrado datos relacionados',
+    404: 'Recurso no encontrado, no hay datos disponibles',
+  };
+
+  const defaultErrorMessage = 'Ha ocurrido un error';
+  let errorMessage: any = defaultErrorMessage;
 
   if (error.response) {
-    if (error.response.status === 500) {
-      errorMessage = 'Error del servidor, por favor intente nuevamente';
-    } else if (error.response.status === 404) {
-      errorMessage = 'Recurso no encontrado, por favor intente nuevamente';
-    } else {
-      errorMessage = `Error desconocido, código de estado: ${error.response.status}`;
-    }
+    errorMessage = errorMessages[error.response.status] || `Error desconocido, código de estado: ${error.response.status}`;
   } else if (error.request) {
     errorMessage = 'No se recibió respuesta del servidor, por favor intente nuevamente';
   } else {
@@ -19,9 +19,9 @@ export function handleApiError(error: any) {
   }
 
   Swal.fire({
-    icon: 'error',
+    icon: 'warning',
     title: 'Oops...',
     text: errorMessage,
-    footer: 'Por favor intente nuevamente',
+    footer: 'Por favor intente nuevamente o contacte al administrador del sistema.',
   });
 }

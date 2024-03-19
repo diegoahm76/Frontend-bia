@@ -57,6 +57,7 @@ interface Variable {
   valor: any;
 }
 interface IProps {
+  select_variable: any;
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
   form_data: { variable: string, nombre_opcion_liquidacion: string, estado: string };
@@ -69,6 +70,7 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarEditarOpciones = ({
+  select_variable,
   opciones_liquidaciones,
   id_opcion_liquidacion,
   form_data,
@@ -398,8 +400,8 @@ export const AgregarEditarOpciones = ({
                   <Button color='success'
                     variant='contained'
                     startIcon={<SaveIcon />}
-                    onClick={handleSave}> 
-                    </Button>
+                    onClick={handleSave}>
+                  </Button>
                 </Grid>
               </Grid>
             </> : ''}
@@ -409,22 +411,11 @@ export const AgregarEditarOpciones = ({
 
   ];
 
-  {/* <IconButton
-            color="primary"
-            aria-label="Ver"
-            onClick={() => handleOpenModal(params.row.nombre)}
-          >
-            <PlaylistAddCheckIcon />
-          </IconButton> */}
-  //
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVariableName, setSelectedVariableName] = useState("");
 
-  // const handleOpenModal = (variableName: any) => {
-  //   setSelectedVariableName(variableName);
-  //   setIsModalOpen(true);
-  // };
+
   const [selectedVariableNames, setSelectedVariableNames] = useState<string[]>([]);
 
   const handleSave = () => {
@@ -440,7 +431,6 @@ export const AgregarEditarOpciones = ({
     control_success("Variable asignada ");
     setIsModalOpen(false);
 
-    // Aquí puedes cerrar el modal o realizar otras acciones necesarias
   };
 
   const handleOpenModal = (variableName: any) => {
@@ -448,26 +438,10 @@ export const AgregarEditarOpciones = ({
     // setIsModalOpen(true);
   };
 
-  // Estado para almacenar las variables seleccionadas y sus valores
-  // const [selectedVariables, setSelectedVariables] = useState<{[key: string]: string}>({});
-
 
   const [valores, setvalores] = useState<Variable[]>([]);
   const [selectedVariable, setSelectedVariable] = useState<any>(null);
 
-  // const handleSelectChange = (event: SelectChangeEvent<number>) => {
-  //   setSelectedVariable(event.target.value as number);
-  // };
-
-  // const handleSelectChange = (event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>, variableName: string) => {
-  //   const value = event.target.value as string; // Asegúrate de manejar correctamente el tipo
-
-  //   setSelectedVariables(prev => ({
-  //     ...prev,
-  //     [variableName]: value, // Actualiza el valor de la variable seleccionada
-  //   }));
-  // };
-  // Ajusta el tipo de evento a SelectChangeEvent de Material-UI
   const [selectedVariables, setSelectedVariables] = useState<{ [key: string]: string | null }>(
     variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {})
   );
@@ -504,7 +478,6 @@ export const AgregarEditarOpciones = ({
   const handleClick = () => {
     console.log(selectedVariables);
     console.log("2222222");
-
   };
 
   const [is_buscar, set_is_buscar] = useState<boolean>(true);
@@ -522,15 +495,16 @@ export const AgregarEditarOpciones = ({
 
   return (
     <>
+      {/* <div>
+        <button onClick={handleClick}>consola  </button>
+      </div> */}
       <>
 
         {/* <Button color='success'
                   variant='contained'
                   onClick={handleClick}>CONSOLE </Button> */}
         {/* INICIO TEST */}
-         {/* <div>
-          <button onClick={handleClick}>consola  </button>
-        </div> */}
+
         <Grid container spacing={2} sx={{ my: '10px' }}>
 
 
@@ -754,6 +728,7 @@ export const AgregarEditarOpciones = ({
             <Liquidator
               setNotifications={setNotifications}
               variables={variables}
+              selectedVariables={selectedVariables}
               generateCode={generateCode}
               preview
               handle_close={setOpen}

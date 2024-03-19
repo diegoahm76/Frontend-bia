@@ -14,20 +14,24 @@ import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext
 import { useContext, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
+import { fetchChartData } from '../../../services/getDataCharts.service';
+import { ChartDataContext } from '../../../context/DataChartContext';
 
-export const ModalGruposConMasExp = (): JSX.Element => {
+export const ModalGruposConMasExp = ({
+  controlBusquedaGeneradoraReporte,
+}: any): JSX.Element => {
   // * context declaration
   //* context declaration
-  const { thirdLoading, handleThirdLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const {openModalOne,  handleOpenModalOne, handleOpenModalTwo} = useContext(ModalAndLoadingContext);
+    //* context declaration
+    const { setIsReportReady } = useContext(ChartDataContext);
 
   //* states declaration
   const [chartData, setChartData] = useState({
     series: [
       {
         name: 'Expedientes',
-        data: [2085, 585],
+        data: [2085, 585, 1000, 1200],
       },
     ],
     options: {
@@ -58,6 +62,8 @@ export const ModalGruposConMasExp = (): JSX.Element => {
         categories: [
           'Grupo 1',
           'Grupo 2',
+          'Grupo 3',
+          'Grupo 4',
         ],
         position: 'top',
         axisBorder: {
@@ -66,64 +72,34 @@ export const ModalGruposConMasExp = (): JSX.Element => {
         axisTicks: {
           show: false,
         },
-       /* crosshairs: {
-          fill: {
-            type: 'gradient',
-            gradient: {
-              colorFrom: '#D8E3F0',
-              colorTo: '#BED1E6',
-              stops: [0, 100],
-              opacityFrom: 0.4,
-              opacityTo: 0.5,
-            },
-          },
-        },*/
-       /* tooltip: {
-          enabled: true,
-        },*/
       },
-     /*yaxis: {
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-        labels: {
-          show: false,
-          formatter: function (val: any) {
-            return val + '%';
-          },
-        },
-      },*/
-     /* title: {
-        text: 'Monthly Inflation in Argentina, 2002',
-        floating: true,
-        offsetY: 330,
-        align: 'center',
-        style: {
-          color: '#444',
-        },
-      },*/
+
     },
   });
 
   //* use Effect declaration
   useEffect(() => {
-    if (thirdLoading) {
-      console.log('thirdLoading', thirdLoading);
+    if (openModalOne) {
+      console.log('thirdLoading', openModalOne);
+      fetchChartData( 
+      setChartData,
+      `gestor/reporte_indices_archivos_carpetas/reporte_unidad_total/get/${controlBusquedaGeneradoraReporte?._formValues?.seccion_subseccion?.value ?? 0}?${controlBusquedaGeneradoraReporte._formValues.fecha_inicio}/${controlBusquedaGeneradoraReporte._formValues.fecha_fin}`,
+      handleOpenModalTwo,
+      setIsReportReady
+      // ? aquí se debe hacer la petición para obtener los datos
+      )
     }
 
     return () => {};
-  }, [thirdLoading]);
+  }, [openModalOne]);
 
   return (
     <Dialog
       fullWidth
-      maxWidth="sm"
-      open={thirdLoading}
+      maxWidth="md"
+      open={openModalOne}
       onClose={() => {
-        handleThirdLoading(false);
+        handleOpenModalOne(false);
       }}
     >
       <DialogTitle>
@@ -134,8 +110,8 @@ export const ModalGruposConMasExp = (): JSX.Element => {
         <div style={{ width: '100%', height: '100%' }}>
           <div id="chart" style={{ width: '100%', height: '100%' }}>
             <ReactApexChart
-              series={chartData.series as ApexOptions['series']}
-              options={chartData.options as ApexOptions}
+              series={chartData?.series as ApexOptions['series'] ?? []}
+              options={chartData?.options as ApexOptions ?? []}
               type="bar"
               height={350}
             />
@@ -154,7 +130,7 @@ export const ModalGruposConMasExp = (): JSX.Element => {
             variant="contained"
             color="error"
             onClick={() => {
-              handleThirdLoading(false);
+              handleOpenModalOne(false);
             }}
             startIcon={<CloseIcon />}
           >

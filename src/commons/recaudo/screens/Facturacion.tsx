@@ -8,7 +8,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Select, TextField, Button, Dialog
+  Select, TextField, Button, Dialog, Switch
 } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
@@ -24,8 +24,9 @@ import { Persona } from '../../../interfaces/globalModels';
 import { UnidadOrganizacional } from '../../conservacion/solicitudMaterial/interfaces/solicitudVivero';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
-import { remicion_viso,constancia_publicacion, constancia_publicacion2} from '../plantillasRecaudo/miguel';
- 
+import { remicion_viso, constancia_publicacion, plantila_4, constancia_publicaci5, citacion, documento8 } from '../plantillasRecaudo/miguel';
+import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
+
 export interface SerieSubserie {
   // id_catserie_unidadorg: number;
   // id_serie_doc: number;
@@ -147,10 +148,13 @@ export const Facturacion: React.FC = () => {
     // Añadir información del usuario   
     doc.setFontSize(12);
     let y = 30; // posición inicial para el texto
+    // ${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}
+    // doc.text(`Serie ${unidadSeleccionada} - Subserie ${selectedSerieSubserie}`, 10, y);
+    // y += 6;
 
-    doc.text(`${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}`, 10, y);
+
+    doc.text(`${consecutivoActual}`, 10, y);
     y += 6;
-
     doc.text(`Identificación: ${identificacion}`, 10, y);
     y += 6;
     doc.text(`Email: ${email}`, 10, y);
@@ -195,23 +199,30 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
     else if (opcionSeleccionada === '2') {
-      textoAMostrar = `${ remicion_viso(email) } `;
+      textoAMostrar = `${remicion_viso(expediente_2, Fecha_2)}  `;
     }
     else if (opcionSeleccionada === '3') {
-      textoAMostrar = ``
-    } 
+      textoAMostrar = `${constancia_publicacion(Fecha_3, Fecha_acto_3, expediente_3, fijacion_3, des_fijacion_3, cc_3, nombre_3, empresa_3, nombre_nit_3, nombre_enpresa_3)}`
+    }
     else if (opcionSeleccionada === '4') {
-      textoAMostrar = `${ constancia_publicacion(email) } `;
+      textoAMostrar = ` ${plantila_4(Fecha_4, nombre_4, cc_4, constancia_4, constancia_des_4, opcionSiNo, dias_4)}`;
     }
     else if (opcionSeleccionada === '5') {
-      textoAMostrar = `${ constancia_publicacion2(email) } `;
+      textoAMostrar = `  ${constancia_publicaci5(email)}  `;
+    }
+    else if (opcionSeleccionada === '6') {
+      textoAMostrar = `  ${citacion(opcion_6, numero_6)}  `;
+    }
+    else if (opcionSeleccionada === '8') {
+      textoAMostrar = `  ${documento8(Fecha_8, empresa_8, nit_8, opcion_8, dias_8)}  `;
+    }
+    else if (opcionSeleccionada === '9') {
+      textoAMostrar = ``;
     }
 
-    
-    
-    
-    
-    
+
+
+
     else {
       textoAMostrar = ''; // Valor predeterminado o manejo del caso 'undefined'
     }
@@ -310,9 +321,13 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchSeriesSubseries();
   }, [idUnidadSeleccionada]);
+
+
+
 
   useEffect(() => {
     fetchSeriesSubseries();
@@ -348,6 +363,68 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   const [telefono, setTelefono] = useState('');
   const [ciudad, setCiudad] = useState('');
 
+  const [expediente_2, setexpediente_2] = useState('');
+  const [Fecha_2, setFecha_2] = useState('');
+
+  const [Fecha_3, setFecha_3] = useState('');
+  const [Fecha_acto_3, setFecha_acto3] = useState('');
+  const [expediente_3, setexpediente_3] = useState('');
+  const [fijacion_3, setfijacion_3] = useState('');
+  const [des_fijacion_3, setdes_fijacion_3] = useState('');
+  const [cc_3, setcc_3] = useState('');
+  const [nombre_3, setnombre_3] = useState('');
+
+
+  const [nombre_enpresa_3, setnombre_enpresa_3] = useState('');
+  const [nombre_nit_3, setnombre_nit_3] = useState('');
+  const [empresa_3, setempresa_3] = useState("Si");
+  const handleChangeSiNo3 = (event: any) => {
+    setempresa_3(event.target.value);
+  };
+  const [Fecha_4, setFecha_4] = useState('');
+  const [nombre_4, setnombre_4] = useState('');
+  const [cc_4, setcc_4] = useState('');
+  const [constancia_4, setconstancia_4] = useState('');
+  const [constancia_des_4, setconstancia_des_4] = useState('');
+  const [dias_4, setdias_4] = useState('');
+
+  const handleInputChangel = (e: { target: { value: any; }; }) => {
+    const inputValue = e.target.value;
+    // Expresión regular para permitir solo números
+    const numericInput = inputValue.replace(/[^0-9]/g, '');
+    setdias_4(numericInput);
+  };
+
+  const [opcionSiNo, setOpcionSiNo] = useState('');
+  const handleChangeSiNo = (event: any) => {
+    setOpcionSiNo(event.target.value);
+  };
+
+
+  const [numero_6, setnumero_6] = useState('');
+
+  const [opcion_6, setOpcion_6] = useState('');
+  const handleChange_6 = (event: any) => {
+    setOpcion_6(event.target.value);
+  };
+
+
+  const [Fecha_8, setFecha_8] = useState('');
+  const [empresa_8, setempresa_8] = useState('');
+  const [nit_8, setnit_8] = useState('');
+  const [opcion_8, setOpcion_8] = useState('');
+  const handleChange_8 = (event: any) => {
+    setOpcion_8(event.target.value);
+  };
+  const [dias_8, setdias_8] = useState('');
+
+  const handleInputChangel_8 = (e: { target: { value: any; }; }) => {
+    const inputValue = e.target.value;
+    // Expresión regular para permitir solo números
+    const numericInput = inputValue.replace(/[^0-9]/g, '');
+    setdias_8(numericInput);
+  };
+
 
   const dataURItoBlob = (dataURI: string) => {
     const byteString = atob(dataURI.split(',')[1]);
@@ -381,6 +458,9 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
     }));
   };
+  useEffect(() => {
+    generarHistoricoBajas();
+  }, [empresa_3]);
 
 
   const miVariable = `${formData.id_unidad_org_lider}`;
@@ -519,12 +599,13 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   async function crearConsecutivo() {
     try {
+      const fechaActual = new Date().toISOString();
       const url = `/gestor/consecutivos-unidades/consecutivo/create/`;
       const data = {
         id_unidad: unidadSeleccionada,
         id_cat_serie_und: selectedSerieSubserie,
-        id_persona: 215,
-        fecha_actual: "2024-01-29T15:30:00"
+        id_persona: id_persona,
+        fecha_actual: fechaActual
       };
       // Asumiendo que `api` es una instancia de Axios o similar para hacer la petición
       const res = await api.post(url, data);
@@ -542,7 +623,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   }
 
 
-  const isButtonDisabled = !unidadSeleccionada || !selectedSerieSubserie;
+  const isButtonDisabled = !unidadSeleccionada;
 
 
   return (
@@ -572,7 +653,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       >
         <Title title="Generación de documento" />
 
-      
+
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="opcion-select-label">Plantilla</InputLabel>
@@ -582,13 +663,17 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
               label="Opción"
               onChange={handleChangeee}
             >
-              <MenuItem value="1">Plantilla 1</MenuItem>
-              <MenuItem value="2">Plantilla 2</MenuItem>
-              <MenuItem value="4">constancia_publicacion </MenuItem>
-              <MenuItem value="5">constancia_publicacion2 </MenuItem>
+              <MenuItem value="1">1</MenuItem>
+              <MenuItem value="2">2</MenuItem>
+              <MenuItem value="3">3</MenuItem>
+              <MenuItem value="4">4 </MenuItem>
+              {/* <MenuItem value="5">5 </MenuItem> */}
+              <MenuItem value="6">6</MenuItem>
+              {/* <MenuItem value="7">7</MenuItem> */}
+              <MenuItem value="8">8</MenuItem>
+              <MenuItem value="9">Vacio</MenuItem>
 
 
-              <MenuItem value="3">Vacio</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -655,6 +740,8 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         </Grid>
 
 
+
+
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="serie-subserie-select-label">Serie/Subserie</InputLabel>
@@ -666,14 +753,15 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
               onChange={handleChangee}
             >
               {seriesSubseries.map((item) => (
-                <MenuItem key={item.id_cat_serie_und} value={item.id_cat_serie_und}>
+                <MenuItem key={item.id_cat_serie_und} value={`${item.id_cat_serie_und}`}>
                   {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
-
+        {/* id_cat_serie_und */}
+        {/* {selectedSerieSubserie} */}
 
         {/* {nombre}
           {nombre_unidad_organizacional} */}
@@ -749,7 +837,6 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
 
-
         <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
@@ -780,6 +867,397 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
             onChange={(e) => setCiudad(e.target.value)}
           />
         </Grid>
+
+
+
+
+        {opcionSeleccionada === '2' ? (
+          <>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                value={expediente_2}
+                label="N Expediente"
+                variant="outlined"
+                onChange={(e) => setexpediente_2(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha"
+                value={Fecha_2}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_2(e.target.value)}
+              />
+            </Grid>
+          </>
+        ) : null}
+
+        {opcionSeleccionada === '3' ? (
+          <>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha"
+                value={Fecha_3}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_3(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                value={expediente_3}
+                label="N Expediente"
+                variant="outlined"
+                onChange={(e) => setexpediente_3(e.target.value)}
+              />
+            </Grid>
+            {/* <Grid item xs={12} sm={4}>
+              <Switch
+                defaultChecked={empresa_3} // Establece el estado predeterminado del Switch
+                onChange={(event) => setempresa_3(event.target.checked)} // Maneja el cambio de estado del Switch y actualiza el estado
+              />
+            </Grid> */}
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">Persona / Empresa</InputLabel>
+                <Select
+                  labelId="Procede recurso"
+                  value={empresa_3}
+                  label="Confirmación"
+                  onChange={handleChangeSiNo3}
+                >
+                  <MenuItem value="Si">persona</MenuItem>
+                  <MenuItem value="No">empresa</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* {empresa_3} */}
+
+
+            {empresa_3 === "Si" ? (
+              <>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={nombre_3}
+                    label="Nombre"
+                    onChange={(e) => setnombre_3(e.target.value)}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={cc_3}
+                    label="N Identificacion    "
+                    onChange={(e) => setcc_3(e.target.value)}
+                  />
+                </Grid>
+
+              </>
+            ) : (
+              <>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={nombre_enpresa_3}
+                    label="Nombre de empresa"
+                    onChange={(e) => setnombre_enpresa_3(e.target.value)}
+                  />
+                </Grid>
+
+
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={nombre_nit_3}
+                    label="Nit de empresa"
+                    onChange={(e) => setnombre_nit_3(e.target.value)}
+                  />
+                </Grid>
+              </>
+            )}
+
+            {empresa_3 ? (
+              <>
+
+              </>
+            ) : (
+              <>
+
+
+
+
+              </>
+            )}
+
+
+
+
+
+
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                value={fijacion_3}
+                label="Constancio de fijación"
+                onChange={(e) => setfijacion_3(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                value={des_fijacion_3}
+                label="Constancio de desfijación"
+                variant="outlined"
+                onChange={(e) => setdes_fijacion_3(e.target.value)}
+              />
+            </Grid>
+
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha del acto administrativo"
+                value={Fecha_acto_3}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_acto3(e.target.value)}
+              />
+            </Grid>
+
+          </>
+        ) : null}
+        {opcionSeleccionada === '4' ? (
+          <>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha"
+                value={Fecha_4}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_4(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Nombre"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={nombre_4}
+                onChange={(e) => setnombre_4(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Numeor de dias     "
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={dias_4}
+                onChange={handleInputChangel}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Nit"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={cc_4}
+                onChange={(e) => setcc_4(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label"> procede recurso</InputLabel>
+                <Select
+                  labelId="Procede recurso"
+                  value={opcionSiNo}
+                  label="Confirmación"
+                  onChange={handleChangeSiNo}
+                >
+                  <MenuItem value="Si">Sí</MenuItem>
+                  <MenuItem value="No">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Constancia de fijación "
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={constancia_4}
+                onChange={(e) => setconstancia_4(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Constancia de desfijación "
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={constancia_des_4}
+                onChange={(e) => setconstancia_des_4(e.target.value)}
+              />
+            </Grid>
+
+
+
+            {/* {opcionSiNo} */}
+          </>
+        ) : null}
+        {opcionSeleccionada === '6' ? (
+          <>
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">Artículo   </InputLabel>
+                <Select
+                  labelId="Articulo"
+                  value={opcion_6}
+                  label="Confirmación"
+                  onChange={handleChange_6}
+                >
+                  <MenuItem value="artículo 44 CCA">artículo 44 CCA</MenuItem>
+                  <MenuItem value=" artículo 68 CPACA"> artículo 68 CPACA</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Numero"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={numero_6}
+                onChange={(e) => setnumero_6(e.target.value)}
+              />
+            </Grid>
+
+
+            {/* {opcion_6} */}
+          </>
+
+        ) : null}
+        {opcionSeleccionada === '8' ? (
+          <>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha"
+                value={Fecha_8}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_8(e.target.value)}
+              />
+            </Grid>
+
+
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Nombre de empresa"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={empresa_8}
+                onChange={(e) => setempresa_8(e.target.value)}
+              />
+            </Grid>
+
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Nit"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={nit_8}
+                onChange={(e) => setnit_8(e.target.value)}
+              />
+            </Grid>
+
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">procede recurso de reposición</InputLabel>
+                <Select
+                  labelId="procede recurso de reposición"
+                  value={opcion_8}
+                  label="procede recurso de reposición"
+                  onChange={handleChange_8}
+                >
+                  <MenuItem value="si">Si</MenuItem>
+                  <MenuItem value="no ">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+
+
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Numeor de dias     "
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={dias_8}
+                onChange={handleInputChangel_8}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              />
+            </Grid>
+
+
+          </>
+        ) : null}
+
         <Grid item xs={12} sm={12}>
           <TextField
             rows={3}
@@ -813,6 +1291,18 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         </Grid>
       </Grid>
 
+
+
+
+
+
+      <AlertaDestinatario  />
+
+
+
+
+
+
       <Grid
         container
         spacing={2} m={2} p={2}
@@ -831,7 +1321,6 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         </Grid>
 
       </Grid>
-
 
 
 
