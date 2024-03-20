@@ -1,13 +1,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from "react";
-import { Grid } from "@mui/material";
+import React, { useContext } from "react";
+import { Button, Grid } from "@mui/material";
 import { Title } from "../../../../../components/Title";
 import { useNavigate } from "react-router-dom";
 import { BotonInformativo } from "../../utils/BotonInformativo";
 import { BuscarTramitesProcesoScreen } from "../../components/BuscarTramitesProceso/BuscarTramitesProcesoScreen";
+import { CustomizedSteppers } from "../../components/sterper/Steper";
+import { ControlledAccordions } from "../../components/ListaChequeoSolicitudPermisoConsecio/ListaChequeoSolicitudPermisoConsecio";
+import { VisorDocumento } from "../../components/VisorDocumentos/VisorDocumento";
+import { VistaCompleta } from "../../components/VIistaCompleta/VistaCompleta";
+import { StepperContext } from "../../context/SteperContext";
 
 export const MenuPantallaPrincipalScreem = () => {
 
+
+  const { set_id, activeStep, id, setActiveStep } = useContext(StepperContext);
   // Hook para la navegación
   const navigate = useNavigate();
 
@@ -39,6 +46,10 @@ export const MenuPantallaPrincipalScreem = () => {
         {/* Título */}
         <Grid item xs={12}>
           <Title title="Juridica de OpAS" />
+
+
+
+          <CustomizedSteppers />
         </Grid>
 
         {/* Botón informativo */}
@@ -49,8 +60,49 @@ export const MenuPantallaPrincipalScreem = () => {
         </Grid>
       </Grid>
 
-      <BuscarTramitesProcesoScreen />
+{/* 
+      <Button onClick={() => setActiveStep(activeStep + 1)}>
+        Incrementar activeStep
+      </Button>
+      <Button onClick={() => setActiveStep(activeStep => activeStep - 1)}>
+        Decrementar activeStep
+      </Button>
 
+      <>{activeStep}</>
+      <>{id}</> */}
+
+
+      {activeStep === 0 && (
+
+        <>
+          <BuscarTramitesProcesoScreen />
+
+        </>
+      )}
+
+      {activeStep === 1 && (
+
+        <>
+          <VistaCompleta />
+        </>
+      )}
+
+      {activeStep === 2 && (
+
+        <>
+          <ControlledAccordions />
+        </>
+      )}
+
+
+      {activeStep === 3 && (
+
+        <>
+          <VisorDocumento />
+
+        </>
+      )}
+     
 
     </>
   );

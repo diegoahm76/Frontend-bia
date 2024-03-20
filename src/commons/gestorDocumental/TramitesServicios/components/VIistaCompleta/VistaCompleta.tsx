@@ -1,74 +1,82 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Title } from '../../../../../components/Title'
 import { RenderDataGrid } from '../../../tca/Atom/RenderDataGrid/RenderDataGrid'
+import Chip from '@mui/material/Chip';
+import { StepperContext } from '../../context/SteperContext';
+import { api } from '../../../../../api/axios';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import CleanIcon from '@mui/icons-material/CleaningServices';
-import SearchIcon from '@mui/icons-material/Search';
-import { RepresentacioEmpresa } from './Representacion/RepresentacioEmpresa';
-import { RepresentacioPropio } from './Representacion/RepresentacioPropio';
-import { RepresentacioTercero } from './Representacion/RepresentacioTercero';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Iinformacion_opa, initialDataOpa } from '../../interfaces/InterfacesInicializacionJuridicaOpas';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 export const VistaCompleta = () => {
 
 
-
-    const initialDataBusqueda = {
-        Radicado: '',
-        FormaPago: '',
-        NombreProyecto: '',
-        Expediente: '',
-        Estado: '',
-    }
-    const [form, setForm] = useState(initialDataBusqueda);
+    const { set_nombre_proyecto, activeStep, id, setActiveStep } = useContext(StepperContext);
+    const [form_data, set_form_data] = useState<Iinformacion_opa>(initialDataOpa);
+    const [showMoreInfo, setShowMoreInfo] = useState(false);
+    console.log(form_data)
 
 
-    const handleInputChange = (field: string, value: string) => {
-        setForm({
-            ...form,
-            [field]: value,
-        });
+
+
+
+    // Función para manejar el clic del botón y cambiar el estado
+    const handleShowMoreInfo = () => {
+        setShowMoreInfo(!showMoreInfo);
     };
 
-    // Limpia el formulario
-    const limpiarFormulario = () => {
-        setForm(initialDataBusqueda);
+
+
+    const procesoVistaTramiete = (params: any) => {
+        console.log(params);
+        setActiveStep(activeStep + 1);
     };
 
     // Definición de columnas y datos para el DataGrid
-    const columns = [
-        { field: "orden_documento", headerName: "Orden de documento", flex: 1 },
-        { field: "nombre", headerName: "Nombre", flex: 1 },
-        { field: "medio_almacenamiento", headerName: "Medio de almacenamiento", flex: 1 },
-        { field: "digitalizacion", headerName: "Digitalización", flex: 1 },
-        { field: "observacion", headerName: "Observación", flex: 1 },
+    const columns_permisos_ambientales = [
+        { field: "nombre_proyecto", headerName: "Tipo de Solicitud", flex: 1 },
+        { field: "permiso_ambiental", headerName: "Permiso Abiental", flex: 1 },
+        { field: "tipo_permiso_ambiental", headerName: "Tipo de Permiso", flex: 1 },
+        { field: "radicado", headerName: "Radicado", flex: 1 },
         {
             field: "acciones",
             headerName: "Acciones",
             flex: 1,
             renderCell: (params: any) => (
                 <>
-                    <Button>
+                    <Button onClick={() => procesoVistaTramiete(params)}>
                         <VisibilityIcon />
                     </Button>
-
                 </>
             ),
         },
     ];
 
-    // Genera datos aleatorios para el DataGrid
-    const listadoDeAsignaciones = Array.from({ length: 4 }, (_, index) => ({
-        id: index + 1,
-        orden_documento: `Orden ${index + 1}`,
-        nombre: `Nombre ${index + 1}`,
-        medio_almacenamiento: `Medio ${index + 1}`,
-        digitalizacion: `Digitalizado ${index + 1}`,
-        observacion: `Observación ${index + 1}`,
-    }));
 
+
+
+
+    // Consulta las opciones de tipo de pago
+    const consulta_informacion_opa = async () => {
+        try {
+            let url = `/gestor/panel_juridica/opas/informacion/get/${id}/`;
+            const res = await api.get(url);
+            const dataConsulta = res.data.data;
+            set_form_data(dataConsulta);
+            set_nombre_proyecto(dataConsulta.nombre_proyecto);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        consulta_informacion_opa();
+    }, [])
 
     return (
         <>
@@ -91,109 +99,273 @@ export const VistaCompleta = () => {
                 <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth
-                        style={{ marginTop: 15, width: '90%' }}
+                        style={{ marginTop: 15, width: '95%' }}
                         size="small"
                         variant="outlined"
-                        value={form.NombreProyecto}
-                        label="Nombre del Proyecto"
-                        onChange={(e) => handleInputChange('NombreProyecto', e.target.value)}
+                        value={form_data.relacion_con_el_titular}
+                        label="Radicacion a Nombre"
+                        // onChange={(e) => handleInputChange('radicado', e.target.value)}
                         InputLabelProps={{ shrink: true }}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth
-                        style={{ marginTop: 15, width: '90%' }}
+                        style={{ marginTop: 15, width: '95%' }}
                         size="small"
                         variant="outlined"
-                        value={form.Radicado}
+                        value={form_data.radicado}
                         label="Radicado"
-                        onChange={(e) => handleInputChange('Radicado', e.target.value)}
+                        // onChange={(e) => handleInputChange('Radicado', e.target.value)}
                         InputLabelProps={{ shrink: true }}
+                    />
+                </Grid>
+
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        style={{ marginTop: 15, width: '95%' }}
+                        size="small"
+                        variant="outlined"
+                        value={form_data.cod_tipo_documento_persona_interpone}
+                        label="Tipo Documento Persona Interpone"
+                    // onChange={(e) => handleInputChange('nombres', e.target.value)}
+                    />
+                </Grid>
+
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        style={{ marginTop: 15, width: '95%' }}
+                        size="small"
+                        variant="outlined"
+                        value={form_data.nombre_persona_interpone}
+                        label="Nombre Persona Interpone"
+                    // onChange={(e) => handleInputChange('cedulaCiudadania', e.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        style={{ marginTop: 15, width: '95%' }}
+                        size="small"
+                        variant="outlined"
+                        value={form_data.numero_documento_persona_interpone}
+                        label="Cédula de Ciudadanía Persona Interpone"
+                    // onChange={(e) => handleInputChange('numeroIdentificacion', e.target.value)}
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth
-                        style={{ marginTop: 15 }}
+                        style={{ marginTop: 15, width: '95%' }}
                         size="small"
                         variant="outlined"
-                        value={"hola dos"}
-                        label="TipoDocumento"
-                        // onChange={(e) => handleInputChange('TipoDocumento', e.target.value)}
-                        InputLabelProps={{ shrink: true }}
+                        value={form_data.cod_tipo_documento_persona_titular}
+                        label="Tipo Documento Titular"
+                    // onChange={(e) => handleInputChange('nombres', e.target.value)}
+                    />
+                </Grid>
+
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        style={{ marginTop: 15, width: '95%' }}
+                        size="small"
+                        variant="outlined"
+                        value={form_data.nombre_persona_titular}
+                        label="Nombre Titular"
+                    // onChange={(e) => handleInputChange('cedulaCiudadania', e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth
-                        style={{ marginTop: 15 }}
+                        style={{ marginTop: 15, width: '95%' }}
                         size="small"
                         variant="outlined"
-                        value={"hola"}
-                        label="Número de Identificación"
-                        // onChange={(e) => handleInputChange('NumeroIdentificacionTributaria', e.target.value)}
+                        value={form_data.numero_documento_persona_titular}
+                        label="Cédula de Ciudadanía Titular"
+                    // onChange={(e) => handleInputChange('numeroIdentificacion', e.target.value)}
+                    />
+                </Grid>
+
+                <Grid container alignItems="center" justifyContent="center">
+                    <Grid item  >
+                        <h3>Datos basicos</h3>
+                    </Grid>
+                </Grid>
+
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        style={{ marginTop: 15, width: '95%' }}
+                        size="small"
+                        variant="outlined"
+                        value={form_data.nombre_proyecto}
+                        label="Nombre del Proyecto"
+                        // onChange={(e) => handleInputChange('NombreProyecto', e.target.value)}
                         InputLabelProps={{ shrink: true }}
                     />
                 </Grid>
 
 
-                <Grid item xs={12} >
-                    <RepresentacioEmpresa />
-                </Grid>
-
-                <Grid item xs={12} >
-                    <RepresentacioPropio />
-                </Grid>
-                <Grid item xs={12} >
-                    <RepresentacioTercero />
-                </Grid>
-
-
-
-
-
-
-                {/* Botones de búsqueda y limpieza */}
-                <Grid item xs={12} sm={3}>
-                    <Button
-                        style={{ width: '90%', marginTop: 25 }}
-                        variant="contained"
-                        startIcon={<SearchIcon />}
-                        color="primary"
+                <Grid item xs={12} sm={6}>
+                    <TextField
                         fullWidth
-                    >
-                        Buscar
-                    </Button>
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <Button
-                        color="primary"
-                        style={{ width: '90%', marginTop: 25 }}
+                        style={{ marginTop: 15, width: '95%' }}
+                        size="small"
                         variant="outlined"
-                        onClick={limpiarFormulario}
-                        fullWidth
-                        startIcon={<CleanIcon />}
-                    >
-                        Limpiar
-                    </Button>
+                        value={form_data.costo_proyecto}
+                        label="valor del Proyecto"
+                        // onChange={(e) => handleInputChange('ValorProyecto', e.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                    />
                 </Grid>
 
-                {/* DataGrid */}
+                <Grid container alignItems="center" justifyContent="center">
+                    <Grid item >
+                        <Button
+                            onClick={handleShowMoreInfo}
+                            variant="contained"
+                            style={{ marginTop: 15 }}
+                            color={showMoreInfo ? "error" : "success"}
+                            startIcon={showMoreInfo ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        >
+                            {showMoreInfo ? "Ocultar información" : "Mostrar más información"}
+                        </Button>
+                    </Grid>
+                </Grid>
+
+                {showMoreInfo && (
+                    <>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.municipio}
+                                label="Municipio"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.fecha_ini_estado_actual}
+                                label="Fecha Inicio Estado Actual"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.estado_actual_solicitud}
+                                label="Estado Actual de la Solicitud"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.descripcion_direccion}
+                                label="Descripción de la Dirección"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.coordenada_x}
+                                label="Coordenada X"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.coordenada_y}
+                                label="Coordenada Y"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.cod_municipio}
+                                label="Código de Municipio"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.tipo_operacion_tramite}
+                                label="Tipo de Operación de Trámite"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                    </>
+                )}
+
+
                 <Grid container alignItems="center" justifyContent="center">
                     <Grid item xs={10}>
                         <RenderDataGrid
-                            title="Resultados"
-                            columns={columns ?? []}
-                            rows={listadoDeAsignaciones ?? []}
+                            title="Permisos Ambientales"
+                            columns={columns_permisos_ambientales ?? []}
+                            rows={[form_data] ?? []}
                         />
                     </Grid>
                 </Grid>
 
+                <Grid container justifyContent="flex-end">
+                    <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+                        <Button
+                            fullWidth
+                            style={{ width: "90%", marginTop: 15 }}
+                            variant="contained"
+                            color="error"
+                            startIcon={<ArrowBackIcon />} // Agrega el icono de flecha hacia atrás
+                            onClick={() => {
+                                setActiveStep(activeStep - 1);
+                            }}
+                        >
+                            Volver
+                        </Button>
+                    </Grid>
+                </Grid>
+
+
+
             </Grid>
-
-
         </>
     )
 }

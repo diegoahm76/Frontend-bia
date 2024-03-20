@@ -13,7 +13,7 @@ export const BuscadorPerzonasStiven = ({ onResultt }: PropsBuscador) => {
 const [cerrar, set_cerrar] = useState<boolean>(false);
   const on_result = async (info_persona: Persona): Promise<void> => {
     onResultt(info_persona);
-    // set_cerrar(!cerrar)
+    setIsModalOpen(false); 
   };
 
   const handleOpenModal = () => {
