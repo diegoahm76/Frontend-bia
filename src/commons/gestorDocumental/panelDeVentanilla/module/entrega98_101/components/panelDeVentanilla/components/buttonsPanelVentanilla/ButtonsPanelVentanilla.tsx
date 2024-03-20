@@ -14,7 +14,6 @@ import { ButtonsOtros } from './buttonsOtros/ButtonsOtros';
 import { ButtonsTramites } from './buttonsTramitesYServicios/ButtonsTramitesSer';
 import { ButtonsCompTram } from './buttonsTramitesYServicios/buttonCompTra/ButtonsComTram';
 
-
 //* este array de acciones debe asignarsele a un elemento en redux para que se pueda actualizar el estado interno de los elementos según condicionales(ARRAY DE ACTIONS YA HACE PARTE DEL SLICE DE PANEL DE VENTANILLA)
 
 {
