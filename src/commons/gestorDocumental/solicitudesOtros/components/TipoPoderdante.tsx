@@ -5,7 +5,10 @@ import { Grid } from '@mui/material';
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import type { IObjDocumentType, IObjPerson } from '../../PQRSDF/interfaces/pqrsdf';
+import type {
+  IObjDocumentType,
+  IObjPerson,
+} from '../../PQRSDF/interfaces/pqrsdf';
 import {
   set_grantors,
   set_person,
@@ -18,6 +21,7 @@ import {
   initial_state_person,
 } from '../../PQRSDF/store/slice/pqrsdfSlice';
 import {
+  get_attorney_document_service,
   get_attorneys_service,
   get_document_types_service,
   get_person_document_service,
@@ -30,6 +34,8 @@ import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo
 const TipoPoderdanteOtros = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
+
   const {
     control: control_tipo_poderdante,
     reset: reset_poderdante,
@@ -69,9 +75,19 @@ const TipoPoderdanteOtros = () => {
   useEffect(() => {
     reset_poderdante(grantor);
     dispatch(set_attorney(initial_state_person));
+    if (representacion_legal.tipo_sesion === 'E') {
+      void dispatch(
+        get_attorney_document_service(
+          userinfo.tipo_documento ?? '',
+          userinfo.numero_documento ?? ''
+        )
+      );
+    } else {
+      dispatch(set_attorney(initial_state_person));
 
-    if (grantor.id_persona !== null && grantor.id_persona !== undefined) {
-      dispatch(get_attorneys_service(grantor.id_persona));
+      if (grantor.id_persona !== null && grantor.id_persona !== undefined) {
+        dispatch(get_attorneys_service(grantor.id_persona));
+      }
     }
   }, [grantor]);
 
@@ -186,6 +202,8 @@ const TipoPoderdanteOtros = () => {
           set_models={set_grantors}
           reset_values={reset_poderdante}
           button_submit_label="BUSCAR"
+          button_submit_disabled={representacion_legal.tipo_sesion === 'E'}
+          show_search_button={!(representacion_legal.tipo_sesion === 'E')}
           form_inputs={[
             {
               datum_type: 'title',
@@ -200,7 +218,7 @@ const TipoPoderdanteOtros = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
-              disabled: false,
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: aux_document_types,
               option_label: 'nombre',
@@ -217,7 +235,9 @@ const TipoPoderdanteOtros = () => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento',
               type: 'number',
-              disabled: (document_type.cod_tipo_documento ?? null) === null,
+              disabled:
+                (document_type.cod_tipo_documento ?? null) === null ||
+                representacion_legal.tipo_sesion === 'E',
               helper_text: 'Digite para buscar',
               on_blur_function: search_person,
             },
@@ -240,7 +260,6 @@ const TipoPoderdanteOtros = () => {
           ]}
           modal_select_model_title="Buscar poderdante"
           modal_form_filters={[
-           
             {
               datum_type: 'select_controller',
               xs: 12,
@@ -325,11 +344,8 @@ const TipoPoderdanteOtros = () => {
           reset_values={reset_poderdante}
           button_submit_label="Seleccionar apoderado"
           button_submit_disabled={grantor.id_persona === null}
+          show_search_button={!(representacion_legal.tipo_sesion === 'E')}
           form_inputs={[
-            {
-                datum_type: 'subtitleotros',
-                title_label: 'DATOS APODERADO',
-              },
             {
               datum_type: 'select_controller',
               xs: 12,

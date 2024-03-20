@@ -420,7 +420,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
         }
       } else {
         set_step(0);
-        console.log(pqr);
         void dispatch(get_pqrsdf_id_service(pqr.id_PQRSDF));
       }
       if (pqr.cod_tipo_PQRSDF === 'D') {
@@ -541,7 +540,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
         };
         form_data.append('pqrsdf', JSON.stringify(data_edit));
         aux_items.forEach((elemento) => {
-          console.log(elemento);
           if (elemento.id_anexo === null) {
             form_data.append(
               `archivo-create-${elemento.nombre_anexo}`,
@@ -576,7 +574,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
         );
       }
     } else {
-      console.log(data, exhibits);
       set_action('crear');
       const fecha = new Date(data.fecha_registro ?? '').toISOString();
       let folios: number = 0;
