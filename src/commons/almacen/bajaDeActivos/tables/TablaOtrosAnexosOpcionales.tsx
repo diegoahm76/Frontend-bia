@@ -41,11 +41,8 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
 
   const dispatch = useDispatch();
 
-  const form_data_anexos_opcionales = new FormData();
-
-
-  const delete_anexo_opcional_fc = async(params: interface_anexo_opcional) => {
-    const modal_confirmar_eliminacion = await Swal.fire({
+  const delete_anexo_opcional_fc = (params: interface_anexo_opcional) => {
+    Swal.fire({
       title: '¿Está seguro que desea eliminar este anexo?',
       showDenyButton: true,
       confirmButtonText: `Si`,
@@ -53,37 +50,33 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
       confirmButtonColor: '#042F4A',
       cancelButtonColor: '#DE1616',
       icon: 'question',
-    }).then((result) => {
+    }).then(async(result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        console.log(form_data_anexos_opcionales.get('id_anexo_doc_alma'));
-
-        dispatch(delete_anexo_opcional(params.id_baja_activo.id_baja_activo, form_data_anexos_opcionales))
+        
+        await dispatch(delete_anexo_opcional(params.id_baja_activo.id_baja_activo, params.id_anexo_doc_alma))
         .then((response: any) => {
           if(Object.keys(response).length !== 0){
             if (response.success) {
               control_success('Se elimino el anexo correctamente');
             } else {
-              control_error('Error al intentar eliminar el anexo');
+              control_error('No se encontro el id del anexo a eliminar, refresque la pagina e intente nuevamente');
             }
           } else {
             control_error('Error al intentar eliminar el anexo');
           }
         })
+
+        anexos_optenidos.current = false;
+        set_refrescar_tabla(!refrescar_tabla);
         return true;
       } else if(result.isDenied){
         return false;
       }
-    });
-
-    if(modal_confirmar_eliminacion){
-      anexos_optenidos.current = false;
-      set_refrescar_tabla(!refrescar_tabla);
-    }    
+    });  
   }
   
   const eliminar_anexo_opcional = (params: interface_anexo_opcional) => {
-    form_data_anexos_opcionales.append("id_anexo_doc_alma", params.id_anexo_doc_alma.toString());
     delete_anexo_opcional_fc(params);
   }
 
@@ -101,6 +94,7 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
     {field: 'descripcion_anexo', headerName:'Descripción del anexo', minWidth:350, flex:1},
     { field: 'eliminar', headerName: 'Eliminar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
+        params.row.nombre_anexo !== 'Resolución aprobada por el comité' &&
         <DeleteForeverIcon 
           onClick={() => eliminar_anexo_opcional(params.row)}
           sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
@@ -108,6 +102,7 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
     },
     { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
+        params.row.nombre_anexo !== 'Resolución aprobada por el comité' &&
         <EditIcon 
           onClick={() => editar_anexo_opcional(params.row)}
           sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
