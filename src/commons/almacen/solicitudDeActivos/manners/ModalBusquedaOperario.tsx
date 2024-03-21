@@ -3,10 +3,10 @@ import { Box, Button, Dialog, DialogContent, FormControl, FormLabel, Grid, Input
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { interface_busqueda_responsable, response_busqueda_responsable } from '../interfaces/types';
-import TablaModalBusquedaResponsable from '../tables/TablaModalBusquedaResponsable';
+import { interface_busqueda_operario, response_busqueda_operario } from '../interfaces/types';
+import TablaModalBusquedaOperario from '../tables/TablaModalBusquedaOperario';
 import { useAppDispatch } from '../../../../hooks';
-import { get_obtener_responsables } from '../thunks/solicitud_activos';
+import { get_obtener_operarios } from '../thunks/solicitud_activos';
 import { control_error } from '../../../../helpers';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
@@ -14,16 +14,16 @@ import SaveIcon from '@mui/icons-material/Save';
 
 
 interface props {
-  set_mostrar_busqueda_responsable: React.Dispatch<React.SetStateAction<boolean>>;
-  mostrar_busqueda_responsable: boolean;
-  set_funcionario_responsable_seleccionado: React.Dispatch<React.SetStateAction<interface_busqueda_responsable>>;
+  set_mostrar_busqueda_operario: React.Dispatch<React.SetStateAction<boolean>>;
+  mostrar_busqueda_operario: boolean;
+  set_funcionario_operario_seleccionado: React.Dispatch<React.SetStateAction<interface_busqueda_operario>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const ModalBusquedaResponsable: React.FC<props> = ({
-  set_mostrar_busqueda_responsable,
-  mostrar_busqueda_responsable,
-  set_funcionario_responsable_seleccionado,
+const ModalBusquedaOperario: React.FC<props> = ({
+  set_mostrar_busqueda_operario,
+  mostrar_busqueda_operario,
+  set_funcionario_operario_seleccionado,
 }) => {
 
   const dispatch = useAppDispatch();
@@ -35,47 +35,47 @@ const ModalBusquedaResponsable: React.FC<props> = ({
   const [primer_apellido, set_primer_apellido] = useState<string>('');
   const [nombre_comercial, set_nombre_comercial] = useState<string>('');
 
-  const [funcionario_responsable_temp, set_funcionario_responsable_temp] = useState<interface_busqueda_responsable>(Object);
-  const [data_funcionarios_responsables, set_data_funcionarios_responsables] = useState<interface_busqueda_responsable[]>([
-    undefined as unknown as interface_busqueda_responsable,
-    undefined as unknown as interface_busqueda_responsable,
-    undefined as unknown as interface_busqueda_responsable,
-    undefined as unknown as interface_busqueda_responsable,
-    undefined as unknown as interface_busqueda_responsable,
+  const [funcionario_operario_temp, set_funcionario_operario_temp] = useState<interface_busqueda_operario>(Object);
+  const [data_funcionarios_operarios, set_data_funcionarios_operarios] = useState<interface_busqueda_operario[]>([
+    undefined as unknown as interface_busqueda_operario,
+    undefined as unknown as interface_busqueda_operario,
+    undefined as unknown as interface_busqueda_operario,
+    undefined as unknown as interface_busqueda_operario,
+    undefined as unknown as interface_busqueda_operario,
   ]);
 
-  const get_obtener_responsables_fc = () => {
-    dispatch(get_obtener_responsables(
+  const get_obtener_operarios_fc = () => {
+    dispatch(get_obtener_operarios(
       tipo_documento,
       documento,
       primer_nombre,
       primer_apellido,
       razon_social,
       nombre_comercial,
-    )).then((response: response_busqueda_responsable) => {
+    )).then((response: response_busqueda_operario) => {
       if(Object.keys(response).length !== 0) {
         if (response.data.length !== 0) {
-          set_data_funcionarios_responsables(response.data);
+          set_data_funcionarios_operarios(response.data);
         } else {
-          set_data_funcionarios_responsables([]);
+          set_data_funcionarios_operarios([]);
           control_error('No se encontraron funcionarios');
         }
       } else {
-        control_error('Error en el servidor al obtener los responsables de la solicitud de activos');
+        control_error('Error en el servidor al obtener los operarios de la solicitud de activos');
       }
     });
   }
 
-  const responsables_obtenidos = useRef(false);
+  const operarios_obtenidos = useRef(false);
   useEffect(()=>{
-    if(!responsables_obtenidos.current && mostrar_busqueda_responsable){
-      get_obtener_responsables_fc();
-      responsables_obtenidos.current = true;
+    if(!operarios_obtenidos.current && mostrar_busqueda_operario){
+      get_obtener_operarios_fc();
+      operarios_obtenidos.current = true;
     }
-  },[mostrar_busqueda_responsable])
+  },[mostrar_busqueda_operario])
 
-  const consultar_responsable = () => {
-    alert("Se está realizando la búsqueda del responsable");
+  const consultar_operario = () => {
+    alert("Se está realizando la búsqueda del operario");
   }
 
   const limpiar_form = () => {
@@ -87,22 +87,22 @@ const ModalBusquedaResponsable: React.FC<props> = ({
     set_nombre_comercial('');
   }
 
-  const enviar_responsable_seleccionado = () => {
-    if(Object.keys(funcionario_responsable_temp).length !== 0){
-      set_mostrar_busqueda_responsable(false);
-      set_funcionario_responsable_seleccionado(funcionario_responsable_temp);
-      set_funcionario_responsable_temp({} as interface_busqueda_responsable);
+  const enviar_operario_seleccionado = () => {
+    if(Object.keys(funcionario_operario_temp).length !== 0){
+      set_mostrar_busqueda_operario(false);
+      set_funcionario_operario_seleccionado(funcionario_operario_temp);
+      set_funcionario_operario_temp({} as interface_busqueda_operario);
     } else {
-      control_error('Haga clic en una fila de la tabla para seleccionar el responsable');
+      control_error('Haga clic en una fila de la tabla para seleccionar el operario');
     }
   }
 
   return (
     <>
       <Dialog
-        open={mostrar_busqueda_responsable}
+        open={mostrar_busqueda_operario}
         onClose={() => {
-          set_mostrar_busqueda_responsable(false);
+          set_mostrar_busqueda_operario(false);
         }}
         fullWidth maxWidth="lg" >
         <DialogContent>
@@ -118,11 +118,11 @@ const ModalBusquedaResponsable: React.FC<props> = ({
               boxShadow: '0px 3px 6px #042F4A26',
             }}
             >
-            <Title title='Búsqueda de Responsable' />
+            <Title title='Búsqueda de operario' />
 
             <Box
               component="form"
-              onSubmit={consultar_responsable}
+              onSubmit={consultar_operario}
               noValidate
               autoComplete="off"
               sx={{width:'100%', mt:'20px'}}
@@ -240,9 +240,9 @@ const ModalBusquedaResponsable: React.FC<props> = ({
                 display:'flex',
                 justifyContent:'center'
               }}>
-              <TablaModalBusquedaResponsable
-                data_funcionarios_responsables={data_funcionarios_responsables}
-                set_funcionario_responsable_temp={set_funcionario_responsable_temp}
+              <TablaModalBusquedaOperario
+                data_funcionarios_operarios={data_funcionarios_operarios}
+                set_funcionario_operario_temp={set_funcionario_operario_temp}
               />
             </Grid>
 
@@ -257,8 +257,8 @@ const ModalBusquedaResponsable: React.FC<props> = ({
                   color='primary'
                   variant='contained'
                   startIcon={<SaveIcon />}
-                  disabled={Object.keys(funcionario_responsable_temp).length === 0}
-                  onClick={enviar_responsable_seleccionado}
+                  disabled={Object.keys(funcionario_operario_temp).length === 0}
+                  onClick={enviar_operario_seleccionado}
                 >
                   Seleccionar
                 </Button>
@@ -273,7 +273,7 @@ const ModalBusquedaResponsable: React.FC<props> = ({
                   color="error"
                   variant="contained"
                   startIcon={<ClearIcon />}
-                  onClick={()=>set_mostrar_busqueda_responsable(false)}
+                  onClick={()=>set_mostrar_busqueda_operario(false)}
                 >
                   Salir
                 </Button>
@@ -289,4 +289,4 @@ const ModalBusquedaResponsable: React.FC<props> = ({
  
 
 // eslint-disable-next-line no-restricted-syntax
-export default ModalBusquedaResponsable;
+export default ModalBusquedaOperario;

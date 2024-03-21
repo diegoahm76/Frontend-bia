@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Grid, TextField,  } from "@mui/material";
+import { Button, CircularProgress, Grid, TextField,  } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import TablaBienesBaja from '../tables/TablaBienesBaja';
 import ModalBuscarBien from './ModalBuscarBien';
@@ -100,6 +100,10 @@ const AnexosOpcionales: React.FC<props> = ({id_baja_activo}) => {
   }
 
   const validar_formulario: () => Promise<boolean> = async() => {
+    const quitar_acentos_tiltes = (str: string) => {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    } 
+
     if (nombre_anexo_opcional === '') {
       control_error('El nombre del anexo es requerido');
       return false
@@ -111,6 +115,9 @@ const AnexosOpcionales: React.FC<props> = ({id_baja_activo}) => {
       return false
     } else if (descripcion_opcinal === '') {
       control_error('La descripción del anexo es requerida');
+      return false
+    } else if(quitar_acentos_tiltes(nombre_anexo_opcional).toLowerCase().trim().replace(/\s/g, "") === 'resolucionaprobadaporelcomite'){
+      control_error('El nombre del anexo no puede ser "Resolución aprobada por el comité"');
       return false
     }
 
@@ -318,10 +325,10 @@ const AnexosOpcionales: React.FC<props> = ({id_baja_activo}) => {
               variant='contained'
               color='success'
               disabled={loadding}
-              startIcon={<AddIcon />}
+              startIcon={loadding ? <CircularProgress size={25} /> :<AddIcon />}
               onClick={()=>{handle_submit()}}
             >
-              {accion === 'crear' ? 'Agregar y guardar' : 'Actualizar y guardar'}
+              {!loadding ? accion === 'crear' ? "Agregar y guardar" : 'Actualizar y guardar' : ''}
             </Button>
           </Grid>
         </Grid>
