@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ButtonGroup, Grid } from '@mui/material';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
@@ -41,7 +41,10 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
 
   const dispatch = useDispatch();
 
-  const delete_anexo_opcional_fc = async(id_anexo_doc_alma: string) => {
+  const form_data_anexos_opcionales = new FormData();
+
+
+  const delete_anexo_opcional_fc = async(params: interface_anexo_opcional) => {
     const modal_confirmar_eliminacion = await Swal.fire({
       title: '¿Está seguro que desea eliminar este anexo?',
       showDenyButton: true,
@@ -53,7 +56,10 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        dispatch(delete_anexo_opcional(id_anexo_doc_alma)).then((response: any) => {
+        console.log(form_data_anexos_opcionales.get('id_anexo_doc_alma'));
+
+        dispatch(delete_anexo_opcional(params.id_baja_activo.id_baja_activo, form_data_anexos_opcionales))
+        .then((response: any) => {
           if(Object.keys(response).length !== 0){
             if (response.success) {
               control_success('Se elimino el anexo correctamente');
@@ -75,9 +81,10 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
       set_refrescar_tabla(!refrescar_tabla);
     }    
   }
-
+  
   const eliminar_anexo_opcional = (params: interface_anexo_opcional) => {
-    delete_anexo_opcional_fc(params.id_anexo_doc_alma.toString());
+    form_data_anexos_opcionales.append("id_anexo_doc_alma", params.id_anexo_doc_alma.toString());
+    delete_anexo_opcional_fc(params);
   }
 
   const editar_anexo_opcional = (params: interface_anexo_opcional) => {

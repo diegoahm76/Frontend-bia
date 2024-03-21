@@ -119,7 +119,7 @@ export const VisorDocumento = ({ data_r, Actualizar_tabla }: { data_r: Registro;
                   onClick={handleActivateClick}
 
                 >
-                  Aprovar
+                  Aprobar
                 </Button>
 
               </Grid>
