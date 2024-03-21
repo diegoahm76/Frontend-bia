@@ -144,7 +144,7 @@ export interface interface_articulos_agregados {
   cod_tipo_depreciacion: number
   id_unidad_medida_vida_util: number
   id_bien_padre: number
-  cantidad_articulo?: string
+  cantidad_articulo?: number
   fecha_devolucion?: string
   tipo_unidad_medida?: string 
   observacion?: string
