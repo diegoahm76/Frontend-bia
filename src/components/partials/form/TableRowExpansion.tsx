@@ -9,7 +9,6 @@ import {
   DataTableExpandedRows,
   DataTableValueArray,
 } from 'primereact/datatable';
-import { Grid, TableContainer } from '@mui/material';
 interface Level {
   level: number;
   column_id: string;

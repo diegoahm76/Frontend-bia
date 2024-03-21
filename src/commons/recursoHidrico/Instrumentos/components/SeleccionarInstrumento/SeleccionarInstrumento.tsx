@@ -657,7 +657,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={3} sm={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de creación del instrumento"
