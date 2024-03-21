@@ -3,9 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Grid } from '@mui/material';
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import {
-  initial_state_person,
-} from '../../PQRSDF/store/slice/pqrsdfSlice';
+import { initial_state_person } from '../../PQRSDF/store/slice/pqrsdfSlice';
 import { IObjCompany, IObjPerson } from '../../PQRSDF/interfaces/pqrsdf';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import PrimaryForm from '../../../../components/partials/form/PrimaryForm';

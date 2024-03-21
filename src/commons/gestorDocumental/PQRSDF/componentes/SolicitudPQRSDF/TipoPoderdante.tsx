@@ -73,6 +73,7 @@ const TipoPoderdante = () => {
   }, []);
   useEffect(() => {
     reset_poderdante(grantor);
+    dispatch(set_attorney(initial_state_person));
     if (representacion_legal.tipo_sesion === 'E') {
       void dispatch(
         get_attorney_document_service(

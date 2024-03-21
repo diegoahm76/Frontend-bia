@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -19,16 +18,24 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 
-import { IObjMetaData,  } from '../../PQRSDF/interfaces/pqrsdf';
-import {  set_metadata } from '../../PQRSDF/store/slice/pqrsdfSlice';
+import { IObjMetaData } from '../../PQRSDF/interfaces/pqrsdf';
+import {
+  set_metadata,
+  set_file_fisico,
+} from '../../PQRSDF/store/slice/pqrsdfSlice';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { Title } from '../../../../components';
 import PrimaryForm from '../../../../components/partials/form/PrimaryForm';
+import { control_success } from '../../PQRSDF/store/thunks/pqrsdfThunks';
+import { jsPDF } from 'jspdf';
+import { logo_cormacarena_h } from '../../../conservacion/Reportes/logos/logos';
+import dayjs from 'dayjs';
 
 interface IProps {
   action?: string;
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  get_values_anexo: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -36,6 +43,7 @@ const MetadataFormDialogOtros = ({
   action,
   is_modal_active,
   set_is_modal_active,
+  get_values_anexo,
 }: IProps) => {
   const dispatch = useAppDispatch();
 
@@ -47,6 +55,7 @@ const MetadataFormDialogOtros = ({
     file_origins,
     file_typologies,
     exhibit,
+    storage_mediums,
   } = useAppSelector((state) => state.pqrsdf_slice);
   const [checked_tiene_tipologia, set_checked_tiene_tipologia] = useState(
     metadata.id_tipologia_doc !== null
@@ -58,9 +67,11 @@ const MetadataFormDialogOtros = ({
     handleSubmit: handle_submit,
     reset: reset_metadata,
     setValue,
+    watch,
   } = useForm<IObjMetaData>();
   const [keywords_object, set_keywords_object] = useState<any[]>([]);
-
+  const [doc, set_doc] = useState<jsPDF>(new jsPDF());
+  const [doc_height, set_doc_height] = useState<number>(0);
   const handle_close_add_bien = (): void => {
     set_is_modal_active(false);
   };
@@ -87,10 +98,98 @@ const MetadataFormDialogOtros = ({
     }
   }, [metadata]);
 
+  useEffect(() => {
+    if (watch('cod_origen_archivo') === 'F') {
+      control_success(
+        'Al seleccionar fisico se reemplazará el archivo por uno por defecto y se configurará el numero de folios en 1'
+      );
+    }
+  }, [watch('cod_origen_archivo')]);
+
   const on_submit: SubmitHandler<IObjMetaData> = (data: IObjMetaData): void => {
-    console.log(data);
+    //  console.log('')(data);
+    if (data.cod_origen_archivo === 'F') {
+      set_doc(new jsPDF());
+      set_doc_height(doc.internal.pageSize.getHeight());
+      crear_encabezado(data);
+    }
     dispatch(set_metadata(data));
     set_is_modal_active(false);
+  };
+
+  const crear_encabezado: (data: IObjMetaData) => {
+    title: string;
+  } = (data: IObjMetaData) => {
+    const title = `Archivo no digitalizado - solo almacenado en físico`;
+    doc.setFont('Arial', 'normal');
+    doc.setFontSize(12);
+    doc.addImage(logo_cormacarena_h, 'PNG', 160, 10, 40, 15);
+    doc.setFont('Arial', 'bold'); // establece la fuente en Arial
+    doc.text(
+      '(Buscar en carpeta física)',
+      (doc.internal.pageSize.width -
+        doc.getTextWidth('(Buscar en carpeta física)')) /
+        2,
+      10
+    );
+    doc.text(
+      title,
+      (doc.internal.pageSize.width - doc.getTextWidth(title)) / 2,
+      15
+    );
+    doc.setFont('Arial', 'normal'); // establece la fuente en Arial
+    const fecha_generacion = `Fecha de creación ${dayjs().format(
+      'DD/MM/YYYY'
+    )}`;
+    doc.text(
+      fecha_generacion,
+      doc.internal.pageSize.width - doc.getTextWidth(fecha_generacion) - 5,
+      5
+    );
+    doc.line(5, 30, doc.internal.pageSize.width - 5, 30);
+    doc.line(5, 35, doc.internal.pageSize.width - 5, 35);
+    const linea_uno = `Nombre del anexo: ${
+      get_values_anexo('nombre_anexo') ?? ''
+    }               Medio de almacenamiento: ${
+      get_values_anexo('cod_medio_almacenamiento') === 'Ot'
+        ? get_values_anexo('medio_almacenamiento_otros_cual')
+        : storage_mediums.find(
+            (objeto) =>
+              objeto.key === get_values_anexo('cod_medio_almacenamiento')
+          )?.label
+    }`;
+    const ancho_texto_linea_uno = doc.getTextWidth(linea_uno);
+    const x_linea_uno =
+      (doc.internal.pageSize.width - ancho_texto_linea_uno) / 2;
+    doc.text(linea_uno, x_linea_uno, 45);
+
+    const linea_dos = `Categoría de archivo: ${
+      file_categories.find(
+        (objeto) => objeto.key === data.cod_categoria_archivo
+      )?.label
+    }           Tipología documental: ${
+      data.id_tipologia_doc !== null
+        ? file_typologies.find((objeto) => objeto.key === data.id_tipologia_doc)
+            ?.label
+        : data.tipologia_no_creada_en_TRD
+    }`;
+    const ancho_texto_linea_dos = doc.getTextWidth(linea_dos);
+    const x_linea_dos =
+      (doc.internal.pageSize.width - ancho_texto_linea_dos) / 2;
+    doc.text(linea_dos, x_linea_dos, 55);
+
+    const linea_tres = `Asunto: ${data.asunto}`;
+    const ancho_texto_linea_tres = doc.getTextWidth(linea_tres);
+    const x_linea_tres =
+      (doc.internal.pageSize.width - ancho_texto_linea_tres) / 2;
+    doc.text(linea_tres, x_linea_tres, 65);
+
+    const pdfBlob = doc.output('blob');
+    const pdfFile = new File([pdfBlob], 'generado.pdf', {
+      type: 'application/pdf',
+    });
+    dispatch(set_file_fisico(pdfFile));
+    return { title };
   };
 
   return (
