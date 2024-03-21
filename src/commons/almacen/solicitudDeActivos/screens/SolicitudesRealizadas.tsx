@@ -17,6 +17,7 @@ interface props {
   set_fecha_fin: React.Dispatch<React.SetStateAction<Dayjs | null>>;
   data_solicitudes_realizadas: interface_solicitudes_realizadas[];
   get_buscar_solicites_activos: () => void;
+  set_data_solicitudes_realizadas: React.Dispatch<React.SetStateAction<interface_solicitudes_realizadas[]>>;
 }
 
 
@@ -29,7 +30,8 @@ const SolicitudesRealizadas: React.FC<props> = ({
   fecha_fin,
   set_fecha_fin,
   data_solicitudes_realizadas,
-  get_buscar_solicites_activos
+  set_data_solicitudes_realizadas,
+  get_buscar_solicites_activos,
 }) => {
 
   const cambio_fecha_inicio = (newValue: Dayjs | null) => {
@@ -41,6 +43,13 @@ const SolicitudesRealizadas: React.FC<props> = ({
   }
 
   const consultar_solicitudes = () => {
+    set_data_solicitudes_realizadas([
+      undefined as unknown as interface_solicitudes_realizadas,
+      undefined as unknown as interface_solicitudes_realizadas,
+      undefined as unknown as interface_solicitudes_realizadas,
+      undefined as unknown as interface_solicitudes_realizadas,
+      undefined as unknown as interface_solicitudes_realizadas,
+    ]);
     get_buscar_solicites_activos();
   }
 
