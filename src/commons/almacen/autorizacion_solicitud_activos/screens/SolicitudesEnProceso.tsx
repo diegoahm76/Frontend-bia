@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import SearchIcon from "@mui/icons-material/Search";
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
-import TablaSolicitudesRealizadas from '../tables/TablaSolicitudesRealizadas';
+import TablaSolicitudesEnProceso from '../tables/TablaSolicitudesEnProceso';
 import { interface_solicitudes_realizadas } from '../interfaces/types';
 
 interface props {
@@ -19,13 +19,13 @@ interface props {
   fecha_fin: Dayjs | null;
   set_fecha_fin: React.Dispatch<React.SetStateAction<Dayjs | null>>;
   data_solicitudes_realizadas: interface_solicitudes_realizadas[];
-  get_buscar_solicites_activos: () => void;
+  get_obtener_solicitudes_activos_fc: () => void;
   set_data_solicitudes_realizadas: React.Dispatch<React.SetStateAction<interface_solicitudes_realizadas[]>>;
 }
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const SolicitudesRealizadas: React.FC<props> = ({
+const SolicitudesEnProceso: React.FC<props> = ({
   set_accion,
   set_position_tab,
   estado,
@@ -37,7 +37,7 @@ const SolicitudesRealizadas: React.FC<props> = ({
   set_fecha_fin,
   data_solicitudes_realizadas,
   set_data_solicitudes_realizadas,
-  get_buscar_solicites_activos,
+  get_obtener_solicitudes_activos_fc,
 }) => {
 
   const cambio_fecha_inicio = (newValue: Dayjs | null) => {
@@ -56,7 +56,7 @@ const SolicitudesRealizadas: React.FC<props> = ({
       undefined as unknown as interface_solicitudes_realizadas,
       undefined as unknown as interface_solicitudes_realizadas,
     ]);
-    get_buscar_solicites_activos();
+    get_obtener_solicitudes_activos_fc();
   }
 
   const limpiar_filtros = () => {
@@ -143,7 +143,7 @@ const SolicitudesRealizadas: React.FC<props> = ({
       </Grid>
 
       <Grid container item xs={12}>
-        <TablaSolicitudesRealizadas
+        <TablaSolicitudesEnProceso
           set_position_tab={set_position_tab}
           set_accion={set_accion}
           set_id_solicitud_activo={set_id_solicitud_activo}
@@ -155,4 +155,4 @@ const SolicitudesRealizadas: React.FC<props> = ({
 }
  
 // eslint-disable-next-line no-restricted-syntax
-export default SolicitudesRealizadas;
+export default SolicitudesEnProceso;
