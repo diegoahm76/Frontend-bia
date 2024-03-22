@@ -18,7 +18,7 @@ export const Parte2Screen = ({
         mt: '2rem',
       }}
     >
-      <Title title="Requerimiento sobre una solicitud" />
+      <Title title="Segundo paso - solicitud requerimiento OPA" />
       <FormParte2
         controlFormulario={controlFormulario}
         handleSubmitFormulario={handleSubmitFormulario}

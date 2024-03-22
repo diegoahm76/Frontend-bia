@@ -6,7 +6,7 @@ import { control_warning } from '../../../../../../../almacen/configuracion/stor
 import Select from 'react-select';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { choicesRepresentacion } from '../../utils/choicesRepresentacion';
+import { choicesRepresentacion } from '../../utils/choices';
 import { PropiaComponent } from './enRepresentacionDe/propiaComponent/PropiaComponent';
 
 /* eslint-disable @typescript-eslint/naming-convention */

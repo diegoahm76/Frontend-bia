@@ -78,7 +78,6 @@ export const ElementoOPAS = (): JSX.Element => {
       });
 
       if (result.isConfirmed) {
-        alert('estás aceptando la tarea perro siuu')
        const res = await putAceptarTareaOpa(row.id_tarea_asignada);
         console.log(res);
 
