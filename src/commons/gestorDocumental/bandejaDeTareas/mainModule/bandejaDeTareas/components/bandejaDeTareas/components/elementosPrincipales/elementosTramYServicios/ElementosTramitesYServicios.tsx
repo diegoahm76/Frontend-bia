@@ -466,12 +466,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea ({' '}
-              {
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
-              }
-              )
-            </Button>
+              Quitar selección de tarea de trámite / servicio            </Button>
           ) : null
         }
       />

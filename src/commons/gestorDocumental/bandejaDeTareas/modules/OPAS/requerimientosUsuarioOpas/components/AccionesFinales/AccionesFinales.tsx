@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 
-
 import { postRequerimientoUsuario } from '../../toolkit/thunks/postRequerimiento.service';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { useStepperRequerimiento } from '../../../../../hook/useStepperRequerimiento';
@@ -12,6 +11,7 @@ import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinal
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import { control_error } from '../../../../../../../../helpers';
 import { handleApiError } from '../../../../../../../../utils/functions/errorManage';
+import { Anexo } from '../../../../../../PQRSDF/componentes/respuestaSolicitudUsuario/toolkit/slice/ResSolicitudUsarioSlice';
 
 export const AccionesFinales = ({
   controlFormulario,
@@ -39,9 +39,21 @@ export const AccionesFinales = ({
   //* handleSumbit
 
   const sendDataByFormData = async () => {
-    try {
+    const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
+      if (a.ruta_soporte && !b.ruta_soporte) {
+        return -1;
+      }
+      if (!a.ruta_soporte && b.ruta_soporte) {
+        return 1;
+      }
+      return 0;
+    });try {
       if (!Array.isArray(anexosCreados) || anexosCreados.length === 0) {
-        showAlert('Opss!', 'No se han creado anexos, no se puede enviar la solicitud', 'warning');
+        showAlert(
+          'Opss!',
+          'No se han creado anexos, no se puede enviar la solicitud',
+          'warning'
+        );
       }
 
       const firstAnexo = anexosCreados[0];
@@ -61,12 +73,16 @@ export const AccionesFinales = ({
         JSON.stringify({
           asunto: firstAnexo.asunto,
           descripcion: firstAnexo.descripcion_de_la_solicitud,
-          id_solicitud_tramite: +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
+          id_solicitud_tramite:
+            +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
         })
       );
-      formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
+      formData.append(
+        'id_tarea',
+        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
+      );
 
-      anexosCreados.forEach((anexo: any, index: number) => {
+      sortedAnexos.forEach((anexo: any, index: number) => {
         formData.append('archivo', anexo.ruta_soporte);
         formData.append(
           'anexo',
@@ -76,27 +92,34 @@ export const AccionesFinales = ({
             cod_medio_almacenamiento: 'Na',
             orden_anexo_doc: index + 1,
             meta_data: {
-              tiene_replica_fisica: anexo?.tieneReplicaFisicaMetadatos?.value === 'Si',
+              tiene_replica_fisica:
+                anexo?.tieneReplicaFisicaMetadatos?.value === 'Si' ? true : false,
               cod_origen_archivo: anexo?.origenArchivoMetadatos?.value,
-              nombre_original_archivo: 'Archivo',
+              nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
               descripcion: anexo?.descripcionMetadatos,
               asunto: anexo?.asuntoMetadatos,
               cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
-              nro_folios_documento: +anexo?.numero_folios || 0,
-              id_tipologia_doc: +anexo?.tipologiasDocumentalesMetadatos?.value || null,
-              tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos || null,
+              nro_folios_documento: +anexo?.numero_folios
+                ? +anexo?.numero_folios
+                : 0,
+              id_tipologia_doc: +anexo?.tipologiasDocumentalesMetadatos?.value
+                ? +anexo?.tipologiasDocumentalesMetadatos?.value
+                : null,
+              tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos
+                ? anexo?.cualTipologiaDocumentalMetadatos
+                : null,
               palabras_clave_doc: anexo?.palabrasClavesMetadatos.join('|'),
             },
           })
         );
       });
 
-      await postRequerimientoUsuario(formData, setLoadingButton);
-
-      handleReset();
-      resetFormulario({});
-      setInfoReset({});
-      dispatch(resetItems());
+      await postRequerimientoUsuario(formData, setLoadingButton).then(() => {
+        dispatch(resetItems());
+        handleReset();
+        resetFormulario({});
+        setInfoReset({});
+      });
 
       Swal.fire({
         title: 'Solicitud enviada',
