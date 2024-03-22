@@ -10,6 +10,7 @@ import React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useAppDispatch } from "../../../../hooks";
 import { cargar_anexos_opas } from "../thunks/TramitesOServicios";
+import { ModalMetadatosTramite } from "../../TramitesServicios/components/MetadatosTramite/ModalMetadatosTramite";
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
@@ -124,7 +125,7 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
                 "id_anexo_tramite": null,
                 "descripcion": descripcion
             }
-            archivos_grid = [...archivos_grid, {id: uuidv4(), nombre_archivo:file_name, descripcion: descripcion, tamaño: tamaño, archivo: file, data_json: data_json }];
+            archivos_grid = [...archivos_grid, { id: uuidv4(), nombre_archivo: file_name, descripcion: descripcion, tamaño: tamaño, archivo: file, data_json: data_json }];
             set_archivos([...archivos_grid]);
             set_limpiar(false);
         }
@@ -152,18 +153,18 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
             const cargar = (archivos.length > 0);
             props.set_cargar_anexos(cargar);
             if (cargar) {
-                const data_anexos: any[] = archivos.map((obj:any) => obj.data_json);
-                const data_archivos: File[] = archivos.map((obj:any) => obj.archivo);
+                const data_anexos: any[] = archivos.map((obj: any) => obj.data_json);
+                const data_archivos: File[] = archivos.map((obj: any) => obj.archivo);
                 const form_data = new FormData();
                 form_data.append('data_anexos', JSON.stringify(data_anexos));
                 // form_data.append('archivos', data_archivos[0]);
                 data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
                 dispatch(cargar_anexos_opas(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
-                    if(response.success)
+                    if (response.success)
                         props.set_anexar_error(response.success);
                 });
-            }else{
-                props.set_anexar_error(true); 
+            } else {
+                props.set_anexar_error(true);
             }
         }
     }, [props.cargar_anexos]);
@@ -177,6 +178,14 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
             set_tamaño("");
         }
     }, [limpiar]);
+
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
 
     return (
         <>
@@ -235,6 +244,33 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
                 <Grid item xs={12} sm={12}>
                     <Alert severity="info">Adjunte los documentos requeridos para la solicitud, puede agregar los que necesite.</Alert>
                 </Grid>
+
+
+
+<Grid container justifyContent="center" >
+
+                <Grid item xs={6}>
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        color="warning"
+                        size='medium'
+                        onClick={handleOpenModal}>AGREGAR MeTADATOS</Button>
+                    <ModalMetadatosTramite
+                        is_modal_active={isModalOpen}
+                        set_is_modal_active={setIsModalOpen}
+                    />
+                </Grid>
+                        </Grid>
+
+
+
+
+
+
+
+
+
                 <Grid item xs={12} sm={12} textAlign={'end'}>
                     <Button variant="contained" onClick={() => { agregar_archivos() }} startIcon={<AddCircleOutlinedIcon />}>
                         Agregar
@@ -250,7 +286,7 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
                         rows={archivos}
                         getRowId={(row) => uuidv4()} />
                 </Grid>
-            </Grid>
+            </Grid >
         </>
     )
 }
