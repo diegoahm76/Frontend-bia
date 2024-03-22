@@ -11,9 +11,13 @@ export const AsignacionGrupoTramiteProvider = ({ children }: any): JSX.Element =
   const [listaSeccionesSubsecciones, setListaSeccionesSubsecciones] =
     useState<any>([]);
 
-  const [listaSubGrupos, setListaSubGrupos] = useState<any>([]);
-  const [currentGrupo, setCurrentGrupo] = useState(null)
-
+    const [listaSubGrupos, setListaSubGrupos] = useState<any>([]);
+    const [listaSeries, setListaSeries] = useState<any>([])
+    // se va a cambiar para definir el current grupo y serie
+    const [currentGrupo, setCurrentGrupo] = useState({
+      grupoSelected: null,
+      currentSerie: null,
+    })
   const [liderAsignado, setLiderAsignado] = useState(null);
 
   const [listaAsignaciones, setListaAsignaciones] = useState<any[]>([])
@@ -24,6 +28,8 @@ export const AsignacionGrupoTramiteProvider = ({ children }: any): JSX.Element =
 
     listaSubGrupos,
     setListaSubGrupos,
+    listaSeries,
+    setListaSeries,
 
     currentGrupo,
     setCurrentGrupo,

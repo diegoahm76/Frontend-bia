@@ -23,6 +23,7 @@ export const getSeriesByIdUnidad = async (idUnidad:number): Promise<any> => {
   }
   catch (error) {
     handleApiError(error);
+    return [];
   }
   finally {}
 }
