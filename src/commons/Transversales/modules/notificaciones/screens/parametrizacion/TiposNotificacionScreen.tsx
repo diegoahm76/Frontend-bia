@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Box, Chip, Grid, IconButton, Tooltip } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -20,13 +20,25 @@ import React from 'react';
 import PrimaryForm from '../../../../../../components/partials/form/PrimaryForm';
 import ListadoAnexos from '../../../../../gestorDocumental/CentralDigitalizacion/componentes/CentralDigitalizacion/ListadoAnexos';
 import FormButton from '../../../../../../components/partials/form/FormButton';
-import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuid } from 'uuid';
-
+import { IObjNotificacionType } from '../../interfaces/notificaciones';
+import {
+  add_tipo_notificacion,
+  delete_tipo_notificacion,
+  edit_tipo_notificacion,
+  get_tipos_notificacion,
+} from '../../store/thunks/notificacionesThunks';
+import {
+  set_tipo_notificacion,
+  reset_state,
+} from '../../store/slice/notificacionesSlice';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
 // import ListadoPqrsdf from '../componentes/SolicitudPQRSDF/ListadoPqrsdf';
@@ -300,7 +312,9 @@ export function TiposNotificacionScreen(): JSX.Element {
       property_name: 'solicitudes_pqr',
     },
   ];
-
+  const { tipo_notificacion, tipos_notificacion } = useAppSelector(
+    (state) => state.notificaciones_slice
+  );
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
   const [expandedRows, setExpandedRows] = useState<
@@ -313,15 +327,21 @@ export function TiposNotificacionScreen(): JSX.Element {
     reset: reset_notificacion,
     watch,
   } = useForm<any>();
+  const [action, set_action] = useState<string>('crear');
+
   useEffect(() => {
     setExpandedRows(undefined);
     set_button_option('');
     setSelectedPqr({});
     set_detail_is_active(false);
+    void dispatch(get_tipos_notificacion());
   }, []);
+  useEffect(() => {
+    reset_notificacion(tipo_notificacion);
+  }, [tipo_notificacion]);
   const columns_list: GridColDef[] = [
     {
-      field: 'tipo_documento',
+      field: 'nombre',
       headerName: 'Nombre',
       width: 250,
       renderCell: (params) => (
@@ -331,30 +351,34 @@ export function TiposNotificacionScreen(): JSX.Element {
       ),
     },
     {
-      field: 'numero_documento',
+      field: 'aplica_para_notificaciones',
       headerName: 'Aplica notificación',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      width: 150,
+      renderCell: (params) => {
+        return params.row.aplica_para_notificaciones === true ? (
+          <Chip size="small" label="Sí" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
     },
     {
-      field: 'nombre_completo',
+      field: 'aplica_para_correspondencia',
       headerName: 'Aplica correspondencia',
-      width: 300,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      width: 150,
+      renderCell: (params) => {
+        return params.row.aplica_para_correspondencia === true ? (
+          <Chip size="small" label="Sí" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
     },
 
     {
-      field: 'tipo_persona',
+      field: 'tiempo_en_dias',
       headerName: 'Días permitidos',
-      width: 250,
+      width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -362,46 +386,198 @@ export function TiposNotificacionScreen(): JSX.Element {
       ),
     },
     {
-      field: 'tipo_persona_1',
+      field: 'registro_precargado',
       headerName: 'Precargado',
-      width: 250,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      width: 150,
+      renderCell: (params) => {
+        return params.row.registro_precargado === true ? (
+          <Chip size="small" label="Sí" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
     },
     {
-      field: 'tipo_persona_5',
-      headerName: 'Activo',
-      width: 250,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      field: 'activo',
+      headerName: '¿Activo?',
+      width: 200,
+      flex: 1,
+      renderCell: (params) => {
+        return params.row.activo === true ? (
+          <Chip
+            size="small"
+            label="Activo"
+            color="success"
+            variant="outlined"
+          />
+        ) : (
+          <Chip
+            size="small"
+            label="Inactivo"
+            color="error"
+            variant="outlined"
+          />
+        );
+      },
     },
     {
-      field: 'tipo_persona_7',
-      headerName: 'Usado',
-      width: 250,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      field: 'item_ya_usado',
+      headerName: '¿Usado?',
+      width: 200,
+      flex: 1,
+      renderCell: (params) => {
+        return params.row.item_ya_usado === true ? (
+          <Chip size="small" label="Sí" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
     },
     {
-      field: 'tipo_persona_6',
+      field: 'acciones',
       headerName: 'Acciones',
-      width: 250,
+      width: 300,
+      flex: 1,
       renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
+        <>
+          {params.row.item_ya_usado ? null : (
+            <Tooltip title="Editar">
+              <IconButton
+                onClick={() => {
+                  dispatch(
+                    set_tipo_notificacion({
+                      ...params.row,
+                      aplica_para: [
+                        params.row.aplica_para_correspondencia &&
+                          'correspondencia',
+                        params.row.aplica_para_notificaciones &&
+                          'notificaciones',
+                      ],
+                    })
+                  );
+                  set_action('editar');
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <EditIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          )}
+          {/* <Tooltip title={params.row.activo ? "Desactivar" : "Activar"}>
+            <IconButton
+              onClick={() => {
+                dispatch(activate_deactivate_marca_service(params.row.id_marca, params.row));// true -> activar false -> desactivar
+
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                {params.row.activo ?
+                  <BlockIcon // icon desactivar
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  /> :
+                  <DoneOutlineIcon // icon activar
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+                }
+
+              </Avatar>
+            </IconButton>
+          </Tooltip> */}
+          {params.row.item_ya_usado ? null : (
+            <Tooltip title="Eliminar">
+              <IconButton
+                onClick={() => {
+                  dispatch(delete_tipo_notificacion(params.row));
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <DeleteIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          )}
+        </>
       ),
     },
   ];
+
+  const on_submit = (data: IObjNotificacionType): void => {
+    if (
+      tipo_notificacion?.id_tipo_notificacion_correspondencia !== null &&
+      tipo_notificacion?.id_tipo_notificacion_correspondencia !== undefined
+    ) {
+      set_action('editar');
+      if (data.aplica_para !== null && data.aplica_para !== undefined) {
+        const data_edit: IObjNotificacionType = {
+          ...data,
+          aplica_para_correspondencia:
+            data.aplica_para.includes('correspondencia'),
+          aplica_para_notificaciones:
+            data.aplica_para.includes('notificaciones'),
+          item_ya_usado: false,
+          registro_precargado: false,
+          activo: true,
+        };
+        void dispatch(edit_tipo_notificacion(data_edit));
+      }
+    } else {
+      set_action('crear');
+      if (data.aplica_para !== null && data.aplica_para !== undefined) {
+        const data_edit: IObjNotificacionType = {
+          ...data,
+          aplica_para_correspondencia:
+            data.aplica_para.includes('correspondencia'),
+          aplica_para_notificaciones:
+            data.aplica_para.includes('notificaciones'),
+          item_ya_usado: false,
+          registro_precargado: false,
+          activo: true,
+        };
+        void dispatch(add_tipo_notificacion(data_edit));
+      }
+    }
+  };
+  const descartar = (): void => {
+    reset_notificacion({});
+    set_action('crear');
+  };
   return (
     <>
       <Grid
@@ -432,7 +608,7 @@ export function TiposNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'aplica_para',
                 default_value: [],
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Aplica a:',
@@ -451,7 +627,7 @@ export function TiposNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 8,
                 control_form: control_notificacion,
-                control_name: 'type_applicant_1',
+                control_name: 'nombre',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Nombre',
@@ -463,22 +639,10 @@ export function TiposNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 3,
                 control_form: control_notificacion,
-                control_name: 'type_applicant_2',
+                control_name: 'tiempo_en_dias',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Días maximos permitidos',
-                disabled: false,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'type_applicant_4',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Acto administrativo',
                 disabled: false,
                 helper_text: '',
               },
@@ -487,32 +651,32 @@ export function TiposNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 3,
                 control_form: control_notificacion,
-                control_name: 'type_applicant_3',
+                control_name: 'habiles_o_calendario',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Aplica a:',
                 disabled: false,
                 helper_text: '',
                 select_options: [
-                  { label: 'Días habiles', key: 'habiles' },
-                  { label: 'Días calendario', key: 'calendario' },
+                  { label: 'Días habiles', key: 'H' },
+                  { label: 'Días calendario', key: 'C' },
                 ],
                 option_label: 'label',
                 option_key: 'key',
               },
 
-              {
-                datum_type: 'checkbox_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'type_applicant_5',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Activo',
-                disabled: false,
-                helper_text: '',
-              },
+              // {
+              //   datum_type: 'checkbox_controller',
+              //   xs: 12,
+              //   md: 3,
+              //   control_form: control_notificacion,
+              //   control_name: 'activo',
+              //   default_value: false,
+              //   rules: { required_rule: { rule: true, message: 'Requerido' } },
+              //   label: 'Activo',
+              //   disabled: false,
+              //   helper_text: '',
+              // },
               {
                 datum_type: 'button',
                 xs: 12,
@@ -521,18 +685,18 @@ export function TiposNotificacionScreen(): JSX.Element {
                 type_button: 'button',
                 disabled: false,
                 variant_button: 'outlined',
-                on_click_function: null,
+                on_click_function: descartar,
                 color_button: 'error',
               },
               {
                 datum_type: 'button',
                 xs: 12,
                 md: 3,
-                label: 'Agregar',
+                label: action,
                 type_button: 'button',
                 disabled: false,
                 variant_button: 'contained',
-                on_click_function: null,
+                on_click_function: handle_submit_notificacion(on_submit),
                 color_button: 'success',
               },
             ]}
@@ -540,15 +704,15 @@ export function TiposNotificacionScreen(): JSX.Element {
           <DataGrid
             density="compact"
             autoHeight
-            rows={[]}
+            rows={tipos_notificacion || []}
             columns={columns_list}
             pageSize={10}
             rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) =>
-              row['id_notificacion' ?? uuid()] === null
+              row['id_tipo_notificacion_correspondencia' ?? uuid()] === null
                 ? uuid()
-                : row['id_notificacion' ?? uuid()]
+                : row['id_tipo_notificacion_correspondencia' ?? uuid()]
             }
           />
         </Grid>

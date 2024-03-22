@@ -14,6 +14,17 @@ import {
   get_departamentos,
 } from '../../../../../../request/getRequest';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
+import {
+  set_causas_notificacion,
+  set_estados_notificacion,
+  set_list_document_types,
+  set_list_groups,
+  set_list_status,
+  set_notification_requests,
+  set_tipos_notificacion,
+  set_tipos_soporte,
+} from '../slice/notificacionesSlice';
+import { IObjListType } from '../../interfaces/notificaciones';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
@@ -43,47 +54,561 @@ export const control_success = (message: ToastContent) =>
     theme: 'light',
   });
 
-// const map_list = (
-//   list: any[],
-//   is_choice: boolean,
-//   id?: number | string,
-//   key?: number | string,
-//   label?: number | string
-// ): any => {
-//   console.log(list);
-//   let list_aux: IObjListType[] = [];
-//   if (is_choice) {
-//     list.forEach((objeto) => {
-//       list_aux.push({ id: objeto[0], key: objeto[0], label: objeto[1] });
-//     });
-//   } else {
-//     list.forEach((objeto) => {
-//       list_aux.push({
-//         id: objeto[id ?? ''],
-//         key: objeto[key ?? ''],
-//         label: objeto[label ?? ''],
-//       });
-//     });
-//   }
-//   return list_aux;
-// };
+const map_list = (
+  list: any[],
+  is_choice: boolean,
+  id?: number | string,
+  key?: number | string,
+  label?: number | string
+): any => {
+  console.log(list);
+  let list_aux: IObjListType[] = [];
+  if (is_choice) {
+    list.forEach((objeto) => {
+      list_aux.push({ id: objeto[0], key: objeto[0], label: objeto[1] });
+    });
+  } else {
+    list.forEach((objeto) => {
+      list_aux.push({
+        id: objeto[id ?? ''],
+        key: objeto[key ?? ''],
+        label: objeto[label ?? ''],
+      });
+    });
+  }
 
-// // Obtener tipos documento
-// export const get_document_types_service = (): any => {
-//   return async (dispatch: Dispatch<any>) => {
-//     try {
-//       const { data } = await api.get('personas/tipos-documento/get-list/');
-//       dispatch(set_document_types(data));
-//       return data;
-//     } catch (error: any) {
-//       console.log('get_document_types_service');
-//       control_error(error.response.data.detail);
-//       return error as AxiosError;
-//     }
-//   };
-// };
+  return list_aux;
+};
 
-// // Obtener tipos pqr
+// obtener radicados filtro pqrsdf
+export const get_solicitudes_notificacion = (params: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/notificaciones/get-notificaciones/`,
+        {
+          params,
+        }
+      );
+      console.log(data);
+
+      dispatch(set_notification_requests(data.data));
+      if (data.data.length > 0) {
+        control_success(data.detail);
+      } else {
+        control_error(
+          'No se encontrarón solicitudes con la busquedad ingresada'
+        );
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener tipos documento
+export const get_document_types_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('gestor/choices/cod-tipo-documento/');
+      console.log(data);
+      dispatch(set_list_document_types(map_list(data.data, true)));
+      return data;
+    } catch (error: any) {
+      console.log('get_document_types_service');
+      control_error(error);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener tipos documento
+export const get_status_list_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        'gestor/choices/cod-estado-notificaciones/'
+      );
+      console.log(data.data);
+
+      dispatch(set_list_status(map_list(data.data, true)));
+      return data;
+    } catch (error: any) {
+      console.log('get_document_types_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener tipos documento
+export const get_groups_list_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        'gestor/consecutivos-unidades/unidades_organigrama_actual/get/'
+      );
+      console.log(data);
+
+      dispatch(
+        set_list_groups(
+          map_list(
+            data.data,
+            false,
+            'id_unidad_organizacional',
+            'id_unidad_organizacional',
+            'nombre'
+          )
+        )
+      );
+      return data;
+    } catch (error: any) {
+      console.log('get_document_types_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener radicados filtro pqrsdf
+export const get_tipos_notificacion = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/notificaciones/get-tipos-notificaciones/`
+      );
+      console.log(data);
+
+      dispatch(set_tipos_notificacion(data.data));
+
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+
+export const add_tipo_notificacion = (tipo: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post(
+        `gestor/notificaciones/create-tipos-notificaciones/`,
+        tipo
+      );
+      console.log(data);
+
+      dispatch(get_tipos_notificacion());
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón tipos');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const edit_tipo_notificacion = (tipo: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `gestor/notificaciones/update-tipos-notificaciones/${tipo.id_tipo_notificacion_correspondencia}/`,
+        tipo
+      );
+      console.log(data);
+
+      dispatch(get_tipos_notificacion());
+
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón tipos');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const delete_tipo_notificacion = (tipo: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/notificaciones/delete-tipos-notificaciones/${tipo.id_tipo_notificacion_correspondencia}/`
+      );
+      console.log(data);
+
+      dispatch(get_tipos_notificacion());
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón tipos');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const get_causas_notificacion = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/notificaciones/get-Causas-notificaciones/`
+      );
+      console.log(data);
+
+      dispatch(set_causas_notificacion(data.data));
+
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+
+export const add_causa_notificacion = (causa: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post(
+        `gestor/notificaciones/create-Causas-notificaciones/`,
+        causa
+      );
+      console.log(data);
+
+      dispatch(get_causas_notificacion());
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón causas');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const edit_causa_notificacion = (causa: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `gestor/notificaciones/update-Causas-notificaciones/${causa.id_causa_o_anomalia}/`,
+        causa
+      );
+      console.log(data);
+
+      dispatch(get_causas_notificacion());
+
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón causas');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const delete_causa_notificacion = (causa: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/notificaciones/delete-Causas-notificaciones/${causa.id_causa_o_anomalia}/`
+      );
+      console.log(data);
+
+      dispatch(get_causas_notificacion());
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón causas');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const get_estados_notificacion = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/notificaciones/get-estado-notificaciones/`
+      );
+      console.log(data);
+
+      dispatch(set_estados_notificacion(data.data));
+
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+
+export const add_estado_notificacion = (estado: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post(
+        `gestor/notificaciones/create-estado-notificaciones/`,
+        estado
+      );
+      console.log(data);
+
+      dispatch(get_estados_notificacion());
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón estados');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const edit_estado_notificacion = (estado: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `gestor/notificaciones/update-estado-notificaciones/${estado.id_estado_notificacion_correspondencia}/`,
+        estado
+      );
+
+      dispatch(get_estados_notificacion());
+
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón estados');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const delete_estado_notificacion = (estado: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/notificaciones/delete-estado-notificaciones/${estado.id_estado_notificacion_correspondencia}/`
+      );
+      console.log(data);
+
+      dispatch(get_estados_notificacion());
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón estados');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const get_tipos_soporte = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/notificaciones/get-tipos-anexos-notificaciones/`
+      );
+      console.log(data);
+
+      dispatch(set_tipos_soporte(data.data));
+
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+
+export const add_tipo_soporte = (estado: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post(
+        `gestor/notificaciones/create-tipos-anexos-notificaciones/`,
+        estado
+      );
+      console.log(data);
+
+      dispatch(get_tipos_soporte());
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón estados');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const edit_tipo_soporte = (estado: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `gestor/notificaciones/update-tipos-anexos-notificaciones/${estado.id_tipo_anexo_soporte}/`,
+        estado
+      );
+
+      dispatch(get_tipos_soporte());
+
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón estados');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+export const delete_tipo_soporte = (estado: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `gestor/notificaciones/delete-tipos-anexos-notificaciones/${estado.id_tipo_anexo_soporte}/`
+      );
+      console.log(data);
+
+      dispatch(get_tipos_soporte());
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error('No se encontrarón estados');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener tipos pqr
 // export const get_pqr_types_service = (): any => {
 //   return async (dispatch: Dispatch<any>) => {
 //     try {

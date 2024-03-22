@@ -1,4 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type {
+  INotificaciones,
+  IObjListType,
+  IObjNotificacionCause,
+  IObjNotificacionStatus,
+  IObjNotificacionType,
+  IObjNotificationPerRequest,
+  IObjNotificationRequest,
+  IObjSupportType,
+} from '../../interfaces/notificaciones';
 
 // import { type Persona } from '../../../../../interfaces/globalModels';
 
@@ -15,11 +25,11 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 //   },
 // ];
 
-// export const initial_state_list: IObjListType = {
-//   id: null,
-//   key: null,
-//   label: '',
-// };
+export const initial_state_list: IObjListType = {
+  id: null,
+  key: null,
+  label: '',
+};
 
 // export const on_behalf_of: IObjListType[] = [
 //   {
@@ -235,390 +245,415 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 //   anexos:[],
 // }
 
-// const initial_state: IPqrsdf = {
-//   file_fisico: null,
-//   list_applicant_types: [],
-//   type_applicant: initial_state_list,
-//   list_on_behalf_of: [],
-//   on_behalf_of: initial_state_list,
-//   persons: [],
-//   person: initial_state_person,
-//   companies: [],
-//   company: initial_state_company,
-//   grantors: [],
-//   grantor: initial_state_person,
-//   attorneys: [],
-//   attorney: initial_state_person,
-//   list_pqr_status: [],
-//   pqr_status: initial_state_list,
-//   pqrs: [],
-//   pqr: initial_state_pqr,
-//   pqr_request: initial_state_pqr_request,
-//   person_types: [],
-//   person_type: { id: null, key: null, label: null },
-//   document_types: [],
-//   document_type: {
-//     cod_tipo_documento: null,
-//     nombre: null,
-//   },
+const initial_state: INotificaciones = {
+  list_document_types: [],
+  document_type: initial_state_list,
+  list_status: [],
+  status_notification: initial_state_list,
+  list_groups: [],
+  group: initial_state_list,
 
-//   pqr_types: [],
-//   pqr_type: initial_state_list,
-//   presentation_types: [],
-//   presentation_type: initial_state_list,
-//   media_types: [],
-//   media_type: initial_state_list,
-//   destination_offices: [],
-//   destination_office: initial_state_list,
-//   storage_mediums: [],
-//   exhibits: [],
-//   exhibit: initial_state_exhibit,
-//   file_categories: [],
-//   file_category: initial_state_list,
-//   file_origins: [],
-//   file_origin: initial_state_list,
-//   file_typologies: [],
-//   file_typology: initial_state_list,
-//   metadata: initial_state_metadata,
-//   areas: [],
-//   area: initial_state_list,
-//   municipalities: [],
-//   municipality: initial_state_list,
-//   departments: [],
-//   department: initial_state_list,
-//   resources: [
-//     { id: 1, key: 'Su', label: 'Suelo' },
-//     { id: 2, key: 'Ag', label: 'Agua' },
-//     { id: 3, key: 'Fs', label: 'Fauna silvestre' },
-//     { id: 4, key: 'Ai', label: 'Aire' },
-//     { id: 5, key: 'Fl', label: 'Flora' },
-//     { id: 6, key: 'Ot', label: 'Otro' },
-//   ],
-//   resource: [],
+  notification_requests: [],
+  notification_request: null,
+  notifications_per_request: [],
+  notification_per_request: null,
+  search_notification_request: null,
 
-//   filings: [],
-//   filed: initial_state_filed,
-//   filed_types: [],
-//   filed_type: initial_state_list,
-//   denuncia: initial_state_denuncia,
-//   otros: [],
-//   otro: initial_state_otro,
-// };
+  tipos_notificacion: [],
+  tipo_notificacion: null,
+  causas_notificacion: [],
+  causa_notificacion: null,
+  estados_notificacion: [],
+  estado_notificacion: null,
+  tipos_soporte: [],
+  tipo_soporte: null,
 
-// export const pqrsdf_slice = createSlice({
-//   name: 'pqrsdf_slice',
-//   initialState: initial_state,
-//   reducers: {
-//     reset_state: () => initial_state,
-//     set_list_applicant_types: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.list_applicant_types = action.payload;
-//     },
-//     set_file_fisico: (state: IPqrsdf, action: PayloadAction<any>) => {
-//       state.file_fisico = action.payload;
-//     },
-//     set_type_applicant: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType>
-//     ) => {
-//       state.type_applicant = action.payload;
-//     },
+  //   file_fisico: null,
+  //   list_applicant_types: [],
+  //   type_applicant: initial_state_list,
+  //   list_on_behalf_of: [],
+  //   on_behalf_of: initial_state_list,
+  //   persons: [],
+  //   person: initial_state_person,
+  //   companies: [],
+  //   company: initial_state_company,
+  //   grantors: [],
+  //   grantor: initial_state_person,
+  //   attorneys: [],
+  //   attorney: initial_state_person,
+  //   list_pqr_status: [],
+  //   pqr_status: initial_state_list,
+  //   pqrs: [],
+  //   pqr: initial_state_pqr,
+  //   pqr_request: initial_state_pqr_request,
+  //   person_types: [],
+  //   person_type: { id: null, key: null, label: null },
+  //   document_types: [],
+  //   document_type: {
+  //     cod_tipo_documento: null,
+  //     nombre: null,
+  //   },
 
-//     set_list_on_behalf_of: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.list_on_behalf_of = action.payload;
-//     },
-//     set_on_behalf_of: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.on_behalf_of = action.payload;
-//     },
+  //   pqr_types: [],
+  //   pqr_type: initial_state_list,
+  //   presentation_types: [],
+  //   presentation_type: initial_state_list,
+  //   media_types: [],
+  //   media_type: initial_state_list,
+  //   destination_offices: [],
+  //   destination_office: initial_state_list,
+  //   storage_mediums: [],
+  //   exhibits: [],
+  //   exhibit: initial_state_exhibit,
+  //   file_categories: [],
+  //   file_category: initial_state_list,
+  //   file_origins: [],
+  //   file_origin: initial_state_list,
+  //   file_typologies: [],
+  //   file_typology: initial_state_list,
+  //   metadata: initial_state_metadata,
+  //   areas: [],
+  //   area: initial_state_list,
+  //   municipalities: [],
+  //   municipality: initial_state_list,
+  //   departments: [],
+  //   department: initial_state_list,
+  //   resources: [
+  //     { id: 1, key: 'Su', label: 'Suelo' },
+  //     { id: 2, key: 'Ag', label: 'Agua' },
+  //     { id: 3, key: 'Fs', label: 'Fauna silvestre' },
+  //     { id: 4, key: 'Ai', label: 'Aire' },
+  //     { id: 5, key: 'Fl', label: 'Flora' },
+  //     { id: 6, key: 'Ot', label: 'Otro' },
+  //   ],
+  //   resource: [],
 
-//     set_persons: (state: IPqrsdf, action: PayloadAction<IObjPerson[]>) => {
-//       state.persons = action.payload;
-//     },
-//     set_person: (state: IPqrsdf, action: PayloadAction<IObjPerson>) => {
-//       state.person = action.payload;
-//     },
+  //   filings: [],
+  //   filed: initial_state_filed,
+  //   filed_types: [],
+  //   filed_type: initial_state_list,
+  //   denuncia: initial_state_denuncia,
+  //   otros: [],
+  //   otro: initial_state_otro,
+};
 
-//     set_companies: (state: IPqrsdf, action: PayloadAction<IObjCompany[]>) => {
-//       state.companies = action.payload;
-//     },
-//     set_company: (state: IPqrsdf, action: PayloadAction<IObjCompany>) => {
-//       state.company = action.payload;
-//     },
+export const notificaciones_slice = createSlice({
+  name: 'notificaciones_slice',
+  initialState: initial_state,
+  reducers: {
+    reset_state: () => initial_state,
+    set_list_document_types: (
+      state: INotificaciones,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.list_document_types = action.payload;
+    },
+    set_list_status: (
+      state: INotificaciones,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.list_status = action.payload;
+    },
 
-//     set_grantors: (state: IPqrsdf, action: PayloadAction<IObjPerson[]>) => {
-//       state.grantors = action.payload;
-//     },
-//     set_grantor: (state: IPqrsdf, action: PayloadAction<IObjPerson>) => {
-//       state.grantor = action.payload;
-//     },
+    set_list_groups: (
+      state: INotificaciones,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.list_groups = action.payload;
+    },
+    set_notification_requests: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificationRequest[]>
+    ) => {
+      state.notification_requests = action.payload;
+    },
+    set_notification_request: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificationRequest>
+    ) => {
+      state.notification_request = action.payload;
+    },
+    set_notifications_per_request: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificationPerRequest[]>
+    ) => {
+      state.notifications_per_request = action.payload;
+    },
+    set_notification_per_request: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificationPerRequest>
+    ) => {
+      state.notification_per_request = action.payload;
+    },
+    set_tipos_notificacion: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificacionType[]>
+    ) => {
+      state.tipos_notificacion = action.payload;
+    },
+    set_tipo_notificacion: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificacionType>
+    ) => {
+      state.tipo_notificacion = action.payload;
+    },
+    set_causas_notificacion: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificacionCause[]>
+    ) => {
+      state.causas_notificacion = action.payload;
+    },
+    set_causa_notificacion: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificacionCause>
+    ) => {
+      state.causa_notificacion = action.payload;
+    },
+    set_estados_notificacion: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificacionStatus[]>
+    ) => {
+      state.estados_notificacion = action.payload;
+    },
+    set_estado_notificacion: (
+      state: INotificaciones,
+      action: PayloadAction<IObjNotificacionStatus>
+    ) => {
+      state.estado_notificacion = action.payload;
+    },
+    set_tipos_soporte: (
+      state: INotificaciones,
+      action: PayloadAction<IObjSupportType[]>
+    ) => {
+      state.tipos_soporte = action.payload;
+    },
+    set_tipo_soporte: (
+      state: INotificaciones,
+      action: PayloadAction<IObjSupportType>
+    ) => {
+      state.tipo_soporte = action.payload;
+    },
+    //     set_document_type: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjDocumentType>
+    //     ) => {
+    //       state.document_type = action.payload;
+    //     },
 
-//     set_attorneys: (state: IPqrsdf, action: PayloadAction<IObjPerson[]>) => {
-//       state.attorneys = action.payload;
-//     },
-//     set_attorney: (state: IPqrsdf, action: PayloadAction<IObjPerson>) => {
-//       state.attorney = action.payload;
-//     },
+    //     set_pqr_types: (state: INotificaciones, action: PayloadAction<IObjListType[]>) => {
+    //       state.pqr_types = action.payload;
+    //     },
+    //     set_pqr_type: (state: INotificaciones, action: PayloadAction<IObjListType>) => {
+    //       state.pqr_type = action.payload;
+    //     },
 
-//     set_list_pqr_status: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.list_pqr_status = action.payload;
-//     },
-//     set_pqr_status: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.pqr_status = action.payload;
-//     },
+    //     set_presentation_types: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.presentation_types = action.payload;
+    //     },
+    //     set_presentation_type: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType>
+    //     ) => {
+    //       state.presentation_type = action.payload;
+    //     },
 
-//     set_pqrs: (state: IPqrsdf, action: PayloadAction<IObjPqr[]>) => {
-//       state.pqrs = action.payload;
-//     },
-//     set_pqr: (state: IPqrsdf, action: PayloadAction<IObjPqr>) => {
-//       state.pqr = action.payload;
-//     },
-//     set_pqr_request: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjPqrRequest>
-//     ) => {
-//       state.pqr_request = action.payload;
-//     },
+    //     set_media_types: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.media_types = action.payload;
+    //     },
+    //     set_media_type: (state: INotificaciones, action: PayloadAction<IObjListType>) => {
+    //       state.media_type = action.payload;
+    //     },
 
-//     set_person_types: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.person_types = action.payload;
-//     },
-//     set_person_type: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.person_type = action.payload;
-//     },
+    //     set_destination_offices: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.destination_offices = action.payload;
+    //     },
+    //     set_destination_office: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType>
+    //     ) => {
+    //       state.destination_office = action.payload;
+    //     },
 
-//     set_document_types: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjDocumentType[]>
-//     ) => {
-//       state.document_types = action.payload;
-//     },
-//     set_document_type: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjDocumentType>
-//     ) => {
-//       state.document_type = action.payload;
-//     },
+    //     set_storage_mediums: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.storage_mediums = action.payload;
+    //     },
+    //     set_exhibits: (state: INotificaciones, action: PayloadAction<IObjExhibit[]>) => {
+    //       state.exhibits = action.payload;
+    //     },
+    //     set_exhibit: (state: INotificaciones, action: PayloadAction<IObjExhibit>) => {
+    //       state.exhibit = action.payload;
+    //     },
 
-//     set_pqr_types: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
-//       state.pqr_types = action.payload;
-//     },
-//     set_pqr_type: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.pqr_type = action.payload;
-//     },
+    //     set_file_categories: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.file_categories = action.payload;
+    //     },
+    //     set_file_category: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType>
+    //     ) => {
+    //       state.file_category = action.payload;
+    //     },
 
-//     set_presentation_types: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.presentation_types = action.payload;
-//     },
-//     set_presentation_type: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType>
-//     ) => {
-//       state.presentation_type = action.payload;
-//     },
+    //     set_file_origins: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.file_origins = action.payload;
+    //     },
+    //     set_file_origin: (state: INotificaciones, action: PayloadAction<IObjListType>) => {
+    //       state.file_origin = action.payload;
+    //     },
 
-//     set_media_types: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.media_types = action.payload;
-//     },
-//     set_media_type: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.media_type = action.payload;
-//     },
+    //     set_file_typologies: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.file_typologies = action.payload;
+    //     },
+    //     set_file_typology: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType>
+    //     ) => {
+    //       state.file_typology = action.payload;
+    //     },
 
-//     set_destination_offices: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.destination_offices = action.payload;
-//     },
-//     set_destination_office: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType>
-//     ) => {
-//       state.destination_office = action.payload;
-//     },
+    //     set_metadata: (state: INotificaciones, action: PayloadAction<IObjMetaData>) => {
+    //       state.metadata = action.payload;
+    //     },
 
-//     set_storage_mediums: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.storage_mediums = action.payload;
-//     },
-//     set_exhibits: (state: IPqrsdf, action: PayloadAction<IObjExhibit[]>) => {
-//       state.exhibits = action.payload;
-//     },
-//     set_exhibit: (state: IPqrsdf, action: PayloadAction<IObjExhibit>) => {
-//       state.exhibit = action.payload;
-//     },
+    //     set_filings: (state: INotificaciones, action: PayloadAction<IObjFiled[]>) => {
+    //       state.filings = action.payload;
+    //     },
+    //     set_filed: (state: INotificaciones, action: PayloadAction<IObjFiled>) => {
+    //       state.filed = action.payload;
+    //     },
 
-//     set_file_categories: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.file_categories = action.payload;
-//     },
-//     set_file_category: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType>
-//     ) => {
-//       state.file_category = action.payload;
-//     },
+    //     set_filed_types: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.filed_types = action.payload;
+    //     },
+    //     set_filed_type: (state: INotificaciones, action: PayloadAction<IObjListType>) => {
+    //       state.filed_type = action.payload;
+    //     },
 
-//     set_file_origins: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.file_origins = action.payload;
-//     },
-//     set_file_origin: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.file_origin = action.payload;
-//     },
+    //     set_denuncia: (state: INotificaciones, action: PayloadAction<IObjPqrDenuncia>) => {
+    //       state.denuncia = action.payload;
+    //     },
 
-//     set_file_typologies: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.file_typologies = action.payload;
-//     },
-//     set_file_typology: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType>
-//     ) => {
-//       state.file_typology = action.payload;
-//     },
+    //     set_areas: (state: INotificaciones, action: PayloadAction<IObjListType[]>) => {
+    //       state.areas = action.payload;
+    //     },
+    //     set_area: (state: INotificaciones, action: PayloadAction<IObjListType>) => {
+    //       state.area = action.payload;
+    //     },
 
-//     set_metadata: (state: IPqrsdf, action: PayloadAction<IObjMetaData>) => {
-//       state.metadata = action.payload;
-//     },
+    //     set_municipalities: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.municipalities = action.payload;
+    //     },
+    //     set_municipality: (state: INotificaciones, action: PayloadAction<IObjListType>) => {
+    //       state.municipality = action.payload;
+    //     },
 
-//     set_filings: (state: IPqrsdf, action: PayloadAction<IObjFiled[]>) => {
-//       state.filings = action.payload;
-//     },
-//     set_filed: (state: IPqrsdf, action: PayloadAction<IObjFiled>) => {
-//       state.filed = action.payload;
-//     },
+    //     set_departments: (
+    //       state: INotificaciones,
+    //       action: PayloadAction<IObjListType[]>
+    //     ) => {
+    //       state.departments = action.payload;
+    //     },
+    //     set_department: (state: INotificaciones, action: PayloadAction<IObjListType>) => {
+    //       state.department = action.payload;
+    //     },
 
-//     set_filed_types: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.filed_types = action.payload;
-//     },
-//     set_filed_type: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.filed_type = action.payload;
-//     },
-
-//     set_denuncia: (state: IPqrsdf, action: PayloadAction<IObjPqrDenuncia>) => {
-//       state.denuncia = action.payload;
-//     },
-
-//     set_areas: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
-//       state.areas = action.payload;
-//     },
-//     set_area: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.area = action.payload;
-//     },
-
-//     set_municipalities: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.municipalities = action.payload;
-//     },
-//     set_municipality: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.municipality = action.payload;
-//     },
-
-//     set_departments: (
-//       state: IPqrsdf,
-//       action: PayloadAction<IObjListType[]>
-//     ) => {
-//       state.departments = action.payload;
-//     },
-//     set_department: (state: IPqrsdf, action: PayloadAction<IObjListType>) => {
-//       state.department = action.payload;
-//     },
-
-//     set_resources: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
-//       state.resources = action.payload;
-//     },
-//     set_resource: (state: IPqrsdf, action: PayloadAction<IObjListType[]>) => {
-//       state.resource = action.payload;
-//     },
-//     set_others: (state: IPqrsdf, action: PayloadAction<IObjOtros[]>) => {
-//       state.otros = action.payload;
-//     },
-//   },
-// });
-// export const {
-//   set_file_fisico,
-//   set_area,
-//   set_areas,
-//   set_department,
-//   set_departments,
-//   set_municipalities,
-//   set_municipality,
-//   set_resource,
-//   set_resources,
-//   set_denuncia,
-//   set_list_applicant_types,
-//   set_type_applicant,
-//   set_list_on_behalf_of,
-//   set_on_behalf_of,
-//   set_persons,
-//   set_person,
-//   set_companies,
-//   set_company,
-//   set_grantors,
-//   set_grantor,
-//   set_attorneys,
-//   set_attorney,
-//   set_list_pqr_status,
-//   set_pqr_status,
-//   set_pqrs,
-//   set_pqr,
-//   set_pqr_request,
-//   set_person_types,
-//   set_person_type,
-//   set_document_types,
-//   set_document_type,
-//   set_pqr_types,
-//   set_pqr_type,
-//   set_presentation_types,
-//   set_presentation_type,
-//   set_media_types,
-//   set_media_type,
-//   set_destination_offices,
-//   set_destination_office,
-//   set_storage_mediums,
-//   set_exhibits,
-//   set_exhibit,
-//   set_file_categories,
-//   set_file_category,
-//   set_file_origins,
-//   set_file_origin,
-//   set_file_typologies,
-//   set_file_typology,
-//   set_metadata,
-//   reset_state,
-//   set_filed,
-//   set_filed_type,
-//   set_filed_types,
-//   set_filings,
-//   set_others,
-// } = pqrsdf_slice.actions;
+    //     set_resources: (state: INotificaciones, action: PayloadAction<IObjListType[]>) => {
+    //       state.resources = action.payload;
+    //     },
+    //     set_resource: (state: INotificaciones, action: PayloadAction<IObjListType[]>) => {
+    //       state.resource = action.payload;
+    //     },
+    //     set_others: (state: INotificaciones, action: PayloadAction<IObjOtros[]>) => {
+    //       state.otros = action.payload;
+    //     },
+  },
+});
+export const {
+  set_notification_requests,
+  set_notification_request,
+  set_notifications_per_request,
+  set_notification_per_request,
+  set_list_document_types,
+  set_list_status,
+  set_list_groups,
+  set_tipo_notificacion,
+  set_tipos_notificacion,
+  set_causa_notificacion,
+  set_causas_notificacion,
+  set_estados_notificacion,
+  set_estado_notificacion,
+  set_tipo_soporte,
+  set_tipos_soporte,
+  reset_state,
+  //   set_type_applicant,
+  //   set_list_on_behalf_of,
+  //   set_on_behalf_of,
+  //   set_persons,
+  //   set_person,
+  //   set_companies,
+  //   set_company,
+  //   set_grantors,
+  //   set_grantor,
+  //   set_attorneys,
+  //   set_attorney,
+  //   set_list_pqr_status,
+  //   set_pqr_status,
+  //   set_pqrs,
+  //   set_pqr,
+  //   set_pqr_request,
+  //   set_person_types,
+  //   set_person_type,
+  //   set_document_types,
+  //   set_document_type,
+  //   set_pqr_types,
+  //   set_pqr_type,
+  //   set_presentation_types,
+  //   set_presentation_type,
+  //   set_media_types,
+  //   set_media_type,
+  //   set_destination_offices,
+  //   set_destination_office,
+  //   set_storage_mediums,
+  //   set_exhibits,
+  //   set_exhibit,
+  //   set_file_categories,
+  //   set_file_category,
+  //   set_file_origins,
+  //   set_file_origin,
+  //   set_file_typologies,
+  //   set_file_typology,
+  //   set_metadata,
+  //   reset_state,
+  //   set_filed,
+  //   set_filed_type,
+  //   set_filed_types,
+  //   set_filings,
+  //   set_others,
+} = notificaciones_slice.actions;

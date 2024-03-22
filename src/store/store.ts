@@ -70,6 +70,7 @@ import { RequerimientoUsarioSlice } from '../commons/gestorDocumental/bandejaDeT
 import { ResSolicitudUsarioSlice } from '../commons/gestorDocumental/PQRSDF/componentes/respuestaSolicitudUsuario/toolkit/slice/ResSolicitudUsarioSlice';
 import { RequerimientoUsarioOpasSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/OPAS/requerimientosUsuarioOpas/toolkit/slice/RequerimientoUsarioOpasSlice';
 import { ReportesGeneralesGestorSlice } from '../commons/gestorDocumental/ReportesGeneralesGestorDocumental/toolkit/ReportesGeneralesGestorSlice';
+import { notificaciones_slice } from '../commons/Transversales/modules/notificaciones/store/slice/notificacionesSlice';
 
 
 const persist_config = {
@@ -179,6 +180,7 @@ const app_reducers = combineReducers({
   RequerimientoUsarioOpasSlice: RequerimientoUsarioOpasSlice.reducer,
   // ? reportes generales gestor slice
   ReportesGeneralesGestorSlice: ReportesGeneralesGestorSlice.reducer,
+  notificaciones_slice: notificaciones_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

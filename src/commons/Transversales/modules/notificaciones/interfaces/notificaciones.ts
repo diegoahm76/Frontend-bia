@@ -1,68 +1,212 @@
 import { type Persona } from '../../../../../interfaces/globalModels';
 
-export interface IPqrsdf {
+export interface INotificaciones {
   // Solicitud PQRSDF
-  list_applicant_types: IObjListType[];
-  type_applicant: IObjListType;
-  list_on_behalf_of: IObjListType[];
-  on_behalf_of: IObjListType;
-  persons: IObjPerson[];
-  person: IObjPerson;
-  companies: IObjCompany[];
-  company: IObjCompany;
-  grantors: IObjPerson[];
-  grantor: IObjPerson;
-  attorneys: IObjPerson[];
-  attorney: IObjPerson;
-  list_pqr_status: IObjListType[];
-  pqr_status: IObjListType;
-  pqrs: IObjPqr[];
-  pqr: IObjPqr;
-  pqr_request: IObjPqrRequest;
-  person_types: IObjListType[];
-  person_type: IObjListType;
-  document_types: IObjDocumentType[];
-  document_type: IObjDocumentType;
-  otros: IObjOtros[];
-  otro:IObjOtros;
+  list_document_types: IObjListType[];
+  document_type: IObjListType;
+  list_status: IObjListType[];
+  status_notification: IObjListType;
+  list_groups: IObjListType[];
+  group: IObjListType;
+ // persons: IObjPerson[];
+  //person: IObjPerson;
+  notification_requests: IObjNotificationRequest[];
+  notification_request: IObjNotificationRequest | null;
+  notifications_per_request: IObjNotificationPerRequest[];
+  notification_per_request: IObjNotificationPerRequest | null;
+  search_notification_request: IObjSearchNotificationRequest | null;
 
-  // Crear PQRSDF
-  pqr_types: IObjListType[];
-  pqr_type: IObjListType;
-  presentation_types: IObjListType[];
-  presentation_type: IObjListType;
-  media_types: IObjListType[];
-  media_type: IObjListType;
-  destination_offices: IObjListType[];
-  destination_office: IObjListType;
-  exhibits: IObjExhibit[];
-  exhibit: IObjExhibit;
-  storage_mediums: IObjListType[];
-  file_categories: IObjListType[];
-  file_category: IObjListType;
-  file_origins: IObjListType[];
-  file_origin: IObjListType;
-  file_typologies: IObjListType[];
-  file_typology: IObjListType;
-  metadata: IObjMetaData;
-  denuncia: IObjPqrDenuncia | null;
-  areas: IObjListType[];
-  area: IObjListType;
-  municipalities: IObjListType[];
-  municipality: IObjListType;
-  departments: IObjListType[];
-  department: IObjListType;
-  resources: IObjListType[];
-  resource: IObjListType[];
-  file_fisico: any | null;
+  tipos_notificacion: IObjNotificacionType[] |  null;
+  tipo_notificacion: IObjNotificacionType|  null;
+  causas_notificacion: IObjNotificacionCause[]|  null;
+  causa_notificacion: IObjNotificacionCause|  null;
+  estados_notificacion: IObjNotificacionStatus[]|  null;
+  estado_notificacion: IObjNotificacionStatus|  null;
+  tipos_soporte: IObjSupportType[]|  null;
+  tipo_soporte: IObjSupportType|  null;
+
+  // grantors: IObjPerson[];
+  // grantor: IObjPerson;
+  // attorneys: IObjPerson[];
+  // attorney: IObjPerson;
+  // list_pqr_status: IObjListType[];
+  // pqr_status: IObjListType;
+  // pqrs: IObjPqr[];
+  // pqr: IObjPqr;
+  // pqr_request: IObjPqrRequest;
+  // person_types: IObjListType[];
+  // person_type: IObjListType;
+  // otros: IObjOtros[];
+  // otro:IObjOtros;
+
+  // // Crear PQRSDF
+  // pqr_types: IObjListType[];
+  // pqr_type: IObjListType;
+  // presentation_types: IObjListType[];
+  // presentation_type: IObjListType;
+  // media_types: IObjListType[];
+  // media_type: IObjListType;
+  // destination_offices: IObjListType[];
+  // destination_office: IObjListType;
+  // exhibits: IObjExhibit[];
+  // exhibit: IObjExhibit;
+  // storage_mediums: IObjListType[];
+  // file_categories: IObjListType[];
+  // file_category: IObjListType;
+  // file_origins: IObjListType[];
+  // file_origin: IObjListType;
+  // file_typologies: IObjListType[];
+  // file_typology: IObjListType;
+  // metadata: IObjMetaData;
+  // denuncia: IObjPqrDenuncia | null;
+  // areas: IObjListType[];
+  // area: IObjListType;
+  // municipalities: IObjListType[];
+  // municipality: IObjListType;
+  // departments: IObjListType[];
+  // department: IObjListType;
+  // resources: IObjListType[];
+  // resource: IObjListType[];
+  // file_fisico: any | null;
 
 
-  //Radicados pqr
-  filings: IObjFiled[];
-  filed: IObjFiled;
-  filed_types: IObjListType[];
-  filed_type: IObjListType;
+  // //Radicados pqr
+  // filings: IObjFiled[];
+  // filed: IObjFiled;
+  // filed_types: IObjListType[];
+  // filed_type: IObjListType;
 
+}
+
+export interface IObjNotificacionType{
+  id_tipo_notificacion_correspondencia?: string | number | null;
+  nombre?: string | null;
+  aplica_para_notificaciones?: boolean | null;
+  aplica_para_correspondencia?: boolean | null;
+  tiempo_en_dias?: number | null;
+  habiles_o_calendario?: string | null;
+  registro_precargado?: boolean | null;
+  activo?: boolean | null;
+  item_ya_usado?: boolean | null;
+  aplica_para?: string[] | null;
+}
+
+export interface IObjNotificacionCause{
+  id_causa_o_anomalia?: string | number | null;
+  nombre?: string | null;
+  id_tipo_notificacion_correspondencia?: number | null;
+  registro_precargado?: boolean | null;
+  activo?: boolean | null;
+  item_ya_usado?: boolean | null;
+}
+export interface IObjNotificacionStatus{
+  id_estado_notificacion_correspondencia?: string | number | null;
+  nombre?: string | null;
+  id_tipo_notificacion_correspondencia?: number | null;
+  cod_tipo_notificacion_correspondencia?: number | null;
+  registro_precargado?: boolean | null;
+  activo?: boolean | null;
+  item_ya_usado?: boolean | null;
+}
+export interface IObjSupportType{
+  id_tipo_anexo_soporte?: string | number | null;
+  nombre?: string | null;
+  id_tipo_notificacion_correspondencia?: number | null;
+  registro_precargado?: boolean | null;
+  activo?: boolean | null;
+  item_ya_usado?: boolean | null;
+}
+export interface IObjSearchNotificationRequest{
+  tipo_documento?: string | number | null;
+  radicado?: string | number | null;
+  expediente?: string | number | null;
+  grupo_solicitante?: string | number | null;
+  estado?: string | number | null;
+}
+
+export interface IObjNotificationPerRequest{
+  id_registro_notificacion_correspondencia?: number | null;
+  fecha_registro?: string | Date | null;
+  cod_relacion_con_titular?: string | null;
+  persona_a_quien_se_dirige?: string | null;
+  numero_identificacion?: string | null;
+  dir_notificacion_nal?: string | null;
+  tel_celular?: string | null;
+  tel_fijo?: string | null;
+  email_notificacion?: string | null;
+  asunto?: string | null;
+  descripcion?: string | null;
+  fecha_asignacion?: string | null;
+  cod_estado_asignacion?: string | null;
+  fecha_eleccion_estado?: string | null;
+  cantidad_anexos?: string | null;
+  nro_folios_totales?: string | null;
+  requiere_digitalizacion?: boolean | null;
+  fecha_envio_definitivo_a_digitalizacion?: string | null;
+  fecha_digitalizacion_completada?: string | null;
+  ya_digitizado?: boolean | null;
+  fecha_radicado_salida?: string | Date | null;
+  fecha_inicial_registro?: string | Date | null;
+  fecha_final_registro?: string | Date | null;
+  id_notificacion_correspondencia?: number | null;
+  id_tipo_notificacion_correspondencia?: number | null;
+  id_persona_titular?: number | null;
+  id_persona_interpone?: number | null;
+  cod_tipo_documentoID?: string | null;
+  cod_municipio_notificacion_nal?: string | null;
+  id_persona_asignada?: number | null;
+  id_persona_asigna?: number | null;
+  id_radicado_salida?: number | null;
+  id_persona_finaliza_registro?: number | null;
+  id_estado_actual_registro?: number | null;
+  id_doc_de_arch_exp?: number | null;
+}
+
+export interface IObjNotificationRequest{
+  id_notificacion_correspondencia?: number | null;
+  cod_tipo_documento?: string | null;
+  registros_notificaciones?: IObjNotificationPerRequest[] | null;
+  expediente?: string | null;
+  funcuinario_solicitante?: string | null;
+  unidad_solicitante?: string | null;
+  cod_tipo_solicitud?: string | null;
+  procede_recurso_reposicion?: boolean | null;
+  es_anonima?: boolean | null;
+  permite_notificacion_email?: boolean | null;
+  cod_relacion_con_titular?: string | null;
+  persona_a_quien_se_dirige?: string | null;
+  nro_documentoID?: string | null;
+  dir_notificacion_nal?: string | null;
+  tel_celular?: string | null;
+  tel_fijo?: string | null;
+  email_notificacion?: string | null;
+  asunto?: string | null;
+  descripcion?: string | null;
+  cod_medio_solicitud?: string | null;
+  fecha_solicitud?: string | Date | null;
+  allega_copia_fisica?: boolean | null;
+  cantidad_anexos?: number | null;
+  nro_folios_totales?: number | null;
+  requiere_digitalizacion?: boolean | null;
+  fecha_envio_definitivo_a_digitalizacion?: string | number | null;
+  fecha_digitalizacion_completada?: string | number | null;
+  ya_digitizado?: boolean | null;
+  fecha_rta_final_gestion?: string | number | null;
+  solicitud_aceptada_rechazada?: string | number | null;
+  fecha_devolucion?: string | number | null;
+  cod_estado?: string | number | null;
+  id_expediente_documental?: string | number | null;
+  id_solicitud_tramite?: string | number | null;
+  id_acto_administrativo?: string | number | null;
+  id_persona_titular?: string | number | null;
+  id_persona_interpone?: string | number | null;
+  cod_tipo_documentoID?: string | number | null;
+  cod_municipio_notificacion_nal?: string | number | null;
+  id_persona_solicita?: string | number | null;
+  id_und_org_oficina_solicita?: string | number | null;
+  id_persona_recibe_solicitud_manual?: string | number | null;
+  id_persona_rta_final_gestion?: string | number | null;
+  id_doc_de_arch_exp?: string | number | null;
 }
 
 export interface IObjListType {

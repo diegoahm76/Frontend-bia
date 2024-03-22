@@ -19,6 +19,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import React from 'react';
 import { type GridColDef } from '@mui/x-data-grid';
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
+import {
+  get_document_types_service,
+  get_groups_list_service,
+  get_solicitudes_notificacion,
+  get_status_list_service,
+} from '../store/thunks/notificacionesThunks';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -38,127 +44,125 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
-      field: 'cod_tipo_PQRSDF',
+      field: 'cod_tipo_documento',
       header: 'Tipo de documento',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.cod_tipo_PQRSDF}
+          {rowData.cod_tipo_documento}
         </div>
       ),
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'fecha_registro',
+      field: 'asunto',
       header: 'Asunto',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(rowData.fecha_registro).toDateString()}
+          {rowData.asunto}
         </div>
       ),
       style: { width: 150 },
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'fecha_radicado',
+      field: 'expediente',
       header: 'Expediente',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.fecha_radicado === null
-            ? '-'
-            : new Date(rowData.fecha_radicado).toDateString()}
+          {rowData.expediente}
         </div>
       ),
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'numero_radicado_entrada',
+      field: 'unidad_solicitante',
       header: 'Grupo solicitante',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.unidad_solicitante}
         </div>
       ),
     },
 
     {
-      field: 'nombre_estado_solicitud',
+      field: 'funcuinario_solicitante',
       headerStyle: { width: '4rem' },
       header: 'Funcionario solicitante',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.funcuinario_solicitante}
         </div>
       ),
     },
 
     {
-      field: 'nombre_estado_solicitud',
+      field: 'fecha_solicitud',
       headerStyle: { width: '4rem' },
       header: 'Fecha de la solicitud',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {new Date(rowData.fecha_solicitud).toDateString()}
         </div>
       ),
     },
     {
-      field: 'nombre_estado_solicitud',
+      field: 'fecha_rta_final_gestion',
       headerStyle: { width: '4rem' },
       header: 'Fecha de finalizacion',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {new Date(rowData.fecha_rta_final_gestion).toDateString()}
         </div>
       ),
     },
+    // {
+    //   field: 'Dias Faltantes',
+    //   headerStyle: { width: '4rem' },
+    //   header: 'Fecha de la solicitud',
+    //   sortable: false,
+    //   body: (rowData) => (
+    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //       {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+    //     </div>
+    //   ),
+    // },
+    // {
+    //   field: 'nombre_estado_solicitud',
+    //   headerStyle: { width: '4rem' },
+    //   header: 'Aceptado',
+    //   sortable: false,
+    //   body: (rowData) => (
+    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //       {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+    //     </div>
+    //   ),
+    // },
     {
-      field: 'Dias Faltantes',
-      headerStyle: { width: '4rem' },
-      header: 'Fecha de la solicitud',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
-      headerStyle: { width: '4rem' },
-      header: 'Aceptado',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
+      field: 'cod_medio_solicitud',
       headerStyle: { width: '4rem' },
       header: 'Medio de solicitud',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.cod_medio_solicitud}
         </div>
       ),
     },
     {
-      field: 'nombre_estado_solicitud',
+      field: 'cod_estado',
       headerStyle: { width: '4rem' },
       header: 'Estado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.cod_estado}
         </div>
       ),
     },
@@ -169,7 +173,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
         <Tooltip title="Detalle">
           <IconButton
             onClick={() => {
-              set_detail_is_active(true);
+              //set_detail_is_active(true);
               setSelectedPqr(rowData);
             }}
           >
@@ -193,7 +197,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
   ];
   const columns_solicitud: ColumnProps[] = [
     {
-      field: 'nombre_tipo_oficio',
+      field: 'cod_tipo_documentoID',
       header: 'Tipo de gestión',
       sortable: false,
     },
@@ -279,20 +283,26 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
   ];
   const definition_levels = [
     {
-      column_id: 'id_PQRSDF',
+      column_id: 'id_notificacion_correspondencia',
       level: 0,
       columns: columns_pqrs,
       table_name: 'Solicitudes de notificación',
       property_name: '',
     },
     {
-      column_id: 'id_solicitud_al_usuario_sobre_pqrsdf',
+      column_id: 'id_registro_notificacion_correspondencia',
       level: 1,
       columns: columns_solicitud,
       table_name: 'Registro de notificación por solicitud',
-      property_name: 'solicitudes_pqr',
+      property_name: 'registros_notificaciones',
     },
   ];
+  const {
+    notification_requests,
+    list_document_types,
+    list_status,
+    list_groups,
+  } = useAppSelector((state) => state.notificaciones_slice);
 
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
@@ -305,51 +315,47 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     handleSubmit: handle_submit_notificacion,
     reset: reset_notificacion,
     watch,
+    getValues: get_values,
   } = useForm<any>();
-  const columns_personas: GridColDef[] = [
-    {
-      field: 'tipo_documento',
-      headerName: 'Tipo de documento',
-      width: 250,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'numero_documento',
-      headerName: 'Número de documento',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_completo',
-      headerName: 'Nombre completo',
-      width: 300,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
+  useEffect(() => {
+    dispatch(get_status_list_service());
+    dispatch(get_document_types_service());
+    dispatch(get_groups_list_service());
+  }, []);
 
-    {
-      field: 'tipo_persona',
-      headerName: 'Tipo de persona',
-      width: 250,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-  ];
-  useEffect(() => {}, []);
+  const get_solicitudes: any = async () => {
+    const tipo_documento = get_values('tipo_documento') ?? '';
+    const radicado = get_values('radicado') ?? '';
+    const expediente = get_values('expediente') ?? '';
+    const grupo_solicitante = get_values('grupo_solicitante') ?? '';
+    const estado = get_values('estado') ?? '';
+
+    const params: any = {};
+
+    if (tipo_documento !== '') {
+      params.tipo_documento = tipo_documento;
+    }
+
+    if (radicado !== '') {
+      params.radicado = radicado;
+    }
+
+    if (expediente !== '') {
+      params.expediente = expediente;
+    }
+
+    if (grupo_solicitante !== '') {
+      params.grupo_solicitante = grupo_solicitante;
+    }
+    if (estado !== '') {
+      params.estado = estado;
+    }
+
+    void dispatch(get_solicitudes_notificacion(params));
+  };
+  const get_x: any = (data: any) => {
+    //  console.log('')(data);
+  };
   return (
     <>
       <Grid
@@ -382,22 +388,22 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 control_form: control_notificacion,
                 control_name: 'tipo_documento',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
                 label: 'Tipo de documento',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
+                select_options: list_document_types,
+                option_label: 'label',
+                option_key: 'key',
               },
               {
                 datum_type: 'input_controller',
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'numero_documento',
+                control_name: 'radicado',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
                 label: 'Radicado',
                 type: 'number',
                 disabled: false,
@@ -408,9 +414,9 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'nombre_completo',
+                control_name: 'expediente',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
                 label: 'Expediente',
                 type: 'text',
                 disabled: false,
@@ -421,30 +427,30 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 3,
                 control_form: control_notificacion,
-                control_name: 'tipo_documento',
+                control_name: 'grupo_solicitante',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
                 label: 'Grupo solicitante',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
+                select_options: list_groups,
+                option_label: 'label',
+                option_key: 'key',
               },
               {
                 datum_type: 'select_controller',
                 xs: 12,
                 md: 3,
                 control_form: control_notificacion,
-                control_name: 'tipo_documento',
+                control_name: 'estado',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
                 label: 'Estado',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
-                option_label: 'nombre',
-                option_key: 'cod_tipo_documento',
+                select_options: list_status,
+                option_label: 'label',
+                option_key: 'key',
               },
 
               {
@@ -466,20 +472,20 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 type_button: 'button',
                 disabled: false,
                 variant_button: 'contained',
-                on_click_function: null,
+                on_click_function: handle_submit_notificacion(get_solicitudes),
                 color_button: 'primary',
               },
             ]}
           />
 
           <TableRowExpansion
-            products={[]}
+            products={notification_requests}
             definition_levels={definition_levels}
             selectedItem={selectedPqr}
             setSelectedItem={setSelectedPqr}
             expandedRows={expandedRows}
             setExpandedRows={setExpandedRows}
-            onRowToggleFunction={null}
+            onRowToggleFunction={get_x}
           />
         </Grid>
       </Grid>
