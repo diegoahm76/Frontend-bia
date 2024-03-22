@@ -24,7 +24,7 @@ interface Props {
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-const TablaSolicitudesRealizadas: React.FC<Props> = ({
+const TablaSolicitudesEnProceso: React.FC<Props> = ({
   set_position_tab,
   set_accion,
   data_solicitudes_realizadas,
@@ -127,4 +127,4 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default TablaSolicitudesRealizadas;
+export default TablaSolicitudesEnProceso;

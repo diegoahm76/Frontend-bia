@@ -520,7 +520,7 @@ export const ElementoOPAS = (): JSX.Element => {
           ) ?? []
         }
         columns={columns ?? []}
-        title={`Listado de tareas asignadas en PQRSDF`}
+        title={`Listado de tareas asignadas en OPA`}
         aditionalElement={
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ? (
             <Button
@@ -531,11 +531,7 @@ export const ElementoOPAS = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea ({' '}
-              {
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
-              }
-              )
+              Quitar selección de Tarea OPA
             </Button>
           ) : null
         }
