@@ -9,7 +9,10 @@ import TablaSolicitudesRealizadas from '../tables/TablaSolicitudesRealizadas';
 import { interface_solicitudes_realizadas } from '../interfaces/types';
 
 interface props {
+  set_accion: React.Dispatch<React.SetStateAction<string>>;
+  set_position_tab: React.Dispatch<React.SetStateAction<string>>;
   estado: string;
+  set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
   set_estado: React.Dispatch<React.SetStateAction<string>>;
   fecha_inicio: Dayjs | null;
   set_fecha_inicio: React.Dispatch<React.SetStateAction<Dayjs | null>>;
@@ -23,7 +26,10 @@ interface props {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SolicitudesRealizadas: React.FC<props> = ({
+  set_accion,
+  set_position_tab,
   estado,
+  set_id_solicitud_activo,
   set_estado,
   fecha_inicio,
   set_fecha_inicio,
@@ -138,6 +144,9 @@ const SolicitudesRealizadas: React.FC<props> = ({
 
       <Grid container item xs={12}>
         <TablaSolicitudesRealizadas
+          set_position_tab={set_position_tab}
+          set_accion={set_accion}
+          set_id_solicitud_activo={set_id_solicitud_activo}
           data_solicitudes_realizadas={data_solicitudes_realizadas}
         />
       </Grid>

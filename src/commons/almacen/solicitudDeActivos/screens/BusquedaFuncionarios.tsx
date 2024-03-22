@@ -39,6 +39,14 @@ interface props {
   funcionario_responsable_seleccionado: interface_busqueda_responsable;
   set_funcionario_operario_seleccionado: React.Dispatch<React.SetStateAction<interface_busqueda_operario>>;
   funcionario_operario_seleccionado: interface_busqueda_operario;
+  tipo_documento_solicito: string;
+  set_tipo_documento_solicito: React.Dispatch<React.SetStateAction<string>>;
+  documento_solicito: string;
+  set_documento_solicito: React.Dispatch<React.SetStateAction<string>>;
+  nombres_solicito: string;
+  set_nombres_solicito: React.Dispatch<React.SetStateAction<string>>;
+  apellidos_solicito: string;
+  set_apellidos_solicito: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -70,6 +78,14 @@ const BusquedaFuncionarios: React.FC<props> = ({
   funcionario_responsable_seleccionado,
   set_funcionario_operario_seleccionado,
   funcionario_operario_seleccionado,
+  tipo_documento_solicito,
+  set_tipo_documento_solicito,
+  documento_solicito,
+  set_documento_solicito,
+  nombres_solicito,
+  set_nombres_solicito,
+  apellidos_solicito,
+  set_apellidos_solicito,
 }) => {
 
   const dispatch = useDispatch();
@@ -190,12 +206,103 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
       </Grid>
+
+      {accion === 'ver' &&
+        <Grid container spacing={2} item xs={12}>
+          <Grid item xs={12}>
+            <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
+              <Chip label="FUNCIONARIO QUIEN SOLICITÓ" size="small" />
+            </Divider>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <FormControl required size="small" fullWidth>
+              <InputLabel >Tipo documento de quien solicitó</InputLabel>
+              <Select
+                label='Tipo documento de quien solicitó'
+                value={tipo_documento_solicito}
+                disabled={accion === 'ver'}
+                onChange={(e) => set_tipo_documento_solicito(e.target.value)}
+              >
+                <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
+                <MenuItem value="RC" >Registro civil</MenuItem>
+                <MenuItem value="TI" >Tarjeta de identidad</MenuItem>
+                <MenuItem value="CE" >Cédula de extranjería</MenuItem>
+                <MenuItem value="PA" >Pasaporte</MenuItem>
+                <MenuItem value="PE" >Permiso especial de permanencia</MenuItem>
+                <MenuItem value="NT" >NIT</MenuItem>
+                <MenuItem value="NU" >NUIP</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <TextField
+              fullWidth
+              label='Documento de quien solicitó'
+              value={documento_solicito}
+              disabled={accion === 'ver'}
+              onChange={(e) => set_documento_solicito(e.target.value)}
+              size='small'
+            />
+          </Grid>
+          
+          {accion !== 'ver' && 
+            <>
+              <Grid item xs={12} lg={3}>
+                <Button
+                  fullWidth
+                  disabled={accion === 'ver'}
+                  color="primary"
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                >
+                  Buscar
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} lg={3}>
+                <Button
+                  fullWidth
+                  disabled={accion === 'ver'}
+                  color="primary"
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                >
+                  Búsqueda avanzada
+                </Button>
+              </Grid>
+            </>
+          }
+
+          <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
+            <TextField
+              fullWidth
+              disabled
+              label='Nombres de quien solicitó'
+              value={nombres_solicito}
+              onChange={(e) => set_nombres_solicito(e.target.value)}
+              size='small'
+            />
+          </Grid>
+
+          <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
+            <TextField
+              fullWidth
+              disabled
+              label='Apellidos de quien solicitó'
+              value={apellidos_solicito}
+              onChange={(e) => set_apellidos_solicito(e.target.value)}
+              size='small'
+            />
+          </Grid>
+        </Grid>
+      }
       
       <Grid container spacing={2} item xs={12}>
-
         <Grid item xs={12}>
           <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
-            <Chip label="BÚSQUEDA RESPONSABLE" size="small" />
+            <Chip label="FUNCIONARIO RESPONSABLE" size="small" />
           </Divider>
         </Grid>
 
@@ -231,31 +338,37 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={busqueda_responsable}
-          >
-            Buscar
-          </Button>
-        </Grid>
+        {accion !== 'ver' && 
+          <>
+            <Grid item xs={12} lg={3}>
+              <Button
+                fullWidth
+                disabled={accion === 'ver'}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={busqueda_responsable}
+              >
+                Buscar
+              </Button>
+            </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={()=>set_mostrar_busqueda_responsable(true)}
-          >
-            Búsqueda avanzada
-          </Button>
-        </Grid>
+            <Grid item xs={12} lg={3}>
+              <Button
+                fullWidth
+                disabled={accion === 'ver'}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={()=>set_mostrar_busqueda_responsable(true)}
+              >
+                Búsqueda avanzada
+              </Button>
+            </Grid>
+          </>
+        }
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
           <TextField
             fullWidth
             disabled
@@ -266,7 +379,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
           <TextField
             fullWidth
             disabled
@@ -280,10 +393,9 @@ const BusquedaFuncionarios: React.FC<props> = ({
 
 
       <Grid container spacing={2} item xs={12}>
-
         <Grid item xs={12}>
           <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
-            <Chip label="BÚSQUEDA OPERARIO" size="small" />
+            <Chip label="FUNCIONARIO OPERARIO" size="small" />
           </Divider>
         </Grid>
 
@@ -320,31 +432,37 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={busqueda_operario}
-          >
-            Buscar
-          </Button>
-        </Grid>
+        {accion !== 'ver' && 
+          <>
+            <Grid item xs={12} lg={3}>
+              <Button
+                fullWidth
+                disabled={accion === 'ver'}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={busqueda_operario}
+              >
+                Buscar
+              </Button>
+            </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={()=>set_mostrar_busqueda_operario(true)}
-          >
-            Búsqueda avanzada
-          </Button>
-        </Grid>
+            <Grid item xs={12} lg={3}>
+              <Button
+                fullWidth
+                disabled={accion === 'ver'}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={()=>set_mostrar_busqueda_operario(true)}
+              >
+                Búsqueda avanzada
+              </Button>
+            </Grid>
+          </>
+        }
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
           <TextField
             fullWidth
             disabled
@@ -355,7 +473,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
         
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
           <TextField
             fullWidth
             disabled

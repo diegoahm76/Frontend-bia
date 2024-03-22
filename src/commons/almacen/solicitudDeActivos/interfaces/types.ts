@@ -1,4 +1,4 @@
-export interface response_solicitudes_realizadas {
+export interface response_obtener_solicitudes_realizadas {
   success: boolean
   detail: string
   data: interface_solicitudes_realizadas[]
@@ -148,4 +148,82 @@ export interface interface_articulos_agregados {
   fecha_devolucion?: string
   tipo_unidad_medida?: string 
   observacion?: string
+}
+
+export interface response_unidades_medidas {
+  success: boolean
+  detail: string
+  data: interface_unidades_medidas[]
+}
+
+export interface interface_unidades_medidas {
+  id_unidad_medida: number
+  nombre: string
+  abreviatura: string
+  precargado: boolean
+  activo: boolean
+  item_ya_usado: boolean
+  id_magnitud: number
+}
+
+export interface response_solicitud_obtenida_por_id {
+  success: boolean
+  detail: string
+  data: interface_solicitud_obtenida_por_id
+}
+
+export interface interface_solicitud_obtenida_por_id {
+  id_solicitud_activo: number
+  primer_nombre_persona_solicita: string
+  primer_apellido_persona_solicita: string
+  tipo_documento_persona_solicita: string
+  numero_documento_persona_solicita: any
+  primer_nombre_funcionario_resp_unidad: string
+  primer_apellido_funcionario_resp_unidad: string
+  tipo_documento_funcionario_resp_unidad: string
+  numero_documento_funcionario_resp_unidad: string
+  primer_nombre_persona_operario: string
+  primer_apellido_persona_operario: string
+  tipo_documento_persona_operario: string
+  numero_documento_persona_operario: string
+  fecha_solicitud: string
+  motivo: string
+  observacion: string
+  estado_solicitud: string
+  solicitud_prestamo: boolean
+  fecha_devolucion: any
+  fecha_cierra_solicitud: any
+  revisada_responsable: boolean
+  estado_aprobacion_resp: string
+  justificacion_rechazo_resp: any
+  fecha_aprobacion_resp: any
+  gestionada_alma: boolean
+  obser_cierre_no_dispo_alma: any
+  fecha_cierre_no_dispo_alma: any
+  rechazada_almacen: boolean
+  fecha_rechazo_almacen: any
+  justificacion_rechazo_almacen: any
+  solicitud_anulada_solicitante: boolean
+  fecha_anulacion_solicitante: any
+  justificacion_anulacion: any
+  id_persona_solicita: number
+  id_uni_org_solicitante: number
+  id_funcionario_resp_unidad: number
+  id_uni_org_responsable: number
+  id_persona_operario: number
+  id_uni_org_operario: number
+  id_persona_cierra_no_dispo_alma: any
+  id_persona_alma_rechaza: any
+  items: interface_articulos_obtenidos_por_id[]
+}
+
+export interface interface_articulos_obtenidos_por_id {
+  id_item_solicitud_activo: number
+  cantidad: number
+  observacion: string
+  nro_posicion: number
+  id_solicitud_activo: number
+  id_bien: number
+  id_unidad_medida: number
+  nombre_unidad_medida: string
 }

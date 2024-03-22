@@ -16,19 +16,44 @@ interface CustomColumn extends GridColDef {
 }
 
 interface Props {
+  set_position_tab: React.Dispatch<React.SetStateAction<string>>;
+  set_accion: React.Dispatch<React.SetStateAction<string>>;
   data_solicitudes_realizadas: interface_solicitudes_realizadas[];
+  set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 const TablaSolicitudesRealizadas: React.FC<Props> = ({
+  set_position_tab,
+  set_accion,
   data_solicitudes_realizadas,
+  set_id_solicitud_activo,
 }) => {
   const dispatch = useAppDispatch();
 
 
+  const editar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
+    console.log('Editar solicitud', solicitud);
+    set_position_tab('2');
+    set_accion('ver');
+    set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null);
+  }
+
+
   const columns: CustomColumn[] = [
-    { field: 'estado_solicitud', headerName: 'Estado', maxWidth: 120, flex: 1,},
+    { field: 'estado_solicitud', headerName: 'Estado', maxWidth: 120, flex: 1,
+      renderCell: (params) => (
+        params.row.estado_solicitud === 'S' ? 'Solicitado'
+        : params.row.estado_solicitud === 'R' ? 'Respondido'
+        : params.row.estado_solicitud === 'SR' ? 'Solicitud Rechazada'
+        : params.row.estado_solicitud === 'SA' ? 'Solicitud Aprobada'
+        : params.row.estado_solicitud === 'DR' ? 'Despacho Rechazado'
+        : params.row.estado_solicitud === 'DA' ? 'Despacho Autorizado'
+        : params.row.estado_solicitud === 'F' ? 'Finalizado'
+        : params.row.estado_solicitud === 'C' && 'Cancelado' 
+      )
+    },
     { field: 'fecha_solicitud', headerName: 'Fecha de la solicitud', minWidth: 120, flex: 1,
       renderCell: (params) => (dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY'))
     },
@@ -47,7 +72,9 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
     },
     { field: 'ver', headerName: 'Ver', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
-        <VisibilityIcon sx={{fontSize: '30px', cursor: 'pointer'}} />
+        <VisibilityIcon 
+          onClick={() => editar_solicitud(params.row)}
+          sx={{fontSize: '30px', cursor: 'pointer'}} />
       )
     },
     { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
