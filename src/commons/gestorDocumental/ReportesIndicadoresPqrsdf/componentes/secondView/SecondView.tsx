@@ -26,7 +26,7 @@ export const SecondView = (): JSX.Element => {
         }}
       >
         <Grid item xs={12} sx={{ mb: '1rem' }}>
-          <Title title="Reporte de índices de carpetas / expedientes" />
+          <Title title="Reporte de índices PQRSDF" />
         </Grid>
         <div style={{ width: '100%', height: '100%' }}>
           <div id="chart" style={{ width: '100%', height: '100%' }}>
@@ -35,7 +35,7 @@ export const SecondView = (): JSX.Element => {
               series={chartDataViewTwo?.series as ApexOptions['series'] ?? []}
               options={chartDataViewTwo?.options as ApexOptions ?? []}
               type="bar"
-              height={500}
+              height={750}
             />
           </div>
           <div id="html-dist"></div>

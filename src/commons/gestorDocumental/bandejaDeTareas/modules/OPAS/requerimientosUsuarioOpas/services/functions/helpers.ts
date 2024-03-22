@@ -2,14 +2,20 @@ import Swal from 'sweetalert2';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const API_PATHS = {
-  //* persona que solicita el requerimiento al usuario
+  //* persona que solicita el requerimiento al usuariom sobre la opa
+  // gestor/bandeja-tareas/pqrsdf/persona/requerimiento/get/
   solicita: 'gestor/bandeja-tareas/pqrsdf/persona/requerimiento/get/',
-  //* persona titular de la pqrsdf
-  titular: (id: number) => `gestor/bandeja-tareas/pqrsdf/titular/get/${id}/`,
+  //* persona titular de la opa
+  // gestor/bandeja-tareas/opa/persona/titular/get/36/
+  titular: (id: number) => `gestor/bandeja-tareas/opa/persona/titular/get/${id}/`,
+  //* detalle de la solicitud de opa
+  // gestor/bandeja-tareas/opa/tramite/detalle/get/36/
   detalleSolicitud: (id: number) =>
-    `gestor/panel_ventanilla/pqrsdf/detalle-solicitud/get/${id}/`,
+    `gestor/bandeja-tareas/opa/tramite/detalle/get/${id}/`,
+  //* histórico de solicitudes de requerimientos de opas
+  // gestor/bandeja-tareas/opa/requerimiento/get/25/
   solicitudUsuario: (id: number) =>
-    `gestor/bandeja-tareas/pqrsdf/requerimiento/get/${id}/`,
+    `gestor/bandeja-tareas/opa/requerimiento/get/${id}/`,
 };
 
 export const handleError = (navigate: any, route?: any) => {

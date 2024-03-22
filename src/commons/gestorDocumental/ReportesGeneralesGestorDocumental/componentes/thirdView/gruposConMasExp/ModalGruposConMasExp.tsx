@@ -14,11 +14,17 @@ import { ModalAndLoadingContext } from '../../../../../../context/GeneralContext
 import { useContext, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
+import { fetchChartData } from '../../../services/getDataCharts.service';
+import { ChartDataContext } from '../../../context/DataChartContext';
 
-export const ModalGruposConMasExp = (): JSX.Element => {
+export const ModalGruposConMasExp = ({
+  controlBusquedaGeneradoraReporte,
+}: any): JSX.Element => {
   // * context declaration
   //* context declaration
-  const {openModalOne,  handleOpenModalOne} = useContext(ModalAndLoadingContext);
+  const {openModalOne,  handleOpenModalOne, handleOpenModalTwo} = useContext(ModalAndLoadingContext);
+    //* context declaration
+    const { setIsReportReady } = useContext(ChartDataContext);
 
   //* states declaration
   const [chartData, setChartData] = useState({
@@ -75,7 +81,13 @@ export const ModalGruposConMasExp = (): JSX.Element => {
   useEffect(() => {
     if (openModalOne) {
       console.log('thirdLoading', openModalOne);
+      fetchChartData( 
+      setChartData,
+      `gestor/reporte_indices_archivos_carpetas/reporte_unidad_total/get/${controlBusquedaGeneradoraReporte?._formValues?.seccion_subseccion?.value ?? 0}?${controlBusquedaGeneradoraReporte._formValues.fecha_inicio}/${controlBusquedaGeneradoraReporte._formValues.fecha_fin}`,
+      handleOpenModalTwo,
+      setIsReportReady
       // ? aquí se debe hacer la petición para obtener los datos
+      )
     }
 
     return () => {};
@@ -84,7 +96,7 @@ export const ModalGruposConMasExp = (): JSX.Element => {
   return (
     <Dialog
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       open={openModalOne}
       onClose={() => {
         handleOpenModalOne(false);

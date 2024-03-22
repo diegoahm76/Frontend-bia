@@ -20,7 +20,7 @@ export const Parte3Screen = ({
         mt: '2rem',
       }}
     >
-      <Title title="Anexos del requerimiento" />
+      <Title title="Anexos de la solicitud de requerimiento OPA" />
       <FormParte3
         controlFormulario={controlFormulario}
         handleSubmitFormulario={handleSubmitFormulario}

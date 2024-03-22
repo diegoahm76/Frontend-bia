@@ -199,64 +199,6 @@ const StepTwo = () => {
     }
   }, [file_fisico]);
 
-  useEffect(() => {
-    //  console.log('')(metadata);
-    // if (metadata !== null) {
-    //   if (metadata.asunto !== null && metadata.asunto !== '') {
-    //     dispatch(
-    //       set_exhibit({
-    //         ...exhibit,
-    //         nombre_anexo: get_values('nombre_anexo'),
-    //         orden_anexo_doc: get_values('orden_anexo_doc'),
-    //         medio_almacenamiento: get_values('medio_almacenamiento'),
-    //         cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //         medio_almacenamiento_otros_cual: get_values(
-    //           'medio_almacenamiento_otros_cual'
-    //         ),
-    //         numero_folios: get_values('numero_folios'),
-    //         ya_digitalizado: true,
-    //         exhibit_link: file,
-    //         metadatos: metadata,
-    //       })
-    //     );
-    //   } else {
-    //     dispatch(
-    //       set_exhibit({
-    //         ...exhibit,
-    //         nombre_anexo: get_values('nombre_anexo'),
-    //         orden_anexo_doc: get_values('orden_anexo_doc'),
-    //         medio_almacenamiento: get_values('medio_almacenamiento'),
-    //         cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //         medio_almacenamiento_otros_cual: get_values(
-    //           'medio_almacenamiento_otros_cual'
-    //         ),
-    //         numero_folios: get_values('numero_folios'),
-    //         ya_digitalizado: false,
-    //         exhibit_link: file,
-    //         metadatos: null,
-    //       })
-    //     );
-    //   }
-    // } else {
-    //   dispatch(
-    //     set_exhibit({
-    //       ...exhibit,
-    //       nombre_anexo: get_values('nombre_anexo'),
-    //       orden_anexo_doc: get_values('orden_anexo_doc'),
-    //       medio_almacenamiento: get_values('medio_almacenamiento'),
-    //       cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //       medio_almacenamiento_otros_cual: get_values(
-    //         'medio_almacenamiento_otros_cual'
-    //       ),
-    //       numero_folios: get_values('numero_folios'),
-    //       ya_digitalizado: false,
-    //       exhibit_link: file,
-    //       metadatos: null,
-    //     })
-    //   );
-    // }
-  }, [metadata]);
-
   const add_metadata_form = (): void => {
     const nombre_anexo = get_values('nombre_anexo') ?? '';
     const medio_almacenamiento_otros_cual =

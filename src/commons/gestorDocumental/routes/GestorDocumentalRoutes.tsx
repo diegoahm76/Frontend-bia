@@ -206,11 +206,11 @@ const routes = [
     name: 'busqueda',
     component: () => <RutesWorkFlowPQRSDF />,
   },
-  /*{
-    path: 'tramites/',
-    name: 'tramites',
+  {
+    path: 'juridica/',
+    name: 'juridica',
     component: () => <RutesTramitesServicos />,
-  },*/
+  },
   {
     path: 'indicadores_pqrsdf/',
     name: 'indicadores_pqrsdf',
@@ -222,7 +222,7 @@ const routes = [
     component: () => <SolicitudesOtrosRoutes />,
   },
   {
-    path: 'tramites/',
+    path: 'tramites',
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
   },

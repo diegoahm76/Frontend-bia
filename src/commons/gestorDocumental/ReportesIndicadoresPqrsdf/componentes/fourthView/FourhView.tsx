@@ -25,7 +25,7 @@ export const FourhView = (): JSX.Element => {
       }}
     >
       <Grid item xs={12} sx={{ mb: '1rem' }}>
-        <Title title="Reporte de índices de carpetas / expedientes" />
+        <Title title="Reporte de índices PQRSDF" />
       </Grid>
       <div style={{ width: '100%', height: '100%' }}>
         <div id="chart" style={{ width: '100%', height: '100%' }}>
@@ -33,16 +33,11 @@ export const FourhView = (): JSX.Element => {
             series={chartDataViewFour?.series as ApexOptions['series'] ?? []}
             options={chartDataViewFour?.options as ApexOptions ?? []}
             type="bar"
-            height={500}
+            height={775}
           />
         </div>
         <div id="html-dist"></div>
       </div>
-      <Grid
-        container
-        spacing={2}
-        sx={{ mb: '20px', justifyContent: 'center', alignItems: 'center' }}
-      ></Grid>
     </Grid>
   );
 };

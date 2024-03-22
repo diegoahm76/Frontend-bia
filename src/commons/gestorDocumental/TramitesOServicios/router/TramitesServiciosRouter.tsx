@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
 import { UserProvider } from '../../deposito/Estantes/context/context';
 import { TramitesOServiciosScreen } from '../screens/TramitesOServiciosScreen';
+import { ResReqOpaRouter } from '../respuestaRequerimientoOpa/router/ResReqOpaRouter';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TramitesServiciosRouter = (): ReactElement => {
@@ -15,7 +16,7 @@ export const TramitesServiciosRouter = (): ReactElement => {
         />
         <Route
           path="respuesta_requerimiento_opa/*"
-          element={<>Respuesta de requerimiento de una opa</>}
+          element={<ResReqOpaRouter/>}
         />
         <Route path="/*" element={<Page404 />} />
       </Routes>

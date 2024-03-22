@@ -1,22 +1,25 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, Grid } from '@mui/material';
 import { ApexOptions } from 'apexcharts';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ThirdView } from '../componentes/thirdView/ThirdView';
 import { BusquedaGeneral } from '../componentes/BusquedaReportes/BusquedaGeneral';
 import { BusquedaBasicaGeneradoraReporte } from '../componentes/BusquedaReportes/BusquedaInputsEspecificos/BusquedaBasica';
-import { useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { FourhView } from '../componentes/fourthView/FourhView';
 import { FirstView } from '../componentes/firstView/FirstView';
 import { SecondView } from '../componentes/secondView/SecondView';
 import { useIndicadores } from '../hooks/useIndicadores';
 import { ChartDataContext } from '../context/DataChartContext';
+import { setCurrentBusquedaReporte } from '../toolkit/ReportesGeneralesGestorSlice';
 export const ReporGenGestorMainScreen = (): JSX.Element => {
   const { currentBusquedaReporte } = useAppSelector(
     (state) => state.ReportesGeneralesGestorSlice
   );
+
+  const dispatch = useAppDispatch();
   // * hooks declaration
   const {
     controlBusquedaGeneradoraReporte,
@@ -24,6 +27,12 @@ export const ReporGenGestorMainScreen = (): JSX.Element => {
     resetBusquedaGeneradoraReporte,
     watchBusquedaGeneradoraReporte,
   } = useIndicadores();
+
+
+  useEffect(() => {
+    dispatch(setCurrentBusquedaReporte(null))
+  }
+  , []);
 
   //* context declaration
   const { isReporteReady } = useContext(ChartDataContext);
@@ -48,11 +57,13 @@ export const ReporGenGestorMainScreen = (): JSX.Element => {
 
       {isReporteReady &&
         (currentBusquedaReporte?.value === 1 ? (
-          <FirstView />
-        ) : currentBusquedaReporte?.value === 2 ? (
+          <FirstView /> /*: currentBusquedaReporte?.value === 2 ? (
           <SecondView />
+        )*/
         ) : currentBusquedaReporte?.value === 3 ? (
-          <ThirdView />
+          <ThirdView
+            controlBusquedaGeneradoraReporte={controlBusquedaGeneradoraReporte}
+          />
         ) : currentBusquedaReporte?.value === 4 ? (
           <FourhView />
         ) : (

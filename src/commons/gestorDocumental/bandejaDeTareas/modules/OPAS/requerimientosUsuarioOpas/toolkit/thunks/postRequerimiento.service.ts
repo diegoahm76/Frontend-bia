@@ -1,26 +1,27 @@
 import Swal from 'sweetalert2';
 import { api } from '../../../../../../../../api/axios';
+import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const postRequerimientoUsuario = async (
   formData: any,
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-  const url = `gestor/bandeja-tareas/pqrsdf/requerimiento/create/`;
+  const url = `gestor/bandeja-tareas/opa/requerimiento/create/`;
   try {
     if (!formData || typeof formData !== 'object') {
-      throw new Error('Invalid formData');
+       showAlert('Opss!', 'Faltan valores para realizar la solicitud', 'warning');
     }
 
     if (typeof setLoadingButton !== 'function') {
-      throw new Error('setLoadingButton must be a function');
+      showAlert('Opss!', 'Ha ocurrido un error con el botón de carga de la solicitud', 'warning');
     }
 
     setLoadingButton(true);
     const response = await api.post(url, formData);
 
     if (!response || typeof response !== 'object') {
-      throw new Error('Invalid response from api.post');
+      showAlert('Opss!', 'Ha ocurrido un error con la respuesta de la solicitud', 'warning');
     }
 
     console.log(response);
@@ -33,7 +34,7 @@ export const postRequerimientoUsuario = async (
       text: 'Ha ocurrido un error',
       footer: 'Por favor intente nuevamente',
     });
-    throw error; // Re-throw the error so it can be caught in the calling function
+    throw error;
   } finally {
     setLoadingButton(false);
   }

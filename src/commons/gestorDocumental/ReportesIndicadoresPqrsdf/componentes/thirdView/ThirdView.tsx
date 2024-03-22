@@ -27,7 +27,7 @@ export const ThirdView = (): JSX.Element => {
         }}
       >
         <Grid item xs={12} sx={{ mb: '1rem' }}>
-          <Title title="Reporte de índices de carpetas / expedientes" />
+          <Title title="Reporte de índices PQRSDF" />
         </Grid>
         <div style={{ width: '100%', height: '100%' }}>
           <div id="chart" style={{ width: '100%', height: '100%' }}>
@@ -36,28 +36,13 @@ export const ThirdView = (): JSX.Element => {
               series={chartDataViewThree?.series as ApexOptions['series'] ?? []}
               options={chartDataViewThree?.options as ApexOptions ?? []}
               type="bar"
-              height={500}
+              height={1200}
             />
           </div>
           <div id="html-dist"></div>
         </div>
       </Grid>
-        <Grid
-          container
-          sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            
-          }}
-        >
-        </Grid>
+
     </>
   );
 };

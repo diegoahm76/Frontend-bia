@@ -76,12 +76,12 @@ const TableBitacoraViajes: React.FC<Props> = ({
         }
       })
     },
-    { field: 'nombre_conductor', headerName: 'Conductor Asignado', minWidth: 120, flex: 1,
+    { field: 'nombre_conductor', headerName: 'Conductor asignado', minWidth: 120, flex: 1,
       renderCell: ((res)=>(
         res.row.nombre_conductor !== null && res.row.nombre_conductor + ' ' + res.row.apellido_conductor
       ))
     },
-    { field: 'fecha_partida_asignada', headerName: 'Flecha Salida', minWidth: 120, flex: 1,
+    { field: 'fecha_partida_asignada', headerName: 'Flecha salida', minWidth: 120, flex: 1,
       renderCell: ((res)=>(
         dayjs(res.row.fecha_partida_asignada).format('DD/MM/YYYY')
       ))

@@ -70,6 +70,7 @@ import { RequerimientoUsarioSlice } from '../commons/gestorDocumental/bandejaDeT
 import { ResSolicitudUsarioSlice } from '../commons/gestorDocumental/PQRSDF/componentes/respuestaSolicitudUsuario/toolkit/slice/ResSolicitudUsarioSlice';
 import { RequerimientoUsarioOpasSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/OPAS/requerimientosUsuarioOpas/toolkit/slice/RequerimientoUsarioOpasSlice';
 import { ReportesGeneralesGestorSlice } from '../commons/gestorDocumental/ReportesGeneralesGestorDocumental/toolkit/ReportesGeneralesGestorSlice';
+import { ResRequerimientoOpaSlice } from '../commons/gestorDocumental/TramitesOServicios/respuestaRequerimientoOpa/modules/secondPart/toolkit/slice/ResRequerimientoOpaSlice';
 import { notificaciones_slice } from '../commons/Transversales/modules/notificaciones/store/slice/notificacionesSlice';
 
 
@@ -180,6 +181,7 @@ const app_reducers = combineReducers({
   RequerimientoUsarioOpasSlice: RequerimientoUsarioOpasSlice.reducer,
   // ? reportes generales gestor slice
   ReportesGeneralesGestorSlice: ReportesGeneralesGestorSlice.reducer,
+  ResRequerimientoOpaSlice: ResRequerimientoOpaSlice.reducer,
   notificaciones_slice: notificaciones_slice.reducer,
 });
 

@@ -20,6 +20,7 @@ import { miEstilo } from '../../../gestorDocumental/Encuesta/interfaces/types';
 import SaveIcon from '@mui/icons-material/Save';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Knob } from 'primereact/knob';
+import { Tasa } from './Tasa';
 
 
 interface ConfiguracionBasica {
@@ -34,12 +35,19 @@ interface ConfiguracionBasica {
     id_valores_variables: any;
 }
 
-
+interface ConfiguracionInteres {
+    id: number;
+    año: number;
+    mes: number;
+    valor_interes: string;
+    estado_editable: boolean;
+}
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConceptoPago: React.FC = () => {
+    const [value, setValue] = useState<number>(2023);
+
     const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
-    const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
     const fetchConfiguraciones = async (): Promise<void> => {
         try {
             const url = "/recaudo/configuracion_baisca/valoresvariables/get/";
@@ -50,16 +58,43 @@ export const ConceptoPago: React.FC = () => {
             console.error(error);
         }
     };
-    const handleAbrirEditar = (configuracion: ConfiguracionBasica) => {
+   useEffect(() => {
+        void fetchConfiguraciones();
+    }, []);
+
+    // const [configuracionInteres, setConfiguracionInteres] = useState<ConfiguracionInteres[]>([]);
+
+    // const fetchConfiguracionInteres = async (): Promise<void> => {
+    //     try {
+    //         const url = `/recaudo/configuracion_basica/configuracioninterres/get/${value}/`;
+    //         const res = await api.get(url);
+    //         const configuracionInteresData: ConfiguracionInteres[] = res.data?.data || [];
+    //         setConfiguracionInteres(configuracionInteresData);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+    // useEffect(() => {
+    //      void fetchConfiguracionInteres(); // Puedes ajustar el año según sea necesario
+    // }, [value]);
+
+
+
+
+
+
+
+
+
+
+    const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
+ const handleAbrirEditar = (configuracion: ConfiguracionBasica) => {
         setSelectedConfiguracion(configuracion);
         setIsBuscarActivo(true);
     };
 
 
-
-    useEffect(() => {
-        void fetchConfiguraciones();
-    }, []);
+    
 
     const handleEliminarConfiguracion = async (id_valores_variables: number) => {
         try {
@@ -154,18 +189,12 @@ export const ConceptoPago: React.FC = () => {
     const handle_close = (): void => {
         set_is_tasa(false);
     };
-    const [value, setValue] = useState<number>(2023);
 
     // Estado para el valor del "Knob", empezando en 0 que corresponde a 2023
     const [knobValue, setKnobValue] = useState<number>(2023);
 
     // Manejador para actualizar el valor basado en el "Knob"
-    const handleKnobChange = (newValue: any) => {
-        // Actualizar el valor del "Knob"
-        setKnobValue(newValue);
-        // Convertir el valor del "Knob" al valor real y actualizarlo
-        setValue(2023 + newValue);
-    };
+  
 
     // Manejador para decrementar el valor
     const handleDecrement = () => {
@@ -179,198 +208,19 @@ export const ConceptoPago: React.FC = () => {
         setValue(value + 1);
     };
 
+
+
     return (
         <>
-            <Dialog open={is_tasa} onClose={handle_close} maxWidth="sm" >
-                <Grid container
-                    spacing={2} m={2} p={2}
-                    sx={miEstilo}
-                >
-                    <Grid item xs={12}>
-                        <Title title="Configuracion de tasa " />
-                    </Grid>
-
-                    <Grid container
-                        direction="row"
-                        spacing={2}
-                        justifyContent="center"
-                        alignItems="center" item xs={12} sm={12} >
-                        <Grid item >
-                            <Button
-                                startIcon={<RemoveIcon />}
-                                color="error"
-                                variant="contained"
-                                onClick={handleDecrement}
-                                disabled={value === 2023} 
-                                >
-                                Menos
-                            </Button>
-                        </Grid>
-
-                        <Grid item >
-                            <Knob  value={knobValue}   />
-                        </Grid>
-
-
-                        <Grid item  >
-                            <Button
-                                startIcon={<AddIcon />}
-                                color="success"
-                                variant="contained"
-                                onClick={handleIncrement}
-                                disabled={value === 2040}
-                            >
-                                Más
-                            </Button>
-                        </Grid>
-
-
-                    </Grid>
-
-
-
-
-
-
-
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Enero"
-                            name="Enero"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Febrero"
-                            name="Febrero"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Marzo"
-                            name="Marzo"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Abril"
-                            name="Abril"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Mayo"
-                            name="Mayo"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Junio"
-                            name="Junio"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Julio"
-                            name="Julio"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Agosto"
-                            name="Agosto"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Septiembre"
-                            name="Septiembre"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Octubre"
-                            name="Octubre"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Noviembre"
-                            name="Noviembre"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Diciembre"
-                            name="Diciembre"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-
-                    <Grid container
-                        direction="row"
-                        justifyContent="center"
-                        alignItems="center" item xs={12} sm={12} >
-
-                        <Grid item xs={3} sm={2} marginTop={2} >
-                            <Button color='success'
-                                variant='contained'
-                                startIcon={<SaveIcon />} onClick={handle_open_tasa}    >
-                                guardar
-                            </Button>
-                        </Grid>
-                    </Grid>
-
-
-                </Grid>
-            </Dialog>
+            
+            <Tasa   
+            is_tasa={is_tasa} 
+            handle_close={handle_close} 
+            handleDecrement={handleDecrement} 
+            value={value} knobValue={knobValue} 
+            handleIncrement={handleIncrement} handle_open_tasa={handle_open_tasa}
+            
+            />
 
             <ConceptoEditar
                 isBuscarActivo={isBuscarActivo}
@@ -403,7 +253,7 @@ export const ConceptoPago: React.FC = () => {
 
                 <Grid item xs={3} sm={2} marginTop={2} marginLeft={2} >
                     <Button startIcon={<AddIcon />} onClick={handle_open_tasa} fullWidth variant="outlined"    >
-                        tasa
+                    Interés
                     </Button>
                 </Grid>
 
