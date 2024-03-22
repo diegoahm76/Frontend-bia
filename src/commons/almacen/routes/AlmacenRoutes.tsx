@@ -25,6 +25,7 @@ import AgendamientoVehiculos from '../agendamientoVehiculos/screens/Agendamiento
 import NovedadesInspeccionVehiculos from '../revisionDeInspeccion/screens/NovedadesInspeccionVehiculos';
 import BajaActivos from '../bajaDeActivos/screens/BajaActivos';
 import SolicitudActivos from '../solicitudDeActivos/screens/SolicitudActivos';
+import AutorizacionSolicitudActivos from '../autorizacion_solicitud_activos/screens/AutorizacionSolicitudActivos';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -119,6 +120,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="solicitud_activos/*"
         element={<SolicitudActivos />}
+      />
+      <Route
+        path="autorizacion_solicitud_activos/*"
+        element={<AutorizacionSolicitudActivos />}
       />
       <Route
         path="otras_entregas/*"
