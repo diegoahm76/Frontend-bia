@@ -96,3 +96,48 @@ export const get_obtener_articulos: any = (
     }
   };
 };
+
+export const post_crear_solicitud_activos: any = (form_data: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`/almacen/activos/crear-solicitud-baja-activos/create/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_editar_solicitud_activos: any = (id_solicitud_activo: string, form_data: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/editar-solicitud-activos/${id_solicitud_activo}/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_unidades_medidas: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/listar-unidades-medida/get/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+
+export const get_obtener_solicitudes_realizadas: any = (id_solicitud_activo: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/detalle-solicitud-activos/${id_solicitud_activo}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};

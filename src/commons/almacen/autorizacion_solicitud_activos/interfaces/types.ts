@@ -174,18 +174,6 @@ export interface response_solicitud_obtenida_por_id {
 
 export interface interface_solicitud_obtenida_por_id {
   id_solicitud_activo: number
-  primer_nombre_persona_solicita: string
-  primer_apellido_persona_solicita: string
-  tipo_documento_persona_solicita: string
-  numero_documento_persona_solicita: any
-  primer_nombre_funcionario_resp_unidad: string
-  primer_apellido_funcionario_resp_unidad: string
-  tipo_documento_funcionario_resp_unidad: string
-  numero_documento_funcionario_resp_unidad: string
-  primer_nombre_persona_operario: string
-  primer_apellido_persona_operario: string
-  tipo_documento_persona_operario: string
-  numero_documento_persona_operario: string
   fecha_solicitud: string
   motivo: string
   observacion: string
@@ -226,4 +214,24 @@ export interface interface_articulos_obtenidos_por_id {
   id_bien: number
   id_unidad_medida: number
   nombre_unidad_medida: string
+}
+
+export interface response_solicites_en_proceso {
+  success: boolean
+  detail: string
+  data: interface_solicitiudes_en_proceso[]
+}
+
+export interface interface_solicitiudes_en_proceso {
+  id_solicitud_activo: number
+  fecha_solicitud: string
+  motivo: string
+  estado_solicitud: string
+  id_persona_solicita: number
+  primer_nombre_persona_solicita: string
+  primer_apellido_persona_solicita: string
+  id_funcionario_resp_unidad: number
+  primer_nombre_funcionario_resp_unidad: string
+  primer_apellido_funcionario_resp_unidad: string
+  numero_activos: number
 }
