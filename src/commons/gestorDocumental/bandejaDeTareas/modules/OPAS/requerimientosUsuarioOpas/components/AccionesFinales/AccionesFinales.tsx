@@ -10,6 +10,8 @@ import { useStepperRequerimiento } from '../../../../../hook/useStepperRequerimi
 import { resetItems } from '../../toolkit/slice/RequerimientoUsarioOpasSlice';
 import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
+import { control_error } from '../../../../../../../../helpers';
+import { handleApiError } from '../../../../../../../../utils/functions/errorManage';
 
 export const AccionesFinales = ({
   controlFormulario,
@@ -36,92 +38,75 @@ export const AccionesFinales = ({
 
   //* handleSumbit
 
-  const sendDataByFormData = () => {
+  const sendDataByFormData = async () => {
+    try {
+      if (!Array.isArray(anexosCreados) || anexosCreados.length === 0) {
+        showAlert('Opss!', 'No se han creado anexos, no se puede enviar la solicitud', 'warning');
+      }
 
-    // Show alert that the service does not exist yet
-    showAlert('Service not implemented', 'This service is not implemented yet', 'info');
-    return;
+      const firstAnexo = anexosCreados[0];
+      if (!firstAnexo?.asunto || !firstAnexo?.descripcion_de_la_solicitud) {
+        showAlert(
+          'Opps!',
+          'Por favor diligencie los campos de asunto y descripción de la solicitud',
+          'warning'
+        );
+        return;
+      }
 
-    if (!Array.isArray(anexosCreados) || anexosCreados.length === 0) {
-      console.error('anexosCreados is not an array or is empty');
-      return;
-    }
+      const formData = new FormData();
 
-    if (
-      !anexosCreados[0]?.asunto ||
-      !anexosCreados[0]?.descripcion_de_la_solicitud /* ||
-      !currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf */
-    ) {
-      showAlert(
-        'Opps!',
-        'Por favor diligencie los campos de asunto y descripción de la solicitud',
-        'warning'
-      );
-      return;
-    }
-
-    const formData = new FormData();
-
-    formData.append(
-      'solicitud_usu_PQRSDF',
-      JSON.stringify({
-        asunto: anexosCreados[0]?.asunto,
-        descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-        id_pqrsdf:
-          +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
-      })
-    );
-    formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
-
-    anexosCreados.forEach((anexo: any, index: number) => {
-      formData.append('archivo', anexo.ruta_soporte);
       formData.append(
-        'anexo',
+        'solicitud_usu_PQRSDF',
         JSON.stringify({
-          nombre_anexo: anexo?.nombre_archivo,
-          numero_folios: anexo?.numero_folios,
-          cod_medio_almacenamiento: 'Na',
-          orden_anexo_doc: index + 1,
-          meta_data: {
-            tiene_replica_fisica:
-              anexo?.tieneReplicaFisicaMetadatos?.value === 'Si' ? true : false,
-            cod_origen_archivo: anexo?.origenArchivoMetadatos?.value,
-            nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
-            descripcion: anexo?.descripcionMetadatos,
-            asunto: anexo?.asuntoMetadatos,
-            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
-            nro_folios_documento: +anexo?.numero_folios
-              ? +anexo?.numero_folios
-              : 0,
-            id_tipologia_doc: +anexo?.tipologiasDocumentalesMetadatos?.value
-              ? +anexo?.tipologiasDocumentalesMetadatos?.value
-              : null,
-            tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos
-              ? anexo?.cualTipologiaDocumentalMetadatos
-              : null,
-            palabras_clave_doc: anexo?.palabrasClavesMetadatos.join('|'),
-          },
+          asunto: firstAnexo.asunto,
+          descripcion: firstAnexo.descripcion_de_la_solicitud,
+          id_solicitud_tramite: +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
         })
       );
-    });
+      formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
 
-    postRequerimientoUsuario(formData, setLoadingButton)
-      .then(() => {
-        handleReset();
-        resetFormulario({});
-        setInfoReset({});
-        dispatch(resetItems());
-
-        Swal.fire({
-          title: 'Solicitud enviada',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch((error) => {
-        console.error('Error in postRequerimientoUsuario:', error);
+      anexosCreados.forEach((anexo: any, index: number) => {
+        formData.append('archivo', anexo.ruta_soporte);
+        formData.append(
+          'anexo',
+          JSON.stringify({
+            nombre_anexo: anexo?.nombre_archivo,
+            numero_folios: anexo?.numero_folios,
+            cod_medio_almacenamiento: 'Na',
+            orden_anexo_doc: index + 1,
+            meta_data: {
+              tiene_replica_fisica: anexo?.tieneReplicaFisicaMetadatos?.value === 'Si',
+              cod_origen_archivo: anexo?.origenArchivoMetadatos?.value,
+              nombre_original_archivo: 'Archivo',
+              descripcion: anexo?.descripcionMetadatos,
+              asunto: anexo?.asuntoMetadatos,
+              cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
+              nro_folios_documento: +anexo?.numero_folios || 0,
+              id_tipologia_doc: +anexo?.tipologiasDocumentalesMetadatos?.value || null,
+              tipologia_no_creada_TRD: anexo?.cualTipologiaDocumentalMetadatos || null,
+              palabras_clave_doc: anexo?.palabrasClavesMetadatos.join('|'),
+            },
+          })
+        );
       });
+
+      await postRequerimientoUsuario(formData, setLoadingButton);
+
+      handleReset();
+      resetFormulario({});
+      setInfoReset({});
+      dispatch(resetItems());
+
+      Swal.fire({
+        title: 'Solicitud enviada',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      handleApiError(error);
+    }
   };
 
   const handleSubmit = async () => {

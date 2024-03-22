@@ -46,8 +46,6 @@ import { control_warning } from '../../../../../../../../almacen/configuracion/s
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 export const FormParte3 = ({
   controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
   resetFormulario,
   watchFormulario,
   setInfoReset,
@@ -95,7 +93,7 @@ export const FormParte3 = ({
     if (watchFormulario.ruta_soporte === '' && !metadatos) {
       showAlert(
         'Advertencia',
-        'Para crear un anexo: La carga de un archivo es requerida, aunque existen condiciones bajo las cuales no es obligatoria.\n\nEn caso de optar por no subir un archivo, es necesario agregar metadatos, seleccionar la opción de origen del archivo como físico y proporciona el nombre del archivo, así como el número de folios del archivo físico.',
+        'Para crear un anexo: La carga de un archivo es requerida, aunque existen condiciones bajo las cuales no es obligatoria.\n\nEn caso de optar por no subir un archivo, es necesario agregar metadatos, seleccionar la opción de origen del archivo como físico y proporcionar el nombre del archivo, así como el número de folios del archivo físico.',
         'warning'
       );
       return;
@@ -436,16 +434,10 @@ export const FormParte3 = ({
               name="numero_folios"
               control={controlFormulario}
               defaultValue=""
-              // rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <TextField
-                  // required
                   fullWidth
-                  type="number"
-                  // name="nombre"
+                  type="text"
                   label="Número de folios"
                   helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
@@ -453,11 +445,16 @@ export const FormParte3 = ({
                   value={value}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
-                    if (+e.target.value >= 255) {
+                    const inputValue = e.target.value;
+                    if (inputValue.length > 255) {
                       control_warning('máximo 255 caracteres');
                       return;
                     }
-                    onChange(e.target.value);
+                    if (!/^\d*$/.test(inputValue)) {
+                      control_warning('Solo se permiten números');
+                      return;
+                    }
+                    onChange(inputValue);
                   }}
                   inputProps={{ maxLength: 255 }}
                 />

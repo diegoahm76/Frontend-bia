@@ -71,7 +71,6 @@ export const StepperRequerimientoAlUsuario = ({
       </Stepper>
 
       {/*
-      
         este stepper se va a tener que separar, haciendo las validaciones correpondientes
       */}
 

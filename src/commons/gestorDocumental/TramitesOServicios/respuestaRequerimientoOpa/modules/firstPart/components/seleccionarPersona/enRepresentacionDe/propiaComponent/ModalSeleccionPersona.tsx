@@ -39,6 +39,7 @@ import { getTipoDocumento } from '../../../../../../../../../Transversales/modul
 import { getPersonasService } from '../../../../services/getPersonas.service';
 import { columnsPersona } from './columns/columnsPersona';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { choicesTipoPersona } from '../../../../utils/choices';
 
 export const ModalSeleccionPersona = ({
   control_seleccionar_persona,
@@ -87,13 +88,13 @@ export const ModalSeleccionPersona = ({
   const {openModalOne,  handleOpenModalOne} = useContext(ModalAndLoadingContext);
 
    const resetFunction = (): void => {
-    reset_seleccionar_persona({
+   /* reset_seleccionar_persona({
       ...watchExe,
       primer_nombre: '',
       segundo_nombre: '',
       primer_apellido: '',
       segundo_apellido: '',
-    });
+    });*/
   };
 
   const closeModal = (): any => {
@@ -112,7 +113,7 @@ export const ModalSeleccionPersona = ({
           <IconButton
             onClick={() => {
               console.log(params.row);
-
+/*
               reset_seleccionar_persona({
                 ...watchExe,
                 ...params.row,
@@ -122,7 +123,7 @@ export const ModalSeleccionPersona = ({
                 },
               });
 
-              closeModal();
+              closeModal();*/
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
@@ -153,7 +154,7 @@ export const ModalSeleccionPersona = ({
           onSubmit={async (e) => {
             e.preventDefault();
             console.log('submit');
-            try {
+            /*try {
               await getPersonasService({
                 tipo_documento: watchExe.tipo_documento?.value ?? '',
                 numero_documento:
@@ -172,7 +173,7 @@ export const ModalSeleccionPersona = ({
               })
             } catch (error) {
               console.error('Error fetching data:', error);
-            }
+            }*/
           }}
         >
           <DialogTitle>
@@ -186,6 +187,53 @@ export const ModalSeleccionPersona = ({
             }}
           >
             <Grid container spacing={2}>
+            <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 5,
+                }}
+              >
+                <Controller
+                  name="tipo_persona"
+                  control={control_seleccionar_persona}
+                  defaultValue=""
+                  render={({
+                    field: { onChange, value, ref },
+                    fieldState: { error },
+                  }) => (
+                    <div>
+                      <Select
+                        options={choicesTipoPersona ?? []} // options should be an array of objects with 'value' and
+                        value={value} // set selected value
+                        onChange={onChange} // update value when option is selected
+                        isSearchable
+                        placeholder="Tipo de persona"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          Tipo de persona
+                        </small>
+                      </label>
+                    </div>
+                  )}
+                />
+              </Grid>
+
+
+
+              {/* se realiza la division entre persona natural y jurídica */}
+              
+
               <Grid
                 item
                 xs={12}
@@ -204,7 +252,9 @@ export const ModalSeleccionPersona = ({
                   }) => (
                     <div>
                       <Select
-                        options={tiposDocumentos} // options should be an array of objects with 'value' and
+                        options={watchExe.tipo_documento === 'NATURAL' 
+                        ? tiposDocumentos.filter((item) => item.value !== 'NIT')
+                        : tiposDocumentos.filter((item) => item.value === 'NIT') ?? []} // options should be an array of objects with 'value' and
                         value={value} // set selected value
                         onChange={onChange} // update value when option is selected
                         isSearchable
@@ -277,7 +327,7 @@ export const ModalSeleccionPersona = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+{/*              <Grid item xs={12} sm={3}>
                 <Controller
                   name="segundo_nombre"
                   control={control_seleccionar_persona}
@@ -298,7 +348,7 @@ export const ModalSeleccionPersona = ({
                     />
                   )}
                 />
-              </Grid>
+              </Grid>*/}
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="primer_apellido"
@@ -321,7 +371,7 @@ export const ModalSeleccionPersona = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+            {/*  <Grid item xs={12} sm={3}>
                 <Controller
                   name="segundo_apellido"
                   control={control_seleccionar_persona}
@@ -343,7 +393,7 @@ export const ModalSeleccionPersona = ({
                   )}
                 />
               </Grid>
-
+*/}
               <Grid item xs={12} sm={3}
                 sx={{
                   mb: '1.5rem',
