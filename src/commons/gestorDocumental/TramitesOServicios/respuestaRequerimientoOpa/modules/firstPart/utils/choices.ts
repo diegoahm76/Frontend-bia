@@ -11,5 +11,16 @@ export const choicesRepresentacion = [
   {
     value: 'EMPRESA',
     label: 'EMPRESA',
-  }
-]
+  },
+];
+
+export const choicesTipoPersona = [
+  {
+    value: 'NATURAL',
+    label: 'NATURAL',
+  },
+  {
+    label: 'JURIDICA',
+    varlue: 'JURIDICA',
+  },
+];

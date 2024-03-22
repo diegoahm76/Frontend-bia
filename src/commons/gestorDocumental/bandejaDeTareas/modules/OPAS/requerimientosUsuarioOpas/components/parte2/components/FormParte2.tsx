@@ -10,14 +10,14 @@ import { useStepperRequerimiento } from '../../../../../../hook/useStepperRequer
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 export const FormParte2 = ({
   controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
-  resetFormulario,
+  // handleSubmitFormulario,
+  // errorsFormulario,
+  // resetFormulario,
   watchFormulario,
   // setInfoReset,
 }: any): JSX.Element => {
   // ? stepper hook
-  const { handleNext, handleBack } = useStepperRequerimiento();
+  const { handleNext, /*handleBack*/ } = useStepperRequerimiento();
 
     //* redux states functions
 /*    const { currentAnexo } = useAppSelector(
@@ -68,8 +68,7 @@ export const FormParte2 = ({
                 <TextField
                   required
                   fullWidth
-                  label="Asunto"
-                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  label="Asunto requerimiento"
                   size="small"
                   variant="outlined"
                   value={value}
@@ -88,7 +87,6 @@ export const FormParte2 = ({
             <Controller
               name="fecha_de_solicitud"
               control={controlFormulario}
-              // defaultValue={new Date().toISOString().slice(0, 10)}
               rules={{ required: true }}
               render={({
                 field: { onChange, value },
@@ -100,10 +98,8 @@ export const FormParte2 = ({
                   disabled
                   type="date"
                   label="Fecha de solicitud"
-                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
-                  //* se debe poner la condicional del reset
                   value={new Date().toISOString().slice(0, 10)}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -125,10 +121,8 @@ export const FormParte2 = ({
                   required
                   fullWidth
                   multiline
-                  rows={5}
-                  // name="nombre"
+                  rows={8}
                   label="Descripción de la solicitud"
-                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}

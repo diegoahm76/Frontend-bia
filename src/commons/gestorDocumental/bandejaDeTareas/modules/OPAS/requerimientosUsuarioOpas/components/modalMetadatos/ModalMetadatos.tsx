@@ -63,84 +63,99 @@ export const ModalMetadatos = ({
   //* dispatch declaration
   const dispatch = useAppDispatch();
   //* context
-  const { modalAgregarMetadatos, handleModalAgregarMetadatos, fourthLoading, handleFourthLoading  } = useContext(
-    ModalAndLoadingContext
-  );
+  const {
+    modalAgregarMetadatos,
+    handleModalAgregarMetadatos,
+    fourthLoading,
+    handleFourthLoading,
+  } = useContext(ModalAndLoadingContext);
   //* redux states
   const { metadatos, currentAnexo, viewMode } = useAppSelector(
     (state) => state.RequerimientoUsarioOpasSlice
   );
 
-  //* hooks
-/*  const {
-  
-  } = usePanelVentanilla();*/
+  // ? functions
+
+  const fetchTipologias = (
+    handleLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    getTipologiasDocumentalesMetadatos(handleLoading)
+      .then(setTipologiasDocumentales)
+      .catch((error) => console.error('Error fetching tipologias:', error));
+  };
+
+  const resetMetadatosModal = () => {
+    resetManejoMetadatosModal({
+      ...watchExeManejoModalMetadatos,
+      cualTipologiaDocumentalMetadatos: '',
+    });
+  };
 
   //? useeffect to get tipologias documentales
   useEffect(() => {
-    if (
-      watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value ===
-      'Si'
-    ) {
-      void getTipologiasDocumentalesMetadatos(handleFourthLoading).then(
-        (tipologias) => {
-          setTipologiasDocumentales(tipologias);
-        }
-      );
+    const tipologiaValue =
+      watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value;
+
+    if (tipologiaValue === 'Si') {
+      fetchTipologias(handleFourthLoading);
+    }
+
+    if (tipologiaValue === 'No') {
+      resetMetadatosModal();
     }
   }, [watchExeManejoModalMetadatos.tieneTipologiaRelacionadaMetadatos?.value]);
 
   useEffect(() => {
-    if (metadatos && currentAnexo) {
-      resetManejoMetadatosModal({
-        categoriaArchivoMetadatos: {
-          value: metadatos?.categoriaArchivoMetadatos?.value
-            ? metadatos?.categoriaArchivoMetadatos?.value
-            : '',
-          label: metadatos?.categoriaArchivoMetadatos?.label
-            ? metadatos?.categoriaArchivoMetadatos?.label
-            : '',
-        },
-        tieneReplicaFisicaMetadatos: {
-          value: metadatos?.tieneReplicaFisicaMetadatos?.value
-            ? metadatos?.tieneReplicaFisicaMetadatos?.value
-            : '',
-          label: metadatos?.tieneReplicaFisicaMetadatos?.label
-            ? metadatos?.tieneReplicaFisicaMetadatos?.label
-            : '',
-        },
-        origenArchivoMetadatos: {
-          value: metadatos?.origenArchivoMetadatos?.value
-            ? metadatos?.origenArchivoMetadatos?.value
-            : '',
-          label: metadatos?.origenArchivoMetadatos?.label
-            ? metadatos?.origenArchivoMetadatos?.label
-            : '',
-        },
-        tieneTipologiaRelacionadaMetadatos: {
-          value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value
-            ? metadatos?.tieneTipologiaRelacionadaMetadatos?.value
-            : '',
-          label: metadatos?.tieneTipologiaRelacionadaMetadatos?.label
-            ? metadatos?.tieneTipologiaRelacionadaMetadatos?.label
-            : '',
-        },
-        tipologiasDocumentalesMetadatos: {
-          value: metadatos?.tipologiasDocumentalesMetadatos?.value
-            ? metadatos?.tipologiasDocumentalesMetadatos?.value
-            : '',
-          label: metadatos?.tipologiasDocumentalesMetadatos?.label
-            ? metadatos?.tipologiasDocumentalesMetadatos?.label
-            : '',
-        },
-        cualTipologiaDocumentalMetadatos:
-          metadatos?.cualTipologiaDocumentalMetadatos ?? '',
-        asuntoMetadatos: metadatos?.asuntoMetadatos ?? '',
-        descripcionMetadatos: metadatos?.descripcionMetadatos ?? '',
-        palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos ?? [],
-      });
-    }
-  }, [metadatos, currentAnexo]);
+     if (metadatos && currentAnexo) {
+       resetManejoMetadatosModal({
+         categoriaArchivoMetadatos: {
+           value: metadatos?.categoriaArchivoMetadatos?.value
+             ? metadatos?.categoriaArchivoMetadatos?.value
+             : '',
+           label: metadatos?.categoriaArchivoMetadatos?.label
+             ? metadatos?.categoriaArchivoMetadatos?.label
+             : '',
+         },
+         tieneReplicaFisicaMetadatos: {
+           value: metadatos?.tieneReplicaFisicaMetadatos?.value
+             ? metadatos?.tieneReplicaFisicaMetadatos?.value
+             : '',
+           label: metadatos?.tieneReplicaFisicaMetadatos?.label
+             ? metadatos?.tieneReplicaFisicaMetadatos?.label
+             : '',
+         },
+         origenArchivoMetadatos: {
+           value: metadatos?.origenArchivoMetadatos?.value
+             ? metadatos?.origenArchivoMetadatos?.value
+             : '',
+           label: metadatos?.origenArchivoMetadatos?.label
+             ? metadatos?.origenArchivoMetadatos?.label
+             : '',
+         },
+         tieneTipologiaRelacionadaMetadatos: {
+           value: metadatos?.tieneTipologiaRelacionadaMetadatos?.value
+             ? metadatos?.tieneTipologiaRelacionadaMetadatos?.value
+             : '',
+           label: metadatos?.tieneTipologiaRelacionadaMetadatos?.label
+             ? metadatos?.tieneTipologiaRelacionadaMetadatos?.label
+             : '',
+         },
+         tipologiasDocumentalesMetadatos: {
+           value: metadatos?.tipologiasDocumentalesMetadatos?.value
+             ? metadatos?.tipologiasDocumentalesMetadatos?.value
+             : '',
+           label: metadatos?.tipologiasDocumentalesMetadatos?.label
+             ? metadatos?.tipologiasDocumentalesMetadatos?.label
+             : '',
+         },
+         cualTipologiaDocumentalMetadatos:
+           metadatos?.cualTipologiaDocumentalMetadatos ?? '',
+         asuntoMetadatos: metadatos?.asuntoMetadatos ?? '',
+         descripcionMetadatos: metadatos?.descripcionMetadatos ?? '',
+         palabrasClavesMetadatos: metadatos?.palabrasClavesMetadatos ?? [],
+       });
+     }
+   }, [metadatos, currentAnexo]);
 
   // ? functions
   const handleSubmit = async () => {
@@ -490,44 +505,7 @@ export const ModalMetadatos = ({
                   />
                 </Grid>
               ) : (
-                <Grid
-                  item
-                  xs={12}
-                  sm={4}
-                  sx={{
-                    mt: '1.2rem',
-                    mb: '1.2rem',
-                  }}
-                >
-                  <Controller
-                    name="cualTipologiaDocumentalMetadatos"
-                    control={controlManejoMetadatosModal}
-                    defaultValue=""
-                    // rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        required
-                        fullWidth
-                        label="¿Cual?"
-                        size="small"
-                        variant="outlined"
-                        value={value}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) => {
-                          onChange(e.target.value);
-                          e.target.value.length === 50 &&
-                            control_warning(
-                              'máximo 50 caracteres para definir la tipología documental'
-                            );
-                        }}
-                        inputProps={{ maxLength: 50 }}
-                      />
-                    )}
-                  />
-                </Grid>
+                <></>
               )}
 
               <Grid
@@ -718,3 +696,43 @@ export const ModalMetadatos = ({
     </>
   );
 };
+
+
+{ /*<Grid
+item
+xs={12}
+sm={4}
+sx={{
+  mt: '1.2rem',
+  mb: '1.2rem',
+}}
+>
+<Controller
+  name="cualTipologiaDocumentalMetadatos"
+  control={controlManejoMetadatosModal}
+  defaultValue=""
+  // rules={{ required: true }}
+  render={({
+    field: { onChange, value },
+    fieldState: { error },
+  }) => (
+    <TextField
+      required
+      fullWidth
+      label="¿Cual?"
+      size="small"
+      variant="outlined"
+      value={value}
+      InputLabelProps={{ shrink: true }}
+      onChange={(e) => {
+        onChange(e.target.value);
+        e.target.value.length === 50 &&
+          control_warning(
+            'máximo 50 caracteres para definir la tipología documental'
+          );
+      }}
+      inputProps={{ maxLength: 50 }}
+    />
+  )}
+/>
+</Grid>*/ }

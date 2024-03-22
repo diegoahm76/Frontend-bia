@@ -31,7 +31,7 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^10.12.16",
     "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.5.29",
+    "jspdf-autotable": "^3.8.2",
     "leaflet": "^1.9.3",
     "moment": "^2.29.4",
     "primeicons": "^6.0.1",
