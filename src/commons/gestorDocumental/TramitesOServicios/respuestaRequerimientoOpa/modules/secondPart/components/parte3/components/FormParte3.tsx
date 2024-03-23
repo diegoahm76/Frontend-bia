@@ -36,11 +36,11 @@ import { useFiles } from '../../../../../../../../../hooks/useFiles/useFiles';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
 import { useBandejaTareas } from '../../../../../../../bandejaDeTareas/hook/useBandejaTareas';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
-import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../toolkit/slice/ResRequerimientoOpaSlice';
 import { control_success } from '../../../../../../../../../helpers';
 import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../../../toolkit/slice/ResRequerimientoOpaSlice';
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,

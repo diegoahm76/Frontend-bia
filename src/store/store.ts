@@ -70,8 +70,8 @@ import { RequerimientoUsarioSlice } from '../commons/gestorDocumental/bandejaDeT
 import { ResSolicitudUsarioSlice } from '../commons/gestorDocumental/PQRSDF/componentes/respuestaSolicitudUsuario/toolkit/slice/ResSolicitudUsarioSlice';
 import { RequerimientoUsarioOpasSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/OPAS/requerimientosUsuarioOpas/toolkit/slice/RequerimientoUsarioOpasSlice';
 import { ReportesGeneralesGestorSlice } from '../commons/gestorDocumental/ReportesGeneralesGestorDocumental/toolkit/ReportesGeneralesGestorSlice';
-import { ResRequerimientoOpaSlice } from '../commons/gestorDocumental/TramitesOServicios/respuestaRequerimientoOpa/modules/secondPart/toolkit/slice/ResRequerimientoOpaSlice';
 import { notificaciones_slice } from '../commons/Transversales/modules/notificaciones/store/slice/notificacionesSlice';
+import { ResRequerimientoOpaSlice } from '../commons/gestorDocumental/TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 
 
 const persist_config = {

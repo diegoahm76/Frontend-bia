@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
-import { api } from '../../../../../../../../api/axios';
+import { api } from '../../../../../../api/axios';
+
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const postRequerimientoUsuario = async (

@@ -23,7 +23,7 @@ import { useContext, useState } from 'react';
 import { columnsAnexos } from './columnsAnexos/columnsAnexos';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getMetadatosByAnexo } from '../../../../services/afterCreatedUserRequest.service';
-import { ResRequerimientoOpaContext } from '../../../../context/ResRequerimientoOpaContext';
+import { ResRequerimientoOpaContext } from '../../../../../../context/ResRequerimientoOpaContext';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { DownloadButton } from '../../../../../../../../../../utils/DownloadButton/DownLoadButton';
 import { Title } from '../../../../../../../../../../components';

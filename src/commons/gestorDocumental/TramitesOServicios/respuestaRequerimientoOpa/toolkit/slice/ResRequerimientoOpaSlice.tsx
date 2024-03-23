@@ -2,8 +2,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
-import { control_success } from '../../../../../../../../helpers';
-import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { control_success } from '../../../../../../helpers';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+
 
 interface Anexo {
   asunto: string;
@@ -11,7 +12,6 @@ interface Anexo {
   id: string;
   nombre_archivo: string;
   // other properties...
-
   descripcion?: string | null;
   cod_categoria_archivo?: string | null;
   tiene_replica_fisica?: boolean | null;
@@ -27,12 +27,17 @@ const initialState: {
   currentSolicitudAlUsuario: any;
   metadatos: any;
   viewMode: boolean;
+
+  //* primera parte de la creación de la respuesta de una OPA
+  currentPersonaRespuestaUsuario: any;
+
 } = {
   anexosCreados: [],
   currentAnexo: null,
   currentSolicitudAlUsuario: null,
   metadatos: null,
   viewMode: false,
+  currentPersonaRespuestaUsuario: null,
 };
 
 export const ResRequerimientoOpaSlice = createSlice({
@@ -100,12 +105,23 @@ export const ResRequerimientoOpaSlice = createSlice({
       state.viewMode = action.payload as boolean;
     },
 
+
+    //* para actualización de la primera parte de la respuesta al requerimiento de la OPA
+    setCurrentPersonaRespuestaUsuario: (state: any, action: any) => {
+      state.currentPersonaRespuestaUsuario = action.payload;
+    },
+
+
     resetItems: (state) => {
       state.anexosCreados = [];
       state.currentAnexo = null;
       state.currentSolicitudAlUsuario = null;
       state.metadatos = null;
       state.viewMode = false;
+    },
+
+    resetFormPartOne: (state) => {
+      state.currentPersonaRespuestaUsuario = null;
     },
   },
 });
@@ -118,4 +134,9 @@ export const {
   setMetadatos,
   setViewMode,
   resetItems,
+
+  //* primera parte de la creación de la respuesta de una OPA
+  setCurrentPersonaRespuestaUsuario,
+  resetFormPartOne,
+
 } = ResRequerimientoOpaSlice.actions;
