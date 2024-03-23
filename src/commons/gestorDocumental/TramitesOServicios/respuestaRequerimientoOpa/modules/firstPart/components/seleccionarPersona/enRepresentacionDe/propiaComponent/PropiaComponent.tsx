@@ -10,6 +10,9 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { LoadingButton } from '@mui/lab';
 import { ModalSeleccionPersona } from './ModalSeleccionPersona';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../../../hooks';
+import { setCurrentPersonaRespuestaUsuario } from '../../../../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
 
 export const PropiaComponent = ({
   control_seleccionar_persona,
@@ -20,9 +23,14 @@ export const PropiaComponent = ({
   watchExe: any;
   reset_seleccionar_persona: any;
 }): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
   //* context declarations
   const { handleOpenModalOne} = useContext(ModalAndLoadingContext);
+
+  // ? con esta variable se va a manejar la actualización de la persona seleccionada para no generar conflicsot con use form
+  const {currentPersonaRespuestaUsuario} = useAppSelector((state) => state.ResRequerimientoOpaSlice);
 
   return (
     <>
@@ -51,16 +59,13 @@ export const PropiaComponent = ({
                   zIndex: 2,
                 }}
               >
-                <Controller
-                  name="tipo_documento"
-                  control={control_seleccionar_persona}
-                  rules={{ required: true }}
-                  render={({ field: { value } }) => (
                     <div>
                       <Select
-                        value={value}
+                         value={{
+                          value: currentPersonaRespuestaUsuario?.tipo_documento,
+                          label: currentPersonaRespuestaUsuario?.tipo_documento,
+                        }}
                         isDisabled={true}
-                        options={[] ?? []}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -77,36 +82,19 @@ export const PropiaComponent = ({
                         </small>
                       </label>
                     </div>
-                  )}
-                />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Controller
-                  name="numero_documento"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value }, fieldState: {} }) => (
                     <TextField
                       fullWidth
                       label="Número de documento"
                       size="small"
                       variant="outlined"
-                      value={value}
-                      onChange={onChange}
+                      value={currentPersonaRespuestaUsuario?.numero_documento}
                       InputLabelProps={{ shrink: true }}
                       disabled
                     />
-                  )}
-                />
               </Grid>
               <Grid item xs={12} sm={5}>
-                <Controller
-                  name="nombre_completo"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value }, fieldState: {} }) => (
                     <TextField
                       fullWidth
                       label="Nombre de la persona"
@@ -115,13 +103,10 @@ export const PropiaComponent = ({
                       rows={1}
                       maxRows={2}
                       variant="outlined"
-                      value={value}
-                      onChange={onChange}
+                      value={currentPersonaRespuestaUsuario?.nombre_completo}
                       InputLabelProps={{ shrink: true }}
                       disabled
                     />
-                  )}
-                />
               </Grid>
             </Grid>
 
@@ -136,11 +121,15 @@ export const PropiaComponent = ({
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  // cleanElementComponent();
-                  console.log('limpiar campos');
+                  dispatch(setCurrentPersonaRespuestaUsuario({
+                    tipo_documento: '',
+                    numero_documento: '',
+                    nombre_completo: '',
+                  } as any))
+                  control_info('Se ha quitado la selección de la persona')
                 }}
               >
-                LIMPIAR CAMPOS
+                QUITAR SELECCIÓN DE PERSONA
               </Button>
 
               <Button
@@ -151,7 +140,7 @@ export const PropiaComponent = ({
                   handleOpenModalOne(true)
                 }}
               >
-                BÚSQUEDA DE PERSONAS
+                BÚSQUEDA PERSONA
               </Button>
             </Stack>
             <Divider />

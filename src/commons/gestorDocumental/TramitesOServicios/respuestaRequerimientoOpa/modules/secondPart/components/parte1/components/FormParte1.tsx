@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { ModalInfoSolicitudReq } from './ModalInfoSolicitud/ModalInfoSolicitudReq';
 import { useStepperRequerimiento } from '../../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { ResRequerimientoOpaContext } from '../../../context/ResRequerimientoOpaContext';
+import { ResRequerimientoOpaContext } from '../../../../../context/ResRequerimientoOpaContext';
 import { useAppSelector } from '../../../../../../../../../hooks';
 import { getAnexosSolicitud, getDetalleSolicitud } from '../../../services/afterCreatedUserRequest.service';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';

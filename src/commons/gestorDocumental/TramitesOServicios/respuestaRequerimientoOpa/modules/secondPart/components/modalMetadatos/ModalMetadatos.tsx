@@ -37,9 +37,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { setMetadatos } from '../../toolkit/slice/ResRequerimientoOpaSlice';
 import { control_success } from '../../../../../../../../helpers';
 import { Title } from '../../../../../../../../components';
+import { setMetadatos } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
 
 export const ModalMetadatos = ({
   tipologiasDocumentales,

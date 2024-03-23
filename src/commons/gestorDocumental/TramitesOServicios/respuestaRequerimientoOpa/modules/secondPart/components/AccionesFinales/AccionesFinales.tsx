@@ -4,9 +4,9 @@ import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
-import { resetItems } from '../../toolkit/slice/ResRequerimientoOpaSlice';
 import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
+import { resetItems } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
 
 
 export const AccionesFinales = ({

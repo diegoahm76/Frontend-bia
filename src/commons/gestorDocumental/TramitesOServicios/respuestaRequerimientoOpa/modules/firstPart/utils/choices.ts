@@ -21,6 +21,6 @@ export const choicesTipoPersona = [
   },
   {
     label: 'JURIDICA',
-    varlue: 'JURIDICA',
+    value: 'JURIDICA',
   },
 ];
