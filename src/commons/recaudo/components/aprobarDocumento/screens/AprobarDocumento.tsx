@@ -24,14 +24,10 @@ export const AprobarDocumento = () => {
     const [aprobadoFilter, setAprobadoFilter] = useState<boolean|null>(false);
     const [data_table, set_data_tabla] = useState<Registro[]>([]);
     const navigate = useNavigate();
+const [activador,set_activador]=useState(false);
 
 
 
-
-
-    const Actualizar_tabla = () => {
-        Peticion_Busqueda_Avanzada();
-    };
 
 
 
@@ -144,6 +140,7 @@ export const AprobarDocumento = () => {
     //         console.error(error);
     //     }
     // };
+
     const Peticion_Busqueda_Avanzada = async (): Promise<void> => {
         try {
             let url = '/recaudo/formulario/ver_formulario/';
@@ -162,11 +159,20 @@ export const AprobarDocumento = () => {
         } catch (error) {
             console.error(error);
         }
+        
     };
     
     
+    const Actualizar_tabla = () => {
+        Peticion_Busqueda_Avanzada();
+        set_activador(!activador);
+    };
+
     
-    
+    useEffect(() => {
+        Peticion_Busqueda_Avanzada();
+    }, [activador]);
+
 
 
     useEffect(() => {

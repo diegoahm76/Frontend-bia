@@ -10,11 +10,18 @@ import { Title } from '../../../../../../../components';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { getLiderByUnidadOrganizacional } from '../../services/getLiderUnidadOrganizacional.service';
 import { AsignacionGrupoTramiteContext } from '../../context/AsignacionGrupoTramiteContext';
+import { getSeriesByIdUnidad } from '../../../../../ReportesGeneralesGestorDocumental/services/getSeriesByIdUnidad.service';
 
 export const SeleccionGrupo = (): JSX.Element => {
-  const { listaSubGrupos, liderAsignado, setLiderAsignado, setCurrentGrupo } = useContext(
-    AsignacionGrupoTramiteContext
-  );
+  const {
+    listaSubGrupos,
+    liderAsignado,
+    setLiderAsignado,
+    setCurrentGrupo,
+    currentGrupo,
+    listaSeries,
+    setListaSeries,
+  } = useContext(AsignacionGrupoTramiteContext);
 
   const { secondLoading } = useContext(ModalAndLoadingContext);
 
@@ -77,14 +84,13 @@ export const SeleccionGrupo = (): JSX.Element => {
               ...stylesGrid,
               mt: '1.8rem',
               mb: '1.8rem',
-
-              zIndex: 7,
+              zIndex: 15,
             }}
           >
             <section
               style={{
-                marginTop: '2.2rem',
-                marginBottom: '2.2rem',
+                marginTop: '2rem',
+                marginBottom: '2rem',
               }}
             >
               <Title title="Asginar a: " />
@@ -101,6 +107,45 @@ export const SeleccionGrupo = (): JSX.Element => {
                   <Select
                     value={value}
                     onChange={(selectedOption) => {
+                      const { value } = selectedOption;
+                      console.log('selectedOptioasdan', value);
+                      //* se va a tener que hacer la consulta de si la unidad tiene lider actual o si no no se deben permite asignala la pqrsdf a dicha unidad}
+                      setCurrentGrupo({
+                        grupoSelected: selectedOption,
+                        currentSerie: null,
+                      });
+
+                      {
+                        /* revisar si el expediente generado será simple o complejo ya que en razón de ello se debe analizar de donde se va a sacar la serie */
+                      }
+                      Promise.all([
+                        getSeriesByIdUnidad(value),
+                        getLiderByUnidadOrganizacional(value, setLiderAsignado),
+                      ])
+                        .then(([series, lider]) => {
+                          console.log('series', series);
+                          console.log('lider', lider);
+
+                          if (Array.isArray(series)) {
+                            setListaSeries(series);
+                          }
+
+                          if (!Array.isArray(lider)) {
+                            setLiderAsignado(lider);
+                          }
+                        })
+                        .catch((error) => {
+                          setListaSeries([]);
+                          setLiderAsignado(undefined);
+                          console.error(
+                            'Error fetching series or lider:',
+                            error
+                          );
+                        });
+
+                      onChange(selectedOption);
+                    }}
+                    /* onChange={(selectedOption) => {
                       const { value } = selectedOption;
                       //* se va a tener que hacer la consulta de si la unidad tiene lider actual o si no no se deben permite asignala la pqrsdf a dicha unidad}
                       setCurrentGrupo(selectedOption);
@@ -119,7 +164,7 @@ export const SeleccionGrupo = (): JSX.Element => {
                           setLiderAsignado(res);
                         })
                       onChange(selectedOption);
-                    }}
+                    }}*/
                     // listaSubGrupos
                     options={listaSubGrupos ?? []}
                     placeholder="Seleccionar"
@@ -142,7 +187,7 @@ export const SeleccionGrupo = (): JSX.Element => {
             />
           </Grid>
 
-          {liderAsignado ? (
+          {listaSeries?.length > 0 && (
             <Grid
               item
               xs={12}
@@ -152,9 +197,81 @@ export const SeleccionGrupo = (): JSX.Element => {
                 mt: '1.8rem',
                 mb: '1.8rem',
 
+                zIndex: 7,
+              }}
+            >
+              <section
+                style={{
+                  marginTop: '1rem',
+                  marginBottom: '1rem',
+                }}
+              >
+                <Title title="Seleccionar serie para creación de expediente" />
+              </section>
+              <Controller
+                name="id_serie_doc"
+                control={control_seccion_asociada_control}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <div>
+                    <Select
+                      value={value}
+                      onChange={(selectedOption) => {
+                        const { value } = selectedOption;
+
+                        onChange(selectedOption);
+                        setCurrentGrupo({
+                          ...currentGrupo,
+                          currentSerie: selectedOption,
+                        });
+                      }}
+                      // lista de series
+                      options={listaSeries ?? []}
+                      placeholder="Seleccionar"
+                    />
+                    <label>
+                      <small
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 'thin',
+                          fontSize: '0.75rem',
+                          marginTop: '0.25rem',
+                          marginLeft: '0.25rem',
+                        }}
+                      >
+                        Serie - subserie
+                      </small>
+                    </label>
+                  </div>
+                )}
+              />
+            </Grid>
+          )}
+
+          {liderAsignado ? (
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                ...stylesGrid,
+                mt: '1rem',
+                mb: '1rem',
+
                 zIndex: 5,
               }}
             >
+              <section
+                  style={{
+                    marginTop: '1rem',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  <Title title="Líder actual de la unidad seleccionada" />
+                </section>
               <TextField
                 fullWidth
                 disabled

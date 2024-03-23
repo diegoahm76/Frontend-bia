@@ -262,7 +262,7 @@ export const SeleccionLider = (): JSX.Element => {
                           //  console.log('')(selectedOption);
                           onChange(selectedOption);
                         }}
-                        options={unidadesOrganizacionales}
+                        options={unidadesOrganizacionales ?? []}
                         placeholder="Seleccionar"
                       />
                       <label>

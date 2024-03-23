@@ -221,19 +221,19 @@ export const initial_state_otro: IObjOtros = {
   id_otros: null,
   nombre_estado_solicitud: null,
   id_persona_titular: null,
-	id_persona_interpone: null,
-	cod_relacion_titular: null,
-	es_anonima: false,
-	id_medio_solicitud: null,
-	cod_forma_presentacion: null,
-	asunto: null,
-	descripcion: null,
-	cantidad_anexos: null,
-	nro_folios_totales: null,
-	requiere_rta: false,
-	id_sucursal_especifica_implicada: null,
-	id_persona_recibe: null,
-	id_sucursal_recepciona_fisica: null,
+  id_persona_interpone: null,
+  cod_relacion_titular: null,
+  es_anonima: false,
+  id_medio_solicitud: null,
+  cod_forma_presentacion: null,
+  asunto: null,
+  descripcion: null,
+  cantidad_anexos: null,
+  nro_folios_totales: null,
+  requiere_rta: false,
+  id_sucursal_especifica_implicada: null,
+  id_persona_recibe: null,
+  id_sucursal_recepciona_fisica: null,
   numero_radicado_entrada: null,
   nombre_completo_titular: null,
   fecha_registro: new Date(),
@@ -245,8 +245,8 @@ export const initial_state_otro: IObjOtros = {
   id_estado_actual_solicitud: null,
   id_documento_archivo_expediente: null,
   id_expediente_documental: null,
-  anexos:[],
-}
+  anexos: [],
+};
 
 const initial_state: IPqrsdf = {
   file_fisico: null,
@@ -317,7 +317,6 @@ const initial_state: IPqrsdf = {
   otros: [],
   otro: initial_state_otro,
 };
-
 
 export const pqrsdf_slice = createSlice({
   name: 'pqrsdf_slice',
@@ -577,9 +576,13 @@ export const pqrsdf_slice = createSlice({
     set_others: (state: IPqrsdf, action: PayloadAction<IObjOtros[]>) => {
       state.otros = action.payload;
     },
+    set_other: (state: IPqrsdf, action: PayloadAction<IObjOtros>) => {
+      state.otro = action.payload;
+    },
   },
 });
 export const {
+  set_other,
   set_file_fisico,
   set_area,
   set_areas,

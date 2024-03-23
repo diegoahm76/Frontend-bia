@@ -33,7 +33,7 @@ interface IProps {
   reset_values?: any;
   get_filters_models: any;
   models: any[];
-  columns_model: GridColDef[];
+  columns_model: GridColDef[] | null;
   row_id: string | number;
   set_current_model?: any;
   form_inputs_list?: any[];
@@ -237,7 +237,7 @@ const BuscarModelo = ({
           xs={form_input.xs}
           md={form_input.md}
           margin={form_input.margin}
-          selected_image={form_input.selected_imagen}
+          selected_image={form_input.selected_image}
           width_image={form_input.width_image}
           height_image={form_input.height_image}
         />

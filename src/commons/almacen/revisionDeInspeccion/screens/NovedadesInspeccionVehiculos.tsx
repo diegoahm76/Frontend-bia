@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { interface_put_revisar_vehiculo, interface_vehiculos_con_novedad, interface_vehiculos_sin_novedad, response_vehiculos_inspeccionados } from "../interfaces/types";
 import { useAppDispatch } from "../../../../hooks";
 import { obtener_vehiculos_inspeccionados } from "../thunks/revision_inspeccion";
@@ -23,7 +23,7 @@ const NovedadesInspeccionVehiculos = () => {
     dispatch(obtener_vehiculos_inspeccionados())
       .then((response: response_vehiculos_inspeccionados) => {
         if (!response?.success){
-          control_error('No se encontraron los nombres del conductor');
+          control_error('Error al obtener los vehiculos inspeccionados');
           set_data_vehiculos_sin_novedad([]);
         } else {
           set_data_vehiculos_sin_novedad(response.data.vehiculos_sin_novedad);
@@ -32,8 +32,12 @@ const NovedadesInspeccionVehiculos = () => {
       })
   }
 
+  const inspecciones_obtenidas = useRef(false);
   useEffect(() => {
-    obtener_vehiculos_inspeccionados_fc();
+    if (!inspecciones_obtenidas.current){
+      obtener_vehiculos_inspeccionados_fc();
+      inspecciones_obtenidas.current = true;
+    }
   }, [mostrar_view_inpeccion])
 
   return (

@@ -92,7 +92,47 @@ export const BusquedaReporteTipoCinco = ({
           )}
         />
       </Grid>
-      <Grid
+      <Grid item xs={12} sm={4}>
+        <Controller
+          name="seccion_subseccion"
+          control={controlBusquedaGeneradoraReporte}
+          defaultValue=""
+          render={() => (
+            <TextField
+              required
+              disabled
+              fullWidth
+              label="Sección / Subsección"
+              type="text"
+              size="small"
+              variant="outlined"
+              value={'TODAS'}
+              InputLabelProps={{ shrink: true }}
+            />
+          )}
+        />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Controller
+          name="grupos"
+          control={controlBusquedaGeneradoraReporte}
+          defaultValue=""
+          render={() => (
+            <TextField
+              required
+              disabled
+              fullWidth
+              label="Grupo de la corporación"
+              type="text"
+              size="small"
+              variant="outlined"
+              value={'TODOS'}
+              InputLabelProps={{ shrink: true }}
+            />
+          )}
+        />
+        </Grid>
+    {/*  <Grid
         item
         xs={12}
         sm={4}
@@ -149,8 +189,8 @@ export const BusquedaReporteTipoCinco = ({
             </div>
           )}
         />
-      </Grid>
-      {!controlBusquedaGeneradoraReporte?._formValues?.seccion_subseccion
+      </Grid>*/}
+     {/* {!controlBusquedaGeneradoraReporte?._formValues?.seccion_subseccion
         ?.value || !unidades?.grupos ? (
         <></>
       ) : (
@@ -196,7 +236,7 @@ export const BusquedaReporteTipoCinco = ({
             )}
           />
         </Grid>
-      )}
+      )}*/}
     </>
   );
 };

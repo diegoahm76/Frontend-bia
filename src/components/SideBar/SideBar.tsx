@@ -514,7 +514,7 @@ export const SideBar: FC<SideBarProps> = ({
         })
       ) : (
         <>
-          <Grid
+         <Grid
             container
             alignContent="center"
             justifyContent="center"
@@ -538,7 +538,7 @@ export const SideBar: FC<SideBarProps> = ({
                   color: mod_dark ? '#fafafa' : '#141415',
                 }}
               >
-                Cargando opciones del menú, por favor espere un momento...
+                Cargando opciones del menú. Por favor, espere un momento...
               </Typography>
             </Grid>
           </Grid>

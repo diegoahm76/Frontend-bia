@@ -38,7 +38,15 @@ export const AccionesFinales = ({
   //* handleSumbit
 
   const sendDataByFormData = () => {
-
+    const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
+      if (a.ruta_soporte && !b.ruta_soporte) {
+        return -1;
+      }
+      if (!a.ruta_soporte && b.ruta_soporte) {
+        return 1;
+      }
+      return 0;
+    });
     // Show alert that the service does not exist yet
     showAlert('Service not implemented', 'This service is not implemented yet', 'info');
     return;
@@ -74,7 +82,7 @@ export const AccionesFinales = ({
     );
     formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
 
-    anexosCreados.forEach((anexo: any, index: number) => {
+    sortedAnexos.forEach((anexo: any, index: number) => {
       formData.append('archivo', anexo.ruta_soporte);
       formData.append(
         'anexo',

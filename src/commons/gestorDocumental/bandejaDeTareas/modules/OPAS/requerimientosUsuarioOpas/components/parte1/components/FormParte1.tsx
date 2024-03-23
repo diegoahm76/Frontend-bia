@@ -73,14 +73,14 @@ export const FormParte1 = ({
     //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
     handleReset();
 
-   /* void getInitialData(
-      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
+   void getInitialData(
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
       navigate,
       handleGeneralLoading,
       handleSecondLoading
     ).then((data) => {
       setInfoInicialUsuario(data);
-    });*/
+    });
   }, []);
 
   const getInfoSolicitud = async (params: any) => {
@@ -179,13 +179,13 @@ export const FormParte1 = ({
               fullWidth
               disabled
               size="small"
-              label="Tipo de PQRSDF"
+              label="Tipo de operación OPA"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               inputProps={{
                 maxLength: 50,
               }}
-              value={infoInicialUsuario?.detallePQRSDF?.data?.tipo ?? 'N/A'}
+              value={infoInicialUsuario?.detallePQRSDF?.data?.tipo_operacion_tramite ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -193,7 +193,7 @@ export const FormParte1 = ({
               fullWidth
               disabled
               size="small"
-              label="Estado"
+              label="Estado actual de la OPA"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               inputProps={{
@@ -208,7 +208,7 @@ export const FormParte1 = ({
             <TextField
               fullWidth
               size="small"
-              label="Número de radicado de entrada"
+              label="Número de radicado"
               disabled
               variant="outlined"
               InputLabelProps={{ shrink: true }}
@@ -219,19 +219,19 @@ export const FormParte1 = ({
             <TextField
               fullWidth
               size="small"
-              label="Fecha de radicado de entrada"
+              label="Fecha de radicado"
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
               value={
                 formatDate(
                   infoInicialUsuario?.detallePQRSDF?.data
-                    ?.fecha_radicado_entrada
+                    ?.fecha_radicado
                 ) ?? 'N/A'
               }
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
+          {/*<Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               multiline
@@ -246,8 +246,8 @@ export const FormParte1 = ({
               InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.detallePQRSDF?.data?.asunto ?? 'N/A'}
             />
-          </Grid>
-          <Grid item xs={12} sm={12}>
+          </Grid>*/}
+          {/*<Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               multiline
@@ -274,7 +274,7 @@ export const FormParte1 = ({
                 infoInicialUsuario?.detallePQRSDF?.data?.descripcion ?? 'N/A'
               }
             />
-          </Grid>
+          </Grid>*/}
 
           {/* tabla de elementos a mostrar */}
 
@@ -297,10 +297,11 @@ export const FormParte1 = ({
               sx={{
                 textAlign: 'center',
                 justifyContent: 'center',
-                mt: '1.5rem',
+                mt: '2.5rem',
+                fontWeight: 'bold',
               }}
             >
-              No hay histórico de requerimientos para este elemento
+              No hay histórico de requerimientos para esta solicitud de OPA
             </Typography>
           )}
         </Grid>
@@ -330,7 +331,7 @@ export const FormParte1 = ({
               ) {
                 showAlert(
                   'Opss!',
-                  'Esta PQRSDF ya ha sido respondida, por lo tanto, no es posible realizar un nuevo requerimiento al usuario; solo se puede acceder al historial de estas solicitudes.',
+                  'Esta OPA ya ha sido respondida, por lo tanto, no es posible realizar un nuevo requerimiento al usuario; solo se puede acceder al historial de estas solicitudes.',
                   'warning'
                 );
                 return;
@@ -341,7 +342,7 @@ export const FormParte1 = ({
               width: '60%',
             }}
           >
-            Crear solicitud de requerimiento
+            Crear solicitud de requerimiento al usuario sobre la OPA
           </Button>
         </Grid>
       </form>
