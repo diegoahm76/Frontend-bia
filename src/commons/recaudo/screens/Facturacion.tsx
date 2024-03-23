@@ -27,6 +27,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { remicion_viso, constancia_publicacion, plantila_4, constancia_publicaci5, citacion, documento8 } from '../plantillasRecaudo/miguel';
 import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
+import { AlertaDocumento } from './AlertaDocumento';
 
 export interface SerieSubserie {
   // id_catserie_unidadorg: number;
@@ -52,6 +53,10 @@ export interface UnidadOrganizaciona {
   tiene_configuracion: any;
   id_unidad_organizacional: number;
 }
+interface TipoRadicado {
+  value: string;
+  label: string;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Facturacion: React.FC = () => {
   const { userinfo: { nombre_unidad_organizacional, nombre, id_persona } } = useSelector((state: AuthSlice) => state.auth);
@@ -60,6 +65,67 @@ export const Facturacion: React.FC = () => {
 
   const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
   const [consecutivo_id, setConsecutivo_id] = useState<number | null>(null);
+
+  const [radicadof, setradicadof] = useState<number | null>(null);
+
+
+  const handleSubmitRadicado = async () => {
+    try {
+      const url = "/gestor/adminitrador_radicados/crear-radicado/";
+      const fecha_actual = new Date().toISOString(); // Formato de fecha ISO
+
+      const payload = {
+        id_persona: id_persona,
+        tipo_radicado: tipos_radicado,
+        fecha_actual: fecha_actual,
+        modulo_radica: "Generador de Documento"
+
+      };
+      const response = await api.post(url, payload);
+      setradicadof(response.data?.data?.radicado_nuevo);
+
+      const numeroRadicado = response.data.nro_radicado;
+
+      control_success("Numero de radicado creado");
+
+    } catch (error: any) {
+      // control_error(error.response.data.detail?.error);
+      control_error(error.response.data.detail);
+    }
+  };
+
+
+
+  const [tipos_radicado, settipos_radicado] = useState('');
+
+  // Función para manejar el cambio en el select
+  const handleradicado = (event: { target: { value: SetStateAction<string>; }; }) => {
+    settipos_radicado(event.target.value);
+  };
+  const [tiposRadicado, setTiposRadicado] = useState<TipoRadicado[]>([]);
+
+  const fetchTiposRadicado = async () => {
+    try {
+      const response = await api.get('/gestor/choices/tipo-radicado/');
+
+      // Aseguramos que cada elemento mapeado cumpla con la interfaz TipoRadicado
+      const tipos: TipoRadicado[] = response.data.map(([value, label]: [string, string]) => ({ value, label }));
+
+      setTiposRadicado(tipos);
+    } catch (error:any) {
+      // console.error('Error al obtener los tipos de radicado:', error);
+      control_error(error.response.data.detail);
+    }
+  };
+
+  useEffect(() => {
+    fetchTiposRadicado();
+  }, []);
+
+
+
+
+
 
   const realizarActualizacion = async () => {
     try {
@@ -74,8 +140,9 @@ export const Facturacion: React.FC = () => {
       const data = res.data.data;
       // setConsecutivoActual(data.radicado_nuevo);
       await generarHistoricoBajas();
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      // console.error(error);
+      control_error(error.response.data.detail);
     }
   };
 
@@ -114,7 +181,7 @@ export const Facturacion: React.FC = () => {
         let yTexto = yCuadro + 10; // Posición inicial del texto en Y
         doc.text("Cormacarena ", xCuadro + 30, yTexto);
         yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
-        doc.text(`Radicado: ${consecutivoActual}`, xCuadro + 10, yTexto);
+        doc.text(`Radicado: ${radicadof}`, xCuadro + 10, yTexto);
         yTexto += espacioEntreLineas;
 
         doc.text(dayjs().format('DD/MM/YYYY'), xCuadro + 10, yTexto);
@@ -134,7 +201,7 @@ export const Facturacion: React.FC = () => {
         let yTexto = yCuadro + 10; // Posición inicial del texto en Y
         doc.text("Cormacarenaccc ", xCuadro + 30, yTexto);
         yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
-        doc.text(`Radicado: ${consecutivoActual}`, xCuadro + 10, yTexto);
+        doc.text(`Radicado: ${radicadof}`, xCuadro + 10, yTexto);
         yTexto += espacioEntreLineas;
 
         doc.text(dayjs().format('DD/MM/YYYY'), xCuadro + 10, yTexto);
@@ -150,8 +217,8 @@ export const Facturacion: React.FC = () => {
     doc.setFontSize(12);
     let y = 30; // posición inicial para el texto
     // ${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}
-    
-    
+
+
     doc.text(`${consecutivoActual}`, 10, y);
     y += 6;
 
@@ -292,8 +359,9 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       const res = await api.get(url);
       const unidadesData = res.data.data;
       setUnidades(unidadesData);
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      // console.error(error);
+      control_error(error.response.data.detail);
     }
   };
 
@@ -306,7 +374,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   }, [opcionSeleccionada]);
 
-  const handleChange = (event: any ) => {
+  const handleChange = (event: any) => {
     setUnidadSeleccionada(event.target.value as string);
     const selectedId = event.target.value;
     setIdUnidadSeleccionada(selectedId);
@@ -321,8 +389,9 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       const res = await api.get(url);
       const data = res.data.data;
       setSeriesSubseries(data);
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      // console.error(error);
+      // control_error(error.response.data.detail);
     }
   };
 
@@ -340,7 +409,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   const [nombreSubserieSeleccionada, setNombreSubserieSeleccionada] = useState('');
 
   const handleChangee = (event: { target: { name: any; value: any; }; }) => {
-    setSelectedSerieSubserie(event.target.value as any );
+    setSelectedSerieSubserie(event.target.value as any);
 
     const selectedValue = event.target.value;
     setSelectedSerieSubserie(selectedValue);
@@ -494,8 +563,9 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       console.log("Documento enviado con éxito", response.data);
       control_success("Documento enviado con éxito");
 
-    } catch (error) {
-      console.error("Error al enviar el documento", error);
+    } catch (error:any) {
+      // console.error("Error al enviar el documento", error);}
+      control_error(error.response.data.detail);
     }
   };
 
@@ -527,8 +597,9 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         console.log("222222222222");
         console.log(alertas_lider);
         console.log("111111111111");
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+        // console.error(error);
+        control_error(error.response.data.detail);
       }
     };
     void fetch_perfil();
@@ -577,6 +648,10 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
 
   const handle_open_buscar = (): void => {
+    handleSubmitRadicado()
+
+
+
     set_is_buscar(true);
     crearConsecutivo()
     // realizarActualizacion();
@@ -630,7 +705,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   const isButtonDisabled = !unidadSeleccionada;
 
   const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
-  const [  type_direction, // set_type_direction
+  const [type_direction, // set_type_direction
   ] = useState('');
   const [Fecha_e, setFecha_e] = useState('');
 
@@ -657,8 +732,8 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         }}
       >
         <Title title="Generación de documento" />
-{/* {Fecha_e} */}
-
+        {/* {Fecha_e} */}
+        {/* {radicadof} */}
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="opcion-select-label">Plantilla</InputLabel>
@@ -679,6 +754,23 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
               <MenuItem value="9">Vacio</MenuItem>
 
 
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="opcion-select-label">Radicado</InputLabel>
+            <Select
+              labelId="Radicado"
+              value={tipos_radicado}
+              label="Opción"
+              onChange={handleradicado}
+            >
+              <MenuItem value="NA">Sin radicado</MenuItem>
+              {tiposRadicado.map(tipo => (
+                <MenuItem key={tipo.value} value={tipo.value}>{tipo.label}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
@@ -716,7 +808,10 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
             </Grid>
             <Grid item xs={12} marginTop={3} >
               <div>
-                <h3>Radicado : {consecutivoActual}</h3>
+                <h3>Radicado : {radicadof}</h3>
+
+                <h3>N Consecutivo: {consecutivoActual}</h3>
+
               </div>
             </Grid>
 
@@ -1313,7 +1408,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
 
-      <AlertaDestinatario />
+      <AlertaDocumento />
 
 
 

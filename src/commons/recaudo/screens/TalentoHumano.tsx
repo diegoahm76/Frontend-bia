@@ -35,13 +35,11 @@ export interface SucursalEmpresa {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 interface Historico {
-    id: number;
-    nivel: number;
-    director: string;
-    tecnicos: string;
-    asesor: string;
-    profesional: string;
-    asistencial: string;
+    descripcion: any,
+    nombre: any,
+    nivel: any,
+    valor: any,
+
 };
 
 interface pqrs {
@@ -58,12 +56,10 @@ interface editar {
     id: any
 };
 interface FormData {
-    asistencial: any,
-    profesional: any,
-    asesor: any,
-    tecnicos: any,
-    director: any,
+    descripcion: any,
+    nombre: any,
     nivel: any,
+    valor: any,
 }
 export const TalentoHumano: React.FC = () => {
     const [modo, setModo] = useState<"crear" | "editar" | null>(null);
@@ -71,11 +67,9 @@ export const TalentoHumano: React.FC = () => {
 
     const initialFormData: FormData = {
 
-        asistencial: "",
-        profesional: "",
-        asesor: "",
-        tecnicos: "",
-        director: "",
+        descripcion: "",
+        nombre: "",
+        valor: "",
         nivel: "",
     };
     const [formData, setFormData] = useState(initialFormData);
@@ -115,25 +109,24 @@ export const TalentoHumano: React.FC = () => {
         setModo("editar");
         setselectid(rowData.id)
         setFormData({
-            asistencial: rowData.asistencial,
-            profesional: rowData.profesional,
-            asesor: rowData.asesor,
-            tecnicos: rowData.tecnicos,
-            director: rowData.director,
+            descripcion: rowData.descripcion,
+            nombre: rowData.nombre,
             nivel: rowData.nivel,
+            valor: rowData.valor,
         });
     };
 
+    const seteliminar = (rowData: any) => {
+
+        setselectid(rowData.id)
+
+    };
+
     const columns = [
-
-        // { field: 'id', headerName: 'id  ', width: 130, flex: 1 },
         { field: 'nivel', headerName: 'Nivel', width: 130, flex: 1 },
-        { field: 'director', headerName: 'Director', width: 130, flex: 1 },
-        { field: 'tecnicos', headerName: 'Tecnicos', width: 130, flex: 1 },
-        { field: 'asesor', headerName: 'Asesor', width: 130, flex: 1 },
-        { field: 'profesional', headerName: 'Profesional', width: 130, flex: 1 },
-        { field: 'asistencial', headerName: 'Asistencial', width: 130, flex: 1 },
-
+        { field: 'nombre', headerName: 'Nombre', width: 130, flex: 1 },
+        { field: 'descripcion', headerName: 'Descripcion', width: 130, flex: 1 },
+        { field: 'valor', headerName: 'Valor  ', width: 130, flex: 1 },
         {
             field: 'Acciones',
             headerName: 'Acciones',
@@ -147,11 +140,32 @@ export const TalentoHumano: React.FC = () => {
                     >
                         <EditIcon />
                     </IconButton>
+
+                    {/* <IconButton
+                        color="error"
+                        onClick={() => handleEliminarConfiguracion(params.row.id)}
+                    >
+                        <DeleteIcon />
+                    </IconButton> */}
                 </>
             )
         },
 
     ];
+    // const handleEliminarConfiguracion = async (id: number) => {
+    //     try {
+    //         const url = `/recaudo/configuracion_baisca/tiporenta/delete/${id}/`;
+    //         const response = await api.delete(url);
+    //         control_error("eliminado exitosamente ");
+
+    //     } catch (error: any) {
+    //         console.error("Error al eliminar la configuración", error);
+
+    //         // Manejar el error
+    //     }
+    // };
+
+
 
 
     const [solicitud, set_solicitud] = useState<Solicitud[]>([]);
@@ -269,70 +283,50 @@ export const TalentoHumano: React.FC = () => {
                             />
                         </Grid>
 
-
-
-
                         <Grid item xs={6}>
                             <TextField
-                                label="director"
+                                label="valor"
                                 variant="outlined"
                                 size="small"
                                 fullWidth
                                 required
-                                name="director"
-                                value={formData.director}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="tecnicos"
-                                name="tecnicos"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                value={formData.tecnicos}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="asesor"
-                                name="asesor"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                value={formData.asesor}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="profesional"
-                                name="profesional"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                value={formData.profesional}
+                                name="valor"
+                                value={formData.valor}
                                 onChange={handleInputChange}
                             />
                         </Grid>
 
                         <Grid item xs={6}>
                             <TextField
-                                label="asistencial"
-                                name="asistencial"
+                                label="Nombre"
                                 variant="outlined"
                                 size="small"
                                 fullWidth
                                 required
-                                value={formData.asistencial}
+                                name="nombre"
+                                value={formData.nombre}
                                 onChange={handleInputChange}
                             />
                         </Grid>
+
+                        <Grid item xs={6}>
+                            <TextField
+                                label="descripcion"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                name="descripcion"
+                                value={formData.descripcion}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+
+
+
+
+                        {/* {selectid} */}
+
                         <Grid item  >
                             <Button
                                 color='success'
@@ -411,13 +405,13 @@ export const TalentoHumano: React.FC = () => {
 
 
                 {/* sucursal */}
-            
+
 
             </Grid>
 
 
             <RenderDataGrid
-                title='Profesionales'
+                title='Listado de profesionales'
                 columns={columns ?? []}
                 rows={Historico ?? []}
             />
