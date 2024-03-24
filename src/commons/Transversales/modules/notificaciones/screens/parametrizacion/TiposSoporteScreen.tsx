@@ -37,7 +37,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { set_tipo_soporte } from '../../store/slice/notificacionesSlice';
-import { IObjSupportType } from '../../interfaces/notificaciones';
+import {
+  IObjNotificacionType,
+  IObjSupportType,
+} from '../../interfaces/notificaciones';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -93,7 +96,12 @@ export function TiposSoporteScreen(): JSX.Element {
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {
+            tipos_notificacion?.find(
+              (objeto: IObjNotificacionType) =>
+                objeto.id_tipo_notificacion_correspondencia === params.value
+            )?.nombre
+          }
         </div>
       ),
     },
@@ -277,6 +285,7 @@ export function TiposSoporteScreen(): JSX.Element {
       })
     );
     set_action('crear');
+    set_checked_activo(false);
   };
   return (
     <>
@@ -344,6 +353,11 @@ export function TiposSoporteScreen(): JSX.Element {
                 helper_text: '',
                 checked: checked_activo,
                 set_checked: set_checked_activo,
+              },
+              {
+                datum_type: 'blank_space',
+                xs: 12,
+                md: 6,
               },
               {
                 datum_type: 'button',

@@ -27,6 +27,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { DialogNoticacionesComponent } from '../../../../../components/DialogNotificaciones';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuid } from 'uuid';
+import {
+  get_asignaciones_id_person_service,
+  get_document_types_service,
+  get_persons_service,
+  get_tipos_notificacion,
+} from '../store/thunks/notificacionesThunks';
+import { IObjNotificacionType } from '../interfaces/notificaciones';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -46,127 +53,92 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
-      field: 'cod_tipo_PQRSDF',
+      field: 'nommbre_tipo_documento',
       header: 'Tipo de documento',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.cod_tipo_PQRSDF}
+          {rowData.nommbre_tipo_documento}
         </div>
       ),
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'fecha_registro',
-      header: 'Asunto',
+      field: 'radicado',
+      header: 'Radicado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(rowData.fecha_registro).toDateString()}
+          {rowData.radicado}
         </div>
       ),
       style: { width: 150 },
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'fecha_radicado',
+      field: 'expediente',
       header: 'Expediente',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.fecha_radicado === null
-            ? '-'
-            : new Date(rowData.fecha_radicado).toDateString()}
+          {rowData.expediente}
         </div>
       ),
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'numero_radicado_entrada',
+      field: 'unidad_solicitante',
       header: 'Grupo solicitante',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.unidad_solicitante}
         </div>
       ),
     },
 
     {
-      field: 'nombre_estado_solicitud',
+      field: 'funcuinario_solicitante',
       headerStyle: { width: '4rem' },
       header: 'Funcionario solicitante',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.funcuinario_solicitante}
         </div>
       ),
     },
-
     {
-      field: 'nombre_estado_solicitud',
+      field: 'fecha_solicitud',
       headerStyle: { width: '4rem' },
       header: 'Fecha de la solicitud',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.fecha_solicitud && rowData.fecha_solicitud.split('T')[0]}
         </div>
       ),
     },
     {
-      field: 'nombre_estado_solicitud',
+      field: 'fecha_rta_final_gestion',
       headerStyle: { width: '4rem' },
-      header: 'Fecha de finalizacion',
+      header: 'Fecha de finalización',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.fecha_rta_final_gestion !== null &&
+            new Date(rowData.fecha_rta_final_gestion).toDateString()}
         </div>
       ),
     },
     {
-      field: 'Dias Faltantes',
-      headerStyle: { width: '4rem' },
-      header: 'Fecha de la solicitud',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
-      headerStyle: { width: '4rem' },
-      header: 'Aceptado',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
-      headerStyle: { width: '4rem' },
-      header: 'Medio de solicitud',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
+      field: 'estado_solicitud',
       headerStyle: { width: '4rem' },
       header: 'Estado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.estado_solicitud}
         </div>
       ),
     },
@@ -177,7 +149,7 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
         <Tooltip title="Detalle">
           <IconButton
             onClick={() => {
-              set_detail_is_active(true);
+              //set_detail_is_active(true);
               setSelectedPqr(rowData);
             }}
           >
@@ -201,58 +173,64 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
   ];
   const columns_solicitud: ColumnProps[] = [
     {
-      field: 'nombre_tipo_oficio',
+      field: 'cod_tipo_documentoID',
       header: 'Tipo de gestión',
       sortable: false,
-    },
-    {
-      field: 'fecha_radicado_salida',
-      header: 'Número de oficio o requerimiento',
-      sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.fecha_radicado_salida === null
-            ? '-'
-            : new Date(rowData.fecha_radicado).toDateString()}
+          {
+            tipos_notificacion?.find(
+              (objeto: IObjNotificacionType) =>
+                objeto.id_tipo_notificacion_correspondencia ===
+                rowData.cod_tipo_documentoID
+            )?.nombre
+          }
         </div>
       ),
     },
     {
-      field: 'numero_radicado_salida',
-      header: 'Radicado',
+      field: 'funcionario_asignado',
+      header: 'Funcionario asignado',
       sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_salida === ''
-            ? 'SIN RADICAR'
-            : rowData.numero_radicado_salida}
-        </div>
-      ),
     },
-
     {
-      field: 'fecha_solicitud',
+      field: 'fecha_asignacion',
       header: 'Fecha de asignación',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(rowData.fecha_solicitud).toDateString()}
+          {rowData.fecha_asignacion && rowData.fecha_asignacion.split('T')[0]}
+        </div>
+      ),
+    },
+    {
+      field: 'fecha_actuacion',
+      header: 'Fecha actución',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.fecha_actuacion && rowData.fecha_actuacion.split('T')[0]}
+        </div>
+      ),
+    },
+    {
+      field: 'fecha_resuelta',
+      header: 'Fecha resuelta',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.fecha_resuelta && rowData.fecha_resuelta.split('T')[0]}
         </div>
       ),
     },
 
     {
       field: 'nombre_und_org_oficina_solicita',
-      header: 'Plazo de entrega',
+      header: 'Días en gestión',
       sortable: false,
     },
     {
-      field: 'nombre_und_org_oficina_solicita',
-      header: 'Días restantes',
-      sortable: false,
-    },
-    {
-      field: 'nombre_und_org_oficina_solicita',
+      field: 'estado_notificacion',
       header: 'Estado',
       sortable: false,
     },
@@ -287,21 +265,31 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
   ];
   const definition_levels = [
     {
-      column_id: 'id_PQRSDF',
+      column_id: 'id_notificacion_correspondencia',
       level: 0,
       columns: columns_pqrs,
       table_name: 'Solicitudes de notificación',
       property_name: '',
     },
     {
-      column_id: 'id_solicitud_al_usuario_sobre_pqrsdf',
+      column_id: 'id_registro_notificacion_correspondencia',
       level: 1,
       columns: columns_solicitud,
       table_name: 'Registro de notificación por solicitud',
-      property_name: 'solicitudes_pqr',
+      property_name: 'registros_notificaciones',
     },
   ];
-
+  const {
+    notification_requests,
+    list_document_types,
+    list_status,
+    list_groups,
+    notification_request,
+    person,
+    persons,
+    tipos_notificacion,
+    asignacion_funcionario,
+  } = useAppSelector((state) => state.notificaciones_slice);
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
   const [expandedRows, setExpandedRows] = useState<
@@ -317,7 +305,10 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
   useEffect(() => {
     setExpandedRows(undefined);
     set_button_option('');
-    setSelectedPqr({});
+    // setSelectedPqr({});
+    void dispatch(get_persons_service('', '', '', '', '', ''));
+    void dispatch(get_tipos_notificacion());
+    void dispatch(get_document_types_service());
     set_detail_is_active(false);
   }, []);
 
@@ -329,30 +320,9 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
   const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] =
     useState<boolean>(false);
 
-  const generar_notificación_reporte = (
-    titulo: string,
-    tipo: string,
-    mensaje: string,
-    active: boolean
-  ) => {
-    set_titulo_notificacion(titulo);
-    set_tipo_notificacion(tipo);
-    set_mensaje_notificacion(mensaje);
-    set_dialog_notificaciones_is_active(active);
-    set_abrir_modal(active);
-  };
-
-  const reporte_evolucion_lote_fc: () => void = () => {
-    generar_notificación_reporte(
-      'Notificación',
-      'warn',
-      '¿Estas seguro de devolver o rechazar la solicitud?',
-      true
-    );
-  };
   const columns_list: GridColDef[] = [
     {
-      field: 'tipo_documento',
+      field: 'persona_asignada',
       headerName: 'Funcionario',
       width: 250,
       renderCell: (params) => (
@@ -362,7 +332,7 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
       ),
     },
     {
-      field: 'numero_documento',
+      field: 'vigencia_contrato',
       headerName: 'Vigencia del contrato',
       width: 200,
       renderCell: (params) => (
@@ -372,7 +342,7 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
       ),
     },
     {
-      field: 'nombre_completo',
+      field: 'asignadas',
       headerName: 'Tareas asignadas',
       width: 300,
       renderCell: (params) => (
@@ -383,7 +353,7 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
     },
 
     {
-      field: 'tipo_persona',
+      field: 'resueltas',
       headerName: 'Tareas resueltas',
       width: 250,
       renderCell: (params) => (
@@ -393,7 +363,7 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
       ),
     },
     {
-      field: 'tipo_persona_1',
+      field: 'pendientes',
       headerName: 'Pendientes',
       width: 250,
       renderCell: (params) => (
@@ -403,6 +373,20 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
       ),
     },
   ];
+
+  const on_change_select = (value: any, name: string): void => {
+    if (name === 'id_persona_asignada') {
+      if (value !== undefined) {
+        console.log(value);
+        void dispatch(get_asignaciones_id_person_service(value.id_persona));
+        //  console.log('')(value);
+      } else {
+      }
+    }
+  };
+  const get_x: any = (data: any) => {
+    //  console.log('')(data);
+  };
   return (
     <>
       <Grid
@@ -430,13 +414,13 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'cod_tipo_documento',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Tipo de documento',
-                disabled: true,
+                disabled: false,
                 helper_text: '',
-                select_options: [],
+                select_options: list_document_types,
                 option_label: 'label',
                 option_key: 'key',
               },
@@ -445,60 +429,61 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'id_tipo_notificacion_correspondencia',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Tipo de notificación',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
-                option_label: 'label',
-                option_key: 'key',
+                select_options: tipos_notificacion,
+                option_label: 'nombre',
+                option_key: 'id_tipo_notificacion_correspondencia',
               },
               {
                 datum_type: 'select_controller',
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'id_persona_asignada',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Funcionario a asignar',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
-                option_label: 'label',
-                option_key: 'key',
+                select_options: persons,
+                option_label: 'nombre_completo',
+                option_key: 'id_persona',
+                on_change_function: on_change_select,
               },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 12,
-                control_form: control_notificacion,
-                control_name: 'type_applicant',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Comentario de la asignación de tarea',
-                disabled: true,
-                helper_text: '',
-                multiline_text: true,
-                rows_text: 4,
-              },
+              // {
+              //   datum_type: 'input_controller',
+              //   xs: 12,
+              //   md: 12,
+              //   control_form: control_notificacion,
+              //   control_name: 'comentario',
+              //   default_value: '',
+              //   rules: { required_rule: { rule: true, message: 'Requerido' } },
+              //   label: 'Comentario de la asignación de tarea',
+              //   disabled: true,
+              //   helper_text: '',
+              //   multiline_text: true,
+              //   rows_text: 4,
+              // },
             ]}
           />
         </Grid>
         <DataGrid
           density="compact"
           autoHeight
-          rows={[]}
+          rows={asignacion_funcionario !== null ? [asignacion_funcionario] : []}
           columns={columns_list}
           pageSize={10}
           rowsPerPageOptions={[10]}
           experimentalFeatures={{ newEditingApi: true }}
           getRowId={(row) =>
-            row['id_notificacion' ?? uuid()] === null
+            row['id_persona_asignada' ?? uuid()] === null
               ? uuid()
-              : row['id_notificacion' ?? uuid()]
+              : row['id_persona_asignada' ?? uuid()]
           }
         />
         <Grid container direction="row" padding={2} spacing={2}>
@@ -507,7 +492,7 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
               variant_button="outlined"
               on_click_function={null}
               icon_class={<CloseIcon />}
-              disabled={!false}
+              disabled={false}
               label={'Cancelar'}
               type_button="button"
               color_button="error"
@@ -517,7 +502,7 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
             <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="contained"
-                on_click_function={reporte_evolucion_lote_fc}
+                on_click_function={null}
                 icon_class={<CheckIcon />}
                 label={'Asignar tarea'}
                 type_button="button"
@@ -527,13 +512,13 @@ export function PanelAsignacionCoordinadorScreen(): JSX.Element {
           </>
         </Grid>
         <TableRowExpansion
-          products={[]}
+          products={[notification_request]}
           definition_levels={definition_levels}
           selectedItem={selectedPqr}
           setSelectedItem={setSelectedPqr}
           expandedRows={expandedRows}
           setExpandedRows={setExpandedRows}
-          onRowToggleFunction={null}
+          onRowToggleFunction={get_x}
         />
       </Grid>
     </>

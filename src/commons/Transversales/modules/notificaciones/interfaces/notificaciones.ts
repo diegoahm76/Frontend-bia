@@ -8,8 +8,8 @@ export interface INotificaciones {
   status_notification: IObjListType;
   list_groups: IObjListType[];
   group: IObjListType;
- // persons: IObjPerson[];
-  //person: IObjPerson;
+  persons: IObjPerson[];
+  person: IObjPerson;
   notification_requests: IObjNotificationRequest[];
   notification_request: IObjNotificationRequest | null;
   notifications_per_request: IObjNotificationPerRequest[];
@@ -24,6 +24,8 @@ export interface INotificaciones {
   estado_notificacion: IObjNotificacionStatus|  null;
   tipos_soporte: IObjSupportType[]|  null;
   tipo_soporte: IObjSupportType|  null;
+
+  asignacion_funcionario: IObjAsignacionFuncioanrio | null;
 
   // grantors: IObjPerson[];
   // grantor: IObjPerson;
@@ -78,6 +80,15 @@ export interface INotificaciones {
 
 }
 
+export interface IObjAsignacionFuncioanrio{
+  persona_asignada?: string | null;
+  id_persona_asignada?: number | null;
+  vigencia_contrato?: string | null;
+  Asignadas?: number | null;
+  resueltas?: number | null;
+  pendientes?: number | null;
+}
+
 export interface IObjNotificacionType{
   id_tipo_notificacion_correspondencia?: string | number | null;
   nombre?: string | null;
@@ -95,6 +106,7 @@ export interface IObjNotificacionCause{
   id_causa_o_anomalia?: string | number | null;
   nombre?: string | null;
   id_tipo_notificacion_correspondencia?: number | null;
+  cod_tipo_notificacion_correspondencia?: number | null;
   registro_precargado?: boolean | null;
   activo?: boolean | null;
   item_ya_usado?: boolean | null;
@@ -112,6 +124,7 @@ export interface IObjSupportType{
   id_tipo_anexo_soporte?: string | number | null;
   nombre?: string | null;
   id_tipo_notificacion_correspondencia?: number | null;
+  cod_tipo_notificacion_correspondencia?: number | null;
   registro_precargado?: boolean | null;
   activo?: boolean | null;
   item_ya_usado?: boolean | null;
@@ -125,6 +138,7 @@ export interface IObjSearchNotificationRequest{
 }
 
 export interface IObjNotificationPerRequest{
+  dias_faltantes?: string | null;
   id_registro_notificacion_correspondencia?: number | null;
   fecha_registro?: string | Date | null;
   cod_relacion_con_titular?: string | null;
@@ -159,10 +173,17 @@ export interface IObjNotificationPerRequest{
   id_radicado_salida?: number | null;
   id_persona_finaliza_registro?: number | null;
   id_estado_actual_registro?: number | null;
+  persdona_a_quien_se_dirige?: string | null;
+  plazo_entrega?: string | null;
+  funcionario_asignado?: string | null;
   id_doc_de_arch_exp?: number | null;
+  radicado?: number | null;
 }
 
 export interface IObjNotificationRequest{
+
+  nommbre_tipo_documento?: string | null;
+  estado_solicitud?: string | null;
   id_notificacion_correspondencia?: number | null;
   cod_tipo_documento?: string | null;
   registros_notificaciones?: IObjNotificationPerRequest[] | null;

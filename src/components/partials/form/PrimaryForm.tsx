@@ -13,6 +13,7 @@ import FormDateRangePickerController from './FormDateRangePickerController';
 import FormCheckboxController from './FormCheckboxController';
 import FormButtonGrid from './FormButtonGrid';
 import FormKeywords from './FormKeywords';
+import BlankSpaceGrid from './BlankSpaceGrid';
 
 interface IProps {
   on_submit_form: any;
@@ -228,6 +229,16 @@ const PrimaryForm = ({
           set_form={form_input.set_form}
           keywords={form_input.keywords ?? null}
           disabled={form_input.disabled ?? null}
+        />
+      );
+    } else if (form_input.datum_type === 'blank_space') {
+      return (
+        <BlankSpaceGrid
+          xs={form_input.xs}
+          md={form_input.md}
+          hidden_text={form_input.hidden_text ?? null}
+          margin={form_input.margin ?? null}
+          marginTop={form_input.marginTop ?? null}
         />
       );
     }

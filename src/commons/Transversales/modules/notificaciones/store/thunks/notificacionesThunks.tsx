@@ -15,12 +15,14 @@ import {
 } from '../../../../../../request/getRequest';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
 import {
+  set_asignacion_funcionario,
   set_causas_notificacion,
   set_estados_notificacion,
   set_list_document_types,
   set_list_groups,
   set_list_status,
   set_notification_requests,
+  set_persons,
   set_tipos_notificacion,
   set_tipos_soporte,
 } from '../slice/notificacionesSlice';
@@ -608,6 +610,33 @@ export const delete_tipo_soporte = (estado: any): any => {
   };
 };
 
+export const get_asignaciones_id_person_service = (
+  id_person: string | number | null
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/notificaciones/get-asignaciones/?id_persona_asignada=${
+          id_person ?? ''
+        }`
+      );
+      console.log(data);
+      dispatch(set_asignacion_funcionario(data.data));
+
+      if (data.succes) {
+        control_success('Se encontraron datos');
+      } else {
+        control_error('No se encontro persona');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_persons_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtener tipos pqr
 // export const get_pqr_types_service = (): any => {
 //   return async (dispatch: Dispatch<any>) => {
@@ -903,46 +932,36 @@ export const delete_tipo_soporte = (estado: any): any => {
 //   };
 // };
 
-// // obtener personas filtro
-// export const get_persons_service = (
-//   type: string | number | null,
-//   document: string | number | null,
-//   primer_nombre: string | null,
-//   primer_apellido: string | null,
-//   razon_social: string | null,
-//   comercial_name: string | null,
-//   is_person: boolean
-// ): any => {
-//   return async (dispatch: Dispatch<any>) => {
-//     try {
-//       const { data } = await api.get(
-//         `personas/get-personas-filters/?tipo_documento=${
-//           type ?? ''
-//         }&numero_documento=${document ?? ''}&primer_nombre=${
-//           primer_nombre ?? ''
-//         }&primer_apellido=${primer_apellido ?? ''}&razon_social=${
-//           razon_social ?? ''
-//         }&nombre_comercial=${comercial_name ?? ''}`
-//       );
-//       console.log(data);
-//       if (is_person) {
-//         dispatch(set_persons(data.data));
-//       } else {
-//         dispatch(set_grantors(data.data));
-//       }
-//       if (data.data.length > 0) {
-//         control_success('Se encontraron personas');
-//       } else {
-//         control_error('No se encontro persona');
-//       }
-//       return data;
-//     } catch (error: any) {
-//       console.log('get_persons_service');
-//       control_error(error.response.data.detail);
-//       return error as AxiosError;
-//     }
-//   };
-// };
+// obtener personas filtro
+export const get_persons_service = (
+  type: string | number | null,
+  document: string | number | null,
+  primer_nombre: string | null,
+  primer_apellido: string | null,
+  razon_social: string | null,
+  comercial_name: string | null
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `personas/get-personas-responsible-filters/?tipo_documento=${
+          type ?? ''
+        }&numero_documento=${document ?? ''}&primer_nombre=${
+          primer_nombre ?? ''
+        }&primer_apellido=${primer_apellido ?? ''}&razon_social=${
+          razon_social ?? ''
+        }&nombre_comercial=${comercial_name ?? ''}`
+      );
+      dispatch(set_persons(data.data));
+
+      return data;
+    } catch (error: any) {
+      console.log('get_persons_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // // obtener persona por documento
 // export const get_person_document_service = (

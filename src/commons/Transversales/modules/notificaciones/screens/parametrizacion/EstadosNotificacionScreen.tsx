@@ -36,7 +36,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { set_estado_notificacion } from '../../store/slice/notificacionesSlice';
-import { IObjNotificacionStatus } from '../../interfaces/notificaciones';
+import {
+  IObjNotificacionStatus,
+  IObjNotificacionType,
+} from '../../interfaces/notificaciones';
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
 // import ListadoPqrsdf from '../componentes/SolicitudPQRSDF/ListadoPqrsdf';
@@ -88,12 +91,17 @@ export function EstadosNotificacionScreen(): JSX.Element {
       ),
     },
     {
-      field: 'id_tipo_notificacion_correspondencia',
+      field: 'cod_tipo_notificacion_correspondencia',
       headerName: 'Tipo de notificacion/correspondencia',
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {
+            tipos_notificacion?.find(
+              (objeto: IObjNotificacionType) =>
+                objeto.id_tipo_notificacion_correspondencia === params.value
+            )?.nombre
+          }
         </div>
       ),
     },
@@ -268,8 +276,17 @@ export function EstadosNotificacionScreen(): JSX.Element {
     }
   };
   const descartar = (): void => {
-    reset_notificacion({});
+    dispatch(
+      set_estado_notificacion({
+        ...estado_notificacion,
+        nombre: null,
+        activo: null,
+        id_tipo_notificacion_correspondencia: null,
+        cod_tipo_notificacion_correspondencia: null,
+      })
+    );
     set_action('crear');
+    set_checked_activo(false);
   };
   return (
     <>
@@ -337,6 +354,11 @@ export function EstadosNotificacionScreen(): JSX.Element {
                 helper_text: '',
                 checked: checked_activo,
                 set_checked: set_checked_activo,
+              },
+              {
+                datum_type: 'blank_space',
+                xs: 12,
+                md: 6,
               },
               {
                 datum_type: 'button',

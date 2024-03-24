@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Box, Chip, Grid, IconButton, Tooltip } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -25,6 +25,9 @@ import {
   get_solicitudes_notificacion,
   get_status_list_service,
 } from '../store/thunks/notificacionesThunks';
+import { set_notification_request } from '../store/slice/notificacionesSlice';
+import FormButton from '../../../../../components/partials/form/FormButton';
+import { IObjNotificacionType } from '../interfaces/notificaciones';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -41,15 +44,24 @@ import {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function PanelSolicitudNotificacionScreen(): JSX.Element {
   const dispatch = useAppDispatch();
+
+  const {
+    notification_requests,
+    list_document_types,
+    list_status,
+    list_groups,
+    notification_request,
+    tipos_notificacion,
+  } = useAppSelector((state) => state.notificaciones_slice);
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
-      field: 'cod_tipo_documento',
+      field: 'nommbre_tipo_documento',
       header: 'Tipo de documento',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.cod_tipo_documento}
+          {rowData.nommbre_tipo_documento}
         </div>
       ),
     },
@@ -107,43 +119,48 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(rowData.fecha_solicitud).toDateString()}
+          {rowData.fecha_solicitud && rowData.fecha_solicitud.split('T')[0]}
         </div>
       ),
     },
     {
       field: 'fecha_rta_final_gestion',
       headerStyle: { width: '4rem' },
-      header: 'Fecha de finalizacion',
+      header: 'Fecha de finalización',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(rowData.fecha_rta_final_gestion).toDateString()}
+          {rowData.fecha_rta_final_gestion !== null &&
+            new Date(rowData.fecha_rta_final_gestion).toDateString()}
         </div>
       ),
     },
-    // {
-    //   field: 'Dias Faltantes',
-    //   headerStyle: { width: '4rem' },
-    //   header: 'Fecha de la solicitud',
-    //   sortable: false,
-    //   body: (rowData) => (
-    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-    //       {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-    //     </div>
-    //   ),
-    // },
-    // {
-    //   field: 'nombre_estado_solicitud',
-    //   headerStyle: { width: '4rem' },
-    //   header: 'Aceptado',
-    //   sortable: false,
-    //   body: (rowData) => (
-    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-    //       {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-    //     </div>
-    //   ),
-    // },
+    {
+      field: 'dias_faltantes',
+      headerStyle: { width: '4rem' },
+      header: 'Días faltantes',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.dias_faltantes}
+        </div>
+      ),
+    },
+    {
+      field: 'solicitud_aceptada_rechazada',
+      headerStyle: { width: '4rem' },
+      header: 'Aceptado',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.solicitud_aceptada_rechazada === true ? (
+            <Chip size="small" label="Sí" color="success" variant="outlined" />
+          ) : (
+            <Chip size="small" label="No" color="error" variant="outlined" />
+          )}
+        </div>
+      ),
+    },
     {
       field: 'cod_medio_solicitud',
       headerStyle: { width: '4rem' },
@@ -151,18 +168,18 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.cod_medio_solicitud}
+          {rowData.cod_medio_solicitud === 'MA' ? 'Manual' : 'Sistema'}
         </div>
       ),
     },
     {
-      field: 'cod_estado',
+      field: 'estado_solicitud',
       headerStyle: { width: '4rem' },
       header: 'Estado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.cod_estado}
+          {rowData.estado_solicitud}
         </div>
       ),
     },
@@ -200,55 +217,67 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       field: 'cod_tipo_documentoID',
       header: 'Tipo de gestión',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {
+            tipos_notificacion?.find(
+              (objeto: IObjNotificacionType) =>
+                objeto.id_tipo_notificacion_correspondencia ===
+                rowData.cod_tipo_documentoID
+            )?.nombre
+          }
+        </div>
+      ),
     },
     {
-      field: 'fecha_radicado_salida',
+      field: 'numero_identificacion',
       header: 'Número de oficio o requerimiento',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.fecha_radicado_salida === null
-            ? '-'
-            : new Date(rowData.fecha_radicado).toDateString()}
+          {rowData.numero_identificacion}
         </div>
       ),
     },
     {
-      field: 'numero_radicado_salida',
+      field: 'radicado',
       header: 'Radicado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_salida === ''
-            ? 'SIN RADICAR'
-            : rowData.numero_radicado_salida}
+          {(rowData.radicado ?? '') === '' ? 'SIN RADICAR' : rowData.radicado}
         </div>
       ),
     },
 
     {
-      field: 'fecha_solicitud',
+      field: 'fecha_asignacion',
       header: 'Fecha de asignación',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(rowData.fecha_solicitud).toDateString()}
+          {rowData.fecha_asignacion && rowData.fecha_asignacion.split('T')[0]}
         </div>
       ),
     },
 
     {
-      field: 'nombre_und_org_oficina_solicita',
+      field: 'plazo_entrega',
       header: 'Plazo de entrega',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.plazo_entrega && rowData.plazo_entrega.split('T')[0]}
+        </div>
+      ),
     },
     {
-      field: 'nombre_und_org_oficina_solicita',
+      field: 'dias_faltantes',
       header: 'Días restantes',
       sortable: false,
     },
     {
-      field: 'nombre_und_org_oficina_solicita',
+      field: 'cod_estado_asignacion',
       header: 'Estado',
       sortable: false,
     },
@@ -297,12 +326,6 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       property_name: 'registros_notificaciones',
     },
   ];
-  const {
-    notification_requests,
-    list_document_types,
-    list_status,
-    list_groups,
-  } = useAppSelector((state) => state.notificaciones_slice);
 
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
@@ -322,7 +345,9 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     dispatch(get_document_types_service());
     dispatch(get_groups_list_service());
   }, []);
-
+  useEffect(() => {
+    dispatch(set_notification_request(selectedPqr));
+  }, [selectedPqr]);
   const get_solicitudes: any = async () => {
     const tipo_documento = get_values('tipo_documento') ?? '';
     const radicado = get_values('radicado') ?? '';
@@ -371,6 +396,75 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       >
         <Grid item xs={12} marginY={2}>
           <Title title="Listado de solicitudes de notificación"></Title>
+          <Grid container direction="row" padding={2} spacing={2}>
+            <Grid item xs={12} md={3}>
+              <FormButton
+                disabled={
+                  notification_request?.id_notificacion_correspondencia === null
+                }
+                variant_button="outlined"
+                on_click_function={null}
+                icon_class={null}
+                label={'Generar solicitud'}
+                type_button="button"
+                color_button="primary"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={2}>
+              <FormButton
+                disabled={
+                  notification_request?.id_notificacion_correspondencia === null
+                }
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                label="Ver solicitud"
+                type_button="button"
+                color_button="warning"
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormButton
+                disabled={
+                  notification_request?.id_notificacion_correspondencia === null
+                }
+                href={`/#/app/transversal/notificaciones/panel_asignacion_coordinador/`}
+                variant_button="outlined"
+                on_click_function={null}
+                icon_class={null}
+                label={'Asignar notificación'}
+                type_button="button"
+                color_button="primary"
+              />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <FormButton
+                disabled={
+                  notification_request?.id_notificacion_correspondencia === null
+                }
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                label={'Asignar tarea'}
+                type_button="button"
+                color_button="primary"
+              />
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <FormButton
+                disabled={
+                  notification_request?.id_notificacion_correspondencia === null
+                }
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                label={'Rechazar'}
+                type_button="button"
+                color_button="error"
+              />
+            </Grid>
+          </Grid>
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""

@@ -1,12 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type {
   INotificaciones,
+  IObjAsignacionFuncioanrio,
   IObjListType,
   IObjNotificacionCause,
   IObjNotificacionStatus,
   IObjNotificacionType,
   IObjNotificationPerRequest,
   IObjNotificationRequest,
+  IObjPerson,
   IObjSupportType,
 } from '../../interfaces/notificaciones';
 
@@ -49,17 +51,17 @@ export const initial_state_list: IObjListType = {
 //   },
 // ];
 
-// export const initial_state_person: IObjPerson = {
-//   id_persona: null,
-//   tipo_documento_id: null,
-//   tipo_documento: null,
-//   tipo_persona: null,
-//   tipo_persona_desc: null,
-//   numero_documento: null,
-//   primer_apellido: null,
-//   primer_nombre: null,
-//   nombre_completo: null,
-// };
+export const initial_state_person: IObjPerson = {
+  id_persona: null,
+  tipo_documento_id: null,
+  tipo_documento: null,
+  tipo_persona: null,
+  tipo_persona_desc: null,
+  numero_documento: null,
+  primer_apellido: null,
+  primer_nombre: null,
+  nombre_completo: null,
+};
 
 // export const initial_state_company: IObjCompany = {
 //   id_persona: null,
@@ -267,14 +269,15 @@ const initial_state: INotificaciones = {
   estado_notificacion: null,
   tipos_soporte: [],
   tipo_soporte: null,
+  asignacion_funcionario: null,
 
   //   file_fisico: null,
   //   list_applicant_types: [],
   //   type_applicant: initial_state_list,
   //   list_on_behalf_of: [],
   //   on_behalf_of: initial_state_list,
-  //   persons: [],
-  //   person: initial_state_person,
+  persons: [],
+  person: initial_state_person,
   //   companies: [],
   //   company: initial_state_company,
   //   grantors: [],
@@ -432,6 +435,21 @@ export const notificaciones_slice = createSlice({
       action: PayloadAction<IObjSupportType>
     ) => {
       state.tipo_soporte = action.payload;
+    },
+    set_persons: (
+      state: INotificaciones,
+      action: PayloadAction<IObjPerson[]>
+    ) => {
+      state.persons = action.payload;
+    },
+    set_person: (state: INotificaciones, action: PayloadAction<IObjPerson>) => {
+      state.person = action.payload;
+    },
+    set_asignacion_funcionario: (
+      state: INotificaciones,
+      action: PayloadAction<IObjAsignacionFuncioanrio>
+    ) => {
+      state.asignacion_funcionario = action.payload;
     },
     //     set_document_type: (
     //       state: INotificaciones,
@@ -612,11 +630,12 @@ export const {
   set_tipo_soporte,
   set_tipos_soporte,
   reset_state,
+  set_asignacion_funcionario,
   //   set_type_applicant,
   //   set_list_on_behalf_of,
   //   set_on_behalf_of,
-  //   set_persons,
-  //   set_person,
+  set_persons,
+  set_person,
   //   set_companies,
   //   set_company,
   //   set_grantors,

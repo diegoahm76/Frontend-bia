@@ -33,7 +33,10 @@ import {
   get_tipos_notificacion,
 } from '../../store/thunks/notificacionesThunks';
 import { set_causa_notificacion } from '../../store/slice/notificacionesSlice';
-import { IObjNotificacionCause } from '../../interfaces/notificaciones';
+import {
+  IObjNotificacionCause,
+  IObjNotificacionType,
+} from '../../interfaces/notificaciones';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -93,7 +96,12 @@ export function CausasNotificacionScreen(): JSX.Element {
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {
+            tipos_notificacion?.find(
+              (objeto: IObjNotificacionType) =>
+                objeto.id_tipo_notificacion_correspondencia === params.value
+            )?.nombre
+          }
         </div>
       ),
     },
@@ -278,8 +286,16 @@ export function CausasNotificacionScreen(): JSX.Element {
     }
   };
   const descartar = (): void => {
-    reset_notificacion({});
+    dispatch(
+      set_causa_notificacion({
+        ...causa_notificacion,
+        nombre: null,
+        activo: null,
+        id_tipo_notificacion_correspondencia: null,
+      })
+    );
     set_action('crear');
+    set_checked_activo(false);
   };
   return (
     <>
@@ -347,6 +363,11 @@ export function CausasNotificacionScreen(): JSX.Element {
                 helper_text: '',
                 checked: checked_activo,
                 set_checked: set_checked_activo,
+              },
+              {
+                datum_type: 'blank_space',
+                xs: 12,
+                md: 6,
               },
               {
                 datum_type: 'button',

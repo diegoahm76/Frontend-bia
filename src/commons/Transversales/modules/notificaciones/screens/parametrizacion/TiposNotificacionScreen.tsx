@@ -54,6 +54,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function TiposNotificacionScreen(): JSX.Element {
   const dispatch = useAppDispatch();
+  const [checked_activo, set_checked_activo] = useState(false);
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
@@ -338,6 +339,12 @@ export function TiposNotificacionScreen(): JSX.Element {
   }, []);
   useEffect(() => {
     reset_notificacion(tipo_notificacion);
+    if (
+      tipo_notificacion?.activo !== null &&
+      tipo_notificacion?.activo !== undefined
+    ) {
+      set_checked_activo(tipo_notificacion?.activo);
+    }
   }, [tipo_notificacion]);
   const columns_list: GridColDef[] = [
     {
@@ -553,7 +560,7 @@ export function TiposNotificacionScreen(): JSX.Element {
             data.aplica_para.includes('notificaciones'),
           item_ya_usado: false,
           registro_precargado: false,
-          activo: true,
+          activo: checked_activo,
         };
         void dispatch(edit_tipo_notificacion(data_edit));
       }
@@ -568,15 +575,25 @@ export function TiposNotificacionScreen(): JSX.Element {
             data.aplica_para.includes('notificaciones'),
           item_ya_usado: false,
           registro_precargado: false,
-          activo: true,
+          activo: checked_activo,
         };
         void dispatch(add_tipo_notificacion(data_edit));
       }
     }
   };
   const descartar = (): void => {
-    reset_notificacion({});
+    dispatch(
+      set_tipo_notificacion({
+        ...tipo_notificacion,
+        nombre: null,
+        activo: null,
+        aplica_para: [],
+        habiles_o_calendario: null,
+        tiempo_en_dias: null,
+      })
+    );
     set_action('crear');
+    set_checked_activo(false);
   };
   return (
     <>
@@ -637,7 +654,7 @@ export function TiposNotificacionScreen(): JSX.Element {
               {
                 datum_type: 'input_controller',
                 xs: 12,
-                md: 3,
+                md: 4,
                 control_form: control_notificacion,
                 control_name: 'tiempo_en_dias',
                 default_value: '',
@@ -649,7 +666,7 @@ export function TiposNotificacionScreen(): JSX.Element {
               {
                 datum_type: 'select_controller',
                 xs: 12,
-                md: 3,
+                md: 4,
                 control_form: control_notificacion,
                 control_name: 'habiles_o_calendario',
                 default_value: '',
@@ -665,18 +682,25 @@ export function TiposNotificacionScreen(): JSX.Element {
                 option_key: 'key',
               },
 
-              // {
-              //   datum_type: 'checkbox_controller',
-              //   xs: 12,
-              //   md: 3,
-              //   control_form: control_notificacion,
-              //   control_name: 'activo',
-              //   default_value: false,
-              //   rules: { required_rule: { rule: true, message: 'Requerido' } },
-              //   label: 'Activo',
-              //   disabled: false,
-              //   helper_text: '',
-              // },
+              {
+                datum_type: 'checkbox_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_notificacion,
+                control_name: 'activo',
+                default_value: checked_activo,
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Activo',
+                disabled: false,
+                helper_text: '',
+                checked: checked_activo,
+                set_checked: set_checked_activo,
+              },
+              {
+                datum_type: 'blank_space',
+                xs: 12,
+                md: 6,
+              },
               {
                 datum_type: 'button',
                 xs: 12,
