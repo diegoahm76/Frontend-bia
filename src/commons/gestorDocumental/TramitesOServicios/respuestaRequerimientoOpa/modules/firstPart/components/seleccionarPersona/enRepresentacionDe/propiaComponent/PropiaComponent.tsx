@@ -10,7 +10,10 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { LoadingButton } from '@mui/lab';
 import { ModalSeleccionPersona } from './ModalSeleccionPersona';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../../../hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../../hooks';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../toolkit/slice/ResRequerimientoOpaSlice';
 import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
 
@@ -27,10 +30,12 @@ export const PropiaComponent = ({
   const dispatch = useAppDispatch();
 
   //* context declarations
-  const { handleOpenModalOne} = useContext(ModalAndLoadingContext);
+  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
 
   // ? con esta variable se va a manejar la actualización de la persona seleccionada para no generar conflicsot con use form
-  const {currentPersonaRespuestaUsuario} = useAppSelector((state) => state.ResRequerimientoOpaSlice);
+  const { currentPersonaRespuestaUsuario } = useAppSelector(
+    (state) => state.ResRequerimientoOpaSlice
+  );
 
   return (
     <>
@@ -45,11 +50,6 @@ export const PropiaComponent = ({
               marginTop: '20px',
             }}
           >
-            <Grid
-              container
-              spacing={2}
-              sx={{ mb: '20px', zIndex: 9999 }}
-            ></Grid>
             <Grid container spacing={2}>
               <Grid
                 item
@@ -59,54 +59,59 @@ export const PropiaComponent = ({
                   zIndex: 2,
                 }}
               >
-                    <div>
-                      <Select
-                         value={{
-                          value: currentPersonaRespuestaUsuario?.tipo_documento,
-                          label: currentPersonaRespuestaUsuario?.tipo_documento,
-                        }}
-                        isDisabled={true}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Tipo de documento
-                        </small>
-                      </label>
-                    </div>
+                <div>
+                  <Select
+                    value={{
+                      value: currentPersonaRespuestaUsuario?.tipo_documento,
+                      label:
+                        currentPersonaRespuestaUsuario?.tipo_documento ?? '...',
+                    }}
+                    isDisabled={true}
+                    placeholder="Seleccionar"
+                  />
+                  <label>
+                    <small
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 'thin',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        marginLeft: '0.25rem',
+                      }}
+                    >
+                      Tipo de documento
+                    </small>
+                  </label>
+                </div>
               </Grid>
               <Grid item xs={12} sm={4}>
-                    <TextField
-                      fullWidth
-                      label="Número de documento"
-                      size="small"
-                      variant="outlined"
-                      value={currentPersonaRespuestaUsuario?.numero_documento}
-                      InputLabelProps={{ shrink: true }}
-                      disabled
-                    />
+                <TextField
+                  fullWidth
+                  label="Número de documento"
+                  size="small"
+                  variant="outlined"
+                  value={
+                    currentPersonaRespuestaUsuario?.numero_documento ?? '...'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  disabled
+                />
               </Grid>
               <Grid item xs={12} sm={5}>
-                    <TextField
-                      fullWidth
-                      label="Nombre de la persona"
-                      size="small"
-                      multiline
-                      rows={1}
-                      maxRows={2}
-                      variant="outlined"
-                      value={currentPersonaRespuestaUsuario?.nombre_completo}
-                      InputLabelProps={{ shrink: true }}
-                      disabled
-                    />
+                <TextField
+                  fullWidth
+                  label="Nombre de la persona"
+                  size="small"
+                  multiline
+                  rows={1}
+                  maxRows={2}
+                  variant="outlined"
+                  value={
+                    currentPersonaRespuestaUsuario?.nombre_completo ?? '...'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  disabled
+                />
               </Grid>
             </Grid>
 
@@ -121,12 +126,8 @@ export const PropiaComponent = ({
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  dispatch(setCurrentPersonaRespuestaUsuario({
-                    tipo_documento: '',
-                    numero_documento: '',
-                    nombre_completo: '',
-                  } as any))
-                  control_info('Se ha quitado la selección de la persona')
+                  dispatch(setCurrentPersonaRespuestaUsuario({} as any));
+                  control_info('Se ha quitado la selección de la persona');
                 }}
               >
                 QUITAR SELECCIÓN DE PERSONA
@@ -137,7 +138,7 @@ export const PropiaComponent = ({
                 variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  handleOpenModalOne(true)
+                  handleOpenModalOne(true);
                 }}
               >
                 BÚSQUEDA PERSONA
@@ -184,14 +185,11 @@ export const PropiaComponent = ({
 
       {/* modal selección persona */}
       <ModalSeleccionPersona
-        {
-          ...{
-            control_seleccionar_persona,
-            watchExe,
-            reset_seleccionar_persona,
-
-          }
-        }
+        {...{
+          control_seleccionar_persona,
+          watchExe,
+          reset_seleccionar_persona,
+        }}
       />
       {/* modal selección persona */}
     </>

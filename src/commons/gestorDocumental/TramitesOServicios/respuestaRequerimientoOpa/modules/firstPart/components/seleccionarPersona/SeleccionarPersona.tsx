@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { choicesRepresentacion } from '../../utils/choices';
 import { PropiaComponent } from './enRepresentacionDe/propiaComponent/PropiaComponent';
+import { EmpresaComponent } from './enRepresentacionDe/empresaComponent/EmpresaComponent';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const SelccionarPersona = (): JSX.Element => {
@@ -170,7 +171,13 @@ export const SelccionarPersona = (): JSX.Element => {
       {watchExe?.en_representacion_de?.value === 'APODERADO' ? (
         <>Componente de apoderado</>
       ) : watchExe?.en_representacion_de?.value === 'EMPRESA' ? (
-        <>Componente de empresa</>
+        <EmpresaComponent
+          {...{
+            control_seleccionar_persona,
+            watchExe,
+            reset_seleccionar_persona,
+          }}
+        />
       ) : watchExe?.en_representacion_de?.value === 'PROPIA' ? (
         <PropiaComponent
           {...{
