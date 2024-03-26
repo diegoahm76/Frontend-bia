@@ -24,3 +24,36 @@ export const get_obtener_solicitudes_activos: any = (
     }
   };
 };
+
+export const put_aprobar_solicitud_activo: any = (id_solicitud_activo : string) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/aprobar-solicitud-activo/put/${id_solicitud_activo}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_rechazar_solicitud_activo: any = (id_solicitud_activo : string, form_data: {justificacion_rechazo: string}) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/rechazar-solicitud-activo/put/${id_solicitud_activo}/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_resumen_solicitud: any = (id_solicitud_activo : string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/resumen-solicitud-activos/${id_solicitud_activo}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};

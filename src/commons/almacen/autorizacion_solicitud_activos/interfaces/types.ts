@@ -235,3 +235,109 @@ export interface interface_solicitiudes_en_proceso {
   primer_apellido_funcionario_resp_unidad: string
   numero_activos: number
 }
+
+export interface interface_estado_autorizacion_solicitud_activos {
+  es_solicitud_prestamo:  boolean
+  fecha_devolucion: string
+  fecha_solictud: string
+  estado_solicitud: string
+  tipo_documento_solictante: string
+  documento_solictante: string
+  nombres_solictante: string
+  apellidos_solictante: string
+  tipo_documento_responsable: string
+  documento_responsable: string
+  nombres_responsable: string
+  apellidos_responsable: string
+  justificacion_rechazo: string
+  fecha_aprobacion: string
+  tipo_documento_operario: string
+  documento_operario: string
+  nombres_operario: string
+  apellidos_operario: string
+  tipo_documento_persona_cierra_no_dispo_alma: string
+  documento_persona_cierra_no_dispo_alma: string
+  nombres_persona_cierra_no_dispo_alma: string
+  apellidos_persona_cierra_no_dispo_alma: string
+  obser_cierre_no_dispo_alma: string
+  fecha_cierre_no_dispo_alma: string
+  tipo_documento_persona_alma_rechaza: string
+  documento_persona_alma_rechaza: string
+  nombres_persona_alma_rechaza: string
+  apellidos_persona_alma_rechaza: string
+  motivo: string
+  observacion: string
+  fecha_cierre_solicitud: string
+  items_solicitud: itmes_solicitud_por_id[]
+}
+
+export interface response_solicitud_por_id {
+  success: boolean
+  detail: string
+  data: interface_solicitud_por_id
+}
+
+export interface interface_solicitud_por_id {
+  id_solicitud_activo: number
+  fecha_solicitud: string
+  motivo: string
+  observacion: string
+  id_persona_solicita: number
+  primer_nombre_persona_solicitante: string
+  primer_apellido_persona_solicitante: string
+  tipo_documento_persona_solicitante: string
+  numero_documento_persona_solicitante: string
+  id_uni_org_solicitante: number
+  id_funcionario_resp_unidad: number
+  primer_nombre_funcionario_resp_unidad: string
+  primer_apellido_funcionario_resp_unidad: string
+  tipo_documento_funcionario_resp_unidad: string
+  numero_documento_funcionario_resp_unidad: string
+  id_uni_org_responsable: number
+  id_persona_operario: number
+  primer_nombre_persona_operario: string
+  primer_apellido_persona_operario: string
+  tipo_documento_persona_operario: string
+  numero_documento_persona_operario: string
+  id_uni_org_operario: number
+  estado_solicitud: string
+  solicitud_prestamo: boolean
+  fecha_devolucion: any
+  fecha_cierra_solicitud: any
+  revisada_responsable: boolean
+  estado_aprobacion_resp: string
+  justificacion_rechazo_resp: any
+  fecha_aprobacion_resp: any
+  gestionada_alma: boolean
+  obser_cierre_no_dispo_alma: any
+  fecha_cierre_no_dispo_alma: any
+  id_persona_cierra_no_dispo_alma: any
+  primer_nombre_persona_cierra_no_dispo_alma: any
+  primer_apellido_persona_cierra_no_dispo_alma: any
+  tipo_documento_persona_cierra_no_dispo_alma: any
+  numero_documento_persona_cierra_no_dispo_alma: any
+  rechazada_almacen: boolean
+  fecha_rechazo_almacen: any
+  justificacion_rechazo_almacen: any
+  id_persona_alma_rechaza: any
+  primer_nombre_persona_alma_rechaza: any
+  primer_apellido_persona_alma_rechaza: any
+  tipo_documento_persona_alma_rechaza: any
+  numero_documento_persona_alma_rechaza: any
+  solicitud_anulada_solicitante: boolean
+  fecha_anulacion_solicitante: any
+  items_solicitud: itmes_solicitud_por_id[]
+  despachos: any[]
+  items_despacho: any[]
+}
+
+export interface itmes_solicitud_por_id {
+  id_item_solicitud_activo: number
+  id_solicitud_activo: number
+  id_bien: string
+  cantidad: number
+  id_unidad_medida: number
+  nombre_unidad_medida: string
+  observacion: string
+  nro_posicion: number
+}
