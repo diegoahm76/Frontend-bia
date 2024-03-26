@@ -38,6 +38,8 @@ import { putRechazarTareaOtros } from '../../../../../../toolkit/thunks/otros/pu
 import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 import { getListadoTramitesByPerson } from '../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
 import { putRechazarTareaTramite } from '../../../../services/servicesStates/tramites/rechazarTramite/putRechazarTramite.service';
+import { getListadoTareasOpasByPerson } from '../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
+import { putRechazarTareaOpa } from '../../../../services/servicesStates/opas/rechazarTarea/RecharOpa.service';
 
 export const ModalRejectTask: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -96,9 +98,31 @@ export const ModalRejectTask: FC = (): JSX.Element => {
       listadoTareasType: 'ROtros',
     },
     'RESPONDER TRÁMITE': {
-      rejectTask: putRechazarTareaTramite, // se debe modiificar de acuerdo a los tramites
-      getListadoTareas: getListadoTramitesByPerson, // se debe modiificar de acuerdo a los tramites
-      listadoTareasType: 'Tramites', // se debe modiificar de acuerdo a los tramites
+      rejectTask: putRechazarTareaTramite, 
+      getListadoTareas: getListadoTramitesByPerson, 
+      listadoTareasType: '',
+    },
+    'RESPONDER OPA': {
+      rejectTask: putRechazarTareaOpa,
+      getListadoTareas: (
+        idPersona: number,
+        setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+        tipo_de_tarea?: string,
+        estado_asignacion_de_tarea?: string,
+        estado_de_la_tarea?: string,
+        fecha_inicio?: string,
+        fecha_fin?: string
+      ) => getListadoTareasOpasByPerson(
+        idPersona,
+        setLoading,
+        estado_asignacion_de_tarea,
+        estado_de_la_tarea,
+        fecha_inicio,
+        fecha_fin,
+        false, // Set the value of mostrar_respuesta_con_req_pendientes to false
+        undefined // Set the value of radicado to undefined
+      ),
+      listadoTareasType: '',
     },
     // Agrega aquí los nuevos tipos de tareas
     //* agregar luego para tramites y para opas
@@ -138,7 +162,7 @@ export const ModalRejectTask: FC = (): JSX.Element => {
         const listadoTareas = await taskType.getListadoTareas(
           id_persona,
           handleSecondLoading,
-          taskType.listadoTareasType
+          taskType.listadoTareasType || ''
         );
 
         dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));

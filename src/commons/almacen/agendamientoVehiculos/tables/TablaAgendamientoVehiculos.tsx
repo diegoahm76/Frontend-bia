@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid } from "@mui/material";
+import { Button, ButtonGroup, Grid } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from 'uuid';
 import { FC, useEffect, useState } from "react";
@@ -11,6 +11,8 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { listar_municipios } from "../thunks/agendamiento_vehiculos";
 import { useAppDispatch } from "../../../../hooks";
+import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
+import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
 
 
 interface custom_column extends GridColDef {
@@ -60,6 +62,7 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
   },[])
 
   const ver_agendamiento = (params: interface_data_agendamiento_vehiculos) => {
+    console.log(params);    
     set_id_solicitud_viaje(params.id_solicitud_viaje ?? 0);
     set_mostrar_agendamiento_vehiculo(true);
     set_mostrar_vehiculo_agregado(true);
@@ -169,6 +172,22 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
 
   return (
     <Grid container>
+      <Grid item xs={12} container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center" >
+        <Grid item  >
+          <ButtonGroup style={{ margin: 5, }}>
+              {download_xls({ nurseries: data_agendamiento_vehiculo, columns })}
+              {download_pdf({
+                  nurseries: data_agendamiento_vehiculo,
+                  columns,
+                  title: 'Resultado agendamiento vehículos',
+              })}
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+
       <DataGrid
       style={{margin:'15px 0px'}}
       density="compact"

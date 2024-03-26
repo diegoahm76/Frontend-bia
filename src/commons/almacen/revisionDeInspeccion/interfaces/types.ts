@@ -6,6 +6,7 @@ export interface response_put_revisar_vehiculo {
 }
 
 export interface interface_put_revisar_vehiculo {
+  observaciones_verifi_sup: string
   id_inspeccion_vehiculo: number
   dia_inspeccion: string
   fecha_registro: string
@@ -52,6 +53,7 @@ export interface data_vehiculos_inspeccionados {
 }
 
 export interface interface_vehiculos_con_novedad {
+  fecha_registro: string
   id_inspeccion_vehiculo: number
   id_hoja_de_vida: number
   placa_marca: string
@@ -65,6 +67,19 @@ export interface interface_vehiculos_sin_novedad {
   id_hoja_de_vida: number
   placa: string
   marca: string
+  fecha_registro: string
+  dia_inspeccion: string
+  id_persona_inspecciona: number
+  nombre_inspecciona: string
+  apellido_inspecciona: string
+  fecha_nacimiento_persona_inspecciona: string
+  tipo_documento_persona_inspecciona: string
+  numero_documento_persona_inspecciona: string
+  numero_celular_persona_inspecciona: string
+  numero_empresarial_celular_persona_inspecciona: any
+  email_persona_inspecciona: string
+  email_empresarial_persona_inspecciona: any
+  verificacion_superior_realizada: boolean
 }
 
 export interface response_vehiculos_inspeccionados {

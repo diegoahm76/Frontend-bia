@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { control_error, control_success } from "../alertas/store/thunks/alertas";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -21,6 +22,8 @@ export const LiquidacionScreen = (): JSX.Element => {
   const [opciones_liquidaciones, set_opciones_liquidaciones] = useState<OpcionLiquidacion[]>([]);
   const [form_data, set_form_data] = useState({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
+  const [select_variable, set_select_variable] = useState('');
+
   const [refresh_page, set_refresh_page] = useState<boolean>(false);
   const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
@@ -46,12 +49,15 @@ export const LiquidacionScreen = (): JSX.Element => {
       .then((response) => {
         const cloned_opcion: OpcionLiquidacion = response.data.data;
         add_cloned_opcion(cloned_opcion);
-        set_notification_info({ type: 'success', message: `Se ha clonado correctamente la opción de liquidación "${cloned_opcion.nombre}" al final de la tabla.` });
+        // set_notification_info({ type: 'success', message: `Se ha clonado correctamente la opción de liquidación "${cloned_opcion.nombre}" al final de la tabla.` });
+        control_success(`Se ha clonado correctamente la opción de liquidación "${cloned_opcion.nombre}" al final de la tabla `)
+
         set_open_notification_modal(true);
       })
-      .catch((error) => {
+      .catch((error:any ) => {
         //  console.log('')(error);
-        set_notification_info({ type: 'error', message: `Hubo un error.` });
+        // set_notification_info({ type: 'error', message: `Hubo un error.` });
+        control_error(error.response.data.detail);
         set_open_notification_modal(true);
       });
   };
@@ -60,12 +66,15 @@ export const LiquidacionScreen = (): JSX.Element => {
     api.get(`recaudo/liquidaciones/eliminar-opciones-liquidacion-base/${id}`)
       .then((response) => {
         set_opciones_liquidaciones(opciones_liquidaciones.filter((opcion) => { return opcion.id !== Number(id) }));
-        set_notification_info({ type: 'success', message: response.data.detail });
+        // set_notification_info({ type: 'success', message: response.data.detail });
+        control_success(` ${response.data.detail}  `)
+
         set_open_notification_modal(true);
       })
-      .catch((error) => {
+      .catch((error:any ) => {
         //  console.log('')(error);
-        set_notification_info({ type: 'error', message: `Hubo un error.` });
+        // set_notification_info({ type: 'error', message: `Hubo un error.` });
+        control_error(error.response.data.detail);
         set_open_notification_modal(true);
 
       });
@@ -136,6 +145,7 @@ export const LiquidacionScreen = (): JSX.Element => {
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
+                  set_select_variable(params.row.variables);
                   set_edit_opcion(true);
                   set_id_opcion_liquidacion(params.row.id);
                   set_form_data((previousState) => ({ ...previousState, nombre_opcion_liquidacion: params.row.nombre, estado: params.row.estado }));
@@ -253,7 +263,6 @@ export const LiquidacionScreen = (): JSX.Element => {
                     variant="outlined"
                     startIcon={<AddIcon />}
                     onClick={() => {
-
                       set_edit_opcion(false);
                       set_id_opcion_liquidacion('');
                       set_form_data((previousState) => ({ ...previousState, nombre_opcion_liquidacion: '', estado: '' }));
@@ -278,6 +287,7 @@ export const LiquidacionScreen = (): JSX.Element => {
               </TabPanel>
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <AgregarEditarOpciones
+                select_variable={select_variable}
                   opciones_liquidaciones={opciones_liquidaciones}
                   id_opcion_liquidacion={id_opcion_liquidacion}
                   form_data={form_data}
@@ -286,17 +296,16 @@ export const LiquidacionScreen = (): JSX.Element => {
                   set_refresh_page={set_refresh_page}
                   set_form_data={set_form_data}
                 />
-
               </TabPanel>
             </TabContext>
           </Box>
         </Grid>
       </Grid>
-      <NotificationModal
+      {/* <NotificationModal
         open_notification_modal={open_notification_modal}
         set_open_notification_modal={set_open_notification_modal}
-        notification_info={notification_info}
-      />
+        // notification_info={notification_info}
+      /> */}
     </>
   );
 };

@@ -46,7 +46,7 @@ export const AccionesFinales = (): JSX.Element => {
   // ? declaración de las funciones
 
   const handleClick = async () => {
-    const item = listaAsignaciones.find(
+    /*const item = listaAsignaciones.find(
       (item: any) =>
         item.estado_asignado === 'EN ESPERA' ||
         item.estado_asignado === 'ACEPTADA'
@@ -61,7 +61,7 @@ export const AccionesFinales = (): JSX.Element => {
       });
       return;
     }
-
+*/
     const tipo =
       currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
       currentElementPqrsdComplementoTramitesYotros?.tipo;
@@ -70,15 +70,26 @@ export const AccionesFinales = (): JSX.Element => {
 
     switch (tipo) {
       case 'OPA':
-        res = await postAsignacionGrupoOpas(
+        // seguramente se va a requerir ahora el id de la serie para realizar la creación del expediente
+        console.log('somos la información para el post de la asignación y respectiva creación del expediente', {
+          id_solicitud_tramite:
+            currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
+          id_persona_asignada: liderAsignado?.id_persona,
+          id_und_org_seccion_asignada: currentGrupo?.grupoSelected,
+          // id_serie
+          id_serie:  currentGrupo?.currentSerie,
+        });
+        /*res = await postAsignacionGrupoOpas(
           {
             id_solicitud_tramite:
               currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
+            // id_series: currentElementPqrsdComplementoTramitesYotros?.currentGrupo.serie.value,
             id_persona_asignada: liderAsignado?.id_persona,
+            // va a cambiar a currentGrupo?.unidad.value
             id_und_org_seccion_asignada: currentGrupo?.value,
           },
           handleSecondLoading
-        );
+        );*/
 
         break;
       default:

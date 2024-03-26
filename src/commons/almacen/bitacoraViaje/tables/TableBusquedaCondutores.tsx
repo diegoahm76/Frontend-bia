@@ -5,6 +5,9 @@ import { data_busqueda_conductor, data_busqueda_conductores } from '../interface
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { ButtonGroup, Grid } from '@mui/material';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: data_busqueda_conductor }) => React.ReactNode;
@@ -36,19 +39,37 @@ const TableBusquedaConductores: React.FC<props> = ({data_busqueda_conductores, s
   ]
 
   return (
-    <DataGrid
-      style={{margin:'15px 0px'}}
-      density="compact"
-      autoHeight
-      rows={data_busqueda_conductores ?? []}
-      columns={columns ?? []}
-      pageSize={5}
-      rowHeight={75}
-      rowsPerPageOptions={[5]}
-      experimentalFeatures={{ newEditingApi: true }}
-      onSelectionModelChange={asignar_conductor}
-      getRowId={(row) => row.id_clase_tercero_persona}
-    />
+    <>
+      <Grid item xs={12} container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center" >
+        <Grid item  >
+          <ButtonGroup style={{ margin: 5, }}>
+              {download_xls({ nurseries: data_busqueda_conductores, columns })}
+              {download_pdf({
+                  nurseries: data_busqueda_conductores,
+                  columns,
+                  title: 'Resultado búsqueda conductores',
+              })}
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+
+      <DataGrid
+        style={{margin:'15px 0px'}}
+        density="compact"
+        autoHeight
+        rows={data_busqueda_conductores ?? []}
+        columns={columns ?? []}
+        pageSize={5}
+        rowHeight={75}
+        rowsPerPageOptions={[5]}
+        experimentalFeatures={{ newEditingApi: true }}
+        onSelectionModelChange={asignar_conductor}
+        getRowId={(row) => row.id_clase_tercero_persona}
+      />
+    </>
   );
 }
 

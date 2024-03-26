@@ -457,11 +457,7 @@ export const ElementosOtros = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea ({' '}
-              {
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
-              }
-              )
+              Quitar selección de Tarea solicitud de otros
             </Button>
           ) : null
         }

@@ -99,7 +99,7 @@ const BusquedaConductores: React.FC<props> = ({
             position: 'relative',
             background: '#FAFAFA',
             borderRadius: '15px',
-            p: '10px',
+            p: '30px',
             mb: '10px',
             boxShadow: '0px 3px 6px #042F4A26',
           }}

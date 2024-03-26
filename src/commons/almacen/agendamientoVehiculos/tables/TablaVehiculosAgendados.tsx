@@ -25,39 +25,7 @@ const TablaVehiculosAgendados: FC<props_table> = ({
   set_data_solicitud_a_aprobar
 }) => {
 
-    /*
-    "id_viaje_agendado": 4,
-    "placa": "test1",
-    "nombre": "test",
-    "marca": "FORD MILENIUM",
-    "id_marca": 296,
-    "empresa_contratista": "test",
-    "persona_conductor": "FABIO ALEJANDRO SASTOQUE RINCON",
-    "direccion": "Calle 123, Ciudad",
-    "indicaciones_destino": "Indicaciones para llegar al destino",
-    "nro_total_pasajeros_req": 3,
-    "requiere_capacidad_carga": false,
-    "fecha_partida_asignada": "2024-02-14",
-    "hora_partida": "09:00:00",
-    "fecha_retorno_asignada": "2024-02-16",
-    "hora_retorno": "20:00:00",
-    "requiere_compagnia_militar": false,
-    "viaje_autorizado": true,
-    "observacion_autorizacion": null,
-    "fecha_no_autorizado": null,
-    "fecha_autorizacion": "2024-02-25T19:42:00.160820",
-    "ya_inicio": false,
-    "ya_llego": false,
-    "multiples_asignaciones": false,
-    "estado": "AC",
-    "id_vehiculo_conductor": 30,
-    "id_solicitud_viaje": 77,
-    "cod_municipio_destino": "05001",
-    "id_persona_autoriza": 215
-
-    */
-
-  const editar_detalle_vehiculo_agendado = (params: interface_detalles_vehiculos_agendados | interface_data_agendamiento_vehiculos) => {
+  const editar_detalle_vehiculo_agendado = (params: any) => {
     set_accion('editar_agendamiento');
     console.log(params);
     set_data_editar_agendamiento(params);

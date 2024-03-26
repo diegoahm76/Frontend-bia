@@ -129,12 +129,13 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
         <Grid
         container
         spacing={2}
+        rowSpacing={3}
         marginTop={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
-          p: '10px',
+          p: '30px',
           margin:'10px auto',
           width:'100%',
         }}
@@ -155,7 +156,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
               }}
               spacing={1}
               >
-                <Grid item xs={12} md={3} sx={{
+                <Grid item xs={12} md={4} sx={{
                   display:'flex',
                   justifyContent: 'center',
                   alignItems:'center',
@@ -170,7 +171,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
                     />
                 </Grid>
 
-                <Grid item xs={12} md={3} sx={{
+                <Grid item xs={12} md={4} sx={{
                   display:'flex',
                   justifyContent: 'center',
                   alignItems:'center',
@@ -185,7 +186,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
                     />
                 </Grid>
 
-                <Grid item xs={12} md={3} sx={{
+                <Grid item xs={12} md={4} sx={{
                   display:'flex',
                   justifyContent: 'center',
                   alignItems:'center',
@@ -200,7 +201,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
                     />
                 </Grid>
 
-                <Grid item xs={12} md={3} sx={{
+                <Grid item xs={12} md={4} sx={{
                   display:'flex',
                   justifyContent: 'center',
                   alignItems:'center',
@@ -215,7 +216,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
                     />
                 </Grid>
 
-                <Grid item xs={12} md={2.4} sx={{
+                <Grid item xs={12} md={4} sx={{
                   display:'flex',
                   justifyContent: 'center',
                   alignItems:'center',
@@ -230,7 +231,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
                     />
                 </Grid>
 
-                <Grid item xs={12} md={2.4}>
+                <Grid item xs={12} md={4}>
                   <FormControl required size='small' fullWidth>
                     <InputLabel>¿Con platón?</InputLabel>
                     <Select
@@ -245,7 +246,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={2.4}>
+                <Grid item xs={12} md={4}>
                   <FormControl required size='small' fullWidth>
                     <InputLabel>¿Arrendado?</InputLabel>
                     <Select
@@ -260,7 +261,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
                   </FormControl>
                 </Grid>
                 
-                <Grid item xs={12} md={2.4} sx={{
+                <Grid item xs={12} md={4} sx={{
                   display:'flex',
                   justifyContent: 'center',
                   alignItems:'center'
@@ -275,7 +276,7 @@ const BuscarVehiculo: React.FC<props> = ({mostrar_buscar_vehiculo, set_mostrar_b
                     Buscar
                   </Button>
                 </Grid>
-                <Grid item xs={12} md={2.4} sx={{
+                <Grid item xs={12} md={4} sx={{
                   display:'flex',
                   justifyContent: 'center',
                   alignItems:'center',

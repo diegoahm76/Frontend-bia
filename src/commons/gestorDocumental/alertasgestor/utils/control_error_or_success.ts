@@ -43,7 +43,7 @@ export const control_success = (message: ToastContent) =>
 // create toast info
 export const control_info = (message: ToastContent): any =>
   toast.info(message, {
-    position: 'top-right',
+    position: 'bottom-right',
     autoClose: 1000,
     hideProgressBar: false,
     closeOnClick: true,

@@ -7,23 +7,20 @@ import {
   SelectChangeEvent,
   TextField,
   InputLabel,
-  FormLabel,
-  Switch
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Title } from "../../../../components";
 import SearchIcon from "@mui/icons-material/Search";
 import TableBitacoraViajes from "../tables/TableBitacoraViajes";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import GenerarBitacora from "./GenerarBitacora";
 import { useAppDispatch } from "../../../../hooks";
-import { data_busqueda_conductores, interface_agendamientos_bitacora, response_agendamientos_bitacora } from "../interfaces/types";
+import { interface_agendamientos_bitacora, response_agendamientos_bitacora } from "../interfaces/types";
 import { control_error } from "../../../../helpers";
 import { buscar_agendamientos } from "../thunks/bitacora_viajes";
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
-import BusquedaConductores from "./BusquedaConductores";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -41,6 +38,10 @@ const BitacoraViajes: React.FC = () => {
 
   const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
 
+  /**
+   * Funcion para buscar los agendamientos y listarlos en la tabla
+   * @returns void
+   */
   const buscar_agendamientos_fc: () => void = () => {
     dispatch(buscar_agendamientos(
       fecha_inicio?.format('YYYY-MM-DD') ?? '',
@@ -60,13 +61,18 @@ const BitacoraViajes: React.FC = () => {
       })
   }
 
+
+  /**
+   * useEffect para buscar los agendamientos al cargar la pantalla solo una vez onc useRef
+   * @returns void
+   */
+  const agenmientos_bitacora_obtenidos = useRef(false);
   useEffect(()=>{
-    buscar_agendamientos_fc();
+    if (!agenmientos_bitacora_obtenidos.current) {
+      buscar_agendamientos_fc();
+      agenmientos_bitacora_obtenidos.current = true;
+    }
   },[refrescar_tabla])
-
-
-  //Podemos formatear la fecha guardada en el estado de esta manera
-  //let fecha_formateada = fecha_inicio.format("YYYY-MM-DD");
 
   const cambio_fecha_inicio = (date: Dayjs | null): void => {
     if (date !== null) {
@@ -98,8 +104,6 @@ const BitacoraViajes: React.FC = () => {
     buscar_agendamientos_fc();
   }
 
-
-
   return (
     <>
       <Grid
@@ -113,7 +117,7 @@ const BitacoraViajes: React.FC = () => {
           boxShadow: "0px 3px 6px #042F4A26",
           borderRadius: "15px",
           margin: "auto",
-          p: "20px",
+          p: "40px",
           mb: "20px",
         }}
       >
@@ -153,7 +157,6 @@ const BitacoraViajes: React.FC = () => {
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
                 )}
-                minDate={dayjs()}
               />
             </LocalizationProvider>
           </Grid>
@@ -169,7 +172,6 @@ const BitacoraViajes: React.FC = () => {
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
                 )}
-                minDate={dayjs()}
               />
             </LocalizationProvider>
           </Grid>

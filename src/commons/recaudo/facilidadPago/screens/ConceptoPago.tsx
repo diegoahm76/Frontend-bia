@@ -6,9 +6,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import AddIcon from "@mui/icons-material/Add";
 import { Title } from '../../../../components';
-import { Divider, Button, Grid, } from '@mui/material';
-import { CrearConceptoPago } from './CrearConceptoPago';
-import { Chip } from '@mui/material';
+import { Divider, Button, Grid, Dialog, TextField, } from '@mui/material';
+import { CrearConceptoPago } from './CrearConceptoPago'; 
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -17,26 +16,38 @@ import { ConceptoEditar } from './ConceptoEditar';
 import { TiposCobro } from './TiposCobro';
 import { TipoRenta } from './TipoRenta';
 import { Varible } from './Varible';
+import { miEstilo } from '../../../gestorDocumental/Encuesta/interfaces/types';
+import SaveIcon from '@mui/icons-material/Save';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { Knob } from 'primereact/knob';
+import { Tasa } from './Tasa';
 
 
 interface ConfiguracionBasica {
-    id_valores_variables: any;
-    fecha_inicio: any;
-    fecha_fin: any;
     valor: any;
+    fecha_fin: any;
     variables: any;
-    nombre_tipo_cobro:any;
-    nombre_tipo_rentaany:any;
-    nombre_variable:any;
-    descripccion:any;
+    fecha_inicio: any;
+    descripccion: any;
+    nombre_variable: any;
+    nombre_tipo_cobro: any;
+    nombre_tipo_rentaany: any;
+    id_valores_variables: any;
 }
 
-
+interface ConfiguracionInteres {
+    id: number;
+    año: number;
+    mes: number;
+    valor_interes: string;
+    estado_editable: boolean;
+}
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConceptoPago: React.FC = () => {
+    const [value, setValue] = useState<number>(2023);
+
     const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
-    const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
     const fetchConfiguraciones = async (): Promise<void> => {
         try {
             const url = "/recaudo/configuracion_baisca/valoresvariables/get/";
@@ -47,16 +58,43 @@ export const ConceptoPago: React.FC = () => {
             console.error(error);
         }
     };
-    const handleAbrirEditar = (configuracion: ConfiguracionBasica) => {
+   useEffect(() => {
+        void fetchConfiguraciones();
+    }, []);
+
+    // const [configuracionInteres, setConfiguracionInteres] = useState<ConfiguracionInteres[]>([]);
+
+    // const fetchConfiguracionInteres = async (): Promise<void> => {
+    //     try {
+    //         const url = `/recaudo/configuracion_basica/configuracioninterres/get/${value}/`;
+    //         const res = await api.get(url);
+    //         const configuracionInteresData: ConfiguracionInteres[] = res.data?.data || [];
+    //         setConfiguracionInteres(configuracionInteresData);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+    // useEffect(() => {
+    //      void fetchConfiguracionInteres(); // Puedes ajustar el año según sea necesario
+    // }, [value]);
+
+
+
+
+
+
+
+
+
+
+    const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
+ const handleAbrirEditar = (configuracion: ConfiguracionBasica) => {
         setSelectedConfiguracion(configuracion);
         setIsBuscarActivo(true);
     };
 
 
-
-    useEffect(() => {
-        void fetchConfiguraciones();
-    }, []);
+    
 
     const handleEliminarConfiguracion = async (id_valores_variables: number) => {
         try {
@@ -76,37 +114,33 @@ export const ConceptoPago: React.FC = () => {
         }
     };
 
-    const columns = [
-        // { field: 'id', headerName: 'ID', width: 70 },
+    const columns = [ 
         { field: 'nombre_tipo_renta', headerName: 'Tipo de Renta', width: 130, flex: 1 },
         { field: 'nombre_tipo_cobro', headerName: 'Tipo de Cobro', width: 130, flex: 1 },
         { field: 'descripccion', headerName: 'Descripción', width: 200, flex: 1 },
 
         { field: 'nombre_variable', headerName: 'varible', width: 130, flex: 1 },
-        // { field: 'estado', headerName: 'estado', width: 130, flex: 1 },
-
-        // estado
-        // {
-        //     field: 'Estado',
-        //     headerName: 'Estado',
-        //     width: 130,
-        //     flex: 1,
-
-        //     renderCell: (params: any) => (
-        //         <Chip
-        //             size="small"
-        //             label={params.value ? 'Activo' : 'Inactivo'}
-        //             color={params.value ? 'success' : 'error'}
-        //             variant="outlined"
-        //         />
-        //     )
-        // },
+   
         { field: 'fecha_inicio', headerName: 'fecha inicio', width: 130, flex: 1 },
         { field: 'fecha_fin', headerName: 'Fecha fin', width: 130, flex: 1 },
 
 
-        { field: 'valor', headerName: 'valor', width: 130, flex: 1 },
-
+        {
+            field: 'valor',
+            headerName: 'Valor',
+            width: 130,
+            flex: 1,
+            renderCell: (params:any) => {
+                // Formatear el valor a pesos colombianos
+                const valorFormateado = new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0, // Ajusta según la precisión deseada
+                }).format(params.value);
+    
+                return <>{valorFormateado}</>;
+            },
+        },
         {
             field: 'Acciones',
             headerName: 'Acciones',
@@ -133,6 +167,7 @@ export const ConceptoPago: React.FC = () => {
 
     ];
 
+
     const [is_modal_active, set_is_buscar] = useState<boolean>(false);
     const handle_open_buscar = (): void => {
         set_is_buscar(true);
@@ -145,8 +180,47 @@ export const ConceptoPago: React.FC = () => {
     const handleButtonClick = (buttonText: any) => {
         setSelectedButton(buttonText);
     };
+
+    const [is_tasa, set_is_tasa] = useState<boolean>(false);
+
+    const handle_open_tasa = (): void => {
+        set_is_tasa(true);
+    };
+    const handle_close = (): void => {
+        set_is_tasa(false);
+    };
+
+    // Estado para el valor del "Knob", empezando en 0 que corresponde a 2023
+    const [knobValue, setKnobValue] = useState<number>(2023);
+
+    // Manejador para actualizar el valor basado en el "Knob"
+  
+
+    // Manejador para decrementar el valor
+    const handleDecrement = () => {
+        setKnobValue(knobValue - 1);
+        setValue(value - 1);
+    };
+
+    // Manejador para incrementar el valor
+    const handleIncrement = () => {
+        setKnobValue(knobValue + 1);
+        setValue(value + 1);
+    };
+
+
+
     return (
         <>
+            
+            <Tasa   
+            is_tasa={is_tasa} 
+            handle_close={handle_close} 
+            handleDecrement={handleDecrement} 
+            value={value} knobValue={knobValue} 
+            handleIncrement={handleIncrement} handle_open_tasa={handle_open_tasa}
+            
+            />
 
             <ConceptoEditar
                 isBuscarActivo={isBuscarActivo}
@@ -161,7 +235,7 @@ export const ConceptoPago: React.FC = () => {
             />
             {/* <button onClick={() => //  console.log('')(tipoRio)}>Mostrar zonahidrica en la consola</button> */}
             <Grid container
-                item xs={12} marginLeft={2} marginRight={2} marginTop={3}
+                item xs={12} marginLeft={2} marginRight={2} marginTop={3} spacing={2}
                 sx={{
                     position: 'relative',
                     background: '#FAFAFA',
@@ -176,6 +250,13 @@ export const ConceptoPago: React.FC = () => {
                         Crear
                     </Button>
                 </Grid>
+
+                <Grid item xs={3} sm={2} marginTop={2} marginLeft={2} >
+                    <Button startIcon={<AddIcon />} onClick={handle_open_tasa} fullWidth variant="outlined"    >
+                    Interés
+                    </Button>
+                </Grid>
+
                 <Grid item xs={9} sm={10} marginTop={2} ></Grid>
                 <Divider
                     style={{
@@ -211,13 +292,13 @@ export const ConceptoPago: React.FC = () => {
                 <Title title="Configuracion " />
 
                 <Grid container item xs={12} spacing={2} marginTop={2}  >
-                   <Grid item xs={4} sm={4}>
+                    <Grid item xs={4} sm={4}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de renta")}>Tipos de renta</Button>
-                    </Grid> 
+                    </Grid>
                     <Grid item xs={4} sm={4}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de cobro")}>Tipos de cobro</Button>
                     </Grid>
-                    
+
                     <Grid item xs={4} sm={4}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Variable")}>Variable</Button>
                     </Grid>

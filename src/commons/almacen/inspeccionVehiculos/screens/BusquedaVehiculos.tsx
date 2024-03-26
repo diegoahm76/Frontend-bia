@@ -201,7 +201,7 @@ const BusquedaVehiculos: React.FC<props> = ({
           </Box>
 
 
-          <Grid container xs={12}>
+          <Grid container item xs={12}>
             <TableBusquedaVehiculos
               set_vehiculo_arrendado_temp={set_vehiculo_arrendado_temp}
               data_busqueda_vehiculos={data_busqueda_vehiculos}

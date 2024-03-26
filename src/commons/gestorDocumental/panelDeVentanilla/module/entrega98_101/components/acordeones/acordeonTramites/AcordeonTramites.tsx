@@ -136,7 +136,9 @@ export const AcordeonTramites = (): JSX.Element => {
         onSubmit={onSubmit}
       />
       {listaHistoricoSolicitudes && listaHistoricoSolicitudes.length > 0 ? (
-        [...listaHistoricoSolicitudes].map((item: any) => {
+         [...listaHistoricoSolicitudes]
+         .slice(0, displayCount)
+         .map((item: any) => {
           if (!item?.cabecera?.radicado) {
             return null;
           }

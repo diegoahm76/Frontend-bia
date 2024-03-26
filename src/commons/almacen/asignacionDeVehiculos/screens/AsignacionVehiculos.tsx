@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import BusquedaVehiculos from './BusquedaVehiculos';
 import TableAsignacionVehiculos from '../tables/TableAsignacionVehiculos';
 import BusquedaConductores from './BusquedaConductores';
-import { data_asignacion_vehiculos, interface_crear_vehiculo_agendado_conductor, interface_vehiculo_agendado_conductor, response_asignacion_vehiculo } from '../interfaces/types';
+import { data_asignacion_vehiculos, interface_conductor_seleccionado, interface_crear_vehiculo_agendado_conductor, interface_vehiculo_agendado_conductor, interface_vehiculo_seleccionado, response_asignacion_vehiculo } from '../interfaces/types';
 import { useAppDispatch } from '../../../../hooks';
 import { buscar_vehiculos_asignados, enviar_asignacion_vehiculo } from '../thunks/asignacion_vehiculos';
 import VehiculosConductoresAsignados from './VehiculosConductoresAsignados';
@@ -36,10 +36,10 @@ const AsignacionVehiculos: React.FC = () => {
 
   const [id_hoja_vida_vehiculo, set_id_hoja_vida_vehiculo] = useState<number>(0);
   const [id_persona_conductor, set_id_persona_conductor] = useState<number>(0);
-  const [nro_documento, set_nro_documento] = useState<string>('');
-  const [vehiculo_placa, set_vehiculo_placa] = useState<string>('');
 
   const [vehiculo_agendado_conductor, set_vehiculo_agendado_conductor] = useState<interface_vehiculo_agendado_conductor[]>([]);
+  const [vehiculo_seleccionado, set_vehiculo_seleccionado] = useState<interface_vehiculo_seleccionado>(Object);
+  const [conductor_seleccionado, set_conductor_seleccionado] = useState<interface_conductor_seleccionado>(Object)
 
   const [data_asignacion_vehiculos, set_data_asignacion_vehiculos] = useState<data_asignacion_vehiculos[]>([]);
 
@@ -179,6 +179,12 @@ const AsignacionVehiculos: React.FC = () => {
       });
     }
   }
+
+  useEffect(() => {
+    console.log(vehiculo_seleccionado);
+    console.log(conductor_seleccionado);
+  }
+  , [vehiculo_seleccionado, conductor_seleccionado]);
 
   return (
     <>
@@ -331,12 +337,12 @@ const AsignacionVehiculos: React.FC = () => {
       {mostrar_busqueda_vehiculos &&
         <>
           <BusquedaVehiculos
-            set_vehiculo_placa={set_vehiculo_placa}
+            set_vehiculo_seleccionado={set_vehiculo_seleccionado}
             set_id_hoja_vida_vehiculo={set_id_hoja_vida_vehiculo}
           />
           <BusquedaConductores
             refrescar_tabla_conductores={refrescar_tabla_conductores}
-            set_nro_documento={set_nro_documento}
+            set_conductor_seleccionado={set_conductor_seleccionado}
             set_id_persona_conductor={set_id_persona_conductor}
           />
 
@@ -362,12 +368,12 @@ const AsignacionVehiculos: React.FC = () => {
             <Title title="Vehículos y conductores asignados" />
             <VehiculosConductoresAsignados
               set_vehiculo_agendado_conductor={set_vehiculo_agendado_conductor}
-              nro_documento={nro_documento}
-              vehiculo_placa={vehiculo_placa}
+              conductor_seleccionado={conductor_seleccionado}
+              vehiculo_seleccionado={vehiculo_seleccionado}
               id_hoja_vida_vehiculo={id_hoja_vida_vehiculo}
               id_persona_conductor={id_persona_conductor}
-              set_nro_documento={set_nro_documento}
-              set_vehiculo_placa={set_vehiculo_placa}
+              set_conductor_seleccionado={set_conductor_seleccionado}
+              set_vehiculo_seleccionado={set_vehiculo_seleccionado}
               set_id_hoja_vida_vehiculo={set_id_hoja_vida_vehiculo}
               set_id_persona_conductor={set_id_persona_conductor}
             />
@@ -379,8 +385,16 @@ const AsignacionVehiculos: React.FC = () => {
                 vehiculo_agendado_conductor={vehiculo_agendado_conductor}
                 fecha_inicio_input={agendacion.fecha_inicio_asignacion}
                 fecha_fin_input={agendacion.fecha_final_asignacion}
+                nombre_vehiculo={agendacion.nombre_vehiculo}
                 vehiculo_placa={agendacion.vehiculo_placa}
+                marca_vehiculo={agendacion.marca_vehiculo}
+                tipo_vehiculo={agendacion.tipo_vehiculo}
+                capacidad_pasajeros={agendacion.capacidad_pasajeros}
+                color_vehiculo={agendacion.color_vehiculo}
                 nro_documento={agendacion.nro_documento}
+                nombre_conductor={agendacion.nombre_conductor}
+                telefono_conductor={agendacion.telefono_conductor}
+                tipo_conductor={agendacion.tipo_conductor}
                 id_borrar={agendacion.id_borrar}
               />
             ))}
@@ -403,9 +417,10 @@ const AsignacionVehiculos: React.FC = () => {
                   color="success"
                   variant="contained"
                   startIcon={<SaveIcon />}
+                  disabled={vehiculo_agendado_conductor?.length === 0}
                   onClick={enviar_asiganacion_a_conductor}
                 >
-                  {"Guardar"}
+                  Guardar
                 </Button>
               </Grid>
               <Grid item xs={12} md={1.5} >

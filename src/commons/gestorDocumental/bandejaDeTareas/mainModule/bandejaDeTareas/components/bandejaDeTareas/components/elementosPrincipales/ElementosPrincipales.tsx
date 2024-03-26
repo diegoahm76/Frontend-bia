@@ -8,6 +8,7 @@ import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ElementosOtros } from './elementosOtros/ElementosOtros';
 import { ElementosTramitesYServicios } from './elementosTramYServicios/ElementosTramitesYServicios';
+import { ElementoOPAS } from './elementosOPAS/ElementoOPAS';
 
 export const ElementosPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
@@ -43,7 +44,8 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
     'RESPONDER TRAMITE': <ElementosTramitesYServicios/>,
     'RESPONDER OTRO': <ElementosOtros />,
     'Responder Otro': <ElementosOtros />,
-    'Responder OPA': <>hola OPA</>,
+    'RESPONDER OPA': <ElementoOPAS/>,
+    'Responder OPA': <ElementoOPAS/>,
   } as const;
 
   const tipoDeTarea = listaTareasPqrsdfTramitesUotrosUopas[0]?.tipo_tarea;

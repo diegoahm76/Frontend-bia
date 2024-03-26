@@ -25,6 +25,7 @@ import { control_success } from '../../../../../../../../../helpers';
 import { getInfoTareaRechazadaOtros } from '../../../../services/servicesStates/otros/getInfoTaskRejectedOtros.service';
 import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
 import { getInfoTareaRechazadaTramites } from '../../../../services/servicesStates/tramites/getInfoRejectedTaskTramite.service';
+import { getInfoTareaRechazadaOpas } from '../../../../services/servicesStates/opas/getInfoOpaRechazada.service';
 
 export const ModalSeeRejectedTask: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -60,6 +61,9 @@ export const ModalSeeRejectedTask: FC = (): JSX.Element => {
     },
      'RESPONDER TRÁMITE': {
       getInfoRejectedTask: getInfoTareaRechazadaTramites,
+     },
+     'RESPONDER OPA': {
+      getInfoRejectedTask: getInfoTareaRechazadaOpas,
      },
     // Agrega aquí los nuevos tipos de tareas
     // agregar luego para tramites y para opas

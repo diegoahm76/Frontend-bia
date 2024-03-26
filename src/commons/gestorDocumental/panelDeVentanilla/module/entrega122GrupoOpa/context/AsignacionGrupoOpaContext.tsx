@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createContext, useState } from 'react';
+import { current } from '@reduxjs/toolkit';
 
 export const AsignacionGrupoOpaContext = createContext<any>({
   listaSeccionesSubsecciones: [],
@@ -12,7 +13,12 @@ export const AsignacionGrupoOpaProvider = ({ children }: any): JSX.Element => {
     useState<any>([]);
 
   const [listaSubGrupos, setListaSubGrupos] = useState<any>([]);
-  const [currentGrupo, setCurrentGrupo] = useState(null)
+  const [listaSeries, setListaSeries] = useState<any>([])
+  // se va a cambiar para definir el current grupo y serie
+  const [currentGrupo, setCurrentGrupo] = useState({
+    grupoSelected: null,
+    currentSerie: null,
+  })
 
   const [liderAsignado, setLiderAsignado] = useState(null);
 
@@ -24,6 +30,9 @@ export const AsignacionGrupoOpaProvider = ({ children }: any): JSX.Element => {
 
     listaSubGrupos,
     setListaSubGrupos,
+    
+    listaSeries,
+    setListaSeries,
 
     currentGrupo,
     setCurrentGrupo,

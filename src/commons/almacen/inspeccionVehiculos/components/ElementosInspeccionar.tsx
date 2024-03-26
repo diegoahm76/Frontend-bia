@@ -14,12 +14,13 @@ import { create_inspeccion_vehiculo } from "../interfaces/types";
 import { useAppDispatch } from "../../../../hooks";
 import { enviar_inspeccion_vehiculo } from "../thunks/inspeccion_vehiculos";
 import Swal from "sweetalert2";
+import { control_error } from "../../../../helpers";
 
 interface props {
   set_data_inspeccion_vehiculo: React.Dispatch<React.SetStateAction<create_inspeccion_vehiculo>>;
   data_inspeccion_vehiculo: create_inspeccion_vehiculo;
-  set_kilometraje: React.Dispatch<React.SetStateAction<number>>
-  set_id_hoja_vida_vehiculo: React.Dispatch<React.SetStateAction<number>>
+  set_kilometraje: React.Dispatch<React.SetStateAction<number>>;
+  id_hoja_vida_vehiculo: number;
 }
 
 
@@ -27,7 +28,7 @@ const ElementosInspeccionar: React.FC<props> = ({
   set_data_inspeccion_vehiculo,
   data_inspeccion_vehiculo,
   set_kilometraje,
-  set_id_hoja_vida_vehiculo
+  id_hoja_vida_vehiculo
 }) => {
   const dispatch = useAppDispatch();
   const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('true');
@@ -232,29 +233,34 @@ const ElementosInspeccionar: React.FC<props> = ({
   }
 
   const enviar_asignacion_vehiculo = () => {
-    Swal.fire({
-      title: '¿Está seguro que desea enviar la inspección del vehículo?',
-      showDenyButton: true,
-      confirmButtonText: `Si`,
-      denyButtonText: `No`,
-      confirmButtonColor: '#042F4A',
-      cancelButtonColor: '#DE1616',
-      icon: 'question',
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        dispatch(enviar_inspeccion_vehiculo(data_inspeccion_vehiculo)).then((response: { success: boolean, detail: string, data: any }) => {
-          if (response) {
-            console.log(response);        
-            return;
-          }
-        })
-        limpiar_inspeccion();
-        return true;
-      } else if(result.isDenied){
-        return false;
-      }
-    });
+    if(id_hoja_vida_vehiculo === 0){
+      control_error('No se ha seleccionado un vehículo');
+      return
+    } else {
+      Swal.fire({
+        title: '¿Está seguro que desea enviar la inspección del vehículo?',
+        showDenyButton: true,
+        confirmButtonText: `Si`,
+        denyButtonText: `No`,
+        confirmButtonColor: '#042F4A',
+        cancelButtonColor: '#DE1616',
+        icon: 'question',
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          dispatch(enviar_inspeccion_vehiculo(data_inspeccion_vehiculo)).then((response: { success: boolean, detail: string, data: any }) => {
+            if (response) {
+              console.log(response);        
+              return;
+            }
+          })
+          limpiar_inspeccion();
+          return true;
+        } else if(result.isDenied){
+          return false;
+        }
+      });   
+    }
   }
 
   return (

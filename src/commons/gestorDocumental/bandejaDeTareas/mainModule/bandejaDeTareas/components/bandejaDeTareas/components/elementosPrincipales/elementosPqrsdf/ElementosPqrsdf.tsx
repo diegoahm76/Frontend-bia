@@ -301,7 +301,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       headerName: 'Requerimientos pendientes de respuesta',
       field: 'requerimientos_pendientes_respuesta',
       minWidth: 280,
-      renderCell: (params: any) => {
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
         return (
           <Chip
             size="small"
@@ -315,7 +315,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       headerName: 'Días para respuesta',
       field: 'dias_para_respuesta',
       minWidth: 250,
-      renderCell: (params: any) => {
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
         switch (true) {
           case params.row.dias_para_respuesta >= 7:
             return (
@@ -368,7 +368,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       headerName: 'Estado asignación de tarea',
       field: 'estado_asignacion_tarea',
       minWidth: 220,
-      renderCell: (params: any) => {
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
         switch (params.row.estado_asignacion_tarea) {
           case null:
             return (
@@ -539,11 +539,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea ({' '}
-              {
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
-              }
-              )
+              Quitar selección de tarea de pqrsdf
             </Button>
           ) : null
         }

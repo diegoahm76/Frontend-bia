@@ -15,6 +15,7 @@ import { getReAsignacionesTareasPqrsdf } from '../services/reasignaciones/pqrsdf
 import { ReasignacionesGrid } from '../components/reasignacionesGrid/ReasignacionesGrid';
 import { getReAsignacionesTareasOtros } from '../services/reasignaciones/otros/getReasignacionesTareasOtros.service';
 import { getReAsignacionesTareasTramites } from '../services/reasignaciones/tramitesServicios/getReasignaTram.service';
+import { getReAsignacionesTareasOpas } from '../services/reasignaciones/opas/getReasignacionesTareasOpas.service';
 
 export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
   //* redux states
@@ -57,11 +58,6 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         ).then((res) => {
           setListaAsignaciones(res);
         });
-        /*showAlert(
-          'Atención',
-          'No hay servicio para ver reasignaciones de las (RESPUESTAS A PQRSDF),',
-          'warning'
-        );*/
         break;
       case 'Responder Trámite':
       case 'Responder Tramite':
@@ -86,13 +82,17 @@ export const MainReasignacionesScreen: React.FC = (): JSX.Element => {
         });
 
         break;
-      case 'OPA': // ? se debe mirar el tipo de tarea a establecer ---------------
+      case 'RESPONDER OPA':
+      case 'Responder Opa':
+      case 'Responder OPA':
+        // ? se debe mirar el tipo de tarea a establecer ---------------
         //* se debe llamar el servicio respectivo para las asignaciones de OPA, apenas esté listo
-        showAlert(
-          'Atención',
-          'No hay servicio aún para ver las asignaciones de las OPAS, así que no hay asignaciones de opa por el momento',
-          'warning'
-        );
+       void getReAsignacionesTareasOpas(
+          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+          handleGeneralLoading
+        ).then((res) => {
+          setListaAsignaciones(res);
+        });
 
         // Call the service for OPA
         break;

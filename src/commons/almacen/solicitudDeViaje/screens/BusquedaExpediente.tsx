@@ -8,7 +8,7 @@ import {
 	Dialog,
 	DialogContent,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import SearchIcon from '@mui/icons-material/Search';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -167,7 +167,16 @@ const BusquedaExpediente: React.FC<IProps> = ({ set_mostrar_busqueda_expediente,
 					fecha_fin?.format('YYYY-MM-DD') === undefined ? '' : fecha_fin?.format('YYYY-MM-DD'),
 					palabras_clave)
 			).then((response: any) => {
-				set_expedientes(response.data);
+        if(Object.keys(response).length !== 0){
+          //cambiar esta validacion, cuando no hay resultados, no retorna data
+          if('success' in response){
+            set_expedientes(response.data);
+            control_success('Expedientes encontrados');
+          } else {
+            control_error('No se encontraron expedientes');
+            set_expedientes([]);
+          }
+        }
 			}).catch((err: any) => {
 				set_expedientes([]);
 				console.log(err);
@@ -226,12 +235,22 @@ const BusquedaExpediente: React.FC<IProps> = ({ set_mostrar_busqueda_expediente,
 	 * Realiza una búsqueda inicial de expedientes para mostrar en la tabla
 	 * y actualiza el estado correspondiente solo cuabndo la tabla esta es un estao visible.
 	 */
+  const expedientes_obtenidos = useRef(false);
 	useEffect(() => {
-		if (mostrar_busqueda_expediente) {
+		if (mostrar_busqueda_expediente && !expedientes_obtenidos.current) {
 			dispatch(
 				buscar_expediente('', '', '', '')
 			).then((response: any) => {
-				set_expedientes(response.data);
+        if(Object.keys(response).length !== 0){
+          if(response.data.length !== 0){
+            set_expedientes(response.data);
+            expedientes_obtenidos.current = true;
+          } else {
+            control_error('No se encontraron expedientes');
+            set_expedientes([]);
+            expedientes_obtenidos.current = true;
+          }
+        }
 			}).catch((err: any) => {
 				set_expedientes([]);
 				console.error(err);

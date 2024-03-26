@@ -74,13 +74,13 @@ const actionsTramitesYServicios: Action[] = [
     path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
     disabled: false,
   },
-  {
+ /* {
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario',
     path: '',
     disabled: false,
-  },
+  },*/
   {
     id: 'VerRespuestasRequerimientosOSolicitudesAlUsuario',
     icon: <PreviewIcon />,
@@ -120,14 +120,14 @@ const newActions = [
     id: 'RespondeSolicitud',
     icon: <ReplyAllIcon />,
     name: 'Responder OPA',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/respuesta_opas/',
     disabled: false,
   },
   {
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario sobre OPA',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/requerimiento_a_usuario_opas/',
     disabled: false,
   },
 ];
@@ -223,6 +223,7 @@ export const {
   setActionssTareasPQRSDF,
   setActionsTareasOtros,
   setActionsTareasTramites,
+  setActionsTareasOpas,
 
   // ? lista de las tareas tras la busqueda
   setListaTareasPqrsdfTramitesUotrosUopas,

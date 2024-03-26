@@ -159,7 +159,7 @@ const GenerarBitacora: React.FC<Props> = ({set_mostrar_generar_bitacora,data_sol
   },[data_solicitud_agendada])
 
   useEffect(()=>{
-    if(data_solicitud_agendada?.ya_llego){      
+    if(data_solicitud_agendada?.ya_llego){
       if(Object.keys(data_bitacora_completa).length !== 0){        
         set_fecha_salida(dayjs(data_bitacora_completa.fecha_inicio_recorrido));
         set_novedad_salida(data_bitacora_completa.novedad_salida ?? '');

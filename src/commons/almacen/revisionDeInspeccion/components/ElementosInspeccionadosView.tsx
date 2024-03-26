@@ -9,8 +9,15 @@ import ContenedorInput from "./ContenedorInput";
 import { estilo_radio } from "../thunks/estilo_radio";
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import CloseIcon from '@mui/icons-material/Close';
-import { interface_put_revisar_vehiculo } from "../interfaces/types";
+import { interface_put_revisar_vehiculo, response_put_revisar_vehiculo } from "../interfaces/types";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../../hooks";
+import { put_verificar_inspeccion } from "../thunks/revision_inspeccion";
+import Swal from "sweetalert2";
+import SaveIcon from '@mui/icons-material/Save';
+import { control_success } from "../../../../helpers";
+
+
 
 interface props {
   set_mostrar_view_inpeccion: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,9 +26,10 @@ interface props {
 
 const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccion,data_inspeccion_revisada}) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // Estados de los elementos inspeccionados
-  const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('false'); // Direcionales delanteras
+  const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('true'); // Direcionales delanteras
   const [direcionales_traseras, set_direcionales_traseras] = useState<string>('true'); // Direcionales traseras
   const [limpiabrisas_delantero, set_limpiabrisas_delantero] = useState<string>('true'); // Limpiabrisas delantero
   const [limpiabrisas_trasero, set_limpiabrisas_trasero] = useState<string>('true'); // Limpiabrisas trasero
@@ -52,12 +60,13 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
 
   // Estados de observaciones
   const [observaciones, set_observaciones] = useState<string>('');
+  const [observacion_inspeccion, set_observacion_inspeccion] = useState<string>(''); // Observaciones de la inspección  
   const [tiene_observaciones, set_tiene_observaciones] = useState<boolean>(false);
 
 
   useEffect(()=>{
     // Comentario: Este hook se ejecuta cuando cambia el valor de la variable "data_inspeccion_revisada"
-    if(Object.keys(data_inspeccion_revisada).length !== 0){
+    if(data_inspeccion_revisada !== undefined && Object.keys(data_inspeccion_revisada).length !== 0){
       set_direcionales_delanteras(data_inspeccion_revisada.dir_llantas_delanteras.toString());
       set_direcionales_traseras(data_inspeccion_revisada.dir_llantas_Traseras.toString());
       set_limpiabrisas_delantero(data_inspeccion_revisada.limpiabrisas_delantero.toString());
@@ -86,19 +95,56 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
       set_kit_herramientas(data_inspeccion_revisada.kit_herramientas.toString());
       set_botiquin_completo(data_inspeccion_revisada.botiquin_completo.toString());
       set_pito(data_inspeccion_revisada.pito.toString());
+      set_observacion_inspeccion(data_inspeccion_revisada.observaciones_verifi_sup ?? '');
     }
   },[data_inspeccion_revisada]);
 
   useEffect(()=>{
-    if('observaciones' in data_inspeccion_revisada){
-      set_tiene_observaciones(true);
-      set_observaciones(data_inspeccion_revisada?.observaciones ?? '')
+    if(data_inspeccion_revisada !== undefined && Object.keys(data_inspeccion_revisada).length !== 0){
+      if('observaciones' in data_inspeccion_revisada){
+        set_tiene_observaciones(true);
+        set_observaciones(data_inspeccion_revisada?.observaciones ?? '')
+      }
     }
   },[data_inspeccion_revisada])
 
   // Redirige a la página de programación de mantenimiento de vehículos
   const redirect_mantenimiento = () => {
     navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_vehiculos');
+  }
+
+  const put_verificar_inspeccion_fc: () => Promise<boolean> = async() => {
+    await dispatch(put_verificar_inspeccion(data_inspeccion_revisada.id_inspeccion_vehiculo,{
+      observaciones_verifi_sup: observacion_inspeccion
+    }))
+      .then((response: response_put_revisar_vehiculo) => {
+        if(response !== undefined && Object.keys(response).length !== 0){
+          if(response.success){
+            control_success('Inspección revisada con éxito');
+          }
+        }
+      }
+    )
+    return true;
+  }
+
+  const enviar_revisado = async() => {
+    Swal.fire({
+      title: '¿Está seguro de enviar la revisión de la inspección?',
+      showDenyButton: true,
+      confirmButtonColor: '#042F4A',
+      cancelButtonColor: '#DE1616',
+      icon: 'question',
+      confirmButtonText: `Revisar`,
+      denyButtonText: `Cancelar`,
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        const data = await put_verificar_inspeccion_fc();
+        if(data){
+          set_mostrar_view_inpeccion(false);
+        }
+      }
+    });
   }
   
   return (
@@ -119,6 +165,23 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
       }}
       >
       <Title title="Elementos a inspeccionar" />
+
+      <Grid item container xs={12}>
+        <Grid item xs={12} md={2} sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+        }}>
+          <TextField
+            label='Kilometraje'
+            value={data_inspeccion_revisada?.kilometraje ? Number(data_inspeccion_revisada.kilometraje).toLocaleString() : ''}
+            disabled
+            size="small"
+            fullWidth
+          />
+          <FormLabel>KM</FormLabel>
+        </Grid>
+      </Grid>
 
       <TarjetaInspeccion title="Direccionales">
         <ContenedorInput>
@@ -589,7 +652,8 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
             onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_observaciones(e.target.value)}
             required
             fullWidth
-            placeholder="Escriba aqui sus observaciones"
+            disabled
+            label="Observaciones"
             size="small"
             multiline
             rows={2}
@@ -597,18 +661,40 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
         </Grid>
       }
 
-      <Grid
-          item
-          xs={12}
-          sx={{
-            display: "flex",
-            justifyContent: "end",
-            alignItems: "center",
-            marginTop: "20px",
-            gap: 4,
-          }}
-        >
+        <Grid item container xs={12}>
+          <Title title="Observacion de revisión:" />
+          <TextField
+            style={{margin:'20px 0px'}}
+            value={observacion_inspeccion}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_observacion_inspeccion(e.target.value)}
+            required
+            fullWidth
+            disabled={data_inspeccion_revisada.verificacion_superior_realizada ? true : false}
+            label="Observacion de revisión:"
+            size="small"
+            multiline
+            rows={2}
+          />
+        </Grid>
+
+      <Grid item container spacing={2} xs={12} sx={{
+        display: 'flex',
+        justifyContent: 'end',
+      }}>
+        <Grid item xs={12} lg={3}>
           <Button
+            fullWidth
+            color='primary'
+            variant='contained'
+            startIcon={<SaveIcon/>}
+            onClick={enviar_revisado}
+            >
+              Confirmar revisión
+          </Button>
+        </Grid>
+        <Grid item xs={12} lg={2}>
+          <Button
+            fullWidth
             color="success"
             variant="contained"
             startIcon={<SettingsApplicationsIcon />}
@@ -616,7 +702,10 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
           >
             Mantenimiento
           </Button>
+        </Grid>
+        <Grid item xs={12} lg={2}>
           <Button
+            fullWidth
             color="error"
             variant="contained"
             startIcon={<CloseIcon />}
@@ -625,6 +714,8 @@ const ElementosInspeccionadosView: React.FC<props> = ({set_mostrar_view_inpeccio
             Salir
           </Button>
         </Grid>
+      </Grid>
+
     </Grid>
   );
 }

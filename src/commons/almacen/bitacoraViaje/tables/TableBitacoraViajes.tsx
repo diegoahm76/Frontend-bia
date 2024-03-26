@@ -7,6 +7,9 @@ import { useAppDispatch } from '../../../../hooks';
 import { listar_municipios } from "../thunks/bitacora_viajes";
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ButtonGroup, Grid } from '@mui/material';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_agendamientos_bitacora }) => React.ReactNode;
@@ -45,30 +48,6 @@ const TableBitacoraViajes: React.FC<Props> = ({
     }
   },[])
 
-/*
-  cod_municipio_destino  :"50001"
-  direccion  :"trd"
-  estado  :"AC"
-  fecha_autorizacion  :"2024-02-29T04:15:01.962873"
-  fecha_no_autorizado  :null
-  fecha_partida_asignada  :"2024-02-28"
-  fecha_retorno_asignada  :"2024-02-29"
-  hora_partida  :"23:13:00"
-  hora_retorno  :"17:28:00"
-  id_persona_autoriza  :215
-  id_solicitud_viaje  :89
-  id_vehiculo_conductor  :39
-  id_viaje_agendado  :22
-  indicaciones_destino  :"trd"
-  multiples_asignaciones  :false
-  nro_total_pasajeros_req  :2
-  observacion_autorizacion  :null
-  requiere_capacidad_carga  :true
-  requiere_compagnia_militar  :true
-  viaje_autorizado  :true
-  ya_inicio  :false
-  ya_llego  :false
-*/
 
   const generar_bitacora = (params: interface_agendamientos_bitacora) => {
     set_mostrar_generar_bitacora(true);
@@ -97,12 +76,12 @@ const TableBitacoraViajes: React.FC<Props> = ({
         }
       })
     },
-    { field: 'nombre_conductor', headerName: 'Conductor Asignado', minWidth: 120, flex: 1,
+    { field: 'nombre_conductor', headerName: 'Conductor asignado', minWidth: 120, flex: 1,
       renderCell: ((res)=>(
         res.row.nombre_conductor !== null && res.row.nombre_conductor + ' ' + res.row.apellido_conductor
       ))
     },
-    { field: 'fecha_partida_asignada', headerName: 'Flecha Salida', minWidth: 120, flex: 1,
+    { field: 'fecha_partida_asignada', headerName: 'Flecha salida', minWidth: 120, flex: 1,
       renderCell: ((res)=>(
         dayjs(res.row.fecha_partida_asignada).format('DD/MM/YYYY')
       ))
@@ -136,26 +115,44 @@ const TableBitacoraViajes: React.FC<Props> = ({
   ];
 
   return (
-    <DataGrid
-      style={{margin:'15px 0px'}}
-      density="compact"
-      autoHeight
-      rows={data_table_bitacora ?? []}
-      columns={columns ?? []}
-      pageSize={5}
-      rowHeight={75}
-      rowsPerPageOptions={[5]}
-      experimentalFeatures={{ newEditingApi: true }}
-      getRowId={() => {
-        try {
-          return uuidv4();
-        } catch (error) {
-          console.error(error);
-          //? Genera un ID de respaldo único
-          return `fallback-id-${Date.now()}-${Math.random()}`;
-        }
-      }}
-    />
+    <>
+      <Grid item xs={12} container
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center" >
+        <Grid item  >
+          <ButtonGroup style={{ margin: 5, }}>
+              {download_xls({ nurseries: data_table_bitacora, columns })}
+              {download_pdf({
+                  nurseries: data_table_bitacora,
+                  columns,
+                  title: 'Bitácora de viajes',
+              })}
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+
+      <DataGrid
+        style={{margin:'15px 0px'}}
+        density="compact"
+        autoHeight
+        rows={data_table_bitacora ?? []}
+        columns={columns ?? []}
+        pageSize={5}
+        rowHeight={75}
+        rowsPerPageOptions={[5]}
+        experimentalFeatures={{ newEditingApi: true }}
+        getRowId={() => {
+          try {
+            return uuidv4();
+          } catch (error) {
+            console.error(error);
+            //? Genera un ID de respaldo único
+            return `fallback-id-${Date.now()}-${Math.random()}`;
+          }
+        }}
+      />
+    </>
   );
 }
 

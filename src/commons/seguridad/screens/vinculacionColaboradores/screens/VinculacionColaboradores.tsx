@@ -273,6 +273,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
         vinculacion.fecha_finaliza.format('YYYY-MM-DD'),
       observaciones_vinculacion_cargo_actual: obs_vin_cargo,
       justificacion_cambio_und_org: persona_vinculacion.justificacion,
+      fecha_inicio_cargo_actual: vinculacion.fecha_inicio.format('YYYY-MM-DD'),
     };
     if (update_vinculo && vinculacion.desvincular === false) {
       dispatch(actualizar_vinculo(persona.id_persona, formulario)).then(() => {

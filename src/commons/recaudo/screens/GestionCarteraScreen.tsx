@@ -70,13 +70,49 @@ export const GestionCarteraScreen: React.FC = () => {
     {
       field: 'id',
       headerName: 'ID Cartera',
-      minWidth: 90,
+      minWidth: 9220,
       flex: 1,
+    },
+    {
+      field: 'tipo_renta',
+      headerName: 'Tipo Renta',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
+    },
+    {
+      field: 'Resolucion ',
+      headerName: 'Resolucion   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
+    },
+    {
+      field: 'Expediente ',
+      headerName: 'Expediente   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
+    },
+    {
+      field: 'Descuento ',
+      headerName: 'Descuento   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
     },
     {
       field: 'id_deudor',
       headerName: 'Nit Deudor',
-      minWidth: 90,
+      minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
         if (!params.value) {
@@ -106,13 +142,13 @@ export const GestionCarteraScreen: React.FC = () => {
     {
       field: 'fecha_facturacion',
       headerName: 'Fecha factura',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'numero_factura',
       headerName: 'Número Factura',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
@@ -127,7 +163,7 @@ export const GestionCarteraScreen: React.FC = () => {
     {
       field: 'proceso_cartera',
       headerName: 'Etapas',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
         if (!params.value) {
@@ -139,43 +175,35 @@ export const GestionCarteraScreen: React.FC = () => {
     {
       field: 'id_categoria',
       headerName: 'Subetapas',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
         return categorias.find((categoria) => categoria.id === params.row.proceso_cartera[0]?.id_categoria)?.categoria ?? 'Sin subetapa activa';
       }
     },
-    {
-      field: 'tipo_renta',
-      headerName: 'Tipo Renta',
-      minWidth: 100,
-      flex: 1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin tipo renta';
-      }
-    },
+   
     {
       field: 'monto_inicial',
       headerName: 'Saldo Capital',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'valor_intereses',
       headerName: 'Saldo Intereses',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'codigo_contable',
       headerName: 'Código contable',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'valor_sancion',
       headerName: 'Valor sanción',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {

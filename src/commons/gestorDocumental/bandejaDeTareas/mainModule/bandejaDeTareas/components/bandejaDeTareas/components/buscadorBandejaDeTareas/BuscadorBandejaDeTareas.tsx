@@ -29,6 +29,7 @@ import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert'
 import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 import { control_info } from '../../../../../../../alertasgestor/utils/control_error_or_success';
 import { getListadoTramitesByPerson } from '../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
+import { getListadoTareasOpasByPerson } from '../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -123,7 +124,6 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         fecha_fin,
         radicado,
       } = watchBusquedaBandejaDeTareas;
-      console.log;
 
       const res = await getListadoTareaasOtrosByPerson(
         id_persona,
@@ -136,7 +136,6 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         radicado
       );
 
-      console.log(res);
       dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
       dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
     } catch (error) {
@@ -146,11 +145,30 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
   const searchOpas = async () => {
     try {
-      showAlert(
-        'Estimado usuario!',
-        'Esta funcionalidad de Responder OPA no está disponible ',
-        'warning'
+      const {
+        estado_asignacion_de_tarea,
+        estado_de_la_tarea,
+        fecha_inicio,
+        fecha_fin,
+        mostrar_respuesta_con_req_pendientes,
+        radicado,
+      } = watchBusquedaBandejaDeTareas;
+
+      const res = await getListadoTareasOpasByPerson(
+        id_persona,
+        handleSecondLoading,
+        estado_asignacion_de_tarea?.value,
+        estado_de_la_tarea?.value,
+        fecha_inicio,
+        fecha_fin,
+        mostrar_respuesta_con_req_pendientes?.value,
+        radicado
       );
+
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+
+
     } catch (error) {
       console.error('Error:', error);
     }
@@ -185,6 +203,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         await searchOtros();
         break;
 
+      case 'RESPONDER OPA':
       case 'Responder OPA':
         await searchOpas();
         break;

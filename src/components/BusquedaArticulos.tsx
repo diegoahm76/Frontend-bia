@@ -239,7 +239,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                         style={{ width: '25%' }}
                       ></Column>
                       <Column
-                        field="cod_tipo_bien"
+                        field="tipo_bien"
                         header="Tipo bien"
                         style={{ width: '25%' }}
                       ></Column>

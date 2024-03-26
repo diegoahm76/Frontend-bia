@@ -190,7 +190,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
   };
   const tipos_tramites_fc: () => void = () => {
     dispatch(tipos_tramites()).then((response: any) => {
-      set_lt_tipos_tramites(response);
+      set_lt_tipos_tramites(response); // se deben agregar los permisos menores
     });
   };
 

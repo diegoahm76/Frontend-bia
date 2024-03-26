@@ -12,6 +12,7 @@ interface Metadatos {
 }
 
 export interface Anexo {
+  ruta_soporte: any;
   asunto: string;
   descripcion_de_la_solicitud: string;
   id: string;

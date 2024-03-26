@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState } from 'react';
-import { data_busqueda_conductor, data_busqueda_conductores } from '../interfaces/types';
+import { interface_conductor_seleccionado } from '../interfaces/types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -10,26 +10,26 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 interface CustomColumn extends GridColDef {
-  renderCell?: (params: { row: data_busqueda_conductor }) => React.ReactNode;
+  renderCell?: (params: { row: interface_conductor_seleccionado }) => React.ReactNode;
 }
 
 interface props {
-  data_busqueda_conductores: data_busqueda_conductores[];
+  data_busqueda_conductores: interface_conductor_seleccionado[];
   set_id_persona_conductor:React.Dispatch<React.SetStateAction<number>>;
-  set_nro_documento:React.Dispatch<React.SetStateAction<string>>;
+  set_conductor_seleccionado:React.Dispatch<React.SetStateAction<interface_conductor_seleccionado>>;
 }
 
-const TableBusquedaConductores: React.FC<props> = ({data_busqueda_conductores, set_id_persona_conductor,set_nro_documento}) => {
+const TableBusquedaConductores: React.FC<props> = ({data_busqueda_conductores, set_id_persona_conductor,set_conductor_seleccionado}) => {
 
 
   /**
    * Asigna un conductor a partir de los parámetros proporcionados.
    * 
-   * @param {data_busqueda_conductor} params - Los parámetros de búsqueda del conductor.
+   * @param {interface_conductor_seleccionado} params - Los parámetros de búsqueda del conductor.
    * @returns {void}
    */
-  const asignar_conductor = (params: data_busqueda_conductor) => {
-    set_nro_documento(params.nro_documento);
+  const asignar_conductor = (params: interface_conductor_seleccionado) => {
+    set_conductor_seleccionado(params);
     set_id_persona_conductor(params.id_persona);
   }
 

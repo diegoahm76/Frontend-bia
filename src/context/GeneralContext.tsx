@@ -43,6 +43,11 @@ export const ModalAndLoadingProvider: FC<any> = ({
     const { isLoading: openModalNuevoNumero2, handleLoading: handleOpenModalNuevoNumero2 } =
     useModalAndLoading('', 'isLoading');
 
+    const { isLoading: sevenLoading, handleLoading: handleSevenLoading } =
+    useModalAndLoading('', 'isLoading');
+
+    const { isLoading: eigthLoading, handleLoading: handleEigthLoading } =
+    useModalAndLoading('', 'isLoading');
   
 
   // ? ----- modales para la entrega 99 -----
@@ -95,6 +100,13 @@ export const ModalAndLoadingProvider: FC<any> = ({
     //* open modal nuevo numero 2
     openModalNuevoNumero2,
     handleOpenModalNuevoNumero2,
+
+    //* seven loading
+    sevenLoading,
+    handleSevenLoading,
+    //* eigth loading
+    eigthLoading,
+    handleEigthLoading,
 
     // ? ----- modales para la entrega 99 -----
     //* modal agregar metadatos
