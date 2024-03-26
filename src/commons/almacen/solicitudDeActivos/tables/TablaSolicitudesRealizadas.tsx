@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridFilterModel, useGridApiRef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 import { useAppDispatch } from '../../../../hooks';
@@ -10,6 +10,8 @@ import { ButtonGroup, Grid } from '@mui/material';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { interface_solicitudes_realizadas } from '../interfaces/types';
+import Swal from 'sweetalert2';
+import { put_cancelar_solicitud } from '../thunks/solicitud_activos';
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_solicitudes_realizadas }) => React.ReactNode;
@@ -20,6 +22,7 @@ interface Props {
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   data_solicitudes_realizadas: interface_solicitudes_realizadas[];
   set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
+  loadding_tabla_solicitudes_realizadas: boolean;
 }
 
 
@@ -29,17 +32,29 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
   set_accion,
   data_solicitudes_realizadas,
   set_id_solicitud_activo,
+  loadding_tabla_solicitudes_realizadas,
 }) => {
   const dispatch = useAppDispatch();
 
 
-  const editar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
-    console.log('Editar solicitud', solicitud);
+  const ver_solicitud = (solicitud: interface_solicitudes_realizadas) => {
     set_position_tab('2');
     set_accion('ver');
     set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null);
   }
 
+  const cancelar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
+    set_accion('cancelar');
+    set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null); 
+  }
+
+  const editar_solilitud = (solicitud: interface_solicitudes_realizadas) => {
+    console.log('editar solicitud', solicitud);
+    
+    set_position_tab('2');
+    set_accion('editar');
+    set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null);
+  }
 
   const columns: CustomColumn[] = [
     { field: 'estado_solicitud', headerName: 'Estado', maxWidth: 120, flex: 1,
@@ -54,7 +69,7 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
         : params.row.estado_solicitud === 'C' && 'Cancelado' 
       )
     },
-    { field: 'fecha_solicitud', headerName: 'Fecha de la solicitud', minWidth: 120, flex: 1,
+    { field: 'fecha_solicitud', headerName: 'Fecha de la solicitud', maxWidth: 145, flex: 1,
       renderCell: (params) => (dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY'))
     },
     { field: 'motivo', headerName: 'Motivo', minWidth: 300, flex: 1,},
@@ -67,19 +82,23 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
     { field: 'numero_activos', headerName: 'Número de activos', maxWidth: 150, flex: 1,},
     { field: 'anular', headerName: 'Anular', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
-        <HighlightOffIcon sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
+        <HighlightOffIcon
+          onClick={() => cancelar_solicitud(params.row)}
+          sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
       )
     },
     { field: 'ver', headerName: 'Ver', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         <VisibilityIcon 
-          onClick={() => editar_solicitud(params.row)}
+          onClick={() => ver_solicitud(params.row)}
           sx={{fontSize: '30px', cursor: 'pointer'}} />
       )
     },
     { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
-        <EditIcon sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
+        <EditIcon
+          onClick={() => editar_solilitud(params.row)}
+          sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
       )
     },
   ];
@@ -103,6 +122,7 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
       </Grid>
 
       <DataGrid
+        loading={loadding_tabla_solicitudes_realizadas}
         style={{margin:'15px 0px'}}
         density="compact"
         autoHeight
@@ -112,15 +132,7 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
         rowHeight={75}
         rowsPerPageOptions={[5]}
         experimentalFeatures={{ newEditingApi: true }}
-        getRowId={() => {
-          try {
-            return uuidv4();
-          } catch (error) {
-            console.error(error);
-            //? Genera un ID de respaldo único
-            return `fallback-id-${Date.now()}-${Math.random()}`;
-          }
-        }}
+        getRowId={(row) => row?.id_solicitud_activo === undefined ? uuidv4() : row.id_solicitud_activo}
       />
     </>
   );

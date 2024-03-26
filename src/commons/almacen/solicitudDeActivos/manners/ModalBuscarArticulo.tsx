@@ -25,6 +25,7 @@ const ModalBuscarArticulo: React.FC<props> = ({set_mostrar_busqueda_articulo,mos
   const [cod_tipo_activo, set_cod_tipo_activo] = useState<string>('');
   const [nombre, set_nombre] = useState<string>('');
   const [doc_identificador_nro, set_doc_identificador_nro] = useState<string>('');
+  const [loadding_tabla, set_loadding_tabla] = useState<boolean>(false);
 
   const [data_articulos, set_data_articulos] = useState<interface_busqueda_articulo[]>([
     undefined as unknown as interface_busqueda_articulo,
@@ -38,6 +39,7 @@ const ModalBuscarArticulo: React.FC<props> = ({set_mostrar_busqueda_articulo,mos
 
 
   const get_obtener_articulos_fc = async() => {
+    set_loadding_tabla(true);
     await dispatch(get_obtener_articulos(
       cod_tipo_activo,
       nombre,
@@ -47,10 +49,14 @@ const ModalBuscarArticulo: React.FC<props> = ({set_mostrar_busqueda_articulo,mos
         if(Object.keys(response).length !== 0 && response.success === true) {
           if(response.data.length === 0){
             control_error('No se encontraron articulos');
+            set_loadding_tabla(false);
+          } else {
+            set_data_articulos(response.data);
+            set_loadding_tabla(false);
           }
-          set_data_articulos(response.data);
         } else {
           set_data_articulos([]);
+          set_loadding_tabla(false);
         }
       }
     )
@@ -187,6 +193,7 @@ const ModalBuscarArticulo: React.FC<props> = ({set_mostrar_busqueda_articulo,mos
                 <TablaModalBuscarArticulo
                   data_articulos={data_articulos}
                   set_fila_seleccionada_temp={set_fila_seleccionada_temp}
+                  loadding_tabla={loadding_tabla}
                 />
               </Grid>
 
