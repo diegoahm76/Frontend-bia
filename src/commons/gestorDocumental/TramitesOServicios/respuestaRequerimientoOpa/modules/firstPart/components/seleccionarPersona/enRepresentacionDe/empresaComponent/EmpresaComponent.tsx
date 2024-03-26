@@ -195,6 +195,23 @@ export const EmpresaComponent = ({
                   disabled
                 />
               </Grid>
+              {currentPersonaRespuestaUsuario?.nombre_rep && (
+                  <>
+                    <Grid item xs={12} sm={12}>
+                      <TextField
+                        fullWidth
+                        label="ESTADO DE LA OPA"
+                        size="small"
+                        multiline
+                        rows={1}
+                        maxRows={2}
+                        variant="outlined"
+                        value={'EXISTENTE SIN RESPONDER'}
+                        disabled
+                      />
+                    </Grid>
+                  </>
+                )}
             </Grid>
 
             <Stack
@@ -208,7 +225,7 @@ export const EmpresaComponent = ({
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  dispatch(setCurrentPersonaRespuestaUsuario({} as any));
+                  dispatch(setCurrentPersonaRespuestaUsuario(null as any));
                   control_info('Se ha quitado la selección de la persona');
                 }}
               >
