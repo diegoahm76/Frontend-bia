@@ -3,10 +3,10 @@ import { Box, Button, Dialog, DialogContent, FormControl, FormLabel, Grid, Input
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { interface_busqueda_operario, response_busqueda_operario } from '../interfaces/types';
+import { interface_busqueda_operario, interface_tipos_documentos, response_busqueda_operario, response_tipos_documentos } from '../interfaces/types';
 import TablaModalBusquedaOperario from '../tables/TablaModalBusquedaOperario';
 import { useAppDispatch } from '../../../../hooks';
-import { get_obtener_operarios } from '../thunks/solicitud_activos';
+import { get_obtener_operarios, get_obtener_tipos_documentos } from '../thunks/solicitud_activos';
 import { control_error } from '../../../../helpers';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
@@ -34,6 +34,9 @@ const ModalBusquedaOperario: React.FC<props> = ({
   const [primer_nombre, set_primer_nombre] = useState<string>('');
   const [primer_apellido, set_primer_apellido] = useState<string>('');
   const [nombre_comercial, set_nombre_comercial] = useState<string>('');
+  const [loadding_tabla, set_loadding_tabla] = useState<boolean>(false);
+
+  const [tipos_documentos, set_tipos_documentos] = useState<interface_tipos_documentos[]>([]);
 
   const [funcionario_operario_temp, set_funcionario_operario_temp] = useState<interface_busqueda_operario>(Object);
   const [data_funcionarios_operarios, set_data_funcionarios_operarios] = useState<interface_busqueda_operario[]>([
@@ -45,6 +48,7 @@ const ModalBusquedaOperario: React.FC<props> = ({
   ]);
 
   const get_obtener_operarios_fc = () => {
+    set_loadding_tabla(true);
     dispatch(get_obtener_operarios(
       tipo_documento,
       documento,
@@ -56,9 +60,11 @@ const ModalBusquedaOperario: React.FC<props> = ({
       if(Object.keys(response).length !== 0) {
         if (response.data.length !== 0) {
           set_data_funcionarios_operarios(response.data);
+          set_loadding_tabla(false);
         } else {
           set_data_funcionarios_operarios([]);
           control_error('No se encontraron funcionarios');
+          set_loadding_tabla(false);
         }
       } else {
         control_error('Error en el servidor al obtener los operarios de la solicitud de activos');
@@ -66,16 +72,33 @@ const ModalBusquedaOperario: React.FC<props> = ({
     });
   }
 
-  const operarios_obtenidos = useRef(false);
+  const get_obtener_tipos_documentos_fc = () => {
+    dispatch(get_obtener_tipos_documentos())
+    .then((response: response_tipos_documentos) => {
+      if(Object.keys(response).length !== 0) {
+        if (response.data.length !== 0) {
+          set_tipos_documentos(response.data);
+        } else {
+          set_tipos_documentos([]);
+          control_error('No se encontraron tipos de documentos');
+        }
+      } else {
+        control_error('Error en el servidor al obtener tipos de documentos');
+      }
+    });
+  }
+
+  const operarios_tp_documentos_obtenidos = useRef(false);
   useEffect(()=>{
-    if(!operarios_obtenidos.current && mostrar_busqueda_operario){
+    if(!operarios_tp_documentos_obtenidos.current && mostrar_busqueda_operario){
+      get_obtener_tipos_documentos_fc();
       get_obtener_operarios_fc();
-      operarios_obtenidos.current = true;
+      operarios_tp_documentos_obtenidos.current = true;
     }
   },[mostrar_busqueda_operario])
 
   const consultar_operario = () => {
-    alert("Se está realizando la búsqueda del operario");
+    get_obtener_operarios_fc();
   }
 
   const limpiar_form = () => {
@@ -137,11 +160,13 @@ const ModalBusquedaOperario: React.FC<props> = ({
                       value={tipo_documento}
                       onChange={(e) => set_tipo_documento(e.target.value)}
                     >
-                      <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
-                      <MenuItem value="CE">Cédula de extranjería</MenuItem>
-                      <MenuItem value="TI">Tarjeta de identidad</MenuItem>
-                      <MenuItem value="RC">Registro civil</MenuItem>
-                      <MenuItem value="PA">Pasaporte</MenuItem>
+                      {tipos_documentos.length !== 0 ?
+                        tipos_documentos.map((item: interface_tipos_documentos) => (
+                          <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+                        ))
+                        :
+                        <MenuItem value=''>Cargando...</MenuItem>
+                      }
                     </Select>
                   </FormControl>
                 </Grid>
@@ -210,7 +235,7 @@ const ModalBusquedaOperario: React.FC<props> = ({
                       color='primary'
                       variant='contained'
                       startIcon={<SearchIcon />}
-                      type='submit'
+                      onClick={consultar_operario}
                     >
                       Buscar
                     </Button>
@@ -241,6 +266,7 @@ const ModalBusquedaOperario: React.FC<props> = ({
                 justifyContent:'center'
               }}>
               <TablaModalBusquedaOperario
+                loadding_tabla={loadding_tabla}
                 data_funcionarios_operarios={data_funcionarios_operarios}
                 set_funcionario_operario_temp={set_funcionario_operario_temp}
               />
