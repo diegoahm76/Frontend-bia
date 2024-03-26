@@ -34,12 +34,12 @@ export interface interface_busqueda_responsable {
   segundo_nombre?: string
   primer_apellido?: string
   segundo_apellido?: string
-  nombre_completo: string
+  nombre_completo?: string
   razon_social?: string
   nombre_comercial?: string
   digito_verificacion?: string
   cod_naturaleza_empresa?: string
-  tiene_usuario: boolean
+  tiene_usuario?: boolean
   tipo_usuario?: string
 }
 
@@ -64,7 +64,7 @@ export interface interface_busqueda_operario {
   nombre_comercial?: string
   digito_verificacion?: string
   cod_naturaleza_empresa?: string
-  tiene_usuario: boolean
+  tiene_usuario?: boolean
   tipo_usuario?: string
 }
 
@@ -85,6 +85,8 @@ export interface interface_busqueda_articulo {
   codigo_bien: string
   nro_elemento_bien: any
   nombre: string
+  nombre_bien: string
+  nombre_unidad_medida: string
   cod_tipo_bien: string
   nivel_jerarquico: number
   nombre_cientifico: any
@@ -145,9 +147,11 @@ export interface interface_articulos_agregados {
   id_unidad_medida_vida_util: number
   id_bien_padre: number
   cantidad_articulo?: number
+  cantidad?: number
   fecha_devolucion?: string
   tipo_unidad_medida?: string 
   observacion?: string
+  nro_posicion?: number
 }
 
 export interface response_unidades_medidas {
@@ -173,6 +177,7 @@ export interface response_solicitud_obtenida_por_id {
 }
 
 export interface interface_solicitud_obtenida_por_id {
+  id_bien: number
   id_solicitud_activo: number
   primer_nombre_persona_solicita: string
   primer_apellido_persona_solicita: string
@@ -219,11 +224,27 @@ export interface interface_solicitud_obtenida_por_id {
 
 export interface interface_articulos_obtenidos_por_id {
   id_item_solicitud_activo: number
+  codigo_bien: string
+  nombre_bien: string
+  cod_tipo_bien: string
+  descripcion_bien: string
   cantidad: number
+  fecha_devolucion: any
   observacion: string
   nro_posicion: number
   id_solicitud_activo: number
   id_bien: number
   id_unidad_medida: number
   nombre_unidad_medida: string
+}
+
+export interface response_tipos_documentos {
+  success: boolean
+  detail: string
+  data: interface_tipos_documentos[]
+}
+
+export interface interface_tipos_documentos {
+  value: string
+  label: string
 }
