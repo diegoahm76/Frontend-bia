@@ -22,16 +22,15 @@ import {
   Tooltip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
+import HailIcon from '@mui/icons-material/Hail';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { type GridColDef, DataGrid } from '@mui/x-data-grid';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import { type GridColDef } from '@mui/x-data-grid';
 import { Controller } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
 import { AvatarStyles } from '../../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { Title } from '../../../../../../../../../../components';
 import Select from 'react-select';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { columnsModalBusAvanLider } from '../../../../../../../../../Transversales/modules/corporativo/screens/LideresXUnidadOrg/components/UnidadOrganizacional/components/ModalBusAvanLider/columns/columsBusAvanLider';
 import {
   useAppDispatch,
   useAppSelector,
@@ -39,14 +38,17 @@ import {
 import { ISeleccionLideresProps } from '../../../../../../../../../Transversales/modules/corporativo/screens/LideresXUnidadOrg/components/UnidadOrganizacional/components/SeleccionLider/types/seleccionLideres.types';
 import { getTipoDocumento } from '../../../../../../../../../Transversales/modules/corporativo/screens/LideresXUnidadOrg/components/UnidadOrganizacional/components/SeleccionLider/services/getTipoDocumento.service';
 import { getPersonasService } from '../../../../services/getPersonas.service';
-import { columnsPersona } from './columns/columnsPersona';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { choicesTipoPersona } from '../../../../utils/choices';
 import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../toolkit/slice/ResRequerimientoOpaSlice';
 import { control_info } from '../../../../../../../../ccd/store/utils/success_errors';
+import { columnsPersona } from '../propiaComponent/columns/columnsPersona';
+import { getAttorneys } from '../../../../services/getApoderados.service';
+import { columnsApoderado } from './columns/columnsApoderado';
+import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
-export const ModalSeleccionPersona = ({
+export const ModalSeleccionPersonaApoderado = ({
   control_seleccionar_persona,
   watchExe,
   reset_seleccionar_persona,
@@ -58,12 +60,16 @@ export const ModalSeleccionPersona = ({
   // * dispatch to use in the component * //
   const dispatch = useAppDispatch();
 
+  //* states from redux
+  const { currentPersonaRespuestaUsuario } = useAppSelector((state) => state.ResRequerimientoOpaSlice);
+
   // ? ------- use states declarations -------
   const [tiposDocumentos, setTiposDocumentos] = useState<
     ISeleccionLideresProps[]
   >([]);
 
   const [listaPersonas, setListaPersonas] = useState([]);
+  const [apoderados, setApoderados] = useState([]);
   // ? useContext declaration
   const {
     openModalOne,
@@ -138,9 +144,14 @@ export const ModalSeleccionPersona = ({
       nombre_comercial: '',
     });
     setListaPersonas([]);
+    setApoderados([]);
   };
 
-  const closeModal = (): any => {
+  const closeModal = (hasSelectedApoderado?: boolean): any => {
+    if (!hasSelectedApoderado) {
+      dispatch(setCurrentPersonaRespuestaUsuario(null as any));
+      showAlert('Opss!', 'No se ha seleccionado una representación legal. No podemos proceder sin esta designación. Por favor, intente como titular o empresa.', 'info')
+    }
     handleOpenModalOne(false);
     resetFunction();
   };
@@ -154,10 +165,10 @@ export const ModalSeleccionPersona = ({
       renderCell: (params: any) => (
         <>
         <Tooltip
-          title= "Seleccionar persona"
+          title= "Buscar apoderado"
         >
           <IconButton
-            onClick={() => {
+            onClick={async () => {
               const persona = {
                 tipo_documento: params.row.tipo_documento,
                 numero_documento: params.row.numero_documento,
@@ -167,14 +178,60 @@ export const ModalSeleccionPersona = ({
                   params.row.razon_social,
               };
 
-              dispatch(setCurrentPersonaRespuestaUsuario(persona as any));
-              control_info('Se ha seleccionado la persona correctamente');
-
-              closeModal();
+              //* funcion de búsqueda de apdoerados para la persona seleccioanda
+              await getAttorneys(params.row.id_persona).then((res: any) => {
+                // ? lista de apoderados
+                dispatch(setCurrentPersonaRespuestaUsuario({
+                  titular: persona,
+                  apoderado: null,
+                } as any));
+                setApoderados(res);
+              })
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
-              <HowToRegIcon
+              <HailIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+          </Tooltip>
+        </>
+      ),
+    },
+  ];
+
+  const columnsApoderadoList: GridColDef[] = [
+    ...columnsApoderado,
+    {
+      headerName: 'Acción',
+      field: 'accion',
+      width: 80,
+      renderCell: (params: any) => (
+        <>
+        <Tooltip
+          title= "Seleccionar persona y apoderado"
+        >
+          <IconButton
+            onClick={async () => {
+              const personaApoderado = {
+                tipo_documento: params.row.tipo_documento,
+                numero_documento: params.row.numero_documento,
+                nombre_completo: params.row.nombre_completo
+              };
+
+              dispatch(setCurrentPersonaRespuestaUsuario({
+                ...currentPersonaRespuestaUsuario,
+                apoderado: personaApoderado,
+              } as any));
+
+              control_info('Se ha seleccionado la persona y el apoderado correctamente');
+
+              closeModal(true);
+            }}
+          >
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <PeopleOutlineIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -187,10 +244,12 @@ export const ModalSeleccionPersona = ({
 
   return (
     <>
-      <Dialog fullWidth maxWidth="lg" open={openModalOne} onClose={closeModal}>
+      <Dialog fullWidth maxWidth="lg" open={openModalOne} onClose={() => {
+        closeModal(false)
+      }}>
         <Box component="form" onSubmit={handleSubmit}>
           <DialogTitle>
-            <Title title="Búsqueda de personas (Jurídicas y naturales)" />
+            <Title title="Búsqueda de personas ( jurídicas y naturales )" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -471,6 +530,26 @@ export const ModalSeleccionPersona = ({
                 columns={columns_busqueda_avanzada_persona ?? []}
               />
             )}
+
+            {apoderados.length === 0 ? (
+              <>
+                <Box>
+                  <Typography
+                    variant="body2"
+                    align="center"
+                    sx={{ mt: '3.2rem', mb: '3.2rem' }}
+                  >
+                    No se encontraron apoderados y/o no se ha realizado la búsqueda
+                  </Typography>
+                </Box>
+              </>
+            ) : (
+              <RenderDataGrid
+                title="Resultados de la búsqueda (apoderados)"
+                rows={apoderados ?? []}
+                columns={columnsApoderadoList ?? []}
+              />
+            )}
           </DialogContent>
           <Divider />
           <DialogActions>
@@ -489,7 +568,9 @@ export const ModalSeleccionPersona = ({
               <Button
                 variant="contained"
                 color="error"
-                onClick={closeModal}
+                onClick={() => {
+                  closeModal(false)
+                }}
                 startIcon={<CloseIcon />}
               >
                 CERRAR

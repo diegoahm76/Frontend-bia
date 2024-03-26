@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 //! libraries or frameworks
-import { useContext, type FC, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -24,29 +24,26 @@ import {
 import { LoadingButton } from '@mui/lab';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { type GridColDef, DataGrid } from '@mui/x-data-grid';
+import { type GridColDef } from '@mui/x-data-grid';
 import { Controller } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
 import { AvatarStyles } from '../../../../../../../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import { Title } from '../../../../../../../../../../components';
-import Select from 'react-select';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { columnsModalBusAvanLider } from '../../../../../../../../../Transversales/modules/corporativo/screens/LideresXUnidadOrg/components/UnidadOrganizacional/components/ModalBusAvanLider/columns/columsBusAvanLider';
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { ISeleccionLideresProps } from '../../../../../../../../../Transversales/modules/corporativo/screens/LideresXUnidadOrg/components/UnidadOrganizacional/components/SeleccionLider/types/seleccionLideres.types';
 import { getTipoDocumento } from '../../../../../../../../../Transversales/modules/corporativo/screens/LideresXUnidadOrg/components/UnidadOrganizacional/components/SeleccionLider/services/getTipoDocumento.service';
-import { getPersonasService } from '../../../../services/getPersonas.service';
-import { columnsPersona } from './columns/columnsPersona';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { choicesTipoPersona } from '../../../../utils/choices';
 import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../toolkit/slice/ResRequerimientoOpaSlice';
 import { control_info } from '../../../../../../../../ccd/store/utils/success_errors';
+import { getPersonasJuridicaService } from '../../../../services/getEmpresas.service';
+import { columnsPersonaEmpresa } from './columns/columnsPersonaEmpresa';
 
-export const ModalSeleccionPersona = ({
+export const ModalSeleccionEmpresa = ({
   control_seleccionar_persona,
   watchExe,
   reset_seleccionar_persona,
@@ -58,68 +55,35 @@ export const ModalSeleccionPersona = ({
   // * dispatch to use in the component * //
   const dispatch = useAppDispatch();
 
-  // ? ------- use states declarations -------
-  const [tiposDocumentos, setTiposDocumentos] = useState<
-    ISeleccionLideresProps[]
-  >([]);
+  //* -------- hook declaration -------- *//
 
+  //* -------- use selector declaration -------- *//
+
+  // ? ------- use states declarations -------
   const [listaPersonas, setListaPersonas] = useState([]);
   // ? useContext declaration
-  const {
-    openModalOne,
-    handleOpenModalOne,
-    openModalNuevoNumero2,
-    handleOpenModalNuevoNumero2,
-  } = useContext(ModalAndLoadingContext);
-
-  useEffect(() => {
-    if (openModalOne) {
-      (async () => {
-        try {
-          const res = await getTipoDocumento();
-          setTiposDocumentos(res);
-        } catch (error) {
-          console.error(error);
-        }
-      })();
-    }
-  }, [openModalOne]);
+    //* context declarations
+    const { generalLoading, handleGeneralLoading, secondLoading, handleSecondLoading} = useContext(ModalAndLoadingContext);
 
   // ? ------ FUNCTIONS ------------
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!watchExe.tipo_documento || !watchExe.tipo_persona) {
-      showAlert('Opss!', 'Debe seleccionar un tipo de persona y documento', 'warning');
-      return;
-    }
-
     const {
-      tipo_documento,
       numero_documento,
-      primer_nombre,
-      segundo_nombre,
-      primer_apellido,
-      segundo_apellido,
       razon_social,
       nombre_comercial,
     } = watchExe;
     const personaData = {
-      tipo_documento: tipo_documento?.value ?? '',
       numero_documento: numero_documento ?? '',
-      primer_nombre: primer_nombre ?? '',
-      segundo_nombre: segundo_nombre ?? '',
-      primer_apellido: primer_apellido ?? '',
-      segundo_apellido: segundo_apellido ?? '',
       razon_social: razon_social ?? '',
       nombre_comercial: nombre_comercial ?? '',
     };
 
     try {
-      const res = await getPersonasService(
+      const res = await getPersonasJuridicaService(
         personaData,
-        handleOpenModalNuevoNumero2
+        handleSecondLoading
       );
       setListaPersonas(res);
     } catch (error) {
@@ -141,12 +105,12 @@ export const ModalSeleccionPersona = ({
   };
 
   const closeModal = (): any => {
-    handleOpenModalOne(false);
+    handleGeneralLoading(false);
     resetFunction();
   };
   //* -------- columns declaration -------- *//
   const columns_busqueda_avanzada_persona: GridColDef[] = [
-    ...columnsPersona,
+    ...columnsPersonaEmpresa,
     {
       headerName: 'Acción',
       field: 'accion',
@@ -159,12 +123,14 @@ export const ModalSeleccionPersona = ({
           <IconButton
             onClick={() => {
               const persona = {
-                tipo_documento: params.row.tipo_documento,
-                numero_documento: params.row.numero_documento,
-                nombre_completo:
-                  params.row.nombre_completo ||
-                  params.row.nombre_comercial ||
-                  params.row.razon_social,
+                tipo_documento: params?.row?.tipo_documento,
+                numero_documento: params?.row?.numero_documento,
+                nombre_comercial: params?.row?.nombre_comercial,
+                razon_social: params?.row?.nombre_comercial,
+                tipo_doc_rep: params?.row?.persona_representante?.tipo_documento,
+                numero_documento_rep: params?.row?.persona_representante?.numero_documento,
+                nombre_rep: params?.row?.persona_representante?.
+                nombre_completo,
               };
 
               dispatch(setCurrentPersonaRespuestaUsuario(persona as any));
@@ -187,10 +153,10 @@ export const ModalSeleccionPersona = ({
 
   return (
     <>
-      <Dialog fullWidth maxWidth="lg" open={openModalOne} onClose={closeModal}>
+      <Dialog fullWidth maxWidth="lg" open={generalLoading} onClose={closeModal}>
         <Box component="form" onSubmit={handleSubmit}>
           <DialogTitle>
-            <Title title="Búsqueda de personas (Jurídicas y naturales)" />
+            <Title title="Búsqueda de empresas (Personas jurídicas)" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -200,119 +166,6 @@ export const ModalSeleccionPersona = ({
             }}
           >
             <Grid container spacing={2}>
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{
-                  zIndex: 50,
-                }}
-              >
-                <Controller
-                  name="tipo_persona"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value, ref },
-                    fieldState: { error },
-                  }) => (
-                    <div>
-                      <Select
-                        options={choicesTipoPersona ?? []} // options should be an array of objects with 'value' and
-                        value={value} // set selected value
-                        onChange={(e) => {
-                          onChange(e);
-                          reset_seleccionar_persona({
-                            ...watchExe,
-                            tipo_persona: e,
-                            tipo_documento: '',
-                            numero_documento: '',
-                            primer_nombre: '',
-                            segundo_nombre: '',
-                            primer_apellido: '',
-                            segundo_apellido: '',
-                            razon_social: '',
-                            nombre_comercial: '',
-                          });
-                        }}
-                        isSearchable
-                        placeholder="Tipo de persona"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Tipo de persona
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid>
-
-              {/* se realiza la division entre persona natural y jurídica */}
-
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{
-                  zIndex: 5,
-                }}
-              >
-                <Controller
-                  name="tipo_documento"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value, ref },
-                    fieldState: { error },
-                  }) => (
-                    <div>
-                      <Select
-                        options={
-                          watchExe.tipo_persona?.label === 'NATURAL'
-                            ? tiposDocumentos.filter(
-                                (item) => item.value !== 'NT'
-                              )
-                            : tiposDocumentos.filter(
-                                (item) => item.value === 'NT'
-                              ) ?? []
-                        } // options should be an array of objects with 'value' and
-                        value={value} // set selected value
-                        onChange={onChange} // update value when option is selected
-                        isSearchable
-                        placeholder="Tipo de documento"
-                        styles={{
-                          control: (provided, state) => ({
-                            ...provided,
-                            borderColor: error ? 'red' : provided.borderColor,
-                          }),
-                        }}
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Tipo de documento
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
-              </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="numero_documento"
@@ -440,13 +293,13 @@ export const ModalSeleccionPersona = ({
                 }}
               >
                 <LoadingButton
-                  loading={openModalNuevoNumero2}
+                  loading={secondLoading}
                   variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
                   color="primary"
                 >
-                  BUSCAR PERSONA
+                  BUSCAR EMPRESA
                 </LoadingButton>
               </Grid>
             </Grid>

@@ -40,6 +40,15 @@ export const AccionesFinales = ({
   //* handleSumbit
 // console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_tarea_asignada)
   const sendDataByFormData = () => {
+    const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
+      if (a.ruta_soporte && !b.ruta_soporte) {
+        return -1;
+      }
+      if (!a.ruta_soporte && b.ruta_soporte) {
+        return 1;
+      }
+      return 0;
+    });
     const formData = new FormData();
 
     anexosCreados.forEach((anexo: any) => {
@@ -65,17 +74,17 @@ export const AccionesFinales = ({
         asunto: watchFormulario.asunto,
         id_tarea_asignada:currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
         descripcion: watchFormulario.descripcion_de_la_solicitud,
-        cantidad_anexos: +anexosCreados.length,
-        nro_folios_totales: +anexosCreados.reduce(
+        cantidad_anexos: +sortedAnexos.length,
+        nro_folios_totales: +sortedAnexos.reduce(
           (acc: number, anexo: any) => acc + anexo.numero_folios,
           0
         ),
-        anexos: anexosCreados.map((anexo, index) => ({
+        anexos: sortedAnexos.map((anexo, index) => ({
           nombre_anexo: anexo.nombre_archivo,
           orden_anexo_doc: +index,
           cod_medio_almacenamiento: 'Pa',
           medio_almacenamiento_otros_Cual: null,
-          numero_folios: +anexosCreados.reduce(
+          numero_folios: +sortedAnexos.reduce(
             (acc: number, anexo: any) => acc + anexo.numero_folios,
             0
           ),

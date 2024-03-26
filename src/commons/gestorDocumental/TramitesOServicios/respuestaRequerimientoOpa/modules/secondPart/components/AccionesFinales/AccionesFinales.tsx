@@ -4,9 +4,9 @@ import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
-import { resetItems } from '../../toolkit/slice/ResRequerimientoOpaSlice';
 import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
+import { resetItems } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
 
 
 export const AccionesFinales = ({
@@ -35,6 +35,15 @@ export const AccionesFinales = ({
   //* handleSumbit
 
   const sendDataByFormData = () => {
+    const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
+      if (a.ruta_soporte && !b.ruta_soporte) {
+        return -1;
+      }
+      if (!a.ruta_soporte && b.ruta_soporte) {
+        return 1;
+      }
+      return 0;
+    });
     if (!Array.isArray(anexosCreados) || anexosCreados.length === 0) {
       console.error('anexosCreados is not an array or is empty');
       return;
@@ -66,7 +75,7 @@ export const AccionesFinales = ({
     );
     formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
 
-    anexosCreados.forEach((anexo: any, index: number) => {
+    sortedAnexos.forEach((anexo: any, index: number) => {
       formData.append('archivo', anexo.ruta_soporte);
       formData.append(
         'anexo',

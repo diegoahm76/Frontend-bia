@@ -1,11 +1,13 @@
 import Swal from 'sweetalert2';
-import { api } from '../../../../../../../../api/axios';
+import { api } from '../../../../../../api/axios';
+
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const postRequerimientoUsuario = async (
   formData: any,
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
+  // gestor/bandeja-tareas/opa/requerimiento/tramite/create/
   const url = `gestor/bandeja-tareas/pqrsdf/requerimiento/create/`;
   try {
     if (!formData || typeof formData !== 'object') {

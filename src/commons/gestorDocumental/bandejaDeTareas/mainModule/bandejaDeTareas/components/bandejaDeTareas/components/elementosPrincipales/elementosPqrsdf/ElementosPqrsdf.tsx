@@ -539,11 +539,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea ({' '}
-              {
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
-              }
-              )
+              Quitar selección de tarea de pqrsdf
             </Button>
           ) : null
         }

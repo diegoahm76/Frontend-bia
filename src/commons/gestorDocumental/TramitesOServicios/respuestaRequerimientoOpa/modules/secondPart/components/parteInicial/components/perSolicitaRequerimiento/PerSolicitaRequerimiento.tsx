@@ -3,7 +3,7 @@
 import { Grid, TextField } from '@mui/material';
 import { useContext } from 'react';
 import { Title } from '../../../../../../../../../../components';
-import { ResRequerimientoOpaContext } from '../../../../context/ResRequerimientoOpaContext';
+import { ResRequerimientoOpaContext } from '../../../../../../context/ResRequerimientoOpaContext';
 
 export const PerSolicitaRequerimiento = (): JSX.Element => {
   //* context declaration

@@ -4,19 +4,39 @@ import { control_success } from '../../../../../../../helpers';
 import { handleApiError } from '../../../../../../../utils/functions/errorManage';
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
-export const getPersonasService = async (params: any) => {
-  // personas/get-personas-filters/?tipo_documento=CC&numero_documento=&primer_nombre=&primer_apellido=&razon_social=&nombre_comercial=
-  try {
-    const queryParams = new URLSearchParams({
-      tipo_documento: params?.tipo_documento ?? '',
-      numero_documento: params?.numero_documento ?? '',
-      primer_nombre: params?.primer_nombre ?? '',
-      primer_apellido: params?.primer_apellido ?? '',
-      razon_social: params?.razon_social ?? '',
-      nombre_comercial: params?.nombre_comercial ?? '',
-    });
+interface Params {
+  tipo_documento?: string;
+  numero_documento?: string;
+  primer_nombre?: string;
+  primer_apellido?: string;
+  razon_social?: string;
+  nombre_comercial?: string;
+}
 
-    console.log('queryParams', queryParams.toString());
+export const getPersonasService = async (
+  params: Params,
+  handleOpenModalNuevoNumero2: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  const {
+    tipo_documento = '',
+    numero_documento = '',
+    primer_nombre = '',
+    primer_apellido = '',
+    razon_social = '',
+    nombre_comercial = '',
+  } = params;
+
+  try {
+    handleOpenModalNuevoNumero2(true);
+
+    const queryParams = new URLSearchParams({
+      tipo_documento,
+      numero_documento,
+      primer_nombre,
+      primer_apellido,
+      razon_social,
+      nombre_comercial,
+    });
 
     const url = `/personas/get-personas-filters/?${queryParams.toString()}`;
     const { data } = await api.get(url);
@@ -32,5 +52,7 @@ export const getPersonasService = async (params: any) => {
     return [];
   } catch (error) {
     handleApiError(error);
+  } finally {
+    handleOpenModalNuevoNumero2(false);
   }
 };
