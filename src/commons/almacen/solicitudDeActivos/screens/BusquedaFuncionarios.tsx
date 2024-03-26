@@ -9,6 +9,9 @@ import { interface_busqueda_operario, interface_busqueda_responsable, response_b
 import { useDispatch } from 'react-redux';
 import { get_obtener_operarios, get_obtener_responsables } from '../thunks/solicitud_activos';
 import { control_error, control_success } from '../../../../helpers';
+import { Dayjs } from 'dayjs';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
 interface props {
@@ -47,6 +50,14 @@ interface props {
   set_nombres_solicito: React.Dispatch<React.SetStateAction<string>>;
   apellidos_solicito: string;
   set_apellidos_solicito: React.Dispatch<React.SetStateAction<string>>;
+  set_fecha_devolucion_ver: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  set_fecha_solicitud: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  set_estado_solicitud: React.Dispatch<React.SetStateAction<string>>;
+  fecha_devolucion_ver: Dayjs | null;
+  fecha_solicitud: Dayjs | null;
+  set_fecha_cierre_solicitud: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  fecha_cierre_solicitud: Dayjs | null;
+  estado_solicitud: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -86,6 +97,14 @@ const BusquedaFuncionarios: React.FC<props> = ({
   set_nombres_solicito,
   apellidos_solicito,
   set_apellidos_solicito,
+  set_fecha_devolucion_ver,
+  set_fecha_solicitud,
+  set_estado_solicitud,
+  fecha_devolucion_ver,
+  fecha_solicitud,
+  estado_solicitud,
+  set_fecha_cierre_solicitud,
+  fecha_cierre_solicitud,
 }) => {
 
   const dispatch = useDispatch();
@@ -191,21 +210,83 @@ const BusquedaFuncionarios: React.FC<props> = ({
         mostrar_busqueda_operario={mostrar_busqueda_operario}
         set_funcionario_operario_seleccionado={set_funcionario_operario_seleccionado}
       />
+
       <Grid item xs={12}>
-        <Grid item xs={12} lg={3}>
-          <FormLabel htmlFor="solicitud_prestamo">
-            ¿Es solicitud de préstamo?
-          </FormLabel>
-          <Switch
-            id="solicitud_prestamo"
-            checked={switch_solicitud_prestamo}
-            disabled={accion === 'ver'}
-            onChange={() =>{
-              set_switch_solicitud_prestamo(!switch_solicitud_prestamo)
-            }}
-          />
-        </Grid>
+        <FormLabel sx={{fontWeight: '700'}} htmlFor="solicitud_prestamo">
+          ¿Es solicitud de préstamo?
+        </FormLabel>
+        <Switch
+          id="solicitud_prestamo"
+          checked={switch_solicitud_prestamo}
+          disabled={accion === 'ver'}
+          onChange={() =>{
+            set_switch_solicitud_prestamo(!switch_solicitud_prestamo)
+          }}
+        />
       </Grid>
+
+      {accion === 'ver' && 
+        <>
+          <Grid item xs={12} lg={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled
+                label="Fecha de solicitud:"
+                value={fecha_solicitud}
+                onChange={(newValue) => {
+                  set_fecha_solicitud(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled
+                label="Fecha de cierre solicitud"
+                value={fecha_cierre_solicitud}
+                onChange={(newValue) => {
+                  set_fecha_cierre_solicitud(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled
+                label="Fecha de devolución"
+                value={fecha_devolucion_ver ?? null}
+                onChange={(newValue) => {
+                  set_fecha_devolucion_ver(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <TextField
+              fullWidth
+              label='Estado de la solicitud'
+              value={estado_solicitud}
+              disabled
+              onChange={(e) => set_estado_solicitud(e.target.value)}
+              size='small'
+            />
+          </Grid>
+        </>
+      }
 
       {accion === 'ver' &&
         <Grid container spacing={2} item xs={12}>
