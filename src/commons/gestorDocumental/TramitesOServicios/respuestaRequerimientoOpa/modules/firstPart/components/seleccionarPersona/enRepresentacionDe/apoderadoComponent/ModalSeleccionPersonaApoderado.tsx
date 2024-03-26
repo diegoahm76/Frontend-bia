@@ -46,6 +46,7 @@ import { control_info } from '../../../../../../../../ccd/store/utils/success_er
 import { columnsPersona } from '../propiaComponent/columns/columnsPersona';
 import { getAttorneys } from '../../../../services/getApoderados.service';
 import { columnsApoderado } from './columns/columnsApoderado';
+import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export const ModalSeleccionPersonaApoderado = ({
   control_seleccionar_persona,
@@ -146,7 +147,11 @@ export const ModalSeleccionPersonaApoderado = ({
     setApoderados([]);
   };
 
-  const closeModal = (): any => {
+  const closeModal = (hasSelectedApoderado?: boolean): any => {
+    if (!hasSelectedApoderado) {
+      dispatch(setCurrentPersonaRespuestaUsuario(null as any));
+      showAlert('Opss!', 'No se ha seleccionado una representación legal. No podemos proceder sin esta designación. Por favor, intente como titular o empresa.', 'info')
+    }
     handleOpenModalOne(false);
     resetFunction();
   };
@@ -222,7 +227,7 @@ export const ModalSeleccionPersonaApoderado = ({
 
               control_info('Se ha seleccionado la persona y el apoderado correctamente');
 
-              closeModal();
+              closeModal(true);
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
@@ -239,7 +244,9 @@ export const ModalSeleccionPersonaApoderado = ({
 
   return (
     <>
-      <Dialog fullWidth maxWidth="lg" open={openModalOne} onClose={closeModal}>
+      <Dialog fullWidth maxWidth="lg" open={openModalOne} onClose={() => {
+        closeModal(false)
+      }}>
         <Box component="form" onSubmit={handleSubmit}>
           <DialogTitle>
             <Title title="Búsqueda de personas ( jurídicas y naturales )" />
@@ -561,7 +568,9 @@ export const ModalSeleccionPersonaApoderado = ({
               <Button
                 variant="contained"
                 color="error"
-                onClick={closeModal}
+                onClick={() => {
+                  closeModal(false)
+                }}
                 startIcon={<CloseIcon />}
               >
                 CERRAR

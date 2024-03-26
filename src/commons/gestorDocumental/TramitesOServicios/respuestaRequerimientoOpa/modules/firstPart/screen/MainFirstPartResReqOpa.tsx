@@ -23,6 +23,10 @@ import { setCurrentPersonaRespuestaUsuario } from '../../../toolkit/slice/ResReq
 // ? ------------
 // * http://localhost:3000/#/app/gestor_documental/pqrsdf/solicitud_pqrsdf
 // ? ------------
+/**
+ * Main component for the first part of the response to requirement OPAS.
+ * Renders the UI for the response to requirement OPAS module.
+ */
 export const MainFirstPartResReqOpa = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -35,10 +39,6 @@ export const MainFirstPartResReqOpa = (): JSX.Element => {
   );
 
   useEffect(() => {
-    // persona logueada
-    console.log('persona Logueada', userinfo);
-    console.log('representacion_legal', representacion_legal);
-
     if (representacion_legal.tipo_sesion === 'E') {
       //* analizar si se debe cambiar la forma en la que se estructura el datos para almacenarlo de manera mas ordenada
       dispatch(
@@ -47,8 +47,11 @@ export const MainFirstPartResReqOpa = (): JSX.Element => {
           ...representacion_legal,
         } as any)
       );
+      return;
     }
-  },[]);
+
+    dispatch(setCurrentPersonaRespuestaUsuario(null as any));
+  }, []);
 
   return (
     <>
@@ -69,7 +72,7 @@ export const MainFirstPartResReqOpa = (): JSX.Element => {
 
         {representacion_legal.tipo_sesion === 'I' && <SelccionarPersona />}
 
-        {currentPersonaRespuestaUsuario && <ListaPorPersonaSolPendientes />}
+        {currentPersonaRespuestaUsuario && Object.keys(currentPersonaRespuestaUsuario) && <ListaPorPersonaSolPendientes />}
 
         <Grid container direction="row" padding={2} spacing={2}></Grid>
         <Button
