@@ -16,8 +16,9 @@ import {
 } from '../../../../../../../../../../hooks';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../toolkit/slice/ResRequerimientoOpaSlice';
 import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
+import { ModalSeleccionPersonaApoderado } from './ModalSeleccionPersonaApoderado';
 
-export const PropiaComponent = ({
+export const ApoderadoComponent = ({
   control_seleccionar_persona,
   watchExe,
   reset_seleccionar_persona,
@@ -41,7 +42,7 @@ export const PropiaComponent = ({
     <>
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
-          <Title title="A nombre propio - títular" />
+          <Title title="A nombre propio - ( títular - apoderado )" />
           <form
             onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
@@ -62,9 +63,11 @@ export const PropiaComponent = ({
                 <div>
                   <Select
                     value={{
-                      value: currentPersonaRespuestaUsuario?.tipo_documento,
+                      value:
+                        currentPersonaRespuestaUsuario?.titular?.tipo_documento,
                       label:
-                        currentPersonaRespuestaUsuario?.tipo_documento ?? '...',
+                        currentPersonaRespuestaUsuario?.titular
+                          ?.tipo_documento ?? '...',
                     }}
                     isDisabled={true}
                     placeholder="Seleccionar"
@@ -91,7 +94,8 @@ export const PropiaComponent = ({
                   size="small"
                   variant="outlined"
                   value={
-                    currentPersonaRespuestaUsuario?.numero_documento ?? '...'
+                    currentPersonaRespuestaUsuario?.titular?.numero_documento ??
+                    '...'
                   }
                   InputLabelProps={{ shrink: true }}
                   disabled
@@ -107,12 +111,106 @@ export const PropiaComponent = ({
                   maxRows={2}
                   variant="outlined"
                   value={
-                    currentPersonaRespuestaUsuario?.nombre_completo ?? '...'
+                    currentPersonaRespuestaUsuario?.titular?.nombre_completo ??
+                    '...'
                   }
                   InputLabelProps={{ shrink: true }}
                   disabled
                 />
               </Grid>
+              {/*-----------------------*/}
+              {/*-----------------------*/}
+              {/*-----------------------*/}
+              {/*SELECCIÓN DE APODERADO*/}
+              {/*-----------------------*/}
+              {/*-----------------------*/}
+              {/*-----------------------*/}
+
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 2,
+                }}
+              >
+                <div>
+                  <Select
+                    value={{
+                      value:
+                        currentPersonaRespuestaUsuario?.apoderado
+                          ?.tipo_documento,
+                      label:
+                        currentPersonaRespuestaUsuario?.apoderado
+                          ?.tipo_documento ?? '...',
+                    }}
+                    isDisabled={true}
+                    placeholder="Seleccionar"
+                  />
+                  <label>
+                    <small
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 'thin',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        marginLeft: '0.25rem',
+                      }}
+                    >
+                      Tipo de documento del apoderado
+                    </small>
+                  </label>
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Número de documento del apoderado"
+                  size="small"
+                  variant="outlined"
+                  value={
+                    currentPersonaRespuestaUsuario?.apoderado
+                      ?.numero_documento ?? '...'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={5}>
+                <TextField
+                  fullWidth
+                  label="Nombre del apoderado"
+                  size="small"
+                  multiline
+                  rows={1}
+                  maxRows={2}
+                  variant="outlined"
+                  value={
+                    currentPersonaRespuestaUsuario?.apoderado
+                      ?.nombre_completo ?? '...'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  disabled
+                />
+              </Grid>
+              {currentPersonaRespuestaUsuario?.apoderado &&
+                currentPersonaRespuestaUsuario?.titular && (
+                  <>
+                    <Grid item xs={12} sm={12}>
+                      <TextField
+                        fullWidth
+                        label="ESTADO DE LA OPA"
+                        size="small"
+                        multiline
+                        rows={1}
+                        maxRows={2}
+                        variant="outlined"
+                        value={'EXISTENTE SIN RESPONDER'}
+                        disabled
+                      />
+                    </Grid>
+                  </>
+                )}
             </Grid>
 
             <Stack
@@ -126,11 +224,13 @@ export const PropiaComponent = ({
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  dispatch(setCurrentPersonaRespuestaUsuario({} as any));
-                  control_info('Se ha quitado la selección de la persona');
+                  dispatch(setCurrentPersonaRespuestaUsuario(null as any));
+                  control_info(
+                    'Se ha quitado la selección de la persona y del apoderado'
+                  );
                 }}
               >
-                QUITAR SELECCIÓN DE PERSONA
+                QUITAR SELECCIÓN
               </Button>
 
               <Button
@@ -141,7 +241,7 @@ export const PropiaComponent = ({
                   handleOpenModalOne(true);
                 }}
               >
-                BÚSQUEDA PERSONA
+                BÚSQUEDA PERSONA Y SELECCION DE APODERADO
               </Button>
             </Stack>
             <Divider />
@@ -150,13 +250,13 @@ export const PropiaComponent = ({
       </Grid>
 
       {/* modal selección persona */}
-     {/* <ModalSeleccionPersona
+      <ModalSeleccionPersonaApoderado
         {...{
           control_seleccionar_persona,
           watchExe,
           reset_seleccionar_persona,
         }}
-      />*/}
+      />
       {/* modal selección persona */}
     </>
   );
