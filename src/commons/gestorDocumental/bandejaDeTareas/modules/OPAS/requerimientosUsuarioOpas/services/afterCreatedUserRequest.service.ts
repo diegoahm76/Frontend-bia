@@ -9,7 +9,6 @@ export const getDetalleSolicitud = async (
 ) => {
   try {
     setLoading(true);
-    // gestor/bandeja-tareas/pqrsdf/detalle-requerimiento/get/10/
     const url = `gestor/bandeja-tareas/pqrsdf/detalle-requerimiento/get/${idSolicitud}/`;
     const { data } = await api.get(url);
     return data?.data;
@@ -30,8 +29,8 @@ export const getAnexosSolicitud = async (
 ) => {
   try {
     setLoading(true);
-    // gestor/bandeja-tareas/pqrsdf/requerimientos/anexos/get/96/
-    const url = `gestor/bandeja-tareas/pqrsdf/requerimientos/anexos/get/${idSolicitud}/`;
+    // gestor/bandeja-tareas/opa/requerimiento/anexo/get/2/
+    const url =  `gestor/bandeja-tareas/opa/requerimiento/anexo/get/${idSolicitud}/`;
 
     const { data } = await api.get(url);
     return data?.data;
@@ -46,10 +45,10 @@ export const getAnexosSolicitud = async (
   }
 };
 
-export const getMetadatosByAnexo = async (id_anexo_PQR : number, handleModal: any) => {
+export const getMetadatosByAnexo = async (id_anexo : number, handleModal: any) => {
   try {
     // gestor/bandeja-tareas/pqrsdf/requerimientos/anexos/metadatos/get/288/
-  const url = `gestor/bandeja-tareas/pqrsdf/requerimientos/anexos/metadatos/get/${id_anexo_PQR}/`;
+  const url = `gestor/bandeja-tareas/pqrsdf/requerimientos/anexos/metadatos/get/${id_anexo}/`;
   const { data } = await api.get(url);
   console.log(data?.data);
   return data?.data;

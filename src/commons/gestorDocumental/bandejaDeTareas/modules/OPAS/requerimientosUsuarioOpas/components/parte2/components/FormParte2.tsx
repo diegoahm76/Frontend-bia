@@ -41,10 +41,10 @@ export const FormParte2 = ({
         onSubmit={(e: any) => {
           e.preventDefault();
           if (
-            watchFormulario.asunto.length === 0 ||
+            /*watchFormulario.asunto.length === 0 ||*/
             watchFormulario.descripcion_de_la_solicitud.length === 0
           ) {
-            control_warning('Todos los campos son obligatorios');
+            control_warning('El campo de las observaciones sobre la solicitud es obligatorio');
             return;
           }
 
@@ -55,7 +55,7 @@ export const FormParte2 = ({
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={8}>
+          {/*<Grid item xs={12} sm={8}>
             <Controller
               name="asunto"
               control={controlFormulario}
@@ -82,16 +82,13 @@ export const FormParte2 = ({
                 />
               )}
             />
-          </Grid>
-          <Grid item xs={12} sm={4}>
+          </Grid>*/}
+          <Grid item xs={12} sm={12}>
             <Controller
               name="fecha_de_solicitud"
               control={controlFormulario}
               rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
+              render={() => (
                 <TextField
                   required
                   fullWidth
@@ -121,8 +118,8 @@ export const FormParte2 = ({
                   required
                   fullWidth
                   multiline
-                  rows={8}
-                  label="Descripción de la solicitud"
+                  rows={10}
+                  label="Observaciones de la solicitud"
                   size="small"
                   variant="outlined"
                   value={value}
