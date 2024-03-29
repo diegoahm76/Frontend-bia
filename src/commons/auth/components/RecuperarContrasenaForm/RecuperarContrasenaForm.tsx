@@ -30,7 +30,7 @@ const redirect_url =
 (process.env.NODE_ENV === 'production'
   ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
   : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
-) + '/auth/activacion_cuenta';
+) + '/auth/cambiar_contrasena';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecuperarContrasena: React.FC = () => {
