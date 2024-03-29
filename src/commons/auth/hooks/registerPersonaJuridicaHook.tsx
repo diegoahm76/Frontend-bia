@@ -240,7 +240,7 @@ export const use_register_persona_j = ({
     //  console.log('')('first');
     try {
       values.redirect_url =
-        (process.env.NODE_ENV === 'development'
+        (process.env.NODE_ENV === 'production'
           ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
           : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
         ) + '/auth/activacion_cuenta';

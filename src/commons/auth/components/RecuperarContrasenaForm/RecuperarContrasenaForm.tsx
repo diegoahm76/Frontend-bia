@@ -27,7 +27,7 @@ import { Email, Sms, Close, Send } from '@mui/icons-material';
 import { DEFAULT_AUTH_URL_BETA, DEFAULT_AUTH_URL_PROD } from '../../../../api/axios';
 
 const redirect_url =
-(process.env.NODE_ENV === 'development'
+(process.env.NODE_ENV === 'production'
   ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
   : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
 ) + '/auth/activacion_cuenta';
