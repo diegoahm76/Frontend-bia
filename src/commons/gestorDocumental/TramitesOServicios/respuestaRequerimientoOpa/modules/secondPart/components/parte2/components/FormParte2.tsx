@@ -5,6 +5,7 @@ import { Controller } from 'react-hook-form';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import { useStepperRequerimiento } from '../../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import Select from 'react-select';
 export const FormParte2 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -14,30 +15,14 @@ export const FormParte2 = ({
   // setInfoReset,
 }: any): JSX.Element => {
   // ? stepper hook
-  const { handleNext, handleBack } = useStepperRequerimiento();
-
-    //* redux states functions
-/*    const { currentAnexo } = useAppSelector(
-      (state: any) => state.ResRequerimientoOpaSlice
-    );
-  
-
-
-  useEffect(() => {
-    if (currentAnexo) {
-      //  console.log('')('currentAnexo', currentAnexo);
-      setInfoReset({
-        ...currentAnexo,
-      });
-    }
-  }, [currentAnexo]);
-*/
+  const { handleNext } = useStepperRequerimiento();
   return (
     <>
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
           if (
+            !watchFormulario.medio_de_solicitud.value ||
             watchFormulario.asunto.length === 0 ||
             watchFormulario.descripcion_de_la_solicitud.length === 0
           ) {
@@ -107,6 +92,73 @@ export const FormParte2 = ({
               )}
             />
           </Grid>
+
+          <Grid
+                item
+                xs={12}
+                sm={12}
+                sx={{
+                  mt: '1.2rem',
+                  mb: '1.2rem',
+                  zIndex: 10,
+                }}
+              >
+                {/* Categoria del archivo */}
+                <Controller
+                  name="medio_de_solicitud"
+                  control={controlFormulario}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <div>
+                      <Select
+                        value={value}
+                        // name="id_ccd"
+                        onChange={(selectedOption) => {
+                          //  console.log('')(selectedOption);
+                          /*dispatch(
+                            getServiceSeriesSubseriesXUnidadOrganizacional(
+                              selectedOption.item
+                            )
+                          );*/
+                          onChange(selectedOption);
+                        }}
+                        options={[{
+                          value: 'Telefóno',
+                          label: 'Telefóno',
+                        },
+                        {
+                          value: 'Portal web',
+                          label: 'Portal web',
+                        },
+                        {
+                          value: 'Redes sociales',
+                          label: 'Redes sociales',
+                        },{
+                          value: 'Instalaciones de la corporación',
+                          label: 'Instalaciones de la corporación',
+                        },] ?? []}
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          Medio de solicitud
+                        </small>
+                      </label>
+                    </div>
+                  )}
+                />
+              </Grid>
 
           <Grid item xs={12} sm={12}>
             <Controller
