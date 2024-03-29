@@ -34,7 +34,7 @@ export const ParteInicial: React.FC = (): JSX.Element => {
   return (
     <>
       <PersonaTitular />
-      <PerSolicitaRequerimiento />
+      {/*<PerSolicitaRequerimiento />*/}
     </>
   );
 };
