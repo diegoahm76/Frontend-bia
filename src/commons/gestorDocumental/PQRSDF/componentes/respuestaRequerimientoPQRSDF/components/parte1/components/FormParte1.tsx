@@ -3,12 +3,13 @@ import { Button, Grid, TextField } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import { useNavigate } from 'react-router-dom';
-import { useStepperRequerimiento } from '../../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
-import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { useAppSelector } from '../../../../../../../../../hooks';
-import { Loader } from '../../../../../../../../../utils/Loader/Loader';
-import { formatDate } from '../../../../../../../../../utils/functions/formatDate';
-import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { useAppSelector } from '../../../../../../../../hooks';
+import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+import { formatDate } from '../../../../../../TramitesServicios/utils/FormatoFecha';
+
 
 export const FormParte1 = ({ controlFormulario }: any): JSX.Element => {
   // ? stepper hook
@@ -25,15 +26,14 @@ export const FormParte1 = ({ controlFormulario }: any): JSX.Element => {
     (state) => state.ResRequerimientoOpaSlice
   );
 
-  useEffect(() => {
+/*  useEffect(() => {
     if (!currentPersonaRespuestaUsuario) {
       navigate('/app/gestor_documental/tramites/respuesta_requerimiento_opa/');
       showAlert('Opps...', ' No tienes acceso a éste módulo', 'info');
       return;
     }
-    //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
     handleReset();
-  }, []);
+  }, []);*/
 
   if (secondLoading) {
     return (

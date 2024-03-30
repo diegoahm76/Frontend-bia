@@ -2,7 +2,7 @@
 
 import { Grid } from '@mui/material';
 import { FormParte1 } from '../components/FormParte1';
-import { Title } from '../../../../../../../../../components';
+import { Title } from '../../../../../../../../components';
 
 export const Parte1Screen = ({
   controlFormulario,
@@ -19,7 +19,7 @@ export const Parte1Screen = ({
         mt: '2rem',
       }}
     >
-      <Title title="Información del OPA a responder el requerimiento" />
+      <Title title="Información del PQRSDF a responder el requerimiento / solicitud" />
       <FormParte1
         controlFormulario={controlFormulario}
         handleSubmitFormulario={handleSubmitFormulario}

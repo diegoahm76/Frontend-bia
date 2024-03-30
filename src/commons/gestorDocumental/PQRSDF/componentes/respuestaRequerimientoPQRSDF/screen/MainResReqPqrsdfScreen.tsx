@@ -4,12 +4,12 @@ import { Grid } from '@mui/material';
 import { ParteInicial } from '../components/parteInicial/screen/ParteInicial';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { useStepperRequerimiento } from '../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
-import { useBandejaTareas } from '../../../../../bandejaDeTareas/hook/useBandejaTareas';
-import { Title } from '../../../../../../../components';
 import { StepperRequerimientoAlUsuario } from '../components/stepper/StepperRequerimientoUsuario';
+import { Title } from '../../../../../../components';
+import { useStepperRequerimiento } from '../../../../bandejaDeTareas/hook/useStepperRequerimiento';
+import { useBandejaTareas } from '../../../../bandejaDeTareas/hook/useBandejaTareas';
 
-export const MainResReqOpaScreen = (): JSX.Element => {
+export const MainResReqPqrsdfScreen = (): JSX.Element => {
   const { handleReset } = useStepperRequerimiento();
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export const MainResReqOpaScreen = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Responder requerimiento sobre una OPA" />
+          <Title title="Responder requerimiento / solicitud sobre una PQRSDF" />
           {/* parte Inicial */}
           <ParteInicial />
           {/*stepper*/}

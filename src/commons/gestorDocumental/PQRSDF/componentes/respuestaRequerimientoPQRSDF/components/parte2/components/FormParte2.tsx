@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useEffect } from 'react';
 import { Button, Grid, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import ArrowForward from '@mui/icons-material/ArrowForward';
-import { useStepperRequerimiento } from '../../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
-import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import Select from 'react-select';
+import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
+import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+
 export const FormParte2 = ({
   controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
-  resetFormulario,
   watchFormulario,
-}: // setInfoReset,
+}:
 any): JSX.Element => {
   // ? stepper hook
   const { handleNext } = useStepperRequerimiento();

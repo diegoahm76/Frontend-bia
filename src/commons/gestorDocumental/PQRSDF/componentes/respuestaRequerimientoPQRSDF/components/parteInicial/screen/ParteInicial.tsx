@@ -3,8 +3,9 @@
 import { useContext } from 'react';
 import { PersonaTitular } from '../components/personaTitular/PersonaTitular';
 import { Grid } from '@mui/material';
-import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { Loader } from '../../../../../../../../../utils/Loader/Loader';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { Loader } from '../../../../../../../../utils/Loader/Loader';
+
 
 export const ParteInicial: React.FC = (): JSX.Element => {
   const { generalLoading } =

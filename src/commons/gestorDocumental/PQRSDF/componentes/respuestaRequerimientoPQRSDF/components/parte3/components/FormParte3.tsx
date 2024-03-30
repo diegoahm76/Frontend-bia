@@ -30,17 +30,20 @@ import './style.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../../hooks';
-import { useStepperRequerimiento } from '../../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
-import { useFiles } from '../../../../../../../../../hooks/useFiles/useFiles';
-import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { useBandejaTareas } from '../../../../../../../bandejaDeTareas/hook/useBandejaTareas';
-import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
-import { control_success } from '../../../../../../../../../helpers';
-import { AvatarStyles } from '../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
-import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { RenderDataGrid } from '../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
+import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
+import { useFiles } from '../../../../../../../../hooks/useFiles/useFiles';
+import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
+import { useBandejaTareas } from '../../../../../../bandejaDeTareas/hook/useBandejaTareas';
+import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
+import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../../../../TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
+import { control_success } from '../../../../../store/thunks/pqrsdfThunks';
+import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { RenderDataGrid } from '../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+
+// import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../../../toolkit/slice/ResRequerimientoOpaSlice';
+
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -77,7 +80,6 @@ export const FormParte3 = ({
 
   useEffect(() => {
     if (currentAnexo) {
-      //  console.log('')('currentAnexo', currentAnexo);
       setInfoReset({
         ...currentAnexo,
       });

@@ -2,12 +2,13 @@
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
-import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
-import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
-import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
-import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
-import { resetItems } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
-import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
+import { useStepperRequerimiento } from '../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
+import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
+import { resetItems } from '../../../../../TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
+import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
+
 
 
 export const AccionesFinales = ({

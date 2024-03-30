@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-
 import { Grid } from '@mui/material';
-import { FormParte1 } from '../components/FormParte1';
-import { Title } from '../../../../../../../../../components';
+import { FormParte2 } from '../components/FormParte2';
+import { Title } from '../../../../../../../../components';
 
-export const Parte1Screen = ({
+export const Parte2Screen = ({
   controlFormulario,
   handleSubmitFormulario,
   errorsFormulario,
@@ -19,8 +18,8 @@ export const Parte1Screen = ({
         mt: '2rem',
       }}
     >
-      <Title title="Información del OPA a responder el requerimiento" />
-      <FormParte1
+      <Title title="Respuesta requerimiento / solicitud PQRSDF" />
+      <FormParte2
         controlFormulario={controlFormulario}
         handleSubmitFormulario={handleSubmitFormulario}
         errorsFormulario={errorsFormulario}
@@ -30,5 +29,3 @@ export const Parte1Screen = ({
     </Grid>
   );
 };
-// Compare this snippet from src/commons/gestorDocumental/panelDeVentanilla/module/entrega99/components/parte1/screen/Parte1Screen.tsx:
-
