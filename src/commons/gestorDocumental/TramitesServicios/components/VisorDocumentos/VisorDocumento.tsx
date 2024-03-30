@@ -124,8 +124,9 @@ export const VisorDocumento: React.FC = () => {
     try {
       const body = {
         "aprueba_solicitud_tramite": true,
-        "observacion": "Se finaliza la revisión jurídica"
+        "observacion": "Se finaliza la revisión jurídica ."
     };
+
 
      const response = await api.post(`/gestor/panel_juridica/opas/revision/create/${id}/`, body);
     const data = response.data;
