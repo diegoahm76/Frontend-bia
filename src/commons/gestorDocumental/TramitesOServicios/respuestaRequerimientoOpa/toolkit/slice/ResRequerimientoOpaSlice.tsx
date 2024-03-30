@@ -11,11 +11,14 @@ interface Anexo {
   descripcion_de_la_solicitud: string;
   id: string;
   nombre_archivo: string;
+  fecha_de_solicitud: string;
+  medio_de_solicitud: any;
   // other properties...
   descripcion?: string | null;
   cod_categoria_archivo?: string | null;
   tiene_replica_fisica?: boolean | null;
   cod_origen_archivo?: string | null;
+  medio_almacenamiento?: any
   id_tipologia_doc?: number | null;
   tipologia_no_creada_TRD?: string | null;
   palabras_clave_doc?: string | null;

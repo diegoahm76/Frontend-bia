@@ -12,6 +12,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import { control_error, control_success } from '../../../helpers';
 import { Title } from '../../../components/Title';
 import { api } from '../../../api/axios';
+import { FormControl } from '@mui/material';
+
 import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { DownloadButton } from '../../../utils/DownloadButton/DownLoadButton';
 import AddIcon from "@mui/icons-material/Add";
@@ -46,7 +48,7 @@ interface pqrs {
     value: string;
     label: string;
 };
-interface editar {
+interface Editar {
     asistencial: any,
     profesional: any,
     asesor: any,
@@ -62,7 +64,7 @@ interface FormData {
     valor: any,
 }
 export const TalentoHumano: React.FC = () => {
-    const [modo, setModo] = useState<"crear" | "editar" | null>(null);
+    const [modo, setModo] = useState<"Crear" | "Editar" | null>(null);
 
 
     const initialFormData: FormData = {
@@ -81,7 +83,7 @@ export const TalentoHumano: React.FC = () => {
         }));
     };
 
-    // const [editar, seteditar] = useState<editar | null>(null);
+    // const [Editar, seteditar] = useState<Editar | null>(null);
 
 
     const [Historico, setHistorico] = useState<Historico[]>([]);
@@ -106,7 +108,7 @@ export const TalentoHumano: React.FC = () => {
 
     const seteditar = (rowData: any) => {
         set_is_tasa(true);
-        setModo("editar");
+        setModo("Editar");
         setselectid(rowData.id)
         setFormData({
             descripcion: rowData.descripcion,
@@ -219,7 +221,7 @@ export const TalentoHumano: React.FC = () => {
 
     const handle_open_tasa = (): void => {
         set_is_tasa(true);
-        setModo("crear");
+        setModo("Crear");
     };
     const handle_close = (): void => {
         set_is_tasa(false);
@@ -255,6 +257,25 @@ export const TalentoHumano: React.FC = () => {
             control_error(error.response.data.detail);
         }
     };
+
+
+
+    const [selectedOption, setSelectedOption] = useState('');
+    const [otherValue, setOtherValue] = useState('');
+
+    const handleSelectChange = (event: { target: { value: any; }; }) => {
+        const value = event.target.value;
+        setSelectedOption(value);
+
+        if (value !== 'otro') {
+            setFormData({ ...formData, nombre: value });
+        }
+    };
+    const handleOtherInputChange = (event: { target: { value: any; }; }) => {
+        const value = event.target.value;
+        setOtherValue(value);
+        setFormData({ ...formData, nombre: value });
+    };
     return (
         <>
 
@@ -270,19 +291,87 @@ export const TalentoHumano: React.FC = () => {
                             <Title title={`${modo} Profesionales`} />
                         </Grid>
                         {/* {modo} */}
+
+                        {/* <Grid container xs={12}   spacing={2}   >
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="nivel"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    required
+                                    name="nivel"
+                                    value={formData.nivel}
+                                    onChange={handleInputChange}
+                                />
+                            </Grid>
+                        </Grid> */}
+
+
+
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel id="si-no-select-label">Grado</InputLabel>
+                                <Select
+                                    labelId="Mes"
+                                    label="Grado"
+                                    name="nivel"
+                                    value={formData.nivel}
+                                    onChange={handleInputChange}
+                                >
+                                    {[...Array(28).keys()].map((numero) => (
+                                        <MenuItem key={numero + 1} value={numero + 1}>{numero + 1}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
                         <Grid item xs={6}>
-                            <TextField
-                                label="nivel"
+
+                            <FormControl fullWidth size="small" variant="outlined" required>
+                                <InputLabel id="select-nombre-label">Nombre</InputLabel>
+                                <Select
+                                    labelId="select-nombre-label"
+                                    id="nombre-select"
+                                    value={selectedOption}
+                                    label="Nombre"
+                                    onChange={handleSelectChange}
+                                    fullWidth
+                                >
+                                    <MenuItem value="Directivo">Directivo</MenuItem>
+                                    <MenuItem value="Asesor">Asesor</MenuItem>
+                                    <MenuItem value="Profesional">Profesional</MenuItem>
+                                    <MenuItem value="Tecnico">Tecnico</MenuItem>
+                                    <MenuItem value="Asistencial">Asistencial</MenuItem>
+                                    <MenuItem value="otro">Otro</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            {/* <TextField
+                                label="Nombre"
                                 variant="outlined"
                                 size="small"
                                 fullWidth
                                 required
-                                name="nivel"
-                                value={formData.nivel}
+                                name="nombre"
+                                value={formData.nombre}
                                 onChange={handleInputChange}
-                            />
+                            /> */}
                         </Grid>
-
+                        {selectedOption === 'otro' && (
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Especificar otro"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    required
+                                    name="nombreOtro"
+                                    value={otherValue}
+                                    onChange={handleOtherInputChange}
+                                />
+                            </Grid>
+                        )}
                         <Grid item xs={6}>
                             <TextField
                                 label="valor"
@@ -296,18 +385,7 @@ export const TalentoHumano: React.FC = () => {
                             />
                         </Grid>
 
-                        <Grid item xs={6}>
-                            <TextField
-                                label="Nombre"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                name="nombre"
-                                value={formData.nombre}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
+
 
                         <Grid item xs={6}>
                             <TextField
@@ -334,9 +412,9 @@ export const TalentoHumano: React.FC = () => {
                                 startIcon={<SaveIcon />}
                                 fullWidth
                                 onClick={() => {
-                                    if (modo === 'crear') {
+                                    if (modo === 'Crear') {
                                         handleSubmitCrear();
-                                    } else if (modo === 'editar') {
+                                    } else if (modo === 'Editar') {
                                         handleSubmit();
                                     }
                                 }}

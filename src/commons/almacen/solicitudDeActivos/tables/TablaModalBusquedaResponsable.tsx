@@ -13,6 +13,7 @@ interface CustomColumn extends GridColDef {
 interface Props {
   data_funcionarios_responsables: interface_busqueda_responsable[];
   set_funcionario_responsable_temp: React.Dispatch<React.SetStateAction<interface_busqueda_responsable>>;
+  loadding_tabla: boolean;
 }
 
 
@@ -20,6 +21,7 @@ interface Props {
 const TablaModalBusquedaResponsable: React.FC<Props> = ({
   data_funcionarios_responsables,
   set_funcionario_responsable_temp,
+  loadding_tabla,
 }) => {
 
   const asignar_funcionario_responsable = (newSelectionModel: GridSelectionModel) => {
@@ -67,6 +69,7 @@ const TablaModalBusquedaResponsable: React.FC<Props> = ({
         style={{margin:'15px 0px'}}
         density="compact"
         autoHeight
+        loading={loadding_tabla}
         rows={data_funcionarios_responsables ?? []}
         columns={columns ?? []}
         pageSize={5}

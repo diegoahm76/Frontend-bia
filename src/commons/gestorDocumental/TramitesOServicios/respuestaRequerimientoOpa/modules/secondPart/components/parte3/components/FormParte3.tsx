@@ -5,11 +5,11 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  Select,
   TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
+import Select from 'react-select';
 import { Carousel } from 'react-responsive-carousel';
 import { useContext, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -136,19 +136,20 @@ export const FormParte3 = ({
     if (
       !watchFormulario.asunto ||
       !watchFormulario.descripcion_de_la_solicitud
+      || !watchFormulario?.medio_de_solicitud?.value
     ) {
       showAlert(
         'Advertencia',
-        'Es obligatorio llenar los campos de asunto y descripción de la solicitud',
+        'Es obligatorio llenar los campos de asunto, descripción y medio de solicitud de la respuesta de requerimiento',
         'warning'
       );
       return;
     }
 
-    if (!watchFormulario.nombre_archivo || !watchFormulario.numero_folios) {
+    if (!watchFormulario.nombre_archivo || !watchFormulario.numero_folios || !watchFormulario.medio_almacenamiento) {
       showAlert(
         'Advertencia',
-        'Es obligatorio llenar los campos de nombre del archivo y número de folios',
+        'Es obligatorio llenar los campos de nombre del archivo, número de folios y medio de almacenamiento del archivo',
         'warning'
       );
       return;
@@ -158,7 +159,8 @@ export const FormParte3 = ({
       ...baseObject,
       asunto: watchFormulario?.asunto,
       descripcion_de_la_solicitud: watchFormulario?.descripcion_de_la_solicitud,
-      fecha_de_solicitud: watchFormulario?.fecha_de_solicitud,
+      fecha_de_solicitud: watchFormulario?.fecha_de_solicitud || new Date().toISOString().slice(0, 10),
+      medio_de_solicitud: watchFormulario?.medio_de_solicitud,
       nombre_archivo: watchFormulario?.nombre_archivo,
       ruta_soporte: watchFormulario?.ruta_soporte,
       medio_almacenamiento: watchFormulario?.medio_almacenamiento,
@@ -310,10 +312,8 @@ export const FormParte3 = ({
               name="ruta_soporte"
               control={controlFormulario}
               defaultValue=""
-              // rules={{ required: false }}
               render={({
                 field: { onChange, value },
-                fieldState: { error },
               }) => (
                 <>
                   <Button
@@ -333,8 +333,6 @@ export const FormParte3 = ({
                     <input
                       style={{ display: 'none' }}
                       type="file"
-                      // accept="application/pdf"
-                      // disabled={ccd_current?.actual}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
@@ -379,7 +377,7 @@ export const FormParte3 = ({
                   // required
                   fullWidth
                   label="Nombre del archivo"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  helperText={error ? 'Es obligatorio poner un nombre para el archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
@@ -394,9 +392,17 @@ export const FormParte3 = ({
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{
+              mb: '2rem',
+            }}
+          >
             <Controller
-              name="medio_alamacenamiento"
+              name="medio_almacenamiento"
               control={controlFormulario}
               defaultValue=""
               // rules={{ required: true }}
@@ -407,13 +413,21 @@ export const FormParte3 = ({
                 <TextField
                   // required
                   fullWidth
-                  disabled
-                  label="Medio de almacenamiento"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  type="text"
+                  name="medio_almacenamiento"
+                  label="Medio de almacenamiento (USB - CD - OTRO - N/A, etc.)"
                   size="small"
                   variant="outlined"
-                  value={value || 'No aplica'}
+                  value={value}
                   InputLabelProps={{ shrink: true }}
+                  onChange={(e) => {
+                    if (+e.target.value >= 255) {
+                      control_warning('máximo 255 caracteres');
+                      return;
+                    }
+                    onChange(e.target.value);
+                  }}
+                  inputProps={{ maxLength: 255 }}
                 />
               )}
             />
@@ -472,8 +486,6 @@ export const FormParte3 = ({
               color="primary"
               startIcon={<AttachFileIcon />}
               onClick={() => {
-                //  console.log('')('click siuuu');
-                //  console.log('')('abriendo modal de metadatos');
                 handleModalAgregarMetadatos(true);
               }}
             >
@@ -529,7 +541,7 @@ export const FormParte3 = ({
             color="text.primary"
             sx={{ textAlign: 'center', justifyContent: 'center', mt: '1.5rem' }}
           >
-            Sin anexos creados para esta solicitud de requerimiento
+            Sin anexos creados para esta respuesta de requerimiento
           </Typography>
         )}
 
@@ -558,7 +570,7 @@ export const FormParte3 = ({
               mt: '1rem',
             }}
           >
-            VOLVER A : ASUNTO / DESCRIPCION
+            VOLVER A : ASUNTO / DESCRIPCION / MEDIO DE SOLICITUD
           </Button>
           <Carousel
             className="carousel"

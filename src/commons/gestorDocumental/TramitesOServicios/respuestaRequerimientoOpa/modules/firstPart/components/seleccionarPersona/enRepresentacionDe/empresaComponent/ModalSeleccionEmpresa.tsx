@@ -123,6 +123,7 @@ export const ModalSeleccionEmpresa = ({
           <IconButton
             onClick={() => {
               const persona = {
+                id_persona: params?.row?.id_persona,
                 tipo_documento: params?.row?.tipo_documento,
                 numero_documento: params?.row?.numero_documento,
                 nombre_comercial: params?.row?.nombre_comercial,

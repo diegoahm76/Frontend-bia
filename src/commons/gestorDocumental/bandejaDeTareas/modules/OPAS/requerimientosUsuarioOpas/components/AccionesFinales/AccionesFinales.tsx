@@ -14,11 +14,7 @@ import { handleApiError } from '../../../../../../../../utils/functions/errorMan
 import { Anexo } from '../../../../../../PQRSDF/componentes/respuestaSolicitudUsuario/toolkit/slice/ResSolicitudUsarioSlice';
 
 export const AccionesFinales = ({
-  controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
   resetFormulario,
-  watchFormulario,
   setInfoReset,
 }: any): JSX.Element => {
   //* dispatch declaration
@@ -57,10 +53,10 @@ export const AccionesFinales = ({
       }
 
       const firstAnexo = anexosCreados[0];
-      if (!firstAnexo?.asunto || !firstAnexo?.descripcion_de_la_solicitud) {
+      if (!firstAnexo?.descripcion_de_la_solicitud) {
         showAlert(
           'Opps!',
-          'Por favor diligencie los campos de asunto y descripción de la solicitud',
+          'Por favor diligencie los campos de observaciones de la solicitud',
           'warning'
         );
         return;
@@ -69,10 +65,10 @@ export const AccionesFinales = ({
       const formData = new FormData();
 
       formData.append(
-        'solicitud_usu_PQRSDF',
+        'requerimiento',
         JSON.stringify({
-          asunto: firstAnexo.asunto,
-          descripcion: firstAnexo.descripcion_de_la_solicitud,
+          // asunto: firstAnexo.asunto,
+          observaciones: firstAnexo.descripcion_de_la_solicitud,
           id_solicitud_tramite:
             +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
         })

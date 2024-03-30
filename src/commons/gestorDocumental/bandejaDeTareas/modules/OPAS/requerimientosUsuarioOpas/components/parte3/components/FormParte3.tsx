@@ -135,12 +135,12 @@ export const FormParte3 = ({
     }
 
     if (
-      !watchFormulario.asunto ||
+      /*!watchFormulario.asunto ||*/
       !watchFormulario.descripcion_de_la_solicitud
     ) {
       showAlert(
         'Advertencia',
-        'Es obligatorio llenar los campos de asunto y descripción de la solicitud',
+        'Es obligatorio llenar el campo de observaciones de la solicitud',
         'warning'
       );
       return;
@@ -157,7 +157,7 @@ export const FormParte3 = ({
 
     const createAnexoData = (baseObject = {}) => ({
       ...baseObject,
-      asunto: watchFormulario?.asunto,
+      asunto: watchFormulario?.asunto ?? 'N/A',
       descripcion_de_la_solicitud: watchFormulario?.descripcion_de_la_solicitud,
       fecha_de_solicitud: watchFormulario?.fecha_de_solicitud,
       nombre_archivo: watchFormulario?.nombre_archivo,

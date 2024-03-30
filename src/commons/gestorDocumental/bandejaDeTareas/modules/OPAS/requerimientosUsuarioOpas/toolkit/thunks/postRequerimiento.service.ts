@@ -7,7 +7,7 @@ export const postRequerimientoUsuario = async (
   formData: any,
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-  const url = `gestor/bandeja-tareas/opa/requerimiento/create/`;
+  const url = `gestor/bandeja-tareas/opa/requerimiento/tramite/create/`;
   try {
     if (!formData || typeof formData !== 'object') {
        showAlert('Opss!', 'Faltan valores para realizar la solicitud', 'warning');

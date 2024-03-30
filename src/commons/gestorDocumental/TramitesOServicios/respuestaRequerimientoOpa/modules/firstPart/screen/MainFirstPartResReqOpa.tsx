@@ -19,6 +19,7 @@ import { RestartAlt } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { ListaPorPersonaSolPendientes } from '../components/listaPorPersonasSolPendientes/ListaPorPersonaSolPendientes';
 import { setCurrentPersonaRespuestaUsuario } from '../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { control_info } from '../../../../../ccd/store/utils/success_errors';
 
 // ? ------------
 // * http://localhost:3000/#/app/gestor_documental/pqrsdf/solicitud_pqrsdf
@@ -88,6 +89,11 @@ export const MainFirstPartResReqOpa = (): JSX.Element => {
           sx={{ ml: 2 }}
           variant="outlined"
           color="primary"
+          onClick={() => {
+            control_info('Se ha reiniciado el módulo correctamente');
+            dispatch(setCurrentPersonaRespuestaUsuario(null as any));
+          }
+          }
           startIcon={<RestartAlt />}
         >
           REINICIAR MÓDULO

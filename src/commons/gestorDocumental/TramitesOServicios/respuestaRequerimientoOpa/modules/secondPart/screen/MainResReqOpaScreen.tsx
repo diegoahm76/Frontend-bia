@@ -16,7 +16,7 @@ export const MainResReqOpaScreen = (): JSX.Element => {
     Swal.fire({
       icon: 'warning',
       title: 'Advertencia',
-      text: 'Recuerda que sí sales del módulo, la información que no hayas guardado se borrará.',
+      text: 'Recuerda que sí sales del módulo y no radicas la respuesta, la información se perderá',
       confirmButtonText: 'Entendido',
     });
 
@@ -57,7 +57,7 @@ export const MainResReqOpaScreen = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Respuesta de requerimiento al usario sobre OPA" />
+          <Title title="Responder requerimiento sobre una OPA" />
           {/* parte Inicial */}
           <ParteInicial />
           {/*stepper*/}
