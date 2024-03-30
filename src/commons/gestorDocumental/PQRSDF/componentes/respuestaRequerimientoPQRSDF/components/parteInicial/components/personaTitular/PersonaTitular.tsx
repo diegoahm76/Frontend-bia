@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField } from '@mui/material';
-import { useContext } from 'react';
-import { Title } from '../../../../../../../../../../components';
-import { useAppSelector } from '../../../../../../../../../../hooks';
+import { useAppSelector } from '../../../../../../../../../hooks';
+import { Title } from '../../../../../../../../../components';
 
 export const PersonaTitular = (): JSX.Element => {
 
@@ -21,7 +20,7 @@ export const PersonaTitular = (): JSX.Element => {
         mt: '2rem',
       }}
     >
-      <Title title="Persona titular de la OPA" />
+      <Title title="Persona titular de la PQRSDF" />
       <form
         style={{
           marginTop: '3rem',
@@ -42,20 +41,6 @@ export const PersonaTitular = (): JSX.Element => {
               }}
             />
           </Grid>
-          {/*<Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              disabled
-              size="small"
-              label="Apellidos"
-              variant="outlined"
-              InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.apellidos ?? 'N/A'}
-              inputProps={{
-                maxLength: 10,
-              }}
-            />
-          </Grid>*/}
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
