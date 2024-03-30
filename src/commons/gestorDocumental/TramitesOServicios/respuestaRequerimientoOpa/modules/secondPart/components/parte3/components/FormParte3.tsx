@@ -312,10 +312,8 @@ export const FormParte3 = ({
               name="ruta_soporte"
               control={controlFormulario}
               defaultValue=""
-              // rules={{ required: false }}
               render={({
                 field: { onChange, value },
-                fieldState: { error },
               }) => (
                 <>
                   <Button
@@ -335,8 +333,6 @@ export const FormParte3 = ({
                     <input
                       style={{ display: 'none' }}
                       type="file"
-                      // accept="application/pdf"
-                      // disabled={ccd_current?.actual}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
@@ -381,7 +377,7 @@ export const FormParte3 = ({
                   // required
                   fullWidth
                   label="Nombre del archivo"
-                  helperText={error ? 'Es obligatorio subir un archivo' : ''}
+                  helperText={error ? 'Es obligatorio poner un nombre para el archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
@@ -418,8 +414,8 @@ export const FormParte3 = ({
                   // required
                   fullWidth
                   type="text"
-                  // name="nombre"
-                  label="Medio de almacenamiento"
+                  name="medio_almacenamiento"
+                  label="Medio de almacenamiento (USB - CD - OTRO - N/A, etc.)"
                   size="small"
                   variant="outlined"
                   value={value}
@@ -490,8 +486,6 @@ export const FormParte3 = ({
               color="primary"
               startIcon={<AttachFileIcon />}
               onClick={() => {
-                //  console.log('')('click siuuu');
-                //  console.log('')('abriendo modal de metadatos');
                 handleModalAgregarMetadatos(true);
               }}
             >
@@ -576,7 +570,7 @@ export const FormParte3 = ({
               mt: '1rem',
             }}
           >
-            VOLVER A : ASUNTO / DESCRIPCION
+            VOLVER A : ASUNTO / DESCRIPCION / MEDIO DE SOLICITUD
           </Button>
           <Carousel
             className="carousel"
