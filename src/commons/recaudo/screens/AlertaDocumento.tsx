@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
@@ -49,8 +50,16 @@ export interface lider {
     id_unidad_org_actual_admin_series: number | null;
 }
 
+interface IProps {
+    personaselet: any;
+    setpersona: any;
+    perfilselet: any;
+    setperfilselet: any;
+    lideresUnidad: any;
+    setLideresUnidad: any;
+}
+export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, perfilselet, setperfilselet, lideresUnidad, setLideresUnidad }) => {
 
-export const AlertaDocumento = (): JSX.Element => {
 
     const initialFormData = {
         id_persona_alertar: "",
@@ -72,31 +81,7 @@ export const AlertaDocumento = (): JSX.Element => {
 
 
 
-    // const columns = [
-    //     {
-    //         field: "detalle",
-    //         headerName: "Detalle",
-    //         width: 200,
-    //         flex: 1,
-    //         valueGetter: (params: any) => params.row.datos_reordenados.detalle
-    //     },
-    //     {
-    //         field: "destinatario",
-    //         headerName: "destinatario",
-    //         width: 200,
-    //         flex: 1,
-    //         valueGetter: (params: any) => params.row.datos_reordenados.destinatario
-    //     },
-    //     {
-    //         field: "nombre",
-    //         headerName: "nombre",
-    //         width: 200,
-    //         flex: 1,
-    //         valueGetter: (params: any) => params.row.datos_reordenados.nombre
-    //     },
 
-
-    // ];
 
 
     const [perfil, set_perfil] = useState<SelectItem[]>([]);
@@ -137,25 +122,57 @@ export const AlertaDocumento = (): JSX.Element => {
     const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
 
 
-
-
-
-
     const handleClicdk = () => {
-        console.log(personaselet);
+        console.log(perfilselet);
     };
 
-    const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
+    // const handleClick = () => {
+    //     setLideresUnidad((prevLideres: any) => [...prevLideres, formData.lider_unidad]);
+    // };
+
+
     const handleClick = () => {
-        setLideresUnidad((prevLideres) => [...prevLideres, formData.lider_unidad]);
+        const liderSeleccionado = formData.lider_unidad;
+        if (!liderSeleccionado) {
+            console.log("Seleccione un líder de unidad");
+            control_error("Seleccione un líder de unidad");
+
+            return;
+        }
+        if (lideresUnidad.includes(liderSeleccionado)) {
+            console.log("El líder de unidad seleccionado ya fue agregado");
+            control_error("El líder de unidad seleccionado ya fue agregado");
+
+            return;
+        }
+        setLideresUnidad((prevLideres: any) => [...prevLideres, formData.lider_unidad]);
     };
+
+
+    const handleDeletelider = (liderId: any) => {
+        setLideresUnidad(lideresUnidad.filter((id: any) => id !== liderId));
+    };
+
     const rows = lideresUnidad.map((id: any) => ({
         id,
         ...lider.find((l) => l.id_unidad_organizacional === id),
     }));
     const columns = [
-        // { field: 'id_unidad_organizacional', headerName: 'ID', width: 90 },
-        { field: 'nombre', headerName: 'Nombre', width: 200 },
+        { field: 'nombre', headerName: 'Nombre',   flex: 1, },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            sortable: false,
+            flex: 1,
+            renderCell: (params: { row: { id: any; }; }) => (
+                <IconButton
+                    color="error"
+                    onClick={() => handleDeletelider(params.row.id)}
+                >
+                    <DeleteIcon />
+                </IconButton>
+            ),
+        },
     ];
 
 
@@ -172,37 +189,100 @@ export const AlertaDocumento = (): JSX.Element => {
         setOpcionSeleccionada("3")
     };
 
-
-
-    const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
     const handleperfil = () => {
-        setperfilselet((prevLideres) => [...prevLideres, formData.perfil_profesional]);
+        const perfilSeleccionado = formData.perfil_profesional; // Asegúrate de tener `formData` definido correctamente en tu componente
+
+        if (!perfilSeleccionado) {
+            // No hay ningún perfil seleccionado
+            console.log("Seleccione un perfil");
+            control_error("Seleccione un perfil");
+            return;
+        }
+        if (perfilselet.includes(perfilSeleccionado)) {
+            // El perfil ya fue agregado
+            console.log("El perfil seleccionado ya fue agregado");
+            control_error("El perfil seleccionado ya fue agregado");
+
+            return;
+        }
+
+        setperfilselet((prevLideres: any) => [...prevLideres, formData.perfil_profesional]);
     };
     const rowsperfil = perfilselet.map((id: any) => ({
         id,
         ...perfil.find((l) => l.value === id),
     }));
+
+    const handleDelefte = (perfilId: any) => {
+        setperfilselet(perfilselet.filter((id: any) => id !== perfilId));
+    };
     const columnsperfil = [
-        // { field: 'id_unidad_organizacional', headerName: 'ID', width: 90 },
-        { field: 'label', headerName: 'label', width: 200 },
+        { field: 'label', headerName: 'label',   flex: 1, },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            sortable: false,
+            flex: 1,
+            renderCell: (params: { row: { id: any; }; }) => (
+                <IconButton
+                    color="error"
+                    onClick={() => handleDelefte(params.row.id)}
+                >
+                    <DeleteIcon />
+                </IconButton>
+            ),
+        },
     ];
 
 
 
     const [personaseleta, setpersonaa] = useState<{ id_persona: string, primer_nombre: string }[]>([]);
-    const [personaselet, setpersona] = useState<string[]>([]);
-    const handlpersona = () => {
-        setpersona((prevLideres) => [...prevLideres, persona?.id_persona]);
-        setpersonaa(prevLideres => [...prevLideres, { id_persona: persona?.id_persona, primer_nombre: persona?.primer_nombre }]);
 
+
+    const handlpersona = () => {
+        // Verifica si 'persona' está definido y tiene un 'id_persona' no nulo/no indefinido
+        if (persona && persona.id_persona) {
+            // Verifica si la persona ya está en la lista basado en 'id_persona'
+            const yaExiste = personaseleta.some(p => p.id_persona === persona.id_persona);
+
+            if (!yaExiste) {
+                setpersona((prevLideres: any) => [...prevLideres, persona?.id_persona]);
+                setpersonaa(prevLideres => [...prevLideres, { id_persona: persona.id_persona, primer_nombre: persona.primer_nombre }]);
+                // Si también necesitas actualizar el otro estado, asegúrate de hacerlo aquí.
+            }
+        } else {
+            control_error("No hay ninguna persona seleccionada para agregar.");
+
+        }
+    };
+
+    const handleDelete = (idPersona: any) => {
+        // Elimina el id_persona de personaselet
+        setpersona(personaselet.filter((id: any) => id !== idPersona));
+
+        // Elimina la persona de personaa basado en id_persona
+        setpersonaa(personaseleta.filter((persona: { id_persona: any; }) => persona.id_persona !== idPersona));
     };
 
     const columnss = [
         {
             field: 'primer_nombre',
             headerName: 'Nombre',
-            width: 200,
+            flex: 1,
             editable: false,
+        },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            flex :1,
+            renderCell: (params: any) => (
+                <IconButton
+                    color="error"
+                    onClick={() => handleDelete(params.row.id_persona)}
+                >
+                    <DeleteIcon />
+                </IconButton>
+            ),
         },
     ];
     return (
@@ -224,9 +304,9 @@ export const AlertaDocumento = (): JSX.Element => {
             </Grid>
 
 
-            <Button variant="contained" onClick={handleClicdk}>
-                  Mi Botón
-            </Button>
+            {/* <Button variant="contained" onClick={handleClicdk}>
+                Mi Botón
+            </Button> */}
 
             <Grid container
                 item
@@ -309,7 +389,7 @@ export const AlertaDocumento = (): JSX.Element => {
                                 startIcon={<SaveIcon />} onClick={handleperfil}>
                                 guardar
                             </Button>
-                        </Grid> 
+                        </Grid>
                     </Grid>
 
                     <RenderDataGrid
@@ -372,7 +452,7 @@ export const AlertaDocumento = (): JSX.Element => {
                         />
 
 
-                        {persona?.id_persona}
+                        {/* {persona?.id_persona} */}
                     </>
 
                 </>}

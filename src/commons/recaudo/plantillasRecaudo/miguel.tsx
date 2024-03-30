@@ -2,11 +2,11 @@
 import dayjs from 'dayjs';
 
 
-function remicion_viso(expediente_2: any, Fecha_2: any) {
+function remicion_viso(expediente_2: any, Fecha_2: any ,opcionSiNo2:any ) {
     return `  
                                                    Expediente No ${expediente_2 ? expediente_2 : '__________'} 
         
-        En aplicación del artículo 69 CPACA, comedidamente remitimos NOTIFICACIÓN POR AVISO del Auto {{{{(X)}}}} o Resolución ( ) {{{{ Nº PS-GJ. 1.2.64.23.3165}}}} de fecha ${Fecha_2 ? Fecha_2 : '__________'}, expedido por SUBDIRECCIÓN DE AUTORIDAD AMBIENTAL, anexando a la presente copia informal de un ejemplar de la actuación administrativa, dejando expresa constancia que contra él {{{{SI (  ) o NO (X)}}}} procede recurso de reposición dentro de los diez   (--) días siguientes a la fecha de surtida la presente notificación.
+        En aplicación del artículo 69 CPACA, comedidamente remitimos NOTIFICACIÓN POR AVISO del Auto  (X) de fecha ${Fecha_2 ? Fecha_2 : '__________'}, expedido por SUBDIRECCIÓN DE AUTORIDAD AMBIENTAL, anexando a la presente copia informal de un ejemplar de la actuación administrativa, dejando expresa constancia que contra él ${opcionSiNo2 ? opcionSiNo2 : '__________'} procede recurso de reposición dentro de los diez   (--) días siguientes a la fecha de surtida la presente notificación.
         
         La presente notificación se considerará surtida al finalizar el día siguiente al de la entrega del aviso en el lugar de destino. 
         
@@ -86,7 +86,7 @@ function citacion(opcion_6: any,numero_6:any ) {
     return `      
             REF.: CITACIÓN PARA DILIGENCIA DE NOTIFICACIÓN PERSONAL
                      
-             En aplicación el ${opcion_6 ? opcion_6 : '__________'}, comedidamente lo citamos para que en el término de cinco (5) días, contados a partir de la fecha del recibo de esta citación, comparezca a la Corporación para el Desarrollo Sostenible del Área Especial de la Macarena “CORMACARENA” – Sede Barzal, para realizar diligencia de Notificación personal del Auto ( X) o Resolución ()  Nº ${numero_6 ? numero_6 : '__________'}  
+             En aplicación el ${opcion_6 ? opcion_6 : '__________'}, comedidamente lo citamos para que en el término de cinco (5) días, contados a partir de la fecha del recibo de esta citación, comparezca a la Corporación para el Desarrollo Sostenible del Área Especial de la Macarena “CORMACARENA” – Sede Barzal, para realizar diligencia de Notificación personal del la Resolución   Nº ${numero_6 ? numero_6 : '__________'}  
                     
             Se advierte que transcurrido dicho término sin realizarse notificación personal de la actuación, se procederá en fijación de Edicto (  ) o Notificación por aviso (X), en los términos del artículo 45 del CCA y artículo 69 del CPACA, respectivamente.
             

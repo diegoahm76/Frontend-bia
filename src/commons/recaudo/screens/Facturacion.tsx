@@ -29,14 +29,8 @@ import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { AlertaDocumento } from './AlertaDocumento';
 
-export interface SerieSubserie {
-  // id_catserie_unidadorg: number;
-  // id_serie_doc: number;
-  // nombre_serie_doc: string;
-  // id_subserie_doc: number | null;
-  // nombre_subserie_doc: string | null;
-
-
+export interface SerieSubserie { 
+  tiene_configuracion:any ;
   id_cat_serie_und: number;
   id_serie_doc: number;
   cod_serie_doc: string;
@@ -62,6 +56,10 @@ export const Facturacion: React.FC = () => {
   const { userinfo: { nombre_unidad_organizacional, nombre, id_persona } } = useSelector((state: AuthSlice) => state.auth);
   const [visor, setVisor] = useState('');
   // const [consecutivo, setConsecutivo] = useState<string | null>(null);
+  const [personaselet, setpersona] = useState<string[]>([]);
+  const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
+  const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
+
 
   const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
   const [consecutivo_id, setConsecutivo_id] = useState<number | null>(null);
@@ -112,7 +110,7 @@ export const Facturacion: React.FC = () => {
       const tipos: TipoRadicado[] = response.data.map(([value, label]: [string, string]) => ({ value, label }));
 
       setTiposRadicado(tipos);
-    } catch (error:any) {
+    } catch (error: any) {
       // console.error('Error al obtener los tipos de radicado:', error);
       control_error(error.response.data.detail);
     }
@@ -140,7 +138,7 @@ export const Facturacion: React.FC = () => {
       const data = res.data.data;
       // setConsecutivoActual(data.radicado_nuevo);
       await generarHistoricoBajas();
-    } catch (error:any) {
+    } catch (error: any) {
       // console.error(error);
       control_error(error.response.data.detail);
     }
@@ -270,7 +268,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
     else if (opcionSeleccionada === '2') {
-      textoAMostrar = `${remicion_viso(expediente_2, Fecha_2)}  `;
+      textoAMostrar = `${remicion_viso(expediente_2, Fecha_2 ,opcionSiNo2)}  `;
     }
     else if (opcionSeleccionada === '3') {
       textoAMostrar = `${constancia_publicacion(Fecha_3, Fecha_acto_3, expediente_3, fijacion_3, des_fijacion_3, cc_3, nombre_3, empresa_3, nombre_nit_3, nombre_enpresa_3)}`
@@ -359,7 +357,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       const res = await api.get(url);
       const unidadesData = res.data.data;
       setUnidades(unidadesData);
-    } catch (error:any) {
+    } catch (error: any) {
       // console.error(error);
       control_error(error.response.data.detail);
     }
@@ -389,7 +387,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       const res = await api.get(url);
       const data = res.data.data;
       setSeriesSubseries(data);
-    } catch (error:any) {
+    } catch (error: any) {
       // console.error(error);
       // control_error(error.response.data.detail);
     }
@@ -438,6 +436,13 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   const [expediente_2, setexpediente_2] = useState('');
   const [Fecha_2, setFecha_2] = useState('');
+  const [opcionSiNo2, setOpcionSiNo2] = useState('');
+  const handleChangeSiNo2 = (event: any) => {
+    setOpcionSiNo2(event.target.value);
+  };
+
+
+
 
   const [Fecha_3, setFecha_3] = useState('');
   const [Fecha_acto_3, setFecha_acto3] = useState('');
@@ -541,16 +546,28 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
     try {
       const formData = new FormData();
+      const personaseletArrayString = JSON.stringify(personaselet);
+      const perfilseletArrayString = JSON.stringify(perfilselet);
+      const liderseletArrayString = JSON.stringify(lideresUnidad);
+
+
+
 
       formData.append("radicado", `${consecutivoActual}`);
+      formData.append("id_persona", id_persona.toString());
 
 
+
+
+
+      formData.append("ids_destinatarios_personas", `${personaseletArrayString}`);
       formData.append("id_consecutivo", `${consecutivo_id}`);
 
-      formData.append("ids_destinatarios_personas", `${persona?.id_persona}`);
-      formData.append("ids_destinatarios_unidades", `${miVariable}`);
 
-      formData.append("id_persona", id_persona.toString());
+      formData.append("ids_destinatarios_unidades", `${liderseletArrayString}`);
+      formData.append("ids_destinatarios_perfiles", `${perfilseletArrayString}`);
+
+
 
       const archivo = generarArchivo();
       formData.append("archivo", archivo);
@@ -563,7 +580,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       console.log("Documento enviado con éxito", response.data);
       control_success("Documento enviado con éxito");
 
-    } catch (error:any) {
+    } catch (error: any) {
       // console.error("Error al enviar el documento", error);}
       control_error(error.response.data.detail);
     }
@@ -597,7 +614,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         console.log("222222222222");
         console.log(alertas_lider);
         console.log("111111111111");
-      } catch (error:any) {
+      } catch (error: any) {
         // console.error(error);
         control_error(error.response.data.detail);
       }
@@ -708,6 +725,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   const [type_direction, // set_type_direction
   ] = useState('');
   const [Fecha_e, setFecha_e] = useState('');
+
 
   return (
     <>
@@ -861,11 +879,15 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
               labelId="serie-subserie-select-label"
               id="serie-subserie-select"
               value={selectedSerieSubserie}
-              label="Serie/Subserie"
+              label="Serie/Subserie" 
               onChange={handleChangee}
             >
               {seriesSubseries.map((item) => (
-                <MenuItem key={item.id_cat_serie_und} value={`${item.id_cat_serie_und}`}>
+                <MenuItem 
+                key={item.id_cat_serie_und} 
+                value={`${item.id_cat_serie_und}`}
+                disabled={!item.tiene_configuracion}
+                >
                   {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
                 </MenuItem>
               ))}
@@ -1009,6 +1031,25 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
                 onChange={(e) => setFecha_2(e.target.value)}
               />
             </Grid>
+
+
+
+
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label"> procede recurso</InputLabel>
+                <Select
+                  labelId="Procede recurso"
+                  value={opcionSiNo2}
+                  label="procede recurso"
+                  onChange={handleChangeSiNo2}
+                >
+                  <MenuItem value="Si">Sí</MenuItem>
+                  <MenuItem value="No">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
           </>
         ) : null}
 
@@ -1049,7 +1090,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
                 <Select
                   labelId="Procede recurso"
                   value={empresa_3}
-                  label="Confirmación"
+                  label="Persona / Empresa"
                   onChange={handleChangeSiNo3}
                 >
                   <MenuItem value="Si">persona</MenuItem>
@@ -1223,7 +1264,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
                 <Select
                   labelId="Procede recurso"
                   value={opcionSiNo}
-                  label="Confirmación"
+                  label="procede recurso"
                   onChange={handleChangeSiNo}
                 >
                   <MenuItem value="Si">Sí</MenuItem>
@@ -1408,7 +1449,14 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
 
-      <AlertaDocumento />
+      <AlertaDocumento
+        personaselet={personaselet}
+        setpersona={setpersona}
+        perfilselet={perfilselet}
+        setperfilselet={setperfilselet}
+        lideresUnidad={lideresUnidad}
+        setLideresUnidad={setLideresUnidad}
+      />
 
 
 
