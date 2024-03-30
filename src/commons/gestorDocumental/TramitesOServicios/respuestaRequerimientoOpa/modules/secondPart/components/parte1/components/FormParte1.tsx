@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { ModalInfoSolicitudReq } from './ModalInfoSolicitud/ModalInfoSolicitudReq';
 import { useStepperRequerimiento } from '../../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
-import { ResRequerimientoOpaContext } from '../../../context/ResRequerimientoOpaContext';
+import { ResRequerimientoOpaContext } from '../../../../../context/ResRequerimientoOpaContext';
 import { useAppSelector } from '../../../../../../../../../hooks';
 import { getAnexosSolicitud, getDetalleSolicitud } from '../../../services/afterCreatedUserRequest.service';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
@@ -46,6 +46,8 @@ export const FormParte1 = ({
     infoInicialUsuario,
     setCurrentSolicitudUsuario,
   } = useContext(ResRequerimientoOpaContext);
+
+  const { currentPersonaRespuestaUsuario } = useAppSelector(state => state.ResRequerimientoOpaSlice);
 
   //* navigate declaration
   const navigate = useNavigate();
@@ -103,7 +105,7 @@ export const FormParte1 = ({
       field: 'accion',
       renderCell: (params: any) => (
         <>
-          <Tooltip title="Ver solicitud de requerimiento realizada">
+          <Tooltip title="Ver respuesta de requerimiento realizada">
             <IconButton
               onClick={async () => {
                 handleOpenModalOne(true); //* open modal
@@ -171,13 +173,13 @@ export const FormParte1 = ({
               fullWidth
               disabled
               size="small"
-              label="Tipo de PQRSDF"
+              label="Tipo de trámite"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               inputProps={{
                 maxLength: 50,
               }}
-              value={infoInicialUsuario?.detallePQRSDF?.data?.tipo ?? 'N/A'}
+              value={currentPersonaRespuestaUsuario?.tipo_tramite ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -192,11 +194,11 @@ export const FormParte1 = ({
                 maxLength: 10,
               }}
               value={
-                infoInicialUsuario?.detallePQRSDF?.data?.estado_actual ?? 'N/A'
+                currentPersonaRespuestaUsuario?.estado ?? 'N/A'
               }
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/*<Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               size="small"
@@ -206,24 +208,24 @@ export const FormParte1 = ({
               InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.detallePQRSDF?.data?.radicado ?? 'N/A'}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </Grid>*/}
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               size="small"
-              label="Fecha de radicado de entrada"
+              label="Fecha de radicado"
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
               value={
                 formatDate(
-                  infoInicialUsuario?.detallePQRSDF?.data
-                    ?.fecha_radicado_entrada
+                  currentPersonaRespuestaUsuario
+                    ?.fecha_radicado
                 ) ?? 'N/A'
               }
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
+         {/* <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               multiline
@@ -238,8 +240,8 @@ export const FormParte1 = ({
               InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.detallePQRSDF?.data?.asunto ?? 'N/A'}
             />
-          </Grid>
-          <Grid item xs={12} sm={12}>
+          </Grid>*/}
+         {/* <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               multiline
@@ -266,16 +268,16 @@ export const FormParte1 = ({
                 infoInicialUsuario?.detallePQRSDF?.data?.descripcion ?? 'N/A'
               }
             />
-          </Grid>
+          </Grid>*/}
 
           {/* tabla de elementos a mostrar */}
 
           {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
 
-          {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
+          {/*{infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
           0 ? (
             <RenderDataGrid
-              title="Histórico de requerimientos realizados"
+              title="Respuesta realizada a requerimiento"
               columns={columns ?? []}
               rows={
                 [...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data] ??
@@ -294,7 +296,7 @@ export const FormParte1 = ({
             >
               No hay histórico de requerimientos para este elemento
             </Typography>
-          )}
+          )}*/}
         </Grid>
 
         <Grid
@@ -315,25 +317,25 @@ export const FormParte1 = ({
             startIcon={<SaveAsIcon />}
             onClick={() => {
               //* hacer validaciones previas antes de permitir el next, para el paso 2
-              console.log('jeje next');
+             /* console.log('jeje next');
               if (
                 currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
                 'Respondida por el propietario de la bandeja de tareas'
               ) {
                 showAlert(
                   'Opss!',
-                  'Esta PQRSDF ya ha sido respondida, por lo tanto, no es posible realizar un nuevo requerimiento al usuario; solo se puede acceder al historial de estas solicitudes.',
+                  'Esta requerimiento ya ha sido respondido, por lo tanto, no es posible realizar un nuevo requerimiento al usuario; solo se puede acceder al historial de estas solicitudes.',
                   'warning'
                 );
                 return;
-              }
+              }*/
               handleNext();
             }}
             sx={{
               width: '60%',
             }}
           >
-            Crear solicitud de requerimiento
+            Responder / radicar respuesta a requerimiento seleccionado
           </Button>
         </Grid>
       </form>

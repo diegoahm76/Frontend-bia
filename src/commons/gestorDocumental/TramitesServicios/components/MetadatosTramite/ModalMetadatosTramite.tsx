@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Dispatch, SetStateAction } from 'react';
 import {
     Dialog,
@@ -21,6 +21,8 @@ import { Title } from '../../../../../components/Title';
 import FormKeywords from '../../../../../components/partials/form/FormKeywords';
 import ClearIcon from '@mui/icons-material/Clear';
 import CloseIcon from '@mui/icons-material/Close'; // Agregado: Importación de CloseIcon
+import { api } from '../../../../../api/axios';
+import { FormContextMetadatos } from '../../context/MetadatosContext';
 
 interface IProps {
     is_modal_active: boolean;
@@ -31,16 +33,10 @@ export const ModalMetadatosTramite = ({
     is_modal_active,
     set_is_modal_active,
 }: IProps) => {
-    // Estado para almacenar los valores del formulario
-    const [form, setForm] = useState({
-        categoriaArchivo: '',
-        asunto: '',
-        tieneReplicaFisica: false,
-        origenArchivo: '',
-        tieneTipologiaRelacionada: false,
-        tipologiaRelacionada: '',
-        descripcion: '',
-    });
+
+    const { form, setForm } = useContext(FormContextMetadatos);
+    console.log(form)
+
 
     // Función para manejar el cambio en los campos del formulario
     const handleInputChange = (field: string, value: any) => {
@@ -56,10 +52,15 @@ export const ModalMetadatosTramite = ({
             categoriaArchivo: '',
             asunto: '',
             tieneReplicaFisica: false,
+            nro_folios_documento:0,
             origenArchivo: '',
             tieneTipologiaRelacionada: false,
             tipologiaRelacionada: '',
             descripcion: '',
+            tipologiaRelacionadaotra: '',
+            CodCategoriaArchivo: '',
+            keywords:'', // Nuevo campo para almacenar las palabras clave
+
         });
     };
 
@@ -69,6 +70,67 @@ export const ModalMetadatosTramite = ({
         set_is_modal_active(false);
     };
 
+    const [origenArchivoChoices, setOrigenArchivoChoices] = useState([]);
+    const [tipoArchivoChoices, setTipoArchivoChoices] = useState([]);
+    const [tipologias, setTipologias] = useState<{ id_tipologia_documental: number; nombre: string; }[]>([]);
+
+
+
+
+    const choise_origen_archivo = async (): Promise<void> => {
+        try {
+            const url = '/gestor/choices/origen-archivo/';
+            const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
+            const origen_archivo = res.data;
+            setOrigenArchivoChoices(origen_archivo);
+            //  control_success('Datos actualizados correctamente');
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchTipoArchivoChoices = async (): Promise<void> => {
+        try {
+            const url = '/gestor/choices/tipo-archivo/';
+            const response = await api.get(url);
+            const tipoArchivoChoicess = response.data;
+            console.log(tipoArchivoChoicess);
+            setTipoArchivoChoices(tipoArchivoChoicess);
+            // Si necesitas hacer algo con las opciones de tipo de archivo, puedes hacerlo aquí
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const listarTipologias = async (): Promise<void> => {
+        try {
+            const url = '/gestor/expedientes-archivos/expedientes/listar-tipologias/';
+            const response = await api.get(url);
+            const tipologias = response.data.data;
+            setTipologias(tipologias);
+            // Si necesitas hacer algo con la lista de tipologías, puedes hacerlo aquí
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+    useEffect(() => {
+        listarTipologias();
+        fetchTipoArchivoChoices();
+        choise_origen_archivo();
+    }, []);
+
+
+    const handleKeywordsChange = (selectedKeywords:any) => {
+        setForm({
+            ...form,
+            keywords: selectedKeywords, // Actualiza el estado del formulario con las palabras clave seleccionadas
+        });
+    };
+
+
+   
     return (<>
         <Dialog maxWidth="xl" open={is_modal_active} onClose={handleCloseModal} fullWidth>
             <DialogTitle> <Title title="Agregar Metadatos" /></DialogTitle>
@@ -76,21 +138,22 @@ export const ModalMetadatosTramite = ({
             {/* Contenedor principal del formulario */}
             <Grid container spacing={2} style={{ margin: '1rem' }}>
                 <Grid item xs={12} md={4}>
-                    {/* Campo: Categoría de archivo */}
+                    {/* Campo: Tipo de archivo */}
                     <FormControl fullWidth>
-                        <InputLabel id="categoriaArchivo-label">Categoría de archivo</InputLabel>
+                        <InputLabel id="tipoArchivo-label">Tipo de archivo</InputLabel>
                         <Select
                             style={{ width: "100%" }}
-                            labelId="categoriaArchivo-label"
-                            id="categoriaArchivo"
+                            labelId="tipoArchivo-label"
+                            id="CodCategoriaArchivo"
                             size="small"
-                            value={form.categoriaArchivo}
-                            onChange={(e) => handleInputChange('categoriaArchivo', e.target.value as string)}
+
+                            value={form.CodCategoriaArchivo}
+                            onChange={(e) => handleInputChange('CodCategoriaArchivo', e.target.value as string)}
                         >
-                            {/* Opciones del select */}
-                            <MenuItem value="categoria1">Categoría 1</MenuItem>
-                            <MenuItem value="categoria2">Categoría 2</MenuItem>
-                            <MenuItem value="categoria3">Categoría 3</MenuItem>
+                            {/* Opciones del select generadas dinámicamente */}
+                            {tipoArchivoChoices.map((option, index) => (
+                                <MenuItem key={index} value={option[0]}>{option[1]}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
@@ -127,15 +190,31 @@ export const ModalMetadatosTramite = ({
                             value={form.origenArchivo}
                             onChange={(e) => handleInputChange('origenArchivo', e.target.value as string)}
                         >
-                            {/* Opciones del select */}
-                            <MenuItem value="interno">Interno</MenuItem>
-                            <MenuItem value="externo">Externo</MenuItem>
-                            <MenuItem value="otro">Otro</MenuItem>
+                            {/* Opciones del select generadas dinámicamente */}
+                            {origenArchivoChoices.map((option, index) => (
+                                <MenuItem key={index} value={option[0]}>{option[1]}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
+
+
+                </Grid>
+
+                <Grid item xs={2}>
+                    {/* Campo: Asunto */}
+                    <TextField
+                        fullWidth
+                        size="small"
+                        variant="outlined"
+                        value={form.nro_folios_documento}
+                        label="Numero folios"
+                        onChange={(e) => handleInputChange('nro_folios_documento', e.target.value)}
+                    />
                 </Grid>
 
 
+
+                
                 <Grid item xs={12} md={3}>
                     {/* Campo: ¿Tiene tipología relacionada? */}
                     <FormControlLabel
@@ -160,9 +239,9 @@ export const ModalMetadatosTramite = ({
                             fullWidth
                             size="small"
                             variant="outlined"
-                            value={form.tipologiaRelacionada}
+                            value={form.tipologiaRelacionadaotra}
                             label="¿Cuál?"
-                            onChange={(e) => handleInputChange('tipologiaRelacionada', e.target.value)}
+                            onChange={(e) => handleInputChange('tipologiaRelacionadaotra', e.target.value)}
                         />
                     </Grid>
                 )}
@@ -170,13 +249,22 @@ export const ModalMetadatosTramite = ({
                 <Grid item xs={12} md={6}>
                     {/* Campo condicional: Tipología */}
                     {!form.tieneTipologiaRelacionada && (
-                        <TextField
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            label="Tipología"
-                            onChange={(e) => handleInputChange('tipologiaRelacionada', e.target.value)}
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="tipologiaRelacionada-label">Tipología</InputLabel>
+                            <Select
+                                size="small"
+                                style={{ width: "100%" }}
+                                labelId="tipologiaRelacionada-label"
+                                id="tipologiaRelacionada"
+                                value={form.tipologiaRelacionada}
+                                onChange={(e) => handleInputChange('tipologiaRelacionada', e.target.value as string)}
+                            >
+                                {/* Opciones del select generadas dinámicamente */}
+                                {tipologias.map((option, index) => (
+                                    <MenuItem key={index} value={option.id_tipologia_documental}>{option.nombre}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     )}
                 </Grid>
 
@@ -204,31 +292,31 @@ export const ModalMetadatosTramite = ({
                         onChange={(e) => handleInputChange('descripcion', e.target.value)}
                     />
                 </Grid>
-                <Grid item xs={11}>
+        
+            </Grid>
+            <Grid item xs={11}>
                     {/* Agrega el componente FormKeywords aquí */}
                     <FormKeywords
                         hidden_text={false} // Puedes ajustar este valor según tus necesidades
-                        initial_values={[]} // Puedes pasar valores iniciales si es necesario
+                        initial_values={[]} // Pasa las palabras clave almacenadas en el estado del formulario como valores iniciales
                         character_separator="," // Puedes ajustar este separador según tus necesidades
-                        set_form={null} // Puedes pasar una función para actualizar el estado del formulario si es necesario
+                        set_form={handleKeywordsChange} // P
                         keywords="keywords" // Puedes ajustar el nombre de los keywords según tus necesidades
                         disabled={false} // Puedes ajustar este valor según tus necesidades
                     />
                 </Grid>
-            </Grid>
-
 
 
 
 
             <DialogActions>
                 <Stack direction="row" spacing={2} sx={{ mr: '15px', mb: '10px', mt: '10px' }}>
-                    <IconButton color="inherit" onClick={handleClearForm} aria-label="Limpiar formulario">
-                        <ClearIcon />
-                    </IconButton>
-                    <IconButton color="error" onClick={handleCloseModal} aria-label="Cerrar">
-                        <CloseIcon />
-                    </IconButton>
+                    <Button color="inherit" onClick={handleClearForm} variant="outlined"  >
+                        Limpiar
+                    </Button>
+                    <Button startIcon={<CloseIcon />} color="error" onClick={handleCloseModal} variant="outlined">
+                        cerrar
+                    </Button>
                 </Stack>
             </DialogActions>
         </Dialog>

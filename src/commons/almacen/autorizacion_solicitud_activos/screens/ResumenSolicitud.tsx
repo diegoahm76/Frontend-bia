@@ -1,103 +1,31 @@
-import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
+import { Button, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, Switch, Tab, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import SearchIcon from "@mui/icons-material/Search";
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import { interface_busqueda_operario, interface_busqueda_responsable, response_busqueda_responsable } from '../interfaces/types';
+import { interface_estado_autorizacion_solicitud_activos, interface_solicitud_por_id } from '../interfaces/types';
 import { useDispatch } from 'react-redux';
 import { control_error, control_success } from '../../../../helpers';
+import { convertir_cod_estado } from '../../solicitudDeActivos/validations/validations';
+import TablaArticulosSolicitados from '../tables/TablaArticulosSolicitados';
 
 
 interface props {
   accion: string;
-  switch_solicitud_prestamo: boolean;
-  set_switch_solicitud_prestamo: React.Dispatch<React.SetStateAction<boolean>>;
-  tipo_documento_responsable: string;
-  set_tipo_documento_responsable: React.Dispatch<React.SetStateAction<string>>;
-  documento_responsable: string;
-  set_documento_responsable: React.Dispatch<React.SetStateAction<string>>;
-  nombres_responsable: string;
-  set_nombres_responsable: React.Dispatch<React.SetStateAction<string>>;
-  apellidos_responsable: string;
-  set_apellidos_responsable: React.Dispatch<React.SetStateAction<string>>;
-  tipo_documento_operario: string;
-  set_tipo_documento_operario: React.Dispatch<React.SetStateAction<string>>;
-  documento_operario: string;
-  set_documento_operario: React.Dispatch<React.SetStateAction<string>>;
-  nombres_operario: string;
-  set_nombres_operario: React.Dispatch<React.SetStateAction<string>>;
-  apellidos_operario: string;
-  set_apellidos_operario: React.Dispatch<React.SetStateAction<string>>;
-  motivo: string;
-  set_motivo: React.Dispatch<React.SetStateAction<string>>;
-  observaciones: string;
-  set_observaciones: React.Dispatch<React.SetStateAction<string>>;
-  funcionario_responsable_seleccionado: interface_busqueda_responsable;
-  funcionario_operario_seleccionado: interface_busqueda_operario;
-  tipo_documento_solicito: string;
-  set_tipo_documento_solicito: React.Dispatch<React.SetStateAction<string>>;
-  documento_solicito: string;
-  set_documento_solicito: React.Dispatch<React.SetStateAction<string>>;
-  nombres_solicito: string;
-  set_nombres_solicito: React.Dispatch<React.SetStateAction<string>>;
-  apellidos_solicito: string;
-  set_apellidos_solicito: React.Dispatch<React.SetStateAction<string>>;
+  data_form_resumen_solicitud: interface_estado_autorizacion_solicitud_activos;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const BusquedaFuncionarios: React.FC<props> = ({
+const ResumenSolicitud: React.FC<props> = ({
   accion,
-  switch_solicitud_prestamo,
-  set_switch_solicitud_prestamo,
-  tipo_documento_responsable,
-  set_tipo_documento_responsable,
-  documento_responsable,
-  set_documento_responsable,
-  nombres_responsable,
-  set_nombres_responsable,
-  apellidos_responsable,
-  set_apellidos_responsable,
-  tipo_documento_operario,
-  set_tipo_documento_operario,
-  documento_operario,
-  set_documento_operario,
-  nombres_operario,
-  set_nombres_operario,
-  apellidos_operario,
-  set_apellidos_operario,
-  motivo,
-  set_motivo,
-  observaciones,
-  set_observaciones,
-  funcionario_responsable_seleccionado,
-  funcionario_operario_seleccionado,
-  tipo_documento_solicito,
-  set_tipo_documento_solicito,
-  documento_solicito,
-  set_documento_solicito,
-  nombres_solicito,
-  set_nombres_solicito,
-  apellidos_solicito,
-  set_apellidos_solicito,
+  data_form_resumen_solicitud,
 }) => {
 
   useEffect(() => {
-    if (Object.keys(funcionario_responsable_seleccionado).length !== 0){
-      set_tipo_documento_responsable(funcionario_responsable_seleccionado.tipo_documento);
-      set_documento_responsable(funcionario_responsable_seleccionado.numero_documento);
-      set_nombres_responsable(funcionario_responsable_seleccionado.primer_nombre ?? '');
-      set_apellidos_responsable(funcionario_responsable_seleccionado.primer_apellido ?? '');
+    if (Object.keys(data_form_resumen_solicitud).length !== 0){
+      // Aquí debería haber alguna acción a realizar si la condición es verdadera
     }
-  }, [funcionario_responsable_seleccionado]);
-
-  useEffect(() => {
-    if (Object.keys(funcionario_operario_seleccionado).length !== 0){
-      set_tipo_documento_operario(funcionario_operario_seleccionado.tipo_documento);
-      set_documento_operario(funcionario_operario_seleccionado.numero_documento);
-      set_nombres_operario(funcionario_operario_seleccionado.primer_nombre ?? '');
-      set_apellidos_operario(funcionario_operario_seleccionado.primer_apellido ?? '');
-    }
-  }, [funcionario_operario_seleccionado]);
+  }, [data_form_resumen_solicitud]);
 
 
   return (
@@ -109,13 +37,20 @@ const BusquedaFuncionarios: React.FC<props> = ({
           </FormLabel>
           <Switch
             id="solicitud_prestamo"
-            checked={switch_solicitud_prestamo}
+            checked={data_form_resumen_solicitud.es_solicitud_prestamo || false}
             disabled={accion === 'ver'}
-            onChange={() =>{
-              set_switch_solicitud_prestamo(!switch_solicitud_prestamo)
-            }}
           />
         </Grid>
+      </Grid>
+
+      <Grid item xs={12} lg={3}>
+        <TextField
+          fullWidth
+          label='Estado solicitud'
+          value={convertir_cod_estado(data_form_resumen_solicitud?.estado_solicitud) || ''}
+          disabled={accion === 'ver'}
+          size='small'
+        />
       </Grid>
 
       <Grid container spacing={2} item xs={12}>
@@ -130,9 +65,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
             <InputLabel >Tipo documento de quien solicitó</InputLabel>
             <Select
               label='Tipo documento de quien solicitó'
-              value={tipo_documento_solicito}
+              value={data_form_resumen_solicitud.tipo_documento_solictante || ''}
               disabled={accion === 'ver'}
-              onChange={(e) => set_tipo_documento_solicito(e.target.value)}
             >
               <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
               <MenuItem value="RC" >Registro civil</MenuItem>
@@ -150,9 +84,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
           <TextField
             fullWidth
             label='Documento de quien solicitó'
-            value={documento_solicito}
+            value={data_form_resumen_solicitud.documento_solictante || ''}
             disabled={accion === 'ver'}
-            onChange={(e) => set_documento_solicito(e.target.value)}
             size='small'
           />
         </Grid>
@@ -186,8 +119,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
             fullWidth
             disabled
             label='Nombres de quien solicitó'
-            value={nombres_solicito}
-            onChange={(e) => set_nombres_solicito(e.target.value)}
+            value={data_form_resumen_solicitud.nombres_solictante || ''}
             size='small'
           />
         </Grid>
@@ -197,8 +129,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
             fullWidth
             disabled
             label='Apellidos de quien solicitó'
-            value={apellidos_solicito}
-            onChange={(e) => set_apellidos_solicito(e.target.value)}
+            value={data_form_resumen_solicitud.apellidos_solictante || ''}
             size='small'
           />
         </Grid>
@@ -216,9 +147,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
             <InputLabel >Tipo documento responsable</InputLabel>
             <Select
               label='Tipo documento responsable'
-              value={tipo_documento_responsable}
+              value={data_form_resumen_solicitud.tipo_documento_responsable || ''}
               disabled={accion === 'ver'}
-              onChange={(e) => set_tipo_documento_responsable(e.target.value)}
             >
               <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
               <MenuItem value="RC" >Registro civil</MenuItem>
@@ -236,9 +166,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
           <TextField
             fullWidth
             label='Documento responsable'
-            value={documento_responsable}
+            value={data_form_resumen_solicitud.documento_responsable || ''}
             disabled={accion === 'ver'}
-            onChange={(e) => set_documento_responsable(e.target.value)}
             size='small'
           />
         </Grid>
@@ -272,8 +201,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
             fullWidth
             disabled
             label='Nombres responsable'
-            value={nombres_responsable}
-            onChange={(e) => set_nombres_responsable(e.target.value)}
+            value={data_form_resumen_solicitud.nombres_responsable || ''}
             size='small'
           />
         </Grid>
@@ -283,8 +211,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
             fullWidth
             disabled
             label='Apellidos responsable'
-            value={apellidos_responsable}
-            onChange={(e) => set_apellidos_responsable(e.target.value)}
+            value={data_form_resumen_solicitud.apellidos_responsable || ''}
             size='small'
           />
         </Grid>
@@ -304,9 +231,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
             <InputLabel >Tipo documento operario</InputLabel>
             <Select
               label='Tipo documento operario'
-              value={tipo_documento_operario}
+              value={data_form_resumen_solicitud.tipo_documento_operario || ''}
               disabled={accion === 'ver'}
-              onChange={(e) => set_tipo_documento_operario(e.target.value)}
             >
               <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
               <MenuItem value="RC" >Registro civil</MenuItem>
@@ -324,9 +250,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
           <TextField
             fullWidth
             label='Documento operario'
-            value={documento_operario}
+            value={data_form_resumen_solicitud.documento_operario || ''}
             disabled={accion === 'ver'}
-            onChange={(e) => set_documento_operario(e.target.value)}
             size='small'
           />
         </Grid>
@@ -360,8 +285,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
             fullWidth
             disabled
             label='Nombres operario'
-            value={nombres_operario}
-            onChange={(e) => set_nombres_operario(e.target.value)}
+            value={data_form_resumen_solicitud.nombres_operario || ''}
             size='small'
           />
         </Grid>
@@ -371,8 +295,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
             fullWidth
             disabled
             label='Apellidos operario'
-            value={apellidos_operario}
-            onChange={(e) => set_apellidos_operario(e.target.value)}
+            value={data_form_resumen_solicitud.apellidos_operario || ''}
             size='small'
           />
         </Grid>
@@ -385,9 +308,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
           multiline
           rows={2}
           label='Motivo'
-          value={motivo}
+          value={data_form_resumen_solicitud.motivo || ''}
           disabled={accion === 'ver'}
-          onChange={(e) => set_motivo(e.target.value)}
           size='small'
         />
       </Grid>
@@ -398,10 +320,15 @@ const BusquedaFuncionarios: React.FC<props> = ({
           multiline
           rows={2}
           label='Observaciones'
-          value={observaciones}
+          value={data_form_resumen_solicitud.observacion || ''}
           disabled={accion === 'ver'}
-          onChange={(e) => set_observaciones(e.target.value)}
           size='small'
+        />
+      </Grid>
+
+      <Grid container item xs={12}>
+        <TablaArticulosSolicitados
+          articulos_solicitados={data_form_resumen_solicitud.items_solicitud}
         />
       </Grid>
     </>
@@ -410,4 +337,4 @@ const BusquedaFuncionarios: React.FC<props> = ({
 
 
 // eslint-disable-next-line no-restricted-syntax
-export default BusquedaFuncionarios;
+export default ResumenSolicitud;

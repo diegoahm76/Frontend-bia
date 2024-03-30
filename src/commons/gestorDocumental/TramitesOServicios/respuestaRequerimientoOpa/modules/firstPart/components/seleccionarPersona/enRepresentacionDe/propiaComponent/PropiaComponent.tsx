@@ -10,6 +10,12 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { LoadingButton } from '@mui/lab';
 import { ModalSeleccionPersona } from './ModalSeleccionPersona';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../../../../../../../../../hooks';
+import { setCurrentPersonaRespuestaUsuario } from '../../../../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
 
 export const PropiaComponent = ({
   control_seleccionar_persona,
@@ -20,9 +26,16 @@ export const PropiaComponent = ({
   watchExe: any;
   reset_seleccionar_persona: any;
 }): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
 
   //* context declarations
-  const { handleOpenModalOne} = useContext(ModalAndLoadingContext);
+  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
+
+  // ? con esta variable se va a manejar la actualización de la persona seleccionada para no generar conflicsot con use form
+  const { currentPersonaRespuestaUsuario } = useAppSelector(
+    (state) => state.ResRequerimientoOpaSlice
+  );
 
   return (
     <>
@@ -37,11 +50,6 @@ export const PropiaComponent = ({
               marginTop: '20px',
             }}
           >
-            <Grid
-              container
-              spacing={2}
-              sx={{ mb: '20px', zIndex: 9999 }}
-            ></Grid>
             <Grid container spacing={2}>
               <Grid
                 item
@@ -51,78 +59,77 @@ export const PropiaComponent = ({
                   zIndex: 2,
                 }}
               >
-                <Controller
-                  name="tipo_documento"
-                  control={control_seleccionar_persona}
-                  rules={{ required: true }}
-                  render={({ field: { value } }) => (
-                    <div>
-                      <Select
-                        value={value}
-                        isDisabled={true}
-                        options={[] ?? []}
-                        placeholder="Seleccionar"
-                      />
-                      <label>
-                        <small
-                          style={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontWeight: 'thin',
-                            fontSize: '0.75rem',
-                            marginTop: '0.25rem',
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          Tipo de documento
-                        </small>
-                      </label>
-                    </div>
-                  )}
-                />
+                <div>
+                  <Select
+                    value={{
+                      value: currentPersonaRespuestaUsuario?.tipo_documento,
+                      label:
+                        currentPersonaRespuestaUsuario?.tipo_documento ?? '...',
+                    }}
+                    isDisabled={true}
+                    placeholder="Seleccionar"
+                  />
+                  <label>
+                    <small
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 'thin',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        marginLeft: '0.25rem',
+                      }}
+                    >
+                      Tipo de documento
+                    </small>
+                  </label>
+                </div>
               </Grid>
               <Grid item xs={12} sm={4}>
-                <Controller
-                  name="numero_documento"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value }, fieldState: {} }) => (
-                    <TextField
-                      fullWidth
-                      label="Número de documento"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      InputLabelProps={{ shrink: true }}
-                      disabled
-                    />
-                  )}
+                <TextField
+                  fullWidth
+                  label="Número de documento"
+                  size="small"
+                  variant="outlined"
+                  value={
+                    currentPersonaRespuestaUsuario?.numero_documento ?? '...'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
-                <Controller
-                  name="nombre_completo"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value }, fieldState: {} }) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre de la persona"
-                      size="small"
-                      multiline
-                      rows={1}
-                      maxRows={2}
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      InputLabelProps={{ shrink: true }}
-                      disabled
-                    />
-                  )}
+                <TextField
+                  fullWidth
+                  label="Nombre de la persona"
+                  size="small"
+                  multiline
+                  rows={1}
+                  maxRows={2}
+                  variant="outlined"
+                  value={
+                    currentPersonaRespuestaUsuario?.nombre_completo ?? '...'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  disabled
                 />
               </Grid>
+              {currentPersonaRespuestaUsuario?.nombre_completo && (
+                  <>
+                    <Grid item xs={12} sm={12}>
+                      <TextField
+                        fullWidth
+                        label="ESTADO DE LA OPA"
+                        size="small"
+                        multiline
+                        rows={1}
+                        maxRows={2}
+                        variant="outlined"
+                        value={'EXISTENTE SIN RESPONDER'}
+                        disabled
+                      />
+                    </Grid>
+                  </>
+                )}
             </Grid>
 
             <Stack
@@ -136,11 +143,11 @@ export const PropiaComponent = ({
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  // cleanElementComponent();
-                  console.log('limpiar campos');
+                  dispatch(setCurrentPersonaRespuestaUsuario(null as any));
+                  control_info('Se ha quitado la selección de la persona');
                 }}
               >
-                LIMPIAR CAMPOS
+                QUITAR SELECCIÓN DE PERSONA
               </Button>
 
               <Button
@@ -148,10 +155,10 @@ export const PropiaComponent = ({
                 variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  handleOpenModalOne(true)
+                  handleOpenModalOne(true);
                 }}
               >
-                BÚSQUEDA DE PERSONAS
+                BÚSQUEDA PERSONA
               </Button>
             </Stack>
             <Divider />
@@ -195,14 +202,11 @@ export const PropiaComponent = ({
 
       {/* modal selección persona */}
       <ModalSeleccionPersona
-        {
-          ...{
-            control_seleccionar_persona,
-            watchExe,
-            reset_seleccionar_persona,
-
-          }
-        }
+        {...{
+          control_seleccionar_persona,
+          watchExe,
+          reset_seleccionar_persona,
+        }}
       />
       {/* modal selección persona */}
     </>

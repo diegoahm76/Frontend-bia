@@ -4,9 +4,9 @@ import { LoadingButton } from '@mui/lab';
 import Swal from 'sweetalert2';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
-import { resetItems } from '../../toolkit/slice/ResRequerimientoOpaSlice';
 import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
+import { resetItems } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
 
 
 export const AccionesFinales = ({
@@ -29,8 +29,8 @@ export const AccionesFinales = ({
   const { anexosCreados } = useAppSelector(
     (state) => state.ResRequerimientoOpaSlice
   );
-  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
-    useAppSelector((state: any) => state.BandejaTareasSlice);
+  const { currentPersonaRespuestaUsuario } =
+    useAppSelector((state: any) => state.ResRequerimientoOpaSlice);
 
   //* handleSumbit
 
@@ -50,17 +50,20 @@ export const AccionesFinales = ({
     }
 
     if (
+      !anexosCreados[0]?.medio_de_solicitud ||
       !anexosCreados[0]?.asunto ||
-      !anexosCreados[0]?.descripcion_de_la_solicitud ||
-      !currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf
+      !anexosCreados[0]?.descripcion_de_la_solicitud /*||
+      !currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf*/
     ) {
       showAlert(
         'Opps!',
-        'Por favor diligencie los campos de asunto y descripción de la solicitud',
+        'Por favor diligencie los campos de asunto, descripción y medio de almacenamiento de la respuesta del requerimiento',
         'warning'
       );
       return;
     }
+
+    //console.log('estos son los anexos creados', anexosCreados)
 
     const formData = new FormData();
 
@@ -69,11 +72,11 @@ export const AccionesFinales = ({
       JSON.stringify({
         asunto: anexosCreados[0]?.asunto,
         descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-        id_pqrsdf:
-          +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
+        id_requerimiento:
+          +currentPersonaRespuestaUsuario?.id_requerimiento,
       })
     );
-    formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
+  /*  formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);*/
 
     sortedAnexos.forEach((anexo: any, index: number) => {
       formData.append('archivo', anexo.ruta_soporte);
@@ -138,11 +141,11 @@ export const AccionesFinales = ({
       return;
     }
 
-    console.log(anexosCreados);
+    console.log('estos son los anexos creado', anexosCreados);
 
     await Swal.fire({
-      title: '¿Está seguro de enviar el requerimiento?',
-      text: 'Una vez enviado no podrá realizar cambios',
+      title: '¿Está seguro de enviar la respuesta sobre el requerimiento?',
+      text: 'Una vez enviado no podrá realizar cambios, porfavor verifique la información antes de enviarla!!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Enviar',

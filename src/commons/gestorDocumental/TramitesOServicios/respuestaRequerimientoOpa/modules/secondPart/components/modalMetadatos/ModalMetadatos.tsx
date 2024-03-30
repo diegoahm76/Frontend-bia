@@ -37,9 +37,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { ModalAndLoadingContext } from '../../../../../../../../context/GeneralContext';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { setMetadatos } from '../../toolkit/slice/ResRequerimientoOpaSlice';
 import { control_success } from '../../../../../../../../helpers';
 import { Title } from '../../../../../../../../components';
+import { setMetadatos } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
 
 export const ModalMetadatos = ({
   tipologiasDocumentales,
@@ -492,44 +492,7 @@ export const ModalMetadatos = ({
                   />
                 </Grid>
               ) : (
-                <Grid
-                  item
-                  xs={12}
-                  sm={4}
-                  sx={{
-                    mt: '1.2rem',
-                    mb: '1.2rem',
-                  }}
-                >
-                  <Controller
-                    name="cualTipologiaDocumentalMetadatos"
-                    control={controlManejoMetadatosModal}
-                    defaultValue=""
-                    // rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        required
-                        fullWidth
-                        label="¿Cual?"
-                        size="small"
-                        variant="outlined"
-                        value={value}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) => {
-                          onChange(e.target.value);
-                          e.target.value.length === 50 &&
-                            control_warning(
-                              'máximo 50 caracteres para definir la tipología documental'
-                            );
-                        }}
-                        inputProps={{ maxLength: 50 }}
-                      />
-                    )}
-                  />
-                </Grid>
+                <></>
               )}
 
               <Grid

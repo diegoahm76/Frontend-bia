@@ -2,20 +2,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
-import { control_success } from '../../../../../../../../helpers';
-import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { control_success } from '../../../../../../helpers';
+import { control_warning } from '../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+
 
 interface Anexo {
   asunto: string;
   descripcion_de_la_solicitud: string;
   id: string;
   nombre_archivo: string;
+  fecha_de_solicitud: string;
+  medio_de_solicitud: any;
   // other properties...
-
   descripcion?: string | null;
   cod_categoria_archivo?: string | null;
   tiene_replica_fisica?: boolean | null;
   cod_origen_archivo?: string | null;
+  medio_almacenamiento?: any
   id_tipologia_doc?: number | null;
   tipologia_no_creada_TRD?: string | null;
   palabras_clave_doc?: string | null;
@@ -27,12 +30,17 @@ const initialState: {
   currentSolicitudAlUsuario: any;
   metadatos: any;
   viewMode: boolean;
+
+  //* primera parte de la creación de la respuesta de una OPA
+  currentPersonaRespuestaUsuario: any;
+
 } = {
   anexosCreados: [],
   currentAnexo: null,
   currentSolicitudAlUsuario: null,
   metadatos: null,
   viewMode: false,
+  currentPersonaRespuestaUsuario: null,
 };
 
 export const ResRequerimientoOpaSlice = createSlice({
@@ -100,12 +108,23 @@ export const ResRequerimientoOpaSlice = createSlice({
       state.viewMode = action.payload as boolean;
     },
 
+
+    //* para actualización de la primera parte de la respuesta al requerimiento de la OPA
+    setCurrentPersonaRespuestaUsuario: (state: any, action: any) => {
+      state.currentPersonaRespuestaUsuario = action.payload;
+    },
+
+
     resetItems: (state) => {
       state.anexosCreados = [];
       state.currentAnexo = null;
       state.currentSolicitudAlUsuario = null;
       state.metadatos = null;
       state.viewMode = false;
+    },
+
+    resetFormPartOne: (state) => {
+      state.currentPersonaRespuestaUsuario = null;
     },
   },
 });
@@ -118,4 +137,9 @@ export const {
   setMetadatos,
   setViewMode,
   resetItems,
+
+  //* primera parte de la creación de la respuesta de una OPA
+  setCurrentPersonaRespuestaUsuario,
+  resetFormPartOne,
+
 } = ResRequerimientoOpaSlice.actions;

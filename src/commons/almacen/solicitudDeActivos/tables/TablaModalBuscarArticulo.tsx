@@ -16,12 +16,13 @@ interface custom_column extends GridColDef {
 interface props {
   set_fila_seleccionada_temp: React.Dispatch<React.SetStateAction<any>>;
   data_articulos: interface_busqueda_articulo[];
+  loadding_tabla: boolean;
 }
 
-const TablaModalBuscarArticulo: React.FC<props> = ({set_fila_seleccionada_temp,data_articulos}) => {
+const TablaModalBuscarArticulo: React.FC<props> = ({set_fila_seleccionada_temp,data_articulos,loadding_tabla}) => {
 
   const columns: custom_column[] = [
-    {field: 'codigo_bien', headerName:'Código bien', width:150, flex:1},
+    {field: 'codigo_bien', headerName:'Código bien', maxWidth:150, flex:1},
     {field: 'cod_tipo_activo', headerName:'Tipo activo', width:150, flex:1,
       renderCell: (params) => params.row.cod_tipo_activo === 'Veh' ? 'Vehículo' 
       : params.row.cod_tipo_activo === 'Com' ? 'Computador'
@@ -60,6 +61,7 @@ const TablaModalBuscarArticulo: React.FC<props> = ({set_fila_seleccionada_temp,d
         style={{margin:'15px 0px'}}
         density="compact"
         autoHeight
+        loading={loadding_tabla}
         rows={data_articulos ?? []}
         columns={columns ?? []}
         pageSize={5}
