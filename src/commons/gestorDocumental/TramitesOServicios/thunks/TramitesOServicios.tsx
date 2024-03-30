@@ -107,16 +107,15 @@ export const create_tramite_servicio: any = (tramite: any) => {
 export const cargar_anexos_opas: any = (id_tramite: any, documentos: any) => {
   return async () => {
     try {
-      const { data } = await api.put(`tramites/opa/tramites/anexos/update/${id_tramite}/`,documentos);
+      const { data } = await api.put(`tramites/opa/tramites/anexos-metadatos/update/${id_tramite}/`,documentos);
       control_success(data.detail);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
+    };
   };
-};
-
 
 export const cargar_anexos_opas_metadatos: any = (id_tramite: any, documentos: any) => {
   return async () => {
@@ -130,6 +129,9 @@ export const cargar_anexos_opas_metadatos: any = (id_tramite: any, documentos: a
     }
   };
 };
+
+
+
 
 
 
