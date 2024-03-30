@@ -20,7 +20,6 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useContext, useState } from 'react';
-import { columnsAnexos } from './columnsAnexos/columnsAnexos';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getMetadatosByAnexo } from '../../../../services/afterCreatedUserRequest.service';
 import { ResRequerimientoOpaContext } from '../../../../../../context/ResRequerimientoOpaContext';
@@ -29,6 +28,7 @@ import { DownloadButton } from '../../../../../../../../../../utils/DownloadButt
 import { Title } from '../../../../../../../../../../components';
 import { formatDate } from '../../../../../../../../../../utils/functions/formatDate';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { columnsAnexos } from '../../../../../../../../PQRSDF/componentes/respuestaSolicitudUsuario/components/parte1/components/ModalInfoSolicitud/columnsAnexos/columnsAnexos';
 
 export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
   //* se debe manejar un loader ya que a través de ello se consultatá un servicio para los metadatos que están asociados a un archivo

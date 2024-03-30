@@ -1,5 +1,5 @@
 import { api } from '../../../../../../../api/axios';
-import { API_PATHS, handleError } from './functions/helpers';
+import { API_PATHS, handleError } from '../../../../../bandejaDeTareas/modules/OPAS/requerimientosUsuarioOpas/services/functions/helpers';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
