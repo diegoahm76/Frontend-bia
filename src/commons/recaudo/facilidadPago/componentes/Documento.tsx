@@ -11,10 +11,10 @@ import { FormControl } from '@material-ui/core';
 import SaveIcon from '@mui/icons-material/Save';
 import React, { useEffect, useState } from 'react';
 import { AuthSlice } from '../../../auth/interfaces';
-import { control_error, control_success } from '../../../../helpers';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Persona } from '../../../../interfaces/globalModels';
+import { control_error, control_success } from '../../../../helpers';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { logo_cormacarena_h } from '../../../conservacion/Reportes/logos/logos';
@@ -55,7 +55,7 @@ interface Cuota {
 }
 
 interface PlanPagoData {
-  plan_pago: any; 
+  plan_pago: any;
   cuotas: Cuota[];
 }
 
@@ -151,7 +151,7 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
         yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
 
         doc.text(`Nombre: ${nombre}`, xCuadro + 10, yTexto); // Reemplazar X con el número de hojas
-      } 
+      }
 
 
     };
@@ -174,34 +174,34 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
     y += 6; doc.text(``, 10, y);
     y += 6;
 
-  
+
 
 
     let textoAMostrar: any;
 
     let tituloColumnas = "Nro Cuota  | Fecha Venc.    | Valor Capital   | Valor Interés   | Monto Cuota  ";
     let divisor = "".repeat(tituloColumnas.length);  // Crea una línea divisora basada en el largo del título
-    
+
     // Convertir los datos de las cuotas en filas de texto con formato tabular, asegurando alineación
-    let filasCuotas = cuotas.map(cuota => 
+    let filasCuotas = cuotas.map(cuota =>
       cuota.nro_cuota.toString().padEnd(10) + "           |" +
       cuota.fecha_vencimiento.padEnd(17) + "| " +
       parseFloat(cuota.valor_capital).toFixed(2).toString().padEnd(15) + "      | " +
       parseFloat(cuota.valor_interes).toFixed(2).toString().padEnd(14) + "      | " +
       parseFloat(cuota.monto_cuota).toFixed(2).toString().padEnd(12)
-    ).join("\n" +  "\n");  // Añade el divisor entre filas para simular las líneas horizontales de una tabla
-    
+    ).join("\n" + "\n");  // Añade el divisor entre filas para simular las líneas horizontales de una tabla
+
     // Combinar el título, el divisor y las filas de datos para formar el texto completo de la tabla
     //  textoAMostrar = ``;
 
-    let textoCuotas = cuotas.map((cuota, index) => 
-    `-Nro Cuota: ${cuota.nro_cuota},
+    let textoCuotas = cuotas.map((cuota, index) =>
+      `-Nro Cuota: ${cuota.nro_cuota},
     -Fecha Vencimiento: ${cuota.fecha_vencimiento},
     -Valor Capital: ${cuota.valor_capital},
     -Valor Interés: ${cuota.valor_interes},
     -Monto Cuota: ${cuota.monto_cuota},`
-  ).join("\n\n");
-  
+    ).join("\n\n");
+
     if (opcionSeleccionada === '2') {
       textoAMostrar = ` 
       
@@ -261,7 +261,7 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
     `;
     }
 
-   
+
     // Configuraciones iniciales
     const lineHeight = 6; // Altura de línea para el texto
     const margin = 10; // Márgenes izquierdo y derecho
@@ -350,7 +350,7 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
       console.log('Consecutivo creado con éxito', res.data);
       // Actualizar el DOM o el estado para mostrar el valor de consecutivo
       setConsecutivoActual(res.data?.data?.consecutivo);
-    } catch (error:any) {
+    } catch (error: any) {
       console.error('Error al crear el consecutivo', error);
       control_error(error.response.data.detail);
       // Manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
@@ -495,9 +495,9 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
 
       <Dialog open={is_modal_active_doc} onClose={handle_close} maxWidth="xl"
       >
-  
-        <Grid   container
-        spacing={2} m={2} p={2}
+
+        <Grid container
+          spacing={2} m={2} p={2}
           sx={{
 
             width: '900px', // Cambia '700px' por el ancho que desees
@@ -556,52 +556,52 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
 
           </Grid>
           <Grid item xs={12} sm={4}>
-          <TextField
-            label="Identificación Usuario "
-            variant="outlined"
-            size="small"
-            fullWidth
-            value={identificacion}
-            onChange={(e) => setIdentificacion(e.target.value)}
-          />
-        </Grid>
+            <TextField
+              label="Identificación Usuario "
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={identificacion}
+              onChange={(e) => setIdentificacion(e.target.value)}
+            />
+          </Grid>
           <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Email"
-            value={email}
-            variant="outlined"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Grid>
+            <TextField
+              fullWidth
+              size="small"
+              label="Email"
+              value={email}
+              variant="outlined"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label="Teléfono"
-            variant="outlined"
-            size="small"
-            fullWidth
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label="Ciudad"
-            variant="outlined"
-            size="small"
-            fullWidth
-            value={ciudad}
-            onChange={(e) => setCiudad(e.target.value)}
-          />
-        </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              label="Teléfono"
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              label="Ciudad"
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={ciudad}
+              onChange={(e) => setCiudad(e.target.value)}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4}>
 
-<Button fullWidth startIcon={<VisibilityIcon />} variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
-</Grid>
-<Grid item xs={12} sm={4}>
+            <Button fullWidth startIcon={<VisibilityIcon />} variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
+          </Grid>
+          <Grid item xs={12} sm={4}>
             <Button
               startIcon={<SaveIcon />}
               color='success'
@@ -688,13 +688,13 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
 
 
             <Grid item xs={12} sm={12} marginTop={0}>
-               <DataGrid
+              <DataGrid
                 rows={cuotas}
                 columns={columns}
                 pageSize={5}
                 autoHeight
               />
-             </Grid>
+            </Grid>
 
             <Grid item xs={4}>
               <TextField
