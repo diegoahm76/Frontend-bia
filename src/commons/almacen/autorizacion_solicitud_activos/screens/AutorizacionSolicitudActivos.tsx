@@ -7,7 +7,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useAppDispatch } from '../../../../hooks';
 import dayjs, { Dayjs } from 'dayjs';
-import { interface_estado_autorizacion_solicitud_activos, interface_solicitiudes_en_proceso, interface_solicitud_por_id, response_obtener_solicitudes_realizadas } from '../interfaces/types';
+import { interface_busqueda_persona_solicita, interface_estado_autorizacion_solicitud_activos, interface_persona_solicita_modal, interface_solicitiudes_en_proceso, interface_solicitud_por_id, response_obtener_solicitudes_realizadas } from '../interfaces/types';
 import { control_error, control_success } from '../../../../helpers';
 import ResumenSolicitud from './ResumenSolicitud';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -23,19 +23,11 @@ const AutorizacionSolicitudActivos = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [loadding_tabla_solicitudes, set_loadding_tabla_solicitudes] = useState<boolean>(false);
+
   const [position_tab, set_position_tab] = useState<string>('1');
 
   //estado para controlar el formulario segun la accion
   const [accion, set_accion] = useState<string>('null');
-
-  // id solucitud de activo para poder editar o ver la solicitud
-  const [id_solicitud_activo, set_id_solicitud_activo] = useState<number | null>(null);
-
-  // Estados pantalla 1 - Solicitudes realizadas
-  const [estado, set_estado] = useState<string>('');
-  const [fecha_inicio, set_fecha_inicio] = useState<Dayjs | null>(null);
-  const [fecha_fin, set_fecha_fin] = useState<Dayjs | null>(null);
 
   // Pantalla 2. Resumen de solicitud
   // Objeto donde se guarda los valores de cada input del formulario de resumen de solicitud
@@ -46,13 +38,6 @@ const AutorizacionSolicitudActivos = () => {
 
 
   // Datos de la tabla de solicitudes realizadas
-  const [data_solicitudes_realizadas, set_data_solicitudes_realizadas] = useState<interface_solicitiudes_en_proceso[]>([
-    undefined as unknown as interface_solicitiudes_en_proceso,
-    undefined as unknown as interface_solicitiudes_en_proceso,
-    undefined as unknown as interface_solicitiudes_en_proceso,
-    undefined as unknown as interface_solicitiudes_en_proceso,
-    undefined as unknown as interface_solicitiudes_en_proceso,
-  ]);
 
   useEffect(() => {
     console.log(data_solicitud_ver_por_id);
@@ -95,39 +80,14 @@ const AutorizacionSolicitudActivos = () => {
           observacion: data_solicitud_ver_por_id.observacion,
           fecha_cierre_solicitud: data_solicitud_ver_por_id.fecha_cierra_solicitud,
           items_solicitud: data_solicitud_ver_por_id.items_solicitud,
+          justificacion_rechazo_resp: data_solicitud_ver_por_id.justificacion_rechazo_resp,
+          fecha_aprobacion_resp: data_solicitud_ver_por_id.fecha_aprobacion_resp,
+          justificacion_rechazo_almacen: data_solicitud_ver_por_id.justificacion_rechazo_almacen,
+          fecha_rechazo_almacen: data_solicitud_ver_por_id.fecha_rechazo_almacen,
         });
       }
     }
   },[accion,data_solicitud_ver_por_id]);
-
-
-  const get_obtener_solicitudes_activos_fc = () => {
-    set_loadding_tabla_solicitudes(true);
-    dispatch(get_obtener_solicitudes_activos(
-      estado,
-      fecha_inicio ? fecha_inicio.format('YYYY-MM-DD') : '',
-      fecha_fin ? fecha_fin.format('YYYY-MM-DD') : '',
-      ''
-    )).then((response: response_obtener_solicitudes_realizadas) => {
-      if(Object.keys(response).length !== 0){
-        set_loadding_tabla_solicitudes(false);
-        set_data_solicitudes_realizadas(response.data);
-      } else {
-        set_loadding_tabla_solicitudes(false);
-        control_error('No se encontraron solicitudes');
-        set_data_solicitudes_realizadas([]);
-      }
-    })
-  }
-
-
-  const solicites_obtenidas = useRef(false);
-  useEffect(() => {
-    if(!solicites_obtenidas.current){
-      get_obtener_solicitudes_activos_fc();
-      solicites_obtenidas.current = true;
-    }
-  }, []);
 
   const handle_tablist_change = (event: React.SyntheticEvent, newValue: string) => {
     set_position_tab(newValue);
@@ -194,18 +154,6 @@ const AutorizacionSolicitudActivos = () => {
                   <SolicitudesEnProceso
                     accion={accion}
                     set_accion={set_accion}
-                    estado={estado}
-                    set_estado={set_estado}
-                    id_solicitud_activo={id_solicitud_activo}
-                    set_id_solicitud_activo={set_id_solicitud_activo}
-                    fecha_inicio={fecha_inicio}
-                    set_fecha_inicio={set_fecha_inicio}
-                    fecha_fin={fecha_fin}
-                    set_fecha_fin={set_fecha_fin}
-                    set_data_solicitudes_realizadas={set_data_solicitudes_realizadas}
-                    data_solicitudes_realizadas={data_solicitudes_realizadas}
-                    get_obtener_solicitudes_activos_fc={get_obtener_solicitudes_activos_fc}
-                    loadding_tabla_solicitudes={loadding_tabla_solicitudes}
                     set_data_solicitud_ver_por_id={set_data_solicitud_ver_por_id}
                   />
                 </Grid>

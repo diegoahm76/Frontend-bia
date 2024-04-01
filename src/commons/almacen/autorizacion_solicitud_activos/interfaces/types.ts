@@ -43,13 +43,13 @@ export interface interface_busqueda_responsable {
   tipo_usuario?: string
 }
 
-export interface response_busqueda_operario {
+export interface response_busqueda_persona_solicita {
   success: boolean
   detail: string
-  data: interface_busqueda_operario[]
+  data: interface_busqueda_persona_solicita[]
 }
 
-export interface interface_busqueda_operario {
+export interface interface_busqueda_persona_solicita {
   id_persona: number
   tipo_persona: string
   tipo_persona_desc: string
@@ -255,6 +255,8 @@ export interface interface_estado_autorizacion_solicitud_activos {
   documento_operario: string
   nombres_operario: string
   apellidos_operario: string
+  justificacion_rechazo_resp: string
+  fecha_aprobacion_resp: string
   tipo_documento_persona_cierra_no_dispo_alma: string
   documento_persona_cierra_no_dispo_alma: string
   nombres_persona_cierra_no_dispo_alma: string
@@ -263,6 +265,8 @@ export interface interface_estado_autorizacion_solicitud_activos {
   fecha_cierre_no_dispo_alma: string
   tipo_documento_persona_alma_rechaza: string
   documento_persona_alma_rechaza: string
+  justificacion_rechazo_almacen: string
+  fecha_rechazo_almacen : string
   nombres_persona_alma_rechaza: string
   apellidos_persona_alma_rechaza: string
   motivo: string
@@ -340,4 +344,20 @@ export interface itmes_solicitud_por_id {
   nombre_unidad_medida: string
   observacion: string
   nro_posicion: number
+}
+
+export interface interface_persona_solicita_modal {
+  nombre_completo: string
+  id_persona: number
+}
+
+export interface response_tipos_documentos {
+  success: boolean
+  detail: string
+  data: interface_tipos_documentos[]
+}
+
+export interface interface_tipos_documentos {
+  value: string
+  label: string
 }

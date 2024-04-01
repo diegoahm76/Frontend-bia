@@ -8,6 +8,9 @@ import { useDispatch } from 'react-redux';
 import { control_error, control_success } from '../../../../helpers';
 import { convertir_cod_estado } from '../../solicitudDeActivos/validations/validations';
 import TablaArticulosSolicitados from '../tables/TablaArticulosSolicitados';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Title } from '../../../../components';
 
 
 interface props {
@@ -53,6 +56,48 @@ const ResumenSolicitud: React.FC<props> = ({
         />
       </Grid>
 
+      <Grid item xs={12} lg={3}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            disabled
+            label="Fecha de solicitud:"
+            value={data_form_resumen_solicitud.fecha_solictud || null}
+            onChange={() => {}} // No hace nada
+            renderInput={(params) => (
+              <TextField fullWidth size="small" {...params} />
+            )}
+          />
+        </LocalizationProvider>
+      </Grid>
+
+      <Grid item xs={12} lg={3}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            disabled
+            label="Fecha de cierre de solicitud:"
+            value={data_form_resumen_solicitud.fecha_cierre_solicitud || null}
+            onChange={() => {}} // No hace nada
+            renderInput={(params) => (
+              <TextField fullWidth size="small" {...params} />
+            )}
+          />
+        </LocalizationProvider>
+      </Grid>
+
+      <Grid item xs={12} lg={3}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            disabled
+            label="Fecha de devolución"
+            value={data_form_resumen_solicitud.fecha_devolucion || null}
+            onChange={() => {}} // No hace nada
+            renderInput={(params) => (
+              <TextField fullWidth size="small" {...params} />
+            )}
+          />
+        </LocalizationProvider>
+      </Grid>
+
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
           <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
@@ -91,30 +136,6 @@ const ResumenSolicitud: React.FC<props> = ({
         </Grid>
 
         <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            disabled={accion === 'ver'}
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-          >
-            Buscar
-          </Button>
-        </Grid>
-
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            disabled={accion === 'ver'}
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-          >
-            Búsqueda avanzada
-          </Button>
-        </Grid>
-
-        <Grid item xs={12} lg={6}>
           <TextField
             fullWidth
             disabled
@@ -124,7 +145,7 @@ const ResumenSolicitud: React.FC<props> = ({
           />
         </Grid>
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={3}>
           <TextField
             fullWidth
             disabled
@@ -173,30 +194,6 @@ const ResumenSolicitud: React.FC<props> = ({
         </Grid>
 
         <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            disabled={accion === 'ver'}
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-          >
-            Buscar
-          </Button>
-        </Grid>
-
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            disabled={accion === 'ver'}
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-          >
-            Búsqueda avanzada
-          </Button>
-        </Grid>
-
-        <Grid item xs={12} lg={6}>
           <TextField
             fullWidth
             disabled
@@ -206,7 +203,7 @@ const ResumenSolicitud: React.FC<props> = ({
           />
         </Grid>
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={3}>
           <TextField
             fullWidth
             disabled
@@ -214,6 +211,32 @@ const ResumenSolicitud: React.FC<props> = ({
             value={data_form_resumen_solicitud.apellidos_responsable || ''}
             size='small'
           />
+        </Grid>
+
+        <Grid item xs={12} lg={10}>
+          <TextField
+            fullWidth
+            multiline
+            rows={1}
+            label='Justificación del rechazo'
+            value={data_form_resumen_solicitud.justificacion_rechazo_resp || ''}
+            disabled={accion === 'ver'}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={2}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              disabled
+              label="Fecha de aprobación"
+              value={data_form_resumen_solicitud.fecha_aprobacion_resp || null}
+              onChange={() => {}} // No hace nada
+              renderInput={(params) => (
+                <TextField fullWidth size="small" {...params} />
+              )}
+            />
+          </LocalizationProvider>
         </Grid>
       </Grid>
 
@@ -257,30 +280,6 @@ const ResumenSolicitud: React.FC<props> = ({
         </Grid>
 
         <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            disabled={accion === 'ver'}
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-          >
-            Buscar
-          </Button>
-        </Grid>
-
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            disabled={accion === 'ver'}
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-          >
-            Búsqueda avanzada
-          </Button>
-        </Grid>
-
-        <Grid item xs={12} lg={6}>
           <TextField
             fullWidth
             disabled
@@ -290,7 +289,7 @@ const ResumenSolicitud: React.FC<props> = ({
           />
         </Grid>
         
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={3}>
           <TextField
             fullWidth
             disabled
@@ -298,6 +297,175 @@ const ResumenSolicitud: React.FC<props> = ({
             value={data_form_resumen_solicitud.apellidos_operario || ''}
             size='small'
           />
+        </Grid>
+      </Grid>
+
+
+      <Grid container spacing={2} item xs={12}>
+        <Grid item xs={12}>
+          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
+            <Chip label="FUNCIONARIO QUE CIERRA POR NO DISPONIBILIDAD EN ALMACÉN" size="small" />
+          </Divider>
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <FormControl required size="small" fullWidth>
+            <InputLabel >Tipo documento</InputLabel>
+            <Select
+              label='Tipo documento'
+              value={data_form_resumen_solicitud.tipo_documento_persona_cierra_no_dispo_alma || ''}
+              disabled={accion === 'ver'}
+            >
+              <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
+              <MenuItem value="RC" >Registro civil</MenuItem>
+              <MenuItem value="TI" >Tarjeta de identidad</MenuItem>
+              <MenuItem value="CE" >Cédula de extranjería</MenuItem>
+              <MenuItem value="PA" >Pasaporte</MenuItem>
+              <MenuItem value="PE" >Permiso especial de permanencia</MenuItem>
+              <MenuItem value="NT" >NIT</MenuItem>
+              <MenuItem value="NU" >NUIP</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <TextField
+            fullWidth
+            label='Documento: '
+            value={data_form_resumen_solicitud.documento_persona_cierra_no_dispo_alma || ''}
+            disabled={accion === 'ver'}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <TextField
+            fullWidth
+            disabled
+            label='Nombres: '
+            value={data_form_resumen_solicitud.nombres_persona_cierra_no_dispo_alma || ''}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <TextField
+            fullWidth
+            disabled
+            label='Apellidos: '
+            value={data_form_resumen_solicitud.apellidos_persona_cierra_no_dispo_alma || ''}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={10}>
+          <TextField
+            fullWidth
+            multiline
+            rows={1}
+            label='Observaciones del cierre: '
+            value={data_form_resumen_solicitud.obser_cierre_no_dispo_alma || ''}
+            disabled={accion === 'ver'}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={2}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              disabled
+              label="Fecha de cierre:"
+              value={data_form_resumen_solicitud.fecha_cierre_no_dispo_alma || null}
+              onChange={() => {}} // No hace nada
+              renderInput={(params) => (
+                <TextField fullWidth size="small" {...params} />
+              )}
+            />
+          </LocalizationProvider>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2} item xs={12}>
+        <Grid item xs={12}>
+          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
+            <Chip label="FUNCIONARIO DE ALMACÉN QUE RECHAZA LA SOLICITUD" size="small" />
+          </Divider>
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <FormControl required size="small" fullWidth>
+            <InputLabel >Tipo documento:</InputLabel>
+            <Select
+              label='Tipo documento:'
+              value={data_form_resumen_solicitud.tipo_documento_persona_alma_rechaza || ''}
+              disabled={accion === 'ver'}
+            >
+              <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
+              <MenuItem value="RC" >Registro civil</MenuItem>
+              <MenuItem value="TI" >Tarjeta de identidad</MenuItem>
+              <MenuItem value="CE" >Cédula de extranjería</MenuItem>
+              <MenuItem value="PA" >Pasaporte</MenuItem>
+              <MenuItem value="PE" >Permiso especial de permanencia</MenuItem>
+              <MenuItem value="NT" >NIT</MenuItem>
+              <MenuItem value="NU" >NUIP</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <TextField
+            fullWidth
+            label='Documento: '
+            value={data_form_resumen_solicitud.documento_persona_alma_rechaza || ''}
+            disabled={accion === 'ver'}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <TextField
+            fullWidth
+            disabled
+            label='Nombres: '
+            value={data_form_resumen_solicitud.nombres_persona_alma_rechaza || ''}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <TextField
+            fullWidth
+            disabled
+            label='Apellidos: '
+            value={data_form_resumen_solicitud.apellidos_persona_alma_rechaza || ''}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={10}>
+          <TextField
+            fullWidth
+            multiline
+            rows={1}
+            label='Justificación del rechazo'
+            value={data_form_resumen_solicitud.justificacion_rechazo_almacen || ''}
+            disabled={accion === 'ver'}
+            size='small'
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={2}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              disabled
+              label="Fecha de rechazo:"
+              value={data_form_resumen_solicitud.fecha_rechazo_almacen || null}
+              onChange={() => {}} // No hace nada
+              renderInput={(params) => (
+                <TextField fullWidth size="small" {...params} />
+              )}
+            />
+          </LocalizationProvider>
         </Grid>
       </Grid>
 
@@ -326,7 +494,15 @@ const ResumenSolicitud: React.FC<props> = ({
         />
       </Grid>
 
-      <Grid container item xs={12}>
+      <Grid container item xs={12} sx={{
+          position: "relative",
+          background: "#FAFAFA",
+          borderRadius: "15px",
+          p: "40px",
+          my: "20px",
+          boxShadow: "0px 3px 6px #042F4A26",
+        }}>
+        <Title title="Artículos solicitados" />
         <TablaArticulosSolicitados
           articulos_solicitados={data_form_resumen_solicitud.items_solicitud}
         />
