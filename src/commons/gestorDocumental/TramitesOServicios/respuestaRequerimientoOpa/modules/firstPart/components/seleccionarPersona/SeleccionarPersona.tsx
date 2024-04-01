@@ -46,7 +46,6 @@ export const SelccionarPersona = (): JSX.Element => {
               marginTop: '20px',
             }}
             onSubmit={(e: any) => {
-              // on_submit_create_ccd(e);
             }}
           >
             <Grid container spacing={2}>
@@ -83,23 +82,11 @@ export const SelccionarPersona = (): JSX.Element => {
                           }}
                         >
                           A NOMBRE *
-                          {/* {ccd_current
-                        ? `
-                          Organigrama Seleccionado
-                        `
-                        : `Seleccionar Organigrama`}*/}
                         </small>
                       </label>
                     </div>
                   )}
                 />
-                {/*   {errors_create_ccd.organigrama != null && (
-              <div className="col-12">
-                <small className="text-center text-danger">
-                  Este campo es obligatorio
-                </small>
-              </div>
-            )}*/}
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
@@ -203,13 +190,3 @@ export const SelccionarPersona = (): JSX.Element => {
     </>
   );
 };
-
-{
-  /*<ApoderadoComponent />*/
-}
-{
-  /*<EmpresaComponent />*/
-}
-{
-  /*<PropiaComponent />*/
-}

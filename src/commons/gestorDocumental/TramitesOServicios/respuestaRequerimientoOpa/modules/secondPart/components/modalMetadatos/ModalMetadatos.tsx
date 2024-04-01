@@ -492,44 +492,7 @@ export const ModalMetadatos = ({
                   />
                 </Grid>
               ) : (
-                <Grid
-                  item
-                  xs={12}
-                  sm={4}
-                  sx={{
-                    mt: '1.2rem',
-                    mb: '1.2rem',
-                  }}
-                >
-                  <Controller
-                    name="cualTipologiaDocumentalMetadatos"
-                    control={controlManejoMetadatosModal}
-                    defaultValue=""
-                    // rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        required
-                        fullWidth
-                        label="¿Cual?"
-                        size="small"
-                        variant="outlined"
-                        value={value}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) => {
-                          onChange(e.target.value);
-                          e.target.value.length === 50 &&
-                            control_warning(
-                              'máximo 50 caracteres para definir la tipología documental'
-                            );
-                        }}
-                        inputProps={{ maxLength: 50 }}
-                      />
-                    )}
-                  />
-                </Grid>
+                <></>
               )}
 
               <Grid

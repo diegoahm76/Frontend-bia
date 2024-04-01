@@ -13,9 +13,9 @@ export const API_PATHS = {
   detalleSolicitud: (id: number) =>
     `gestor/bandeja-tareas/opa/tramite/detalle/get/${id}/`,
   //* histórico de solicitudes de requerimientos de opas
-  // gestor/bandeja-tareas/opa/requerimiento/get/25/
+  // gestor/bandeja-tareas/opa/requerimiento/tramite/get/52/
   solicitudUsuario: (id: number) =>
-    `gestor/bandeja-tareas/opa/requerimiento/get/${id}/`,
+    `gestor/bandeja-tareas/opa/requerimiento/tramite/get/${id}/`,
 };
 
 export const handleError = (navigate: any, route?: any) => {

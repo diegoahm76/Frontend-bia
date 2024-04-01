@@ -170,6 +170,7 @@ export const ModalSeleccionPersonaApoderado = ({
           <IconButton
             onClick={async () => {
               const persona = {
+                id_persona: params.row.id_persona,
                 tipo_documento: params.row.tipo_documento,
                 numero_documento: params.row.numero_documento,
                 nombre_completo:
@@ -215,6 +216,7 @@ export const ModalSeleccionPersonaApoderado = ({
           <IconButton
             onClick={async () => {
               const personaApoderado = {
+                id_apoderado: params.row.id_persona,
                 tipo_documento: params.row.tipo_documento,
                 numero_documento: params.row.numero_documento,
                 nombre_completo: params.row.nombre_completo

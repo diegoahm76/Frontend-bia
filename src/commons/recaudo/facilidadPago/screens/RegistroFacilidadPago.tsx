@@ -983,16 +983,25 @@ export const RegistroFacilidadPago: React.FC = () => {
                       if (value === '12') {
                         set_periodicidad('años')
                         set_limite(5)
+
+                      }
+                      if (value === '2') {
+                        set_periodicidad('bimestra')
+                        set_limite(30)
                       }
                     }}
                   >
-                    <MenuItem value="1">Mensual</MenuItem>
-                    <MenuItem value="3">Trimestral</MenuItem>
-                    <MenuItem value="6">Semestral</MenuItem>
                     <MenuItem value="12">Anual</MenuItem>
+                    <MenuItem value="6">Semestral</MenuItem>
+                    <MenuItem value="3">Trimestral</MenuItem>
+                    <MenuItem value="2">Bimestral</MenuItem>
+                    <MenuItem value="1">Mensual</MenuItem>
+
                   </Select>
                 </FormControl>
               </Grid>
+
+
               <Grid item xs={12} sm={5}>
                 <FormControl size="small" fullWidth>
                   <InputLabel>{periodicidad !== '' ? `Plazo (${periodicidad})` : 'Plazo'}</InputLabel>

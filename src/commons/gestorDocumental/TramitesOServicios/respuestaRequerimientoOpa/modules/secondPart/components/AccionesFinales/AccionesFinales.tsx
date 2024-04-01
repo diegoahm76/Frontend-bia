@@ -7,15 +7,11 @@ import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
 import { resetItems } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 
 export const AccionesFinales = ({
-  controlFormulario,
-  handleSubmitFormulario,
-  errorsFormulario,
   resetFormulario,
-  watchFormulario,
-  setInfoReset,
 }: any): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
@@ -29,8 +25,8 @@ export const AccionesFinales = ({
   const { anexosCreados } = useAppSelector(
     (state) => state.ResRequerimientoOpaSlice
   );
-  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
-    useAppSelector((state: any) => state.BandejaTareasSlice);
+  const { currentPersonaRespuestaUsuario } =
+    useAppSelector((state: any) => state.ResRequerimientoOpaSlice);
 
   //* handleSumbit
 
@@ -45,22 +41,26 @@ export const AccionesFinales = ({
       return 0;
     });
     if (!Array.isArray(anexosCreados) || anexosCreados.length === 0) {
-      console.error('anexosCreados is not an array or is empty');
+      control_warning('No se ha creado ningún anexo, o hay un error en la creación de los anexos');
       return;
     }
 
     if (
+      //* se debe añadir probablemente el id del tramite para el que se va a realizar la respuesta del requerimiento
+      !anexosCreados[0]?.medio_de_solicitud ||
       !anexosCreados[0]?.asunto ||
-      !anexosCreados[0]?.descripcion_de_la_solicitud ||
-      !currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf
+      !anexosCreados[0]?.descripcion_de_la_solicitud /*||
+      !currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf*/
     ) {
       showAlert(
         'Opps!',
-        'Por favor diligencie los campos de asunto y descripción de la solicitud',
+        'Por favor diligencie los campos de asunto, descripción y medio de almacenamiento de la respuesta del requerimiento',
         'warning'
       );
       return;
     }
+
+    //console.log('estos son los anexos creados', anexosCreados)
 
     const formData = new FormData();
 
@@ -69,11 +69,11 @@ export const AccionesFinales = ({
       JSON.stringify({
         asunto: anexosCreados[0]?.asunto,
         descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-        id_pqrsdf:
-          +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
+        id_requerimiento:
+          +currentPersonaRespuestaUsuario?.id_requerimiento,
       })
     );
-    formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
+  /*  formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);*/
 
     sortedAnexos.forEach((anexo: any, index: number) => {
       formData.append('archivo', anexo.ruta_soporte);
@@ -130,7 +130,7 @@ export const AccionesFinales = ({
     if (anexosCreados.length === 0) {
       Swal.fire({
         title: 'No se ha creado ningún anexo',
-        text: 'Por favor cree al menos un anexo para poder enviar la solicitud al usuario',
+        text: 'Por favor cree al menos un anexo para poder radicar la respuesta al requerimiento!!',
         icon: 'warning',
         showConfirmButton: false,
         timer: 1500,
@@ -138,11 +138,11 @@ export const AccionesFinales = ({
       return;
     }
 
-    console.log(anexosCreados);
+    console.log('estos son los anexos creado', anexosCreados);
 
     await Swal.fire({
-      title: '¿Está seguro de enviar el requerimiento?',
-      text: 'Una vez enviado no podrá realizar cambios',
+      title: '¿Seguro de radicar la respuesta sobre el requerimiento?',
+      text: 'Después de enviar la información, NO será posible realizar cambios. Por favor, verifique los detalles antes de proceder!!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Enviar',
@@ -172,6 +172,7 @@ export const AccionesFinales = ({
       loadingButton={LoadingButton}
       handleSubmit={handleSubmit}
       reset_states={reset}
+      textGuardar='RADICAR RESPUESTA REQUERIMIENTO'
     />
   );
 };
