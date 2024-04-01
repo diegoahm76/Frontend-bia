@@ -13,6 +13,7 @@ interface CustomColumn extends GridColDef {
 interface Props {
   data_funcionarios_operarios: interface_busqueda_operario[];
   set_funcionario_operario_temp: React.Dispatch<React.SetStateAction<interface_busqueda_operario>>;
+  loadding_tabla: boolean;
 }
 
 
@@ -20,6 +21,7 @@ interface Props {
 const TablaModalBusquedaOperario: React.FC<Props> = ({
   data_funcionarios_operarios,
   set_funcionario_operario_temp,
+  loadding_tabla,
 }) => {
 
   const asignar_funcionario_responsable = (newSelectionModel: GridSelectionModel) => {
@@ -67,6 +69,7 @@ const TablaModalBusquedaOperario: React.FC<Props> = ({
         style={{margin:'15px 0px'}}
         density="compact"
         autoHeight
+        loading={loadding_tabla}
         rows={data_funcionarios_operarios ?? []}
         columns={columns ?? []}
         pageSize={5}

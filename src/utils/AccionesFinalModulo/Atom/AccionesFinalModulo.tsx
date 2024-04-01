@@ -15,7 +15,7 @@ import { AccionesFinalModuloProps } from '../types/acciones.types';
 export const AccionesFinalModulo = (
   props: AccionesFinalModuloProps
 ): JSX.Element => {
-  const { loadingButton, handleSubmit, reset_states } = props;
+  const { loadingButton, handleSubmit, reset_states, textGuardar = 'GUARDAR' } = props;
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -84,7 +84,7 @@ export const AccionesFinalModulo = (
                     type="submit"
                     startIcon={<SaveIcon />}
                   >
-                    GUARDAR
+                    {textGuardar}
                   </LoadingButton>
 
                   <Button

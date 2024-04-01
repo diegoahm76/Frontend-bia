@@ -5,43 +5,30 @@ import { Controller } from 'react-hook-form';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import { useStepperRequerimiento } from '../../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
 import { control_warning } from '../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import Select from 'react-select';
 export const FormParte2 = ({
   controlFormulario,
   handleSubmitFormulario,
   errorsFormulario,
   resetFormulario,
   watchFormulario,
-  // setInfoReset,
-}: any): JSX.Element => {
+}: // setInfoReset,
+any): JSX.Element => {
   // ? stepper hook
-  const { handleNext, handleBack } = useStepperRequerimiento();
-
-    //* redux states functions
-/*    const { currentAnexo } = useAppSelector(
-      (state: any) => state.ResRequerimientoOpaSlice
-    );
-  
-
-
-  useEffect(() => {
-    if (currentAnexo) {
-      //  console.log('')('currentAnexo', currentAnexo);
-      setInfoReset({
-        ...currentAnexo,
-      });
-    }
-  }, [currentAnexo]);
-*/
+  const { handleNext } = useStepperRequerimiento();
   return (
     <>
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
           if (
+            !watchFormulario.medio_de_solicitud.value ||
             watchFormulario.asunto.length === 0 ||
             watchFormulario.descripcion_de_la_solicitud.length === 0
           ) {
-            control_warning('Todos los campos son obligatorios');
+            control_warning(
+              'Todos los campos son obligatorios, por favor diligenciarlos'
+            );
             return;
           }
 
@@ -66,7 +53,6 @@ export const FormParte2 = ({
                   required
                   fullWidth
                   label="Asunto"
-                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
@@ -85,7 +71,6 @@ export const FormParte2 = ({
             <Controller
               name="fecha_de_solicitud"
               control={controlFormulario}
-              // defaultValue={new Date().toISOString().slice(0, 10)}
               rules={{ required: true }}
               render={({
                 field: { onChange, value },
@@ -97,13 +82,77 @@ export const FormParte2 = ({
                   disabled
                   type="date"
                   label="Fecha de solicitud"
-                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   //* se debe poner la condicional del reset
                   value={new Date().toISOString().slice(0, 10)}
                   InputLabelProps={{ shrink: true }}
                 />
+              )}
+            />
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            sx={{
+              mt: '1.2rem',
+              mb: '1.2rem',
+              zIndex: 10,
+            }}
+          >
+            <Controller
+              name="medio_de_solicitud"
+              control={controlFormulario}
+              rules={{ required: true }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <div>
+                  <Select
+                    value={value}
+                    name="medio_de_solicitud"
+                    onChange={(selectedOption) => {
+                      onChange(selectedOption);
+                    }}
+                    options={
+                      [
+                        {
+                          value: 'Telefóno',
+                          label: 'Telefóno',
+                        },
+                        {
+                          value: 'Portal web',
+                          label: 'Portal web',
+                        },
+                        {
+                          value: 'Redes sociales',
+                          label: 'Redes sociales',
+                        },
+                        {
+                          value: 'Instalaciones de la corporación',
+                          label: 'Instalaciones de la corporación',
+                        },
+                      ] ?? []
+                    }
+                    placeholder="Seleccionar"
+                  />
+                  <label>
+                    <small
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 'thin',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        marginLeft: '0.25rem',
+                      }}
+                    >
+                      Medio de solicitud
+                    </small>
+                  </label>
+                </div>
               )}
             />
           </Grid>
@@ -123,9 +172,8 @@ export const FormParte2 = ({
                   fullWidth
                   multiline
                   rows={5}
-                  // name="nombre"
+                  name='descripcion_de_la_solicitud'
                   label="Descripción de la solicitud"
-                  // helperText={error ? 'Es obligatorio subir un archivo' : ''}
                   size="small"
                   variant="outlined"
                   value={value}
@@ -163,11 +211,11 @@ export const FormParte2 = ({
             type="submit"
             endIcon={<ArrowForward />}
             sx={{
-              width: '35%',
+              width: '55%',
               mr: '2rem',
             }}
           >
-             Siguiente paso
+            Siguiente paso (paso final)
           </Button>
         </Grid>
       </form>

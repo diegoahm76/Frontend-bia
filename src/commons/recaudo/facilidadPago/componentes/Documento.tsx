@@ -11,10 +11,10 @@ import { FormControl } from '@material-ui/core';
 import SaveIcon from '@mui/icons-material/Save';
 import React, { useEffect, useState } from 'react';
 import { AuthSlice } from '../../../auth/interfaces';
-import { control_error, control_success } from '../../../../helpers';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Persona } from '../../../../interfaces/globalModels';
+import { control_error, control_success } from '../../../../helpers';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { logo_cormacarena_h } from '../../../conservacion/Reportes/logos/logos';
@@ -55,7 +55,7 @@ interface Cuota {
 }
 
 interface PlanPagoData {
-  plan_pago: any; 
+  plan_pago: any;
   cuotas: Cuota[];
 }
 
@@ -151,26 +151,6 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
         yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
 
         doc.text(`Nombre: ${nombre}`, xCuadro + 10, yTexto); // Reemplazar X con el número de hojas
-      } else if (plantillaSeleccionada === 'plantilla2') {
-        let xCuadro = 120; // Ajusta según sea necesario
-        let yCuadro = 25; // Ubicación justo debajo de la imagen
-        let anchoCuadro = 80; // Ajusta según sea necesario
-        let altoCuadro = 30; // Ajusta según sea necesari
-        // Dibujar el cuadro
-        doc.rect(xCuadro, yCuadro, anchoCuadro, altoCuadro);
-        // Agregar texto dentro del cuadro
-        doc.setFontSize(9);
-        const espacioEntreLineas = 6; // Espacio entre líneas de texto
-        let yTexto = yCuadro + 10; // Posición inicial del texto en Y
-        doc.text("Cormacarenaccc ", xCuadro + 30, yTexto);
-        yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
-        doc.text(`Radicado: ${consecutivoActual}`, xCuadro + 10, yTexto);
-        yTexto += espacioEntreLineas;
-
-        doc.text(dayjs().format('DD/MM/YYYY'), xCuadro + 10, yTexto);
-        yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
-
-        doc.text(`Nombre: ${nombre}`, xCuadro + 10, yTexto); // Reemplazar X con el número de hojas
       }
 
 
@@ -194,21 +174,34 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
     y += 6; doc.text(``, 10, y);
     y += 6;
 
-  
+
 
 
     let textoAMostrar: any;
 
+    let tituloColumnas = "Nro Cuota  | Fecha Venc.    | Valor Capital   | Valor Interés   | Monto Cuota  ";
+    let divisor = "".repeat(tituloColumnas.length);  // Crea una línea divisora basada en el largo del título
 
+    // Convertir los datos de las cuotas en filas de texto con formato tabular, asegurando alineación
+    let filasCuotas = cuotas.map(cuota =>
+      cuota.nro_cuota.toString().padEnd(10) + "           |" +
+      cuota.fecha_vencimiento.padEnd(17) + "| " +
+      parseFloat(cuota.valor_capital).toFixed(2).toString().padEnd(15) + "      | " +
+      parseFloat(cuota.valor_interes).toFixed(2).toString().padEnd(14) + "      | " +
+      parseFloat(cuota.monto_cuota).toFixed(2).toString().padEnd(12)
+    ).join("\n" + "\n");  // Añade el divisor entre filas para simular las líneas horizontales de una tabla
 
-    let textoCuotas = cuotas.map((cuota, index) => 
-    `-Nro Cuota: ${cuota.nro_cuota},
+    // Combinar el título, el divisor y las filas de datos para formar el texto completo de la tabla
+    //  textoAMostrar = ``;
+
+    let textoCuotas = cuotas.map((cuota, index) =>
+      `-Nro Cuota: ${cuota.nro_cuota},
     -Fecha Vencimiento: ${cuota.fecha_vencimiento},
     -Valor Capital: ${cuota.valor_capital},
     -Valor Interés: ${cuota.valor_interes},
     -Monto Cuota: ${cuota.monto_cuota},`
-  ).join("\n\n");
-  
+    ).join("\n\n");
+
     if (opcionSeleccionada === '2') {
       textoAMostrar = ` 
       
@@ -223,38 +216,42 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
     
     .                                                            CONSIDERANDO:
     
-    Que la Constitución Política de Colombia, en su artículo 209 establece que «la función administrativa está al servicio de los intereses generales y se desarrolla con fundamento en los principios de igualdad, moralidad, eficacia, economía, celeridad, imparcialidad y publicidad mediante la descentralización, la delegación y la desconcentración de funciones. Las autoridades administrativas deben coordinar sus actuaciones para el adecuado cumplimiento de los fines del Estado. La administración pública, en todos sus órdenes, tendrá un control interno que se ejercerá en los términos que señale la ley...»
+Que la Constitución Política de Colombia, en su artículo 209 establece que «la función administrativa está al servicio de los intereses generales y se desarrolla con fundamento en los principios de igualdad, moralidad, eficacia, economía, celeridad, imparcialidad y publicidad mediante la descentralización, la delegación y la desconcentración de funciones. Las autoridades administrativas deben coordinar sus actuaciones para el adecuado cumplimiento de los fines del Estado. La administración pública, en todos sus órdenes, tendrá un control interno que se ejercerá en los términos que señale la ley...»
     
-    Que de conformidad con la resolución No 2.6.07.073 de fecha quince (15) de febrero de 2007, artículo quinto, numeral 4, facilidades de pago, establece como requisitos y documentos necesarios para el trámite los siguientes          
+Que de conformidad con la resolución No 2.6.07.073 de fecha quince (15) de febrero de 2007, artículo quinto, numeral 4, facilidades de pago, establece como requisitos y documentos necesarios para el trámite los siguientes          
     
     1. Los deudores no deben encontrarse reportados en el boletín de deudores morosos del estado por incumplimiento de acuerdos de pago
     2. Tener obligaciones a favor de CORMACARENA
     3. Presentar un escrito en el cual solicite el plazo
     4. Ofrecer garantías que respalden el pago de las obligaciones, determinando los usuarios y capacidades de pago de los mismos
     
-    Que mediante Resolución No 2.6.08.465 de fecha veintisiete (27) de junio de 2008, se adoptó El Manual de Cobro Persuasivo y coactivo de CORMACARENA, el cual tuvo su última actualización el día siete (07) de febrero de 2023.
+Que mediante Resolución No 2.6.08.465 de fecha veintisiete (27) de junio de 2008, se adoptó El Manual de Cobro Persuasivo y coactivo de CORMACARENA, el cual tuvo su última actualización el día siete (07) de febrero de 2023.
     
      
-    Que la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion}, mediante escrito radicado en la Corporación con el número 18922 de fecha veintisiete (27) de julio de 2023 solicitó se le concediera una facilidad de pago para pagar el valor capital e intereses de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, la señora  ${idFacilidades.nombre_de_usuario}, realizó consignación del 30% del valor total de la deuda, capital más intereses, el día seis (06) de agosto de 2023, para dar continuidad al trámite de otorgamiento de la facilidad de pago.
+Que la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion}, mediante escrito radicado en la Corporación con el número 18922 de fecha veintisiete (27) de julio de 2023 solicitó se le concediera una facilidad de pago para pagar el valor capital e intereses de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, la señora  ${idFacilidades.nombre_de_usuario}, realizó consignación del 30% del valor total de la deuda, capital más intereses, el día seis (06) de agosto de 2023, para dar continuidad al trámite de otorgamiento de la facilidad de pago.
     
-    Que una vez revisado el boletín de deudores morosos del estado BDME, a través de la página web de la contaduría general de la nación, se verifico que la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion}, no se encuentra reportada por incumplimiento de acuerdos de pago. En mérito de lo expuesto,
+Que una vez revisado el boletín de deudores morosos del estado BDME, a través de la página web de la contaduría general de la nación, se verifico que la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion}, no se encuentra reportada por incumplimiento de acuerdos de pago. En mérito de lo expuesto,
     
                                                                   RESUELVE
                                                                  
-     ARTÍCULO PRIMERO: Otorgar facilidad de pago a la señora BLANCA LUCIARAMIREZ TORO identificada con C.C.  ${idFacilidades.identificacion}, con un plazo de nueve (09) cuotas mensuales de igual valor, para el pago de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, incluido valor capital e intereses. PARÁGRAFO PRIMERO: Teniendo en cuenta que el valor capital de la presente facilidad de pago es la suma de UN MILLON SEISCIENTOS OCHENTA Y TRES MIL QUINIENTOS TREINTA Y CINCO PESOS MCTE ($1.683.535) y que la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion}, consignó el día seis (06) de agosto de 2023, la suma de QUINIENTOS QUINCE MIL SEISCIENTOS SESENTA Y SEIS PESOS MCTE ($515.666), el cual se aplicó proporcionalmente a capital por valor de QUINIENTOS CINCO MIL OCHOCIENTOS OCHENTA Y SEIS PESOS MCTE ($505.886) y a intereses de mora por valor de NUEVE MIL SETECIENTOS OCHENTA PESOS MCTE ($9.780).
+ARTÍCULO PRIMERO: Otorgar facilidad de pago a la señora BLANCA LUCIARAMIREZ TORO identificada con C.C.  ${idFacilidades.identificacion}, con un plazo de nueve (09) cuotas mensuales de igual valor, para el pago de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, incluido valor capital e intereses. PARÁGRAFO PRIMERO: Teniendo en cuenta que el valor capital de la presente facilidad de pago es la suma de UN MILLON SEISCIENTOS OCHENTA Y TRES MIL QUINIENTOS TREINTA Y CINCO PESOS MCTE ($1.683.535) y que la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion}, consignó el día seis (06) de agosto de 2023, la suma de QUINIENTOS QUINCE MIL SEISCIENTOS SESENTA Y SEIS PESOS MCTE ($515.666), el cual se aplicó proporcionalmente a capital por valor de QUINIENTOS CINCO MIL OCHOCIENTOS OCHENTA Y SEIS PESOS MCTE ($505.886) y a intereses de mora por valor de NUEVE MIL SETECIENTOS OCHENTA PESOS MCTE ($9.780).
     
-    Conforme a lo anterior, queda un saldo a capital por valor de UN MILLON CIENTO SETENTA Y SIETE MIL SEISCIENTOS CUARENTA Y NUEVE PESOS MCTE ($1.177.649), más los intereses proyectados por el término de la facilidad de pago, es decir, al día cinco (05) de Junio del año 2024, fecha en la que se estima el pago total de las obligaciones, por valor de CIENTO CUARENTA Y DOS MIL CIENTO TRES PESOS MCTE ($142.103), y que arrojan una deuda total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752). ARTICULO SEGUNDO: Autorizar el pago del valor capital más los intereses que sumados arrojan un valor total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752) en nueve (09) cuotas, distribuido de la siguiente manera:
-    ${textoCuotas}
+Conforme a lo anterior, queda un saldo a capital por valor de UN MILLON CIENTO SETENTA Y SIETE MIL SEISCIENTOS CUARENTA Y NUEVE PESOS MCTE ($1.177.649), más los intereses proyectados por el término de la facilidad de pago, es decir, al día cinco (05) de Junio del año 2024, fecha en la que se estima el pago total de las obligaciones, por valor de CIENTO CUARENTA Y DOS MIL CIENTO TRES PESOS MCTE ($142.103), y que arrojan una deuda total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752). ARTICULO SEGUNDO: Autorizar el pago del valor capital más los intereses que sumados arrojan un valor total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752) en nueve (09) cuotas, distribuido de la siguiente manera:
+   
+   
+   
+    ${tituloColumnas}\n${divisor}\n${filasCuotas}
 
-    Valor capital = ${totalValorCapital.toFixed(2)}
-    Valor intereces = ${totalValorInteres.toFixed(2)}
-    Total moto cuota = ${totalMontoCuota.toFixed(2)}
     
-    PARÁGRAFO ÚNICO: Si el día acordado para el pago de las cuotas fuere feriado el pago se prorrogará hasta el día siguiente hábil.
+Valor capital = ${totalValorCapital.toFixed(2)}
+Valor intereces = ${totalValorInteres.toFixed(2)}
+Total moto cuota = ${totalMontoCuota.toFixed(2)}
     
-    ARTÍCULO TERCERO: El pago deberá efectuarse en la cuenta corriente 364190062-66 Bancolombia (convenio 87318) por concepto de multas Ref. 1 C.C. (32505396) y Ref. 2. Resolución facilidad de pago (126223020) a nombre de CORMACARENA; identificada con NIT. 822.000.091-2, a más tardar en la fecha de vencimiento de la respectiva cuota y acreditarlo en la oficina del Grupo Rentas de la Corporación.
+PARÁGRAFO ÚNICO: Si el día acordado para el pago de las cuotas fuere feriado el pago se prorrogará hasta el día siguiente hábil.
     
-    ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en relación con el pago de una de las cuotas estipuladas y en las demás obligaciones contenidas en la presente resolución, CORMACARENA
+ARTÍCULO TERCERO: El pago deberá efectuarse en la cuenta corriente 364190062-66 Bancolombia (convenio 87318) por concepto de multas Ref. 1 C.C. (32505396) y Ref. 2. Resolución facilidad de pago (126223020) a nombre de CORMACARENA; identificada con NIT. 822.000.091-2, a más tardar en la fecha de vencimiento de la respectiva cuota y acreditarlo en la oficina del Grupo Rentas de la Corporación.
+    
+ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en relación con el pago de una de las cuotas estipuladas y en las demás obligaciones contenidas en la presente resolución, CORMACARENA
     
     dispondrá la terminación anticipada de la facilidad de pago y se iniciará el trámite del proceso administrativo de cobro coactivo. Parágrafo único: Los saldos de las obligaciones que resulten luego de dar por terminada la facilidad de pago, se continuarán ejecutando por medio del respectivo proceso administrativo de cobro coactivo, hasta cuando se satisfaga la obligación en su totalidad. ARTÍCULO QUINTO: Como consecuencia de lo convenido en la facilidad de pago, las partes acuerdan interrumpir los términos de prescripción de las obligaciones, y se reanudaran en el momento en que se declare el incumplimiento de la presente Resolución. ARTÍCULO SEXTO: Notificar el contenido de la presente resolución a la señora  ${idFacilidades.nombre_de_usuario} identificada con C.C.  ${idFacilidades.identificacion}; al correo electrónico jandreitahr21@hotmail.com adjuntando copia de la misma. ARTICULO SEPTIMO: Contra esta decisión no procede recurso alguno, de conformidad con el artículo 833-1 del Estatuto Tributario. ARTICULO OCTAVO: Remitir copia de la presente Resolución a la Subdirección Administrativa y Financiera para lo de su competencia.
     
@@ -264,11 +261,7 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
     `;
     }
 
-    else if (opcionSeleccionada === '3') {
-      textoAMostrar = ``
-    } else {
-      textoAMostrar = ''; // Valor predeterminado o manejo del caso 'undefined'
-    }
+
     // Configuraciones iniciales
     const lineHeight = 6; // Altura de línea para el texto
     const margin = 10; // Márgenes izquierdo y derecho
@@ -357,7 +350,7 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
       console.log('Consecutivo creado con éxito', res.data);
       // Actualizar el DOM o el estado para mostrar el valor de consecutivo
       setConsecutivoActual(res.data?.data?.consecutivo);
-    } catch (error:any) {
+    } catch (error: any) {
       console.error('Error al crear el consecutivo', error);
       control_error(error.response.data.detail);
       // Manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
@@ -502,9 +495,9 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
 
       <Dialog open={is_modal_active_doc} onClose={handle_close} maxWidth="xl"
       >
-  
-        <Grid   container
-        spacing={2} m={2} p={2}
+
+        <Grid container
+          spacing={2} m={2} p={2}
           sx={{
 
             width: '900px', // Cambia '700px' por el ancho que desees
@@ -563,52 +556,52 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
 
           </Grid>
           <Grid item xs={12} sm={4}>
-          <TextField
-            label="Identificación Usuario "
-            variant="outlined"
-            size="small"
-            fullWidth
-            value={identificacion}
-            onChange={(e) => setIdentificacion(e.target.value)}
-          />
-        </Grid>
+            <TextField
+              label="Identificación Usuario "
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={identificacion}
+              onChange={(e) => setIdentificacion(e.target.value)}
+            />
+          </Grid>
           <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Email"
-            value={email}
-            variant="outlined"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Grid>
+            <TextField
+              fullWidth
+              size="small"
+              label="Email"
+              value={email}
+              variant="outlined"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label="Teléfono"
-            variant="outlined"
-            size="small"
-            fullWidth
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label="Ciudad"
-            variant="outlined"
-            size="small"
-            fullWidth
-            value={ciudad}
-            onChange={(e) => setCiudad(e.target.value)}
-          />
-        </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              label="Teléfono"
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              label="Ciudad"
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={ciudad}
+              onChange={(e) => setCiudad(e.target.value)}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4}>
 
-<Button fullWidth startIcon={<VisibilityIcon />} variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
-</Grid>
-<Grid item xs={12} sm={4}>
+            <Button fullWidth startIcon={<VisibilityIcon />} variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
+          </Grid>
+          <Grid item xs={12} sm={4}>
             <Button
               startIcon={<SaveIcon />}
               color='success'
@@ -695,13 +688,13 @@ export const Documento: React.FC<BuscarProps> = ({ idFacilidades, idFacilidadSel
 
 
             <Grid item xs={12} sm={12} marginTop={0}>
-               <DataGrid
+              <DataGrid
                 rows={cuotas}
                 columns={columns}
                 pageSize={5}
                 autoHeight
               />
-             </Grid>
+            </Grid>
 
             <Grid item xs={4}>
               <TextField

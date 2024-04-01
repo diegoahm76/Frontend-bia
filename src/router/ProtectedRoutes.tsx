@@ -50,7 +50,7 @@ export const ProtectedRoutes: React.FC = () => {
               <Route path="seguridad/*" element={<SeguridadRoutes />} />
             ) : null}
             {/* ---------------- Gestor documental ---------------- */}
-            {allowed_routes.includes('GEST') ? (
+           {allowed_routes.includes('GEST') ? (
               <Route
                 path="gestor_documental/*"
                 element={<GestorDocumentalRoutes />}

@@ -10,7 +10,7 @@ import { set } from 'date-fns';
 import dayjs, { Dayjs } from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { interface_articulos_agregados, interface_busqueda_articulo } from '../interfaces/types';
+import { interface_articulos_agregados, interface_articulos_obtenidos_por_id, interface_busqueda_articulo } from '../interfaces/types';
 
 
 interface custom_column extends GridColDef {
@@ -18,8 +18,9 @@ interface custom_column extends GridColDef {
 }
 
 interface props {
-  data_articulos_agregados: interface_articulos_agregados[];
-  set_data_articulos_agregados: React.Dispatch<React.SetStateAction<interface_articulos_agregados[]>>;
+  accion: string;
+  data_articulos_agregados: interface_articulos_agregados[] | interface_articulos_obtenidos_por_id[];
+  set_data_articulos_agregados: React.Dispatch<React.SetStateAction<interface_articulos_agregados[] | interface_articulos_obtenidos_por_id[]>>;
   set_articulo_encontrado: React.Dispatch<React.SetStateAction<interface_busqueda_articulo>>;
   set_tipo_unidad_medida: React.Dispatch<React.SetStateAction<string>>;
   set_cantidad_articulo: React.Dispatch<React.SetStateAction<number>>;
@@ -27,7 +28,9 @@ interface props {
   set_observacion: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const TablaArticulosAgregados: React.FC<props> = ({data_articulos_agregados,
+const TablaArticulosAgregados: React.FC<props> = ({
+  accion,
+  data_articulos_agregados,
   set_data_articulos_agregados,
   set_articulo_encontrado,
   set_tipo_unidad_medida,
@@ -35,45 +38,57 @@ const TablaArticulosAgregados: React.FC<props> = ({data_articulos_agregados,
   set_fecha_devolucion,
   set_observacion}) => {
 
-  const quitar_articulo = (row: interface_articulos_agregados) => {
-    const articulos_sin_articulo_eliminado = data_articulos_agregados.filter((bien_temp) => bien_temp.id_bien !== row.id_bien);
-    set_data_articulos_agregados(articulos_sin_articulo_eliminado);
+
+  const quitar_articulo = (row: interface_articulos_obtenidos_por_id | interface_articulos_agregados) => {
+    const articulos_sin_articulo_eliminado = 
+      (data_articulos_agregados as Array<interface_articulos_obtenidos_por_id | interface_articulos_agregados>)
+      .filter((bien_temp) => bien_temp.id_bien !== row.id_bien);
+
+    set_data_articulos_agregados(articulos_sin_articulo_eliminado as interface_articulos_agregados[]);
   }
+  
 
-  const editar_articulo = (row: interface_articulos_agregados) => {
-
-    set_tipo_unidad_medida(row.tipo_unidad_medida ?? '');
-    set_cantidad_articulo(Number(row.cantidad_articulo) ?? 0);
+  const editar_articulo = (row: interface_articulos_agregados | interface_articulos_obtenidos_por_id) => {
+    set_tipo_unidad_medida((row as interface_articulos_obtenidos_por_id).nombre_unidad_medida ?? '');
+    set_cantidad_articulo(Number((row as interface_articulos_obtenidos_por_id).cantidad) ?? 0);
     set_fecha_devolucion(dayjs(row.fecha_devolucion ?? ''));
     set_observacion(row.observacion?? '');
 
-    set_articulo_encontrado(row);
+    set_articulo_encontrado(row as any);
   }
 
-  const columns: custom_column[] = [
-    {field: 'codigo_bien', headerName:'Código bien', width:150, flex:1},
-    {field: 'nombre', headerName:'Nombre del articulo', width:150, flex:1},
-    {field: 'tipo_unidad_medida', headerName:'Unidad medida', width:150, flex:1},
-    {field: 'cantidad_articulo', headerName:'Cantidad', width:150, flex:1},
-    {field: 'fecha_devolucion', headerName:'Fecha devolucion', width:150, flex:1,
+  let columns: custom_column[] = [
+    {field: 'codigo_bien', headerName:'Código bien', maxWidth:150, flex:1},
+    {field: 'nombre_bien', headerName:'Nombre del articulo', minWidth:250, flex:1},
+    {field: 'nombre_unidad_medida', headerName:'Unidad medida', maxWidth:150, flex:1},
+    {field: 'cantidad', headerName:'Cantidad', maxWidth:150, flex:1},
+    {field: 'fecha_devolucion', headerName:'Fecha devolucion', maxWidth:150, flex:1,
       renderCell: (params) => dayjs(params.row.fecha_devolucion).format('DD/MM/YYYY')
     },
     {field: 'observacion', headerName:'Observacion', width:150, flex:1},
-    { field: 'eliminar', headerName: 'Eliminar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
-    renderCell: (params) => (
-      <HighlightOffIcon 
-        onClick={()=>quitar_articulo(params.row)}
-        sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
-    )
-    },
-    { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
-      renderCell: (params) => (
-        <EditIcon 
-          onClick={() => editar_articulo(params.row)}
-          sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
-      )
-    },
-  ]
+  ];
+
+  if (accion === 'editar' || accion === 'crear') {
+    columns.push(
+      {
+        field: 'eliminar', headerName: 'Eliminar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+        renderCell: (params) => (
+          <HighlightOffIcon 
+            onClick={()=>quitar_articulo(params.row)}
+            sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
+        )
+      },
+      { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+        renderCell: (params) => (
+          <EditIcon 
+            onClick={() => editar_articulo(params.row)}
+            sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
+        )
+      }
+    );
+  } else {
+    columns = columns;
+  }
 
  
   return (
