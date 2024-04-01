@@ -22,7 +22,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useContext, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getMetadatosByAnexo } from '../../../../services/afterCreatedUserRequest.service';
-import { ResRequerimientoOpaContext } from '../../../../../../context/ResRequerimientoOpaContext';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { DownloadButton } from '../../../../../../../../../../utils/DownloadButton/DownLoadButton';
 import { Title } from '../../../../../../../../../../components';
@@ -40,7 +39,6 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
     handleOpenModalTwo,
     fifthLoading,
   } = useContext(ModalAndLoadingContext);
-  const { currentSolicitudUsuario } = useContext(ResRequerimientoOpaContext);
 
   const [infoMetadatos, setInfoMetadatos] = useState<any>({});
 
