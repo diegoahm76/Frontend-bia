@@ -8,8 +8,12 @@ import { useStepperRequerimiento } from '../../../../../bandejaDeTareas/hook/use
 import { useBandejaTareas } from '../../../../../bandejaDeTareas/hook/useBandejaTareas';
 import { Title } from '../../../../../../../components';
 import { StepperRequerimientoAlUsuario } from '../components/stepper/StepperRequerimientoUsuario';
+import { resetItems } from '../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { useAppDispatch } from '../../../../../../../hooks';
 
 export const MainResReqOpaScreen = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   const { handleReset } = useStepperRequerimiento();
 
   useEffect(() => {
@@ -21,6 +25,7 @@ export const MainResReqOpaScreen = (): JSX.Element => {
     });
 
     // ? tambien se entra a re iniciar el módulo de asignación de usuario || mejor cuando se de en el finish y se envie la solicitud al usuario, por tanto se hará en el componente de stepper o en submit de envío
+    dispatch(resetItems())
     handleReset();
   }, []);
 
