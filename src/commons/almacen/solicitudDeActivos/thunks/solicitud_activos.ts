@@ -141,3 +141,25 @@ export const get_obtener_solicitudes_realizadas: any = (id_solicitud_activo: str
     }
   };
 };
+
+export const put_cancelar_solicitud: any = (id_solicitud_activo: string, form_data: {justificacion_anulacion:string}) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/cancelar-solicitud-activos/${id_solicitud_activo}/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_tipos_documentos: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/listas/tipo-documento/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}

@@ -18,6 +18,8 @@ import {
   IconButton,
   Stack,
   TextField,
+  Typography,
+  Tooltip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
@@ -40,13 +42,15 @@ import { getPersonasService } from '../../../../services/getPersonas.service';
 import { columnsPersona } from './columns/columnsPersona';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { choicesTipoPersona } from '../../../../utils/choices';
+import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
+import { setCurrentPersonaRespuestaUsuario } from '../../../../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { control_info } from '../../../../../../../../ccd/store/utils/success_errors';
 
 export const ModalSeleccionPersona = ({
   control_seleccionar_persona,
   watchExe,
   reset_seleccionar_persona,
-}:
-{
+}: {
   control_seleccionar_persona: any;
   watchExe: any;
   reset_seleccionar_persona: any;
@@ -54,52 +58,91 @@ export const ModalSeleccionPersona = ({
   // * dispatch to use in the component * //
   const dispatch = useAppDispatch();
 
-  //* -------- hook declaration -------- *//
-
-  //* -------- use selector declaration -------- *//
-/*  const {
-    organigrama_lideres_current,
-    unidad_current,
-    busqueda_avanzada_personas_list,
-    asignacion_lideres_current,
-  } = useAppSelector((state) => state.lideres_slice);*/
-
   // ? ------- use states declarations -------
   const [tiposDocumentos, setTiposDocumentos] = useState<
     ISeleccionLideresProps[]
   >([]);
 
-  const [listaPersonas, setListaPersonas] = useState([])
+  const [listaPersonas, setListaPersonas] = useState([]);
+  // ? useContext declaration
+  const {
+    openModalOne,
+    handleOpenModalOne,
+    openModalNuevoNumero2,
+    handleOpenModalNuevoNumero2,
+  } = useContext(ModalAndLoadingContext);
 
   useEffect(() => {
-    void getTipoDocumento()
-      .then((res) => {
-        const filterDocumentos = res?.filter(
-          (item: ISeleccionLideresProps) => item.value !== 'NT'
-        );
-        setTiposDocumentos(filterDocumentos);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+    if (openModalOne) {
+      (async () => {
+        try {
+          const res = await getTipoDocumento();
+          setTiposDocumentos(res);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+  }, [openModalOne]);
 
-  // ? useContext declaration
-  const {openModalOne,  handleOpenModalOne} = useContext(ModalAndLoadingContext);
+  // ? ------ FUNCTIONS ------------
 
-   const resetFunction = (): void => {
-   /* reset_seleccionar_persona({
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!watchExe.tipo_documento || !watchExe.tipo_persona) {
+      showAlert('Opss!', 'Debe seleccionar un tipo de persona y documento', 'warning');
+      return;
+    }
+
+    const {
+      tipo_documento,
+      numero_documento,
+      primer_nombre,
+      segundo_nombre,
+      primer_apellido,
+      segundo_apellido,
+      razon_social,
+      nombre_comercial,
+    } = watchExe;
+    const personaData = {
+      tipo_documento: tipo_documento?.value ?? '',
+      numero_documento: numero_documento ?? '',
+      primer_nombre: primer_nombre ?? '',
+      segundo_nombre: segundo_nombre ?? '',
+      primer_apellido: primer_apellido ?? '',
+      segundo_apellido: segundo_apellido ?? '',
+      razon_social: razon_social ?? '',
+      nombre_comercial: nombre_comercial ?? '',
+    };
+
+    try {
+      const res = await getPersonasService(
+        personaData,
+        handleOpenModalNuevoNumero2
+      );
+      setListaPersonas(res);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const resetFunction = (): void => {
+    reset_seleccionar_persona({
       ...watchExe,
+      tipo_persona: null,
+      numero_documento: '',
       primer_nombre: '',
-      segundo_nombre: '',
       primer_apellido: '',
-      segundo_apellido: '',
-    });*/
+      razon_social: '',
+      nombre_comercial: '',
+    });
+    setListaPersonas([]);
   };
 
   const closeModal = (): any => {
     handleOpenModalOne(false);
-    setListaPersonas([]);
+    resetFunction();
   };
   //* -------- columns declaration -------- *//
   const columns_busqueda_avanzada_persona: GridColDef[] = [
@@ -110,29 +153,34 @@ export const ModalSeleccionPersona = ({
       width: 80,
       renderCell: (params: any) => (
         <>
+        <Tooltip
+          title= "Seleccionar persona"
+        >
           <IconButton
             onClick={() => {
-              console.log(params.row);
-/*
-              reset_seleccionar_persona({
-                ...watchExe,
-                ...params.row,
-                tipo_documento: {
-                  label: params.row.tipo_documento,
-                  value: params.row.tipo_documento,
-                },
-              });
+              const persona = {
+                id_persona: params.row.id_persona,
+                tipo_documento: params.row.tipo_documento,
+                numero_documento: params.row.numero_documento,
+                nombre_completo:
+                  params.row.nombre_completo ||
+                  params.row.nombre_comercial ||
+                  params.row.razon_social,
+              };
 
-              closeModal();*/
+              dispatch(setCurrentPersonaRespuestaUsuario(persona as any));
+              control_info('Se ha seleccionado la persona correctamente');
+
+              closeModal();
             }}
           >
             <Avatar sx={AvatarStyles} variant="rounded">
               <HowToRegIcon
-                titleAccess="Seleccionar Persona"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
           </IconButton>
+          </Tooltip>
         </>
       ),
     },
@@ -140,44 +188,10 @@ export const ModalSeleccionPersona = ({
 
   return (
     <>
-      <Dialog
-        fullWidth
-        maxWidth="lg"
-        open={openModalOne}
-        onClose={closeModal}
-        sx={{
-          minHeight: '600px',
-        }}
-      >
-        <Box
-          component="form"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            console.log('submit');
-            /*try {
-              await getPersonasService({
-                tipo_documento: watchExe.tipo_documento?.value ?? '',
-                numero_documento:
-                watchExe.numero_documento,
-                primer_nombre: watchExe.primer_nombre,
-                segundo_nombre: watchExe.segundo_nombre,
-                primer_apellido:
-                watchExe.primer_apellido,
-                segundo_apellido:
-                watchExe.segundo_apellido,
-                razon_social: '',
-                nombre_comercial: '',
-              }).then((res) => {
-                console.log('res', res);
-                setListaPersonas(res);
-              })
-            } catch (error) {
-              console.error('Error fetching data:', error);
-            }*/
-          }}
-        >
+      <Dialog fullWidth maxWidth="lg" open={openModalOne} onClose={closeModal}>
+        <Box component="form" onSubmit={handleSubmit}>
           <DialogTitle>
-            <Title title="Búsqueda avanzada de personas" />
+            <Title title="Búsqueda de personas (Jurídicas y naturales)" />
           </DialogTitle>
           <Divider />
           <DialogContent
@@ -187,12 +201,12 @@ export const ModalSeleccionPersona = ({
             }}
           >
             <Grid container spacing={2}>
-            <Grid
+              <Grid
                 item
                 xs={12}
                 sm={3}
                 sx={{
-                  zIndex: 5,
+                  zIndex: 50,
                 }}
               >
                 <Controller
@@ -207,7 +221,21 @@ export const ModalSeleccionPersona = ({
                       <Select
                         options={choicesTipoPersona ?? []} // options should be an array of objects with 'value' and
                         value={value} // set selected value
-                        onChange={onChange} // update value when option is selected
+                        onChange={(e) => {
+                          onChange(e);
+                          reset_seleccionar_persona({
+                            ...watchExe,
+                            tipo_persona: e,
+                            tipo_documento: '',
+                            numero_documento: '',
+                            primer_nombre: '',
+                            segundo_nombre: '',
+                            primer_apellido: '',
+                            segundo_apellido: '',
+                            razon_social: '',
+                            nombre_comercial: '',
+                          });
+                        }}
                         isSearchable
                         placeholder="Tipo de persona"
                       />
@@ -229,10 +257,7 @@ export const ModalSeleccionPersona = ({
                 />
               </Grid>
 
-
-
               {/* se realiza la division entre persona natural y jurídica */}
-              
 
               <Grid
                 item
@@ -252,9 +277,15 @@ export const ModalSeleccionPersona = ({
                   }) => (
                     <div>
                       <Select
-                        options={watchExe.tipo_documento === 'NATURAL' 
-                        ? tiposDocumentos.filter((item) => item.value !== 'NIT')
-                        : tiposDocumentos.filter((item) => item.value === 'NIT') ?? []} // options should be an array of objects with 'value' and
+                        options={
+                          watchExe.tipo_persona?.label === 'NATURAL'
+                            ? tiposDocumentos.filter(
+                                (item) => item.value !== 'NT'
+                              )
+                            : tiposDocumentos.filter(
+                                (item) => item.value === 'NT'
+                              ) ?? []
+                        } // options should be an array of objects with 'value' and
                         value={value} // set selected value
                         onChange={onChange} // update value when option is selected
                         isSearchable
@@ -305,117 +336,142 @@ export const ModalSeleccionPersona = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="primer_nombre"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Primer nombre"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
+
+              {watchExe.tipo_persona?.label === 'NATURAL' ? (
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <Controller
+                      name="primer_nombre"
+                      control={control_seleccionar_persona}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          fullWidth
+                          label="Primer nombre"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={onChange}
+                          error={!!error}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Grid>
-{/*              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="segundo_nombre"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Segundo Nombre"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <Controller
+                      name="primer_apellido"
+                      control={control_seleccionar_persona}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          fullWidth
+                          label="Primer apellido"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={onChange}
+                          error={!!error}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Grid>*/}
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="primer_apellido"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Primer apellido"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <Controller
+                      name="razon_social"
+                      control={control_seleccionar_persona}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          fullWidth
+                          label="Razón social"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={onChange}
+                          error={!!error}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Grid>
-            {/*  <Grid item xs={12} sm={3}>
-                <Controller
-                  name="segundo_apellido"
-                  control={control_seleccionar_persona}
-                  defaultValue=""
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      fullWidth
-                      label="Segundo apellido"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={onChange}
-                      error={!!error}
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <Controller
+                      name="nombre_comercial"
+                      control={control_seleccionar_persona}
+                      defaultValue=""
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          fullWidth
+                          label="Nombre comercial"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={onChange}
+                          error={!!error}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Grid>
-*/}
-              <Grid item xs={12} sm={3}
+                  </Grid>
+                </>
+              )}
+              <Grid
+                item
+                xs={12}
+                sm={3}
                 sx={{
                   mb: '1.5rem',
                 }}
               >
                 <LoadingButton
-                  loading={false}
+                  loading={openModalNuevoNumero2}
                   variant="contained"
                   type="submit"
                   startIcon={<SearchIcon />}
                   color="primary"
                 >
-                  BUSCAR
+                  BUSCAR PERSONA
                 </LoadingButton>
               </Grid>
             </Grid>
 
-            <RenderDataGrid
-              title="Resultados de la búsqueda (personas que coinciden)"
-              rows={listaPersonas ?? []}
-              columns={columns_busqueda_avanzada_persona ?? []}
-            />
+            {listaPersonas.length === 0 ? (
+              <>
+                <Box>
+                  <Typography
+                    variant="body2"
+                    align="center"
+                    sx={{ mt: '2.8rem', mb: '2.8rem' }}
+                  >
+                    No se encontraron resultados y/o no se ha realizado la
+                    búsqueda
+                  </Typography>
+                </Box>
+              </>
+            ) : (
+              <RenderDataGrid
+                title="Resultados de la búsqueda (personas que coinciden)"
+                rows={listaPersonas ?? []}
+                columns={columns_busqueda_avanzada_persona ?? []}
+              />
+            )}
           </DialogContent>
           <Divider />
           <DialogActions>
@@ -429,7 +485,7 @@ export const ModalSeleccionPersona = ({
                 onClick={resetFunction}
                 startIcon={<CleanIcon />}
               >
-                LIMPIAR BÚSQUEDA
+                LIMPIAR CAMPOS
               </Button>
               <Button
                 variant="contained"

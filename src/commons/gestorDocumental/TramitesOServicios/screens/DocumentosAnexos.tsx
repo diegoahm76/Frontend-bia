@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Button, Stack, Box, Stepper, Step, StepButton, Typography, TextField, Alert, Tooltip, IconButton, Avatar, FormHelperText } from "@mui/material";
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
@@ -9,8 +9,9 @@ import { CloudUpload } from '@mui/icons-material';
 import React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useAppDispatch } from "../../../../hooks";
-import { cargar_anexos_opas } from "../thunks/TramitesOServicios";
+import { cargar_anexos_opas, cargar_anexos_opas_metadatos } from "../thunks/TramitesOServicios";
 import { ModalMetadatosTramite } from "../../TramitesServicios/components/MetadatosTramite/ModalMetadatosTramite";
+import { FormContextMetadatos } from "../../TramitesServicios/context/MetadatosContext";
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
@@ -38,6 +39,8 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
     const [file_name, set_file_name] = useState<string | any>('');
     const [archivos, set_archivos] = useState<any[]>([]);
     const [limpiar, set_limpiar] = useState<boolean>(false);
+    const { form, setForm } = useContext(FormContextMetadatos);
+console.log(form)
     const columns: GridColDef[] = [
         {
             field: 'nombre_archivo',
@@ -123,7 +126,16 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
             let archivos_grid: any[] = [...archivos];
             const data_json = {
                 "id_anexo_tramite": null,
-                "descripcion": descripcion
+                "descripcion": descripcion,
+                "nro_folios_documento": form.nro_folios_documento, // Valor predeterminado
+                "cod_categoria_archivo": form.CodCategoriaArchivo,
+                "cod_origen_archivo": form.origenArchivo,
+                "es_version_original": false, // Valor predeterminado
+                "tiene_replica_fisica": form.tieneReplicaFisica,
+                "id_tipologia_doc": form.tipologiaRelacionada, // Valor predeterminado
+                "tipologia_no_creada_TRD": form.tipologiaRelacionadaotra, // Valor predeterminado
+                "asunto": form.asunto,
+                "palabras_clave_doc": form.keywords,
             }
             archivos_grid = [...archivos_grid, { id: uuidv4(), nombre_archivo: file_name, descripcion: descripcion, tamaño: tamaño, archivo: file, data_json: data_json }];
             set_archivos([...archivos_grid]);
@@ -159,10 +171,22 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
                 form_data.append('data_anexos', JSON.stringify(data_anexos));
                 // form_data.append('archivos', data_archivos[0]);
                 data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
-                dispatch(cargar_anexos_opas(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
+
+
+
+
+                dispatch(cargar_anexos_opas_metadatos(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
                     if (response.success)
                         props.set_anexar_error(response.success);
                 });
+
+
+
+                // dispatch(cargar_anexos_opas(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
+                //     if (response.success)
+                //         props.set_anexar_error(response.success);
+                // });
+
             } else {
                 props.set_anexar_error(true);
             }
@@ -247,21 +271,21 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
 
 
 
-<Grid container justifyContent="center" >
+                <Grid container justifyContent="center" >
 
-                <Grid item xs={6}>
-                    <Button
-                        variant="contained"
-                        fullWidth
-                        color="warning"
-                        size='medium'
-                        onClick={handleOpenModal}>AGREGAR MeTADATOS</Button>
-                    <ModalMetadatosTramite
-                        is_modal_active={isModalOpen}
-                        set_is_modal_active={setIsModalOpen}
-                    />
+                    <Grid item xs={6}>
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            color="warning"
+                            size='medium'
+                            onClick={handleOpenModal}>AGREGAR MeTADATOS</Button>
+                        <ModalMetadatosTramite
+                            is_modal_active={isModalOpen}
+                            set_is_modal_active={setIsModalOpen}
+                        />
+                    </Grid>
                 </Grid>
-                        </Grid>
 
 
 

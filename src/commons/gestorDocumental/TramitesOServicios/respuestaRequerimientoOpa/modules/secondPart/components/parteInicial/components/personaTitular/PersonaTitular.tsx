@@ -2,14 +2,15 @@
 import { Grid, TextField } from '@mui/material';
 import { useContext } from 'react';
 import { Title } from '../../../../../../../../../../components';
-import { ResRequerimientoOpaContext } from '../../../../context/ResRequerimientoOpaContext';
+import { useAppSelector } from '../../../../../../../../../../hooks';
 
 export const PersonaTitular = (): JSX.Element => {
 
   {/*datos deben salir de una mixtura del objeto de autenticación y */}
 
     //* context declaration
-    const { infoInicialUsuario } = useContext(ResRequerimientoOpaContext);
+    // const { infoInicialUsuario } = useContext(ResRequerimientoOpaContext);
+    const { currentPersonaRespuestaUsuario } = useAppSelector(state => state.ResRequerimientoOpaSlice);
   
 
   return (
@@ -27,21 +28,21 @@ export const PersonaTitular = (): JSX.Element => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               disabled
               size="small"
-              label="Nombres"
+              label="Nombre completo"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.nombres ?? 'N/A'}
+              value={currentPersonaRespuestaUsuario?.nombre_completo ?? 'N/A'}
               inputProps={{
                 maxLength: 50,
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/*<Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               disabled
@@ -54,7 +55,7 @@ export const PersonaTitular = (): JSX.Element => {
                 maxLength: 10,
               }}
             />
-          </Grid>
+          </Grid>*/}
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
@@ -63,7 +64,7 @@ export const PersonaTitular = (): JSX.Element => {
               disabled
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.tipo_documento ?? 'N/A'}
+              value={currentPersonaRespuestaUsuario?.tipo_documento ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -74,7 +75,7 @@ export const PersonaTitular = (): JSX.Element => {
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.numero_documento ?? 'N/A'}
+              value={currentPersonaRespuestaUsuario?.numero_documento ?? 'N/A'}
             />
           </Grid>
         </Grid>

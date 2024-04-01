@@ -12,6 +12,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import { control_error, control_success } from '../../../helpers';
 import { Title } from '../../../components/Title';
 import { api } from '../../../api/axios';
+import { FormControl } from '@mui/material';
+
 import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { DownloadButton } from '../../../utils/DownloadButton/DownLoadButton';
 import AddIcon from "@mui/icons-material/Add";
@@ -35,20 +37,18 @@ export interface SucursalEmpresa {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 interface Historico {
-    id: number;
-    nivel: number;
-    director: string;
-    tecnicos: string;
-    asesor: string;
-    profesional: string;
-    asistencial: string;
+    descripcion: any,
+    nombre: any,
+    nivel: any,
+    valor: any,
+
 };
 
 interface pqrs {
     value: string;
     label: string;
 };
-interface editar {
+interface Editar {
     asistencial: any,
     profesional: any,
     asesor: any,
@@ -58,24 +58,20 @@ interface editar {
     id: any
 };
 interface FormData {
-    asistencial: any,
-    profesional: any,
-    asesor: any,
-    tecnicos: any,
-    director: any,
+    descripcion: any,
+    nombre: any,
     nivel: any,
+    valor: any,
 }
 export const TalentoHumano: React.FC = () => {
-    const [modo, setModo] = useState<"crear" | "editar" | null>(null);
+    const [modo, setModo] = useState<"Crear" | "Editar" | null>(null);
 
 
     const initialFormData: FormData = {
 
-        asistencial: "",
-        profesional: "",
-        asesor: "",
-        tecnicos: "",
-        director: "",
+        descripcion: "",
+        nombre: "",
+        valor: "",
         nivel: "",
     };
     const [formData, setFormData] = useState(initialFormData);
@@ -87,7 +83,7 @@ export const TalentoHumano: React.FC = () => {
         }));
     };
 
-    // const [editar, seteditar] = useState<editar | null>(null);
+    // const [Editar, seteditar] = useState<Editar | null>(null);
 
 
     const [Historico, setHistorico] = useState<Historico[]>([]);
@@ -112,28 +108,27 @@ export const TalentoHumano: React.FC = () => {
 
     const seteditar = (rowData: any) => {
         set_is_tasa(true);
-        setModo("editar");
+        setModo("Editar");
         setselectid(rowData.id)
         setFormData({
-            asistencial: rowData.asistencial,
-            profesional: rowData.profesional,
-            asesor: rowData.asesor,
-            tecnicos: rowData.tecnicos,
-            director: rowData.director,
+            descripcion: rowData.descripcion,
+            nombre: rowData.nombre,
             nivel: rowData.nivel,
+            valor: rowData.valor,
         });
     };
 
+    const seteliminar = (rowData: any) => {
+
+        setselectid(rowData.id)
+
+    };
+
     const columns = [
-
-        // { field: 'id', headerName: 'id  ', width: 130, flex: 1 },
         { field: 'nivel', headerName: 'Nivel', width: 130, flex: 1 },
-        { field: 'director', headerName: 'Director', width: 130, flex: 1 },
-        { field: 'tecnicos', headerName: 'Tecnicos', width: 130, flex: 1 },
-        { field: 'asesor', headerName: 'Asesor', width: 130, flex: 1 },
-        { field: 'profesional', headerName: 'Profesional', width: 130, flex: 1 },
-        { field: 'asistencial', headerName: 'Asistencial', width: 130, flex: 1 },
-
+        { field: 'nombre', headerName: 'Nombre', width: 130, flex: 1 },
+        { field: 'descripcion', headerName: 'Descripcion', width: 130, flex: 1 },
+        { field: 'valor', headerName: 'Valor  ', width: 130, flex: 1 },
         {
             field: 'Acciones',
             headerName: 'Acciones',
@@ -147,11 +142,32 @@ export const TalentoHumano: React.FC = () => {
                     >
                         <EditIcon />
                     </IconButton>
+
+                    {/* <IconButton
+                        color="error"
+                        onClick={() => handleEliminarConfiguracion(params.row.id)}
+                    >
+                        <DeleteIcon />
+                    </IconButton> */}
                 </>
             )
         },
 
     ];
+    // const handleEliminarConfiguracion = async (id: number) => {
+    //     try {
+    //         const url = `/recaudo/configuracion_baisca/tiporenta/delete/${id}/`;
+    //         const response = await api.delete(url);
+    //         control_error("eliminado exitosamente ");
+
+    //     } catch (error: any) {
+    //         console.error("Error al eliminar la configuración", error);
+
+    //         // Manejar el error
+    //     }
+    // };
+
+
 
 
     const [solicitud, set_solicitud] = useState<Solicitud[]>([]);
@@ -205,7 +221,7 @@ export const TalentoHumano: React.FC = () => {
 
     const handle_open_tasa = (): void => {
         set_is_tasa(true);
-        setModo("crear");
+        setModo("Crear");
     };
     const handle_close = (): void => {
         set_is_tasa(false);
@@ -241,6 +257,25 @@ export const TalentoHumano: React.FC = () => {
             control_error(error.response.data.detail);
         }
     };
+
+
+
+    const [selectedOption, setSelectedOption] = useState('');
+    const [otherValue, setOtherValue] = useState('');
+
+    const handleSelectChange = (event: { target: { value: any; }; }) => {
+        const value = event.target.value;
+        setSelectedOption(value);
+
+        if (value !== 'otro') {
+            setFormData({ ...formData, nombre: value });
+        }
+    };
+    const handleOtherInputChange = (event: { target: { value: any; }; }) => {
+        const value = event.target.value;
+        setOtherValue(value);
+        setFormData({ ...formData, nombre: value });
+    };
     return (
         <>
 
@@ -256,15 +291,111 @@ export const TalentoHumano: React.FC = () => {
                             <Title title={`${modo} Profesionales`} />
                         </Grid>
                         {/* {modo} */}
+
+                        {/* <Grid container xs={12}   spacing={2}   >
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="nivel"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    required
+                                    name="nivel"
+                                    value={formData.nivel}
+                                    onChange={handleInputChange}
+                                />
+                            </Grid>
+                        </Grid> */}
+
+
+
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                                <InputLabel id="si-no-select-label">Grado</InputLabel>
+                                <Select
+                                    labelId="Mes"
+                                    label="Grado"
+                                    name="nivel"
+                                    value={formData.nivel}
+                                    onChange={handleInputChange}
+                                >
+                                    {[...Array(28).keys()].map((numero) => (
+                                        <MenuItem key={numero + 1} value={numero + 1}>{numero + 1}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
                         <Grid item xs={6}>
-                            <TextField
-                                label="nivel"
+
+                            <FormControl fullWidth size="small" variant="outlined" required>
+                                <InputLabel id="select-nombre-label">Nombre</InputLabel>
+                                <Select
+                                    labelId="select-nombre-label"
+                                    id="nombre-select"
+                                    value={selectedOption}
+                                    label="Nombre"
+                                    onChange={handleSelectChange}
+                                    fullWidth
+                                >
+                                    <MenuItem value="Directivo">Directivo</MenuItem>
+                                    <MenuItem value="Asesor">Asesor</MenuItem>
+                                    <MenuItem value="Profesional">Profesional</MenuItem>
+                                    <MenuItem value="Tecnico">Tecnico</MenuItem>
+                                    <MenuItem value="Asistencial">Asistencial</MenuItem>
+                                    <MenuItem value="otro">Otro</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            {/* <TextField
+                                label="Nombre"
                                 variant="outlined"
                                 size="small"
                                 fullWidth
                                 required
-                                name="nivel"
-                                value={formData.nivel}
+                                name="nombre"
+                                value={formData.nombre}
+                                onChange={handleInputChange}
+                            /> */}
+                        </Grid>
+                        {selectedOption === 'otro' && (
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Especificar otro"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    required
+                                    name="nombreOtro"
+                                    value={otherValue}
+                                    onChange={handleOtherInputChange}
+                                />
+                            </Grid>
+                        )}
+                        <Grid item xs={6}>
+                            <TextField
+                                label="valor"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                name="valor"
+                                value={formData.valor}
+                                onChange={handleInputChange}
+                            />
+                        </Grid>
+
+
+
+                        <Grid item xs={6}>
+                            <TextField
+                                label="descripcion"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                required
+                                name="descripcion"
+                                value={formData.descripcion}
                                 onChange={handleInputChange}
                             />
                         </Grid>
@@ -272,67 +403,8 @@ export const TalentoHumano: React.FC = () => {
 
 
 
-                        <Grid item xs={6}>
-                            <TextField
-                                label="director"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                name="director"
-                                value={formData.director}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="tecnicos"
-                                name="tecnicos"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                value={formData.tecnicos}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="asesor"
-                                name="asesor"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                value={formData.asesor}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                label="profesional"
-                                name="profesional"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                value={formData.profesional}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
+                        {/* {selectid} */}
 
-                        <Grid item xs={6}>
-                            <TextField
-                                label="asistencial"
-                                name="asistencial"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                value={formData.asistencial}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
                         <Grid item  >
                             <Button
                                 color='success'
@@ -340,9 +412,9 @@ export const TalentoHumano: React.FC = () => {
                                 startIcon={<SaveIcon />}
                                 fullWidth
                                 onClick={() => {
-                                    if (modo === 'crear') {
+                                    if (modo === 'Crear') {
                                         handleSubmitCrear();
-                                    } else if (modo === 'editar') {
+                                    } else if (modo === 'Editar') {
                                         handleSubmit();
                                     }
                                 }}
@@ -411,13 +483,13 @@ export const TalentoHumano: React.FC = () => {
 
 
                 {/* sucursal */}
-            
+
 
             </Grid>
 
 
             <RenderDataGrid
-                title='Profesionales'
+                title='Listado de profesionales'
                 columns={columns ?? []}
                 rows={Historico ?? []}
             />

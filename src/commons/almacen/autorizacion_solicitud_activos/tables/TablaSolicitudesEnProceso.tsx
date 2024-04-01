@@ -9,40 +9,99 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { ButtonGroup, Grid } from '@mui/material';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { interface_solicitudes_realizadas } from '../interfaces/types';
+import { interface_solicitud_por_id, interface_solicitudes_realizadas, response_solicitud_por_id } from '../interfaces/types';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { get_resumen_solicitud, put_aprobar_solicitud_activo } from '../thunks/autorizacion_solicitud_activos';
+import { control_error, control_success } from '../../../../helpers';
+import Swal from 'sweetalert2';
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_solicitudes_realizadas }) => React.ReactNode;
 }
 
 interface Props {
-  set_position_tab: React.Dispatch<React.SetStateAction<string>>;
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   data_solicitudes_realizadas: interface_solicitudes_realizadas[];
   set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
+  loadding_tabla_solicitudes: boolean;
+  get_obtener_solicitudes_activos_fc: () => void;
+  set_data_solicitud_ver_por_id: React.Dispatch<React.SetStateAction<interface_solicitud_por_id>>;
 }
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 const TablaSolicitudesEnProceso: React.FC<Props> = ({
-  set_position_tab,
   set_accion,
   data_solicitudes_realizadas,
+  loadding_tabla_solicitudes,
+  get_obtener_solicitudes_activos_fc,
   set_id_solicitud_activo,
+  set_data_solicitud_ver_por_id,
 }) => {
   const dispatch = useAppDispatch();
 
 
-  const editar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
-    console.log('Editar solicitud', solicitud);
-    set_position_tab('2');
+  const aprobar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
+    Swal.fire({
+      title: '¿Esta seguro de aprobar la solicitud?',
+      showDenyButton: true,
+      confirmButtonText: `Confirmar`,
+      denyButtonText: `Cancelar`,
+      confirmButtonColor: '#042F4A',
+      cancelButtonColor: '#DE1616',
+      icon: 'question',
+    }).then( async(result: any) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        dispatch(put_aprobar_solicitud_activo(solicitud.id_solicitud_activo))
+          .then((response: any) => {
+            if(Object.keys(response).length !== 0){
+              if(response.success){
+                control_success('Solicitud aprobada');
+                get_obtener_solicitudes_activos_fc();
+              } else {
+                control_error('No se pudo aprobar la solicitud');
+                get_obtener_solicitudes_activos_fc();
+              }
+            } else {
+              control_error('Hubo un error al intentar aprobar la solicitud');
+            }
+        })
+        return true;
+      } else if(result.isDenied){
+        return false;
+      }
+    });
+  }
+
+  const rechazar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
+    set_id_solicitud_activo(solicitud.id_solicitud_activo);
+    set_accion('rechazar');
+  }
+
+  const ver_solicitud = (solicitud: any) => {
     set_accion('ver');
-    set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null);
+
+    dispatch(get_resumen_solicitud(solicitud.id_solicitud_activo))
+    .then((response: response_solicitud_por_id) => {
+      if(Object.keys(response).length !== 0){
+        if(response.success){
+          control_success('Solicitud encontrada correctamente');
+          set_data_solicitud_ver_por_id(response.data);
+        } else {
+          control_error('No se pudo encontrar la solicitud');
+          set_data_solicitud_ver_por_id({} as interface_solicitud_por_id);
+        }
+      } else {
+        control_error('Hubo un error al intentar encontrar la solicitud');
+        set_data_solicitud_ver_por_id({} as interface_solicitud_por_id)
+      }
+    })
   }
 
 
   const columns: CustomColumn[] = [
-    { field: 'estado_solicitud', headerName: 'Estado', maxWidth: 120, flex: 1,
+    { field: 'estado_solicitud', headerName: 'Estado', minWidth: 140, flex: 1,
       renderCell: (params) => (
         params.row.estado_solicitud === 'S' ? 'Solicitado'
         : params.row.estado_solicitud === 'R' ? 'Respondido'
@@ -54,32 +113,38 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
         : params.row.estado_solicitud === 'C' && 'Cancelado' 
       )
     },
-    { field: 'fecha_solicitud', headerName: 'Fecha de la solicitud', minWidth: 120, flex: 1,
+    { field: 'fecha_solicitud', headerName: 'Fecha solicitud', minWidth: 150, flex: 1,
       renderCell: (params) => (dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY'))
     },
     { field: 'motivo', headerName: 'Motivo', minWidth: 300, flex: 1,},
     { field: 'primer_nombre_persona_solicita', headerName: 'Persona que solicita', minWidth: 300, flex: 1,
       renderCell: (params) => (`${params.row.primer_nombre_persona_solicita} ${params.row.primer_apellido_persona_solicita}`)
     },
-    { field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 120, flex: 1,
+    { field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 300, flex: 1,
       renderCell: (params) => (`${params.row.primer_nombre_funcionario_resp_unidad} ${params.row.primer_apellido_funcionario_resp_unidad}`)
     },
-    { field: 'numero_activos', headerName: 'Número de activos', maxWidth: 150, flex: 1,},
-    { field: 'anular', headerName: 'Anular', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+    { field: 'numero_activos', headerName: 'N° de activos', minWidth: 100, flex: 1, align: 'center', headerAlign: 'center'},
+    { field: 'anular', headerName: 'Rechazar', maxWidth: 80, minWidth:80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
-        <HighlightOffIcon sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
+        params.row.estado_solicitud === 'S' &&
+          <HighlightOffIcon 
+            onClick={() => rechazar_solicitud(params.row)}
+            sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
       )
     },
-    { field: 'ver', headerName: 'Ver', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+    { field: 'ver', headerName: 'Aprobar', maxWidth: 70, minWidth:70, flex: 1, align: 'center', headerAlign: 'center',
+      renderCell: (params) => (
+        params.row.estado_solicitud === 'S' &&
+          <CheckCircleOutlineIcon 
+            onClick={() => aprobar_solicitud(params.row)}
+            sx={{fontSize: '30px', cursor: 'pointer', color: '#1b5e20'}} />
+      )
+    },
+    { field: 'editar', headerName: 'Ver', maxWidth: 70, minWidth:70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         <VisibilityIcon 
-          onClick={() => editar_solicitud(params.row)}
+          onClick={()=>ver_solicitud(params.row)}
           sx={{fontSize: '30px', cursor: 'pointer'}} />
-      )
-    },
-    { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
-      renderCell: (params) => (
-        <EditIcon sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
       )
     },
   ];
@@ -106,6 +171,7 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
         style={{margin:'15px 0px'}}
         density="compact"
         autoHeight
+        loading={loadding_tabla_solicitudes}
         rows={data_solicitudes_realizadas ?? []}
         columns={columns ?? []}
         pageSize={5}

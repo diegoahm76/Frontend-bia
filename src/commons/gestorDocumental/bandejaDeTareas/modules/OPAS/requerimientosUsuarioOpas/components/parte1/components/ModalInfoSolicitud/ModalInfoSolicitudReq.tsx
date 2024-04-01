@@ -147,7 +147,7 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={8}>
+             {/* <Grid item xs={12} sm={8}>
                 <TextField
                   fullWidth
                   label="Asunto"
@@ -160,8 +160,8 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 50 }}
                 />
-              </Grid>
-              <Grid item xs={12} sm={4}>
+              </Grid>*/}
+             {/* <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   disabled
@@ -178,9 +178,9 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
                   }
                   InputLabelProps={{ shrink: true }}
                 />
-              </Grid>
+              </Grid>*/}
 
-              <Grid
+             {/* <Grid
                 item
                 xs={12}
                 sm={12}
@@ -204,13 +204,13 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
-              </Grid>
+              </Grid>*/}
 
-              {currentSolicitudUsuario?.anexos &&
-              currentSolicitudUsuario?.anexos.length > 0 ? (
+              {currentSolicitudUsuario &&
+              currentSolicitudUsuario.length > 0 ? (
                 <RenderDataGrid
                   title="Anexos de la solicitud"
-                  rows={currentSolicitudUsuario?.anexos ?? []}
+                  rows={currentSolicitudUsuario ?? []}
                   columns={colums ?? []}
                 />
               ) : (
@@ -235,7 +235,7 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
                   <Grid
                     item
                     xs={12}
-                    sm={4}
+                    sm={6}
                     sx={{
                       mt: '1.2rem',
                       mb: '1.2rem',
@@ -255,7 +255,7 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
                   <Grid
                     item
                     xs={12}
-                    sm={4}
+                    sm={6}
                     sx={{
                       mt: '1.2rem',
                       mb: '1.2rem',

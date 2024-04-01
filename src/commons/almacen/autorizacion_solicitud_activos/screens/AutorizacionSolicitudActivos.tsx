@@ -7,9 +7,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useAppDispatch } from '../../../../hooks';
 import dayjs, { Dayjs } from 'dayjs';
-import { interface_articulos_agregados, interface_busqueda_articulo, interface_busqueda_operario, interface_busqueda_responsable, interface_solicitiudes_en_proceso, interface_solicitudes_realizadas, interface_unidades_medidas, response_obtener_solicitudes_realizadas, response_solicitud_obtenida_por_id, response_unidades_medidas } from '../interfaces/types';
+import { interface_busqueda_persona_solicita, interface_estado_autorizacion_solicitud_activos, interface_persona_solicita_modal, interface_solicitiudes_en_proceso, interface_solicitud_por_id, response_obtener_solicitudes_realizadas } from '../interfaces/types';
 import { control_error, control_success } from '../../../../helpers';
-import BusquedaFuncionarios from './BusquedaFuncionarios';
+import ResumenSolicitud from './ResumenSolicitud';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import CloseIcon from '@mui/icons-material/Close';
 import Swal from 'sweetalert2';
@@ -23,125 +23,71 @@ const AutorizacionSolicitudActivos = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [loadding, set_loadding] = useState<boolean>(false);
+
   const [position_tab, set_position_tab] = useState<string>('1');
 
   //estado para controlar el formulario segun la accion
   const [accion, set_accion] = useState<string>('null');
 
-  // id solucitud de activo para poder editar o ver la solicitud
-  const [id_solicitud_activo, set_id_solicitud_activo] = useState<number | null>(null);
+  // Pantalla 2. Resumen de solicitud
+  // Objeto donde se guarda los valores de cada input del formulario de resumen de solicitud
+  const [data_form_resumen_solicitud, set_data_form_resumen_solicitud] = useState<interface_estado_autorizacion_solicitud_activos>(Object);
 
-  // Estados pantalla 1 - Solicitudes realizadas
-  const [estado, set_estado] = useState<string>('');
-  const [fecha_inicio, set_fecha_inicio] = useState<Dayjs | null>(null);
-  const [fecha_fin, set_fecha_fin] = useState<Dayjs | null>(null);
+  // Datos de la solicitud por id
+  const [data_solicitud_ver_por_id, set_data_solicitud_ver_por_id] = useState<interface_solicitud_por_id>(Object);
 
-
-  // Estados pantalla 2 - Solicitudes de activos
-  const [switch_solicitud_prestamo, set_switch_solicitud_prestamo] = useState<boolean>(false);
-   // Datos del funcionario quien solicito
-   const [tipo_documento_solicito, set_tipo_documento_solicito] = useState<string>('');
-   const [documento_solicito, set_documento_solicito] = useState<string>('');
-   const [nombres_solicito, set_nombres_solicito] = useState<string>('');
-   const [apellidos_solicito, set_apellidos_solicito] = useState<string>('');
-  // Datos del funcionario responsable
-  const [tipo_documento_responsable, set_tipo_documento_responsable] = useState<string>('');
-  const [documento_responsable, set_documento_responsable] = useState<string>('');
-  const [nombres_responsable, set_nombres_responsable] = useState<string>('');
-  const [apellidos_responsable, set_apellidos_responsable] = useState<string>('');
-  // Datos del funcionario operario
-  const [tipo_documento_operario, set_tipo_documento_operario] = useState<string>('');
-  const [documento_operario, set_documento_operario] = useState<string>('');
-  const [nombres_operario, set_nombres_operario] = useState<string>('');
-  const [apellidos_operario, set_apellidos_operario] = useState<string>('');
-  const [motivo, set_motivo] = useState<string>('');
-  const [observaciones, set_observaciones] = useState<string>('');
-  // Datos de la busqueda de funcionarios cuando se selecciona en los modales
-  const [funcionario_responsable_seleccionado, set_funcionario_responsable_seleccionado] = useState<interface_busqueda_responsable>(Object);
-  const [funcionario_operario_seleccionado, set_funcionario_operario_seleccionado] = useState<interface_busqueda_operario>(Object);
-
-
-
-  // Estados Pantalla 3 - Busqueda de articulos
-  const [codigo_articulo, set_codigo_articulo] = useState<string>('');
-  const [nombre_articulo, set_nombre_articulo] = useState<string>('');
-  // Datos que se ingresan adicionalmente al seleccionar un articulo
-  const [tipo_unidad_medida, set_tipo_unidad_medida] = useState<string>('');
-  const [cantidad_articulo, set_cantidad_articulo] = useState<number>(0);
-  const [fecha_devolucion, set_fecha_devolucion] = useState<Dayjs | null>(null);
-  const [observacion, set_observacion] = useState<string>('');
-  const [unidades_medidas, set_unidades_medidas] = useState<interface_unidades_medidas[]>([]);
-  // Datos del articulo seleccionado del modal
-  const [articulo_encontrado, set_articulo_encontrado] = useState<interface_busqueda_articulo>(Object); // se guarda el articulo seleccionado
-  // Datos de los articulos agregados a la tabla
-  const [data_articulos_agregados, set_data_articulos_agregados] = useState<interface_articulos_agregados[]>([]);
-  
 
   // Datos de la tabla de solicitudes realizadas
-  const [data_solicitudes_realizadas, set_data_solicitudes_realizadas] = useState<interface_solicitiudes_en_proceso[]>([
-    undefined as unknown as interface_solicitiudes_en_proceso,
-    undefined as unknown as interface_solicitiudes_en_proceso,
-    undefined as unknown as interface_solicitiudes_en_proceso,
-    undefined as unknown as interface_solicitiudes_en_proceso,
-    undefined as unknown as interface_solicitiudes_en_proceso,
-  ]);
 
   useEffect(() => {
-    console.log(id_solicitud_activo);
-  },[id_solicitud_activo]);
-
-  /* 
-  const get_obtener_solicitudes_realizadas_fc = () => {
-    dispatch(get_obtener_solicitudes_realizadas(id_solicitud_activo))
-    .then((response: response_solicitud_obtenida_por_id) => {
-      if(Object.keys(response).length !== 0){
-        if(response.success === true){
-
-          set_motivo(response.data.motivo);
-          set_observaciones(response.data.observacion);
-          set_data_articulos_agregados([]);
-        }
-      } else {
-        control_error('No se encontraron solicitudes');
-      }
-    })
-  }
+    console.log(data_solicitud_ver_por_id);
+  },[data_solicitud_ver_por_id, accion]);
 
   useEffect(() => {
     if(accion === 'ver'){
-      get_obtener_solicitudes_realizadas_fc();
-    } else {
-      set_id_solicitud_activo(null);
-    }
-  },[accion]);
-   */
-
-
-  const get_obtener_solicitudes_activos_fc = () => {
-    dispatch(get_obtener_solicitudes_activos(
-      estado,
-      fecha_inicio ? fecha_inicio.format('YYYY-MM-DD') : '',
-      fecha_fin ? fecha_fin.format('YYYY-MM-DD') : '',
-      ''
-    )).then((response: response_obtener_solicitudes_realizadas) => {
-      if(Object.keys(response).length !== 0){
-        set_data_solicitudes_realizadas(response.data);
-      } else {
-        control_error('No se encontraron solicitudes');
-        set_data_solicitudes_realizadas([]);
+      set_position_tab('2');
+      if(Object.keys(data_solicitud_ver_por_id).length !== 0){
+        set_data_form_resumen_solicitud({
+          es_solicitud_prestamo: data_solicitud_ver_por_id.solicitud_prestamo,
+          fecha_devolucion: data_solicitud_ver_por_id.fecha_devolucion,
+          fecha_solictud: data_solicitud_ver_por_id.fecha_solicitud,
+          estado_solicitud: data_solicitud_ver_por_id.estado_solicitud,
+          tipo_documento_solictante: data_solicitud_ver_por_id.tipo_documento_persona_solicitante,
+          documento_solictante: data_solicitud_ver_por_id.numero_documento_persona_solicitante,
+          nombres_solictante: data_solicitud_ver_por_id.primer_nombre_persona_solicitante,
+          apellidos_solictante: data_solicitud_ver_por_id.primer_apellido_persona_solicitante,
+          tipo_documento_responsable: data_solicitud_ver_por_id.tipo_documento_funcionario_resp_unidad,
+          documento_responsable: data_solicitud_ver_por_id.numero_documento_funcionario_resp_unidad,
+          nombres_responsable: data_solicitud_ver_por_id.primer_nombre_funcionario_resp_unidad,
+          apellidos_responsable: data_solicitud_ver_por_id.primer_apellido_funcionario_resp_unidad,
+          justificacion_rechazo: data_solicitud_ver_por_id.justificacion_rechazo_resp,
+          fecha_aprobacion: data_solicitud_ver_por_id.fecha_aprobacion_resp,
+          tipo_documento_operario: data_solicitud_ver_por_id.tipo_documento_persona_operario,
+          documento_operario: data_solicitud_ver_por_id.numero_documento_persona_operario,
+          nombres_operario: data_solicitud_ver_por_id.primer_nombre_persona_operario,
+          apellidos_operario: data_solicitud_ver_por_id.primer_apellido_persona_operario,
+          tipo_documento_persona_cierra_no_dispo_alma: data_solicitud_ver_por_id.tipo_documento_persona_cierra_no_dispo_alma,
+          documento_persona_cierra_no_dispo_alma: data_solicitud_ver_por_id.numero_documento_persona_cierra_no_dispo_alma,
+          nombres_persona_cierra_no_dispo_alma: data_solicitud_ver_por_id.primer_nombre_persona_cierra_no_dispo_alma,
+          apellidos_persona_cierra_no_dispo_alma: data_solicitud_ver_por_id.primer_apellido_persona_cierra_no_dispo_alma,
+          obser_cierre_no_dispo_alma: data_solicitud_ver_por_id.obser_cierre_no_dispo_alma,
+          fecha_cierre_no_dispo_alma: data_solicitud_ver_por_id.fecha_cierre_no_dispo_alma,
+          tipo_documento_persona_alma_rechaza: data_solicitud_ver_por_id.tipo_documento_persona_alma_rechaza,
+          documento_persona_alma_rechaza: data_solicitud_ver_por_id.numero_documento_persona_alma_rechaza,
+          nombres_persona_alma_rechaza: data_solicitud_ver_por_id.primer_nombre_persona_alma_rechaza,
+          apellidos_persona_alma_rechaza: data_solicitud_ver_por_id.primer_apellido_persona_alma_rechaza,
+          motivo: data_solicitud_ver_por_id.motivo,
+          observacion: data_solicitud_ver_por_id.observacion,
+          fecha_cierre_solicitud: data_solicitud_ver_por_id.fecha_cierra_solicitud,
+          items_solicitud: data_solicitud_ver_por_id.items_solicitud,
+          justificacion_rechazo_resp: data_solicitud_ver_por_id.justificacion_rechazo_resp,
+          fecha_aprobacion_resp: data_solicitud_ver_por_id.fecha_aprobacion_resp,
+          justificacion_rechazo_almacen: data_solicitud_ver_por_id.justificacion_rechazo_almacen,
+          fecha_rechazo_almacen: data_solicitud_ver_por_id.fecha_rechazo_almacen,
+        });
       }
-    })
-  }
-
-
-  const solicites_obtenidas = useRef(false);
-  useEffect(() => {
-    if(!solicites_obtenidas.current){
-      get_obtener_solicitudes_activos_fc();
-      solicites_obtenidas.current = true;
     }
-  }, []);
+  },[accion,data_solicitud_ver_por_id]);
 
   const handle_tablist_change = (event: React.SyntheticEvent, newValue: string) => {
     set_position_tab(newValue);
@@ -169,9 +115,13 @@ const AutorizacionSolicitudActivos = () => {
     } else if(position_tab === '2'){
       set_accion('null');
       set_position_tab('1');
+      set_data_form_resumen_solicitud({} as interface_estado_autorizacion_solicitud_activos);
+      set_data_solicitud_ver_por_id({} as interface_solicitud_por_id);
     }
     
   }
+
+
 
   return (
     <>
@@ -202,83 +152,45 @@ const AutorizacionSolicitudActivos = () => {
               <TabPanel value="1" sx={{ p: '20px 0' }}>
                 <Grid container spacing={2}>
                   <SolicitudesEnProceso
-                    set_position_tab={set_position_tab}
+                    accion={accion}
                     set_accion={set_accion}
-                    estado={estado}
-                    set_estado={set_estado}
-                    set_id_solicitud_activo={set_id_solicitud_activo}
-                    fecha_inicio={fecha_inicio}
-                    set_fecha_inicio={set_fecha_inicio}
-                    fecha_fin={fecha_fin}
-                    set_fecha_fin={set_fecha_fin}
-                    set_data_solicitudes_realizadas={set_data_solicitudes_realizadas}
-                    data_solicitudes_realizadas={data_solicitudes_realizadas}
-                    get_obtener_solicitudes_activos_fc={get_obtener_solicitudes_activos_fc}
+                    set_data_solicitud_ver_por_id={set_data_solicitud_ver_por_id}
                   />
                 </Grid>
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <Grid container spacing={2} rowSpacing={7}>
-                  <BusquedaFuncionarios
+                  <ResumenSolicitud
                     accion={accion}
-                    switch_solicitud_prestamo={switch_solicitud_prestamo}
-                    set_switch_solicitud_prestamo={set_switch_solicitud_prestamo}
-                    tipo_documento_responsable={tipo_documento_responsable}
-                    set_tipo_documento_responsable={set_tipo_documento_responsable}
-                    documento_responsable={documento_responsable}
-                    set_documento_responsable={set_documento_responsable}
-                    nombres_responsable={nombres_responsable}
-                    set_nombres_responsable={set_nombres_responsable}
-                    apellidos_responsable={apellidos_responsable}
-                    set_apellidos_responsable={set_apellidos_responsable}
-                    tipo_documento_operario={tipo_documento_operario}
-                    set_tipo_documento_operario={set_tipo_documento_operario}
-                    documento_operario={documento_operario}
-                    set_documento_operario={set_documento_operario}
-                    nombres_operario={nombres_operario}
-                    set_nombres_operario={set_nombres_operario}
-                    apellidos_operario={apellidos_operario}
-                    set_apellidos_operario={set_apellidos_operario}
-                    motivo={motivo}
-                    set_motivo={set_motivo}
-                    observaciones={observaciones}
-                    set_observaciones={set_observaciones}
-                    funcionario_responsable_seleccionado={funcionario_responsable_seleccionado}
-                    funcionario_operario_seleccionado={funcionario_operario_seleccionado}
-                    tipo_documento_solicito={tipo_documento_solicito}
-                    set_tipo_documento_solicito={set_tipo_documento_solicito}
-                    documento_solicito={documento_solicito}
-                    set_documento_solicito={set_documento_solicito}
-                    nombres_solicito={nombres_solicito}
-                    set_nombres_solicito={set_nombres_solicito}
-                    apellidos_solicito={apellidos_solicito}
-                    set_apellidos_solicito={set_apellidos_solicito}
+                    data_form_resumen_solicitud={data_form_resumen_solicitud}
                   />
                 </Grid>
               </TabPanel>
             </TabContext>
 
-            <Grid item xs={12}  sx={{
-                display: "flex",
-                justifyContent: "end",
-                alignItems: "center",
-                marginTop: "20px",
-                gap: 2,
-              }}
-              >
-              <Grid item xs={12} lg={2}>
-                <Button
-                  fullWidth
-                  color="error"
-                  variant="contained"
-                  startIcon={position_tab === '1' ? <CloseIcon /> : <ArrowBackIosIcon />}
-                  onClick={btn_salir}
+            {accion !== 'rechazar' &&
+              <Grid item xs={12}  sx={{
+                  display: "flex",
+                  justifyContent: "end",
+                  alignItems: "center",
+                  marginTop: "20px",
+                  gap: 2,
+                }}
                 >
-                  {position_tab === '1' ? 'Salir' : 'Atras'}
-                </Button>
+                <Grid item xs={12} lg={2}>
+                  <Button
+                    fullWidth
+                    color="error"
+                    variant="contained"
+                    startIcon={position_tab === '1' ? <CloseIcon /> : <ArrowBackIosIcon />}
+                    onClick={btn_salir}
+                  >
+                    {position_tab === '1' ? 'Salir' : 'Atras'}
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
+            }
           </Box>
         </Grid>
  
