@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import { control_error, control_success } from '../../../../helpers';
 import { delete_anexo_opcional } from '../thunks/baja_activos';
+import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 
 
 
@@ -87,6 +88,15 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
   }
 
   const columns: custom_column[] = [
+    { field: 'descargar', headerName: 'Descargar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
+      renderCell: (params) => (
+        <DownloadButton
+          fileUrl={params.row.id_archivo_digital.ruta_archivo}
+          fileName={params.row.nombre_anexo} // Puedes proporcionar un nombre de archivo deseado
+          condition={false} // Establece la condición según tus necesidades
+        />
+      )
+    },
     {field: 'nombre_anexo', headerName:'Nombre del anexo', minWidth:250, flex:1},
     {field: 'fecha_creacion_anexo', headerName:'Fecha creación', maxWidth:120, flex:1,
       renderCell: (params) => dayjs(params.row.fecha_creacion_anexo).format('DD/MM/YYYY')},
