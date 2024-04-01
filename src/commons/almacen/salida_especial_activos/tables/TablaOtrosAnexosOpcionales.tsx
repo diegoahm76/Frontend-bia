@@ -13,7 +13,6 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import { control_error, control_success } from '../../../../helpers';
-import { delete_anexo_opcional } from '../thunks/baja_activos';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 
 
@@ -23,10 +22,10 @@ interface custom_column extends GridColDef {
 }
 
 interface props {
+  set_data_anexos_opcionales: React.Dispatch<React.SetStateAction<interface_anexo_opcional[]>>;
   data_anexos_opcionales: interface_anexo_opcional[];
   refrescar_tabla: boolean;
   set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
-  anexos_optenidos: React.MutableRefObject<boolean>;
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   set_data_anexo_editar: React.Dispatch<React.SetStateAction<interface_anexo_opcional>>;
 }
@@ -35,9 +34,9 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
   data_anexos_opcionales,
   refrescar_tabla,
   set_refrescar_tabla,
-  anexos_optenidos,
   set_accion,
-  set_data_anexo_editar
+  set_data_anexo_editar,
+  set_data_anexos_opcionales
 }) => {
 
   const dispatch = useDispatch();
@@ -54,21 +53,9 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
     }).then(async(result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        
-        await dispatch(delete_anexo_opcional(params.id_baja_activo.id_baja_activo, params.id_anexo_doc_alma))
-        .then((response: any) => {
-          if(Object.keys(response).length !== 0){
-            if (response.success) {
-              control_success('Se elimino el anexo correctamente');
-            } else {
-              control_error('No se encontro el id del anexo a eliminar, refresque la pagina e intente nuevamente');
-            }
-          } else {
-            control_error('Error al intentar eliminar el anexo');
-          }
-        })
+        // Acción de eliminar anexo
+        set_data_anexos_opcionales(data_anexos_opcionales.filter(item => item.id_anexo !== params.id_anexo));
 
-        anexos_optenidos.current = false;
         set_refrescar_tabla(!refrescar_tabla);
         return true;
       } else if(result.isDenied){
@@ -91,7 +78,7 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
     { field: 'descargar', headerName: 'Descargar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         <DownloadButton
-          fileUrl={params.row.id_archivo_digital.ruta_archivo}
+          fileUrl={/*params.row.id_archivo_digital.ruta_archivo*/ ''}
           fileName={params.row.nombre_anexo} // Puedes proporcionar un nombre de archivo deseado
           condition={false} // Establece la condición según tus necesidades
         />
@@ -148,15 +135,7 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
         rowHeight={75}
         rowsPerPageOptions={[5]}
         experimentalFeatures={{ newEditingApi: true }}
-        getRowId={() => {
-          try {
-            return uuidv4();
-          } catch (error) {
-            console.error(error);
-            //? Genera un ID de respaldo único
-            return `fallback-id-${Date.now()}-${Math.random()}`;
-          }
-        }}
+        getRowId={(row) => row?.id_anexo === undefined ? uuidv4() : row.id_anexo}
       />
     </>
   );

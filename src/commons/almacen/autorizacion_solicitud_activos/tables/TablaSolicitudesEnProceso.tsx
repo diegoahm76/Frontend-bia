@@ -101,7 +101,7 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
 
 
   const columns: CustomColumn[] = [
-    { field: 'estado_solicitud', headerName: 'Estado', maxWidth: 140, flex: 1,
+    { field: 'estado_solicitud', headerName: 'Estado', minWidth: 140, flex: 1,
       renderCell: (params) => (
         params.row.estado_solicitud === 'S' ? 'Solicitado'
         : params.row.estado_solicitud === 'R' ? 'Respondido'
@@ -113,18 +113,18 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
         : params.row.estado_solicitud === 'C' && 'Cancelado' 
       )
     },
-    { field: 'fecha_solicitud', headerName: 'Fecha solicitud', maxWidth: 150, flex: 1,
+    { field: 'fecha_solicitud', headerName: 'Fecha solicitud', minWidth: 150, flex: 1,
       renderCell: (params) => (dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY'))
     },
     { field: 'motivo', headerName: 'Motivo', minWidth: 300, flex: 1,},
     { field: 'primer_nombre_persona_solicita', headerName: 'Persona que solicita', minWidth: 300, flex: 1,
       renderCell: (params) => (`${params.row.primer_nombre_persona_solicita} ${params.row.primer_apellido_persona_solicita}`)
     },
-    { field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 120, flex: 1,
+    { field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 300, flex: 1,
       renderCell: (params) => (`${params.row.primer_nombre_funcionario_resp_unidad} ${params.row.primer_apellido_funcionario_resp_unidad}`)
     },
-    { field: 'numero_activos', headerName: 'Número de activos', maxWidth: 150, flex: 1,},
-    { field: 'anular', headerName: 'Rechazar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
+    { field: 'numero_activos', headerName: 'N° de activos', minWidth: 100, flex: 1, align: 'center', headerAlign: 'center'},
+    { field: 'anular', headerName: 'Rechazar', maxWidth: 80, minWidth:80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         params.row.estado_solicitud === 'S' &&
           <HighlightOffIcon 
@@ -132,7 +132,7 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
             sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
       )
     },
-    { field: 'ver', headerName: 'Aprobar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+    { field: 'ver', headerName: 'Aprobar', maxWidth: 70, minWidth:70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         params.row.estado_solicitud === 'S' &&
           <CheckCircleOutlineIcon 
@@ -140,7 +140,7 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
             sx={{fontSize: '30px', cursor: 'pointer', color: '#1b5e20'}} />
       )
     },
-    { field: 'editar', headerName: 'Ver', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+    { field: 'editar', headerName: 'Ver', maxWidth: 70, minWidth:70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         <VisibilityIcon 
           onClick={()=>ver_solicitud(params.row)}

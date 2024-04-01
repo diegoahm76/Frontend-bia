@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Tab, TextField } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -6,29 +6,18 @@ import dayjs, { Dayjs } from 'dayjs';
 import SearchIcon from "@mui/icons-material/Search";
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import TablaSolicitudesEnProceso from '../tables/TablaSolicitudesEnProceso';
-import { interface_solicitud_por_id, interface_solicitudes_realizadas } from '../interfaces/types';
+import { interface_busqueda_persona_solicita, interface_persona_solicita_modal, interface_solicitiudes_en_proceso, interface_solicitud_por_id, interface_solicitudes_realizadas, response_obtener_solicitudes_realizadas } from '../interfaces/types';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Swal from 'sweetalert2';
 import { useAppDispatch } from '../../../../hooks';
-import { put_rechazar_solicitud_activo } from '../thunks/autorizacion_solicitud_activos';
+import { get_obtener_solicitudes_activos, put_rechazar_solicitud_activo } from '../thunks/autorizacion_solicitud_activos';
 import { control_error, control_success } from '../../../../helpers';
+import ModalBusquedaPersonaSolicita from '../manners/ModalBusquedaPersonaSolicita';
 
 interface props {
   accion: string;
   set_accion: React.Dispatch<React.SetStateAction<string>>;
-  estado: string;
-  set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
-  id_solicitud_activo: number | null;
-  set_estado: React.Dispatch<React.SetStateAction<string>>;
-  fecha_inicio: Dayjs | null;
-  set_fecha_inicio: React.Dispatch<React.SetStateAction<Dayjs | null>>;
-  fecha_fin: Dayjs | null;
-  set_fecha_fin: React.Dispatch<React.SetStateAction<Dayjs | null>>;
-  data_solicitudes_realizadas: interface_solicitudes_realizadas[];
-  get_obtener_solicitudes_activos_fc: () => void;
-  set_data_solicitudes_realizadas: React.Dispatch<React.SetStateAction<interface_solicitudes_realizadas[]>>;
-  loadding_tabla_solicitudes: boolean;
   set_data_solicitud_ver_por_id: React.Dispatch<React.SetStateAction<interface_solicitud_por_id>>;
 }
 
@@ -37,23 +26,71 @@ interface props {
 const SolicitudesEnProceso: React.FC<props> = ({
   accion,
   set_accion,
-  estado,
-  id_solicitud_activo,
-  set_id_solicitud_activo,
-  set_estado,
-  fecha_inicio,
-  set_fecha_inicio,
-  fecha_fin,
-  set_fecha_fin,
-  data_solicitudes_realizadas,
-  get_obtener_solicitudes_activos_fc,
-  loadding_tabla_solicitudes,
   set_data_solicitud_ver_por_id,
 }) => {
   const dispatch = useAppDispatch();
 
+  //estado para controlar el loadding de la tabla de solicitudes
+  const [loadding_tabla_solicitudes, set_loadding_tabla_solicitudes] = useState<boolean>(false);
+
+  // id solucitud de activo para poder editar o ver la solicitud
+  const [id_solicitud_activo, set_id_solicitud_activo] = useState<number | null>(null);
+
+  // estado para mostrar el modal de busqueda de persona
+  const [mostrar_modal_persona_solicita, set_mostrar_modal_persona_solicita] = useState<boolean>(false);
+
+  // estado para controlar los filtros de busqueda
+  const [estado, set_estado] = useState<string>('');
+  const [fecha_inicio, set_fecha_inicio] = useState<Dayjs | null>(null);
+  const [fecha_fin, set_fecha_fin] = useState<Dayjs | null>(null);
+  const [data_persona_solicita, set_data_persona_solicita] = useState<interface_busqueda_persona_solicita>(Object);
+
+  // estado para justificar rechazo
   const [justificacion_rechazo, set_justificacion_rechazo] = useState<string>('');
 
+  // estado para controlar la data de las solicitudes realizadas
+  const [data_solicitudes_realizadas, set_data_solicitudes_realizadas] = useState<interface_solicitiudes_en_proceso[]>([
+    undefined as unknown as interface_solicitiudes_en_proceso,
+    undefined as unknown as interface_solicitiudes_en_proceso,
+    undefined as unknown as interface_solicitiudes_en_proceso,
+    undefined as unknown as interface_solicitiudes_en_proceso,
+    undefined as unknown as interface_solicitiudes_en_proceso,
+  ]);
+
+  /**
+   * Funcion para obtener las solicitudes de activos
+   * @returns void
+   */
+  const get_obtener_solicitudes_activos_fc = () => {
+    set_loadding_tabla_solicitudes(true);
+    dispatch(get_obtener_solicitudes_activos(
+      estado,
+      fecha_inicio ? fecha_inicio.format('YYYY-MM-DD') : '',
+      fecha_fin ? fecha_fin.format('YYYY-MM-DD') : '',
+      data_persona_solicita?.id_persona ?? ''
+    )).then((response: response_obtener_solicitudes_realizadas) => {
+      if(Object.keys(response).length !== 0){
+        set_loadding_tabla_solicitudes(false);
+        set_data_solicitudes_realizadas(response.data);
+      } else {
+        set_loadding_tabla_solicitudes(false);
+        control_error('No se encontraron solicitudes');
+        set_data_solicitudes_realizadas([]);
+      }
+    })
+  }
+
+  /**
+   * Funcion para obtener las solicitudes de activos
+   * @returns void
+   */
+  const solicites_obtenidas = useRef(false);
+  useEffect(() => {
+    if(!solicites_obtenidas.current){
+      get_obtener_solicitudes_activos_fc();
+      solicites_obtenidas.current = true;
+    }
+  }, []);
 
   const cambio_fecha_inicio = (newValue: Dayjs | null) => {
     set_fecha_inicio(newValue);
@@ -71,8 +108,13 @@ const SolicitudesEnProceso: React.FC<props> = ({
     set_estado('');
     set_fecha_inicio(null);
     set_fecha_fin(null);
+    set_data_persona_solicita({} as interface_busqueda_persona_solicita);
   }
 
+  /**
+   * Funcion para rechazar la solicitud
+   * @returns void
+   */
   const rechazar_solicitud = () => {
     Swal.fire({
       title: '¿Esta seguro de rechazar la solicitud',
@@ -85,6 +127,11 @@ const SolicitudesEnProceso: React.FC<props> = ({
     }).then( async(result: any) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
+        /**
+         * Se envia la solicitud para rechazar
+         * @param id_solicitud_activo
+         * @param justificacion_rechazo
+         */
         dispatch(put_rechazar_solicitud_activo(id_solicitud_activo, {justificacion_rechazo: justificacion_rechazo}))
           .then((response: any) => {
             if(Object.keys(response).length !== 0){
@@ -110,8 +157,35 @@ const SolicitudesEnProceso: React.FC<props> = ({
 
   return (
     <>
+      <ModalBusquedaPersonaSolicita
+        mostrar_modal_persona_solicita={mostrar_modal_persona_solicita}
+        set_mostrar_modal_persona_solicita={set_mostrar_modal_persona_solicita}
+        set_data_persona_solicita={set_data_persona_solicita}
+      />
       {accion !== 'rechazar' &&
         <>
+          <Grid item xs={12} lg={2.4}>
+            <TextField
+              fullWidth
+              label='Persona que solicita:'
+              value={data_persona_solicita?.nombre_completo ?? ''}
+              disabled
+              size='small'
+            />
+          </Grid>
+
+          <Grid item xs={12} lg={2.4}>
+            <Button
+              fullWidth
+              color="primary"
+              variant="contained"
+              startIcon={<SearchIcon />}
+              onClick={() => set_mostrar_modal_persona_solicita(true)}
+            >
+              Buscar Persona
+            </Button>
+          </Grid>
+
           <Grid item xs={12} lg={2.4}>
             <FormControl required size='small' fullWidth>
               <InputLabel>Estado: </InputLabel>
@@ -163,28 +237,33 @@ const SolicitudesEnProceso: React.FC<props> = ({
             </LocalizationProvider>
           </Grid>
 
-          <Grid item xs={12} lg={2.4}>
-            <Button
-              fullWidth
-              color="primary"
-              variant="contained"
-              startIcon={<SearchIcon />}
-              onClick={consultar_solicitudes}
-            >
-              Buscar
-            </Button>
-          </Grid>
-
-          <Grid item xs={12} lg={2.4}>
-            <Button
-              fullWidth
-              color="primary"
-              variant="outlined"
-              startIcon={<CleaningServicesIcon />}
-              onClick={limpiar_filtros}
-            >
-              Limpiar
-            </Button>
+          <Grid container spacing={2} item xs={12} sx={{
+            display: "flex",
+            justifyContent: "end",
+            }}>
+            <Grid item xs={12} lg={2.4}>
+              <Button
+                fullWidth
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={consultar_solicitudes}
+              >
+                Buscar
+              </Button>
+            </Grid>
+  
+            <Grid item xs={12} lg={2.4}>
+              <Button
+                fullWidth
+                color="primary"
+                variant="outlined"
+                startIcon={<CleaningServicesIcon />}
+                onClick={limpiar_filtros}
+              >
+                Limpiar
+              </Button>
+            </Grid>
           </Grid>
 
           <Grid container item xs={12}>
