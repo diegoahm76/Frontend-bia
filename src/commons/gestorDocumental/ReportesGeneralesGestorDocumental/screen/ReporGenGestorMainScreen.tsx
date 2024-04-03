@@ -10,7 +10,6 @@ import { BusquedaBasicaGeneradoraReporte } from '../componentes/BusquedaReportes
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { FourhView } from '../componentes/fourthView/FourhView';
 import { FirstView } from '../componentes/firstView/FirstView';
-import { SecondView } from '../componentes/secondView/SecondView';
 import { useIndicadores } from '../hooks/useIndicadores';
 import { ChartDataContext } from '../context/DataChartContext';
 import { setCurrentBusquedaReporte } from '../toolkit/ReportesGeneralesGestorSlice';

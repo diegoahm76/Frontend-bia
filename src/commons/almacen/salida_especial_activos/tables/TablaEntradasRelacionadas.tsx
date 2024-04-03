@@ -6,8 +6,6 @@ import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { interface_entradas_relacionadas } from '../interfaces/types';
 
-
-
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_entradas_relacionadas }) => React.ReactNode;
 }
@@ -15,30 +13,18 @@ interface CustomColumn extends GridColDef {
 
 interface props {
   data_entradas_relacionadas: interface_entradas_relacionadas[];
-  set_entrada_relacionada_seleccionada: React.Dispatch<React.SetStateAction<interface_entradas_relacionadas>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-const TablaEntradasEspeciales: React.FC<props> = ({
+const TablaEntradasRelacionadas: React.FC<props> = ({
   data_entradas_relacionadas,
-  set_entrada_relacionada_seleccionada,
   }) => {
-
-
-  const selecionar_entrada_relacionada = (newSelectionModel: GridSelectionModel) => {
-    if (newSelectionModel.length > 0) {
-      const entrada_relacionada_seleccionada = data_entradas_relacionadas.find(row => row.id_entrada_almacen === newSelectionModel[0]);
-      const entrada_encontrada = entrada_relacionada_seleccionada ?? Object;
-      set_entrada_relacionada_seleccionada(entrada_encontrada);
-    }
-  }
 
   const columns: CustomColumn[] = [
     { field: 'tipo_entrada', headerName: 'Tipo de entrada', minWidth: 120, flex: 1,},
     { field: 'consecutivo', headerName: 'Consecutivo', minWidth: 120, flex: 1,},
     { field: 'fecha_registro', headerName: 'Fecha y hora de registro', minWidth: 120, flex: 1,},
   ];
-
 
   return (
     <>
@@ -67,13 +53,13 @@ const TablaEntradasEspeciales: React.FC<props> = ({
         pageSize={5}
         rowHeight={75}
         rowsPerPageOptions={[5]}
-        onSelectionModelChange={selecionar_entrada_relacionada}
         experimentalFeatures={{ newEditingApi: true }}
         getRowId={(row) => row?.id_entrada_almacen !== undefined ? row.id_entrada_almacen : uuidv4()}
+        isRowSelectable={() => false}
       />
     </>
   );
 }
  
 // eslint-disable-next-line no-restricted-syntax
-export default TablaEntradasEspeciales;
+export default TablaEntradasRelacionadas;

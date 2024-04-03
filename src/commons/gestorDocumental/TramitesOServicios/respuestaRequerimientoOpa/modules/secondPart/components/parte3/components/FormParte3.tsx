@@ -134,13 +134,13 @@ export const FormParte3 = ({
     }
 
     if (
-      !watchFormulario.asunto ||
+      // !watchFormulario.asunto ||
       !watchFormulario.descripcion_de_la_solicitud
-      || !watchFormulario?.medio_de_solicitud?.value
+      //|| !watchFormulario?.medio_de_solicitud?.value
     ) {
       showAlert(
         'Advertencia',
-        'Es obligatorio llenar los campos de asunto, descripción y medio de solicitud de la respuesta de requerimiento',
+        'Es obligatorio llenar el campo de descripción de la respuesta de requerimiento',
         'warning'
       );
       return;
@@ -157,10 +157,10 @@ export const FormParte3 = ({
 
     const createAnexoData = (baseObject = {}) => ({
       ...baseObject,
-      asunto: watchFormulario?.asunto,
+      asunto: watchFormulario?.asunto ?? 'Sin asunto',
       descripcion_de_la_solicitud: watchFormulario?.descripcion_de_la_solicitud,
       fecha_de_solicitud: watchFormulario?.fecha_de_solicitud || new Date().toISOString().slice(0, 10),
-      medio_de_solicitud: watchFormulario?.medio_de_solicitud,
+      medio_de_solicitud: watchFormulario?.medio_de_solicitud ?? { value: 'Na', label: 'No aplica' },
       nombre_archivo: watchFormulario?.nombre_archivo,
       ruta_soporte: watchFormulario?.ruta_soporte,
       medio_almacenamiento: watchFormulario?.medio_almacenamiento,
@@ -570,7 +570,7 @@ export const FormParte3 = ({
               mt: '1rem',
             }}
           >
-            VOLVER A : ASUNTO / DESCRIPCION / MEDIO DE SOLICITUD
+            VOLVER A : DESCRIPCION
           </Button>
           <Carousel
             className="carousel"
