@@ -60,3 +60,25 @@ export const get_obtener_inf_terceros: any = (
     }
   };
 };
+
+export const get_obtener_entradas_relacionadas: any = (id_persona: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/entradas-relacionadas-activos/get/${id_persona}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
+
+export const get_obtener_activos_asociados: any = (id_entrada_almacen: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/activos-asociados/get/${id_entrada_almacen}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
