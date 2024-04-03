@@ -338,9 +338,11 @@ export interface interface_solicitud_por_id {
 export interface itmes_solicitud_por_id {
   id_item_solicitud_activo: number
   id_solicitud_activo: number
-  id_bien: string
+  id_bien: number
+  nombre_bien: string
   cantidad: number
   id_unidad_medida: number
+  abreviatura_unidad_medida: string
   nombre_unidad_medida: string
   observacion: string
   nro_posicion: number

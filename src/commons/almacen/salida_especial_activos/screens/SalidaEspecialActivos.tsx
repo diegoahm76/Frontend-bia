@@ -9,12 +9,17 @@ import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import ConfiguracionGeneral from './ConfiguracionGeneral';
 import dayjs, { Dayjs } from 'dayjs';
-import { interface_anexo_opcional, interface_form_inf_tercero, interface_inf_tercero } from '../interfaces/types';
+import { interface_activos_asociados, interface_anexo_opcional, interface_entradas_relacionadas, interface_form_inf_tercero, interface_inf_tercero, response_activos_asociados, response_entradas_relacionadas } from '../interfaces/types';
 import DetallesActivos from './DetallesActivos';
+import { control_error, control_success } from '../../../../helpers';
+import { useDispatch } from 'react-redux';
+import { get_obtener_activos_asociados, get_obtener_entradas_relacionadas } from '../thunks/salida_especial_activos';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SalidaEspecialActivos: React.FC = () => {
+  const dispatch = useDispatch();
+
   const [position_tab, set_position_tab] = useState<string>('1');
   const [loadding, set_loadding] = useState<boolean>(false);
   const [accion, set_accion] = useState<string>('null'); 
@@ -29,9 +34,21 @@ const SalidaEspecialActivos: React.FC = () => {
   const [referencia_salida, set_referencia_salida] = useState<string>('');
   const [concepto, set_concepto] = useState<string>('');
   const [data_anexos_opcionales, set_data_anexos_opcionales] = useState<interface_anexo_opcional[]>([]);
-
   // Datos de la inf persona tercero seleccionado del modal
   const [data_inf_tercero_seleccionado, set_data_inf_tercero_seleccionado] = useState<interface_inf_tercero>(Object);
+  
+  // Entradas relacionadas al tercero seleccionado
+  const [data_entradas_relacionadas, set_data_entradas_relacionadas] = useState<interface_entradas_relacionadas[]>([]);
+
+  // Pantalla 2 - Detalles y activos
+  const [loadding_tabla_activos_asociados, set_loadding_tabla_activos_asociados] = useState<boolean>(false);
+  // Entrada relacionada seleccionada
+  const [entrada_relacionada_seleccionada, set_entrada_relacionada_seleccionada] = useState<interface_entradas_relacionadas>(Object);
+  // Activos asociados a la entrada seleccionada
+  const [data_activos_asociados, set_data_activos_asociados] = useState<interface_activos_asociados[]>([]);
+  // Activos asociados agregados desde la tabla de activos asociados
+  const [data_activos_asociados_agregados, set_data_activos_asociados_agregados] = useState<interface_activos_asociados[]>([]);
+
 
   useEffect(() => {
     if (Object.keys(data_inf_tercero_seleccionado).length !== 0){
@@ -48,6 +65,51 @@ const SalidaEspecialActivos: React.FC = () => {
       set_accion('null');
     }
   }, [accion,data_inf_tercero_seleccionado,concepto,referencia_salida,form_inf_tercero]);
+
+
+  const get_obtener_entradas_relacionadas_fc = async (id_persona: string) => {
+    await dispatch(get_obtener_entradas_relacionadas(id_persona))
+    .then((response: response_entradas_relacionadas) => {
+      if(Object.keys(response).length !== 0){
+        if(response.data.length > 0){
+          set_data_entradas_relacionadas(response.data);
+          control_success('Entradas relacionadas obtenidas correctamente');
+        } else {
+          set_data_entradas_relacionadas([]);
+          control_error('No se encontraron entradas relacionadas');
+        }
+      } else {
+        control_error('Hubo un error al intentar obtener las entradas relacionadas');
+      }
+    });
+  }
+
+  const get_obtener_activos_asociados_fc = async (id_entrada_almacen: string) => {
+    set_loadding_tabla_activos_asociados(true);
+    await dispatch(get_obtener_activos_asociados(id_entrada_almacen))
+    .then((response: response_activos_asociados) => {
+      if(Object.keys(response).length !== 0){
+        if(response.data.length > 0){
+          set_data_activos_asociados(response.data);
+          set_loadding_tabla_activos_asociados(false);
+        } else {
+          set_data_activos_asociados([]);
+          set_loadding_tabla_activos_asociados(false);
+          control_error('No se encontraron activos asociados con la que seleccionó');
+        }
+      } else {
+        set_loadding_tabla_activos_asociados(false);
+        control_error('Hubo un error al intentar obtener los activos asociados de la entrada seleccionada');
+      }
+    });
+  }
+
+  // Cargar los activos asociados a la entrada seleccionada
+  useEffect(() => {
+    if (Object.keys(entrada_relacionada_seleccionada).length > 0) {
+      get_obtener_activos_asociados_fc(entrada_relacionada_seleccionada.id_entrada_almacen.toString());
+    }
+  }, [entrada_relacionada_seleccionada]);
   
   // Cargar datos de la inf persona tercero seleccionado del modal
   useEffect(() => {
@@ -59,9 +121,11 @@ const SalidaEspecialActivos: React.FC = () => {
         nombres: `${data_inf_tercero_seleccionado.primer_nombre ?? ''} ${data_inf_tercero_seleccionado.segundo_nombre ?? ''}`,
         apellidos: `${data_inf_tercero_seleccionado.primer_apellido ?? ''} ${data_inf_tercero_seleccionado.segundo_apellido ?? ''}`
       });
+
+      // Obtener entradas relacionadas del tercero seleccionado
+      get_obtener_entradas_relacionadas_fc(data_inf_tercero_seleccionado.id_clase_tercero_persona.toString());
     }
   }, [data_inf_tercero_seleccionado]);
-
 
   const handle_tablist_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab(newValue);
@@ -136,12 +200,21 @@ const SalidaEspecialActivos: React.FC = () => {
                     set_data_inf_tercero_seleccionado={set_data_inf_tercero_seleccionado}
                     data_anexos_opcionales={data_anexos_opcionales}
                     set_data_anexos_opcionales={set_data_anexos_opcionales}
+                    data_entradas_relacionadas={data_entradas_relacionadas}
                   />
                 </Grid>
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
-                <DetallesActivos />
+                <DetallesActivos
+                  data_entradas_relacionadas={data_entradas_relacionadas}
+                  data_activos_asociados={data_activos_asociados}
+                  set_data_activos_asociados={set_data_activos_asociados}
+                  data_activos_asociados_agregados={data_activos_asociados_agregados}
+                  set_data_activos_asociados_agregados={set_data_activos_asociados_agregados}
+                  set_entrada_relacionada_seleccionada={set_entrada_relacionada_seleccionada}
+                  loadding_tabla_activos_asociados={loadding_tabla_activos_asociados}
+                />
               </TabPanel>
             </TabContext>
 

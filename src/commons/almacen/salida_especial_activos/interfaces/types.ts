@@ -62,3 +62,49 @@ export interface interface_tipos_terceros {
   value: number
   label: string
 }
+
+export interface response_entradas_relacionadas {
+  success: boolean
+  detail: string
+  data: interface_entradas_relacionadas[]
+}
+
+export interface interface_entradas_relacionadas {
+  id_entrada_almacen: number
+  tipo_entrada: string
+  consecutivo: number
+  fecha_registro: string
+  numero_entrada_almacen: number
+  fecha_entrada: string
+  fecha_real_registro: string
+  motivo: string
+  observacion: string
+  id_archivo_soporte: any
+  valor_total_entrada: string
+  fecha_ultima_actualizacion_diferente_creador: any
+  entrada_anulada: any
+  justificacion_anulacion: any
+  fecha_anulacion: any
+  id_proveedor: number
+  id_tipo_entrada: number
+  id_bodega: number
+  id_creador: number
+  id_persona_ult_act_dif_creador: any
+  id_persona_anula: any
+}
+
+export interface response_activos_asociados {
+  success: boolean
+  detail: string
+  data: interface_activos_asociados[]
+}
+
+export interface interface_activos_asociados {
+  id_item_entrada_almacen: number
+  id_entrada_almacen: number
+  id_bien: number
+  codigo: string
+  serial_placa: string
+  nombre: string
+  marca: string
+}
