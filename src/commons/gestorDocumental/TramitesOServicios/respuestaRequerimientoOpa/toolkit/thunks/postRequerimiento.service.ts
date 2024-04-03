@@ -3,12 +3,12 @@ import { api } from '../../../../../../api/axios';
 
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const postRequerimientoUsuario = async (
+export const postResponderRequerimientoUsuario = async (
   formData: any,
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   // gestor/bandeja-tareas/opa/requerimiento/tramite/create/
-  const url = `gestor/bandeja-tareas/pqrsdf/requerimiento/create/`;
+  const url = `tramites/respuesta_requerimiento_opa/respuesta/create/`;
   try {
     if (!formData || typeof formData !== 'object') {
       throw new Error('Invalid formData');
