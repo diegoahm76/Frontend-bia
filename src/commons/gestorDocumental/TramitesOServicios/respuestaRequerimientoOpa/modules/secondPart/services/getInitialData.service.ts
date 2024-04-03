@@ -1,7 +1,5 @@
-import axios from 'axios';
-import { api } from '../../../../../../api/axios';
-import Swal from 'sweetalert2';
-import { API_PATHS, handleError } from './functions/helpers';
+import { api } from '../../../../../../../api/axios';
+import { API_PATHS, handleError } from '../../../../../bandejaDeTareas/modules/OPAS/requerimientosUsuarioOpas/services/functions/helpers';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -22,28 +20,28 @@ export const getInitialData = async (
     const [
       responseSolicita,
       responseTitular,
-      responseDetallePQRSDF,
       responseHistoricoSolicitudesPQRSDF,
+      responseDetallePQRSDF,
     ] = await Promise.all([
       api.get(API_PATHS.solicita),
       api.get(API_PATHS.titular(id_PQRSDF)),
-      api.get(API_PATHS.detalleSolicitud(id_PQRSDF)),
       api
-        .get(API_PATHS.solicitudUsuario(id_PQRSDF))
-        .catch(() => ({ data: [] })),
+      .get(API_PATHS.solicitudUsuario(id_PQRSDF))
+      .catch(() => ({ data: [] })),
+      api.get(API_PATHS.detalleSolicitud(id_PQRSDF)),
     ]);
 
     const data = {
       dataSolicita: responseSolicita.data,
       dataTitular: responseTitular.data,
-      detallePQRSDF: responseDetallePQRSDF.data,
       dataHistoricoSolicitudesPQRSDF: responseHistoricoSolicitudesPQRSDF.data,
+      detallePQRSDF: responseDetallePQRSDF.data,
     };
 
-    //  console.log('')('data Informaciones', data);
+    console.log('data Informaciones', data);
     return data;
   } catch (error) {
-    handleError(navigate, '/app/gestor_documental/panel_ventanilla/');
+    handleError(navigate, '/app/gestor_documental/bandeja_tareas/');
   } finally {
     setLoadings(false);
   }

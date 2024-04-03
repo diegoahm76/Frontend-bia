@@ -12,6 +12,8 @@ import { useAppDispatch } from "../../../../hooks";
 import { cargar_anexos_opas, cargar_anexos_opas_metadatos } from "../thunks/TramitesOServicios";
 import { ModalMetadatosTramite } from "../../TramitesServicios/components/MetadatosTramite/ModalMetadatosTramite";
 import { FormContextMetadatos } from "../../TramitesServicios/context/MetadatosContext";
+import { AuthSlice } from "../../../auth/interfaces/authModels";
+import { useSelector } from "react-redux";
 const class_css = {
     position: 'relative',
     background: '#FAFAFA',
@@ -39,8 +41,8 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
     const [file_name, set_file_name] = useState<string | any>('');
     const [archivos, set_archivos] = useState<any[]>([]);
     const [limpiar, set_limpiar] = useState<boolean>(false);
-    const { form, setForm } = useContext(FormContextMetadatos);
-console.log(form)
+    const { form } = useContext(FormContextMetadatos);
+    // console.log(form)
     const columns: GridColDef[] = [
         {
             field: 'nombre_archivo',
@@ -121,6 +123,11 @@ console.log(form)
         }
     };
 
+    const { userinfo } = useSelector(
+        (state: AuthSlice) => state.auth
+    );
+    console.log(userinfo.tipo_usuario)
+
     const agregar_archivos: any = () => {
         if (validar_formulario()) {
             let archivos_grid: any[] = [...archivos];
@@ -133,7 +140,7 @@ console.log(form)
                 "es_version_original": false, // Valor predeterminado
                 "tiene_replica_fisica": form.tieneReplicaFisica,
                 "id_tipologia_doc": form.tipologiaRelacionada, // Valor predeterminado
-                "tipologia_no_creada_TRD": form.tipologiaRelacionadaotra, // Valor predeterminado
+                "tipologia_no_creada_TRD": form.tipologiaRelacionadaotra || null, // Valor predeterminado
                 "asunto": form.asunto,
                 "palabras_clave_doc": form.keywords,
             }
@@ -173,19 +180,24 @@ console.log(form)
                 data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
 
 
+                // console.log(userinfo.tipo_usuario);
 
+                if (userinfo.tipo_usuario === 'I') {
+                    // Ejecutar la acción para el tipo de usuario 'i'
+                    dispatch(cargar_anexos_opas_metadatos(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
+                        if (response.success) {
+                            props.set_anexar_error(response.success);
+                        }
+                    });
+                } else if (userinfo.tipo_usuario === 'E') {
+                    // Ejecutar la acción para el tipo de usuario 'o'
+                    dispatch(cargar_anexos_opas(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
+                        if (response.success) {
+                            props.set_anexar_error(response.success);
+                        }
+                    });
+                }
 
-                dispatch(cargar_anexos_opas_metadatos(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
-                    if (response.success)
-                        props.set_anexar_error(response.success);
-                });
-
-
-
-                // dispatch(cargar_anexos_opas(props.response_paso_1?.id_solicitud_tramite, form_data)).then((response: any) => {
-                //     if (response.success)
-                //         props.set_anexar_error(response.success);
-                // });
 
             } else {
                 props.set_anexar_error(true);
@@ -265,31 +277,34 @@ console.log(form)
                     />
                     {error_descripcion && (<FormHelperText error id="desde-error">{'El campo es obligatorio.'}</FormHelperText>)}
                 </Grid>
-                <Grid item xs={12} sm={12}>
+           
+
+                {userinfo && userinfo.tipo_usuario === 'I' && (
+    <>
+        <Grid container justifyContent="center">
+            <Grid item xs={6}>
+                <Button
+                    variant="contained"
+                    fullWidth
+                    color="warning"
+                    size='medium'
+                    onClick={handleOpenModal}
+                >
+                    AGREGAR METADATOS
+                </Button>
+                <ModalMetadatosTramite
+                    is_modal_active={isModalOpen}
+                    set_is_modal_active={setIsModalOpen}
+                />
+            </Grid>
+        </Grid>
+    </>
+)}
+
+
+     <Grid item xs={12} sm={12}>
                     <Alert severity="info">Adjunte los documentos requeridos para la solicitud, puede agregar los que necesite.</Alert>
                 </Grid>
-
-
-
-                <Grid container justifyContent="center" >
-
-                    <Grid item xs={6}>
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            color="warning"
-                            size='medium'
-                            onClick={handleOpenModal}>AGREGAR MeTADATOS</Button>
-                        <ModalMetadatosTramite
-                            is_modal_active={isModalOpen}
-                            set_is_modal_active={setIsModalOpen}
-                        />
-                    </Grid>
-                </Grid>
-
-
-
-
 
 
 
