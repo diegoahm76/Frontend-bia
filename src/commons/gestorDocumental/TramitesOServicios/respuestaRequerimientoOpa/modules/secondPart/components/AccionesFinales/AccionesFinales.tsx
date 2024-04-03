@@ -8,6 +8,8 @@ import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinal
 import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
 import { resetItems } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { postResponderRequerimientoUsuario } from '../../../../toolkit/thunks/postRequerimiento.service';
+import { useNavigate } from 'react-router-dom';
 
 
 export const AccionesFinales = ({
@@ -17,6 +19,7 @@ export const AccionesFinales = ({
   const dispatch = useAppDispatch();
 
   //* context
+  const navigate = useNavigate();
 
   const { handleReset } = useStepperRequerimiento();
 
@@ -31,6 +34,9 @@ export const AccionesFinales = ({
   //* handleSumbit
 
   const sendDataByFormData = () => {
+
+    console.log('este es el currentPersonaRespuestaUsuario', currentPersonaRespuestaUsuario)
+
     const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
       if (a.ruta_soporte && !b.ruta_soporte) {
         return -1;
@@ -47,14 +53,14 @@ export const AccionesFinales = ({
 
     if (
       //* se debe añadir probablemente el id del tramite para el que se va a realizar la respuesta del requerimiento
-      !anexosCreados[0]?.medio_de_solicitud ||
-      !anexosCreados[0]?.asunto ||
+      //!anexosCreados[0]?.medio_de_solicitud ||
+      //!anexosCreados[0]?.asunto ||
       !anexosCreados[0]?.descripcion_de_la_solicitud /*||
       !currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf*/
     ) {
       showAlert(
         'Opps!',
-        'Por favor diligencie los campos de asunto, descripción y medio de almacenamiento de la respuesta del requerimiento',
+        'Por favor diligencie el campo de descripción de la respuesta del requerimiento',
         'warning'
       );
       return;
@@ -65,12 +71,14 @@ export const AccionesFinales = ({
     const formData = new FormData();
 
     formData.append(
-      'solicitud_usu_PQRSDF',
+      'respuesta',
       JSON.stringify({
-        asunto: anexosCreados[0]?.asunto,
+        //asunto: anexosCreados[0]?.asunto  || 'Sin asunto',
         descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-        id_requerimiento:
-          +currentPersonaRespuestaUsuario?.id_requerimiento,
+        id_solicitud_tramite: currentPersonaRespuestaUsuario?.id_solicitud_tramite,
+        id_requerimiento: currentPersonaRespuestaUsuario?.id_requerimiento,
+        //id_requerimiento:
+        //  +currentPersonaRespuestaUsuario?.id_requerimiento,
       })
     );
   /*  formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);*/
@@ -107,13 +115,13 @@ export const AccionesFinales = ({
       );
     });
 
-    /*postRequerimientoUsuario(formData, setLoadingButton)
+    postResponderRequerimientoUsuario(formData, setLoadingButton)
       .then(() => {
         handleReset();
         resetFormulario({});
-        setInfoReset({});
+        //setInfoReset({});
         dispatch(resetItems());
-
+        navigate('/app/gestor_documental/tramites/respuesta_requerimiento_opa/');
         Swal.fire({
           title: 'Solicitud enviada',
           icon: 'success',
@@ -123,10 +131,11 @@ export const AccionesFinales = ({
       })
       .catch((error) => {
         console.error('Error in postRequerimientoUsuario:', error);
-      });*/
+      });
   };
 
   const handleSubmit = async () => {
+    console.log('este es el currentPersonaRespuestaUsuario', currentPersonaRespuestaUsuario)
     if (anexosCreados.length === 0) {
       Swal.fire({
         title: 'No se ha creado ningún anexo',

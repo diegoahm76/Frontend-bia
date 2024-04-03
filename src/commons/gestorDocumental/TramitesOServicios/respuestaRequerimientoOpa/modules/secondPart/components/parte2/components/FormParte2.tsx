@@ -22,12 +22,12 @@ any): JSX.Element => {
         onSubmit={(e: any) => {
           e.preventDefault();
           if (
-            !watchFormulario.medio_de_solicitud.value ||
-            watchFormulario.asunto.length === 0 ||
+          /*  !watchFormulario.medio_de_solicitud.value ||
+            watchFormulario.asunto.length === 0 ||*/
             watchFormulario.descripcion_de_la_solicitud.length === 0
           ) {
             control_warning(
-              'Todos los campos son obligatorios, por favor diligenciarlos'
+              'El campo de descripcion es obligatio, por favor diligencie el campo'
             );
             return;
           }
@@ -39,7 +39,7 @@ any): JSX.Element => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={8}>
+         {/* <Grid item xs={12} sm={8}>
             <Controller
               name="asunto"
               control={controlFormulario}
@@ -66,8 +66,8 @@ any): JSX.Element => {
                 />
               )}
             />
-          </Grid>
-          <Grid item xs={12} sm={4}>
+          </Grid>*/}
+          <Grid item xs={12} sm={12}>
             <Controller
               name="fecha_de_solicitud"
               control={controlFormulario}
@@ -91,7 +91,7 @@ any): JSX.Element => {
               )}
             />
           </Grid>
-
+{/*
           <Grid
             item
             xs={12}
@@ -155,7 +155,7 @@ any): JSX.Element => {
                 </div>
               )}
             />
-          </Grid>
+          </Grid>*/}
 
           <Grid item xs={12} sm={12}>
             <Controller
@@ -171,7 +171,7 @@ any): JSX.Element => {
                   required
                   fullWidth
                   multiline
-                  rows={5}
+                  rows={8}
                   name='descripcion_de_la_solicitud'
                   label="Descripción de la solicitud"
                   size="small"
