@@ -62,6 +62,7 @@ export const ConceptoPago: React.FC = () => {
         void fetchConfiguraciones();
     }, []);
 
+    
     // const [configuracionInteres, setConfiguracionInteres] = useState<ConfiguracionInteres[]>([]);
 
     // const fetchConfiguracionInteres = async (): Promise<void> => {
