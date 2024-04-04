@@ -405,12 +405,12 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
 
   const columns_deudores: GridColDef[] = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      minWidth: 110,
-      flex: 0.1,
-    },
+    // {
+    //   field: 'id',
+    //   headerName: 'ID',
+    //   minWidth: 110,
+    //   flex: 0.1,
+    // },
     {
       field: 'identificacion',
       headerName: 'Identificación',
@@ -447,7 +447,24 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         return params.value ?? 'Sin tipo estaddo';
       }
     },
-
+    {
+      field: 'Periodo',
+      headerName: 'Periodo',
+      minWidth: 210,
+      flex: 0.1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin Periodo  ';
+      }
+    },
+    {
+      field: 'Tipo de cobro',
+      headerName: 'Tipo de cobro',
+      minWidth: 210,
+      flex: 0.1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin Tipo de cobro  ';
+      }
+    },
 
 
     // {

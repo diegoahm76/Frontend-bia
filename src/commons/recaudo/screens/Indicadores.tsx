@@ -189,7 +189,9 @@ export const Indicadores: React.FC = () => {
                 ...prevData,
                 vigencia_reporta: knobValue,
             }))
-            const url = `/recaudo/configuracion_baisca/indicadores/${formData.vigencia_reporta}/`;
+            const url = `/recaudo/configuracion_baisca/indicadores/${formData.vigencia_reporta}/${formData.formulario}/`;
+
+            // 2024/1/
             const res = await api.get(url);
             const HistoricoData: Historico[] = res.data?.data || [];
             setHistorico(HistoricoData);
@@ -204,8 +206,11 @@ export const Indicadores: React.FC = () => {
     useEffect(() => {
         void fetchHistorico();
     }, []);
+    useEffect(() => {
+        void fetchHistorico();
+    }, [formData.formulario]);
 
-
+  
     useEffect(() => {
         updateget()
     }, []);
@@ -464,7 +469,20 @@ export const Indicadores: React.FC = () => {
 
         actualizaDatos();
     }, [indicadorvalor]);
-
+    const textoSeleccionado = (() => {
+        switch (formData.formulario) {
+            case "1":
+                return "recaudo tua";
+            case "2":
+                return "recaudo tr";
+            case "3":
+                return "costo recaudo tua";
+            case "4":
+                return "costo recaudo tr";
+            default:
+                return "";
+        }
+    })();
 
     return (
         <>
@@ -481,7 +499,7 @@ export const Indicadores: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <Title title=" Datos del indicador " />
+                <Title title={` Datos del indicador ${textoSeleccionado}`} />
 
 
                 <Grid container
@@ -535,6 +553,7 @@ export const Indicadores: React.FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
+             
 
                 <Grid item xs={12} sm={3}>
                     <TextField
@@ -822,7 +841,8 @@ export const Indicadores: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <Title title="Semáforo" />
+                
+                <Title title={`Semáforo ${textoSeleccionado}`} />
                 <Grid item xs={2.4}  >
                     <Box
                         className={`border px-4 text-white fs-5 p-1`}
@@ -981,7 +1001,7 @@ export const Indicadores: React.FC = () => {
 
             </Grid>
             <RenderDataGrid
-                title='Cálculo de metas'
+                title={`Cálculo de metas ${textoSeleccionado}`}
                 columns={columns ?? []}
                 rows={indicadorvalor ?? []}
             />
@@ -996,7 +1016,7 @@ export const Indicadores: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                <Title title="Gráfica  de indicadores " />
+                <Title title={`Gráfica  de indicadores ${textoSeleccionado}`} />
 
 
                 <Grid item xs={12} marginTop={2} sm={12}>
