@@ -6,8 +6,12 @@ export interface INotificaciones {
   document_type: IObjListType;
   list_status: IObjListType[];
   status_notification: IObjListType;
+  list_status_asignation: IObjListType[];
+  status_asignation: IObjListType;
   list_groups: IObjListType[];
   group: IObjListType;
+  list_unidades_organizacionales: IObjListType[];
+  unidad_organizacional: IObjListType;
   persons: IObjPerson[];
   person: IObjPerson;
   notification_requests: IObjNotificationRequest[];
@@ -24,9 +28,21 @@ export interface INotificaciones {
   estado_notificacion: IObjNotificacionStatus|  null;
   tipos_soporte: IObjSupportType[]|  null;
   tipo_soporte: IObjSupportType|  null;
+  tipos_acto_administrativo: IObjSupportType[]|  null;
+  tipos_documento_notificacion: IObjTypeDocument[]|  null;
+  tipo_documento_notificacion: IObjTypeDocument|  null;
 
   asignacion_funcionario: IObjAsignacionFuncioanrio | null;
 
+  expedientes: IObjExpediente[];
+  expediente: IObjExpediente | null;
+  actos_administrativos: IObjActo[];
+  acto_administrativo: IObjActo | null;
+  tramites: IObjTramite[];
+  tramite: IObjTramite | null;
+  trd: IObjTrd[];
+  serie_subserie:IObjSerieSubserie[];
+  unidades_marcadas: IObjUnidadesMarcadas[];
   // grantors: IObjPerson[];
   // grantor: IObjPerson;
   // attorneys: IObjPerson[];
@@ -80,13 +96,101 @@ export interface INotificaciones {
 
 }
 
-export interface IObjAsignacionFuncioanrio{
+
+export interface IObjUnidadesMarcadas {
+  id_trd?: number | null;
+  usado?: boolean;
+  version?: string | null;
+  nombre?: string | null;
+  fecha_terminado?: string | null;
+  fecha_puesta_produccion?: string | null;
+  fecha_retiro_produccion?: string | null;
+  actual?: boolean;
+  id_ccd?: number | null;
+}
+export interface IObjTrd {
+  id_trd?: number | null;
+  usado?: boolean;
+  version?: string | null;
+  nombre?: string | null;
+  fecha_terminado?: string | null;
+  fecha_puesta_produccion?: string | null;
+  fecha_retiro_produccion?: string | null;
+  actual?: boolean;
+  id_ccd?: number | null;
+}
+
+
+export interface IObjSerieSubserie{
+  codigo_serie?: string | null;
+  codigo_subserie?: string | null;
+  codigo_unidad_org_actual_admin_series?: string | null;
+  codigo_unidad_organizacional?: string | null;
+  id_catalogo_serie?: number | null;
+  id_catserie_unidadorg?: number | null;
+  id_serie_doc?: number | null;
+  id_subserie_doc?: number | null;
+  id_unidad_org_actual_admin_series?: number | null;
+  id_unidad_organizacional?: number | null;
+  nombre_serie?: string | null;
+  nombre_subserie?: string | null;
+  nombre_unidad_org_actual_admin_series?: string | null;
+  nombre_unidad_organizacional?: string | null;
+}
+
+export interface IObjExpediente{
+  id_expediente_documental?: number | null;
+  id_cat_serie_und_org_ccd_trd_prop?: number | null;
+  codigo_exp_und_serie_subserie?: string | null;
+  id_trd_origen?: number | null;
+  nombre_trd_origen?: string | null;
+  titulo_expediente?: string | null;
+  id_und_seccion_propietaria_serie?: number | null;
+  nombre_unidad_org?: string | null;
+  id_serie_origen?: number | null;
+  nombre_serie_origen?: string | null;
+  id_subserie_origen?: number | null;
+  nombre_subserie_origen?: string | null;
+  codigo_exp_Agno?: string | number | null;
+  id_persona_titular_exp_complejo?: number | null;
+  nombre_persona_titular?: string | null;
+}
+export interface IObjActo{
   persona_asignada?: string | null;
   id_persona_asignada?: number | null;
   vigencia_contrato?: string | null;
   Asignadas?: number | null;
   resueltas?: number | null;
   pendientes?: number | null;
+}
+export interface IObjTramite{
+  id_solicitud_tramite?: number | null;
+  nombre_proyecto?: string | null;
+  radicado?: string | null;
+  fecha_radicado?: string | null;
+  expediente?: number | null;
+}
+
+export interface IObjAsignacionFuncioanrio{
+  persona_asignada?: string | null;
+  id_persona_asignada?: number | null;
+  vigencia_contrato?: string | null;
+  tarear_asignadas?: number | null;
+  tarear_resueltas?: number | null;
+  tarear_pendientes?: number | null;
+  notificaciones_asignadas?: number | null;
+  notificaciones_resueltas?: number | null;
+  notificaciones_pendientes?: number | null;
+}
+export interface IObjTypeDocument{
+  id_tipo_documento?: string | number | null;
+  nombre?: string | null;
+  aplica_para_notificaciones?: boolean | null;
+  aplica_para_correspondencia?: boolean | null;
+  registro_precargado?: boolean | null;
+  activo?: boolean | null;
+  item_ya_usado?: boolean | null;
+  aplica_para?: string[] | null;
 }
 
 export interface IObjNotificacionType{
@@ -176,6 +280,7 @@ export interface IObjNotificationPerRequest{
   persdona_a_quien_se_dirige?: string | null;
   plazo_entrega?: string | null;
   funcionario_asignado?: string | null;
+  tipo_gestion?: string | null;
   id_doc_de_arch_exp?: number | null;
   radicado?: number | null;
 }
@@ -227,7 +332,12 @@ export interface IObjNotificationRequest{
   id_und_org_oficina_solicita?: string | number | null;
   id_persona_recibe_solicitud_manual?: string | number | null;
   id_persona_rta_final_gestion?: string | number | null;
+  id_persona_asignada?: string | number | null;
+  cod_estado_asignacion?: string | number | null;
   id_doc_de_arch_exp?: string | number | null;
+  codigo_exp_und_serie_subserie?: string | number | null;
+  tramite?: string | number | null;
+  justificacion_rechazo?: string | number | null;
 }
 
 export interface IObjListType {

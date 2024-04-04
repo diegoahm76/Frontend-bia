@@ -34,6 +34,7 @@ const TipoPersona = () => {
     reset: reset_persona,
     getValues: get_values,
     watch,
+    handleSubmit: handle_on_submit,
   } = useForm<IObjPerson>();
   const {
     persons,
@@ -166,7 +167,7 @@ const TipoPersona = () => {
           row_id={'id_persona'}
           columns_model={columns_personas}
           models={persons}
-          get_filters_models={get_personas}
+          get_filters_models={handle_on_submit(get_personas)}
           set_models={set_persons}
           reset_values={reset_persona}
           button_submit_label="BUSCAR"
@@ -235,7 +236,7 @@ const TipoPersona = () => {
               control_form: control_tipo_persona,
               control_name: 'tipo_persona',
               default_value: '',
-              rules: {},
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de persona',
               disabled: false,
               helper_text: 'Debe seleccionar tipo',
@@ -251,7 +252,7 @@ const TipoPersona = () => {
               control_form: control_tipo_persona,
               control_name: 'tipo_documento',
               default_value: '',
-              rules: {},
+              rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
               disabled: person_type.id === null,
               helper_text: '',

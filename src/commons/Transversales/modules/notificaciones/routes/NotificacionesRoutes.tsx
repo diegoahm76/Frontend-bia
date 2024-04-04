@@ -14,6 +14,8 @@ import { TiposSoporteScreen } from '../screens/parametrizacion/TiposSoporteScree
 import { GacetaAmbientalScreen } from '../screens/GacetaAmbientalScreen';
 import { PublicarEdictosScreen } from '../screens/PublicarEdictosScreen';
 import { GeneradorDocumentosScreen } from '../screens/generadorDocumentos/GeneradorDocumentosScreen';
+import { TiposDocumentoNotificacionScreen } from '../screens/parametrizacion/TiposDocumentoNotificacionScreen';
+import { PanelAsignacionTareaFuncioanrioScreen } from '../screens/PanelAsignacionTareaFuncionarioScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NotificacionesRoutes: React.FC = () => {
@@ -43,10 +45,18 @@ export const NotificacionesRoutes: React.FC = () => {
         path="panel_asignacion_funcionario"
         element={<PanelAsignacionFuncionarioScreen />}
       />
+      <Route
+        path="panel_asignacion_tarea_funcionario"
+        element={<PanelAsignacionTareaFuncioanrioScreen />}
+      />
       <Route path="panel_funcionario" element={<PanelFuncionarioScreen />} />
       <Route
         path="parametrizacion/tipos_notificacion"
         element={<TiposNotificacionScreen />}
+      />
+      <Route
+        path="parametrizacion/tipos_documento_notificacion"
+        element={<TiposDocumentoNotificacionScreen />}
       />
       <Route
         path="parametrizacion/estados_notificacion"

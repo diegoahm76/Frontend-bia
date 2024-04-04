@@ -1,7 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type {
   INotificaciones,
+  IObjActo,
   IObjAsignacionFuncioanrio,
+  IObjExpediente,
   IObjListType,
   IObjNotificacionCause,
   IObjNotificacionStatus,
@@ -9,7 +11,12 @@ import type {
   IObjNotificationPerRequest,
   IObjNotificationRequest,
   IObjPerson,
+  IObjSerieSubserie,
   IObjSupportType,
+  IObjTramite,
+  IObjTrd,
+  IObjTypeDocument,
+  IObjUnidadesMarcadas,
 } from '../../interfaces/notificaciones';
 
 // import { type Persona } from '../../../../../interfaces/globalModels';
@@ -252,14 +259,21 @@ const initial_state: INotificaciones = {
   document_type: initial_state_list,
   list_status: [],
   status_notification: initial_state_list,
+  list_status_asignation: [],
+  status_asignation: initial_state_list,
   list_groups: [],
   group: initial_state_list,
+  list_unidades_organizacionales: [],
+  unidad_organizacional: initial_state_list,
 
   notification_requests: [],
   notification_request: null,
   notifications_per_request: [],
   notification_per_request: null,
   search_notification_request: null,
+
+  tipos_documento_notificacion: [],
+  tipo_documento_notificacion: null,
 
   tipos_notificacion: [],
   tipo_notificacion: null,
@@ -270,7 +284,16 @@ const initial_state: INotificaciones = {
   tipos_soporte: [],
   tipo_soporte: null,
   asignacion_funcionario: null,
-
+  tramites: [],
+  tramite: null,
+  actos_administrativos: [],
+  acto_administrativo: null,
+  expedientes: [],
+  expediente: null,
+  trd: [],
+  serie_subserie: [],
+  unidades_marcadas: [],
+  tipos_acto_administrativo: [],
   //   file_fisico: null,
   //   list_applicant_types: [],
   //   type_applicant: initial_state_list,
@@ -357,12 +380,30 @@ export const notificaciones_slice = createSlice({
     ) => {
       state.list_status = action.payload;
     },
+    set_list_status_asignation: (
+      state: INotificaciones,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.list_status_asignation = action.payload;
+    },
 
     set_list_groups: (
       state: INotificaciones,
       action: PayloadAction<IObjListType[]>
     ) => {
       state.list_groups = action.payload;
+    },
+    set_group: (
+      state: INotificaciones,
+      action: PayloadAction<IObjListType>
+    ) => {
+      state.group = action.payload;
+    },
+    set_list_unidades_organizacionales: (
+      state: INotificaciones,
+      action: PayloadAction<IObjListType[]>
+    ) => {
+      state.list_unidades_organizacionales = action.payload;
     },
     set_notification_requests: (
       state: INotificaciones,
@@ -399,6 +440,18 @@ export const notificaciones_slice = createSlice({
       action: PayloadAction<IObjNotificacionType>
     ) => {
       state.tipo_notificacion = action.payload;
+    },
+    set_tipos_documento_notificacion: (
+      state: INotificaciones,
+      action: PayloadAction<IObjTypeDocument[]>
+    ) => {
+      state.tipos_documento_notificacion = action.payload;
+    },
+    set_tipo_documento_notificacion: (
+      state: INotificaciones,
+      action: PayloadAction<IObjTypeDocument>
+    ) => {
+      state.tipo_documento_notificacion = action.payload;
     },
     set_causas_notificacion: (
       state: INotificaciones,
@@ -450,6 +503,63 @@ export const notificaciones_slice = createSlice({
       action: PayloadAction<IObjAsignacionFuncioanrio>
     ) => {
       state.asignacion_funcionario = action.payload;
+    },
+    set_expedientes: (
+      state: INotificaciones,
+      action: PayloadAction<IObjExpediente[]>
+    ) => {
+      state.expedientes = action.payload;
+    },
+    set_expediente: (
+      state: INotificaciones,
+      action: PayloadAction<IObjExpediente>
+    ) => {
+      state.expediente = action.payload;
+    },
+    set_actos_administrativos: (
+      state: INotificaciones,
+      action: PayloadAction<IObjActo[]>
+    ) => {
+      state.actos_administrativos = action.payload;
+    },
+    set_acto_administrativo: (
+      state: INotificaciones,
+      action: PayloadAction<IObjActo>
+    ) => {
+      state.acto_administrativo = action.payload;
+    },
+    set_tramites: (
+      state: INotificaciones,
+      action: PayloadAction<IObjTramite[]>
+    ) => {
+      state.tramites = action.payload;
+    },
+    set_tramite: (
+      state: INotificaciones,
+      action: PayloadAction<IObjTramite>
+    ) => {
+      state.tramite = action.payload;
+    },
+    set_serie_subserie: (
+      state: INotificaciones,
+      action: PayloadAction<IObjSerieSubserie[]>
+    ) => {
+      state.serie_subserie = action.payload;
+    },
+    set_trd: (state: INotificaciones, action: PayloadAction<IObjTrd[]>) => {
+      state.trd = action.payload;
+    },
+    set_unidades_marcadas: (
+      state: INotificaciones,
+      action: PayloadAction<IObjUnidadesMarcadas[]>
+    ) => {
+      state.unidades_marcadas = action.payload;
+    },
+    set_tipos_acto_administrativo: (
+      state: INotificaciones,
+      action: PayloadAction<IObjSupportType[]>
+    ) => {
+      state.tipos_acto_administrativo = action.payload;
     },
     //     set_document_type: (
     //       state: INotificaciones,
@@ -614,13 +724,28 @@ export const notificaciones_slice = createSlice({
   },
 });
 export const {
+  set_list_unidades_organizacionales,
+  set_tipo_documento_notificacion,
+  set_tipos_documento_notificacion,
+  set_tipos_acto_administrativo,
+  set_serie_subserie,
+  set_trd,
+  set_unidades_marcadas,
+  set_acto_administrativo,
+  set_actos_administrativos,
+  set_expediente,
+  set_expedientes,
+  set_tramite,
+  set_tramites,
   set_notification_requests,
   set_notification_request,
   set_notifications_per_request,
   set_notification_per_request,
   set_list_document_types,
   set_list_status,
+  set_list_status_asignation,
   set_list_groups,
+  set_group,
   set_tipo_notificacion,
   set_tipos_notificacion,
   set_causa_notificacion,
