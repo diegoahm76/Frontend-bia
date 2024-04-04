@@ -125,14 +125,29 @@ export const TalentoHumano: React.FC = () => {
     };
 
     const columns = [
-        { field: 'nivel', headerName: 'Nivel', width: 130, flex: 1 },
-        { field: 'nombre', headerName: 'Nombre', width: 130, flex: 1 },
-        { field: 'descripcion', headerName: 'Descripcion', width: 130, flex: 1 },
-        { field: 'valor', headerName: 'Valor  ', width: 130, flex: 1 },
+        { field: 'nivel', headerName: 'Nivel',  flex: 1 },
+        { field: 'nombre', headerName: 'Nombre',   flex: 1 },
+        {
+            field: 'valor',
+            headerName: 'Valor',
+          
+            flex: 1,
+            renderCell: (params:any) => {
+                // Formatear el valor a pesos colombianos
+                const valorFormateado = new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0, // Ajusta según la precisión deseada
+                }).format(params.value);
+                
+                return <>{valorFormateado}</>;
+            },
+        },
+        { field: 'descripcion', headerName: 'Descripcion',  flex: 1 },
         {
             field: 'Acciones',
             headerName: 'Acciones',
-            width: 200,
+           
             flex: 1,
             renderCell: (params: any) => (
                 <>
@@ -154,18 +169,18 @@ export const TalentoHumano: React.FC = () => {
         },
 
     ];
-    // const handleEliminarConfiguracion = async (id: number) => {
-    //     try {
-    //         const url = `/recaudo/configuracion_baisca/tiporenta/delete/${id}/`;
-    //         const response = await api.delete(url);
-    //         control_error("eliminado exitosamente ");
+    const handleEliminarConfiguracion = async (id: number) => {
+        try {
+            const url = `/recaudo/configuracion_baisca/tiporenta/delete/${id}/`;
+            const response = await api.delete(url);
+            control_error("eliminado exitosamente ");
 
-    //     } catch (error: any) {
-    //         console.error("Error al eliminar la configuración", error);
+        } catch (error: any) {
+            console.error("Error al eliminar la configuración", error);
 
-    //         // Manejar el error
-    //     }
-    // };
+            // Manejar el error
+        }
+    };
 
 
 
@@ -326,8 +341,7 @@ export const TalentoHumano: React.FC = () => {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={6}>
-
+                        <Grid item xs={6}> 
                             <FormControl fullWidth size="small" variant="outlined" required>
                                 <InputLabel id="select-nombre-label">Nombre</InputLabel>
                                 <Select
@@ -345,18 +359,7 @@ export const TalentoHumano: React.FC = () => {
                                     <MenuItem value="Asistencial">Asistencial</MenuItem>
                                     <MenuItem value="otro">Otro</MenuItem>
                                 </Select>
-                            </FormControl>
-
-                            {/* <TextField
-                                label="Nombre"
-                                variant="outlined"
-                                size="small"
-                                fullWidth
-                                required
-                                name="nombre"
-                                value={formData.nombre}
-                                onChange={handleInputChange}
-                            /> */}
+                            </FormControl> 
                         </Grid>
                         {selectedOption === 'otro' && (
                             <Grid item xs={6}>
