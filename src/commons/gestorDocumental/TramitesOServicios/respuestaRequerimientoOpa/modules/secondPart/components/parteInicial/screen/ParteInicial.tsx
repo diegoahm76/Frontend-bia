@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useContext } from 'react';
-import { PerSolicitaRequerimiento } from '../components/perSolicitaRequerimiento/PerSolicitaRequerimiento';
 import { PersonaTitular } from '../components/personaTitular/PersonaTitular';
 import { Grid } from '@mui/material';
 import { ModalAndLoadingContext } from '../../../../../../../../../context/GeneralContext';
@@ -34,7 +33,6 @@ export const ParteInicial: React.FC = (): JSX.Element => {
   return (
     <>
       <PersonaTitular />
-      {/*<PerSolicitaRequerimiento />*/}
     </>
   );
 };

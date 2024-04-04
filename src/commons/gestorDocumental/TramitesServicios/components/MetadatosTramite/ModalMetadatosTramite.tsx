@@ -35,7 +35,7 @@ export const ModalMetadatosTramite = ({
 }: IProps) => {
 
     const { form, setForm } = useContext(FormContextMetadatos);
-    console.log(form)
+     console.log(form)
 
 
     // Función para manejar el cambio en los campos del formulario
@@ -57,7 +57,7 @@ export const ModalMetadatosTramite = ({
             tieneTipologiaRelacionada: false,
             tipologiaRelacionada: '',
             descripcion: '',
-            tipologiaRelacionadaotra: '',
+            tipologiaRelacionadaotra:'',
             CodCategoriaArchivo: '',
             keywords:'', // Nuevo campo para almacenar las palabras clave
 

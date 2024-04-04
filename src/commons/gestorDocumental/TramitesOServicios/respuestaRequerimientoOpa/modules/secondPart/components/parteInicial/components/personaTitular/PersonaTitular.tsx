@@ -2,7 +2,6 @@
 import { Grid, TextField } from '@mui/material';
 import { useContext } from 'react';
 import { Title } from '../../../../../../../../../../components';
-import { ResRequerimientoOpaContext } from '../../../../../../context/ResRequerimientoOpaContext';
 import { useAppSelector } from '../../../../../../../../../../hooks';
 
 export const PersonaTitular = (): JSX.Element => {
