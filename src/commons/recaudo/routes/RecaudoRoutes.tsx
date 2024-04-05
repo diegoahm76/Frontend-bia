@@ -22,6 +22,7 @@ import { AprovacionAutodeclaracion } from '../screens/AprovacionAutodeclaracion'
 import { ActivacionComponentRoutes } from '../components/aprobarDocumento/routes/ActivacoinDocumento';
 import { Indicadores } from '../screens/Indicadores';
 import { TalentoHumano } from '../screens/TalentoHumano';
+import { IndicadoresRecaudo } from '../screens/IndicadoresRecaudo';
 
 
 
@@ -51,6 +52,7 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="formulario_auto_declaracion/*" element={<ActivacionComponentRoutes/>} />
       <Route path="Indicadores/*" element={<Indicadores/>} />
       <Route path="talento_humano/*" element={<TalentoHumano />} />
+      <Route path="graficas_indicadores/*" element={<IndicadoresRecaudo/>} />
 
       
       
