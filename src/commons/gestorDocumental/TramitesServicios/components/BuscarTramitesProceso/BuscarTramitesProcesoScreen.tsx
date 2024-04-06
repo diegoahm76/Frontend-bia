@@ -138,7 +138,7 @@ export const BuscarTramitesProcesoScreen = () => {
             flex: 1,
             valueFormatter: (params: any) => formatDate(params.value),
         },
-        { field: "cod_tipo_operacion_tramite", headerName: "Código Tipo Operación Trámite", flex: 1 },
+        // { field: "cod_tipo_operacion_tramite", headerName: "Código Tipo Operación Trámite", flex: 1 },
         { field: "tipo_operacion_tramite", headerName: "Tipo Operación Trámite", flex: 1 },
         {
             field: "pago",
