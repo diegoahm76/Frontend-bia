@@ -4,39 +4,38 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
+import { interface_entradas_relacionadas } from '../interfaces/types';
 
 
 
 interface CustomColumn extends GridColDef {
-  renderCell?: (params: { row: any }) => React.ReactNode;
+  renderCell?: (params: { row: interface_entradas_relacionadas }) => React.ReactNode;
 }
 
 
 interface props {
-  data_funcionarios_terceros: any[];
-  set_funcionario_tercero_temp: React.Dispatch<React.SetStateAction<any>>;
-  loadding_tabla: boolean;
+  data_entradas_relacionadas: interface_entradas_relacionadas[];
+  set_entrada_relacionada_seleccionada: React.Dispatch<React.SetStateAction<interface_entradas_relacionadas>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 const TablaEntradasEspeciales: React.FC<props> = ({
-  data_funcionarios_terceros,
-  set_funcionario_tercero_temp,
-  loadding_tabla,
+  data_entradas_relacionadas,
+  set_entrada_relacionada_seleccionada,
   }) => {
 
 
-  const asignar_funcionario_tercero = (newSelectionModel: GridSelectionModel) => {
+  const selecionar_entrada_relacionada = (newSelectionModel: GridSelectionModel) => {
     if (newSelectionModel.length > 0) {
-      const persona_tercero_seleccionado = data_funcionarios_terceros.find(row => row.id_clase_tercero_persona === newSelectionModel[0]);
-      const persona_tercero = persona_tercero_seleccionado ?? Object;
-      set_funcionario_tercero_temp(persona_tercero);
+      const entrada_relacionada_seleccionada = data_entradas_relacionadas.find(row => row.id_entrada_almacen === newSelectionModel[0]);
+      const entrada_encontrada = entrada_relacionada_seleccionada ?? Object;
+      set_entrada_relacionada_seleccionada(entrada_encontrada);
     }
   }
 
   const columns: CustomColumn[] = [
     { field: 'tipo_entrada', headerName: 'Tipo de entrada', minWidth: 120, flex: 1,},
-    { field: 'consetivo', headerName: 'Consecutivo', minWidth: 120, flex: 1,},
+    { field: 'consecutivo', headerName: 'Consecutivo', minWidth: 120, flex: 1,},
     { field: 'fecha_registro', headerName: 'Fecha y hora de registro', minWidth: 120, flex: 1,},
   ];
 
@@ -49,11 +48,11 @@ const TablaEntradasEspeciales: React.FC<props> = ({
         alignItems="center" >
         <Grid item  >
           <ButtonGroup style={{ margin: 5, }}>
-              {download_xls({ nurseries: data_funcionarios_terceros, columns })}
+              {download_xls({ nurseries: data_entradas_relacionadas, columns })}
               {download_pdf({
-                  nurseries: data_funcionarios_terceros,
+                  nurseries: data_entradas_relacionadas,
                   columns,
-                  title: 'Funcionarios Responsables',
+                  title: 'Entradas Relacionadas',
               })}
           </ButtonGroup>
         </Grid>
@@ -63,15 +62,14 @@ const TablaEntradasEspeciales: React.FC<props> = ({
         style={{margin:'15px 0px'}}
         density="compact"
         autoHeight
-        loading={loadding_tabla}
-        rows={data_funcionarios_terceros ?? []}
+        rows={data_entradas_relacionadas ?? []}
         columns={columns ?? []}
         pageSize={5}
         rowHeight={75}
         rowsPerPageOptions={[5]}
-        onSelectionModelChange={asignar_funcionario_tercero}
+        onSelectionModelChange={selecionar_entrada_relacionada}
         experimentalFeatures={{ newEditingApi: true }}
-        getRowId={(row) => row?.id_clase_tercero_persona !== undefined ? row.id_clase_tercero_persona : uuidv4()}
+        getRowId={(row) => row?.id_entrada_almacen !== undefined ? row.id_entrada_almacen : uuidv4()}
       />
     </>
   );

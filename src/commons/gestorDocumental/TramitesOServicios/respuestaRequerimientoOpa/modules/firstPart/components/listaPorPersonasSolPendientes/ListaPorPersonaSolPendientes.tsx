@@ -58,7 +58,7 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
         console.error(error);
       }
     })();
-  }, [currentPersonaRespuestaUsuario]);
+  }, [currentPersonaRespuestaUsuario?.id_persona || currentPersonaRespuestaUsuario?.titular.id_persona]);
 
   // ! columns
 
@@ -82,6 +82,12 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
                     ...listaOpas,
                     reqOSolSinResponderRelacionadasAUnaOpa: data || [],
                   });
+                  dispatch(
+                    setCurrentPersonaRespuestaUsuario({
+                      ...currentPersonaRespuestaUsuario,
+                     id_solicitud_tramite: params.row.id_solicitud_tramite,
+                    })
+                  );
                 } catch (error) {
                   console.error(error);
                 }

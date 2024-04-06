@@ -3,13 +3,15 @@ import { Button, Chip, CircularProgress, Divider, FormControl, Grid, InputLabel,
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SearchIcon from '@mui/icons-material/Search';
-import { interface_anexo_opcional, interface_form_inf_tercero, interface_inf_tercero, response_obtener_consecutivo } from '../interfaces/types';
+import { interface_anexo_opcional, interface_entradas_relacionadas, interface_form_inf_tercero, interface_inf_tercero, response_obtener_consecutivo } from '../interfaces/types';
 import dayjs, { Dayjs } from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { get_obtener_consecutivo } from '../thunks/salida_especial_activos';
 import { control_error } from '../../../../helpers';
 import ModalBusquedaTercero from '../manners/ModalBusquedaTercero';
 import AnexosOpcionales from './AnexosOpcionales';
+import { Title } from '../../../../components';
+import TablaEntradasRelacionadas from '../tables/TablaEntradasRelacionadas';
 
 interface props {
   set_consecutivo: React.Dispatch<React.SetStateAction<number | null>>;
@@ -30,6 +32,7 @@ interface props {
   set_data_inf_tercero_seleccionado: React.Dispatch<React.SetStateAction<interface_inf_tercero>>;
   data_anexos_opcionales: interface_anexo_opcional[];
   set_data_anexos_opcionales: React.Dispatch<React.SetStateAction<interface_anexo_opcional[]>>;
+  data_entradas_relacionadas: interface_entradas_relacionadas[];
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -51,7 +54,8 @@ const ConfiguracionGeneral: React.FC<props> = ({
   set_accion,
   set_data_inf_tercero_seleccionado,
   data_anexos_opcionales,
-  set_data_anexos_opcionales
+  set_data_anexos_opcionales,
+  data_entradas_relacionadas,
   }) => {
   
   const dispatch = useDispatch();
@@ -262,6 +266,22 @@ const ConfiguracionGeneral: React.FC<props> = ({
             />
           </Grid>
         </Grid>
+
+        {data_entradas_relacionadas.length > 0 &&
+          <Grid container item xs={12} rowSpacing={4} columnSpacing={1} sx={{
+            position: "relative",
+            background: "#FAFAFA",
+            borderRadius: "15px",
+            p: "40px",
+            my: "20px",
+            boxShadow: "0px 3px 6px #042F4A26",
+            }}>
+            <Title title="Entradas relacionadas" />
+            <TablaEntradasRelacionadas
+              data_entradas_relacionadas={data_entradas_relacionadas}
+            />
+          </Grid>
+        }
 
         <Grid container item xs={12} lg={3}>
           <TextField
