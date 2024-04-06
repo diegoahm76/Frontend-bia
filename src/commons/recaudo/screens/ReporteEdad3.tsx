@@ -6,24 +6,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import { useSelector } from 'react-redux';
-import { api } from '../../../api/axios';
-import { DataGrid } from '@mui/x-data-grid';
-import { SetStateAction, useEffect, useState } from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
+import { useState } from 'react';
 import { Title } from '../../../components/Title';
-import { AuthSlice } from '../../auth/interfaces';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { control_error } from '../alertas/store/thunks/alertas';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { BuscadorPersona } from '../../../components/BuscadorPersona';
-import { control_success } from '../../recursoHidrico/requets/Request';
-import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
-import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button, IconButton, styled } from '@mui/material';
+import { Grid, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
@@ -199,8 +185,11 @@ export const ReporteEdad3: React.FC = () => {
                         variant="outlined"
                         size="small"
                         fullWidth
+
                         onChange={handleInputChange}
-                        value={formData.edad}
+                        // value={formData.edad}
+                        value={'TODOS'}
+
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
@@ -212,7 +201,9 @@ export const ReporteEdad3: React.FC = () => {
                         size="small"
                         fullWidth
                         onChange={handleInputChange}
-                        value={formData.deuda}
+                        // value={formData.deuda}
+                        value={'TODOS'}
+
                     />
                 </Grid>
 

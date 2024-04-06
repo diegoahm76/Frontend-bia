@@ -140,7 +140,7 @@ export const Indicadores: React.FC = () => {
             ...prevData,
             vigencia_reporta: knobValue,
         }))
-        fetchHistorico()
+        // fetchHistorico()
     }, [knobValue]);
 
     //crear 
@@ -189,7 +189,7 @@ export const Indicadores: React.FC = () => {
                 ...prevData,
                 vigencia_reporta: knobValue,
             }))
-            const url = `/recaudo/configuracion_baisca/indicadores/${formData.vigencia_reporta}/${formData.formulario}/`;
+            const url = `/recaudo/configuracion_baisca/indicadores/${knobValue}/${formData.formulario}/`;
 
             // 2024/1/
             const res = await api.get(url);
@@ -203,35 +203,36 @@ export const Indicadores: React.FC = () => {
         }
     };
 
+    // useEffect(() => {
+    //     void fetchHistorico();
+    // }, []);
     useEffect(() => {
+        
         void fetchHistorico();
-    }, []);
-    useEffect(() => {
-        void fetchHistorico();
+
     }, [formData.formulario]);
 
-  
+
     useEffect(() => {
         updateget()
     }, []);
 
-    useEffect(() => {
-        void fetchHistorico();
-    }, [formData.vigencia_reporta]);
+    // useEffect(() => {
+    //     void fetchHistorico();
+    // }, [formData.vigencia_reporta]);
 
     const getMonthRange = (mesId: number, frecuenciaMedicion: string) => {
         switch (frecuenciaMedicion) {
             case 'mensual':
                 return meses[mesId - 1]; // Retorna el mes específico
             case 'semestral':
-                return mesId <= 6 ? 'enero-junio' : 'julio-diciembre';
+                return meses[mesId - 1];
             case 'trimestral':
-                if (mesId <= 3) return 'enero-marzo';
-                if (mesId <= 6) return 'abril-junio';
-                if (mesId <= 9) return 'julio-septiembre';
-                return 'octubre-diciembre';
+                return meses[mesId - 1];
+            case 'cuatrimestral':
+                return meses[mesId - 1];
             case 'anual':
-                return 'enero-diciembre';
+                return meses[mesId - 1];
             default:
                 return ''; // Manejar casos no definidos o por defecto
         }
@@ -243,8 +244,33 @@ export const Indicadores: React.FC = () => {
             headerName: 'Meses',
             width: 250,
             valueGetter: (params: { row: { mes_id: any; }; }) => getMonthRange(params.row.mes_id, formData.frecuencia_medicion)
-        }, { field: 'variable_1', headerName: 'Variable 1', width: 350 },
-        { field: 'variable_2', headerName: 'Variable 2', width: 350 },
+        },
+        {
+            field: 'variable_1', headerName: 'Variable 1', width: 350,
+            renderCell: (params: any) => {
+                // Formatear el valor a pesos colombianos
+                const valorFormateado = new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0, // Ajusta según la precisión deseada
+                }).format(params.value);
+
+                return <>{valorFormateado}</>;
+            },
+        },
+        {
+            field: 'variable_2', headerName: 'Variable 2', width: 350,
+            renderCell: (params: any) => {
+                // Formatear el valor a pesos colombianos
+                const valorFormateado = new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0, // Ajusta según la precisión deseada
+                }).format(params.value);
+
+                return <>{valorFormateado}</>;
+            },
+        },
         {
             field: 'logro',
             headerName: 'Logro (%)',
@@ -330,32 +356,89 @@ export const Indicadores: React.FC = () => {
     };
 
     // Función para actualizar formData cuando se selecciona un mes y se ingresan las variables
+    // const updateFormData = () => {
+    //     control_success("Variables agregadas")
+
+    //     const existingIndex = formData.indicadorvalor_set.findIndex(indicador => indicador.mes_id === mesId);
+    //     const newIndicadorValor = {
+    //         mes_id: mesId,
+    //         valor: '0',
+    //         variable_1: variable1,
+    //         variable_2: variable2
+    //     };
+
+    //     if (existingIndex > -1) {
+    //         const updatedIndicadorValorSet = [...formData.indicadorvalor_set];
+    //         updatedIndicadorValorSet[existingIndex] = newIndicadorValor;
+    //         setFormData((prevData) => ({
+    //             ...prevData,
+    //             indicadorvalor_set: updatedIndicadorValorSet
+    //         }));
+    //     } else {
+    //         setFormData((prevData) => ({
+    //             ...prevData,
+    //             indicadorvalor_set: [...prevData.indicadorvalor_set, newIndicadorValor]
+    //         }));
+    //     }
+    // };
     const updateFormData = () => {
-        control_success("Variables agregadas")
-
-        const existingIndex = formData.indicadorvalor_set.findIndex(indicador => indicador.mes_id === mesId);
-        const newIndicadorValor = {
-            mes_id: mesId,
-            valor: '0',
-            variable_1: variable1,
-            variable_2: variable2
-        };
-
-        if (existingIndex > -1) {
-            const updatedIndicadorValorSet = [...formData.indicadorvalor_set];
-            updatedIndicadorValorSet[existingIndex] = newIndicadorValor;
-            setFormData((prevData) => ({
-                ...prevData,
-                indicadorvalor_set: updatedIndicadorValorSet
-            }));
-        } else {
-            setFormData((prevData) => ({
-                ...prevData,
-                indicadorvalor_set: [...prevData.indicadorvalor_set, newIndicadorValor]
-            }));
+        
+    
+        // Clonar indicadorvalor_set para evitar la mutación directa del estado
+        let updatedIndicadorValorSet = [...formData.indicadorvalor_set];
+    
+        // Determinar el rango de meses basado en la frecuencia de medición
+        let monthRange: any[] = [];
+        const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+        switch (formData.frecuencia_medicion) {
+            case 'anual':
+                monthRange = monthNames.map((_, index) => index + 1);
+                break;
+            case 'semestral':
+                monthRange = selectedMonth.includes('enero') ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
+                break;
+            case 'mensual':
+                monthRange = [meses.indexOf(selectedMonth.split('-')[0]) + 1]; // Asumiendo que selectedMonth es "enero", "febrero", etc.
+                break;
+            case 'trimestral':
+                const startMonthIndex = monthNames.indexOf(selectedMonth.split('-')[0]);
+                const trimestreInicio = Math.floor(startMonthIndex / 3) * 3; // Encuentra el inicio del trimestre
+                monthRange = [trimestreInicio + 1, trimestreInicio + 2, trimestreInicio + 3];
+                break;
+            // Agrega lógica para "cuatrimestral" si es necesario
         }
+    
+    
+        // Agregar o actualizar valores para cada mes en el rango determinado
+        monthRange.forEach(mesId => {
+            const existingIndex = updatedIndicadorValorSet.findIndex(indicador => indicador.mes_id === mesId);
+            const newIndicadorValor = {
+                mes_id: mesId,
+                valor: '0', // Actualiza esto con el valor real que necesitas agregar
+                variable_1: variable1,
+                variable_2: variable2
+            };
+    
+            if (existingIndex > -1) {
+                updatedIndicadorValorSet[existingIndex] = {...newIndicadorValor};
+            } else {
+                updatedIndicadorValorSet.push({...newIndicadorValor});
+            }
+        });
+    
+        // Actualizar el estado con el nuevo array modificado
+        setFormData(prevData => ({
+            ...prevData,
+            indicadorvalor_set: updatedIndicadorValorSet
+        }));
     };
-
+    
+    useEffect(() => {
+        // Suponiendo que quieres ejecutar control_success solo si indicadorvalor_set tiene elementos
+        if (formData.indicadorvalor_set.length > 0) {
+            control_success("Variables agregadas");
+        }
+    }, [formData.indicadorvalor_set]);
     const getFilteredMonths = () => {
         switch (formData.frecuencia_medicion) {
             case 'mensual':
@@ -366,6 +449,8 @@ export const Indicadores: React.FC = () => {
             case 'trimestral':
                 // Ejemplo para trimestral, ajusta según corresponda
                 return ['enero-marzo', 'abril-junio', 'julio-septiembre', 'octubre-diciembre'];
+            case 'cuatrimestral':
+                return ['enero-abril', 'mayo-agosto', 'septiembre-diciembre'];
             case 'anual':
                 // Para anual, podrías elegir un mes o simplemente dejar seleccionar cualquier
                 return ['enero-diciembre']; // Ajusta según necesites
@@ -455,10 +540,45 @@ export const Indicadores: React.FC = () => {
     const datos = indicadorvalor;
 
 
+    // useEffect(() => {
+    //     const actualizaDatos = () => {
+    //         const logros = datos.map(dato => parseFloat(((parseFloat(dato.variable_1) / parseFloat(dato.variable_2)) * 100).toFixed(2)));
+    //         const nombresMeses = datos.map(dato => meses[dato.mes_id - 1]);
+
+    //         setSeries([{ name: "Logro", data: logros }]);
+    //         setOptions(prevOptions => ({
+    //             ...prevOptions,
+    //             xaxis: { ...prevOptions.xaxis, categories: nombresMeses }
+    //         }));
+    //     };
+
+    //     actualizaDatos();
+    // }, [indicadorvalor]);
     useEffect(() => {
         const actualizaDatos = () => {
-            const logros = datos.map(dato => parseFloat(((parseFloat(dato.variable_1) / parseFloat(dato.variable_2)) * 100).toFixed(2)));
-            const nombresMeses = datos.map(dato => meses[dato.mes_id - 1]);
+            // Crear un arreglo de datos para todos los meses con valores predeterminados
+            let datosCompletos = Array.from({ length: 12 }, (_, index) => ({
+                mes_id: index + 1,
+                variable_1: "0",
+                variable_2: "0"
+            }));
+
+            // Mapear los datos existentes en el arreglo de datos completos
+            datos.forEach(dato => {
+                const mesIndex = dato.mes_id - 1;
+                if (mesIndex >= 0 && mesIndex < 12) {
+                    datosCompletos[mesIndex] = { ...dato };
+                }
+            });
+
+            // Ahora puedes usar datosCompletos en lugar de datos para asegurar que siempre tengas 12 meses
+            const logros = datosCompletos.map(dato => {
+                if (dato.variable_2 === "0") { // Evitar división por cero
+                    return 0;
+                }
+                return parseFloat(((parseFloat(dato.variable_1) / parseFloat(dato.variable_2)) * 100).toFixed(2));
+            });
+            const nombresMeses = datosCompletos.map(dato => meses[dato.mes_id - 1]);
 
             setSeries([{ name: "Logro", data: logros }]);
             setOptions(prevOptions => ({
@@ -468,7 +588,8 @@ export const Indicadores: React.FC = () => {
         };
 
         actualizaDatos();
-    }, [indicadorvalor]);
+    }, [indicadorvalor]); // Asegúrate de que indicadorvalor esté definido y sea parte de tus dependencias si es necesario
+
     const textoSeleccionado = (() => {
         switch (formData.formulario) {
             case "1":
@@ -478,7 +599,7 @@ export const Indicadores: React.FC = () => {
             case "3":
                 return "costo recaudo tua";
             case "4":
-                return "costo recaudo tr";
+                return "ambiental";
             default:
                 return "";
         }
@@ -549,11 +670,11 @@ export const Indicadores: React.FC = () => {
                             <MenuItem value="1">RECAUDO TUA</MenuItem>
                             <MenuItem value="2">RECAUDO TR</MenuItem>
                             <MenuItem value="3">COSTO RECAUDO TUA</MenuItem>
-                            <MenuItem value="4">COSTO RECAUDO TR</MenuItem>
+                            <MenuItem value="4">AMBIENTAL</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
-             
+
 
                 <Grid item xs={12} sm={3}>
                     <TextField
@@ -585,11 +706,30 @@ export const Indicadores: React.FC = () => {
                     />
                 </Grid> */}
 
-
-
                 <Grid item xs={12} sm={3}>
-                    <TextField
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="si-no-select-label"> proceso</InputLabel>
+                        <Select
+                            labelId="Procede recurso"
+                            name="proceso"
+                            value={formData.proceso}
+                            label="proceso"
+                            onChange={handleInputChange}
+                        >
+                            <MenuItem value="Direccionamiento estratégico">Direccionamiento estratégico  </MenuItem>
+                            <MenuItem value="Planeción estratégica">Planeción estratégica </MenuItem>
+                            <MenuItem value=" Gestión ambiental"> Gestión ambiental</MenuItem>
+                            <MenuItem value="Planificación y ordenamiento ambienta territorial"> Planificación y ordenamiento ambienta territorial</MenuItem>
+                            <MenuItem value="Autoridad ambiental"> Autoridad ambiental</MenuItem>
+                            <MenuItem value="Gestión humana ">  Gestión humana  </MenuItem>
+                            <MenuItem value=" Gestión logística"> Gestión logística   </MenuItem>
+                            <MenuItem value="Gestión jurídica "> Gestión jurídica </MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
 
+                {/* <Grid item xs={12} sm={3}>
+                    <TextField
                         label="proceso"
                         helperText='proceso'
                         size="small"
@@ -598,7 +738,7 @@ export const Indicadores: React.FC = () => {
                         value={formData.proceso}
                         onChange={handleInputChange}
                     />
-                </Grid>
+                </Grid> */}
 
 
 
@@ -673,7 +813,7 @@ export const Indicadores: React.FC = () => {
                         onChange={handleInputChange}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={3}>
                     <TextField
                         label="Tipo indicador"
                         helperText='Tipo indicador'
@@ -683,7 +823,30 @@ export const Indicadores: React.FC = () => {
                         value={formData.tipo_indicador}
                         onChange={handleInputChange}
                     />
+                </Grid> */}
+
+
+
+                <Grid item xs={12} sm={3}>
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="si-no-select-label"> Tipo indicador</InputLabel>
+                        <Select
+                            name="tipo_indicador"
+                            value={formData.tipo_indicador}
+                            label="Tipo indicador"
+                            onChange={handleInputChange}
+                        >
+                            <MenuItem value="Eficacia">Eficacia </MenuItem>
+                            <MenuItem value="Eficiencia">Eficiencia </MenuItem>
+
+                            <MenuItem value="Efectividad">Efectividad </MenuItem>
+
+
+
+                        </Select>
+                    </FormControl>
                 </Grid>
+
 
                 <Grid item xs={12} sm={3}>
                     <TextField
@@ -755,6 +918,7 @@ export const Indicadores: React.FC = () => {
                             <MenuItem value="mensual">Mensual</MenuItem>
                             <MenuItem value="semestral">Semestral</MenuItem>
                             <MenuItem value="trimestral">Trimestral</MenuItem>
+                            <MenuItem value="cuatrimestral">cuatrimestral</MenuItem> 
                             <MenuItem value="anual">Anual</MenuItem>
                         </Select>
                     </FormControl>
@@ -841,7 +1005,7 @@ export const Indicadores: React.FC = () => {
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
-                
+
                 <Title title={`Semáforo ${textoSeleccionado}`} />
                 <Grid item xs={2.4}  >
                     <Box
@@ -1011,15 +1175,22 @@ export const Indicadores: React.FC = () => {
                 sx={{
                     position: 'relative',
                     borderRadius: '15px',
-                    background: '#FAFAFA',
+                    background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
                     boxShadow: '0px 3px 6px #042F4A26',
                     p: '20px', m: '10px 0 20px 0', mb: '20px',
                 }}
             >
                 <Title title={`Gráfica  de indicadores ${textoSeleccionado}`} />
 
-
-                <Grid item xs={12} marginTop={2} sm={12}>
+                <Grid
+                    item
+                    xs={12}
+                    marginTop={2}
+                    sm={12}
+                    sx={{
+                        // background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
+                    }}
+                >
                     <ReactApexChart options={options} series={series} type="line" height={350} />
                 </Grid>
 
