@@ -2,16 +2,14 @@
 import { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
-  useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
 import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import TaskIcon from '@mui/icons-material/Task';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { columnsReqOpas } from './columnsReqOpas/columnsReqOpas';
-// import { columnsReqTra } from './columsReqTra/columnsReqTra';
+import { downloadCSV } from '../../../utils/downloadCSV';
+import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
 
 export const RequerimientosOpas: React.FC = (): JSX.Element => {
   const {
@@ -50,7 +48,7 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
         );
       },
     },*/
-   {
+  /* {
       headerName: 'Complemento asignado a unidad',
       field: 'complemento_asignado_unidad',
       minWidth: 250,
@@ -62,7 +60,7 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
           />
         );
       },
-    },
+    },*/
    {
       headerName: 'Acciones',
       field: 'Acciones',
@@ -70,11 +68,25 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-           {/* <Tooltip title="Ver info complemento asociado">
+             <Tooltip title="Exportar COMPLEMENTO OPA en fomato CSV">
               <IconButton
                 onClick={() => {
-                  setActionsComplementos(params?.row);
-                  handleFifthLoading(true);
+                  downloadCSV(params.row, `complemento_vital_OPA${Math.random()}.csv`);
+                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
                 }}
               >
                 <Avatar
@@ -86,17 +98,17 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <VisibilityIcon
+                  <DocumentScannerIcon
                     sx={{
-                      color: 'primary.main',
+                      color: 'success.main',
                       width: '18px',
                       height: '18px',
                     }}
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>*/}
-            <Tooltip title="Seleccionar elemento para procesos">
+            </Tooltip>
+           {/* <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {
                   //setActionsComplementos(params?.row);
@@ -120,7 +132,7 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>
+            </Tooltip>*/}
           </>
         );
       },

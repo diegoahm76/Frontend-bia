@@ -22,6 +22,9 @@ import { columnsTramites } from './columnsTramites/columnsTramites';
 
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { getComplementosAsociadosTramite } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getComplementosTramites.service';
+import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import { api } from '../../../../../../../../../../api/axios';
+import { downloadCSV } from '../../../utils/downloadCSV';
 
 export const ListaElementosTramites = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -178,11 +181,48 @@ export const ListaElementosTramites = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>*/}
-            <Tooltip title="Ver detalle del trámite">
+             <Tooltip title="Exportar TRÁMITE en fomato CSV">
               <IconButton
                 onClick={() => {
-                  handleSixthLoading(true);
-                  //setActionsTramites(params?.row);
+                
+                    (async () => {
+                      try {
+                        const { data } = await api.get(
+                          `tramites/general/get/?radicado=${params?.row?.radicado}`
+                        );
+                
+                        if (data?.data) {
+                          downloadCSV(data?.data, `tramite_vital${params?.row?.radicado}.csv`);
+                          return;
+                          //control_success('se ha encontrado la siguiente información');
+                        } 
+                        control_warning('No se ha encontrado información para exportar');
+                      } catch (error) {
+                        control_warning('No se ha encontrado información para exportar, intente de nuevo o con otro trámite');
+
+                      }
+                    })();
+
+                
+
+
+
+
+                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
                 }}
               >
                 <Avatar
@@ -194,7 +234,7 @@ export const ListaElementosTramites = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <PreviewIcon
+                  <DocumentScannerIcon
                     sx={{
                       color: 'success.main',
                       width: '18px',

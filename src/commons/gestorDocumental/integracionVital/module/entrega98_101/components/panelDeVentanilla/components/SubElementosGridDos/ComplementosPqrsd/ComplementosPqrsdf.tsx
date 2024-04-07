@@ -1,20 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useContext, useState } from 'react';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
-  useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { columnsComplementoPqrsdf } from './columnsComplementoPqrsd/colComplePqrsdf';
-import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Chip, IconButton, Tooltip } from '@mui/material';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
 import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
-import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
+import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import { downloadCSV } from '../../../utils/downloadCSV';
 
 export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   const {
@@ -24,7 +19,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
   //* columns definition
   const columns = [
     ...columnsComplementoPqrsdf,
-    {
+   /* {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
       minWidth: 200,
@@ -76,7 +71,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
           />
         );
       },
-    },
+    },*/
     {
       headerName: 'Acciones',
       field: 'Acciones',
@@ -84,28 +79,26 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            <Tooltip title="Ver info complemento asociado">
+            <Tooltip title="Exportar COMPLEMENTO PQRSDF en fomato CSV">
               <IconButton
-                /*onClick={() => {
-                  void getAnexosComplemento(
-                    params?.row?.idComplementoUsu_PQR
-                  ).then((res) => {
+                onClick={() => {
+                  downloadCSV(params.row, `complemento_vital_PQRSDF${Math.random()}.csv`);
+                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     //  console.log('')(res);
-
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
                     if (res.length > 0) {
-                      setAnexos(res);
                       handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
                       handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      setActionsComplementos(params?.row);
-                      navigate(
-                        `/app/gestor_documental/panel_ventanilla/complemento_info/${params.row.idComplementoUsu_PQR}`
-                      );
                       return;
                     }
 
                     return;
-                  });
-                }}*/
+                  });*/
+                }}
               >
                 <Avatar
                   sx={{
@@ -116,9 +109,9 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <VisibilityIcon
+                  <DocumentScannerIcon
                     sx={{
-                      color: 'primary.main',
+                      color: 'success.main',
                       width: '18px',
                       height: '18px',
                     }}
@@ -126,7 +119,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-            <Tooltip title="Seleccionar elemento para procesos">
+           {/* <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {
                   //setActionsComplementos(params?.row);
@@ -150,7 +143,7 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>
+            </Tooltip>*/}
           </>
         );
       },

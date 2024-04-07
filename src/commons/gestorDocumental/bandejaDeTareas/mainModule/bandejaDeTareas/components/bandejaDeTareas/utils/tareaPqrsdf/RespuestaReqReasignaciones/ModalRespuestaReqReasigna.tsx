@@ -18,7 +18,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
-import { getComplementosReqResSolicitudes } from '../../../../../services/servicesStates/pqrsdf/reqResSolicitudes/getReqResSolicitudes.service';
+import { getComplementosReqResOPA, getComplementosReqResSolicitudes } from '../../../../../services/servicesStates/pqrsdf/reqResSolicitudes/getReqResSolicitudes.service';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { GridValueGetterParams } from '@mui/x-data-grid';
 import { columnsStatic } from './columns/columns';
@@ -50,22 +50,39 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
 
   //* useeffect para llamar un servicio con la informacion, solo se llama el servicio cuando handleThirdLoading es true
 
-  useEffect(() => {
-    if (fourthLoading) {
-      (async () => {
-        getComplementosReqResSolicitudes(
-          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
-        ).then((data) => {
-          setDataComplementos(data);
-        });
-      })();
-    }
-  }, [fourthLoading]);
-
+ useEffect(() => {
+  if (fourthLoading) {
+    (async () => {
+      switch (currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea) {
+        case 'RESPONDER PQRSDF':
+          // Código para manejar tarea1
+          getComplementosReqResSolicitudes(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
+          ).then((data) => {
+            setDataComplementos(data);
+          });
+          break;
+        case 'RESPONDER OPA':
+          getComplementosReqResOPA(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
+          ).then((data) => {
+            setDataComplementos(data);
+          });
+          // Código para manejar tarea2
+          break;
+        default:
+          break;
+      }
+    })();
+  }
+}, [fourthLoading]);
   const [dataComplementos, setDataComplementos] = useState<any[]>([]);
 
   const columns = [
     ...columnsStatic,
+
+    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea === 'RESPONDER PQRSDF' &&
+
     {
       headerName: 'Acciones',
       field: 'acciones',

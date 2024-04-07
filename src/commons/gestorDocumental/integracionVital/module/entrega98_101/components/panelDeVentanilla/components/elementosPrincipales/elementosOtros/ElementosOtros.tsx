@@ -10,6 +10,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { useContext, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
+import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import { downloadCSV } from '../../../utils/downloadCSV';
 
 export const ElementosOtros = (): JSX.Element => {
   //* redux states
@@ -120,11 +122,25 @@ export const ElementosOtros = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            <Tooltip title="Ver info de la solicitud de otros">
+           <Tooltip title="Exportar OTRO en fomato CSV">
               <IconButton
                 onClick={() => {
-                  handleOpenModalOne(true);
-                  //setActionsOtrosManejo(params?.row);
+                  downloadCSV(params.row, `otro_vital_${params.row.id_otros}.csv`);
+                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
                 }}
               >
                 <Avatar
@@ -136,9 +152,9 @@ export const ElementosOtros = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <VisibilityIcon
+                  <DocumentScannerIcon
                     sx={{
-                      color: 'primary.main',
+                      color: 'success.main',
                       width: '18px',
                       height: '18px',
                     }}

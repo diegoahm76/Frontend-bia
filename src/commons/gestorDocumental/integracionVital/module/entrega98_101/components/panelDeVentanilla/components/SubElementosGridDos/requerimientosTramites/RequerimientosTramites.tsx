@@ -5,11 +5,11 @@ import {
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { Avatar, Chip, IconButton, Tooltip } from '@mui/material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { control_info } from '../../../../../../../../alertasgestor/utils/control_error_or_success';
+import { Avatar, IconButton, Tooltip } from '@mui/material';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { columnsReqTra } from './columsReqTra/columnsReqTra';
+import { downloadCSV } from '../../../utils/downloadCSV';
+import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
 
 export const RequerimientosTramites: React.FC = (): JSX.Element => {
   const {
@@ -25,7 +25,7 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
   const columns = [
     //* se debe revisar si el tipo de complemento es pqrsdf o tramite para poder mostrar la información de la manera correcta
     ...columnsReqTra,
-    {
+  /*  {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
       minWidth: 200,
@@ -77,7 +77,7 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
           />
         );
       },
-    },
+    },*/
     {
       headerName: 'Acciones',
       field: 'Acciones',
@@ -85,11 +85,25 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            <Tooltip title="Ver info complemento asociado">
+           <Tooltip title="Exportar COMPLEMENTO TRÁMITE en fomato CSV">
               <IconButton
                 onClick={() => {
-                  //setActionsComplementos(params?.row);
-                  handleFifthLoading(true);
+                  downloadCSV(params.row, `complemento_vital_TRAMITE${Math.random()}.csv`);
+                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
                 }}
               >
                 <Avatar
@@ -101,9 +115,9 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <VisibilityIcon
+                  <DocumentScannerIcon
                     sx={{
-                      color: 'primary.main',
+                      color: 'success.main',
                       width: '18px',
                       height: '18px',
                     }}

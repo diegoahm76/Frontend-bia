@@ -19,6 +19,8 @@ import Swal from 'sweetalert2';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getComplementosAsociadosOpas } from '../../../../../../../toolkit/thunks/opas/complementos/getComplementosOpas.service';
+import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import { downloadCSV } from '../../../utils/downloadCSV';
 
 export const ElementoOPAS = (): JSX.Element => {
   // ? dispatch necesario
@@ -154,11 +156,25 @@ export const ElementoOPAS = (): JSX.Element => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Ver información asociada a OPA">
+            <Tooltip title="Exportar OPA en fomato CSV">
               <IconButton
                 onClick={() => {
-                  handleOpenModalOne(true);
-                  //setActionsOpas(params?.row);
+                  downloadCSV(params.row, `OPA_vital_${params.row.id_solicitud_tramite}.csv`);
+                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
                 }}
               >
                 <Avatar
@@ -170,9 +186,9 @@ export const ElementoOPAS = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <VisibilityIcon
+                  <DocumentScannerIcon
                     sx={{
-                      color: 'primary.main',
+                      color: 'success.main',
                       width: '18px',
                       height: '18px',
                     }}

@@ -1,16 +1,12 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext, useState } from 'react';
-import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Avatar, Chip, IconButton, Tooltip } from '@mui/material';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
-import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
-import { LoadingButton } from '@mui/lab';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import TaskIcon from '@mui/icons-material/Task';
 import {
   setListaElementosComplementosRequerimientosOtros,
 } from '../../../../../../../toolkit/store/VitalStore';
@@ -21,18 +17,11 @@ import {
 import Swal from 'sweetalert2';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
-import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
+import { downloadCSV } from '../../../utils/downloadCSV';
 
 export const ListaElementosPqrsdf = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
-  //* navigate declaration
-  const navigate = useNavigate();
-  //* context declaration
-  const {
-    setRadicado,
-    setValue,
-  } = useContext(PanelVentanillaContext);
   const {
     handleThirdLoading,
   } = useContext(ModalAndLoadingContext);
@@ -230,9 +219,10 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-            <Tooltip title="Ver info pqrsdf">
+            <Tooltip title="Exportar PQRSDF en fomato CSV">
               <IconButton
                 onClick={() => {
+                  downloadCSV(params.row, `pqrsdf_vital_${params.row.id_PQRSDF}.csv`);
                   /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     //  console.log('')(res);
                     setActionsPQRSDF(params?.row);
@@ -259,9 +249,9 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <VisibilityIcon
+                  <DocumentScannerIcon
                     sx={{
-                      color: 'primary.main',
+                      color: 'success.main',
                       width: '18px',
                       height: '18px',
                     }}
