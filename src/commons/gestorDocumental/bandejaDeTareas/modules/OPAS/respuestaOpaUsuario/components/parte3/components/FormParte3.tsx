@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Avatar,
@@ -532,7 +533,7 @@ export const FormParte3 = ({
             color="text.primary"
             sx={{ textAlign: 'center', justifyContent: 'center', mt: '1.5rem' }}
           >
-            Sin anexos creados para esta solicitud de requerimiento
+            Sin anexos creados para esta respuesta de OPA
           </Typography>
         )}
 

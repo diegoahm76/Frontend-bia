@@ -2,10 +2,10 @@
 export const choiceShowTaskRequerimientos = [
   {
     label: 'SI',
-    value: true,
+    value: 'True',
   },
   {
     label: 'NO',
-    value: false,
+    value: 'False',
   }
 ]

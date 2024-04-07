@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import Swal from 'sweetalert2';
@@ -10,7 +11,7 @@ export const getDetalleSolicitud = async (
   try {
     setLoading(true);
     // gestor/bandeja-tareas/pqrsdf/detalle-requerimiento/get/10/
-    const url = `gestor/bandeja-tareas/pqrsdf/detalle-requerimiento/get/${idSolicitud}/`;
+    const url = `gestor/bandeja-tareas/opa/respuesta/anexo/get/${idSolicitud}/`;
     const { data } = await api.get(url);
     return data?.data;
   } catch (error) {
@@ -31,7 +32,7 @@ export const getAnexosSolicitud = async (
   try {
     setLoading(true);
     // gestor/bandeja-tareas/pqrsdf/requerimientos/anexos/get/96/
-    const url = `gestor/bandeja-tareas/pqrsdf/requerimientos/anexos/get/${idSolicitud}/`;
+    const url = `gestor/bandeja-tareas/opa/respuesta/anexo/get/${idSolicitud}/`;
 
     const { data } = await api.get(url);
     return data?.data;
