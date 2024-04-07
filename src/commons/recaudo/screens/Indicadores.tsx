@@ -153,6 +153,7 @@ export const Indicadores: React.FC = () => {
             const url = "recaudo/configuracion_baisca/indicadores/post/";
             const response = await api.post(url, formData)
             fetchHistorico()
+            
             control_success("Guardado exitosamente")
 
         } catch (error: any) {
@@ -160,7 +161,19 @@ export const Indicadores: React.FC = () => {
         }
     };
 
+    // eliminar
+    const handleEliminarConfiguracion = async () => {
+        try {
+            const url = `/recaudo/configuracion_baisca/indicadores/delete/${id_indicador}/`;
+            const response = await api.delete(url);
+            fetchHistorico();
+            control_error("eliminado exitosamente ");
 
+        } catch (error: any) {
+            console.error("Error al eliminar la configuración", error);
+            control_error(error.response.data.detail);
+        }
+    };
 
     //editar 
     const handleSubmiteditar = async () => {
@@ -207,7 +220,7 @@ export const Indicadores: React.FC = () => {
     //     void fetchHistorico();
     // }, []);
     useEffect(() => {
-        
+
         void fetchHistorico();
 
     }, [formData.formulario]);
@@ -382,11 +395,11 @@ export const Indicadores: React.FC = () => {
     //     }
     // };
     const updateFormData = () => {
-        
-    
+
+
         // Clonar indicadorvalor_set para evitar la mutación directa del estado
         let updatedIndicadorValorSet = [...formData.indicadorvalor_set];
-    
+
         // Determinar el rango de meses basado en la frecuencia de medición
         let monthRange: any[] = [];
         const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -407,8 +420,8 @@ export const Indicadores: React.FC = () => {
                 break;
             // Agrega lógica para "cuatrimestral" si es necesario
         }
-    
-    
+
+
         // Agregar o actualizar valores para cada mes en el rango determinado
         monthRange.forEach(mesId => {
             const existingIndex = updatedIndicadorValorSet.findIndex(indicador => indicador.mes_id === mesId);
@@ -418,21 +431,21 @@ export const Indicadores: React.FC = () => {
                 variable_1: variable1,
                 variable_2: variable2
             };
-    
+
             if (existingIndex > -1) {
-                updatedIndicadorValorSet[existingIndex] = {...newIndicadorValor};
+                updatedIndicadorValorSet[existingIndex] = { ...newIndicadorValor };
             } else {
-                updatedIndicadorValorSet.push({...newIndicadorValor});
+                updatedIndicadorValorSet.push({ ...newIndicadorValor });
             }
         });
-    
+
         // Actualizar el estado con el nuevo array modificado
         setFormData(prevData => ({
             ...prevData,
             indicadorvalor_set: updatedIndicadorValorSet
         }));
     };
-    
+
     useEffect(() => {
         // Suponiendo que quieres ejecutar control_success solo si indicadorvalor_set tiene elementos
         if (formData.indicadorvalor_set.length > 0) {
@@ -488,8 +501,9 @@ export const Indicadores: React.FC = () => {
     const tipo_id = Historico.length > 0 ? Historico[0].id_indicador : '';
     const formularioo = Historico.length > 0 ? Historico[0].formulario : '';
     const indicadorvalor = Historico.length > 0 ? Historico[0].indicadorvalor_set : [];
+    const id_indicador = Historico.length > 0 ? Historico[0].id_indicador : [];
 
-
+    
 
 
     useEffect(() => {
@@ -918,7 +932,7 @@ export const Indicadores: React.FC = () => {
                             <MenuItem value="mensual">Mensual</MenuItem>
                             <MenuItem value="semestral">Semestral</MenuItem>
                             <MenuItem value="trimestral">Trimestral</MenuItem>
-                            <MenuItem value="cuatrimestral">cuatrimestral</MenuItem> 
+                            <MenuItem value="cuatrimestral">cuatrimestral</MenuItem>
                             <MenuItem value="anual">Anual</MenuItem>
                         </Select>
                     </FormControl>
@@ -989,6 +1003,19 @@ export const Indicadores: React.FC = () => {
                         }}
                     >
                         {tipo_id ? 'Editar' : 'Guardar'}
+                    </Button>
+
+                </Grid>
+                <Grid item >
+                    <Button
+                        color="error"
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => {
+                            handleEliminarConfiguracion()
+                        }}
+                    >
+                        Elimian indicador
                     </Button>
 
                 </Grid>
