@@ -77,7 +77,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
     {
       field: 'nombre_de_usuario',
       headerName: 'Nombre Usuario',
-      width: 250,
+      flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -87,7 +87,8 @@ export const TablaFacilidadesAdmin: React.FC = () => {
     {
       field: 'identificacion',
       headerName: 'Identificación',
-      width: 150,
+      flex: 1,
+     
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -97,7 +98,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
     {
       field: 'numero_radicacion',
       headerName: 'Número Radicación F.P.',
-      width: 200,
+      flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -107,7 +108,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
     {
       field: 'fecha_generacion',
       headerName: 'Fecha Radicación',
-      width: 200,
+      flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {dayjs(params.value.slice(0, 10)).format('DD/MM/YYYY')}
@@ -117,7 +118,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
     {
       field: 'acciones',
       headerName: 'Acción',
-      width: 150,
+      flex: 1,
       renderCell: (params) => {
         return (
           <>
@@ -176,7 +177,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
     {
       field: 'nombre_funcionario',
       headerName: 'Asignación',
-      width: 300,
+      flex: 1,
       renderCell: (params) => {
         return modal_asignacion ? (
           <FormControl fullWidth sx={{ minWidth: 110 }}>
@@ -255,6 +256,13 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   };
 
   return (
+    <>
+       <Documento
+          idFacilidadSeleccionada={idFacilidadSeleccionada}
+          is_modal_active_doc={is_modal_active_doc}
+          set_doc={set_doc}
+          idFacilidades={idFacilidades}
+        />
     <Box sx={{ width: '100%' }}>
       <Stack
         direction="row"
@@ -262,12 +270,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         spacing={2}
         sx={{ mb: '20px' }}
       >
-        <Documento
-          idFacilidadSeleccionada={idFacilidadSeleccionada}
-          is_modal_active_doc={is_modal_active_doc}
-          set_doc={set_doc}
-          idFacilidades={idFacilidades}
-        />
+     
 
 
         <PlanPago
@@ -494,5 +497,6 @@ export const TablaFacilidadesAdmin: React.FC = () => {
         </DialogActions>
       </Dialog>
     </Box>
+    </>
   );
 }

@@ -10,6 +10,7 @@ import {
   IconButton,
   Button,
   Divider,
+  Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
@@ -345,7 +346,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={12} sm={2} md={2}>
+              {/* <Grid item xs={12} sm={2} md={2}>
                 <TextField
                   {...register('cuadrante')}
                   onChange={handle_change}
@@ -354,13 +355,13 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   size="small"
                   fullWidth
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Title title="Datos de dirección secundaria" />
-              </Grid>
-              <Grid item xs={12} sm={3} md={3}>
+            <Grid item xs={12}>
+              <Typography style={{ height: 30,marginTop:-25 }} variant="h5">Número</Typography>
+            </Grid>
+            <Grid container style={{marginTop:-5 }} spacing={2}>
+              {/* <Grid item xs={12} sm={3} md={3}>
                 <TextField
                   {...register('via_secundaria', { required: true })}
                   error={errors.via_secundaria?.type === 'required'}
@@ -382,7 +383,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                     </MenuItem>
                   ))}
                 </TextField>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={4} md={3}>
                 <TextField
                   {...register('numero_o_nombre_via_secundaria', {

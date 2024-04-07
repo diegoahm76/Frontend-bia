@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext } from 'react';
 import { Button, Grid, Stack, TextField } from '@mui/material';
@@ -427,3 +428,4 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     </>
   );
 };
+

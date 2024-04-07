@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Box,
@@ -322,3 +323,4 @@ export const ModalRejectTask: FC = (): JSX.Element => {
     </>
   );
 };
+

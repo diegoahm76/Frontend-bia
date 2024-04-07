@@ -26,8 +26,8 @@ const TablaArticulosSolicitados: React.FC<props> = ({
 }) => {
 
   let columns: custom_column[] = [
-    {field: 'id_item_solicitud_activo', headerName:'Código bien', minWidth:150, flex:1},
-    {field: 'id_bien', headerName:'Nombre del articulo', minWidth:250, flex:1},
+    {field: 'id_bien', headerName:'Código bien', minWidth:150, flex:1},
+    {field: 'nombre_bien', headerName:'Nombre del articulo', minWidth:250, flex:1},
     {field: 'nombre_unidad_medida', headerName:'Unidad medida', minWidth:150, flex:1},
     {field: 'cantidad', headerName:'Cantidad', minWidth:150, flex:1},
     {field: 'observacion', headerName:'Observacion', minWidth:600, flex:1},
