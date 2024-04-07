@@ -54,13 +54,13 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
       width: 110,
       renderCell: (params: any) => (
         <DownloadButton
-          fileUrl={params.row.archivo}
-          fileName={params.row.nombre_archivo}
+          fileUrl={params?.row?.archivo?.archivo ?? ''}
+          fileName={params?.row?.archivo?.nombre_archivo}
           condition={false}
         />
       ),
     },
-    {
+   /* {
       headerName: 'Ver metadatos anexo',
       field: 'Detalle',
       width: 200,
@@ -99,7 +99,7 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
           </IconButton>
         </Tooltip>
       ),
-    },
+    },*/
   ];
 
   /* if (fifthLoading) {
@@ -135,7 +135,7 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
       >
         <Box component="form">
           <DialogTitle>
-            <Title title="Información de la solicitud de requerimiento relacionada a la tarea seleccionada" />
+            <Title title="Información de la de la respuesta de la OPA" />
           </DialogTitle>
           <Divider />
 
@@ -147,7 +147,7 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={8}>
+              {/*<Grid item xs={12} sm={8}>
                 <TextField
                   fullWidth
                   label="Asunto"
@@ -160,8 +160,8 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 50 }}
                 />
-              </Grid>
-              <Grid item xs={12} sm={4}>
+              </Grid>*/}
+            {/*  <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   disabled
@@ -178,9 +178,9 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
                   }
                   InputLabelProps={{ shrink: true }}
                 />
-              </Grid>
+              </Grid>*/}
 
-              <Grid
+              {/*<Grid
                 item
                 xs={12}
                 sm={12}
@@ -204,7 +204,7 @@ export const ModalInfoSolicitudReq: React.FC = (): JSX.Element => {
                   InputLabelProps={{ shrink: true }}
                   inputProps={{ maxLength: 255 }}
                 />
-              </Grid>
+              </Grid>*/}
 
               {currentSolicitudUsuario?.anexos &&
               currentSolicitudUsuario?.anexos.length > 0 ? (

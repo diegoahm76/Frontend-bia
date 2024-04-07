@@ -73,30 +73,33 @@ export const FormParte1 = ({
     //* deberian pasar dos cosas también, que se resetee el stepper y que se resetee el formulario y todos los demás campos guardados
     handleReset();
 
-   /* void getInitialData(
-      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
+    void getInitialData(
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
       navigate,
       handleGeneralLoading,
       handleSecondLoading
     ).then((data) => {
       setInfoInicialUsuario(data);
-    });*/
+    });
   }, []);
 
   const getInfoSolicitud = async (params: any) => {
-    const [detalleSolicitud, anexos] = await Promise.all([
-      getDetalleSolicitud(
-        params?.row?.id_solicitud_al_usuario_sobre_pqrsdf,
+
+    console.log('params', params?.row);
+    const [anexos] = await Promise.all([
+     /* getDetalleSolicitud(
+        // id_tramite
+        params?.row?.id_solicitud_tramite,
         handleFifthLoading
-      ),
+      ),*/
       getAnexosSolicitud(
-        params?.row?.id_solicitud_al_usuario_sobre_pqrsdf,
+        params?.row?.id_respuesta_opa,
         handleFifthLoading
       ),
     ]);
 
     const data = {
-      detalleSolicitud,
+      //detalleSolicitud,
       anexos,
     };
 
@@ -111,7 +114,7 @@ export const FormParte1 = ({
       field: 'accion',
       renderCell: (params: any) => (
         <>
-          <Tooltip title="Ver solicitud de requerimiento realizada">
+          <Tooltip title="Ver respuesta realizada">
             <IconButton
               onClick={async () => {
                 handleOpenModalOne(true); //* open modal
@@ -174,21 +177,21 @@ export const FormParte1 = ({
             justifyContent: 'center',
           }}
         >
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               disabled
               size="small"
-              label="Tipo de PQRSDF"
+              label="Tipo de operación trámite"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               inputProps={{
                 maxLength: 50,
               }}
-              value={infoInicialUsuario?.detallePQRSDF?.data?.tipo ?? 'N/A'}
+              value={infoInicialUsuario?.detallePQRSDF?.data?.tipo_operacion_tramite ?? 'N/A'}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               disabled
@@ -204,34 +207,34 @@ export const FormParte1 = ({
               }
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               size="small"
-              label="Número de radicado de entrada"
+              label="Número de radicado"
               disabled
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.detallePQRSDF?.data?.radicado ?? 'N/A'}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+         <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               size="small"
-              label="Fecha de radicado de entrada"
+              label="Fecha de radicado"
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
               value={
                 formatDate(
                   infoInicialUsuario?.detallePQRSDF?.data
-                    ?.fecha_radicado_entrada
+                    ?.fecha_radicado
                 ) ?? 'N/A'
               }
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
+          {/*<Grid item xs={12} sm={12}>
             <TextField
               fullWidth
               multiline
@@ -246,7 +249,7 @@ export const FormParte1 = ({
               InputLabelProps={{ shrink: true }}
               value={infoInicialUsuario?.detallePQRSDF?.data?.asunto ?? 'N/A'}
             />
-          </Grid>
+          </Grid>*/}
           <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
@@ -264,9 +267,9 @@ export const FormParte1 = ({
                   </InputAdornment>
                 ),
               }}
-              rows={5}
+              rows={3}
               size="small"
-              label="Descripción de la PQRSDF"
+              label="Descripción de la OPA"
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
@@ -280,13 +283,13 @@ export const FormParte1 = ({
 
           {/* estos datos a mostrar van a ser los históricos de las solicitudes y requerimientos que se han realizado */}
 
-          {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data?.length >
+          {infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.length >
           0 ? (
             <RenderDataGrid
-              title="Histórico de requerimientos realizados"
+              title="OPA contestada"
               columns={columns ?? []}
               rows={
-                [...infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.data] ??
+                infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF ??
                 []
               }
             />
@@ -298,9 +301,10 @@ export const FormParte1 = ({
                 textAlign: 'center',
                 justifyContent: 'center',
                 mt: '1.5rem',
+                fontWeight: 'bold',
               }}
             >
-              No hay histórico de requerimientos para este elemento
+              No hay información de OPA con respuesta
             </Typography>
           )}
         </Grid>
@@ -326,11 +330,12 @@ export const FormParte1 = ({
               console.log('jeje next');
               if (
                 currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
-                'Respondida por el propietario de la bandeja de tareas'
+                'Respondida por el propietario de la bandeja de tareas' || infoInicialUsuario?.dataHistoricoSolicitudesPQRSDF?.length >
+                0
               ) {
                 showAlert(
                   'Opss!',
-                  'Esta PQRSDF ya ha sido respondida, por lo tanto, no es posible realizar un nuevo requerimiento al usuario; solo se puede acceder al historial de estas solicitudes.',
+                  'Esta OPA ya tiene respuesta, por lo tanto, no es posible realizar una nueva respuesta a esta solicitud de OPA. Por favor, verifica en la bandeja de tareas para más detalle',
                   'warning'
                 );
                 return;
@@ -341,7 +346,7 @@ export const FormParte1 = ({
               width: '60%',
             }}
           >
-            Crear solicitud de requerimiento
+            Responder OPA
           </Button>
         </Grid>
       </form>

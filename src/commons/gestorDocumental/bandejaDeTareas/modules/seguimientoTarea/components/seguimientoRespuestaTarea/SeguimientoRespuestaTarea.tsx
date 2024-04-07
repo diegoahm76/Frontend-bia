@@ -20,7 +20,7 @@ import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { useAppSelector } from '../../../../../../../hooks';
 import { Title } from '../../../../../../../components';
 import { formatDate } from '../../../../../../../utils/functions/formatDate';
-import { getRespuestaTarea } from '../../services/getRespuestaTarea.service';
+import { getRespuestaTarea } from '../../services/pqrsdf/getRespuestaTarea.service';
 import { columnsRespuesta } from './columnsRespuesta';
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 export const SeguimientoRespuestaTarea = (): JSX.Element => {

@@ -14,7 +14,7 @@ import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import { RenderDataGrid } from '../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { useAppSelector } from '../../../../../../../hooks';
-import { getSeguimientoTarea } from '../../services/getSeguimientoTarea.service';
+import { getSeguimientoTarea } from '../../services/pqrsdf/getSeguimientoTarea.service';
 import { Title } from '../../../../../../../components';
 import { formatDate } from '../../../../../../../utils/functions/formatDate';
 import { columnsTarea } from './columns/columnsTarea';
@@ -69,14 +69,17 @@ export const SeguimientoReasignacionTar = (): JSX.Element => {
               currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
               handleSixthLoading
             );
-            setlistaReasigna(dataSeguimientos);
+            setlistaReasigna(dataSeguimientos ?? []);
             break;
             case 'RESPONDER OPA':
               case 'Responder Opa':
               case 'Responder OPA':
-
+                const dataSeguimientosOPA = await getSeguimientoTarea(
+                  currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+                  handleSixthLoading
+                );
               showAlert('Advertencia', 'No se puede hacer seguimiento de la atre aún', 'warning');
-              setlistaReasigna([])
+              setlistaReasigna(dataSeguimientosOPA ?? [])
               break;
           default:
             // Manejo por defecto si es necesario

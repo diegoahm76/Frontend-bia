@@ -134,14 +134,14 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
         );
       },
     },*/
-   /* {
+   {
       headerName: 'Acciones',
       field: 'Acciones',
       minWidth: 250,
       renderCell: (params: any) => {
         return (
           <>
-            <Tooltip title="Ver info complemento asociado">
+           {/* <Tooltip title="Ver info complemento asociado">
               <IconButton
                 onClick={() => {
                   setActionsComplementos(params?.row);
@@ -166,7 +166,7 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>
+            </Tooltip>*/}
             <Tooltip title="Seleccionar elemento para procesos">
               <IconButton
                 onClick={() => {
@@ -195,7 +195,7 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
           </>
         );
       },
-    },*/
+    },
   ];
 
   return (

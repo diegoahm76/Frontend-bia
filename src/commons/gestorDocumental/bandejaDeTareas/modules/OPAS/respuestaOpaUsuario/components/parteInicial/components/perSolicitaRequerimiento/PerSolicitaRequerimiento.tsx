@@ -20,7 +20,7 @@ export const PerSolicitaRequerimiento = (): JSX.Element => {
         justifyContent: 'center',
       }}
     >
-      <Title title="Persona que realiza el requerimiento" />
+      <Title title="Persona que responde la OPA" />
       <form
         style={{
           marginTop: '3rem',

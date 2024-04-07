@@ -43,4 +43,5 @@ export const columnsTramites = [
   createColumn("Fecha digitalización completada", "fecha_digitalizacion_completada", 300, true),
   createColumn("Fecha de respuesta final de gestión", "fecha_rta_final_gestion", 300, true),
   createColumn("Fecha de inicio estado actual", "fecha_ini_estado_actual", 250, true),
+  createColumn("Nombre del trámite", 'nombre_tramite', 400, true),
 ];

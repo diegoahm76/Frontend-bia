@@ -71,7 +71,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         estado_de_la_tarea?.value,
         fecha_inicio,
         fecha_fin,
-        mostrar_respuesta_con_req_pendientes?.value,
+        mostrar_respuesta_con_req_pendientes?.value ?? '',
         radicado
       );
 
@@ -103,7 +103,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         fecha_fin,
         radicado,
         estado_de_la_tarea?.value,
-        mostrar_respuesta_con_req_pendientes?.value
+        mostrar_respuesta_con_req_pendientes?.value ?? ''
       );
 
       console.log(res);
@@ -161,7 +161,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         estado_de_la_tarea?.value,
         fecha_inicio,
         fecha_fin,
-        mostrar_respuesta_con_req_pendientes?.value,
+        mostrar_respuesta_con_req_pendientes?.value ?? '',
         radicado
       );
 
