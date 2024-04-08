@@ -13,7 +13,8 @@ import { interface_activos_asociados, interface_anexo_opcional, interface_entrad
 import DetallesActivos from './DetallesActivos';
 import { control_error, control_success } from '../../../../helpers';
 import { useDispatch } from 'react-redux';
-import { get_obtener_activos_asociados, get_obtener_entradas_relacionadas } from '../thunks/salida_especial_activos';
+import { get_obtener_activos_asociados, get_obtener_entradas_relacionadas, post_crear_salida_especial } from '../thunks/salida_especial_activos';
+import Swal from 'sweetalert2';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -23,6 +24,9 @@ const SalidaEspecialActivos: React.FC = () => {
   const [position_tab, set_position_tab] = useState<string>('1');
   const [loadding, set_loadding] = useState<boolean>(false);
   const [accion, set_accion] = useState<string>('null'); 
+
+  // Form data para enviar los datos al backend
+  const form_data = new FormData();
 
   const [loadding_registro_baja, set_loadding_registro_baja] = useState<boolean>(false);
 
@@ -34,6 +38,7 @@ const SalidaEspecialActivos: React.FC = () => {
   const [referencia_salida, set_referencia_salida] = useState<string>('');
   const [concepto, set_concepto] = useState<string>('');
   const [data_anexos_opcionales, set_data_anexos_opcionales] = useState<interface_anexo_opcional[]>([]);
+  const [data_anexos_agregados, set_data_anexos_agregados] = useState<File[]>([]);
   // Datos de la inf persona tercero seleccionado del modal
   const [data_inf_tercero_seleccionado, set_data_inf_tercero_seleccionado] = useState<interface_inf_tercero>(Object);
   
@@ -49,6 +54,9 @@ const SalidaEspecialActivos: React.FC = () => {
   // Activos asociados agregados desde la tabla de activos asociados
   const [data_activos_asociados_agregados, set_data_activos_asociados_agregados] = useState<interface_activos_asociados[]>([]);
 
+  useEffect(() => {
+    console.log(data_anexos_opcionales)
+  }, [data_anexos_opcionales]);
 
   useEffect(() => {
     if (Object.keys(data_inf_tercero_seleccionado).length !== 0){
@@ -143,13 +151,75 @@ const SalidaEspecialActivos: React.FC = () => {
     set_data_inf_tercero_seleccionado({} as interface_inf_tercero);
   }
 
+  const btn_continuar = () => {
+    set_position_tab('2');
+  }
+  
   const onsubmit_form = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     set_loadding(true);
+    ordenar_data_anexos();
+
+    Swal.fire({
+      title: '¿Está seguro que desea registrar esta salida especial?',
+      showDenyButton: true,
+      confirmButtonText: `Si`,
+      denyButtonText: `Cancelar`,
+      confirmButtonColor: '#042F4A',
+      cancelButtonColor: '#DE1616',
+      icon: 'question',
+    }).then(async(result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        crear_salida_especial_activos();
+        return true;
+      } else if(result.isDenied){
+        return false;
+      }
+    });
   }
 
-  const btn_continuar = () => {
-    set_position_tab('2');
+  function crear_salida_especial_activos (){
+    form_data.append('referencia_salida', referencia_salida);
+    form_data.append('concepto_salida', concepto);
+    form_data.append('id_entrada_almacen', entrada_relacionada_seleccionada.id_entrada_almacen.toString());
+    form_data.append('activos_incluidos', JSON.stringify(data_activos_asociados_agregados.map((item => item.id_bien))));
+    form_data.append('anexos', JSON.stringify(data_anexos_opcionales.map((item)=>{
+      return {
+        nombre_anexo: item.nombre_anexo,
+        nro_folios: item.nro_folios,
+        descripcion_anexo: item.descripcion_anexo,
+      }
+    })));
+    data_anexos_agregados.forEach((anexo) => {
+      form_data.append('anexo_opcional', anexo);
+    });
+
+    console.log('Form data', form_data);
+
+    dispatch(post_crear_salida_especial(form_data))
+    .then((response: any) => {
+      if(Object.keys(response).length !== 0){
+        if(response.success){
+          control_success('Salida especial registrada correctamente');
+          limpiar_formulario();
+        } else {
+          control_error('Hubo un error al intentar registrar la salida especial');
+        }
+      } else {
+        control_error('Hubo un error al intentar registrar la salida especial');
+      }
+    });
+  }
+
+  // Ordena los anexos y el array de files para enviar
+  function ordenar_data_anexos (){
+    if(data_anexos_agregados.length > 0){
+      set_data_anexos_agregados([...data_anexos_agregados].sort((a, b) => b.lastModified - a.lastModified));
+    }
+    if(data_anexos_opcionales.length > 0){
+      set_data_anexos_opcionales([...data_anexos_opcionales].sort((a , b) => (b.id_file ?? 0) - (a.id_file ?? 0)));
+    }
   }
 
   return (
@@ -182,6 +252,7 @@ const SalidaEspecialActivos: React.FC = () => {
               <TabPanel value="1" sx={{ p: '20px 0' }}>
                 <Grid container spacing={2}>
                   <ConfiguracionGeneral
+                    form_data={form_data}
                     set_loadding_registro_baja={set_loadding_registro_baja}
                     loadding_registro_baja={loadding_registro_baja}
                     set_accion={set_accion}
@@ -201,6 +272,9 @@ const SalidaEspecialActivos: React.FC = () => {
                     data_anexos_opcionales={data_anexos_opcionales}
                     set_data_anexos_opcionales={set_data_anexos_opcionales}
                     data_entradas_relacionadas={data_entradas_relacionadas}
+                    data_anexos_agregados={data_anexos_agregados}
+                    set_data_anexos_agregados={set_data_anexos_agregados}
+                    ordenar_data_anexos={ordenar_data_anexos}
                   />
                 </Grid>
               </TabPanel>
