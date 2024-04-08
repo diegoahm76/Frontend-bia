@@ -148,7 +148,7 @@ export const CarteraTop: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Consepto edad"
+                        label="Concepto edad"
                         name="edad"
                         disabled
                         variant="outlined"
@@ -162,7 +162,7 @@ export const CarteraTop: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Consepto deuda"
+                        label="Concepto deuda"
                         name="deuda"
                         disabled
                         variant="outlined"
@@ -177,7 +177,7 @@ export const CarteraTop: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Consepto "
+                        label="Concepto "
                         name="top"
                         disabled
                         variant="outlined"

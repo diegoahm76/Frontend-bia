@@ -145,7 +145,7 @@ export const CarteraEdad: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Consepto edad"
+                        label="Concepto edad"
                         name="edad"
                         disabled
                         variant="outlined"

@@ -255,11 +255,11 @@ export const Indicadores: React.FC = () => {
         {
             field: 'mes_id',
             headerName: 'Meses',
-            width: 250,
+            flex: 1,
             valueGetter: (params: { row: { mes_id: any; }; }) => getMonthRange(params.row.mes_id, formData.frecuencia_medicion)
         },
         {
-            field: 'variable_1', headerName: 'Variable 1', width: 350,
+            field: 'variable_1', headerName: 'Variable 1', flex: 1,
             renderCell: (params: any) => {
                 // Formatear el valor a pesos colombianos
                 const valorFormateado = new Intl.NumberFormat('es-CO', {
@@ -272,7 +272,8 @@ export const Indicadores: React.FC = () => {
             },
         },
         {
-            field: 'variable_2', headerName: 'Variable 2', width: 350,
+            field: 'variable_2', headerName: 'Variable 2',             flex: 1,
+
             renderCell: (params: any) => {
                 // Formatear el valor a pesos colombianos
                 const valorFormateado = new Intl.NumberFormat('es-CO', {
@@ -287,13 +288,14 @@ export const Indicadores: React.FC = () => {
         {
             field: 'logro',
             headerName: 'Logro (%)',
-            width: 400,
+            flex: 1,
             valueGetter: (params: any) => ((parseFloat(params.row.variable_1) / parseFloat(params.row.variable_2)) * 100).toFixed(2) + '%'
         },
         {
             field: 'semaforo',
             headerName: 'Semáforo',
-            width: 400,
+            // width: 340,
+            flex: 1,
             renderCell: (params: any) => {
                 const logro = parseFloat(params.getValue(params.id, 'logro'));
                 let label = 'Estado actual';
@@ -818,8 +820,8 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Unidad de medicion reporte"
-                        helperText='Unidad de medicion reporte'
+                        label="Unidad de medición reporte"
+                        helperText='Unidad de medición reporte'
                         size="small"
                         fullWidth
                         name="unidad_medicion_reporte"
@@ -864,8 +866,8 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Responsable de  creacion"
-                        helperText='Responsable de creacion'
+                        label="Responsable de  creación"
+                        helperText='Responsable de creación'
                         size="small"
                         fullWidth
                         name="responsable_creacion"
@@ -879,8 +881,8 @@ export const Indicadores: React.FC = () => {
                 <Grid item xs={12} sm={3}>
                     <TextField
 
-                        label="Descripcion de variable 1"
-                        helperText='Descripcion de variable 1'
+                        label="Descripción de variable 1"
+                        helperText='Descripción de variable 1'
                         size="small"
                         fullWidth
                         name="descripcion_variable_1"
@@ -891,8 +893,8 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Descripcion variable 2"
-                        helperText='Descripcion variable 2'
+                        label="Descripción variable 2"
+                        helperText='Descripción variable 2'
                         size="small"
                         fullWidth
                         name="descripcion_variable_2"
@@ -919,7 +921,7 @@ export const Indicadores: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <FormControl fullWidth size="small">
-                        <InputLabel id="opcion-select-label">Frecuencia de medicion</InputLabel>
+                        <InputLabel id="opcion-select-label">Frecuencia de medición</InputLabel>
                         <Select
                             fullWidth
                             size="small"
@@ -1006,7 +1008,13 @@ export const Indicadores: React.FC = () => {
                     </Button>
 
                 </Grid>
-                <Grid item >
+                
+
+
+
+                {indicadorvalor && (
+                    <>
+                       <Grid item >
                     <Button
                         color="error"
                         variant="contained"
@@ -1019,6 +1027,10 @@ export const Indicadores: React.FC = () => {
                     </Button>
 
                 </Grid>
+
+                    </>
+                )}
+                
             </Grid>
 
 
