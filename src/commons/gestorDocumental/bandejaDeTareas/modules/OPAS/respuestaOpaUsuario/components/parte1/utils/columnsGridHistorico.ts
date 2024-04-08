@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
+import { formatDate } from "../../../../../../../TramitesServicios/utils/FormatoFecha";
+
 /*{
   "id_solicitud_al_usuario_sobre_pqrsdf": 35,
   "tipo_tramite": "Solicitud de Complemento de Información al Usuario",
@@ -10,24 +12,24 @@
 
 export const columnsGridHistorico = [
   {
-    headerName: 'Tipo de trámite',
-    field: 'tipo_tramite',
-    width: 400,
+    headerName: 'radicado',
+    field: 'radicado',
+    width: 250,
   },
   {
-    headerName: 'Fecha de radicado de salida',
-    field: 'fecha_radicado_salida',
+    headerName: 'Fecha de respuesta',
+    field: 'fecha_respuesta',
     width: 220,
-    renderCell: (params: any) => params.value || 'N/A',
+    renderCell: (params: any) => formatDate(params.value) || 'N/A',
   },
   {
-    headerName: 'Número de radicado de salida',
-    field: 'numero_radicado',
-    width: 230,
+    headerName: 'Descripción',
+    field: 'descripcion',
+    width: 450,
   },
   {
-    headerName: 'Estado',
-    field: 'estado',
+    headerName: 'Número de folios totales',
+    field: 'nro_folios_totales',
     width: 170,
   },
 ]

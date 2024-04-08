@@ -19,7 +19,7 @@ export const Parte1Screen = ({
         mt: '2rem',
       }}
     >
-      <Title title="Información del elemento a realizar el requerimiento" />
+      <Title title="Información de la OPA a responder" />
       <FormParte1
         controlFormulario={controlFormulario}
         handleSubmitFormulario={handleSubmitFormulario}

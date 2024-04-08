@@ -19,10 +19,19 @@ import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { logo_cormacarena_h } from '../../../conservacion/Reportes/logos/logos';
 import { Button, ButtonGroup, Dialog, Grid, InputLabel, MenuItem, Select, TextField, } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
+import { miEstilo } from '../../../gestorDocumental/Encuesta/interfaces/types';
+import { makeStyles } from '@material-ui/core/styles';
+import { AlertaDocumento } from '../../screens/AlertaDocumento';
+
 
 export interface UnidadOrganizaciona {
   id_unidad_organizacional: number;
   nombre: string;
+  tiene_configuracion: any;
 }
 interface BuscarProps {
   is_modal_active_doc: any;
@@ -38,6 +47,7 @@ export interface SerieSubserie {
   id_subserie_doc: number | null;
   cod_subserie_doc: string | null;
   nombre_subserie_doc: string | null;
+  tiene_configuracion: any;
 }
 interface Cuota {
   id: number;
@@ -335,6 +345,7 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
     crearConsecutivo()
     // realizarActualizacion();
   };
+  const [consecutivo_id, setConsecutivo_id] = useState<number | null>(null);
 
   async function crearConsecutivo() {
     try {
@@ -350,6 +361,8 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
       console.log('Consecutivo creado con éxito', res.data);
       // Actualizar el DOM o el estado para mostrar el valor de consecutivo
       setConsecutivoActual(res.data?.data?.consecutivo);
+      setConsecutivo_id(res.data?.data?.id_consecutivo);
+
     } catch (error: any) {
       console.error('Error al crear el consecutivo', error);
       control_error(error.response.data.detail);
@@ -422,19 +435,69 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
 
   // const miVariable = `${formData.id_unidad_org_lider}`;
 
+  // const enviarDocumento = async () => {
+
+  //   try {
+  //     const formData = new FormData();
+
+  //     formData.append("radicado", `${consecutivoActual}`);
+  //     formData.append("ids_destinatarios_personas", `${persona?.id_persona}`);
+  //     formData.append("ids_destinatarios_unidades", `${persona?.id_persona}`);
+
+  //     formData.append("id_persona", id_persona.toString());
+
+  //     const archivo = generarArchivo();
+  //     formData.append("archivo", archivo);
+  //     const url = "/recaudo/formulario/documento_formulario_recuado/";
+  //     const response = await api.post(url, formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     });
+  //     console.log("Documento enviado con éxito", response.data);
+  //     control_success("Documento enviado con éxito");
+
+  //   } catch (error) {
+  //     console.error("Error al enviar el documento", error);
+  //   }
+  // };
+
+
+
+  const [personaselet, setpersona] = useState<string[]>([id_persona.toString()]);
+  const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
+  const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
+
+
+
   const enviarDocumento = async () => {
 
     try {
       const formData = new FormData();
+      const personaseletArrayString = JSON.stringify(personaselet);
+      const perfilseletArrayString = JSON.stringify(perfilselet);
+      const liderseletArrayString = JSON.stringify(lideresUnidad);
+
+
+
 
       formData.append("radicado", `${consecutivoActual}`);
-      formData.append("ids_destinatarios_personas", `${persona?.id_persona}`);
-      formData.append("ids_destinatarios_unidades", `${persona?.id_persona}`);
-
       formData.append("id_persona", id_persona.toString());
 
-      const archivo = generarArchivo();
-      formData.append("archivo", archivo);
+
+
+
+
+      formData.append("ids_destinatarios_personas", `${personaseletArrayString}`);
+      formData.append("id_consecutivo", `${consecutivo_id}`);
+
+
+      formData.append("ids_destinatarios_unidades", `${liderseletArrayString}`);
+      formData.append("ids_destinatarios_perfiles", `${perfilseletArrayString}`);
+
+
+
+      formData.append("archivo", formmmm.archivo);
       const url = "/recaudo/formulario/documento_formulario_recuado/";
       const response = await api.post(url, formData, {
         headers: {
@@ -444,10 +507,13 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
       console.log("Documento enviado con éxito", response.data);
       control_success("Documento enviado con éxito");
 
-    } catch (error) {
-      console.error("Error al enviar el documento", error);
+    } catch (error: any) {
+      // console.error("Error al enviar el documento", error);}
+      control_error(error.response.data.detail);
     }
   };
+
+
   const handle_close_documento = (): void => {
     set_is_buscar(false);
     enviarDocumento();
@@ -458,34 +524,105 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
 
   }, [consecutivoActual]);
 
-  const isButtonDisabled = !unidadSeleccionada || !selectedSerieSubserie;
+
+
+  const [formmmm, set_form] = useState<{ archivo: null | any }>({ archivo: null });
+
+  const isButtonDisabled = !unidadSeleccionada || !selectedSerieSubserie || !formmmm.archivo;
+
+
+
+
+  const [fileExtension, setFileExtension] = useState<string | null>(null);
+  const [file_nombre, set_file_nombre] = useState<string | null>(null);
+
+
+
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const fileInput = event.target;
+    if (fileInput?.files?.length) {
+      const fileName = fileInput.files[0].name;
+      const selectedFile = fileInput.files[0];
+
+
+      // Verificar si selectedFile no es null antes de asignarlo a set_form
+
+      set_form({ archivo: selectedFile });
+
+      const extension = fileName.split('.').pop();
+      if (extension) {
+        setFileExtension(extension);
+        set_file_nombre(fileName);
+      } else {
+        console.error('No se pudo determinar la extensión del archivo.');
+        setFileExtension('Desconocido');
+        set_file_nombre('Desconocido');
+      }
+    } else {
+      console.warn('Ningún archivo seleccionado.');
+      setFileExtension(null);
+      set_file_nombre(null);
+    }
+  };
+
+  const VisuallyHiddenInput = styled('input')`
+clip: rect(0 0 0 0);
+clip-path: inset(50%);
+height: 1px;
+overflow: hidden;
+position: absolute;
+bottom: 0;
+left: 0;
+white-space: nowrap;
+width: 1px;
+`;
+
+  const handleRemoveFile = () => {
+    // Limpia la selección actual del archivo
+    set_form({
+
+      archivo: null,
+    });
+    setFileExtension(null);
+    set_file_nombre(null);
+  };
+
+
+  const useStyles = makeStyles((theme) => ({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+      '& .MuiInputBase-root': {
+        height: '30px', // Ajusta la altura a tu preferencia
+        '& .MuiInputBase-input': {
+          fontSize: '0.875rem', // Ajusta el tamaño de fuente a tu preferencia
+        },
+      },
+    },
+  }));
+
+
+   
 
   return (
 
     <>
 
-      <Dialog open={is_modal_active} onClose={handle_close_documento} maxWidth="xl">
-        <Grid container
-          item xs={12} marginLeft={2} marginRight={2} marginTop={3}
-          sx={{
+      <Dialog open={is_modal_active} onClose={handle_close_documento}
 
-            width: '900px', // Cambia '700px' por el ancho que desees
-            height: '900px', // Cambia '500px' por el alto que desees
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px', m: '10px 0 20px 0', mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-
+      >
+        <Grid container xs={12}
+          sx={miEstilo}
         >
+
           <Grid item xs={12} >
-            <Title title="Numero de radicado" />
+            <Title title="Número  de radicado" />
 
           </Grid>
           <Grid item xs={12} marginTop={3} >
             <div>
-              <h3>Radicado : {consecutivoActual}</h3>
+              <h3>Consecutivo  : {consecutivoActual}</h3>
             </div>
           </Grid>
 
@@ -493,140 +630,144 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
       </Dialog>
 
 
-      <Dialog open={is_modal_active_doc} onClose={handle_close} maxWidth="xl"
-      >
-
-        <Grid container
-          spacing={2} m={2} p={2}
-          sx={{
-
-            width: '900px', // Cambia '700px' por el ancho que desees
-            height: '900px', // Cambia '500px' por el alto que desees
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            m: '10px 0 20px 0',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
+      <Dialog open={is_modal_active_doc} onClose={handle_close} fullWidth maxWidth="md" >
+        <Grid container xs={12}
+          sx={miEstilo}
         >
-          <Title title="Facilidad de Pago " />
+          <Grid container xs={12} spacing={2}    >
+            <Title title="Facilidad de Pago " />
 
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="unidad-organizacional-select-label">Unidad Organizacional</InputLabel>
-              <Select
-                labelId="unidad-organizacional-select-label"
-                id="unidad-organizacional-select"
-                value={unidadSeleccionada}
-                label="Unidad Organizacional"
-                onChange={handleChange}
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="unidad-organizacional-select-label">Unidad Organizacional</InputLabel>
+                <Select
+                  labelId="unidad-organizacional-select-label"
+                  id="unidad-organizacional-select"
+                  value={unidadSeleccionada}
+                  label="Unidad Organizacional"
+                  onChange={handleChange}
+                >
+                  {unidades.map((unidad) => (
+                    <MenuItem
+                      key={unidad.id_unidad_organizacional}
+                      value={unidad.id_unidad_organizacional}
+                      disabled={!unidad.tiene_configuracion} // Deshabilita el MenuItem si tiene_configuracion es false
+                    >
+                      {unidad.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="serie-subserie-select-label">Serie/Subserie</InputLabel>
+                <Select
+                  labelId="serie-subserie-select-label"
+                  id="serie-subserie-select"
+                  value={selectedSerieSubserie}
+                  label="Serie/Subserie"
+                  onChange={handleChangee}
+                >
+                  {seriesSubseries.map((item) => (
+                    <MenuItem
+                      key={item.id_cat_serie_und}
+                      value={`${item.id_cat_serie_und}`}
+                      disabled={!item.tiene_configuracion}
+                    >
+                      {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+
+
+            <Grid item xs={12} sm={6}>
+              <Button
+                style={{ marginTop: 20 }}
+                fullWidth
+
+                component="label"
+                variant="outlined"
+                startIcon={<CloudUploadIcon />}
+              // htmlFor="file-upload"
               >
-                {unidades.map((unidad) => (
-                  <MenuItem key={unidad.id_unidad_organizacional} value={unidad.id_unidad_organizacional}>
-                    {unidad.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                {formmmm.archivo ? (
+                  <>
+                    Quitar
+                    <Button
+                      size="small"
+                      startIcon={<DeleteIcon />}
+
+                      onClick={handleRemoveFile}
+                      sx={{  marginLeft: 4 }}
+                    >
+                      {/* <DeleteIcon /> */}
+                    </Button>
+                  </>
+                ) : (
+                  'Seleccionar Documento'
+                )}
+                <VisuallyHiddenInput
+                  type="file"
+                  id="file-upload"
+                  onChange={handleFileChange}
+                />
+              </Button>
+
+            </Grid>
+
+
+
+
+
+
+
+
+
+
+            <Grid item xs={12} sm={6}>
+              <Button
+                startIcon={<SaveIcon />}
+                color='success'
+                fullWidth
+                style={{ marginTop: 20 }}
+
+                variant='contained'
+                onClick={handle_open_buscar}
+                disabled={isButtonDisabled}
+
+              >Enviar Documento
+              </Button>
+            </Grid>
+
+
+
+
+
           </Grid>
 
 
 
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="serie-subserie-select-label">Serie/Subserie</InputLabel>
-              <Select
-                labelId="serie-subserie-select-label"
-                id="serie-subserie-select"
-                value={selectedSerieSubserie}
-                label="Serie/Subserie"
-                onChange={handleChangee}
-              >
-                {seriesSubseries.map((item) => (
-                  <MenuItem key={item.id_cat_serie_und} value={item.id_cat_serie_und}>
-                    {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={4}>
 
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Identificación Usuario "
-              variant="outlined"
-              size="small"
-              fullWidth
-              value={identificacion}
-              onChange={(e) => setIdentificacion(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Email"
-              value={email}
-              variant="outlined"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Grid>
 
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Teléfono"
-              variant="outlined"
-              size="small"
-              fullWidth
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Ciudad"
-              variant="outlined"
-              size="small"
-              fullWidth
-              value={ciudad}
-              onChange={(e) => setCiudad(e.target.value)}
-            />
-          </Grid>
 
+          {/*        
           <Grid item xs={12} sm={4}>
 
-            <Button fullWidth startIcon={<VisibilityIcon />} variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Button
-              startIcon={<SaveIcon />}
-              color='success'
-              fullWidth
-              variant='contained'
-              onClick={handle_open_buscar}
-              disabled={isButtonDisabled}
-
-            >Enviar Documento
-            </Button>
-          </Grid>
-
-
-
-          {/* <Grid container item xs={12} spacing={2} marginTop={2} justifyContent="flex-end">
-            <ButtonGroup style={{ margin: 7 }}>
-              {download_xls({ nurseries: cuotas, columns })}
-              {download_pdf({
-                nurseries: cuotas,
-                columns,
-                title: 'Facilidad de Pago ',
-              })}
-            </ButtonGroup>
           </Grid> */}
-          <Grid container item xs={12} spacing={2} marginTop={2}>
+
+
+
+
+
+
+
+
+          {/* <Grid container item xs={12} spacing={2} marginTop={2}>
 
             <Divider
               style={{
@@ -636,7 +777,6 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
                 marginLeft: 'auto',
               }}
             />
-            {/* {idFacilidadSeleccionada} */}
 
 
 
@@ -651,20 +791,6 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
 
 
 
-
-
-            {/* <div>
-      {cuotas.map((cuota, index) => (
-        <h1 key={index}>
-          {`ID: ${cuota.id}, Nro Cuota: ${cuota.nro_cuota}, Monto Cuota: ${cuota.monto_cuota}, ID Plan Pago: ${cuota.id_plan_pago}, ID Tipo Pago: ${cuota.id_tipo_pago}, Valor Capital: ${cuota.valor_capital}, Valor Interés: ${cuota.valor_interes}, Saldo Pendiente: ${cuota.saldo_pendiente}, Fecha Vencimiento: ${cuota.fecha_vencimiento}, Fecha Pago: ${cuota.fecha_pago || ''}, Monto Pagado: ${cuota.monto_pagado || ''}, ID Cuota Anterior: ${cuota.id_cuota_anterior || ''}`}
-        </h1>
-      ))}
-    </div> */}
-
-
-            <Grid item xs={12} sm={12}>
-              <embed src={visor} type="application/pdf" width="100%" height="1080px" />
-            </Grid>
 
 
 
@@ -736,8 +862,20 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
               />
             </Grid>
 
-          </Grid>
+          </Grid> */}
+
+          <AlertaDocumento
+              personaselet={personaselet}
+              setpersona={setpersona}
+              perfilselet={perfilselet}
+              setperfilselet={setperfilselet}
+              lideresUnidad={lideresUnidad}
+              setLideresUnidad={setLideresUnidad}
+            />
         </Grid>
+
+
+
       </Dialog>
     </>
   );

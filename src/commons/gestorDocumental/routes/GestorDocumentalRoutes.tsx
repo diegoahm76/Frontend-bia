@@ -52,6 +52,9 @@ import { ReporGenGestorMainScreen } from '../ReportesGeneralesGestorDocumental/s
 import { ChartDataProvider } from '../ReportesGeneralesGestorDocumental/context/DataChartContext';
 import { ReportIndicadoresPqrsdf } from '../ReportesIndicadoresPqrsdf/screen/ReportIndicadoresPqrsdf';
 import { ChartDataProviderPQRSDF } from '../ReportesIndicadoresPqrsdf/context/DataChartContext';
+import { MainViweVital } from '../integracionVital/screen/MainVital';
+import { ModalAndLoadingProvider } from '../../../context/GeneralContext';
+import { PanelVentanillaProvider } from '../integracionVital/context/PanelVentanillaContext';
 
 const routes = [
   {
@@ -318,6 +321,20 @@ const routes = [
       <ChartDataProviderPQRSDF>
         <ReportIndicadoresPqrsdf />
       </ChartDataProviderPQRSDF>
+    ),
+  },
+  {
+    path: 'vital/',
+    name: 'vital',
+    component: () => (
+      <>
+        {' '}
+        <ModalAndLoadingProvider>
+          <PanelVentanillaProvider>
+            <MainViweVital />
+          </PanelVentanillaProvider>
+        </ModalAndLoadingProvider>
+      </>
     ),
   },
 ];
