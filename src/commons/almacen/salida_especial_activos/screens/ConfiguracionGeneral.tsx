@@ -14,6 +14,7 @@ import { Title } from '../../../../components';
 import TablaEntradasRelacionadas from '../tables/TablaEntradasRelacionadas';
 
 interface props {
+  form_data: FormData;
   set_consecutivo: React.Dispatch<React.SetStateAction<number | null>>;
   consecutivo: number | null;
   set_consecutivo_buscar: React.Dispatch<React.SetStateAction<number>>;
@@ -33,10 +34,14 @@ interface props {
   data_anexos_opcionales: interface_anexo_opcional[];
   set_data_anexos_opcionales: React.Dispatch<React.SetStateAction<interface_anexo_opcional[]>>;
   data_entradas_relacionadas: interface_entradas_relacionadas[];
+  data_anexos_agregados: File[];
+  set_data_anexos_agregados: React.Dispatch<React.SetStateAction<File[]>>;
+  ordenar_data_anexos: ()=> void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ConfiguracionGeneral: React.FC<props> = ({
+  form_data,
   set_consecutivo,
   consecutivo,
   set_consecutivo_buscar,
@@ -56,6 +61,9 @@ const ConfiguracionGeneral: React.FC<props> = ({
   data_anexos_opcionales,
   set_data_anexos_opcionales,
   data_entradas_relacionadas,
+  data_anexos_agregados,
+  set_data_anexos_agregados,
+  ordenar_data_anexos,
   }) => {
   
   const dispatch = useDispatch();
@@ -312,9 +320,13 @@ const ConfiguracionGeneral: React.FC<props> = ({
         </Grid>
 
         <AnexosOpcionales 
+          form_data={form_data}
           id_baja_activo={null}
           data_anexos_opcionales={data_anexos_opcionales}
           set_data_anexos_opcionales={set_data_anexos_opcionales}
+          data_anexos_agregados={data_anexos_agregados}
+          set_data_anexos_agregados={set_data_anexos_agregados}
+          ordenar_data_anexos={ordenar_data_anexos}
         />
 
       </Grid>
