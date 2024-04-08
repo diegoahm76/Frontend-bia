@@ -45,6 +45,7 @@ export interface interface_tipos_documentos {
 
 export interface interface_anexo_opcional {
   id_anexo: string
+  id_file?: number
   id_salida_espec_arti: any
   nombre_anexo: string
   nro_folios: number
