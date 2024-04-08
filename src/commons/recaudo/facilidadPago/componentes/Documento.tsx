@@ -550,7 +550,13 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
 
       set_form({ archivo: selectedFile });
 
-      const extension = fileName.split('.').pop();
+      const extension = fileName.split('.').pop()?.toLowerCase();
+
+      // Verificar si la extensión del archivo es PDF
+      if (extension !== 'pdf') {
+        alert('Solo se aceptan archivos PDF.');
+        return; // Salir de la función si el archivo no es un PDF
+      }
       if (extension) {
         setFileExtension(extension);
         set_file_nombre(fileName);
@@ -603,7 +609,7 @@ width: 1px;
   }));
 
 
-   
+
 
   return (
 
@@ -703,7 +709,7 @@ width: 1px;
                       startIcon={<DeleteIcon />}
 
                       onClick={handleRemoveFile}
-                      sx={{  marginLeft: 4 }}
+                      sx={{ marginLeft: 4 }}
                     >
                       {/* <DeleteIcon /> */}
                     </Button>
@@ -713,6 +719,7 @@ width: 1px;
                 )}
                 <VisuallyHiddenInput
                   type="file"
+                  accept=".pdf"
                   id="file-upload"
                   onChange={handleFileChange}
                 />
@@ -865,13 +872,13 @@ width: 1px;
           </Grid> */}
 
           <AlertaDocumento
-              personaselet={personaselet}
-              setpersona={setpersona}
-              perfilselet={perfilselet}
-              setperfilselet={setperfilselet}
-              lideresUnidad={lideresUnidad}
-              setLideresUnidad={setLideresUnidad}
-            />
+            personaselet={personaselet}
+            setpersona={setpersona}
+            perfilselet={perfilselet}
+            setperfilselet={setperfilselet}
+            lideresUnidad={lideresUnidad}
+            setLideresUnidad={setLideresUnidad}
+          />
         </Grid>
 
 

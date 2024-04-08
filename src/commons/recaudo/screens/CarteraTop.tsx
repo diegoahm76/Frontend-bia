@@ -6,27 +6,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import { useSelector } from 'react-redux';
-import { api } from '../../../api/axios';
-import { DataGrid } from '@mui/x-data-grid';
-import { SetStateAction, useEffect, useState } from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
+import { useState } from 'react';
 import { Title } from '../../../components/Title';
-import { AuthSlice } from '../../auth/interfaces';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { control_error } from '../alertas/store/thunks/alertas';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { BuscadorPersona } from '../../../components/BuscadorPersona';
-import { control_success } from '../../recursoHidrico/requets/Request';
-import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
-import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button, IconButton, styled } from '@mui/material';
+import { Grid, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
-import Logorecaudo from '../../gestorDocumental/InfoEncuesta/components/logorecaudo';
 
 
 
@@ -163,39 +148,45 @@ export const CarteraTop: React.FC = () => {
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Consepto edad"
+                        label="Concepto edad"
                         name="edad"
                         disabled
                         variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleInputChange}
-                        value={formData.edad}
+                        // value={formData.edad}
+                        value={'TODOS'}
+
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Consepto deuda"
+                        label="Concepto deuda"
                         name="deuda"
                         disabled
                         variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleInputChange}
-                        value={formData.deuda}
+                        // value={formData.deuda}
+                        value={'TODOS'}
+
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Consepto top 5"
+                        label="Concepto "
                         name="top"
                         disabled
                         variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleInputChange}
-                        value={formData.top}
+                        // value={formData.top}
+                        value={'Top 10'}
+
                     />
                 </Grid>
 
