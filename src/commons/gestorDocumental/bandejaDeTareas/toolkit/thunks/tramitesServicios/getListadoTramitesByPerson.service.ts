@@ -15,7 +15,7 @@ export const getListadoTramitesByPerson = async (
   fecha_fin: string = '',
   radicado: string = '',
   estado_asignacion_de_tarea: string = '',
-  mostrar_respuesta_con_req_pendientes: boolean = false,
+  mostrar_respuesta_con_req_pendientes: string = '',
 ) => {
   try {
     setLoading(true);
@@ -29,7 +29,7 @@ export const getListadoTramitesByPerson = async (
       estado_de_la_tarea
     )}&fecha_inicio=${formattedFechaInicio}&fecha_fin=${formattedFechaFin}&radicado=${encodeURIComponent(
       radicado
-    )}&estado_asignacion=${encodeURIComponent(estado_asignacion_de_tarea)}&mostrar_respuesta_con_req_pendientes=${mostrar_respuesta_con_req_pendientes ? 'True' : 'False'}`;
+    )}&estado_asignacion=${encodeURIComponent(estado_asignacion_de_tarea)}&mostrar_respuesta_con_req_pendientes=${mostrar_respuesta_con_req_pendientes === 'True' ? 'True' : mostrar_respuesta_con_req_pendientes === '' ? '' : 'False'}`;
     const { data } = await api.get(url);
 
     if (data && data?.data?.length) {

@@ -72,6 +72,7 @@ import { RequerimientoUsarioOpasSlice } from '../commons/gestorDocumental/bandej
 import { ReportesGeneralesGestorSlice } from '../commons/gestorDocumental/ReportesGeneralesGestorDocumental/toolkit/ReportesGeneralesGestorSlice';
 import { notificaciones_slice } from '../commons/Transversales/modules/notificaciones/store/slice/notificacionesSlice';
 import { ResRequerimientoOpaSlice } from '../commons/gestorDocumental/TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
+import { VitalSlice } from '../commons/gestorDocumental/integracionVital/toolkit/store/VitalStore';
 
 
 const persist_config = {
@@ -183,6 +184,7 @@ const app_reducers = combineReducers({
   ReportesGeneralesGestorSlice: ReportesGeneralesGestorSlice.reducer,
   ResRequerimientoOpaSlice: ResRequerimientoOpaSlice.reducer,
   notificaciones_slice: notificaciones_slice.reducer,
+  VitalSlice: VitalSlice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
