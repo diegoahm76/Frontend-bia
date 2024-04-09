@@ -1010,7 +1010,7 @@ export const Indicadores: React.FC = () => {
 
 
 
-                {indicadorvalor && (
+                {/* {indicadorvalor && (
                     <>
                        <Grid item >
                     <Button
@@ -1027,7 +1027,7 @@ export const Indicadores: React.FC = () => {
                 </Grid>
 
                     </>
-                )}
+                )} */}
                 
             </Grid>
 
