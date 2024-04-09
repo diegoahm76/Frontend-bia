@@ -28,7 +28,7 @@ import SolicitudActivos from '../solicitudDeActivos/screens/SolicitudActivos';
 import AutorizacionSolicitudActivos from '../autorizacion_solicitud_activos/screens/AutorizacionSolicitudActivos';
 import SalidaEspecialActivos from '../salida_especial_activos/screens/SalidaEspecialActivos';
 import DevolucionActivos from '../devolucion_activos/screens/DevolucionActivos';
-import DespachoSolicitudes from '../despacho_solicitudes/screens/DespachoSolicitudes';
+import DespachoActivos from '../despacho_activos/screens/DespachoActivos';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -137,8 +137,8 @@ export const AlmacenRoutes: React.FC = () => {
         element={<DevolucionActivos />}
       />
       <Route
-        path="despacho_solicitudes/*"
-        element={<DespachoSolicitudes />}
+        path="despacho_activos/*"
+        element={<DespachoActivos />}
       />
       <Route
         path="otras_entregas/*"
