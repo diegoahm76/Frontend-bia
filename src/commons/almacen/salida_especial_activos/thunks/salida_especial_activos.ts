@@ -82,3 +82,14 @@ export const get_obtener_activos_asociados: any = (id_entrada_almacen: string) =
     }
   };
 }
+
+export const post_crear_salida_especial: any = (form_data: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`/almacen/activos/crear-salida-especial-activo/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}

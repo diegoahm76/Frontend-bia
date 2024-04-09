@@ -1,30 +1,38 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, CircularProgress, Grid, TextField,  } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../../../components';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import AddIcon from '@mui/icons-material/Add';
-import { control_error, control_success } from '../../../../helpers';
-import Swal from 'sweetalert2';
-import { useDispatch } from 'react-redux';
+import { control_error } from '../../../../helpers';
 import { interface_anexo_opcional } from '../interfaces/types';
 import TablaOtrosAnexosOpcionales from '../tables/TablaOtrosAnexosOpcionales';
 import { v4 as uuidv4 } from 'uuid';
 
 
 interface props {
+  form_data: FormData;
   id_baja_activo: number | null;
   data_anexos_opcionales: interface_anexo_opcional[];
   set_data_anexos_opcionales: React.Dispatch<React.SetStateAction<interface_anexo_opcional[]>>;
+  data_anexos_agregados: File[];
+  set_data_anexos_agregados: React.Dispatch<React.SetStateAction<File[]>>;
+  ordenar_data_anexos: () => void;
 }
 
-const AnexosOpcionales: React.FC<props> = ({id_baja_activo, data_anexos_opcionales, set_data_anexos_opcionales}) => {
-  const dispatch = useDispatch();
+const AnexosOpcionales: React.FC<props> = ({
+  form_data,
+  id_baja_activo, 
+  data_anexos_opcionales, 
+  set_data_anexos_opcionales, 
+  data_anexos_agregados,
+  set_data_anexos_agregados,
+  ordenar_data_anexos,
+}) => {
 
   const [accion, set_accion] = useState<string>('crear');
   
@@ -32,15 +40,19 @@ const AnexosOpcionales: React.FC<props> = ({id_baja_activo, data_anexos_opcional
 
   const [data_anexo_editar, set_data_anexo_editar] = useState<interface_anexo_opcional>(Object);
 
+  const [data_anexo_opcional, set_data_anexo_opcional] = useState<any>(Object);
 
   const [nombre_anexo_opcional, set_nombre_anexo_opcional] = useState<string>('');
   const [fecha_anexo_opcional, set_fecha_anexo_opcional] = useState<Dayjs | null>(dayjs());
   const [numero_folios_opcional, set_numero_folios_opcional] = useState<number>(0);
   const [descripcion_opcinal, set_descripcion_opcinal] = useState<string>('');
-  const [data_anexo_opcional, set_data_anexo_opcional] = useState<any>(Object);
   const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false)
 
-  const form_data = new FormData();
+  
+
+  useEffect(() => {
+    console.log(data_anexos_agregados)
+  }, [data_anexos_agregados]);
 
 
   useEffect(() => {
@@ -58,16 +70,17 @@ const AnexosOpcionales: React.FC<props> = ({id_baja_activo, data_anexos_opcional
     }
   }
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const selectedFile = files[0];
-
-      set_data_anexo_opcional(selectedFile);
-    } else {
-      set_data_anexo_opcional({} as any);
-    }
-  };
+const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const files = event.target.files;
+  if (files && files.length > 0) {
+    const selectedFile = files[0];
+    set_data_anexo_opcional(selectedFile);
+  } else {
+    set_data_anexo_opcional({} as any);
+  }
+  // Limpiar el input
+  event.target.value = '';
+};
 
   const limpiar_formulario = () => {
     set_nombre_anexo_opcional('');
@@ -133,24 +146,62 @@ const AnexosOpcionales: React.FC<props> = ({id_baja_activo, data_anexos_opcional
 
 
   const agregar_anexo_opcional = async() => {
-    // Agregamos el anexo opcional a la lista de anexos opcionales
-    set_data_anexos_opcionales([...data_anexos_opcionales, {
-      id_anexo: uuidv4(),
-      id_salida_espec_arti: id_baja_activo,
-      nombre_anexo: nombre_anexo_opcional,
-      nro_folios: numero_folios_opcional,
-      descripcion_anexo: descripcion_opcinal,
-      fecha_creacion_anexo: dayjs().format('YYYY-MM-DD'),
-    }]);
-    limpiar_formulario();
+    // Verificamos que el id_file no exista en la lista de anexos opcionales, 
+    // si el data_anexo_opcional.lastModified ya existe en la lista de anexos opcionales
+    // no se permitirá agregar el anexo
+    const existe_anexo = data_anexos_opcionales.find(item => item.id_file === data_anexo_opcional.lastModified.toString());
+
+    if(existe_anexo){
+      control_error('El archivo que seleccionó ya fue agregado como anexo opcional');
+      return;
+    } else {
+      set_data_anexos_agregados([...data_anexos_agregados, data_anexo_opcional]);
+
+      // Agregamos el anexo opcional a la lista de anexos opcionales
+      set_data_anexos_opcionales([...data_anexos_opcionales, {
+        id_anexo: uuidv4(),
+        id_file: data_anexo_opcional.lastModified.toString(),
+        id_salida_espec_arti: id_baja_activo,
+        nombre_anexo: nombre_anexo_opcional,
+        nro_folios: numero_folios_opcional,
+        descripcion_anexo: descripcion_opcinal,
+        fecha_creacion_anexo: dayjs().format('YYYY-MM-DD'),
+      }]);
+
+      limpiar_formulario();
+    }
   }
   
   const editar_anexo_opcional = async() => {
+    //Si editamos un anexo, y seleccionamos un file, entonces se buscara en data_anexos_agregados el id_file del anexo a editar y se eliminara, para agregar el nuevo file
+    if('name' in data_anexo_opcional){
+      // Verificamos que el id_file no exista en la lista de anexos opcionales,
+      const existe_anexo = data_anexos_opcionales.find(item => item.id_file === data_anexo_opcional.lastModified.toString());
+      if(existe_anexo){
+        control_error('El archivo que seleccionó ya fue agregado como anexo opcional');
+        return;
+      }
+
+      // Buscamos el anexo en la lista de anexos agregados
+      const anexo_agregado = data_anexos_agregados.find(item => item.lastModified === Number(data_anexo_editar.id_file));
+
+      if(anexo_agregado){
+        // Creamos una nueva lista de anexos sin el anexo antiguo
+        const nuevos_anexos = data_anexos_agregados.filter(item => item.lastModified !== Number(data_anexo_editar.id_file));
+
+        // Agregamos el nuevo anexo a la lista
+        nuevos_anexos.push(data_anexo_opcional);
+        // Actualizamos el estado con la nueva lista de anexos
+        set_data_anexos_agregados(nuevos_anexos);
+      }
+    }
+    
     // Editamos el anexo opcional en la lista de anexos opcionales
     const data_anexos_opcionales_temp = data_anexos_opcionales.map((item) => {
       if(item.id_anexo === data_anexo_editar.id_anexo){
         return {
           ...item,
+          ...(('lastModified' in data_anexo_opcional) ? {id_file: data_anexo_opcional.lastModified.toString()} : {}),
           nombre_anexo: nombre_anexo_opcional,
           nro_folios: numero_folios_opcional,
           descripcion_anexo: descripcion_opcinal,
@@ -161,7 +212,12 @@ const AnexosOpcionales: React.FC<props> = ({id_baja_activo, data_anexos_opcional
     });
     set_data_anexos_opcionales(data_anexos_opcionales_temp);
     limpiar_formulario();
+    set_accion('crear');
   }
+
+  useEffect(() => {
+    ordenar_data_anexos();
+  },[data_anexo_opcional,data_anexo_editar,accion]);
 
   return (
     <>
@@ -279,6 +335,8 @@ const AnexosOpcionales: React.FC<props> = ({id_baja_activo, data_anexos_opcional
             data_anexos_opcionales={data_anexos_opcionales}
             set_data_anexo_editar={set_data_anexo_editar}
             set_data_anexos_opcionales={set_data_anexos_opcionales}
+            set_data_anexos_agregados={set_data_anexos_agregados}
+            data_anexos_agregados={data_anexos_agregados}
           />
         </Grid>
 

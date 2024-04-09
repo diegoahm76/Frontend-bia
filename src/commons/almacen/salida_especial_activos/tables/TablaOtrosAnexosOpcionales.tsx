@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ButtonGroup, Grid } from '@mui/material';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
@@ -10,9 +10,7 @@ import { interface_anexo_opcional } from '../interfaces/types';
 import dayjs from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
-import { control_error, control_success } from '../../../../helpers';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 
 
@@ -28,6 +26,8 @@ interface props {
   set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   set_data_anexo_editar: React.Dispatch<React.SetStateAction<interface_anexo_opcional>>;
+  set_data_anexos_agregados: React.Dispatch<React.SetStateAction<File[]>>;
+  data_anexos_agregados: File[];
 }
 
 const TablaOtrosAnexosOpcionales: React.FC<props> = ({
@@ -36,10 +36,10 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
   set_refrescar_tabla,
   set_accion,
   set_data_anexo_editar,
-  set_data_anexos_opcionales
+  set_data_anexos_opcionales,
+  set_data_anexos_agregados,
+  data_anexos_agregados,
 }) => {
-
-  const dispatch = useDispatch();
 
   const delete_anexo_opcional_fc = (params: interface_anexo_opcional) => {
     Swal.fire({
@@ -55,8 +55,10 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
       if (result.isConfirmed) {
         // Acción de eliminar anexo
         set_data_anexos_opcionales(data_anexos_opcionales.filter(item => item.id_anexo !== params.id_anexo));
-
         set_refrescar_tabla(!refrescar_tabla);
+        console.log(params.id_file);
+        //Eliminamos el file de data_anexos_agregados si el params.id_file es igual a el lastModified del file
+        set_data_anexos_agregados(data_anexos_agregados.filter(item => item.lastModified !== Number(params.id_file)));
         return true;
       } else if(result.isDenied){
         return false;

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import SearchIcon from "@mui/icons-material/Search";
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import { interface_estado_autorizacion_solicitud_activos, interface_solicitud_por_id } from '../interfaces/types';
+import { interface_articulos_despachados, interface_estado_autorizacion_solicitud_activos, interface_inputs_resumen_despacho, interface_solicitud_por_id } from '../interfaces/types';
 import { useDispatch } from 'react-redux';
 import { control_error, control_success } from '../../../../helpers';
 import { convertir_cod_estado } from '../../solicitudDeActivos/validations/validations';
@@ -11,24 +11,33 @@ import TablaArticulosSolicitados from '../tables/TablaArticulosSolicitados';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Title } from '../../../../components';
+import ResumenDespacho from './ResumenDespacho';
+import { useAppDispatch } from '../../../../hooks';
 
 
 interface props {
   accion: string;
   data_form_resumen_solicitud: interface_estado_autorizacion_solicitud_activos;
+  inputs_resumen_despacho: interface_inputs_resumen_despacho;
+  data_articulos_despachados: interface_articulos_despachados[];
+  set_inputs_resumen_despacho: React.Dispatch<React.SetStateAction<interface_inputs_resumen_despacho>>;
+  set_data_articulos_despachados: React.Dispatch<React.SetStateAction<interface_articulos_despachados[]>>;
+  data_solicitud_ver_por_id: interface_solicitud_por_id;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ResumenSolicitud: React.FC<props> = ({
   accion,
   data_form_resumen_solicitud,
+  inputs_resumen_despacho,
+  data_articulos_despachados,
+  set_inputs_resumen_despacho,
+  set_data_articulos_despachados,
+  data_solicitud_ver_por_id,
 }) => {
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (Object.keys(data_form_resumen_solicitud).length !== 0){
-      // Aquí debería haber alguna acción a realizar si la condición es verdadera
-    }
-  }, [data_form_resumen_solicitud]);
+  
 
 
   return (
@@ -62,7 +71,7 @@ const ResumenSolicitud: React.FC<props> = ({
             disabled
             label="Fecha de solicitud:"
             value={data_form_resumen_solicitud.fecha_solictud || null}
-            onChange={() => {}} // No hace nada
+            onChange={() => { }} // No hace nada
             renderInput={(params) => (
               <TextField fullWidth size="small" {...params} />
             )}
@@ -76,7 +85,7 @@ const ResumenSolicitud: React.FC<props> = ({
             disabled
             label="Fecha de cierre de solicitud:"
             value={data_form_resumen_solicitud.fecha_cierre_solicitud || null}
-            onChange={() => {}} // No hace nada
+            onChange={() => { }} // No hace nada
             renderInput={(params) => (
               <TextField fullWidth size="small" {...params} />
             )}
@@ -90,7 +99,7 @@ const ResumenSolicitud: React.FC<props> = ({
             disabled
             label="Fecha de devolución"
             value={data_form_resumen_solicitud.fecha_devolucion || null}
-            onChange={() => {}} // No hace nada
+            onChange={() => { }} // No hace nada
             renderInput={(params) => (
               <TextField fullWidth size="small" {...params} />
             )}
@@ -100,7 +109,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
+          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
             <Chip label="FUNCIONARIO QUIEN SOLICITÓ" size="small" />
           </Divider>
         </Grid>
@@ -155,10 +164,10 @@ const ResumenSolicitud: React.FC<props> = ({
           />
         </Grid>
       </Grid>
-      
+
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
+          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
             <Chip label="FUNCIONARIO RESPONSABLE" size="small" />
           </Divider>
         </Grid>
@@ -231,7 +240,7 @@ const ResumenSolicitud: React.FC<props> = ({
               disabled
               label="Fecha de aprobación"
               value={data_form_resumen_solicitud.fecha_aprobacion_resp || null}
-              onChange={() => {}} // No hace nada
+              onChange={() => { }} // No hace nada
               renderInput={(params) => (
                 <TextField fullWidth size="small" {...params} />
               )}
@@ -243,7 +252,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
+          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
             <Chip label="FUNCIONARIO OPERARIO" size="small" />
           </Divider>
         </Grid>
@@ -288,7 +297,7 @@ const ResumenSolicitud: React.FC<props> = ({
             size='small'
           />
         </Grid>
-        
+
         <Grid item xs={12} lg={3}>
           <TextField
             fullWidth
@@ -303,7 +312,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
+          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
             <Chip label="FUNCIONARIO QUE CIERRA POR NO DISPONIBILIDAD EN ALMACÉN" size="small" />
           </Divider>
         </Grid>
@@ -376,7 +385,7 @@ const ResumenSolicitud: React.FC<props> = ({
               disabled
               label="Fecha de cierre:"
               value={data_form_resumen_solicitud.fecha_cierre_no_dispo_alma || null}
-              onChange={() => {}} // No hace nada
+              onChange={() => { }} // No hace nada
               renderInput={(params) => (
                 <TextField fullWidth size="small" {...params} />
               )}
@@ -387,7 +396,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
+          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
             <Chip label="FUNCIONARIO DE ALMACÉN QUE RECHAZA LA SOLICITUD" size="small" />
           </Divider>
         </Grid>
@@ -460,7 +469,7 @@ const ResumenSolicitud: React.FC<props> = ({
               disabled
               label="Fecha de rechazo:"
               value={data_form_resumen_solicitud.fecha_rechazo_almacen || null}
-              onChange={() => {}} // No hace nada
+              onChange={() => { }} // No hace nada
               renderInput={(params) => (
                 <TextField fullWidth size="small" {...params} />
               )}
@@ -495,18 +504,23 @@ const ResumenSolicitud: React.FC<props> = ({
       </Grid>
 
       <Grid container item xs={12} sx={{
-          position: "relative",
-          background: "#FAFAFA",
-          borderRadius: "15px",
-          p: "40px",
-          my: "20px",
-          boxShadow: "0px 3px 6px #042F4A26",
-        }}>
+        position: "relative",
+        background: "#FAFAFA",
+        borderRadius: "15px",
+        p: "40px",
+        my: "20px",
+        boxShadow: "0px 3px 6px #042F4A26",
+      }}>
         <Title title="Artículos solicitados" />
         <TablaArticulosSolicitados
           articulos_solicitados={data_form_resumen_solicitud.items_solicitud}
         />
       </Grid>
+
+      <ResumenDespacho
+        inputs_resumen_despacho={inputs_resumen_despacho}
+        data_articulos_despachados={data_articulos_despachados}
+      />
     </>
   );
 }
