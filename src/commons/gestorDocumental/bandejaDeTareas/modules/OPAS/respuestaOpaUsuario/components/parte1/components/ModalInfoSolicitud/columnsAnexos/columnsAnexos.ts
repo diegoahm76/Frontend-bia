@@ -7,21 +7,25 @@ export const columnsAnexos: {
   {
     headerName: 'Medio de almacenamiento',
     field: 'medio_almacenamiento',
-    minWidth: 200,
+    minWidth: 250,
   },
   {
-    headerName: 'Número de folios',
-    field: 'n_folios',
-    minWidth: 200,
-  },
-  {
-    headerName: 'Nombre',
-    field: 'nombre',
-    minWidth: 220,
-  },
-  {
-    headerName: 'Número de documento',
-    field: 'numero',
-    minWidth: 200,
+    headerName: 'Nombre de anexo',
+    field: 'nombre_anexo',
+    minWidth: 350,
   },
 ];
+
+/* 
+{
+    "medio_almacenamiento": "No Aplica",
+    "nombre_anexo": "aasd",
+    "orden_anexo_doc": 1,
+    "cod_medio_almacenamiento": "Na",
+    "medio_almacenamiento_otros_Cual": null,
+    "numero_folios": 2,
+    "ya_digitalizado": true,
+    "observacion_digitalizacion": null,
+    "id_docu_arch_exp": null
+}
+ */

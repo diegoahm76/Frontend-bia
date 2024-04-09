@@ -9,6 +9,7 @@ import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/
 import {
   setActionssToManagePermissionsOpas,
   setCurrentElementPqrsdComplementoTramitesYotros,
+  setListaElementosComplementosRequerimientosOtros,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { columnsOpas } from './columnsOpas/columnsOpas';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
@@ -18,6 +19,9 @@ import { ModalOpa as ModalOpaInformacion } from '../../../../../Atom/Opas/ModalO
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import Swal from 'sweetalert2';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
+import { getComplementosAsociadosOpas } from '../../../../../../../toolkit/thunks/opas/complementos/getComplementosOpas.service';
 
 export const ElementoOPAS = (): JSX.Element => {
   // ? dispatch necesario
@@ -33,7 +37,9 @@ export const ElementoOPAS = (): JSX.Element => {
 
   //* context necesario
 
-  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
+  const { handleOpenModalOne, handleThirdLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   // ? set actions OPAS, button selected
 
@@ -238,6 +244,47 @@ const actionsOpas: any[] = [
       renderCell: (params: any) => {
         return (
           <>
+            <Tooltip
+              title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
+            >
+              <IconButton
+                onClick={() => {
+                  (async () => {
+                    try {
+                      const res = await getComplementosAsociadosOpas(
+                        params.row.id_solicitud_tramite,
+                        handleThirdLoading
+                      );
+                      dispatch(
+                        setListaElementosComplementosRequerimientosOtros(res)
+                      );
+                    } catch (error) {
+                      console.error(error);
+                      // Handle error appropriately
+                    }
+                  })();
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <KeyboardDoubleArrowDownIcon
+                    sx={{
+                      color: 'info.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
             <Tooltip title="Ver información asociada a OPA">
               <IconButton
                 onClick={() => {

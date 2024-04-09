@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Box,
@@ -119,7 +120,7 @@ export const ModalRejectTask: FC = (): JSX.Element => {
         estado_de_la_tarea,
         fecha_inicio,
         fecha_fin,
-        false, // Set the value of mostrar_respuesta_con_req_pendientes to false
+        '', // Set the value of mostrar_respuesta_con_req_pendientes to false
         undefined // Set the value of radicado to undefined
       ),
       listadoTareasType: '',
@@ -322,3 +323,4 @@ export const ModalRejectTask: FC = (): JSX.Element => {
     </>
   );
 };
+

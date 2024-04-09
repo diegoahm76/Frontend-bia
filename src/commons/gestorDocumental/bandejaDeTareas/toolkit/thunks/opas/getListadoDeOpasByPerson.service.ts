@@ -11,9 +11,10 @@ export const getListadoTareasOpasByPerson = async (
   estado_de_la_tarea: string = '',
   fecha_inicio: string = '',
   fecha_fin: string = '',
-  mostrar_respuesta_con_req_pendientes: boolean = false,
+  mostrar_respuesta_con_req_pendientes: string = '',
   radicado: string = ''
 ) => {
+  console.log('soy los requerimiento pendientes por respuesta', mostrar_respuesta_con_req_pendientes)
   try {
     setLoading(true);
     const formattedFechaInicio = fecha_inicio
@@ -24,7 +25,7 @@ export const getListadoTareasOpasByPerson = async (
       : '';
 
       // gestor/bandeja-tareas/tareas-asignadas/opas/get-by-persona/215/?radicado=&estado_asignacion=&estado_tarea&fecha_inicio&fecha_fin&requerimiento
-    const url = `gestor/bandeja-tareas/tareas-asignadas/opas/get-by-persona/${idPersona}/?radicado=${radicado}&estado_asignacion=${estado_asignacion_de_tarea}&estado_tarea=${estado_de_la_tarea}&fecha_inicio=${formattedFechaInicio}&fecha_fin=${formattedFechaFin}&requerimiento=${mostrar_respuesta_con_req_pendientes ? 'True' : 'False'}`;
+    const url = `gestor/bandeja-tareas/tareas-asignadas/opas/get-by-persona/${idPersona}/?radicado=${radicado}&estado_asignacion=${estado_asignacion_de_tarea}&estado_tarea=${estado_de_la_tarea}&fecha_inicio=${formattedFechaInicio}&fecha_fin=${formattedFechaFin}&requerimiento=${mostrar_respuesta_con_req_pendientes === 'True' ? 'True' : mostrar_respuesta_con_req_pendientes === '' ? '' : 'False'}`;
     const { data } = await api.get(url);
 
     if (data && data?.data?.length) {

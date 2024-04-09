@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { SucursalEntidad } from './SucursalEntidad';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { ISucursalEmpresa } from './utils/interfac';
+import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -30,7 +31,7 @@ export const Sucursal: FC = () => {
       // console.error(error);
     }
   };
-  
+
 
   // useEffect(() => {
   //   fetchand_update_data().catch((error) => {
@@ -198,7 +199,8 @@ export const Sucursal: FC = () => {
         {/* sucursal entidad */}
         <SucursalEntidad />
         <Grid item xs={12}>
-          <DataGrid
+
+          {/* <DataGrid
             density="compact"
             autoHeight
             columns={columns ?? []}
@@ -206,8 +208,15 @@ export const Sucursal: FC = () => {
             pageSize={10}
             rowsPerPageOptions={[10]}
             getRowId={(row) => row.id_sucursal_empresa}
-          />
+          /> */}
         </Grid>
+
+        <RenderDataGrid
+          title={`Listado de sucursales`}
+          columns={columns ?? []}
+          rows={data_entidad ?? []}
+        />
+
         <SucursalActuaizar fetch_dataget={fetch_dataget} setnew_number={setnew_number} fetchand_update_data={fetchand_update_data}
           sucursal={Sucursal} data_entidad={data_entidad} setselected_id={setselected_id} selected_id={selected_id} new_number={new_number}
           esPrincipalExists={esPrincipalExists} />
