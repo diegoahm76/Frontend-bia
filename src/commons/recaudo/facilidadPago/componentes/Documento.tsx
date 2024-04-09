@@ -38,6 +38,7 @@ interface BuscarProps {
   set_doc: any;
   idFacilidadSeleccionada: any;
   idFacilidades: any
+  
 }
 export interface SerieSubserie {
   id_cat_serie_und: number;
@@ -464,7 +465,7 @@ ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en
 
 
 
-  const [personaselet, setpersona] = useState<string[]>([id_persona.toString()]);
+  const [personaselet, setpersona] = useState<string[]>([id_persona.toString(),]);
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
   const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
 

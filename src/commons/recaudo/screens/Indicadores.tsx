@@ -371,82 +371,82 @@ export const Indicadores: React.FC = () => {
     };
 
     // Función para actualizar formData cuando se selecciona un mes y se ingresan las variables
-    // const updateFormData = () => {
-    //     control_success("Variables agregadas")
-
-    //     const existingIndex = formData.indicadorvalor_set.findIndex(indicador => indicador.mes_id === mesId);
-    //     const newIndicadorValor = {
-    //         mes_id: mesId,
-    //         valor: '0',
-    //         variable_1: variable1,
-    //         variable_2: variable2
-    //     };
-
-    //     if (existingIndex > -1) {
-    //         const updatedIndicadorValorSet = [...formData.indicadorvalor_set];
-    //         updatedIndicadorValorSet[existingIndex] = newIndicadorValor;
-    //         setFormData((prevData) => ({
-    //             ...prevData,
-    //             indicadorvalor_set: updatedIndicadorValorSet
-    //         }));
-    //     } else {
-    //         setFormData((prevData) => ({
-    //             ...prevData,
-    //             indicadorvalor_set: [...prevData.indicadorvalor_set, newIndicadorValor]
-    //         }));
-    //     }
-    // };
     const updateFormData = () => {
+        control_success("Variables agregadas")
 
+        const existingIndex = formData.indicadorvalor_set.findIndex(indicador => indicador.mes_id === mesId);
+        const newIndicadorValor = {
+            mes_id: mesId,
+            valor: '0',
+            variable_1: variable1,
+            variable_2: variable2
+        };
 
-        // Clonar indicadorvalor_set para evitar la mutación directa del estado
-        let updatedIndicadorValorSet = [...formData.indicadorvalor_set];
-
-        // Determinar el rango de meses basado en la frecuencia de medición
-        let monthRange: any[] = [];
-        const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-        switch (formData.frecuencia_medicion) {
-            case 'anual':
-                monthRange = monthNames.map((_, index) => index + 1);
-                break;
-            case 'semestral':
-                monthRange = selectedMonth.includes('enero') ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
-                break;
-            case 'mensual':
-                monthRange = [meses.indexOf(selectedMonth.split('-')[0]) + 1]; // Asumiendo que selectedMonth es "enero", "febrero", etc.
-                break;
-            case 'trimestral':
-                const startMonthIndex = monthNames.indexOf(selectedMonth.split('-')[0]);
-                const trimestreInicio = Math.floor(startMonthIndex / 3) * 3; // Encuentra el inicio del trimestre
-                monthRange = [trimestreInicio + 1, trimestreInicio + 2, trimestreInicio + 3];
-                break;
-            // Agrega lógica para "cuatrimestral" si es necesario
+        if (existingIndex > -1) {
+            const updatedIndicadorValorSet = [...formData.indicadorvalor_set];
+            updatedIndicadorValorSet[existingIndex] = newIndicadorValor;
+            setFormData((prevData) => ({
+                ...prevData,
+                indicadorvalor_set: updatedIndicadorValorSet
+            }));
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                indicadorvalor_set: [...prevData.indicadorvalor_set, newIndicadorValor]
+            }));
         }
-
-
-        // Agregar o actualizar valores para cada mes en el rango determinado
-        monthRange.forEach(mesId => {
-            const existingIndex = updatedIndicadorValorSet.findIndex(indicador => indicador.mes_id === mesId);
-            const newIndicadorValor = {
-                mes_id: mesId,
-                valor: '0', // Actualiza esto con el valor real que necesitas agregar
-                variable_1: variable1,
-                variable_2: variable2
-            };
-
-            if (existingIndex > -1) {
-                updatedIndicadorValorSet[existingIndex] = { ...newIndicadorValor };
-            } else {
-                updatedIndicadorValorSet.push({ ...newIndicadorValor });
-            }
-        });
-
-        // Actualizar el estado con el nuevo array modificado
-        setFormData(prevData => ({
-            ...prevData,
-            indicadorvalor_set: updatedIndicadorValorSet
-        }));
     };
+    // const updateFormData = () => {
+
+
+    //     // Clonar indicadorvalor_set para evitar la mutación directa del estado
+    //     let updatedIndicadorValorSet = [...formData.indicadorvalor_set];
+
+    //     // Determinar el rango de meses basado en la frecuencia de medición
+    //     let monthRange: any[] = [];
+    //     const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    //     switch (formData.frecuencia_medicion) {
+    //         case 'anual':
+    //             monthRange = monthNames.map((_, index) => index + 1);
+    //             break;
+    //         case 'semestral':
+    //             monthRange = selectedMonth.includes('enero') ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
+    //             break;
+    //         case 'mensual':
+    //             monthRange = [meses.indexOf(selectedMonth.split('-')[0]) + 1]; // Asumiendo que selectedMonth es "enero", "febrero", etc.
+    //             break;
+    //         case 'trimestral':
+    //             const startMonthIndex = monthNames.indexOf(selectedMonth.split('-')[0]);
+    //             const trimestreInicio = Math.floor(startMonthIndex / 3) * 3; // Encuentra el inicio del trimestre
+    //             monthRange = [trimestreInicio + 1, trimestreInicio + 2, trimestreInicio + 3];
+    //             break;
+    //         // Agrega lógica para "cuatrimestral" si es necesario
+    //     }
+
+
+    //     // Agregar o actualizar valores para cada mes en el rango determinado
+    //     monthRange.forEach(mesId => {
+    //         const existingIndex = updatedIndicadorValorSet.findIndex(indicador => indicador.mes_id === mesId);
+    //         const newIndicadorValor = {
+    //             mes_id: mesId,
+    //             valor: '0', // Actualiza esto con el valor real que necesitas agregar
+    //             variable_1: variable1,
+    //             variable_2: variable2
+    //         };
+
+    //         if (existingIndex > -1) {
+    //             updatedIndicadorValorSet[existingIndex] = { ...newIndicadorValor };
+    //         } else {
+    //             updatedIndicadorValorSet.push({ ...newIndicadorValor });
+    //         }
+    //     });
+
+    //     // Actualizar el estado con el nuevo array modificado
+    //     setFormData(prevData => ({
+    //         ...prevData,
+    //         indicadorvalor_set: updatedIndicadorValorSet
+    //     }));
+    // };
 
     useEffect(() => {
         // Suponiendo que quieres ejecutar control_success solo si indicadorvalor_set tiene elementos
@@ -457,22 +457,20 @@ export const Indicadores: React.FC = () => {
     const getFilteredMonths = () => {
         switch (formData.frecuencia_medicion) {
             case 'mensual':
-                return meses; // Retorna todos los meses
+                return meses; // Asume que 'meses' es un arreglo de todos los meses
             case 'semestral':
-                // Retorna los rangos de meses para semestral
-                return ['enero-junio', 'julio-diciembre'];
+                return ['junio', 'diciembre']; // Solo el último mes de cada semestre
             case 'trimestral':
-                // Ejemplo para trimestral, ajusta según corresponda
-                return ['enero-marzo', 'abril-junio', 'julio-septiembre', 'octubre-diciembre'];
+                return ['marzo', 'junio', 'septiembre', 'diciembre']; // Solo el último mes de cada trimestre
             case 'cuatrimestral':
-                return ['enero-abril', 'mayo-agosto', 'septiembre-diciembre'];
+                return ['abril', 'agosto', 'diciembre']; // Solo el último mes de cada cuatrimestre
             case 'anual':
-                // Para anual, podrías elegir un mes o simplemente dejar seleccionar cualquier
-                return ['enero-diciembre']; // Ajusta según necesites
+                return ['diciembre']; // Solo diciembre para anual
             default:
-                return meses; // Por defecto retorna todos los meses
+                return meses;
         }
     };
+    
 
 
 
@@ -686,7 +684,7 @@ export const Indicadores: React.FC = () => {
                             <MenuItem value="1">RECAUDO TUA</MenuItem>
                             <MenuItem value="2">RECAUDO TR</MenuItem>
                             <MenuItem value="3">COSTO RECAUDO TUA</MenuItem>
-                            <MenuItem value="4">AMBIENTAL</MenuItem>
+                            <MenuItem value="4">PORCENTAJE  AMBIENTAL</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
