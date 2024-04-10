@@ -57,7 +57,7 @@ const TablaArticulosDespachados: React.FC<props> = ({
         rowHeight={75}
         rowsPerPageOptions={[5]}
         experimentalFeatures={{ newEditingApi: true }}
-        getRowId={(row) => row.id_bien === undefined ? uuidv4() : row.id_bien}
+        getRowId={() => uuidv4()}
       />
     </>
   );
