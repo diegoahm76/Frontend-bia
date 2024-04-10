@@ -20,21 +20,23 @@ interface custom_column extends GridColDef {
 }
 
 interface props {
+  accion: string;
   set_data_anexos_opcionales: React.Dispatch<React.SetStateAction<interface_anexo_opcional[]>>;
   data_anexos_opcionales: interface_anexo_opcional[];
   refrescar_tabla: boolean;
   set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
-  set_accion: React.Dispatch<React.SetStateAction<string>>;
+  set_accion_componente: React.Dispatch<React.SetStateAction<string>>;
   set_data_anexo_editar: React.Dispatch<React.SetStateAction<interface_anexo_opcional>>;
   set_data_anexos_agregados: React.Dispatch<React.SetStateAction<File[]>>;
   data_anexos_agregados: File[];
 }
 
 const TablaOtrosAnexosOpcionales: React.FC<props> = ({
+  accion,
   data_anexos_opcionales,
   refrescar_tabla,
   set_refrescar_tabla,
-  set_accion,
+  set_accion_componente,
   set_data_anexo_editar,
   set_data_anexos_opcionales,
   set_data_anexos_agregados,
@@ -50,7 +52,7 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
       confirmButtonColor: '#042F4A',
       cancelButtonColor: '#DE1616',
       icon: 'question',
-    }).then(async(result) => {
+    }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         // Acción de eliminar anexo
@@ -60,54 +62,64 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
         //Eliminamos el file de data_anexos_agregados si el params.id_file es igual a el lastModified del file
         set_data_anexos_agregados(data_anexos_agregados.filter(item => item.lastModified !== Number(params.id_file)));
         return true;
-      } else if(result.isDenied){
+      } else if (result.isDenied) {
         return false;
       }
-    });  
+    });
   }
-  
+
   const eliminar_anexo_opcional = (params: interface_anexo_opcional) => {
     delete_anexo_opcional_fc(params);
   }
 
   const editar_anexo_opcional = (params: interface_anexo_opcional) => {
-    set_accion('editar');
+    set_accion_componente('editar');
     set_refrescar_tabla(!refrescar_tabla);
     set_data_anexo_editar(params);
   }
 
-  const columns: custom_column[] = [
-    { field: 'descargar', headerName: 'Descargar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
+  let columns: custom_column[] = [
+    {
+      field: 'descargar', headerName: 'Descargar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         <DownloadButton
-          fileUrl={/*params.row.id_archivo_digital.ruta_archivo*/ ''}
+          fileUrl={(params.row.id_archivo_digital?.ruta_archivo) ?? ''}
           fileName={params.row.nombre_anexo} // Puedes proporcionar un nombre de archivo deseado
           condition={false} // Establece la condición según tus necesidades
         />
       )
     },
-    {field: 'nombre_anexo', headerName:'Nombre del anexo', minWidth:250, flex:1},
-    {field: 'fecha_creacion_anexo', headerName:'Fecha creación', maxWidth:120, flex:1,
-      renderCell: (params) => dayjs(params.row.fecha_creacion_anexo).format('DD/MM/YYYY')},
-    {field: 'nro_folios', headerName:'Número de folios', maxWidth:140, flex:1},
-    {field: 'descripcion_anexo', headerName:'Descripción del anexo', minWidth:350, flex:1},
-    { field: 'eliminar', headerName: 'Eliminar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
-      renderCell: (params) => (
-        params.row.nombre_anexo !== 'Resolución aprobada por el comité' &&
-        <DeleteForeverIcon 
-          onClick={() => eliminar_anexo_opcional(params.row)}
-          sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
-      )
+    { field: 'nombre_anexo', headerName: 'Nombre del anexo', minWidth: 250, flex: 1 },
+    {
+      field: 'fecha_creacion_anexo', headerName: 'Fecha creación', maxWidth: 120, flex: 1,
+      renderCell: (params) => dayjs(params.row.fecha_creacion_anexo).format('DD/MM/YYYY')
     },
-    { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
-      renderCell: (params) => (
-        params.row.nombre_anexo !== 'Resolución aprobada por el comité' &&
-        <EditIcon 
-          onClick={() => editar_anexo_opcional(params.row)}
-          sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
-      )
-    },
-  ]
+    { field: 'nro_folios', headerName: 'Número de folios', maxWidth: 140, flex: 1 },
+    { field: 'descripcion_anexo', headerName: 'Descripción del anexo', minWidth: 350, flex: 1 },
+  ];
+
+  if (accion !== 'ver') {
+    columns.push(
+      {
+        field: 'eliminar', headerName: 'Eliminar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+        renderCell: (params) => (
+          params.row.nombre_anexo !== 'Resolución aprobada por el comité' &&
+          <DeleteForeverIcon
+            onClick={() => eliminar_anexo_opcional(params.row)}
+            sx={{ fontSize: '30px', cursor: 'pointer', color: '#c62828' }} />
+        )
+      },
+      {
+        field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+        renderCell: (params) => (
+          params.row.nombre_anexo !== 'Resolución aprobada por el comité' &&
+          <EditIcon
+            onClick={() => editar_anexo_opcional(params.row)}
+            sx={{ fontSize: '30px', cursor: 'pointer', color: '#1071b2' }} />
+        )
+      },
+    );
+  }
 
   return (
     <>
@@ -117,18 +129,18 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
         alignItems="center" >
         <Grid item  >
           <ButtonGroup style={{ margin: 5, }}>
-              {download_xls({ nurseries: data_anexos_opcionales, columns })}
-              {download_pdf({
-                  nurseries: data_anexos_opcionales,
-                  columns,
-                  title: 'Anexos opcionales',
-              })}
+            {download_xls({ nurseries: data_anexos_opcionales, columns })}
+            {download_pdf({
+              nurseries: data_anexos_opcionales,
+              columns,
+              title: 'Anexos opcionales',
+            })}
           </ButtonGroup>
         </Grid>
       </Grid>
 
       <DataGrid
-        style={{margin:'15px 0px'}}
+        style={{ margin: '15px 0px' }}
         density="compact"
         autoHeight
         rows={data_anexos_opcionales ?? []}
@@ -142,6 +154,6 @@ const TablaOtrosAnexosOpcionales: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaOtrosAnexosOpcionales;

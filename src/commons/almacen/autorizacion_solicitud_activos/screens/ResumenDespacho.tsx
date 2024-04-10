@@ -5,6 +5,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import TablaArticulosDespachados from '../tables/TablaArticulosDespachados';
 import { interface_articulos_despachados, interface_inputs_resumen_despacho } from '../interfaces/types';
+import dayjs from 'dayjs';
 
 interface props {
   inputs_resumen_despacho: interface_inputs_resumen_despacho
@@ -30,13 +31,13 @@ const ResumenDespacho: React.FC<props> = ({
       >
         <Title title='Resumen del despacho' />
 
-        <Grid item container mt={2} xs={12}>
+        <Grid item container spacing={2} mt={2} xs={12}>
           <Grid item xs={12} lg={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 disabled
                 label="Fecha de despacho:"
-                value={inputs_resumen_despacho.fecha_despacho}
+                value={!(dayjs(inputs_resumen_despacho.fecha_despacho)).isValid() && null}
                 onChange={() => { }} // No hace nada
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
@@ -51,7 +52,7 @@ const ResumenDespacho: React.FC<props> = ({
               fullWidth
               size="small"
               label="Motivo"
-              value={inputs_resumen_despacho.motivo}
+              value={inputs_resumen_despacho.motivo ?? ''}
             />
           </Grid>
         </Grid>
@@ -68,7 +69,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Tipo de documento"
-            value={inputs_resumen_despacho.tp_documento_pers_despacha}
+            value={inputs_resumen_despacho.tp_documento_pers_despacha ?? ''}
           />
         </Grid>
 
@@ -78,7 +79,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Documento"
-            value={inputs_resumen_despacho.documento_pers_despacha}
+            value={inputs_resumen_despacho.documento_pers_despacha ?? ''}
           />
         </Grid>
 
@@ -88,7 +89,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Nombres"
-            value={inputs_resumen_despacho.nombres_pers_despacha}
+            value={inputs_resumen_despacho.nombres_pers_despacha ?? ''}
           />
         </Grid>
 
@@ -98,7 +99,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Apellidos"
-            value={inputs_resumen_despacho.apellidos_pers_despacha}
+            value={inputs_resumen_despacho.apellidos_pers_despacha ?? ''}
           />
         </Grid>
 
@@ -114,7 +115,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Tipo de documento"
-            value={inputs_resumen_despacho.tp_documento_pers_anula}
+            value={inputs_resumen_despacho.tp_documento_pers_anula ?? ''}
           />
         </Grid>
 
@@ -124,7 +125,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Documento"
-            value={inputs_resumen_despacho.documento_pers_anula}
+            value={inputs_resumen_despacho.documento_pers_anula ?? ''}
           />
         </Grid>
 
@@ -134,7 +135,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Nombres"
-            value={inputs_resumen_despacho.nombres_pers_anula}
+            value={inputs_resumen_despacho.nombres_pers_anula ?? ''}
           />
         </Grid>
 
@@ -144,7 +145,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Apellidos"
-            value={inputs_resumen_despacho.apellidos_pers_anula}
+            value={inputs_resumen_despacho.apellidos_pers_anula ?? ''}
           />
         </Grid>
 
@@ -154,7 +155,7 @@ const ResumenDespacho: React.FC<props> = ({
             fullWidth
             size="small"
             label="Justificación"
-            value={inputs_resumen_despacho.justificacion}
+            value={inputs_resumen_despacho.justificacion ?? ''}
           />
         </Grid>
 
@@ -163,7 +164,7 @@ const ResumenDespacho: React.FC<props> = ({
             <DatePicker
               disabled
               label="Fecha de anulación:"
-              value={inputs_resumen_despacho.fecha_anulacion}
+              value={!(dayjs(inputs_resumen_despacho.fecha_anulacion)).isValid() && null}
               onChange={() => { }} // No hace nada
               renderInput={(params) => (
                 <TextField fullWidth size="small" {...params} />
@@ -173,7 +174,7 @@ const ResumenDespacho: React.FC<props> = ({
         </Grid>
 
         <TablaArticulosDespachados 
-          articulos_despachados={[]}
+          articulos_despachados={data_articulos_despachados}
         />
 
       </Grid>

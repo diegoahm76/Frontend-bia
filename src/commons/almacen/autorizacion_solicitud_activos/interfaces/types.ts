@@ -380,8 +380,8 @@ export interface interface_inputs_resumen_despacho {
 }
 
 export interface interface_articulos_despachados {
-  id_item_solicitud_activo: number
-  id_solicitud_activo: number
+  id_item_solicitud_activo?: number
+  id_solicitud_activo?: number
   id_bien: number
   nombre_bien: string
   cantidad: number

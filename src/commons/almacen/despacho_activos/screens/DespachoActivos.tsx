@@ -4,6 +4,7 @@ import { Title } from '../../../../components';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import SolicitudesEnProceso from './SolicitudesEnProceso';
+import AddIcon from '@mui/icons-material/Add';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DespachoActivos = () => {
@@ -11,8 +12,14 @@ const DespachoActivos = () => {
   const [position_tab, set_position_tab] = useState<string>('1');
   const [accion, set_accion] = useState<string>('null');
 
+  const [despacho_sin_solicitud, set_despacho_sin_solicitud] = useState<boolean>(false);
+
   const handle_tablist_change = (event: React.SyntheticEvent, newValue: string) => {
     set_position_tab(newValue);
+  }
+
+  const btn_crear_despacho_sin_solicitud = () => {
+    set_despacho_sin_solicitud(true);
   }
 
   return (
@@ -45,7 +52,7 @@ const DespachoActivos = () => {
                 <Grid container spacing={2}>
                   <SolicitudesEnProceso
                     set_accion={set_accion}
-                    
+                    despacho_sin_solicitud={despacho_sin_solicitud}
                   />
                 </Grid>
               </TabPanel>
@@ -65,17 +72,18 @@ const DespachoActivos = () => {
               gap: 2,
             }}
             >
-              <Grid item xs={12} lg={2}>
+              <Grid item xs={12} lg={3}>
                 <Button
                   fullWidth
-                  color="error"
+                  color="success"
                   variant="contained"
-                  startIcon={<ArrowBackIosIcon />}
-                  onClick={()=>{}}
+                  startIcon={<AddIcon />}
+                  onClick={btn_crear_despacho_sin_solicitud}
                 >
-                  Atras
+                  Crear despacho sin solicitud
                 </Button>
               </Grid>
+
             </Grid>
           </Box>
         </Grid>
