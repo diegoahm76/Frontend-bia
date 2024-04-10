@@ -323,7 +323,7 @@ const SolicitudesEnProceso: React.FC<props> = ({
                   set_accion('null');
                 }}
               >
-                Atras
+                Atrás
               </Button>
             </Grid>
           </Grid>

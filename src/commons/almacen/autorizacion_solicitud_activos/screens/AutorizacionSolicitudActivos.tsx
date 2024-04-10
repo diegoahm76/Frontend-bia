@@ -87,6 +87,42 @@ const AutorizacionSolicitudActivos = () => {
           justificacion_rechazo_almacen: data_solicitud_ver_por_id.justificacion_rechazo_almacen,
           fecha_rechazo_almacen: data_solicitud_ver_por_id.fecha_rechazo_almacen,
         });
+
+        if (Object.keys(data_solicitud_ver_por_id.despachos).length !== 0) {
+          const primer_despacho = data_solicitud_ver_por_id.despachos[0];
+          set_inputs_resumen_despacho({
+            fecha_despacho: primer_despacho.fecha_despacho,
+            motivo: primer_despacho.observacion,
+            tp_documento_pers_despacha: primer_despacho.tipo_documento_persona_despacha,
+            documento_pers_despacha: primer_despacho.numero_documento_persona_despacha,
+            nombres_pers_despacha: primer_despacho.primer_nombre_persona_despacha,
+            apellidos_pers_despacha: primer_despacho.primer_apellido_persona_despacha,
+            tp_documento_pers_anula: primer_despacho.tipo_documento_persona_solicitante,
+            documento_pers_anula: primer_despacho.numero_documento_persona_solicitante,
+            nombres_pers_anula: primer_despacho.primer_nombre_persona_solicitante,
+            apellidos_pers_anula: primer_despacho.primer_apellido_persona_solicitante,
+            justificacion: primer_despacho.justificacion_anulacion ?? '',
+            fecha_anulacion: primer_despacho.fecha_anulacion
+          });
+        } else {
+          control_error('No se encontraron despachos para esta solicitud');
+        }
+
+        if (Object.keys(data_solicitud_ver_por_id.items_despacho).length !== 0) {
+          set_data_articulos_despachados(data_solicitud_ver_por_id.items_despacho.map((despacho) => {
+            return {
+              id_item_solicitud_activo: despacho.id_item_despacho_activo,
+              id_bien: despacho.id_bien_despachado,
+              nombre_bien: despacho.despachonombre_bien_despachado,
+              cantidad: despacho.cantidad_despachada,
+              id_unidad_medida: despacho.id_uni_medida_solicitada,
+              abreviatura_unidad_medida: despacho.abreviatura_uni_medida_solicitada,
+              nombre_unidad_medida: despacho.nombre_uni_medida_solicitada,
+              observacion: despacho.observacion,
+              nro_posicion: despacho.nro_posicion_despacho,
+            }
+          }));
+        }
       }
     }
   }, [accion, data_solicitud_ver_por_id]);
@@ -193,7 +229,7 @@ const AutorizacionSolicitudActivos = () => {
                     startIcon={position_tab === '1' ? <CloseIcon /> : <ArrowBackIosIcon />}
                     onClick={btn_salir}
                   >
-                    {position_tab === '1' ? 'Salir' : 'Atras'}
+                    {position_tab === '1' ? 'Salir' : 'Atrás'}
                   </Button>
                 </Grid>
               </Grid>
