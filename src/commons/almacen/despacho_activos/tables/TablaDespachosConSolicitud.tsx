@@ -21,7 +21,7 @@ interface CustomColumn extends GridColDef {
 
 interface Props {
   set_accion: React.Dispatch<React.SetStateAction<string>>;
-  data_solicitudes_realizadas: interface_solicitudes_realizadas[];
+  data_despachos_con_solicitud: interface_solicitudes_realizadas[];
   set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
   loadding_tabla_solicitudes: boolean;
   get_obtener_solicitudes_activos_fc: () => void;
@@ -30,9 +30,9 @@ interface Props {
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-const TablaSolicitudesEnProceso: React.FC<Props> = ({
+const TablaDespachosConSolicitud: React.FC<Props> = ({
   set_accion,
-  data_solicitudes_realizadas,
+  data_despachos_con_solicitud,
   loadding_tabla_solicitudes,
   get_obtener_solicitudes_activos_fc,
   set_id_solicitud_activo,
@@ -144,9 +144,9 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
         alignItems="center" >
         <Grid item  >
           <ButtonGroup style={{ margin: 5, }}>
-              {download_xls({ nurseries: data_solicitudes_realizadas, columns })}
+              {download_xls({ nurseries: data_despachos_con_solicitud, columns })}
               {download_pdf({
-                  nurseries: data_solicitudes_realizadas,
+                  nurseries: data_despachos_con_solicitud,
                   columns,
                   title: 'Solicitudes realizadas',
               })}
@@ -159,7 +159,7 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
         density="compact"
         autoHeight
         loading={loadding_tabla_solicitudes}
-        rows={data_solicitudes_realizadas ?? []}
+        rows={data_despachos_con_solicitud ?? []}
         columns={columns ?? []}
         pageSize={5}
         rowHeight={75}
@@ -180,4 +180,4 @@ const TablaSolicitudesEnProceso: React.FC<Props> = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default TablaSolicitudesEnProceso;
+export default TablaDespachosConSolicitud;
