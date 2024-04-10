@@ -36,7 +36,7 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   const handleInfoSolicitud = withValidation(() => {
     handleThirdLoading(true)
     console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas)
-  } );
+  });
 
   const handleRespondeSolicitud = withValidation(() =>
     console.log('Responder solicitud')
@@ -56,6 +56,10 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
 
     }
   );
+  const handleArchivado = withValidation(() =>
+    console.log(' Archivado ')
+  );
+
 
   const handleSeguimientoARespuesta = withValidation(() =>
     console.log('Seguimiento a respuesta de la tarea')
@@ -66,6 +70,7 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
   }
 
   const actionHandlers: action = {
+    Archivado_PQR: handleArchivado, 
     InfoSolictud: handleInfoSolicitud,
     RespondeSolicitud: handleRespondeSolicitud,
     Reasignar: handleReasignar,
@@ -90,7 +95,7 @@ export const ButtonsPqrsdf: React.FC = (): JSX.Element => {
       <ModalInfoTarea />
       {/*se acomoda el modal para ver la información resumida de la tarea*/}
       {/* se acomoda el modal para ver las respuestas de los requerimientos y las reasignaciones */}
-      <ModalRespuestaReqReasigna/>
+      <ModalRespuestaReqReasigna />
       {/* se acomoda el modal para ver las respuestas de los requerimientos y las reasignaciones */}
 
       <Box sx={{ height: 70, transform: 'translateZ(0px)', flexGrow: 1 }}>
