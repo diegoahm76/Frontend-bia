@@ -52,6 +52,7 @@ import { ReporGenGestorMainScreen } from '../ReportesGeneralesGestorDocumental/s
 import { ChartDataProvider } from '../ReportesGeneralesGestorDocumental/context/DataChartContext';
 import { ReportIndicadoresPqrsdf } from '../ReportesIndicadoresPqrsdf/screen/ReportIndicadoresPqrsdf';
 import { ChartDataProviderPQRSDF } from '../ReportesIndicadoresPqrsdf/context/DataChartContext';
+import { LiquidacionRutes } from '../Liquidacion_dos/routes/LiquidacionRutes';
 
 const routes = [
   {
@@ -320,7 +321,14 @@ const routes = [
       </ChartDataProviderPQRSDF>
     ),
   },
+  {
+    path: 'liquidacion/',
+    name: 'liquidacion',
+    component: () => <LiquidacionRutes />,
+  },
 ];
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

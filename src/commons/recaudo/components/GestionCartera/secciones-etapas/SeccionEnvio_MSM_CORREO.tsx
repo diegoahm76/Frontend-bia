@@ -177,7 +177,7 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
                                 // color="error"
                                 startIcon={<PermPhoneMsgIcon />}
                                 style={{ width: 150, margin: 7 }}
-                                disabled={etapa_proceso.disable}
+                                // disabled={etapa_proceso.disable}
                                 onClick={EnviarSolicitudMSM}
                             >
                                 Notificar

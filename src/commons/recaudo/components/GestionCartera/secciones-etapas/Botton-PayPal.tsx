@@ -17,12 +17,12 @@ export const BottonPayPalFuncion = () => {
         boxShadow: '0px 3px 6px #042F4A26'
     }}
 >
-    <Grid item xs={12}>
+    {/* <Grid item xs={12}>
         <Title title={`Informacion a Enviar a `}></Title>
     </Grid>
     
  paypal
- 
+  */}
 </Grid >
   )
 }
