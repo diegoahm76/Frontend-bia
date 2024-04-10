@@ -664,7 +664,7 @@ const SolicitudActivos = () => {
                       }
                     }}
                   >
-                    {position_tab === '2' && accion !== 'null' ? 'Salir' : 'Atras'}
+                    {position_tab === '2' && accion !== 'null' ? 'Salir' : 'Atrás'}
                   </Button>
                 </Grid>
               }
