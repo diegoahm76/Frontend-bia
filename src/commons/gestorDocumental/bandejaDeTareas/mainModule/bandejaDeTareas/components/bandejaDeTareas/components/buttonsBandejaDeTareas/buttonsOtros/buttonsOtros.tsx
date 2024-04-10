@@ -74,8 +74,13 @@ export const ButtonsTareaOtros: React.FC = (): JSX.Element => {
   interface action {
     [key: string]: any;
   }
+  const handleArchivado = withValidation(() =>
+    console.log(' Archivado ')
+  );
 
   const actionHandlers: action = {
+    Archivado_OTROS: handleArchivado, 
+
     InfoSolictud: handleInfoSolicitud,
     // RespondeSolicitud: handleRespondeSolicitud,
     Reasignar: handleReasignar,
