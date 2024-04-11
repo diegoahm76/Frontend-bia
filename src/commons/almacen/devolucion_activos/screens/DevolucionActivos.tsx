@@ -1,5 +1,5 @@
 import { Box, Button, Chip, CircularProgress, Divider, FormControl, Grid, InputLabel, MenuItem, Select, Tab, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Title } from '../../../../components';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
@@ -10,10 +10,10 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SearchIcon from '@mui/icons-material/Search';
 import { Dayjs } from 'dayjs';
-import { inputs_almacenista, inputs_funcionario_responsable, interface_busqueda_responsable, response_busqueda_responsable } from '../interfaces/types';
+import { inputs_almacenista, inputs_funcionario_responsable, interface_busqueda_responsable, response_busqueda_responsable, response_inf_almacenista, response_obtener_ultimo_consecutivo } from '../interfaces/types';
 import { control_error, control_success } from '../../../../helpers';
 import { useDispatch } from 'react-redux';
-import { get_obtener_responsables } from '../thunks/devolucion_activos';
+import { get_obtener_despachos_activos, get_obtener_inf_almacenista, get_obtener_responsables, get_obtener_ultimo_consecutivo } from '../thunks/devolucion_activos';
 import ModalBusquedaResponsable from '../manners/ModalBusquedaResponsable';
 
 
@@ -77,11 +77,77 @@ const DevolucionActivos: React.FC = () => {
     });
   }
 
+  // Obtener ultimo consecutivo
+  const get_obtener_ultimo_consecutivo_fc = () => {
+    dispatch(get_obtener_ultimo_consecutivo())
+    .then((response: response_obtener_ultimo_consecutivo) => {
+      if(Object.keys(response).length !== 0) {
+        if (response.success) {
+          set_consecutivo(response.ultimo_consecutivo);
+        } else {
+          control_error('No se encontró el último consecutivo');
+        }
+      } else {
+        control_error('Error en el servidor al obtener el último consecutivo');
+      }
+    }
+    );
+  }
+
+  const get_obtener_inf_almacenista_fc = () => {
+    dispatch(get_obtener_inf_almacenista())
+    .then((response: response_inf_almacenista) => {
+      if(Object.keys(response).length !== 0) {
+        if (Object.keys(response.data).length !== 0) {
+          set_inputs_almacenista({
+            tipo_documento: response.data.tipo_documento,
+            numero_documento: response.data.numero_documento,
+            nombre_apellido: `${response.data.primer_nombre} ${response.data.primer_apellido}`,
+          });
+        } else {
+          set_inputs_almacenista({} as inputs_almacenista);
+          control_error('No se encontraro información del almacenista');
+        }
+      } else {
+        control_error('Error en el servidor al obtener la información del almacenista');
+      }
+    });
+  }
+
+  const servicios_obtenidos = useRef(false);
+  useEffect(() => {
+    if (!servicios_obtenidos.current) {
+      get_obtener_inf_almacenista_fc();
+      get_obtener_ultimo_consecutivo_fc();
+      servicios_obtenidos.current = true;
+    }
+  }, [servicios_obtenidos]);
+  
+
+  const get_obtener_despachos_activos_fc = () => {
+    dispatch(get_obtener_despachos_activos(funcionario_responsable_seleccionado.id_persona.toString()))
+    .then((response: response_inf_almacenista) => {
+      if(Object.keys(response).length !== 0) {
+        console.log(response.data);
+      } else {
+        control_error('Error en el servidor al obtener los despachos activos');
+      }
+    });
+  }
+
+  useEffect(() => {
+    if ('id_persona' in funcionario_responsable_seleccionado || Object.keys(funcionario_responsable_seleccionado).length !== 0) {
+      get_obtener_despachos_activos_fc();
+    }
+  }, [funcionario_responsable_seleccionado]);
+
+
+  
   const busqueda_responsable = () => {
-    if(inputs_funcionario_responsable.tipo_documento === ''){
+    if(!('tipo_documento' in inputs_funcionario_responsable) || inputs_funcionario_responsable.tipo_documento === ''){
       control_error('Debe seleccionar el tipo de documento');
       return;
-    } else if (inputs_funcionario_responsable.numero_documento.trim() === ''){
+    } else if (inputs_funcionario_responsable.numero_documento === ''){
       control_error('Debe ingresar el número de documento');
       return;
     }
