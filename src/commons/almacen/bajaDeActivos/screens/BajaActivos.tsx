@@ -559,7 +559,7 @@ const BajaActivos: React.FC = () => {
                   startIcon={<ChevronLeftIcon />}
                   onClick={()=>{set_position_tab(position_tab === '1' ? '1' : (parseInt(position_tab) - 1).toString())}}
                 >
-                  Atras
+                  Atrás
                 </Button>
               </Grid>
 

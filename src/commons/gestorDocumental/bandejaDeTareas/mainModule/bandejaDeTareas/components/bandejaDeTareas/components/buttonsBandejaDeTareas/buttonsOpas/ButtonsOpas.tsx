@@ -65,7 +65,12 @@ export const ButtonsTareaOpas: React.FC = (): JSX.Element => {
     [key: string]: any;
   }
 
+  const handleArchivado = withValidation(() =>
+    console.log(' Archivado ')
+  );
+
   const actionHandlers: action = {
+    Archivado_OPAS: handleArchivado,
     InfoSolictud: handleInfoSolicitud,
     RespondeSolicitud: handleRespondeSolicitud,
     Reasignar: handleReasignar,

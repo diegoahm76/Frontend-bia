@@ -88,7 +88,16 @@ export const GestionCarteraScreen: React.FC = () => {
       minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
-        return params.value ?? 'Sin tipo renta';
+        return params.value ?? 'Sin tipo Resolucion';
+      }
+    },
+    {
+      field: 'Periodo ',
+      headerName: 'Periodo   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin Periodo';
       }
     },
     {
@@ -97,7 +106,7 @@ export const GestionCarteraScreen: React.FC = () => {
       minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
-        return params.value ?? 'Sin tipo renta';
+        return params.value ?? 'Sin Expediente';
       }
     },
     {

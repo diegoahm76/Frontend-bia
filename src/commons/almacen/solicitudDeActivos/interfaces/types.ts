@@ -179,10 +179,10 @@ export interface response_solicitud_obtenida_por_id {
 export interface interface_solicitud_obtenida_por_id {
   id_bien: number
   id_solicitud_activo: number
-  primer_nombre_persona_solicita: string
-  primer_apellido_persona_solicita: string
-  tipo_documento_persona_solicita: string
-  numero_documento_persona_solicita: any
+  primer_nombre_persona_solicitante: string
+  primer_apellido_persona_solicitante: string
+  tipo_documento_persona_solicitante: string
+  numero_documento_persona_solicitante: any
   primer_nombre_funcionario_resp_unidad: string
   primer_apellido_funcionario_resp_unidad: string
   tipo_documento_funcionario_resp_unidad: string
@@ -191,6 +191,16 @@ export interface interface_solicitud_obtenida_por_id {
   primer_apellido_persona_operario: string
   tipo_documento_persona_operario: string
   numero_documento_persona_operario: string
+  fecha_cierre_no_dispo_alma: string
+  tipo_documento_persona_cierra_no_dispo_alma: string
+  numero_documento_persona_cierra_no_dispo_alma: string
+  obser_cierre_no_dispo_alma: string
+  primer_apellido_persona_cierra_no_dispo_alma: string
+  primer_nombre_persona_cierra_no_dispo_alma: string
+  numero_documento_persona_alma_rechaza: string
+  primer_apellido_persona_alma_rechaza: string
+  primer_nombre_persona_alma_rechaza: string
+  tipo_documento_persona_alma_rechaza: string
   fecha_solicitud: string
   motivo: string
   observacion: string
@@ -203,8 +213,6 @@ export interface interface_solicitud_obtenida_por_id {
   justificacion_rechazo_resp: any
   fecha_aprobacion_resp: any
   gestionada_alma: boolean
-  obser_cierre_no_dispo_alma: any
-  fecha_cierre_no_dispo_alma: any
   rechazada_almacen: boolean
   fecha_rechazo_almacen: any
   justificacion_rechazo_almacen: any
@@ -219,7 +227,9 @@ export interface interface_solicitud_obtenida_por_id {
   id_uni_org_operario: number
   id_persona_cierra_no_dispo_alma: any
   id_persona_alma_rechaza: any
-  items: interface_articulos_obtenidos_por_id[]
+  items_solicitud: interface_articulos_obtenidos_por_id[]
+  despachos: any[]
+  items_despacho: any[]
 }
 
 export interface interface_articulos_obtenidos_por_id {
@@ -247,4 +257,50 @@ export interface response_tipos_documentos {
 export interface interface_tipos_documentos {
   value: string
   label: string
+}
+
+export interface interface_inputs_resumen_despacho {
+  fecha_despacho: string,
+  motivo: string,
+  tp_documento_pers_despacha: string,
+  documento_pers_despacha: string,
+  nombres_pers_despacha: string,
+  apellidos_pers_despacha: string,
+  tp_documento_pers_anula: string,
+  documento_pers_anula: string,
+  nombres_pers_anula: string,
+  apellidos_pers_anula: string,
+  justificacion: string,
+  fecha_anulacion: string,
+}
+
+export interface interface_articulos_despachados {
+  id_item_solicitud_activo?: number
+  id_solicitud_activo?: number
+  id_bien: number
+  nombre_bien: string
+  cantidad: number
+  id_unidad_medida: number
+  abreviatura_unidad_medida: string
+  nombre_unidad_medida: string
+  observacion: string
+  nro_posicion: number
+}
+
+export interface interface_inputs_persona_cierra_no_dispo_alma {
+  tipo_documento_persona_cierra_no_dispo_alma: string
+  documento_persona_cierra_no_dispo_alma: string
+  nombres_persona_cierra_no_dispo_alma: string
+  apellidos_persona_cierra_no_dispo_alma: string
+  obser_cierre_no_dispo_alma: string
+  fecha_cierre_no_dispo_alma: string
+}
+
+export interface interface_inputs_persona_alma_rechaza {
+  tipo_documento_persona_alma_rechaza: string
+  documento_persona_alma_rechaza: string
+  nombres_persona_alma_rechaza: string
+  apellidos_persona_alma_rechaza: string
+  justificacion_rechazo_almacen: string
+  fecha_rechazo_almacen : string
 }

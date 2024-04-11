@@ -137,159 +137,160 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    /*const shouldDisable = (actionId: string) => {
-      if (!tareaPQRSDF) {
-        return true; // No se ha seleccionado ninguna tarea
-      }
 
-      const isNoSeleccionado = !tareaPQRSDF;
-      const isEstadoAsignacionNoDefinido =
-        tareaPQRSDF.estado_asignacion_tarea === null ||
-        tareaPQRSDF.estado_asignacion_tarea === '';
-      const isEstadoAsignacionRechazada =
-        tareaPQRSDF.estado_asignacion_tarea === 'Rechazado';
-      const isEstadoAsignacionAceptada =
-        tareaPQRSDF.estado_asignacion_tarea === 'Aceptado';
-      const isEstadoTareaEnProcesoRespuesta =
-        tareaPQRSDF.estado_tarea === 'En proceso de respuesta';
-      const isTareaRespondida =
-        tareaPQRSDF.estado_tarea ===
-        'Respondida por el propietario de la bandeja de tareas';
-      const isEstadoTareaRespondida = tareaPQRSDF.respondida_por;
-      const isEstadoTareaDelegada = tareaPQRSDF.estado_tarea === 'Delegada';
-      const isEstadoReasignacionEnEspera =
-        tareaPQRSDF.estado_reasignacion_tarea === null ||
-        tareaPQRSDF.estado_reasignacion_tarea === '' ||
-        tareaPQRSDF.estado_reasignacion_tarea === 'En espera';
-      const isEstadoReasignacionRechazada =
-        tareaPQRSDF.estado_reasignacion_tarea === 'Rechazado';
-      const isEstadoReasignacionAceptada =
-        tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado';
+    // const shouldDisable = (actionId: string) => {
+    //   if (!tareaPQRSDF) {
+    //     return true; // No se ha seleccionado ninguna tarea
+    //   }
 
-      const hasReqPendientes = tareaPQRSDF.requerimientos_pendientes_respuesta;
+    //   const isNoSeleccionado = !tareaPQRSDF;
+    //   const isEstadoAsignacionNoDefinido =
+    //     tareaPQRSDF.estado_asignacion_tarea === null ||
+    //     tareaPQRSDF.estado_asignacion_tarea === '';
+    //   const isEstadoAsignacionRechazada =
+    //     tareaPQRSDF.estado_asignacion_tarea === 'Rechazado';
+    //   const isEstadoAsignacionAceptada =
+    //     tareaPQRSDF.estado_asignacion_tarea === 'Aceptado';
+    //   const isEstadoTareaEnProcesoRespuesta =
+    //     tareaPQRSDF.estado_tarea === 'En proceso de respuesta';
+    //   const isTareaRespondida =
+    //     tareaPQRSDF.estado_tarea ===
+    //     'Respondida por el propietario de la bandeja de tareas';
+    //   const isEstadoTareaRespondida = tareaPQRSDF.respondida_por;
+    //   const isEstadoTareaDelegada = tareaPQRSDF.estado_tarea === 'Delegada';
+    //   const isEstadoReasignacionEnEspera =
+    //     tareaPQRSDF.estado_reasignacion_tarea === null ||
+    //     tareaPQRSDF.estado_reasignacion_tarea === '' ||
+    //     tareaPQRSDF.estado_reasignacion_tarea === 'En espera';
+    //   const isEstadoReasignacionRechazada =
+    //     tareaPQRSDF.estado_reasignacion_tarea === 'Rechazado';
+    //   const isEstadoReasignacionAceptada =
+    //     tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado';
 
-      if (isNoSeleccionado) {
-        return true;
-      }
+    //   const hasReqPendientes = tareaPQRSDF.requerimientos_pendientes_respuesta;
 
-      if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
-        return actionId !== 'InfoSolictud';
-      }
+    //   if (isNoSeleccionado) {
+    //     return true;
+    //   }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        !hasReqPendientes
-      ) {
-        //* se habilita todo
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
+    //     return actionId !== 'InfoSolictud';
+    //   }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        hasReqPendientes
-      ) {
-        //* se deshabilita la opción de responder solicitud
-        return !(
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     !hasReqPendientes
+    //   ) {
+    //     //* se habilita todo
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
-        return true;
-      }
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     hasReqPendientes
+    //   ) {
+    //     //* se deshabilita la opción de responder solicitud
+    //     return !(
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionEnEspera
-      ) {
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario'
-        );
-      }
+    //   if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
+    //     return true;
+    //   }
 
-      if (isEstadoAsignacionAceptada && isTareaRespondida) {
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     isEstadoReasignacionEnEspera
+    //   ) {
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario'
+    //     );
+    //   }
 
-      //* septimo caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionAceptada
-      ) {
-        return !(
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   if (isEstadoAsignacionAceptada && isTareaRespondida) {
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      //* octavo caso
+    //   //* septimo caso
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     isEstadoReasignacionAceptada
+    //   ) {
+    //     return !(
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionRechazada
-      ) {
-        //* se habilitan todos botones -
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   //* octavo caso
 
-      //* noveno caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaDelegada &&
-        isEstadoReasignacionRechazada
-      ) {
-        //* se habilitan todos botones -
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     isEstadoReasignacionRechazada
+    //   ) {
+    //     //* se habilitan todos botones -
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      return !(actionId === 'InfoSolictud');
-    };
+    //   //* noveno caso
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaDelegada &&
+    //     isEstadoReasignacionRechazada
+    //   ) {
+    //     //* se habilitan todos botones -
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-    const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
-      ...action,
-      disabled: shouldDisable(action.id),
-    }));
-*/
+    //   return !(actionId === 'InfoSolictud');
+    // };
+
+    // const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
+    //   ...action,
+    //   disabled: shouldDisable(action.id),
+    // }));
+
     dispatch(setActionssTareasPQRSDF(actionsTareasPQRSDF));
   };
 

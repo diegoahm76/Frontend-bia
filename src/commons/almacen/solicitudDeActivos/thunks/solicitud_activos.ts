@@ -134,7 +134,7 @@ export const get_obtener_unidades_medidas: any = () => {
 export const get_obtener_solicitudes_realizadas: any = (id_solicitud_activo: string) => {
   return async () => {
     try {
-      const { data } = await api.get(`/almacen/activos/detalle-solicitud-activos/${id_solicitud_activo}/`);
+      const { data } = await api.get(`/almacen/activos/resumen-solicitud-activos/${id_solicitud_activo}/`);
       return data;
     } catch (error: any) {
       return error as AxiosError;
