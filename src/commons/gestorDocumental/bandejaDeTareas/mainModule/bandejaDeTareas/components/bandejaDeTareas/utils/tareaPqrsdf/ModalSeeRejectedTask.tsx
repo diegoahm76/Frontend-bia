@@ -63,7 +63,7 @@ export const ModalSeeRejectedTask: FC = (): JSX.Element => {
       getInfoRejectedTask: getInfoTareaRechazadaTramites,
      },
      'RESPONDER OPA': {
-      getInfoRejectedTask: getInfoTareaRechazadaOpas,
+      getInfoRejectedTask: getInfoTareaRechazadaTramites,
      },
     // Agrega aquí los nuevos tipos de tareas
     // agregar luego para tramites y para opas
