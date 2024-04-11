@@ -102,7 +102,7 @@ const actionsOpas: any[] = [
 ];
 */
 
-    const shouldDisable = (actionId: string) => {
+    /*const shouldDisable = (actionId: string) => {
       const isNoSeleccionado = !opa;
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
@@ -163,8 +163,8 @@ const actionsOpas: any[] = [
     const actionsOPAS = actionsOpas.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
-    }));
-    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));
+    }));*/
+    dispatch(setActionssToManagePermissionsOpas(actionsOpas));
   };
 
   //* const columns with actions
