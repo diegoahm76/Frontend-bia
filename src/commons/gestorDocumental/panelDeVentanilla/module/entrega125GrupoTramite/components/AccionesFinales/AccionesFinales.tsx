@@ -46,7 +46,7 @@ export const AccionesFinales = (): JSX.Element => {
   // ? declaración de las funciones
 
   const handleClick = async () => {
-   /* const item = listaAsignaciones.find(
+    const item = listaAsignaciones.find(
       (item: any) =>
         item.estado_asignado === 'EN ESPERA' ||
         item.estado_asignado === 'ACEPTADA'
@@ -60,7 +60,7 @@ export const AccionesFinales = (): JSX.Element => {
         confirmButtonText: 'Entendido',
       });
       return;
-    }*/
+    }
 
     const tipo =
       currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
@@ -75,7 +75,7 @@ export const AccionesFinales = (): JSX.Element => {
           id_solicitud_tramite:
             currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
           id_persona_asignada: liderAsignado?.id_persona,
-          id_und_org_seccion_asignada: currentGrupo?.grupoSelected,
+          id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value,
           // id_serie
           id_serie:  currentGrupo?.currentSerie,
         });
@@ -83,9 +83,10 @@ export const AccionesFinales = (): JSX.Element => {
           {
             id_solicitud_tramite:
               currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
-              // id_series: currentElementPqrsdComplementoTramitesYotros?.currentGrupo.serie.value,
+              // id_catalogo_serie_subserie
+              // id_catalogo_serie_subserie: currentElementPqrsdComplementoTramitesYotros?.currentGrupo.serie.value,
             id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value, 
           },
           handleSecondLoading
         );

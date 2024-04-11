@@ -75,7 +75,7 @@ export const FormParte1 = ({ controlFormulario }: any): JSX.Element => {
               fullWidth
               disabled
               size="small"
-              label="Tipo de trámite"
+              label="Info PQRSDF"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               inputProps={{
