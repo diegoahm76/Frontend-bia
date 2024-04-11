@@ -40,3 +40,36 @@ export const get_obtener_tipos_documentos: any = () => {
     }
   };
 }
+
+export const get_obtener_inf_almacenista: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/Informacion-almacenista/get/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
+
+export const get_obtener_ultimo_consecutivo: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/obtener-ultimo-consecutivo-salida-especial/get/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
+
+export const get_obtener_despachos_activos: any = (id_persona_responsable: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/despachos-activos/get/${id_persona_responsable}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}

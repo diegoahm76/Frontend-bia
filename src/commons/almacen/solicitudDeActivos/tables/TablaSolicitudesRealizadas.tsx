@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { DataGrid, GridColDef, GridFilterModel, useGridApiRef } from '@mui/x-data-grid';
+import React from 'react';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
-import { useAppDispatch } from '../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -10,8 +9,6 @@ import { ButtonGroup, Grid } from '@mui/material';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { interface_solicitudes_realizadas } from '../interfaces/types';
-import Swal from 'sweetalert2';
-import { put_cancelar_solicitud } from '../thunks/solicitud_activos';
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_solicitudes_realizadas }) => React.ReactNode;
@@ -34,7 +31,6 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
   set_id_solicitud_activo,
   loadding_tabla_solicitudes_realizadas,
 }) => {
-  const dispatch = useAppDispatch();
 
 
   const ver_solicitud = (solicitud: interface_solicitudes_realizadas) => {
@@ -45,60 +41,73 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
 
   const cancelar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
     set_accion('cancelar');
-    set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null); 
+    set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null);
   }
 
   const editar_solilitud = (solicitud: interface_solicitudes_realizadas) => {
     console.log('editar solicitud', solicitud);
-    
+
     set_position_tab('2');
     set_accion('editar');
     set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null);
   }
 
   const columns: CustomColumn[] = [
-    { field: 'estado_solicitud', headerName: 'Estado', maxWidth: 120, flex: 1,
+    {
+      field: 'estado_solicitud', headerName: 'Estado', maxWidth: 120, flex: 1,
       renderCell: (params) => (
         params.row.estado_solicitud === 'S' ? 'Solicitado'
-        : params.row.estado_solicitud === 'R' ? 'Respondido'
-        : params.row.estado_solicitud === 'SR' ? 'Solicitud Rechazada'
-        : params.row.estado_solicitud === 'SA' ? 'Solicitud Aprobada'
-        : params.row.estado_solicitud === 'DR' ? 'Despacho Rechazado'
-        : params.row.estado_solicitud === 'DA' ? 'Despacho Autorizado'
-        : params.row.estado_solicitud === 'F' ? 'Finalizado'
-        : params.row.estado_solicitud === 'C' && 'Cancelado' 
+          : params.row.estado_solicitud === 'R' ? 'Respondido'
+            : params.row.estado_solicitud === 'SR' ? 'Solicitud Rechazada'
+              : params.row.estado_solicitud === 'SA' ? 'Solicitud Aprobada'
+                : params.row.estado_solicitud === 'DR' ? 'Despacho Rechazado'
+                  : params.row.estado_solicitud === 'DA' ? 'Despacho Autorizado'
+                    : params.row.estado_solicitud === 'F' ? 'Finalizado'
+                      : params.row.estado_solicitud === 'C' && 'Cancelado'
       )
     },
-    { field: 'fecha_solicitud', headerName: 'Fecha de la solicitud', maxWidth: 145, flex: 1,
+    {
+      field: 'fecha_solicitud', headerName: 'Fecha de la solicitud', maxWidth: 145, flex: 1,
       renderCell: (params) => (dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY'))
     },
-    { field: 'motivo', headerName: 'Motivo', minWidth: 300, flex: 1,},
-    { field: 'primer_nombre_persona_solicita', headerName: 'Persona que solicita', minWidth: 300, flex: 1,
+    { field: 'motivo', headerName: 'Motivo', minWidth: 300, flex: 1, },
+    {
+      field: 'primer_nombre_persona_solicita', headerName: 'Persona que solicita', minWidth: 300, flex: 1,
       renderCell: (params) => (`${params.row.primer_nombre_persona_solicita} ${params.row.primer_apellido_persona_solicita}`)
     },
-    { field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 120, flex: 1,
+    {
+      field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 120, flex: 1,
       renderCell: (params) => (`${params.row.primer_nombre_funcionario_resp_unidad} ${params.row.primer_apellido_funcionario_resp_unidad}`)
     },
-    { field: 'numero_activos', headerName: 'Número de activos', maxWidth: 150, flex: 1,},
-    { field: 'anular', headerName: 'Anular', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
-      renderCell: (params) => (
-        <HighlightOffIcon
-          onClick={() => cancelar_solicitud(params.row)}
-          sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
-      )
+    { field: 'numero_activos', headerName: 'Número de activos', maxWidth: 150, flex: 1, },
+    {
+      field: 'anular', headerName: 'Anular', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+      renderCell: (params) => {
+        if (params.row.estado_solicitud === 'SR' || params.row.estado_solicitud === 'SA') {
+          return (
+            <HighlightOffIcon
+              onClick={() => cancelar_solicitud(params.row)}
+              sx={{ fontSize: '30px', cursor: 'pointer', color: '#c62828' }} />
+          )
+        }
+      }
+
     },
-    { field: 'ver', headerName: 'Ver', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+    {
+      field: 'ver', headerName: 'Ver', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
-        <VisibilityIcon 
+        <VisibilityIcon
           onClick={() => ver_solicitud(params.row)}
-          sx={{fontSize: '30px', cursor: 'pointer'}} />
+          sx={{ fontSize: '30px', cursor: 'pointer' }} />
       )
     },
-    { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
+    {
+      field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
+        params.row.estado_solicitud === 'SR' &&
         <EditIcon
           onClick={() => editar_solilitud(params.row)}
-          sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
+          sx={{ fontSize: '30px', cursor: 'pointer', color: '#1071b2' }} />
       )
     },
   ];
@@ -111,19 +120,19 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
         alignItems="center" >
         <Grid item  >
           <ButtonGroup style={{ margin: 5, }}>
-              {download_xls({ nurseries: data_solicitudes_realizadas, columns })}
-              {download_pdf({
-                  nurseries: data_solicitudes_realizadas,
-                  columns,
-                  title: 'Solicitudes realizadas',
-              })}
+            {download_xls({ nurseries: data_solicitudes_realizadas, columns })}
+            {download_pdf({
+              nurseries: data_solicitudes_realizadas,
+              columns,
+              title: 'Solicitudes realizadas',
+            })}
           </ButtonGroup>
         </Grid>
       </Grid>
 
       <DataGrid
         loading={loadding_tabla_solicitudes_realizadas}
-        style={{margin:'15px 0px'}}
+        style={{ margin: '15px 0px' }}
         density="compact"
         autoHeight
         rows={data_solicitudes_realizadas ?? []}

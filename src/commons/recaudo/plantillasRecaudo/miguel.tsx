@@ -96,14 +96,14 @@ function citacion(opcion_6: any,numero_6:any ) {
                     
                   
                     `};
-function documento8(Fecha_8: any,empresa_8:any,nit_8:any,opcion_8:any,dias_8:any,) {
+function documento8(Fecha_8: any,empresa_8:any,nit_8:any,opcion_8:any,dias_8:any,Fecha_8remi:any) {
     return `                         
 En Villavicencio,${Fecha_8 ? Fecha_8 : '__________'} se procede a realizar la Notificación por Aviso al empresa ${empresa_8 ? empresa_8 : '__________'}  ,  identificado (a) cono NIT  No ${nit_8 ? nit_8 : '__________'}
  
                         
 Dejando  expresa  constancia  que  contra él ${opcion_8 ? opcion_8 : '__________'}  procede recurso de reposición, dentro de los (${dias_8 ? dias_8 : '__________'}) días siguientes a la fecha de surtida la presente notificación, el cual lo podrá interponer ante SUBDIRECCIÓN DE GESTIÓN AMBIENTAL.
                         
-La remisión por aviso se allegó a la dirección que se encuentra en el expediente el día  27  del mes  JULIO  del año 2022, teniendo en cuenta que dicha dirección no se reportó como incompleta, errada, inexistente, entre otras, y que no se presentó en el término establecido para notificación personal o no da acuse de recibido para la notificación por correo electrónico por lo que se entiende NOTIFICADO el día  29  del mes  JULIO   del año 2022 conforme a lo establecido en el artículo 69 de la Ley 1437 de 2011.
+La remisión por aviso se allegó a la dirección que se encuentra en el expediente el del ${Fecha_8remi ? Fecha_8remi : '__________'}, teniendo en cuenta que dicha dirección no se reportó como incompleta, errada, inexistente, entre otras, y que no se presentó en el término establecido para notificación personal o no da acuse de recibido para la notificación por correo electrónico por lo que se entiende NOTIFICADO el ${dayjs().format('DD/MM/YYYY')} conforme a lo establecido en el artículo 69 de la Ley 1437 de 2011.
                        
                         `};
 
