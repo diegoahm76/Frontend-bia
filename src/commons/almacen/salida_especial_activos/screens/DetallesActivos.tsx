@@ -46,7 +46,6 @@ const DetallesActivos: React.FC<props> = ({
             <Title title='Entradas especiales' />
 
             <TablaEntradasEspeciales
-              accion={accion}
               data_entradas_relacionadas={data_entradas_relacionadas}
               set_entrada_relacionada_seleccionada={set_entrada_relacionada_seleccionada}
             />

@@ -123,7 +123,7 @@ const ConfiguracionGeneral: React.FC<props> = ({
 
   const buscar_registro = async () => {
     set_accion('ver');
-    if(consecutivo_buscar !== 0){
+    if (consecutivo_buscar !== 0) {
       get_obtener_data_registro_por_consecutivo_fc();
     } else {
       control_error('Digite un consecutivo en el campo de búsqueda');
@@ -273,31 +273,50 @@ const ConfiguracionGeneral: React.FC<props> = ({
             </>
           }
 
-          <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
-            <TextField
-              fullWidth
-              disabled
-              label='Nombres '
-              value={form_inf_tercero.nombres ?? ''}
-              onChange={
-                (e) => set_form_inf_tercero({ ...form_inf_tercero, nombres: e.target.value })
-              }
-              size='small'
-            />
-          </Grid>
+          {accion !== 'ver' ?
+            <>
+              <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
+                <TextField
+                  fullWidth
+                  disabled
+                  label='Nombres '
+                  value={form_inf_tercero.nombres ?? ''}
+                  onChange={
+                    (e) => set_form_inf_tercero({ ...form_inf_tercero, nombres: e.target.value })
+                  }
+                  size='small'
+                />
+              </Grid>
 
-          <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
-            <TextField
-              fullWidth
-              disabled
-              label='Apellidos '
-              value={form_inf_tercero.apellidos ?? ''}
-              onChange={
-                (e) => set_form_inf_tercero({ ...form_inf_tercero, apellidos: e.target.value })
-              }
-              size='small'
-            />
-          </Grid>
+              <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
+                <TextField
+                  fullWidth
+                  disabled
+                  label='Apellidos '
+                  value={form_inf_tercero.apellidos ?? ''}
+                  onChange={
+                    (e) => set_form_inf_tercero({ ...form_inf_tercero, apellidos: e.target.value })
+                  }
+                  size='small'
+                />
+              </Grid>
+            </>
+            :
+            <Grid item xs={12} lg={6}>
+              <TextField
+                fullWidth
+                disabled
+                label='Nosbres y apellidos: '
+                value={form_inf_tercero.nombres_apellidos ?? ''}
+                onChange={
+                  (e) => set_form_inf_tercero({ ...form_inf_tercero, nombres_apellidos: e.target.value })
+                }
+                size='small'
+              />
+            </Grid>
+          }
+
+
         </Grid>
 
         {data_entradas_relacionadas.length > 0 &&
