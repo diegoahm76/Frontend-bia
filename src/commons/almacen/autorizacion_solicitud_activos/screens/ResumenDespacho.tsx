@@ -51,7 +51,7 @@ const ResumenDespacho: React.FC<props> = ({
               disabled
               fullWidth
               size="small"
-              label="Motivo"
+              label="Observación: "
               value={inputs_resumen_despacho.motivo ?? ''}
             />
           </Grid>
