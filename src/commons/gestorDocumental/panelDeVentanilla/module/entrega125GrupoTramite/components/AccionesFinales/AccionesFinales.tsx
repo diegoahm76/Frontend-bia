@@ -83,9 +83,10 @@ export const AccionesFinales = (): JSX.Element => {
           {
             id_solicitud_tramite:
               currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
-              // id_series: currentElementPqrsdComplementoTramitesYotros?.currentGrupo.serie.value,
+              // id_catalogo_serie_subserie
+              // id_catalogo_serie_subserie: currentElementPqrsdComplementoTramitesYotros?.currentGrupo.serie.value,
             id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value,
+            id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value, 
           },
           handleSecondLoading
         );
