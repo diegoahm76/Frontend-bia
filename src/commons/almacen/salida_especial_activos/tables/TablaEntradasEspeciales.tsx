@@ -14,14 +14,12 @@ interface CustomColumn extends GridColDef {
 
 
 interface props {
-  accion: string;
   data_entradas_relacionadas: interface_entradas_relacionadas[];
   set_entrada_relacionada_seleccionada: React.Dispatch<React.SetStateAction<interface_entradas_relacionadas>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 const TablaEntradasEspeciales: React.FC<props> = ({
-  accion,
   data_entradas_relacionadas,
   set_entrada_relacionada_seleccionada,
   }) => {
@@ -72,7 +70,6 @@ const TablaEntradasEspeciales: React.FC<props> = ({
         onSelectionModelChange={selecionar_entrada_relacionada}
         experimentalFeatures={{ newEditingApi: true }}
         getRowId={(row) => row?.id_entrada_almacen !== undefined ? row.id_entrada_almacen : uuidv4()}
-        isRowSelectable={() => accion === 'ver' ? true : false}
       />
     </>
   );

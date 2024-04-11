@@ -1,9 +1,10 @@
 export interface interface_form_inf_tercero {
-  id_persona_tercero: number;
+  id_persona_tercero?: number;
   tipo_documento: string;
   documento: string;
-  nombres: string;
-  apellidos: string;
+  nombres?: string;
+  apellidos?: string;
+  nombres_apellidos?: string;
 }
 
 export interface response_obtener_consecutivo {
@@ -116,8 +117,26 @@ export interface response_interface_registro_por_consecutivo {
   anexos: interface_data_anexos[]
   archivos_digitales: archivos_digitales[]
   bienes: interface_bienes_asociados[]
+  informacion_tercero: interface_informacion_tercero[]
   success?: boolean
 }
+/*
+ 
+"informacion_tercero": [
+        {
+            "nombre": "Oscar Steven Rodríguez Galeano",
+            "tipo_documento": "CC",
+            "numero_documento": "119320147798080"
+        }
+    ],
+*/
+
+export interface interface_informacion_tercero {
+  nombre: string
+  tipo_documento: string
+  numero_documento: string
+}
+
 
 export interface interface_registro_por_consecutivo {
   id_salida_espec_arti: number

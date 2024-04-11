@@ -79,7 +79,7 @@ const SalidaEspecialActivos: React.FC = () => {
           id_archivo_digital: item.id_archivo_digital
         }
       }));
-      set_data_activos_asociados_agregados(data_registro_por_consecutivo.bienes.map((item: any) => {
+      set_data_activos_asociados_agregados(data_registro_por_consecutivo.bienes?.map((item: any) => {
         return {
           id_item_entrada_almacen: item.id_item_entrada_almacen,
           id_entrada_almacen: item.id_entrada_almacen,
@@ -90,6 +90,11 @@ const SalidaEspecialActivos: React.FC = () => {
           marca: item.nombre_marca,
         }
       }));
+      set_form_inf_tercero({
+        tipo_documento: data_registro_por_consecutivo.informacion_tercero[0].tipo_documento,
+        documento: data_registro_por_consecutivo.informacion_tercero[0].numero_documento,
+        nombres_apellidos: data_registro_por_consecutivo.informacion_tercero[0].nombre
+      });
       /*set_entrada_relacionada_seleccionada(data_registro_por_consecutivo.salida_especial);
       set_data_activos_asociados_agregados(data_registro_por_consecutivo.bienes);
       set_data_anexos_agregados(data_registro_por_consecutivo.archivos_digitales);
@@ -184,6 +189,7 @@ const SalidaEspecialActivos: React.FC = () => {
 
   const limpiar_formulario = () => {
     set_position_tab('1');
+    set_accion('null');
     set_consecutivo_buscar(0);
     set_concepto('');
     set_referencia_salida('');
@@ -201,27 +207,55 @@ const SalidaEspecialActivos: React.FC = () => {
     set_position_tab('2');
   }
 
-  const onsubmit_form = (e: React.FormEvent<HTMLFormElement>) => {
+  const validar_formulario = async() => {
+    if (concepto.trim() === '') {
+      control_error('El concepto es requerido');
+      return false;
+    }
+    if (referencia_salida.trim() === '') {
+      control_error('La referencia de la salida es requerida');
+      return false;
+    }
+    if (Object.keys(data_inf_tercero_seleccionado).length === 0) {
+      control_error('Debe seleccionar un tercero');
+      return false;
+    }
+    if (Object.keys(entrada_relacionada_seleccionada).length === 0) {
+      control_error('Debe seleccionar una entrada relacionada');
+      return false;
+    }
+    if (data_activos_asociados_agregados.length === 0) {
+      control_error('Debe seleccionar al menos un activo');
+      return false;
+    }
+    return true;
+  }
+
+  const onsubmit_form = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     ordenar_data_anexos();
 
-    Swal.fire({
-      title: '¿Está seguro que desea registrar esta salida especial?',
-      showDenyButton: true,
-      confirmButtonText: `Si`,
-      denyButtonText: `Cancelar`,
-      confirmButtonColor: '#042F4A',
-      cancelButtonColor: '#DE1616',
-      icon: 'question',
-    }).then(async (result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        crear_salida_especial_activos();
-        return true;
-      } else if (result.isDenied) {
-        return false;
-      }
-    });
+    const form_validado = await validar_formulario();
+
+    if(form_validado){
+      Swal.fire({
+        title: '¿Está seguro que desea registrar esta salida especial?',
+        showDenyButton: true,
+        confirmButtonText: `Si`,
+        denyButtonText: `Cancelar`,
+        confirmButtonColor: '#042F4A',
+        cancelButtonColor: '#DE1616',
+        icon: 'question',
+      }).then(async (result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          crear_salida_especial_activos();
+          return true;
+        } else if (result.isDenied) {
+          return false;
+        }
+      });
+    }
   }
 
   function crear_salida_especial_activos() {
@@ -312,6 +346,7 @@ const SalidaEspecialActivos: React.FC = () => {
           <Box
             component={'form'}
             onSubmit={onsubmit_form}
+            noValidate
             sx={{ mt: '20px' }}
           >
             <TabContext value={position_tab}>
@@ -384,11 +419,11 @@ const SalidaEspecialActivos: React.FC = () => {
                     fullWidth
                     color="success"
                     variant="contained"
-                    disabled={loadding || position_tab === '1' || accion === 'ver'}
+                    disabled={loadding || accion === 'ver'}
                     startIcon={loadding ? <CircularProgress size={25} /> : <SaveIcon />}
                     type='submit'
                   >
-                    {loadding ? '' : accion === 'ver' ? "Guardar" : accion === 'crear' || accion === 'null' && 'Guardar'}
+                    {loadding ? '' : accion === 'ver' ? "Guardar" : accion === 'crear' ? 'Guardar' : accion === 'null' && 'Guardar'}
                   </Button>
                 </Grid>
               }
