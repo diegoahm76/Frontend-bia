@@ -55,6 +55,7 @@ import { ChartDataProviderPQRSDF } from '../ReportesIndicadoresPqrsdf/context/Da
 import { MainViweVital } from '../integracionVital/screen/MainVital';
 import { ModalAndLoadingProvider } from '../../../context/GeneralContext';
 import { PanelVentanillaProvider } from '../integracionVital/context/PanelVentanillaContext';
+import { RouteArchibo } from '../ArchivadosOtros/routes/RouteArchibo';
 
 const routes = [
   {
@@ -146,7 +147,12 @@ const routes = [
     name: 'encuesta',
     component: () => <Encuesta />,
   },
-
+  {
+    path: 'archivado/',
+    name: 'archivado',
+    component: () => <RouteArchibo />,
+  },
+  
   {
     path: 'Reubicacion_Expedientes/',
     name: 'Reubicacion_Expedientes',

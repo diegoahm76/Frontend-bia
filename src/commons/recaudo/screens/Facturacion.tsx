@@ -29,8 +29,8 @@ import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { AlertaDocumento } from './AlertaDocumento';
 
-export interface SerieSubserie { 
-  tiene_configuracion:any ;
+export interface SerieSubserie {
+  tiene_configuracion: any;
   id_cat_serie_und: number;
   id_serie_doc: number;
   cod_serie_doc: string;
@@ -268,7 +268,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
     else if (opcionSeleccionada === '2') {
-      textoAMostrar = `${remicion_viso(expediente_2, Fecha_2 ,opcionSiNo2)}  `;
+      textoAMostrar = `${remicion_viso(expediente_2, Fecha_2, opcionSiNo2)}  `;
     }
     else if (opcionSeleccionada === '3') {
       textoAMostrar = `${constancia_publicacion(Fecha_3, Fecha_acto_3, expediente_3, fijacion_3, des_fijacion_3, cc_3, nombre_3, empresa_3, nombre_nit_3, nombre_enpresa_3)}`
@@ -283,7 +283,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       textoAMostrar = `  ${citacion(opcion_6, numero_6)}  `;
     }
     else if (opcionSeleccionada === '8') {
-      textoAMostrar = `  ${documento8(Fecha_8, empresa_8, nit_8, opcion_8, dias_8)}  `;
+      textoAMostrar = `  ${documento8(Fecha_8, Fecha_8remi, empresa_8, nit_8, opcion_8, dias_8)}  `;
     }
     else if (opcionSeleccionada === '9') {
       textoAMostrar = ``;
@@ -488,6 +488,8 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
 
   const [Fecha_8, setFecha_8] = useState('');
+  const [Fecha_8remi, setFecha_8remi] = useState('');
+
   const [empresa_8, setempresa_8] = useState('');
   const [nit_8, setnit_8] = useState('');
   const [opcion_8, setOpcion_8] = useState('');
@@ -726,6 +728,10 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   ] = useState('');
   const [Fecha_e, setFecha_e] = useState('');
 
+  useEffect(() => {
+    setSeriesSubseries([])
+
+  }, [unidadSeleccionada]);
 
   return (
     <>
@@ -761,15 +767,15 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
               label="Opción"
               onChange={handleChangeee}
             >
-              <MenuItem value="1">1</MenuItem>
-              <MenuItem value="2">2</MenuItem>
-              <MenuItem value="3">3</MenuItem>
-              <MenuItem value="4">4 </MenuItem>
-              {/* <MenuItem value="5">5 </MenuItem> */}
-              <MenuItem value="6">6</MenuItem>
-              {/* <MenuItem value="7">7</MenuItem> */}
-              <MenuItem value="8">8</MenuItem>
               <MenuItem value="9">Vacio</MenuItem>
+              {/* <MenuItem value="5">5 </MenuItem> */}
+              <MenuItem value="6">Citación</MenuItem>
+              <MenuItem value="8">Notificación </MenuItem>
+              <MenuItem value="2">Remisión por aviso</MenuItem>
+              <MenuItem value="1">Solicitud de información</MenuItem>
+              <MenuItem value="3">Constancia de publicación de citación</MenuItem>
+              <MenuItem value="4">Constancia de publicación de notificación </MenuItem>
+              {/* <MenuItem value="7">7</MenuItem> */}
 
 
             </Select>
@@ -879,14 +885,14 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
               labelId="serie-subserie-select-label"
               id="serie-subserie-select"
               value={selectedSerieSubserie}
-              label="Serie/Subserie" 
+              label="Serie/Subserie"
               onChange={handleChangee}
             >
               {seriesSubseries.map((item) => (
-                <MenuItem 
-                key={item.id_cat_serie_und} 
-                value={`${item.id_cat_serie_und}`}
-                disabled={!item.tiene_configuracion}
+                <MenuItem
+                  key={item.id_cat_serie_und}
+                  value={`${item.id_cat_serie_und}`}
+                  disabled={!item.tiene_configuracion}
                 >
                   {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
                 </MenuItem>
@@ -1348,6 +1354,20 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
                 value={Fecha_8}
                 InputLabelProps={{ shrink: true }}
                 onChange={(e) => setFecha_8(e.target.value)}
+              />
+            </Grid>
+
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha remicion"
+                value={Fecha_8remi}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_8remi(e.target.value)}
               />
             </Grid>
 
