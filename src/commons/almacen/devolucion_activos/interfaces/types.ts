@@ -71,3 +71,74 @@ export interface response_obtener_ultimo_consecutivo {
   detail: string
   ultimo_consecutivo: number
 }
+
+export interface response_obtener_despacho_activos {
+  success: boolean
+  detail: string
+  data: interface_obtener_despacho_activos[]
+}
+
+export interface interface_obtener_despacho_activos {
+  id_despacho_activo: number
+  id_bodega: number
+  nombre_bodega: string
+  nombre_persona_despacha: string
+  tipo_solicitud: string
+  despacho_sin_solicitud: boolean
+  estado_despacho: string
+  fecha_autorizacion_resp: any
+  justificacion_rechazo_resp: any
+  fecha_solicitud: string
+  fecha_despacho: string
+  observacion: string
+  despacho_anulado: boolean
+  justificacion_anulacion: any
+  fecha_anulacion: any
+  id_solicitud_activo: number
+  id_persona_despacha: number
+  id_persona_solicita: number
+  id_uni_org_solicitante: any
+  id_persona_anula: any
+  id_archivo_doc_recibido?: number
+}
+
+export interface response_obtener_activos_de_despachos {
+  success: boolean
+  detail: string
+  data: interface_obtener_activos_de_despachos[]
+}
+
+export interface interface_obtener_activos_de_despachos {
+  id_item_despacho_activo: number
+  id_bodega?: number
+  nombre_bodega?: string
+  id_bien?: number
+  codigo_bien?: string
+  nombre_bien?: string
+  nombre_marca?: string
+  identificador_activo?: string
+  cantidad_solicitada: number
+  fecha_devolucion: any
+  se_devolvio: boolean
+  cantidad_despachada: number
+  observacion?: string
+  nro_posicion_despacho: number
+  id_despacho_activo: number
+  id_bien_despachado?: number
+  id_bien_solicitado: number
+  id_entrada_alma?: number
+  id_uni_medida_solicitada: number
+  justificacion_devolucion?: string | null
+  cod_estado_activo?: string | null
+}
+
+export interface response_tipos_estado_activo {
+  success: boolean
+  detail: string
+  data: interface_tipos_estado_activo[]
+}
+
+export interface interface_tipos_estado_activo {
+  cod_estado: string
+  nombre: string
+}
