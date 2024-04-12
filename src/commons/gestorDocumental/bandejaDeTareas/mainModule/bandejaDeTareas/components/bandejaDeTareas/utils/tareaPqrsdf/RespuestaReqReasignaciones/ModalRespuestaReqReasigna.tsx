@@ -18,7 +18,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
-import { getComplementosReqResSolicitudes } from '../../../../../services/servicesStates/pqrsdf/reqResSolicitudes/getReqResSolicitudes.service';
+import {
+  getComplementosReqResOPA,
+  getComplementosReqResSolicitudes,
+} from '../../../../../services/servicesStates/pqrsdf/reqResSolicitudes/getReqResSolicitudes.service';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { GridValueGetterParams } from '@mui/x-data-grid';
 import { columnsStatic } from './columns/columns';
@@ -30,6 +33,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAnexosComplemento } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosComplementos.service';
 import { BandejaTareasContext } from '../../../../../../context/BandejaTareasContext';
 import { getAnexosComplementoBandejaTareas } from '../../../../../services/servicesStates/pqrsdf/complementos/getAnexosComplementos.service';
+import { getAnexosComplementoOpas } from '../../../../../services/servicesStates/opas/complementos/getAnexosComplementoOpas.service';
 
 export const ModalRespuestaReqReasigna = (): JSX.Element => {
   //* redux states
@@ -49,7 +53,7 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
   const { setAnexos } = useContext(BandejaTareasContext);
 
   //* useeffect para llamar un servicio con la informacion, solo se llama el servicio cuando handleThirdLoading es true
-
+  /*
   useEffect(() => {
     if (fourthLoading) {
       (async () => {
@@ -60,6 +64,46 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
         });
       })();
     }
+  }, [fourthLoading]);
+*/
+
+  useEffect(() => {
+    (async () => {
+      if (fourthLoading) {
+      const tipo =
+        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
+        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
+
+      try {
+        switch (tipo) {
+          case 'RESPONDER PQRSDF':
+          case 'Responder PQRSDF':
+            const dataPqr = await getComplementosReqResSolicitudes(
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
+            );
+            console.log('dataPqr', dataPqr);
+            setDataComplementos(dataPqr);
+
+            break;
+          case 'RESPONDER OPA':
+          case 'Responder Opa':
+          case 'Responder OPA':
+            const dataOpa = await getComplementosReqResOPA(
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada
+            );
+            setDataComplementos(dataOpa);
+
+            // Call the service for OPA
+            break;
+          default:
+            // Default service call or no service call
+            break;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    })();
   }, [fourthLoading]);
 
   const [dataComplementos, setDataComplementos] = useState<any[]>([]);
@@ -77,24 +121,66 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
               //* se debe llamar el servicio del detalle de la pqrsdf para traer la informacion y en consecuencias luego traer los anexos para la pqrsdf
               console.log(params.row);
 
-              (async () => {
-                try {
-                  const idComplemento = params?.row?.id_complemento_usu_pqr;
-                  const [detalleTarea, anexosPqrsdf] = await Promise.all([
-                    getDetalleComplemento(idComplemento, navigate),
-                    getAnexosComplementoBandejaTareas(idComplemento),
-                  ]);
-                  dispatch(setInfoTarea(detalleTarea));
-                  setAnexos(anexosPqrsdf);
-                  if (detalleTarea || anexosPqrsdf.length > 0) {
-                    navigate(
-                      `/app/gestor_documental/bandeja_tareas/info_complemento/${idComplemento}`
-                    );
-                  }
-                } catch (error) {
-                  console.error(error);
-                }
-              })();
+              const tipo =
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
+
+
+              switch (tipo) {
+                case 'RESPONDER PQRSDF':
+                case 'Responder PQRSDF':
+                  (async () => {
+                    try {
+                      const idComplemento = params?.row?.id_complemento_usu_pqr;
+                      const [detalleTarea, anexosPqrsdf] = await Promise.all([
+                        getDetalleComplemento(idComplemento, navigate),
+                        getAnexosComplementoBandejaTareas(idComplemento),
+                      ]);
+                      dispatch(setInfoTarea(detalleTarea));
+                      setAnexos(anexosPqrsdf);
+                      if (detalleTarea || anexosPqrsdf.length > 0) {
+                        navigate(
+                          `/app/gestor_documental/bandeja_tareas/info_complemento/${idComplemento}`
+                        );
+                      }
+                    } catch (error) {
+                      console.error(error);
+                    }
+                  })();
+                  break;
+                case 'RESPONDER OPA':
+                case 'Responder Opa':
+                case 'Responder OPA':
+                  (async () => {
+                    try {
+                      const idComplemento = params?.row?.id_respuesta_requerimiento;
+                      /*const [detalleTarea, anexosPqrsdf] = await Promise.all([
+                        getDetalleComplemento(idComplemento, navigate),
+                        getAnexosComplementoBandejaTareas(idComplemento),
+                      ]);*/
+                      const anexos = await getAnexosComplementoOpas(idComplemento);
+
+                      // dispatch(setInfoTarea(detalleTarea));
+                      setAnexos(anexos);
+                      if (/*detalleTarea || */ anexos.length > 0) {
+                        navigate(
+                          `/app/gestor_documental/bandeja_tareas/info_tarea_complemento_opa/`
+                        );
+                      }
+                    } catch (error) {
+                      console.error(error);
+                    }
+                  })();
+                  break;
+                default:
+                  // Default service call or no service call
+                  break;
+              }
+
+
+
+
+              
             }}
           >
             <Avatar
@@ -138,9 +224,7 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
             <RenderDataGrid
               title="Respuesta de requerimientos o solicitudes al usuario"
               columns={columns ?? []}
-              rows={[
-                ...dataComplementos,
-              ]}
+              rows={[...dataComplementos]}
             />
           ) : (
             <Box
@@ -189,5 +273,3 @@ export const ModalRespuestaReqReasigna = (): JSX.Element => {
     </>
   );
 };
-
-

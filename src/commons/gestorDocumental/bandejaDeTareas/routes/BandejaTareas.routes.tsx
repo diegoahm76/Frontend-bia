@@ -16,6 +16,7 @@ import { VistaTareasOpas } from '../mainModule/bandejaDeTareas/components/bandej
 import { RequerimientoAlUsuarioOPASProvider } from '../modules/OPAS/requerimientosUsuarioOpas/context/RequerimientoUsarioOpasContext';
 import { RequerimientoUsuarioOpasScreen } from '../modules/OPAS/requerimientosUsuarioOpas/screen/RequerimientoUsuarioOpasScreen';
 import { RespuestaOpaUsuario } from '../modules/OPAS/respuestaOpaUsuario/screen/RespuestaOpaUsuario';
+import { ModuleInfoTareaComplementoOpa } from '../mainModule/bandejaDeTareas/Atom/ModuleInfoTareaComplementoOpa';
 
 const routes = [
   {
@@ -79,6 +80,10 @@ const routes = [
   {
     path: 'info_tarea_opas/:id_tramite',
     component: () => <VistaTareasOpas />,
+  },
+  {
+    path: 'info_tarea_complemento_opa/',
+    component: () => <ModuleInfoTareaComplementoOpa />,
   },
 
   //* respuesta y requerimiento opas

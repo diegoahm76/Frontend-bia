@@ -13,6 +13,7 @@ export const postAsignacionGrupoOpas = async (
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   try {
+    console.log('soy la fucking data', data);  
     setLoading(true);
     // gestor/panel_ventanilla/opas/asignacion/create/
     const url = `gestor/panel_ventanilla/opas/asignacion/create/`;
