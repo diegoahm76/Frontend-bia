@@ -73,3 +73,36 @@ export const get_obtener_despachos_activos: any = (id_persona_responsable: strin
     }
   };
 }
+
+export const get_obtener_activos_de_despachos: any = (id_despacho_activo: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/despachos-activos/detalle/${id_despacho_activo}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
+
+export const get_obtener_tipos_estado_activos: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/info-estados-articulo/get/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
+
+export const post_crear_devolucion_activos: any = (form_data: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`/almacen/activos/devolucion-activos/create/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
