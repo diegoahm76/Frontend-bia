@@ -7,9 +7,9 @@ import { useAppDispatch } from '../../../../hooks';
 import { control_error } from '../../../../helpers';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
-import { interface_busqueda_persona_solicita, interface_tipos_documentos, response_busqueda_persona_solicita, response_tipos_documentos } from '../interfeces/types';
-import { get_obtener_persona_solicita, get_obtener_tipos_documentos, get_obtener_tipos_estados } from '../thunks/despacho_solicitudes';
-import TablaModalBusquedaPersonaSolicita from '../tables/TablaModalBusquedaPersonaSolicita';
+import { interface_busqueda_persona_responsable, interface_busqueda_persona_solicita, interface_tipos_documentos, response_busqueda_persona_responsable, response_busqueda_persona_solicita, response_tipos_documentos } from '../interfeces/types';
+import { get_obtener_persona_responsable, get_obtener_persona_solicita, get_obtener_tipos_documentos, get_obtener_tipos_estados } from '../thunks/despacho_solicitudes';
+import TablaModalBusquedaPersona from '../tables/TablaModalBusquedaPersona';
 
 
 
@@ -17,6 +17,8 @@ interface props {
   set_mostrar_modal_buscar_persona: React.Dispatch<React.SetStateAction<boolean>>;
   mostrar_modal_buscar_persona: boolean;
   set_data_persona_solicita: React.Dispatch<React.SetStateAction<interface_busqueda_persona_solicita>>;
+  set_data_persona_responsable: React.Dispatch<React.SetStateAction<interface_busqueda_persona_responsable>>;
+  despacho_sin_solicitud: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -24,6 +26,8 @@ const ModalBusquedaPersona: React.FC<props> = ({
   set_mostrar_modal_buscar_persona,
   mostrar_modal_buscar_persona,
   set_data_persona_solicita,
+  set_data_persona_responsable,
+  despacho_sin_solicitud,
 }) => {
 
   const dispatch = useAppDispatch();
@@ -39,14 +43,10 @@ const ModalBusquedaPersona: React.FC<props> = ({
   const [tipos_documentos, set_tipos_documentos] = useState<interface_tipos_documentos[]>([]);
 
   const [data_persona_solicita_temp, set_data_persona_solicita_temp] = useState<interface_busqueda_persona_solicita>(Object);
-  
-  const [data_personas_solicitan, set_data_personas_solicitan] = useState<interface_busqueda_persona_solicita[]>([
-    undefined as unknown as interface_busqueda_persona_solicita,
-    undefined as unknown as interface_busqueda_persona_solicita,
-    undefined as unknown as interface_busqueda_persona_solicita,
-    undefined as unknown as interface_busqueda_persona_solicita,
-    undefined as unknown as interface_busqueda_persona_solicita,
-  ]);
+  // Data de la tabla de personas que solicitan
+  const [data_personas_solicitan, set_data_personas_solicitan] = useState<interface_busqueda_persona_solicita[]>([]);
+  // Data de la tabla de personas responsables
+  const [data_personas_responsables, set_data_personas_responsables] = useState<interface_busqueda_persona_responsable[]>([]);
 
   const get_obtener_persona_solicita_fc = () => {
     set_loadding_tabla(true);
@@ -68,7 +68,32 @@ const ModalBusquedaPersona: React.FC<props> = ({
           set_loadding_tabla(false);
         }
       } else {
-        control_error('Error en el servidor al obteneer funcionarios');
+        control_error('Error en el servidor al obtener funcionarios');
+      }
+    });
+  }
+
+  const get_obtener_persona_responsable_fc = () => {
+    set_loadding_tabla(true);
+    dispatch(get_obtener_persona_responsable(
+      tipo_documento,
+      documento,
+      primer_nombre,
+      primer_apellido,
+      razon_social,
+      nombre_comercial,
+    )).then((response: response_busqueda_persona_responsable) => {
+      if(Object.keys(response).length !== 0) {
+        if (response.data.length !== 0) {
+          set_data_personas_responsables(response.data);
+          set_loadding_tabla(false);
+        } else {
+          set_data_personas_responsables([]);
+          control_error('No se encontraron funcionarios');
+          set_loadding_tabla(false);
+        }
+      } else {
+        control_error('Error en el servidor al obtener funcionarios');
       }
     });
   }
@@ -95,13 +120,21 @@ const ModalBusquedaPersona: React.FC<props> = ({
   useEffect(()=>{
     if(!ejecutar_servicios.current && mostrar_modal_buscar_persona){
       get_obtener_tipos_documentos_fc();
-      get_obtener_persona_solicita_fc();
+      if(despacho_sin_solicitud){
+        get_obtener_persona_responsable_fc();
+      } else {
+        get_obtener_persona_solicita_fc();
+      }
       ejecutar_servicios.current = true;
     }
-  },[mostrar_modal_buscar_persona])
+  },[mostrar_modal_buscar_persona, despacho_sin_solicitud])
 
   const consultar_funcionarios = () => {
-    get_obtener_persona_solicita_fc();
+    if(despacho_sin_solicitud){
+      get_obtener_persona_responsable_fc();
+    } else {
+      get_obtener_persona_solicita_fc();
+    }
   }
 
   const limpiar_form = () => {
@@ -144,8 +177,7 @@ const ModalBusquedaPersona: React.FC<props> = ({
               boxShadow: '0px 3px 6px #042F4A26',
             }}
             >
-            <Title title='Búsqueda de persona solicitante' />
-
+            <Title title={despacho_sin_solicitud ? 'Búsqueda de persona responsable' : 'Búsqueda de persona solicitante'} />
             <Box
               component="form"
               noValidate
@@ -267,10 +299,12 @@ const ModalBusquedaPersona: React.FC<props> = ({
                 display:'flex',
                 justifyContent:'center'
               }}>
-              <TablaModalBusquedaPersonaSolicita
+              <TablaModalBusquedaPersona
                 loadding_tabla={loadding_tabla}
                 data_personas_solicitan={data_personas_solicitan}
+                data_personas_responsables={data_personas_responsables}
                 set_data_persona_solicita_temp={set_data_persona_solicita_temp}
+                despacho_sin_solicitud={despacho_sin_solicitud}
               />
             </Grid>
 
