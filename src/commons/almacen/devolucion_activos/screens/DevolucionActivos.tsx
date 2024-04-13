@@ -9,11 +9,11 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SearchIcon from '@mui/icons-material/Search';
-import { Dayjs } from 'dayjs';
-import { inputs_almacenista, inputs_funcionario_responsable, interface_busqueda_responsable, interface_obtener_activos_de_despachos, interface_obtener_despacho_activos, interface_tipos_estado_activo, response_busqueda_responsable, response_inf_almacenista, response_obtener_despacho_activos, response_obtener_ultimo_consecutivo, response_tipos_estado_activo } from '../interfaces/types';
+import dayjs, { Dayjs } from 'dayjs';
+import { inputs_almacenista, inputs_funcionario_responsable, interface_busqueda_responsable, interface_obtener_activos_de_despachos, interface_obtener_despacho_activos, interface_tipos_estado_activo, response_busqueda_responsable, response_data_registro_devolucion, response_inf_almacenista, response_obtener_despacho_activos, response_obtener_ultimo_consecutivo, response_tipos_estado_activo } from '../interfaces/types';
 import { control_error, control_success } from '../../../../helpers';
 import { useDispatch } from 'react-redux';
-import { get_obtener_despachos_activos, get_obtener_inf_almacenista, get_obtener_responsables, get_obtener_tipos_estado_activos, get_obtener_ultimo_consecutivo, post_crear_devolucion_activos } from '../thunks/devolucion_activos';
+import { get_data_registro_devolucion, get_obtener_despachos_activos, get_obtener_inf_almacenista, get_obtener_responsables, get_obtener_tipos_estado_activos, get_obtener_ultimo_consecutivo, post_crear_devolucion_activos } from '../thunks/devolucion_activos';
 import ModalBusquedaResponsable from '../manners/ModalBusquedaResponsable';
 import TablaDespachosActivos from '../tables/TablaDespachosActivos';
 import TablaActivosDespacho from '../tables/TablaActivosDespacho';
@@ -42,7 +42,7 @@ const DevolucionActivos: React.FC = () => {
   const [loadding, set_loadding] = useState<boolean>(false);
   const [consecutivo, set_consecutivo] = useState<number | null>(null);
   const [consecutivo_buscar, set_consecutivo_buscar] = useState<number>(0);
-  const [fecha_salida, set_fecha_salida] = useState<Dayjs | null>(null);
+  const [fecha_devolucion, set_fecha_devolucion] = useState<Dayjs | null>(null);
 
   // Tipos estado activos
   const [tipos_estado_activos, set_tipos_estado_activos] = useState<interface_tipos_estado_activo[]>([]);
@@ -58,19 +58,48 @@ const DevolucionActivos: React.FC = () => {
   const [data_activos_despachos, set_data_activos_despachos] = useState<interface_obtener_activos_de_despachos[]>([]);
   // Id del despacho activo seleccionado
   const [id_despacho_activo_seleccionado, set_id_despacho_activo_seleccionado] = useState<number>(0);
-
+  // Data del registro de devolución de activos por consecutivo buscado
+  const [data_registro_devolucion, set_data_registro_devolucion] = useState<response_data_registro_devolucion>(Object);
 
   useEffect(() => {
     if (Object.keys(funcionario_responsable_seleccionado).length !== 0) {
-      set_accion('crear');
+      if(accion !== 'ver'){
+        set_accion('crear');
+      }
     }
-  }, [funcionario_responsable_seleccionado])
+  }, [funcionario_responsable_seleccionado,accion])
 
   const buscar_registro = () => {
-    set_loadding_btn_buscar(true);
-    // Lógica de búsqueda
-    set_loadding_btn_buscar(false);
+    set_accion('ver');
+    get_data_registro_devolucion_fc();
   };
+
+  useEffect(() => {
+    if (Object.keys(data_registro_devolucion).length !== 0 && accion === 'ver') {
+      // Si hay informacion en data_registro_devolucion entonces se llena los campos del formulario y las tablas
+      set_fecha_devolucion(dayjs(data_registro_devolucion.devolucion_activos.fecha_devolucion));
+      set_inputs_funcionario_responsable({
+        tipo_documento: 'PENDIENTE BACK', /*data_registro_devolucion.devolucion_activos.tipo_documento,*/
+        numero_documento: 'PENDIENTE BACK'/*data_registro_devolucion.devolucion_activos.numero_documento*/
+      });
+      set_funcionario_responsable_seleccionado({
+        nombre_completo: data_registro_devolucion.devolucion_activos.nombre_persona_devolucion
+      });
+      set_data_despachos_activos(Array(data_registro_devolucion.despacho_activo));
+      set_data_activos_despachos(data_registro_devolucion.item_despacho_activos.map((item) => {
+        // se compara si el activo devuelto es igual al activo despachado segun id_item_despacho_activo y si es asi se retorna 
+        // la data de item_despachos mas la jsutificacion y el cod_estado_activo_devolucion
+        const activo_devuelto = data_registro_devolucion.activos_devueltos.find((activo) => activo.id_item_despacho_activo === item.id_item_despacho_activo);
+        return {
+          ...item,
+          justificacion_devolucion: activo_devuelto?.justificacion_activo_devolucion,
+          cod_estado_activo: activo_devuelto?.cod_estado_activo_devolucion,
+        };
+      })
+      );
+      set_mostrar_tabla_activos_despachos(true);
+    }
+  }, [data_registro_devolucion, accion]);
 
   const limpiar_formulario = () => {
     set_accion('null');
@@ -126,6 +155,27 @@ const DevolucionActivos: React.FC = () => {
           }
         } else {
           control_error('Error en el servidor al obtener el último consecutivo');
+        }
+      }
+      );
+  }
+
+  const get_data_registro_devolucion_fc = () => {
+    set_loadding_btn_buscar(true);
+    dispatch(get_data_registro_devolucion(consecutivo_buscar))
+      .then((response: response_data_registro_devolucion) => {
+        if (Object.keys(response).length !== 0) {
+          if (response.success) {
+            set_data_registro_devolucion(response);
+            control_success('Registro de devolución encontrado');
+            set_loadding_btn_buscar(false);
+          } else {
+            control_error('No se encontró el registro de devolución');
+            set_loadding_btn_buscar(false);
+          }
+        } else {
+          control_error('Error en el servidor al obtener el registro de devolución');
+          set_loadding_btn_buscar(false);
         }
       }
       );
@@ -192,10 +242,10 @@ const DevolucionActivos: React.FC = () => {
    */
   const get_obtener_despachos_activos_fc = () => {
     set_loadding_tabla_despacho_activos(true);
-    dispatch(get_obtener_despachos_activos(funcionario_responsable_seleccionado.id_persona.toString()))
+    dispatch(get_obtener_despachos_activos(funcionario_responsable_seleccionado.id_persona?.toString()))
       .then((response: response_obtener_despacho_activos) => {
         if (Object.keys(response).length !== 0) {
-          if (response.data.length !== 0) {
+          if (response.data?.length !== 0) {
             set_data_despachos_activos(response.data);
             set_loadding_tabla_despacho_activos(false);
             control_success('Despachos activos encontrados');
@@ -216,7 +266,9 @@ const DevolucionActivos: React.FC = () => {
    */
   useEffect(() => {
     if ('id_persona' in funcionario_responsable_seleccionado || Object.keys(funcionario_responsable_seleccionado).length !== 0) {
-      get_obtener_despachos_activos_fc();
+      if(accion !== 'ver'){
+        get_obtener_despachos_activos_fc();
+      }
     }
   }, [funcionario_responsable_seleccionado]);
 
@@ -246,6 +298,33 @@ const DevolucionActivos: React.FC = () => {
       control_error('No hay activos de despachos seleccionados');
       return false;
     }
+    // Mapeamos data_activos_despachados para verificar, si cod_estado_activo es 'D' o 'A' 
+    // entonces la propiedad de justificacion tendra que tener un valor
+    const activos_con_justificacion = data_activos_despachos.filter((activo) => {
+      return activo.cod_estado_activo === 'D' || activo.cod_estado_activo === 'A';
+    });
+    if (activos_con_justificacion.length !== 0) {
+      let justificacion_vacia = true;
+      const activos_sin_justificacion = activos_con_justificacion.filter((activo) => {
+        return activo.justificacion_devolucion === null || activo.justificacion_devolucion === '' || !('justificacion_devolucion' in activo);
+      });
+      if (activos_sin_justificacion.length !== 0) {
+        control_error('Debe agregar una justificación en los activos con estado: "Defectuoso" o "Averiado"');
+        justificacion_vacia = false;
+        return false;
+      }
+      return justificacion_vacia;
+    }
+
+    // Mapeamos data_activos_despachados para verificar que todos los objetos tengan un valor en la propiedad cod_estado_activo
+    const activos_sin_estado = data_activos_despachos.filter((activo) => {
+      return activo.cod_estado_activo === null || activo.cod_estado_activo === '' || !('cod_estado_activo' in activo);
+    });
+    if (activos_sin_estado.length !== 0) {
+      control_error('Debe seleccionar un estado para todos los activos');
+      return false;
+    }
+
     return true;
   }
 
@@ -264,6 +343,7 @@ const DevolucionActivos: React.FC = () => {
       }).then(async (result: any) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
+          set_loadding(true);
           dispatch(post_crear_devolucion_activos({
             id_despacho_activo: id_despacho_activo_seleccionado,
             id_persona_devolucion: funcionario_responsable_seleccionado.id_persona,
@@ -278,11 +358,15 @@ const DevolucionActivos: React.FC = () => {
               if (response.success) {
                 control_success('Devolución de activos guardada correctamente');
                 limpiar_formulario();
+                get_obtener_ultimo_consecutivo_fc();
+                set_loadding(false);
               } else {
                 control_error('Error al guardar la devolución de activos');
+                set_loadding(false);
               }
             } else {
               control_error('Error en el servidor al guardar la devolución de activos');
+              set_loadding(false);
             }
           });
           return true;
@@ -370,8 +454,8 @@ const DevolucionActivos: React.FC = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       disabled
-                      label='Fecha de salida: '
-                      value={fecha_salida}
+                      label='Fecha devolución: '
+                      value={fecha_devolucion}
                       onChange={() => { }} // Not implemented
                       renderInput={(params) => (
                         <TextField disabled required fullWidth size="small" {...params} />
@@ -520,10 +604,11 @@ const DevolucionActivos: React.FC = () => {
 
             {Object.keys(funcionario_responsable_seleccionado).length !== 0 &&
               <Grid container item xs={12}>
-                <Grid spacing={2} item xs={12} my={2}>
+                <Grid item xs={12} my={2}>
                   <Title title="Despachos de activos encontrados" />
                 </Grid>
                 <TablaDespachosActivos
+                  accion={accion}
                   data={data_despachos_activos}
                   loadding_tabla={loadding_tabla_despacho_activos}
                   set_data_activos_despachos={set_data_activos_despachos}
@@ -536,10 +621,11 @@ const DevolucionActivos: React.FC = () => {
 
             {mostrar_tabla_activos_despachos &&
               <Grid container item xs={12}>
-                <Grid spacing={2} item xs={12} my={2}>
+                <Grid item xs={12} my={2}>
                   <Title title="Activos despachados" />
                 </Grid>
                 <TablaActivosDespacho
+                  accion={accion}
                   data={data_activos_despachos}
                   set_data={set_data_activos_despachos}
                   loadding_tabla={loadding_tabla_activos_despachos}
@@ -561,7 +647,7 @@ const DevolucionActivos: React.FC = () => {
                   fullWidth
                   color="success"
                   variant="contained"
-                  disabled={loadding}
+                  disabled={loadding || accion === 'ver'}
                   startIcon={loadding ? <CircularProgress size={25} /> : <SaveIcon />}
                   type='submit'
                 >

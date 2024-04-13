@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { Button, ButtonGroup, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
@@ -16,6 +16,7 @@ interface custom_column extends GridColDef {
 }
 
 interface Props {
+  accion: string;
   data: interface_obtener_activos_de_despachos[];
   set_data: Dispatch<SetStateAction<interface_obtener_activos_de_despachos[]>>;
   loadding_tabla: boolean;
@@ -25,6 +26,7 @@ interface Props {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 const TablaActivosDespacho: React.FC<Props> = ({
+  accion,
   data,
   set_data,
   loadding_tabla,
@@ -34,19 +36,19 @@ const TablaActivosDespacho: React.FC<Props> = ({
 
   const [selected_rows, set_selected_rows] = useState<any[]>([]);
 
-const handle_editar_celdas = (objeto_nuevo: any) => {
-  set_data(data.map((activo) => {
-    if (activo.id_item_despacho_activo === objeto_nuevo.id_item_despacho_activo) {
-      if (activo.cod_estado_activo) {
-        return { ...activo, ...objeto_nuevo };
-      } else {
-        control_error('No se puede agregar una justificación si no se ha seleccionado un estado para el activo.');
+  const handle_editar_celdas = (objeto_nuevo: any) => {
+    set_data(data.map((activo) => {
+      if (activo.id_item_despacho_activo === objeto_nuevo.id_item_despacho_activo) {
+        if (activo.cod_estado_activo) {
+          return { ...activo, ...objeto_nuevo };
+        } else {
+          control_error('No se puede agregar una justificación si no se ha seleccionado un estado para el activo.');
+        }
       }
-    }
-    return activo;
-  }));
-  return { success: true };
-}
+      return activo;
+    }));
+    return { success: true };
+  }
 
   let columns: custom_column[] = [
     { field: 'codigo_bien', headerName: 'Código activo', minWidth: 130, flex: 1, },
@@ -66,12 +68,13 @@ const handle_editar_celdas = (objeto_nuevo: any) => {
       field: 'ver_activos', headerName: 'Devolución', minWidth: 200, flex: 1, headerAlign: 'center', align: 'center',
       renderCell: (params) => (
         <>
-        {/*Mostramos el boton de devolucion si el id no esta en el array selectedRows*/}
-           {!selected_rows.includes(params.row.id_item_despacho_activo) && (
+          {/*Mostramos el boton de devolucion si el id no esta en el array selectedRows*/}
+          {!selected_rows.includes(params.row.id_item_despacho_activo) && (
             <Button
               type="button"
               variant="contained"
               color="success"
+              disabled={accion === 'ver'}
               onClick={() => {
                 set_selected_rows(prev_rows => [...prev_rows, params.row.id_item_despacho_activo]); // Agrega el id de la fila al array
               }}
@@ -108,7 +111,8 @@ const handle_editar_celdas = (objeto_nuevo: any) => {
   ];
 
   // agregamos con push una columna mas para el boton de devolucion
-  if (selected_rows.length > 0) {
+  if (accion === 'ver' || selected_rows.length !== 0) {
+    console.log(accion);
     columns.push(
       {
         field: 'cod_estado_activo', headerName: 'Estado', minWidth: 200, flex: 1, headerAlign: 'center', align: 'center',
@@ -121,6 +125,7 @@ const handle_editar_celdas = (objeto_nuevo: any) => {
                 <Select
                   label='Estado: '
                   value={params.row.cod_estado_activo ?? ''}
+                  disabled={accion === 'ver'}
                   onChange={
                     // actualiza el estado del activo en la propiedad cod_estado_activo de la fila de set_data
                     (event) => {
@@ -147,10 +152,18 @@ const handle_editar_celdas = (objeto_nuevo: any) => {
               </FormControl>
             );
           }
+
+          if(accion === 'ver'){
+            return params.row.cod_estado_activo === 'O' ? 'Óptimo' 
+            : params.row.cod_estado_activo === 'D' ? 'Defectuoso' 
+            : params.row.cod_estado_activo === 'A' ? 'Averiado' 
+            : params.row.cod_estado_activo === '' && null;
+          }
+          
           return null;
         },
       },
-      { field: 'justificacion_devolucion', headerName: 'Justificación', minWidth: 450, flex: 1, headerAlign: 'center', align: 'center', editable: true },
+      { field: 'justificacion_devolucion', headerName: 'Justificación', minWidth: 450, flex: 1, headerAlign: 'center', align: 'center', editable: accion !== 'ver' },
     );
   }
 
