@@ -90,21 +90,17 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
   const columns: CustomColumn[] = [
     { field: 'estado_solicitud', headerName: 'Estado', minWidth: 140, flex: 1,
       renderCell: (params) => (
-        params.row.estado_solicitud === 'S' ? 'Solicitado'
-        : params.row.estado_solicitud === 'R' ? 'Respondido'
-        : params.row.estado_solicitud === 'SR' ? 'Solicitud Rechazada'
-        : params.row.estado_solicitud === 'SA' ? 'Solicitud Aprobada'
-        : params.row.estado_solicitud === 'DR' ? 'Despacho Rechazado'
-        : params.row.estado_solicitud === 'DA' ? 'Despacho Autorizado'
-        : params.row.estado_solicitud === 'F' ? 'Finalizado'
-        : params.row.estado_solicitud === 'C' && 'Cancelado' 
+        params.row.estado_solicitud === 'Ep' ? 'En Espera'
+        : params.row.estado_solicitud === 'Ac' ? 'Aceptada'
+        : params.row.estado_solicitud === 'Re' ? 'Rechazada'
+        : params.row.estado_solicitud === 'An' && 'Anulada'
       )
     },
-    { field: 'fecha_solicitud', headerName: 'Fecha solicitud', minWidth: 150, flex: 1,
+    { field: 'fecha_despacho', headerName: 'Fecha despacho', minWidth: 150, flex: 1,
       renderCell: (params) => (dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY'))
     },
-    { field: 'motivo', headerName: 'Motivo', minWidth: 300, flex: 1,},
-    { field: 'primer_nombre_persona_solicita', headerName: 'Persona que solicita', minWidth: 300, flex: 1,
+    { field: 'observaciones', headerName: 'Motivo', minWidth: 300, flex: 1,},
+    { field: 'primer_nombre_persona_operario', headerName: 'Operario', minWidth: 300, flex: 1,
       renderCell: (params) => (`${params.row.primer_nombre_persona_solicita} ${params.row.primer_apellido_persona_solicita}`)
     },
     { field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 300, flex: 1,
@@ -117,14 +113,6 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
           <HighlightOffIcon 
             onClick={() => rechazar_solicitud(params.row)}
             sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
-      )
-    },
-    { field: 'ver', headerName: 'Aprobar', maxWidth: 70, minWidth:70, flex: 1, align: 'center', headerAlign: 'center',
-      renderCell: (params) => (
-        params.row.estado_solicitud === 'S' &&
-          <CheckCircleOutlineIcon 
-            onClick={() => aprobar_solicitud(params.row)}
-            sx={{fontSize: '30px', cursor: 'pointer', color: '#1b5e20'}} />
       )
     },
     { field: 'editar', headerName: 'Ver', maxWidth: 70, minWidth:70, flex: 1, align: 'center', headerAlign: 'center',
