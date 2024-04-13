@@ -16,6 +16,7 @@ interface CustomColumn extends GridColDef {
 }
 
 interface Props {
+  accion: string;
   data: interface_obtener_despacho_activos[];
   loadding_tabla: boolean;
   set_data_activos_despachos: Dispatch<SetStateAction<interface_obtener_activos_de_despachos[]>>;
@@ -27,6 +28,7 @@ interface Props {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 const TablaDespachosActivos: React.FC<Props> = ({
+  accion,
   data,
   loadding_tabla,
   set_data_activos_despachos,
@@ -80,6 +82,7 @@ const TablaDespachosActivos: React.FC<Props> = ({
           type="button"
           variant="contained"
           color="primary"
+          disabled={accion === 'ver'}
           startIcon={<VisibilityIcon />}
           onClick={() => { obtener_activos(params.row.id_despacho_activo.toString())}}
         >

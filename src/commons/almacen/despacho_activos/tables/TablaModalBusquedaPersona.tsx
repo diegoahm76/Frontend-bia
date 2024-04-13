@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ButtonGroup, Grid } from '@mui/material';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { interface_busqueda_persona_solicita } from '../interfeces/types';
+import { interface_busqueda_persona_responsable, interface_busqueda_persona_solicita } from '../interfeces/types';
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_busqueda_persona_solicita }) => React.ReactNode;
@@ -12,15 +12,19 @@ interface CustomColumn extends GridColDef {
 
 interface Props {
   data_personas_solicitan: interface_busqueda_persona_solicita[];
+  data_personas_responsables: interface_busqueda_persona_responsable[];
   set_data_persona_solicita_temp: React.Dispatch<React.SetStateAction<interface_busqueda_persona_solicita>>;
+  despacho_sin_solicitud: boolean;
   loadding_tabla: boolean;
 }
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-const TablaModalBusquedaPersonaSolicita: React.FC<Props> = ({
+const TablaModalBusquedaPersona: React.FC<Props> = ({
   data_personas_solicitan,
+  data_personas_responsables,
   set_data_persona_solicita_temp,
+  despacho_sin_solicitud,
   loadding_tabla,
 }) => {
 
@@ -70,7 +74,7 @@ const TablaModalBusquedaPersonaSolicita: React.FC<Props> = ({
         density="compact"
         autoHeight
         loading={loadding_tabla}
-        rows={data_personas_solicitan ?? []}
+        rows={ despacho_sin_solicitud ? (data_personas_responsables ?? []) : (data_personas_solicitan ?? [])}
         columns={columns ?? []}
         pageSize={5}
         rowHeight={75}
@@ -84,4 +88,4 @@ const TablaModalBusquedaPersonaSolicita: React.FC<Props> = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default TablaModalBusquedaPersonaSolicita;
+export default TablaModalBusquedaPersona;

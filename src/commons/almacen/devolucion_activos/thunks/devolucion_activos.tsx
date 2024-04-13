@@ -55,7 +55,7 @@ export const get_obtener_inf_almacenista: any = () => {
 export const get_obtener_ultimo_consecutivo: any = () => {
   return async () => {
     try {
-      const { data } = await api.get(`/almacen/activos/obtener-ultimo-consecutivo-salida-especial/get/`);
+      const { data } = await api.get(`/almacen/activos/obtener-ultimo-consecutivo-devolucion-activo/get/`);
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -100,6 +100,17 @@ export const post_crear_devolucion_activos: any = (form_data: any) => {
   return async () => {
     try {
       const { data } = await api.post(`/almacen/activos/devolucion-activos/create/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
+
+export const get_data_registro_devolucion: any = (consecutivo: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/info-salida-devolucion-activo/get/${consecutivo}/`);
       return data;
     } catch (error: any) {
       return error as AxiosError;

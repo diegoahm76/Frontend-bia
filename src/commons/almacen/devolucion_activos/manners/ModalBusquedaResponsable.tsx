@@ -119,8 +119,8 @@ const ModalBusquedaResponsable: React.FC<props> = ({
       set_mostrar_busqueda_responsable(false);
       set_funcionario_responsable_seleccionado(funcionario_responsable_temp);
       set_inputs_funcionario_responsable({
-        tipo_documento: funcionario_responsable_temp.tipo_documento,
-        numero_documento: funcionario_responsable_temp.numero_documento
+        tipo_documento: funcionario_responsable_temp.tipo_documento ?? '',
+        numero_documento: funcionario_responsable_temp.numero_documento ?? ''
       });
       set_funcionario_responsable_temp({} as interface_busqueda_responsable);
     } else {
