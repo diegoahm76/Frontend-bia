@@ -34,7 +34,7 @@ export const get_obtener_despachos_sin_solicitud: any = (
   ) => {
   return async () => {
     try {
-      const { data } = await api.get(`/almacen/activos/busqueda-solicitudes-despacho/get/?estado_despacho=${
+      const { data } = await api.get(`/almacen/activos/despachos-sin-solicitud/get/?estado_despacho=${
         estado_despacho
       }&fecha_desde=${
         fecha_desde
@@ -78,6 +78,34 @@ export const get_obtener_persona_solicita: any = (
   };
 };
 
+export const get_obtener_persona_responsable: any = (
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  primer_apellido: string,
+  razon_social: string,
+  nombre_comercial: string,
+  ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/personas/get-personas-responsible-filters/?tipo_documento=${
+        tipo_documento
+      }&numero_documento=${
+        numero_documento
+      }&primer_nombre=${
+        primer_nombre
+      }&primer_apellido=${
+        primer_apellido
+      }&razon_social=${
+        razon_social
+      }&nombre_comercial=${nombre_comercial}`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
 export const get_obtener_tipos_documentos: any = () => {
   return async () => {
     try {
@@ -93,6 +121,17 @@ export const get_obtener_tipos_estados: any = () => {
   return async () => {
     try {
       const { data } = await api.get(`/almacen/choices/estado-solicitud-activo/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
+
+export const get_obtener_tipos_estados_despachos_sin_solicitud: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/choices/estado-despacho-activo/`);
       return data;
     } catch (error: any) {
       return error as AxiosError;
