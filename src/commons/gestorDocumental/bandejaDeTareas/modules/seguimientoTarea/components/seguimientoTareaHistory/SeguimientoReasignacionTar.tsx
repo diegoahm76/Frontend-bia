@@ -78,7 +78,6 @@ export const SeguimientoReasignacionTar = (): JSX.Element => {
                   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
                   handleSixthLoading
                 );
-              showAlert('Advertencia', 'No se puede hacer seguimiento de la atre aún', 'warning');
               setlistaReasigna(dataSeguimientosOPA ?? [])
               break;
           default:
