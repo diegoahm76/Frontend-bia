@@ -48,7 +48,19 @@ export const ModalAndLoadingProvider: FC<any> = ({
 
     const { isLoading: eigthLoading, handleLoading: handleEigthLoading } =
     useModalAndLoading('', 'isLoading');
+
+    const { isLoading: nineLoading, handleLoading: handleNineLoading } =
+    useModalAndLoading('', 'isLoading');
+
+    const { isLoading: tenLoading, handleLoading: handleTenLoading } =
+    useModalAndLoading('', 'isLoading');
   
+    const { isLoading: ElevenLoading, handleLoading: handleElevenLoading } =
+    useModalAndLoading('', 'isLoading');
+
+    const { isLoading: TwelveLoading, handleLoading: handleTwelveLoading } =
+    useModalAndLoading('', 'isLoading');
+
 
   // ? ----- modales para la entrega 99 -----
 
@@ -107,6 +119,19 @@ export const ModalAndLoadingProvider: FC<any> = ({
     //* eigth loading
     eigthLoading,
     handleEigthLoading,
+
+    //* nine loading
+    nineLoading,
+    handleNineLoading,
+    //* ten loading
+    tenLoading,
+    handleTenLoading,
+    //* Eleven loading
+    ElevenLoading,
+    handleElevenLoading,
+    //* Twelve loading
+    TwelveLoading,
+    handleTwelveLoading,
 
     // ? ----- modales para la entrega 99 -----
     //* modal agregar metadatos

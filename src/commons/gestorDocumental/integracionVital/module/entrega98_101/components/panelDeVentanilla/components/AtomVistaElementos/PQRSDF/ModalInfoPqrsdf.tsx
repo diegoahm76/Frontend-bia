@@ -30,7 +30,7 @@ import { DownloadButton } from '../../../../../../../../../../utils/DownloadButt
 import CloseIcon from '@mui/icons-material/Close';
 import { getAnexosTramite } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/TramitesyServiciosyRequerimientos/anexos/getAnexosTramites.service';
 import { getAnexosPqrsdf } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/getAnexosPqrsdf.service';
-import { getArchivoAnexoPqrsdf } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
+import { getAnexosComplementoOpa, getArchivoAnexoComplementoOpa, getArchivoAnexoPqrsdf } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/PqrsdfyComplementos/anexos/archivo/getArchiAnexoPqr.service';
 import { getAnexosOpa } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/opas/anexos/getAnexoByIdOpa.service';
 import { getArchivoAnexoOpa } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/opas/archivo/getArchivoAnexoOpas.service';
 import { getAnexosOtros } from '../../../../../../../../panelDeVentanilla/toolkit/thunks/otros/anexos/getAnexosOtros.service';
@@ -53,80 +53,62 @@ export const ModalInfoElementos = ({
   const [infoAnexos, setInfoAnexos] = useState<any>([]);
 
   //* use effect para cargar los datos de los anexos
-  useEffect(() => {
-    if (!openModalOne) return;
+  const fetchData = async (id: string, fetchFunction: Function) => {
+  try {
+    const res = await fetchFunction(id);
+    setInfoAnexos(res);
+    console.log(res);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-    (async () => {
-      //* para pqrsdf
-      if (currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF) {
-        try {
-          const res = await getAnexosPqrsdf(
-            currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF
-          );
-          setInfoAnexos(res);
-          console.log(res);
-        } catch (error) {
-          console.error(error);
-        }
-        return;
-      }
-      //* para tramites
-      if (currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite && currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud != 'OPA') {
-        try {
-          const res = await getAnexosTramite(
-            currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite
-          );
-          setInfoAnexos(res);
-          console.log(res);
-        } catch (error) {
-          console.error(error);
-        }
-        return;
-      }
+useEffect(() => {
+  if (!openModalOne) return;
 
-      //* para opas
-     if (currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite && currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud == 'OPA') {
-        try {
-          const res = await getAnexosOpa(
-            currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite
-          );
-          setInfoAnexos(res);
-          console.log(res);
-        } catch (error) {
-          console.error(error);
-        }
-        return;
-      }
-      //* para otros
-      if (currentElementPqrsdComplementoTramitesYotros?.id_otros) {
-        try {
-          const res = await getAnexosOtros(
-            currentElementPqrsdComplementoTramitesYotros?.id_otros
-          );
-          setInfoAnexos(res);
-          console.log(res);
-        } catch (error) {
-          console.error(error);
-        }
-        return;
-      }
+  (async () => {
+    const currentElement = currentElementPqrsdComplementoTramitesYotros;
+console.log(currentElement, 'currentElement')
+    if (currentElement?.id_PQRSDF) {
+      await fetchData(currentElement.id_PQRSDF, getAnexosPqrsdf);
+      return;
+    }
 
+    if (currentElement?.id_solicitud_tramite && currentElement?.tipo_solicitud != 'OPA' && currentElement?.descripcion != "Requerimiento Opa") {
+      await fetchData(currentElement.id_solicitud_tramite, getAnexosTramite);
+      return;
+    }
 
-      if (currentElementPqrsdComplementoTramitesYotros?.idComplementoUsu_PQR) {
-        try {
-          const res = await getAnexosComplemento(
-            currentElementPqrsdComplementoTramitesYotros?.idComplementoUsu_PQR
-          );
-          setInfoAnexos(res);
-          console.log(res);
-        } catch (error) {
-          console.error(error);
-        }
-        return;
+    if (currentElement?.id_solicitud_tramite && currentElement?.tipo_solicitud == 'OPA') {
+      await fetchData(currentElement.id_solicitud_tramite, getAnexosOpa);
+      return;
+    }
+
+    if (currentElement?.id_otros) {
+      await fetchData(currentElement.id_otros, getAnexosOtros);
+      return;
+    }
+
+    if (currentElement?.idComplementoUsu_PQR) {
+      await fetchData(currentElement.idComplementoUsu_PQR, getAnexosComplemento);
+      return;
+    }
+
+    if(currentElement?.id_respuesta_requerimiento){
+      try {
+        handleOpenModalTwo(true);
+        const resArchivoTramite = await getAnexosComplementoOpa(currentElement.id_respuesta_requerimiento);
+        console.log('resByAnexo', resArchivoTramite);
+        // setInfoMetadatos({ ...resArchivoTramite });
+        setInfoAnexos(resArchivoTramite);
+      } catch (err) {
+        console.log(err);
+        handleOpenModalTwo(false);
       }
-    })();
-  }, [openModalOne]);
-
+      return;
+    }
+  })();
+}, [openModalOne]);
   const columns = [
     ...columnsModalOpas,
     {
@@ -202,6 +184,22 @@ export const ModalInfoElementos = ({
               try {
                 handleOpenModalTwo(true);
                 const resArchivoTramite = await getArchivoAnexoComplemento(
+                  params.row.id_anexo
+                );
+                console.log('resByAnexo', resArchivoTramite);
+                setInfoMetadatos({ ...resArchivoTramite });
+              } catch (err) {
+                console.log(err);
+                handleOpenModalTwo(false);
+              }
+              return;
+            }
+
+            
+            if(currentElementPqrsdComplementoTramitesYotros?.id_respuesta_requerimiento){
+              try {
+                handleOpenModalTwo(true);
+                const resArchivoTramite = await getArchivoAnexoComplementoOpa(
                   params.row.id_anexo
                 );
                 console.log('resByAnexo', resArchivoTramite);

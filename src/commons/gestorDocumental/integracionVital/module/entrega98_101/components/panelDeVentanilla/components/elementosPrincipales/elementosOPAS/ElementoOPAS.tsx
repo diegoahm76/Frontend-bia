@@ -115,7 +115,7 @@ export const ElementoOPAS = (): JSX.Element => {
         return (
           <>
             <Tooltip
-              title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
+              title={`Ver complementos relacionados a opa`}
             >
               <IconButton
                 onClick={() => {
