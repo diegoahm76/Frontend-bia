@@ -70,12 +70,13 @@ export const CarteraTop: React.FC = () => {
 
                 ],
                 labels: {
-                    style: {
-                        colors: colors,
-                        fontSize: '12px'
-                    }
+                  style: {
+                    colors: colors,
+                    fontSize: '12px'
+                  }
                 }
-            }
+              }
+            
         },
     });
 

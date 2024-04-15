@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Box, Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 // import { obtener_usuario_logueado } from "../aperturaExpedientes/thunks/aperturaExpedientes";
-import { useAppDispatch } from "../../../../hooks";
+import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
@@ -12,15 +13,17 @@ import dayOfYear from 'dayjs/plugin/dayOfYear';
 // import { SerieDocumentalScreen } from "./SerieDocumentalScreen";
 //  import { ExpedienteSeleccionado } from "./ExpedienteSeleccionado";
 // import { ArchivoDocumento } from "./ArchivoDocumento";
-// import { borrar_documento, crear_indexacion_documentos } from "../thunks/indexacionExpedientes";
+// import { borrar_documento, crear_archivado } from "../thunks/indexacionExpedientes";
 // import AnularDocumnetoModal from "./AnularDocumento";
 import { obtener_usuario_logueado } from "../../Expedientes/aperturaExpedientes/thunks/aperturaExpedientes";
 import { SerieDocumentalScreen } from "../../Expedientes/indexacionExpedientes/screens/SerieDocumentalScreen";
 import { ExpedienteSeleccionado } from "../../Expedientes/indexacionExpedientes/screens/ExpedienteSeleccionado";
 import { ArchivoDocumento } from "../../Expedientes/indexacionExpedientes/screens/ArchivoDocumento";
 import AnularDocumnetoModal from "../../Expedientes/indexacionExpedientes/screens/AnularDocumento";
-import { borrar_documento, crear_indexacion_documentos } from "../../Expedientes/indexacionExpedientes/thunks/indexacionExpedientes";
+import { borrar_documento, crear_archivado } from "../../Expedientes/indexacionExpedientes/thunks/indexacionExpedientes";
 import { Archibo } from "./Archibo";
+import { useParams } from 'react-router-dom';
+
 dayjs.extend(dayOfYear);
 const class_css = {
     position: 'relative',
@@ -88,7 +91,7 @@ export const Series: React.FC = () => {
             form_data.append('data_documentos', JSON.stringify(data_documentos));
             // form_data.append('archivos', data_archivos[0]);
             data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
-            dispatch(crear_indexacion_documentos(form_data, expediente?.id_expediente_documental)).then((response: any) => {
+            dispatch(crear_archivado(form_data, expediente?.id_expediente_documental)).then((response: any) => {
                 if (response.success)
                     set_limpiar(true);
             });
@@ -98,18 +101,26 @@ export const Series: React.FC = () => {
     useEffect(() => {
         if (limpiar) {
             set_archivos([]);
+            set_limpiar(false);
             set_expediente(null);
             set_configuracion(null);
-            set_limpiar(false);
         }
     }, [limpiar]);
 
+    // const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } = useAppSelector(state.BandejaTareasSlice)
+
+    const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } = useAppSelector((state) => state.BandejaTareasSlice);
     return (
         <>
             <Grid
                 container
                 sx={class_css}
             >
+               
+
+           
+                {/* <button onClick={() => console.log({ currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas })} >Haz clic aquí</button> */}
+
                 <SerieDocumentalScreen set_expediente={set_expediente} set_serie={set_serie} set_seccion={set_seccion} set_tdr={set_tdr} limpiar={limpiar} set_configuracion={set_configuracion}></SerieDocumentalScreen>
             </Grid>
             {expediente !== null && <Grid
@@ -122,9 +133,9 @@ export const Series: React.FC = () => {
                 container
                 sx={class_css}
             >
-                <Archibo expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion} set_actualizar={set_actualizar} set_id_documento_seleccionado={set_id_documento_seleccionado}></Archibo>
+                <Archibo currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas={currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas} limpiar_formulario={limpiar_formulario} expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion} set_actualizar={set_actualizar} set_id_documento_seleccionado={set_id_documento_seleccionado}></Archibo>
             </Grid>}
-            <Grid container                 sx={class_css}
+            {/* <Grid container                 sx={class_css}
 >
                 <Grid item xs={12} sm={12}>
                     <Box
@@ -155,23 +166,9 @@ export const Series: React.FC = () => {
                             >
                                 Limpiar
                             </Button>
-                            {(id_documento_seleccionado !== null && !anulado && expediente !== null) && <Button
-                                sx={{ background: '#ff9800' }}
-                                variant='contained'
-                                startIcon={<ClearIcon />}
-                                onClick={() => { set_abrir_modal_anular(true) }}
-                            >
-                                Anular documento
-                            </Button>}
+                            
                             {<AnularDocumnetoModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={id_documento_seleccionado}></AnularDocumnetoModal>}
-                            {(id_documento_seleccionado !== null && expediente !== null) && <Button
-                                variant='contained'
-                                startIcon={<ClearIcon />}
-                                onClick={() => { borrar_documento_fc() }}
-                                sx={{ background: '#ff6961' }}
-                            >
-                                Borrar documento
-                            </Button>}
+                          
                             <Button
                                 color="error"
                                 variant='contained'
@@ -180,10 +177,12 @@ export const Series: React.FC = () => {
                             >
                                 Salir
                             </Button>
+
+                            
                         </Stack>
                     </Box>
                 </Grid>
-            </Grid>
+            </Grid> */}
         </>
     )
 }

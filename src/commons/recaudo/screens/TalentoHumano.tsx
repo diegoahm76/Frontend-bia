@@ -355,7 +355,7 @@ export const TalentoHumano: React.FC = () => {
                                     <MenuItem value="Directivo">Directivo</MenuItem>
                                     <MenuItem value="Asesor">Asesor</MenuItem>
                                     <MenuItem value="Profesional">Profesional</MenuItem>
-                                    <MenuItem value="Tecnico">Tecnico</MenuItem>
+                                    <MenuItem value="Tecnico">Técnico</MenuItem>
                                     <MenuItem value="Asistencial">Asistencial</MenuItem>
                                     <MenuItem value="otro">Otro</MenuItem>
                                 </Select>
