@@ -219,9 +219,7 @@ export const FormParte1 = ({
             />
           </Grid>
           <Grid item xs={12} sm={6}
-            sx={{
-              mt: '1.8rem',
-            }}
+           
           >
             <TextField
               fullWidth
