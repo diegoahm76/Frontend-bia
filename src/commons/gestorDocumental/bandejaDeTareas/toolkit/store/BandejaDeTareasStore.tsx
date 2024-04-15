@@ -239,6 +239,14 @@ export const BandejaTareasSlice = createSlice({
 
       state.infoTarea = null;
     },
+    resetBandejaDeTareas: (state) => {
+     
+      state.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = null;
+     
+    },
+
+
+
   },
 });
 
@@ -247,7 +255,7 @@ export const {
   setActionsTareasOtros,
   setActionsTareasTramites,
   setActionsTareasOpas,
-
+  resetBandejaDeTareas,
   // ? lista de las tareas tras la busqueda
   setListaTareasPqrsdfTramitesUotrosUopas,
   // ? elemento actual de la tarea

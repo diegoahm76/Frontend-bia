@@ -153,7 +153,7 @@ export const Indicadores: React.FC = () => {
             const url = "recaudo/configuracion_baisca/indicadores/post/";
             const response = await api.post(url, formData)
             fetchHistorico()
-            
+
             control_success("Guardado exitosamente")
 
         } catch (error: any) {
@@ -272,7 +272,7 @@ export const Indicadores: React.FC = () => {
             },
         },
         {
-            field: 'variable_2', headerName: 'Variable 2',             flex: 1,
+            field: 'variable_2', headerName: 'Variable 2', flex: 1,
 
             renderCell: (params: any) => {
                 // Formatear el valor a pesos colombianos
@@ -330,14 +330,16 @@ export const Indicadores: React.FC = () => {
     const [value, setValue] = useState<number>(2023);
 
     const handleDecrement = () => {
+        setFormData(initialFormData);
         setKnobValue(knobValue - 1);
         setValue(value - 1);
+
     };
     const handleIncrement = () => {
         setFormData(initialFormData)
-
         setKnobValue(knobValue + 1);
         setValue(value + 1);
+
     };
 
 
@@ -396,6 +398,8 @@ export const Indicadores: React.FC = () => {
             }));
         }
     };
+
+
     // const updateFormData = () => {
 
 
@@ -470,7 +474,7 @@ export const Indicadores: React.FC = () => {
                 return meses;
         }
     };
-    
+
 
 
 
@@ -503,12 +507,12 @@ export const Indicadores: React.FC = () => {
     const indicadorvalor = Historico.length > 0 ? Historico[0].indicadorvalor_set : [];
     const id_indicador = Historico.length > 0 ? Historico[0].id_indicador : [];
 
-    
+
 
 
     useEffect(() => {
         updateget()
-    }, [nombre_indicador, proceso, frecuencia_medicion, formula_indicador, vigencia_reporta, dependencia_grupo_regional, objetivo_indicador, unidad_medicion_reporte, descripcion_variable_1, descripcion_variable_2, origen_datos, responsable_creacion, tipo_indicador]);
+    }, [nombre_indicador]);
 
 
 
@@ -529,7 +533,7 @@ export const Indicadores: React.FC = () => {
             origen_datos: origen_datos,
             responsable_creacion: responsable_creacion,
             tipo_indicador: tipo_indicador,
-            formulario: formularioo,
+            // formulario: formularioo,
             indicadorvalor_set: indicadorvalor
         }));
     };
@@ -803,18 +807,7 @@ export const Indicadores: React.FC = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={3}>
-                    <TextField
 
-                        label="Objetivo indicador"
-                        helperText='Objetivo indicador'
-                        size="small"
-                        fullWidth
-                        name="objetivo_indicador"
-                        value={formData.objetivo_indicador}
-                        onChange={handleInputChange}
-                    />
-                </Grid>
 
                 <Grid item xs={12} sm={3}>
                     <TextField
@@ -874,27 +867,60 @@ export const Indicadores: React.FC = () => {
                     />
                 </Grid>
 
+                <Grid item xs={12} sm={6}>
+                    <TextField
 
+                        label="Origen de datos"
+                        helperText='Origen de datos'
+                        size="small"
+                        fullWidth
+                        rows={3}
+                        multiline
+                        name="origen_datos"
+                        value={formData.origen_datos}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
 
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+
+                        label="Objetivo indicador"
+                        helperText='Objetivo indicador'
+                        size="small"
+                        fullWidth
+                        rows={3}
+                        multiline
+                        name="objetivo_indicador"
+                        value={formData.objetivo_indicador}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
                     <TextField
 
                         label="Descripción de variable 1"
                         helperText='Descripción de variable 1'
                         size="small"
                         fullWidth
+                        rows={3}
+                        multiline
                         name="descripcion_variable_1"
                         value={formData.descripcion_variable_1}
                         onChange={handleInputChange}
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
                     <TextField
                         label="Descripción variable 2"
                         helperText='Descripción variable 2'
                         size="small"
                         fullWidth
+                        rows={3}
+                        multiline
+
                         name="descripcion_variable_2"
                         value={formData.descripcion_variable_2}
                         onChange={handleInputChange}
@@ -902,16 +928,21 @@ export const Indicadores: React.FC = () => {
                 </Grid>
 
 
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12}>
                     <TextField
-
-                        label="Origen de datos"
-                        helperText='Origen de datos'
+                        variant="outlined"
                         size="small"
-                        fullWidth
-                        name="origen_datos"
-                        value={formData.origen_datos}
-                        onChange={handleInputChange}
+                        required 
+                        label="Interpretación"
+                        rows={3}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        multiline
+                        fullWidth 
+                        name="descripcion"
+                    //   value={formData.descripcion}
+                    //   onChange={handleInputChange}
                     />
                 </Grid>
 
@@ -1006,11 +1037,11 @@ export const Indicadores: React.FC = () => {
                     </Button>
 
                 </Grid>
-                
 
 
 
-                {indicadorvalor && (
+
+                {/* {indicadorvalor && (
                     <>
                        <Grid item >
                     <Button
@@ -1027,12 +1058,12 @@ export const Indicadores: React.FC = () => {
                 </Grid>
 
                     </>
-                )}
-                
+                )} */}
+
             </Grid>
 
 
-            <Grid container
+            {/* <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
                     position: 'relative',
@@ -1200,7 +1231,7 @@ export const Indicadores: React.FC = () => {
                     </Box>
                 </Grid>
 
-            </Grid>
+            </Grid> */}
             <RenderDataGrid
                 title={`Cálculo de metas ${textoSeleccionado}`}
                 columns={columns ?? []}
@@ -1230,6 +1261,8 @@ export const Indicadores: React.FC = () => {
                 >
                     <ReactApexChart options={options} series={series} type="line" height={350} />
                 </Grid>
+
+
 
 
             </Grid>
