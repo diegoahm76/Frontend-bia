@@ -34,7 +34,7 @@ const DespachoActivos = () => {
       }}
       >
         <Grid item xs={12}>
-          <Title title='Despacho de solicitudes de activos'></Title>
+          <Title title={despacho_sin_solicitud ? 'Despachos activos sin solicitud' : 'Despachos activos con solicitud'} />
           <Box
             component={'form'}
             sx={{ mt: '20px' }}

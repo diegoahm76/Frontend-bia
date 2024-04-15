@@ -59,7 +59,7 @@ const TablaArticulosAgregados: React.FC<props> = ({
 
   let columns: custom_column[] = [
     {field: 'codigo_bien', headerName:'Código bien', maxWidth:150, flex:1},
-    {field: 'nombre_bien', headerName:'Nombre del articulo', minWidth:250, flex:1},
+    {field: accion === 'ver' ? 'nombre_bien' : 'nombre', headerName:'Nombre del articulo', minWidth:250, flex:1},
     {field: 'nombre_unidad_medida', headerName:'Unidad medida', maxWidth:150, flex:1},
     {field: 'cantidad', headerName:'Cantidad', maxWidth:150, flex:1},
     {field: 'fecha_devolucion', headerName:'Fecha devolucion', maxWidth:150, flex:1,

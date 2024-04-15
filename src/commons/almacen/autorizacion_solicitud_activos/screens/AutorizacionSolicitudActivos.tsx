@@ -113,7 +113,7 @@ const AutorizacionSolicitudActivos = () => {
             return {
               id_item_solicitud_activo: despacho.id_item_despacho_activo,
               id_bien: despacho.id_bien_despachado,
-              nombre_bien: despacho.despachonombre_bien_despachado,
+              nombre_bien: despacho.nombre_bien_despachado,
               cantidad: despacho.cantidad_despachada,
               id_unidad_medida: despacho.id_uni_medida_solicitada,
               abreviatura_unidad_medida: despacho.abreviatura_uni_medida_solicitada,
@@ -155,8 +155,9 @@ const AutorizacionSolicitudActivos = () => {
       set_position_tab('1');
       set_data_form_resumen_solicitud({} as interface_estado_autorizacion_solicitud_activos);
       set_data_solicitud_ver_por_id({} as interface_solicitud_por_id);
+      set_inputs_resumen_despacho({} as interface_inputs_resumen_despacho);
+      set_data_articulos_despachados([]);
     }
-
   }
 
 

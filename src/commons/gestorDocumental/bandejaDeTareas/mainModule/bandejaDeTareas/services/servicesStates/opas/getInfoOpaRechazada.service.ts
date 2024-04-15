@@ -7,8 +7,8 @@ export const getInfoTareaRechazadaOpas = async (
   handleOpenModalNuevoNumero2: any,
 ): Promise<any> => {
   try {
-    showAlert('XXX', 'Sin servicio disponible aún', 'info');
-    return;
+   /* showAlert('XXX', 'Sin servicio disponible aún', 'info');
+    return;*/
     const url = `gestor/bandeja-tareas/opas/justificacion-rechazo/${id_tarea_asignada}`;
     const {data} = await api.get(url);
     console.log('response', data?.data);
