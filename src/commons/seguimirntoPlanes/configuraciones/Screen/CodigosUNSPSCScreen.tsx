@@ -15,7 +15,8 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { eliminar_codigo_unspsc, get_codigo_unspsc } from '../Request/request';
+import SearchIcon from '@mui/icons-material/Search';
+import { eliminar_codigo_unspsc, get_codigo_unspsc, get_codigo_unspsc_pag } from '../Request/request';
 import type { ICodigoUnspsc } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
 import { control_error, control_success } from '../../../../helpers';
@@ -121,7 +122,10 @@ export const CodigosUNSPSCScreen: React.FC = () => {
   const [codigo, set_codigo] = useState<ICodigoUnspsc>();
   const [is_crear, set_is_crear] = useState<boolean>(false);
   const [is_editar, set_is_editar] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const [codeSearch, setCodeSearch] = useState('');
+  const [nameSearch, setNameSearch] = useState('');
 
   const handle_open_crear = (): void => {
     set_is_crear(true);
@@ -132,9 +136,10 @@ export const CodigosUNSPSCScreen: React.FC = () => {
 
   const get_traer = async () => {
     try {
-      setSearchTerm('');
-      const response = await get_codigo_unspsc();
-      const datos = response.map((datos: ICodigoUnspsc) => ({
+      if(nameSearch || codeSearch) setPage(1);
+      const response = await get_codigo_unspsc_pag(page, nameSearch, codeSearch);
+      setCount(response.count);
+      const datos = response.results.map((datos: ICodigoUnspsc) => ({
         id_codigo: datos.id_codigo,
         codigo_unsp: datos.codigo_unsp,
         nombre_producto_unsp: datos.nombre_producto_unsp,
@@ -142,7 +147,8 @@ export const CodigosUNSPSCScreen: React.FC = () => {
         registro_precargado: datos.registro_precargado,
         item_ya_usado: datos.item_ya_usado,
       }));
-      set_rows(filterRows(datos, ''));
+      set_rows([...datos]);
+      console.log(page)
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'
@@ -191,7 +197,7 @@ export const CodigosUNSPSCScreen: React.FC = () => {
 
   useEffect(() => {
     void get_traer();
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -244,17 +250,42 @@ export const CodigosUNSPSCScreen: React.FC = () => {
                 label="Buscar código UNSPSC"
                 size="small"
                 variant="outlined"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={codeSearch}
+                onChange={(e) => setCodeSearch(e.target.value)}
                 style={{ marginBottom: '20px' }}
               />
+              <TextField
+                label="Buscar nombre UNSPSC"
+                size="small"
+                variant="outlined"
+                sx={{marginLeft: '20px'}}
+                value={nameSearch}
+                onChange={(e) => setNameSearch(e.target.value)}
+                style={{ marginBottom: '20px' }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{marginLeft: '20px'}}
+                startIcon={<SearchIcon />}
+                onClick={() => {
+                  get_traer();
+                }}
+              >
+                Buscar
+              </Button>
               <DataGrid
                 autoHeight
-                rows={filterRows(rows, searchTerm)}
+                rows={rows}
                 columns={columns}
                 getRowId={(row) => row.id_codigo}
+                rowCount={count}
                 pageSize={10}
+                paginationMode="server"
                 rowsPerPageOptions={[10]}
+                onPageChange={async (newPage: number) => {
+                  setPage(newPage + 1);
+                }}
               />
             </>
           )}

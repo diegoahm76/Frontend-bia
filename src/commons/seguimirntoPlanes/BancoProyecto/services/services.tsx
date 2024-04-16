@@ -15,6 +15,15 @@ export const get_banco = async (): Promise<IBanco[]> => {
   return response.data.data;
 };
 
+export const get_banco_by_meta_id = async (
+  id_meta: number
+): Promise<IBanco[]> => {
+  const response = await api.get(
+    `seguimiento-planes/consultar-banco-proyectos/${id_meta}/`
+  );
+  return response.data.data;
+};
+
 export const get_proyectos = async (): Promise<IProyectos[]> => {
   const response = await api.get(`seguimiento/planes/consultar-proyectos/`);
   return response.data.data;
