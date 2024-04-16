@@ -125,7 +125,7 @@ export interface PropsUpdateJ {
 }
 
 export interface Direccion {
-  via_principal: string;
+  Cordenada:string;
   numero_o_nombre_via: string;
   letras_via_principal: string;
   prefijo_bis: string;
@@ -133,14 +133,19 @@ export interface Direccion {
   cuadrante: string;
   via_secundaria: string;
   numero_o_nombre_via_secundaria: string;
+  numero_referencia:string;
   letras_via_secundaria: string;
   sufijo_bis: string;
   letra_sufijo: string;
   cuadrante_secundaria: string;
+  Informacion_Adicional:string;
+  coordenada_x:string;
+  coordenada_y: string;
   barrio: string;
   nombre: string;
   ubicacion: string;
   direccion_estandarizada: string;
+  via_principal: string;
 }
 
 export interface Persona {
@@ -159,7 +164,7 @@ export interface Persona {
 }
 
 export type keys_direccion =
-  | 'via_principal'
+  | 'numero_referencia'
   | 'numero_o_nombre_via'
   | 'letras_via_principal'
   | 'prefijo_bis'
@@ -174,7 +179,9 @@ export type keys_direccion =
   | 'barrio'
   | 'nombre'
   | 'direccion_estandarizada'
-  | 'ubicacion';
+  | 'ubicacion'
+  | 'Informacion_Adicional'
+  | 'via_principal';
 
 export interface InfoPersona {
   id: number;

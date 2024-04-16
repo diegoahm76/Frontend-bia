@@ -6,22 +6,29 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { GenerarLiquidacion } from '../components/GenerarLiquidacion/GenerarLiquidacion';
 import { Title } from '../../../../components/Title';
 import { api } from '../../../../api/axios';
+import { BotonesFinales } from '../components/BotonesFinales/BotonesFinales';
 
 export interface Deudor {
-  id: number;
-  identificacion: string;
-  nombres: string;
-  apellidos: string;
+  id_pago: string;
+  id_liquidacion: {
+    id: number;
+    fecha_liquidacion: string;
+    vencimiento: string;
+    periodo_liquidacion: string;
+    ciclo_liquidacion: string;
+    valor: string;
+    estado: string;
+    id_deudor: number;
+    id_expediente: number;
+  };
+  desc_estado_pago: string;
+  fecha_inicio_pago: string;
+  fecha_pago: string;
+  estado_pago: number;
+  notificacion: boolean;
+  id_persona_pago: number;
 }
 
-export interface FormLiquidacion {
-  id_deudor: string;
-  id_expediente: string;
-  ciclo_liquidacion: string;
-  periodo_liquidacion: string;
-  valor?: number;
-  estado?: string;
-}
 
 
 export const ProcesoLiquidacionScreen: React.FC = () => {
@@ -32,64 +39,100 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
 
 
-
   const columns_deudores: GridColDef[] = [
     {
-      field: 'identificacion',
-      headerName: 'Identificación',
+      field: 'id_pago',
+      headerName: 'ID Pago',
       minWidth: 150,
-      flex: 0.3,
-    },
-    {
-      field: 'nombres',
-      headerName: 'Nombres',
-      minWidth: 110,
-      flex: 0.1,
-    },
-    {
-      field: 'apellidos',
-      headerName: 'Apellidos',
-      minWidth: 110,
-      flex: 0.1,
-    },
-    {
-      field: 'deudor',
-      headerName: 'Deudor',
-      minWidth: 160,
       flex: 1,
-      valueGetter: (params) => {
-        return `${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`;
-      }
     },
     {
-      field: 'Estado',
+      field: 'id_liquidacion.fecha_liquidacion',
+      headerName: 'Fecha Liquidación',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'id_liquidacion.vencimiento',
+      headerName: 'Vencimiento',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'id_liquidacion.periodo_liquidacion',
+      headerName: 'Periodo Liquidación',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'id_liquidacion.ciclo_liquidacion',
+      headerName: 'Ciclo Liquidación',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'id_liquidacion.valor',
+      headerName: 'Valor',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'id_liquidacion.estado',
       headerName: 'Estado',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin tipo estaddo';
-      }
+      minWidth: 150,
+      flex: 1,
     },
     {
-      field: 'Periodo',
-      headerName: 'Periodo',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Periodo  ';
-      }
+      field: 'id_liquidacion.id_deudor',
+      headerName: 'ID Deudor',
+      minWidth: 150,
+      flex: 1,
     },
     {
-      field: 'Tipo de cobro',
-      headerName: 'Tipo de cobro',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Tipo de cobro  ';
-      }
+      field: 'id_liquidacion.id_expediente',
+      headerName: 'ID Expediente',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'desc_estado_pago',
+      headerName: 'Descripción Estado Pago',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'fecha_inicio_pago',
+      headerName: 'Fecha Inicio Pago',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'fecha_pago',
+      headerName: 'Fecha Pago',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'estado_pago',
+      headerName: 'Estado Pago',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'notificacion',
+      headerName: 'Notificación',
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'id_persona_pago',
+      headerName: 'ID Persona Pago',
+      minWidth: 150,
+      flex: 1,
     },
   ];
-
+  
+  
 
 
 
@@ -103,7 +146,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
 
   useEffect(() => {
-    api.get('recaudo/liquidaciones/deudores')
+    api.get('recaudo/pagos/consultar/')
       .then((response) => {
         set_deudores(response.data.data);
       })
@@ -131,49 +174,43 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
         <Grid item xs={12}>
           <Title title="Proceso de Liquidación personal"></Title>
-          <Box
-            component='form'
-            sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
-          >
-            <TabContext value={position_tab}>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <TabList onChange={handle_position_tab_change}>
-                  <Tab label="Deudores" value="1" />
-                  <Tab label="Generar Liquidación" value="2" />
-                </TabList>
-              </Box>
-              <TabPanel value="1" sx={{ p: '20px 0' }}>
-                <DataGrid
-                  density='compact'
-                  autoHeight
-                  rows={deudores}
-                  columns={columns_deudores}
-                  pageSize={100}
-                  rowsPerPageOptions={[100]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) => row.id}
-                  components={{ Toolbar: GridToolbar }}
-                  loading={loading}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {
-                        nombres: false,
-                        apellidos: false,
-                      }
-                    }
-                  }}
-                />
 
-              </TabPanel>
-              <TabPanel value="2" sx={{ p: '20px 0' }}>
-                <GenerarLiquidacion />
-              </TabPanel>
-            </TabContext>
-          </Box>
+            <Box
+              component='form'
+              sx={{ mt: '20px' }}
+              noValidate
+              autoComplete="off"
+            >
+              <TabContext value={position_tab}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList onChange={handle_position_tab_change}>
+                    <Tab label="Deudores" value="1" sx={{ flexGrow: 1 }} />
+                    <Tab label="Generar Liquidación" value="2" sx={{ flexGrow: 1 }} />
+                  </TabList>
+                </Box>
+                <TabPanel value="1" sx={{ p: '20px 0' }}>
+                  <DataGrid
+                    density='compact'
+                    autoHeight
+                    rows={deudores}
+                    columns={columns_deudores}
+                    pageSize={100}
+                    rowsPerPageOptions={[100]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => row.id_pago}
+                    loading={loading}
+                  
+                  />
+
+                </TabPanel>
+                <TabPanel value="2" sx={{ p: '20px 0' }}>
+                  <GenerarLiquidacion />
+                </TabPanel>
+              </TabContext>
+            </Box>
         </Grid>
       </Grid>
+      <BotonesFinales />
     </>
   );
 };

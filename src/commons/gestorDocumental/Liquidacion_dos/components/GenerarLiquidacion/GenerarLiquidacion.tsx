@@ -1,27 +1,33 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { useContext, useState } from "react";
-import { PreciosContext } from "../../context/PersonalContext";
+import { Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import { DetalleLiquidacion } from "../DetalleLiquidacion/DetalleLiquidacion";
+import { api } from "../../../../../api/axios";
+import { Persona } from "../../../WorkFlowPQRSDF/interface/IwordFlow";
+import { BuscadorPerzonasStiven } from "../../../WorkFlowPQRSDF/components/BuscadorPersonaPersonalizado/BuscadorPerzonas";
+import { useSelector } from "react-redux";
+import type { AuthSlice } from '../../../../auth/interfaces/authModels';
+import { Title } from "../../../../../components/Title";
+import { PreciosContext } from "../../context/PersonalContext";
 
 export const GenerarLiquidacion = () => {
 
 
-  const [form, setForm] = useState({
-    id_expediente: '', // Ejemplo de propiedad que se actualizará desde un componente
-    deudor: '', // Ejemplo de propiedad que se actualizará desde un componente
-    cedula: '', // Ejemplo de propiedad que se actualizará desde un componente
-    fecha_liquidacion: '', // Ejemplo de propiedad para la fecha de liquidación
-    telefono: '', // Ejemplo de propiedad para el teléfono
-    ciclo_liquidacion: '', // Ejemplo de propiedad para el ciclo de liquidación
-    periodo_liquidacion: '', // Ejemplo de propiedad para el periodo de liquidación
-    direccion: '', // Ejemplo de propiedad para la dirección
-    representante_legal: '', // Ejemplo de propiedad para el representante legal
-    predio: '', // Ejemplo de propiedad para el predio
-    caudalConcesionado: '', // Ejemplo de propiedad para el caudal concesionado
-    // Agrega más propiedades según sea necesario para los demás componentes
-  });
+  const {
+    userinfo: { id_persona, email, telefono_celular, numero_documento }
+  } = useSelector((state: AuthSlice) => state.auth);
+
+  console.log(id_persona);
+
+  const {form,setForm } = useContext(PreciosContext);
+
+  
+  // const [form, setForm] = useState({
+  //   id_expediente: '', // Ejemplo de propiedad que se actualizará desde un componente
+  //   Email: '', // Ejemplo de propiedad que se actualizará desde un componente
+  //   telefono_cliente: '', // Ejemplo de propiedad para el ciclo de liquidación
+  // });
 
 
   const handleSelectChange = (event: any) => {
@@ -33,63 +39,190 @@ export const GenerarLiquidacion = () => {
     setForm({ ...form, [event.target.name || '']: event.target.value });
   };
 
+  const [data_choise, setDataChoise] = useState<any[]>([]);
 
 
 
 
+  const fetch_datos_choises = async (): Promise<void> => {
+    try {
+      const url = '/recaudo/choices/pagos-tipo-id/';
+      const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
+      const data_consulta = res.data.data;
+      setDataChoise(data_consulta);
+      // control_success('Datos actualizados correctamente');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
- 
+  const [persona, set_persona] = useState<Persona | undefined>();
+
+  const {
+
+    primer_nombre,
+    segundo_nombre,
+    primer_apellido,
+    segundo_apellido,
+  } = persona ?? {};
+  const nombres_concatenados = `${primer_nombre ?? ''} ${segundo_nombre ?? ''}`;
+  const apellidos_concatenados = `${primer_apellido ?? ''} ${segundo_apellido ?? ''}`;
+
+
+
+  useEffect(() => {
+    fetch_datos_choises();
+  }, [])
+
+  const handleResult = async (persona?: Persona): Promise<void> => {
+    if (persona) {
+      // Haz lo que necesites con la información de la persona
+      set_persona(persona);
+
+    } else {
+      // Manejar el caso en el que la persona es undefined
+      console.log("No se seleccionó ninguna persona.");
+    }
+  };
+
 
   return (
     <>
       {/* Maquetación de los componentes */}
       <Grid container spacing={2}>
+
+
+        <Grid container justifyContent="center">
+          <Grid item xs={10} >
+            <Grid container alignItems="center" justifyContent="center">
+              <Title title="Solicitante" />
+            </Grid>
+          </Grid>
+        </Grid>
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label='Email'
+            name="Email"
+            value={email || ""}
+            size="small"
+            fullWidth
+            disabled
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label='Telefono Celular'
+            name="telefono_celular"
+            value={telefono_celular || ""}
+            size="small"
+            fullWidth
+            disabled
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label='Numero Documento'
+            name="numero_documento"
+            value={numero_documento || ""}
+            size="small"
+            fullWidth
+            disabled
+          />
+        </Grid>
+
+
+        <Grid container justifyContent="center">
+          <Grid item xs={10} >
+            <Grid container alignItems="center" justifyContent="center">
+              <Title title="Beneficiario" />
+            </Grid>
+          </Grid>
+        </Grid>
+
+
+        <Grid container justifyContent="center" style={{ marginTop: 15 }}>
+
+
+          {nombres_concatenados && (
+            <>
+              <Grid item xs={12} sm={5}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  label="Nombre Titular"
+                  value={nombres_concatenados}
+                  disabled
+                  style={{ width: '95%' }}
+                />
+              </Grid>
+
+
+              <Grid item xs={12} sm={5}>
+                <TextField
+                  label='Apeliido Cliente'
+                  name="apellido_cliente"
+                  value={apellidos_concatenados}
+                  size="small"
+                  style={{ width: '95%' }}
+                  disabled
+                  fullWidth
+                />
+              </Grid>
+            </>
+          )}
+
+          <Grid item xs={1} >
+
+            <BuscadorPerzonasStiven onResultt={handleResult} />
+          </Grid>
+
+        </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl size="small" fullWidth>
-            <InputLabel>Expediente</InputLabel>
+            <InputLabel>Tipo Pago</InputLabel>
             <Select
               label='Expediente'
               name="id_expediente"
               value={form.id_expediente}
               onChange={handleSelectChange}
             >
-              <MenuItem value="">Seleccionar expediente</MenuItem>
+              {data_choise.map((option, index) => (
+                <MenuItem key={option[0]} value={option[0]}>
+                  {option[1]}
+                </MenuItem>
+              ))}
             </Select>
             <FormHelperText>Seleccione el expediente</FormHelperText>
           </FormControl>
         </Grid>
 
+
+
+
+
+
         <Grid item xs={12} sm={4}>
           <TextField
-            label='Deudor'
-            name="deudor"
-            value={form.deudor}
+            label='Email'
+            name="Email"
+            value={form.Email}
             size="small"
             fullWidth
             onChange={handleTextFieldChange}
           />
         </Grid>
 
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label='Cedula'
-            name="cedula"
-            value={form.cedula}
-            size="small"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            onChange={handleTextFieldChange}
-          />
-        </Grid>
 
 
         <Grid item xs={12} sm={4}>
           <TextField
-            label='Teléfono'
-            name="telefono"
-            value={form.telefono}
+            label='Telefono Cliente'
+            name="telefono_cliente"
+            value={form.telefono_cliente}
             size="small"
             InputLabelProps={{
               shrink: true,
@@ -100,105 +233,16 @@ export const GenerarLiquidacion = () => {
         </Grid>
 
 
-        <Grid item xs={12} sm={4}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>Ciclo</InputLabel>
-            <Select
-              label='Ciclo'
-              name="ciclo_liquidacion"
-              value={form.ciclo_liquidacion}
-              onChange={handleSelectChange}
-            >
-            </Select>
-            <FormHelperText>Seleccione el ciclo</FormHelperText>
-          </FormControl>
-        </Grid>
-
-
-        <Grid item xs={12} sm={4}>
-          <FormControl size="small" fullWidth>
-            <InputLabel>Periodo</InputLabel>
-            <Select
-              label='Periodo'
-              name="periodo_liquidacion"
-              value={form.periodo_liquidacion}
-              onChange={handleSelectChange}
-            >
-            </Select>
-            <FormHelperText>Seleccione el periodo</FormHelperText>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label='Dirección'
-            name="direccion"
-            value={form.direccion}
-            size="small"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            onChange={handleTextFieldChange}
-          />
-        </Grid>
-
-
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label='Representante legal'
-            name="representante_legal"
-            value={form.representante_legal}
-            size="small"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            onChange={handleTextFieldChange}
-          />
-        </Grid>
-
-
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label='Predio'
-            name="predio"
-            value={form.predio}
-            size="small"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            fullWidth
-            onChange={handleTextFieldChange}
-          />
-        </Grid>
-
-
-        <Grid item xs={12} sm={4}>
-          <TextField
-            label='Caudal Concesionado'
-            name="caudalConcesionado"
-            value={form.caudalConcesionado}
-            size="small"
-            fullWidth
-            onChange={handleTextFieldChange}
-          />
-        </Grid>
-
-      </Grid>
-
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <Button variant="contained" color="primary" >
-            Actualizar
-          </Button>
-        </Grid>
-
-      </Grid>
 
 
 
-<DetalleLiquidacion/>
+        {/* </Grid> */}
+
+
+      </Grid >
+
+
+      <DetalleLiquidacion />
     </>
   );
 };
