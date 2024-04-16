@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
 import { Dayjs } from 'dayjs';
-import { interface_busqueda_persona_responsable, interface_busqueda_persona_solicita, interface_solicitud_por_id, interface_solicitudes_realizadas } from '../interfeces/types';
+import { interface_busqueda_persona_responsable, interface_busqueda_persona_solicita, interface_despachos_sin_solicitud, interface_solicitud_por_id, interface_solicitudes_realizadas, response_despachos_sin_solicitud } from '../interfeces/types';
 import { useAppDispatch } from '../../../../hooks';
 import { response_obtener_solicitudes_realizadas } from '../../autorizacion_solicitud_activos/interfaces/types';
 import { control_error } from '../../../../helpers';
@@ -39,7 +39,7 @@ const SolicitudesEnProceso: React.FC<props> = ({
 
   //------------------------------------------------------------------------------------//
   //FALTA IMPLEMENTAR LA DATA DE DESPACHOS SIN SOLICITUD, POR AHORA SE DEJA VACIO
-  const [data_despachos_sin_solicitud, set_data_despachos_sin_solicitud] = useState<interface_solicitudes_realizadas[]>([]);
+  const [data_despachos_sin_solicitud, set_data_despachos_sin_solicitud] = useState<interface_despachos_sin_solicitud[]>([]);
   //------------------------------------------------------------------------------------//
 
 
@@ -61,6 +61,9 @@ const SolicitudesEnProceso: React.FC<props> = ({
   const [tipos_estados_solicitud_sin_solicitud, set_tipos_estados_solicitud_sin_solicitud] = useState<any[]>([]);
 
 
+  /**
+   * Se obtienen los despachos con solicitud
+   */
   const get_obtener_solicitudes_activos_fc = () => {
     set_loadding_tabla_solicitudes(true);
     dispatch(get_obtener_despachos_con_solicitud(
@@ -80,6 +83,9 @@ const SolicitudesEnProceso: React.FC<props> = ({
     })
   }
 
+  /**
+   * Se obtienen los despachos sin solicitud
+   */
   const get_obtener_despachos_sin_solictud_fc = () => {
     set_loadding_tabla_solicitudes(true);
     dispatch(get_obtener_despachos_sin_solicitud(
@@ -87,18 +93,21 @@ const SolicitudesEnProceso: React.FC<props> = ({
       fecha_inicio ? fecha_inicio.format('YYYY-MM-DD') : '',
       fecha_fin ? fecha_fin.format('YYYY-MM-DD') : '',
       data_persona_responsable.id_persona ?? ''
-    )).then((response: response_obtener_solicitudes_realizadas) => {
+    )).then((response: response_despachos_sin_solicitud) => {
       if (Object.keys(response).length !== 0) {
         set_loadding_tabla_solicitudes(false);
-        set_data_despachos_con_solicitud(response.data);
+        set_data_despachos_sin_solicitud(response.data);
       } else {
         set_loadding_tabla_solicitudes(false);
         control_error('No se encontraron solicitudes de activos');
-        set_data_despachos_con_solicitud([]);
+        set_data_despachos_sin_solicitud([]);
       }
     })
   }
 
+  /**
+   * Se obtienen los tipos de estados de solicitud
+   */
   const get_obtener_tipos_estados_fc = () => {
     dispatch(get_obtener_tipos_estados())
       .then((response: any) => {
@@ -116,6 +125,9 @@ const SolicitudesEnProceso: React.FC<props> = ({
       );
   }
 
+  /**
+   * Se obtienen los tipos de estados de solicitud sin solicitud
+   */
   const get_obtener_tipos_estados_despachos_sin_solicitud_fc = () => {
     dispatch(get_obtener_tipos_estados_despachos_sin_solicitud())
       .then((response: any) => {
@@ -133,22 +145,33 @@ const SolicitudesEnProceso: React.FC<props> = ({
       );
   }
 
-  const servicios_obtenidos = useRef(false);
+  /**
+   * Se obtienen los despachos con solicitud
+   */
+  const despachos_con_solicitud_obtenidos = useRef(false);
   useEffect(() => {
-    if (!servicios_obtenidos.current) {
-      if (despacho_sin_solicitud) {
-        get_obtener_despachos_sin_solictud_fc();
-        get_obtener_tipos_estados_despachos_sin_solicitud_fc();
-        servicios_obtenidos.current = false;
-      } else {
-        get_obtener_solicitudes_activos_fc();
-        get_obtener_tipos_estados_fc();
-        servicios_obtenidos.current = false;
-      }
-      servicios_obtenidos.current = true;
+    if (!despachos_con_solicitud_obtenidos.current && !despacho_sin_solicitud) {
+      get_obtener_solicitudes_activos_fc();
+      get_obtener_tipos_estados_fc();
+      despachos_con_solicitud_obtenidos.current = true;
     }
   }, [despacho_sin_solicitud]);
 
+  /**
+   * Se obtienen los despachos sin solicitud
+   */
+  const despachos_sin_solicitud_obtenidos = useRef(false);
+  useEffect(() => {
+    if (!despachos_sin_solicitud_obtenidos.current && despacho_sin_solicitud) {
+      get_obtener_despachos_sin_solictud_fc();
+      get_obtener_tipos_estados_despachos_sin_solicitud_fc();
+      despachos_sin_solicitud_obtenidos.current = true;
+    }
+  }, [despacho_sin_solicitud]);
+
+  /**
+   * Limpiar los filtros de busqueda
+   */
   const limpiar_filtros = () => {
     set_estado('');
     set_fecha_inicio(null);
@@ -156,6 +179,9 @@ const SolicitudesEnProceso: React.FC<props> = ({
     set_data_persona_solicita({} as interface_busqueda_persona_solicita);
   }
 
+  /**
+   * Consultar las solicitudes de activos
+   */
   const consultar_solicitudes = () => {
     if (despacho_sin_solicitud) {
       get_obtener_despachos_sin_solictud_fc();

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField, Box, Button, Stack, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent, FormHelperText, Fab, Tooltip, IconButton, Avatar } from "@mui/material";
 import { Title } from "../../../../components/Title";
 import { useEffect, useState } from "react";
@@ -13,7 +14,11 @@ import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SaveIcon from '@mui/icons-material/Save';
-import { actualizar_documento , obtener_documento_id, obtener_tipo_archivo, obtener_tipologias_id_serie, obtener_tipos_archivos_permitidos, obtener_tipos_recurso } from "../../Expedientes/indexacionExpedientes/thunks/indexacionExpedientes";
+import { actualizar_documento, obtener_documento_id, obtener_tipo_archivo, obtener_tipologias_id_serie, obtener_tipos_archivos_permitidos, obtener_tipos_recurso } from "../../Expedientes/indexacionExpedientes/thunks/indexacionExpedientes";
+import { api } from "../../../../api/axios";
+import { useNavigate } from "react-router-dom";
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface IProps {
     expediente: any,
@@ -22,7 +27,9 @@ interface IProps {
     configuracion: any,
     set_id_documento_seleccionado: any,
     limpiar: boolean,
-    serie: any
+    serie: any,
+    limpiar_formulario: any,
+    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas:any,
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -55,6 +62,7 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
 
     // Listas
     const [lt_tipologias, set_lt_tipologias] = useState<any[]>([]);
+    
     const [lt_tipo_archivo, set_lt_tipo_archivo] = useState<any[]>([]);
     const [lt_tipo_recurso, set_lt_tipo_recurso] = useState<any[]>([]);
     const lt_si_no = [{ id: 'S', nombre: 'Si' }, { id: 'N', nombre: 'No' }]
@@ -224,10 +232,10 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
         obtener_tipo_documento_fc();
         obtener_tipos_recurso_fc();
     }, []);
-    
-    useEffect(() => {        
+
+    useEffect(() => {
         console.log(props.configuracion?.expediente);
-        if(props.configuracion !== null)
+        if (props.configuracion !== null)
             props.configuracion?.expediente.length > 0 ? set_anulado(props.configuracion?.expediente[0]?.anulado) : set_anulado(false);
     }, [props.configuracion]);
 
@@ -235,7 +243,9 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
         if (props.serie !== "")
             obtener_tipologias_id_serie_fc();
     }, [props.serie]);
-
+    useEffect(() => {
+             obtener_tipologias_id_serie_fc();
+    }, [props.serie]);
     useEffect(() => {
         if (palabras_clave !== "")
             set_lt_palabras_clave(palabras_clave.split(',', 5));
@@ -248,6 +258,11 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
             set_lt_tipologias(response.data);
         })
     }
+
+    useEffect(() => {
+        obtener_tipologias_id_serie_fc();
+      }, [props.serie.id_catserie_unidadorg]); 
+
     const obtener_tipo_documento_fc: () => void = () => {
         dispatch(obtener_tipo_archivo()).then((response: any) => {
             set_lt_tipo_archivo(response);
@@ -258,16 +273,19 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
             set_lt_tipo_recurso(response);
         })
     }
+    const [codTipoMedioDoc, setCodTipoMedioDoc] = useState("");
 
     const cambio_tipologia_doc: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipologia_doc(e.target.value);
         set_error_tipologia_doc(!(e.target.value !== null && e.target.value !== ""));
-        if((e.target.value !== null && e.target.value !== "")){
-            const tipo = lt_tipologias.find((t: any)=> t.id_tipologia_documental === e.target.value);
+        if ((e.target.value !== null && e.target.value !== "")) {
+            const tipo = lt_tipologias.find((t: any) => t.id_tipologia_documental === e.target.value);
+            setCodTipoMedioDoc(tipo ? tipo.cod_tipo_medio_doc : "");
+
             dispatch(obtener_tipos_archivos_permitidos(tipo.cod_tipo_medio_doc)).then((response: any) => {
                 let tipos = '';
                 response.data.forEach((tipo_archivo: any) => {
-                    tipos =tipos+"."+tipo_archivo.nombre+',';
+                    tipos = tipos + "." + tipo_archivo.nombre + ',';
                 });
                 set_tipo_doc(tipos.slice(0, -1));
             })
@@ -339,30 +357,30 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
             set_file_name(selected_file.name);
         }
     };
-  let archivos_grid: any[] = [...archivos];
-            let orden = archivos_grid.length + 1;
-            const data_json = {
-                "fecha_incorporacion_doc_a_Exp": fecha_incorporacion_exp.format('YYYY-MM-DD'),
-                "fecha_creacion_doc": fecha_creacion_doc.format('YYYY-MM-DD'),
-                "id_tipologia_documental": parseInt(tipologia_doc),
-                "nro_folios_del_doc": parseInt(nro_folio),
-                "cod_origen_archivo": tipo_archivo,
-                "codigo_radicado_prefijo": tiene_consecutivo === 'S' ? prefijo : null,
-                "codigo_radicado_agno": tiene_consecutivo === 'S' ? año_doc.format('YYYY') : null,
-                "codigo_radicado_consecutivo": tiene_consecutivo === 'S' ? consecutivo : null,
-                "cod_categoria_archivo": tipo_recurso,
-                "tiene_replica_fisica": (tiene_replica === 'S'),
-                "nombre_asignado_documento": nombre_documento,
-                "asunto": asunto,
-                "descripcion": descripcion,
-                "orden_en_expediente": orden,
-                "palabras_clave_documento": palabras_clave
-            }
+    let archivos_grid: any[] = [...archivos];
+    let orden = archivos_grid.length + 1;
+    const data_json = {
+        "fecha_incorporacion_doc_a_Exp": fecha_incorporacion_exp.format('YYYY-MM-DD'),
+        "fecha_creacion_doc": fecha_creacion_doc.format('YYYY-MM-DD'),
+        "id_tipologia_documental": parseInt(tipologia_doc),
+        "nro_folios_del_doc": parseInt(nro_folio),
+        "cod_origen_archivo": tipo_archivo,
+        "codigo_radicado_prefijo": tiene_consecutivo === 'S' ? prefijo : null,
+        "codigo_radicado_agno": tiene_consecutivo === 'S' ? año_doc.format('YYYY') : null,
+        "codigo_radicado_consecutivo": tiene_consecutivo === 'S' ? consecutivo : null,
+        "cod_categoria_archivo": tipo_recurso,
+        "tiene_replica_fisica": (tiene_replica === 'S'),
+        "nombre_asignado_documento": nombre_documento,
+        "asunto": asunto,
+        "descripcion": descripcion,
+        "orden_en_expediente": orden,
+        "palabras_clave_documento": palabras_clave
+    }
     const agregar_archivos: any = () => {
         if (validar_formulario()) {
-          
+
             const tipologia = lt_tipologias.find((t: any) => t.id_tipologia_documental === parseInt(tipologia_doc)).nombre;
-            archivos_grid = [...archivos_grid, { orden_en_expediente: orden,nombre_asignado_documento:nombre_documento, archivo: archivo_principal, tipologia: tipologia, data_json: data_json, estado: anulado ? 'Anulado' : 'Activo' }];
+            archivos_grid = [...archivos_grid, { orden_en_expediente: orden, nombre_asignado_documento: nombre_documento, archivo: archivo_principal, tipologia: tipologia, data_json: data_json, estado: anulado ? 'Anulado' : 'Activo' }];
             set_archivos([...archivos_grid]);
             set_limpiar(true);
         }
@@ -384,7 +402,7 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
         let archivos_grid: any[] = [...archivos].slice();
         const contador_archivos = archivos_grid.length;
         const nueva_posicion = archivo.orden_en_expediente;
-        if (contador_archivos > 2 && (nueva_posicion-1) !== 1) {
+        if (contador_archivos > 2 && (nueva_posicion - 1) !== 1) {
             archivos_grid[nueva_posicion - 1].orden_en_expediente = nueva_posicion - 1;
             archivos_grid[nueva_posicion - 2].orden_en_expediente = nueva_posicion;
             archivos_grid = [...archivos_grid.sort((a, b) => a.orden_en_expediente - b.orden_en_expediente)];
@@ -395,7 +413,7 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
     const seleccionar_archivos: any = (archivo: any) => {
         props.set_id_documento_seleccionado(archivo.id_documento_de_archivo_exped);
         dispatch(obtener_documento_id(archivo.id_documento_de_archivo_exped)).then((response: any) => {
-            if(response.succes){
+            if (response.succes) {
                 set_fecha_incorporacion_exp(dayjs(response.data.fecha_incorporacion_doc_a_Exp));
                 set_fecha_creacion_doc(dayjs(response.data.fecha_creacion_doc));
                 set_tipologia_doc(response.data.id_tipologia_documental);
@@ -406,39 +424,91 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
                 set_año_doc(dayjs(response.data.codigo_radicado_agno));
                 set_consecutivo(response.data.codigo_radicado_consecutivo);
                 set_tipo_recurso(response.data.cod_categoria_archivo);
-                set_tiene_replica(response.data.tiene_replica_fisica ? 'S':'N');
+                set_tiene_replica(response.data.tiene_replica_fisica ? 'S' : 'N');
                 set_nombre_documento(response.data.nombre_asignado_documento);
                 set_asunto(response.data.asunto);
                 set_descripcion(response.data.descripcion);
                 set_palabras_clave(response.data.palabras_clave_documento);
                 set_creado_automaticamente(response.data.creado_automaticamente);
-            }else{
+            } else {
 
             }
         });
     }
+
+
     const actualizar_documentos: any = (archivo: any) => {
         if (validar_formulario()) {
             const data_json = {
+                "nombre_asignado_documento": nombre_documento,
                 "fecha_creacion_doc": fecha_creacion_doc.format('YYYY-MM-DD'),
                 "fecha_incorporacion_doc_a_Exp": fecha_incorporacion_exp.format('YYYY-MM-DD'),
                 "descripcion": descripcion,
                 "asunto": asunto,
-                "nombre_asignado_documento": nombre_documento,
-                // "id_persona_titular": "1",
                 "cod_categoria_archivo": tipo_recurso,
                 "tiene_replica_fisica": (tiene_replica === 'S'),
                 "nro_folios_del_doc": parseInt(nro_folio),
                 "cod_origen_archivo": tipo_archivo,
-                "palabras_clave_documento": palabras_clave
+                "id_tipologia_documental": parseInt(tipologia_doc),
+
+                // "id_persona_titular": "1",
+                "palabras_clave_documento": palabras_clave,
+
+                "id_expediente_documental": props.expediente.id_expediente_documental,
+
+
+                //pendiente 
+                "codigo_tipologia_doc_prefijo": "",
+                "codigo_tipologia_doc_agno": "",
+
+                "id_otros": 58
+
+
             };
             dispatch(actualizar_documento(archivo.id_documento_de_archivo_exped, data_json)).then((response: any) => {
-                if(response.success)
+                if (response.success)
                     set_limpiar(true);
             });;
         }
     }
 
+    const handleSubmitCrear = async () => {
+        try {
+            const url = "gestor/bandeja-tareas/archivar/otros/create/";
+
+            const data_json = {
+                "nombre_asignado_documento": nombre_documento,
+                "fecha_creacion_doc": fecha_creacion_doc.format('YYYY-MM-DD'),
+                "fecha_incorporacion_doc_a_Exp": fecha_incorporacion_exp.format('YYYY-MM-DD'),
+                "descripcion": descripcion,
+                "asunto": asunto,
+                "cod_categoria_archivo": tipo_recurso,
+                "tiene_replica_fisica": (tiene_replica === 'S'),
+                "nro_folios_del_doc": parseInt(nro_folio),
+                "cod_origen_archivo": tipo_archivo,
+                "palabras_clave_documento": palabras_clave,
+                "id_expediente_documental": props.expediente.id_expediente_documental,
+                "id_tipologia_documental": parseInt(tipologia_doc),
+                "codigo_tipologia_doc_prefijo": codTipoMedioDoc,
+
+                //pendiente 
+                "codigo_tipologia_doc_agno": "",
+                "codigo_tipologia_doc_consecutivo": "",
+
+                "id_otros": props.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_otro,
+
+
+            };
+            const response = await api.post(url, data_json);
+
+
+            // control_success("Guardado exitosamente");
+
+        } catch (error: any) {
+            //  console.log('')(error.response.data.detail.detail);
+            // control_error(error.response.data.detail?.error);
+        }
+    };
     const eliminar_archivos: any = (archivo: any) => {
         let archivos_grid: any[] = [...archivos];
         archivos_grid.splice((archivo.orden_en_expediente - 1), 1);
@@ -478,8 +548,8 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
     }, [archivos]);
 
     useEffect(() => {
-        if(props.expediente !== null && props.expediente !== undefined){
-            if(props.expediente){
+        if (props.expediente !== null && props.expediente !== undefined) {
+            if (props.expediente) {
                 props.expediente.documentos_agregados.map((doc: any) => { doc.estado = anulado ? 'Anulado' : 'Activo'; });
                 set_archivos(props.expediente.documentos_agregados);
                 set_actualizar(props.expediente.documentos_agregados.length > 0);
@@ -511,15 +581,22 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
             set_limpiar(false);
         }
     }, [limpiar]);
+    const navigate = useNavigate();
 
+    const salir_expediente: () => void = () => {
+        navigate('/home');
+    }
     return (
         <>
             {props.expediente !== null && <Grid item md={12} xs={12}>
-                <Title title="Archivado de documento hhhhh" />
+                <Title title="Archivado de documento " />
+
+
 
                 <Grid item xs={12} sm={6}>
-                        <button onClick={() => console.log(data_json)} >Haz clic aquí</button>
-                    </Grid>
+                    <button onClick={() => console.log(lt_tipologias)} >Haz clic aquí</button>
+                </Grid>
+                {/* {props.expediente.cod_tipo_expediente} */}
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
                         <Grid item xs={12} sm={6}>
@@ -571,7 +648,7 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
                                 <InputLabel>Tipología documental</InputLabel>
                                 <Select
                                     label="Tipología documental"
-                                    value={tipologia_doc ?? ""}
+                                    value={tipologia_doc}
                                     onChange={cambio_tipologia_doc}
                                     readOnly={actualizar}
                                     disabled={anulado}
@@ -586,6 +663,7 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
                             </FormControl>
                             {error_tipologia_doc && (<FormHelperText error id="desde-error">{msj_error}</FormHelperText>)}
                         </Grid>
+
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Número de folios"
@@ -797,8 +875,8 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
                                         fullWidth
                                         value={palabras_clave}
                                         onChange={cambio_palabras_clave}
-                                    disabled={anulado}
-                                    InputLabelProps={{
+                                        disabled={anulado}
+                                        InputLabelProps={{
                                             shrink: true
                                         }}
                                         InputProps={{
@@ -822,9 +900,54 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        
-                        
-                        {archivos.length !== 0 && <Grid item xs={12} sm={12}>
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="flex-end"
+                            alignItems="center"
+                            spacing={2}
+
+                        >
+                            <Grid item >
+                                <Button
+                                    color='success'
+                                    variant='contained'
+                                    startIcon={<SaveIcon />}
+                                    onClick={() => { handleSubmitCrear() }}
+                                >
+                                    Guardar
+                                </Button>
+                            </Grid>
+
+                            <Grid item >
+                                <Button
+                                    // color='inherit'
+                                    variant="outlined"
+                                    startIcon={<CleanIcon />}
+                                    onClick={() => { props.limpiar_formulario() }}
+                                >
+                                    Limpiar
+                                </Button>
+                            </Grid>
+
+                            <Grid item >
+                                <Button
+                                    color="error"
+                                    variant='contained'
+                                    startIcon={<ClearIcon />}
+                                    onClick={() => { salir_expediente() }}
+                                >
+                                    Salir
+                                </Button>
+                            </Grid>
+
+
+
+
+
+                        </Grid>
+
+                        {/* {archivos.length !== 0 && <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -844,7 +967,7 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
                                     </Box>
                                 </Grid>
                             </Stack>
-                        </Grid>}
+                        </Grid>} */}
                     </Grid>
                 </Box>
             </Grid>}
