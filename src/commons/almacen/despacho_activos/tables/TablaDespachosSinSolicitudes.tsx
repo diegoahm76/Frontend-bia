@@ -12,16 +12,16 @@ import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { control_error, control_success } from '../../../../helpers';
 import Swal from 'sweetalert2';
-import { interface_solicitud_por_id, interface_solicitudes_realizadas, response_solicitud_por_id } from '../interfeces/types';
+import { interface_despachos_sin_solicitud, interface_solicitud_por_id, response_solicitud_por_id } from '../interfeces/types';
 import { get_resumen_solicitud } from '../../autorizacion_solicitud_activos/thunks/autorizacion_solicitud_activos';
 
 interface CustomColumn extends GridColDef {
-  renderCell?: (params: { row: interface_solicitudes_realizadas }) => React.ReactNode;
+  renderCell?: (params: { row: interface_despachos_sin_solicitud }) => React.ReactNode;
 }
 
 interface Props {
   set_accion: React.Dispatch<React.SetStateAction<string>>;
-  data_despachos_sin_solicitud: interface_solicitudes_realizadas[];
+  data_despachos_sin_solicitud: interface_despachos_sin_solicitud[];
   set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
   loadding_tabla_solicitudes: boolean;
   get_obtener_solicitudes_activos_fc: () => void;
@@ -41,7 +41,7 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
 
-  const aprobar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
+  const aprobar_solicitud = (solicitud: interface_despachos_sin_solicitud) => {
     Swal.fire({
       title: '¿Esta seguro de aprobar la solicitud?',
       showDenyButton: true,
@@ -61,7 +61,7 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
     });
   }
 
-  const rechazar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
+  const rechazar_solicitud = (solicitud: interface_despachos_sin_solicitud) => {
     set_id_solicitud_activo(solicitud.id_solicitud_activo);
     set_accion('rechazar');
   }
@@ -88,28 +88,24 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
 
 
   const columns: CustomColumn[] = [
-    { field: 'estado_solicitud', headerName: 'Estado', minWidth: 140, flex: 1,
+    { field: 'estado_despacho', headerName: 'Estado', minWidth: 140, flex: 1,
       renderCell: (params) => (
-        params.row.estado_solicitud === 'Ep' ? 'En Espera'
-        : params.row.estado_solicitud === 'Ac' ? 'Aceptada'
-        : params.row.estado_solicitud === 'Re' ? 'Rechazada'
-        : params.row.estado_solicitud === 'An' && 'Anulada'
+        params.row.estado_despacho === 'Ep' ? 'En Espera'
+        : params.row.estado_despacho === 'Ac' ? 'Aceptada'
+        : params.row.estado_despacho === 'Re' ? 'Rechazada'
+        : params.row.estado_despacho === 'An' && 'Anulada'
       )
     },
     { field: 'fecha_despacho', headerName: 'Fecha despacho', minWidth: 150, flex: 1,
-      renderCell: (params) => (dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY'))
+      renderCell: (params) => (dayjs(params.row.fecha_despacho).format('DD/MM/YYYY'))
     },
-    { field: 'observaciones', headerName: 'Motivo', minWidth: 300, flex: 1,},
-    { field: 'primer_nombre_persona_operario', headerName: 'Operario', minWidth: 300, flex: 1,
-      renderCell: (params) => (`${params.row.primer_nombre_persona_solicita} ${params.row.primer_apellido_persona_solicita}`)
-    },
-    { field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 300, flex: 1,
-      renderCell: (params) => (`${params.row.primer_nombre_funcionario_resp_unidad} ${params.row.primer_apellido_funcionario_resp_unidad}`)
-    },
+    { field: 'observacion', headerName: 'Observación', minWidth: 300, flex: 1,},
+    { field: 'nombre_persona_despacha', headerName: 'Operario', minWidth: 300, flex: 1},
+    { field: 'nombre_persona_despachaa', headerName: 'Persona responsable', minWidth: 300, flex: 1},
     { field: 'numero_activos', headerName: 'N° de activos', minWidth: 100, flex: 1, align: 'center', headerAlign: 'center'},
     { field: 'anular', headerName: 'Rechazar', maxWidth: 80, minWidth:80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
-        params.row.estado_solicitud === 'S' &&
+        params.row.estado_despacho === 'Ep' &&
           <HighlightOffIcon 
             onClick={() => rechazar_solicitud(params.row)}
             sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
