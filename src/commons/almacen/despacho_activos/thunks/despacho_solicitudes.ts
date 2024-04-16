@@ -138,3 +138,130 @@ export const get_obtener_tipos_estados_despachos_sin_solicitud: any = () => {
     }
   };
 }
+
+export const get_obtener_responsables: any = (
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  primer_apellido: string,
+  razon_social: string,
+  nombre_comercial: string,
+  ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/personas/get-personas-responsible-filters/?tipo_documento=${
+        tipo_documento
+      }&numero_documento=${
+        numero_documento
+      }&primer_nombre=${
+        primer_nombre
+      }&primer_apellido=${
+        primer_apellido
+      }&razon_social=${
+        razon_social
+      }&nombre_comercial=${nombre_comercial}`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_operarios: any = (
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  primer_apellido: string,
+  razon_social: string,
+  nombre_comercial: string,
+  ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/personas/get-personas-filters/?tipo_documento=${
+        tipo_documento
+      }&numero_documento=${
+        numero_documento
+      }&primer_nombre=${
+        primer_nombre
+      }&primer_apellido=${
+        primer_apellido
+      }&razon_social=${
+        razon_social
+      }&nombre_comercial=${nombre_comercial}`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_bodegas: any = (
+  nombre_bodega: string,
+  cod_municipio: string,
+  ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/bodegas/busqueda-avanzada/?nombre=${
+        nombre_bodega
+      }&cod_municipio=${
+        cod_municipio
+      }`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_departamentos: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/choices/departamentos/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_municipios: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/choices/municipios/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_articulos: any = (
+  cod_tipo_activo: string,
+  nombre: string,
+  doc_identificador_nro: string,
+  ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/bienes/catalogo-bienes/busqueda-articulo-activo/?cod_tipo_activo=${
+        cod_tipo_activo
+      }&nombre=${
+        nombre
+      }&doc_identificador_nro=${
+        doc_identificador_nro}`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_activos_disponibles: any = (id_bien: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/busqueda-articulos-sub/${id_bien}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
