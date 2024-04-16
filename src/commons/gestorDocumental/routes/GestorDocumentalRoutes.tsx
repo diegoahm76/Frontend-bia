@@ -52,7 +52,7 @@ import { ReporGenGestorMainScreen } from '../ReportesGeneralesGestorDocumental/s
 import { ChartDataProvider } from '../ReportesGeneralesGestorDocumental/context/DataChartContext';
 import { ReportIndicadoresPqrsdf } from '../ReportesIndicadoresPqrsdf/screen/ReportIndicadoresPqrsdf';
 import { ChartDataProviderPQRSDF } from '../ReportesIndicadoresPqrsdf/context/DataChartContext';
-import { LiquidacionRutes } from '../Liquidacion_dos/routes/LiquidacionRutes';
+import { LiquidacionRutesPago } from '../Liquidacion_dos/routes/LiquidacionRutes';
 
 const routes = [
   {
@@ -322,9 +322,9 @@ const routes = [
     ),
   },
   {
-    path: 'liquidacion/',
-    name: 'liquidacion',
-    component: () => <LiquidacionRutes />,
+    path: 'liquidacionnn/',
+    name: 'liquidacionnn',
+    component: () => <LiquidacionRutesPago />,
   },
 ];
 

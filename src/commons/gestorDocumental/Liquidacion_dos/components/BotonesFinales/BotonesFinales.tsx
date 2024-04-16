@@ -19,6 +19,7 @@ export const BotonesFinales = () => {
   } = useSelector((state: AuthSlice) => state.auth);
 
   const { precios,form } = useContext(PreciosContext);
+
   const descripcionConcatenada = precios.map(precio => `Servicio de ${precio.descripcion} de nivel ${precio.nivel} con valor de ${precio.valor}`).join(', ');
  
 
@@ -28,27 +29,27 @@ export const BotonesFinales = () => {
 
 
   const crear_configuracion_expediente_simple = async () => {
-    // try {
-    //   const url = '/recaudo/pagos/iniciar/';
-    //   const postData = {
-    //     "descripcion_pago": descripcionConcatenada,
-    //     "email": "zona@prueba.com.co",
-    //     "id_persona_pago": 1,
-    //     "id_cliente": "123456789",
-    //     "tipo_id": 1,
-    //     "nombre_cliente": "Cormacarena",
-    //     "apellido_cliente": "Pruebas",
-    //     "telefono_cliente": "123456789",
-    //     "id_liquidacion": 16
-    // };
-    //   const res = await api.post(url, postData);
-    //   const numeroConsulta = res.data && res.data.data;
-    //   console.log(numeroConsulta);
-    //  control_success("se creo correctamente");
-    // } catch (error: any) {
-    //   control_error(error.response.data.detail);
+    try {
+      const url = '/recaudo/pagos/iniciar/';
+      const postData = {
+        "descripcion_pago": descripcionConcatenada,
+        "email": "zona@prueba.com.co",
+        "id_persona_pago": 1,
+        "id_cliente": "123456789",
+        "tipo_id": 1,
+        "nombre_cliente": "Cormacarena",
+        "apellido_cliente": "Pruebas",
+        "telefono_cliente": "123456789",
+        "id_liquidacion": 16
+    };
+      const res = await api.post(url, postData);
+      const numeroConsulta = res.data && res.data.data;
+      console.log(numeroConsulta);
+     control_success("se creo correctamente");
+    } catch (error: any) {
+      control_error(error.response.data.detail);
 
-    // }
+    }
   };
 
 
@@ -76,7 +77,7 @@ export const BotonesFinales = () => {
             onClick={crear_configuracion_expediente_simple}
             variant="contained"
           >
-            Liquidar 
+            Iniciar Pago 
           </Button>
         </Grid>
 

@@ -93,7 +93,7 @@ export const GenerarLiquidacion = () => {
 
 
         <Grid container justifyContent="center">
-          <Grid item xs={10} >
+          <Grid item xs={12} >
             <Grid container alignItems="center" justifyContent="center">
               <Title title="Solicitante" />
             </Grid>
@@ -135,7 +135,7 @@ export const GenerarLiquidacion = () => {
 
 
         <Grid container justifyContent="center">
-          <Grid item xs={10} >
+          <Grid item xs={12} >
             <Grid container alignItems="center" justifyContent="center">
               <Title title="Beneficiario" />
             </Grid>
