@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { Button, Grid } from '@material-ui/core';
-import { jsPDF } from 'jspdf';
 // @ts-ignore
 import html2pdf from 'html2pdf.js';
 
