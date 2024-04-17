@@ -322,8 +322,8 @@ const routes = [
     ),
   },
   {
-    path: 'liquidacionnn/',
-    name: 'liquidacionnn',
+    path: 'liquidacion/',
+    name: 'liquidacion',
     component: () => <LiquidacionRutesPago />,
   },
 ];
