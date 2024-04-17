@@ -27,6 +27,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
@@ -165,6 +166,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                 nombre_producto: params.row.nombre_producto,
                 nombre_actividad: params.row.nombre_actividad,
                 nombre_indicador: params.row.nombre_indicador,
+                nombre_meta: params.row.nombre_meta,
               });
               handle_close();
             }}
@@ -221,6 +223,18 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     // reset();
     set_open_dialog(false);
   };
+
+  const clean_form_advance_search = () => {
+    reset({
+      nombre_plan: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
+      nombre_indicador: '',
+      nombre_meta: '',
+    });
+  }
 
   const dispatch = useAppDispatch();
 
@@ -616,7 +630,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+              <Grid item xs={12} sm={6} md={3} container gap={2} justifyContent="end">
                 <LoadingButton
                   type="submit"
                   variant="contained"
@@ -630,7 +644,17 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                 >
                   Buscar
                 </LoadingButton>
+                <Button
+                  color="inherit"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={clean_form_advance_search}
+                >
+                  Limpiar
+                </Button>
               </Grid>
+              {/* <Grid item xs={12} lg={2} container>
+              </Grid> */}
               {rows.length > 0 && (
                 <>
                   <Grid item xs={12}>

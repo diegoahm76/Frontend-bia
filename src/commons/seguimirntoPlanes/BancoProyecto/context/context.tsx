@@ -12,6 +12,7 @@ import type {
 import { control_error } from '../../../../helpers';
 import {
   get_banco,
+  get_banco_by_meta_id,
   get_metas_indicador,
   get_proyectos,
   get_rubros,
@@ -58,6 +59,7 @@ interface UserContext {
   // * fetch
 
   fetch_data_bancos: () => Promise<void>;
+  fetch_data_bancos_by_meta_id: () => Promise<void>;
   fetch_data_metas: () => Promise<void>;
   fetch_data_proyectos: () => Promise<void>;
   fetch_data_rubros: () => Promise<void>;
@@ -96,6 +98,7 @@ export const DataContextBancos = createContext<UserContext>({
   set_sector_selected: () => {},
 
   fetch_data_bancos: async () => {},
+  fetch_data_bancos_by_meta_id: async () => {},
   fetch_data_metas: async () => {},
   fetch_data_proyectos: async () => {},
   fetch_data_rubros: async () => {},
@@ -170,6 +173,40 @@ export const UserProviderBanco = ({
         set_rows_bancos(data_detalle_inversion);
       }
     } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+  const fetch_data_bancos_by_meta_id = async (): Promise<void> => {
+    try {
+      console.log('id_metaxd', id_meta)
+      const endpoint = id_meta ? get_banco_by_meta_id(id_meta) : get_banco();
+      const response = await endpoint;
+      if (response?.length > 0) {
+        const data_detalle_inversion: IBanco[] = response.map(
+          (item: IBanco) => ({
+            id_banco: item.id_banco,
+            nombre_proyecto: item.nombre_proyecto,
+            nombre_actividad: item.nombre_actividad,
+            nombre_indicador: item.nombre_indicador,
+            nombre_meta: item.nombre_meta,
+            rubro: item.rubro,
+            banco_valor: item.banco_valor,
+            objeto_contrato: item.objeto_contrato,
+            id_proyecto: item.id_proyecto,
+            id_actividad: item.id_actividad,
+            id_indicador: item.id_indicador,
+            id_meta: item.id_meta,
+            id_rubro: item.id_rubro,
+            id_fuente_financiacion: item.id_fuente_financiacion,
+          })
+        );
+
+        set_rows_bancos(data_detalle_inversion);
+      }
+    } catch (error: any) {
+      set_rows_bancos([]);
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo'
       );
@@ -324,6 +361,7 @@ export const UserProviderBanco = ({
 
     // * fetch
     fetch_data_bancos,
+    fetch_data_bancos_by_meta_id,
     fetch_data_metas,
     fetch_data_proyectos,
     fetch_data_rubros,

@@ -19,6 +19,7 @@ import {
   get_actividades_id_producto,
   get_proyectos,
   get_metas_id_indicador,
+  get_fuente_financiancion_by_meta_id,
 } from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import type { Cuenca } from '../../configuraciones/interfaces/interfaces';
@@ -63,6 +64,7 @@ interface UserContext {
   // * fetch
 
   fetch_data_fuente_financiacion: () => Promise<void>;
+  fetch_data_fuente_financiacion_indicadores: () => Promise<void>;
   fetch_data_cuencas: () => Promise<void>;
   fetch_data_indicadores: () => Promise<void>;
   fetch_data_proyectos: () => Promise<void>;
@@ -106,6 +108,7 @@ export const DataContextFuentesFinanciacion = createContext<UserContext>({
   set_actividades_selected: () => {},
 
   fetch_data_fuente_financiacion: async () => {},
+  fetch_data_fuente_financiacion_indicadores: async () => {},
   fetch_data_cuencas: async () => {},
   fetch_data_indicadores: async () => {},
   fetch_data_proyectos: async () => {},
@@ -175,6 +178,26 @@ export const UserProviderFuentesFinanciacion = ({
         set_rows_fuentes(data_fuentes);
       }
     } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
+  const fetch_data_fuente_financiacion_indicadores = async (): Promise<void> => {
+    try {
+      console.log(id_meta)
+      const response = await get_fuente_financiancion_by_meta_id(id_meta || 0);
+      if (response?.length > 0) {
+        const data_fuentes: IFuentesFinanciacion[] = response.map(
+          (item: any) => ({
+            ...item,
+          })
+        );
+        set_rows_fuentes(data_fuentes);
+      }
+    } catch (error: any) {
+      set_rows_fuentes([]);
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo'
       );
@@ -334,6 +357,7 @@ export const UserProviderFuentesFinanciacion = ({
 
     // * fetch
     fetch_data_fuente_financiacion,
+    fetch_data_fuente_financiacion_indicadores,
     fetch_data_cuencas,
     fetch_data_indicadores,
     fetch_data_proyectos,

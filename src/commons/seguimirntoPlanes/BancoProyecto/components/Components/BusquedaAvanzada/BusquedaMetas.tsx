@@ -27,6 +27,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
@@ -154,6 +155,7 @@ export const BusquedaMetas: React.FC = () => {
               set_id_producto(params.row.id_producto);
               set_id_actividad(params.row.id_actividad);
               set_id_indicador(params.row.id_indicador);
+              console.log(params.row.id_meta)
               set_id_meta(params.row.id_meta);
               dispatch(
                 set_current_mode_planes({
@@ -227,6 +229,18 @@ export const BusquedaMetas: React.FC = () => {
     // reset();
     set_open_dialog(false);
   };
+
+  const clean_form_advance_search = () => {
+    reset({
+      nombre_plan: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
+      nombre_indicador: '',
+      nombre_meta: '',
+    });
+  }
 
   const dispatch = useAppDispatch();
 
@@ -616,7 +630,7 @@ export const BusquedaMetas: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+              <Grid item xs={12} sm={6} md={3} container gap={2} justifyContent="end">
                 <LoadingButton
                   type="submit"
                   variant="contained"
@@ -630,6 +644,14 @@ export const BusquedaMetas: React.FC = () => {
                 >
                   Buscar
                 </LoadingButton>
+                <Button
+                  color="inherit"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={clean_form_advance_search}
+                >
+                  Limpiar
+                </Button>
               </Grid>
               {rows.length > 0 && (
                 <>
