@@ -68,6 +68,10 @@ export const get_codigo_unspsc = async (): Promise<ICodigoUnspsc[]> => {
   const response = await api.get(`seguimiento-planes/consultar-codigos-unsp/`);
   return response.data.data;
 };
+export const get_codigo_unspsc_pag = async (page:number): Promise<ICodigoUnspsc[]> => {
+  const response = await api.get(`seguimiento-planes/consultar-codigos-unsp/?page=${page}&page_size=10`);
+  return response.data.data;
+};
 
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
 

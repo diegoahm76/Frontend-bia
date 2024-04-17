@@ -128,7 +128,7 @@ export const ListarBanco: React.FC = () => {
     },
   ];
 
-  const { rows_bancos, fetch_data_bancos } = useContext(
+  const { rows_bancos, id_meta, fetch_data_bancos_by_meta_id } = useContext(
     DataContextBancos
   );
 
@@ -140,9 +140,9 @@ export const ListarBanco: React.FC = () => {
 
   useEffect(() => {
     // if (id_indicador) {
-    fetch_data_bancos();
+      fetch_data_bancos_by_meta_id()
     // }
-  }, []);
+  }, [id_meta]);
 
   return (
     <>
