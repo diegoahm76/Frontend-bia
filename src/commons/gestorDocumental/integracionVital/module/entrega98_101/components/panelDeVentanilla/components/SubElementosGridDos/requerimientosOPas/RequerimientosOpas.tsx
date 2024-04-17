@@ -2,6 +2,7 @@
 import { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
+  useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
@@ -10,8 +11,12 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { columnsReqOpas } from './columnsReqOpas/columnsReqOpas';
 import { downloadCSV } from '../../../utils/downloadCSV';
 import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/VitalStore';
+import  VisibilityIcon  from '@mui/icons-material/Visibility';
+import { ModalInfoElementos } from '../../AtomVistaElementos/PQRSDF/ModalInfoPqrsdf';
 
 export const RequerimientosOpas: React.FC = (): JSX.Element => {
+  const dispatch = useAppDispatch();
   const {
     listaComplementosRequerimientosOtros,
   } = useAppSelector((state) => state.VitalSlice);
@@ -19,7 +24,10 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
   //* context declaration
   const { setAnexos } = useContext(PanelVentanillaContext);
 
-  const { handleFifthLoading, handleOpenModalTwo: handleOpenInfoMetadatos } =
+  const {  nineLoading,
+    handleNineLoading,
+    tenLoading,
+    handleTenLoading,} =
     useContext(ModalAndLoadingContext);
 
 
@@ -27,40 +35,6 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
   const columns = [
     //* se debe revisar si el tipo de complemento es pqrsdf o tramite para poder mostrar la información de la manera correcta
     ...columnsReqOpas,
-    /*{
-      headerName: 'Requiere digitalización',
-      field: 'requiere_digitalizacion',
-      minWidth: 200,
-      renderCell: (params: any) => {
-        return (
-          <Chip
-            label={params.value ? 'Si' : 'No'}
-            color={params.value ? 'success' : 'error'}
-            clickable
-            onClick={() => {
-              control_info(
-                `Este complemento ${
-                  params.value ? 'requiere' : 'no requiere'
-                } digitalización`
-              );
-            }}
-          />
-        );
-      },
-    },*/
-  /* {
-      headerName: 'Complemento asignado a unidad',
-      field: 'complemento_asignado_unidad',
-      minWidth: 250,
-      renderCell: (params: any) => {
-        return (
-          <Chip
-            label={params.value ? 'Si' : 'No'}
-            color={params.value ? 'success' : 'error'}
-          />
-        );
-      },
-    },*/
    {
       headerName: 'Acciones',
       field: 'Acciones',
@@ -72,21 +46,6 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
               <IconButton
                 onClick={() => {
                   downloadCSV(params.row, `complemento_vital_OPA${Math.random()}.csv`);
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
                 }}
               >
                 <Avatar
@@ -108,10 +67,14 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-           {/* <Tooltip title="Seleccionar elemento para procesos">
+            <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
-                  //setActionsComplementos(params?.row);
+                  dispatch(
+                    setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
+                  );
+                  console.log(params.row)
+                  handleNineLoading(true);
                 }}
               >
                 <Avatar
@@ -123,16 +86,16 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <TaskIcon
+                  <VisibilityIcon
                     sx={{
-                      color: 'green',
+                      color: 'primary.main',
                       width: '18px',
                       height: '18px',
                     }}
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>*/}
+            </Tooltip>
           </>
         );
       },
@@ -141,6 +104,12 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
 
   return (
     <>
+     <ModalInfoElementos
+        openModalOne={nineLoading}
+        openModalTwo={tenLoading}
+        handleOpenModalOne={handleNineLoading}
+        handleOpenModalTwo={handleTenLoading}
+      />
       <RenderDataGrid
         rows={[...listaComplementosRequerimientosOtros] ?? []}
         columns={columns ?? []}
