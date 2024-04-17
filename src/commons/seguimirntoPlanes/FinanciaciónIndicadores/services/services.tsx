@@ -19,6 +19,15 @@ export const get_fuente_financiancion = async (): Promise<
   return response.data.data;
 };
 
+export const get_fuente_financiancion_by_meta_id = async (
+  id_meta: number
+): Promise<IFuentesFinanciacion[]> => {
+  const response = await api.get(
+    `seguimiento-planes/consultar-fuentes-financiacion-indicadores/${id_meta}/`
+  );
+  return response.data.data;
+};
+
 export const get_cuencas = async (): Promise<Cuenca[]> => {
   const response = await api.get(`hidrico/bibliotecas/cuencas/get/`);
   return response.data.data;

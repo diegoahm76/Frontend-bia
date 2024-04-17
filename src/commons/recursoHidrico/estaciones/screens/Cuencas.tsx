@@ -48,6 +48,7 @@ interface MacroCuenca {
   id_macro_cuenca: string;
   nombre_zona_hidrica: string;
   id_zona_hidrografica: string;
+  id_sub_zona_hidrica: any;
 }
 
 interface ZonaHidrica {
@@ -58,6 +59,16 @@ interface ZonaHidrica {
   id_tipo_agua_zona_hidrica: any;
   nombre_sub_zona_hidrica: string;
 }
+interface Rio {
+  id_cuenca: number;
+  nombre_macrocuenca: string;
+  nombre_zona_hidrica: string;
+  nombre_sub_zona_hidrica: string;
+  codigo_cuenca: string;
+  nombre_cuenca: string;
+  id_sub_zona_hidrica: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Cuencas: React.FC = () => {
@@ -115,6 +126,8 @@ export const Cuencas: React.FC = () => {
 
   useEffect(() => {
     void fetchZonasHidricas();
+    fetchrios()
+
   }, [selectedZonaHidrica]);
   const [expanded, setExpanded] = useState<string | false>(false);
   // Inicializado en null, cámbialo al tipo de dato que sea apropiado para tu caso
@@ -146,81 +159,79 @@ export const Cuencas: React.FC = () => {
       </Accordion>
     ));
   };
+
+
   const [selectedSubZonaHidricaId, setSelectedSubZonaHidricaId] = useState<number | null>(null);
   const handleSelectSubZonaHidrica = (zonaHidrica: ZonaHidrica) => {
     setSelectedSubZonaHidrica(zonaHidrica);
     handleAbrirActualizarModal();
     setSelectedSubZonaHidricaId(zonaHidrica.id_sub_zona_hidrica);
   };
-  const handleEliminarSubZonaHidrica = async (idSubZonaHidrica: number) => {
+
+
+
+
+  const [selectedrio, setSelectedrio] = useState<number | null>(null); // El tipo de dato puede variar según tus necesidades
+
+  const [rios, setrios] = useState<Rio[]>([]);
+  const fetchrios = async (): Promise<void> => {
     try {
-      const url = `/hidrico/zonas-hidricas/sub_zona_hidrica/delete/${idSubZonaHidrica}/`;
-      const response = await api.delete(url);
-      //  console.log('')("Sub-zona hídrica eliminada con éxito", response.data);
-      control_success("Eliminado axitosamente ");
-      // Agregar aquí cualquier lógica adicional post-eliminación, como actualizar la lista
-      fetchZonasHidricas();
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-      fetchZonasHidricas();
+      if (selectedZonaHidrica !== null) {
+        const url = `/hidrico/zonas-hidricas/cuencas/get/${selectedrio}/`;
+        const res = await api.get(url);
+        const zonasHidricasData: Rio[] = res.data?.data || [];
+        setrios(zonasHidricasData);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
+
+  useEffect(() => {
+    fetchrios()
+  }, [selectedrio]);
+
+  const [expandedZonaHidrica, setExpandedZonaHidrica] = useState<string | false>(false);
+
   const renderZonasHidricas = () => {
     return zonasHidricas.map((zonaHidrica, index) => (
-      <div key={index}>
-        <Grid container item xs={12} sx={custom} spacing={2} marginLeft={3} marginTop={2}>
-          <Grid container item xs={6} spacing={2} marginTop={2} >
+      <Accordion
+        key={index}
+        expanded={expandedZonaHidrica === `zonaHidricaPanel${index}`}
+        onChange={(event, isExpanded) => {
+          setExpandedZonaHidrica(isExpanded ? `zonaHidricaPanel${index}` : false);
+          setSelectedrio(isExpanded ? zonaHidrica.id_sub_zona_hidrica : null);
+        }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>{zonaHidrica.codigo_rio} : {zonaHidrica.nombre_sub_zona_hidrica}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {rios.length > 0 ? (
+            <ul>
 
+              {rios.map((rio) => (
+                <>
 
-             
-                        <h3>  {zonaHidrica.codigo_rio}:</h3>
-                        <ul>
-                            <li> {zonaHidrica.nombre_sub_zona_hidrica}</li>
-                            
-                        </ul>
-                   
-          
+                  <Grid container item xs={12} sx={custom} spacing={2} marginLeft={-13} marginTop={2}>
+                    <Grid container item xs={6} spacing={2} marginTop={2} >
+                      <li key={rio.id_cuenca}>{rio.nombre_cuenca}</li>
+                    </Grid>
+                  </Grid>
+                
+                </>
+              ))}
+            </ul>
+          ) : (
 
-           
+            <Typography>No se encontraron ríos</Typography>
 
-          </Grid>
-          <Grid container item xs={5} spacing={2} marginTop={0} justifyContent="flex-end">
-            {zonaHidrica.id_tipo_agua_zona_hidrica === 1 && (
-              <Grid item xs={12} sm={2} marginTop={-1}>
-
-                <Chip size="small" label="Subterránea" color="success" variant="outlined" />
-              </Grid>
-
-
-            )}
-            {zonaHidrica.id_tipo_agua_zona_hidrica === 2 && (
-              <Grid item xs={12} sm={2} marginTop={-1}>
-                <Chip size="small" label="Superficial" color="warning" variant="outlined" />
-              </Grid>
-            )}
-            <IconButton onClick={() => handleSelectSubZonaHidrica(zonaHidrica)}>
-              <EditIcon />
-            </IconButton>
-            <IconButton color="error" onClick={() => handleEliminarSubZonaHidrica(zonaHidrica.id_sub_zona_hidrica)}>
-              <DeleteForeverIcon />
-            </IconButton>
-            {/* {zonaHidrica.codigo_rio} */}
-
-          </Grid>
-        </Grid>
-        {index !== zonasHidricas.length - 1 && (
-          <Divider
-            style={{
-              width: '98%',
-              marginTop: '8px',
-              marginBottom: '8px',
-              marginLeft: 'auto',
-            }}
-          />
-        )}
-      </div>
+          )}
+        </AccordionDetails>
+      </Accordion>
     ));
   };
+
 
   const [expandedPanel, setExpandedPanel] = useState<string | false>(false);
   const renderMacroCuencas = () => {

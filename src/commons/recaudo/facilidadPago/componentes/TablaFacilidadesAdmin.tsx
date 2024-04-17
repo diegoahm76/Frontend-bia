@@ -43,6 +43,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
   const navigate = useNavigate();
   const [idFacilidadSeleccionada, setIdFacilidadSeleccionada] = useState('');
   const [idFacilidades, setIdFacilidades] = useState('');
+  const [personaid, setpersonaid] = useState('');
 
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
   const handle_open_buscar = (): void => {
@@ -262,6 +263,7 @@ export const TablaFacilidadesAdmin: React.FC = () => {
           is_modal_active_doc={is_modal_active_doc}
           set_doc={set_doc}
           idFacilidades={idFacilidades}
+          
         />
     <Box sx={{ width: '100%' }}>
       <Stack

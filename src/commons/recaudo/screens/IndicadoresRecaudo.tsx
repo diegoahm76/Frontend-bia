@@ -12,8 +12,7 @@ import { SetStateAction, useState } from 'react';
 import { Title } from '../../../components/Title';
 import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 import { ReporteEdad3 } from './ReporteEdad3';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import { ReporteCartera4 } from './ReporteCartera4';
+ import { ReporteCartera4 } from './ReporteCartera4';
 import { CarteraEdad } from './CarteraEdad';
 import { Reportetop1 } from './Reportetop1';
 import { Reportetop2 } from './Reportetop2';
@@ -65,7 +64,11 @@ export const IndicadoresRecaudo: React.FC = () => {
                                 <MenuItem value="1">Reporte General de Cartera Por Edad</MenuItem>
                                 <MenuItem value="2">Reporte General Cartera Por Deuda </MenuItem>
                                 <MenuItem value="3">Reporte General de Cartera Por Deuda y Edad  </MenuItem>
-                                <MenuItem value="4">Reporte General de Cartera Por Deuda y Edad –Top</MenuItem>
+
+                                <MenuItem value="4">Reporte de Cartera Por Deuda y Edad –Top</MenuItem>
+
+
+
                                 <MenuItem value="5">Reporte General de Cartera Por Deuda y Edad –Top</MenuItem>
                                 <MenuItem value="6">Reporte General Cartera Por Edad – Deuda y Etapa </MenuItem>
                                 <MenuItem value="7">Reporte General Cartera Top 10 Deudores x Concepto </MenuItem>

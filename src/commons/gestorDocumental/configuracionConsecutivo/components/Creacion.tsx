@@ -265,6 +265,14 @@ export const Creacion: React.FC = () => {
         fetchSeriesSubseries();
     }, [formData.id_unidad]);
 
+
+    useEffect(() => {
+        setSeriesSubseries([]) 
+   
+    }, [formData.id_unidad]);
+
+
+
     const handleClicdk = () => {
         console.log(unidadesConfig);
         fetchUnidadesConfig()

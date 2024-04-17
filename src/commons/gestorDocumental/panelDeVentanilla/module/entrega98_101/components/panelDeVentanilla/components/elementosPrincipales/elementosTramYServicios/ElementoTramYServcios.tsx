@@ -294,6 +294,7 @@ export const ListaElementosTramites = (): JSX.Element => {
             <Tooltip title="Ver información asociada a trámite">
               <IconButton
                 onClick={() => {
+                  setActionsTramites(params?.row)
                   handleOpenModalOne(true);
                 }}
               >

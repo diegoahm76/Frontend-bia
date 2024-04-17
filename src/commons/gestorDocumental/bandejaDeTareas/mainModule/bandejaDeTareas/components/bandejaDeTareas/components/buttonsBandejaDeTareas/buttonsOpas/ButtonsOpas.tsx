@@ -1,3 +1,4 @@
+
 /* eslint-disable no-unused-vars */
 import { useContext } from 'react';
 import { Box, SpeedDial, SpeedDialAction, Typography } from '@mui/material';
@@ -64,7 +65,12 @@ export const ButtonsTareaOpas: React.FC = (): JSX.Element => {
     [key: string]: any;
   }
 
+  const handleArchivado = withValidation(() =>
+    console.log(' Archivado ')
+  );
+
   const actionHandlers: action = {
+    Archivado_OPAS: handleArchivado,
     InfoSolictud: handleInfoSolicitud,
     RespondeSolicitud: handleRespondeSolicitud,
     Reasignar: handleReasignar,
@@ -90,7 +96,7 @@ export const ButtonsTareaOpas: React.FC = (): JSX.Element => {
       {/*se acomoda el modal para ver la información resumida de la tarea*/}
       {/* se acomoda el modal para ver las respuestas de los requerimientos y las reasignaciones */}
       {/* se debe cambiar este modal o analizar si el de pqrsdf funciona, pero con condicionales en el llamado de los servicios */}
-      {/*<ModalRespuestaReqReasigna />*/}
+      <ModalRespuestaReqReasigna />
       {/* se acomoda el modal para ver las respuestas de los requerimientos y las reasignaciones */}
 
       <Box sx={{ height: 70, transform: 'translateZ(0px)', flexGrow: 1 }}>
@@ -132,3 +138,4 @@ export const ButtonsTareaOpas: React.FC = (): JSX.Element => {
     </>
   );
 };
+

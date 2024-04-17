@@ -19,7 +19,7 @@ import { get_obligaciones_id } from '../facilidadPago/slices/ObligacionesSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import { TablaObligacionesUsuarioConsulta } from '../facilidadPago/componentes/TablaObligacionesUsuarioConsulta';
-import {  Article } from '@mui/icons-material';
+import { Article } from '@mui/icons-material';
 
 
 const detalles_ciclos: string[] = [
@@ -465,14 +465,22 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         return params.value ?? 'Sin Tipo de cobro  ';
       }
     },
-
+    {
+      field: 'Tipo de renta',
+      headerName: 'Tipo de renta',
+      minWidth: 210,
+      flex: 0.1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin Tipo de renta  ';
+      }
+    },
 
     // {
     //   field: 'Deudores',
     //   headerName: 'Deudores',
     //   width: 150,
     //   renderCell: (params) => {
-       
+
     //       return <>
     //       <Tooltip title="Ver">
     //         <IconButton
@@ -505,7 +513,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     //         </IconButton>
     //       </Tooltip>
     //     </>;
-       
+
     //   },
     // },
     {
@@ -515,7 +523,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       flex: 0.2,
       renderCell: (params) => {
         return (<>
-        <Tooltip title="Ver">
+          <Tooltip title="Ver">
             <IconButton
               onClick={() => {
                 set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
@@ -528,7 +536,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                   // Manejo del error
                   control_error(error.response.data.detail);
                 }
-              } }
+              }}
             >
               <Avatar
                 sx={{
@@ -539,9 +547,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 }}
                 variant="rounded"
               >
-                 <Article
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                  />
+                <Article
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
               </Avatar>
             </IconButton>
           </Tooltip>
@@ -583,11 +591,11 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
             <VisibilityIcon sx={{ color: 'primary.main' }} /> {/* Ícono del ojo */}
           </IconButton>
 
-          </>
+        </>
         );
       }
     },
-   
+
 
   ];
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
@@ -612,7 +620,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
-        
+
         {/* <Button onClick={handle_open_buscar} fullWidth variant="outlined"    >
           Crear
         </Button> */}
@@ -667,39 +675,39 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 />
 
 
-{
-        obligaciones_module ? (
-        <Grid
-          container
-          sx={{
-            position: 'relative',
-            // background: '#FAFAFA',
-            borderRadius: '15px',
-            mb: '20px',
-            mt: '20px',
-            p: '20px',
-            // boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        >
-          <Grid item xs={12}>
-            <Box
-              component="form"
-              noValidate
-              autoComplete="off"
-            >
-              {
-                obligaciones.length !== 0 ? (
-                  <>
+                {
+                  obligaciones_module ? (
+                    <Grid
+                      container
+                      sx={{
+                        position: 'relative',
+                        // background: '#FAFAFA',
+                        borderRadius: '15px',
+                        mb: '20px',
+                        mt: '20px',
+                        p: '20px',
+                        // boxShadow: '0px 3px 6px #042F4A26',
+                      }}
+                    >
+                      <Grid item xs={12}>
+                        <Box
+                          component="form"
+                          noValidate
+                          autoComplete="off"
+                        >
+                          {
+                            obligaciones.length !== 0 ? (
+                              <>
 
-                    <TablaObligacionesUsuarioConsulta set_position_tab={set_position_tab} is_modal_active={is_modal_activee}  set_is_modal_active={set_is_buscarr}/>
-                  </>
-                ): <p>.</p>
-              }
-            </Box>
-          </Grid>
-        </Grid>
-        ) : null
-      }
+                                <TablaObligacionesUsuarioConsulta set_position_tab={set_position_tab} is_modal_active={is_modal_activee} set_is_modal_active={set_is_buscarr} />
+                              </>
+                            ) : <p>.</p>
+                          }
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  ) : null
+                }
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>

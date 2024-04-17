@@ -21,6 +21,7 @@ import {
   set_company,
   set_grantor,
 } from '../../store/slice/pqrsdfSlice';
+import { setCurrentPersonaRespuestaUsuario } from '../../../TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionTipoPersona = () => {
@@ -61,6 +62,23 @@ const SeleccionTipoPersona = () => {
       on_behalf_of: on_behalf_of.key,
     });
   }, [type_applicant, on_behalf_of]);
+
+
+  useEffect(() => {
+    if (representacion_legal.tipo_sesion === 'E') {
+      //* analizar si se debe cambiar la forma en la que se estructura el datos para almacenarlo de manera mas ordenada
+      dispatch(
+        setCurrentPersonaRespuestaUsuario({
+          ...userinfo,
+          ...representacion_legal,
+        } as any)
+      );
+      return;
+    }
+
+    dispatch(setCurrentPersonaRespuestaUsuario(null as any));
+  }, []);
+
 
   return (
     <>

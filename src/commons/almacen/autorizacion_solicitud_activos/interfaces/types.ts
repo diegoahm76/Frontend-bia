@@ -363,3 +363,31 @@ export interface interface_tipos_documentos {
   value: string
   label: string
 }
+
+export interface interface_inputs_resumen_despacho {
+  fecha_despacho: string,
+  motivo: string,
+  tp_documento_pers_despacha: string,
+  documento_pers_despacha: string,
+  nombres_pers_despacha: string,
+  apellidos_pers_despacha: string,
+  tp_documento_pers_anula: string,
+  documento_pers_anula: string,
+  nombres_pers_anula: string,
+  apellidos_pers_anula: string,
+  justificacion: string,
+  fecha_anulacion: string,
+}
+
+export interface interface_articulos_despachados {
+  id_item_solicitud_activo?: number
+  id_solicitud_activo?: number
+  id_bien: number
+  nombre_bien: string
+  cantidad: number
+  id_unidad_medida: number
+  abreviatura_unidad_medida: string
+  nombre_unidad_medida: string
+  observacion: string
+  nro_posicion: number
+}

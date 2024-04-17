@@ -369,9 +369,19 @@ export const editar_estado_vf = async (
 
 export const get_codigo_unspsc = async (): Promise<ICodigoUnspsc[]> => {
     const response = await api.get(`/seguimiento-planes/consultar-codigos-unsp/`);
-    const data = response.data.data;
+    const data = response.data.results;
     return data ?? [];
 };
+
+export const get_codigo_unspsc_pag = async (page:number, name?: string, code?: string): Promise<any> => {
+    let url = `seguimiento-planes/consultar-codigos-unsp/?page=${page}&page_size=10`;
+    if (name) url += `&nombre=${name}`;
+    if (code)  url += `&codigo=${code}`;
+    const response = await api.get(url);
+    return response.data;
+};
+
+
 export const crear_codigo_unspsc = async (
     datos: ICodigoUnspsc
 ): Promise<ICodigoUnspsc> => {

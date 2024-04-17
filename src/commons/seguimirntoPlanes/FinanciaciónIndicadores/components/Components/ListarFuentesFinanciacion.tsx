@@ -187,13 +187,15 @@ export const ListarFuentesFinanciacion: React.FC = () => {
 
   const {
     rows_fuentes,
+    id_meta,
     set_id_plan,
     set_id_programa,
     set_id_proyecto,
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
-    fetch_data_fuente_financiacion,
+    // fetch_data_fuente_financiacion,
+    fetch_data_fuente_financiacion_indicadores,
   } = useContext(DataContextFuentesFinanciacion);
 
   // const {
@@ -204,9 +206,9 @@ export const ListarFuentesFinanciacion: React.FC = () => {
 
   useEffect(() => {
     // if (id_indicador) {
-    fetch_data_fuente_financiacion();
+      fetch_data_fuente_financiacion_indicadores();
     // }
-  }, []);
+  }, [id_meta]);
 
   return (
     <>

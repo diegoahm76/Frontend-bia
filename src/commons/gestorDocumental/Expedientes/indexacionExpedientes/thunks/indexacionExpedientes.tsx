@@ -56,6 +56,22 @@ export const crear_indexacion_documentos: any = (obj_json: any, id_expediente: n
     }
   };
 };
+
+//crear archibado 
+
+ 
+export const crear_archivado: any = (obj_json: any, id_expediente: number) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`gestor/bandeja-tareas/archivar/otros/create/`,obj_json,{ headers: { "Content-Type": "multipart/form-data"}});
+      control_success('El documento se creo correctamente.');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // Actualizar documento
 export const actualizar_documento: any = (id_expediente: number,documento: any) => {
   return async () => {
