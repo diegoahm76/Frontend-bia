@@ -21,10 +21,10 @@ export const ElementosOtros = (): JSX.Element => {
     (state) => state.VitalSlice
   );
   const {
-    handleThirdLoading,
-    handleSecondLoading,
-    thirdLoading,
-    secondLoading,
+    handleElevenLoading,
+    handleTwelveLoading,
+    ElevenLoading,
+    TwelveLoading,
   } = useContext(ModalAndLoadingContext);
   const { setRadicado, setValue } = useContext(PanelVentanillaContext);
   //* dispatch necesario
@@ -173,22 +173,7 @@ export const ElementosOtros = (): JSX.Element => {
                   dispatch(
                     setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
                   );
-                  handleSecondLoading(true);
-                  /* void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
+                  handleElevenLoading(true);
                 }}
               >
                 <Avatar
@@ -219,12 +204,11 @@ export const ElementosOtros = (): JSX.Element => {
   return (
     <>
       <ModalInfoElementos
-        openModalOne={secondLoading}
-        openModalTwo={thirdLoading}
-        handleOpenModalOne={handleSecondLoading}
-        handleOpenModalTwo={handleThirdLoading}
+        openModalOne={ElevenLoading}
+        openModalTwo={TwelveLoading}
+        handleOpenModalOne={handleElevenLoading}
+        handleOpenModalTwo={handleTwelveLoading}
       />
-
       <RenderDataGrid
         rows={
           [

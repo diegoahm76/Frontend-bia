@@ -61,9 +61,12 @@ export const ModalAndLoadingProvider: FC<any> = ({
     const { isLoading: TwelveLoading, handleLoading: handleTwelveLoading } =
     useModalAndLoading('', 'isLoading');
 
+    const { isLoading: treceLoading, handleLoading: handleTreceLoading } =
+    useModalAndLoading('', 'isLoading');
 
+    const { isLoading: catorceLoading, handleLoading: handleCatorceLoading } =
+    useModalAndLoading('', 'isLoading');
   // ? ----- modales para la entrega 99 -----
-
   const {
     isLoading: modalAgregarMetadatos,
     handleLoading: handleModalAgregarMetadatos,
@@ -132,6 +135,13 @@ export const ModalAndLoadingProvider: FC<any> = ({
     //* Twelve loading
     TwelveLoading,
     handleTwelveLoading,
+
+    //* trece loading
+    treceLoading,
+    handleTreceLoading,
+    //* catorce loading
+    catorceLoading,
+    handleCatorceLoading,
 
     // ? ----- modales para la entrega 99 -----
     //* modal agregar metadatos

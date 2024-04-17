@@ -47,6 +47,7 @@ export const SubElementoPrincipales: React.FC = (): JSX.Element => {
     'Complemento de trámite',
     'Complemento de Trámite - Respuesta a Requerimiento',
     'Complementos trámite – Respuestas a solicitudes',
+    412,
   ] as any;
 
   const complementosOpasKeys: any = [
@@ -70,7 +71,7 @@ export const SubElementoPrincipales: React.FC = (): JSX.Element => {
     }, {}) as any,
   };
   //* la propiedad va a ser tipo por ahora pero se debe asignar a traves de una nueva propiedad que se va a llamar clasificacions
-  const clasificacion = listaComplementosRequerimientosOtros[0]?.tipo;
+  const clasificacion = listaComplementosRequerimientosOtros[0]?.tipo || listaComplementosRequerimientosOtros[0]?.id_anexo;
   const Componente: any = tipoSolicitudComponentMap[clasificacion];
 
   return <>{Componente || <></>}</>;
