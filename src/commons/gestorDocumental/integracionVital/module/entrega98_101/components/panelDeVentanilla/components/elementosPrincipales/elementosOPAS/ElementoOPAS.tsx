@@ -1,26 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Chip, IconButton, Tooltip } from '@mui/material';
 import {
   useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import {
-  setListaElementosComplementosRequerimientosOtros,
-} from '../../../../../../../toolkit/store/VitalStore';
+import { setCurrentElementPqrsdComplementoTramitesYotros, setListaElementosComplementosRequerimientosOtros } from '../../../../../../../toolkit/store/VitalStore';
 import { columnsOpas } from './columnsOpas/columnsOpas';
-import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
-import TaskIcon from '@mui/icons-material/Task';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
-import Swal from 'sweetalert2';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getComplementosAsociadosOpas } from '../../../../../../../toolkit/thunks/opas/complementos/getComplementosOpas.service';
-import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import { downloadCSV } from '../../../utils/downloadCSV';
+import { ModalInfoElementos } from '../../AtomVistaElementos/PQRSDF/ModalInfoPqrsdf';
 
 export const ElementoOPAS = (): JSX.Element => {
   // ? dispatch necesario
@@ -28,15 +23,19 @@ export const ElementoOPAS = (): JSX.Element => {
 
   //* redux states
 
-  const {
-    listaElementosPqrsfTramitesUotros,
-  } = useAppSelector((state) => state.VitalSlice);
+  const { listaElementosPqrsfTramitesUotros } = useAppSelector(
+    (state) => state.VitalSlice
+  );
 
   //* context necesario
 
-  const { handleOpenModalOne, handleThirdLoading } = useContext(
-    ModalAndLoadingContext
-  );
+  const {
+    handleThirdLoading,
+    fourthLoading,
+    fifthLoading,
+    handleFourthLoading,
+    handleFifthLoading,
+  } = useContext(ModalAndLoadingContext);
 
   //* const columns with actions
 
@@ -56,7 +55,7 @@ export const ElementoOPAS = (): JSX.Element => {
         );
       },
     },
-   /* {
+    /* {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
       minWidth: 200,
@@ -84,7 +83,7 @@ export const ElementoOPAS = (): JSX.Element => {
         );
       },
     },
-   /* {
+    /* {
       headerName: 'Estado de asignación de grupo',
       field: 'estado_asignacion_grupo',
       minWidth: 250,
@@ -116,7 +115,7 @@ export const ElementoOPAS = (): JSX.Element => {
         return (
           <>
             <Tooltip
-              title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
+              title={`Ver complementos relacionados a opa`}
             >
               <IconButton
                 onClick={() => {
@@ -159,7 +158,10 @@ export const ElementoOPAS = (): JSX.Element => {
             <Tooltip title="Exportar OPA en fomato CSV">
               <IconButton
                 onClick={() => {
-                  downloadCSV(params.row, `OPA_vital_${params.row.id_solicitud_tramite}.csv`);
+                  downloadCSV(
+                    params.row,
+                    `OPA_vital_${params.row.id_solicitud_tramite}.csv`
+                  );
                   /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     //  console.log('')(res);
                     setActionsPQRSDF(params?.row);
@@ -197,8 +199,30 @@ export const ElementoOPAS = (): JSX.Element => {
               </IconButton>
             </Tooltip>
 
-           {/* <Tooltip title="Seleccionar OPA para proceso">
-              <IconButton onClick={() => setActionsOpas(params?.row)}>
+            <Tooltip title="Ver">
+              <IconButton
+                onClick={() => {
+                  dispatch(
+                    setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
+                  );
+                  handleFourthLoading(true);
+                  /* void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
+                }}
+              >
                 <Avatar
                   sx={{
                     width: 24,
@@ -208,16 +232,16 @@ export const ElementoOPAS = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <TaskIcon
+                  <VisibilityIcon
                     sx={{
-                      color: 'warning.main',
+                      color: 'primary.main',
                       width: '18px',
                       height: '18px',
                     }}
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>*/}
+            </Tooltip>
           </>
         );
       },
@@ -226,6 +250,12 @@ export const ElementoOPAS = (): JSX.Element => {
 
   return (
     <>
+      <ModalInfoElementos
+        openModalOne={fourthLoading}
+        openModalTwo={fifthLoading}
+        handleOpenModalOne={handleFourthLoading}
+        handleOpenModalTwo={handleFifthLoading}
+      />
       <RenderDataGrid
         rows={listaElementosPqrsfTramitesUotros ?? []}
         columns={columns ?? []}

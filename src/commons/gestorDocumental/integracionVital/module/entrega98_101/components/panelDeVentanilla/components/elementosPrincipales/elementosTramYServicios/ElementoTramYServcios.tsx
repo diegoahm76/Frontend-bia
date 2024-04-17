@@ -11,6 +11,7 @@ import TaskIcon from '@mui/icons-material/Task';
 import PreviewIcon from '@mui/icons-material/Preview';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import {
+  setCurrentElementPqrsdComplementoTramitesYotros,
   setListaElementosComplementosRequerimientosOtros,
 } from '../../../../../../../toolkit/store/VitalStore';
 import {
@@ -22,25 +23,30 @@ import { columnsTramites } from './columnsTramites/columnsTramites';
 
 import { control_warning } from '../../../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { getComplementosAsociadosTramite } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getComplementosTramites.service';
-import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import { api } from '../../../../../../../../../../api/axios';
 import { downloadCSV } from '../../../utils/downloadCSV';
+import { ModalInfoElementos } from '../../AtomVistaElementos/PQRSDF/ModalInfoPqrsdf';
 
 export const ListaElementosTramites = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { handleThirdLoading, handleSixthLoading } =
-    useContext(ModalAndLoadingContext);
+  const {
+    handleThirdLoading,
+    handleSixthLoading,
+    handleSevenLoading,
+    sevenLoading,
+    sixthLoading,
+  } = useContext(ModalAndLoadingContext);
 
   //* redux states
-  const {
-    listaElementosPqrsfTramitesUotros,
-  } = useAppSelector((state) => state.VitalSlice);
-
+  const { listaElementosPqrsfTramitesUotros } = useAppSelector(
+    (state) => state.VitalSlice
+  );
 
   //* espacio para la definición de las columnas
   const columns = [
     ...columnsTramites,
-  /*  {
+    /*  {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
       minWidth: 250,
@@ -54,7 +60,7 @@ export const ListaElementosTramites = (): JSX.Element => {
         );
       },
     },*/
-  /*  {
+    /*  {
       headerName: 'Pago',
       field: 'pago',
       minWidth: 200,
@@ -68,7 +74,7 @@ export const ListaElementosTramites = (): JSX.Element => {
         );
       },
     },*/
-  /*  {
+    /*  {
       headerName: 'Solictud enviada',
       field: 'solicitud_enviada',
       minWidth: 200,
@@ -145,7 +151,7 @@ export const ListaElementosTramites = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-           {/* <Tooltip title="Seleccionar trámite para procesos">
+            {/* <Tooltip title="Seleccionar trámite para procesos">
               <IconButton
                 onClick={() => {
                   if (params?.row?.estado_asignacion_grupo === 'EN GESTION') {
@@ -181,32 +187,32 @@ export const ListaElementosTramites = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>*/}
-             <Tooltip title="Exportar TRÁMITE en fomato CSV">
+            <Tooltip title="Exportar TRÁMITE en fomato CSV">
               <IconButton
                 onClick={() => {
-                
-                    (async () => {
-                      try {
-                        const { data } = await api.get(
-                          `tramites/general/get/?radicado=${params?.row?.radicado}`
+                  (async () => {
+                    try {
+                      const { data } = await api.get(
+                        `tramites/general/get/?radicado=${params?.row?.radicado}`
+                      );
+
+                      if (data?.data) {
+                        downloadCSV(
+                          data?.data,
+                          `tramite_vital${params?.row?.radicado}.csv`
                         );
-                
-                        if (data?.data) {
-                          downloadCSV(data?.data, `tramite_vital${params?.row?.radicado}.csv`);
-                          return;
-                          //control_success('se ha encontrado la siguiente información');
-                        } 
-                        control_warning('No se ha encontrado información para exportar');
-                      } catch (error) {
-                        control_warning('No se ha encontrado información para exportar, intente de nuevo o con otro trámite');
-
+                        return;
+                        //control_success('se ha encontrado la siguiente información');
                       }
-                    })();
-
-                
-
-
-
+                      control_warning(
+                        'No se ha encontrado información para exportar'
+                      );
+                    } catch (error) {
+                      control_warning(
+                        'No se ha encontrado información para exportar, intente de nuevo o con otro trámite'
+                      );
+                    }
+                  })();
 
                   /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
                     //  console.log('')(res);
@@ -244,6 +250,49 @@ export const ListaElementosTramites = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+            <Tooltip title="Ver">
+              <IconButton
+                onClick={() => {
+                  dispatch(
+                    setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
+                  );
+                  handleSixthLoading(true);
+                  /* void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
+                    //  console.log('')(res);
+                    setActionsPQRSDF(params?.row);
+                    navigate(
+                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
+                    );
+                    setAnexos(res);
+                    if (res.length > 0) {
+                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
+                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
+                      return;
+                    }
+
+                    return;
+                  });*/
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           </>
         );
       },
@@ -252,6 +301,13 @@ export const ListaElementosTramites = (): JSX.Element => {
 
   return (
     <>
+      <ModalInfoElementos
+        openModalOne={sixthLoading}
+        openModalTwo={sevenLoading}
+        handleOpenModalOne={handleSixthLoading}
+        handleOpenModalTwo={handleSevenLoading}
+      />
+
       <RenderDataGrid
         rows={
           listaElementosPqrsfTramitesUotros.filter(
