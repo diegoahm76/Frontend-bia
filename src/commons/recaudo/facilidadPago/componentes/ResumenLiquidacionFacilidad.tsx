@@ -26,7 +26,8 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
 
   useEffect(() => {
     if(plan_pagos.resumen_inicial !== undefined){
-      set_capital_total(plan_pagos.resumen_inicial.capital_total);
+
+      // set_capital_total(plan_pagos.resumen_inicial.capital_total);
       set_abono_facilidad(plan_pagos.resumen_inicial.abono_facilidad);
       set_saldo_capital(plan_pagos.resumen_facilidad.saldo_total);
       set_intereses_mora(plan_pagos.resumen_facilidad.intreses_mora);
