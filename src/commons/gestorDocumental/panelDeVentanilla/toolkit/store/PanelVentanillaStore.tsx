@@ -6,6 +6,7 @@ import DevicesIcon from '@mui/icons-material/Devices';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
+import PaidIcon from '@mui/icons-material/Paid';
 
 // ? icons necesarios para los botones de acciones de tramites y servicios
 import BalanceIcon from '@mui/icons-material/Balance';
@@ -71,6 +72,13 @@ const actionsTramitesYServicios: any[] = [
     id: 'Dig',
     icon: <DevicesIcon />,
     name: 'Enviar solicitud de digitalización',
+    path: '', // pendiente por definir
+    disabled: false,
+  },
+  {
+    id: 'Pay',
+    icon: <PaidIcon />,
+    name: 'Liquidación',
     path: '', // pendiente por definir
     disabled: false,
   },
