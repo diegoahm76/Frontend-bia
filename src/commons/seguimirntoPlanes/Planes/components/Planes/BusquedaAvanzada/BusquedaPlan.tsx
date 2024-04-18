@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { IBusquedaPLanes } from './types';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
@@ -48,37 +49,43 @@ export const BusquedaPlan: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'sigla_plan',
       headerName: 'SIGLA DEL PLAN',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'tipo_plan',
       headerName: 'TIPO DE PLAN',
       sortable: true,
-      width: 200,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'agno_inicio',
       headerName: 'AÑO INICIO',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'agno_fin',
       headerName: 'AÑO FIN',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'activo',
       headerName: 'VIGENCIA',
       sortable: true,
-      width: 200,
+      minWidth: 150,
+      flex: 1,
       renderCell: (params) => {
         return params.row.estado_vigencia === true ? (
           <Chip
@@ -101,7 +108,7 @@ export const BusquedaPlan: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
+      minWidth: 150,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -172,6 +179,11 @@ export const BusquedaPlan: React.FC = () => {
     set_open_dialog(false);
   };
 
+  const clean_search = () => {
+    reset();
+    set_rows([]);
+  }
+
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(async ({ nombre_plan }) => {
@@ -227,7 +239,7 @@ export const BusquedaPlan: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} md={6} xl={3}>
           <Controller
             name="nombre_plan"
             control={control}
@@ -300,20 +312,8 @@ export const BusquedaPlan: React.FC = () => {
             }}
           >
             <Title title="Búsqueda avanzada planes" />
-            {/* <form
-              onSubmit={(e) => {
-                void on_submit_advance(e);
-              }}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            > */}
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} md={4}>
                 <Controller
                   name="nombre_plan"
                   control={control}
@@ -332,8 +332,9 @@ export const BusquedaPlan: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+              <Grid item xs={12} md sx={{display: 'flex', gap: '1rem'}}>
                 <LoadingButton
+                  size="medium"
                   type="submit"
                   variant="contained"
                   color="primary"
@@ -346,12 +347,21 @@ export const BusquedaPlan: React.FC = () => {
                 >
                   Buscar
                 </LoadingButton>
+                <Button
+                  size="medium"
+                  color="inherit"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={clean_search}
+                >
+                  Limpiar
+                </Button>
               </Grid>
+
               {rows.length > 0 && (
                 <>
                   <Grid item xs={12}>
                     <Title title="Resultados de la búsqueda" />
-                    {/* <Typography>Resultados de la búsqueda</Typography> */}
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ width: '100%' }}>
@@ -377,6 +387,7 @@ export const BusquedaPlan: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

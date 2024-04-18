@@ -14,6 +14,15 @@ export const get_eje_estrategico_id = async (
   return response.data.data;
 };
 
+export const get_eje_estrategico_id_obj = async (
+  id_obj: number
+): Promise<IEjeEstrategico[]> => {
+  const response = await api.get(
+    `seguimiento/planes/consultar-ejes-estrategicos-id-objetivo/${id_obj}/`
+  );
+  return response.data.data;
+};
+
 export const get_eje_estrategico = async (
 ): Promise<IEjeEstrategico[]> => {
   const response = await api.get(

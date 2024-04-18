@@ -96,10 +96,9 @@ export const AgregarObjetivo: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}></Grid>
             </>
           ) : null}
-          <Grid item xs={12} >
+          <Grid item xs={12} sm={mode.editar ? 6 : 12}>
             <Controller
               name="nombre_objetivo"
               control={control_objetivo}

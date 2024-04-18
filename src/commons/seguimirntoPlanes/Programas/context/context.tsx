@@ -12,8 +12,8 @@ import { ISector } from '../../configuraciones/interfaces/interfaces';
 
 interface UserContext {
   // * id
-  id_plan: number | null;
-  set_id_plan: (value: number | null) => void;
+  id_eje_estrategico: number | null;
+  set_id_eje_estrategico: (value: number | null) => void;
   id_programa: number | null;
   set_id_programa: (value: number | null) => void;
 
@@ -37,8 +37,8 @@ interface UserContext {
 
 export const DataContextprograma = createContext<UserContext>({
   // * id
-  id_plan: null,
-  set_id_plan: () => {},
+  id_eje_estrategico: null,
+  set_id_eje_estrategico: () => {},
   id_programa: null,
   set_id_programa: () => {},
   // * rows
@@ -60,7 +60,7 @@ export const UserProviderPrograma = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
-  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_eje_estrategico, set_id_eje_estrategico] = React.useState<number | null>(null);
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
 
   // * select
@@ -82,13 +82,13 @@ export const UserProviderPrograma = ({
   // * fetch
   //* declaracion context
   // const {
-  //   plan: { id_plan },
+  //   plan: { id_eje_estrategico },
   // } = useAppSelector((state) => state.planes);
 
   const fetch_data_programa = async (): Promise<void> => {
     try {
       set_rows_programa([]);
-      const response = await get_programa_id(id_plan as number);
+      const response = await get_programa_id(id_eje_estrategico as number);
       if (response?.length > 0) {
         const data_programa: IProgramas[] = response.map(
           (item: IProgramas) => ({
@@ -126,8 +126,8 @@ export const UserProviderPrograma = ({
 
   const value: UserContext = {
     // * id
-    id_plan,
-    set_id_plan,
+    id_eje_estrategico,
+    set_id_eje_estrategico,
     id_programa,
     set_id_programa,
 

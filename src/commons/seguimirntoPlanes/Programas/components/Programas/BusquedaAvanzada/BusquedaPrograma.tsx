@@ -52,69 +52,78 @@ export const BusquedaPrograma: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex:1
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex:2
     },
     {
       field: 'numero_programa',
       headerName: 'Número del Programa',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex:1
     },
     {
       field: 'porcentaje_1',
       headerName: 'Porcentaje 1',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_2',
       headerName: 'Porcentaje 2',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_3',
       headerName: 'Porcentaje 3',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_4',
       headerName: 'Porcentaje 4',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'fecha_creacion',
       headerName: 'Fecha de Creación',
       sortable: true,
-      width: 180,
+      minWidth: 180,
+      flex: 1,
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
             size="small"
             onClick={() => {
-              set_id_plan(params.row.id_plan);
+              set_id_eje_estrategico(params.row.id_eje_estrategico);
               set_id_programa(params.row.id_programa);
               dispatch(
                 set_current_mode_planes({
@@ -208,7 +217,7 @@ export const BusquedaPrograma: React.FC = () => {
     }
   );
 
-  const { set_id_plan, set_id_programa } = useContext(DataContextprograma);
+  const { set_id_eje_estrategico, set_id_programa } = useContext(DataContextprograma);
 
   useEffect(() => {
     reset();
@@ -343,6 +352,7 @@ export const BusquedaPrograma: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>
