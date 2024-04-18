@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Button, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import {  FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { DetalleLiquidacion } from "../DetalleLiquidacion/DetalleLiquidacion";
 import { api } from "../../../../../api/axios";
@@ -13,21 +13,11 @@ import { PreciosContext } from "../../context/PersonalContext";
 
 export const GenerarLiquidacion = () => {
 
-
   const {
     userinfo: { id_persona, email, telefono_celular, numero_documento }
   } = useSelector((state: AuthSlice) => state.auth);
 
-  console.log(id_persona);
-
   const {form,setForm } = useContext(PreciosContext);
-
-  
-  // const [form, setForm] = useState({
-  //   id_expediente: '', // Ejemplo de propiedad que se actualizará desde un componente
-  //   Email: '', // Ejemplo de propiedad que se actualizará desde un componente
-  //   telefono_cliente: '', // Ejemplo de propiedad para el ciclo de liquidación
-  // });
 
 
   const handleSelectChange = (event: any) => {

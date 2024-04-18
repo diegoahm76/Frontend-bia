@@ -10,6 +10,7 @@ import { control_error, control_success } from "../../../alertasgestor/utils/con
 import { api } from "../../../../../api/axios";
 import type { AuthSlice } from "../../../../auth/interfaces/authModels";
 import { useSelector } from "react-redux";
+import { ModalDocumentoLiquidacionDetalle } from "../ModalDocumento/ModalDocumentoLiquidacionDetalle";
 
 export const BotonesFinales = () => {
 
@@ -67,6 +68,10 @@ export const BotonesFinales = () => {
         boxShadow: '0px 3px 6px #042F4A26',
       }}
     >
+    
+
+    <ModalDocumentoLiquidacionDetalle/>
+
     
       <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
           <Button

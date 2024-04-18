@@ -16,7 +16,7 @@ export const LiquidacionPlantilla = () => {
     const TipoTramite = "cobro persiacivo";
     const Proyecto = "el proyecto mas grande  de el mundo ";
     // const TipoCobro = "cobro a las malas                                    ";
-    let TipoCobro = "cobro a lasmalas123456789111111234567892222222221234567893333333312345678944444";
+    let TipoCobro = "cobro a lasmalas123456789111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     const radicado = "123456";
     const fechaRadicado = fechaActual.toLocaleDateString();
     const ValorCapital = "$22222";
@@ -25,14 +25,14 @@ export const LiquidacionPlantilla = () => {
     const ValorTotalEscrito = "milon novecientos cuencueta y dos";
     const ValorTotalEscritoEnMayusculas = ValorTotalEscrito.toUpperCase();
 
-    const LongitudDeseada = 70;
-    
+    const LongitudDeseada = 35;
+
     if (TipoCobro.length > LongitudDeseada) {
         TipoCobro = TipoCobro.substring(0, LongitudDeseada);
     } else {
         TipoCobro = TipoCobro.padEnd(LongitudDeseada, ' ');
     }
-    
+
     console.log(TipoCobro);
     // console.log(TipoCobrotextoFormateado)
 
@@ -350,15 +350,18 @@ export const LiquidacionPlantilla = () => {
 
     return (
         <>
-            <Grid item xs={12}>
+            <Grid container spacing={1}>
 
-                <Button onClick={descargarPDF}>Descargar PDF</Button>
+                <Grid item xs={12}>
 
-            </Grid>
+                    <Button onClick={descargarPDF}>Descargar PDF</Button>
 
-            <Grid item xs={8}>
-                <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                </Grid>
 
+                <Grid item xs={12}>
+                    <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+
+                </Grid>
             </Grid>
         </>
     );

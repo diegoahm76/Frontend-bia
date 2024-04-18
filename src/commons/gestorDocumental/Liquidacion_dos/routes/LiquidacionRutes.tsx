@@ -11,7 +11,6 @@ export const LiquidacionRutesPago: React.FC = () => {
     <PreciosProvider>
       <Routes>
         <Route path="/activacion" element={<ProcesoLiquidacionScreen/>} />
-        <Route path="/plantilla" element={<LiquidacionPlantilla/>} />
 
         <Route path="/*" element={<Page404 />} />
         {/* Puedes agregar más rutas según tus necesidades */}

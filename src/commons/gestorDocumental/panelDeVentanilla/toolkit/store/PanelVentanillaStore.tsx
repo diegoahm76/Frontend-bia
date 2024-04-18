@@ -95,7 +95,7 @@ const actionsOpas: any[] = [
     id: 'Jurídica',
     icon: <BalanceIcon />,
     name: 'Revisión jurídica',
-    path: '/app/gestor_documental/panel_ventanilla/revision_juridica_opa', // pendiente por definir
+    path: '/app/gestor_documental/juridica/servicios', // pendiente por definir
     disabled: false,
   },
 ];
