@@ -5,6 +5,7 @@ import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { interface_entradas_relacionadas } from '../interfaces/types';
+import dayjs from 'dayjs';
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_entradas_relacionadas }) => React.ReactNode;
@@ -23,7 +24,11 @@ const TablaEntradasRelacionadas: React.FC<props> = ({
   const columns: CustomColumn[] = [
     { field: 'tipo_entrada', headerName: 'Tipo de entrada', minWidth: 120, flex: 1,},
     { field: 'consecutivo', headerName: 'Consecutivo', minWidth: 120, flex: 1,},
-    { field: 'fecha_registro', headerName: 'Fecha y hora de registro', minWidth: 120, flex: 1,},
+    { field: 'fecha_registro', headerName: 'Fecha y hora de registro', minWidth: 120, flex: 1,
+      valueFormatter: (params) => {
+        return params.value ? dayjs(params.value).format('DD/MM/YYYY HH:mm') : '';
+      }
+    },
   ];
 
   return (
