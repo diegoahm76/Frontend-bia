@@ -24,8 +24,8 @@ interface props {
   set_inputs_buscar_bodega: Dispatch<SetStateAction<interface_inputs_buscar_bodega>>;
   observacion: string;
   set_observacion: Dispatch<SetStateAction<string>>;
-  data_anexo_obligatorio: any;
-  set_data_anexo_obligatorio: Dispatch<any>;
+  data_anexo_opcional: any;
+  set_data_anexo_opcional: Dispatch<any>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -40,15 +40,17 @@ const BusquedaFuncionarios: FC<props> = ({
   set_inputs_buscar_bodega,
   observacion,
   set_observacion,
-  data_anexo_obligatorio,
-  set_data_anexo_obligatorio,
+  data_anexo_opcional,
+  set_data_anexo_opcional,
 }) => {
   const dispatch = useDispatch();
 
   // Definimos que que tipo de funcionario se va a buscar
   const [tipo_funcionario, set_tipo_funcionario] = useState<string>(''); // [responsable, operario]
 
+  // estado para mostrar los modales de busqueda de funcionarios
   const [mostrar_modal_busqueda_funcionarios, set_mostrar_modal_busqueda_funcionarios] = useState<boolean>(false);
+  // estado para mostrar el modal de busqueda de bodegas
   const [mostrar_modal_buscar_bodega, set_mostrar_modal_buscar_bodega] = useState<boolean>(false);
 
   // Departamentos
@@ -139,9 +141,9 @@ const BusquedaFuncionarios: FC<props> = ({
     if (files && files.length > 0) {
       const selected_file = files[0];
 
-      set_data_anexo_obligatorio(selected_file);
+      set_data_anexo_opcional(selected_file);
     } else {
-      set_data_anexo_obligatorio({} as any);
+      set_data_anexo_opcional({} as any);
     }
   };
 
@@ -298,11 +300,11 @@ const BusquedaFuncionarios: FC<props> = ({
           fullWidth
           component="label"
           role={undefined}
-          variant={('name' in data_anexo_obligatorio) ? 'contained' : 'outlined'}
+          variant={('name' in data_anexo_opcional) ? 'contained' : 'outlined'}
           tabIndex={-1}
           startIcon={<CloudUploadIcon />}
         >
-          {!('name' in data_anexo_obligatorio) ? 'Subir anexo' : 'Actualizar anexo'}
+          {!('name' in data_anexo_opcional) ? 'Subir anexo' : 'Actualizar anexo'}
           <input
             type="file"
             style={{ display: "none" }}

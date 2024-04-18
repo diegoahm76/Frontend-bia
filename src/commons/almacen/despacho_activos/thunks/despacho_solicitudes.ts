@@ -120,7 +120,7 @@ export const get_obtener_tipos_documentos: any = () => {
 export const get_obtener_tipos_estados: any = () => {
   return async () => {
     try {
-      const { data } = await api.get(`/almacen/choices/estado-solicitud-activo/`);
+      const { data } = await api.get(`/almacen/choices/estado-despacho-activo-despacho/`);
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -259,6 +259,72 @@ export const get_obtener_activos_disponibles: any = (id_bien: string) => {
   return async () => {
     try {
       const { data } = await api.get(`/almacen/activos/busqueda-articulos-sub/${id_bien}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const post_crear_despacho_sin_solicitud: any = (form_data: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`/almacen/activos/crear-despacho-activo-sin-solicitud/create/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const post_crear_despacho_con_solicitud: any = (form_data: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`/almacen/activos/crear-despacho-activo/create/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_anular_despacho_sin_solicitud: any = (id_despacho: string) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/anular-solicitud-despacho-sin-solicitud/${id_despacho}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_resumen_sin_solicitud: any = (id_solicitud_activo : string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/resumen-despacho-activos/${id_solicitud_activo}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_articulos_despacho_con_solicitud: any = (id_solicitud_activo : string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/busqueda-articulos-principal/${id_solicitud_activo}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_anular_despacho_con_solicitud: any = (id_solicitud_activo: string, form_data: { justificacion_anulacion: string}) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/anular-solicitud-despacho/${id_solicitud_activo}/`, form_data);
       return data;
     } catch (error: any) {
       return error as AxiosError;

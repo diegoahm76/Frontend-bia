@@ -9,18 +9,35 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import Swal from 'sweetalert2';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { interface_activos_disponibles, interface_busqueda_articulos, interface_busqueda_bodegas, interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_buscar_bodega, interface_inputs_funcionarios } from '../interfeces/types';
+import { interface_articulos_despacho_con_solicitud, interface_busqueda_articulos, interface_busqueda_bodegas, interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_buscar_bodega, interface_inputs_funcionarios, response_articulos_despacho_con_solicitud } from '../interfeces/types';
 import BusquedaFuncionarios from './BusquedaFuncionarios';
 import BusquedaArticulos from './BusquedaArticulos';
+import SaveIcon from '@mui/icons-material/Save';
+import { control_error, control_success } from '../../../../helpers';
+import { useAppDispatch } from '../../../../hooks';
+import { get_articulos_despacho_con_solicitud, post_crear_despacho_con_solicitud, post_crear_despacho_sin_solicitud } from '../thunks/despacho_solicitudes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DespachoActivos = () => {
+  const dispatch = useAppDispatch();
 
   const [position_tab, set_position_tab] = useState<string>('1');
   const [accion, set_accion] = useState<string>('null'); // [null, ver, crear, editar]
 
   // Estado para saber si se está viendo los despachos sin solicitud
   const [despacho_sin_solicitud, set_despacho_sin_solicitud] = useState<boolean>(false);
+
+  // loadding de btn guardar despacho, para evitar doble click
+  const [loadding_btn_guardar_despacho, set_loadding_btn_guardar_despacho] = useState<boolean>(false);
+
+  // al darle click en aprobar despacho con solicitud trae el id de la solicitud
+  const [id_solicitud_activo, set_id_solicitud_activo] = useState<number | null>(null);
+
+  const form_data = new FormData();
+
+  // ---- Estados de pagina 1  ------ //
+  // INput de justificacion de anulacion
+  const [justificacion_anulacion, set_justificacion_anulacion] = useState<string>('');
 
   // ---- Estados de pagina 2  ------ //
   // Inputs Búsqueda funcionarios
@@ -30,7 +47,7 @@ const DespachoActivos = () => {
   // INput OBservacion
   const [observacion, set_observacion] = useState<string>('');
   // Anexo file obligatorio
-  const [data_anexo_obligatorio, set_data_anexo_obligatorio] = useState<any>(Object);
+  const [data_anexo_opcional, set_data_anexo_opcional] = useState<any>(Object);
   // Data funcionario responsable seleccionado
   const [funcionario_responsable_seleccionado, set_funcionario_responsable_seleccionado] = useState<interface_busqueda_responsable>(Object);
   // Data funcionario operario seleccionado
@@ -40,8 +57,8 @@ const DespachoActivos = () => {
 
 
   // ---- Estados de pagina 3  ------ //
-    //Data de la tabla de articulos agregados
-    const [data_articulos_agregados_padres, set_data_articulos_agregados_padres] = useState<interface_busqueda_articulos[]>([]);
+  //Data de la tabla de articulos agregados
+  const [data_articulos_agregados_padres, set_data_articulos_agregados_padres] = useState<interface_busqueda_articulos[]>([]);
 
   useEffect(() => {
     // SI hay data de funcionario responsable seleccionado se rellenará los inputs
@@ -74,6 +91,42 @@ const DespachoActivos = () => {
       });
     }
   }, [funcionario_operario_seleccionado, funcionario_responsable_seleccionado, bodega_seleccionada]);
+
+
+  const get_articulos_despacho_con_solicitud_fc = async () => {
+    await dispatch(get_articulos_despacho_con_solicitud(id_solicitud_activo))
+      .then((response: response_articulos_despacho_con_solicitud) => {
+        if (Object.keys(response).length !== 0) {
+          if (response.success) {
+            console.log(response.items);
+            set_data_articulos_agregados_padres(response.items);
+          } else {
+            control_error('Error interno al intentar obtener los articulos de la solicitud');
+          }
+        } else {
+          control_error('Error interno al intentar obtener los articulos de la solicitud');
+        }
+      }
+      )
+  }
+
+
+  useEffect(() => {
+    if (!despacho_sin_solicitud && accion === 'crear') {
+      get_articulos_despacho_con_solicitud_fc();
+    }
+  }, [despacho_sin_solicitud, accion])
+
+
+  const limpiar_campos = () => {
+    set_inputs_funcionarios({} as interface_inputs_funcionarios);
+    set_funcionario_responsable_seleccionado({} as interface_busqueda_responsable);
+    set_funcionario_operario_seleccionado({} as interface_busqueda_operario);
+    set_bodega_seleccionada({} as interface_busqueda_bodegas);
+    set_inputs_buscar_bodega({} as interface_inputs_buscar_bodega);
+    set_data_anexo_opcional({} as any);
+    set_observacion('');
+  }
 
 
   /**
@@ -136,6 +189,167 @@ const DespachoActivos = () => {
     });
   }
 
+  const validar_formulario: () => Promise<boolean> = async () => {
+    if (Object.keys(funcionario_responsable_seleccionado).length === 0) {
+      control_error('Debe seleccionar un funcionario responsable');
+      return false;
+    }
+    if (Object.keys(funcionario_operario_seleccionado).length === 0) {
+      control_error('Debe seleccionar un funcionario operario');
+      return false;
+    }
+    if (Object.keys(bodega_seleccionada).length === 0) {
+      control_error('Debe seleccionar una bodega');
+      return false;
+    }
+    if (observacion === '') {
+      control_error('Debe ingresar una observación');
+      return false;
+    }
+    if (data_articulos_agregados_padres.length === 0) {
+      control_error('Debe agregar al menos un articulo para despachar');
+      return false;
+    }
+    // verificamos que almenos en un articulo de data_articulos_agregados_padres tenga la propiedad articulos_hijos
+    const articulo_hijo_existente = data_articulos_agregados_padres.find(articulo => articulo.articulos_hijos);
+    if (!articulo_hijo_existente) {
+      control_error('Debe agregar al menos un activo a un articulo');
+      return false;
+    }
+    
+    return true;
+  }
+
+  useEffect(()=>{
+    console.log(data_articulos_agregados_padres)
+  },[data_articulos_agregados_padres])
+
+  const agregar_propiedades_form_data = async() => {
+    if(!despacho_sin_solicitud){
+      form_data.append('id_solicitud_activo', id_solicitud_activo ? id_solicitud_activo.toString() : '');
+    }
+
+    form_data.append('observacion', observacion);
+    form_data.append('id_bodega', bodega_seleccionada.id_bodega.toString());
+    form_data.append('id_funcionario_resp_asignado', funcionario_responsable_seleccionado.id_persona.toString());
+    form_data.append('id_persona_operario_asignado', funcionario_operario_seleccionado.id_persona.toString());
+    //anexo opcional
+    if ('name' in data_anexo_opcional) {
+      form_data.append('anexo_opcional', data_anexo_opcional);
+    }
+
+    // activos despachados
+    form_data.append('bienes_despachados', JSON.stringify(data_articulos_agregados_padres.flatMap((item) => {
+      return item.articulos_hijos?.map((articulo_hijo, index) => {
+        return {
+          id_bien_despachado: articulo_hijo.id_bien_despachado,
+          id_bodega: articulo_hijo.id_bodega,
+          observacion: articulo_hijo.observaciones ?? '',
+          ...(!despacho_sin_solicitud ? {id_bien_solicitado: articulo_hijo?.id_bien_despachado} : {}),
+          nro_posicion_despacho: Number(index + 1)
+        }
+      }) || [];
+    })));
+  }
+
+  const guardar_despacho = async () => {
+    const validacion_form = await validar_formulario();
+
+    if (despacho_sin_solicitud && validacion_form) {
+      await agregar_propiedades_form_data();
+
+      Swal.fire({
+        title: '¿Está seguro de crear el despacho sin solicitud?',
+        showDenyButton: true,
+        confirmButtonText: `Confirmar`,
+        denyButtonText: `Cancelar`,
+        confirmButtonColor: '#042F4A',
+        cancelButtonColor: '#DE1616',
+        icon: 'question',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          crear_despacho_sin_solicitud();
+          return true;
+        }
+      });
+    } else if (!despacho_sin_solicitud && validacion_form) {
+      // logica de aguardar despachos con solicitud
+      await agregar_propiedades_form_data();
+      Swal.fire({
+        title: '¿Está seguro de aprobar este despacho?',
+        showDenyButton: true,
+        confirmButtonText: `Confirmar`,
+        denyButtonText: `Cancelar`,
+        confirmButtonColor: '#042F4A',
+        cancelButtonColor: '#DE1616',
+        icon: 'question',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          crear_despacho_con_solicitud();
+          return true;
+        }
+      });
+    }
+  }
+
+  async function crear_despacho_sin_solicitud() {
+    set_loadding_btn_guardar_despacho(true);
+    await dispatch(post_crear_despacho_sin_solicitud(form_data))
+      .then((response: any) => {
+        if (Object.keys(response).length !== 0) {
+          if (response.success) {
+            control_success('Despacho creado correctamente');
+            set_loadding_btn_guardar_despacho(false);
+            limpiar_campos();
+            set_position_tab('1');
+            set_accion('null');
+          } else {
+            if (response.detail) {
+              control_error(response.detail)
+              set_loadding_btn_guardar_despacho(false);
+            } else {
+              control_error('Error interno al intentar crear el despacho');
+              set_loadding_btn_guardar_despacho(false);
+            }
+            set_loadding_btn_guardar_despacho(false);
+          }
+        } else {
+          control_error('Error interno al intentar crear el despacho');
+          set_loadding_btn_guardar_despacho(false);
+        }
+      }
+      )
+  }
+
+  async function crear_despacho_con_solicitud() {
+    set_loadding_btn_guardar_despacho(true);
+    await dispatch(post_crear_despacho_con_solicitud(form_data))
+      .then((response: any) => {
+        if (Object.keys(response).length !== 0) {
+          if (response.success) {
+            control_success('Despacho aprobrado correctamente');
+            set_loadding_btn_guardar_despacho(false);
+            limpiar_campos();
+            set_position_tab('1');
+            set_accion('null');
+          } else {
+            if (response.detail) {
+              control_error(response.detail)
+              set_loadding_btn_guardar_despacho(false);
+            } else {
+              control_error('Error interno al intentar aprobar el despacho');
+              set_loadding_btn_guardar_despacho(false);
+            }
+            set_loadding_btn_guardar_despacho(false);
+          }
+        } else {
+          control_error('Error interno al intentar aprobar el despacho');
+          set_loadding_btn_guardar_despacho(false);
+        }
+      }
+      )
+  }
+
   return (
     <>
       <Grid container spacing={2} marginTop={2} sx={{
@@ -168,6 +382,8 @@ const DespachoActivos = () => {
                   <SolicitudesEnProceso
                     set_accion={set_accion}
                     despacho_sin_solicitud={despacho_sin_solicitud}
+                    set_position_tab={set_position_tab}
+                    set_id_solicitud_activo={set_id_solicitud_activo}
                   />
                 </Grid>
               </TabPanel>
@@ -185,17 +401,18 @@ const DespachoActivos = () => {
                     set_inputs_buscar_bodega={set_inputs_buscar_bodega}
                     observacion={observacion}
                     set_observacion={set_observacion}
-                    data_anexo_obligatorio={data_anexo_obligatorio}
-                    set_data_anexo_obligatorio={set_data_anexo_obligatorio}
+                    data_anexo_opcional={data_anexo_opcional}
+                    set_data_anexo_opcional={set_data_anexo_opcional}
                   />
                 </Grid>
               </TabPanel>
 
               <TabPanel value="3" sx={{ p: '20px 0' }}>
                 <Grid container spacing={2} rowSpacing={7}>
-                  <BusquedaArticulos 
+                  <BusquedaArticulos
                     data_articulos_agregados_padres={data_articulos_agregados_padres}
                     set_data_articulos_agregados_padres={set_data_articulos_agregados_padres}
+                    despacho_sin_solicitud={despacho_sin_solicitud}
                   />
                 </Grid>
               </TabPanel>
@@ -224,6 +441,21 @@ const DespachoActivos = () => {
                 </Grid>
               }
 
+              {position_tab !== '1' &&
+                <Grid item xs={12} lg={2}>
+                  <Button
+                    fullWidth
+                    color="success"
+                    variant="contained"
+                    startIcon={<SaveIcon />}
+                    disabled={loadding_btn_guardar_despacho}
+                    onClick={() => guardar_despacho()}
+                  >
+                    Guardar
+                  </Button>
+                </Grid>
+              }
+
               {despacho_sin_solicitud && position_tab === '1' &&
                 <Grid item xs={12} lg={3}>
                   <Button
@@ -238,7 +470,7 @@ const DespachoActivos = () => {
                 </Grid>
               }
 
-              {!despacho_sin_solicitud &&
+              {!despacho_sin_solicitud && position_tab === '1' &&
                 <Grid item xs={12} lg={3}>
                   <Button
                     fullWidth
@@ -252,8 +484,8 @@ const DespachoActivos = () => {
                 </Grid>
               }
 
-              {despacho_sin_solicitud && position_tab === '2' &&
-                <Grid item xs={12} lg={3}>
+              {position_tab === '2' &&
+                <Grid item xs={12} lg={2}>
                   <Button
                     fullWidth
                     color="error"
@@ -266,8 +498,8 @@ const DespachoActivos = () => {
                 </Grid>
               }
 
-              {despacho_sin_solicitud && position_tab !== '1' &&
-                <Grid item xs={12} lg={3}>
+              {position_tab !== '1' &&
+                <Grid item xs={12} lg={2}>
                   <Button
                     fullWidth
                     color="error"
@@ -281,8 +513,8 @@ const DespachoActivos = () => {
                 </Grid>
               }
 
-              {despacho_sin_solicitud && position_tab !== '1' &&
-                <Grid item xs={12} lg={3}>
+              {position_tab !== '1' &&
+                <Grid item xs={12} lg={2}>
                   <Button
                     fullWidth
                     color="primary"

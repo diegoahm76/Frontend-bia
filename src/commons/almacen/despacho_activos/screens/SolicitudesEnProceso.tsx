@@ -19,6 +19,8 @@ import TablaDespachosSinSolicitudes from '../tables/TablaDespachosSinSolicitudes
 interface props {
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   despacho_sin_solicitud: boolean;
+  set_position_tab: React.Dispatch<React.SetStateAction<string>>;
+  set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 
@@ -26,10 +28,12 @@ interface props {
 const SolicitudesEnProceso: React.FC<props> = ({
   set_accion,
   despacho_sin_solicitud,
+  set_position_tab,
+  set_id_solicitud_activo
 }) => {
   const dispatch = useAppDispatch();
 
-  const [id_solicitud_activo, set_id_solicitud_activo] = useState<number | null>(null);
+  
   const [loadding_tabla_solicitudes, set_loadding_tabla_solicitudes] = useState<boolean>(false);
   const [data_solicitud_ver_por_id, set_data_solicitud_ver_por_id] = useState<interface_solicitud_por_id>(Object);
 
@@ -243,7 +247,7 @@ const SolicitudesEnProceso: React.FC<props> = ({
               Object.keys(tipos_estados_solicitud).length === 0 ?
                 <MenuItem value={''}>Cargando...</MenuItem>
                 :
-                tipos_estados_solicitud.map((item: any, index: number) => {
+                tipos_estados_solicitud?.map((item: any, index: number) => {
                   return (
                     <MenuItem key={index} value={item[0]}>{item[1]}</MenuItem>
                   )
@@ -321,10 +325,9 @@ const SolicitudesEnProceso: React.FC<props> = ({
         {despacho_sin_solicitud ?
           <TablaDespachosSinSolicitudes
             set_accion={set_accion}
-            set_id_solicitud_activo={set_id_solicitud_activo}
             data_despachos_sin_solicitud={data_despachos_sin_solicitud}
             loadding_tabla_solicitudes={loadding_tabla_solicitudes}
-            get_obtener_solicitudes_activos_fc={get_obtener_solicitudes_activos_fc}
+            get_obtener_despachos_sin_solictud_fc={get_obtener_despachos_sin_solictud_fc}
             set_data_solicitud_ver_por_id={set_data_solicitud_ver_por_id}
           />
           :
@@ -335,6 +338,7 @@ const SolicitudesEnProceso: React.FC<props> = ({
             loadding_tabla_solicitudes={loadding_tabla_solicitudes}
             get_obtener_solicitudes_activos_fc={get_obtener_solicitudes_activos_fc}
             set_data_solicitud_ver_por_id={set_data_solicitud_ver_por_id}
+            set_position_tab={set_position_tab}
           />
         }
       </Grid>

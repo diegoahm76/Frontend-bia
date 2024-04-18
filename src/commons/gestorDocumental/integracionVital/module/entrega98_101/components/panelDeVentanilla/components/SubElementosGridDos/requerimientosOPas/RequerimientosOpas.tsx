@@ -45,7 +45,28 @@ export const RequerimientosOpas: React.FC = (): JSX.Element => {
              <Tooltip title="Exportar COMPLEMENTO OPA en fomato CSV">
               <IconButton
                 onClick={() => {
-                  downloadCSV(params.row, `complemento_vital_OPA${Math.random()}.csv`);
+              /*    console.log({
+                    tipo: params.row.tipo || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    nombrePersonaResponde: params.row.nombre_persona_responde || 'No aplica',
+                    numeroSolicitudesDigitalizacion: params.row.numero_solicitudes_digitalizacion || 'No aplica',
+                    fechaRespuesta: params.row.fecha_respuesta || 'No aplica',
+                    descripcion: params.row.descripcion || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    complementoAsignadoUnidad: params.row.complemento_asignado_unidad ? 'Sí' : 'No',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion ? 'Sí' : 'No',
+                });*/
+                  downloadCSV({
+                    tipo: params.row.tipo || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    nombrePersonaResponde: params.row.nombre_persona_responde || 'No aplica',
+                    numeroSolicitudesDigitalizacion: params.row.numero_solicitudes_digitalizacion || 'No aplica',
+                    fechaRespuesta: params.row.fecha_respuesta || 'No aplica',
+                    descripcion: params.row.descripcion || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    complementoAsignadoUnidad: params.row.complemento_asignado_unidad ? 'Sí' : 'No',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion ? 'Sí' : 'No',
+                }, `complemento_vital_OPA${Math.random()}.csv`);
                 }}
               >
                 <Avatar

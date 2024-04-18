@@ -31,6 +31,7 @@ interface props {
   set_articulo_encontrado: React.Dispatch<React.SetStateAction<interface_busqueda_articulo>>;
   data_articulos_agregados: interface_articulos_agregados[] | interface_articulos_obtenidos_por_id[];
   set_data_articulos_agregados: React.Dispatch<React.SetStateAction<interface_articulos_agregados[] | interface_articulos_obtenidos_por_id[]>>;
+  switch_solicitud_prestamo: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -52,7 +53,8 @@ const BusquedaArticulos: React.FC<props> = ({
   articulo_encontrado,
   set_articulo_encontrado,
   data_articulos_agregados,
-  set_data_articulos_agregados
+  set_data_articulos_agregados,
+  switch_solicitud_prestamo,
 }) => {
 
   const [mostrar_busqueda_articulo, set_mostrar_busqueda_articulo] = useState<boolean>(false);
@@ -60,16 +62,16 @@ const BusquedaArticulos: React.FC<props> = ({
   useEffect(() => {
     if (Object.keys(articulo_encontrado).length !== 0) {
       console.log(articulo_encontrado);
-      if(accion === 'editar'){
+      if (accion === 'editar') {
         set_nombre_articulo(articulo_encontrado.nombre_bien);
         set_tipo_unidad_medida(articulo_encontrado.nombre_unidad_medida);
-      } else if(accion === 'crear'){
+      } else if (accion === 'crear') {
         set_nombre_articulo(articulo_encontrado.nombre);
         set_tipo_unidad_medida(articulo_encontrado.unidad_medida);
       }
       set_codigo_articulo(articulo_encontrado.codigo_bien);
     }
-  }, [articulo_encontrado,accion]);
+  }, [articulo_encontrado, accion]);
 
   const cambio_fecha_devolucion = (date: Dayjs | null): void => {
     if (date !== null) {
@@ -77,16 +79,16 @@ const BusquedaArticulos: React.FC<props> = ({
     }
   };
 
-  const validar_formulario: ()=>boolean = () => {
+  const validar_formulario: () => boolean = () => {
     if (Object.keys(articulo_encontrado).length === 0) {
       control_error('Debe buscar y seleccionar un artículo');
       return false;
     }
-    if (cantidad_articulo === 0 ) {
+    if (cantidad_articulo === 0) {
       control_error('Debe ingresar una cantidad');
       return false;
     }
-    if (fecha_devolucion === null) {
+    if (switch_solicitud_prestamo && fecha_devolucion === null) {
       control_error('Debe seleccionar una fecha de devolución');
       return false;
     }
@@ -106,7 +108,7 @@ const BusquedaArticulos: React.FC<props> = ({
   const handle_agregar_articulo = () => {
     const form_validado = validar_formulario();
 
-    if(form_validado){
+    if (form_validado) {
       let editando_articulo = false;
       let nuevos_articulos: any = data_articulos_agregados.map((articulo) => {
         if (articulo.codigo_bien === articulo_encontrado.codigo_bien) {
@@ -115,7 +117,7 @@ const BusquedaArticulos: React.FC<props> = ({
           return {
             ...articulo,
             cantidad: cantidad_articulo,
-            fecha_devolucion: fecha_devolucion?.toString(),
+            ...(switch_solicitud_prestamo ? { fecha_devolucion: fecha_devolucion?.toString() } : {}),
             nombre_unidad_medida: tipo_unidad_medida?.toString(),
             observacion: observacion?.toString(),
           };
@@ -124,13 +126,13 @@ const BusquedaArticulos: React.FC<props> = ({
         }
       });
 
-      if(!editando_articulo){
+      if (!editando_articulo) {
         nuevos_articulos = [
           ...nuevos_articulos,
           {
             ...articulo_encontrado,
             cantidad: cantidad_articulo,
-            fecha_devolucion: fecha_devolucion?.toString(),
+            ...(switch_solicitud_prestamo ? { fecha_devolucion: fecha_devolucion?.toString() } : {}),
             nombre_unidad_medida: tipo_unidad_medida?.toString(),
             observacion: observacion?.toString(),
           }
@@ -188,13 +190,13 @@ const BusquedaArticulos: React.FC<props> = ({
                   variant="contained"
                   startIcon={<SearchIcon />}
                   disabled={accion === 'ver' || accion === 'editar'}
-                  onClick={()=>set_mostrar_busqueda_articulo(true)}
+                  onClick={() => set_mostrar_busqueda_articulo(true)}
                 >
                   Buscar
                 </Button>
               </Grid>
 
-              <Grid item xs={12} lg={4}>
+              <Grid item xs={12} lg={switch_solicitud_prestamo ? 4 : 6}>
                 <FormControl required size="small" fullWidth>
                   <InputLabel >Unidad de medida </InputLabel>
                   <Select
@@ -203,13 +205,13 @@ const BusquedaArticulos: React.FC<props> = ({
                     disabled
                     onChange={(e) => set_tipo_unidad_medida(e.target.value)}
                   >
-                    {unidades_medidas.length !== 0 ? 
+                    {unidades_medidas.length !== 0 ?
                       unidades_medidas.map((unidad_medida: interface_unidades_medidas) => (
                         <MenuItem key={unidad_medida.id_unidad_medida} value={unidad_medida.abreviatura}>
                           {unidad_medida.nombre}
                         </MenuItem>
                       ))
-                      : 
+                      :
                       <MenuItem key={0} value={0}>
                         Cargando...
                       </MenuItem>
@@ -218,14 +220,14 @@ const BusquedaArticulos: React.FC<props> = ({
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} lg={4}>
+              <Grid item xs={12} lg={switch_solicitud_prestamo ? 4 : 6}>
                 <TextField
                   type={"number"}
                   fullWidth
                   disabled={accion === 'ver' || Object.keys(articulo_encontrado).length === 0}
                   label='Cantidad de artículo: '
                   value={cantidad_articulo}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement> ) => set_cantidad_articulo(Number(e.target.value))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_cantidad_articulo(Number(e.target.value))}
                   size='small'
                   InputLabelProps={{
                     shrink: true,
@@ -233,21 +235,24 @@ const BusquedaArticulos: React.FC<props> = ({
                 />
               </Grid>
 
-              <Grid item xs={12} lg={4}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    disabled={accion === 'ver' || Object.keys(articulo_encontrado).length === 0}
-                    label="Fecha de devolución: "
-                    value={fecha_devolucion}
-                    onChange={(newValue) => {
-                      cambio_fecha_devolucion(newValue);
-                    }}
-                    renderInput={(params) => (
-                      <TextField fullWidth size="small" {...params} />
-                    )}
-                  />
-                </LocalizationProvider>
-              </Grid>
+              {switch_solicitud_prestamo &&
+                <Grid item xs={12} lg={4}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      disabled={accion === 'ver' || Object.keys(articulo_encontrado).length === 0}
+                      label="Fecha de devolución: "
+                      value={fecha_devolucion}
+                      onChange={(newValue) => {
+                        cambio_fecha_devolucion(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField fullWidth size="small" {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+              }
+
 
               <Grid item xs={12}>
                 <TextField
@@ -265,7 +270,7 @@ const BusquedaArticulos: React.FC<props> = ({
               <Grid container item xs={12} sx={{
                 display: "flex",
                 justifyContent: "end",
-                }}>
+              }}>
                 <Grid item xs={12} lg={2}>
                   <Button
                     fullWidth
@@ -289,6 +294,8 @@ const BusquedaArticulos: React.FC<props> = ({
       <Grid container item xs={12}>
         <TablaArticulosAgregados
           accion={accion}
+          unidades_medidas={unidades_medidas} // Asegúrate de que unidades_medidas está definido
+          switch_solicitud_prestamo={switch_solicitud_prestamo}
           data_articulos_agregados={data_articulos_agregados}
           set_data_articulos_agregados={set_data_articulos_agregados}
           set_articulo_encontrado={set_articulo_encontrado}
@@ -301,6 +308,6 @@ const BusquedaArticulos: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default BusquedaArticulos;
