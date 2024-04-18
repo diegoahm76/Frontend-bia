@@ -108,25 +108,96 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
             <Tooltip title="Exportar PQRSDF en fomato CSV">
               <IconButton
                 onClick={() => {
+                  /*console.log('params.row', {
+                    //idPQRSDF: params.row.id_PQRSDF || 'No aplica',
+                    codigoTipoPQRSDF: params.row.cod_tipo_PQRSDF || 'No aplica',
+                    tipoPQRSDF: params.row.tipo_PQRSDF || 'No aplica',
+                    tipoSolicitud: params.row.tipo_solicitud || 'No aplica',
+                    nombreCompletoTitular:
+                      params.row.nombre_completo_titular || 'No aplica',
+                    asunto: params.row.asunto || 'No aplica',
+                    cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion
+                      ? 'Sí'
+                      : 'No',
+                    estadoSolicitud: params.row.estado_solicitud || 'No aplica',
+                    nombreSucursal: params.row.nombre_sucursal || 'No aplica',
+                    numeroSolicitudesDigitalizacion:
+                      params.row.numero_solicitudes_digitalizacion ||
+                      'No aplica',
+                    numeroSolicitudesUsuario:
+                      params.row.numero_solicitudes_usuario || 'No aplica',
+                    tieneComplementos: params.row.tiene_complementos
+                      ? 'Sí'
+                      : 'No',
+                    diasRespuesta: params.row.dias_respuesta || 'No aplica',
+                    medioSolicitud: params.row.medio_solicitud || 'No aplica',
+                    formaPresentacion:
+                      params.row.forma_presentacion || 'No aplica',
+                    numeroFolios: params.row.numero_folios || 'No aplica',
+                    personaRecibe: params.row.persona_recibe || 'No aplica',
+                    nombreSucursalImplicada:
+                      params.row.nombre_sucursal_implicada || 'No aplica',
+                    nombreSucursalRecepcionFisica:
+                      params.row.nombre_sucursal_recepcion_fisica ||
+                      'No aplica',
+                    fechaRegistro: params.row.fecha_registro || 'No aplica',
+                    estadoAsignacionGrupo:
+                      params.row.estado_asignacion_grupo || 'No aplica',
+                    personaAsignada: params.row.persona_asignada || 'No aplica',
+                    unidadAsignada: params.row.unidad_asignada || 'No aplica',
+                    esPqrsdf: params.row.es_pqrsdf ? 'Sí' : 'No',
+                  });*/
                   downloadCSV(
-                    params.row,
+                    {
+                      //idPQRSDF: params.row.id_PQRSDF || 'No aplica',
+                      codigoTipoPQRSDF:
+                        params.row.cod_tipo_PQRSDF || 'No aplica',
+                      tipoPQRSDF: params.row.tipo_PQRSDF || 'No aplica',
+                      tipoSolicitud: params.row.tipo_solicitud || 'No aplica',
+                      nombreCompletoTitular:
+                        params.row.nombre_completo_titular || 'No aplica',
+                      asunto: params.row.asunto || 'No aplica',
+                      cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                      radicado: params.row.radicado || 'No aplica',
+                      fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                      requiereDigitalizacion: params.row.requiere_digitalizacion
+                        ? 'Sí'
+                        : 'No',
+                      estadoSolicitud:
+                        params.row.estado_solicitud || 'No aplica',
+                      nombreSucursal: params.row.nombre_sucursal || 'No aplica',
+                      numeroSolicitudesDigitalizacion:
+                        params.row.numero_solicitudes_digitalizacion ||
+                        'No aplica',
+                      numeroSolicitudesUsuario:
+                        params.row.numero_solicitudes_usuario || 'No aplica',
+                      tieneComplementos: params.row.tiene_complementos
+                        ? 'Sí'
+                        : 'No',
+                      diasRespuesta: params.row.dias_respuesta || 'No aplica',
+                      medioSolicitud: params.row.medio_solicitud || 'No aplica',
+                      formaPresentacion:
+                        params.row.forma_presentacion || 'No aplica',
+                      numeroFolios: params.row.numero_folios || 'No aplica',
+                      personaRecibe: params.row.persona_recibe || 'No aplica',
+                      nombreSucursalImplicada:
+                        params.row.nombre_sucursal_implicada || 'No aplica',
+                      nombreSucursalRecepcionFisica:
+                        params.row.nombre_sucursal_recepcion_fisica ||
+                        'No aplica',
+                      fechaRegistro: params.row.fecha_registro || 'No aplica',
+                      estadoAsignacionGrupo:
+                        params.row.estado_asignacion_grupo || 'No aplica',
+                      personaAsignada:
+                        params.row.persona_asignada || 'No aplica',
+                      unidadAsignada: params.row.unidad_asignada || 'No aplica',
+                      esPqrsdf: params.row.es_pqrsdf ? 'Sí' : 'No',
+                    },
                     `pqrsdf_vital_${params.row.id_PQRSDF}.csv`
                   );
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
                 }}
               >
                 <Avatar
