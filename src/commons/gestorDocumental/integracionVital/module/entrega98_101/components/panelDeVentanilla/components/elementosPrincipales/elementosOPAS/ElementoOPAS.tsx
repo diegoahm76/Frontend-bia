@@ -158,25 +158,52 @@ export const ElementoOPAS = (): JSX.Element => {
             <Tooltip title="Exportar OPA en fomato CSV">
               <IconButton
                 onClick={() => {
-                  downloadCSV(
-                    params.row,
+                 /* console.log('params.row', {
+                    idSolicitudTramite: params.row.id_solicitud_tramite || 'No aplica',
+                    tipoSolicitud: params.row.tipo_solicitud || 'No aplica',
+                    nombreProyecto: params.row.nombre_proyecto || 'No aplica',
+                    nombreOPA: params.row.nombre_opa || 'No aplica',
+                    nombreCompletoTitular: params.row.nombre_completo_titular || 'No aplica',
+                    costoProyecto: params.row.costo_proyecto || 'No aplica',
+                    pagado: params.row.pagado ? 'Sí' : 'No',
+                    cantidadPredios: params.row.cantidad_predios || 'No aplica',
+                    cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    idSede: params.row.id_sede || 'No aplica',
+                    sede: params.row.sede || 'No aplica',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion ? 'Sí' : 'No',
+                    estadoActual: params.row.estado_actual || 'No aplica',
+                    estadoAsignacionGrupo: params.row.estado_asignacion_grupo || 'No aplica',
+                    personaAsignada: params.row.persona_asignada || 'No aplica',
+                    unidadAsignada: params.row.unidad_asignada || 'No aplica',
+                    tieneAnexos: params.row.tiene_anexos ? 'Sí' : 'No'
+                })
+*/
+                downloadCSV(
+                    {
+                    //idSolicitudTramite: params.row.id_solicitud_tramite || 'No aplica',
+                    tipoSolicitud: params.row.tipo_solicitud || 'No aplica',
+                    nombreProyecto: params.row.nombre_proyecto || 'No aplica',
+                    nombreOPA: params.row.nombre_opa || 'No aplica',
+                    nombreCompletoTitular: params.row.nombre_completo_titular || 'No aplica',
+                    costoProyecto: params.row.costo_proyecto || 'No aplica',
+                    pagado: params.row.pagado ? 'Sí' : 'No',
+                    cantidadPredios: params.row.cantidad_predios || 'No aplica',
+                    cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    //idSede: params.row.id_sede || 'No aplica',
+                    sede: params.row.sede || 'No aplica',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion ? 'Sí' : 'No',
+                    estadoActual: params.row.estado_actual || 'No aplica',
+                    estadoAsignacionGrupo: params.row.estado_asignacion_grupo || 'No aplica',
+                    personaAsignada: params.row.persona_asignada || 'No aplica',
+                    unidadAsignada: params.row.unidad_asignada || 'No aplica',
+                    tieneAnexos: params.row.tiene_anexos ? 'Sí' : 'No'
+                },
                     `OPA_vital_${params.row.id_solicitud_tramite}.csv`
                   );
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
                 }}
               >
                 <Avatar

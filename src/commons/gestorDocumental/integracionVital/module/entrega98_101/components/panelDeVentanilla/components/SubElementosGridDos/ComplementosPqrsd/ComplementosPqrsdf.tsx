@@ -43,25 +43,54 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
             <Tooltip title="Exportar COMPLEMENTO PQRSDF en fomato CSV">
               <IconButton
                 onClick={() => {
+                  /*  console.log('complementos', {
+                    // idComplementoUsuPQR: params.row.idComplementoUsu_PQR || 'No aplica',
+                    tipo: params.row.tipo || 'No aplica',
+                    nombreCompletoTitular: params.row.nombre_completo_titular || 'No aplica',
+                    asunto: params.row.asunto || 'No aplica',
+                    cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion ? 'Sí' : 'No',
+                    numeroSolicitudes: params.row.numero_solicitudes || 'No aplica',
+                    esComplemento: params.row.es_complemento ? 'Sí' : 'No',
+                    complementoAsignadoUnidad: params.row.complemento_asignado_unidad ? 'Sí' : 'No',
+                    fechaComplemento: params.row.fecha_complemento || 'No aplica',
+                    numeroFoliosTotales: params.row.nro_folios_totales || 'No aplica',
+                    nombreCompletoRecibe: params.row.nombre_completo_recibe || 'No aplica',
+                    descripcion: params.row.descripcion || 'No aplica'
+                });*/
+
                   downloadCSV(
-                    params.row,
+                    {
+                      // idComplementoUsuPQR: params.row.idComplementoUsu_PQR || 'No aplica',
+                      tipo: params.row.tipo || 'No aplica',
+                      nombreCompletoTitular:
+                        params.row.nombre_completo_titular || 'No aplica',
+                      asunto: params.row.asunto || 'No aplica',
+                      cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                      radicado: params.row.radicado || 'No aplica',
+                      fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                      requiereDigitalizacion: params.row.requiere_digitalizacion
+                        ? 'Sí'
+                        : 'No',
+                      numeroSolicitudes:
+                        params.row.numero_solicitudes || 'No aplica',
+                      esComplemento: params.row.es_complemento ? 'Sí' : 'No',
+                      complementoAsignadoUnidad: params.row
+                        .complemento_asignado_unidad
+                        ? 'Sí'
+                        : 'No',
+                      fechaComplemento:
+                        params.row.fecha_complemento || 'No aplica',
+                      numeroFoliosTotales:
+                        params.row.nro_folios_totales || 'No aplica',
+                      nombreCompletoRecibe:
+                        params.row.nombre_completo_recibe || 'No aplica',
+                      descripcion: params.row.descripcion || 'No aplica',
+                    },
                     `complemento_vital_PQRSDF${Math.random()}.csv`
                   );
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
-
-                    return;
-                  });*/
                 }}
               >
                 <Avatar
