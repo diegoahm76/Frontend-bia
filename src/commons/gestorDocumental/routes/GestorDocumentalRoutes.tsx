@@ -56,6 +56,7 @@ import { MainViweVital } from '../integracionVital/screen/MainVital';
 import { ModalAndLoadingProvider } from '../../../context/GeneralContext';
 import { PanelVentanillaProvider } from '../integracionVital/context/PanelVentanillaContext';
 import { RouteArchibo } from '../ArchivadosOtros/routes/RouteArchibo';
+import { LiquidacionRutesPago } from '../Liquidacion_dos/routes/LiquidacionRutes';
 
 const routes = [
   {
@@ -343,7 +344,14 @@ const routes = [
       </>
     ),
   },
+  {
+    path: 'liquidacion/',
+    name: 'liquidacion',
+    component: () => <LiquidacionRutesPago />,
+  },
 ];
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

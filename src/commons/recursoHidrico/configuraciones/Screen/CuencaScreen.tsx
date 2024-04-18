@@ -197,7 +197,7 @@ export const CuencaScreen: React.FC = () => {
               >
                 {download_xls({ nurseries: rows, columns })}
                 {download_pdf({ nurseries: rows, columns, title: 'CREAR CUENCA' })}
-              </ButtonGroup> 
+              </ButtonGroup>
               <DataGrid
                 autoHeight
                 rows={rows}
