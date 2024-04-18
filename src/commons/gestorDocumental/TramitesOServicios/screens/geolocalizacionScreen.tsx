@@ -28,9 +28,10 @@ export const Geolocalizacion: React.FC<IProps> = (props: IProps) => {
     if(props.coordenada_x !== "" && props.coordenada_y !== ""){
       set_position([parseFloat(props.coordenada_x),parseFloat(props.coordenada_y)]);
     }
-  },[props.coordenada_x, props.coordenada_y])
+  },[props])
 
   useEffect(() => {
+    console.log(props);
       console.log(position);
   },[position]);
   

@@ -47,8 +47,56 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
             <Tooltip title="Exportar COMPLEMENTO TRÁMITE en fomato CSV">
               <IconButton
                 onClick={() => {
+                  /* console.log({
+                    //idComplementoUsuPQR: params.row.idComplementoUsu_PQR || 'No aplica',
+                    //idSolicitudTramite: params.row.id_solicitud_tramite || 'No aplica',
+                    tipo: params.row.tipo || 'No aplica',
+                    nombreCompletoTitular: params.row.nombre_completo_titular || 'No aplica',
+                    asunto: params.row.asunto || 'No aplica',
+                    cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion ? 'Sí' : 'No',
+                    numeroSolicitudes: params.row.numero_solicitudes || 'No aplica',
+                    esComplemento: params.row.es_complemento ? 'Sí' : 'No',
+                    complementoAsignadoUnidad: params.row.complemento_asignado_unidad ? 'Sí' : 'No',
+                    fechaComplemento: params.row.fecha_complemento || 'No aplica',
+                    medioSolicitud: params.row.medio_solicitud || 'No aplica',
+                    numeroFoliosTotales: params.row.nro_folios_totales || 'No aplica',
+                    nombreCompletoRecibe: params.row.nombre_completo_recibe || 'No aplica',
+                    descripcion: params.row.descripcion || 'No aplica'
+                });*/
+
                   downloadCSV(
-                    params.row,
+                    {
+                      //idComplementoUsuPQR: params.row.idComplementoUsu_PQR || 'No aplica',
+                      //idSolicitudTramite: params.row.id_solicitud_tramite || 'No aplica',
+                      tipo: params.row.tipo || 'No aplica',
+                      nombreCompletoTitular:
+                        params.row.nombre_completo_titular || 'No aplica',
+                      asunto: params.row.asunto || 'No aplica',
+                      cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                      radicado: params.row.radicado || 'No aplica',
+                      fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                      requiereDigitalizacion: params.row.requiere_digitalizacion
+                        ? 'Sí'
+                        : 'No',
+                      numeroSolicitudes:
+                        params.row.numero_solicitudes || 'No aplica',
+                      esComplemento: params.row.es_complemento ? 'Sí' : 'No',
+                      complementoAsignadoUnidad: params.row
+                        .complemento_asignado_unidad
+                        ? 'Sí'
+                        : 'No',
+                      fechaComplemento:
+                        params.row.fecha_complemento || 'No aplica',
+                      medioSolicitud: params.row.medio_solicitud || 'No aplica',
+                      numeroFoliosTotales:
+                        params.row.nro_folios_totales || 'No aplica',
+                      nombreCompletoRecibe:
+                        params.row.nombre_completo_recibe || 'No aplica',
+                      descripcion: params.row.descripcion || 'No aplica',
+                    },
                     `complemento_vital_TRAMITE${Math.random()}.csv`
                   );
                 }}
@@ -108,7 +156,7 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
 
   return (
     <>
-       <ModalInfoElementos
+      <ModalInfoElementos
         openModalOne={treceLoading}
         openModalTwo={catorceLoading}
         handleOpenModalOne={handleTreceLoading}
