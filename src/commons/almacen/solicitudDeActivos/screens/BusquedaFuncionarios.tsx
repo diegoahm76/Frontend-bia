@@ -72,6 +72,7 @@ interface props {
   data_articulos_despachados: interface_articulos_despachados[];
   inputs_persona_alma_no_dispo_alma: interface_inputs_persona_cierra_no_dispo_alma;
   inputs_persona_alma_rechaza: interface_inputs_persona_alma_rechaza;
+  unidades_medidas: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -130,6 +131,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
   data_articulos_despachados,
   inputs_persona_alma_no_dispo_alma,
   inputs_persona_alma_rechaza,
+  unidades_medidas,
 }) => {
 
   const dispatch = useDispatch();
@@ -796,6 +798,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
             <Title title="Artículos solicitados" />
             <TablaArticulosAgregados
               accion={accion}
+              unidades_medidas={unidades_medidas}
+              switch_solicitud_prestamo={switch_solicitud_prestamo}
               data_articulos_agregados={data_articulos_agregados}
               set_data_articulos_agregados={set_data_articulos_agregados}
               set_articulo_encontrado={set_articulo_encontrado}

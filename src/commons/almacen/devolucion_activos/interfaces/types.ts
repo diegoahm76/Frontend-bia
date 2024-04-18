@@ -150,7 +150,24 @@ export interface response_data_registro_devolucion {
   activos_devueltos: interface_activos_devueltos[]
   item_despacho_activos: item_despacho_activos[]
   despacho_activo: interface_despacho_activo
+  almacenista_logueado?: interface_almacenista_logueado
 }
+
+export interface interface_almacenista_logueado {
+  id_persona: number
+  tipo_documento: string
+  numero_documento: string
+  primer_nombre: string
+  segundo_nombre: string
+  primer_apellido: string
+  segundo_apellido: string
+  tipo_persona: string
+  telefono_celular: string
+  telefono_empresa: any
+  email: string
+  email_empresarial: any
+}
+
 
 export interface interface_data_registro_devolucion {
   id_devolucion_activos: number
@@ -194,6 +211,8 @@ export interface item_despacho_activos {
 }
 
 export interface interface_despacho_activo {
+  tipo_documento_funcionario_resp_asignado: string
+  numero_documento_funcionario_resp_asignado: string
   id_despacho_activo: number
   id_bodega: number
   nombre_bodega: string

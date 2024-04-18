@@ -79,8 +79,13 @@ const DevolucionActivos: React.FC = () => {
       // Si hay informacion en data_registro_devolucion entonces se llena los campos del formulario y las tablas
       set_fecha_devolucion(dayjs(data_registro_devolucion.devolucion_activos.fecha_devolucion));
       set_inputs_funcionario_responsable({
-        tipo_documento: 'PENDIENTE BACK', /*data_registro_devolucion.devolucion_activos.tipo_documento,*/
-        numero_documento: 'PENDIENTE BACK'/*data_registro_devolucion.devolucion_activos.numero_documento*/
+        tipo_documento: data_registro_devolucion.despacho_activo.tipo_documento_funcionario_resp_asignado,
+        numero_documento: data_registro_devolucion.despacho_activo.numero_documento_funcionario_resp_asignado,
+      });
+      set_inputs_almacenista({
+        tipo_documento: data_registro_devolucion.almacenista_logueado?.tipo_documento ?? '',
+        numero_documento: data_registro_devolucion.almacenista_logueado?.numero_documento ?? '',
+        nombre_apellido: `${data_registro_devolucion.almacenista_logueado?.primer_nombre} ${data_registro_devolucion.almacenista_logueado?.primer_apellido}`,
       });
       set_funcionario_responsable_seleccionado({
         nombre_completo: data_registro_devolucion.devolucion_activos.nombre_persona_devolucion
@@ -518,7 +523,7 @@ const DevolucionActivos: React.FC = () => {
                   </Divider>
                 </Grid>
 
-                <Grid item xs={12} lg={4.5}>
+                <Grid item xs={12} lg={accion === 'ver' ? 6 : 4.5}>
                   <FormControl required size="small" fullWidth>
                     <InputLabel >Tipo documento responsable</InputLabel>
                     <Select
@@ -541,7 +546,7 @@ const DevolucionActivos: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} lg={4.5}>
+                <Grid item xs={12} lg={accion === 'ver' ? 6 : 4.5}>
                   <TextField
                     fullWidth
                     label='Documento responsable'
@@ -570,7 +575,7 @@ const DevolucionActivos: React.FC = () => {
                   </Grid>
                 }
 
-                <Grid item xs={12} lg={9}>
+                <Grid item xs={12} lg={accion === 'ver' ? 12 : 9}>
                   <TextField
                     fullWidth
                     disabled

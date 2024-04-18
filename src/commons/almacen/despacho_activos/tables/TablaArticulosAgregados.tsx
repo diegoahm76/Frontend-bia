@@ -25,6 +25,9 @@ interface props {
   loadding_tabla_padre: boolean;
   set_loadding_activos_disponibles: React.Dispatch<React.SetStateAction<boolean>>;
   set_id_articulo_seleccionado: React.Dispatch<React.SetStateAction<number>>;
+  set_data_activos_agregados: React.Dispatch<React.SetStateAction<interface_activos_disponibles[]>>;
+  set_mostrar_tabla_activos_agregados: React.Dispatch<React.SetStateAction<boolean>>;
+  despacho_sin_solicitud: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
@@ -36,6 +39,9 @@ const TablaArticulosAgregados: FC<props> = ({
   loadding_tabla_padre,
   set_loadding_activos_disponibles,
   set_id_articulo_seleccionado,
+  set_data_activos_agregados,
+  set_mostrar_tabla_activos_agregados,
+  despacho_sin_solicitud,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -52,10 +58,10 @@ const TablaArticulosAgregados: FC<props> = ({
     set_data(new_data);
   }
 
-  const buscar_activos_disponibles = async(params: interface_busqueda_articulos) => {
+  const buscar_activos_disponibles = async (params: interface_busqueda_articulos) => {
     set_mostrar_modal_activos_disponibles(true);
     set_loadding_activos_disponibles(true);
-    set_id_articulo_seleccionado(params.id_bien);
+    set_id_articulo_seleccionado(params.id_bien ?? 0);
 
     await dispatch(get_obtener_activos_disponibles(params.id_bien))
       .then((response: response_activos_disponibles) => {
@@ -75,12 +81,18 @@ const TablaArticulosAgregados: FC<props> = ({
       )
   }
 
+  const ver_activos_agregados = (row: any) => {
+    set_data_activos_agregados(row.articulos_hijos);
+    set_mostrar_tabla_activos_agregados(true);
+    set_id_articulo_seleccionado(row.id_bien);
+  }
+
   const columns: custom_column[] = [
     {
       field: 'ver_activos', headerName: 'Ver activos', maxWidth: 180, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         <Button
-          onClick={() => console.log(params.row.articulos_hijos)}
+          onClick={() => ver_activos_agregados(params.row)}
           variant="contained"
           color="primary"
           size="small"
@@ -92,7 +104,7 @@ const TablaArticulosAgregados: FC<props> = ({
       ),
     },
     { field: 'codigo_bien', headerName: 'Código bien', maxWidth: 150, flex: 1 },
-    { field: 'nombre', headerName: 'Nombre del articulo', width: 150, flex: 1 },
+    { field: despacho_sin_solicitud ? 'nombre' : 'nombre_bien', headerName: 'Nombre del articulo', width: 150, flex: 1 },
     {
       field: 'cantidad_despachada', headerName: 'Cantidad despachada', maxWidth: 160, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (params.row.articulos_hijos?.length ?? 0),
@@ -110,7 +122,7 @@ const TablaArticulosAgregados: FC<props> = ({
       field: 'quitar', headerName: 'Quitar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         <DeleteForeverIcon
-          onClick={() => quitar_articulo(params.row.id_bien)}
+          onClick={() => quitar_articulo(params.row?.id_bien ?? 0)}
           style={{ cursor: 'pointer', color: 'red', fontSize: 30 }}
         />
       ),

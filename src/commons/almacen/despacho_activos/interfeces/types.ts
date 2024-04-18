@@ -291,6 +291,18 @@ export interface interface_inputs_busqueda_articulo {
   nombre_articulo: string
 }
 
+
+export interface response_articulos_despacho_con_solicitud {
+  success: boolean
+  detail: string
+  items: interface_busqueda_articulos[]
+}
+
+export interface interface_articulos_despacho_con_solicitud {
+
+}
+
+
 export interface response_busqueda_articulos {
   success: boolean
   detail: string
@@ -298,14 +310,28 @@ export interface response_busqueda_articulos {
 }
 
 export interface interface_busqueda_articulos {
-  id_bien: number
+  // Interface cuando se traen los articulos de los despachos con solicitud
+  id_item_solicitud_activo?: number
+  id_solicitud_activo?: number
+  nombre_bien?: string
+  id_unidad_medida?: number
+  nombre_unidad_medida?: string
+  abreviatura_unidad_medida?: string
+  cantidad_solicitada?: string
+  fecha_devolucion?: any
+  observaciones?: string
+  
+  // propiedades que comparten ambas interfaces
+  codigo_bien?: string
+  id_bien?: number
+  
+  // Interface cuando se traen los articulos de los despachos sin solicitud
   marca: string
   nombre_padre: string
   unidad_medida: string
   unidad_medida_vida_util: string
   porcentaje_iva: number
   tipo_bien: string
-  codigo_bien: string
   nro_elemento_bien: any
   nombre: string
   cod_tipo_bien: string
@@ -325,13 +351,12 @@ export interface interface_busqueda_articulos {
   visible_solicitudes: boolean
   cod_tipo_activo: string
   id_marca: number
-  id_unidad_medida: number
   id_porcentaje_iva: number
   cod_metodo_valoracion: any
   cod_tipo_depreciacion: number
   id_unidad_medida_vida_util: number
   id_bien_padre: number
-  articulos_hijos: any[]
+  articulos_hijos: interface_activos_disponibles[]
 }
 
 export interface response_activos_disponibles {

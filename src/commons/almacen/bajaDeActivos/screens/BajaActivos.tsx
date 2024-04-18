@@ -83,7 +83,6 @@ const BajaActivos: React.FC = () => {
    */
   useEffect(() => {
     if(accion === 'editar' && Object.keys(data_registro_baja).length !== 0) {
-      console.log(dayjs(data_registro_baja.anexos[0].fecha_creacion_anexo));
       set_hay_anexo_seleccionado(true);
       set_fecha_registro(dayjs(data_registro_baja.fecha_baja));
       set_concepto(data_registro_baja.concepto);
@@ -444,7 +443,6 @@ const BajaActivos: React.FC = () => {
       }
     }
   }
-
 
   return (
     <>

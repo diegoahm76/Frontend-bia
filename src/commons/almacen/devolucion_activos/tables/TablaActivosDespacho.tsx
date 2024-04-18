@@ -51,17 +51,17 @@ const TablaActivosDespacho: React.FC<Props> = ({
   }
 
   let columns: custom_column[] = [
-    { field: 'codigo_bien_despachado', headerName: 'Código activo', minWidth: 130, flex: 1, },
-    { field: 'nombre_bien_despachado', headerName: 'Nombre activo', minWidth: 250, flex: 1, },
-    { field: 'nombre_marca_despachado', headerName: 'Nombre marca', minWidth: 150, flex: 1, },
-    { field: 'id_item_despacho_activo', headerName: 'Identificador de activo', minWidth: 190, flex: 1, },
-    { field: 'nombre_bodega_despachado', headerName: 'Bodega', minWidth: 200, flex: 1, },
+    { field: 'codigo_bien', headerName: 'Código activo', minWidth: 130, flex: 1, },
+    { field: 'nombre_bien', headerName: 'Nombre activo', minWidth: 250, flex: 1, },
+    { field: 'nombre_marca', headerName: 'Nombre marca', minWidth: 150, flex: 1, },
+    { field: 'id_bien', headerName: 'Identificador de activo', minWidth: 190, flex: 1, },
+    { field: 'nombre_bodega', headerName: 'Bodega', minWidth: 200, flex: 1, },
     { field: 'nro_posicion_despacho', headerName: 'Posición en el despacho', minWidth: 180, flex: 1, },
     { field: 'cantidad_solicitada', headerName: 'Cantidad solicitada', minWidth: 140, flex: 1, },
     { field: 'cantidad_despachada', headerName: 'Cantidad despachada', minWidth: 150, flex: 1, },
     {
       field: 'fecha_devolucion', headerName: 'Fecha devolución', minWidth: 140, flex: 1,
-      valueFormatter: (params) => params.value !== null && dayjs(params.value).format('DD/MM/YYYY'),
+      valueFormatter: (params) => params.value !== null ? dayjs(params.value).format('DD/MM/YYYY') : 'Sin dato',
     },
     { field: 'observacion', headerName: 'Observación', minWidth: 350, flex: 1, },
     {
