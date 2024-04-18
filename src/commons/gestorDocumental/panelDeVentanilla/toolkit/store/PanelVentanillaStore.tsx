@@ -79,7 +79,7 @@ const actionsTramitesYServicios: any[] = [
     id: 'Pay',
     icon: <PaidIcon />,
     name: 'Liquidación',
-    path: '', // pendiente por definir
+    path: '/app/gestor_documental/liquidacion/activacion', // pendiente por definir
     disabled: false,
   },
 ];
