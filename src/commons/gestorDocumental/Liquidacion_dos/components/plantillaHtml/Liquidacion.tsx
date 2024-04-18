@@ -15,7 +15,8 @@ export const LiquidacionPlantilla = () => {
     const Telefono = "3126459868";
     const TipoTramite = "cobro persiacivo";
     const Proyecto = "el proyecto mas grande  de el mundo ";
-    const TipoCobro = "cobro a las malas                                    ";
+    // const TipoCobro = "cobro a las malas                                    ";
+    let TipoCobro = "cobro a lasmalas123456789111111234567892222222221234567893333333312345678944444";
     const radicado = "123456";
     const fechaRadicado = fechaActual.toLocaleDateString();
     const ValorCapital = "$22222";
@@ -23,6 +24,18 @@ export const LiquidacionPlantilla = () => {
     const ValorTotal = "$0000";
     const ValorTotalEscrito = "milon novecientos cuencueta y dos";
     const ValorTotalEscritoEnMayusculas = ValorTotalEscrito.toUpperCase();
+
+    const LongitudDeseada = 70;
+    
+    if (TipoCobro.length > LongitudDeseada) {
+        TipoCobro = TipoCobro.substring(0, LongitudDeseada);
+    } else {
+        TipoCobro = TipoCobro.padEnd(LongitudDeseada, ' ');
+    }
+    
+    console.log(TipoCobro);
+    // console.log(TipoCobrotextoFormateado)
+
 
     const htmlContent = `<!DOCTYPE html>
     <!-- Created by pdf2htmlEX (https://github.com/pdf2htmlEX/pdf2htmlEX) -->
@@ -337,16 +350,16 @@ export const LiquidacionPlantilla = () => {
 
     return (
         <>
-        <Grid item xs={12}>
+            <Grid item xs={12}>
 
-            <Button onClick={descargarPDF}>Descargar PDF</Button>
+                <Button onClick={descargarPDF}>Descargar PDF</Button>
 
-        </Grid>
+            </Grid>
 
-        <Grid item xs={8}>
-            <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+            <Grid item xs={8}>
+                <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
-        </Grid>
+            </Grid>
         </>
     );
 }
