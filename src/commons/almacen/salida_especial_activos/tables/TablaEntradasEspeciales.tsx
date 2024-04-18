@@ -5,6 +5,7 @@ import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { interface_entradas_relacionadas } from '../interfaces/types';
+import dayjs from 'dayjs';
 
 
 
@@ -22,7 +23,7 @@ interface props {
 const TablaEntradasEspeciales: React.FC<props> = ({
   data_entradas_relacionadas,
   set_entrada_relacionada_seleccionada,
-  }) => {
+}) => {
 
 
   const selecionar_entrada_relacionada = (newSelectionModel: GridSelectionModel) => {
@@ -34,9 +35,14 @@ const TablaEntradasEspeciales: React.FC<props> = ({
   }
 
   const columns: CustomColumn[] = [
-    { field: 'tipo_entrada', headerName: 'Tipo de entrada', minWidth: 120, flex: 1,},
-    { field: 'consecutivo', headerName: 'Consecutivo', minWidth: 120, flex: 1,},
-    { field: 'fecha_registro', headerName: 'Fecha y hora de registro', minWidth: 120, flex: 1,},
+    { field: 'tipo_entrada', headerName: 'Tipo de entrada', minWidth: 120, flex: 1, },
+    { field: 'consecutivo', headerName: 'Consecutivo', minWidth: 120, flex: 1, },
+    {
+      field: 'fecha_registro', headerName: 'Fecha y hora de registro', minWidth: 120, flex: 1,
+      valueFormatter: (params) => {
+        return params.value ? dayjs(params.value).format('DD/MM/YYYY HH:mm') : '';
+      }
+    },
   ];
 
 
@@ -48,18 +54,18 @@ const TablaEntradasEspeciales: React.FC<props> = ({
         alignItems="center" >
         <Grid item  >
           <ButtonGroup style={{ margin: 5, }}>
-              {download_xls({ nurseries: data_entradas_relacionadas, columns })}
-              {download_pdf({
-                  nurseries: data_entradas_relacionadas,
-                  columns,
-                  title: 'Entradas Relacionadas',
-              })}
+            {download_xls({ nurseries: data_entradas_relacionadas, columns })}
+            {download_pdf({
+              nurseries: data_entradas_relacionadas,
+              columns,
+              title: 'Entradas Relacionadas',
+            })}
           </ButtonGroup>
         </Grid>
       </Grid>
 
       <DataGrid
-        style={{margin:'15px 0px'}}
+        style={{ margin: '15px 0px' }}
         density="compact"
         autoHeight
         rows={data_entradas_relacionadas ?? []}
@@ -74,6 +80,6 @@ const TablaEntradasEspeciales: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaEntradasEspeciales;

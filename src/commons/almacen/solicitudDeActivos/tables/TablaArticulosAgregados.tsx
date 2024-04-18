@@ -10,7 +10,7 @@ import { set } from 'date-fns';
 import dayjs, { Dayjs } from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { interface_articulos_agregados, interface_articulos_obtenidos_por_id, interface_busqueda_articulo } from '../interfaces/types';
+import { interface_articulos_agregados, interface_articulos_obtenidos_por_id, interface_busqueda_articulo, interface_unidades_medidas } from '../interfaces/types';
 
 
 interface custom_column extends GridColDef {
@@ -26,6 +26,8 @@ interface props {
   set_cantidad_articulo: React.Dispatch<React.SetStateAction<number>>;
   set_fecha_devolucion: React.Dispatch<React.SetStateAction<Dayjs | null>>;
   set_observacion: React.Dispatch<React.SetStateAction<string>>;
+  switch_solicitud_prestamo: boolean;
+  unidades_medidas: interface_unidades_medidas[];
 }
 
 const TablaArticulosAgregados: React.FC<props> = ({
@@ -36,7 +38,10 @@ const TablaArticulosAgregados: React.FC<props> = ({
   set_tipo_unidad_medida,
   set_cantidad_articulo,
   set_fecha_devolucion,
-  set_observacion}) => {
+  set_observacion,
+  switch_solicitud_prestamo,
+  unidades_medidas,
+}) => {
 
 
   const quitar_articulo = (row: interface_articulos_obtenidos_por_id | interface_articulos_agregados) => {
@@ -59,14 +64,21 @@ const TablaArticulosAgregados: React.FC<props> = ({
 
   let columns: custom_column[] = [
     {field: 'codigo_bien', headerName:'Código bien', maxWidth:150, flex:1},
-    {field: accion === 'ver' ? 'nombre_bien' : 'nombre', headerName:'Nombre del articulo', minWidth:250, flex:1},
-    {field: 'nombre_unidad_medida', headerName:'Unidad medida', maxWidth:150, flex:1},
-    {field: 'cantidad', headerName:'Cantidad', maxWidth:150, flex:1},
-    {field: 'fecha_devolucion', headerName:'Fecha devolucion', maxWidth:150, flex:1,
-      renderCell: (params) => dayjs(params.row.fecha_devolucion).format('DD/MM/YYYY')
+    {field: accion === 'ver' || accion === 'editar' ? 'nombre_bien' : 'nombre', headerName:'Nombre del articulo', minWidth:250, flex:1},
+    {field: 'nombre_unidad_medida', headerName:'Unidad medida', maxWidth:150, flex:1,
+      renderCell: (params) => unidades_medidas?.find((unidad_medida) => unidad_medida.id_unidad_medida === params.row.id_unidad_medida)?.nombre
     },
+    {field: 'cantidad', headerName:'Cantidad', maxWidth:150, flex:1},
     {field: 'observacion', headerName:'Observacion', width:150, flex:1},
   ];
+
+  if(switch_solicitud_prestamo){
+    columns.push(
+      {field: 'fecha_devolucion', headerName:'Fecha devolucion', maxWidth:150, flex:1,
+        renderCell: (params) => params.row.fecha_devolucion ? dayjs(params.row.fecha_devolucion).format('DD/MM/YYYY') : 'NO REGISTRADA'
+      },
+    )
+  }
 
   if (accion === 'editar' || accion === 'crear') {
     columns.push(
