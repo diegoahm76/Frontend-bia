@@ -43,69 +43,79 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_producto',
       headerName: 'Nombre del Producto',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_actividad',
       headerName: 'Nombre de la Actividad',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_indicador',
       headerName: 'Nombre del Indicador',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_medicion',
       headerName: 'Nombre de Medición',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'nombre_tipo',
       headerName: 'Nombre de Tipo',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
 
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 100,
+      minWidth: 100,
+      flex: 1,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'fecha_creacion',
       headerName: 'Fecha de Creación',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -605,6 +615,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={() => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

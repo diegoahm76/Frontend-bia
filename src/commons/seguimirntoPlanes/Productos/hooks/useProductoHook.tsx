@@ -41,7 +41,7 @@ export const useProductoHook = (): any => {
       id_plan: null,
       id_programa: null,
       id_producto: null,
-      fecha_creacion: '',
+      // fecha_creacion: '',
       cumplio: false,
     });
   };

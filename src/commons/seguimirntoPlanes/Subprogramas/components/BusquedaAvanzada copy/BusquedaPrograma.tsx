@@ -46,8 +46,8 @@ export const BusquedaPrograma: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre_plan',
-      headerName: 'Nombre del Plan',
+      field: 'nombre_eje_estrategico',
+      headerName: 'Nombre del Eje Estratégico',
       sortable: true,
       width: 250,
     },
@@ -116,7 +116,7 @@ export const BusquedaPrograma: React.FC = () => {
               );
               dispatch(set_current_subprograma(params.row));
               reset({
-                nombre_plan: params.row.nombre_plan,
+                nombre_eje_estrategico: params.row.nombre_eje_estrategico,
                 nombre_programa: params.row.nombre_programa,
               });
               handle_close();
@@ -154,7 +154,7 @@ export const BusquedaPrograma: React.FC = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      nombre_plan: '',
+      nombre_eje_estrategico: '',
       nombre_programa: '',
     },
   });
@@ -175,14 +175,14 @@ export const BusquedaPrograma: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
-    async ({ nombre_plan, nombre_programa }) => {
+    async ({ nombre_eje_estrategico, nombre_programa }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
         } = await search_programas({
-          nombre_plan,
+          nombre_eje_estrategico,
           nombre_programa,
         });
 
@@ -232,14 +232,14 @@ export const BusquedaPrograma: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Controller
-            name="nombre_plan"
+            name="nombre_eje_estrategico"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
               <TextField
                 fullWidth
-                label="Nombre plan"
+                label="Nombre eje estratégico"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -337,14 +337,14 @@ export const BusquedaPrograma: React.FC = () => {
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
               <Grid item xs={12} sm={6} md={4}>
                 <Controller
-                  name="nombre_plan"
+                  name="nombre_eje_estrategico"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre plan"
+                      label="Nombre eje estratégico"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -418,6 +418,7 @@ export const BusquedaPrograma: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

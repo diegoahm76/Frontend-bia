@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
@@ -52,57 +53,65 @@ export const BusquedaPrograma: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 2
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'porcentaje_1',
       headerName: 'Porcentaje 1',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex:1
     },
     {
       field: 'porcentaje_2',
       headerName: 'Porcentaje 2',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex:1
     },
     {
       field: 'porcentaje_3',
       headerName: 'Porcentaje 3',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex:1
     },
     {
       field: 'porcentaje_4',
       headerName: 'Porcentaje 4',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex:1
     },
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex:1,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'fecha_creacion',
       headerName: 'Fecha de Creación',
       sortable: true,
-      width: 180,
+      minWidth: 160,
+      flex:1
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
-      flex: 1,
+      minWidth: 120,
+      flex:1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -175,6 +184,11 @@ export const BusquedaPrograma: React.FC = () => {
     set_open_dialog(false);
   };
 
+  const clean_form_advance_search = (): void => {
+    reset();
+    set_rows([]);
+  }
+
   const dispatch = useAppDispatch();
 
   const on_submit_advance = handle_submit(
@@ -228,7 +242,7 @@ export const BusquedaPrograma: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Busqueda Programas" />
+          <Title title="Busqueda de Programas" />
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -325,18 +339,6 @@ export const BusquedaPrograma: React.FC = () => {
             }}
           >
             <Title title="Búsqueda avanzada programas" />
-            {/* <form
-              onSubmit={(e) => {
-                void on_submit_advance(e);
-              }}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            > */}
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
               <Grid item xs={12} sm={6} md={4}>
                 <Controller
@@ -390,6 +392,15 @@ export const BusquedaPrograma: React.FC = () => {
                 >
                   Buscar
                 </LoadingButton>
+                <Button
+                  color="inherit"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  sx={{marginLeft: 2}}
+                  onClick={clean_form_advance_search}
+                >
+                  Limpiar
+                </Button>
               </Grid>
               {rows.length > 0 && (
                 <>
@@ -421,6 +432,7 @@ export const BusquedaPrograma: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

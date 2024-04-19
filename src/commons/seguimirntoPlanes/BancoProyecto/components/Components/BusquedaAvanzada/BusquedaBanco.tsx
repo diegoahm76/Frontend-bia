@@ -48,49 +48,57 @@ export const BusquedaBanco: React.FC = () => {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 1
     },
     {
       field: 'nombre_actividad',
       headerName: 'Nombre de la Actividad',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 1
     },
     {
       field: 'nombre_indicador',
       headerName: 'Nombre del Indicador',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_meta',
       headerName: 'Nombre de la Meta',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'rubro',
       headerName: 'Rubro',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_fuente',
       headerName: 'Nombre de la Fuente',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'objeto_contrato',
       headerName: 'Objeto del Contrato',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'banco_valor',
       headerName: 'BANCO VALOR',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -107,7 +115,7 @@ export const BusquedaBanco: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -416,6 +424,7 @@ export const BusquedaBanco: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={() => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

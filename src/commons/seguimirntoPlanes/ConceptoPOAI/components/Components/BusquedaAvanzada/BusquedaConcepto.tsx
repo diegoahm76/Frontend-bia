@@ -48,31 +48,36 @@ export const BusquedaConcepto: React.FC = () => {
       field: 'nombre_indicador',
       headerName: 'Nombre del Indicador',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'nombre',
       headerName: 'Nombre grupo',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 1
     },
     {
       field: 'rubro',
       headerName: 'Rubro',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'concepto',
       headerName: 'Concepto',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 1
     },
     {
       field: 'valor_total',
       headerName: 'Valor total',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 2,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -89,7 +94,7 @@ export const BusquedaConcepto: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -344,6 +349,7 @@ export const BusquedaConcepto: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={() => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>
