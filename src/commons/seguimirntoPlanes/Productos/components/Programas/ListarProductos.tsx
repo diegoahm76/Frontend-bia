@@ -29,50 +29,57 @@ export const ListarProductos: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 250,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'numero_producto',
       headerName: 'Número de Producto',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'nombre_producto',
       headerName: 'Nombre del Producto',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'fecha_creacion',
       headerName: 'Fecha de Creación',
       sortable: true,
-      width: 180,
+      minWidth: 180,
+      flex: 1
     },
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -184,6 +191,7 @@ export const ListarProductos: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </Box>
             </Grid>

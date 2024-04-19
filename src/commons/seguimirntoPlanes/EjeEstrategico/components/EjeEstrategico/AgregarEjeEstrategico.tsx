@@ -27,7 +27,7 @@ export const AgregarEjeEstrategico: React.FC = () => {
     limpiar_formulario_eje_estrategico,
   } = useEjeEstrategicoHook();
 
-  const { tipo_eje_selected, fetch_data_tipo_eje } = useContext(
+  const { id_plan, tipo_eje_selected, fetch_data_tipo_eje } = useContext(
     DataContextEjeEstrategico
   );
 
@@ -47,9 +47,10 @@ export const AgregarEjeEstrategico: React.FC = () => {
       reset_eje_estrategico({
         id_eje_estrategico: eje_estrategico.id_eje_estrategico,
         nombre_plan: eje_estrategico.nombre_plan,
+        sigla_plan: eje_estrategico.sigla_plan,
         nombre_tipo_eje: eje_estrategico.nombre_tipo_eje,
         nombre: eje_estrategico.nombre,
-        nombre_programa: eje_estrategico.nombre_programa,
+        nombre_objetivo: eje_estrategico.nombre_objetivo,
         id_programa: eje_estrategico.id_programa,
         id_plan: eje_estrategico.id_plan,
         id_tipo_eje: eje_estrategico.id_tipo_eje,
@@ -112,14 +113,14 @@ export const AgregarEjeEstrategico: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="nombre_tipo_eje"
+                  name={id_plan ? 'sigla_plan' : 'nombre_objetivo'}
                   control={control_eje_estrategico}
                   rules={{ required: false }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       size="small"
-                      label="Nombre del tipo de eje estrategico"
+                      label={id_plan ? 'Sigla plan' : 'Nombre objetivo'}
                       variant="outlined"
                       value={value}
                       disabled={true}

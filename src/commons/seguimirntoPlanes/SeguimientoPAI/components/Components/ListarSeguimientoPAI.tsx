@@ -35,7 +35,8 @@ export const ListarSeguimientoPAI: React.FC = () => {
       field: 'razagada',
       headerName: 'REZAGADA',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex:1,
       renderCell: (params) => {
         return params.row.razagada === true ? (
           <Chip size="small" label="SI" color="success" variant="outlined" />
@@ -48,32 +49,36 @@ export const ListarSeguimientoPAI: React.FC = () => {
       field: 'fecha_registro_avance',
       headerName: 'FECHA REGISTRO AVANCE',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex:1,
     },
     {
       field: 'porcentaje_avance',
       headerName: 'PORCENTAJE AVANCE',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex:1,
     },
     {
       field: 'mes',
       headerName: 'MES',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex:1,
     },
     {
       field: 'nombre_meta',
       headerName: 'NOMBRE META',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex:1,
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
-      flex: 1,
+      minWidth: 120,
+      flex:1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -179,6 +184,7 @@ export const ListarSeguimientoPAI: React.FC = () => {
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

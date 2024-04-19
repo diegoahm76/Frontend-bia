@@ -20,11 +20,13 @@ export interface IMode {
 export interface IEjeEstrategico {
   id_eje_estrategico?: number | null;
   nombre_plan?: string;
+  nombre_objetivo?: string;
+  sigla_plan?: string;
   nombre_tipo_eje?: string;
   nombre: string;
   id_plan?: number | null;
   id_programa: number | null;
-  nombre_programa: string;
+  id_objetivo?: number | null;
   id_tipo_eje?: number | null;
 }
 // Objetivo
@@ -38,6 +40,7 @@ export interface IObjetivo {
 export interface IProgramas {
   id_programa?: number | null;
   nombre_plan?: string;
+  nombre_eje_estrategico?: string;
   nombre_programa: string;
   numero_programa: string;
   porcentaje_1: number | null;
@@ -46,7 +49,7 @@ export interface IProgramas {
   porcentaje_4: number | null;
   cumplio: boolean;
   fecha_creacion: string;
-  id_plan?: number | null;
+  id_eje_estrategico?: number | null;
   id_sector: number | null;
 }
 // Proyectos

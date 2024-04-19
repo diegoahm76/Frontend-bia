@@ -29,68 +29,78 @@ export const ListarProyecto: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 250,
+      minWidth: 350,
+      flex: 1
     },
     {
       field: 'numero_proyecto',
       headerName: 'Número de Proyecto',
       sortable: true,
-      width: 150,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 350,
+      minWidth: 450,
+      flex: 1
     },
     {
       field: 'pondera_1',
       headerName: 'Ponderación 1',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'pondera_2',
       headerName: 'Ponderación 2',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'pondera_3',
       headerName: 'Ponderación 3',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'pondera_4',
       headerName: 'Ponderación 4',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'fecha_creacion',
       headerName: 'Fecha de Creación',
       sortable: true,
-      width: 180,
+      minWidth: 160,
+      flex: 1
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -192,6 +202,7 @@ export const ListarProyecto: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
+                  getRowHeight={() => 'auto'}
                   rows={rows_proyecto}
                   columns={columns}
                   pageSize={10}
