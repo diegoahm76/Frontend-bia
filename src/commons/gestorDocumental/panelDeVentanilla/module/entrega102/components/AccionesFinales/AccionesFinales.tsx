@@ -48,7 +48,7 @@ export const AccionesFinales = (): JSX.Element => {
   // ? declaración de las funciones
 
   const handleClick = async () => {
-    const item = listaAsignaciones.find(
+    /*const item = listaAsignaciones.find(
       (item: any) =>
         item.estado_asignado === 'EN ESPERA' ||
         item.estado_asignado === 'ACEPTADA'
@@ -62,7 +62,7 @@ export const AccionesFinales = (): JSX.Element => {
         confirmButtonText: 'Entendido',
       });
       return;
-    }
+    }*/
 
     const tipo =
       currentElementPqrsdComplementoTramitesYotros?.tipo_solicitud ||
@@ -73,14 +73,26 @@ export const AccionesFinales = (): JSX.Element => {
     switch (tipo) {
       case 'PQRSDF':
         // Call the service for PQRSDF
-        res = await postAsignacionGrupoPQRSDF(
+        console.log(
+          'somos la información para el post de la asignación y respectiva creación del expediente',
+          {
+            id_pqrsdf:
+              currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_persona_asignada: liderAsignado?.id_persona,
+            id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value,
+            id_catalogo_serie_subserie:
+              currentGrupo?.currentSerie?.id_cat_serie_und,
+            // id_serie:  currentGrupo?.currentSerie,
+          }
+        );
+       /* res = await postAsignacionGrupoPQRSDF(
           {
             id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
             id_persona_asignada: liderAsignado?.id_persona,
             id_und_org_seccion_asignada: currentGrupo?.value,
           },
           handleSecondLoading
-        );
+        );*/
         break;
       case 'Tramites y Servicios':
         // Call the service for Tramites y Servicios
