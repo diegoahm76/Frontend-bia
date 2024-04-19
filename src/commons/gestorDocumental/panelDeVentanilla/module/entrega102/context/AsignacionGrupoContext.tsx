@@ -12,7 +12,12 @@ export const AsignacionGrupoProvider = ({ children }: any): JSX.Element => {
     useState<any>([]);
 
   const [listaSubGrupos, setListaSubGrupos] = useState<any>([]);
-  const [currentGrupo, setCurrentGrupo] = useState(null)
+  const [listaSeries, setListaSeries] = useState<any>([])
+  // se va a cambiar para definir el current grupo y serie
+  const [currentGrupo, setCurrentGrupo] = useState({
+    grupoSelected: null,
+    currentSerie: null,
+  })
 
   const [liderAsignado, setLiderAsignado] = useState(null);
 
@@ -32,7 +37,10 @@ export const AsignacionGrupoProvider = ({ children }: any): JSX.Element => {
     setLiderAsignado,
 
     listaAsignaciones,
-    setListaAsignaciones
+    setListaAsignaciones,
+
+    listaSeries,
+    setListaSeries,
   };
 
   return (
