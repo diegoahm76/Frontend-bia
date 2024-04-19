@@ -50,7 +50,7 @@ import React from 'react';
 export const BusquedaObjetivo: React.FC = () => {
   const columns: GridColDef[] = [
     {
-      field: 'nombre_plan_objetivo',
+      field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
       minWidth: 300,

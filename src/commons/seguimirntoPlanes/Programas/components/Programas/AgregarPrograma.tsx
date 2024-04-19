@@ -74,7 +74,7 @@ export const AgregarPrograma: React.FC = () => {
       set_fecha_creacion(programa.fecha_creacion);
       reset_programa({
         id_programa: programa.id_programa,
-        nombre_plan: programa.nombre_plan,
+        nombre_eje_estrategico: programa.nombre_eje_estrategico,
         nombre_programa: programa.nombre_programa,
         numero_programa: programa.numero_programa,
         porcentaje_1: programa.porcentaje_1,
@@ -138,14 +138,14 @@ export const AgregarPrograma: React.FC = () => {
             <>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="nombre_plan"
+                  name="nombre_eje_estrategico"
                   control={control_programa}
                   rules={{ required: false }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       size="small"
-                      label="Nombre del Plan"
+                      label="Nombre del Eje Estratégico"
                       variant="outlined"
                       value={value}
                       disabled={true}

@@ -41,7 +41,8 @@ export const ListarEjeEstrategico: React.FC = () => {
       headerName: 'NOMBRE DEL PLAN',
       sortable: true,
       minWidth: 300,
-      flex: 1
+      flex: 1,
+      valueGetter: (params) => params.row.nombre_objetivo ? params.row.nombre_plan_objetivo : params.row.nombre_plan,
     },
     ...(id_plan ? [{
       field: 'sigla_plan',

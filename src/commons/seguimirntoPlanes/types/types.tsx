@@ -40,6 +40,7 @@ export interface IObjetivo {
 export interface IProgramas {
   id_programa?: number | null;
   nombre_plan?: string;
+  nombre_eje_estrategico?: string;
   nombre_programa: string;
   numero_programa: string;
   porcentaje_1: number | null;
