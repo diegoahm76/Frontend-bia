@@ -8,6 +8,7 @@ import { ActividadPgarScreen } from "../../ActividadesPGAR/screen/ActividadPgarS
 import { IndicadorPgarScreen } from "../../IndicadoresPGAR/screen/IndicadorPgarScreen";
 import { ArmonizacionPlanesScreen } from "../../ArmonizacionPlanesPGAR/screen/ArmonizacionPlanesScreen";
 import { SeguimientoPgarScreen } from "../../SeguimientoPPGARComp/screen/SeguimientoPgarScreen";
+import { TableroPgarObjetivoScreen } from "../../TablerosControlPGAR/GeneralPorObjetivo/screen/TableroPgarObjetivoScreen";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeguimientoPgarRoutes: React.FC = () => {
@@ -16,6 +17,7 @@ export const SeguimientoPgarRoutes: React.FC = () => {
         <UserProviderPlanes>
           <Routes>
             <Route path="meta/*" element={<MetasPgarScreen />} />
+            {/* <Route path="meta/*" element={<TableroPgarObjetivoScreen />} /> */}
             <Route path="linea_base/*" element={<LineaBaseScreen />} />
             <Route path="actividades/*" element={<ActividadPgarScreen />} />
             <Route path="indicadores/*" element={<IndicadorPgarScreen />} />

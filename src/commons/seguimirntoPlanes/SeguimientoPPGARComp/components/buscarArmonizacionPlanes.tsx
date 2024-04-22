@@ -10,26 +10,15 @@ import {
   TextField,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import {
-  set_current_actividad_pgar,
-  set_current_mode_planes,
-  set_current_planes,
-} from '../../store/slice/indexPlanes';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { useAppSelector } from '../../../../hooks';
 import SaveIcon from '@mui/icons-material/Save';
 import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { DataContextPgar } from '../../SeguimientoPGAR/context/context';
-import { get_actividades_id_linea_base, get_actividades_id_producto, get_ejes_estrategicos_id_objetivo, get_indicadores_id_actividad, get_linea_base_id_meta, get_metas_id_eje, get_productos_id_proyectos, get_programas_id_eje_estrategico, get_proyectos_id_programa, post_seguimiento_pgar, search_actividad } from '../../SeguimientoPGAR/services/services';
-import { IBusquedaLineas } from '../../SeguimientoPGAR/utils/types';
-import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
+import { get_actividades_id_linea_base, get_actividades_id_producto, get_ejes_estrategicos_id_objetivo, get_indicadores_id_actividad, get_linea_base_id_meta, get_metas_id_eje, get_productos_id_proyectos, get_programas_id_eje_estrategico, get_proyectos_id_programa, post_seguimiento_pgar, put_seguimiento_pgar, search_actividad } from '../../SeguimientoPGAR/services/services';
 import { NumericFormatCustom } from '../../components/inputs/NumericInput';
-import { id } from 'date-fns/locale';
 import { get_eje_estrategico_id } from '../../EjeEstrategico/services/services';
 import { LoadingButton } from '@mui/lab';
-import { validate, v4 as uuid } from 'uuid';
-import { set } from 'date-fns';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaArmonizacionPlanes: React.FC = () => {
 
@@ -498,10 +487,14 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
       return false;
     }
 
+    if(error_porcentaje_avance !== '') return false;
+
     if(!porcentaje_avance_acumulado){
       set_error_porcentaje_avance_acumulado('Este campo es requerido');
       return false;
     }
+
+    if(error_porcentaje_avance_acumulado !== '') return false;
 
     if(!descripcion_avance){
       set_error_description_avance('Este campo es requerido');
@@ -523,6 +516,8 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
       return false;
     }
 
+    if(error_porcentaje_avance_financiero !== '') return false;
+
     if(!avance_recursos_obligados){
       set_error_avance_recursos_obligados('Este campo es requerido');
       return false;
@@ -532,6 +527,8 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
       set_error_porcentaje_avance_recursos_obligados('Este campo es requerido');
       return false;
     }
+
+    if(error_porcentaje_avance_recursos_obligados !== '') return false;
 
     return true;
   }
@@ -561,16 +558,43 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
         avance_recurso_obligado: avance_recursos_obligados,
         pavance_recurso_obligado: porcentaje_avance_recursos_obligados,
       };
-      if(data){
+      if(mode.crear){
         post_seguimiento_pgar(data).then(() => {
           control_success('Se registro correctamente');
           limpiar_form_registro();
+          limpiar_informacion_planes();
+          set_show_plan_info(false);
+          fetch_data_seguimiento_pgar();
+        }).catch((error) => {
+          control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
+        });
+      }
+
+      if(mode.editar){
+        put_seguimiento_pgar(seguimiento_pgar.id_PGAR, data).then(() => {
+          control_success('Se actualizo correctamente');
+          limpiar_form_registro();
+          limpiar_informacion_planes();
+          set_show_plan_info(false);
           fetch_data_seguimiento_pgar();
         }).catch((error) => {
           control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
         });
       }
     }
+  }
+
+  const reset_form = () => {
+    set_form_values({
+      id_armonizar: '',
+      id_planPGAR: null,
+      id_planPAI: null,
+      nombre_planPGAR: '',
+      nombre_planPAI: '',
+      objetivoPGAR: [],
+      ejesEstrategicosPAI: [],
+      estado: '',
+    });
   }
 
   const { mode, seguimiento_pgar } = useAppSelector((state) => state.planes);
@@ -580,7 +604,14 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if(mode.crear){
+      reset_form();
+      limpiar_informacion_planes();
+      limpiar_form_registro();
+      set_show_plan_info(false);
+    }
     if (mode.editar) {
+      set_show_plan_info(true);
       form_values.id_armonizar = seguimiento_pgar.id_armonizar;
       form_values.id_planPGAR = seguimiento_pgar.id_planPGAR;
       form_values.id_planPAI = seguimiento_pgar.id_planPAI;
@@ -1188,7 +1219,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                   onClick={() => {send_form()}}
                   startIcon={<SaveIcon />}
                 >
-                  Guardar
+                  {mode.crear ? 'Guardar': 'Actualizar'}
                 </LoadingButton>
               </Grid>
             </Grid>
