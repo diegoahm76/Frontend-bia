@@ -16,6 +16,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { eliminar_codigo_unspsc, get_codigo_unspsc, get_codigo_unspsc_pag } from '../Request/request';
 import type { ICodigoUnspsc } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
@@ -34,19 +35,22 @@ export const CodigosUNSPSCScreen: React.FC = () => {
       field: 'codigo_unsp',
       headerName: 'CÓDIGO UNSPSC',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
     },
     {
       field: 'nombre_producto_unsp',
       headerName: 'NOMBRE PRODUCTO UNSPSC',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
     },
     {
       field: 'activo',
       headerName: 'ESTADO',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => {
         return params.row.activo === true ? (
           <Chip
@@ -68,7 +72,8 @@ export const CodigosUNSPSCScreen: React.FC = () => {
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 200,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -134,6 +139,12 @@ export const CodigosUNSPSCScreen: React.FC = () => {
     set_is_editar(true);
   };
 
+  const clean_search = () => {
+    setNameSearch('');
+    setCodeSearch('');
+    get_traer();
+  }
+
   const get_traer = async () => {
     try {
       if(nameSearch || codeSearch) setPage(1);
@@ -148,7 +159,6 @@ export const CodigosUNSPSCScreen: React.FC = () => {
         item_ya_usado: datos.item_ya_usado,
       }));
       set_rows([...datos]);
-      console.log(page)
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'
@@ -216,12 +226,11 @@ export const CodigosUNSPSCScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Title title="Configuraciones básicas códigoS UNSPSC" />
+        <Grid item xs={12} sx={{my: 2}}>
+          <Title title="Configuraciones básicas códigos UNSPSC" />
         </Grid>
         <Grid item xs={12}>
           <Button
-            sx={{ mb: '20px' }}
             variant="outlined"
             onClick={handle_open_crear}
             startIcon={<AddIcon />}
@@ -230,43 +239,25 @@ export const CodigosUNSPSCScreen: React.FC = () => {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          {rows.length > 0 && (
-            <>
-              <ButtonGroup
-                style={{
-                  margin: 7,
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}
-              >
-                {download_xls({ nurseries: rows, columns })}
-                {download_pdf({
-                  nurseries: rows,
-                  columns,
-                  title: 'CREAR',
-                })}
-              </ButtonGroup>
+          <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
+            <Grid style={{display: 'flex', gap: '1rem'}}>
               <TextField
                 label="Buscar código UNSPSC"
                 size="small"
                 variant="outlined"
                 value={codeSearch}
                 onChange={(e) => setCodeSearch(e.target.value)}
-                style={{ marginBottom: '20px' }}
               />
               <TextField
                 label="Buscar nombre UNSPSC"
                 size="small"
                 variant="outlined"
-                sx={{marginLeft: '20px'}}
                 value={nameSearch}
                 onChange={(e) => setNameSearch(e.target.value)}
-                style={{ marginBottom: '20px' }}
               />
               <Button
                 variant="contained"
                 color="primary"
-                sx={{marginLeft: '20px'}}
                 startIcon={<SearchIcon />}
                 onClick={() => {
                   get_traer();
@@ -274,21 +265,44 @@ export const CodigosUNSPSCScreen: React.FC = () => {
               >
                 Buscar
               </Button>
-              <DataGrid
-                autoHeight
-                rows={rows}
-                columns={columns}
-                getRowId={(row) => row.id_codigo}
-                rowCount={count}
-                pageSize={10}
-                paginationMode="server"
-                rowsPerPageOptions={[10]}
-                onPageChange={async (newPage: number) => {
-                  setPage(newPage + 1);
-                }}
-              />
-            </>
-          )}
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </Grid>
+            <ButtonGroup
+              style={{
+                margin: 7,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {download_xls({ nurseries: rows, columns })}
+              {download_pdf({
+                nurseries: rows,
+                columns,
+                title: 'CREAR',
+              })}
+            </ButtonGroup>
+          </Grid>
+          <DataGrid
+            autoHeight
+            rows={rows}
+            columns={columns}
+            getRowId={(row) => row.id_codigo}
+            rowCount={count}
+            pageSize={10}
+            paginationMode="server"
+            rowsPerPageOptions={[10]}
+            onPageChange={async (newPage: number) => {
+              setPage(newPage + 1);
+            }}
+            getRowHeight={() => 'auto'}
+          />
         </Grid>
         <Grid item xs={12}>
           <Stack

@@ -177,7 +177,7 @@ export const search_planes = async ({
   nombre_plan,
   sigla_plan,
 }: any): Promise<AxiosResponse<ResponseServer<IBusquedaPlanes[]>>> => {
-  const url = `seguimiento/planes/busqueda-avanzada-planes/?nombre_plan=${String(
+  const url = `seguimiento/planes/consultar-planesPAI/?nombre_plan=${String(
     nombre_plan ?? ''
   )}&nombre_sigla_plan=${String(sigla_plan ?? '')}`;
   return await api.get<ResponseServer<IBusquedaPlanes[]>>(url);
@@ -202,12 +202,11 @@ export const search_proyectos = async ({
 
 export const search_eje = async ({
   nombre_plan,
-  nombre_objetivo,
   nombre,
 }: any): Promise<AxiosResponse<ResponseServer<IBusquedaEjeEstrategico[]>>> => {
   const url = `/seguimiento/planes/busqueda-avanzada-ejes/?nombre_plan=${String(
     nombre_plan ?? ''
-  )}&nombre_objetivo=${String(nombre_objetivo ?? '')}&nombre_eje=${String(
+  )}&nombre_eje=${String(
     nombre ?? ''
   )}`;
   return await api.get<ResponseServer<IBusquedaEjeEstrategico[]>>(url);

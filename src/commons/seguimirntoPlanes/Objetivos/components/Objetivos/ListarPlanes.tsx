@@ -132,12 +132,12 @@ export const ListarPlanes: React.FC = () => {
     },
   ];
 
-  const { rows_planes, fetch_data_planes } = useContext(DataContextPlanes);
+  const { rows_planes, fetch_data_planes_pgar } = useContext(DataContextPlanes);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    void fetch_data_planes();
+    void fetch_data_planes_pgar();
   }, []);
 
   return (
