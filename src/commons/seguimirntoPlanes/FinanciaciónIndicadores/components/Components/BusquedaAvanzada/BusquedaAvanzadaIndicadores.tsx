@@ -685,6 +685,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={() => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

@@ -30,7 +30,8 @@ export const ListarPaaCodigos: React.FC = () => {
       field: 'nombre_paa',
       headerName: 'NOMBRE DEL PAA',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 2
     },
     // {
     //   field: 'nombre_producto_unsp',
@@ -42,14 +43,15 @@ export const ListarPaaCodigos: React.FC = () => {
       field: 'codigo_unsp',
       headerName: 'CODIGO UNSPSC',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 2
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
-      flex: 1,
+      minWidth: 120,
+      flex: 2,
       renderCell: (params) => (
         <>
           <IconButton
@@ -156,6 +158,7 @@ export const ListarPaaCodigos: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

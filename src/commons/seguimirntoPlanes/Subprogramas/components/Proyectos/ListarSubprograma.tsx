@@ -30,19 +30,21 @@ export const ListarSubprograma: React.FC = () => {
       field: 'nombre_subprograma',
       headerName: 'NOMBRE SUBPROGRAMA',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 2
     },
     {
       field: 'nombre_programa',
       headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 2
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -150,6 +152,7 @@ export const ListarSubprograma: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

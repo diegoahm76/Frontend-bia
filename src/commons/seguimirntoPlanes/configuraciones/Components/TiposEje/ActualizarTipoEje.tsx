@@ -46,12 +46,7 @@ export const ActualizarTipoEje: React.FC<IProps> = ({
     watch,
     setValue: set_value,
     formState: { errors },
-  } = useForm<TiposEjes>({
-    defaultValues: {
-      nombre_tipo_eje: '',
-      activo: false,
-    },
-  });
+  } = useForm<TiposEjes>();
 
   const [is_loading, set_is_loading] = useState(false);
 
@@ -66,6 +61,13 @@ export const ActualizarTipoEje: React.FC<IProps> = ({
       set_value('activo', data?.activo);
     }, 100);
   }, [data, reset]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (is_modal_active && data) {
+      reset(data);
+    }
+  }, [is_modal_active, data, reset]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
@@ -113,10 +115,11 @@ export const ActualizarTipoEje: React.FC<IProps> = ({
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={data?.nombre_tipo_eje}
                 {...register('nombre_tipo_eje', {
                   required: true,
                 })}
-                error={!!errors.nombre_tipo_eje}
+                error={Boolean(errors.nombre_tipo_eje)}
                 helperText={
                   errors.nombre_tipo_eje?.type === 'required'
                     ? 'Este campo es obligatorio'

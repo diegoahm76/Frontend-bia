@@ -15,6 +15,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { eliminar_ods, get_ods } from '../Request/request';
 import type { IObjetivoDesarrolloSostenible } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
@@ -185,6 +186,10 @@ export const ODSScreen: React.FC = () => {
     });
   };
 
+  const clean_search = (): void => {
+    setSearchTerm('');
+  }
+
   useEffect(() => {
     void get_traer_ods();
   }, []);
@@ -219,13 +224,24 @@ export const ODSScreen: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
-            <TextField
-              label="Buscar entidad"
-              size="small"
-              variant="outlined"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <section style={{display: 'flex', gap: '1rem'}}>
+              <TextField
+                label="Buscar ODS"
+                size="small"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </section>
+
             <ButtonGroup
               style={{
                 margin: 7,
@@ -245,9 +261,10 @@ export const ODSScreen: React.FC = () => {
             autoHeight
             rows={filterRows(rows, searchTerm)}
             columns={columns ?? []}
-            getRowId={() => uuidv4()}
+            getRowId={(row) => row.id_objetivo}
             pageSize={10}
             rowsPerPageOptions={[10]}
+            getRowHeight={() => 'auto'}
           />
         </Grid>
         <Grid item xs={12}>
