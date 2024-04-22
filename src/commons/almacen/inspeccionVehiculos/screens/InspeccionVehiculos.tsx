@@ -152,11 +152,6 @@ const InspeccionVehiculos = () => {
       set_mensaje_error_kilometraje("");
   };
 
-  const cambio_capacidad_extintor = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_kilometraje(Number(e.target.value)); 
-    if (e.target.value !== null && e.target.value !== "")
-      set_mensaje_error_kilometraje("");
-  };
 
   // cambio fecha vencimiento tecnomecanica
   const cambio_fecha_vencimiento_tecnomecanica = (date: Dayjs | null): void => {
@@ -316,7 +311,7 @@ const InspeccionVehiculos = () => {
         <Title title="Seleccionar vehículo" />
 
         <Grid item container xs={12} rowSpacing={1} columnSpacing={4}>
-          <Grid item container xs={12} lg={4}>
+          <Grid item container xs={12} lg={8}>
             <TextField
               fullWidth
               label='Nombre del vehículo asignado:'
@@ -337,18 +332,6 @@ const InspeccionVehiculos = () => {
               onClick={restablecer_vehiculo_logueado}
               >
                 Seleccionar vehículo asignado
-            </Button>
-          </Grid>
-
-          <Grid item container xs={12} lg={4}>
-            <Button
-              fullWidth
-              color='primary'
-              variant='contained'
-              startIcon={<SearchIcon />}
-              onClick={()=>set_mostrar_busqueda_vehiculo(true)}
-              >
-                Buscar
             </Button>
           </Grid>
         </Grid>
@@ -452,11 +435,20 @@ const InspeccionVehiculos = () => {
             label='Capacidad extintor: '
             type={"number"}
             value={capacidad_extintor === 0 ? '' : capacidad_extintor}
+            // maximo hasta el numero 10
+            inputProps={{ min: "0", max: "10" }}
             size="small"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={cambio_capacidad_extintor}
+            onChange={
+              (e: React.ChangeEvent<HTMLInputElement>) => {
+                //maximo hasta el 10
+                if (Number(e.target.value) <= 10 && Number(e.target.value) >= 0) {
+                  set_capacidad_extintor(Number(e.target.value));
+                }
+              }
+            }
           />
         </Grid>
 
