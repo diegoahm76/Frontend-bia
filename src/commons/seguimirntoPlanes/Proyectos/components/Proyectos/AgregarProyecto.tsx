@@ -210,7 +210,7 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Año 1"
+                  label="Valor Año 1"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -236,7 +236,7 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Año 2"
+                  label="Valor Año 2"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -262,7 +262,7 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Año 3"
+                  label="Valor Año 3"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -288,7 +288,7 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Año 4"
+                  label="Valor Año 4"
                   variant="outlined"
                   value={value}
                   disabled={false}

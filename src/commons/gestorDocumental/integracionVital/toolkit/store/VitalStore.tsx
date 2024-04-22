@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-;
 
 const initialState: any = {
   listaElementosPqrsfTramitesUotros: [],
@@ -29,6 +28,12 @@ export const VitalSlice = createSlice({
       state.listaComplementosRequerimientosOtros = action.payload;
     },
 
+    setCurrentElementPqrsdComplementoTramitesYotros: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.currentElementPqrsdComplementoTramitesYotros = action.payload;
+    },
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetPanelVentanillaFull: (state) => {
       state.currentElementPqrsdComplementoTramitesYotros = null;
@@ -50,6 +55,7 @@ export const {
   // ? acciones sobre lista de complementos, derequerimientos y otros
   setListaElementosComplementosRequerimientosOtros,
   // ? listar historico de solicitudes pqr y complementos
+  setCurrentElementPqrsdComplementoTramitesYotros,
   // ? reset de todos los estados del slice
   resetPanelVentanillaFull,
   resetParcial,

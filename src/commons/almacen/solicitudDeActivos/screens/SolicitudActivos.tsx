@@ -169,24 +169,26 @@ const SolicitudActivos = () => {
             set_observaciones(response.data.observacion);
             set_data_articulos_agregados(response.data.items_solicitud);
 
-            if (Object.keys(response.data.despachos).length !== 0) {
-              const primer_despacho = response.data.despachos[0];
-              set_inputs_resumen_despacho({
-                fecha_despacho: primer_despacho.fecha_despacho,
-                motivo: primer_despacho.observacion,
-                tp_documento_pers_despacha: primer_despacho.tipo_documento_persona_despacha,
-                documento_pers_despacha: primer_despacho.numero_documento_persona_despacha,
-                nombres_pers_despacha: primer_despacho.primer_nombre_persona_despacha,
-                apellidos_pers_despacha: primer_despacho.primer_apellido_persona_despacha,
-                tp_documento_pers_anula: primer_despacho.tipo_documento_persona_solicitante,
-                documento_pers_anula: primer_despacho.numero_documento_persona_solicitante,
-                nombres_pers_anula: primer_despacho.primer_nombre_persona_solicitante,
-                apellidos_pers_anula: primer_despacho.primer_apellido_persona_solicitante,
-                justificacion: primer_despacho.justificacion_anulacion ?? '',
-                fecha_anulacion: primer_despacho.fecha_anulacion
-              });
-            } else {
-              control_error('No se encontraron despachos para esta solicitud');
+            if (accion === 'ver') {
+              if (Object.keys(response.data.despachos).length !== 0) {
+                const primer_despacho = response.data.despachos[0];
+                set_inputs_resumen_despacho({
+                  fecha_despacho: primer_despacho.fecha_despacho,
+                  motivo: primer_despacho.observacion,
+                  tp_documento_pers_despacha: primer_despacho.tipo_documento_persona_despacha,
+                  documento_pers_despacha: primer_despacho.numero_documento_persona_despacha,
+                  nombres_pers_despacha: primer_despacho.primer_nombre_persona_despacha,
+                  apellidos_pers_despacha: primer_despacho.primer_apellido_persona_despacha,
+                  tp_documento_pers_anula: primer_despacho.tipo_documento_persona_solicitante,
+                  documento_pers_anula: primer_despacho.numero_documento_persona_solicitante,
+                  nombres_pers_anula: primer_despacho.primer_nombre_persona_solicitante,
+                  apellidos_pers_anula: primer_despacho.primer_apellido_persona_solicitante,
+                  justificacion: primer_despacho.justificacion_anulacion ?? '',
+                  fecha_anulacion: primer_despacho.fecha_anulacion
+                });
+              } else {
+                control_error('No se encontraron despachos para esta solicitud');
+              }
             }
 
             if (Object.keys(response.data.items_despacho).length !== 0) {
@@ -210,6 +212,10 @@ const SolicitudActivos = () => {
         }
       })
   }
+
+  useEffect(() => {
+    console.log('accion', accion);
+  }, [accion])
 
   useEffect(() => {
     if (accion === 'ver' || accion === 'editar') {
@@ -314,7 +320,6 @@ const SolicitudActivos = () => {
   }, [position_tab]);
 
   const btn_continuar = async () => {
-
     if (position_tab === '1' && accion === 'null') {
       set_accion('crear');
     }
@@ -340,21 +345,6 @@ const SolicitudActivos = () => {
       }
     }
 
-    if (position_tab === '2') {
-      const form_busqueda_articulos = await validar_busqueda_articulos(
-        accion,
-        articulo_encontrado,
-        cantidad_articulo,
-        fecha_devolucion,
-        observacion
-      );
-      if (form_busqueda_articulos) {
-        set_position_tab('3');
-        set_btn_continuar_disabled(true);
-      } else {
-        set_btn_continuar_disabled(false);
-      }
-    }
   }
 
   const btn_salir = () => {
@@ -401,13 +391,11 @@ const SolicitudActivos = () => {
     );
     const form_busqueda_articulos = await validar_busqueda_articulos(
       accion,
-      articulo_encontrado,
-      cantidad_articulo,
-      fecha_devolucion,
-      observacion
+      data_articulos_agregados,
+      switch_solicitud_prestamo
     );
 
-    if (form_seleccion_funcionarios && form_busqueda_articulos) {
+    if (form_seleccion_funcionarios === true && form_busqueda_articulos === true) {
       if (accion === 'crear') {
         crear_solucion_activos();
       } else if (accion === 'editar') {
@@ -456,7 +444,6 @@ const SolicitudActivos = () => {
   }
 
   const crear_solucion_activos = () => {
-    console.log(data_articulos_agregados);
 
     Swal.fire({
       title: '¿Está seguro de crear la solicitud de activos?',
@@ -479,7 +466,7 @@ const SolicitudActivos = () => {
             return {
               id_bien: articulo.id_bien,
               cantidad: articulo.cantidad,
-              fecha_devolucion: dayjs(articulo.fecha_devolucion).format('YYYY-MM-DD'),
+              ...(switch_solicitud_prestamo ? { fecha_devolucion: dayjs(articulo.fecha_devolucion).format('YYYY-MM-DD') } : {}),
               observacion: articulo.observacion,
               id_unidad_medida: articulo.id_unidad_medida
             }
@@ -587,8 +574,8 @@ const SolicitudActivos = () => {
 
               <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%', }}>
                 <TabList sx={{ minWidth: '100%' }} onChange={handle_tablist_change}>
-                  <Tab disabled={accion !== 'null'} sx={{ minWidth: accion === 'ver' ? '50%' : '33.3%'}} label="Solicitudes realizadas" value="1" />
-                  <Tab disabled={accion === 'null' || accion === 'cancelar'} sx={{ minWidth: accion === 'ver' ? '50%' : '33.3%'}} label={accion !== 'ver' ? "Selección de funcionarios" : "Resumen de la solicitud"} value="2" />
+                  <Tab disabled={accion !== 'null'} sx={{ minWidth: accion === 'ver' ? '50%' : '33.3%' }} label="Solicitudes realizadas" value="1" />
+                  <Tab disabled={accion === 'null' || accion === 'cancelar'} sx={{ minWidth: accion === 'ver' ? '50%' : '33.3%' }} label={accion !== 'ver' ? "Selección de funcionarios" : "Resumen de la solicitud"} value="2" />
                   {accion !== 'ver' &&
                     <Tab disabled={accion === 'null' || accion === 'cancelar'} sx={{ minWidth: '33.3%' }} label={accion !== 'ver' ? "Búsqueda de  artículos" : "Artículos solicitados"} value="3" />
                   }
@@ -674,6 +661,7 @@ const SolicitudActivos = () => {
                     data_articulos_despachados={data_articulos_despachados}
                     inputs_persona_alma_no_dispo_alma={inputs_persona_alma_no_dispo_alma}
                     inputs_persona_alma_rechaza={inputs_persona_alma_rechaza}
+                    unidades_medidas={unidades_medidas}
                   />
                 </Grid>
               </TabPanel>
@@ -681,6 +669,7 @@ const SolicitudActivos = () => {
               <TabPanel value="3" sx={{ p: '20px 0' }}>
                 <Grid container spacing={2}>
                   <BusquedaArticulos
+                    switch_solicitud_prestamo={switch_solicitud_prestamo}
                     accion={accion}
                     unidades_medidas={unidades_medidas}
                     codigo_articulo={codigo_articulo}

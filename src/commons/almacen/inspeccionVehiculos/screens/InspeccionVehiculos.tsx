@@ -33,6 +33,12 @@ const InspeccionVehiculos = () => {
   const [id_hoja_vida_vehiculo, set_id_hoja_vida_vehiculo] = useState<number>(0);
   const [refrescar_input_vehiculo_buscado, set_refrescar_input_vehiculo_buscado] = useState<boolean>(false);
 
+  const [capacidad_extintor, set_capacidad_extintor] = useState<number>(0);
+  const [fecha_vencimiento_extintor, set_fecha_vencimiento_extintor] = useState<Dayjs>(dayjs());
+  const [fecha_vencimiento_licencia, set_fecha_vencimiento_licencia] = useState<Dayjs>(dayjs());
+  const [fecha_vencimiento_soat, set_fecha_vencimiento_soat] = useState<Dayjs>(dayjs());
+  const [fecha_revision_tecnomecanica, set_fecha_revision_tecnomecanica] = useState<Dayjs>(dayjs());
+
   const [vehiculo_arrendado_encontrado, set_vehiculo_arrendado_encontrado] = useState<data_busqueda_vehiculos>(Object);
 
   const [vehiculo_seleccionado, set_vehiculo_seleccionado] = useState<string>('');
@@ -115,6 +121,12 @@ const InspeccionVehiculos = () => {
     }
   };
 
+  const cambio_fecha_vencimiento_soat = (date: Dayjs | null): void => {
+    if (date !== null) {
+      set_fecha_vencimiento_soat(date);
+    }
+  };
+
   /**
    * Función para cambiar la fecha de nacimiento del conductor.
    * 
@@ -138,6 +150,28 @@ const InspeccionVehiculos = () => {
     set_kilometraje(Number(e.target.value)); 
     if (e.target.value !== null && e.target.value !== "")
       set_mensaje_error_kilometraje("");
+  };
+
+
+  // cambio fecha vencimiento tecnomecanica
+  const cambio_fecha_vencimiento_tecnomecanica = (date: Dayjs | null): void => {
+    if (date !== null) {
+      set_fecha_revision_tecnomecanica(date);
+    }
+  };
+
+  // cambio fecha vencimiento extintor
+  const cambio_fecha_vencimiento_extintor = (date: Dayjs | null): void => {
+    if (date !== null) {
+      set_fecha_vencimiento_extintor(date);
+    }
+  };
+
+  //cambio vencimiento licencia
+  const cambio_fecha_vencimiento_licencia = (date: Dayjs | null): void => {
+    if (date !== null) {
+      set_fecha_vencimiento_licencia(date);
+    }
   };
 
   /**
@@ -277,7 +311,7 @@ const InspeccionVehiculos = () => {
         <Title title="Seleccionar vehículo" />
 
         <Grid item container xs={12} rowSpacing={1} columnSpacing={4}>
-          <Grid item container xs={12} lg={4}>
+          <Grid item container xs={12} lg={8}>
             <TextField
               fullWidth
               label='Nombre del vehículo asignado:'
@@ -300,23 +334,11 @@ const InspeccionVehiculos = () => {
                 Seleccionar vehículo asignado
             </Button>
           </Grid>
-
-          <Grid item container xs={12} lg={4}>
-            <Button
-              fullWidth
-              color='primary'
-              variant='contained'
-              startIcon={<SearchIcon />}
-              onClick={()=>set_mostrar_busqueda_vehiculo(true)}
-              >
-                Buscar
-            </Button>
-          </Grid>
         </Grid>
       </Grid>
       
 
-      <Grid item container rowSpacing={3} xs={12} sx={{
+      <Grid item container columnSpacing={2} rowSpacing={3} xs={12} sx={{
           display:'flex',
           justifyContent:'space-between',
           alignItems:'center',
@@ -331,14 +353,9 @@ const InspeccionVehiculos = () => {
 
         <Title title="Realizar inspección" />
 
-        <Grid item xs={12} lg={2} sx={{
-          display:'flex',
-          alignItems:'center',
-          justifyContent:'center'
-          }}>
+        <Grid item xs={12} lg={4}>
           <TextField
             fullWidth
-            id="kilometraje"
             label='Kilometraje*:'
             type={"number"}
             value={kilometraje === 0 ? '' : kilometraje}
@@ -348,13 +365,94 @@ const InspeccionVehiculos = () => {
             }}
             onChange={cambio_kilometraje}
           />
-          <FormLabel sx={{ marginLeft: "10px" }} htmlFor="kilometraje">
-            KM
-          </FormLabel>
         </Grid>
 
+        <Grid item xs={12} lg={4}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label='Fecha de vencimiento SOAT:'
+              value={fecha_vencimiento_soat}
+              onChange={(newValue) => {cambio_fecha_vencimiento_soat(newValue);}}
+              renderInput={(params) => (
+                <TextField  required fullWidth size="small" {...params} />
+              )}
+              minDate={dayjs()}
+            />
+          </LocalizationProvider>
+        </Grid>
 
-        <Grid item xs={12} lg={10} sx={{display:'flex',alignItems:'center',justifyContent:'end'}}>
+        <Grid item xs={12} lg={4}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label='Fecha revision tecno mecanica:'
+              value={fecha_revision_tecnomecanica}
+              onChange={(newValue) => {
+                cambio_fecha_vencimiento_tecnomecanica(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField  required fullWidth size="small" {...params} />
+              )}
+              minDate={dayjs()}
+            />
+          </LocalizationProvider>
+        </Grid>
+
+        <Grid item xs={12} lg={4}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label='Fecha vencimiento extintor:'
+              value={fecha_vencimiento_extintor}
+              onChange={(newValue) => {
+                cambio_fecha_vencimiento_extintor(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField  required fullWidth size="small" {...params} />
+              )}
+              minDate={dayjs()}
+            />
+          </LocalizationProvider>
+        </Grid>
+
+        <Grid item xs={12} lg={4}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label='Fecha vencimiento licencia conducción:'
+              value={fecha_vencimiento_licencia}
+              onChange={(newValue) => {
+                cambio_fecha_vencimiento_licencia(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField  required fullWidth size="small" {...params} />
+              )}
+              minDate={dayjs()}
+            />
+          </LocalizationProvider>
+        </Grid>
+
+        <Grid item xs={12} lg={4}>
+          <TextField
+            fullWidth
+            label='Capacidad extintor: '
+            type={"number"}
+            value={capacidad_extintor === 0 ? '' : capacidad_extintor}
+            // maximo hasta el numero 10
+            inputProps={{ min: "0", max: "10" }}
+            size="small"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={
+              (e: React.ChangeEvent<HTMLInputElement>) => {
+                //maximo hasta el 10
+                if (Number(e.target.value) <= 10 && Number(e.target.value) >= 0) {
+                  set_capacidad_extintor(Number(e.target.value));
+                }
+              }
+            }
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={12} sx={{display:'flex',alignItems:'center',justifyContent:'end'}}>
           <b>¿El vehículo es agendable?: </b>
           <Grid item sx={{
             display:'flex',

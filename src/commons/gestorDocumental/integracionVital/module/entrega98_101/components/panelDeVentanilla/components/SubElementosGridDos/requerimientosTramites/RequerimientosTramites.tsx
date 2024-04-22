@@ -2,6 +2,7 @@
 import { useContext } from 'react';
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import {
+  useAppDispatch,
   useAppSelector,
 } from '../../../../../../../../../../hooks';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
@@ -9,75 +10,33 @@ import { Avatar, IconButton, Tooltip } from '@mui/material';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { columnsReqTra } from './columsReqTra/columnsReqTra';
 import { downloadCSV } from '../../../utils/downloadCSV';
-import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/VitalStore';
+import { ModalInfoElementos } from '../../AtomVistaElementos/PQRSDF/ModalInfoPqrsdf';
 
 export const RequerimientosTramites: React.FC = (): JSX.Element => {
-  const {
-    listaComplementosRequerimientosOtros,
-  } = useAppSelector((state) => state.VitalSlice);
+  const dispatch = useAppDispatch();
+
+  const { listaComplementosRequerimientosOtros } = useAppSelector(
+    (state) => state.VitalSlice
+  );
 
   //* context declaration
   const { setAnexos } = useContext(PanelVentanillaContext);
 
-  const { handleFifthLoading, handleOpenModalTwo: handleOpenInfoMetadatos } =
-    useContext(ModalAndLoadingContext);
+  const {
+    handleFifthLoading,
+    handleOpenModalTwo: handleOpenInfoMetadatos,
+    treceLoading,
+    handleTreceLoading,
+    catorceLoading,
+    handleCatorceLoading,
+  } = useContext(ModalAndLoadingContext);
   //* columns definition
   const columns = [
     //* se debe revisar si el tipo de complemento es pqrsdf o tramite para poder mostrar la información de la manera correcta
     ...columnsReqTra,
-  /*  {
-      headerName: 'Requiere digitalización',
-      field: 'requiere_digitalizacion',
-      minWidth: 200,
-      renderCell: (params: any) => {
-        return (
-          <Chip
-            label={params.value ? 'Si' : 'No'}
-            color={params.value ? 'success' : 'error'}
-            clickable
-            onClick={() => {
-              control_info(
-                `Este complemento ${
-                  params.value ? 'requiere' : 'no requiere'
-                } digitalización`
-              );
-            }}
-          />
-        );
-      },
-    },
-    {
-      headerName: 'Complememto asignado a unidad',
-      field: 'complemento_asignado_unidad',
-      minWidth: 250,
-      renderCell: (params: any) => {
-        return (
-          <Chip
-            label={params.value ? 'Si' : 'No'}
-            color={params.value ? 'success' : 'error'}
-          />
-        );
-      },
-    },
-    {
-      headerName: 'Número de solicitudes de digitalización',
-      field: 'numero_solicitudes',
-      minWidth: 300,
-      renderCell: (params: any) => {
-        return (
-          <Chip
-            label={`Solicitudes de digitalización: ${params.value}`}
-            clickable
-            color="info"
-            onClick={() => {
-              control_info(
-                `Actualmente tienes ${params.value} solicitudes de digitalización para este complemento`
-              );
-            }}
-          />
-        );
-      },
-    },*/
     {
       headerName: 'Acciones',
       field: 'Acciones',
@@ -85,25 +44,61 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-           <Tooltip title="Exportar COMPLEMENTO TRÁMITE en fomato CSV">
+            <Tooltip title="Exportar COMPLEMENTO TRÁMITE en fomato CSV">
               <IconButton
                 onClick={() => {
-                  downloadCSV(params.row, `complemento_vital_TRAMITE${Math.random()}.csv`);
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
+                  /* console.log({
+                    //idComplementoUsuPQR: params.row.idComplementoUsu_PQR || 'No aplica',
+                    //idSolicitudTramite: params.row.id_solicitud_tramite || 'No aplica',
+                    tipo: params.row.tipo || 'No aplica',
+                    nombreCompletoTitular: params.row.nombre_completo_titular || 'No aplica',
+                    asunto: params.row.asunto || 'No aplica',
+                    cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion ? 'Sí' : 'No',
+                    numeroSolicitudes: params.row.numero_solicitudes || 'No aplica',
+                    esComplemento: params.row.es_complemento ? 'Sí' : 'No',
+                    complementoAsignadoUnidad: params.row.complemento_asignado_unidad ? 'Sí' : 'No',
+                    fechaComplemento: params.row.fecha_complemento || 'No aplica',
+                    medioSolicitud: params.row.medio_solicitud || 'No aplica',
+                    numeroFoliosTotales: params.row.nro_folios_totales || 'No aplica',
+                    nombreCompletoRecibe: params.row.nombre_completo_recibe || 'No aplica',
+                    descripcion: params.row.descripcion || 'No aplica'
+                });*/
 
-                    return;
-                  });*/
+                  downloadCSV(
+                    {
+                      //idComplementoUsuPQR: params.row.idComplementoUsu_PQR || 'No aplica',
+                      //idSolicitudTramite: params.row.id_solicitud_tramite || 'No aplica',
+                      tipo: params.row.tipo || 'No aplica',
+                      nombreCompletoTitular:
+                        params.row.nombre_completo_titular || 'No aplica',
+                      asunto: params.row.asunto || 'No aplica',
+                      cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                      radicado: params.row.radicado || 'No aplica',
+                      fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                      requiereDigitalizacion: params.row.requiere_digitalizacion
+                        ? 'Sí'
+                        : 'No',
+                      numeroSolicitudes:
+                        params.row.numero_solicitudes || 'No aplica',
+                      esComplemento: params.row.es_complemento ? 'Sí' : 'No',
+                      complementoAsignadoUnidad: params.row
+                        .complemento_asignado_unidad
+                        ? 'Sí'
+                        : 'No',
+                      fechaComplemento:
+                        params.row.fecha_complemento || 'No aplica',
+                      medioSolicitud: params.row.medio_solicitud || 'No aplica',
+                      numeroFoliosTotales:
+                        params.row.nro_folios_totales || 'No aplica',
+                      nombreCompletoRecibe:
+                        params.row.nombre_completo_recibe || 'No aplica',
+                      descripcion: params.row.descripcion || 'No aplica',
+                    },
+                    `complemento_vital_TRAMITE${Math.random()}.csv`
+                  );
                 }}
               >
                 <Avatar
@@ -125,6 +120,34 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+            <Tooltip title="Ver">
+              <IconButton
+                onClick={() => {
+                  dispatch(
+                    setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
+                  );
+                  handleTreceLoading(true);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           </>
         );
       },
@@ -133,6 +156,12 @@ export const RequerimientosTramites: React.FC = (): JSX.Element => {
 
   return (
     <>
+      <ModalInfoElementos
+        openModalOne={treceLoading}
+        openModalTwo={catorceLoading}
+        handleOpenModalOne={handleTreceLoading}
+        handleOpenModalTwo={handleCatorceLoading}
+      />
       <RenderDataGrid
         rows={[...listaComplementosRequerimientosOtros] ?? []}
         columns={columns ?? []}

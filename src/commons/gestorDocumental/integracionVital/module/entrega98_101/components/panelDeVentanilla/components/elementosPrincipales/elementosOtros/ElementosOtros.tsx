@@ -10,21 +10,23 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { useContext, useState } from 'react';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import  DocumentScannerIcon  from '@mui/icons-material/DocumentScanner';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import { downloadCSV } from '../../../utils/downloadCSV';
+import { ModalInfoElementos } from '../../AtomVistaElementos/PQRSDF/ModalInfoPqrsdf';
+import { setCurrentElementPqrsdComplementoTramitesYotros } from '../../../../../../../toolkit/store/VitalStore';
 
 export const ElementosOtros = (): JSX.Element => {
   //* redux states
+  const { listaElementosPqrsfTramitesUotros } = useAppSelector(
+    (state) => state.VitalSlice
+  );
   const {
-    listaElementosPqrsfTramitesUotros,
-  } = useAppSelector((state) => state.VitalSlice);
-
-  const { handleOpenModalOne, handleGeneralLoading } = useContext(
-    ModalAndLoadingContext
-  );
-  const { setRadicado, setValue } = useContext(
-    PanelVentanillaContext
-  );
+    handleElevenLoading,
+    handleTwelveLoading,
+    ElevenLoading,
+    TwelveLoading,
+  } = useContext(ModalAndLoadingContext);
+  const { setRadicado, setValue } = useContext(PanelVentanillaContext);
   //* dispatch necesario
   const dispatch = useAppDispatch();
 
@@ -35,7 +37,7 @@ export const ElementosOtros = (): JSX.Element => {
   // ? columns config
   const columns = [
     ...columnsOtros,
-  /*  {
+    /*  {
       headerName: 'Requiere digitalización',
       field: 'requiere_digitalizacion',
       minWidth: 250,
@@ -50,7 +52,7 @@ export const ElementosOtros = (): JSX.Element => {
       },
     },*/
     //* sacar para poner color
-  /*  {
+    /*  {
       headerName: 'Estado de asignación de grupo',
       field: 'estado_asignacion_grupo',
       minWidth: 250,
@@ -75,7 +77,7 @@ export const ElementosOtros = (): JSX.Element => {
       },
     },*/
     //* sacar para poner color
- /*   {
+    /*   {
       headerName: 'Número de solicitudes de digitalización',
       field: 'numero_solicitudes_digitalizacion',
       minWidth: 300,
@@ -122,25 +124,100 @@ export const ElementosOtros = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
-           <Tooltip title="Exportar OTRO en fomato CSV">
+            <Tooltip title="Exportar OTRO en fomato CSV">
               <IconButton
                 onClick={() => {
-                  downloadCSV(params.row, `otro_vital_${params.row.id_otros}.csv`);
-                  /*void getAnexosPqrsdf(params?.row?.id_PQRSDF).then((res) => {
-                    //  console.log('')(res);
-                    setActionsPQRSDF(params?.row);
-                    navigate(
-                      `/app/gestor_documental/panel_ventanilla/pqr_info/${params.row.id_PQRSDF}`
-                    );
-                    setAnexos(res);
-                    if (res.length > 0) {
-                      handleOpenInfoMetadatos(false); //* cierre de la parte de los metadatos
-                      handleOpenInfoAnexos(false); //* cierra la parte de la información del archivo realacionaod a la pqesdf que se consulta con el id del anexo
-                      return;
-                    }
+                  /* console.log('otro', {
+                    tipoSolicitud: params.row.tipo_solicitud || 'No aplica',
+                    nombreCompletoTitular: params.row.nombre_completo_titular || 'No aplica',
+                    asunto: params.row.asunto || 'No aplica',
+                    cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                    radicado: params.row.radicado || 'No aplica',
+                    fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                    requiereDigitalizacion: params.row.requiere_digitalizacion ? 'Sí' : 'No',
+                    estadoSolicitud: params.row.estado_solicitud || 'No aplica',
+                    estadoAsignacionGrupo: params.row.estado_asignacion_grupo || 'No aplica',
+                    personaAsignada: params.row.persona_asignada || 'No aplica',
+                    idPersonaRecibe: params.row.id_persona_recibe || 'No aplica',
+                    personaRecibe: params.row.persona_recibe || 'No aplica',
+                    numeroSolicitudesDigitalizacion: params.row.numero_solicitudes_digitalizacion || 'No aplica',
+                    numeroFoliosTotales: params.row.nro_folios_totales || 'No aplica',
+                    unidadAsignada: params.row.unidad_asignada || 'No aplica',
+                    esPqrsdf: params.row.es_pqrsdf ? 'Sí' : 'No',
+                    personaInterpone: params.row.persona_interpone || 'No aplica',
+                    codigoRelacionTitular: params.row.cod_relacion_titular || 'No aplica',
+                    relacionTitular: params.row.relacion_titular || 'No aplica',
+                    medioSolicitud: params.row.medio_solicitud || 'No aplica',
+                    codigoFormaPresentacion: params.row.cod_forma_presentacion || 'No aplica',
+                    formaPresentacion: params.row.forma_presentacion || 'No aplica',
+                    fechaRegistro: params.row.fecha_registro || 'No aplica',
+                    descripcion: params.row.descripcion || 'No aplica',
+                    idSucursalRecepcionaFisica: params.row.id_sucursal_recepciona_fisica || 'No aplica',
+                    nombreSucursal: params.row.nombre_sucursal || 'No aplica',
+                    nombreSucursalRecepcionFisica: params.row.nombre_sucursal_recepcion_fisica || 'No aplica',
+                    fechaEnvioDefinitivoDigitalizacion: params.row.fecha_envio_definitivo_digitalizacion || 'No aplica',
+                    fechaDigitalizacionCompletada: params.row.fecha_digitalizacion_completada || 'No aplica',
+                    fechaInicialEstadoActual: params.row.fecha_inicial_estado_actual || 'No aplica',
+                });*/
 
-                    return;
-                  });*/
+                  downloadCSV(
+                    {
+                      tipoSolicitud: params.row.tipo_solicitud || 'No aplica',
+                      nombreCompletoTitular:
+                        params.row.nombre_completo_titular || 'No aplica',
+                      asunto: params.row.asunto || 'No aplica',
+                      cantidadAnexos: params.row.cantidad_anexos || 'No aplica',
+                      radicado: params.row.radicado || 'No aplica',
+                      fechaRadicado: params.row.fecha_radicado || 'No aplica',
+                      requiereDigitalizacion: params.row.requiere_digitalizacion
+                        ? 'Sí'
+                        : 'No',
+                      estadoSolicitud:
+                        params.row.estado_solicitud || 'No aplica',
+                      estadoAsignacionGrupo:
+                        params.row.estado_asignacion_grupo || 'No aplica',
+                      personaAsignada:
+                        params.row.persona_asignada || 'No aplica',
+                      idPersonaRecibe:
+                        params.row.id_persona_recibe || 'No aplica',
+                      personaRecibe: params.row.persona_recibe || 'No aplica',
+                      numeroSolicitudesDigitalizacion:
+                        params.row.numero_solicitudes_digitalizacion ||
+                        'No aplica',
+                      numeroFoliosTotales:
+                        params.row.nro_folios_totales || 'No aplica',
+                      unidadAsignada: params.row.unidad_asignada || 'No aplica',
+                      esPqrsdf: params.row.es_pqrsdf ? 'Sí' : 'No',
+                      personaInterpone:
+                        params.row.persona_interpone || 'No aplica',
+                      codigoRelacionTitular:
+                        params.row.cod_relacion_titular || 'No aplica',
+                      relacionTitular:
+                        params.row.relacion_titular || 'No aplica',
+                      medioSolicitud: params.row.medio_solicitud || 'No aplica',
+                      codigoFormaPresentacion:
+                        params.row.cod_forma_presentacion || 'No aplica',
+                      formaPresentacion:
+                        params.row.forma_presentacion || 'No aplica',
+                      fechaRegistro: params.row.fecha_registro || 'No aplica',
+                      descripcion: params.row.descripcion || 'No aplica',
+                      idSucursalRecepcionaFisica:
+                        params.row.id_sucursal_recepciona_fisica || 'No aplica',
+                      nombreSucursal: params.row.nombre_sucursal || 'No aplica',
+                      nombreSucursalRecepcionFisica:
+                        params.row.nombre_sucursal_recepcion_fisica ||
+                        'No aplica',
+                      fechaEnvioDefinitivoDigitalizacion:
+                        params.row.fecha_envio_definitivo_digitalizacion ||
+                        'No aplica',
+                      fechaDigitalizacionCompletada:
+                        params.row.fecha_digitalizacion_completada ||
+                        'No aplica',
+                      fechaInicialEstadoActual:
+                        params.row.fecha_inicial_estado_actual || 'No aplica',
+                    },
+                    `otro_vital_${params.row.id_otros}.csv`
+                  );
                 }}
               >
                 <Avatar
@@ -162,21 +239,13 @@ export const ElementosOtros = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-          {/*  <Tooltip title="Seleccionar solicitud de otros para procesos">
+            <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
-                  if (params?.row?.estado_asignacion_grupo === 'Aceptado') {
-                    control_warning(
-                      'No se pueden seleccionar esta pqrsdf ya que ha sido asignada a un grupo'
-                    );
-                    return;
-                  }
-
                   dispatch(
-                    setListaElementosComplementosRequerimientosOtros([])
+                    setCurrentElementPqrsdComplementoTramitesYotros(params?.row)
                   );
-
-                  //setActionsOtrosManejo(params?.row);
+                  handleElevenLoading(true);
                 }}
               >
                 <Avatar
@@ -188,16 +257,16 @@ export const ElementosOtros = (): JSX.Element => {
                   }}
                   variant="rounded"
                 >
-                  <TaskIcon
+                  <VisibilityIcon
                     sx={{
-                      color: 'warning.main',
+                      color: 'primary.main',
                       width: '18px',
                       height: '18px',
                     }}
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>*/}
+            </Tooltip>
           </>
         );
       },
@@ -206,10 +275,16 @@ export const ElementosOtros = (): JSX.Element => {
 
   return (
     <>
+      <ModalInfoElementos
+        openModalOne={ElevenLoading}
+        openModalTwo={TwelveLoading}
+        handleOpenModalOne={handleElevenLoading}
+        handleOpenModalTwo={handleTwelveLoading}
+      />
       <RenderDataGrid
         rows={
           [
-            ...listaElementosPqrsfTramitesUotros,
+            // ...listaElementosPqrsfTramitesUotros,
             ...listaElementosPqrsfTramitesUotros,
           ] ?? []
         }

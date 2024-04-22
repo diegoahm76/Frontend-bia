@@ -16,6 +16,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { eliminar_cuenca, get_cuencas } from '../Request/request';
 import type { Cuenca } from '../interfaces/interfaces';
 import { AgregarCuenca } from '../Components/Cuencas/AgregarCuenca';
@@ -32,15 +33,17 @@ export const CuencaScreen: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'nombre',
-      headerName: 'NOMBRE CUENCA',
+      headerName: 'Nombre Cuenca',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
     },
     {
       field: 'activo',
-      headerName: 'ESTADO',
+      headerName: 'Estado',
       sortable: true,
-      width: 120,
+      minWidth: 100,
+      flex: 1,
       renderCell: (params) => {
         return params.row.activo === true ? (
           <Chip
@@ -61,8 +64,9 @@ export const CuencaScreen: React.FC = () => {
     },
     {
       field: 'ACCIONES',
-      headerName: 'ACCIONES',
-      width: 200,
+      headerName: 'Acciones',
+      minWidth: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -149,6 +153,7 @@ export const CuencaScreen: React.FC = () => {
       );
     }
   };
+
   const confirmar_eliminar_cuenca = (id_cuenca: number): void => {
     void Swal.fire({
       // title: "Estas seguro?",
@@ -162,7 +167,7 @@ export const CuencaScreen: React.FC = () => {
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',
       cancelButtonColor: '#DE1616',
-      confirmButtonText: 'Si, elminar!',
+      confirmButtonText: 'Si, eliminar!',
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -178,6 +183,10 @@ export const CuencaScreen: React.FC = () => {
       }
     });
   };
+
+  const clean_search = (): void => {
+    setSearchTerm('');
+  }
 
   useEffect(() => {
     void get_traer_cuencas();
@@ -195,17 +204,15 @@ export const CuencaScreen: React.FC = () => {
           background: '#FAFAFA',
           borderRadius: '15px',
           p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
+          m: '20px 0 20px 0',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
         <Grid item xs={12}>
           <Title title="Configuraciones básicas cuencas" />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{my: 2}}>
           <Button
-            sx={{ mb: '20px' }}
             variant="outlined"
             onClick={handle_open_crear}
             startIcon={<AddIcon />}
@@ -214,40 +221,49 @@ export const CuencaScreen: React.FC = () => {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          {rows.length > 0 && (
-            <>
-              <ButtonGroup
-                style={{
-                  margin: 7,
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}
-              >
-                {download_xls({ nurseries: rows, columns })}
-                {download_pdf({
-                  nurseries: rows,
-                  columns,
-                  title: 'CREAR CUENCA',
-                })}
-              </ButtonGroup>
+          <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
+            <Grid style={{display: 'flex', gap: '1rem'}}>
               <TextField
                 label="Buscar cuenca"
                 size="small"
                 variant="outlined"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ marginBottom: '20px' }}
               />
-              <DataGrid
-                autoHeight
-                rows={filterRows(rows, searchTerm)}
-                columns={columns}
-                getRowId={(row) => row.id_cuenca}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-              />
-            </>
-          )}
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </Grid>
+            <ButtonGroup
+              style={{
+                margin: 7,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {download_xls({ nurseries: rows, columns })}
+              {download_pdf({
+                nurseries: rows,
+                columns,
+                title: 'CREAR CUENCA',
+              })}
+            </ButtonGroup>
+          </Grid>
+          <DataGrid
+            // density="compact"
+            getRowHeight={() => 'auto'}
+            autoHeight
+            rows={filterRows(rows, searchTerm)}
+            columns={columns}
+            getRowId={(row) => row.id_cuenca}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+          />
         </Grid>
         <Grid item xs={12}>
           <Stack

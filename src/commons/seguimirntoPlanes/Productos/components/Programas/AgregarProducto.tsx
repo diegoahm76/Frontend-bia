@@ -261,7 +261,7 @@ export const AgregarProducto: React.FC = () => {
           <Grid item xs={12} sm={6} md={4}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                label="Fecha de creacion"
+                label="Fecha de creación *"
                 value={fecha_creacion}
                 onChange={(value) => {
                   handle_change_fecha_creacion(value);
@@ -277,7 +277,7 @@ export const AgregarProducto: React.FC = () => {
                     error={!!errors_producto.fecha_creacion}
                     helperText={
                       errors_producto.fecha_creacion
-                        ? 'Es obligatorio la fecha de creación'
+                        ? 'Es obligatoria la fecha de creación'
                         : ''
                     }
                   />

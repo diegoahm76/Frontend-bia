@@ -34,68 +34,79 @@ export const ListarMetas: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_producto',
       headerName: 'Nombre del Producto',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_actividad',
       headerName: 'Nombre de la Actividad',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_indicador',
       headerName: 'Nombre del Indicador',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_meta',
       headerName: 'Nombre de la Meta',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'unidad_meta',
       headerName: 'Unidad de Meta',
       sortable: true,
-      width: 100,
+      minWidth: 100,
+      flex: 1
     },
     {
       field: 'porcentaje_meta',
       headerName: 'Porcentaje de Meta',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 100,
+      minWidth: 100,
+      flex: 1,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'fecha_creacion_meta',
       headerName: 'Fecha de Creación de Meta',
       sortable: true,
-      width: 200,
+      minWidth: 180,
+      flex: 1
     },
     // {
     //   field: 'avance_fisico',
@@ -107,7 +118,8 @@ export const ListarMetas: React.FC = () => {
       field: 'valor_meta',
       headerName: 'VALOR META',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -125,7 +137,7 @@ export const ListarMetas: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -245,6 +257,7 @@ export const ListarMetas: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

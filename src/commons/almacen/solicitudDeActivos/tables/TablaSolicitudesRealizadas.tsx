@@ -45,8 +45,6 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
   }
 
   const editar_solilitud = (solicitud: interface_solicitudes_realizadas) => {
-    console.log('editar solicitud', solicitud);
-
     set_position_tab('2');
     set_accion('editar');
     set_id_solicitud_activo(Number(solicitud.id_solicitud_activo) ?? null);
@@ -83,7 +81,9 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
     {
       field: 'anular', headerName: 'Anular', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => {
-        if (params.row.estado_solicitud === 'SR' || params.row.estado_solicitud === 'SA') {
+        if (params.row.estado_solicitud === 'SR' ||
+         params.row.estado_solicitud === 'SA' ||
+         params.row.estado_solicitud === 'S') {
           return (
             <HighlightOffIcon
               onClick={() => cancelar_solicitud(params.row)}
@@ -103,12 +103,13 @@ const TablaSolicitudesRealizadas: React.FC<Props> = ({
     },
     {
       field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
-      renderCell: (params) => (
-        params.row.estado_solicitud === 'SR' &&
-        <EditIcon
-          onClick={() => editar_solilitud(params.row)}
-          sx={{ fontSize: '30px', cursor: 'pointer', color: '#1071b2' }} />
-      )
+      renderCell: (params) => {
+        if(params.row.estado_solicitud === 'SR' || params.row.estado_solicitud === 'S'){
+          return <EditIcon
+            onClick={() => editar_solilitud(params.row)}
+            sx={{ fontSize: '30px', cursor: 'pointer', color: '#1071b2' }} />
+        }
+      }
     },
   ];
 

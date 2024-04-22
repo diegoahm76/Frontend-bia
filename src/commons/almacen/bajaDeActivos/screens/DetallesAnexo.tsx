@@ -49,10 +49,6 @@ const DetallesAnexo: React.FC<props> = ({
 
   const [mostrar_buscar_bienes, set_mostrar_buscar_bienes] = useState<boolean>(false);
 
-  
-  const [data_anexos_opcionales, set_data_anexos_opcionales] = useState<interface_anexo_opcional[]>([]);
-  const [nombre_anexo_opcional, set_nombre_anexo_opcional] = useState<string>('');
-
   const cambio_fecha_anexo_obligatorio = (date: Dayjs | null) => {
     if (date !== null){
       set_fecha_anexo_obligatorio(date);
@@ -103,6 +99,7 @@ const DetallesAnexo: React.FC<props> = ({
             mostrar_buscar_bienes={mostrar_buscar_bienes}
           />
           <TablaBienesBaja 
+            accion={accion}
             bienes_seleccionados={bienes_seleccionados}
             set_bienes_seleccionados={set_bienes_seleccionados}
           />

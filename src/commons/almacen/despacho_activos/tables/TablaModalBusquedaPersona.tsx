@@ -14,6 +14,7 @@ interface Props {
   data_personas_solicitan: interface_busqueda_persona_solicita[];
   data_personas_responsables: interface_busqueda_persona_responsable[];
   set_data_persona_solicita_temp: React.Dispatch<React.SetStateAction<interface_busqueda_persona_solicita>>;
+  set_data_persona_responsable_temp: React.Dispatch<React.SetStateAction<interface_busqueda_persona_responsable>>;
   despacho_sin_solicitud: boolean;
   loadding_tabla: boolean;
 }
@@ -24,15 +25,24 @@ const TablaModalBusquedaPersona: React.FC<Props> = ({
   data_personas_solicitan,
   data_personas_responsables,
   set_data_persona_solicita_temp,
+  set_data_persona_responsable_temp,
   despacho_sin_solicitud,
   loadding_tabla,
 }) => {
 
-  const asignar_funcionario_responsable = (newSelectionModel: GridSelectionModel) => {
-    if (newSelectionModel.length > 0) {
-      const vehiculo_seleccionado = data_personas_solicitan.find(row => row.id_persona === newSelectionModel[0]);
-      const vehiculo_arrendado = vehiculo_seleccionado ?? Object;
-      set_data_persona_solicita_temp(vehiculo_arrendado);
+  const asignar_funcionario = (newSelectionModel: GridSelectionModel) => {
+    if(!despacho_sin_solicitud){
+      if (newSelectionModel.length > 0) {
+        const vehiculo_seleccionado = data_personas_solicitan.find(row => row.id_persona === newSelectionModel[0]);
+        const vehiculo_arrendado = vehiculo_seleccionado ?? Object;
+        set_data_persona_solicita_temp(vehiculo_arrendado);
+      }
+    } else {
+      if (newSelectionModel.length > 0) {
+        const vehiculo_seleccionado = data_personas_responsables.find(row => row.id_persona === newSelectionModel[0]);
+        const vehiculo_arrendado = vehiculo_seleccionado ?? Object;
+        set_data_persona_responsable_temp(vehiculo_arrendado);
+      }
     }
   }
 
@@ -59,9 +69,9 @@ const TablaModalBusquedaPersona: React.FC<Props> = ({
         alignItems="center" >
         <Grid item  >
           <ButtonGroup style={{ margin: 5, }}>
-              {download_xls({ nurseries: data_personas_solicitan, columns })}
+              {download_xls({ nurseries: despacho_sin_solicitud ? data_personas_responsables : data_personas_solicitan, columns })}
               {download_pdf({
-                  nurseries: data_personas_solicitan,
+                  nurseries: despacho_sin_solicitud ? data_personas_responsables : data_personas_solicitan,
                   columns,
                   title: 'Funcionarios Responsables',
               })}
@@ -79,7 +89,7 @@ const TablaModalBusquedaPersona: React.FC<Props> = ({
         pageSize={5}
         rowHeight={75}
         rowsPerPageOptions={[5]}
-        onSelectionModelChange={asignar_funcionario_responsable}
+        onSelectionModelChange={asignar_funcionario}
         experimentalFeatures={{ newEditingApi: true }}
         getRowId={(row) => row?.id_persona !== undefined ? row.id_persona : uuidv4()}
       />

@@ -34,67 +34,78 @@ export const ListarDetalleInversion: React.FC = () => {
       field: 'nombre_sector',
       headerName: 'Nombre del Sector',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 1
     },
     {
       field: 'rubro',
       headerName: 'Rubro',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_subprograma',
       headerName: 'Nombre del Subprograma',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 1
     },
     {
       field: 'nombre_producto',
       headerName: 'Nombre del Producto',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 1
     },
     {
       field: 'nombre_actividad',
       headerName: 'Nombre de la Actividad',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 1
     },
     {
       field: 'nombre_indicador',
       headerName: 'Nombre del Indicador',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_meta',
       headerName: 'Nombre de la Meta',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'cuenta',
       headerName: 'Cuenta',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'valor_cuenta',
       headerName: 'VALOR DE LA CUENTA',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -111,7 +122,7 @@ export const ListarDetalleInversion: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -228,9 +239,9 @@ export const ListarDetalleInversion: React.FC = () => {
                   rows={rows_detalle_inversion ?? []}
                   columns={columns_detalle ?? []}
                   pageSize={10}
-                  // rowHeight={150}
                   rowsPerPageOptions={[10]}
                   getRowId={() => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

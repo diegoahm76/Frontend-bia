@@ -30,37 +30,43 @@ export const ListarPlanes: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'sigla_plan',
       headerName: 'SIGLA DEL PLAN',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'tipo_plan',
       headerName: 'TIPO DE PLAN',
       sortable: true,
-      width: 200,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'agno_inicio',
       headerName: 'AÑO INICIO',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'agno_fin',
       headerName: 'AÑO FIN',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'activo',
       headerName: 'VIGENCIA',
       sortable: true,
-      width: 200,
+      minWidth: 150,
+      flex: 1,
       renderCell: (params) => {
         return params.row.estado_vigencia === true ? (
           <Chip
@@ -83,7 +89,7 @@ export const ListarPlanes: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
+      minWidth: 150,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -180,6 +186,7 @@ export const ListarPlanes: React.FC = () => {
                   columns={columns}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
+                  getRowHeight={() => 'auto'}
                   getRowId={(row) => uuidv4()}
                 />
               </Box>
@@ -189,21 +196,11 @@ export const ListarPlanes: React.FC = () => {
         <Grid
           container
           spacing={2}
-          // m={2}
-          // p={2}
-          // sx={{
-          //   position: 'relative',
-          //   background: '#FAFAFA',
-          //   borderRadius: '15px',
-          //   p: '20px',
-          //   m: '10px 0 20px 0',
-          //   mb: '20px',
-          //   boxShadow: '0px 3px 6px #042F4A26',
-          // }}
           justifyContent="flex-end"
         >
           <Grid item>
             <Button
+              sx={{marginTop: 2}}
               variant="outlined"
               color="primary"
               disabled={false}

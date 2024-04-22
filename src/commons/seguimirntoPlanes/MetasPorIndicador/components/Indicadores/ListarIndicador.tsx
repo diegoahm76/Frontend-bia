@@ -31,31 +31,35 @@ export const ListarIndicador: React.FC = () => {
       field: 'nombre_indicador',
       headerName: 'NOMBRE INDICADOR',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1
     },
     {
       field: 'nombre_plan',
       headerName: 'NOMBRE PLAN',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1
     },
     {
       field: 'nombre_producto',
       headerName: 'NOMBRE PRODUCTO',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1
     },
     {
       field: 'nombre_actividad',
       headerName: 'NOMBRE ACTIVIDAD',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -168,6 +172,7 @@ export const ListarIndicador: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

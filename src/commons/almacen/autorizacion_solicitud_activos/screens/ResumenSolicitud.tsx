@@ -20,9 +20,6 @@ interface props {
   data_form_resumen_solicitud: interface_estado_autorizacion_solicitud_activos;
   inputs_resumen_despacho: interface_inputs_resumen_despacho;
   data_articulos_despachados: interface_articulos_despachados[];
-  set_inputs_resumen_despacho: React.Dispatch<React.SetStateAction<interface_inputs_resumen_despacho>>;
-  set_data_articulos_despachados: React.Dispatch<React.SetStateAction<interface_articulos_despachados[]>>;
-  data_solicitud_ver_por_id: interface_solicitud_por_id;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -31,14 +28,7 @@ const ResumenSolicitud: React.FC<props> = ({
   data_form_resumen_solicitud,
   inputs_resumen_despacho,
   data_articulos_despachados,
-  set_inputs_resumen_despacho,
-  set_data_articulos_despachados,
-  data_solicitud_ver_por_id,
 }) => {
-  const dispatch = useAppDispatch();
-
-  
-
 
   return (
     <>

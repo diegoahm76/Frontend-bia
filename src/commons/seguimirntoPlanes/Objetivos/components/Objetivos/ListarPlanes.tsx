@@ -31,37 +31,43 @@ export const ListarPlanes: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'sigla_plan',
       headerName: 'SIGLA DEL PLAN',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'tipo_plan',
       headerName: 'TIPO DE PLAN',
       sortable: true,
-      width: 200,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'agno_inicio',
       headerName: 'AÑO INICIO',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'agno_fin',
       headerName: 'AÑO FIN',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'activo',
       headerName: 'VIGENCIA',
       sortable: true,
-      width: 200,
+      minWidth: 150,
+      flex: 1,
       renderCell: (params) => {
         return params.row.estado_vigencia === true ? (
           <Chip
@@ -84,7 +90,7 @@ export const ListarPlanes: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
+      minWidth: 150,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -126,12 +132,12 @@ export const ListarPlanes: React.FC = () => {
     },
   ];
 
-  const { rows_planes, fetch_data_planes } = useContext(DataContextPlanes);
+  const { rows_planes, fetch_data_planes_pgar } = useContext(DataContextPlanes);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    void fetch_data_planes();
+    void fetch_data_planes_pgar();
   }, []);
 
   return (
@@ -183,6 +189,7 @@ export const ListarPlanes: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>
