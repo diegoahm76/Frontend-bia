@@ -804,7 +804,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                     >
                       {download_xls({ nurseries: rows_cartera, columns: columns_aforo })}
                       {download_pdf({ nurseries: rows_cartera, columns: columns_aforo, title: 'Carteras de aforo' })}
-                    </ButtonGroup> 
+                    </ButtonGroup>
                     <DataGrid
                       autoHeight
                       rows={rows_cartera}
@@ -907,7 +907,7 @@ export const SeleccionarInstrumento: React.FC = (): JSX.Element => {
                 >
                   {download_xls({ nurseries: rows_laboratorio, columns: colums_laboratorio })}
                   {download_pdf({ nurseries: rows_laboratorio, columns: colums_laboratorio, title: 'Resultados de laboratorio' })}
-                </ButtonGroup> 
+                </ButtonGroup>
                 <DataGrid
                   autoHeight
                   rows={rows_laboratorio}

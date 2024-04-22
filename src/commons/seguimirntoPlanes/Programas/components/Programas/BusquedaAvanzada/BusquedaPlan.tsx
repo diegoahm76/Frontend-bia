@@ -159,7 +159,6 @@ export const BusquedaPlan: React.FC = () => {
       nombre_objetivo: '',
       nombre: '',
     });
-    set_rows([]);
   }
 
   const dispatch = useAppDispatch();

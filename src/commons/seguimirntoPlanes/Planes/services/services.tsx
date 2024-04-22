@@ -9,6 +9,11 @@ export const get_planes = async (): Promise<IPlanes[]> => {
   return response.data.data;
 };
 
+export const get_planes_pgar = async (): Promise<IPlanes[]> => {
+  const response = await api.get(`seguimiento/planes/consultar-planesPGAR/`);
+  return response.data.data;
+};
+
 // ? ----------------------------------------------- [ POST ] -----------------------------------------------
 export const post_planes = async (data: IPlanes): Promise<IPlanes> => {
   const response = await api.post(`seguimiento/planes/crear-planes/`, data);

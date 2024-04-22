@@ -23,6 +23,10 @@ import type {
   IUnspsc,
   ISeguimientoPAI,
   ISeguiminetoPOAI,
+  IMetasPgar,
+  ILineaBasePgar,
+  IActividadPgar,
+  IIndicadorPgar,
 } from '../../types/types';
 import { IPlan } from '../../Consultas/types/types';
 
@@ -74,6 +78,99 @@ export const initial_state_programa: IProgramas = {
   fecha_creacion: '',
   cumplio: false,
 };
+
+export const initial_state_meta_pgar: IMetasPgar = {
+  id_meta_eje: null,
+  nombre_eje_estrategico: '',
+  nombre_objetivo: '',
+  nombre_plan: '',
+  tipo_eje_estrategico: '',
+  nombre_plan_objetivo: '',
+  nombre_meta_eje: '',
+  numero_meta_eje: '',
+  fecha_creacion: '',
+  cumplio: false,
+  id_eje_estrategico: null,
+  id_objetivo: null,
+  id_plan: null,
+}
+
+export const initial_state_linea_base: ILineaBasePgar = {
+  id_linea_base: null,
+  nombre_eje_estrategico: '',
+  nombre_objetivo: '',
+  nombre_plan: '',
+  nombre_meta: '',
+  tipo_eje_estrategico: '',
+  nombre_linea_base: '',
+  fecha_creacion: '',
+  cumplio: false,
+  id_meta_eje: null,
+  id_eje_estrategico: null,
+  id_plan: null,
+  id_objetivo: null,
+}
+
+export const initial_state_actividad_pgar: IActividadPgar = {
+  id_actividad: null,
+  numero_actividad: '',
+  nombre_actividad: '',
+  nombre_plan: '',
+  nombre_eje_estrategico: '',
+  nombre_meta: '',
+  nombre_linea_base: '',
+  id_linea_base: null,
+  id_meta_eje: null,
+  id_eje_estrategico: null,
+  id_plan: null,
+  id_objetivo: null,
+  fecha_creacion: '',
+  cumplio: false,
+}
+
+export const initial_state_indicador_pegar: IIndicadorPgar = {
+  id_indicador: null,
+  numero_indicador: '',
+  nombre_indicador: '',
+  nombre_linea_base: '',
+  medida: '',
+  tipo_indicador: '',
+  entidad_responsable: '',
+  nombre_actividad: '',
+  nombre_plan: '',
+  nombre_eje_estrategico: '',
+  nombre_meta: '',
+  id_medicion: null,
+  id_actividad: null,
+  id_plan: null,
+  id_linea_base: null,
+  id_meta_eje: null,
+  id_eje_estrategico: null,
+  id_objetivo: null,
+  id_unidad_organizacional: null,
+  fecha_creacion: '',
+  cumplio: false,
+}
+
+export const initial_state_armonizacion_pgar: any = {
+  id_indicador: null,
+  numero_indicador: '',
+  nombre_indicador: '',
+  nombre_actividad: '',
+  linea_base: '',
+  nombre_plan: '',
+  nombre_eje_estrategico: '',
+  nombre_meta: '',
+  id_actividad: null,
+  id_linea_base: null,
+  id_meta_eje: null,
+  id_eje_estrategico: null,
+  id_planPGAR: null,
+  id_planPAI: null,
+  id_objetivo: null,
+  fecha_creacion: '',
+  cumplio: false,
+}
 
 export const initial_state_proyecto: IProyectos = {
   id_proyecto: null,
@@ -461,6 +558,11 @@ export const initial_state: IPlanesIndex = {
   mode: mode_planes,
   obj_plan: initial_state_objetivo_plan,
   programa: initial_state_programa,
+  meta_pgar: initial_state_meta_pgar,
+  linea_base: initial_state_linea_base,
+  actividad_pgar: initial_state_actividad_pgar,
+  indicador_pgar: initial_state_indicador_pegar,
+  armonizacion_pgar: initial_state_armonizacion_pgar,
   proyecto: initial_state_proyecto,
   producto: initial_state_productos,
   actividad: initial_state_actividades,
@@ -517,6 +619,36 @@ export const planes_slice = createSlice({
       action: PayloadAction<IProgramas>
     ) => {
       state.programa = action.payload;
+    },
+    set_current_meta_pgar: (
+      state: IPlanesIndex,
+      action: PayloadAction<IMetasPgar>
+    ) => {
+      state.meta_pgar = action.payload;
+    },
+    set_current_linea_base: (
+      state: IPlanesIndex,
+      action: PayloadAction<ILineaBasePgar>
+    ) => {
+      state.linea_base = action.payload;
+    },
+    set_current_actividad_pgar: (
+      state: IPlanesIndex,
+      action: PayloadAction<IActividadPgar>
+    ) => {
+      state.actividad_pgar = action.payload;
+    },
+    set_current_indicador_pgar : (
+      state: IPlanesIndex,
+      action: PayloadAction<IIndicadorPgar>
+    ) => {
+      state.indicador_pgar = action.payload;
+    },
+    set_current_armonizacion_pgar : (
+      state: IPlanesIndex,
+      action: PayloadAction<any>
+    ) => {
+      state.armonizacion_pgar = action.payload;
     },
     set_current_proyecto: (
       state: IPlanesIndex,
@@ -636,6 +768,11 @@ export const {
   set_current_mode_planes,
   set_current_objetivo,
   set_current_programa,
+  set_current_meta_pgar,
+  set_current_linea_base,
+  set_current_actividad_pgar,
+  set_current_indicador_pgar,
+  set_current_armonizacion_pgar,
   set_current_proyecto,
   set_current_producto,
   set_current_actividad,
