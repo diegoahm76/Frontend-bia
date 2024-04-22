@@ -642,7 +642,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                     onChange={handle_change}
                     label="Cordenada x"
                     size="small"
-                    style={{width:"95%"}}
+                    style={{width:"96%"}}
                     fullWidth
                   />
                 </Grid>
