@@ -4,10 +4,10 @@ import type { IProgramas } from '../../types/types';
 // ! Programa
 // ? ----------------------------------------------- [ GET ] -----------------------------------------------
 export const get_programa_id = async (
-  id_plan: number
+  id_eje: number
 ): Promise<IProgramas[]> => {
   const response = await api.get(
-    `seguimiento/planes/consultar-programas-id-planes/${id_plan}/`
+    `seguimiento/planes/consultar-programas-id-eje-estrategico/${id_eje}/`
   );
   return response.data.data;
 };

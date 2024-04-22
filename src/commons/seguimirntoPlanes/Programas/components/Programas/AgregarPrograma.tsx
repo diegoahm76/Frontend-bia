@@ -74,7 +74,7 @@ export const AgregarPrograma: React.FC = () => {
       set_fecha_creacion(programa.fecha_creacion);
       reset_programa({
         id_programa: programa.id_programa,
-        nombre_plan: programa.nombre_plan,
+        nombre_eje_estrategico: programa.nombre_eje_estrategico,
         nombre_programa: programa.nombre_programa,
         numero_programa: programa.numero_programa,
         porcentaje_1: programa.porcentaje_1,
@@ -82,7 +82,7 @@ export const AgregarPrograma: React.FC = () => {
         porcentaje_3: programa.porcentaje_3,
         porcentaje_4: programa.porcentaje_4,
         id_sector: programa.id_sector,
-        id_plan: programa.id_plan,
+        id_eje_estrategico: programa.id_eje_estrategico,
         fecha_creacion: programa.fecha_creacion,
         cumplio: programa.cumplio,
       });
@@ -138,14 +138,14 @@ export const AgregarPrograma: React.FC = () => {
             <>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="nombre_plan"
+                  name="nombre_eje_estrategico"
                   control={control_programa}
                   rules={{ required: false }}
                   render={({ field: { onChange, value } }) => (
                     <TextField
                       fullWidth
                       size="small"
-                      label="Nombre del Plan"
+                      label="Nombre del Eje Estratégico"
                       variant="outlined"
                       value={value}
                       disabled={true}
@@ -234,7 +234,7 @@ export const AgregarPrograma: React.FC = () => {
                   helperText={
                     errors_programa.porcentaje_1
                       ? 'Es obligatorio ingresar un parcentaje'
-                      : 'Ingrese un parcentaje'
+                      : 'Ingrese un porcentaje'
                   }
                 />
               )}
@@ -264,8 +264,8 @@ export const AgregarPrograma: React.FC = () => {
                   error={!!errors_programa.porcentaje_2}
                   helperText={
                     errors_programa.porcentaje_2
-                      ? 'Es obligatorio ingresar un parcentaje'
-                      : 'Ingrese un parcentaje'
+                      ? 'Es obligatorio ingresar un porcentaje'
+                      : 'Ingrese un porcentaje'
                   }
                 />
               )}
@@ -295,8 +295,8 @@ export const AgregarPrograma: React.FC = () => {
                   error={!!errors_programa.porcentaje_3}
                   helperText={
                     errors_programa.porcentaje_3
-                      ? 'Es obligatorio ingresar un parcentaje'
-                      : 'Ingrese un parcentaje'
+                      ? 'Es obligatorio ingresar un porcentaje'
+                      : 'Ingrese un porcentaje'
                   }
                 />
               )}
@@ -438,7 +438,7 @@ export const AgregarPrograma: React.FC = () => {
           <Grid item xs={12} sm={6} md={4}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                label="Fecha de creacion"
+                label="Fecha de creación *"
                 value={fecha_creacion}
                 onChange={(value) => {
                   handle_change_fecha_creacion(value);

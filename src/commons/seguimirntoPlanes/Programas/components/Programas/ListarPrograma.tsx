@@ -26,72 +26,81 @@ import { Title } from '../../../../../components/Title';
 export const ListarPrograma: React.FC = () => {
   const columns: GridColDef[] = [
     {
-      field: 'nombre_plan',
-      headerName: 'Nombre del Plan',
+      field: 'nombre_eje_estrategico',
+      headerName: 'NOMBRE DEL EJE ESTRATÉGICO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_programa',
-      headerName: 'Nombre del Programa',
+      headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
-      width: 350,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'numero_programa',
-      headerName: 'Número del Programa',
+      headerName: 'NÚMERO DEL PROGRAMA',
       sortable: true,
-      width: 150,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'porcentaje_1',
-      headerName: 'Porcentaje 1',
+      headerName: 'PORCENTAJE 1',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_2',
-      headerName: 'Porcentaje 2',
+      headerName: 'PORCENTAJE 2',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_3',
-      headerName: 'Porcentaje 3',
+      headerName: 'PORCENTAJE 3',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_4',
-      headerName: 'Porcentaje 4',
+      headerName: 'PORCENTAJE 4',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'cumplio',
-      headerName: '¿Cumplió?',
+      headerName: '¿CUMPLIÓ?',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'fecha_creacion',
-      headerName: 'Fecha de Creación',
+      headerName: 'FECHA DE CREACIÓN',
       sortable: true,
-      width: 180,
+      minWidth: 160,
+      flex: 1
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
             size="small"
             onClick={() => {
-              set_id_plan(params.row.id_plan);
+              set_id_eje_estrategico(params.row.id_eje_estrategico);
               set_id_programa(params.row.id_programa);
               dispatch(
                 set_current_mode_planes({
@@ -128,23 +137,23 @@ export const ListarPrograma: React.FC = () => {
   ];
 
   // const {
-  //   plan: { id_plan },
+  //   plan: { id_eje_estrategico },
   // } = useAppSelector((state) => state.planes);
 
   const dispatch = useAppDispatch();
   const {
-    id_plan,
+    id_eje_estrategico,
     rows_programa,
-    set_id_plan,
+    set_id_eje_estrategico,
     set_id_programa,
     fetch_data_programa,
   } = useContext(DataContextprograma);
 
   useEffect(() => {
-    if (id_plan) {
+    if (id_eje_estrategico) {
       fetch_data_programa();
     }
-  }, [id_plan]);
+  }, [id_eje_estrategico]);
 
   return (
     <>
@@ -163,11 +172,8 @@ export const ListarPrograma: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        {rows_programa.length > 0 && (
-          <>
             <Grid item xs={12}>
               <Title title="Listado de programas" />
-              {/* <Typography>Resultados de la búsqueda</Typography> */}
             </Grid>
             <Grid item xs={12}>
               <Box sx={{ width: '100%' }}>
@@ -193,12 +199,11 @@ export const ListarPrograma: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </Box>
             </Grid>
-          </>
-        )}
-        <Grid container spacing={2} justifyContent="flex-end">
+        <Grid container spacing={2} justifyContent="flex-end" my={1}>
           <Grid item>
             <Button
               variant="outlined"

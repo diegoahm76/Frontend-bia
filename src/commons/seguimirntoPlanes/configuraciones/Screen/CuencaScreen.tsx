@@ -16,6 +16,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { eliminar_cuenca, get_cuencas } from '../Request/request';
 import type { Cuenca } from '../interfaces/interfaces';
 import { AgregarCuenca } from '../Components/Cuencas/AgregarCuenca';
@@ -35,7 +36,7 @@ export const CuencaScreen: React.FC = () => {
       headerName: 'Nombre Cuenca',
       sortable: true,
       minWidth: 300,
-      flex: 3,
+      flex: 1,
     },
     {
       field: 'activo',
@@ -166,7 +167,7 @@ export const CuencaScreen: React.FC = () => {
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',
       cancelButtonColor: '#DE1616',
-      confirmButtonText: 'Si, elminar!',
+      confirmButtonText: 'Si, eliminar!',
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -182,6 +183,10 @@ export const CuencaScreen: React.FC = () => {
       }
     });
   };
+
+  const clean_search = (): void => {
+    setSearchTerm('');
+  }
 
   useEffect(() => {
     void get_traer_cuencas();
@@ -217,13 +222,23 @@ export const CuencaScreen: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
-            <TextField
-              label="Buscar cuenca"
-              size="small"
-              variant="outlined"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <Grid style={{display: 'flex', gap: '1rem'}}>
+              <TextField
+                label="Buscar cuenca"
+                size="small"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </Grid>
             <ButtonGroup
               style={{
                 margin: 7,
@@ -241,6 +256,7 @@ export const CuencaScreen: React.FC = () => {
           </Grid>
           <DataGrid
             // density="compact"
+            getRowHeight={() => 'auto'}
             autoHeight
             rows={filterRows(rows, searchTerm)}
             columns={columns}

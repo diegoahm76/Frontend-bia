@@ -22,49 +22,56 @@ export const ListarProyectos: React.FC = () => {
       field: 'nombre_proyecto',
       headerName: 'NOMBRE DEL PROYECTO',
       sortable: true,
-      width: 300,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'numero_proyecto',
       headerName: 'NUMERO DEL PROYECTO',
       sortable: true,
-      width: 200,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'nombre_programa',
       headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
-      width: 300,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'pondera_1',
       headerName: 'AÑO 1',
       sortable: true,
-      width: 130,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'pondera_2',
       headerName: 'AÑO 2',
       sortable: true,
-      width: 130,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'pondera_3',
       headerName: 'AÑO 3',
       sortable: true,
-      width: 130,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'pondera_4',
       headerName: 'AÑO 4',
       sortable: true,
-      width: 130,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -167,6 +174,7 @@ export const ListarProyectos: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

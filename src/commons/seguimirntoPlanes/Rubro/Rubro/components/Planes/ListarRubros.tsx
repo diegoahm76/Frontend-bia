@@ -35,19 +35,22 @@ export const ListarRubros: React.FC = () => {
       field: 'cod_pre',
       headerName: 'CODPRE',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 2
     },
     {
       field: 'cuenta',
       headerName: 'CUENTA',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 2
     },
     {
       field: 'valcuenta',
       headerName: 'VALOR CUENTA',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 2,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -64,7 +67,7 @@ export const ListarRubros: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -158,10 +161,11 @@ export const ListarRubros: React.FC = () => {
                   density="compact"
                   autoHeight
                   rows={rows_rubros ?? []}
-                  columns={columns_rubro ?? []} 
+                  columns={columns_rubro ?? []}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

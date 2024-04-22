@@ -15,6 +15,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { eliminar_sector, get_sector } from '../Request/request';
 import type { ISector } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
@@ -34,7 +35,7 @@ export const SectorScreen: React.FC = () => {
       headerName: 'NOMBRE SECTOR',
       sortable: true,
       minWidth: 300,
-      flex: 3,
+      flex: 1,
     },
     {
       field: 'aplicacion',
@@ -189,6 +190,10 @@ export const SectorScreen: React.FC = () => {
     });
   };
 
+  const clean_search = (): void => {
+    setSearchTerm('');
+  }
+
   useEffect(() => {
     void get_traer_sector();
   }, []);
@@ -224,13 +229,23 @@ export const SectorScreen: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
-            <TextField
-              label="Buscar sector"
-              size="small"
-              variant="outlined"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <Grid style={{display: 'flex', gap: '1rem'}}>
+              <TextField
+                label="Buscar sector"
+                size="small"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </Grid>
             <ButtonGroup
               style={{
                 margin: 7,
@@ -253,6 +268,7 @@ export const SectorScreen: React.FC = () => {
             getRowId={(row) => row.id_sector}
             pageSize={10}
             rowsPerPageOptions={[10]}
+            getRowHeight={() => 'auto'}
           />
         </Grid>
         <Grid item xs={12}>

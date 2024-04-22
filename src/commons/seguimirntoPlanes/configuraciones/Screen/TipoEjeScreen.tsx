@@ -15,6 +15,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { eliminar_tipos_eje, get_tipos_eje } from '../Request/request';
 import type { TiposEjes } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
@@ -32,10 +33,10 @@ export const TipoEjeScreen: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'nombre_tipo_eje',
-      headerName: 'NOMBRE TIPO EJE',
+      headerName: 'NOMBRE EJE ESTRATÉGICO',
       sortable: true,
       minWidth: 300,
-      flex: 3,
+      flex: 1,
     },
     {
       field: 'activo',
@@ -72,7 +73,6 @@ export const TipoEjeScreen: React.FC = () => {
             onClick={() => {
               handle_open_editar();
               set_tipo_eje(params.row);
-              //  console.log('')(params.row);
             }}
           >
             <Avatar
@@ -85,6 +85,7 @@ export const TipoEjeScreen: React.FC = () => {
               variant="rounded"
             >
               <EditIcon
+                titleAccess="Editar eje"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -106,6 +107,7 @@ export const TipoEjeScreen: React.FC = () => {
                   variant="rounded"
                 >
                   <DeleteIcon
+                    titleAccess="Eliminar eje"
                     sx={{
                       color: 'red',
                       width: '18px',
@@ -193,6 +195,11 @@ export const TipoEjeScreen: React.FC = () => {
     void get_traer_tipo_eje();
   }, []);
 
+  const clean_search = (): void => {
+    setSearchTerm('');
+  }
+
+
   return (
     <>
       <Grid
@@ -206,7 +213,6 @@ export const TipoEjeScreen: React.FC = () => {
           borderRadius: '15px',
           p: '20px',
           m: '20px 0 20px 0',
-          mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
@@ -224,13 +230,23 @@ export const TipoEjeScreen: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
-            <TextField
-              label="Buscar tipo de eje estrategico"
-              size="small"
-              variant="outlined"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <Grid style={{display: 'flex', gap: '1rem'}}>
+              <TextField
+                label="Buscar tipo de eje estrategico"
+                size="small"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </Grid>
             <ButtonGroup
               style={{
                 margin: 7,
@@ -247,10 +263,11 @@ export const TipoEjeScreen: React.FC = () => {
             </ButtonGroup>
           </Grid>
           <DataGrid
+            getRowHeight={() => 'auto'}
             autoHeight
             rows={filterRows(rows, searchTerm)}
             columns={columns}
-            getRowId={() => uuidv4()}
+            getRowId={(row) => row.id_tipo_eje}
             pageSize={10}
             rowsPerPageOptions={[10]}
           />

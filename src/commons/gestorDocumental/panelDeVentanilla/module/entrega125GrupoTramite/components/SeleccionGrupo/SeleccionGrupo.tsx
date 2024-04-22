@@ -21,6 +21,7 @@ export const SeleccionGrupo = (): JSX.Element => {
     currentGrupo,
     listaSeries,
     setListaSeries,
+    setListaSubGrupos,
   } = useContext(AsignacionGrupoTramiteContext);
 
   const { secondLoading } = useContext(ModalAndLoadingContext);
@@ -38,6 +39,7 @@ export const SeleccionGrupo = (): JSX.Element => {
         label: '',
       },
     });
+    setListaSubGrupos([]);
     setLiderAsignado(undefined);
     //* ademas de estepar de acciones e deben limpiar los demas controles que esten debajo del mismop
   };

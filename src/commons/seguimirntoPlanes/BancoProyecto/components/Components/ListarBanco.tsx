@@ -34,43 +34,50 @@ export const ListarBanco: React.FC = () => {
       field: 'nombre_proyecto',
       headerName: 'NOMBRE PROYECTO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_actividad',
       headerName: 'NOMBRE ACTIVIDAD',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_indicador',
       headerName: 'NOMBRE INDICADOR',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_meta',
       headerName: 'NOMBRE META',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'rubro',
       headerName: 'RUBRO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'objeto_contrato',
       headerName: 'OBJETO CONTRATO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'banco_valor',
       headerName: 'BANCO VALOR',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -87,7 +94,7 @@ export const ListarBanco: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -191,9 +198,9 @@ export const ListarBanco: React.FC = () => {
                   rows={rows_bancos}
                   columns={columns_banco}
                   pageSize={10}
-                  // rowHeight={150}
                   rowsPerPageOptions={[10]}
                   getRowId={() => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

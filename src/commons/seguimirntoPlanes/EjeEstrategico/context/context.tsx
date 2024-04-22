@@ -7,6 +7,7 @@ import { control_error } from '../../../../helpers';
 import {
   get_eje_estrategico,
   get_eje_estrategico_id,
+  get_eje_estrategico_id_obj,
   get_tipos_eje,
 } from '../services/services';
 import { useAppSelector } from '../../../../hooks';
@@ -18,7 +19,9 @@ interface UserContext {
   id_plan: number | null;
   set_id_plan: (value: number | null) => void;
   id_programa: number | null;
+  id_objetivo: number | null;
   set_id_programa: (value: number | null) => void;
+  set_id_objetivo: (value: number | null) => void;
   id_eje_estrategico: number | null;
   set_id_eje_estrategico: (value: number | null) => void;
 
@@ -36,6 +39,7 @@ interface UserContext {
   // * fetch
 
   fetch_data_eje_estrategico: () => Promise<void>;
+  fetch_data_eje_estrategico_id_obj: () => Promise<void>;
   fetch_data_eje_estrategico2: () => Promise<void>;
   fetch_data_tipo_eje: () => Promise<void>;
 }
@@ -45,7 +49,9 @@ export const DataContextEjeEstrategico = createContext<UserContext>({
   id_plan: null,
   set_id_plan: () => {},
   id_programa: null,
+  id_objetivo: null,
   set_id_programa: () => {},
+  set_id_objetivo: () => {},
   id_eje_estrategico: null,
   set_id_eje_estrategico: () => {},
 
@@ -56,6 +62,7 @@ export const DataContextEjeEstrategico = createContext<UserContext>({
   set_tipo_eje_selected: () => {},
 
   fetch_data_eje_estrategico: async () => {},
+  fetch_data_eje_estrategico_id_obj: async () => {},
   fetch_data_eje_estrategico2: async () => {},
   fetch_data_tipo_eje: async () => {},
 });
@@ -68,6 +75,7 @@ export const UserProviderEjeEstrategico = ({
   // * id
   const [id_plan, set_id_plan] = React.useState<number | null>(null);
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
+  const [id_objetivo, set_id_objetivo] = React.useState<number | null>(null);
   const [id_eje_estrategico, set_id_eje_estrategico] = React.useState<number | null>(
     null
   );
@@ -111,6 +119,26 @@ export const UserProviderEjeEstrategico = ({
     }
   };
 
+  const fetch_data_eje_estrategico_id_obj = async (): Promise<void> => {
+    set_rows_eje_estrategico([]);
+    try {
+      const response = await get_eje_estrategico_id_obj(id_objetivo as number);
+      if (response?.length > 0) {
+        const data_eje_estrategico: IEjeEstrategico[] = response.map(
+          (item: IEjeEstrategico) => ({
+            ...item,
+          })
+        );
+
+        set_rows_eje_estrategico(data_eje_estrategico);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
   const fetch_data_eje_estrategico2 = async (): Promise<void> => {
     try {
       set_rows_eje_estrategico([]);
@@ -134,6 +162,8 @@ export const UserProviderEjeEstrategico = ({
       );
     }
   };
+
+
   const fetch_data_tipo_eje = async (): Promise<void> => {
     try {
       const response = await get_tipos_eje();
@@ -157,7 +187,9 @@ export const UserProviderEjeEstrategico = ({
     id_plan,
     set_id_plan,
     id_programa,
+    id_objetivo,
     set_id_programa,
+    set_id_objetivo,
     id_eje_estrategico,
     set_id_eje_estrategico,
 
@@ -173,6 +205,7 @@ export const UserProviderEjeEstrategico = ({
 
     // * fetch
     fetch_data_eje_estrategico,
+    fetch_data_eje_estrategico_id_obj,
     fetch_data_eje_estrategico2,
     fetch_data_tipo_eje,
   };
