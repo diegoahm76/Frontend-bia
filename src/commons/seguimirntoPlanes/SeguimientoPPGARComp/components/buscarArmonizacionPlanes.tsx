@@ -584,6 +584,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
       form_values.id_armonizar = seguimiento_pgar.id_armonizar;
       form_values.id_planPGAR = seguimiento_pgar.id_planPGAR;
       form_values.id_planPAI = seguimiento_pgar.id_planPAI;
+      form_values.objetivoPGAR = seguimiento_pgar.objetivoPGAR;
       form_values.nombre_planPGAR = seguimiento_pgar.nombre_planPGAR;
       form_values.nombre_planPAI = seguimiento_pgar.nombre_planPAI;
       set_id_objetivo(seguimiento_pgar.id_objetivo);
