@@ -15,6 +15,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { eliminar_modalidad, get_modalidad } from '../Request/request';
 import type { IModalidad } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
@@ -33,19 +34,22 @@ export const ModalidadesScreen: React.FC = () => {
       field: 'nombre_modalidad',
       headerName: 'NOMBRE MODALIDAD',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
     },
     {
       field: 'codigo_modalidad',
       headerName: 'CÓDIGO MODALIDAD',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
     },
     {
       field: 'activo',
       headerName: 'ESTADO',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => {
         return params.row.activo === true ? (
           <Chip
@@ -67,7 +71,8 @@ export const ModalidadesScreen: React.FC = () => {
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 200,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -129,6 +134,10 @@ export const ModalidadesScreen: React.FC = () => {
   const handle_open_editar = (): void => {
     set_is_editar(true);
   };
+
+  const clean_search = () => {
+    setSearchTerm('');
+  }
 
   const filterRows = (rows: any[], searchTerm: string) => {
     return rows.filter(
@@ -211,9 +220,8 @@ export const ModalidadesScreen: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Configuraciones básicas modalidades" />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{my: 2}}>
           <Button
-            sx={{ mb: '20px' }}
             variant="outlined"
             onClick={handle_open_crear}
             startIcon={<AddIcon />}
@@ -222,40 +230,48 @@ export const ModalidadesScreen: React.FC = () => {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          {rows.length > 0 && (
-            <>
-              <ButtonGroup
-                style={{
-                  margin: 7,
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}
-              >
-                {download_xls({ nurseries: rows, columns })}
-                {download_pdf({
-                  nurseries: rows,
-                  columns,
-                  title: 'CREAR MODALIDAD',
-                })}
-              </ButtonGroup>
+          <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
+            <Grid style={{display: 'flex', gap: '1rem'}}>
               <TextField
                 label="Buscar modalidad"
                 size="small"
                 variant="outlined"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ marginBottom: '20px' }}
               />
-              <DataGrid
-                autoHeight
-                rows={filterRows(rows, searchTerm)}
-                columns={columns ?? []}
-                getRowId={(row) => row.id_modalidad}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-              />
-            </>
-          )}
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </Grid>
+            <ButtonGroup
+              style={{
+                margin: 7,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {download_xls({ nurseries: rows, columns })}
+              {download_pdf({
+                nurseries: rows,
+                columns,
+                title: 'CREAR MODALIDAD',
+              })}
+            </ButtonGroup>
+          </Grid>
+          <DataGrid
+            autoHeight
+            rows={filterRows(rows, searchTerm)}
+            columns={columns ?? []}
+            getRowId={(row) => row.id_modalidad}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            getRowHeight={() => 'auto'}
+          />
         </Grid>
         <Grid item xs={12}>
           <Stack

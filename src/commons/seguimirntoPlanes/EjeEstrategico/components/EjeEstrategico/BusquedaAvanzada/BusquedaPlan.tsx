@@ -51,42 +51,42 @@ export const BusquedaPlan: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'nombre_plan',
-      headerName: 'Nombre del Plan',
+      headerName: 'NOMBRE DEL PLAN',
       sortable: true,
       minWidth: 250,
       flex: 2
     },
     {
       field: 'sigla_plan',
-      headerName: 'Sigla del plan',
+      headerName: 'SIGLA DEL PLAN',
       sortable: true,
       minWidth: 200,
       flex: 1
     },
     {
       field: 'tipo_plan',
-      headerName: 'Tipo del plan',
+      headerName: 'TIPO DE PLAN',
       sortable: true,
       minWidth: 150,
       flex:1
     },
     {
       field: 'agno_inicio',
-      headerName: 'Año inicio',
+      headerName: 'AÑO INICIO',
       sortable: true,
       minWidth: 120,
       flex:1
     },
     {
       field: 'agno_fin',
-      headerName: 'Año fin',
+      headerName: 'AÑO FIN',
       sortable: true,
       minWidth: 120,
       flex:1
     },
     {
       field: 'estado_vigencia',
-      headerName: 'Vigencia',
+      headerName: 'VIGENCIA',
       sortable: true,
       minWidth: 120,
       flex:1,
@@ -189,7 +189,6 @@ export const BusquedaPlan: React.FC = () => {
       nombre_plan: '',
       sigla_plan: '',
     });
-    set_rows([]);
   }
 
   const dispatch = useAppDispatch();

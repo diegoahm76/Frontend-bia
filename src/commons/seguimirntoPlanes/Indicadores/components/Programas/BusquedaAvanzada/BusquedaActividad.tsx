@@ -188,6 +188,7 @@ export const BusquedaActividad: React.FC = () => {
         set_rows([]);
         const {
           data: { data },
+          // } = await search_actividad({
         } = await search_actividades({
           nombre_plan,
           nombre_programa,
