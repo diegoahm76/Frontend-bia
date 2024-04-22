@@ -5,6 +5,7 @@ import { Grid } from "@mui/material";
 import { Title } from "../../../../components/Title";
 import { ButtonSalir } from "../../../../components/Salir/ButtonSalir";
 import { BusquedaArmonizacionPlanes } from "../components/buscarArmonizacionPlanes";
+import { ListarSeguimientosPGAR } from "../components/ListarSeguimientosPGAR";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeguimientoPgarScreen: React.FC = () => {
@@ -44,9 +45,9 @@ export const SeguimientoPgarScreen: React.FC = () => {
           </Grid>
         </Grid>
 
-        <BusquedaArmonizacionPlanes />
+        <ListarSeguimientosPGAR />
+        {mode.crear || mode.editar ? <BusquedaArmonizacionPlanes /> : null}
         {/* {mode.ver ? <ListarIndicadoresPgar /> : null} */}
-        {/* {mode.crear || mode.editar ? <AgregarArmonizacionPlanes /> : null} */}
         <Grid
           container
           spacing={2}

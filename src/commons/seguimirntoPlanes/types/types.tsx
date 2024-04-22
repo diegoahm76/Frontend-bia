@@ -526,6 +526,7 @@ export interface IPlanesIndex {
   actividad_pgar: IActividadPgar;
   indicador_pgar: IIndicadorPgar;
   armonizacion_pgar: any;
+  seguimiento_pgar: any;
   proyecto: IProyectos;
   producto: IProductos;
   actividad: IActividades;

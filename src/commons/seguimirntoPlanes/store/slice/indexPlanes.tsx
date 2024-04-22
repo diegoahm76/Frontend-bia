@@ -172,6 +172,28 @@ export const initial_state_armonizacion_pgar: any = {
   cumplio: false,
 }
 
+export const initial_state_seguimiento_pgar: any = {
+  id_PGAR: null,
+  nombre_objetivo: '',
+  numero_indicador: '',
+  nombre_indicador: '',
+  nombre_actividad: '',
+  linea_base: '',
+  nombre_plan: '',
+  nombre_eje_estrategico: '',
+  nombre_meta: '',
+  id_indicador: null,
+  id_actividad: null,
+  id_linea_base: null,
+  id_meta_eje: null,
+  id_eje_estrategico: null,
+  id_planPGAR: null,
+  id_planPAI: null,
+  id_objetivo: null,
+  fecha_creacion: '',
+  cumplio: false,
+}
+
 export const initial_state_proyecto: IProyectos = {
   id_proyecto: null,
   numero_proyecto: '',
@@ -563,6 +585,7 @@ export const initial_state: IPlanesIndex = {
   actividad_pgar: initial_state_actividad_pgar,
   indicador_pgar: initial_state_indicador_pegar,
   armonizacion_pgar: initial_state_armonizacion_pgar,
+  seguimiento_pgar: initial_state_seguimiento_pgar,
   proyecto: initial_state_proyecto,
   producto: initial_state_productos,
   actividad: initial_state_actividades,
@@ -649,6 +672,12 @@ export const planes_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.armonizacion_pgar = action.payload;
+    },
+    set_current_seguimiento_pgar : (
+      state: IPlanesIndex,
+      action: PayloadAction<any>
+    ) => {
+      state.seguimiento_pgar = action.payload;
     },
     set_current_proyecto: (
       state: IPlanesIndex,
@@ -773,6 +802,7 @@ export const {
   set_current_actividad_pgar,
   set_current_indicador_pgar,
   set_current_armonizacion_pgar,
+  set_current_seguimiento_pgar,
   set_current_proyecto,
   set_current_producto,
   set_current_actividad,

@@ -16,7 +16,7 @@ import {
   set_current_mode_planes,
   set_current_planes,
 } from '../../store/slice/indexPlanes';
-import { useAppDispatch } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import SaveIcon from '@mui/icons-material/Save';
 import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
@@ -98,7 +98,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
   const [show_registro_avance, set_show_registro_avance] = useState(false);
   const [value, set_value] = useState('');
 
-  const {rows_armonizacion, fetch_data_armonizaciones} = useContext(DataContextPgar);
+  const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
 
   const change_armonizacion = (event: any) => {
     set_show_plan_info(true);
@@ -561,11 +561,11 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
         avance_recurso_obligado: avance_recursos_obligados,
         pavance_recurso_obligado: porcentaje_avance_recursos_obligados,
       };
-      console.log(data)
       if(data){
         post_seguimiento_pgar(data).then(() => {
           control_success('Se registro correctamente');
           limpiar_form_registro();
+          fetch_data_seguimiento_pgar();
         }).catch((error) => {
           control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
         });
@@ -573,9 +573,44 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
     }
   }
 
+  const { mode, seguimiento_pgar } = useAppSelector((state) => state.planes);
+
   useEffect(() => {
     fetch_data_armonizaciones();
   }, []);
+
+  useEffect(() => {
+    if (mode.editar) {
+      form_values.id_armonizar = seguimiento_pgar.id_armonizar;
+      form_values.id_planPGAR = seguimiento_pgar.id_planPGAR;
+      form_values.id_planPAI = seguimiento_pgar.id_planPAI;
+      form_values.nombre_planPGAR = seguimiento_pgar.nombre_planPGAR;
+      form_values.nombre_planPAI = seguimiento_pgar.nombre_planPAI;
+      set_id_objetivo(seguimiento_pgar.id_objetivo);
+      set_id_eje_estrategico_pgar(seguimiento_pgar.id_eje_estrategico);
+      set_id_meta(seguimiento_pgar.id_meta_eje);
+      set_id_linea_base(seguimiento_pgar.id_linea_base);
+      set_anio_pgar(seguimiento_pgar.ano_PGAR);
+      set_id_actividad_pgar(seguimiento_pgar.id_actividad);
+      set_id_indicador_pgar(seguimiento_pgar.id_indicador);
+      set_id_eje_estrategico_pai(seguimiento_pgar.id_eje_estrategico_pai);
+      set_id_programa(seguimiento_pgar.id_programa);
+      set_id_proyecto(seguimiento_pgar.id_proyecto);
+      // set_id_producto(seguimiento_pgar.id_producto);
+      // set_id_actividad_pai(seguimiento_pgar.id_actividad);
+      set_id_indicador_pai(seguimiento_pgar.id_indicador_seg);
+      set_meta_fisica_anual(seguimiento_pgar.meta_fisica_anual);
+      set_avance_meta_fisica_anual(seguimiento_pgar.avance_fisico_anual);
+      set_porcentaje_avance(seguimiento_pgar.pavance_fisico);
+      set_porcentaje_avance_acumulado(seguimiento_pgar.pavance_fisico_acumulado);
+      set_descripcion_avance(seguimiento_pgar.descripcion_avance);
+      set_meta_financiera_anual(seguimiento_pgar.meta_finaciera_anual);
+      set_avance_meta_financiera(seguimiento_pgar.avance_financiero_anual);
+      set_porcentaje_avance_financiero(seguimiento_pgar.pavance_financiero);
+      set_avance_recursos_obligados(seguimiento_pgar.avance_recurso_obligado);
+      set_porcentaje_avance_recursos_obligados(seguimiento_pgar.pavance_recurso_obligado);
+    }
+  }, [mode, seguimiento_pgar]);
 
   return (
     <>
@@ -804,7 +839,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
             <Grid item xs={12}>
               <Divider />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Eje Estratégico</InputLabel>
                 <Select
@@ -831,7 +866,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                 <FormHelperText>Seleccione un Eje Estratégico</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Nombre Programa</InputLabel>
                 <Select
@@ -853,7 +888,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                 <FormHelperText>Seleccione un Programa</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Nombre Proyecto</InputLabel>
                 <Select
@@ -876,7 +911,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                 <FormHelperText>Seleccione un Proyecto</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Nombre Producto</InputLabel>
                 <Select
@@ -899,7 +934,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                 <FormHelperText>Seleccione un Producto</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Nombre Actividad</InputLabel>
                 <Select
@@ -918,7 +953,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                 <FormHelperText>Seleccione una Actividad</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <FormControl required size='small' fullWidth>
                 <InputLabel>Nombre Indicador</InputLabel>
                 <Select

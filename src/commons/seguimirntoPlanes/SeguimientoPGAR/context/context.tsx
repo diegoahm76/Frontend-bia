@@ -4,7 +4,7 @@
 import React, { createContext } from "react";
 import { IActividadPgar, IIndicadorPgar, ILineaBasePgar, IMedicion, IMetasPgar, IUnidadOrganizacional } from "../../types/types";
 import { control_error } from "../../../../helpers";
-import { get_actividades_id_linea_base, get_armonizaciones, get_indicadores_id_actividad, get_linea_base_id_meta, get_mediciones, get_metas_id_eje, get_planes_pai, get_planes_pgar, get_unidades_organizacionales } from "../services/services";
+import { get_actividades_id_linea_base, get_armonizaciones, get_indicadores_id_actividad, get_linea_base_id_meta, get_mediciones, get_metas_id_eje, get_planes_pai, get_planes_pgar, get_seguimientos_pgar, get_unidades_organizacionales } from "../services/services";
 import { data } from '../../../almacen/gestionDeInventario/catalogoBienes/interfaces/Nodo';
 
 
@@ -22,6 +22,8 @@ interface UserContext {
   set_id_indicador: (value: number | null) => void;
   id_armonizar: number | null;
   set_id_armonizar: (value: number | null) => void;
+  id_seguimiento_pgar: number | null;
+  set_id_seguimiento_pgar: (value: number | null) => void;
   id_plan: number | null;
   set_id_plan: (value: number | null) => void;
   id_objetivo: number | null;
@@ -39,6 +41,8 @@ interface UserContext {
 
   rows_armonizacion: any[];
   set_rows_armonizacion: (value: any[]) => void;
+  rows_seguimiento_pgar: any[];
+  set_rows_seguimiento_pgar: (value: any[]) => void;
   rows_meta_pgar: IMetasPgar[];
   set_rows_meta_pgar: (value: IMetasPgar[]) => void;
   rows_linea_base: ILineaBasePgar[];
@@ -60,6 +64,7 @@ interface UserContext {
   fetch_data_planes_pgar: () => Promise<void>;
 
   fetch_data_armonizaciones: () => Promise<void>;
+  fetch_data_seguimiento_pgar: () => Promise<void>;
   fetch_data_linea_base: () => Promise<void>;
   fetch_data_meta_pgar: () => Promise<void>;
   fetch_data_actividad_pgar: () => Promise<void>;
@@ -81,6 +86,8 @@ export const DataContextPgar = createContext<UserContext>({
   set_id_indicador: () => {},
   id_armonizar: null,
   set_id_armonizar: () => {},
+  id_seguimiento_pgar: null,
+  set_id_seguimiento_pgar: () => {},
   id_plan: null,
   set_id_plan: () => {},
   id_objetivo: null,
@@ -97,6 +104,8 @@ export const DataContextPgar = createContext<UserContext>({
 
   rows_armonizacion: [],
   set_rows_armonizacion: () => {},
+  rows_seguimiento_pgar: [],
+  set_rows_seguimiento_pgar: () => {},
   rows_meta_pgar: [],
   set_rows_meta_pgar: () => {},
   rows_linea_base: [],
@@ -112,6 +121,7 @@ export const DataContextPgar = createContext<UserContext>({
   fetch_data_planes_pgar: async () => {},
 
   fetch_data_armonizaciones: async () => {},
+  fetch_data_seguimiento_pgar: async () => {},
   fetch_data_meta_pgar: async () => {},
   fetch_data_linea_base: async () => {},
   fetch_data_actividad_pgar: async () => {},
@@ -131,6 +141,7 @@ export const UserProviderPgar = ({
   const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
   const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
   const [id_armonizar, set_id_armonizar] = React.useState<number | null>(null);
+  const [id_seguimiento_pgar, set_id_seguimiento_pgar] = React.useState<number | null>(null);
   const [id_plan, set_id_plan] = React.useState<number | null>(null);
   const [id_objetivo, set_id_objetivo] = React.useState<number | null>(null);
 
@@ -144,6 +155,7 @@ export const UserProviderPgar = ({
 
   //TODO: Cambiar any por el tipo correcto
   const [rows_armonizacion, set_rows_armonizacion] = React.useState<any[]>([]);
+  const [rows_seguimiento_pgar, set_rows_seguimiento_pgar] = React.useState<any[]>([]);
   const [rows_meta_pgar, set_rows_meta_pgar] = React.useState<IMetasPgar[]>([]);
   const [rows_linea_base, set_rows_linea_base] = React.useState<ILineaBasePgar[]>([]);
   const [rows_actividad, set_rows_actividad] = React.useState<IActividadPgar[]>([]);
@@ -253,6 +265,26 @@ export const UserProviderPgar = ({
     }
   };
 
+  const fetch_data_seguimiento_pgar = async (): Promise<void> => {
+    try {
+      set_rows_seguimiento_pgar([]);
+      const response = await get_seguimientos_pgar();
+      if (response?.length > 0) {
+        const data_seguimiento_pgar: any[] = response.map(
+          (item: any) => ({
+            ...item,
+          })
+        );
+
+        set_rows_seguimiento_pgar(data_seguimiento_pgar);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Ocurrió un error al obtener los seguimientos'
+      );
+    }
+  };
+
   const fetch_data_mediciones = async (): Promise<void> => {
     try {
       set_data_mediciones([]);
@@ -350,6 +382,8 @@ export const UserProviderPgar = ({
     set_id_indicador,
     id_armonizar,
     set_id_armonizar,
+    id_seguimiento_pgar,
+    set_id_seguimiento_pgar,
     id_plan,
     set_id_plan,
     id_objetivo,
@@ -367,6 +401,8 @@ export const UserProviderPgar = ({
 
     rows_armonizacion,
     set_rows_armonizacion,
+    rows_seguimiento_pgar,
+    set_rows_seguimiento_pgar,
     rows_meta_pgar,
     set_rows_meta_pgar,
     rows_linea_base,
@@ -386,6 +422,7 @@ export const UserProviderPgar = ({
     fetch_data_planes_pgar,
 
     fetch_data_armonizaciones,
+    fetch_data_seguimiento_pgar,
     fetch_data_meta_pgar,
     fetch_data_linea_base,
     fetch_data_actividad_pgar,

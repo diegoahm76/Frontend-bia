@@ -2,7 +2,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useAppDispatch } from "../../../../hooks";
 import { useContext, useEffect } from "react";
 import EditIcon from '@mui/icons-material/Edit';
-import { set_current_actividad_pgar, set_current_armonizacion_pgar, set_current_linea_base, set_current_mode_planes } from "../../store/slice/indexPlanes";
+import { set_current_actividad_pgar, set_current_armonizacion_pgar, set_current_linea_base, set_current_mode_planes, set_current_seguimiento_pgar } from "../../store/slice/indexPlanes";
 import { Avatar, Box, Button, ButtonGroup, Chip, Grid, IconButton } from "@mui/material";
 import { Title } from "../../../../components/Title";
 import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
@@ -11,10 +11,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { DataContextPgar } from "../../SeguimientoPGAR/context/context";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ListarArmonizaciones: React.FC = () => {
+export const ListarSeguimientosPGAR: React.FC = () => {
     const columns: GridColDef[] = [
       {
-        field: 'nombre_relacion',
+        field: 'nombre_armonizacion',
         headerName: 'NOMBRE ARMONIZACIÓN',
         sortable: true,
         minWidth: 250,
@@ -35,34 +35,31 @@ export const ListarArmonizaciones: React.FC = () => {
         flex: 1
       },
       {
-        field: 'estado',
-        headerName: 'VIGENCIA',
+        field: 'pavance_fisico',
+        headerName: 'PORCENTAJE AVANCE FÍSICO',
         sortable: true,
-        minWidth: 120,
-        flex:1,
-        renderCell: (params) => {
-          return params.row.estado === true ? (
-            <Chip
-              size="small"
-              label="vigente"
-              color="success"
-              variant="outlined"
-            />
-          ) : (
-            <Chip
-              size="small"
-              label="No vigente"
-              color="error"
-              variant="outlined"
-            />
-          );
-        },
+        minWidth: 250,
+        flex: 1
       },
       {
-        field: 'fecha_creacion',
-        headerName: 'FECHA DE CREACIÓN',
+        field: 'pavance_financiero',
+        headerName: 'PORCENTAJE AVANCE FINANCIERO',
         sortable: true,
-        minWidth: 160,
+        minWidth: 250,
+        flex: 1
+      },
+      {
+        field: 'pavance_recurso_obligado',
+        headerName: 'PORCENTAJE AVANCE RECURSOs OBLIGATORIOS',
+        sortable: true,
+        minWidth: 250,
+        flex: 1
+      },
+      {
+        field: 'ano_PGAR',
+        headerName: 'AÑO PGAR',
+        sortable: true,
+        minWidth: 120,
         flex: 1
       },
       {
@@ -76,7 +73,7 @@ export const ListarArmonizaciones: React.FC = () => {
             <IconButton
               size="small"
               onClick={() => {
-                set_id_armonizar(params.row.id_armonizar);
+                set_id_seguimiento_pgar(params.row.id_PGAR);
                 dispatch(
                   set_current_mode_planes({
                     ver: true,
@@ -84,7 +81,7 @@ export const ListarArmonizaciones: React.FC = () => {
                     editar: true,
                   })
                 );
-                dispatch(set_current_armonizacion_pgar(params.row));
+                dispatch(set_current_seguimiento_pgar(params.row));
               }}
             >
               <Avatar
@@ -113,13 +110,13 @@ export const ListarArmonizaciones: React.FC = () => {
 
     const dispatch = useAppDispatch();
     const {
-      rows_armonizacion,
-      set_id_armonizar,
-      fetch_data_armonizaciones,
+      rows_seguimiento_pgar,
+      set_id_seguimiento_pgar,
+      fetch_data_seguimiento_pgar,
     } = useContext(DataContextPgar);
 
     useEffect(() => {
-      fetch_data_armonizaciones();
+      fetch_data_seguimiento_pgar();
     }, []);
 
     return (
@@ -140,7 +137,7 @@ export const ListarArmonizaciones: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Listado de Armonizaciones" />
+            <Title title="Listado de Seguimientos PGAR" />
           </Grid>
           <Grid item xs={12}>
             <Box sx={{ width: '100%' }}>
@@ -151,17 +148,17 @@ export const ListarArmonizaciones: React.FC = () => {
                   justifyContent: 'flex-end',
                 }}
               >
-                {download_xls({ nurseries: rows_armonizacion, columns })}
+                {download_xls({ nurseries: rows_seguimiento_pgar, columns })}
                 {download_pdf({
-                  nurseries: rows_armonizacion,
+                  nurseries: rows_seguimiento_pgar,
                   columns,
-                  title: 'RArmonizaciones',
+                  title: 'RSeguimientosPGAR',
                 })}
               </ButtonGroup>
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={rows_armonizacion}
+                rows={rows_seguimiento_pgar}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
@@ -186,7 +183,7 @@ export const ListarArmonizaciones: React.FC = () => {
                   );
                 }}
               >
-                Agregar Armonización
+                Agregar Seguimiento PGAR
               </Button>
             </Grid>
           </Grid>

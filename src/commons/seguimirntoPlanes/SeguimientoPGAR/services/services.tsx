@@ -100,6 +100,11 @@ import { IBusquedaActividades, IBusquedaLineas, IBusquedaMetas } from "../utils/
     return response.data.data;
   };
 
+  export const get_seguimientos_pgar = async (): Promise<any> => {
+    const response = await api.get(`seguimiento/planes/consultar-SeguimientoPGAR/`);
+    return response.data.data;
+  };
+
   export const get_mediciones = async (): Promise<IMedicion[]> => {
     const response = await api.get(`seguimiento/planes/consultar-mediciones/`);
     return response.data.data;
@@ -282,6 +287,17 @@ import { IBusquedaActividades, IBusquedaLineas, IBusquedaMetas } from "../utils/
   ): Promise<any> => {
     const response = await api.put(
       `seguimiento/planes/actualizar-ArmonizacionPGAR/${id_armonizacion}/`,
+      data
+    );
+    return response.data;
+  };
+
+  export const put_seguimiento_pgar = async (
+    id_seguimiento: number,
+    data: any
+  ): Promise<any> => {
+    const response = await api.put(
+      `seguimiento/planes/actualizar-SeguimientoPGAR/${id_seguimiento}/`,
       data
     );
     return response.data;
