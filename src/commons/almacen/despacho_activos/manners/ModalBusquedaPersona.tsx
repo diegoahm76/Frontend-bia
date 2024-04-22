@@ -42,7 +42,10 @@ const ModalBusquedaPersona: React.FC<props> = ({
 
   const [tipos_documentos, set_tipos_documentos] = useState<interface_tipos_documentos[]>([]);
 
+  // Data para persona que solicita seleccionada
   const [data_persona_solicita_temp, set_data_persona_solicita_temp] = useState<interface_busqueda_persona_solicita>(Object);
+  // Data para persona responsable seleccionada
+  const [data_persona_responsable_temp, set_data_persona_responsable_temp] = useState<interface_busqueda_persona_responsable>(Object);
   // Data de la tabla de personas que solicitan
   const [data_personas_solicitan, set_data_personas_solicitan] = useState<interface_busqueda_persona_solicita[]>([]);
   // Data de la tabla de personas responsables
@@ -147,12 +150,22 @@ const ModalBusquedaPersona: React.FC<props> = ({
   }
 
   const enviar_persona_solicita_seleccionado = () => {
-    if(Object.keys(data_persona_solicita_temp).length !== 0){
-      set_mostrar_modal_buscar_persona(false);
-      set_data_persona_solicita(data_persona_solicita_temp);
-      set_data_persona_solicita_temp({} as interface_busqueda_persona_solicita);
+    if(!despacho_sin_solicitud){
+      if(Object.keys(data_persona_solicita_temp).length !== 0){
+        set_mostrar_modal_buscar_persona(false);
+        set_data_persona_solicita(data_persona_solicita_temp);
+        set_data_persona_solicita_temp({} as interface_busqueda_persona_solicita);
+      } else {
+        control_error('Haga clic en una fila de la tabla para seleccionar un funcionario');
+      }
     } else {
-      control_error('Haga clic en una fila de la tabla para seleccionar un funcionario');
+      if(Object.keys(data_persona_responsable_temp).length !== 0){
+        set_mostrar_modal_buscar_persona(false);
+        set_data_persona_responsable(data_persona_responsable_temp);
+        set_data_persona_responsable_temp({} as interface_busqueda_persona_responsable);
+      } else {
+        control_error('Haga clic en una fila de la tabla para seleccionar un funcionario');
+      }
     }
   }
 
@@ -304,6 +317,7 @@ const ModalBusquedaPersona: React.FC<props> = ({
                 data_personas_solicitan={data_personas_solicitan}
                 data_personas_responsables={data_personas_responsables}
                 set_data_persona_solicita_temp={set_data_persona_solicita_temp}
+                set_data_persona_responsable_temp={set_data_persona_responsable_temp}
                 despacho_sin_solicitud={despacho_sin_solicitud}
               />
             </Grid>

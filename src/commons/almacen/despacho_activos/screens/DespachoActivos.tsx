@@ -46,7 +46,7 @@ const DespachoActivos = () => {
   const [inputs_buscar_bodega, set_inputs_buscar_bodega] = useState<interface_inputs_buscar_bodega>(Object);
   // INput OBservacion
   const [observacion, set_observacion] = useState<string>('');
-  // Anexo file obligatorio
+  // Anexo file opcional
   const [data_anexo_opcional, set_data_anexo_opcional] = useState<any>(Object);
   // Data funcionario responsable seleccionado
   const [funcionario_responsable_seleccionado, set_funcionario_responsable_seleccionado] = useState<interface_busqueda_responsable>(Object);
@@ -110,7 +110,7 @@ const DespachoActivos = () => {
       )
   }
 
-
+  // useEffect para obtener los articulos del despacho con solicitud
   useEffect(() => {
     if (!despacho_sin_solicitud && accion === 'crear') {
       get_articulos_despacho_con_solicitud_fc();
@@ -164,6 +164,8 @@ const DespachoActivos = () => {
   const btn_atras = () => {
     if (position_tab === '3') {
       set_position_tab('2');
+    } else if (accion === 'ver' && position_tab === '4') {
+      set_position_tab('1');
     }
   }
 
@@ -216,16 +218,12 @@ const DespachoActivos = () => {
       control_error('Debe agregar al menos un activo a un articulo');
       return false;
     }
-    
+
     return true;
   }
 
-  useEffect(()=>{
-    console.log(data_articulos_agregados_padres)
-  },[data_articulos_agregados_padres])
-
-  const agregar_propiedades_form_data = async() => {
-    if(!despacho_sin_solicitud){
+  const agregar_propiedades_form_data = async () => {
+    if (!despacho_sin_solicitud) {
       form_data.append('id_solicitud_activo', id_solicitud_activo ? id_solicitud_activo.toString() : '');
     }
 
@@ -245,7 +243,7 @@ const DespachoActivos = () => {
           id_bien_despachado: articulo_hijo.id_bien_despachado,
           id_bodega: articulo_hijo.id_bodega,
           observacion: articulo_hijo.observaciones ?? '',
-          ...(!despacho_sin_solicitud ? {id_bien_solicitado: articulo_hijo?.id_bien_despachado} : {}),
+          ...(!despacho_sin_solicitud ? { id_bien_solicitado: item?.id_bien } : {}),
           nro_posicion_despacho: Number(index + 1)
         }
       }) || [];
@@ -371,15 +369,21 @@ const DespachoActivos = () => {
 
               <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%', }}>
                 <TabList sx={{ minWidth: '100%' }} onChange={handle_tablist_change}>
-                  <Tab disabled={accion === 'ver' || accion === 'crear'} sx={{ minWidth: '33.3%' }} label={despacho_sin_solicitud ? 'Despachos sin solicitud' : 'Despachos con solicitud'} value="1" />
-                  <Tab disabled={accion === 'null'} sx={{ minWidth: '33.3%' }} label="Búsqueda funcionarios" value="2" />
-                  <Tab disabled={accion === 'null'} sx={{ minWidth: '33.3%' }} label="Búsqueda activos" value="3" />
+                  <Tab disabled={accion === 'ver' || accion === 'crear'} sx={{ minWidth: accion === 'ver' ? '50%' : '33.3%' }} label={despacho_sin_solicitud ? 'Despachos sin solicitud' : 'Despachos con solicitud'} value="1" />
+                  
+                  {accion !== 'ver' && <Tab disabled={accion === 'null'} sx={{ minWidth: '33.3%' }} label="Búsqueda funcionarios" value="2" /> }
+
+                  {accion !== 'ver' && <Tab disabled={accion === 'null'} sx={{ minWidth: '33.3%' }} label="Búsqueda activos" value="3" /> }
+
+                  {accion === 'ver' && <Tab sx={{ minWidth: '50%' }} label="Resumen despacho" value="4" /> }
                 </TabList>
               </Box>
 
               <TabPanel value="1" sx={{ p: '20px 0' }}>
                 <Grid container spacing={2}>
                   <SolicitudesEnProceso
+                    accion={accion}
+                    id_solicitud_activo={id_solicitud_activo}
                     set_accion={set_accion}
                     despacho_sin_solicitud={despacho_sin_solicitud}
                     set_position_tab={set_position_tab}
@@ -419,7 +423,7 @@ const DespachoActivos = () => {
 
             </TabContext>
 
-            <Grid item xs={12} sx={{
+            <Grid container item xs={12} sx={{
               display: "flex",
               justifyContent: "end",
               alignItems: "center",
@@ -441,7 +445,7 @@ const DespachoActivos = () => {
                 </Grid>
               }
 
-              {position_tab !== '1' &&
+              {position_tab !== '1' && accion !== 'ver' &&
                 <Grid item xs={12} lg={2}>
                   <Button
                     fullWidth
@@ -513,7 +517,7 @@ const DespachoActivos = () => {
                 </Grid>
               }
 
-              {position_tab !== '1' &&
+              {position_tab !== '1' && accion !== 'ver' &&
                 <Grid item xs={12} lg={2}>
                   <Button
                     fullWidth

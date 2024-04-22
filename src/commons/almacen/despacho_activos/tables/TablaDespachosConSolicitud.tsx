@@ -46,20 +46,26 @@ const TablaDespachosConSolicitud: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
 
-  const aprobar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
-    set_id_solicitud_activo(solicitud.id_solicitud_activo);
+  const aprobar_solicitud = (row: interface_solicitudes_realizadas) => {
+    set_id_solicitud_activo(row.id_solicitud_activo);
     set_accion('crear');
     set_position_tab('2');
   }
 
-  const rechazar_solicitud = (solicitud: interface_solicitudes_realizadas) => {
+  const rechazar_solicitud = (row: interface_solicitudes_realizadas) => {
     set_accion('rechazar');
+    set_id_solicitud_activo(row.id_solicitud_activo);
   }
 
-  const ver_solicitud = (solicitud: any) => {
+  const anular_solicitud = (row: interface_solicitudes_realizadas) => {
+    set_accion('anular');
+    set_id_solicitud_activo(row.id_solicitud_activo);
+  }
+
+  const ver_solicitud = (row: any) => {
     set_accion('ver');
 
-    dispatch(get_resumen_solicitud(solicitud.id_solicitud_activo))
+    dispatch(get_resumen_solicitud(row.id_solicitud_activo))
       .then((response: response_solicitud_por_id) => {
         if (Object.keys(response).length !== 0) {
           if (response.success) {
@@ -76,32 +82,7 @@ const TablaDespachosConSolicitud: React.FC<Props> = ({
       })
   }
 
-  const anular_solicitud = (row: interface_solicitudes_realizadas) => {
-    Swal.fire({
-      title: '¿Está seguro de anular la solicitud?',
-      showDenyButton: true,
-      confirmButtonText: `Confirmar`,
-      denyButtonText: `Cancelar`,
-      confirmButtonColor: '#042F4A',
-      cancelButtonColor: '#DE1616',
-      icon: 'question',
-    }).then(async (result: any) => {
-      if (result.isConfirmed) {
-        await dispatch(put_anular_despacho_con_solicitud(row.id_solicitud_activo,{
-          justificacion_anulacion: 'Anulación de solicitud'
-        }))
-          .then((response: any) => {
-            if (Object.keys(response).length !== 0) {
-              control_success('Solicitud anulada correctamente');
-              get_obtener_solicitudes_activos_fc();
-            } else {
-              control_error('Hubo un error al intentar anular la solicitud');
-            }
-          })
-        return true;
-      }
-    });
-  }
+
 
 
   const columns: CustomColumn[] = [
@@ -124,19 +105,22 @@ const TablaDespachosConSolicitud: React.FC<Props> = ({
     },
     { field: 'motivo', headerName: 'Motivo', minWidth: 300, flex: 1, },
     {
-      field: 'primer_nombre_persona_solicita', headerName: 'Persona que solicita', minWidth: 300, flex: 1,
-      renderCell: (params) => (`${params.row.primer_nombre_persona_solicita} ${params.row.primer_apellido_persona_solicita}`)
+      field: 'opeario', headerName: 'Persona que solicita', minWidth: 300, flex: 1,
+      renderCell: (params) => (
+        `${params.row.primer_nombre_persona_solicita} ${params.row.primer_apellido_persona_solicita}`
+      )
     },
     {
       field: 'persona_responsable', headerName: 'Persona responsable', minWidth: 300, flex: 1,
-      renderCell: (params) => (`${params.row.primer_nombre_funcionario_resp_unidad} ${params.row.primer_apellido_funcionario_resp_unidad}`)
+      renderCell: (params) => (
+        `${params.row.primer_nombre_funcionario_resp_unidad} ${params.row.primer_apellido_funcionario_resp_unidad}`
+      )
     },
     { field: 'numero_activos', headerName: 'N° de activos', minWidth: 100, flex: 1, align: 'center', headerAlign: 'center' },
     {
       field: 'rechazar', headerName: 'Rechazar', maxWidth: 80, minWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => {
-        if (params.row.estado_solicitud === 'SA' ||
-          params.row.estado_solicitud === 'DA') {
+        if (params.row.estado_solicitud === 'SA') {
           return (
             <HighlightOffIcon
               onClick={() => rechazar_solicitud(params.row)}
@@ -148,8 +132,7 @@ const TablaDespachosConSolicitud: React.FC<Props> = ({
     {
       field: 'aprobar', headerName: 'Aprobar', maxWidth: 70, minWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => {
-        if (params.row.estado_solicitud === 'SA' ||
-          params.row.estado_solicitud === 'DA') {
+        if (params.row.estado_solicitud === 'SA') {
           return (
             <CheckCircleOutlineIcon
               onClick={() => aprobar_solicitud(params.row)}

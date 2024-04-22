@@ -23,8 +23,9 @@ interface Props {
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   data_despachos_sin_solicitud: interface_despachos_sin_solicitud[];
   loadding_tabla_solicitudes: boolean;
-  get_obtener_despachos_sin_solictud_fc: () => void;
   set_data_solicitud_ver_por_id: React.Dispatch<React.SetStateAction<interface_solicitud_por_id>>;
+  set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
+  set_position_tab: React.Dispatch<React.SetStateAction<string>>;
 }
 
 
@@ -33,64 +34,21 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
   set_accion,
   data_despachos_sin_solicitud,
   loadding_tabla_solicitudes,
-  get_obtener_despachos_sin_solictud_fc,
   set_data_solicitud_ver_por_id,
+  set_id_solicitud_activo,
+  set_position_tab,
 }) => {
   const dispatch = useAppDispatch();
 
-
-  const aprobar_solicitud = (solicitud: interface_despachos_sin_solicitud) => {
-    Swal.fire({
-      title: '¿Esta seguro de aprobar la solicitud?',
-      showDenyButton: true,
-      confirmButtonText: `Confirmar`,
-      denyButtonText: `Cancelar`,
-      confirmButtonColor: '#042F4A',
-      cancelButtonColor: '#DE1616',
-      icon: 'question',
-    }).then(async (result: any) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-
-        return true;
-      } else if (result.isDenied) {
-        return false;
-      }
-    });
-  }
-
-  const rechazar_solicitud = (row: interface_despachos_sin_solicitud) => {
-    Swal.fire({
-      title: '¿Está seguro de rechazar la solicitud?',
-      showDenyButton: true,
-      confirmButtonText: `Confirmar`,
-      denyButtonText: `Cancelar`,
-      confirmButtonColor: '#042F4A',
-      cancelButtonColor: '#DE1616',
-      icon: 'question',
-    }).then(async(result: any) => {
-      if (result.isConfirmed) {
-        await dispatch(put_anular_despacho_sin_solicitud(row.id_despacho_activo))
-          .then((response: any) => {
-            if (Object.keys(response).length !== 0) {
-              if (response.length !== 0) {
-                control_success('Solicitud rechazada correctamente');
-                get_obtener_despachos_sin_solictud_fc();
-              } else {
-                control_error('No se pudo rechazar la solicitud');
-              }
-            } else {
-              control_error('Error en el servidor al intentar rechazar la solicitud');
-            }
-          }
-          );
-        return true;
-      }
-    });
+  const anular_solicitud = (row: interface_despachos_sin_solicitud) => {
+    set_accion('anular');
+    set_id_solicitud_activo(row.id_solicitud_activo);
   }
 
   const ver_solicitud = (row: any) => {
     set_accion('ver');
+    set_position_tab('4');
+
     dispatch(get_resumen_sin_solicitud(row.id_despacho_activo))
       .then((response: response_solicitud_por_id) => {
         if (Object.keys(response).length !== 0) {
@@ -124,15 +82,25 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
       renderCell: (params) => (dayjs(params.row.fecha_despacho).format('DD/MM/YYYY'))
     },
     { field: 'observacion', headerName: 'Observación', minWidth: 300, flex: 1, },
-    { field: 'nombre_persona_despacha', headerName: 'Operario', minWidth: 300, flex: 1 },
-    { field: 'nombre_persona_despachaa', headerName: 'Persona responsable', minWidth: 300, flex: 1 },
+    {
+      field: 'nombre_persona_despacha', headerName: 'Operario', minWidth: 300, flex: 1,
+      renderCell: (params) => (
+        `${params.row.primer_nombre_persona_operario_asignado} ${params.row.primer_apellido_persona_operario_asignado}`
+      )
+    },
+    {
+      field: 'nombre_persona_despachaa', headerName: 'Persona responsable', minWidth: 300, flex: 1,
+      renderCell: (params) => (
+        `${params.row.primer_nombre_funcionario_resp_asignado} ${params.row.primer_apellido_funcionario_resp_asignado}`
+      )
+    },
     { field: 'numero_activos', headerName: 'N° de activos', minWidth: 100, flex: 1, align: 'center', headerAlign: 'center' },
     {
-      field: 'rechazar', headerName: 'Rechazar', maxWidth: 80, minWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
+      field: 'anular', headerName: 'Anular', maxWidth: 80, minWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         params.row.estado_despacho === 'Ep' &&
         <HighlightOffIcon
-          onClick={() => rechazar_solicitud(params.row)}
+          onClick={() => anular_solicitud(params.row)}
           sx={{ fontSize: '30px', cursor: 'pointer', color: '#c62828' }} />
       )
     },
