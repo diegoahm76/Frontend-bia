@@ -36,7 +36,7 @@ export const CuencaScreen: React.FC = () => {
       headerName: 'Nombre Cuenca',
       sortable: true,
       minWidth: 300,
-      flex: 3,
+      flex: 1,
     },
     {
       field: 'activo',
@@ -222,7 +222,7 @@ export const CuencaScreen: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
-            <section style={{display: 'flex', gap: '1rem'}}>
+            <Grid style={{display: 'flex', gap: '1rem'}}>
               <TextField
                 label="Buscar cuenca"
                 size="small"
@@ -238,7 +238,7 @@ export const CuencaScreen: React.FC = () => {
                 onClick={clean_search}
               >
               </Button>
-            </section>
+            </Grid>
             <ButtonGroup
               style={{
                 margin: 7,

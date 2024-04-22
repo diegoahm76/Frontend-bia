@@ -27,56 +27,56 @@ export const ListarPrograma: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'nombre_eje_estrategico',
-      headerName: 'Nombre del Eje Estratégico',
+      headerName: 'NOMBRE DEL EJE ESTRATÉGICO',
       sortable: true,
       minWidth: 250,
       flex: 1
     },
     {
       field: 'nombre_programa',
-      headerName: 'Nombre del Programa',
+      headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
       minWidth: 350,
       flex: 2
     },
     {
       field: 'numero_programa',
-      headerName: 'Número del Programa',
+      headerName: 'NÚMERO DEL PROGRAMA',
       sortable: true,
-      minWidth: 150,
+      minWidth: 250,
       flex: 1
     },
     {
       field: 'porcentaje_1',
-      headerName: 'Porcentaje 1',
+      headerName: 'PORCENTAJE 1',
       sortable: true,
       minWidth: 120,
       flex: 1
     },
     {
       field: 'porcentaje_2',
-      headerName: 'Porcentaje 2',
+      headerName: 'PORCENTAJE 2',
       sortable: true,
       minWidth: 120,
       flex: 1
     },
     {
       field: 'porcentaje_3',
-      headerName: 'Porcentaje 3',
+      headerName: 'PORCENTAJE 3',
       sortable: true,
       minWidth: 120,
       flex: 1
     },
     {
       field: 'porcentaje_4',
-      headerName: 'Porcentaje 4',
+      headerName: 'PORCENTAJE 4',
       sortable: true,
       minWidth: 120,
       flex: 1
     },
     {
       field: 'cumplio',
-      headerName: '¿Cumplió?',
+      headerName: '¿CUMPLIÓ?',
       sortable: true,
       minWidth: 120,
       flex: 1,
@@ -84,7 +84,7 @@ export const ListarPrograma: React.FC = () => {
     },
     {
       field: 'fecha_creacion',
-      headerName: 'Fecha de Creación',
+      headerName: 'FECHA DE CREACIÓN',
       sortable: true,
       minWidth: 160,
       flex: 1
@@ -172,11 +172,8 @@ export const ListarPrograma: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        {rows_programa.length > 0 && (
-          <>
             <Grid item xs={12}>
               <Title title="Listado de programas" />
-              {/* <Typography>Resultados de la búsqueda</Typography> */}
             </Grid>
             <Grid item xs={12}>
               <Box sx={{ width: '100%' }}>
@@ -206,9 +203,7 @@ export const ListarPrograma: React.FC = () => {
                 />
               </Box>
             </Grid>
-          </>
-        )}
-        <Grid container spacing={2} justifyContent="flex-end">
+        <Grid container spacing={2} justifyContent="flex-end" my={1}>
           <Grid item>
             <Button
               variant="outlined"

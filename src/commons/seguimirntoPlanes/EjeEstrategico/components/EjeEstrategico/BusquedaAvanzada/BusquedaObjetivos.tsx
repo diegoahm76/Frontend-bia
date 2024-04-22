@@ -51,14 +51,14 @@ export const BusquedaObjetivo: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'nombre_plan',
-      headerName: 'Nombre del Plan',
+      headerName: 'NOMBRE DEL PLAN',
       sortable: true,
       minWidth: 300,
       flex:2
     },
     {
       field: 'nombre_objetivo',
-      headerName: 'Nombre del Objetivo',
+      headerName: 'NOMBRE DEL OBJETIVO',
       sortable: true,
       minWidth: 350,
       flex:2
@@ -141,7 +141,6 @@ export const BusquedaObjetivo: React.FC = () => {
         nombre_plan: '',
         nombre_objetivo: '',
     });
-    set_rows([]);
   }
 
   const handle_close = (): void => {
