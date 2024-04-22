@@ -35,7 +35,6 @@ export const GenerarLiquidacion = () => {
   const { userinfo: { id_persona, email, telefono_celular, numero_documento } } = useSelector((state: AuthSlice) => state.auth);
   const { form, setForm } = useContext(PreciosContext);
   const [data_liquidacion, set_data_liquidacion] = useState<ElementoPQRS | null>(null);
-  const [persona, set_persona] = useState<Persona | undefined>();
 
   
   const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
@@ -44,41 +43,26 @@ export const GenerarLiquidacion = () => {
     );
     
   
+// console.log("currentElementPqrsdComplementoTramitesYotros",currentElementPqrsdComplementoTramitesYotros)
+const fetch_datos_choises = async (): Promise<void> => {
+  try {
+    const url = `/tramites/general/get/?radicado=${currentElementPqrsdComplementoTramitesYotros?.radicado}`;
+    const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
+    const data_consulta = res.data.data;
+    console.log("data_consulta",data_consulta);
+    // control_success('Datos actualizados correctamente');
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
-
-
-
-
-
-  const {
-
-    primer_nombre,
-    segundo_nombre,
-    primer_apellido,
-    segundo_apellido,
-  } = persona ?? {};
-  const nombres_concatenados = `${primer_nombre ?? ''} ${segundo_nombre ?? ''}`;
-  const apellidos_concatenados = `${primer_apellido ?? ''} ${segundo_apellido ?? ''}`;
-
-
-  const handleResult = async (persona?: Persona): Promise<void> => {
-    if (persona) {
-      // Haz lo que necesites con la información de la persona
-      set_persona(persona);
-
-    } else {
-      // Manejar el caso en el que la persona es undefined
-      console.log("No se seleccionó ninguna persona.");
-    }
-  };
-
-
-
+`tramites/general/get/?radicado=${currentElementPqrsdComplementoTramitesYotros?.radicado}`
 
   useEffect(() => {
     if (currentElementPqrsdComplementoTramitesYotros) {
       set_data_liquidacion(currentElementPqrsdComplementoTramitesYotros);
+      fetch_datos_choises();
     }
   }, [currentElementPqrsdComplementoTramitesYotros]);
 
@@ -90,7 +74,6 @@ export const GenerarLiquidacion = () => {
       {/* Maquetación de los componentes */}
       <Grid container spacing={2}>
 
-
         <Grid container justifyContent="center">
           <Grid item xs={12} >
             <Grid container alignItems="center" justifyContent="center">
@@ -99,6 +82,7 @@ export const GenerarLiquidacion = () => {
           </Grid>
         </Grid>
 
+<button onClick={fetch_datos_choises}> xxxxx</button>
 
         <Grid item xs={12} sm={4}>
           <TextField

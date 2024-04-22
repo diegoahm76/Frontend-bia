@@ -10,6 +10,8 @@ import { control_error, control_success } from "../../../alertasgestor/utils/con
 import { api } from "../../../../../api/axios";
 import type { AuthSlice } from "../../../../auth/interfaces/authModels";
 import { useSelector } from "react-redux";
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+
 
 export const BotonesFinales = () => {
 
@@ -84,9 +86,9 @@ export const BotonesFinales = () => {
 
       <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
         <Button
-          startIcon={<ClearIcon />}
+          startIcon={<DescriptionOutlinedIcon />}
           fullWidth
-          style={{ width: "90%", marginTop: 15 }}
+          style={{ width: "90%", marginTop: 15,backgroundColor:"green",color:"white" }}
           variant="contained"
           color="error"
           onClick={() => {

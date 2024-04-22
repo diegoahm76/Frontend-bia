@@ -7,22 +7,30 @@ import { Title } from "../../../../../components/Title";
 import { api } from "../../../../../api/axios";
 import { DescriptionOutlined } from '@mui/icons-material';
 import { BuscadorPerzonasStiven } from "../../../WorkFlowPQRSDF/components/BuscadorPersonaPersonalizado/BuscadorPerzonas";
-import { Persona } from "../../../WorkFlowPQRSDF/interface/IwordFlow";
 import { PreciosContext } from "../../context/PersonalContext";
 import PaymentIcon from '@mui/icons-material/Payment';
 
+export interface Persona {
+    id_persona: number;
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+}
 export const ModalDocumentoLiquidacionDetalle = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataChoise, setDataChoise] = useState<any[]>([]);
     const [form_tipo, set_tipo] = useState({ id_expediente: '' }); // Agregar estado para el formulario
     const [persona, set_persona] = useState<Persona | undefined>();
+    console.log("persona",persona);
     const { form, setForm } = useContext(PreciosContext);
 
 
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
+
     const iniciarpago=()=>{
         console.log("iniciar pago")
     }
@@ -47,13 +55,8 @@ export const ModalDocumentoLiquidacionDetalle = () => {
     };
 
 
-    useEffect(() => {
-        fetchDatosChoises();
-    }, []);
-
 
     const {
-
         primer_nombre,
         segundo_nombre,
         primer_apellido,
@@ -66,15 +69,15 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
     const handleResult = async (persona?: Persona): Promise<void> => {
         if (persona) {
-            // Haz lo que necesites con la información de la persona
             set_persona(persona);
-
         } else {
-            // Manejar el caso en el que la persona es undefined
             console.log("No se seleccionó ninguna persona.");
         }
     };
 
+    useEffect(() => {
+        fetchDatosChoises();
+    }, []);
 
     return (
         <>
@@ -239,13 +242,13 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                             <Grid container alignItems="center" justifyContent="center">
                                 <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
                                     <Button
-                                        startIcon={<ClearIcon />}
+                                        startIcon={<PaymentIcon />}
                                         fullWidth
-                                        style={{ width: "90%", marginTop: 15, backgroundColor: "green ", color: "white" }}
+                                        style={{ width: "90%", marginTop: 15,marginLeft:8, backgroundColor: "green ", color: "white" }}
                                         variant="contained"
                                         color="error"
                                         onClick={iniciarpago}
-                                    >
+                                        >
                                         Iniciar Pago
                                     </Button>
                                 </Grid>
@@ -256,8 +259,8 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
                                 <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
                                     <Button
-                                        startIcon={<PaymentIcon />}
                                         fullWidth
+                                        startIcon={<ClearIcon />}
                                         style={{ width: "90%", marginTop: 15, backgroundColor: "red", color: "white" }}
                                         variant="contained"
                                         color="error"
