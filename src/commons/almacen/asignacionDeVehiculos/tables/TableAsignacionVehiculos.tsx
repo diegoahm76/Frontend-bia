@@ -49,10 +49,15 @@ const AsignacionVehiculos: React.FC<props> = ({
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {  
-        dispatch(elimiar_asignacion_vehiculo(params.id_asignacion)).then((response: { success: boolean, detail: string, data: any }) => {
-          if (response.success) {
-            set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
-            control_success('Se elimino la solicitud correctamente');
+        dispatch(elimiar_asignacion_vehiculo(params.id_asignacion))
+        .then((response: any) => {
+          if(Object.keys(response).length !== 0){
+            if (response.success) {
+              set_refrescar_tabla_conductores(!refrescar_tabla_conductores);
+              control_success('Se elimino la solicitud correctamente');
+            } else {
+              control_error('Error al intentar borrar la solicitud, intente de nuevo');
+            }
           }
         });
         return true;
@@ -73,6 +78,9 @@ const AsignacionVehiculos: React.FC<props> = ({
       ),
     },
     { field: 'marca', headerName: 'Marca', minWidth: 170, flex: 1 },
+    { field: 'estado', headerName: 'Estado', minWidth: 170, flex: 1,
+      renderCell: (params) => params.row.activo ? 'Activo' : 'Inactivo',
+    },
     { field: 'placa', headerName: 'Placa', minWidth: 120, flex: 1 },
     { field: 'tipo_conductor', headerName: 'Tipo de conductor', minWidth: 120, flex: 1 },
     { field: 'nombre_conductor', headerName: 'Nombres', minWidth: 120, flex: 1 },
@@ -85,6 +93,7 @@ const AsignacionVehiculos: React.FC<props> = ({
       width: 80,
       align: 'center',
       renderCell: (params) => (
+        params.row.activo &&
         <DeleteForeverIcon
           sx={{ cursor: 'pointer', fontSize: '32px' , color:'#e72929'}}
           onClick={() => eliminar_asignacion(params.row)}

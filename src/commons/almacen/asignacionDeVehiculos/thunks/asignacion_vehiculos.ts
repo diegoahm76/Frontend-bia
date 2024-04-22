@@ -18,15 +18,9 @@ export const buscar_vehiculos_asignados: any = (tipo_vehiculo: string,tipo_coduc
 export const elimiar_asignacion_vehiculo: any = (id_solicitud: number) => {
   return async () => {
     try {
-      const eliminiar_solicitud = await api.delete(`/almacen/vehiculos/eliminar-asignacion/${id_solicitud}/`);
-      if(eliminiar_solicitud.status === 200){
-        control_success('Se elimino la asignacion correctamente')
-      } else {
-        console.log(eliminiar_solicitud.status);
-      }
-      return eliminiar_solicitud;
+      const { data } = await api.put(`/almacen/vehiculos/eliminar-asignacion/${id_solicitud}/`);
+      return data;
     } catch (error) {
-      control_error('Error al intentar borrar la asignacion, intente de nuevo');
       return error as AxiosError;
     }
   }

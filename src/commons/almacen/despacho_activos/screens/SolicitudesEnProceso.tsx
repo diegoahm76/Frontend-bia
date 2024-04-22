@@ -14,41 +14,54 @@ import { Title } from '../../../../components';
 import ModalBusquedaPersona from '../manners/ModalBusquedaPersona';
 import TablaDespachosConSolicitud from '../tables/TablaDespachosConSolicitud';
 import TablaDespachosSinSolicitudes from '../tables/TablaDespachosSinSolicitudes';
+import ModalAnularDespachoConSolicitud from '../manners/ModalAnularDespachoConSolicitud';
+import ModalRechazarDespachoConSolicitud from '../manners/ModalRechazarDespachoConSolicitud';
+import ModalAnularDespachoSinSolicitud from '../manners/ModalAnularDespachoSinSolicitud';
 
 
 interface props {
+  accion: string;
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   despacho_sin_solicitud: boolean;
   set_position_tab: React.Dispatch<React.SetStateAction<string>>;
   set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
+  id_solicitud_activo: number | null;
 }
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const SolicitudesEnProceso: React.FC<props> = ({
+  accion,
   set_accion,
   despacho_sin_solicitud,
   set_position_tab,
-  set_id_solicitud_activo
+  set_id_solicitud_activo,
+  id_solicitud_activo,
 }) => {
   const dispatch = useAppDispatch();
 
-  
+
   const [loadding_tabla_solicitudes, set_loadding_tabla_solicitudes] = useState<boolean>(false);
+
+  // data cuando se da click en el icono de 'ojo' para ver la solicitud
   const [data_solicitud_ver_por_id, set_data_solicitud_ver_por_id] = useState<interface_solicitud_por_id>(Object);
 
+  // Data de las solicitudes de activos con solicitud
   const [data_despachos_con_solicitud, set_data_despachos_con_solicitud] = useState<interface_solicitudes_realizadas[]>([]);
-
-
 
   //------------------------------------------------------------------------------------//
   //FALTA IMPLEMENTAR LA DATA DE DESPACHOS SIN SOLICITUD, POR AHORA SE DEJA VACIO
   const [data_despachos_sin_solicitud, set_data_despachos_sin_solicitud] = useState<interface_despachos_sin_solicitud[]>([]);
   //------------------------------------------------------------------------------------//
 
-
-
+  // estado para mostrar el modal de busqueda de persona
   const [mostrar_modal_buscar_persona, set_mostrar_modal_buscar_persona] = useState<boolean>(false);
+  // estado para mostrar el modal de justificacion de anulacion - con solicitud
+  const [mostrar_modal_anular_despacho, set_mostrar_modal_anular_despacho] = useState<boolean>(false);
+  // estado para mostrar el modal de justificacion de rechazo - con solicitud
+  const [mostar_modal_rechazar_despacho, set_mostar_modal_rechazar_despacho] = useState<boolean>(false);
+  // estado para mostarr el modal de justificacion de anulacion de despacho - sin solicitud
+  const [mostrar_modal_anular_despacho_sin_solicitud, set_mostrar_modal_anular_despacho_sin_solicitud] = useState<boolean>(false);
 
   // estado para controlar los filtros de busqueda
   const [estado, set_estado] = useState<string>('');
@@ -194,6 +207,23 @@ const SolicitudesEnProceso: React.FC<props> = ({
     }
   }
 
+  // Se muestra el modal de anulacion de despacho con solicitud
+  // Se muestra el modal de rechazo de despacho con solicitud
+  // Se muestra el modal de anulacion de despacho sin solicitud
+  useEffect(() => {
+    if (accion === 'anular' && !despacho_sin_solicitud) {
+      set_mostrar_modal_anular_despacho(true);
+      set_accion('');
+    } else if(accion === 'rechazar' && !despacho_sin_solicitud) {
+      set_mostar_modal_rechazar_despacho(true);
+      set_accion('');
+    } else if(accion === 'anular' && despacho_sin_solicitud) {
+      set_mostrar_modal_anular_despacho_sin_solicitud(true);
+      set_accion('');
+    }
+  }, [accion, despacho_sin_solicitud])
+
+
   return (
     <>
       <ModalBusquedaPersona
@@ -203,11 +233,33 @@ const SolicitudesEnProceso: React.FC<props> = ({
         set_data_persona_responsable={set_data_persona_responsable}
         despacho_sin_solicitud={despacho_sin_solicitud}
       />
+
+      <ModalAnularDespachoConSolicitud
+        set_mostrar_modal_anular_despacho={set_mostrar_modal_anular_despacho}
+        mostrar_modal_anular_despacho={mostrar_modal_anular_despacho}
+        get_obtener_solicitudes_activos_fc={get_obtener_solicitudes_activos_fc}
+        id_solicitud_activo={id_solicitud_activo}
+      />
+
+      <ModalRechazarDespachoConSolicitud
+        set_mostar_modal_rechazar_despacho={set_mostar_modal_rechazar_despacho}
+        mostar_modal_rechazar_despacho={mostar_modal_rechazar_despacho}
+        get_obtener_solicitudes_activos_fc={get_obtener_solicitudes_activos_fc}
+        id_solicitud_activo={id_solicitud_activo}
+      />
+
+      <ModalAnularDespachoSinSolicitud
+        set_mostrar_modal_anular_despacho_sin_solicitud={set_mostrar_modal_anular_despacho_sin_solicitud}
+        mostrar_modal_anular_despacho_sin_solicitud={mostrar_modal_anular_despacho_sin_solicitud}
+        get_obtener_despachos_sin_solictud_fc={get_obtener_despachos_sin_solictud_fc}
+        id_solicitud_activo={id_solicitud_activo}
+      />
+
       <Grid item xs={12} lg={2.4}>
         <TextField
           fullWidth
           label={despacho_sin_solicitud ? 'Persona responsable' : 'Persona solicita'}
-          value={data_persona_solicita?.nombre_completo ?? ''}
+          value={despacho_sin_solicitud ? data_persona_responsable?.nombre_completo ?? '' : data_persona_solicita?.nombre_completo ?? ''}
           disabled
           size='small'
         />
@@ -325,9 +377,10 @@ const SolicitudesEnProceso: React.FC<props> = ({
         {despacho_sin_solicitud ?
           <TablaDespachosSinSolicitudes
             set_accion={set_accion}
+            set_position_tab={set_position_tab}
             data_despachos_sin_solicitud={data_despachos_sin_solicitud}
             loadding_tabla_solicitudes={loadding_tabla_solicitudes}
-            get_obtener_despachos_sin_solictud_fc={get_obtener_despachos_sin_solictud_fc}
+            set_id_solicitud_activo={set_id_solicitud_activo}
             set_data_solicitud_ver_por_id={set_data_solicitud_ver_por_id}
           />
           :

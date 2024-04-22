@@ -70,10 +70,11 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
     set_accion('ver_agendamiento');
   }
 
-  const no_aprobar_solicitud = (params: interface_data_agendamiento_vehiculos) => { 
+  // Se comenta la funcion no_aprobar_solicitud ya que por version no se esta utilizando
+  /*const no_aprobar_solicitud = (params: interface_data_agendamiento_vehiculos) => { 
     set_mostrar_input_no_aprobado(true);
     set_id_solicitud_viaje(params.id_solicitud_viaje ?? 0);
-  }
+  }*/
 
   const aprobar_solicitud = (params: interface_data_agendamiento_vehiculos) => {
     set_mostrar_agendamiento_vehiculo(true);
@@ -147,22 +148,14 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
           )
         } else if (res.row.estado_solicitud === 'ES'){
           return (
-            <Grid container display={'flex'} gap='5px' justifyContent={'center'}>
               <Button
+                fullWidth
                 size="small"
                 color='success'
                 variant='contained'
                 startIcon={<DoneIcon />}
                 onClick={()=>aprobar_solicitud(res.row)}
-              >Aprobar</Button>
-              <Button
-                size="small"
-                color='error'
-                variant='contained'
-                startIcon={<CloseIcon />}
-                onClick={()=>no_aprobar_solicitud(res.row)}
-              >No aprobar</Button>
-            </Grid>
+              >Agendar Vehiculo</Button>
           )
         }
         return ''
