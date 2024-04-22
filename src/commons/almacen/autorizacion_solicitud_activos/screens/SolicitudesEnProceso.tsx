@@ -116,6 +116,11 @@ const SolicitudesEnProceso: React.FC<props> = ({
    * @returns void
    */
   const rechazar_solicitud = () => {
+    if(justificacion_rechazo === ''){
+      control_error('Debe ingresar una jsutificación de rechazo');
+      return;
+    }
+    
     Swal.fire({
       title: '¿Esta seguro de rechazar la solicitud',
       showDenyButton: true,
