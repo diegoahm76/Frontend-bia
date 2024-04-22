@@ -66,7 +66,7 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
       tipo_vehiculo: vehiculo_seleccionado.tipo_vehiculo,
       capacidad_pasajeros: vehiculo_seleccionado.capacidad_pasajeros,
       color_vehiculo: vehiculo_seleccionado.color,
-      nro_documento: conductor_seleccionado.nro_documento,
+      nro_documento: conductor_seleccionado.numero_documento,
       nombre_conductor: conductor_seleccionado.nombre_persona,
       telefono_conductor: conductor_seleccionado.telefono_celular,
       tipo_conductor: conductor_seleccionado.nombre_clase_tercero,
@@ -174,7 +174,7 @@ const VehiculosConductoresAsignados: React.FC<props> = ({
     set_capacidad_pasajeros(vehiculo_seleccionado.capacidad_pasajeros);
     set_color_vehiculo(vehiculo_seleccionado.color);
 
-    set_documento_coductor(conductor_seleccionado.nro_documento);
+    set_documento_coductor(conductor_seleccionado.numero_documento);
     set_nombre_conductor(conductor_seleccionado.nombre_persona);
     set_telefono_conductor(conductor_seleccionado.telefono_celular);
     set_tipo_conductor(conductor_seleccionado.nombre_clase_tercero);
