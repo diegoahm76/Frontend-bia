@@ -8,7 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Title } from "../../../../../components/Title";
 import { api } from "../../../../../api/axios";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useAppSelector } from "../../../../../hooks/hooks";
+
 
 
 interface TipologiaDocumental {
@@ -26,11 +26,6 @@ export const DetalleLiquidacion = () => {
   const [valor, setValor] = useState('');
   const [data_choise, set_data_choise] = useState<TipologiaDocumental[]>([]);
 
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
-console.log(currentElementPqrsdComplementoTramitesYotros)
 
   const fetch_datos_choises = async (): Promise<void> => {
     try {

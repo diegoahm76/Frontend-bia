@@ -4,6 +4,8 @@ import { ProcesoLiquidacionScreen } from '../screens/BandejaEntradaLiquidacion';
 import { Page404 } from '../../../../screens/404';
 import { PreciosProvider } from '../context/PersonalContext';
 import { LiquidacionPlantilla } from '../components/plantillaHtml/Liquidacion';
+import { BuscarPagosIniciados } from '../screens/BuscarPagosIniciados';
+import { DocumentoPagoLiquidacion } from '../components/Documento&Pago/Documento&Pago';
 
 
 export const LiquidacionRutesPago: React.FC = () => {
@@ -11,6 +13,9 @@ export const LiquidacionRutesPago: React.FC = () => {
     <PreciosProvider>
       <Routes>
         <Route path="/activacion" element={<ProcesoLiquidacionScreen/>} />
+        <Route path="/pagos_iniciados" element={<BuscarPagosIniciados/>} />
+        <Route path="/documneto" element={<DocumentoPagoLiquidacion/>} />
+
 
         <Route path="/*" element={<Page404 />} />
         {/* Puedes agregar más rutas según tus necesidades */}

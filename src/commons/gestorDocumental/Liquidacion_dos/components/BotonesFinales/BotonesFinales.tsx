@@ -1,4 +1,4 @@
- /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -10,7 +10,6 @@ import { control_error, control_success } from "../../../alertasgestor/utils/con
 import { api } from "../../../../../api/axios";
 import type { AuthSlice } from "../../../../auth/interfaces/authModels";
 import { useSelector } from "react-redux";
-import { ModalDocumentoLiquidacionDetalle } from "../ModalDocumento/ModalDocumentoLiquidacionDetalle";
 
 export const BotonesFinales = () => {
 
@@ -19,10 +18,10 @@ export const BotonesFinales = () => {
     userinfo: { id_persona, email, telefono_celular, numero_documento }
   } = useSelector((state: AuthSlice) => state.auth);
 
-  const { precios,form } = useContext(PreciosContext);
+  const { precios } = useContext(PreciosContext);
 
   const descripcionConcatenada = precios.map(precio => `Servicio de ${precio.descripcion} de nivel ${precio.nivel} con valor de ${precio.valor}`).join(', ');
- 
+
 
 
 
@@ -42,11 +41,11 @@ export const BotonesFinales = () => {
         "apellido_cliente": "Pruebas",
         "telefono_cliente": "123456789",
         "id_liquidacion": 16
-    };
+      };
       const res = await api.post(url, postData);
       const numeroConsulta = res.data && res.data.data;
       console.log(numeroConsulta);
-     control_success("se creo correctamente");
+      control_success("se creo correctamente");
     } catch (error: any) {
       control_error(error.response.data.detail);
 
@@ -68,25 +67,35 @@ export const BotonesFinales = () => {
         boxShadow: '0px 3px 6px #042F4A26',
       }}
     >
-    
 
-    <ModalDocumentoLiquidacionDetalle/>
 
-    
+      {/* <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+        <Button
+          startIcon={<SaveIcon />}
+          style={{ width: "90%", marginTop: 15 }}
+          color="success" // Cambia el color según si es una actualización o creación
+          fullWidth
+          onClick={crear_configuracion_expediente_simple}
+          variant="contained"
+        >
+          Iniciar Pago
+        </Button>
+      </Grid> */}
+
       <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-          <Button
-            startIcon={<SaveIcon />}
-            style={{ width: "90%", marginTop: 15 }}
-            color="success" // Cambia el color según si es una actualización o creación
-            fullWidth
-            onClick={crear_configuracion_expediente_simple}
-            variant="contained"
-          >
-            Iniciar Pago 
-          </Button>
-        </Grid>
-
-
+        <Button
+          startIcon={<ClearIcon />}
+          fullWidth
+          style={{ width: "90%", marginTop: 15 }}
+          variant="contained"
+          color="error"
+          onClick={() => {
+            navigate('/app/gestor_documental/liquidacion/documneto');
+          }}
+        >
+          documento
+        </Button>
+      </Grid>
 
       <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
         <Button color='primary' style={{ width: "90%", marginTop: 15 }} variant="outlined" fullWidth startIcon={<CleanIcon />}>
@@ -100,7 +109,7 @@ export const BotonesFinales = () => {
         <Button
           startIcon={<ClearIcon />}
           fullWidth
-          style={{ width: "90%", marginTop: 15 }}
+          style={{ width: "90%", marginTop: 15 ,backgroundColor:"red",color:"white"}}
           variant="contained"
           color="error"
           onClick={() => {
