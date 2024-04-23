@@ -366,7 +366,9 @@ export const Varible: React.FC = () => {
                                 autoHeight
                                 pageSize={5}
                                 columns={columns}
-                                rows={configuraciones}
+                                // rows={configuraciones}
+                                rows={configuraciones.filter(config => config.tipo_cobro === formValues.tipo_cobro)} // Filtrado adicional basado en tipo_cobro
+
                                 getRowId={(row) => row.id_variables}
                             />
                         </div>
