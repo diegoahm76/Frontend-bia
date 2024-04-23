@@ -303,9 +303,7 @@ export const Varible: React.FC = () => {
                                         {tipoCobro.nombre_tipo_cobro}
                                     </MenuItem>
                                 ))}
-                        </TextField>
-
-
+                        </TextField> 
                     </Grid>
 
 

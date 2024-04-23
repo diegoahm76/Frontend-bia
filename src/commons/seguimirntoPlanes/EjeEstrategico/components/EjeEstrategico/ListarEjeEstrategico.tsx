@@ -30,7 +30,8 @@ export const ListarEjeEstrategico: React.FC = () => {
     id_objetivo,
     rows_eje_estrategico,
     set_id_plan,
-    fetch_data_tipo_eje,
+    set_id_objetivo,
+    set_id_eje_estrategico,
     fetch_data_eje_estrategico,
     fetch_data_eje_estrategico_id_obj,
   } = useContext(DataContextEjeEstrategico);
@@ -82,6 +83,9 @@ export const ListarEjeEstrategico: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
+              set_id_objetivo(params.row.id_objetivo);
+              set_id_eje_estrategico(params.row.id_eje_estrategico);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -123,11 +127,7 @@ export const ListarEjeEstrategico: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetch_data_tipo_eje();
-  }, []);
-
-  useEffect(() => {
-    if (id_plan) {
+    if (id_plan && !id_objetivo) {
       fetch_data_eje_estrategico();
     }
   }, [id_plan]);

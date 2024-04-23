@@ -4,6 +4,8 @@ export interface OpcionLiquidacion {
   estado: number;
   version: number;
   funcion: string;
+  tipo_cobro:any;
+  tipo_renta:any;
   variables: {
     [key: string]: string;
   };

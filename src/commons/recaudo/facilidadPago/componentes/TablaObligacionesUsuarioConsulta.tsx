@@ -27,10 +27,14 @@ interface BuscarProps {
   is_modal_active: any;
   set_is_modal_active: any;
   set_position_tab: any;
+  selectedIds:any;
+  set_selectedIds:any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_position_tab, is_modal_active, set_is_modal_active }) => {
+export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_selectedIds, selectedIds, set_position_tab, is_modal_active, set_is_modal_active }) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
+  const [seledexpediente, set_seledexpediente] = useState<readonly string[]>([]);
+
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
@@ -65,23 +69,52 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_po
     }
   };
 
-  const handle_click = (event: React.MouseEvent<unknown>, name: string): void => {
+  // const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
+
+  // const handle_click = (event: React.MouseEvent<unknown>, name: string): void => {
+    const handle_click = (event: React.MouseEvent<unknown>, name: string, id: string): void => {
+
     const selected_index = selected.indexOf(name);
+    const selectedIdIndex = selectedIds.indexOf(id);
+
     let new_selected: readonly string[] = [];
+    let newSelectedIds: readonly string[] = [];
 
     if (selected_index === -1) {
       new_selected = new_selected.concat(selected, name);
+      newSelectedIds = newSelectedIds.concat(selectedIds, id);
+
     } else if (selected_index === 0) {
       new_selected = new_selected.concat(selected.slice(1));
+      newSelectedIds = newSelectedIds.concat(selectedIds.slice(1));
+
     } else if (selected_index === selected.length - 1) {
       new_selected = new_selected.concat(selected.slice(0, -1));
+      newSelectedIds = newSelectedIds.concat(selectedIds.slice(0, -1));
+
     } else if (selected_index > 0) {
       new_selected = new_selected.concat(
         selected.slice(0, selected_index),
         selected.slice(selected_index + 1),
       );
+      newSelectedIds = newSelectedIds.concat(
+        selectedIds.slice(0, selected_index),
+        selectedIds.slice(selected_index + 1),
+      );
     }
+
+    // if (selectedIdIndex === -1) {
+    //   newSelectedIds = newSelectedIds.concat(selectedIds, id);
+    // } else {
+    //   newSelectedIds = newSelectedIds.concat(
+    //     selectedIds.slice(0, selectedIdIndex),
+    //     selectedIds.slice(selectedIdIndex + 1)
+    //   );
+    // }
+    set_selectedIds(newSelectedIds);
+
     set_selected(new_selected);
+    
   };
 
   const total_cop = new Intl.NumberFormat("es-ES", {
@@ -127,25 +160,36 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_po
   const handleSelectAllClick = (): void => {
     if (selected.length === lista_obligaciones.length) {
       set_selected([]);
+      set_selectedIds([]);
     } else {
       const newSelected = lista_obligaciones.map((obligacion) => obligacion.nombre);
       set_selected(newSelected);
+
+      const newSelectedd = lista_obligaciones.map((obligacion) => obligacion.id);
+      set_selectedIds(newSelectedd);
     }
+    
   };
 
 
   const columns: GridColDef[] = [
     {
       field: 'checkbox',
-      headerName: 'Solicitar Fac. Pago',
-      width: 150,
+      headerName: 'Seleccionar',
+      width: 120,
       renderCell: (params) => {
         return (
           <Checkbox
-            checked={selected.indexOf(params.row.nombre) !== -1}
-            onClick={(event) => {
-              handle_click(event, params.row.nombre);
-            }}
+            // checked={selected.indexOf(params.row.nombre) !== -1 }
+            checked={selected.indexOf(params.row.nombre) !== -1 && selectedIds.indexOf(params.row.id) !== -1}
+
+            onClick={(event) => handle_click(event, params.row.nombre, params.row.id)}
+
+            // onClick={(event) => {
+            //   handle_click(event, params.row.nombre);
+              
+              
+            //  }}
           />
         );
       },
@@ -153,7 +197,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_po
     },
     {
       field: 'nombre',
-      headerName: 'Nombre Obligación',
+      headerName: 'Tipo de renta',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -254,6 +298,13 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_po
   ];
   const handle_closee = (): void => {
     set_is_modal_active(false);
+    set_lista_obligaciones([]);
+   };
+  const handleClick = () => {
+    console.log( selectedIds);
+    console.log("2222222");
+    
+ 
   };
   return (
     <>
@@ -273,6 +324,9 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_po
           }}
         >
           <Title title='Listado de pagos pendientes' />
+          {/* <Button color='success'
+          variant='contained'
+          onClick={handleClick}>CONSOLE </Button> */}
           {
             lista_obligaciones.length !== 0 ? (
               <Grid item xs={12}>
@@ -348,8 +402,8 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_po
                     color='primary'
                     variant='contained'
                     sx={{ marginTop: '30px' }}
-                    startIcon={<RequestQuoteIcon />}
-
+                    startIcon={<RequestQuoteIcon />} 
+                    disabled={selectedIds.length === 0}
                     onClick={() => {
                       set_position_tab('2');
                     }}
