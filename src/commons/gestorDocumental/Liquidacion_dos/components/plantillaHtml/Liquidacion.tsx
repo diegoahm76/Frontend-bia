@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, Grid } from '@material-ui/core';
 // @ts-ignore
-import html2pdf from 'html2pdf.js';
+//import html2pdf from 'html2pdf.js';
 
 
 export const LiquidacionPlantilla = () => {
@@ -331,7 +331,7 @@ export const LiquidacionPlantilla = () => {
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
-        html2pdf().from(htmlContent).set(options).save();
+        //html2pdf().from(htmlContent).set(options).save();
     };
 
 
