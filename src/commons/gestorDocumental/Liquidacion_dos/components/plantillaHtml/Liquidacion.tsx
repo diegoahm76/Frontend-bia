@@ -2,11 +2,13 @@
 import { useContext } from 'react';
 import { Button, Grid } from '@material-ui/core';
 // @ts-ignore
+
 import html2pdf from 'html2pdf.js';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { ModalDocumentoLiquidacionDetalle } from '../ModalDocumento/ModalDocumentoLiquidacionDetalle';
 import { ElementoPQRS } from '../GenerarLiquidacion/GenerarLiquidacion';
 import { PreciosContext } from '../../context/PersonalContext';
+
 
 interface props_data {
     data: ElementoPQRS
@@ -414,7 +416,7 @@ console.log("La suma de los valores es:", sumaValores);
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
-        html2pdf().from(htmlContent).set(options).save();
+        //html2pdf().from(htmlContent).set(options).save();
     };
 
 
