@@ -1024,7 +1024,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
           </>
         )}
       </Grid>
-      {show_registro_avance && (
+      {!show_registro_avance && (
         <Grid
           container
           spacing={2}

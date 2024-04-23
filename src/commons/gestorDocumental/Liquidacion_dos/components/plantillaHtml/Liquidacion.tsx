@@ -5,8 +5,8 @@ import { Button, Grid } from '@material-ui/core';
 import html2pdf from 'html2pdf.js';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { ModalDocumentoLiquidacionDetalle } from '../ModalDocumento/ModalDocumentoLiquidacionDetalle';
-import { ElementoPQRS } from '../GenerarLiquidacion/GenerarLiquidacion';
 import { PreciosContext } from '../../context/PersonalContext';
+import { ElementoPQRS } from '../../interfaces/InterfacesLiquidacion';
 
 interface props_data {
     data: ElementoPQRS

@@ -5,9 +5,9 @@ import { LiquidacionPlantilla } from "../plantillaHtml/Liquidacion"
 import { Title } from "../../../../../components/Title"
 import { useAppSelector } from "../../../../../hooks";
 import { useEffect, useState } from "react";
-import { ElementoPQRS } from "../GenerarLiquidacion/GenerarLiquidacion";
 import { useNavigate } from "react-router-dom"; // Asumo que estás utilizando react-router
 import { ArrowBack } from '@mui/icons-material';
+import { ElementoPQRS } from "../../interfaces/InterfacesLiquidacion";
 
 const initialData: ElementoPQRS = {
     costo_proyecto: "",

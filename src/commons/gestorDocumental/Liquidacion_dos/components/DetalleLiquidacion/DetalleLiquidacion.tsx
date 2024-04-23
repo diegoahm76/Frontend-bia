@@ -8,17 +8,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Title } from "../../../../../components/Title";
 import { api } from "../../../../../api/axios";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { TipologiaDocumental } from "../../interfaces/InterfacesLiquidacion";
 
 
 
-interface TipologiaDocumental {
-  id: number;
-  codigo_profesional: string;
-  nivel: number;
-  valor: string;
-  nombre: string;
-  descripcion: string;
-}
 export const DetalleLiquidacion = () => {
 
   const { precios, setPrecios } = useContext(PreciosContext);

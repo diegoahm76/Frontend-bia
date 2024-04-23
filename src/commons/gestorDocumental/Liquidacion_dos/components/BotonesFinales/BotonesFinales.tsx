@@ -20,7 +20,7 @@ export const BotonesFinales = () => {
     userinfo: { id_persona, email, telefono_celular, numero_documento }
   } = useSelector((state: AuthSlice) => state.auth);
 
-  const { precios } = useContext(PreciosContext);
+  const { precios,setPrecios } = useContext(PreciosContext);
 
   const descripcionConcatenada = precios.map(precio => `Servicio de ${precio.descripcion} de nivel ${precio.nivel} con valor de ${precio.valor}`).join(', ');
 
@@ -54,6 +54,9 @@ export const BotonesFinales = () => {
     }
   };
 
+  const LimpiarTabla=()=>{
+    setPrecios([]);
+  }
 
   return (
     <Grid
@@ -100,7 +103,7 @@ export const BotonesFinales = () => {
       </Grid>
 
       <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-        <Button color='primary' style={{ width: "90%", marginTop: 15 }} variant="outlined" fullWidth startIcon={<CleanIcon />}>
+        <Button color='primary' onClick={LimpiarTabla} style={{ width: "90%", marginTop: 15 }} variant="outlined" fullWidth startIcon={<CleanIcon />}>
           Limpiar
         </Button>
       </Grid>

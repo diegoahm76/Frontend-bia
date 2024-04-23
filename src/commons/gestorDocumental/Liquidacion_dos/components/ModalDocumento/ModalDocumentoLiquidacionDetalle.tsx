@@ -23,7 +23,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
     const [dataChoise, setDataChoise] = useState<any[]>([]);
     const [form_tipo, set_tipo] = useState({ id_expediente: '' }); // Agregar estado para el formulario
     const [persona, set_persona] = useState<Persona | undefined>();
-    console.log("persona",persona);
+    console.log("persona", persona);
     const { form, setForm } = useContext(PreciosContext);
 
 
@@ -31,7 +31,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    const iniciarpago=()=>{
+    const iniciarpago = () => {
         console.log("iniciar pago")
     }
 
@@ -130,7 +130,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                                 PaperProps: {
                                                     style: {
                                                         maxHeight: 48 * 4.5, // Ajusta la altura máxima del menú desplegable
-                                                        width: 250, // Ajusta el ancho del menú desplegable
+                                                        width: 100, // Ajusta el ancho del menú desplegable
                                                     },
                                                 },
                                             }}
@@ -147,13 +147,13 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
                             </Grid>
 
-
-                            <Grid container justifyContent="center">
+                     
+                           <Grid container justifyContent="center">
                                 <Grid item xs={12} >
                                     <Grid container alignItems="center" justifyContent="center">
                                         <Title title="Beneficiario" />
                                     </Grid>
-                                </Grid>
+                                </Grid> 
 
 
                                 <Grid container justifyContent="center" style={{ marginTop: 15 }}>
@@ -228,7 +228,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                 </Grid>
 
 
-                            </Grid>
+                            </Grid> 
 
 
 
@@ -244,11 +244,11 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                     <Button
                                         startIcon={<PaymentIcon />}
                                         fullWidth
-                                        style={{ width: "90%", marginTop: 15,marginLeft:8, backgroundColor: "green ", color: "white" }}
+                                        style={{ width: "90%", marginTop: 15, marginLeft: 8, backgroundColor: "green ", color: "white" }}
                                         variant="contained"
                                         color="error"
                                         onClick={iniciarpago}
-                                        >
+                                    >
                                         Iniciar Pago
                                     </Button>
                                 </Grid>
