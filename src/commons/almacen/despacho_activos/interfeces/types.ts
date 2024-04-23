@@ -197,6 +197,14 @@ export interface interface_despachos_sin_solicitud {
   id_uni_org_solicitante: any
   id_persona_anula: any
   id_archivo_doc_recibido: number
+  tipo_documento_funcionario_resp_asignado: string
+  tipo_documento_persona_operario_asignado: string
+  numero_documento_funcionario_resp_asignado: string
+  numero_documento_persona_operario_asignado: string
+  primer_apellido_funcionario_resp_asignado: string
+  primer_apellido_persona_operario_asignado: string
+  primer_nombre_funcionario_resp_asignado: string
+  primer_nombre_persona_operario_asignado: string
 }
 
 export interface interface_inputs_funcionarios {
@@ -320,11 +328,12 @@ export interface interface_busqueda_articulos {
   cantidad_solicitada?: string
   fecha_devolucion?: any
   observaciones?: string
-  
+  id_articulo_seleccionado?: string
+
   // propiedades que comparten ambas interfaces
   codigo_bien?: string
   id_bien?: number
-  
+
   // Interface cuando se traen los articulos de los despachos sin solicitud
   marca: string
   nombre_padre: string
@@ -366,6 +375,7 @@ export interface response_activos_disponibles {
 }
 
 export interface interface_activos_disponibles {
+  id_bien_solicitado?: number
   id_bien_despachado: number
   codigo_bien_espachado: string
   nombre_bien_espachado: string

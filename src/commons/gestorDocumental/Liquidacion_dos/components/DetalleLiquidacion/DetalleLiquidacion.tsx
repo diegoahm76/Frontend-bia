@@ -10,6 +10,7 @@ import { api } from "../../../../../api/axios";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
+
 interface TipologiaDocumental {
   id: number;
   codigo_profesional: string;
@@ -110,7 +111,7 @@ export const DetalleLiquidacion = () => {
   return (
     <>
       <Grid container alignItems="center" justifyContent="center">
-        <Grid item xs={8}>
+        <Grid item xs={12}>
 
 
           <Grid item xs={12}>

@@ -10,7 +10,7 @@ import SolicitarViaje from './SolicitarViaje';
 import TableSolicitudViajes from '../tables/TableSolicitudViajes';
 import { data_solicitud_viaje, interface_solicitar_viaje } from '../interfaces/types';
 import { useAppDispatch } from '../../../../hooks';
-import { listar_municipios, obtener_solicitudes, obtener_solicitudes_params } from '../thunks/viajes';
+import { get_obtener_estados_solicitud, listar_municipios, obtener_solicitudes, obtener_solicitudes_params } from '../thunks/viajes';
 import { control_error } from '../../../../helpers';
 
 
@@ -27,6 +27,8 @@ const SolicitudViaje: React.FC = () => {
   const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
   const [accion, set_accion] = useState<string>('');
   const [municipios, set_municipios] = useState<any>([])
+
+  const [tipos_estados_solicitud, set_tipos_estados_solicitud] = useState<any[]>([]);
 
 
   const [data_solicitudes_viajes, set_data_solicitudes_viajes] = useState<data_solicitud_viaje[]>([]);
@@ -85,15 +87,25 @@ const SolicitudViaje: React.FC = () => {
     })
   }
 
+  const get_obtener_estados_solicitud_fc: () => void = async () => {
+    dispatch(get_obtener_estados_solicitud())
+      .then((response: any) => {
+        if (Object.keys(response).length !== 0) {
+          set_tipos_estados_solicitud(response);
+        }
+        return;
+      })
+  }
+
   // Efecto secundario que se ejecuta al montar el componente para obtener la lista de municipios
-  const municipios_obtenidos = useRef(false);
+  const servicios_obtenidos = useRef(false);
   useEffect(() => {
-    if (!municipios_obtenidos.current) {
+    if (!servicios_obtenidos.current) {
       obtener_municipios();
-      municipios_obtenidos.current = true;
+      get_obtener_estados_solicitud_fc();
+      servicios_obtenidos.current = true;
     }
   }, [])
-
 
 
   /**
@@ -149,7 +161,7 @@ const SolicitudViaje: React.FC = () => {
       estado,
       fecha_inicio?.format('YYYY-MM-DDT00:00:ss.SSSSSS') ?? '',
       fecha_fin?.format('YYYY-MM-DDT23:59:59.SSSSSS') ?? ''
-      ))
+    ))
       .then((response: any) => {
         console.log(response);
         if (response.data.length === 0) {
@@ -228,13 +240,13 @@ const SolicitudViaje: React.FC = () => {
   /**
   * Efecto secundario que se ejecuta al cambiar el estado de 'refrescar_tabla'.
   */
- const solicitudes_obtenidas = useRef(false);
+  const solicitudes_obtenidas = useRef(false);
   useEffect(() => {
     if (!solicitudes_obtenidas.current || municipios.length !== 0) {
       obtener_solicitudes_fc();
       solicitudes_obtenidas.current = true;
     }
-  }, [refrescar_tabla, municipios, municipios_obtenidos.current, solicitudes_obtenidas.current]);
+  }, [refrescar_tabla, municipios, servicios_obtenidos.current, solicitudes_obtenidas.current]);
 
 
   return (
@@ -263,73 +275,78 @@ const SolicitudViaje: React.FC = () => {
           <Box
             component="form"
             onSubmit={handle_submit}
-            sx={{ width: '100%', my: '10px'}}
+            sx={{ width: '100%', my: '10px' }}
           >
             <Grid container item spacing={1} rowSpacing={2} xs={12}>
               <Grid item xs={12} md={3}>
-                  <FormControl required size='small' fullWidth>
-                    <InputLabel>Estado</InputLabel>
-                    <Select
-                      fullWidth
-                      label="Estado"
-                      value={estado}
-                      onChange={cambio_estado}
-                      error={msj_error_estado !== ""}
-                    >
-                      <MenuItem value={'ES'}>En Espera</MenuItem>
-                      <MenuItem value={'RE'}>Respondida</MenuItem>
-                      <MenuItem value={'RC'}>Rechazada</MenuItem>
-                      <MenuItem value={'FN'}>Finalizada</MenuItem>
-                    </Select>
-                  </FormControl>
-              </Grid>
-
-              <Grid item xs={12} md={3}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      label="Fecha inicio solicitud:"
-                      value={fecha_inicio}
-                      onChange={(newValue) => { cambio_fecha_inicio(newValue); }}
-                      renderInput={(params) => (
-                        <TextField
-                          fullWidth
-                          error={msj_error_fecha_inicio !== ''}
-                          size="small"
-                          {...params}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-              </Grid>
-
-              <Grid item xs={12} md={3}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      label="Fecha fin solicitud:"
-                      value={fecha_fin}
-                      onChange={(newValue) => { cambio_fecha_fin(newValue); }}
-                      renderInput={(params) => (
-                        <TextField
-                          error={msj_error_fecha_fin !== ''}
-                          fullWidth
-                          size="small"
-                          {...params}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-              </Grid>
-
-              <Grid item xs={12} md={3}>
-                  <Button
+                <FormControl required size='small' fullWidth>
+                  <InputLabel>Estado</InputLabel>
+                  <Select
                     fullWidth
-                    color='primary'
-                    variant='contained'
-                    startIcon={<SearchIcon />}
-                    type='submit'
+                    label="Estado"
+                    value={estado}
+                    onChange={cambio_estado}
+                    error={msj_error_estado !== ""}
                   >
-                    Buscar
-                  </Button>
+                    {tipos_estados_solicitud?.length !== 0 ?
+                      tipos_estados_solicitud?.map((estado: any) => (
+                        <MenuItem key={estado[0]} value={estado[0]}>
+                          {estado[1]}
+                        </MenuItem>
+                      ))
+                      :
+                      <MenuItem value=''>Cargando...</MenuItem>
+                    }
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha inicio solicitud:"
+                    value={fecha_inicio}
+                    onChange={(newValue) => { cambio_fecha_inicio(newValue); }}
+                    renderInput={(params) => (
+                      <TextField
+                        fullWidth
+                        error={msj_error_fecha_inicio !== ''}
+                        size="small"
+                        {...params}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha fin solicitud:"
+                    value={fecha_fin}
+                    onChange={(newValue) => { cambio_fecha_fin(newValue); }}
+                    renderInput={(params) => (
+                      <TextField
+                        error={msj_error_fecha_fin !== ''}
+                        fullWidth
+                        size="small"
+                        {...params}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </Grid>
+
+              <Grid item xs={12} md={3}>
+                <Button
+                  fullWidth
+                  color='primary'
+                  variant='contained'
+                  startIcon={<SearchIcon />}
+                  type='submit'
+                >
+                  Buscar
+                </Button>
               </Grid>
             </Grid>
           </Box>

@@ -64,28 +64,36 @@ interface IProps {
     handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
     handle_submit_liquidacion: () => void;
+    handle_submit_liquidacionma:any,
     set_fecha_liquidacion: Dispatch<SetStateAction<dayjs.Dayjs>>;
     set_fecha_vencimiento: Dispatch<SetStateAction<dayjs.Dayjs>>;
+    selectedIds: any;
+    set_selectedIds: any;
+    set_form_liquidacion:any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GenerarLiquidacion: React.FC<IProps> = ({
-    form_liquidacion,
-    nombre_deudor,
+    periodos,
+    selectedIds,
     rows_detalles,
-    expedientes_deudor,
+    nombre_deudor,
+    form_liquidacion,
+    tamano_detalles,
+    detalles_ciclos,
+    set_form_liquidacion,
+    set_selectedIds,
     estado_expediente,
     fecha_liquidacion,
     fecha_vencimiento,
+    expedientes_deudor,
     id_liquidacion_pdf,
-    detalles_ciclos,
-    periodos,
-    tamano_detalles,
+    set_fecha_vencimiento,
+    set_fecha_liquidacion,
+    handle_submit_liquidacion,
+    handle_submit_liquidacionma,
     handle_input_form_liquidacion_change,
     handle_select_form_liquidacion_change,
-    handle_submit_liquidacion,
-    set_fecha_liquidacion,
-    set_fecha_vencimiento,
 }: IProps) => {
 
     const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
@@ -156,7 +164,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
             control_success("Caudal actualizado con éxito");
 
             // Actualizar la información en la interfaz si es necesario
-        } catch (error:any) {
+        } catch (error: any) {
             console.error('Error al actualizar el caudal concedido', error);
             control_error(error.response.data.detail);
         }
@@ -172,17 +180,27 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
             });
             console.log('Liquidación base actualizada con éxito', response.data);
             control_success("Liquidación base actualizada con éxito");
-    
+
             // Actualizar la información en la interfaz si es necesario
-        } catch (error:any) {
+        } catch (error: any) {
             console.error('Error al actualizar la liquidación base', error);
             control_error(error.response.data.detail);
         }
     };
+
+    useEffect(() => {
+        set_form_liquidacion((prevData: any) => ({
+            ...prevData,
+            id_expediente: selectedIds[0].toString(),
+           
+        }));
+
+    }, [selectedIds]);
+   
     return (
         <>
             <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={4}>
                     <FormControl size="small" fullWidth>
                         <InputLabel>Expediente</InputLabel>
                         <Select
@@ -205,8 +223,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                         <FormHelperText>Seleccione el expediente</FormHelperText>
                     </FormControl>
                 </Grid>
-
-
+               {/* { selectedIds[0].toString()}
+               ññ
+               {form_liquidacion.id_expediente} */}
                 <Grid item xs={12} sm={4}>
                     <TextField
                         label='Deudor'
@@ -218,47 +237,33 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                     />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                            <TextField
-                                label='Cedula'
-                                value={liquidacion?.data.cedula}
-                                size="small"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                disabled
-                            />
-                        </Grid>
+                    <TextField
+                        label='Cedula'
+                        value={liquidacion?.data.cedula}
+                        size="small"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        fullWidth
+                        disabled
+                    />
+                </Grid>
 
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label='telefono'
-                                value={liquidacion?.data.telefono}
-                                size="small"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                disabled
-                            />
-                        </Grid>
-          
-
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        label='telefono'
+                        value={liquidacion?.data.telefono}
+                        size="small"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        fullWidth
+                        disabled
+                    />
+                </Grid>
 
 
-
-
-
-
-
-
-
-
-
-
-
-              
-              
+ 
                 <Grid item xs={12} sm={4}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -345,101 +350,101 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                         <FormHelperText>Seleccione el periodo</FormHelperText>
                     </FormControl>
                 </Grid>
-          
-         
+
+                {/* {form_liquidacion.periodo_liquidacion} */}
 
 
-               
-                    <>
 
-    <Grid item xs={12} sm={4}>
-                            <TextField
-                                label='Año'
-                                value={liquidacion?.data.anio}
-                                size="small"
-                                fullWidth
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                disabled
-                            />
-                        </Grid>
-                     
-                    
+                <>
 
-
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label='direccion'
-                                value={liquidacion?.data.direccion}
-                                size="small"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                disabled
-                            />
-                        </Grid>
-
-
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label='Representante legal'
-                                value={liquidacion?.data.representante_legal}
-                                size="small"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                disabled
-                            />
-                        </Grid>
-
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label='predio'
-                                value={liquidacion?.data.predio}
-                                size="small"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                disabled
-                            />
-                        </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            label='Año'
+                            value={liquidacion?.data.anio}
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            disabled
+                        />
+                    </Grid>
 
 
 
 
-                      
-                    </>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            label='direccion'
+                            value={liquidacion?.data.direccion}
+                            size="small"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            fullWidth
+                            disabled
+                        />
+                    </Grid>
 
-           
-            
-                    <> 
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Caudal Concesionado"
-                                 size="small"
 
-                                fullWidth
-                                value={caudalConcesionado}
-                                onChange={(e) => setCaudalConcesionado(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item >
-                            <Button variant="contained" color="success" onClick={actualizarCaudalConcesionado}>
-                                Actualizar Caudal
-                            </Button>
-                        </Grid>
-                        <Grid item  >
-                            <Button variant="contained" color="success" onClick={actualizarLiquidacionBase}>
-                                actualizar fecha 
-                            </Button>
-                        </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            label='Representante legal'
+                            value={liquidacion?.data.representante_legal}
+                            size="small"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            fullWidth
+                            disabled
+                        />
+                    </Grid>
 
-                    </>
-                
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            label='predio'
+                            value={liquidacion?.data.predio}
+                            size="small"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            fullWidth
+                            disabled
+                        />
+                    </Grid>
+
+
+
+
+
+                </>
+
+
+
+                <>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            label="Caudal Concesionado"
+                            size="small"
+
+                            fullWidth
+                            value={caudalConcesionado}
+                            onChange={(e) => setCaudalConcesionado(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item >
+                        <Button variant="contained" color="success" onClick={actualizarCaudalConcesionado}>
+                            Actualizar Caudal
+                        </Button>
+                    </Grid>
+                    <Grid item  >
+                        <Button variant="contained" color="success" onClick={actualizarLiquidacionBase}>
+                            actualizar fecha
+                        </Button>
+                    </Grid>
+
+                </>
+
 
 
 
@@ -476,7 +481,11 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                                 rows_detalles.length === 0 ||
                                 tamano_detalles
                             }
+                            // onClick={handle_submit_liquidacionma}
+
                             onClick={handle_submit_liquidacion}
+
+                            
                         >
                             Guardar
                         </Button>
@@ -497,7 +506,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                                 Imprimir recibo
                             </Button>
                         </Grid>
-                        {id_liquidacion_pdf}
+                        {/* {id_liquidacion_pdf} */}
                         {/* {id_liquidacion_pdf} */}
 
                         {/* <div>

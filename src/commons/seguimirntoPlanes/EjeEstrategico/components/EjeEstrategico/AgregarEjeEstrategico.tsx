@@ -17,7 +17,6 @@ export const AgregarEjeEstrategico: React.FC = () => {
   const {
     control_eje_estrategico,
     errors_eje_estrategico,
-    data_watch_eje_estrategico,
     reset_eje_estrategico,
 
     onsubmit_eje_estrategico,
@@ -46,7 +45,7 @@ export const AgregarEjeEstrategico: React.FC = () => {
     if (mode.editar) {
       reset_eje_estrategico({
         id_eje_estrategico: eje_estrategico.id_eje_estrategico,
-        nombre_plan: eje_estrategico.nombre_plan,
+        nombre_plan: eje_estrategico.nombre_objetivo ? eje_estrategico.nombre_plan_objetivo : eje_estrategico.nombre_plan,
         sigla_plan: eje_estrategico.sigla_plan,
         nombre_tipo_eje: eje_estrategico.nombre_tipo_eje,
         nombre: eje_estrategico.nombre,
@@ -191,6 +190,25 @@ export const AgregarEjeEstrategico: React.FC = () => {
             />
           </Grid>
           <Grid container spacing={2} justifyContent="flex-end">
+            <Grid item>
+                <Button
+                  variant="contained"
+                  color="error"
+                  disabled={false}
+                  onClick={() => {
+                    limpiar_formulario_eje_estrategico();
+                    dispatch(
+                      set_current_mode_planes({
+                        ver: true,
+                        crear: false,
+                        editar: false,
+                      })
+                    );
+                  }}
+                >
+                  Cerrar
+                </Button>
+              </Grid>
             <Grid item>
               <Button
                 variant="outlined"

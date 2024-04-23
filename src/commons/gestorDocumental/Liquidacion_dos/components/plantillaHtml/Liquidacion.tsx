@@ -1,28 +1,113 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React from 'react';
+import { useContext } from 'react';
 import { Button, Grid } from '@material-ui/core';
 // @ts-ignore
-//import html2pdf from 'html2pdf.js';
+
+import html2pdf from 'html2pdf.js';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { ModalDocumentoLiquidacionDetalle } from '../ModalDocumento/ModalDocumentoLiquidacionDetalle';
+import { ElementoPQRS } from '../GenerarLiquidacion/GenerarLiquidacion';
+import { PreciosContext } from '../../context/PersonalContext';
 
 
-export const LiquidacionPlantilla = () => {
+interface props_data {
+    data: ElementoPQRS
+}
 
-    const NombreTitular = "pedro pablo emilio";
+
+export const LiquidacionPlantilla = ({ data }: props_data) => {
+
+    const { precios } = useContext(PreciosContext);
+
+console.log(precios);
+
+const sumaValores = precios.reduce((total, item) => {
+    // Convierte el valor a número antes de sumarlo
+    const valorNumerico = parseInt(item.valor);
+    return total + valorNumerico;
+}, 0);
+
+console.log("La suma de los valores es:", sumaValores);
+    
+    const ConvertirNumeroAPalabras = (numero: any) => {
+        const unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+        const decenas = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+        const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+    
+        const miles = ['mil', 'millón', 'millones'];
+    
+        const ConvertirNumeroMenorAMil = (numeroMenorAMil: number):string => {
+            if (numeroMenorAMil === 0) {
+                return '';
+            } else if (numeroMenorAMil < 10) {
+                return unidades[numeroMenorAMil];
+            } else if (numeroMenorAMil < 20) {
+                switch (numeroMenorAMil) {
+                    case 10: return 'diez';
+                    case 11: return 'once';
+                    case 12: return 'doce';
+                    case 13: return 'trece';
+                    case 14: return 'catorce';
+                    case 15: return 'quince';
+                    default: return 'dieci' + ConvertirNumeroMenorAMil(numeroMenorAMil % 10);
+                }
+            } else if (numeroMenorAMil < 100) {
+                return decenas[Math.floor(numeroMenorAMil / 10)] + ' ' + ConvertirNumeroMenorAMil(numeroMenorAMil % 10);
+            } else {
+                return centenas[Math.floor(numeroMenorAMil / 100)] + ' ' + ConvertirNumeroMenorAMil(numeroMenorAMil % 100);
+            }
+        }
+    
+        const ConvertirNumero = (numero: number) => {
+            if (numero === 0) {
+                return 'cero';
+            } else if (numero < 1000) {
+                return ConvertirNumeroMenorAMil(numero);
+            } else {
+                let resultado = '';
+                let contadorMiles = 0;
+                while (numero > 0) {
+                    const fragmento = numero % 1000;
+                    if (fragmento !== 0) {
+                        resultado = ConvertirNumeroMenorAMil(fragmento) + ' ' + miles[contadorMiles] + ' ' + resultado;
+                    }
+                    numero = Math.floor(numero / 1000);
+                    contadorMiles++;
+                }
+                return resultado.trim();
+            }
+        }
+    
+        return ConvertirNumero(numero);
+    }
+    
+
+    const NombreTitular = data.nombre_completo_titular;
     const fechaActual = new Date();
     const FechaElaboracion = fechaActual.toLocaleDateString(); // Esto te dará la fecha actual en formato de cadena, por ejemplo: "16/04/2024"
     const IdentificacionTitular = "1006874277";
-    const Direccion = "casa de color rr";
-    const Telefono = "3126459868";
-    const TipoTramite = "cobro persiacivo";
-    const Proyecto = "el proyecto mas grande  de el mundo ";
-    const TipoCobro = "cobro a las malas                                    ";
-    const radicado = "123456";
-    const fechaRadicado = fechaActual.toLocaleDateString();
-    const ValorCapital = "$22222";
+    const Direccion = "dato pendiente";
+    const Telefono = "dato pendiente";
+    const TipoTramite = data.tipo_solicitud;
+    const Proyecto = data.nombre_proyecto;
+    let TipoCobro = "COBRO POR VISITAS DE EVALUACION";
+    const radicado = data.radicado;
+    const fechaRadicado = new Date(data.fecha_radicado).toLocaleDateString();
+    const ValorCapital = sumaValores;
     const interes = "$11111";
-    const ValorTotal = "$0000";
-    const ValorTotalEscrito = "milon novecientos cuencueta y dos";
-    const ValorTotalEscritoEnMayusculas = ValorTotalEscrito.toUpperCase();
+    const ValorTotal = data.costo_proyecto; // Ciento veinte mil
+    const ValorTotalEscrito = ConvertirNumeroAPalabras(ValorTotal);
+    const ValorTotalEscritoEnMayusculas = ValorTotalEscrito;
+    
+
+    const LongitudDeseada = 35;
+
+    if (TipoCobro.length > LongitudDeseada) {
+        TipoCobro = TipoCobro.substring(0, LongitudDeseada);
+    } else {
+        TipoCobro = TipoCobro.padEnd(LongitudDeseada, ' ');
+    }
+
 
     const htmlContent = `<!DOCTYPE html>
     <!-- Created by pdf2htmlEX (https://github.com/pdf2htmlEX/pdf2htmlEX) -->
@@ -337,16 +422,34 @@ export const LiquidacionPlantilla = () => {
 
     return (
         <>
-        <Grid item xs={12}>
+            <Grid container spacing={1}>
 
-            <Button onClick={descargarPDF}>Descargar PDF</Button>
 
-        </Grid>
+                <Grid container alignItems="center" justifyContent="center">
+                    <Grid item xs={3}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ marginTop: 15 }}
+                            startIcon={<CloudDownloadIcon />}
+                            onClick={descargarPDF}
+                        >
+                            Descargar PDF
+                        </Button>
+                    </Grid>
 
-        <Grid item xs={8}>
-            <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                    <Grid item xs={3}>
+                        <ModalDocumentoLiquidacionDetalle />
+                    </Grid>
 
-        </Grid>
+
+                </Grid>
+
+
+                <Grid item xs={12}>
+                    <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                </Grid>
+            </Grid>
         </>
     );
 }

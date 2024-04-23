@@ -36,7 +36,7 @@ const TableBusquedaConductores: React.FC<props> = ({data_busqueda_conductores, s
   const columns: CustomColumn[] = [
     {field: 'nombre_clase_tercero', headerName:'Tipo de conductor', minWidth:150, flex:1},
     {field: 'nombre_persona', headerName:'Nombres', minWidth:200, flex:1},
-    {field: 'nro_documento', headerName:'Numero de documento', minWidth:150, flex:1},
+    {field: 'numero_documento', headerName:'Numero de documento', minWidth:150, flex:1},
     {
       field: 'asignar',
       headerName: 'Asignar',
