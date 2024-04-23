@@ -74,7 +74,7 @@ export const BusquedaObjetivo: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
-              set_id_plan(null);
+              set_id_plan(params.row.id_plan);
               set_id_objetivo(params.row.id_objetivo);
               dispatch(
                 set_current_mode_planes({

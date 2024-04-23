@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../hooks";
 import { set_current_mode_planes } from "../../../store/slice/indexPlanes";
 import { Title } from "../../../../../components/Title";
 import { ButtonSalir } from "../../../../../components/Salir/ButtonSalir";
+import { BusquedaIndicadorObjetivo } from "../components/BusquedaIndicadorObjetivo";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TableroPgarObjetivoScreen: React.FC = () => {
@@ -43,6 +44,7 @@ export const TableroPgarObjetivoScreen: React.FC = () => {
           </Grid>
         </Grid>
 
+        <BusquedaIndicadorObjetivo />
         {/* <BusquedaEjes />
         {mode.ver ? <ListarMetasPgar /> : null}
         {mode.crear || mode.editar ? <AgregarMetaPgar /> : null} */}
