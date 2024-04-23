@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useEffect, useState } from "react";
 import type { OpcionLiquidacion } from "../interfaces/liquidacion";
@@ -12,8 +13,26 @@ import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { control_error, control_success } from "../alertas/store/thunks/alertas";
+import { Divider, TextField, MenuItem, } from '@mui/material';
 
+import { control_error, control_success } from "../alertas/store/thunks/alertas";
+interface TipoCobro {
+  id_tipo_cobro: number;
+  nombre_tipo_cobro: string;
+  tipo_renta_asociado: any;
+}
+interface TipoRenta {
+  id_tipo_renta: number;
+  nombre_tipo_renta: string;
+  tipo_cobro_asociado: any;
+  tipo_renta_asociado: any
+}
+interface ConfiguracionBasica {
+  id_variables: any;
+  nombre: any;
+  tipo_cobro: any;
+  tipo_renta: any;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen = (): JSX.Element => {
@@ -54,7 +73,7 @@ export const LiquidacionScreen = (): JSX.Element => {
 
         set_open_notification_modal(true);
       })
-      .catch((error:any ) => {
+      .catch((error: any) => {
         //  console.log('')(error);
         // set_notification_info({ type: 'error', message: `Hubo un error.` });
         control_error(error.response.data.detail);
@@ -71,7 +90,7 @@ export const LiquidacionScreen = (): JSX.Element => {
 
         set_open_notification_modal(true);
       })
-      .catch((error:any ) => {
+      .catch((error: any) => {
         //  console.log('')(error);
         // set_notification_info({ type: 'error', message: `Hubo un error.` });
         control_error(error.response.data.detail);
@@ -92,22 +111,28 @@ export const LiquidacionScreen = (): JSX.Element => {
   };
 
   const opciones_liquidacion_columns: GridColDef[] = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      minWidth: 40,
-      flex: 1,
-    },
+    // {
+    //   field: 'id',
+    //   headerName: 'ID',
+    //   minWidth: 40,
+    //   flex: 1,
+    // },
     {
       field: 'nombre',
       headerName: 'Nombre',
-      minWidth: 180,
+      // minWidth: 180,
       flex: 1,
     },
+    // {
+    //   field: 'tipo_cobro',
+    //   headerName: 'tipo_cobro',
+    //   // minWidth: 180,
+    //   flex: 1,
+    // },
     {
       field: 'estado',
       headerName: 'Estado',
-      minWidth: 100,
+      // minWidth: 100,
       flex: 1,
       renderCell: (params) => {
         if (params.value === 0) {
@@ -125,7 +150,7 @@ export const LiquidacionScreen = (): JSX.Element => {
     {
       field: 'variables',
       headerName: 'Variables',
-      minWidth: 200,
+      // minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
         if (!params.value) {
@@ -137,7 +162,7 @@ export const LiquidacionScreen = (): JSX.Element => {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      minWidth: 100,
+      // minWidth: 100,
       flex: 1,
       renderCell: (params) => {
         return (
@@ -227,7 +252,63 @@ export const LiquidacionScreen = (): JSX.Element => {
       }
     }
   ];
+  const [formValues, setFormValues] = useState<ConfiguracionBasica>({
+    id_variables: "",
+    nombre: "",
+    tipo_cobro: "",
+    tipo_renta: "",
+  });
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+  const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
+
+  const fetchTiposRenta = async () => {
+    try {
+      const res = await api.get("/recaudo/configuracion_baisca/tiporenta/get/");
+      setTiposRenta(res.data.data);
+    } catch (error) {
+      console.error("Error al obtener los tipos de renta", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTiposRenta();
+  }, []);
+
+
+  const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
+
+  const fetchTiposCobro = async () => {
+    try {
+      const res = await api.get("/recaudo/configuracion_baisca/tipoCobro/get/");
+      setTiposCobro(res.data.data);
+    } catch (error) {
+      console.error("Error al obtener los tipos de renta", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTiposCobro();
+  }, []);
+
+  
+
+  const tiposCobrof = `${formValues.tipo_cobro}`;  // Ejemplo de nombre que quieres filtrar
+
+  const opcionesFiltradas = opciones_liquidaciones.filter(opcion =>
+      opcion.tipo_cobro === tiposCobrof
+  );
+
+const handleClick = () => {
+    console.log(opcionesFiltradas);
+    console.log("2222222");
+    console.log(formValues.tipo_cobro);
+
+ 
+  };
   return (
     <>
       <Grid
@@ -244,6 +325,9 @@ export const LiquidacionScreen = (): JSX.Element => {
       >
         <Grid item xs={12}>
           <Title title="Liquidación" />
+          {/* <Button color='success'
+          variant='contained'
+          onClick={handleClick}>CONSOLE </Button> */}
           <Box
             component='form'
             sx={{ mt: '20px' }}
@@ -273,21 +357,77 @@ export const LiquidacionScreen = (): JSX.Element => {
                     Agregar opción liquidación
                   </Button>
                 </Stack>
-                <DataGrid
-                  density='compact'
-                  autoHeight
-                  rows={opciones_liquidaciones}
-                  columns={opciones_liquidacion_columns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) => row.id}
-                  components={{ Toolbar: GridToolbar }}
-                />
+                <Grid
+                  container
+                  spacing={2}
+                >
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      select
+                      required
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                      label="Tipo de renta"
+                      name="tipo_renta"
+                      onChange={handleInputChange}
+                      value={formValues.tipo_renta}
+                    >
+                      {tiposRenta.map((tipo) => (
+                        <MenuItem key={tipo.id_tipo_renta} value={tipo.id_tipo_renta}>
+                          {tipo.nombre_tipo_renta}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      select
+                      required
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                      label="Tipo cobro"
+                      name="tipo_cobro"
+                      onChange={handleInputChange}
+                      value={formValues.tipo_cobro}
+                    >
+                      {tiposCobro
+                        .filter(tipoCobro => tipoCobro.tipo_renta_asociado === formValues.tipo_renta) // Filtrado basado en la selección de tipo_renta
+                        .map((tipoCobro) => (
+                          <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
+                            {tipoCobro.nombre_tipo_cobro}
+                          </MenuItem>
+                        ))}
+                    </TextField>
+                  </Grid>
+
+                  <Grid item xs={12} sm={12}>
+                    <DataGrid
+                      density='compact'
+                      autoHeight
+                      // rows={opciones_liquidaciones}
+                      rows={opcionesFiltradas}
+
+                      
+                      columns={opciones_liquidacion_columns}
+                      pageSize={10}
+                      rowsPerPageOptions={[10]}
+                      experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={(row) => row.id}
+                      components={{ Toolbar: GridToolbar }}
+                    />
+                  </Grid> 
+                </Grid>
+
+
+
+
+
               </TabPanel>
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <AgregarEditarOpciones
-                select_variable={select_variable}
+                  select_variable={select_variable}
                   opciones_liquidaciones={opciones_liquidaciones}
                   id_opcion_liquidacion={id_opcion_liquidacion}
                   form_data={form_data}
