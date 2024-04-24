@@ -35,7 +35,7 @@ export const ButtonsBandejaDeTareas = (): JSX.Element => {
       {(() => {
         const tipo =
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
-          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
+          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo || currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_solicitud;
 
         switch (tipo) {
           case 'Responder PQRSDF':
