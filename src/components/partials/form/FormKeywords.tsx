@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 import FormButton from './FormButton';
+import AddIcon from '@mui/icons-material/Add';
 
 interface ChipData {
   key: number;
@@ -113,7 +114,7 @@ const FormKeywords = ({
                 variant_button="contained"
                 on_click_function={handleAddChip}
                 icon_class={null}
-                label="Agregar palabra"
+                label={`Agregar palabra +`}
                 type_button="button"
                 color_button="success"
                 disabled={disabled ?? false}

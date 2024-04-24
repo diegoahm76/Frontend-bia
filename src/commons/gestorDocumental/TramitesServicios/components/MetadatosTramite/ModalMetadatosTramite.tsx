@@ -215,6 +215,7 @@ export const ModalMetadatosTramite = ({
               fullWidth
               size="small"
               variant="outlined"
+              InputLabelProps={{ shrink: true }}
               value={form.nro_folios_documento}
               label="Numero folios"
               onChange={(e) =>
@@ -239,7 +240,7 @@ export const ModalMetadatosTramite = ({
                   color="primary"
                 />
               }
-              label="¿Tiene tipología relacionada?"
+              label="Tipología actual relacionada"
             />
           </Grid>
 
@@ -251,7 +252,7 @@ export const ModalMetadatosTramite = ({
                             size="small"
                             variant="outlined"
                             value={form.tipologiaRelacionadaotra}
-                            label="¿Cuál?"
+                            label="Nombre de la tipología no encontrada"
                             onChange={(e) => handleInputChange('tipologiaRelacionadaotra', e.target.value)}
                         />
                     </Grid>
@@ -297,6 +298,7 @@ export const ModalMetadatosTramite = ({
               fullWidth
               size="small"
               variant="outlined"
+              InputLabelProps={{ shrink: true }}
               value={form.asunto}
               label="Asunto"
               onChange={(e) => handleInputChange('asunto', e.target.value)}
@@ -310,6 +312,7 @@ export const ModalMetadatosTramite = ({
               multiline
               rows={3} // Ajusta el número de filas para una altura mayor
               variant="outlined"
+              InputLabelProps={{ shrink: true }}
               value={form.descripcion}
               label="Descripción"
               onChange={(e) => handleInputChange('descripcion', e.target.value)}

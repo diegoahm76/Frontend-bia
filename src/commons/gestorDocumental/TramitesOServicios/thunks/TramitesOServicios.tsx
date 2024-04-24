@@ -107,6 +107,7 @@ export const create_tramite_servicio: any = (tramite: any) => {
 export const cargar_anexos_opas: any = (id_tramite: any, documentos: any) => {
   return async () => {
     try {
+      console.log(documentos);
       const { data } = await api.put(`tramites/opa/tramites/anexos-metadatos/update/${id_tramite}/`,documentos);
       control_success(data.detail);
       return data;
