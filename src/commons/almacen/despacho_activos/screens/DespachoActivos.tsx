@@ -9,13 +9,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import Swal from 'sweetalert2';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { interface_articulos_despacho_con_solicitud, interface_busqueda_articulos, interface_busqueda_bodegas, interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_buscar_bodega, interface_inputs_funcionarios, response_articulos_despacho_con_solicitud } from '../interfeces/types';
+import { interface_busqueda_articulos, interface_busqueda_bodegas, interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_buscar_bodega, interface_inputs_funcionarios, interface_resumen_despacho_con_solicitud, interface_resumen_despacho_sin_solicitud, response_articulos_despacho_con_solicitud } from '../interfeces/types';
 import BusquedaFuncionarios from './BusquedaFuncionarios';
 import BusquedaArticulos from './BusquedaArticulos';
 import SaveIcon from '@mui/icons-material/Save';
 import { control_error, control_success } from '../../../../helpers';
 import { useAppDispatch } from '../../../../hooks';
 import { get_articulos_despacho_con_solicitud, post_crear_despacho_con_solicitud, post_crear_despacho_sin_solicitud } from '../thunks/despacho_solicitudes';
+import ResumenDespachoConSolicitud from './ResumenDespachoConSolicitud';
+import ResumenDespachoSinSolicitud from './ResumenDespachoSinSolicitud';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DespachoActivos = () => {
@@ -59,6 +61,13 @@ const DespachoActivos = () => {
   // ---- Estados de pagina 3  ------ //
   //Data de la tabla de articulos agregados
   const [data_articulos_agregados_padres, set_data_articulos_agregados_padres] = useState<interface_busqueda_articulos[]>([]);
+
+
+  // data cuando se da click en el icono de 'ojo' en la tabla para ver el despacho con solicitud
+  const [data_solicitud_ver_por_id_con_solicitud, set_data_solicitud_ver_por_id_con_solicitud] = useState<interface_resumen_despacho_con_solicitud>(Object);
+  // data cuando se da click en el icono de 'ojo' en la tabla para ver el despacho sin solicitu
+  const [data_solicitud_ver_por_id_sin_solicitud, set_data_solicitud_ver_por_id_sin_solicitud] = useState<interface_resumen_despacho_sin_solicitud>(Object);
+
 
   useEffect(() => {
     // SI hay data de funcionario responsable seleccionado se rellenará los inputs
@@ -164,8 +173,12 @@ const DespachoActivos = () => {
   const btn_atras = () => {
     if (position_tab === '3') {
       set_position_tab('2');
-    } else if (accion === 'ver' && position_tab === '4') {
+    } else if (accion === 'ver_con_solicitud' && position_tab === '4') {
       set_position_tab('1');
+      set_data_solicitud_ver_por_id_con_solicitud({} as interface_resumen_despacho_con_solicitud);
+    } else if(accion === 'ver_sin_solicitud' && position_tab === '5') {
+      set_position_tab('1');
+      set_data_solicitud_ver_por_id_sin_solicitud({} as interface_resumen_despacho_sin_solicitud);
     }
   }
 
@@ -348,6 +361,8 @@ const DespachoActivos = () => {
       )
   }
 
+
+
   return (
     <>
       <Grid container spacing={2} marginTop={2} sx={{
@@ -369,13 +384,15 @@ const DespachoActivos = () => {
 
               <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%', }}>
                 <TabList sx={{ minWidth: '100%' }} onChange={handle_tablist_change}>
-                  <Tab disabled={accion === 'ver' || accion === 'crear'} sx={{ minWidth: accion === 'ver' ? '50%' : '33.3%' }} label={despacho_sin_solicitud ? 'Despachos sin solicitud' : 'Despachos con solicitud'} value="1" />
-                  
-                  {accion !== 'ver' && <Tab disabled={accion === 'null'} sx={{ minWidth: '33.3%' }} label="Búsqueda funcionarios" value="2" /> }
+                  <Tab disabled={accion === 'ver' || accion === 'crear'} sx={{ minWidth: accion === 'ver_con_solicitud' ? '50%' : accion === 'ver_sin_solicitud' ? '50%' : '33.3%' }} label={despacho_sin_solicitud ? 'Despachos sin solicitud' : 'Despachos con solicitud'} value="1" />
 
-                  {accion !== 'ver' && <Tab disabled={accion === 'null'} sx={{ minWidth: '33.3%' }} label="Búsqueda activos" value="3" /> }
+                  {accion !== 'ver_con_solicitud' && accion !== 'ver_sin_solicitud' && <Tab disabled={accion === 'null'} sx={{ minWidth: '33.3%' }} label="Búsqueda funcionarios" value="2" />}
 
-                  {accion === 'ver' && <Tab sx={{ minWidth: '50%' }} label="Resumen despacho" value="4" /> }
+                  {accion !== 'ver_con_solicitud' && accion !== 'ver_sin_solicitud' && <Tab disabled={accion === 'null'} sx={{ minWidth: '33.3%' }} label="Búsqueda activos" value="3" />}
+
+                  {accion === 'ver_con_solicitud' && <Tab sx={{ minWidth: '50%' }} label="Resumen despacho" value="4" />}
+
+                  {accion === 'ver_sin_solicitud' && <Tab sx={{ minWidth: '50%' }} label="Resumen despacho" value="5" />}
                 </TabList>
               </Box>
 
@@ -388,6 +405,8 @@ const DespachoActivos = () => {
                     despacho_sin_solicitud={despacho_sin_solicitud}
                     set_position_tab={set_position_tab}
                     set_id_solicitud_activo={set_id_solicitud_activo}
+                    set_data_solicitud_ver_por_id_con_solicitud={set_data_solicitud_ver_por_id_con_solicitud}
+                    set_data_solicitud_ver_por_id_sin_solicitud={set_data_solicitud_ver_por_id_sin_solicitud}
                   />
                 </Grid>
               </TabPanel>
@@ -417,6 +436,22 @@ const DespachoActivos = () => {
                     data_articulos_agregados_padres={data_articulos_agregados_padres}
                     set_data_articulos_agregados_padres={set_data_articulos_agregados_padres}
                     despacho_sin_solicitud={despacho_sin_solicitud}
+                  />
+                </Grid>
+              </TabPanel>
+
+              <TabPanel value="4" sx={{ p: '20px 0' }}>
+                <Grid container spacing={2} rowSpacing={3}>
+                  <ResumenDespachoConSolicitud
+                    data_solicitud_ver_por_id_con_solicitud={data_solicitud_ver_por_id_con_solicitud}
+                  />
+                </Grid>
+              </TabPanel>
+
+              <TabPanel value="5" sx={{ p: '20px 0' }}>
+                <Grid container spacing={2} rowSpacing={3}>
+                  <ResumenDespachoSinSolicitud
+                    data_solicitud_ver_por_id_sin_solicitud={data_solicitud_ver_por_id_sin_solicitud}
                   />
                 </Grid>
               </TabPanel>
