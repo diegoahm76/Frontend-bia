@@ -7,12 +7,12 @@ import { interface_articulos_despachados, interface_estado_autorizacion_solicitu
 import { useDispatch } from 'react-redux';
 import { control_error, control_success } from '../../../../helpers';
 import { convertir_cod_estado } from '../../solicitudDeActivos/validations/validations';
-import TablaArticulosSolicitados from '../tables/TablaArticulosSolicitados';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Title } from '../../../../components';
 import ResumenDespacho from './ResumenDespacho';
 import { useAppDispatch } from '../../../../hooks';
+import TablaArticulosSolicitados from '../tables/TablaArticulosSolicitados';
 
 
 interface props {
