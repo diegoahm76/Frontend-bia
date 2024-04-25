@@ -24,6 +24,7 @@ import CloseIcon from '@mui/icons-material/Close'; // Agregado: Importación de 
 import { api } from '../../../../../api/axios';
 import { FormContextMetadatos } from '../../context/MetadatosContext';
 import  CleanIcon  from '@mui/icons-material/CleaningServices';
+import { handleApiError } from '../../../../../utils/functions/errorManage';
 
 interface IProps {
   is_modal_active: boolean;
@@ -74,42 +75,61 @@ export const ModalMetadatosTramite = ({
     { id_tipologia_documental: number; nombre: string }[]
   >([]);
 
-  const choise_origen_archivo = async (): Promise<void> => {
-    try {
-      const url = '/gestor/choices/origen-archivo/';
-      const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
+const choise_origen_archivo = async (): Promise<void> => {
+  try {
+    const url = '/gestor/choices/origen-archivo/';
+    const res = await api.get(url);
+
+    if (res.data && Array.isArray(res.data)) {
       const origen_archivo = res.data;
-      setOrigenArchivoChoices(origen_archivo);
-      //  control_success('Datos actualizados correctamente');
-    } catch (error) {
-      console.error(error);
+      setOrigenArchivoChoices(origen_archivo as any);
+      // Si necesitas hacer algo con las opciones de origen de archivo, puedes hacerlo aquí
+    } else {
+      console.error('La respuesta no contiene los datos esperados');
     }
-  };
+  } catch (error) {
+    handleApiError(error, 'Error al listar los origenes de archivo')
+    //console.error(error);
+    // Considera manejar el error de una manera más útil aquí
+    // Por ejemplo, podrías mostrar un mensaje al usuario o guardar el error en el estado
+  }
+};
 
-  const fetchTipoArchivoChoices = async (): Promise<void> => {
-    try {
-      const url = '/gestor/choices/tipo-archivo/';
-      const response = await api.get(url);
+ const fetchTipoArchivoChoices = async (): Promise<void> => {
+  try {
+    const url = '/gestor/choices/tipo-archivo/';
+    const response = await api.get(url);
+
+    if (response.data && Array.isArray(response.data)) {
       const tipoArchivoChoicess = response.data;
-      console.log(tipoArchivoChoicess);
-      setTipoArchivoChoices(tipoArchivoChoicess);
+      setTipoArchivoChoices(tipoArchivoChoicess as any);
       // Si necesitas hacer algo con las opciones de tipo de archivo, puedes hacerlo aquí
-    } catch (error) {
-      console.error(error);
+    } else {
+      console.error('La respuesta no contiene los datos esperados');
     }
-  };
+  } catch (error) {
+    //console.error(error);
+    handleApiError(error, 'Error al listar los tipos de archivo')
+  }
+};
+const listarTipologias = async (): Promise<void> => {
+  try {
+    const url = '/gestor/expedientes-archivos/expedientes/listar-tipologias/';
+    const response = await api.get(url);
 
-  const listarTipologias = async (): Promise<void> => {
-    try {
-      const url = '/gestor/expedientes-archivos/expedientes/listar-tipologias/';
-      const response = await api.get(url);
+    if (response.data && Array.isArray(response.data.data)) {
       const tipologias = response.data.data;
       setTipologias(tipologias);
       // Si necesitas hacer algo con la lista de tipologías, puedes hacerlo aquí
-    } catch (error) {
-      console.error(error);
+    } else {
+      console.error('La respuesta no contiene los datos esperados');
     }
-  };
+  } catch (error) {
+    handleApiError(error, 'Error al listar las tipologías')
+    // Considera manejar el error de una manera más útil aquí
+    // Por ejemplo, podrías mostrar un mensaje al usuario o guardar el error en el estado
+  }
+};
 
   useEffect(() => {
     listarTipologias();
@@ -127,19 +147,19 @@ export const ModalMetadatosTramite = ({
   return (
     <>
       <Dialog
-        maxWidth="xl"
+        maxWidth="md"
         open={is_modal_active}
         onClose={handleCloseModal}
         fullWidth
       >
         <DialogTitle>
           {' '}
-          <Title title="Agregar Metadatos" />
+          <Title title="Agregar metadatos al anexo" />
         </DialogTitle>
 
         {/* Contenedor principal del formulario */}
         <Grid container spacing={2} style={{ margin: '1rem' }}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3.63}>
             {/* Campo: Tipo de archivo */}
             <FormControl fullWidth>
               <InputLabel id="tipoArchivo-label">Tipo de archivo</InputLabel>
@@ -166,7 +186,7 @@ export const ModalMetadatosTramite = ({
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={3.63}>
             {/* Campo: Tiene réplica física */}
             <FormControlLabel
               control={
@@ -183,7 +203,7 @@ export const ModalMetadatosTramite = ({
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3.63}>
             {/* Campo: Origen del archivo */}
             <FormControl fullWidth>
               <InputLabel id="origenArchivo-label">
@@ -209,7 +229,7 @@ export const ModalMetadatosTramite = ({
             </FormControl>
           </Grid>
 
-          <Grid item xs={2}>
+          <Grid item xs={3.63}>
             {/* Campo: Asunto */}
             <TextField
               fullWidth
@@ -224,7 +244,7 @@ export const ModalMetadatosTramite = ({
             />
           </Grid>
 
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={3.63}>
             {/* Campo: ¿Tiene tipología relacionada? */}
             <FormControlLabel
               control={
@@ -258,7 +278,7 @@ export const ModalMetadatosTramite = ({
                     </Grid>
                 )}*/}
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={3.63}>
             {/* Campo condicional: Tipología */}
             {form.tieneTipologiaRelacionada && (
               <FormControl fullWidth>
@@ -279,7 +299,7 @@ export const ModalMetadatosTramite = ({
                   }
                 >
                   {/* Opciones del select generadas dinámicamente */}
-                  {tipologias.map((option, index) => (
+                  {tipologias?.map((option, index) => (
                     <MenuItem
                       key={index}
                       value={option.id_tipologia_documental}
@@ -310,7 +330,7 @@ export const ModalMetadatosTramite = ({
             <TextField
               fullWidth
               multiline
-              rows={3} // Ajusta el número de filas para una altura mayor
+              rows={4} // Ajusta el número de filas para una altura mayor
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               value={form.descripcion}
@@ -319,7 +339,7 @@ export const ModalMetadatosTramite = ({
             />
           </Grid>
         </Grid>
-        <Grid item xs={11}>
+        <Grid item xs={12}>
           {/* Agrega el componente FormKeywords aquí */}
           <FormKeywords
             hidden_text={false} // Puedes ajustar este valor según tus necesidades
@@ -335,7 +355,7 @@ export const ModalMetadatosTramite = ({
           <Stack
             direction="row"
             spacing={2}
-            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+            sx={{ mr: '15px', mt: '3rem', mb: '2rem' }}
           >
             <Button
               color="primary"
