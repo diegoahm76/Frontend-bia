@@ -21,7 +21,7 @@ interface props_table {
   data_row_solicitud_viaje: data_solicitud_viaje[];
   set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
   refrescar_tabla: boolean;
-  obtener_solicitudes_fc: ()=> void;
+  obtener_solicitudes_fc: () => void;
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   set_mostrar_solicitud_viaje: React.Dispatch<React.SetStateAction<boolean>>;
   set_id_solicitud_editar: React.Dispatch<React.SetStateAction<number>>;
@@ -42,9 +42,9 @@ const TableSolicitudViajes: FC<props_table> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  useEffect(()=>{
+  useEffect(() => {
     //console.log(data_row_solicitud_viaje);    
-  },[])
+  }, [])
 
   /**
    * Muestra la solicitud de viaje en modo de visualización.
@@ -53,7 +53,7 @@ const TableSolicitudViajes: FC<props_table> = ({
    * @returns {void}
    */
   const ver_solicitud = (params: data_solicitud_viaje) => {
-    console.log(params);    
+    console.log(params);
     set_mostrar_solicitud_viaje(true);
     set_id_solicitud_editar(Number(params.id_solicitud));
     set_accion('ver');
@@ -78,7 +78,7 @@ const TableSolicitudViajes: FC<props_table> = ({
    * @param {data_solicitud_viaje} params - Objeto que contiene los parámetros de la solicitud de viaje a eliminar.
    * @returns {Promise<void>} - Una promesa que resuelve después de la confirmación y, si procede, la eliminación de la solicitud.
    */
-  const eliminar_solicitud = async(params: data_solicitud_viaje) => {
+  const eliminar_solicitud = async (params: data_solicitud_viaje) => {
     const modal_confirmar_eliminacion = await Swal.fire({
       title: '¿Está seguro que desea eliminar esta solicitud?',
       showDenyButton: true,
@@ -97,24 +97,33 @@ const TableSolicitudViajes: FC<props_table> = ({
           }
         })
         return true;
-      } else if(result.isDenied){
+      } else if (result.isDenied) {
         return false;
       }
     });
-    if(modal_confirmar_eliminacion){
+    if (modal_confirmar_eliminacion) {
       obtener_solicitudes_fc();
       set_refrescar_tabla(!refrescar_tabla);
-    }    
+    }
   }
 
 
   const columns: custom_column[] = [
-    {field: 'estado_solicitud', headerName:'Estado', width:150, flex:1},
-    {field: 'fecha_solicitud', headerName:'Fecha Solicitud', width:150, flex:1},
-    {field: 'nro_pasajeros', headerName:'N° Pasajeros', width:150, flex:1},
-    {field: 'fecha_partida', headerName:'Fecha Salida', width:150, flex:1},
-    {field: 'fecha_retorno', headerName:'Fecha Retorno', width:150, flex:1},
-    {field: 'cod_municipio', headerName:'Municipio Destino', width:150, flex:1},
+    {
+      field: 'estado_solicitud', headerName: 'Estado', width: 150, flex: 1,
+      renderCell: ((res) => (
+        res.row.estado_solicitud === 'RC' ? 'Rechazada'
+          : res.row.estado_solicitud === 'ES' ? 'En Espera'
+            : res.row.estado_solicitud === 'FN' ? 'Finalizada'
+              : res.row.estado_solicitud === 'AP' ? 'Aprobada'
+                : res.row.estado_solicitud === 'RE' && 'Respondida'
+      ))
+    },
+    { field: 'fecha_solicitud', headerName: 'Fecha Solicitud', width: 150, flex: 1 },
+    { field: 'nro_pasajeros', headerName: 'N° Pasajeros', width: 150, flex: 1 },
+    { field: 'fecha_partida', headerName: 'Fecha Salida', width: 150, flex: 1 },
+    { field: 'fecha_retorno', headerName: 'Fecha Retorno', width: 150, flex: 1 },
+    { field: 'cod_municipio', headerName: 'Municipio Destino', width: 150, flex: 1 },
     {
       field: 'eliminar',
       headerName: 'Eliminar',
@@ -123,7 +132,7 @@ const TableSolicitudViajes: FC<props_table> = ({
       headerAlign: 'center',
       renderCell: ((params) => {
         return <DeleteForeverIcon
-          sx={{ cursor: 'pointer', color:'#e72929', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizada' ? 'none' : 'inline-block' }}
+          sx={{ cursor: 'pointer', color: '#e72929', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizada' ? 'none' : 'inline-block' }}
           onClick={() => eliminar_solicitud(params.row)}
         />
       }),
@@ -136,7 +145,7 @@ const TableSolicitudViajes: FC<props_table> = ({
       headerAlign: 'center',
       renderCell: (params) => (
         <VisibilityIcon
-          sx={{ cursor: 'pointer', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizada' || params.row.estado_solicitud === 'Respondida' ? 'inline-block' : 'none'}}
+          sx={{ cursor: 'pointer', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizada' || params.row.estado_solicitud === 'Respondida' ? 'inline-block' : 'none' }}
           onClick={() => ver_solicitud(params.row)}
         />
       ),
@@ -149,7 +158,7 @@ const TableSolicitudViajes: FC<props_table> = ({
       headerAlign: 'center',
       renderCell: (params) => (
         <ModeEditIcon
-          sx={{ cursor: 'pointer', color:'#138bda',fontSize: '28px', display:params.row.estado_solicitud === 'Rechazada' ? 'inline-block' : 'none' }}
+          sx={{ cursor: 'pointer', color: '#138bda', fontSize: '28px', display: params.row.estado_solicitud === 'Rechazada' ? 'inline-block' : 'none' }}
           onClick={() => editar_solicitar(params.row)}
         />
       ),
@@ -164,36 +173,36 @@ const TableSolicitudViajes: FC<props_table> = ({
         alignItems="center" >
         <Grid item  >
           <ButtonGroup style={{ margin: 5, }}>
-              {download_xls({ nurseries: data_row_solicitud_viaje, columns })}
-              {download_pdf({
-                  nurseries: data_row_solicitud_viaje,
-                  columns,
-                  title: 'Solicitudes de viajes',
-              })}
+            {download_xls({ nurseries: data_row_solicitud_viaje, columns })}
+            {download_pdf({
+              nurseries: data_row_solicitud_viaje,
+              columns,
+              title: 'Solicitudes de viajes',
+            })}
           </ButtonGroup>
         </Grid>
       </Grid>
 
       <DataGrid
-      style={{margin:'15px 0px'}}
-      density="compact"
-      autoHeight
-      rows={data_row_solicitud_viaje ?? []}
-      columns={columns ?? []}
-      pageSize={5}
-      rowHeight={75}
-      rowsPerPageOptions={[10]}
-      experimentalFeatures={{ newEditingApi: true }}
-      getRowId={() => {
-        try {
-          return uuidv4();
-        } catch (error) {
-          console.error(error);
-          //? Genera un ID de respaldo único
-          return `fallback-id-${Date.now()}-${Math.random()}`;
-        }
-      }}
-    />
+        style={{ margin: '15px 0px' }}
+        density="compact"
+        autoHeight
+        rows={data_row_solicitud_viaje ?? []}
+        columns={columns ?? []}
+        pageSize={5}
+        rowHeight={75}
+        rowsPerPageOptions={[10]}
+        experimentalFeatures={{ newEditingApi: true }}
+        getRowId={() => {
+          try {
+            return uuidv4();
+          } catch (error) {
+            console.error(error);
+            //? Genera un ID de respaldo único
+            return `fallback-id-${Date.now()}-${Math.random()}`;
+          }
+        }}
+      />
     </Grid>
   );
 }
