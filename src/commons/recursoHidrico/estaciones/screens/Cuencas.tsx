@@ -173,6 +173,9 @@ export const Cuencas: React.FC = () => {
 
   const [selectedrio, setSelectedrio] = useState<number | null>(null); // El tipo de dato puede variar según tus necesidades
 
+
+
+  
   const [rios, setrios] = useState<Rio[]>([]);
   const fetchrios = async (): Promise<void> => {
     try {

@@ -23,10 +23,42 @@ import { control_error } from '../alertas/store/thunks/alertas';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import { control_success } from '../../recursoHidrico/requets/Request';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
-import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
+import { FormControl, Grid, Dialog, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
+interface Rio {
+    id_cuenca: number;
+    nombre_macrocuenca: string;
+    nombre_zona_hidrica: string;
+    nombre_sub_zona_hidrica: string;
+    codigo_cuenca: string;
+    nombre_cuenca: string;
+    id_sub_zona_hidrica: number;
+  }
 
-export interface Persona {
+interface ZonaHidrica {
+    codigo_rio: string;
+    id_zona_hidrica: number;
+    id_sub_zona_hidrica: number;
+    id_tipo_zona_hidrica: number;
+    id_tipo_agua_zona_hidrica: any;
+    nombre_sub_zona_hidrica: string;
+}
+
+interface SubZonaHidricaForm {
+    nombre_sub_zona_hidrica: any;
+    codigo_rio: any;
+    id_zona_hidrica: any;
+    id_tipo_zona_hidrica: any;
+    id_tipo_agua_zona_hidrica: any;
+}
+interface cuenca {
+    id_zona_hidrica: number;
+    nombre_zona_hidrica: string;
+    id_zona_hidrografica: string;
+    id_macro_cuenca: string;
+}
+interface Persona {
     id_persona: number;
     tipo_usuario: string;
     primer_nombre: string;
@@ -88,7 +120,13 @@ interface Data {
     captacionesMensualesAgua: CaptacionMensualAgua[];
     informacionFuentesAbastecimiento: FuenteAbastecimiento[];
 }
-
+interface MacroCuenca {
+    id_zona_hidrica: any;
+    id_macro_cuenca: string;
+    nombre_zona_hidrica: string;
+    id_zona_hidrografica: string;
+    id_sub_zona_hidrica: any;
+}
 
 export const AutodeclaracionFormulario: React.FC = () => {
 
@@ -496,9 +534,197 @@ export const AutodeclaracionFormulario: React.FC = () => {
         set_file_nombre(null);
     };
 
+
+    const [zonahidrica, setZonahidrica] = useState<cuenca[]>([]);
+
+    const fetchZonahidricas = async (): Promise<void> => {
+        try {
+            const url = `/hidrico/zonas-hidricas/zona_hidrica/get/3/`;
+            const res = await api.get(url);
+            const zonahidricaData: cuenca[] = res.data?.data || [];
+            setZonahidrica(zonahidricaData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchZonahidricas();
+    }, []);
+
+
+    const [is_modal_active, set_is_buscar] = useState<boolean>(false);
+    const handle_open_buscar = (): void => {
+        set_is_buscar(true);
+    };
+
+    const handle_close = (): void => {
+        set_is_buscar(false);
+    };
+
+
+    const initialState: SubZonaHidricaForm = {
+        nombre_sub_zona_hidrica: "",
+        codigo_rio: "",
+        id_zona_hidrica: "",
+        id_tipo_zona_hidrica: "",
+        id_tipo_agua_zona_hidrica: "",
+    };
+    const [formValues, setFormValues] = useState<SubZonaHidricaForm>(initialState);
+    const [selectedCuenca, setSelectedCuenca] = useState<number | "">("");
+
+    const handleInputChangee = (event: { target: { name: any; value: any; }; }) => {
+        const { name, value } = event.target;
+
+        let newCodigoRio = formValues.codigo_rio;
+        if (name === "id_zona_hidrica") {
+            // Actualiza codigo_rio cuando cambia id_zona_hidrica
+            newCodigoRio = `${selectedCuenca}${value}`;
+        }
+        setFormValues({
+            ...formValues,
+            [name]: value,
+            ...(name === "id_zona_hidrica" && { codigo_rio: newCodigoRio })
+        });
+    };
+
+
+    const [zonasHidricas, setZonasHidricas] = useState<ZonaHidrica[]>([]);
+    const fetchZonasHidricas = async (): Promise<void> => {
+        try {
+
+            const url = `/hidrico/zonas-hidricas/subZonahidrica/get/${formValues.id_zona_hidrica}/`;
+            const res = await api.get(url);
+            const zonasHidricasData: ZonaHidrica[] = res.data?.data || [];
+            setZonasHidricas(zonasHidricasData);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        void fetchZonasHidricas();
+
+    }, [formValues.id_zona_hidrica]);
+
+
+
+    const [rios, setrios] = useState<Rio[]>([]);
+    const fetchrios = async (): Promise<void> => {
+      try {
+         
+          const url = `/hidrico/zonas-hidricas/cuencas/get/${formValues.id_tipo_zona_hidrica}/`;
+          const res = await api.get(url);
+          const zonasHidricasData: Rio[] = res.data?.data || [];
+          setrios(zonasHidricasData);
+        
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    useEffect(() => {
+      fetchrios()
+    }, [formValues.id_tipo_zona_hidrica ]);
+
+
+
     return (
         <>
-            <Grid container
+            <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl" >
+
+                <Grid container
+                    item xs={12} marginLeft={2} marginRight={2} marginTop={3}
+                    sx={{
+
+                        width: '900px', // Cambia '700px' por el ancho que desees
+                        height: '900px', // Cambia '500px' por el alto que desees
+                        position: 'relative',
+                        background: '#FAFAFA',
+                        borderRadius: '15px',
+                        p: '20px', m: '10px 0 20px 0', mb: '20px',
+                        boxShadow: '0px 3px 6px #042F4A26',
+                    }}
+                >
+                    <Title title="Fuentes" />
+
+                    <Grid container item xs={12} spacing={2} marginTop={2}>
+
+
+
+                        <Grid item xs={12} sm={12}>
+                            <FormControl required size="small" fullWidth >
+                                <InputLabel id="select-zonahidrica-label">Zona Hídrica</InputLabel>
+                                <Select
+                                    labelId="select-zonahidrica-label"
+                                    id="id_zona_hidrica"
+                                    value={formValues.id_zona_hidrica}
+                                    label="Zona Hidrica"
+                                    name="id_zona_hidrica"
+                                    onChange={handleInputChangee}
+                                >
+                                    {zonahidrica.map((zona) => (
+                                        <MenuItem key={zona.id_zona_hidrica} value={zona.id_zona_hidrica}>
+                                            {zona.nombre_zona_hidrica}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+
+
+
+                        <Grid item xs={12} sm={12}>
+                            <FormControl required size="small" fullWidth >
+                                <InputLabel id="select-zonahidrica-label">id_tipo_zona_hidrica  </InputLabel>
+                                <Select
+                                    labelId="select-zonahidrica-label"
+                                    id="id_tipo_zona_hidrica"
+                                    value={formValues.id_tipo_zona_hidrica}
+                                    label="Zona Hidrica"
+                                    name="id_tipo_zona_hidrica"
+                                    onChange={handleInputChangee}
+                                >
+                                    {zonasHidricas.map((zona) => (
+                                        <MenuItem key={zona.id_sub_zona_hidrica} value={zona.id_sub_zona_hidrica}>
+                                            {zona.nombre_sub_zona_hidrica}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </Grid>
+                </Grid>
+            </Dialog>
+
+
+
+
+            {/* <Grid container
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
                     position: 'relative',
@@ -516,8 +742,9 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         }}
                     />
                 </Grid>
-                {/* {persona?.primer_nombre} */}
-            </Grid>
+             </Grid> */}
+
+
             {/* 222
             {direccion_generada} */}
             <Grid container
@@ -612,7 +839,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
-                            disabled
+                            // disabled
                             fullWidth
                             size="small"
                             variant="standard"
@@ -761,7 +988,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         onChange={handleCurrentFuenteChange}
                     />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         fullWidth
                         size="small"
@@ -772,6 +999,17 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         onChange={handleCurrentFuenteChange}
                     />
                 </Grid>
+
+                <Grid item >
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        startIcon={<SearchIcon />}
+                        onClick={handle_open_buscar}
+                    >
+                    </Button>
+                </Grid>
+
                 <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -816,44 +1054,6 @@ export const AutodeclaracionFormulario: React.FC = () => {
                         onChange={handleCurrentFuenteChange}
                     />
                 </Grid>
-                {/* <Grid item xs={12} sm={4}>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        variant="standard"
-                        label="Coordenada X"
-                        name="cordenadaX"
-                        value={Data.coordenadasSitioCaptacion.cordenadaX}
-                        onChange={(event) => {
-                            setFormData(prevState => ({
-                                ...prevState,
-                                coordenadasSitioCaptacion: {
-                                    ...prevState.coordenadasSitioCaptacion,
-                                    cordenadaX: parseFloat(event.target.value) || 0
-                                }
-                            }));
-                        }}
-                    />
-                </Grid> */}
-                {/* <Grid item xs={12} sm={4}>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        variant="standard"
-                        label="Coordenada Y"
-                        name="cordenadaY"
-                        value={Data.coordenadasSitioCaptacion.cordenadaY}
-                        onChange={(event) => {
-                            setFormData(prevState => ({
-                                ...prevState,
-                                coordenadasSitioCaptacion: {
-                                    ...prevState.coordenadasSitioCaptacion,
-                                    cordenadaY: parseFloat(event.target.value) || 0
-                                }
-                            }));
-                        }}
-                    />
-                </Grid> */}
 
 
 

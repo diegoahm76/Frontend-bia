@@ -80,6 +80,9 @@ export const Varible: React.FC = () => {
         { field: 'id_variables', headerName: ' Numero', width: 130, flex: 1 },
         { field: 'nombre', headerName: 'nombre', width: 130, flex: 1 },
 
+
+        // { field: 'nombre', headerName: 'nombre', width: 130, flex: 1 },
+
         // { field: 'valor_varaible', headerName: 'Valor varaible', width: 130, flex: 1 },
 
         {

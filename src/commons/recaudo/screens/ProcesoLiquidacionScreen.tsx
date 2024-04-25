@@ -338,7 +338,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     set_position_tab(newValue);
     if (newValue === '1') {
       set_form_liquidacion(previousState => ({ ...previousState, id_expediente: '' }));
-
+      set_selectedIds([])
     }
   }
 
@@ -643,7 +643,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handle_position_tab_change}>
                   <Tab label="Deudores" value="1" />
-                  <Tab label="Generar Liquidación" value="2" />
+                  <Tab label="Generar Liquidación" disabled value="2" />
                 </TabList>
               </Box>
 

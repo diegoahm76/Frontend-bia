@@ -165,7 +165,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
 
   useEffect(() => {
     set_ciclo(form_liquidacion.periodo_liquidacion);
-     }, [form_liquidacion.periodo_liquidacion]);
+  }, [form_liquidacion.periodo_liquidacion]);
   // }, []);
 
 
@@ -297,7 +297,6 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
     //       <List dense>
     //         {Object.entries(params.value).map((entry) => {
     //           const [key, value] = entry;
-
     //           return (
     //             <ListItemText key={`${params.row.id}-${key}`}>
     //               <Stack direction={'row'} spacing={2} alignItems={'center'}>
@@ -357,7 +356,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
 
   const [tasa, settasa] = useState('Copia Factor Regional TUA');
 
-  
+
   useEffect(() => {
     const opcionPreseleccionada = opciones_liquidacion.find(opc => opc.nombre === tasa);
     if (opcionPreseleccionada) {

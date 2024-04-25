@@ -75,6 +75,7 @@ interface Variable {
   valor: any;
 }
 interface IProps {
+  borar: any;
   select_variable: any;
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
@@ -88,6 +89,7 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarEditarOpciones = ({
+  borar,
   select_variable,
   opciones_liquidaciones,
   id_opcion_liquidacion,
@@ -308,7 +310,7 @@ export const AgregarEditarOpciones = ({
           [nombreVariable]: selectedVariables[nombreVariable],
         }), {}),
         tipo_renta: formValues.tipo_renta,
-        tipo_cobro: formValues.tipo_cobro, 
+        tipo_cobro: formValues.tipo_cobro,
         bloques: JSON.stringify(json),
       })
         .then((response) => {
@@ -376,7 +378,22 @@ export const AgregarEditarOpciones = ({
       flex: 1,
       renderCell: (params) => (
         <>
+
           <IconButton
+            color="error"
+            onClick={() => {
+              const updatedRow = row.filter((item) => item.id !== params.id);
+              set_row(updatedRow);
+              removeVariable(params.row.nombre)
+            }}
+            disabled={borar}
+          >
+            <RemoveCircleOutlinedIcon />
+          </IconButton>
+
+
+          {/* <IconButton
+
             onClick={() => {
               const updatedRow = row.filter((item) => item.id !== params.id);
               set_row(updatedRow);
@@ -397,7 +414,7 @@ export const AgregarEditarOpciones = ({
                 sx={{ width: '18px', height: '18px' }}
               />
             </Avatar>
-          </IconButton>
+          </IconButton> */}
 
           <IconButton
             color="primary"
@@ -556,11 +573,9 @@ export const AgregarEditarOpciones = ({
   }, []);
 
   const handleClick = () => {
-    console.log(selectedVariables);
+    console.log( borar);
     console.log("2222222");
-    console.log(row);
-    console.log("33333");
-    console.log(opciones_liquidaciones);
+ 
 
 
 
@@ -578,7 +593,7 @@ export const AgregarEditarOpciones = ({
 
   };
   const [searchTerm, setSearchTerm] = useState<string>('');
-  
+
   const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
 
   const fetchTiposRenta = async () => {
@@ -620,10 +635,10 @@ export const AgregarEditarOpciones = ({
         {/* <Button color='success'
           variant='contained'
           onClick={handleClick}>CONSOLE </Button> */}
+
         {/* INICIO TEST */}
 
         <Grid container spacing={2} sx={{ my: '10px' }}>
-
 
           <Dialog
             keepMounted
@@ -786,7 +801,8 @@ export const AgregarEditarOpciones = ({
           </Grid>
           <Grid item xs={12} sm={3}>
             <Button
-              disabled={!form_data.variable}
+            
+              disabled={!form_data.variable || borar }
               variant="contained" color="primary" onClick={handleSubmit}
               startIcon={<Add />}
               fullWidth
