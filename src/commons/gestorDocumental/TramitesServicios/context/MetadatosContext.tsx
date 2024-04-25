@@ -33,11 +33,15 @@ const initialFormValues: FormValues = {
 interface FormContextMetadatosType {
   form: FormValues;
   setForm: Dispatch<SetStateAction<FormValues>>;
+  archivos: any;
+  set_archivos: Dispatch<SetStateAction<any>>;
 }
 
 export const FormContextMetadatos = createContext<FormContextMetadatosType>({
   form: initialFormValues,
   setForm: () => {},
+  archivos: [],
+  set_archivos: () => {},
 });
 
 interface FormProviderProps {
@@ -45,11 +49,14 @@ interface FormProviderProps {
 }
 
 export const FormProviderMetadatos = ({ children }: FormProviderProps): JSX.Element => {
+  const [archivos, set_archivos] = useState<any[]>([]);
   const [form, setForm] = useState<FormValues>(initialFormValues);
 
   const value = {
     form,
     setForm,
+    archivos,
+    set_archivos,
   };
 
   return (

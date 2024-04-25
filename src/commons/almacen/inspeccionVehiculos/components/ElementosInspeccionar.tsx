@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Radio, FormLabel, TextField, Button } from "@mui/material";
 import TarjetaInspeccion from "./TarjetaInspeccion";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { cambio_input_radio } from "../thunks/cambio_input_radio";
 import { Title } from "../../../../components";
 import SaveIcon from '@mui/icons-material/Save';
@@ -10,17 +10,31 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
 import ContenedorInput from "./ContenedorInput";
 import { estilo_radio } from "../thunks/estilo_radio";
-import { create_inspeccion_vehiculo } from "../interfaces/types";
+import { create_inspeccion_vehiculo, interface_busqueda_persona_solicita } from "../interfaces/types";
 import { useAppDispatch } from "../../../../hooks";
 import { enviar_inspeccion_vehiculo } from "../thunks/inspeccion_vehiculos";
 import Swal from "sweetalert2";
 import { control_error } from "../../../../helpers";
+import dayjs, { Dayjs } from "dayjs";
 
 interface props {
-  set_data_inspeccion_vehiculo: React.Dispatch<React.SetStateAction<create_inspeccion_vehiculo>>;
+  set_data_inspeccion_vehiculo: Dispatch<SetStateAction<create_inspeccion_vehiculo>>;
   data_inspeccion_vehiculo: create_inspeccion_vehiculo;
-  set_kilometraje: React.Dispatch<React.SetStateAction<number>>;
+  set_kilometraje: Dispatch<SetStateAction<number>>;
   id_hoja_vida_vehiculo: number;
+  set_inspeccionando_vehiculo: Dispatch<SetStateAction<boolean>>;
+  data_personas_viajan: interface_busqueda_persona_solicita[];
+  set_data_personas_viajan: Dispatch<SetStateAction<interface_busqueda_persona_solicita[]>>;
+  capacidad_extintor: number;
+  set_capacidad_extintor: Dispatch<SetStateAction<number>>;
+  fecha_vencimiento_extintor: Dayjs | null;
+  set_fecha_vencimiento_extintor: Dispatch<SetStateAction<Dayjs | null>>;
+  fecha_vencimiento_licencia: Dayjs | null;
+  set_fecha_vencimiento_licencia: Dispatch<SetStateAction<Dayjs | null>>;
+  fecha_vencimiento_soat: Dayjs | null;
+  set_fecha_vencimiento_soat: Dispatch<SetStateAction<Dayjs | null>>;
+  fecha_revision_tecnomecanica: Dayjs | null;
+  set_fecha_revision_tecnomecanica: Dispatch<SetStateAction<Dayjs | null>>;
 }
 
 
@@ -28,7 +42,20 @@ const ElementosInspeccionar: React.FC<props> = ({
   set_data_inspeccion_vehiculo,
   data_inspeccion_vehiculo,
   set_kilometraje,
-  id_hoja_vida_vehiculo
+  id_hoja_vida_vehiculo,
+  set_inspeccionando_vehiculo,
+  data_personas_viajan,
+  set_data_personas_viajan,
+  capacidad_extintor,
+  set_capacidad_extintor,
+  fecha_vencimiento_extintor,
+  set_fecha_vencimiento_extintor,
+  fecha_vencimiento_licencia,
+  set_fecha_vencimiento_licencia,
+  fecha_vencimiento_soat,
+  set_fecha_vencimiento_soat,
+  fecha_revision_tecnomecanica,
+  set_fecha_revision_tecnomecanica,
 }) => {
   const dispatch = useAppDispatch();
   const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('true');
@@ -64,6 +91,25 @@ const ElementosInspeccionar: React.FC<props> = ({
   const [tiene_observaciones, set_tiene_observaciones] = useState<boolean>(false);
 
   useEffect(() => {
+    // mapeamos a data_personas_viajan para ver si en el atributo persona_agregada_inspeccion hay personas agregadas en true, si es asi entonces devolvemos un atributo llamado 'personas_nuevas' que sera lo retornado por el map en caso que persona_agregada_inspeccion sea true
+    const personas_nuevas = data_personas_viajan
+      .filter(persona => persona.persona_agregada_inspeccion)
+      .map(persona => ({
+        id_persona_viaja: persona.id_persona,
+        id_solicitud_viaje: persona.id_solicitud_viaje,
+      }));
+
+    const personas_existentes = data_personas_viajan
+      .filter(persona => !persona.persona_agregada_inspeccion)
+      .map(persona => {
+        return {
+          id_persona_viaja: persona.id_persona,
+          id_solicitud_viaje: persona.id_solicitud_viaje,
+          persona_confirma_viaje: persona.persona_confirma_viaje,
+          ...(!persona.persona_confirma_viaje ? { observacion: persona.observacion } : {})
+        }
+      })
+
     set_data_inspeccion_vehiculo((prev) => {
       const nuevos_datos = {
         dir_llantas_delanteras: direcionales_delanteras === 'true' ? true : false,
@@ -94,6 +140,13 @@ const ElementosInspeccionar: React.FC<props> = ({
         kit_herramientas: kit_herramientas === 'true' ? true : false,
         botiquin_completo: botiquin_completo === 'true' ? true : false,
         pito: pito === 'true' ? true : false,
+        personas_nuevas: personas_nuevas,
+        personas_existentes: personas_existentes,
+        capacidad_extintor: capacidad_extintor,
+        fecha_vencimiento_extintor: dayjs(fecha_vencimiento_extintor).format('YYYY-MM-DD'),
+        fecha_vecimiento_licencia: dayjs(fecha_vencimiento_licencia).format('YYYY-MM-DD'),
+        fecha_vencimiento_soat: dayjs(fecha_vencimiento_soat).format('YYYY-MM-DD'),
+        fecha_revision_tecno_mecanica: dayjs(fecha_revision_tecnomecanica).format('YYYY-MM-DD'),
         ...(tiene_observaciones && { observaciones: observaciones }),
       }
 
@@ -135,7 +188,15 @@ const ElementosInspeccionar: React.FC<props> = ({
     kit_herramientas,
     botiquin_completo,
     pito,
-    tiene_observaciones, observaciones])
+    tiene_observaciones,
+    observaciones,
+    data_personas_viajan,
+    capacidad_extintor,
+    fecha_vencimiento_extintor,
+    fecha_vencimiento_licencia,
+    fecha_vencimiento_soat,
+    fecha_revision_tecnomecanica,
+  ])
 
   useEffect(() => {
     const estados_individuales = [
@@ -230,13 +291,54 @@ const ElementosInspeccionar: React.FC<props> = ({
     set_botiquin_completo('true');
     set_pito('true');
     set_kilometraje(0);
+    set_observaciones('');
+    set_data_personas_viajan([]);
+    set_capacidad_extintor(0);
+    set_fecha_vencimiento_extintor(null);
+    set_fecha_vencimiento_licencia(null);
+    set_fecha_vencimiento_soat(null);
+    set_fecha_revision_tecnomecanica(null);
+    set_inspeccionando_vehiculo(false);
   }
 
-  const enviar_asignacion_vehiculo = () => {
+  const validar_formulario: () => Promise<boolean> = async () => {
     if (id_hoja_vida_vehiculo === 0) {
       control_error('No se ha seleccionado un vehículo');
-      return
-    } else {
+      return false;
+    } else if(data_personas_viajan.length === 0){
+      control_error('No se han agregado personas que viajan');
+      return false;
+    } else if(capacidad_extintor === 0){
+      control_error('Debe agregar la capacidad del extintor');
+      return false;
+    } else if(fecha_vencimiento_extintor === null || dayjs(fecha_vencimiento_extintor).isValid() === false){
+      control_error('Debe agregar la fecha de vencimiento del extintor');
+      return false;
+    } else if(fecha_vencimiento_licencia === null || dayjs(fecha_vencimiento_licencia).isValid() === false){
+      control_error('Debe agregar la fecha de vencimiento de la licencia');
+      return false;
+    } else if(fecha_vencimiento_soat === null || dayjs(fecha_vencimiento_soat).isValid() === false){
+      control_error('Debe agregar la fecha de vencimiento del SOAT');
+      return false;
+    } else if(fecha_revision_tecnomecanica === null || dayjs(fecha_revision_tecnomecanica).isValid() === false){
+      control_error('Debe agregar la fecha de revisión tecnomecánica');
+      return false;
+    } else if(data_personas_viajan.some(persona => persona.persona_confirma_viaje === false)){
+      if(data_personas_viajan.some(persona => persona.observacion === '')){
+        control_error('Debe agregar una observación a las personas que no confirman el viaje');
+        return false;
+      }
+    } else if(tiene_observaciones && observaciones === ''){
+      control_error('Debe agregar observaciones, ya que hay elementos que no están en buen estado');
+      return false;
+    }
+    return true;
+  }
+
+  const enviar_asignacion_vehiculo = async() => {
+    const validacion = await validar_formulario();
+
+    if (validacion) {
       Swal.fire({
         title: '¿Está seguro que desea enviar la inspección del vehículo?',
         showDenyButton: true,
@@ -710,7 +812,10 @@ const ElementosInspeccionar: React.FC<props> = ({
           color="error"
           variant="contained"
           startIcon={<ClearIcon />}
-          onClick={() => { }}
+          onClick={() => {
+            limpiar_inspeccion()
+            set_inspeccionando_vehiculo(false)
+          }}
         >
           Salir
         </Button>

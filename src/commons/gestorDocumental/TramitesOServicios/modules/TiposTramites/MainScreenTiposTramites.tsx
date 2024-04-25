@@ -74,8 +74,10 @@ export const MainScreenTiposTramites = (): JSX.Element => {
           controlAdministrarTiposTramites._formValues.cod_tipo_permiso_ambiental
             .value,
         nombre: controlAdministrarTiposTramites._formValues.nombre,
-        tiene_pago: controlAdministrarTiposTramites._formValues.tiene_pago,
+        tiene_pago: controlAdministrarTiposTramites._formValues.tiene_pago ? true : false,
       };
+
+      console.log(dataToSend);
 
       const { data } = await api.post(url, dataToSend);
 
@@ -83,7 +85,7 @@ export const MainScreenTiposTramites = (): JSX.Element => {
         control_success(data.detail);
         getTramitesCreados(
           '',
-          controlAdministrarTiposTramites._formValues.tiene_pago,
+          controlAdministrarTiposTramites._formValues.tiene_pago ? true : false,
           '',
           handleGeneralLoading
         ).then((data) => {
@@ -117,7 +119,6 @@ export const MainScreenTiposTramites = (): JSX.Element => {
       };
 
       const { data } = await api.put(url, dataToSend);
-
       if (data.success) {
         control_success(data.detail);
         getTramitesCreados(
@@ -234,7 +235,33 @@ export const MainScreenTiposTramites = (): JSX.Element => {
                   return;
                 }
 
-                //void deleteFormat(params);
+                const deleteFormat = async (params: any) => {
+                  try {
+                    handleGeneralLoading(true);
+
+                    const url = `tramites/tipos/delete/${params.row.id_permiso_ambiental}/`;
+                    const { data } = await api.delete(url);
+
+                    if (data.success) {
+                      control_success(data.detail);
+                      getTramitesCreados(
+                        '',
+                        controlAdministrarTiposTramites._formValues.tiene_pago,
+                        '',
+                        handleGeneralLoading
+                      ).then((data) => {
+                        console.log(data);
+                        setListaTramites(data);
+                      });
+                    }
+                  } catch (err) {
+                    handleApiError(err);
+                  } finally {
+                    handleGeneralLoading(false);
+                  }
+                };
+
+                void deleteFormat(params);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">

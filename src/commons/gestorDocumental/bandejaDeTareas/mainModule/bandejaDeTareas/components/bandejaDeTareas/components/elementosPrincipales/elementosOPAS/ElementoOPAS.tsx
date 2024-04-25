@@ -70,7 +70,7 @@ export const ElementoOPAS = (): JSX.Element => {
     try {
       const result = await Swal.fire({
         title: 'Aceptar tarea',
-        text: `¿Estás seguro que deseas aceptar esta tarea?`,
+        text: `¿Estás seguro que deseas aceptar esta tarea?, recuerda activar las ventanas emergentes en el navegador para ver el auto de inicio y el pago (si aplica)`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Aceptar',

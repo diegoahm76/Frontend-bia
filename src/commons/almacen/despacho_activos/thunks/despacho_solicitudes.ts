@@ -299,6 +299,17 @@ export const get_resumen_sin_solicitud: any = (id_solicitud_activo : string) => 
   };
 };
 
+export const get_resumen_con_solicitud: any = (id_solicitud_activo : string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/resumen-solicitud-activos/${id_solicitud_activo}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
 export const get_articulos_despacho_con_solicitud: any = (id_solicitud_activo : string) => {
   return async () => {
     try {

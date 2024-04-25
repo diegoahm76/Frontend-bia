@@ -10,7 +10,7 @@ import {
   Typography,
   Avatar,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
 import React from 'react';
 import { TipoTramite } from './TipoTramite';
@@ -21,6 +21,14 @@ import { radicar_opa } from '../thunks/TramitesOServicios';
 import { useAppDispatch } from '../../../../hooks';
 import { TramitesEnProceso } from './TramitesEnProceso';
 import { useNavigate } from 'react-router-dom';
+import FeedIcon from '@mui/icons-material/Feed';
+import AutoModeIcon from '@mui/icons-material/AutoMode';
+import InfoIcon from '@mui/icons-material/Info';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
+import CallToActionIcon from '@mui/icons-material/CallToAction';
+import { FormContextMetadatos } from '../../TramitesServicios/context/MetadatosContext';
+import Swal from 'sweetalert2';
 const class_css = {
   position: 'relative',
   background: '#FAFAFA',
@@ -29,14 +37,15 @@ const class_css = {
   mb: '20px',
   boxShadow: '0px 3px 6px #042F4A26',
   display: 'flex',
-  justifyContent: 'center'
+  justifyContent: 'center',
 };
 const class_css_back = {
   position: 'relative',
   background: '#FAFAFA',
   borderRadius: '15px',
   p: '20px',
-  mb: '20px',
+  mt: '2rem',
+  mb: '2rem',
   boxShadow: '3px 3px 3px 3px #042F4A26',
 };
 interface IProps {
@@ -76,6 +85,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   const [completed, setCompleted] = React.useState<{ [k: number]: boolean }>(
     {}
   );
+  const { archivos, set_archivos, setForm } = useContext(FormContextMetadatos);
   const totalSteps = () => {
     return steps.length;
   };
@@ -93,9 +103,23 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
       set_crear_tramite(true);
     }
     if (activeStep === 1) {
+      if (!archivos.length) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Atención',
+          text: `Por favor, crea anexos antes de continuar.`,
+          confirmButtonText: 'Entendido',
+        });
+        return;
+      }
       set_cargar_anexos(true);
     }
     if (activeStep === 2) {
+      if (!response_paso_1?.id_solicitud_tramite) {
+        // Asegúrate de que id_solicitud_tramite esté definido
+        control_warning('Por favor, radica la opa antes de continuar.');
+        return;
+      }
       dispatch(radicar_opa(response_paso_1?.id_solicitud_tramite)).then(
         (response: any) => {
           if (response.success) {
@@ -108,6 +132,8 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                 ? steps.findIndex((step, i) => !(i in completed))
                 : activeStep + 1;
             setActiveStep(newActiveStep);
+            set_archivos([]);
+            setForm({} as any);
           }
         }
       );
@@ -187,39 +213,18 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   return (
     <>
       <Grid container sx={class_css}>
-        <Title title="Trámite o servicio" />
-        <Grid
-          container
-          spacing={2}
-          sx={{ my: '1rem', display: 'flex', justifyContent: 'center' }}
-        >
-          {props.usuario !== null && (
-            <Grid container xs={12} sm={12}>
-              <Grid container xs={12} sm={10.5}>
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  textAlign={'center'}
-                  sx={{ my: '1rem', display: 'flex', justifyContent: 'center' }}
-                >
-                  <Button variant="contained" color="error" onClick={() => {
-                    navigate(
-                      `/app/gestor_documental/tramites/respuesta_requerimiento_opa/`
-                    );
-                  }}>
-                    Responder requerimientos
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
+        <Title title="Trámite y servicios (OPAS)" />
         <Grid container sx={class_css_back}>
-          <Grid item xs={12} sm={4} textAlign={'center'}>
+          <Grid
+            item
+            xs={12}
+            sm={props.usuario !== null ? 3 : 4}
+            textAlign={'center'}
+          >
             <Button
               color="success"
               variant="contained"
+              startIcon={<FeedIcon />}
               onClick={() => {
                 tramites(true, false, false);
               }}
@@ -227,10 +232,37 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
               Nuevo trámite
             </Button>
           </Grid>
-          <Grid item xs={12} sm={4} textAlign={'center'}>
+          {props.usuario !== null && (
+            <Grid
+              item
+              xs={12}
+              sm={props.usuario !== null ? 3 : 4}
+              textAlign={'center'}
+            >
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<QuestionAnswerIcon />}
+                onClick={() => {
+                  navigate(
+                    `/app/gestor_documental/tramites/respuesta_requerimiento_opa/`
+                  );
+                }}
+              >
+                Responder requerimientos OPAS
+              </Button>
+            </Grid>
+          )}
+          <Grid
+            item
+            xs={12}
+            sm={props.usuario !== null ? 3 : 4}
+            textAlign={'center'}
+          >
             <Button
-              color="success"
-              variant="outlined"
+              color="primary"
+              variant="contained"
+              startIcon={<AutoModeIcon />}
               onClick={() => {
                 tramites(false, true, false);
               }}
@@ -238,10 +270,16 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
               Trámites en proceso
             </Button>
           </Grid>
-          <Grid item xs={12} sm={4} textAlign={'center'}>
+          <Grid
+            item
+            xs={12}
+            sm={props.usuario !== null ? 3 : 4}
+            textAlign={'center'}
+          >
             <Button
               color="warning"
-              variant="outlined"
+              variant="contained"
+              startIcon={<InfoIcon />}
               onClick={() => {
                 tramites(false, false, true);
               }}
@@ -331,7 +369,13 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                     )}
                     {tramite_servicio === 'O' && (
                       <Box
-                        sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          pt: 2,
+                          mt: '1.5rem',
+                          mb: '1.5rem',
+                        }}
                       >
                         <Box sx={{ flex: '1 1 auto' }} />
                         {activeStep !== 3 && (
@@ -342,10 +386,11 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                                 : 'outlined'
                             }
                             onClick={handleComplete}
+                            startIcon={<CallToActionIcon />}
                           >
                             {completedSteps() === totalSteps() - 2
-                              ? 'Radicar'
-                              : 'Siguiente'}
+                              ? 'Radicar el trámite'
+                              : 'Continuar al siguiente paso'}
                           </Button>
                         )}
                       </Box>

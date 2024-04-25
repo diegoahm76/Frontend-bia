@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from "../../../../api/axios";
+import dayjs from "dayjs";
 
 
 export const get_obtener_solicitudes: any = (
@@ -97,4 +98,14 @@ export const get_obtener_tipos_documentos: any = () => {
       return error as AxiosError;
     }
   };
+}
+
+export function parseHora(hora: string | null): dayjs.Dayjs | null {
+  if (hora === null || hora === '') {
+    return null;
+  } else {
+    const [horas, minutos] = hora?.split(':');
+    const hora_parceada = dayjs().set('hour', parseInt(horas)).set('minute', parseInt(minutos)).toDate();
+    return dayjs(hora_parceada);
+  }
 }

@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
 import { Dayjs } from 'dayjs';
-import { interface_busqueda_persona_responsable, interface_busqueda_persona_solicita, interface_despachos_sin_solicitud, interface_solicitud_por_id, interface_solicitudes_realizadas, response_despachos_sin_solicitud } from '../interfeces/types';
+import { interface_busqueda_persona_responsable, interface_busqueda_persona_solicita, interface_despachos_sin_solicitud, interface_resumen_despacho_con_solicitud, interface_resumen_despacho_sin_solicitud, interface_solicitudes_realizadas, response_despachos_sin_solicitud } from '../interfeces/types';
 import { useAppDispatch } from '../../../../hooks';
 import { response_obtener_solicitudes_realizadas } from '../../autorizacion_solicitud_activos/interfaces/types';
 import { control_error } from '../../../../helpers';
@@ -26,6 +26,8 @@ interface props {
   set_position_tab: React.Dispatch<React.SetStateAction<string>>;
   set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
   id_solicitud_activo: number | null;
+  set_data_solicitud_ver_por_id_con_solicitud: React.Dispatch<React.SetStateAction<interface_resumen_despacho_con_solicitud>>;
+  set_data_solicitud_ver_por_id_sin_solicitud: React.Dispatch<React.SetStateAction<interface_resumen_despacho_sin_solicitud>>;
 }
 
 
@@ -37,14 +39,15 @@ const SolicitudesEnProceso: React.FC<props> = ({
   set_position_tab,
   set_id_solicitud_activo,
   id_solicitud_activo,
+  set_data_solicitud_ver_por_id_con_solicitud,
+  set_data_solicitud_ver_por_id_sin_solicitud
 }) => {
   const dispatch = useAppDispatch();
 
 
   const [loadding_tabla_solicitudes, set_loadding_tabla_solicitudes] = useState<boolean>(false);
 
-  // data cuando se da click en el icono de 'ojo' para ver la solicitud
-  const [data_solicitud_ver_por_id, set_data_solicitud_ver_por_id] = useState<interface_solicitud_por_id>(Object);
+
 
   // Data de las solicitudes de activos con solicitud
   const [data_despachos_con_solicitud, set_data_despachos_con_solicitud] = useState<interface_solicitudes_realizadas[]>([]);
@@ -381,7 +384,7 @@ const SolicitudesEnProceso: React.FC<props> = ({
             data_despachos_sin_solicitud={data_despachos_sin_solicitud}
             loadding_tabla_solicitudes={loadding_tabla_solicitudes}
             set_id_solicitud_activo={set_id_solicitud_activo}
-            set_data_solicitud_ver_por_id={set_data_solicitud_ver_por_id}
+            set_data_solicitud_ver_por_id_sin_solicitud={set_data_solicitud_ver_por_id_sin_solicitud}
           />
           :
           <TablaDespachosConSolicitud
@@ -390,7 +393,7 @@ const SolicitudesEnProceso: React.FC<props> = ({
             data_despachos_con_solicitud={data_despachos_con_solicitud}
             loadding_tabla_solicitudes={loadding_tabla_solicitudes}
             get_obtener_solicitudes_activos_fc={get_obtener_solicitudes_activos_fc}
-            set_data_solicitud_ver_por_id={set_data_solicitud_ver_por_id}
+            set_data_solicitud_ver_por_id_con_solicitud={set_data_solicitud_ver_por_id_con_solicitud}
             set_position_tab={set_position_tab}
           />
         }
