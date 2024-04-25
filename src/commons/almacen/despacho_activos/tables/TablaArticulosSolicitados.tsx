@@ -10,7 +10,7 @@ import { set } from 'date-fns';
 import dayjs, { Dayjs } from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { itmes_solicitud_por_id } from '../interfaces/types';
+import { itmes_solicitud_por_id } from '../interfeces/types';
 
 
 interface custom_column extends GridColDef {

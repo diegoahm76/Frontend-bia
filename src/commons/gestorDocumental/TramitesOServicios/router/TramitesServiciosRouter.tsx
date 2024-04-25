@@ -27,6 +27,8 @@ export const TramitesServiciosRouter = (): ReactElement => {
             path="tipos_tramites/*"
             element={<MainScreenTiposTramites />}
           />
+
+          <Route path="permisos_menores/*" element={<>Permisos menores </>} />
           <Route path="/*" element={<Page404 />} />
         </Routes>
       </UserProvider>

@@ -849,11 +849,11 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     }}
                   >
                     {download_xls({
-                      nurseries: assignments_ccd,
+                      nurseries: assignments_ccd ? [...assignments_ccd].sort((a: any, b: any) => a?.codigo_serie - b?.codigo_serie) : assignments_ccd,
                       columns: columns_asignacion,
                     })}
                     {download_pdf({
-                      nurseries: assignments_ccd,
+                      nurseries: assignments_ccd ? [...assignments_ccd].sort((a: any, b: any) => a?.codigo_serie - b?.codigo_serie) : assignments_ccd,
                       columns: columns_asignacion,
                       title: 'Actividades',
                     })}
@@ -862,7 +862,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     density="compact"
                     autoHeight
                     // ! se deben realizar cambios de filtro para la seleccion de los datos
-                    rows={assignments_ccd}
+                    rows={assignments_ccd ? [...assignments_ccd].sort((a: any, b: any) => a?.codigo_serie - b?.codigo_serie) : assignments_ccd}
                     sx={{
                       zIndex: 2,
                     }}

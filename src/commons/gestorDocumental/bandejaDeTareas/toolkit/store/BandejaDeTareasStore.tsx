@@ -172,6 +172,7 @@ const initialState: any = {
 
   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas: null,
   listaTareasPqrsdfTramitesUotrosUopas: [],
+  data_expediente: null,
 
   //* informacion de tarea
   infoTarea: null,
@@ -228,6 +229,10 @@ export const BandejaTareasSlice = createSlice({
       state.infoTarea = action.payload;
     },
 
+    setDataExpediente: (state, action: PayloadAction<any>) => {
+      state.data_expediente = action.payload;
+    },
+
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetBandejaDeTareasFull: (state) => {
       // state.actionsTareasPQRSDF = [];
@@ -263,5 +268,6 @@ export const {
   // ? reset de todos los estados del slice
   // ? set info tarea
   setInfoTarea,
+  setDataExpediente,
   resetBandejaDeTareasFull,
 } = BandejaTareasSlice.actions;

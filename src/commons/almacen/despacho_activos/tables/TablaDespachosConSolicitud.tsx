@@ -12,10 +12,9 @@ import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { control_error, control_success } from '../../../../helpers';
 import Swal from 'sweetalert2';
-import { interface_solicitud_por_id, interface_solicitudes_realizadas, response_solicitud_por_id } from '../interfeces/types';
-import { get_resumen_solicitud } from '../../autorizacion_solicitud_activos/thunks/autorizacion_solicitud_activos';
+import { interface_resumen_despacho_con_solicitud, interface_solicitudes_realizadas, response_resumen_despacho_con_solicitud } from '../interfeces/types';
 import CloseIcon from '@mui/icons-material/Close';
-import { put_anular_despacho_con_solicitud } from '../thunks/despacho_solicitudes';
+import { get_resumen_con_solicitud } from '../thunks/despacho_solicitudes';
 
 
 interface CustomColumn extends GridColDef {
@@ -28,7 +27,7 @@ interface Props {
   set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
   loadding_tabla_solicitudes: boolean;
   get_obtener_solicitudes_activos_fc: () => void;
-  set_data_solicitud_ver_por_id: React.Dispatch<React.SetStateAction<interface_solicitud_por_id>>;
+  set_data_solicitud_ver_por_id_con_solicitud: React.Dispatch<React.SetStateAction<interface_resumen_despacho_con_solicitud>>;
   set_position_tab: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -40,7 +39,7 @@ const TablaDespachosConSolicitud: React.FC<Props> = ({
   loadding_tabla_solicitudes,
   get_obtener_solicitudes_activos_fc,
   set_id_solicitud_activo,
-  set_data_solicitud_ver_por_id,
+  set_data_solicitud_ver_por_id_con_solicitud,
   set_position_tab,
 }) => {
   const dispatch = useAppDispatch();
@@ -63,21 +62,22 @@ const TablaDespachosConSolicitud: React.FC<Props> = ({
   }
 
   const ver_solicitud = (row: any) => {
-    set_accion('ver');
+    set_accion('ver_con_solicitud');
+    set_position_tab('4');
 
-    dispatch(get_resumen_solicitud(row.id_solicitud_activo))
-      .then((response: response_solicitud_por_id) => {
+    dispatch(get_resumen_con_solicitud(row.id_solicitud_activo))
+      .then((response: response_resumen_despacho_con_solicitud) => {
         if (Object.keys(response).length !== 0) {
           if (response.success) {
             control_success('Solicitud encontrada correctamente');
-            set_data_solicitud_ver_por_id(response.data);
+            set_data_solicitud_ver_por_id_con_solicitud(response.data);
           } else {
             control_error('No se pudo encontrar la solicitud');
-            set_data_solicitud_ver_por_id({} as interface_solicitud_por_id);
+            set_data_solicitud_ver_por_id_con_solicitud({} as interface_resumen_despacho_con_solicitud);
           }
         } else {
           control_error('Hubo un error al intentar encontrar la solicitud');
-          set_data_solicitud_ver_por_id({} as interface_solicitud_por_id)
+          set_data_solicitud_ver_por_id_con_solicitud({} as interface_resumen_despacho_con_solicitud)
         }
       })
   }

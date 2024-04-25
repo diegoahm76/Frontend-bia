@@ -87,7 +87,6 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
   // Estado para almacenar la solicitud de viaje respondida
   const [solicitud_respondida, set_solicitud_respondida] = useState<interface_solicitud_respondida>(Object);
 
-
   useEffect(() => {
     // Establece los datos de la solicitud de viaje en el estado correspondiente
     set_datos_solicitar_viaje({
@@ -232,10 +231,6 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
       set_msj_error_id_expediente('Selecciona un expediente en el campo de buscar expediente');
       control_error('Selecciona un expediente en el campo de buscar expediente');
       return false
-    } else if (direccion.trim() === '') {
-      set_msj_error_direccion('Escriba una dirección');
-      control_error('Escriba una dirección');
-      return false;
     } else if (departamento === '' || departamento === null) {
       set_msj_error_departamento('Seleccione un departamento');
       control_error('Seleccione un departamento');
@@ -263,6 +258,9 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
       control_error('El campo indicaciones de destino no puede estar vacío');
       set_msj_error_indicadores_destino('El campo indicaciones de destino no puede estar vacío');
       return false
+    } else if(accion === 'crear' && data_personas_viajan.length > numero_pasajeros){
+      control_error('El número de funcionarios seleccionados no puede ser mayor al valor del campo de número de pasajeros');
+      return false;
     } else if (accion === 'editar') {
       if (departamento_editar === '' || departamento_editar === null) {
         set_msj_error_departamento('Seleccione un departamento');
@@ -772,7 +770,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
 
           <Grid item xs={12} lg={4}>
             <TextField
-              label='Indicaciones de destino'
+              label='Indicaciones de destino (Predio)'
               disabled={accion === 'ver'}
               value={indicadores_destino}
               error={msj_error_indicadores_destino !== ''}
