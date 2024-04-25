@@ -34,7 +34,7 @@ interface Rio {
     codigo_cuenca: string;
     nombre_cuenca: string;
     id_sub_zona_hidrica: number;
-  }
+}
 
 interface ZonaHidrica {
     codigo_rio: string;
@@ -612,21 +612,20 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
     const [rios, setrios] = useState<Rio[]>([]);
     const fetchrios = async (): Promise<void> => {
-      try {
-         
-          const url = `/hidrico/zonas-hidricas/cuencas/get/${formValues.id_tipo_zona_hidrica}/`;
-          const res = await api.get(url);
-          const zonasHidricasData: Rio[] = res.data?.data || [];
-          setrios(zonasHidricasData);
-        
-      } catch (error) {
-        console.error(error);
-      }
+        try {
+
+            const url = `/hidrico/zonas-hidricas/cuencas/get/${formValues.id_tipo_zona_hidrica}/`;
+            const res = await api.get(url);
+            const zonasHidricasData: Rio[] = res.data?.data || [];
+            setrios(zonasHidricasData);
+
+        } catch (error) {
+            console.error(error);
+        }
     };
-  
     useEffect(() => {
-      fetchrios()
-    }, [formValues.id_tipo_zona_hidrica ]);
+        fetchrios()
+    }, [formValues.id_tipo_zona_hidrica]);
 
 
 
@@ -651,7 +650,7 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
                     <Grid container item xs={12} spacing={2} marginTop={2}>
 
-
+ 
 
                         <Grid item xs={12} sm={12}>
                             <FormControl required size="small" fullWidth >
@@ -678,12 +677,12 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
                         <Grid item xs={12} sm={12}>
                             <FormControl required size="small" fullWidth >
-                                <InputLabel id="select-zonahidrica-label">id_tipo_zona_hidrica  </InputLabel>
+                                <InputLabel id="select-zonahidrica-label">Subzona hidrica </InputLabel>
                                 <Select
                                     labelId="select-zonahidrica-label"
                                     id="id_tipo_zona_hidrica"
                                     value={formValues.id_tipo_zona_hidrica}
-                                    label="Zona Hidrica"
+                                    label="Subzona hidrica"
                                     name="id_tipo_zona_hidrica"
                                     onChange={handleInputChangee}
                                 >
@@ -699,12 +698,40 @@ export const AutodeclaracionFormulario: React.FC = () => {
 
 
 
+                        <Grid item xs={12} sm={12}>
+                            <FormControl required size="small" fullWidth >
+                                <InputLabel id="Fuente">Fuente </InputLabel>
+                                <Select
+                                    labelId="Fuente"
+                                    id="Fuente"
+                                    value={formValues.id_tipo_agua_zona_hidrica}
+                                    label="Fuente"
+                                    name="id_tipo_agua_zona_hidrica"
+                                    onChange={handleInputChangee}
+                                >
+                                    {rios.map((zona) => (
+                                        <MenuItem key={zona.id_cuenca} value={zona.id_cuenca}>
+                                            {zona.nombre_cuenca}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
 
 
 
 
+                        <Grid item xs={12} sm={4}>
+                            <Button
+                                color='success'
+                                variant='contained'
+                                startIcon={<SaveIcon />}
+                                // onClick={ }
+                            >
+                                Guardar
+                            </Button>
 
-
+                        </Grid>
 
 
 
