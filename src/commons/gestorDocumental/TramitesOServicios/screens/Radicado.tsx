@@ -149,6 +149,7 @@ export const Radicado: React.FC<IProps> = (props: IProps) => {
             variant="outlined"
             startIcon={<ArrowBackIcon />}
             onClick={() => {
+              window?.location.reload();
               props.set_restablecer(true);
             }}
           >

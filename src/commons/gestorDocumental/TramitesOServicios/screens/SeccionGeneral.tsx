@@ -85,7 +85,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   const [completed, setCompleted] = React.useState<{ [k: number]: boolean }>(
     {}
   );
-  const { archivos } = useContext(FormContextMetadatos);
+  const { archivos, set_archivos, setForm } = useContext(FormContextMetadatos);
   const totalSteps = () => {
     return steps.length;
   };
@@ -98,53 +98,12 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   const allStepsCompleted = () => {
     return completedSteps() === totalSteps();
   };
-  /* const handleComplete = () => {
-    if (activeStep === 0) {
-      set_crear_tramite(true);
-    }
-    if (activeStep === 1) {
-      set_cargar_anexos(true);
-    }
-    if (activeStep === 2) {
-      dispatch(radicar_opa(response_paso_1?.id_solicitud_tramite)).then(
-        (response: any) => {
-          if (response.success) {
-            set_radicado(response.data);
-            const newCompleted = completed;
-            newCompleted[activeStep] = true;
-            setCompleted(newCompleted);
-            const newActiveStep =
-              isLastStep() && !allStepsCompleted()
-                ? steps.findIndex((step, i) => !(i in completed))
-                : activeStep + 1;
-            setActiveStep(newActiveStep);
-          }
-        }
-      );
-    }
-    if (activeStep > 2) {
-      const newCompleted = completed;
-      newCompleted[activeStep] = true;
-      setCompleted(newCompleted);
-      const newActiveStep =
-        isLastStep() && !allStepsCompleted()
-          ? steps.findIndex((step, i) => !(i in completed))
-          : activeStep + 1;
-      setActiveStep(newActiveStep);
-    }
-  };*/
-
   const handleComplete = () => {
     if (activeStep === 0) {
-      /* if (!crear_tramite) { // Asegúrate de que crear_tramite esté definido
-      control_warning('Por favor, crea el trámite antes de continuar.');
-      return;
-    }*/
       set_crear_tramite(true);
     }
     if (activeStep === 1) {
       if (!archivos.length) {
-        // Asegúrate de que cargar_anexos esté definido
         Swal.fire({
           icon: 'warning',
           title: 'Atención',
@@ -154,7 +113,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
         return;
       }
       set_cargar_anexos(true);
-    };
+    }
     if (activeStep === 2) {
       if (!response_paso_1?.id_solicitud_tramite) {
         // Asegúrate de que id_solicitud_tramite esté definido
@@ -173,6 +132,8 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                 ? steps.findIndex((step, i) => !(i in completed))
                 : activeStep + 1;
             setActiveStep(newActiveStep);
+            set_archivos([]);
+            setForm({} as any);
           }
         }
       );
@@ -253,38 +214,6 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
     <>
       <Grid container sx={class_css}>
         <Title title="Trámite y servicios (OPAS)" />
-        {/*<Grid
-          container
-          spacing={2}
-          sx={{ my: '1rem', display: 'flex', justifyContent: 'center' }}
-        >
-          {props.usuario !== null && (
-            <Grid container xs={12} sm={12}>
-              <Grid container xs={12} sm={10.5}>
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  textAlign={'center'}
-                  sx={{ my: '1rem', display: 'flex', justifyContent: 'center' }}
-                >
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<QuestionAnswerIcon />}
-                    onClick={() => {
-                      navigate(
-                        `/app/gestor_documental/tramites/respuesta_requerimiento_opa/`
-                      );
-                    }}
-                  >
-                    Responder requerimientos OPAS
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          )}
-        </Grid>*/}
         <Grid container sx={class_css_back}>
           <Grid
             item
@@ -440,7 +369,13 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                     )}
                     {tramite_servicio === 'O' && (
                       <Box
-                        sx={{ display: 'flex', flexDirection: 'row', pt: 2, mt: '1.5rem', mb: '1.5rem'}}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          pt: 2,
+                          mt: '1.5rem',
+                          mb: '1.5rem',
+                        }}
                       >
                         <Box sx={{ flex: '1 1 auto' }} />
                         {activeStep !== 3 && (
@@ -451,7 +386,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                                 : 'outlined'
                             }
                             onClick={handleComplete}
-                            startIcon={<CallToActionIcon/>}
+                            startIcon={<CallToActionIcon />}
                           >
                             {completedSteps() === totalSteps() - 2
                               ? 'Radicar el trámite'

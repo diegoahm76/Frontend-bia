@@ -72,7 +72,7 @@ export const TramitesOServiciosScreen: React.FC = () => {
                   salir_expediente();
                 }}
               >
-                Salir
+                Salir del módulo
               </Button>
             </Stack>
           </Grid>
