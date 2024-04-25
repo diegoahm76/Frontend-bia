@@ -27,8 +27,8 @@ interface BuscarProps {
   is_modal_active: any;
   set_is_modal_active: any;
   set_position_tab: any;
-  selectedIds:any;
-  set_selectedIds:any;
+  selectedIds: any;
+  set_selectedIds: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_selectedIds, selectedIds, set_position_tab, is_modal_active, set_is_modal_active }) => {
@@ -72,7 +72,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
   // const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
 
   // const handle_click = (event: React.MouseEvent<unknown>, name: string): void => {
-    const handle_click = (event: React.MouseEvent<unknown>, name: string, id: string): void => {
+  const handle_click = (event: React.MouseEvent<unknown>, name: string, id: string): void => {
 
     const selected_index = selected.indexOf(name);
     const selectedIdIndex = selectedIds.indexOf(id);
@@ -114,7 +114,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
     set_selectedIds(newSelectedIds);
 
     set_selected(new_selected);
-    
+
   };
 
   const total_cop = new Intl.NumberFormat("es-ES", {
@@ -168,7 +168,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
       const newSelectedd = lista_obligaciones.map((obligacion) => obligacion.id);
       set_selectedIds(newSelectedd);
     }
-    
+
   };
 
 
@@ -185,11 +185,11 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
 
             onClick={(event) => handle_click(event, params.row.nombre, params.row.id)}
 
-            // onClick={(event) => {
-            //   handle_click(event, params.row.nombre);
-              
-              
-            //  }}
+          // onClick={(event) => {
+          //   handle_click(event, params.row.nombre);
+
+
+          //  }}
           />
         );
       },
@@ -228,7 +228,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
     {
       field: 'nro_resolucion',
       headerName: 'Nro Resolución',
-      width: 150,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -270,7 +270,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
     {
       field: 'dias_mora',
       headerName: 'Días Mora',
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -299,12 +299,10 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
   const handle_closee = (): void => {
     set_is_modal_active(false);
     set_lista_obligaciones([]);
-   };
+  };
   const handleClick = () => {
-    console.log( selectedIds);
+    console.log(selectedIds);
     console.log("2222222");
-    
- 
   };
   return (
     <>
@@ -337,7 +335,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
                     </p>
                     <Grid item >
                       <Button onClick={handleSelectAllClick} variant="contained" color="primary">
-                      Seleccionar  todo
+                        Seleccionar  todo
                       </Button>
                     </Grid>
 
@@ -402,7 +400,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
                     color='primary'
                     variant='contained'
                     sx={{ marginTop: '30px' }}
-                    startIcon={<RequestQuoteIcon />} 
+                    startIcon={<RequestQuoteIcon />}
                     disabled={selectedIds.length === 0}
                     onClick={() => {
                       set_position_tab('2');

@@ -47,6 +47,7 @@ export const LiquidacionScreen = (): JSX.Element => {
   const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
   const [edit_opcion, set_edit_opcion] = useState<boolean>(false);
+  const [borar, set_borar] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -162,7 +163,6 @@ export const LiquidacionScreen = (): JSX.Element => {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      // minWidth: 100,
       flex: 1,
       renderCell: (params) => {
         return (
@@ -176,6 +176,8 @@ export const LiquidacionScreen = (): JSX.Element => {
                   set_form_data((previousState) => ({ ...previousState, nombre_opcion_liquidacion: params.row.nombre, estado: params.row.estado }));
                   set_tab_name('Editar opciones');
                   set_position_tab('2');
+                  set_borar(params.row.usada)
+
                 }}
               >
                 <Avatar
@@ -201,6 +203,7 @@ export const LiquidacionScreen = (): JSX.Element => {
               <IconButton
                 onClick={() => {
                   clone_opcion_liquidacion(params.row.id);
+                  set_borar(params.row.usada)
                 }}
               >
                 <Avatar
@@ -222,29 +225,16 @@ export const LiquidacionScreen = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Eliminar">
               <IconButton
+                color="error"
                 onClick={() => {
                   delete_opcion_liquidacion(params.row.id);
                 }}
+                disabled={params.row.usada}
               >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <DeleteIcon
-                    sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px'
-                    }}
-                  />
-                </Avatar>
+                <DeleteIcon />
               </IconButton>
             </Tooltip>
           </>
@@ -294,20 +284,20 @@ export const LiquidacionScreen = (): JSX.Element => {
     fetchTiposCobro();
   }, []);
 
-  
+
 
   const tiposCobrof = `${formValues.tipo_cobro}`;  // Ejemplo de nombre que quieres filtrar
 
   const opcionesFiltradas = opciones_liquidaciones.filter(opcion =>
-      opcion.tipo_cobro === tiposCobrof
+    opcion.tipo_cobro === tiposCobrof
   );
 
-const handleClick = () => {
+  const handleClick = () => {
     console.log(opcionesFiltradas);
     console.log("2222222");
     console.log(formValues.tipo_cobro);
 
- 
+
   };
   return (
     <>
@@ -409,7 +399,7 @@ const handleClick = () => {
                       // rows={opciones_liquidaciones}
                       rows={opcionesFiltradas}
 
-                      
+
                       columns={opciones_liquidacion_columns}
                       pageSize={10}
                       rowsPerPageOptions={[10]}
@@ -417,7 +407,7 @@ const handleClick = () => {
                       getRowId={(row) => row.id}
                       components={{ Toolbar: GridToolbar }}
                     />
-                  </Grid> 
+                  </Grid>
                 </Grid>
 
 
@@ -427,6 +417,7 @@ const handleClick = () => {
               </TabPanel>
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <AgregarEditarOpciones
+                  borar={borar}
                   select_variable={select_variable}
                   opciones_liquidaciones={opciones_liquidaciones}
                   id_opcion_liquidacion={id_opcion_liquidacion}

@@ -86,7 +86,7 @@ export const ValorRegional: React.FC = () => {
     const columns = [
         // { field: 'id_sub_zona_hidrica', headerName: '   id_sub_zona_hidrica  ', width: 130, flex: 1 },
 
-        
+
         { field: 'nombre_zona_hidrica_macrocuenca', headerName: ' Zona hidrica macrocuenca  ', width: 130, flex: 1 },
         { field: 'nombre_zona_hidirca', headerName: ' Zona hidirca  ', width: 130, flex: 1 },
         { field: 'nombre_sub_zona_hidrica', headerName: ' Zub zona hidrica  ', width: 130, flex: 1 },
@@ -174,7 +174,7 @@ export const ValorRegional: React.FC = () => {
                         }}
                     >
                         <Grid item xs={12} sm={12}>
-                            <Title title="Ingresar valor regional    " />
+                            <Title title="Ingresar factor  regional    " />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -289,8 +289,9 @@ export const ValorRegional: React.FC = () => {
                                     color='success'
                                     variant='contained'
                                     fullWidth
+                                    disabled={!valor_regional}
                                     startIcon={<SaveIcon />}
-                                    onClick={actualizarValorRegional} // Agregar el evento onClick
+                                    onClick={actualizarValorRegional}
                                 >
                                     Guardar
                                 </Button>
@@ -362,11 +363,14 @@ export const ValorRegional: React.FC = () => {
 
                 <Grid item xs={12} sm={12} marginTop={2}>
                     <DataGrid
+
                         autoHeight
                         pageSize={10}
+                        // rows={data} 
                         columns={columns}
-                        rows={data}
-                        getRowId={(row) => row.codigo_rio}
+                        getRowId={(row) => row.codigo_rio} 
+                        rows={data.filter(config => config.nombre_zona_hidrica_macrocuenca === "Orinoco")}
+
                     />
                 </Grid>
             </Grid>
