@@ -124,14 +124,7 @@ const SolicitudViaje: React.FC = () => {
             const nombre_municipio = municipio_encontrado ? municipio_encontrado[1] : '';
 
             return {
-              estado_solicitud:
-                solicitud.estado_solicitud === 'ES'
-                  ? 'En espera'
-                  : solicitud.estado_solicitud === 'RE'
-                    ? 'Respondida'
-                    : solicitud.estado_solicitud === 'RC'
-                      ? 'Rechazada'
-                      : solicitud.estado_solicitud === 'FN' && 'Finalizada',
+              estado_solicitud: solicitud.estado_solicitud,
               fecha_solicitud: dayjs(solicitud.fecha_solicitud).format(
                 'DD/MM/YYYY'
               ),

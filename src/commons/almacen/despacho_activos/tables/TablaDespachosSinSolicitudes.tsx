@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 import { useAppDispatch } from '../../../../hooks';
-import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { ButtonGroup, Grid } from '@mui/material';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { control_error, control_success } from '../../../../helpers';
-import Swal from 'sweetalert2';
-import { interface_despachos_sin_solicitud, interface_solicitud_por_id, response_solicitud_por_id } from '../interfeces/types';
-import { get_resumen_sin_solicitud, put_anular_despacho_sin_solicitud } from '../thunks/despacho_solicitudes';
+import { interface_despachos_sin_solicitud, interface_resumen_despacho_sin_solicitud, response_resumen_despacho_sin_solicitud } from '../interfeces/types';
+import { get_resumen_sin_solicitud } from '../thunks/despacho_solicitudes';
 
 interface CustomColumn extends GridColDef {
   renderCell?: (params: { row: interface_despachos_sin_solicitud }) => React.ReactNode;
@@ -23,7 +20,7 @@ interface Props {
   set_accion: React.Dispatch<React.SetStateAction<string>>;
   data_despachos_sin_solicitud: interface_despachos_sin_solicitud[];
   loadding_tabla_solicitudes: boolean;
-  set_data_solicitud_ver_por_id: React.Dispatch<React.SetStateAction<interface_solicitud_por_id>>;
+  set_data_solicitud_ver_por_id_sin_solicitud: React.Dispatch<React.SetStateAction<interface_resumen_despacho_sin_solicitud>>;
   set_id_solicitud_activo: React.Dispatch<React.SetStateAction<number | null>>;
   set_position_tab: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -34,7 +31,7 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
   set_accion,
   data_despachos_sin_solicitud,
   loadding_tabla_solicitudes,
-  set_data_solicitud_ver_por_id,
+  set_data_solicitud_ver_por_id_sin_solicitud,
   set_id_solicitud_activo,
   set_position_tab,
 }) => {
@@ -46,22 +43,22 @@ const TablaDespachosSinSolicitudes: React.FC<Props> = ({
   }
 
   const ver_solicitud = (row: any) => {
-    set_accion('ver');
-    set_position_tab('4');
+    set_accion('ver_sin_solicitud');
+    set_position_tab('5');
 
     dispatch(get_resumen_sin_solicitud(row.id_despacho_activo))
-      .then((response: response_solicitud_por_id) => {
+      .then((response: response_resumen_despacho_sin_solicitud) => {
         if (Object.keys(response).length !== 0) {
           if (response.success) {
             control_success('Solicitud encontrada correctamente');
-            set_data_solicitud_ver_por_id(response.data);
+            set_data_solicitud_ver_por_id_sin_solicitud(response.data);
           } else {
             control_error('No se pudo encontrar la solicitud');
-            set_data_solicitud_ver_por_id({} as interface_solicitud_por_id);
+            set_data_solicitud_ver_por_id_sin_solicitud({} as interface_resumen_despacho_sin_solicitud);
           }
         } else {
           control_error('Hubo un error al intentar encontrar la solicitud');
-          set_data_solicitud_ver_por_id({} as interface_solicitud_por_id)
+          set_data_solicitud_ver_por_id_sin_solicitud({} as interface_resumen_despacho_sin_solicitud)
         }
       })
   }

@@ -37,7 +37,10 @@ const ResumenDespacho: React.FC<props> = ({
               <DatePicker
                 disabled
                 label="Fecha de despacho:"
-                value={!(dayjs(inputs_resumen_despacho.fecha_despacho)).isValid() && null}
+                value={!(dayjs(inputs_resumen_despacho.fecha_despacho)).isValid() ? 
+                  null :
+                  dayjs(inputs_resumen_despacho.fecha_despacho)
+                }
                 onChange={() => { }} // No hace nada
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
@@ -164,7 +167,10 @@ const ResumenDespacho: React.FC<props> = ({
             <DatePicker
               disabled
               label="Fecha de anulación:"
-              value={!(dayjs(inputs_resumen_despacho.fecha_anulacion)).isValid() && null}
+              value={!(dayjs(inputs_resumen_despacho.fecha_anulacion)).isValid() ?
+                null :
+                dayjs(inputs_resumen_despacho.fecha_anulacion)
+              }
               onChange={() => { }} // No hace nada
               renderInput={(params) => (
                 <TextField fullWidth size="small" {...params} />
