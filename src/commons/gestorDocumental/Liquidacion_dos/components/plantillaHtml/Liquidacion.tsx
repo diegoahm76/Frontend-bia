@@ -7,6 +7,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { ModalDocumentoLiquidacionDetalle } from '../ModalDocumento/ModalDocumentoLiquidacionDetalle';
 import { PreciosContext } from '../../context/PersonalContext';
 import { ElementoPQRS } from '../../interfaces/InterfacesLiquidacion';
+import { ModalNotificacionUsuario } from '../ModalDocumento/ModalNotificacionUsuario';
 
 interface props_data {
     data: ElementoPQRS
@@ -439,8 +440,9 @@ console.log("La suma de los valores es:", sumaValores);
                     <Grid item xs={3}>
                         <ModalDocumentoLiquidacionDetalle />
                     </Grid>
-
-
+                    <Grid item xs={3}>
+                    <ModalNotificacionUsuario/>
+                    </Grid>
                 </Grid>
 
 

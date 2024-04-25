@@ -83,7 +83,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
         <>
 
             <Button
-                style={{ marginTop: 15, backgroundColor: "green", color: "white" }}
+                style={{ marginTop: 15, backgroundColor: "green", color: "white",width: "95%" }}
                 color="success" // Cambia el color según si es una actualización o creación
                 fullWidth
                 variant="contained"

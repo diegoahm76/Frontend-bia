@@ -7,6 +7,9 @@ interface PrecioItem {
     valor: string;
     nombre: string;
     descripcion: string;
+    valorfuncionario?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
+    viaticos?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
+    dias?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
 }
 
 // Definición del tipo para el objeto de valores adicionales

@@ -6,6 +6,9 @@ export interface TipologiaDocumental {
   valor: string;
   nombre: string;
   descripcion: string;
+  valorfuncionario?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
+  viaticos?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
+  dias?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
 }
 
 export interface ElementoPQRS {
