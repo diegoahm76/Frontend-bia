@@ -2,7 +2,7 @@ import { Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEv
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import React, { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from 'react';
-import { interface_busqueda_persona_solicita, interface_obtener_solicitudes, response_obtener_solicitudes } from '../interfaces/types';
+import { interface_busqueda_persona_solicita, interface_obtener_solicitudes, interface_resumen_solicitud, response_obtener_solicitudes } from '../interfaces/types';
 import SearchIcon from '@mui/icons-material/Search';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
@@ -21,7 +21,7 @@ import ModalBusquedaPersonaSolicita from '../manners/ModalBusquedaPersonaSolicit
 interface props {
   accion: string;
   set_accion: Dispatch<SetStateAction<string>>;
-  set_data_resumen_solicitud: Dispatch<SetStateAction<any>>;
+  set_data_resumen_solicitud: Dispatch<SetStateAction<interface_resumen_solicitud>>;
 }
 
 
