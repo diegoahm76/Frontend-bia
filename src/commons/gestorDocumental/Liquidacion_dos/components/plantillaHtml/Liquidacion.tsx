@@ -9,6 +9,7 @@ import { ModalDocumentoLiquidacionDetalle } from '../ModalDocumento/ModalDocumen
 import { PreciosContext } from '../../context/PersonalContext';
 import { ElementoPQRS } from '../../interfaces/InterfacesLiquidacion';
 import { ModalNotificacionUsuario } from '../ModalDocumento/ModalNotificacionUsuario';
+import { NumerosLetras } from '../../utils/NumerosLetras';
 
 
 interface props_data {
@@ -18,8 +19,8 @@ interface props_data {
 
 export const LiquidacionPlantilla = ({ data }: props_data) => {
 
-    const { precios } = useContext(PreciosContext);
-
+    const { precios, usuario } = useContext(PreciosContext);
+    console.log(usuario)
     console.log(precios);
 
     const sumaValores = precios.reduce((total, item) => {
@@ -439,6 +440,11 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
                         </Button>
                     </Grid>
 
+                    
+                    <Grid item xs={12}>
+                    <NumerosLetras />
+                    </Grid>
+
                     <Grid item xs={3}>
                         <div style={{ position: "relative" }}>
                             <ModalDocumentoLiquidacionDetalle />
@@ -449,7 +455,7 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
                             <ModalNotificacionUsuario />
                         </div>
                     </Grid>
-                    </Grid>
+                </Grid>
                 <Grid item xs={12}>
                     <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
                 </Grid>

@@ -5,13 +5,6 @@ import { CorreoNotificacinSinPopos } from "./NotificacionContent/Notificacion";
 import EmailIcon from "@mui/icons-material/Email";
 
 
-export interface Persona {
-    id_persona: number;
-    primer_nombre: string;
-    segundo_nombre: string;
-    primer_apellido: string;
-    segundo_apellido: string;
-}
 export const ModalNotificacionUsuario = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
