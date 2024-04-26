@@ -48,7 +48,7 @@ export const BusquedaTramitesProyectos: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'nombre_proyecto',
-      headerName: 'NOMBRE DEL TRAMITE',
+      headerName: 'NOMBRE DEL TRAMITE (PROYECTO)',
       sortable: true,
       minWidth: 300,
       flex:2
@@ -65,7 +65,8 @@ export const BusquedaTramitesProyectos: React.FC = () => {
       headerName: 'NÚMERO AUTO INICIO',
       sortable: true,
       minWidth: 250,
-      flex:1
+      flex:1,
+      valueGetter: (params) => params.row.numero_auto_inicio ?? 'Sin datos',
     },
     {
       field: 'numero_expediente',
@@ -207,7 +208,7 @@ export const BusquedaTramitesProyectos: React.FC = () => {
         <Grid item xs={12} sm={6} md={4}>
           <TextField
             fullWidth
-            label="Nombre del Proyecto"
+            label="Nombre del Proyecto o Trámite"
             value={nombre_proyecto}
             onChange={handle_nombre_proyecto_change}
             size="small"
@@ -249,7 +250,7 @@ export const BusquedaTramitesProyectos: React.FC = () => {
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   fullWidth
-                  label="Nombre del Proyecto"
+                  label="Nombre del Proyecto o Trámite"
                   value={nombre_proyecto}
                   onChange={handle_nombre_proyecto_change}
                   size="small"
