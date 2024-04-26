@@ -101,8 +101,6 @@ export const AgregarMetaPgar: React.FC = () => {
             <Grid item xs={12}>
               <Title title="Registro de Metas PGAR" />
             </Grid>
-            {mode.editar ? (
-              <>
                 <Grid item xs={12} sm={6}>
                     <Controller
                         name="nombre_plan"
@@ -141,8 +139,6 @@ export const AgregarMetaPgar: React.FC = () => {
                     )}
                   />
                 </Grid>
-              </>
-            ) : null}
             <Grid item xs={12} sm={6}>
               <Controller
                 name="numero_meta_eje"

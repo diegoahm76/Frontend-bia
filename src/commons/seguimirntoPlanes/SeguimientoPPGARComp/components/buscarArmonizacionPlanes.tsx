@@ -17,7 +17,6 @@ import { Title } from '../../../../components/Title';
 import { DataContextPgar } from '../../SeguimientoPGAR/context/context';
 import { get_actividades_id_linea_base, get_actividades_id_producto, get_ejes_estrategicos_id_objetivo, get_indicadores_id_actividad, get_linea_base_id_meta, get_metas_id_eje, get_productos_id_proyectos, get_programas_id_eje_estrategico, get_proyectos_id_programa, post_seguimiento_pgar, put_seguimiento_pgar, search_actividad } from '../../SeguimientoPGAR/services/services';
 import { NumericFormatCustom } from '../../components/inputs/NumericInput';
-import { get_eje_estrategico_id } from '../../EjeEstrategico/services/services';
 import { LoadingButton } from '@mui/lab';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaArmonizacionPlanes: React.FC = () => {
@@ -32,6 +31,14 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
     ejesEstrategicosPAI: [],
     estado: '',
   });
+
+  const [form_indicador_data, set_form_indicador_data] = useState({
+    responsable: '',
+    medida: '',
+    entidades_resposables: '',
+    tipo_indicador: '',
+  });
+
   const [id_objetivo, set_id_objetivo] = useState<number | "">("");
   const [id_eje_estrategico_pgar, set_id_eje_estrategico_pgar] = useState<number | "">("");
   const [id_meta, set_id_meta] = useState<number | "">("");
@@ -52,9 +59,6 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
   const [actividades_pgar, set_actividades_pgar] = useState<any>([]);
   const [indicadores_pgar, set_indicadores_pgar] = useState<any>([]);
   const [anio_pgar, set_anio_pgar] = useState<any>("");
-
-  //TODO: Eliminar
-  const [ejes_estrategicos_pai, set_ejes_estrategicos_pai] = useState<any>([]);
 
   const [programas_pai, set_programas_pai] = useState<any>([]);
   const [proyectos_pai, set_proyectos_pai] = useState<any>([]);
@@ -85,7 +89,6 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
 
   const [show_plan_info, set_show_plan_info] = useState(false);
   const [show_registro_avance, set_show_registro_avance] = useState(false);
-  const [value, set_value] = useState('');
 
   const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
 
@@ -116,8 +119,12 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
         nombre_planPGAR: armonizacion_select.nombre_planPGAR,
         nombre_planPAI: armonizacion_select.nombre_planPAI,
         objetivoPGAR: armonizacion_select.objetivoPGAR,
+        ejesEstrategicosPAI: armonizacion_select.ejesEstrategicosPAI,
         estado: armonizacion_select.estado,
       });
+
+      if(!armonizacion_select.objetivoPGAR.length) control_error('No se encontraron objetivos para el plan PGAR relacionado');
+      if(!armonizacion_select.ejesEstrategicosPAI.length) control_error('No se encontraron ejes estratégicos para el plan PAI relacionado');
     }
   }
 
@@ -221,22 +228,31 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
   }
 
   useEffect(() => {
+    const current_indicador_pgar = indicadores_pgar.find((indicador: any) => indicador.id_indicador === id_indicador_pgar);
+    if(current_indicador_pgar){
+      let medida;
+      if (current_indicador_pgar.medida == 'NUM') {
+        medida = 'Número';
+      } else if (current_indicador_pgar.medida == 'POR') {
+        medida = 'Porcentaje';
+      } else {
+          medida = 'Tiempo';
+      }
+      set_form_indicador_data({
+        ...form_indicador_data,
+        responsable: current_indicador_pgar.nombre_unidad_org || '',
+        medida: medida,
+        entidades_resposables: current_indicador_pgar.entidad_responsable || '',
+        tipo_indicador: current_indicador_pgar.tipo_indicador == 'MAN' ? 'Mantenimiento' : 'Incremento',
+      });
+    }
+  }, [id_indicador_pgar]);
+
+  useEffect(() => {
     if(id_indicador_pai && id_indicador_pgar) {
       set_show_registro_avance(true);
     }
   }, [id_indicador_pai, id_indicador_pgar]);
-
-  //TODO: Eliminar
-  useEffect(() => {
-    if(form_values.id_planPAI){
-      get_eje_estrategico_id(form_values.id_planPAI).then((response) => {
-        set_ejes_estrategicos_pai(response)
-      }).catch((error) => {
-        set_ejes_estrategicos_pai([]);
-        control_error(error.response.data.detail || 'Algo paso, intente de nuevo');
-      });
-    }
-  }, [form_values.id_planPAI]);
 
   const handle_eje_estrategico_pai_change = (event: any) => {
     set_id_eje_estrategico_pai(event.target.value);
@@ -435,6 +451,23 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
     set_avance_meta_fisica_anual(value);
   }
 
+  useEffect(() => {
+    if(avance_meta_fisica_anual && id_indicador_pai){
+      const indicador_select = indicadores_pai.find((indicador: any) => indicador.id_indicador === id_indicador_pai);
+      if(indicador_select.medida === 'POR'){
+        const numero = parseFloat(avance_meta_fisica_anual);
+        (numero < 0 || numero > 100 || isNaN(numero))
+          ? set_error_avance_meta('El valor debe estar entre 0 y 100')
+          : set_error_avance_meta('');
+      }else{
+        const valid_number = /^[0-9]+(\.[0-9]+)?$/.test(avance_meta_fisica_anual);
+        (!valid_number)
+          ? set_error_avance_meta('Por favor, ingrese solo números')
+          : set_error_avance_meta('');
+      }
+    }
+  }, [avance_meta_fisica_anual])
+
   const limpiar_form_registro = (): void => {
     set_meta_fisica_anual("");
     set_avance_meta_fisica_anual("");
@@ -469,6 +502,19 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
     set_id_actividad_pai("");
     set_id_indicador_pai("");
     set_show_registro_avance(false);
+  }
+
+  const limpiar_form_values = (): void => {
+    set_form_values({
+      id_armonizar: '',
+      id_planPGAR: null,
+      id_planPAI: null,
+      nombre_planPGAR: '',
+      nombre_planPAI: '',
+      objetivoPGAR: [],
+      ejesEstrategicosPAI: [],
+      estado: '',
+    });
   }
 
   const validate_form = (): boolean => {
@@ -539,7 +585,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
         ano_PGAR: anio_pgar,
         id_armonizar: form_values.id_armonizar,
         id_indicador: id_indicador_pgar,
-        id_actividad: id_actividad_pgar,
+        id_actividad: id_actividad_pai,
         id_linea_base: id_linea_base,
         id_meta_eje: id_meta,
         id_eje_estrategico: id_eje_estrategico_pgar,
@@ -563,6 +609,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
           control_success('Se registro correctamente');
           limpiar_form_registro();
           limpiar_informacion_planes();
+          limpiar_form_values();
           set_show_plan_info(false);
           fetch_data_seguimiento_pgar();
         }).catch((error) => {
@@ -575,6 +622,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
           control_success('Se actualizo correctamente');
           limpiar_form_registro();
           limpiar_informacion_planes();
+          limpiar_form_values();
           set_show_plan_info(false);
           fetch_data_seguimiento_pgar();
         }).catch((error) => {
@@ -616,6 +664,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
       form_values.id_planPGAR = seguimiento_pgar.id_planPGAR;
       form_values.id_planPAI = seguimiento_pgar.id_planPAI;
       form_values.objetivoPGAR = seguimiento_pgar.objetivoPGAR;
+      form_values.ejesEstrategicosPAI = seguimiento_pgar.ejesEstrategicosPAI;
       form_values.nombre_planPGAR = seguimiento_pgar.nombre_planPGAR;
       form_values.nombre_planPAI = seguimiento_pgar.nombre_planPAI;
       set_id_objetivo(seguimiento_pgar.id_objetivo);
@@ -623,13 +672,13 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
       set_id_meta(seguimiento_pgar.id_meta_eje);
       set_id_linea_base(seguimiento_pgar.id_linea_base);
       set_anio_pgar(seguimiento_pgar.ano_PGAR);
-      set_id_actividad_pgar(seguimiento_pgar.id_actividad);
+      set_id_actividad_pgar(seguimiento_pgar.id_actividadPGAR);
       set_id_indicador_pgar(seguimiento_pgar.id_indicador);
-      set_id_eje_estrategico_pai(seguimiento_pgar.id_eje_estrategico_pai);
+      set_id_eje_estrategico_pai(seguimiento_pgar.id_eje_estrategicoPAI);
       set_id_programa(seguimiento_pgar.id_programa);
       set_id_proyecto(seguimiento_pgar.id_proyecto);
-      // set_id_producto(seguimiento_pgar.id_producto);
-      // set_id_actividad_pai(seguimiento_pgar.id_actividad);
+      set_id_producto(seguimiento_pgar.id_producto);
+      set_id_actividad_pai(seguimiento_pgar.id_actividad);
       set_id_indicador_pai(seguimiento_pgar.id_indicador_seg);
       set_meta_fisica_anual(seguimiento_pgar.meta_fisica_anual);
       set_avance_meta_fisica_anual(seguimiento_pgar.avance_fisico_anual);
@@ -864,6 +913,47 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                 <FormHelperText>Seleccione un Indicador</FormHelperText>
               </FormControl>
             </Grid>
+            {form_indicador_data.responsable !== '' && (
+              <>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    size='small'
+                    multiline
+                    fullWidth
+                    label="Responsable"
+                    value={form_indicador_data.responsable || ''}
+                    disabled
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    size='small'
+                    fullWidth
+                    label="Medida"
+                    value={form_indicador_data.medida || ''}
+                    disabled
+                />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    size='small'
+                    fullWidth
+                    label="Entidades Responsables"
+                    value={form_indicador_data.entidades_resposables || ''}
+                    disabled
+                />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    size='small'
+                    fullWidth
+                    label="Tipo indicador"
+                    value={form_indicador_data.tipo_indicador || ''}
+                    disabled
+                />
+                </Grid>
+              </>
+            )}
 
             <Grid item xs={12} my={1}>
               <Title title="Información Plan PAI" />
@@ -889,7 +979,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                     </MenuItem>
                   ))} */}
                   {/* TODO: Eliminar */}
-                  {ejes_estrategicos_pai.map((tipos: any) => (
+                  {form_values.ejesEstrategicosPAI.map((tipos: any) => (
                     <MenuItem key={tipos.id_eje_estrategico} value={tipos.id_eje_estrategico}>
                       {tipos.nombre}
                     </MenuItem>
@@ -1024,7 +1114,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
           </>
         )}
       </Grid>
-      {show_registro_avance && (
+      {!show_registro_avance && (
         <Grid
           container
           spacing={2}

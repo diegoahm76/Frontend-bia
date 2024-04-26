@@ -7,25 +7,63 @@ import { Title } from "../../../../../components/Title";
 import { api } from "../../../../../api/axios";
 import { DescriptionOutlined } from '@mui/icons-material';
 import { BuscadorPerzonasStiven } from "../../../WorkFlowPQRSDF/components/BuscadorPersonaPersonalizado/BuscadorPerzonas";
-import { Persona } from "../../../WorkFlowPQRSDF/interface/IwordFlow";
 import { PreciosContext } from "../../context/PersonalContext";
 import PaymentIcon from '@mui/icons-material/Payment';
+import { control_error, control_success } from "../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
+import { useNavigate } from "react-router-dom";
 
+export interface Persona {
+    id_persona: number;
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+}
 export const ModalDocumentoLiquidacionDetalle = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataChoise, setDataChoise] = useState<any[]>([]);
     const [form_tipo, set_tipo] = useState({ id_expediente: '' }); // Agregar estado para el formulario
     const [persona, set_persona] = useState<Persona | undefined>();
-    const { form, setForm } = useContext(PreciosContext);
+    console.log("persona", persona);
+    const { form, setForm, precios } = useContext(PreciosContext);
+    const navigate = useNavigate();
 
 
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-    const iniciarpago=()=>{
-        console.log("iniciar pago")
-    }
+
+
+
+
+    const descripcionConcatenada = precios.map(precio => `Servicio de ${precio.descripcion}`).join(',');
+
+
+    const iniciarpago = async () => {
+        try {
+            const url = '/recaudo/pagos/iniciar/';
+            const postData = {
+                "descripcion_pago": descripcionConcatenada,
+                "email": "zona@prueba.com.co",
+                "id_persona_pago": 1,
+                "id_cliente": "123456789",
+                "tipo_id": 1,
+                "nombre_cliente": "Cormacarena",
+                "apellido_cliente": "Pruebas",
+                "telefono_cliente": "123456789",
+                "id_liquidacion": 16
+            };
+            const res = await api.post(url, postData);
+            const numeroConsulta = res.data && res.data.data;
+            window.location.href =numeroConsulta?.redirect_url;
+            control_success("se creo correctamente");
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
+        }
+    };
+
 
     const fetchDatosChoises = async (): Promise<void> => {
         try {
@@ -47,40 +85,29 @@ export const ModalDocumentoLiquidacionDetalle = () => {
     };
 
 
-    useEffect(() => {
-        fetchDatosChoises();
-    }, []);
 
-
-    const {
-
-        primer_nombre,
-        segundo_nombre,
-        primer_apellido,
-        segundo_apellido,
-    } = persona ?? {};
+    const { primer_nombre, segundo_nombre, primer_apellido, segundo_apellido } = persona ?? {};
     const nombres_concatenados = `${primer_nombre ?? ''} ${segundo_nombre ?? ''}`;
     const apellidos_concatenados = `${primer_apellido ?? ''} ${segundo_apellido ?? ''}`;
 
 
-
     const handleResult = async (persona?: Persona): Promise<void> => {
         if (persona) {
-            // Haz lo que necesites con la información de la persona
             set_persona(persona);
-
         } else {
-            // Manejar el caso en el que la persona es undefined
             console.log("No se seleccionó ninguna persona.");
         }
     };
 
+    useEffect(() => {
+        fetchDatosChoises();
+    }, []);
 
     return (
         <>
 
             <Button
-                style={{ marginTop: 15, backgroundColor: "green", color: "white" }}
+                style={{ marginTop: 15, backgroundColor: "green", color: "white", width: "95%" }}
                 color="success" // Cambia el color según si es una actualización o creación
                 fullWidth
                 variant="contained"
@@ -127,7 +154,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                                 PaperProps: {
                                                     style: {
                                                         maxHeight: 48 * 4.5, // Ajusta la altura máxima del menú desplegable
-                                                        width: 250, // Ajusta el ancho del menú desplegable
+                                                        width: 100, // Ajusta el ancho del menú desplegable
                                                     },
                                                 },
                                             }}
@@ -239,9 +266,9 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                             <Grid container alignItems="center" justifyContent="center">
                                 <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
                                     <Button
-                                        startIcon={<ClearIcon />}
+                                        startIcon={<PaymentIcon />}
                                         fullWidth
-                                        style={{ width: "90%", marginTop: 15, backgroundColor: "green ", color: "white" }}
+                                        style={{ width: "90%", marginTop: 15, marginLeft: 8, backgroundColor: "green ", color: "white" }}
                                         variant="contained"
                                         color="error"
                                         onClick={iniciarpago}
@@ -256,8 +283,8 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
                                 <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
                                     <Button
-                                        startIcon={<PaymentIcon />}
                                         fullWidth
+                                        startIcon={<ClearIcon />}
                                         style={{ width: "90%", marginTop: 15, backgroundColor: "red", color: "white" }}
                                         variant="contained"
                                         color="error"

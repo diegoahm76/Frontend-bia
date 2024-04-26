@@ -45,6 +45,9 @@ export const AgregarArmonizacionPlanes: React.FC = () => {
     useEffect(() => {
       fetch_data_planes_pai();
       fetch_data_planes_pgar();
+    }, [])
+
+    useEffect(() => {
       if (mode.crear) {
         limpiar_formulario_armonizacion();
       }
@@ -101,7 +104,7 @@ export const AgregarArmonizacionPlanes: React.FC = () => {
               <Controller
                 name="id_planPGAR"
                 control={control_armonizacion}
-                defaultValue={null}
+                defaultValue=""
                 rules={{ required: true }}
                 render={({ field }) => (
                   <TextField
@@ -119,9 +122,6 @@ export const AgregarArmonizacionPlanes: React.FC = () => {
                         ? 'Es obligatorio elegir un plan PGAR'
                         : 'Elija un plan PGAR'
                     }
-                    InputLabelProps={{
-                      shrink: true
-                    }}
                   >
                     {data_planes_pgar.map((option) => (
                       <MenuItem key={option.id_plan} value={option.id_plan}>
@@ -136,7 +136,7 @@ export const AgregarArmonizacionPlanes: React.FC = () => {
               <Controller
                 name="id_planPAI"
                 control={control_armonizacion}
-                defaultValue={null}
+                defaultValue=""
                 rules={{ required: true }}
                 render={({ field }) => (
                   <TextField
@@ -154,9 +154,6 @@ export const AgregarArmonizacionPlanes: React.FC = () => {
                         ? 'Es obligatorio elegir un plan PAI'
                         : 'Elija un plan PAI'
                     }
-                    InputLabelProps={{
-                      shrink: true
-                    }}
                   >
                     {data_planes_pai.map((option) => (
                       <MenuItem key={option.id_plan} value={option.id_plan}>

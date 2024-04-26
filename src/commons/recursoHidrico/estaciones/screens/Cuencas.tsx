@@ -63,10 +63,10 @@ interface Rio {
   id_cuenca: number;
   nombre_macrocuenca: string;
   nombre_zona_hidrica: string;
-  nombre_sub_zona_hidrica: string;
   codigo_cuenca: string;
   nombre_cuenca: string;
   id_sub_zona_hidrica: number;
+  nombre_sub_zona_hidrica: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -173,6 +173,9 @@ export const Cuencas: React.FC = () => {
 
   const [selectedrio, setSelectedrio] = useState<number | null>(null); // El tipo de dato puede variar según tus necesidades
 
+
+
+  
   const [rios, setrios] = useState<Rio[]>([]);
   const fetchrios = async (): Promise<void> => {
     try {

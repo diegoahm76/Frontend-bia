@@ -335,7 +335,6 @@ export const UserProviderPgar = ({
             ...item,
           })
         );
-        console.log(data_planes_pai)
         set_data_planes_pai(data_planes_pai);
       }
     } catch (error: any) {
@@ -355,7 +354,6 @@ export const UserProviderPgar = ({
             ...item,
           })
         );
-        console.log(data_planes_pgar)
 
         set_data_planes_pgar(data_planes_pgar);
       }
