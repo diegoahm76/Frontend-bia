@@ -6,6 +6,8 @@ import { TramitesOServiciosScreen } from '../screens/TramitesOServiciosScreen';
 import { ResReqOpaRouter } from '../respuestaRequerimientoOpa/router/ResReqOpaRouter';
 import { FormProviderMetadatos } from '../../TramitesServicios/context/MetadatosContext';
 import { MainScreenTiposTramites } from '../modules/TiposTramites/MainScreenTiposTramites';
+import { PermisosMenoresScreen } from '../modules/PermisosMenores/TramitesOServiciosScreen';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TramitesServiciosRouter = (): ReactElement => {
@@ -28,7 +30,7 @@ export const TramitesServiciosRouter = (): ReactElement => {
             element={<MainScreenTiposTramites />}
           />
 
-          <Route path="permisos_menores/*" element={<>Permisos menores </>} />
+          <Route path="permisos_menores/*" element={<PermisosMenoresScreen/>} />
           <Route path="/*" element={<Page404 />} />
         </Routes>
       </UserProvider>
