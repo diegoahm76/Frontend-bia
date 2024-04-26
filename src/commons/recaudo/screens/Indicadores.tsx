@@ -6,30 +6,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import { useSelector } from 'react-redux';
-import { api } from '../../../api/axios';
-import { DataGrid } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import { styled } from '@mui/material/styles';
-import SaveIcon from '@mui/icons-material/Save';
-import { Title } from '../../../components/Title';
-import { AuthSlice } from '../../auth/interfaces';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { control_error } from '../alertas/store/thunks/alertas';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { BuscadorPersona } from '../../../components/BuscadorPersona';
-import { control_success } from '../../recursoHidrico/requets/Request';
-import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
-import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, SelectChangeEvent, Button, Box, Typography } from '@mui/material';
-import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
-import ReactApexChart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
-import Paper from '@mui/material/Paper';
 import { Knob } from 'primereact/knob';
+import { api } from '../../../api/axios';
+import { useEffect, useState } from 'react';
+import ReactApexChart from "react-apexcharts";
+import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
+import { CrearIndicador } from './CrearIndicador';
+import { Title } from '../../../components/Title';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { Avatar, Chip, IconButton, Tooltip } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { control_error } from '../alertas/store/thunks/alertas';
+import { control_success } from '../../recursoHidrico/requets/Request';
+import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
+import { FormControl, Grid, TextField, InputLabel, MenuItem, Select, Button, Chip } from '@mui/material';
 
 
 interface IndicadorValor {
@@ -62,7 +52,11 @@ interface Serie {
     name: any;
     data: any[];
 };
+interface indicador {
+    nombre: any,
+    id: any,
 
+};
 
 interface Options {
     chart: { type: any; height: any; };
@@ -85,7 +79,7 @@ interface FormData {
     responsable_creacion: string;
     tipo_indicador: string;
     formulario: string;
-
+    interpretacion: string;
     indicadorvalor_set: IndicadorValor[];
 }
 export const Indicadores: React.FC = () => {
@@ -106,18 +100,12 @@ export const Indicadores: React.FC = () => {
         responsable_creacion: "",
         tipo_indicador: "",
         formulario: "",
-        indicadorvalor_set: []
+        indicadorvalor_set: [],
+        interpretacion:","
     };
 
-
     const [formData, setFormData] = useState(initialFormData);
-    // const handleInputChange = (event: any) => {
-    //     const { name, value } = event.target;
-    //     setFormData((prevData) => ({
-    //         ...prevData,
-    //         [name]: value,
-    //     }));
-    // };
+
 
     const handleInputChange = (event: any) => {
         const { name, value } = event.target;
@@ -167,7 +155,7 @@ export const Indicadores: React.FC = () => {
             const url = `/recaudo/configuracion_baisca/indicadores/delete/${id_indicador}/`;
             const response = await api.delete(url);
             fetchHistorico();
-            control_error("eliminado exitosamente ");
+            control_success("Eliminado exitosamente ");
 
         } catch (error: any) {
             console.error("Error al eliminar la configuración", error);
@@ -207,8 +195,33 @@ export const Indicadores: React.FC = () => {
             // 2024/1/
             const res = await api.get(url);
             const HistoricoData: Historico[] = res.data?.data || [];
-            setHistorico(HistoricoData);
-            control_success("Datos encontrados")
+
+            if (HistoricoData.length === 0) {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    proceso: "Gestión jurídica",
+                    nombre_indicador: "Comportamiento del recaudo porcentaje",
+                    frecuencia_medicion: "",
+                    formula_indicador: "(%ambiental recaudado / % ambiental proyectado) *100", 
+                    dependencia_grupo_regional: "Grupo Rentas",
+                    objetivo_indicador: "Llevar un registro y seguimiento del valor recaudado, según lo proyectado",
+                    unidad_medicion_reporte: "porcentaje",
+                    descripcion_variable_1: "Es el % del  impuesto predial recaudado por los municipios que pagan a CORMACARENA",
+                    descripcion_variable_2: "Es el %  proyectado de lo que se estima recaudar",
+                    origen_datos: "Informes de área financiera",
+                    responsable_creacion: "Coordinador grupo Rentas",
+                    tipo_indicador: "Efectividad", 
+                    indicadorvalor_set: [],
+                    interpretacion: "",
+                }));
+
+            } else {
+                setHistorico(HistoricoData);   // Guardar los datos históricos si no están vacíos
+                control_success("Datos encontrados");
+            }
+
+            // setHistorico(HistoricoData);
+            // control_success("Datos encontrados")
 
         } catch (error: any) {
             // console.error(error);
@@ -228,6 +241,8 @@ export const Indicadores: React.FC = () => {
 
     useEffect(() => {
         updateget()
+
+
     }, []);
 
     // useEffect(() => {
@@ -304,13 +319,13 @@ export const Indicadores: React.FC = () => {
                 if (logro === 100) {
                     color = 'blue';
                     label = 'Meta 100%';
-                } else if (logro === 75) {
+                } else if (logro < 75) {
                     color = 'red';
                     label = 'Insatisfactorio 75%';
                 } else if (logro >= 75 && logro <= 79) {
                     color = 'yellow';
                     label = 'Aceptable 75-79%';
-                } else if (logro >= 80) {
+                } else if (logro > 79) {
                     color = 'green';
                     label = 'Satisfactorio >=80%';
                 }
@@ -623,8 +638,23 @@ export const Indicadores: React.FC = () => {
         }
     })();
 
+
+    const [is_modal_active, set_is_buscar] = useState<boolean>(false);
+
+    const handle_open_buscar = (): void => {
+        set_is_buscar(true);
+    };
+    const [indicador, setindicador] = useState<indicador[]>([]);
+
     return (
         <>
+
+            <CrearIndicador
+                is_modal_active={is_modal_active}
+                set_is_modal_active={set_is_buscar}
+                indicador={indicador}
+                setindicador={setindicador}
+            />
             {/* <div>
                 <button onClick={handleClick}>consola  </button>
             </div> */}
@@ -673,8 +703,26 @@ export const Indicadores: React.FC = () => {
                     </Grid>
                 </Grid>
 
+                <Grid container
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center"
+                    alignItems="center" item xs={12} sm={12} >
 
-                <Grid item xs={12} sm={3}>
+                    <Grid item  >
+                        <Button
+                            color="success"
+                            startIcon={<AddIcon />}
+                            variant="contained"
+                            onClick={handle_open_buscar}
+                        >
+                            Agregar indicador
+                        </Button>
+                    </Grid>
+
+
+                </Grid>
+                {/* <Grid item xs={12} sm={3}>
                     <FormControl fullWidth size="small">
                         <InputLabel id="opcion-select-label">Formulario</InputLabel>
                         <Select
@@ -691,10 +739,38 @@ export const Indicadores: React.FC = () => {
                             <MenuItem value="4">PORCENTAJE  AMBIENTAL</MenuItem>
                         </Select>
                     </FormControl>
+                </Grid> */}
+                <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="opcion-select-label">Formulario</InputLabel>
+                        <Select
+                            fullWidth
+                            size="small"
+                            name="formulario"
+                            label="Formulario"
+                            value={formData.formulario}
+                            onChange={handleInputChange}
+                        >
+                            {indicador.map((item) => (
+                                <MenuItem key={item.id} value={item.id}>
+                                    {item.nombre}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Grid>
-
-
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        label="Responsable de  creación"
+                        helperText='Responsable de creación'
+                        size="small"
+                        fullWidth
+                        name="responsable_creacion"
+                        value={formData.responsable_creacion}
+                        onChange={handleInputChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
                     <TextField
 
                         label="Nombre indicador"
@@ -736,12 +812,12 @@ export const Indicadores: React.FC = () => {
                         >
                             <MenuItem value="Direccionamiento estratégico">Direccionamiento estratégico  </MenuItem>
                             <MenuItem value="Planeción estratégica">Planeción estratégica </MenuItem>
-                            <MenuItem value=" Gestión ambiental"> Gestión ambiental</MenuItem>
+                            <MenuItem value="Gestión ambiental"> Gestión ambiental</MenuItem>
                             <MenuItem value="Planificación y ordenamiento ambienta territorial"> Planificación y ordenamiento ambienta territorial</MenuItem>
                             <MenuItem value="Autoridad ambiental"> Autoridad ambiental</MenuItem>
-                            <MenuItem value="Gestión humana ">  Gestión humana  </MenuItem>
-                            <MenuItem value=" Gestión logística"> Gestión logística   </MenuItem>
-                            <MenuItem value="Gestión jurídica "> Gestión jurídica </MenuItem>
+                            <MenuItem value="Gestión humana">  Gestión humana  </MenuItem>
+                            <MenuItem value="Gestión logística"> Gestión logística   </MenuItem>
+                            <MenuItem value="Gestión jurídica"> Gestión jurídica </MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -781,7 +857,7 @@ export const Indicadores: React.FC = () => {
 
 
 
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={3}>
                     <TextField
 
                         label="Formula indicador"
@@ -792,7 +868,7 @@ export const Indicadores: React.FC = () => {
                         value={formData.formula_indicador}
                         onChange={handleInputChange}
                     />
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12} sm={3}>
                     <TextField
@@ -855,17 +931,7 @@ export const Indicadores: React.FC = () => {
                 </Grid>
 
 
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Responsable de  creación"
-                        helperText='Responsable de creación'
-                        size="small"
-                        fullWidth
-                        name="responsable_creacion"
-                        value={formData.responsable_creacion}
-                        onChange={handleInputChange}
-                    />
-                </Grid>
+
 
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -932,17 +998,17 @@ export const Indicadores: React.FC = () => {
                     <TextField
                         variant="outlined"
                         size="small"
-                        required 
+                        required
                         label="Interpretación"
                         rows={3}
                         InputLabelProps={{
                             shrink: true,
                         }}
                         multiline
-                        fullWidth 
-                        name="descripcion"
-                    //   value={formData.descripcion}
-                    //   onChange={handleInputChange}
+                        fullWidth
+                        name="interpretacion"
+                        value={formData.interpretacion}
+                        onChange={handleInputChange}
                     />
                 </Grid>
 
@@ -1009,8 +1075,8 @@ export const Indicadores: React.FC = () => {
                                 onChange={handleVariableChange}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
-                            <Button startIcon={<AddIcon />} variant="contained" onClick={updateFormData}>Agregar</Button>
+                        <Grid item  >
+                            <Button fullWidth startIcon={<AddIcon />} variant="contained" onClick={updateFormData}>Agregar</Button>
                         </Grid>
 
                     </>
@@ -1020,11 +1086,12 @@ export const Indicadores: React.FC = () => {
 
 
 
-                <Grid item >
+                <Grid item   >
                     <Button
                         color="success"
                         variant="contained"
                         startIcon={<SaveIcon />}
+                        fullWidth
                         onClick={() => {
                             if (tipo_id) {
                                 handleSubmiteditar();
@@ -1041,24 +1108,25 @@ export const Indicadores: React.FC = () => {
 
 
 
-                {/* {indicadorvalor && (
-                    <>
-                       <Grid item >
-                    <Button
-                        color="error"
-                        variant="contained"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => {
-                            handleEliminarConfiguracion()
-                        }}
-                    >
-                        Elimian indicador
-                    </Button>
 
-                </Grid>
+                <>
+                    <Grid item   >
+                        <Button
+                            fullWidth
+                            color="error"
+                            variant="contained"
+                            startIcon={<DeleteIcon />}
+                            onClick={() => {
+                                handleEliminarConfiguracion()
+                            }}
+                        >
+                            Eliminar datos
+                        </Button>
 
-                    </>
-                )} */}
+                    </Grid>
+
+                </>
+
 
             </Grid>
 

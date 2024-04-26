@@ -353,7 +353,7 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <TextField
-                                variant="outlined"
+                                // variant="outlined"
                                 size="small"
                                 label="Código río"
                                 fullWidth

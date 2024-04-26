@@ -35,6 +35,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import SearchOutlined from '@mui/icons-material/SearchOutlined';
 import { Geolocalizacion } from './geolocalizacionScreen';
 import { DEFAULT_BETA_URL, DEFAULT_PROD_URL } from '../../../../api/axios';
+import InsightsIcon from '@mui/icons-material/Insights';
 interface IProps {
   usuario: any;
   crear_tramite: any;
@@ -444,7 +445,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
 
   return (
     <>
-      <Grid item container spacing={2}>
+      <Grid item container spacing={2} sx={{mt:'1.8rem'}}>
         <Grid item xs={12} sm={6}>
           <FormControl required size="small" fullWidth>
             <InputLabel>Tipo de trámite</InputLabel>
@@ -557,6 +558,11 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
               <TextField
                 size="small"
                 label="Direccion"
+                InputLabelProps={
+                  {
+                    shrink: true,
+                  } as any
+                }
                 required
                 disabled
                 fullWidth
@@ -569,15 +575,15 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 </FormHelperText>
               )}
             </Grid>
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid item xs={12} sm={2} md={3}>
               <Button
                 variant="contained"
-                startIcon={<SearchOutlined />}
+                startIcon={<InsightsIcon />}
                 onClick={() => {
                   set_abrir_modal(true);
                 }}
               >
-                Generar
+                Generador de direcciones
               </Button>
             </Grid>
             <Grid item xs={12} sm={2}>
@@ -588,6 +594,11 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 label="Descripción"
                 type="text"
                 variant="outlined"
+                InputLabelProps={
+                  {
+                    shrink: true,
+                  } as any
+                }
                 value={descripcion}
                 onChange={cambio_descripcion}
               />
@@ -600,6 +611,11 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 label="Coordenadas X"
                 type="number"
                 variant="outlined"
+                InputLabelProps={
+                  {
+                    shrink: true,
+                  } as any
+                }
                 value={coordenada_x}
                 onChange={cambio_coordenada_x}
               />
@@ -612,17 +628,22 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
                 label="Coordenadas Y"
                 variant="outlined"
                 type="number"
+                InputLabelProps={
+                  {
+                    shrink: true,
+                  } as any
+                }
                 value={coordenada_y}
                 onChange={cambio_coordenada_y}
               />
             </Grid>
-            <Grid item xs={12} sm={1}>
+           {/* <Grid item xs={12} sm={2}>
               <Tooltip title="Ubicar en mapa" placement="bottom">
                 <IconButton color="primary">
                   <LocationOnOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            </Grid>
+            </Grid>*/}
             <Grid item xs={12} sm={12}>
               <Geolocalizacion
                 coordenada_x={coordenada_x}

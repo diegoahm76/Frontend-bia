@@ -47,6 +47,24 @@ import { control_error, control_success } from "../../../../helpers";
 interface Rows {
   id: number;
   nombre: string;
+  variable: any;
+}
+interface TipoCobro {
+  id_tipo_cobro: number;
+  nombre_tipo_cobro: string;
+  tipo_renta_asociado: any;
+}
+interface TipoRenta {
+  id_tipo_renta: number;
+  nombre_tipo_renta: string;
+  tipo_cobro_asociado: any;
+  tipo_renta_asociado: any
+}
+interface ConfiguracionBasica {
+  id_variables: any;
+  nombre: any;
+  tipo_cobro: any;
+  tipo_renta: any;
 }
 interface Variable {
   id_valores_variables: number;
@@ -57,6 +75,7 @@ interface Variable {
   valor: any;
 }
 interface IProps {
+  borar: any;
   select_variable: any;
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
@@ -70,6 +89,7 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarEditarOpciones = ({
+  borar,
   select_variable,
   opciones_liquidaciones,
   id_opcion_liquidacion,
@@ -80,7 +100,6 @@ export const AgregarEditarOpciones = ({
   set_form_data
 
 }: IProps): JSX.Element => {
-  const [row, set_row] = useState<Rows[]>([]);
   const [variables, set_variables] = useState<string[]>([]);
   const [configNotify, setConfigNotify] = useState({ open: false, message: '' });
   const [open, setOpen] = useState(false);
@@ -90,18 +109,27 @@ export const AgregarEditarOpciones = ({
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
   const primaryWorkspace = useRef<any>();
 
+  const [row, set_row] = useState<Rows[]>([]);
+  const [selectedVariables, setSelectedVariables] = useState<{ [key: string]: string | null }>(
+    variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {})
+  );
+
   useEffect(() => {
     if (id_opcion_liquidacion) {
-      const opcion_liquidacion: OpcionLiquidacion = opciones_liquidaciones.filter(opc_liquidacion => opc_liquidacion.id === Number(id_opcion_liquidacion))[0];
-      const new_rows: Rows[] = Object.keys(opcion_liquidacion?.variables).map((key, index) => ({
-        id: index,
-        nombre: key,
-      }));
-      set_row(new_rows);
-      set_variables(Object.keys(opcion_liquidacion.variables));
-      Blockly.serialization.workspaces.load(JSON.parse(opcion_liquidacion.bloques), primaryWorkspace.current);
+      const opcion_liquidacion: OpcionLiquidacion | undefined = opciones_liquidaciones.find(opc => opc.id === Number(id_opcion_liquidacion));
+      if (opcion_liquidacion) {
+        const new_rows: Rows[] | any = Object.keys(opcion_liquidacion.variables).map((key, index) => ({
+          id: index,
+          nombre: key,
+          valor: opcion_liquidacion.variables[key],  // Asigna el valor existente o una cadena vacía si no hay valor
+        }));
+        set_row(new_rows);
+        set_variables(Object.keys(opcion_liquidacion.variables));
+        Blockly.serialization.workspaces.load(JSON.parse(opcion_liquidacion.bloques), primaryWorkspace.current);
+      }
     }
-  }, [id_opcion_liquidacion]);
+  }, [id_opcion_liquidacion, opciones_liquidaciones]);  // Asegura incluir todas las dependencias necesarias
+
 
   const handle_id_opcion_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
     set_id_opcion_liquidacion(event.target.value);
@@ -123,6 +151,17 @@ export const AgregarEditarOpciones = ({
     set_form_data({ ...form_data, [name]: value });
   };
 
+  const [formValues, setFormValues] = useState<ConfiguracionBasica>({
+    id_variables: "",
+    nombre: "",
+    tipo_cobro: "",
+    tipo_renta: "",
+  });
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
   const generateCode = () => {
     // //  console.log('')("primaryWorkspace.current:", primaryWorkspace.current)
     // const code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
@@ -193,6 +232,7 @@ export const AgregarEditarOpciones = ({
       nombre: form_data.variable.replace(/\s/g, '_'),
       tipo: 'Tipo nuevo',
       opciones: '',
+      variable: ""
     };
 
     set_row([...row, newRow]);
@@ -269,8 +309,8 @@ export const AgregarEditarOpciones = ({
           ...acumulador,
           [nombreVariable]: selectedVariables[nombreVariable],
         }), {}),
-
-
+        tipo_renta: formValues.tipo_renta,
+        tipo_cobro: formValues.tipo_cobro,
         bloques: JSON.stringify(json),
       })
         .then((response) => {
@@ -294,6 +334,8 @@ export const AgregarEditarOpciones = ({
           ...acumulador,
           [nombreVariable]: selectedVariables[nombreVariable],
         }), {}),
+        tipo_renta: formValues.tipo_renta,
+        tipo_cobro: formValues.tipo_cobro,
 
         bloques: JSON.stringify(json),
       })
@@ -327,16 +369,31 @@ export const AgregarEditarOpciones = ({
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200
+      flex: 1,
     },
 
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
+
           <IconButton
+            color="error"
+            onClick={() => {
+              const updatedRow = row.filter((item) => item.id !== params.id);
+              set_row(updatedRow);
+              removeVariable(params.row.nombre)
+            }}
+            disabled={borar}
+          >
+            <RemoveCircleOutlinedIcon />
+          </IconButton>
+
+
+          {/* <IconButton
+
             onClick={() => {
               const updatedRow = row.filter((item) => item.id !== params.id);
               set_row(updatedRow);
@@ -357,57 +414,72 @@ export const AgregarEditarOpciones = ({
                 sx={{ width: '18px', height: '18px' }}
               />
             </Avatar>
+          </IconButton> */}
+
+          <IconButton
+            color="primary"
+            onClick={() => {
+              handleOpenModal(params.row.nombre),
+                handleSwitchChange(params.id, !activeSwitches[params.id])
+              setIsModalOpen(true)
+            }}
+            aria-label="Ver"
+          >
+
+            <PlaylistAddCheckIcon />
           </IconButton>
 
-          <Switch
-            color="primary"
-            checked={!!activeSwitches[params.id]}
-            onChange={(event) => { handleOpenModal(params.row.nombre), handleSwitchChange(params.id, event.target.checked) }}
-            aria-label="Ver"
-          />
+
         </>
       ),
     },
     {
-      field: 'valor variable',
-      headerName: 'valor variable',
-      width: 400,
-      renderCell: (params) => (
-        <>
-          {activeSwitches[params.id] ?
-            <>
-              <Grid container spacing={2} >
-                <Grid item xs={12} sm={7}>
-                  <FormControl size="small" fullWidth>
-                    <InputLabel>Valor variable</InputLabel>
-                    <Select
-                      value={searchTerm}
-                      onChange={(event) => {
-                        handleSelectChange(event);
-                        setSearchTerm(event.target.value as string);
-                      }}
-                      label="Valor variable"
-                    >
-                      {valores.map((variable) => (
-                        <MenuItem key={variable.id_valores_variables} value={variable.valor}>
-                          {variable.nombre_variable}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item >
-                  <Button color='success'
-                    variant='contained'
-                    startIcon={<SaveIcon />}
-                    onClick={handleSave}>
-                  </Button>
-                </Grid>
-              </Grid>
-            </> : ''}
-        </>
-      ),
+      field: 'valor',
+      headerName: 'Valor',
+      flex: 1,
+      editable: false,  // Puedes hacer esta columna editable si lo deseas
     },
+
+    // {
+    //   field: 'valor variable',
+    //   headerName: 'valor variable',
+    //   width: 400,
+    //   renderCell: (params) => (
+    //     <>
+    //       {activeSwitches[params.id] ?
+    //         <>
+    //           <Grid container spacing={2} >
+    //             <Grid item xs={12} sm={7}>
+    //               <FormControl size="small" fullWidth>
+    //                 <InputLabel>Valor variable</InputLabel>
+    //                 <Select
+    //                   value={searchTerm}
+    //                   onChange={(event) => {
+    //                     handleSelectChange(event);
+    //                     setSearchTerm(event.target.value as string);
+    //                   }}
+    //                   label="Valor variable"
+    //                 >
+    //                   {valores.map((variable) => (
+    //                     <MenuItem key={variable.id_valores_variables} value={variable.valor}>
+    //                       {variable.nombre_variable}
+    //                     </MenuItem>
+    //                   ))}
+    //                 </Select>
+    //               </FormControl>
+    //             </Grid>
+    //             <Grid item >
+    //               <Button color='success'
+    //                 variant='contained'
+    //                 startIcon={<SaveIcon />}
+    //                 onClick={handleSave}>
+    //               </Button>
+    //             </Grid>
+    //           </Grid>
+    //         </> : ''}
+    //     </>
+    //   ),
+    // },
 
   ];
 
@@ -418,20 +490,47 @@ export const AgregarEditarOpciones = ({
 
   const [selectedVariableNames, setSelectedVariableNames] = useState<string[]>([]);
 
+  // const handleSave = () => {
+  //   const updatedRows = row.map(r => {
+  //     if (r.nombre === selectedVariableName) {  // Comprueba si el nombre de la variable coincide
+  //       return { ...r, valor: selectedVariables[selectedVariableName] };  // Actualiza el valor de la variable
+  //     }
+  //     return r;
+  //   });
+  //   set_row(updatedRows);  // Establece el estado actualizado
+
+  //   setActiveSwitches({ [0]: false });
+  //   setSelectedVariableNames(prev => {
+  //     if (!prev.includes(selectedVariableName)) {
+  //       return [...prev, selectedVariableName];
+  //     }
+  //     return prev;
+  //   });
+  //   control_success("Variable asignada ");
+  //   setIsModalOpen(false);
+  // };
   const handleSave = () => {
-    setActiveSwitches({ [0]: false });
-
-    setSelectedVariableNames((prevSelected) => {
-      // Agrega la variable seleccionada si no está ya en la lista
-      if (!prevSelected.includes(selectedVariableName)) {
-        return [...prevSelected, selectedVariableName];
+    const updatedRows = row.map(r => {
+      // Comprueba si el nombre de la variable coincide y si existe un valor seleccionado para actualizar
+      if (r.nombre === selectedVariableName && selectedVariables[selectedVariableName] !== undefined) {
+        return { ...r, valor: selectedVariables[selectedVariableName] };  // Actualiza el valor de la variable
       }
-      return prevSelected;
+      return r;  // Devuelve la fila sin cambios si no es la variable seleccionada o no hay valor nuevo definido
     });
-    control_success("Variable asignada ");
-    setIsModalOpen(false);
 
+    set_row(updatedRows);  // Establece el estado actualizado de las filas
+
+    setActiveSwitches({ [0]: false });
+    setSelectedVariableNames(prev => {
+      if (!prev.includes(selectedVariableName)) {
+        return [...prev, selectedVariableName];
+      }
+      return prev;
+    });
+    control_success("Variable asignada");
+    setIsModalOpen(false);
   };
+
 
   const handleOpenModal = (variableName: any) => {
     setSelectedVariableName(variableName); // Asumiendo que tienes una función para esto
@@ -442,9 +541,7 @@ export const AgregarEditarOpciones = ({
   const [valores, setvalores] = useState<Variable[]>([]);
   const [selectedVariable, setSelectedVariable] = useState<any>(null);
 
-  const [selectedVariables, setSelectedVariables] = useState<{ [key: string]: string | null }>(
-    variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {})
-  );
+
 
   useEffect(() => {
     setSelectedVariables(variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {}));
@@ -476,8 +573,12 @@ export const AgregarEditarOpciones = ({
   }, []);
 
   const handleClick = () => {
-    console.log(selectedVariables);
+    console.log( borar);
     console.log("2222222");
+ 
+
+
+
   };
 
   const [is_buscar, set_is_buscar] = useState<boolean>(true);
@@ -493,20 +594,51 @@ export const AgregarEditarOpciones = ({
   };
   const [searchTerm, setSearchTerm] = useState<string>('');
 
+  const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
+
+  const fetchTiposRenta = async () => {
+    try {
+      const res = await api.get("/recaudo/configuracion_baisca/tiporenta/get/");
+      setTiposRenta(res.data.data);
+    } catch (error) {
+      console.error("Error al obtener los tipos de renta", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTiposRenta();
+  }, []);
+
+
+  const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
+
+  const fetchTiposCobro = async () => {
+    try {
+      const res = await api.get("/recaudo/configuracion_baisca/tipoCobro/get/");
+      setTiposCobro(res.data.data);
+    } catch (error) {
+      console.error("Error al obtener los tipos de renta", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTiposCobro();
+  }, []);
+
+
+
   return (
     <>
-      {/* <div>
-        <button onClick={handleClick}>consola  </button>
-      </div> */}
+
       <>
 
         {/* <Button color='success'
-                  variant='contained'
-                  onClick={handleClick}>CONSOLE </Button> */}
+          variant='contained'
+          onClick={handleClick}>CONSOLE </Button> */}
+
         {/* INICIO TEST */}
 
         <Grid container spacing={2} sx={{ my: '10px' }}>
-
 
           <Dialog
             keepMounted
@@ -537,17 +669,14 @@ export const AgregarEditarOpciones = ({
               {/* <h2>{selectedVariableName}</h2> */}
               <Grid item xs={12} sm={12}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel>Selecciona opción variable</InputLabel>
+                  <InputLabel>Valor variable</InputLabel>
                   <Select
-                    // value={selectedVariable}
                     value={searchTerm}
-
-                    // onChange={handleSelectChange}
                     onChange={(event) => {
                       handleSelectChange(event);
                       setSearchTerm(event.target.value as string);
                     }}
-                    label="Selecciona opción variable"
+                    label="Valor variable"
                   >
                     {valores.map((variable) => (
                       <MenuItem key={variable.id_valores_variables} value={variable.valor}>
@@ -569,7 +698,68 @@ export const AgregarEditarOpciones = ({
           </Dialog>
 
 
-          <Grid item xs={12} sm={4.5}>
+
+
+
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              select
+              required
+              fullWidth
+              size="small"
+              variant="outlined"
+              label="Tipo de renta"
+              name="tipo_renta"
+              onChange={handleInputChange}
+              value={formValues.tipo_renta}
+            >
+              {tiposRenta.map((tipo) => (
+                <MenuItem key={tipo.id_tipo_renta} value={tipo.id_tipo_renta}>
+                  {tipo.nombre_tipo_renta}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              select
+              required
+              fullWidth
+              size="small"
+              variant="outlined"
+              label="Tipo cobro"
+              name="tipo_cobro"
+              onChange={handleInputChange}
+              value={formValues.tipo_cobro}
+            >
+              {tiposCobro
+                .filter(tipoCobro => tipoCobro.tipo_renta_asociado === formValues.tipo_renta) // Filtrado basado en la selección de tipo_renta
+                .map((tipoCobro) => (
+                  <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
+                    {tipoCobro.nombre_tipo_cobro}
+                  </MenuItem>
+                ))}
+            </TextField>
+          </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          {/* <Grid item xs={12} sm={4.5}>
             <FormControl size="small" fullWidth>
               <InputLabel>Selecciona opción liquidación</InputLabel>
               <Select
@@ -592,11 +782,11 @@ export const AgregarEditarOpciones = ({
                 ))}
               </Select>
             </FormControl>
-          </Grid>
+          </Grid> */}
 
 
 
-          <Grid item xs={12} sm={4.5}>
+          <Grid item xs={12} sm={4}>
             <TextField
               label="Ingresa una variable"
               name="variable"
@@ -611,7 +801,8 @@ export const AgregarEditarOpciones = ({
           </Grid>
           <Grid item xs={12} sm={3}>
             <Button
-              disabled={!form_data.variable}
+            
+              disabled={!form_data.variable || borar }
               variant="contained" color="primary" onClick={handleSubmit}
               startIcon={<Add />}
               fullWidth

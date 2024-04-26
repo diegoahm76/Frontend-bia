@@ -109,8 +109,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     return (
 
         <>
-            <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl"
-            >
+            <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl" >
                 {/* <button onClick={() => //  console.log('')(tiposCobro)}>Mostrar zonahidrica en la consola</button> */}
                 <Grid container
                     item

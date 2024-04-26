@@ -205,9 +205,6 @@ const AutorizacionSolicitudActivos = () => {
                     data_form_resumen_solicitud={data_form_resumen_solicitud}
                     inputs_resumen_despacho={inputs_resumen_despacho}
                     data_articulos_despachados={data_articulos_despachados}
-                    set_inputs_resumen_despacho={set_inputs_resumen_despacho}
-                    set_data_articulos_despachados={set_data_articulos_despachados}
-                    data_solicitud_ver_por_id={data_solicitud_ver_por_id}
                   />
                 </Grid>
               </TabPanel>

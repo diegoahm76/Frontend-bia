@@ -8,7 +8,7 @@ interface props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const TitleDivider: FC<props> = ({ title }) => {
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} mt={2}>
       <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
         <Chip label={title} size="small" />
       </Divider>

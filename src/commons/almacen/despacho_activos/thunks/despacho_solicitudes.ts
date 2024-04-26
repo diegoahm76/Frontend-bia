@@ -288,10 +288,10 @@ export const post_crear_despacho_con_solicitud: any = (form_data: any) => {
   };
 };
 
-export const put_anular_despacho_sin_solicitud: any = (id_despacho: string) => {
+export const get_resumen_sin_solicitud: any = (id_solicitud_activo : string) => {
   return async () => {
     try {
-      const { data } = await api.put(`/almacen/activos/anular-solicitud-despacho-sin-solicitud/${id_despacho}/`);
+      const { data } = await api.get(`/almacen/activos/resumen-despacho-activos/${id_solicitud_activo}/`);
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -299,10 +299,10 @@ export const put_anular_despacho_sin_solicitud: any = (id_despacho: string) => {
   };
 };
 
-export const get_resumen_sin_solicitud: any = (id_solicitud_activo : string) => {
+export const get_resumen_con_solicitud: any = (id_solicitud_activo : string) => {
   return async () => {
     try {
-      const { data } = await api.get(`/almacen/activos/resumen-despacho-activos/${id_solicitud_activo}/`);
+      const { data } = await api.get(`/almacen/activos/resumen-solicitud-activos/${id_solicitud_activo}/`);
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -325,6 +325,28 @@ export const put_anular_despacho_con_solicitud: any = (id_solicitud_activo: stri
   return async () => {
     try {
       const { data } = await api.put(`/almacen/activos/anular-solicitud-despacho/${id_solicitud_activo}/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_rechazar_despacho_con_solicitud: any = (id_solicitud_activo: string, form_data: { justificacion_rechazo_almacen: string}) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/cancelar-solicitud-despacho/${id_solicitud_activo}/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_anular_despacho_sin_solicitud: any = (id_solicitud_activo: string, form_data: { justificacion_anulacion: string}) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/anular-solicitud-despacho-sin-solicitud/${id_solicitud_activo}/`, form_data);
       return data;
     } catch (error: any) {
       return error as AxiosError;

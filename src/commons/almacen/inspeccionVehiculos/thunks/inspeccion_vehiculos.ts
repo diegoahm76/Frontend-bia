@@ -49,3 +49,64 @@ export const enviar_inspeccion_vehiculo: any = (form_data: create_inspeccion_veh
     }
   };
 };
+
+export const get_obtener_viajes_asociados: any = (id_vehiculo_conductor: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/vehiculos/viajes-asociados-vehiculo/${id_vehiculo_conductor}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_resumen_solicitud: any = (id_solicitud_viaje: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/vehiculos/obtener-informacion-viajes/${id_solicitud_viaje}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_tipos_documentos: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/listas/tipo-documento/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}
+
+export const get_obtener_persona_solicita: any = (
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  primer_apellido: string,
+  razon_social: string,
+  nombre_comercial: string,
+  ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/personas/get-operarios-filters/?tipo_documento=${
+        tipo_documento
+      }&numero_documento=${
+        numero_documento
+      }&primer_nombre=${
+        primer_nombre
+      }&primer_apellido=${
+        primer_apellido
+      }&razon_social=${
+        razon_social
+      }&nombre_comercial=${nombre_comercial}`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
