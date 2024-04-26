@@ -1,0 +1,30 @@
+.title{
+  margin: 3rem auto;
+}
+
+.subtitle{
+  margin: auto;
+}
+
+.anio-container{
+  border: 1px solid #252525;
+  border-radius: 1rem;
+  padding: inherit;
+  background-color: #fcfbf6;
+  box-shadow: 0.125rem 0.125rem 0.5rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.semicirlce{
+  margin-bottom: 1rem;
+}
+
+.text-chart{
+  text-align: center;
+  margin-bottom: -.5rem;
+  font-weight: bold;
+}
+
+.anio-text-chart{
+  margin: auto;
+  font-size: 2rem;
+}

@@ -476,6 +476,25 @@ export const AgregarPrograma: React.FC = () => {
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
               <Button
+                variant="contained"
+                color="error"
+                disabled={false}
+                onClick={() => {
+                  limpiar_formulario_programa();
+                  dispatch(
+                    set_current_mode_planes({
+                      ver: true,
+                      crear: false,
+                      editar: false,
+                    })
+                  );
+                }}
+              >
+                Cerrar
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
                 variant="outlined"
                 color="warning"
                 disabled={false}

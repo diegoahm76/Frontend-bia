@@ -176,44 +176,40 @@ export const ListarActividades: React.FC = () => {
         }}
         // justifyContent="flex-end"
       >
-        {rows_actividad.length > 0 && (
-          <>
-            <Grid item xs={12}>
-              <Title title="Listado de actividades" />
-              {/* <Typography>Listado de actividades</Typography> */}
-            </Grid>
-            <Grid item xs={12}>
-              <Box sx={{ width: '100%' }}>
-                <ButtonGroup
-                  style={{
-                    margin: 7,
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  {download_xls({ nurseries: rows_actividad, columns })}
-                  {download_pdf({
-                    nurseries: rows_actividad,
-                    columns,
-                    title: 'Listado de actividades',
-                  })}
-                </ButtonGroup>
-                <DataGrid
-                  density="compact"
-                  autoHeight
-                  rows={rows_actividad}
-                  columns={columns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
-                  getRowId={(row) => uuidv4()}
-                  getRowHeight={() => 'auto'}
-                />
-              </Box>
-            </Grid>
-          </>
-        )}
+        <Grid item xs={12}>
+          <Title title="Listado de actividades" />
+          {/* <Typography>Listado de actividades</Typography> */}
+        </Grid>
+        <Grid item xs={12}>
+          <Box sx={{ width: '100%' }}>
+            <ButtonGroup
+              style={{
+                margin: 7,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {download_xls({ nurseries: rows_actividad, columns })}
+              {download_pdf({
+                nurseries: rows_actividad,
+                columns,
+                title: 'Listado de actividades',
+              })}
+            </ButtonGroup>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={rows_actividad}
+              columns={columns}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              getRowId={(row) => uuidv4()}
+              getRowHeight={() => 'auto'}
+            />
+          </Box>
+        </Grid>
 
-        <Grid container justifyContent="flex-end">
+        <Grid container my={1} justifyContent="flex-end">
           <Grid item>
             <Button
               variant="outlined"

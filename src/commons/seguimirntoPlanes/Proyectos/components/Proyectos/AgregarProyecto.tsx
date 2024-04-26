@@ -412,7 +412,26 @@ export const AgregarProyecto: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
-          <Grid container spacing={2} justifyContent="flex-end">
+          <Grid container spacing={2} my={1} justifyContent="flex-end">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="error"
+                disabled={false}
+                onClick={() => {
+                  limpiar_formulario_proyecto();
+                  dispatch(
+                    set_current_mode_planes({
+                      ver: true,
+                      crear: false,
+                      editar: false,
+                    })
+                  );
+                }}
+              >
+                Cerrar
+              </Button>
+            </Grid>
             <Grid item>
               <Button
                 variant="outlined"

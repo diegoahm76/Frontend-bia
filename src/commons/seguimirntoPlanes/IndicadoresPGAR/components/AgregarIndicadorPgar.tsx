@@ -46,6 +46,9 @@ export const AgregarIndicadorPgar: React.FC = () => {
     useEffect(() => {
       fetch_data_mediciones();
       fetch_data_unidades();
+    }, []);
+
+    useEffect(() => {
       if (mode.crear) {
         limpiar_formulario_indicador();
       }
@@ -247,7 +250,7 @@ export const AgregarIndicadorPgar: React.FC = () => {
             <Controller
               name="id_medicion"
               control={control_indicador}
-              defaultValue={null}
+              defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
                 <TextField
@@ -264,9 +267,6 @@ export const AgregarIndicadorPgar: React.FC = () => {
                       ? 'Es obligatorio ingresar un tipo de medición'
                       : 'Ingrese un tipo de medición'
                   }
-                  InputLabelProps={{
-                    shrink: true
-                  }}
                 >
                   {data_mediciones.map((option) => (
                     <MenuItem key={option.id_medicion} value={option.id_medicion}>
@@ -343,7 +343,7 @@ export const AgregarIndicadorPgar: React.FC = () => {
             <Controller
               name="id_unidad_organizacional"
               control={control_indicador}
-              defaultValue={null}
+              defaultValue=""
               rules={{ required: true }}
               render={({ field }) => (
                 <TextField
@@ -360,9 +360,6 @@ export const AgregarIndicadorPgar: React.FC = () => {
                       ? 'Es obligatorio ingresar una unidad organizacional'
                       : 'Ingrese una unidad organizacional'
                   }
-                  InputLabelProps={{
-                    shrink: true
-                  }}
                 >
                   {data_unidades_organizacionales.map((option) => (
                     <MenuItem key={option.id_unidad_organizacional} value={option.id_unidad_organizacional}>

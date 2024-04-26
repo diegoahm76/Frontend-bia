@@ -24,8 +24,8 @@ export const useArmonizacionHook = (): any => {
         nombre_planPAI: '',
         estado: false,
         fecha_creacion: '',
-        id_planPGAR: null,
-        id_planPAI: null,
+        id_planPGAR: '',
+        id_planPAI: '',
       },
     });
 
@@ -39,8 +39,8 @@ export const useArmonizacionHook = (): any => {
         nombre_planPGAR: '',
         nombre_planPAI: '',
         estado: false,
-        id_planPGAR: null,
-        id_planPAI: null,
+        id_planPGAR: '',
+        id_planPAI: '',
       });
     };
 
