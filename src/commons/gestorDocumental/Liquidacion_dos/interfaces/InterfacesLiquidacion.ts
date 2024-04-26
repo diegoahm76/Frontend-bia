@@ -38,6 +38,9 @@ export interface DatosConsulta {
     Ntelefono: string;
     TIdentificacion: string;
     Zon: string;
+    Nombre: string;
+    subject:string; 
+    
   }
   
   export const DatosConsulta: DatosConsulta = {
@@ -50,5 +53,7 @@ export interface DatosConsulta {
     NIdenticion: "",
     Ntelefono: "",
     TIdentificacion: "",
-    Zon: ""
+    Zon: "",
+    Nombre: "",
+    subject:""
   }

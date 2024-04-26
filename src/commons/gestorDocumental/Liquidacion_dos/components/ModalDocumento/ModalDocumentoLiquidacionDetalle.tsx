@@ -9,6 +9,8 @@ import { DescriptionOutlined } from '@mui/icons-material';
 import { BuscadorPerzonasStiven } from "../../../WorkFlowPQRSDF/components/BuscadorPersonaPersonalizado/BuscadorPerzonas";
 import { PreciosContext } from "../../context/PersonalContext";
 import PaymentIcon from '@mui/icons-material/Payment';
+import { control_error, control_success } from "../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
+import { useNavigate } from "react-router-dom";
 
 export interface Persona {
     id_persona: number;
@@ -24,16 +26,44 @@ export const ModalDocumentoLiquidacionDetalle = () => {
     const [form_tipo, set_tipo] = useState({ id_expediente: '' }); // Agregar estado para el formulario
     const [persona, set_persona] = useState<Persona | undefined>();
     console.log("persona", persona);
-    const { form, setForm } = useContext(PreciosContext);
+    const { form, setForm, precios } = useContext(PreciosContext);
+    const navigate = useNavigate();
 
 
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    const iniciarpago = () => {
-        console.log("iniciar pago")
-    }
+
+
+
+    const descripcionConcatenada = precios.map(precio => `Servicio de ${precio.descripcion}`).join(',');
+
+
+    const iniciarpago = async () => {
+        try {
+            const url = '/recaudo/pagos/iniciar/';
+            const postData = {
+                "descripcion_pago": descripcionConcatenada,
+                "email": "zona@prueba.com.co",
+                "id_persona_pago": 1,
+                "id_cliente": "123456789",
+                "tipo_id": 1,
+                "nombre_cliente": "Cormacarena",
+                "apellido_cliente": "Pruebas",
+                "telefono_cliente": "123456789",
+                "id_liquidacion": 16
+            };
+            const res = await api.post(url, postData);
+            const numeroConsulta = res.data && res.data.data;
+            window.location.href =numeroConsulta?.redirect_url;
+            control_success("se creo correctamente");
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+
+        }
+    };
+
 
     const fetchDatosChoises = async (): Promise<void> => {
         try {
@@ -56,15 +86,9 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
 
 
-    const {
-        primer_nombre,
-        segundo_nombre,
-        primer_apellido,
-        segundo_apellido,
-    } = persona ?? {};
+    const { primer_nombre, segundo_nombre, primer_apellido, segundo_apellido } = persona ?? {};
     const nombres_concatenados = `${primer_nombre ?? ''} ${segundo_nombre ?? ''}`;
     const apellidos_concatenados = `${primer_apellido ?? ''} ${segundo_apellido ?? ''}`;
-
 
 
     const handleResult = async (persona?: Persona): Promise<void> => {
@@ -83,7 +107,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
         <>
 
             <Button
-                style={{ marginTop: 15, backgroundColor: "green", color: "white",width: "95%" }}
+                style={{ marginTop: 15, backgroundColor: "green", color: "white", width: "95%" }}
                 color="success" // Cambia el color según si es una actualización o creación
                 fullWidth
                 variant="contained"
@@ -147,13 +171,13 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
                             </Grid>
 
-                     
-                           <Grid container justifyContent="center">
+
+                            <Grid container justifyContent="center">
                                 <Grid item xs={12} >
                                     <Grid container alignItems="center" justifyContent="center">
                                         <Title title="Beneficiario" />
                                     </Grid>
-                                </Grid> 
+                                </Grid>
 
 
                                 <Grid container justifyContent="center" style={{ marginTop: 15 }}>
@@ -228,7 +252,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                 </Grid>
 
 
-                            </Grid> 
+                            </Grid>
 
 
 

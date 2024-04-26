@@ -22,37 +22,12 @@ export const BotonesFinales = () => {
 
   const { precios,setPrecios } = useContext(PreciosContext);
 
-  const descripcionConcatenada = precios.map(precio => `Servicio de ${precio.descripcion} de nivel ${precio.nivel} con valor de ${precio.valor}`).join(', ');
 
 
 
 
 
 
-
-  const crear_configuracion_expediente_simple = async () => {
-    try {
-      const url = '/recaudo/pagos/iniciar/';
-      const postData = {
-        "descripcion_pago": descripcionConcatenada,
-        "email": "zona@prueba.com.co",
-        "id_persona_pago": 1,
-        "id_cliente": "123456789",
-        "tipo_id": 1,
-        "nombre_cliente": "Cormacarena",
-        "apellido_cliente": "Pruebas",
-        "telefono_cliente": "123456789",
-        "id_liquidacion": 16
-      };
-      const res = await api.post(url, postData);
-      const numeroConsulta = res.data && res.data.data;
-      console.log(numeroConsulta);
-      control_success("se creo correctamente");
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-
-    }
-  };
 
   const LimpiarTabla=()=>{
     setPrecios([]);
@@ -74,18 +49,7 @@ export const BotonesFinales = () => {
     >
 
 
-      {/* <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-        <Button
-          startIcon={<SaveIcon />}
-          style={{ width: "90%", marginTop: 15 }}
-          color="success" // Cambia el color según si es una actualización o creación
-          fullWidth
-          onClick={crear_configuracion_expediente_simple}
-          variant="contained"
-        >
-          Iniciar Pago
-        </Button>
-      </Grid> */}
+     
 
       <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
         <Button

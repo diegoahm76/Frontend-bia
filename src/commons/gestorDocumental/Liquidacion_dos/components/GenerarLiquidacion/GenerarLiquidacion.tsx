@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Grid, InputLabel, MenuItem, Select, Switch, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Grid,  Switch, TextField, Typography } from "@mui/material";
+import { useEffect, useState ,useContext} from "react";
 import { DetalleLiquidacion } from "../DetalleLiquidacion/DetalleLiquidacion";
 import { api } from "../../../../../api/axios";
 import { useSelector } from "react-redux";
@@ -9,6 +9,10 @@ import type { AuthSlice } from '../../../../auth/interfaces/authModels';
 import { Title } from "../../../../../components/Title";
 import { useAppSelector } from "../../../../../hooks/hooks";
 import { DatosConsulta, ElementoPQRS } from "../../interfaces/InterfacesLiquidacion";
+import { PreciosContext } from "../../context/PersonalContext";
+
+
+
 
 
 
@@ -19,8 +23,7 @@ export const GenerarLiquidacion = () => {
   const [datosConsulta, setDatosConsulta] = useState<DatosConsulta>(DatosConsulta);
   const { userinfo: { id_persona, email, telefono_celular, numero_documento } } = useSelector((state: AuthSlice) => state.auth);
   const [data_liquidacion, set_data_liquidacion] = useState<ElementoPQRS | null>(null);
-  const [mostrarMasInfo, setMostrarMasInfo] = useState(false);
-
+  const {usuario, setUsuario } = useContext(PreciosContext);
 
   const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
     (state) =>
@@ -32,17 +35,24 @@ export const GenerarLiquidacion = () => {
     try {
       const url = `/tramites/general/get/?radicado=${currentElementPqrsdComplementoTramitesYotros?.radicado}`;
       const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
-      const data_consulta = res.data.data;
+      const data_consulta:DatosConsulta = res.data.data;
       setDatosConsulta(data_consulta);
-    } catch (error) {
+      console.log(data_consulta)
+      setUsuario({
+        ...usuario,
+        nombres: data_consulta.Nombre,
+        apellidos: "",
+        identificacion: data_consulta.NIdenticion,
+        telefono: data_consulta.Ntelefono,
+        email: data_consulta.Correo,
+        nombreCategoria: data_consulta.subject
+    });
+      } catch (error) {
       console.error(error);
     }
   };
 
   
-  const handleSwitchChange = () => {
-    setMostrarMasInfo(!mostrarMasInfo);
-  };
 
 
   useEffect(() => {
@@ -64,9 +74,6 @@ export const GenerarLiquidacion = () => {
         <Grid item xs={12}>
           <Title title="Solicitante" />
         </Grid>
-
-
-        {/* <button onClick={fetch_datos_choises}> xxxxx</button> */}
 
         <Grid item xs={12} sm={4}>
           <TextField
@@ -99,9 +106,6 @@ export const GenerarLiquidacion = () => {
             disabled
           />
         </Grid>
-
-
-
 
 
 
@@ -238,26 +242,11 @@ export const GenerarLiquidacion = () => {
         </Grid>
 
 
-        <Grid container justifyContent="center">
-          <Grid item xs={4} style={{ marginTop: 15 }}>
-            <Grid container alignItems="center" justifyContent="center">
-
-              <Switch
-                checked={mostrarMasInfo}
-                onChange={handleSwitchChange}
-                color={mostrarMasInfo ? "success" : "info"}
-                name="mostrarMasInfo"
-                inputProps={{ 'aria-label': 'toggle mostrar más información' }}
-              />
-              {mostrarMasInfo ? "Mostrar menos información" : "Mostrar más información"}
-
-            </Grid>
-          </Grid>
-        </Grid>
+     
 
 
 
-        {mostrarMasInfo && (<>
+   
           <Grid item xs={12} sm={4}>
             <TextField
               label="Tipo Identificación"
@@ -357,9 +346,6 @@ export const GenerarLiquidacion = () => {
               disabled
             />
           </Grid>
-
-
-        </>)}
 
       </Grid >
       <DetalleLiquidacion />

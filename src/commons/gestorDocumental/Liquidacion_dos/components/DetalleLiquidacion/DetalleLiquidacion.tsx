@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState} from 'react';
 import { PreciosContext } from "../../context/PersonalContext";
 import { DataGrid, GridCellParams } from "@mui/x-data-grid";
 import SaveIcon from '@mui/icons-material/Save';
@@ -8,6 +8,7 @@ import { Title } from "../../../../../components/Title";
 import { api } from "../../../../../api/axios";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TipologiaDocumental } from "../../interfaces/InterfacesLiquidacion";
+import CalculateIcon from '@mui/icons-material/Calculate';
 
 export interface OpcionLiquidacion {
   id: number;
@@ -27,6 +28,12 @@ export const DetalleLiquidacion = () => {
   const [descripcion, setDescripcion] = useState('');
   const [valor, setValor] = useState('');
   const [data_choise, set_data_choise] = useState<TipologiaDocumental[]>([]);
+  const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
+  const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
+  // const [resultado, setResultado] = useState(null);
+  const [variableValues, setVariableValues] = useState<{ [key: string]: string }>({});
+  const [valor_total, set_valor_total] = useState();
+
 
 
   const fetch_datos_choises = async (): Promise<void> => {
@@ -51,6 +58,7 @@ export const DetalleLiquidacion = () => {
     setValor(event.target.value);
   };
 
+
   const handleAddPrice = () => {
     if (descripcion && valor) {
       const selectedItem = data_choise.find(item => item.nombre === descripcion);
@@ -61,6 +69,8 @@ export const DetalleLiquidacion = () => {
           valor: valor.toString(),
           nombre: selectedItem.nombre,
           nivel: selectedItem.nivel,
+          valorfuncionario_mes: valor,
+          resultado: valor_total !== null ? valor_total : 'xx', // Asigna el valor de valor_total al campo 'resultado'
           ...variableValues // Incluir campos adicionales de variableValues
         };
         setPrecios([...precios, nuevoPrecio]);
@@ -72,6 +82,7 @@ export const DetalleLiquidacion = () => {
       }
     }
   };
+
 
 
   const handleRemovePrice = (indexToRemove: any) => {
@@ -90,11 +101,11 @@ export const DetalleLiquidacion = () => {
 
 
   const columns = [
-    { field: 'id', headerName: 'ID', flex: 1 },
-    { field: 'descripcion', headerName: 'Descripción', flex: 1 },
+    // { field: 'id', headerName: 'ID', flex: 1 },
+    { field: 'descripcion', headerName: 'Funcionario', flex: 1 },
     { field: 'valor', headerName: 'Valor', flex: 1 },
     { field: 'nivel', headerName: 'Nivel', flex: 1 },
-    { field: 'valorfuncionario', headerName: 'Valor Funcionario', flex: 1 },
+    { field: 'valorfuncionario_mes', headerName: 'Valor Funcionario', flex: 1 },
     { field: 'viaticos', headerName: 'Viáticos', flex: 1 },
     { field: 'dias', headerName: 'Días', flex: 1 },
     { field: 'resultado', headerName: 'Resultado', flex: 1 }, // Nueva columna para el resultado
@@ -110,37 +121,21 @@ export const DetalleLiquidacion = () => {
     },
   ];
 
-  
+
   const rows = precios.map((precio, index) => ({
     id: index + 1,
     descripcion: precio.descripcion,
     valor: precio.valor,
     nivel: precio.nivel,
-    valorfuncionario: precio.valorfuncionario || '', // Maneja el caso cuando el atributo no está presente o es undefined
+    valorfuncionario_mes: precio.valorfuncionario_mes || '', // Maneja el caso cuando el atributo no está presente o es undefined
     viaticos: precio.viaticos || '', // Maneja el caso cuando el atributo no está presente o es undefined
     dias: precio.dias || '', // Maneja el caso cuando el atributo no está presente o es undefined
-    // resultado: resultado || '', // Asegúrate de manejar el caso cuando resultado es undefined
+    resultado: precio.resultado || '', // Añade el campo 'resultado'
 
   }));
 
 
-
-
-
-  const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
-  const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
-
-
-
-
-  // Buscar la opción de liquidación seleccionada
   const opcionSeleccionada = opciones_liquidacion.find(opcion => opcion.id === parseInt(id_opcion_liquidacion));
-
-  // Mostrar los datos de la opción seleccionada en el console.log
-  console.log(opcionSeleccionada?.funcion);
-  console.log(opcionSeleccionada?.variables);
-
-
 
 
 
@@ -162,15 +157,10 @@ export const DetalleLiquidacion = () => {
       return null;
     }
   };
-  const [variableValues, setVariableValues] = useState<{ [key: string]: string }>({});
+
 
   // Calcular el resultado
-  const resultado = calcularResultado();
-
-
-  console.log('Resultado:', resultado);
-  console.log('Función:', opcionSeleccionada?.funcion);
-  console.log('Variables:', variableValues);
+  const resultadoo = calcularResultado();
 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -199,6 +189,27 @@ export const DetalleLiquidacion = () => {
         //  console.log('')(error);
       });
   }, []);
+
+
+
+  const Enviar_Valor = () => {
+    set_valor_total(resultadoo)
+  }
+
+
+
+  useEffect(() => {
+    setVariableValues(prevState => ({
+      ...prevState,
+      valorfuncionario: valor // Establecer el valor fijo
+    }));
+  }, [valor_total]); // Se ejecutará solo una vez después de la inicialización del componente
+
+
+  useEffect(() => {
+    set_valor_total(resultadoo)
+  }, [valor]); // Se ejecutará solo una vez después de la inicialización del componente
+
 
 
   return (
@@ -237,22 +248,30 @@ export const DetalleLiquidacion = () => {
           </Grid>
 
 
-
-          {Object.keys(opcionSeleccionada?.variables || {}).map((key) => (
-            <TextField
-              key={key}
-              style={{ width: '95%', marginTop: 10 }}
-              variant="outlined"
-              label={key}
-              fullWidth
-              name={key}
-              value={variableValues[key] || ''}
-              onChange={handleChange}
-            />
-          ))}
+          <Grid container alignItems="center" justifyContent="center">
+            <Grid item xs={8}>
 
 
-          <Grid container spacing={0}>
+              {Object.keys(opcionSeleccionada?.variables || {}).map((key) => (
+                <TextField
+                  key={key}
+                  style={{ width: '95%', marginTop: 10 }}
+                  variant="outlined"
+                  label={key}
+                  fullWidth
+                  name={key}
+                  value={variableValues[key] || ''}
+                  onChange={handleChange}
+                  disabled={key === 'valorfuncionario'} // Solo deshabilitar si la clave es 'valorfuncionario'
+                />
+              ))}
+
+            </Grid>
+
+
+
+
+
             <Grid item xs={12} sm={5} style={{ marginTop: 15 }}>
 
               <FormControl fullWidth >
@@ -274,13 +293,12 @@ export const DetalleLiquidacion = () => {
                 </Select>
               </FormControl>
 
-
-
-
-
             </Grid>
 
-            <Grid item xs={12} sm={4} style={{ marginTop: 15 }} >
+
+
+
+            <Grid item xs={12} sm={5} style={{ marginTop: 15 }} >
               <FormControl fullWidth>
                 <InputLabel id="valor-label">Valor del precio</InputLabel>
                 <Select
@@ -306,18 +324,55 @@ export const DetalleLiquidacion = () => {
 
 
 
-            <Grid item xs={12} sm={3}>
+          
+          </Grid>
+
+
+
+          <Grid container alignItems="center" justifyContent="center">
+
+            <Grid item xs={4}>
               <Button
+                onClick={Enviar_Valor}
                 variant="contained"
                 style={{ marginTop: 15, width: "95%" }}
                 color="primary"
+                startIcon={<CalculateIcon />}
+
+              >
+                Calcualar Total
+              </Button>
+            </Grid>
+
+
+            <Grid item xs={4}>
+              <TextField
+                style={{ width: '95%', marginTop: 10 }}
+                variant="outlined"
+                label="Total"
+                fullWidth
+                size="small"
+                value={valor_total || ''}
+                disabled />
+            </Grid>
+
+
+
+            <Grid item xs={5}>
+              <Button
+                variant="contained"
+                style={{ marginTop: 15, width: "95%" }}
+                color="success"
                 onClick={handleAddPrice}
                 startIcon={<SaveIcon />}
+                disabled={!descripcion || !valor || !valor_total}
 
               >
                 Agregar
               </Button>
             </Grid>
+
+
           </Grid>
           <div style={{ height: 300, width: '100%', marginTop: 15 }}>
             <DataGrid rows={rows} columns={columns} pageSize={5} />
