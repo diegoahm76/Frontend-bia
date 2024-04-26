@@ -45,19 +45,21 @@ export const ListarEjeEstrategico: React.FC = () => {
       flex: 1,
       valueGetter: (params) => params.row.nombre_objetivo ? params.row.nombre_plan_objetivo : params.row.nombre_plan,
     },
-    ...(id_plan ? [{
+    {
       field: 'sigla_plan',
       headerName: 'SIGLA DEL PLAN',
       sortable: true,
-      minWidth: 350,
-      flex: 2
-    }] : [{
+      minWidth: 150,
+      flex: 1,
+      valueGetter: (params) => params.row.nombre_objetivo ? params.row.sigla_plan_objetivo : params.row.sigla_plan,
+    },
+    ...(id_objetivo ? [{
       field: 'nombre_objetivo',
       headerName: 'NOMBRE DEL OBJETIVO',
       sortable: true,
-      minWidth: 350,
-      flex: 2
-    }]),
+      minWidth: 250,
+      flex: 1
+    }] : []),
     {
       field: 'nombre',
       headerName: 'NOMBRE DEL EJE ESTRATEGICO',

@@ -27,7 +27,7 @@ export const useEjeEstrategicoHook = (): any => {
       nombre_tipo_eje: '',
       nombre: '',
       id_objetivo: null,
-      id_tipo_eje: null,
+      id_tipo_eje: '',
     },
   });
 
@@ -44,7 +44,7 @@ export const useEjeEstrategicoHook = (): any => {
       nombre: '',
       id_objetivo: null,
       id_plan: null,
-      id_tipo_eje: null,
+      id_tipo_eje: '',
     });
   };
 

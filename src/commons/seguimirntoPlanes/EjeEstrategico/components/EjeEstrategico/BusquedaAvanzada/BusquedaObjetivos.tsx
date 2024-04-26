@@ -162,12 +162,9 @@ export const BusquedaObjetivo: React.FC = () => {
         });
 
         if (data?.length > 0) {
-          console.log(data)
           set_rows(data);
         }
       } catch (error: any) {
-        // const temp_error = error as AxiosError;
-        // const resp = temp_error.response?.data as ResponseServer<any>;
         control_error(error.response?.data.detail ?? 'Error en la búsqueda');
       } finally {
         set_is_search(false);
@@ -175,15 +172,11 @@ export const BusquedaObjetivo: React.FC = () => {
     }
   );
 
-  const { id_plan, set_id_plan, set_id_objetivo } = useContext(DataContextEjeEstrategico);
+  const { id_plan, id_objetivo, set_id_plan, set_id_objetivo } = useContext(DataContextEjeEstrategico);
 
   useEffect(() => {
-    clean_form_advance_search();
-    set_is_search(false);
-  }, []);
-
-  useEffect(() => {
-    if(id_plan){
+    if(id_plan && !id_objetivo){
+      console.log('desde obj')
       clean_form_advance_search();
     }
   }, [id_plan]);

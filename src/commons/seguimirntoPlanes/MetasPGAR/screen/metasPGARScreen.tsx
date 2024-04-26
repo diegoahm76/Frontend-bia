@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { set_current_mode_planes } from "../../store/slice/indexPlanes";
 import { Grid } from "@mui/material";
@@ -11,10 +11,12 @@ import { AgregarMetaPgar } from "../components/AgregarMeta";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MetasPgarScreen: React.FC = () => {
     const { mode } = useAppSelector((state) => state.planes);
+    const [evaluate, set_evaluate] = useState(false);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
+      set_evaluate(true);
       dispatch(
         set_current_mode_planes({
           ver: false,
@@ -47,7 +49,7 @@ export const MetasPgarScreen: React.FC = () => {
         </Grid>
 
         <BusquedaEjes />
-        {mode.ver ? <ListarMetasPgar /> : null}
+        {(evaluate && mode.ver) ? <ListarMetasPgar /> : null}
         {mode.crear || mode.editar ? <AgregarMetaPgar /> : null}
         <Grid
           container

@@ -47,7 +47,6 @@ export const SeguimientoPgarScreen: React.FC = () => {
 
         <ListarSeguimientosPGAR />
         {mode.crear || mode.editar ? <BusquedaArmonizacionPlanes /> : null}
-        {/* {mode.ver ? <ListarIndicadoresPgar /> : null} */}
         <Grid
           container
           spacing={2}
@@ -64,7 +63,6 @@ export const SeguimientoPgarScreen: React.FC = () => {
           }}
           justifyContent="flex-end"
         >
-          {/* <BusquedaPrograma /> */}
           <Grid item>
             <ButtonSalir />
           </Grid>
