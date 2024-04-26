@@ -1,26 +1,28 @@
 import { Divider, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { Title } from "../../../../../components/Title";
-import ReactApexChart from 'react-apexcharts';
 import { DataContextPgar } from "../../../SeguimientoPGAR/context/context";
 import { InfoCard } from "./InfoCard";
 import { StackedBarChart } from "./StackedBarChart";
 import { LineChart } from "./LineChart";
+import { get_tablero_por_eje } from "../services/services";
+import { control_error } from "../../../../../helpers";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TableroGeneralPgar: React.FC = () => {
 
   const [form_values, set_form_values] = useState({
     id_armonizar: '',
+    id_planPGAR: '',
+    id_planPAI: '',
     nombre_planPGAR: '',
     nombre_planPAI: '',
     objetivoPGAR: [],
     ejesEstrategicosPAI: [],
     estado: '',
-    id_objetivo: '',
-    anio: '',
   });
 
+  const [data_chart, set_data_chart] = useState([]);
   const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
 
   useEffect(() => {
@@ -34,6 +36,8 @@ export const TableroGeneralPgar: React.FC = () => {
       set_form_values({
         ...form_values,
         id_armonizar: armonizacion_select.id_armonizar,
+        id_planPGAR: armonizacion_select.id_planPGAR,
+        id_planPAI: armonizacion_select.id_planPAI,
         nombre_planPGAR: armonizacion_select.nombre_planPGAR,
         nombre_planPAI: armonizacion_select.nombre_planPAI,
         objetivoPGAR: armonizacion_select.objetivoPGAR,
@@ -42,6 +46,18 @@ export const TableroGeneralPgar: React.FC = () => {
       });
     }
   }
+
+  useEffect(() => {
+    if(form_values.id_planPAI && form_values.id_planPGAR) {
+      get_tablero_por_eje(Number(form_values.id_planPAI), Number(form_values.id_planPGAR)).then((data: any) => {
+        set_data_chart(data);
+        // set_show_chart(true);
+        // load_chart_data(data);
+      }).catch((error: any) => {
+        control_error(error);
+      });
+    }
+  }, [form_values.id_planPAI, form_values.id_planPGAR]);
 
   const idfo_data = [
     { value: '90', label: 'AVANCE FISICO', color: 'lightblue' },
@@ -136,7 +152,7 @@ export const TableroGeneralPgar: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Tablero de Control General PGAR por Eje Estrategico" />
+          <Title title="Tablero de Control General PGAR" />
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -192,10 +208,7 @@ export const TableroGeneralPgar: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={12} my={4} mx={2} sx={{
-          background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
-          backgroundSize: 'contain',
-        }}>
+        <Grid item xs={12} sm={12} my={4} mx={2}>
           <Grid container spacing={6}>
             {/* Tarjetas de información */}
             {idfo_data.map((data, index) => (
@@ -206,7 +219,7 @@ export const TableroGeneralPgar: React.FC = () => {
 
             {/* Gráfico de barras apiladas */}
             <Grid item xs={6}>
-              <StackedBarChart />
+              <StackedBarChart data={data_chart}/>
             </Grid>
 
             {/* Gráfico de líneas */}

@@ -657,6 +657,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
       limpiar_informacion_planes();
       limpiar_form_registro();
       set_show_plan_info(false);
+      set_show_registro_avance(false);
     }
     if (mode.editar) {
       set_show_plan_info(true);

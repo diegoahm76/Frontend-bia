@@ -1,9 +1,14 @@
 import { ApexOptions } from 'apexcharts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const StackedBarChart = () => {
+export const StackedBarChart = (data: any) => {
+
+  useEffect(() => {
+    console.log(data)
+  }, [data]);
+
   const [chart_data, set_chart_data] = useState<{
     series: ApexAxisChartSeries | ApexNonAxisChartSeries;
     options: ApexOptions;

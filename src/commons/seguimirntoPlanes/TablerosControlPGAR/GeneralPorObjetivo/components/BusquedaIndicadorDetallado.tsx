@@ -122,7 +122,7 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Tablero de Control General PGAR por Eje Estrategico" />
+          <Title title="Tablero de Control Detallado PGAR" />
         </Grid>
         <Grid item xs={12}>
           <Divider />

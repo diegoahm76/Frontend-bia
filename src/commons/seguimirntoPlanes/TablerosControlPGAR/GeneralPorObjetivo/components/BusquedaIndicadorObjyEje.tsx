@@ -156,7 +156,7 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Tablero de Control General PGAR por Objetivo" />
+          <Title title="Tablero de Control PGAR por Objetivo y Eje Estratégico" />
         </Grid>
         <Grid item xs={12}>
           <Divider />
