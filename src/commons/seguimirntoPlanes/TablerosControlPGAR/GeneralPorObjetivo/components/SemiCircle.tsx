@@ -1,7 +1,6 @@
 import { ApexOptions } from 'apexcharts';
-import React from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { styles } from '../../../../gestorDocumental/actividadesPreviasCambioCCD/modules/delegacionDeOficinasResponsables/components/parte2/components/SeccSubCcdActual/SeccSubCcdActual';
+import '../css/tableros_styles.css'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SemiCircleGauge = ({ value, label }: {value: any, label: any}) => {
@@ -58,8 +57,8 @@ export const SemiCircleGauge = ({ value, label }: {value: any, label: any}) => {
   const chart_series = [value];
 
   return (
-    <div style={{marginBottom: '1rem'}}>
-      <p style={{textAlign: 'center', fontWeight: 'bold', marginBottom: '-.5rem'}}>{label}</p>
+    <div className='semicircle'>
+      <p className='text-chart'>{label}</p>
       <ReactApexChart
         options={chart_options}
         series={chart_series}

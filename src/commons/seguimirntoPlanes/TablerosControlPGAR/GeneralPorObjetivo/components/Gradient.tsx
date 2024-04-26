@@ -15,15 +15,12 @@ export const Gradient = ({ value, label }: {value: any, label: any}) => {
     },
     plotOptions: {
       radialBar: {
-        startAngle: -135,
-        endAngle: 225,
+        startAngle: 0,
+        endAngle: 365,
          hollow: {
           margin: 0,
-          size: '70%',
+          size: '60%',
           background: '#fff',
-          image: undefined,
-          imageOffsetX: 0,
-          imageOffsetY: 0,
           position: 'front',
           dropShadow: {
             enabled: true,
@@ -52,14 +49,11 @@ export const Gradient = ({ value, label }: {value: any, label: any}) => {
             offsetY: -10,
             show: true,
             color: '#888',
-            fontSize: '17px'
+            fontSize: '15px'
           },
           value: {
-            // formatter: function(val) {
-            //   return parseInt(val);
-            // },
-            color: '#111',
-            fontSize: '36px',
+            color: '#888',
+            fontSize: '30px',
             show: true,
           }
         }
@@ -86,14 +80,13 @@ export const Gradient = ({ value, label }: {value: any, label: any}) => {
     stroke: {
       lineCap: 'round'
     },
-    labels: ['Percent'],
+    labels: [label]
   };
 
   const chart_series = [value];
 
   return (
     <>
-      <p style={{textAlign: 'center'}}>{label}</p>
       <ReactApexChart
         options={chart_options}
         series={chart_series}

@@ -19,6 +19,7 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
     estado: '',
   });
 
+  const [show_chart, set_show_chart] = useState(false);
   const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
   }, []);
 
   const handle_change_armonizacion = (event: any) => {
+    set_show_chart(false);
     const id_armonizacion_select = event.target.value;
     const armonizacion_select = rows_armonizacion.find(armonizacion => armonizacion.id_armonizar === id_armonizacion_select);
     if (armonizacion_select) {
@@ -44,73 +46,13 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
   useEffect(() => {
     if(form_values.id_planPAI && form_values.id_planPGAR) {
       get_tablero_por_eje(Number(form_values.id_planPAI), Number(form_values.id_planPGAR)).then((data: any) => {
-        console.log(data)
+        set_show_chart(true);
         load_chart_data(data);
       }).catch((error: any) => {
         control_error(error);
       });
     }
   }, [form_values.id_planPAI, form_values.id_planPGAR]);
-
-  // const load_chart_data = (data: any) => {
-  //   let series_obj: any = {};
-  //   let categories: any = [];
-
-  //   let nombres: any = {
-  //     "pvance_fisico": "Porcentaje AFIS",
-  //     "pavance_fisico_acomulado": "Porcentaje AFISA",
-  //     "pavance_financiero": "Porcentaje AFIN",
-  //     "pavance_recursos_obligados": "Porcentaje ARO"
-  //   };
-
-  //   if (data.length) {
-
-  //     data.forEach((ind: any) => {
-  //       categories.push(ind.nombre);
-
-  //       ind.porcentajes.forEach((porcentaje: any) => {
-  //         const ano = `Año ${porcentaje.año}`;
-
-  //         if (!series_obj[ano]) {
-  //           series_obj[ano] = {};
-  //         }
-
-  //         for (let key in porcentaje) {
-  //           if (key !== 'año') {
-  //             if (!series_obj[ano][key]) {
-  //               series_obj[ano][key] = { name: nombres[key] + ' ' + ano, data: [], group: ano };
-  //             }
-
-  //             series_obj[ano][key].data.push(porcentaje[key]);
-  //           }
-  //         }
-  //       });
-  //     });
-
-
-  //     let series: any = [];
-
-  //     for (let group in series_obj) {
-  //       for (let serie in series_obj[group]) {
-  //         series.push(series_obj[group][serie]);
-  //       }
-  //     }
-
-  //     console.log("series", series)
-
-  //     set_chart_data({
-  //       ...chart_data,
-  //       series,
-  //       options: {
-  //         ...chart_data.options,
-  //         xaxis: {
-  //           ...chart_data.options.xaxis,
-  //           categories,
-  //         }
-  //       }
-  //     });
-  //   }
-  // };
 
   const load_chart_data = (data: any) => {
     let series_obj: any = {};
@@ -139,10 +81,10 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
           const anio_str = `Año ${ano}`;
           if (!series_obj[anio_str]) {
             series_obj[anio_str] = {
-              'pvance_fisico': { name: 'Porcentaje AFIS ' + anio_str, data: [], group: anio_str },
-              'pavance_fisico_acomulado': { name: 'Porcentaje AFISA ' + anio_str, data: [], group: anio_str },
-              'pavance_financiero': { name: 'Porcentaje AFIN ' + anio_str, data: [], group: anio_str },
-              'pavance_recursos_obligados': { name: 'Porcentaje ARO ' + anio_str, data: [], group: anio_str }
+              'pvance_fisico': { name: 'Porcentaje A. FIS ' + ano, data: [], group: anio_str },
+              'pavance_fisico_acomulado': { name: 'Porcentaje A. FIS AC ' + ano, data: [], group: anio_str },
+              'pavance_financiero': { name: 'Porcentaje A. FIN ' + ano, data: [], group: anio_str },
+              'pavance_recursos_obligados': { name: 'Porcentaje A. REC OBL ' + ano, data: [], group: anio_str }
             };
           }
         }
@@ -153,17 +95,12 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
           const ano = `Año ${porcentaje.año}`;
 
           for (let key in porcentaje) {
-            // if(ano === 'Año 3' && series_obj[ano][key].data.length === 0) series_obj[ano][key].data.push(0);
             if (key !== 'año') {
-              if(index !== 0 && length_porcentajes < 4){
-                if(series_obj[ano][key].data.length === 0) series_obj[ano][key].data.push(0);
-              }
               series_obj[ano][key].data.push(porcentaje[key]);
             }
           }
         });
 
-        // Añadir 0s para los años que no tienen datos
       });
 
       console.log(series_obj)
@@ -200,15 +137,12 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
   }>({
     series: [],
     options: {
-      colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560'],
+      colors: ['#47B9F6', '#45F7BC', '#91F647', '#C447F6'],
       chart: {
-          height: 500,
-          type: 'bar' as const, // Corregido para ser reconocido como un valor específico y no un string genérico
+          height: 600,
+          type: 'bar' as const,
           stacked: true,
           events: {
-              click: function (chart: any, w: any, e: any) {
-                  // Puedes manejar clics en la gráfica aquí
-              }
           },
           toolbar: {
               show: true
@@ -223,13 +157,12 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
       },
       plotOptions: {
           bar: {
-              // distributed: true,
-              barHeight: '75%',
-              horizontal: true,
+            barHeight: '75%',
+            horizontal: true,
           }
       },
       dataLabels: {
-          enabled: false
+        enabled: true
       },
       legend: {
         position: 'bottom',
@@ -237,11 +170,6 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
       },
       xaxis: {
         categories: [],
-        labels: {
-          style: {
-            fontSize: '12px'
-          }
-        }
       },
       yaxis: {
         labels: {
@@ -328,12 +256,12 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={12} my={4} mx={2} sx={{
+        {show_chart && <Grid item xs={12} sm={12} my={4} mx={2} sx={{
           background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
           backgroundSize: 'contain',
         }}>
-          <ReactApexChart options={chart_data.options} series={chart_data.series} type="bar" height={500} />
-        </Grid>
+          <ReactApexChart options={chart_data.options} series={chart_data.series} type="bar" height={600} />
+        </Grid>}
       </Grid>
     </>
   )

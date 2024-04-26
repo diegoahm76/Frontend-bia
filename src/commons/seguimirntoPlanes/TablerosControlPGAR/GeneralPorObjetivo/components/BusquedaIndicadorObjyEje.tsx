@@ -1,20 +1,44 @@
 import { Button, Divider, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { Title } from "../../../../../components/Title";
-import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from "apexcharts";
-import SearchIcon from '@mui/icons-material/Search';
 import { DataContextPgar } from "../../../SeguimientoPGAR/context/context";
-import { get_tablero_por_objetivo } from "../services/services";
+import { get_tablero_por_objetivo_ejes } from "../services/services";
+import '../css/tableros_styles.css'
 import { control_error } from "../../../../../helpers";
 import { get_ejes_estrategicos_id_objetivo } from "../../../SeguimientoPGAR/services/services";
 import { Gradient } from "./Gradient";
+import React from "react";
+
+interface Porcentaje {
+  año: number;
+  pvance_fisico: number;
+  pavance_fisico_acomulado: number;
+  pavance_financiero: number;
+  pavance_recursos_obligados: number;
+}
+
+interface Eje {
+  id_eje_estrategico: number;
+  porcentajes: Porcentaje[];
+  nombre: string;
+  id_tipo_eje: number;
+  id_plan: number | null;
+  id_objetivo: number;
+}
+
+interface Gauge {
+  value: number;
+  label: string;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
 
   const [form_values, set_form_values] = useState({
     id_armonizar: '',
+    id_planPGAR: '',
+    id_planPAI: '',
     nombre_planPGAR: '',
     nombre_planPAI: '',
     objetivoPGAR: [],
@@ -26,15 +50,8 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
     anio: 0,
   });
 
-  const gauges_data = [
-    { value: 76, label: 'Avance Físico' },
-    { value: 50, label: 'Avance Financiero' },
-    { value: 50, label: 'Avance Financiero' },
-    { value: 50, label: 'Avance Financiero' },
-    { value: 50, label: 'Avance Financiero' },
-    // ... more gauges
-  ];
-
+  const [show_chart, set_show_chart] = useState(false);
+  const [obj_data, set_obj_data] = useState<Record<string, Gauge[]>>({});
   const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
 
   useEffect(() => {
@@ -42,12 +59,17 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
   }, []);
 
   const handle_change_armonizacion = (event: any) => {
+    set_show_chart(false);
     const id_armonizacion_select = event.target.value;
     const armonizacion_select = rows_armonizacion.find(armonizacion => armonizacion.id_armonizar === id_armonizacion_select);
     if (armonizacion_select) {
       set_form_values({
         ...form_values,
         id_armonizar: armonizacion_select.id_armonizar,
+        id_planPGAR: armonizacion_select.id_planPGAR,
+        id_planPAI: armonizacion_select.id_planPAI,
+        id_objetivo: '',
+        id_eje_estrategico: '',
         nombre_planPGAR: armonizacion_select.nombre_planPGAR,
         nombre_planPAI: armonizacion_select.nombre_planPAI,
         objetivoPGAR: armonizacion_select.objetivoPGAR,
@@ -58,16 +80,11 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
   }
 
   const handle_change_objetivo = (event: any) => {
+    set_show_chart(false);
     set_form_values({
       ...form_values,
       id_objetivo: event.target.value,
-    });
-  }
-
-  const handle_change_eje = (event: any) => {
-    set_form_values({
-      ...form_values,
-      id_eje_estrategico: event.target.value,
+      id_eje_estrategico: '',
     });
   }
 
@@ -84,131 +101,42 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
     }
   }, [form_values.id_objetivo]);
 
-  const handle_click_open = () => {
-    get_tablero_por_objetivo(Number(form_values.id_objetivo), form_values.anio).then((data) => {
-      console.log(data);
-      let series: any = [];
-      let porcentajes_obj: any = {
-        "pvance_fisico": [],
-        "pavance_fisico_acomulado": [],
-        "pavance_financiero": [],
-        "pavance_recursos_obligados": []
-      };
-
-      let nombres: any = {
-        "pvance_fisico": "Porcentaje AFIS",
-        "pavance_fisico_acomulado": "Porcentaje AFISA",
-        "pavance_financiero": "Porcentaje AFIN",
-        "pavance_recursos_obligados": "Porcentaje ARO"
-      };
-      let categories: any = [];
-      if (data.length) {
-        data.forEach((ind: any) => {
-          categories.push(ind.nombre);
-          Object.keys(ind.porcentajes).forEach(key => {
-            porcentajes_obj[key].push(ind.porcentajes[key]);
-          });
-        });
-
-        let series = Object.keys(porcentajes_obj).map(key => {
-          return {
-            name: nombres[key],
-            data: porcentajes_obj[key]
-          };
-        });
-        set_chart_data({
-          ...chart_data,
-          series,
-          options: {
-            ...chart_data.options,
-            xaxis: {
-              ...chart_data.options.xaxis,
-              categories,
-            }
-          }
-        });
-      }
-    }).catch((error) => {
-      control_error(error.response.data.detail);
+  const handle_change_eje = (event: any) => {
+    set_form_values({
+      ...form_values,
+      id_eje_estrategico: event.target.value,
     });
   }
 
-  // Estado inicial para la serie y opciones de la gráfica
-  const [chart_data, set_chart_data] = useState<{
-    series: ApexAxisChartSeries | ApexNonAxisChartSeries;
-    options: ApexOptions;
-  }>({
-      series: [],
-      options: {
-        colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560'],
-        chart: {
-          height: 500,
-          type: 'bar' as const,
-          events: {
-            click: function (chart: any, w: any, e: any) {
-            }
-          },
-          toolbar: {
-            show: true
-          },
-          zoom: {
-            enabled: true
-          }
-        },
-        plotOptions: {
-            bar: {
-                barHeight: '75%',
-                horizontal: true,
-            }
-        },
-        dataLabels: {
-          enabled: true
-        },
-        legend: {
-          position: 'bottom',
-          horizontalAlign: 'center',
-          fontSize: '14px',
-          itemMargin: {
-            horizontal: 20,
-            vertical: 10
-          },
-          show: true
-        },
-        xaxis: {
-            categories: [],
-            labels: {
-              style: {
-                fontSize: '13px',
-                cssClass: 'apexcharts-xaxis-label',
-              },
-              maxHeight: 120,
-            }
-        },
-      },
-  });
+  useEffect(() => {
+    if(form_values.id_eje_estrategico && form_values.id_planPAI) {
+      get_tablero_por_objetivo_ejes(Number(form_values.id_planPAI), Number(form_values.id_eje_estrategico)).then((data: any) => {
+        set_obj_data(handle_search(data[0]));
+      }).catch((error: any) => {
+        control_error(error);
+      });
+    }
+  }, [form_values.id_eje_estrategico, form_values.id_planPAI])
 
-  const get_chart_data_by_obj = (objective: any) => {
-    const categories = ['Eje Estratégico 1', 'Eje Estratégico 2', 'Eje Estratégico 3', 'Eje Estratégico 4'];
-    const series = [
-      {
-        name: 'Porcentaje de Avance Físico',
-        data: [30, 40, 50, 60],
-      },
-      {
-        name: 'Porcentaje de Avance Físico Acumulado',
-        data: [20, 10, 80, 90],
-      },
-      {
-        name: 'Porcentje de Avance Financiero',
-        data: [10, 20, 70, 55],
-      },
-      {
-        name: 'Porcentaje de Avance de los Recursos Obligados',
-        data: [40, 30, 24, 97],
-      },
-    ];
-    return { categories, series };
-  };
+  const handle_search = (obj: any) => {
+    let resultado: any = {};
+    if(obj.porcentajes.length !== 0) {
+      set_show_chart(true);
+      for (let porcentaje of obj.porcentajes) {
+        let anio_key = 'Año ' + porcentaje.año;
+        let valores = [
+          {label: 'Porcentaje A. FIS', value: porcentaje.pvance_fisico},
+          {label: 'Porcentaje A. FIS AC', value: porcentaje.pavance_fisico_acomulado},
+          {label: 'Porcentaje A. FIN', value: porcentaje.pavance_financiero},
+          {label: 'Porcentaje A. REC OBL', value: porcentaje.pavance_recursos_obligados}
+        ];
+        resultado[anio_key] = valores;
+      }
+    }else{
+      control_error('No se encontraron datos');
+    }
+    return resultado;
+  }
 
   return (
     <>
@@ -293,6 +221,9 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
               onChange={handle_change_objetivo}
               disabled={!form_values.objetivoPGAR.length}
             >
+              <MenuItem value="">
+                <em>Seleccione una opción</em>
+              </MenuItem>
               {form_values.objetivoPGAR.map((tipos: any) => (
                 <MenuItem key={tipos.id_objetivo} value={tipos.id_objetivo}>
                   {tipos.nombre_objetivo}
@@ -312,6 +243,9 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
               onChange={handle_change_eje}
               disabled={!form_values.ejesEstrategicosPGAR.length}
             >
+              <MenuItem value="">
+                <em>Seleccione una opción</em>
+              </MenuItem>
               {form_values.ejesEstrategicosPGAR.map((tipos: any) => (
                 <MenuItem key={tipos.id_eje_estrategico} value={tipos.id_eje_estrategico}>
                   {tipos.nombre}
@@ -321,32 +255,24 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
             <FormHelperText>Seleccione un Eje Estratégico</FormHelperText>
           </FormControl>
         </Grid>
-        {/* <Grid item xs={12} sm={6} md={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={!form_values.id_objetivo || !form_values.anio}
-              startIcon={<SearchIcon />}
-              onClick={() => {
-                handle_click_open();
-              }}
-            >
-              Buscar
-            </Button>
-          </Grid> */}
         <Grid item xs={12} my={4} mx={2} sx={{
-          background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
-          backgroundSize: 'contain',
           display: 'flex',
           flexWrap: 'wrap',
-          // justifyContent: 'center',
-          // gap: '5rem'
         }}>
-          {gauges_data.map((gauge, index) => (
-            <Grid item xs={3} key={index}>
-              <Gradient value={gauge.value} label={gauge.label} />
-          </Grid>
-          ))}
+        {show_chart && <Grid className="anio-container" container spacing={2} mx={2}>
+          {Object.entries(obj_data).map(([anio, data]) => (
+              <React.Fragment key={anio}>
+                <Grid item xs={12} xl={3} sx={{display: 'flex', alignContent:'center'}}>
+                  <h3 className="anio-text-chart">{anio}</h3>
+                </Grid>
+                {data.map((gauge, gaugeIndex) => (
+                  <Grid item xs={12} sm={6} lg={3} xl={2} key={gaugeIndex}>
+                    <Gradient value={gauge.value} label={gauge.label} />
+                  </Grid>
+                ))}
+                </React.Fragment>
+            ))}
+          </Grid>}
         </Grid>
       </Grid>
     </>

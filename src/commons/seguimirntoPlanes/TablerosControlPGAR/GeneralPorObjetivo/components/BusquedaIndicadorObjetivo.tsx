@@ -22,6 +22,7 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
     anio: 0,
   });
 
+  const [show_chart, set_show_chart] = useState(false);
   const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
 
   useEffect(() => {
@@ -31,10 +32,13 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
   const handle_change_armonizacion = (event: any) => {
     const id_armonizacion_select = event.target.value;
     const armonizacion_select = rows_armonizacion.find(armonizacion => armonizacion.id_armonizar === id_armonizacion_select);
+    set_show_chart(false);
     if (armonizacion_select) {
       set_form_values({
         ...form_values,
         id_armonizar: armonizacion_select.id_armonizar,
+        id_objetivo: '',
+        anio: 0,
         nombre_planPGAR: armonizacion_select.nombre_planPGAR,
         nombre_planPAI: armonizacion_select.nombre_planPAI,
         objetivoPGAR: armonizacion_select.objetivoPGAR,
@@ -52,14 +56,17 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
   }
 
   const handle_change_objetivo = (event: any) => {
+    set_show_chart(false);
     set_form_values({
       ...form_values,
       id_objetivo: event.target.value,
+      anio: 0,
     });
   }
 
   const handle_click_open = () => {
     get_tablero_por_objetivo(Number(form_values.id_objetivo), form_values.anio).then((data) => {
+      set_show_chart(true);
       let series: any = [];
       let porcentajes_obj: any = {
         "pvance_fisico": [],
@@ -69,10 +76,10 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
       };
 
       let nombres: any = {
-        "pvance_fisico": "Porcentaje AFIS",
-        "pavance_fisico_acomulado": "Porcentaje AFISA",
-        "pavance_financiero": "Porcentaje AFIN",
-        "pavance_recursos_obligados": "Porcentaje ARO"
+        "pvance_fisico": "Porcentaje A. FIS",
+        "pavance_fisico_acomulado": "Porcentaje A. FIS AC",
+        "pavance_financiero": "Porcentaje A. FIN",
+        "pavance_recursos_obligados": "Porcentaje A. REC OBL"
       };
       let categories: any = [];
       if (data.length) {
@@ -96,7 +103,6 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
             data: porcentajes_obj[key]
           };
         });
-        console.log(series)
         set_chart_data({
           ...chart_data,
           series,
@@ -121,7 +127,7 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
   }>({
       series: [],
       options: {
-        colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560'],
+        colors: ['#47B9F6', '#45F7BC', '#91F647', '#C447F6'],
         chart: {
           height: 500,
           type: 'bar' as const,
@@ -252,6 +258,9 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
               onChange={handle_change_objetivo}
               disabled={!form_values.objetivoPGAR.length}
             >
+              <MenuItem value="">
+                <em>Seleccione una opción</em>
+              </MenuItem>
               {form_values.objetivoPGAR.map((tipos: any) => (
                 <MenuItem key={tipos.id_objetivo} value={tipos.id_objetivo}>
                   {tipos.nombre_objetivo}
@@ -268,6 +277,7 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
               fullWidth
               label="Año"
               value={form_values.anio || ''}
+              helperText="Ingrese un año"
               onChange={handle_change_anio}
             />
         </Grid>
@@ -284,12 +294,12 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
               Buscar
             </Button>
           </Grid>
-        <Grid item xs={12} sm={12} my={4} mx={2} sx={{
+        {show_chart && <Grid item xs={12} sm={12} my={4} mx={2} sx={{
           background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
           backgroundSize: 'contain',
         }}>
           <ReactApexChart options={chart_data.options} series={chart_data.series} type="bar" height={500} />
-        </Grid>
+        </Grid>}
       </Grid>
     </>
   )

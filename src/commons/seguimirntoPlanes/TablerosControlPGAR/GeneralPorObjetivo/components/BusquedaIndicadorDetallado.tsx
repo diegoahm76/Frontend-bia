@@ -2,11 +2,11 @@ import { Divider, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Selec
 import { useContext, useEffect, useState } from "react";
 import { DataContextPgar } from "../../../SeguimientoPGAR/context/context";
 import { Title } from "../../../../../components/Title";
-import ReactApexChart from 'react-apexcharts';
-import { ApexOptions } from "apexcharts";
+import '../css/tableros_styles.css'
 import { SemiCircleGauge } from "./SemiCircle";
 import { get_tablero_por_eje } from "../services/services";
 import { control_error } from "../../../../../helpers";
+import React from "react";
 
 interface Porcentaje {
   año: number;
@@ -42,6 +42,7 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
     estado: '',
   });
 
+  const [show_chart, set_show_chart] = useState(false);
   const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
   const [array_data, set_array_data] = useState<Record<string, Record<string, Gauge[]>>>({});
 
@@ -50,6 +51,7 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
   }, []);
 
   const handle_change_armonizacion = (event: any) => {
+    set_show_chart(false);
     const id_armonizacion_select = event.target.value;
     const armonizacion_select = rows_armonizacion.find(armonizacion => armonizacion.id_armonizar === id_armonizacion_select);
     if (armonizacion_select) {
@@ -68,8 +70,13 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
   useEffect(() => {
     if(form_values.id_planPAI && form_values.id_planPGAR) {
       get_tablero_por_eje(Number(form_values.id_planPAI), Number(form_values.id_planPGAR)).then((data: any) => {
+        let contador: number = 0;
+        data.forEach((el: any) => {
+          if(el.porcentajes.length == 0) contador++;
+        });
+        if(data.length ==  contador) control_error('No se encontraron datos');
+        set_show_chart(true);
         load_chart_data(data);
-        console.log(data);
       }).catch((error: any) => {
         control_error(error);
       });
@@ -86,97 +93,16 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
         if (!acc[`Año ${p.año}`][curr.nombre]) {
           acc[`Año ${p.año}`][curr.nombre] = [];
         }
-        acc[`Año ${p.año}`][curr.nombre].push({ value: p.pvance_fisico, label: 'Porcentaje AFis' });
-        acc[`Año ${p.año}`][curr.nombre].push({ value: p.pavance_fisico_acomulado, label: 'Porcentaje AFisA' });
-        acc[`Año ${p.año}`][curr.nombre].push({ value: p.pavance_financiero, label: 'Porcentaje AFIN' });
-        acc[`Año ${p.año}`][curr.nombre].push({ value: p.pavance_recursos_obligados, label: 'Porcentaje ARO' });
+        acc[`Año ${p.año}`][curr.nombre].push({ value: p.pvance_fisico, label: 'Porcentaje A. FIS' });
+        acc[`Año ${p.año}`][curr.nombre].push({ value: p.pavance_fisico_acomulado, label: 'Porcentaje A. FIS AC' });
+        acc[`Año ${p.año}`][curr.nombre].push({ value: p.pavance_financiero, label: 'Porcentaje A. FIN' });
+        acc[`Año ${p.año}`][curr.nombre].push({ value: p.pavance_recursos_obligados, label: 'Porcentaje A. REC OBL' });
       });
       return acc;
     }, {});
-
+    console.log(array)
     set_array_data(array);
   };
-  // data.sort((a: any, b: any) => a.anio.localeCompare(b.anio));
-
-  const gauges_data = [
-    { value: 76, label: 'Avance Físico' },
-    { value: 50, label: 'Avance Financiero' },
-    { value: 50, label: 'Avance Financiero' },
-    { value: 50, label: 'Avance Financiero' },
-    { value: 50, label: 'Avance Financiero' },
-    // ... more gauges
-  ];
-
-
-  // Estado inicial para la serie y opciones de la gráfica
-  const [chart_data, set_chart_data] = useState<{
-    series: ApexAxisChartSeries | ApexNonAxisChartSeries;
-    options: ApexOptions;
-  }>({
-      series: [{
-          name: '0 A 180',
-          data: [21, 22, 10,25],
-      },
-      {
-          name: '181 A 360',
-          data: [10, 20, 30, 17],
-      },
-      {
-          name: 'MAS DE 360',
-          data: [10, 20, 30, 23],
-      },
-      {
-          name: 'MAS DE 360',
-          data: [10, 20, 30, 43],
-      }],
-      options: {
-        colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560'],
-        chart: {
-          height: 350,
-          type: 'radialBar',
-          sparkline: {
-            enabled: true
-          }
-        },
-        plotOptions: {
-          radialBar: {
-            startAngle: -90,
-            endAngle: 90,
-            track: {
-              background: "#e7e7e7",
-              strokeWidth: '97%',
-              margin: 5, // margin is in pixels
-              dropShadow: {
-                enabled: true,
-                top: 2,
-                left: 0,
-                color: '#999',
-                opacity: 1,
-                blur: 2
-              }
-            },
-          },
-        }
-        // xaxis: {
-        //     categories: [
-        //         ['0 a', '30 dias'],
-        //         ['181 a', '360 dias'],
-        //         ['mas de ', '360 dias'],
-        //         ['mas de ', '360 dias']
-
-        //         // ['Peter', 'Brown'],
-        //         // ['Mary', 'Evans'],
-        //         // ['David', 'Wilson'],
-        //         // ['Lily', 'Roberts'],
-        //     ],
-        //     labels: {
-        //         style: {
-        //             fontSize: '12px'
-        //         }
-        //     }
-        // }
-      },
-  });
 
   return (
     <>
@@ -251,55 +177,24 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
             disabled
           />
         </Grid>
-
-        {/* {array_data.length > 0 && <Grid item xs={12} my={4} mx={2} sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-        }}>
-          {array_data.map((gauge, index) => (
-            <Grid item xs={3} key={index}>
-              <SemiCircleGauge value={gauge.value} label={gauge.label} />
-          </Grid>
-          ))}
-        </Grid>
-        } */}
-        {/* {Object.entries(array_data).map(([year, ejes]) => (
-          <Grid item xs={12} my={4} mx={2} key={year} sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            flexWrap: 'wrap',
-          }}>
-            <h2 style={{display: 'flex'}}>{year}</h2>
-            <section style={{display: 'flex'}}>
-              {Object.entries(ejes).map(([eje, gauges]) => (
-                <Grid item xs={3} key={eje}>
-                  <h3>{eje}</h3>
-                  {gauges.map((gauge: Gauge, index: number) => (
-                    <SemiCircleGauge value={gauge.value} label={gauge.label} key={index} />
-                  ))}
-                </Grid>
-              ))}
-            </section>
-          </Grid>
-        ))} */}
-        {Object.entries(array_data).map(([year, ejes], index) => (
-        <>
-          <h2 style={{margin: '3rem auto'}}>Año {index + 1}</h2>
-          <Grid container spacing={2} mx={2} sx={{border: '1px solid #33B8FF', borderRadius: '1rem', padding: 'inherit'}}>
+        {show_chart && Object.entries(array_data).map(([year, ejes], index) => (
+        <React.Fragment key={year} >
+          <h2 className="title">Año {index + 1}</h2>
+          <Grid className="anio-container" container spacing={2} mx={2}>
             {Object.entries(ejes).map(([eje, gauges]) => (
-              <>
-                <Grid item xs={3} sx={{display: 'flex', alignContent:'center'}}>
-                  <h3 style={{margin: 'auto'}}>{eje}</h3>
+              <React.Fragment key={eje}>
+                <Grid item xs={12} xl={3} sx={{display: 'flex', alignContent:'center'}}>
+                  <h3 className="subtitle">{eje}</h3>
                 </Grid>
                 {gauges.map((gauge, gaugeIndex) => (
-                  <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={gaugeIndex}>
+                  <Grid item xs={12} sm={6} lg={3} xl={2} key={gaugeIndex}>
                     <SemiCircleGauge value={gauge.value} label={gauge.label} />
                   </Grid>
                 ))}
-              </>
+              </React.Fragment>
             ))}
           </Grid>
-        </>
+        </React.Fragment>
       ))}
       </Grid>
     </>

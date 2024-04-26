@@ -27,6 +27,16 @@ import { api } from "../../../../../api/axios";
     return response.data.data;
   }
 
+  export const get_tablero_por_objetivo_ejes = async (
+    id_planPAI: number,
+    id_eje: number
+  ): Promise<any> => {
+    const response = await api.get(
+      `seguimiento/planes/tablero-control-objetivo-ejes/?planPAI=${id_planPAI}&eje_estrategico=${id_eje}`
+    );
+    return response.data.data;
+  };
+
   // --------------------------- BUSQUEDAS AVANZADAS ------------------------------------------
 
   // ? ----------------------------------------------- [ POST ] -----------------------------------------------
