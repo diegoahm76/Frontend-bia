@@ -6,8 +6,9 @@ import { Button, Grid } from '@material-ui/core';
 import html2pdf from 'html2pdf.js';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { ModalDocumentoLiquidacionDetalle } from '../ModalDocumento/ModalDocumentoLiquidacionDetalle';
-import { ElementoPQRS } from '../GenerarLiquidacion/GenerarLiquidacion';
 import { PreciosContext } from '../../context/PersonalContext';
+import { ElementoPQRS } from '../../interfaces/InterfacesLiquidacion';
+import { ModalNotificacionUsuario } from '../ModalDocumento/ModalNotificacionUsuario';
 
 
 interface props_data {
@@ -19,24 +20,24 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
 
     const { precios } = useContext(PreciosContext);
 
-console.log(precios);
+    console.log(precios);
 
-const sumaValores = precios.reduce((total, item) => {
-    // Convierte el valor a número antes de sumarlo
-    const valorNumerico = parseInt(item.valor);
-    return total + valorNumerico;
-}, 0);
+    const sumaValores = precios.reduce((total, item) => {
+        // Convierte el valor a número antes de sumarlo
+        const valorNumerico = parseInt(item.valor);
+        return total + valorNumerico;
+    }, 0);
 
-console.log("La suma de los valores es:", sumaValores);
-    
+    console.log("La suma de los valores es:", sumaValores);
+
     const ConvertirNumeroAPalabras = (numero: any) => {
         const unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
         const decenas = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
         const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
-    
+
         const miles = ['mil', 'millón', 'millones'];
-    
-        const ConvertirNumeroMenorAMil = (numeroMenorAMil: number):string => {
+
+        const ConvertirNumeroMenorAMil = (numeroMenorAMil: number): string => {
             if (numeroMenorAMil === 0) {
                 return '';
             } else if (numeroMenorAMil < 10) {
@@ -57,7 +58,7 @@ console.log("La suma de los valores es:", sumaValores);
                 return centenas[Math.floor(numeroMenorAMil / 100)] + ' ' + ConvertirNumeroMenorAMil(numeroMenorAMil % 100);
             }
         }
-    
+
         const ConvertirNumero = (numero: number) => {
             if (numero === 0) {
                 return 'cero';
@@ -77,10 +78,10 @@ console.log("La suma de los valores es:", sumaValores);
                 return resultado.trim();
             }
         }
-    
+
         return ConvertirNumero(numero);
     }
-    
+
 
     const NombreTitular = data.nombre_completo_titular;
     const fechaActual = new Date();
@@ -98,7 +99,7 @@ console.log("La suma de los valores es:", sumaValores);
     const ValorTotal = data.costo_proyecto; // Ciento veinte mil
     const ValorTotalEscrito = ConvertirNumeroAPalabras(ValorTotal);
     const ValorTotalEscritoEnMayusculas = ValorTotalEscrito;
-    
+
 
     const LongitudDeseada = 35;
 
@@ -428,9 +429,9 @@ console.log("La suma de los valores es:", sumaValores);
                 <Grid container alignItems="center" justifyContent="center">
                     <Grid item xs={3}>
                         <Button
+                            style={{ marginTop: 15, backgroundColor: "blue", color: "white", width: "95%" }}
+                            fullWidth
                             variant="contained"
-                            color="primary"
-                            style={{ marginTop: 15 }}
                             startIcon={<CloudDownloadIcon />}
                             onClick={descargarPDF}
                         >
@@ -439,13 +440,16 @@ console.log("La suma de los valores es:", sumaValores);
                     </Grid>
 
                     <Grid item xs={3}>
-                        <ModalDocumentoLiquidacionDetalle />
+                        <div style={{ position: "relative" }}>
+                            <ModalDocumentoLiquidacionDetalle />
+                        </div>
                     </Grid>
-
-
-                </Grid>
-
-
+                    <Grid item xs={3}>
+                        <div style={{ position: "relative" }}>
+                            <ModalNotificacionUsuario />
+                        </div>
+                    </Grid>
+                    </Grid>
                 <Grid item xs={12}>
                     <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
                 </Grid>

@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import { ProcesoLiquidacionScreen } from '../screens/BandejaEntradaLiquidacion';
 import { Page404 } from '../../../../screens/404';
 import { PreciosProvider } from '../context/PersonalContext';
-import { LiquidacionPlantilla } from '../components/plantillaHtml/Liquidacion';
 import { BuscarPagosIniciados } from '../screens/BuscarPagosIniciados';
 import { DocumentoPagoLiquidacion } from '../components/Documento&Pago/Documento&Pago';
 
