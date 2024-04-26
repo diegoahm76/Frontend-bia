@@ -13,6 +13,7 @@ import { listar_municipios } from "../thunks/agendamiento_vehiculos";
 import { useAppDispatch } from "../../../../hooks";
 import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
 import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
+import { useNavigate } from "react-router-dom";
 
 
 interface custom_column extends GridColDef {
@@ -42,6 +43,7 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
   set_mostrar_vehiculos_agendados
 }) => {
   const dispatch = useAppDispatch();
+  const navite = useNavigate();
 
   const [municipios, set_municipios] = useState<any>([]);
 
@@ -70,10 +72,11 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
     set_accion('ver_agendamiento');
   }
 
-  const no_aprobar_solicitud = (params: interface_data_agendamiento_vehiculos) => { 
+  // Se comenta la funcion no_aprobar_solicitud ya que por version no se esta utilizando
+  /*const no_aprobar_solicitud = (params: interface_data_agendamiento_vehiculos) => { 
     set_mostrar_input_no_aprobado(true);
     set_id_solicitud_viaje(params.id_solicitud_viaje ?? 0);
-  }
+  }*/
 
   const aprobar_solicitud = (params: interface_data_agendamiento_vehiculos) => {
     set_mostrar_agendamiento_vehiculo(true);
@@ -117,10 +120,11 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
         res.row.estado_solicitud === 'RC' ? 'Rechazada' 
         : res.row.estado_solicitud === 'ES' ? 'En Espera'
         : res.row.estado_solicitud === 'FN' ? 'Finalizada'
+        : res.row.estado_solicitud === 'AP' ? 'Aprobada'
         : res.row.estado_solicitud === 'RE' && 'Respondida'
       ))
     },
-    {field: 'fecha_aprobacion_responsable', headerName:'Fecha de Aprobacion/Rechazo', minWidth:150, flex:1,
+    {field: 'fecha_aprobacion_responsable', headerName:'Fecha de Aprobacion/Rechazo', minWidth:220, flex:1,
       renderCell: ((res)=>{     
         return res.row.estado_solicitud === 'RE'  ? 
         dayjs(res.row.fecha_aprobacion_responsable).format('DD/MM/YYYY')
@@ -130,7 +134,7 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
         }
       )
     },
-    {field: 'justificacion_rechazo', headerName:'Justificacion de rechazo', minWidth:150, flex:1},
+    {field: 'justificacion_rechazo', headerName:'Justificacion de rechazo', minWidth:300, flex:1},
     {field: 'acciones', headerName:'Acciones', minWidth:260, flex:1, align:'center',
       renderCell: ((res)=>{
         if(res.row.estado_solicitud === 'FN' || res.row.estado_solicitud === 'RE'){
@@ -145,24 +149,16 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
             }
             >Ver agendamiento</Button>
           )
-        } else if (res.row.estado_solicitud === 'ES'){
+        } else if (res.row.estado_solicitud === 'AP'){
           return (
-            <Grid container display={'flex'} gap='5px' justifyContent={'center'}>
               <Button
+                fullWidth
                 size="small"
                 color='success'
                 variant='contained'
                 startIcon={<DoneIcon />}
-                onClick={()=>aprobar_solicitud(res.row)}
-              >Aprobar</Button>
-              <Button
-                size="small"
-                color='error'
-                variant='contained'
-                startIcon={<CloseIcon />}
-                onClick={()=>no_aprobar_solicitud(res.row)}
-              >No aprobar</Button>
-            </Grid>
+                onClick={()=>{aprobar_solicitud(res.row)}}
+              >Agendar Vehiculo</Button>
           )
         }
         return ''

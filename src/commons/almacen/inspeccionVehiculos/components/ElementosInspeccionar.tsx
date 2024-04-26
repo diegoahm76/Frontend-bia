@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Radio, FormLabel, TextField, Button } from "@mui/material";
 import TarjetaInspeccion from "./TarjetaInspeccion";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { cambio_input_radio } from "../thunks/cambio_input_radio";
 import { Title } from "../../../../components";
 import SaveIcon from '@mui/icons-material/Save';
@@ -10,17 +10,31 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import ClearIcon from '@mui/icons-material/Clear';
 import ContenedorInput from "./ContenedorInput";
 import { estilo_radio } from "../thunks/estilo_radio";
-import { create_inspeccion_vehiculo } from "../interfaces/types";
+import { create_inspeccion_vehiculo, interface_busqueda_persona_solicita } from "../interfaces/types";
 import { useAppDispatch } from "../../../../hooks";
 import { enviar_inspeccion_vehiculo } from "../thunks/inspeccion_vehiculos";
 import Swal from "sweetalert2";
 import { control_error } from "../../../../helpers";
+import dayjs, { Dayjs } from "dayjs";
 
 interface props {
-  set_data_inspeccion_vehiculo: React.Dispatch<React.SetStateAction<create_inspeccion_vehiculo>>;
+  set_data_inspeccion_vehiculo: Dispatch<SetStateAction<create_inspeccion_vehiculo>>;
   data_inspeccion_vehiculo: create_inspeccion_vehiculo;
-  set_kilometraje: React.Dispatch<React.SetStateAction<number>>;
+  set_kilometraje: Dispatch<SetStateAction<number>>;
   id_hoja_vida_vehiculo: number;
+  set_inspeccionando_vehiculo: Dispatch<SetStateAction<boolean>>;
+  data_personas_viajan: interface_busqueda_persona_solicita[];
+  set_data_personas_viajan: Dispatch<SetStateAction<interface_busqueda_persona_solicita[]>>;
+  capacidad_extintor: number;
+  set_capacidad_extintor: Dispatch<SetStateAction<number>>;
+  fecha_vencimiento_extintor: Dayjs | null;
+  set_fecha_vencimiento_extintor: Dispatch<SetStateAction<Dayjs | null>>;
+  fecha_vencimiento_licencia: Dayjs | null;
+  set_fecha_vencimiento_licencia: Dispatch<SetStateAction<Dayjs | null>>;
+  fecha_vencimiento_soat: Dayjs | null;
+  set_fecha_vencimiento_soat: Dispatch<SetStateAction<Dayjs | null>>;
+  fecha_revision_tecnomecanica: Dayjs | null;
+  set_fecha_revision_tecnomecanica: Dispatch<SetStateAction<Dayjs | null>>;
 }
 
 
@@ -28,7 +42,20 @@ const ElementosInspeccionar: React.FC<props> = ({
   set_data_inspeccion_vehiculo,
   data_inspeccion_vehiculo,
   set_kilometraje,
-  id_hoja_vida_vehiculo
+  id_hoja_vida_vehiculo,
+  set_inspeccionando_vehiculo,
+  data_personas_viajan,
+  set_data_personas_viajan,
+  capacidad_extintor,
+  set_capacidad_extintor,
+  fecha_vencimiento_extintor,
+  set_fecha_vencimiento_extintor,
+  fecha_vencimiento_licencia,
+  set_fecha_vencimiento_licencia,
+  fecha_vencimiento_soat,
+  set_fecha_vencimiento_soat,
+  fecha_revision_tecnomecanica,
+  set_fecha_revision_tecnomecanica,
 }) => {
   const dispatch = useAppDispatch();
   const [direcionales_delanteras, set_direcionales_delanteras] = useState<string>('true');
@@ -63,8 +90,27 @@ const ElementosInspeccionar: React.FC<props> = ({
   const [observaciones, set_observaciones] = useState<string>('');
   const [tiene_observaciones, set_tiene_observaciones] = useState<boolean>(false);
 
-  useEffect(()=>{
-    set_data_inspeccion_vehiculo((prev)=>{
+  useEffect(() => {
+    // mapeamos a data_personas_viajan para ver si en el atributo persona_agregada_inspeccion hay personas agregadas en true, si es asi entonces devolvemos un atributo llamado 'personas_nuevas' que sera lo retornado por el map en caso que persona_agregada_inspeccion sea true
+    const personas_nuevas = data_personas_viajan
+      .filter(persona => persona.persona_agregada_inspeccion)
+      .map(persona => ({
+        id_persona_viaja: persona.id_persona,
+        id_solicitud_viaje: persona.id_solicitud_viaje,
+      }));
+
+    const personas_existentes = data_personas_viajan
+      .filter(persona => !persona.persona_agregada_inspeccion)
+      .map(persona => {
+        return {
+          id_persona_viaja: persona.id_persona,
+          id_solicitud_viaje: persona.id_solicitud_viaje,
+          persona_confirma_viaje: persona.persona_confirma_viaje,
+          ...(!persona.persona_confirma_viaje ? { observacion: persona.observacion } : {})
+        }
+      })
+
+    set_data_inspeccion_vehiculo((prev) => {
       const nuevos_datos = {
         dir_llantas_delanteras: direcionales_delanteras === 'true' ? true : false,
         dir_llantas_traseras: direcionales_traseras === 'true' ? true : false,
@@ -94,6 +140,13 @@ const ElementosInspeccionar: React.FC<props> = ({
         kit_herramientas: kit_herramientas === 'true' ? true : false,
         botiquin_completo: botiquin_completo === 'true' ? true : false,
         pito: pito === 'true' ? true : false,
+        personas_nuevas: personas_nuevas,
+        personas_existentes: personas_existentes,
+        capacidad_extintor: capacidad_extintor,
+        fecha_vencimiento_extintor: dayjs(fecha_vencimiento_extintor).format('YYYY-MM-DD'),
+        fecha_vecimiento_licencia: dayjs(fecha_vencimiento_licencia).format('YYYY-MM-DD'),
+        fecha_vencimiento_soat: dayjs(fecha_vencimiento_soat).format('YYYY-MM-DD'),
+        fecha_revision_tecno_mecanica: dayjs(fecha_revision_tecnomecanica).format('YYYY-MM-DD'),
         ...(tiene_observaciones && { observaciones: observaciones }),
       }
 
@@ -105,9 +158,9 @@ const ElementosInspeccionar: React.FC<props> = ({
         delete prev.observaciones;
       }
       return { ...prev, ...nuevos_datos };
-      }
+    }
     )
-  },[direcionales_delanteras,
+  }, [direcionales_delanteras,
     direcionales_traseras,
     limpiabrisas_delantero,
     limpiabrisas_trasero,
@@ -135,7 +188,15 @@ const ElementosInspeccionar: React.FC<props> = ({
     kit_herramientas,
     botiquin_completo,
     pito,
-    tiene_observaciones,observaciones])
+    tiene_observaciones,
+    observaciones,
+    data_personas_viajan,
+    capacidad_extintor,
+    fecha_vencimiento_extintor,
+    fecha_vencimiento_licencia,
+    fecha_vencimiento_soat,
+    fecha_revision_tecnomecanica,
+  ])
 
   useEffect(() => {
     const estados_individuales = [
@@ -169,7 +230,7 @@ const ElementosInspeccionar: React.FC<props> = ({
       pito
     ];
     //Si hay por lo menos un estado malo, entoces devuelve true
-    const hay_fallo = estados_individuales.some(estado => estado === 'false');  
+    const hay_fallo = estados_individuales.some(estado => estado === 'false');
     set_tiene_observaciones(hay_fallo ? true : false);
   }, [direcionales_delanteras,
     direcionales_traseras,
@@ -230,13 +291,54 @@ const ElementosInspeccionar: React.FC<props> = ({
     set_botiquin_completo('true');
     set_pito('true');
     set_kilometraje(0);
+    set_observaciones('');
+    set_data_personas_viajan([]);
+    set_capacidad_extintor(0);
+    set_fecha_vencimiento_extintor(null);
+    set_fecha_vencimiento_licencia(null);
+    set_fecha_vencimiento_soat(null);
+    set_fecha_revision_tecnomecanica(null);
+    set_inspeccionando_vehiculo(false);
   }
 
-  const enviar_asignacion_vehiculo = () => {
-    if(id_hoja_vida_vehiculo === 0){
+  const validar_formulario: () => Promise<boolean> = async () => {
+    if (id_hoja_vida_vehiculo === 0) {
       control_error('No se ha seleccionado un vehículo');
-      return
-    } else {
+      return false;
+    } else if(data_personas_viajan.length === 0){
+      control_error('No se han agregado personas que viajan');
+      return false;
+    } else if(capacidad_extintor === 0){
+      control_error('Debe agregar la capacidad del extintor');
+      return false;
+    } else if(fecha_vencimiento_extintor === null || dayjs(fecha_vencimiento_extintor).isValid() === false){
+      control_error('Debe agregar la fecha de vencimiento del extintor');
+      return false;
+    } else if(fecha_vencimiento_licencia === null || dayjs(fecha_vencimiento_licencia).isValid() === false){
+      control_error('Debe agregar la fecha de vencimiento de la licencia');
+      return false;
+    } else if(fecha_vencimiento_soat === null || dayjs(fecha_vencimiento_soat).isValid() === false){
+      control_error('Debe agregar la fecha de vencimiento del SOAT');
+      return false;
+    } else if(fecha_revision_tecnomecanica === null || dayjs(fecha_revision_tecnomecanica).isValid() === false){
+      control_error('Debe agregar la fecha de revisión tecnomecánica');
+      return false;
+    } else if(data_personas_viajan.some(persona => persona.persona_confirma_viaje === false)){
+      if(data_personas_viajan.some(persona => persona.observacion === '')){
+        control_error('Debe agregar una observación a las personas que no confirman el viaje');
+        return false;
+      }
+    } else if(tiene_observaciones && observaciones === ''){
+      control_error('Debe agregar observaciones, ya que hay elementos que no están en buen estado');
+      return false;
+    }
+    return true;
+  }
+
+  const enviar_asignacion_vehiculo = async() => {
+    const validacion = await validar_formulario();
+
+    if (validacion) {
       Swal.fire({
         title: '¿Está seguro que desea enviar la inspección del vehículo?',
         showDenyButton: true,
@@ -250,48 +352,48 @@ const ElementosInspeccionar: React.FC<props> = ({
         if (result.isConfirmed) {
           dispatch(enviar_inspeccion_vehiculo(data_inspeccion_vehiculo)).then((response: { success: boolean, detail: string, data: any }) => {
             if (response) {
-              console.log(response);        
+              console.log(response);
               return;
             }
           })
           limpiar_inspeccion();
           return true;
-        } else if(result.isDenied){
+        } else if (result.isDenied) {
           return false;
         }
-      });   
+      });
     }
   }
 
   return (
     <Grid container item spacing={1} xs={12} sx={{
-      display:'flex',
-      justifyContent:'space-between',
+      display: 'flex',
+      justifyContent: 'space-between',
     }}>
       <TarjetaInspeccion title="Direccionales">
         <ContenedorInput>
           <FormLabel>Direccionales delanteras</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',direcionales_delanteras,set_direcionales_delanteras)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', direcionales_delanteras, set_direcionales_delanteras)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',direcionales_delanteras,set_direcionales_delanteras)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', direcionales_delanteras, set_direcionales_delanteras)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Direccionales Traseras</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',direcionales_traseras,set_direcionales_traseras)}
-              sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', direcionales_traseras, set_direcionales_traseras)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',direcionales_traseras,set_direcionales_traseras)}
-              sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', direcionales_traseras, set_direcionales_traseras)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -300,43 +402,27 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Limpiabrisas">
         <ContenedorInput>
           <FormLabel>Limpiabrisas delantero</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',limpiabrisas_delantero,set_limpiabrisas_delantero)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', limpiabrisas_delantero, set_limpiabrisas_delantero)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',limpiabrisas_delantero,set_limpiabrisas_delantero)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', limpiabrisas_delantero, set_limpiabrisas_delantero)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Limpiabrisas trasero</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',limpiabrisas_trasero,set_limpiabrisas_trasero)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', limpiabrisas_trasero, set_limpiabrisas_trasero)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',limpiabrisas_trasero,set_limpiabrisas_trasero)}
-                sx={estilo_radio('#e23a3a',28)}
-            />
-          </Grid>
-        </ContenedorInput>
-      </TarjetaInspeccion>
-
-      <TarjetaInspeccion title="Aceite">
-        <ContenedorInput>
-          <FormLabel>Nivel de aceite</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
-            <Radio
-              {...cambio_input_radio('true',nivel_aceite,set_nivel_aceite)}
-                sx={estilo_radio('#27b355',28)}
-            />
-            <Radio
-              {...cambio_input_radio('false',nivel_aceite,set_nivel_aceite)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', limpiabrisas_trasero, set_limpiabrisas_trasero)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -344,57 +430,71 @@ const ElementosInspeccionar: React.FC<props> = ({
 
       <TarjetaInspeccion title="Frenos">
         <ContenedorInput>
-          <FormLabel>Nivel de frenos</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
-            <Radio
-              {...cambio_input_radio('true',nivel_frenos,set_nivel_frenos)}
-                sx={estilo_radio('#27b355',28)}
-            />
-            <Radio
-              {...cambio_input_radio('false',nivel_frenos,set_nivel_frenos)}
-                sx={estilo_radio('#e23a3a',28)}
-            />
-          </Grid>
-        </ContenedorInput>
-        <ContenedorInput>
           <FormLabel>Frenos principales</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',frenos_generales,set_frenos_generales)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', frenos_generales, set_frenos_generales)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',frenos_generales,set_frenos_generales)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', frenos_generales, set_frenos_generales)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Frenos de emergencia</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',frenos_emergencia,set_frenos_emergencia)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', frenos_emergencia, set_frenos_emergencia)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',frenos_emergencia,set_frenos_emergencia)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', frenos_emergencia, set_frenos_emergencia)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
       </TarjetaInspeccion>
 
-      <TarjetaInspeccion title="Refrigerante">
+      <TarjetaInspeccion title="Niveles de fluidos">
         <ContenedorInput>
           <FormLabel>Nivel de refrigerante</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',nivel_refrigerante,set_nivel_refrigerante)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', nivel_refrigerante, set_nivel_refrigerante)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',nivel_refrigerante,set_nivel_refrigerante)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', nivel_refrigerante, set_nivel_refrigerante)}
+              sx={estilo_radio('#e23a3a', 28)}
+            />
+          </Grid>
+        </ContenedorInput>
+        <ContenedorInput>
+          <FormLabel>Nivel de frenos</FormLabel>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
+            <Radio
+              {...cambio_input_radio('true', nivel_frenos, set_nivel_frenos)}
+              sx={estilo_radio('#27b355', 28)}
+            />
+            <Radio
+              {...cambio_input_radio('false', nivel_frenos, set_nivel_frenos)}
+              sx={estilo_radio('#e23a3a', 28)}
+            />
+          </Grid>
+        </ContenedorInput>
+
+        <ContenedorInput>
+          <FormLabel>Nivel de aceite</FormLabel>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
+            <Radio
+              {...cambio_input_radio('true', nivel_aceite, set_nivel_aceite)}
+              sx={estilo_radio('#27b355', 28)}
+            />
+            <Radio
+              {...cambio_input_radio('false', nivel_aceite, set_nivel_aceite)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -403,40 +503,40 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Apoya cabezas">
         <ContenedorInput>
           <FormLabel>Apoya cabezas del piloto</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',apoyacabezas_piloto,set_apoyacabezas_piloto)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', apoyacabezas_piloto, set_apoyacabezas_piloto)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',apoyacabezas_piloto,set_apoyacabezas_piloto)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', apoyacabezas_piloto, set_apoyacabezas_piloto)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Apoya cabeza del copiloto</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',apoyacabezas_copiloto,set_apoyacabezas_copiloto)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', apoyacabezas_copiloto, set_apoyacabezas_copiloto)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',apoyacabezas_copiloto,set_apoyacabezas_copiloto)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', apoyacabezas_copiloto, set_apoyacabezas_copiloto)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Apoya cabezas traseros</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',apoyacabezas_traseros,set_apoyacabezas_traseros)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', apoyacabezas_traseros, set_apoyacabezas_traseros)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',apoyacabezas_traseros,set_apoyacabezas_traseros)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', apoyacabezas_traseros, set_apoyacabezas_traseros)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -445,40 +545,40 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Llantas">
         <ContenedorInput>
           <FormLabel>Llantas delanteras</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',llantas_delanteras,set_llantas_delanteras)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', llantas_delanteras, set_llantas_delanteras)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',llantas_delanteras,set_llantas_delanteras)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', llantas_delanteras, set_llantas_delanteras)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Llantas traseras</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',llantas_traseras,set_llantas_traseras)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', llantas_traseras, set_llantas_traseras)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',llantas_traseras,set_llantas_traseras)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', llantas_traseras, set_llantas_traseras)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Llanta de repuesto</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',llanta_repuesto,set_llanta_repuesto)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', llanta_repuesto, set_llanta_repuesto)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',llanta_repuesto,set_llanta_repuesto)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', llanta_repuesto, set_llanta_repuesto)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -487,27 +587,27 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Espejos">
         <ContenedorInput>
           <FormLabel>Espejos laterales</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',espejos_laterales,set_espejos_laterales)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', espejos_laterales, set_espejos_laterales)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',espejos_laterales,set_espejos_laterales)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', espejos_laterales, set_espejos_laterales)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Espejo retrovisor</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',espejos_retrovisor,set_espejos_retrovisor)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', espejos_retrovisor, set_espejos_retrovisor)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',espejos_retrovisor,set_espejos_retrovisor)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', espejos_retrovisor, set_espejos_retrovisor)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -516,27 +616,27 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Cinturones">
         <ContenedorInput>
           <FormLabel>Cinturones delanteros</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',cinturones_delanteros,set_cinturones_delanteros)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', cinturones_delanteros, set_cinturones_delanteros)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',cinturones_delanteros,set_cinturones_delanteros)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', cinturones_delanteros, set_cinturones_delanteros)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Cinturones traseros</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',cinturones_traseros,set_cinturones_traseros)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', cinturones_traseros, set_cinturones_traseros)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',cinturones_traseros,set_cinturones_traseros)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', cinturones_traseros, set_cinturones_traseros)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -545,79 +645,79 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Luces">
         <ContenedorInput>
           <FormLabel>Luces altas</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',luces_altas,set_luces_altas)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', luces_altas, set_luces_altas)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',luces_altas,set_luces_altas)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', luces_altas, set_luces_altas)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Luces Medias</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',luces_medias,set_luces_medias)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', luces_medias, set_luces_medias)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',luces_medias,set_luces_medias)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', luces_medias, set_luces_medias)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Luces bajas</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',luces_bajas,set_luces_bajas)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', luces_bajas, set_luces_bajas)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',luces_bajas,set_luces_bajas)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', luces_bajas, set_luces_bajas)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Luces freno</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',luces_parada,set_luces_parada)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', luces_parada, set_luces_parada)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',luces_parada,set_luces_parada)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', luces_parada, set_luces_parada)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Luces parqueo</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',luces_parqueo,set_luces_parqueo)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', luces_parqueo, set_luces_parqueo)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',luces_parqueo,set_luces_parqueo)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', luces_parqueo, set_luces_parqueo)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
         <ContenedorInput>
           <FormLabel>Luces reversa</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',luces_reversa,set_luces_reversa)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', luces_reversa, set_luces_reversa)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',luces_reversa,set_luces_reversa)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', luces_reversa, set_luces_reversa)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -626,14 +726,14 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Herramientas">
         <ContenedorInput>
           <FormLabel>Kit de herramientas</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',kit_herramientas,set_kit_herramientas)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', kit_herramientas, set_kit_herramientas)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',kit_herramientas,set_kit_herramientas)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', kit_herramientas, set_kit_herramientas)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -642,14 +742,14 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Botiquin">
         <ContenedorInput>
           <FormLabel>Botiquin</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',botiquin_completo,set_botiquin_completo)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', botiquin_completo, set_botiquin_completo)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',botiquin_completo,set_botiquin_completo)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', botiquin_completo, set_botiquin_completo)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -658,14 +758,14 @@ const ElementosInspeccionar: React.FC<props> = ({
       <TarjetaInspeccion title="Pito">
         <ContenedorInput>
           <FormLabel>Pito</FormLabel>
-          <Grid item sx={{display:'flex',gap:2}}>
+          <Grid item sx={{ display: 'flex', gap: 2 }}>
             <Radio
-              {...cambio_input_radio('true',pito,set_pito)}
-                sx={estilo_radio('#27b355',28)}
+              {...cambio_input_radio('true', pito, set_pito)}
+              sx={estilo_radio('#27b355', 28)}
             />
             <Radio
-              {...cambio_input_radio('false',pito,set_pito)}
-                sx={estilo_radio('#e23a3a',28)}
+              {...cambio_input_radio('false', pito, set_pito)}
+              sx={estilo_radio('#e23a3a', 28)}
             />
           </Grid>
         </ContenedorInput>
@@ -675,10 +775,10 @@ const ElementosInspeccionar: React.FC<props> = ({
         <Grid item container xs={12}>
           <Title title="Observaciones" />
           <TextField
-            style={{margin:'20px 0px'}}
+            style={{ margin: '20px 0px' }}
             id="observaciones"
             value={observaciones}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_observaciones(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_observaciones(e.target.value)}
             required
             fullWidth
             placeholder="Escriba aqui sus observaciones"
@@ -690,44 +790,47 @@ const ElementosInspeccionar: React.FC<props> = ({
       }
 
       <Grid
-          item
-          xs={12}
-          sx={{
-            display: "flex",
-            justifyContent: "end",
-            alignItems: "center",
-            marginTop: "20px",
-            gap: 4,
+        item
+        xs={12}
+        sx={{
+          display: "flex",
+          justifyContent: "end",
+          alignItems: "center",
+          marginTop: "20px",
+          gap: 4,
+        }}
+      >
+        <Button
+          color="success"
+          variant="contained"
+          startIcon={<SaveIcon />}
+          onClick={enviar_asignacion_vehiculo}
+        >
+          {"Guardar"}
+        </Button>
+        <Button
+          color="error"
+          variant="contained"
+          startIcon={<ClearIcon />}
+          onClick={() => {
+            limpiar_inspeccion()
+            set_inspeccionando_vehiculo(false)
           }}
         >
-          <Button
-            color="success"
-            variant="contained"
-            startIcon={<SaveIcon />}
-            onClick={enviar_asignacion_vehiculo}
-          >
-            {"Guardar"}
-          </Button>
-          <Button
-            color="error"
-            variant="contained"
-            startIcon={<ClearIcon />}
-            onClick={() => {}}
-          >
-            Salir
-          </Button>
-          <Button
-            color="inherit"
-            variant="outlined"
-            startIcon={<CleanIcon />}
-            onClick={limpiar_inspeccion}
-          >
-            Limpiar
-          </Button>
-        </Grid>
+          Salir
+        </Button>
+        <Button
+          color="inherit"
+          variant="outlined"
+          startIcon={<CleanIcon />}
+          onClick={limpiar_inspeccion}
+        >
+          Limpiar
+        </Button>
+      </Grid>
     </Grid>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default ElementosInspeccionar;

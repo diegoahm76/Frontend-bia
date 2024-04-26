@@ -2,7 +2,7 @@ import { api } from '../../../../../../api/axios';
 import { showAlert } from '../../../../../../utils/showAlert/ShowAlert';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const putAceptarTarea = async (idTarea: number) => {
+export const putAceptarTarea = async (idTarea: number, /*id_PQRSDF: number*/) => {
   try {
     const url = `gestor/bandeja-tareas/tareas-asignada-aceptar/update/${idTarea}/`;
     const bodyPut = {};

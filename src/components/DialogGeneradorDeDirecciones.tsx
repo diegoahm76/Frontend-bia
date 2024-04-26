@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useForm } from 'react-hook-form';
 import {
   Grid,
@@ -11,12 +12,15 @@ import {
   Button,
   Divider,
   Typography,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from './Title';
 import { useState } from 'react';
 import type { Direccion, keys_direccion } from '../interfaces/globalModels';
+import { Geolocalizacion } from '../commons/gestorDocumental/TramitesOServicios/screens/geolocalizacionScreen';
 
 interface Props {
 
@@ -95,34 +99,44 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
       prefijo_bis: '',
       letra_prefijo: '',
       cuadrante: '',
+      Cordenada: '',
       via_secundaria: '',
       numero_o_nombre_via_secundaria: '',
+      numero_referencia: '',
       letras_via_secundaria: '',
       sufijo_bis: '',
       letra_sufijo: '',
       cuadrante_secundaria: '',
+      Informacion_Adicional:'',
+      coordenada_x:'',
+      coordenada_y:'',
       barrio: '',
       nombre: '',
       direccion_estandarizada: '',
     },
   });
   const [data_direction, set_data_direction] = useState<Direccion>({
-    ubicacion: '',
-    via_principal: '',
-    numero_o_nombre_via: '',
-    letras_via_principal: '',
     prefijo_bis: '',
     letra_prefijo: '',
     cuadrante: '',
+    Cordenada: '',
     via_secundaria: '',
     numero_o_nombre_via_secundaria: '',
+    numero_referencia: '',
     letras_via_secundaria: '',
     sufijo_bis: '',
     letra_sufijo: '',
     cuadrante_secundaria: '',
+    Informacion_Adicional:'',
+    coordenada_x:'',
+    coordenada_y:'',
     barrio: '',
     nombre: '',
     direccion_estandarizada: '',
+    ubicacion: '',
+    numero_o_nombre_via: '',
+    letras_via_principal: '',
+    via_principal: ''
   });
   const [direccion_estandarizada, set_direccion_estandariazada] = useState('');
 
@@ -158,38 +172,48 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
   const clear_data_form = (): void => {
     set_data_direction({
       ubicacion: '',
-      via_principal: '',
       numero_o_nombre_via: '',
       letras_via_principal: '',
       prefijo_bis: '',
       letra_prefijo: '',
       cuadrante: '',
+      Cordenada: '',
       via_secundaria: '',
+      via_principal: '',
       numero_o_nombre_via_secundaria: '',
+      numero_referencia: '',
       letras_via_secundaria: '',
       sufijo_bis: '',
       letra_sufijo: '',
       cuadrante_secundaria: '',
+      Informacion_Adicional:'',
+      coordenada_x: '',
+      coordenada_y: '',
       barrio: '',
       nombre: '',
       direccion_estandarizada: '',
     });
     set_value('ubicacion', '');
-    set_value('via_principal', '');
     set_value('numero_o_nombre_via', '');
     set_value('letras_via_principal', '');
     set_value('prefijo_bis', '');
     set_value('letra_prefijo', '');
     set_value('cuadrante', '');
+    set_value('Cordenada', '');
     set_value('via_secundaria', '');
     set_value('numero_o_nombre_via_secundaria', '');
+    set_value('numero_referencia', '');
     set_value('letras_via_secundaria', '');
     set_value('sufijo_bis', '');
     set_value('letra_sufijo', '');
-    set_value('cuadrante_secundaria', '');
+    set_value('letra_sufijo', '');
+    set_value('Informacion_Adicional', '');
+    set_value('coordenada_x', '');
+    set_value('coordenada_y', '');
     set_value('barrio', '');
     set_value('nombre', '');
     set_value('direccion_estandarizada', '');
+    set_value('via_principal', '');
     openDialog(false);
   };
 
@@ -197,6 +221,25 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
     onChange(direccion_estandarizada, type);
     clear_data_form();
   });
+
+
+  const opciones_cordenadas = [
+    { value: 'sur', label: 'Sur' },
+    { value: 'norte', label: 'Norte' },
+    { value: 'este', label: 'Este' },
+    { value: 'oeste', label: 'Oeste' },
+  ];
+
+
+  // const coordenada_x = 4.142;
+  // const coordenada_y = -73.62664;
+
+  const [mostrarGeolocalizacion, setMostrarGeolocalizacion] = useState(false);
+
+  const toggleMostrarGeolocalizacion = () => {
+    setMostrarGeolocalizacion(!mostrarGeolocalizacion);
+  };
+
 
   return (
     <Dialog maxWidth="lg" open={open} onClose={clear_data_form}>
@@ -282,29 +325,39 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
               <Grid item xs={12}>
                 <Title title="Datos de dirección principal" />
               </Grid>
-              <Grid item xs={12} sm={4} md={3}>
-                <TextField
-                  {...register('via_principal', { required: true })}
-                  error={errors.via_principal?.type === 'required'}
-                  helperText={
-                    errors.via_principal?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  onChange={handle_change}
-                  select
-                  defaultValue={''}
-                  label="Vía principal"
-                  size="small"
-                  fullWidth
-                >
-                  {via_principal_options.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+
+
+              <Grid container style={{ margin: 15 }}>
+
+
+
+                <Grid item xs={12} sm={4} md={3}>
+                  <TextField
+                    {...register('via_principal', { required: true })}
+                    error={errors.via_principal?.type === 'required'}
+                    helperText={
+                      errors.via_principal?.type === 'required'
+                        ? 'Este campo es obligatorio'
+                        : ''
+                    }
+                    onChange={handle_change}
+                    select
+                    defaultValue={''}
+                    label="Vía principal"
+                    size="small"
+                    fullWidth
+                  >
+                    {via_principal_options.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
               </Grid>
+
+
               <Grid item xs={12} sm={3} md={3}>
                 <TextField
                   {...register('numero_o_nombre_via', { required: true })}
@@ -346,21 +399,66 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   fullWidth
                 />
               </Grid>
-              {/* <Grid item xs={12} sm={2} md={2}>
+
+
+              <Grid item xs={12} sm={3} md={2}>
                 <TextField
                   {...register('cuadrante')}
                   onChange={handle_change}
-                  label="Número"
-                  type="number"
+                  select
+                  defaultValue={''}
+                  label="Letra"
                   size="small"
                   fullWidth
-                />
-              </Grid> */}
-            </Grid>
-            <Grid item xs={12}>
-              <Typography style={{ height: 30,marginTop:-25 }} variant="h5">Número</Typography>
-            </Grid>
-            <Grid container style={{marginTop:-5 }} spacing={2}>
+                >
+                  {letras_options.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
+
+
+              <Grid item xs={12} sm={3} md={2}>
+                <TextField
+                  {...register('Cordenada')}
+                  onChange={handle_change}
+                  select
+                  defaultValue={''}
+                  label="Cordenada"
+                  size="small"
+                  fullWidth
+                >
+                  {opciones_cordenadas.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
+
+
+
+
+
+              <Grid item xs={1}>
+                <Grid container alignItems="center" justifyContent="center">
+                  <Typography style={{ height: 0, marginTop: 0 }} variant="h6">
+                    #
+                  </Typography>
+                </Grid>
+              </Grid>
+
+
+
+
+
+
+
+
               {/* <Grid item xs={12} sm={3} md={3}>
                 <TextField
                   {...register('via_secundaria', { required: true })}
@@ -384,6 +482,10 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   ))}
                 </TextField>
               </Grid> */}
+
+
+
+
               <Grid item xs={12} sm={4} md={3}>
                 <TextField
                   {...register('numero_o_nombre_via_secundaria', {
@@ -403,9 +505,11 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   fullWidth
                 />
               </Grid>
+
+              
               <Grid item xs={12} sm={4} md={2}>
                 <TextField
-                  {...register('letras_via_secundaria')}
+                  {...register('numero_referencia')}
                   onChange={handle_change}
                   select
                   defaultValue={''}
@@ -420,9 +524,12 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   ))}
                 </TextField>
               </Grid>
+
+
+
               <Grid item xs={12} sm={4} md={2}>
                 <TextField
-                  {...register('sufijo_bis')}
+                  {...register('letras_via_secundaria')}
                   onChange={handle_change}
                   label="Sufijo bis"
                   size="small"
@@ -431,13 +538,136 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
               </Grid>
               <Grid item xs={12} sm={4} md={2}>
                 <TextField
-                  {...register('letra_sufijo')}
+                  {...register('sufijo_bis')}
                   onChange={handle_change}
-                  label="Letra sufijo"
+                  select
+                  defaultValue={''}
+                  label="Letra"
+                  size="small"
+                  fullWidth
+                >
+                  {letras_options.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+              </Grid>
+
+
+
+              <Grid item xs={1}>
+                <Grid container alignItems="center" justifyContent="center">
+                  <Typography style={{ height: 0, marginTop: 0 }} variant="h4">
+                    -
+                  </Typography>
+                </Grid>
+              </Grid>
+
+
+              <Grid item xs={12} sm={4} md={3}>
+                <TextField
+                  {...register('letra_sufijo', {
+                    required: true,
+                  })}
+                  error={
+                    errors.letra_sufijo?.type === 'required'
+                  }
+                  helperText={
+                    errors.letra_sufijo?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : ''
+                  }
+                  onChange={handle_change}
+                  label="Nombre o numero de la via*"
                   size="small"
                   fullWidth
                 />
               </Grid>
+
+
+
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  {...register('cuadrante_secundaria')}
+                  onChange={handle_change}
+                  select
+                  defaultValue={''}
+                  label="Cordenada"
+                  size="small"
+                  fullWidth
+                >
+                  {opciones_cordenadas.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
+
+              <Grid item xs={6} >
+                <TextField
+                  {...register('Informacion_Adicional')}
+                  onChange={handle_change}
+                  label="Informacion Adicional"
+                  size="small"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} >
+              <Grid container alignItems="center" justifyContent="center">
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                    checked={mostrarGeolocalizacion}
+                    onChange={toggleMostrarGeolocalizacion}
+                    color="primary"
+                    />
+                  }
+                  label="Mostrar Geolocalización"
+                  />
+                  </Grid>
+              </Grid>
+
+
+              {mostrarGeolocalizacion && <>
+
+
+                <Grid item xs={6} >
+                  <TextField
+                    {...register('coordenada_x')}
+                    onChange={handle_change}
+                    label="Cordenada x"
+                    size="small"
+                    style={{width:"96%"}}
+                    fullWidth
+                  />
+                </Grid>
+
+
+                <Grid item xs={6} >
+                  <TextField
+                    {...register('coordenada_y')}
+                    onChange={handle_change}
+                    label="Cordenada y"
+                    style={{width:"95%"}}
+                    size="small"
+                    fullWidth
+                  />
+                </Grid>
+
+
+                <Grid item xs={12}>
+                  <Geolocalizacion coordenada_x={222} coordenada_y={data_direction.coordenada_y} />
+
+                </Grid>
+              </>}
+
+
+
               <Grid item xs={12}>
                 <TextField
                   {...register('direccion_estandarizada', { required: true })}
@@ -455,7 +685,11 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   disabled
                 />
               </Grid>
-              <Divider />
+
+
+
+
+
             </Grid>
 
             {/* <DialogActions> */}

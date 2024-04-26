@@ -65,7 +65,7 @@ const TablaDespachosActivos: React.FC<Props> = ({
     { field: 'id_despacho_activo', headerName: 'Id despacho', maxWidth: 110, minWidth: 110, flex: 1, },
     {
       field: 'fecha_despacho', headerName: 'Fecha despacho', maxWidth: 120, minWidth: 120, flex: 1,
-      renderCell: (params) => (dayjs(params.row.fecha_despacho).format('DD/MM/YYYY')),
+      renderCell: (params) => (params.row.fecha_despacho === null ? '' : dayjs(params.row.fecha_despacho).format('DD/MM/YYYY')),
     },
     { field: 'nombre_persona_despacha', headerName: 'Persona que despachó', minWidth: 300, flex: 1, },
     { field: 'nombre_bodega', headerName: 'Bodega', minWidth: 160, flex: 1, },
@@ -73,7 +73,7 @@ const TablaDespachosActivos: React.FC<Props> = ({
     { field: 'tipo_solicitud', headerName: 'Tipo de solicitud', minWidth: 300, flex: 1, },
     {
       field: 'fecha_solicitud', headerName: 'Fecha solicitud', maxWidth: 120, minWidth: 120, flex: 1,
-      renderCell: (params) => (dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY')),
+      renderCell: (params) => (params.row.fecha_solicitud === null ? '' : dayjs(params.row.fecha_solicitud).format('DD/MM/YYYY')),
     },
     {
       field: 'ver_activos', headerName: 'Ver activos', minWidth: 170, flex: 1, headerAlign: 'center', align: 'center',

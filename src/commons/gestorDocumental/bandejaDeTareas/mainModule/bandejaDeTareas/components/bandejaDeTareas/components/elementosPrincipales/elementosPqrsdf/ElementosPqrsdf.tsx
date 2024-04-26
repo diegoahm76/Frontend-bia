@@ -90,7 +90,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       });
 
       if (result.isConfirmed) {
-        const res = await putAceptarTarea(row.id_tarea_asignada);
+        const res = await putAceptarTarea(row.id_tarea_asignada, /*row.id_pqrsdf*/);
         console.log(res);
 
         const listadoTareas = await getListadoTareasByPerson(

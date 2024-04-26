@@ -176,7 +176,7 @@ const SalidaEspecialActivos: React.FC = () => {
       });
 
       // Obtener entradas relacionadas del tercero seleccionado
-      get_obtener_entradas_relacionadas_fc(data_inf_tercero_seleccionado.id_clase_tercero_persona.toString());
+      get_obtener_entradas_relacionadas_fc(data_inf_tercero_seleccionado.id_persona.toString());
     }
   }, [data_inf_tercero_seleccionado]);
 

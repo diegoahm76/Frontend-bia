@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint no-new-func: 0 */
 import { type SyntheticEvent, useState, useEffect } from 'react';
@@ -92,11 +93,13 @@ const detalles_periodos: DetallesPeriodos = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProcesoLiquidacionScreen: React.FC = () => {
+  const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
+
   const [deudores, set_deudores] = useState<Deudor[]>([]);
   const [nombre_deudor, set_nombre_deudor] = useState('');
   const [form_liquidacion, set_form_liquidacion] = useState<FormLiquidacion>({
     id_deudor: '',
-    id_expediente: '',
+    id_expediente: "", // Pre-selecciona el primer ID
     ciclo_liquidacion: '',
     periodo_liquidacion: '',
     valor: 0,
@@ -142,6 +145,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         });
     }
   }, [form_liquidacion.id_deudor]);
+
+
+
 
   useEffect(() => {
     if (form_liquidacion.id_expediente !== '') {
@@ -332,6 +338,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     set_position_tab(newValue);
     if (newValue === '1') {
       set_form_liquidacion(previousState => ({ ...previousState, id_expediente: '' }));
+      set_selectedIds([])
     }
   }
 
@@ -400,6 +407,34 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         set_open_notification_modal(true);
       });
   };
+
+  const handle_submit_liquidacionma = (): void => {
+    api.post('/recaudo/liquidaciones/liquidacion-masivo/', {
+      ...form_liquidacion,
+      fecha_liquidacion: fecha_liquidacion.format('YYYY-MM-DDTHH:mm:ss'),
+      vencimiento: fecha_vencimiento.format('YYYY-MM-DDTHH:mm:ss'),
+      id_deudor: Number(form_liquidacion.id_deudor),
+      id_expediente: selectedIds,
+      valor: form_liquidacion.valor?.toFixed(4),
+    })
+      .then((response) => {
+        //  console.log('')(response);
+        handle_submit_detalles_liquidacion(response.data.id);
+        save_calculos(response.data.id);
+        set_notification_info({ type: 'success', message: `Se ha guardado correctamente la liquidacion.` });
+        set_open_notification_modal(true);
+      })
+      .catch((error) => {
+        //  console.log('')(error);
+        set_notification_info({ type: 'error', message: 'Hubo un error.' });
+        set_open_notification_modal(true);
+      });
+  };
+
+
+
+
+
   const [obligaciones_module, set_obligaciones_module] = useState(false);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
@@ -474,48 +509,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         return params.value ?? 'Sin Tipo de renta  ';
       }
     },
-
-    // {
-    //   field: 'Deudores',
-    //   headerName: 'Deudores',
-    //   width: 150,
-    //   renderCell: (params) => {
-
-    //       return <>
-    //       <Tooltip title="Ver">
-    //         <IconButton
-    //           onClick={() => {
-    //             set_form_liquidacion((previousData) => ({ ...previousData, id_deudor: params.row.id }));
-    //             set_nombre_deudor(`${params.row.nombres as string ?? ''} ${params.row.apellidos as string ?? ''}`);
-    //             try {
-    //               void dispatch(get_obligaciones_id(params.row.identificacion));
-    //               set_obligaciones_module(true);
-    //               handle_open_buscarr();
-    //             } catch (error: any) {
-    //               // Manejo del error
-    //               control_error(error.response.data.detail);
-    //             }
-    //           } }
-    //         >
-    //           <Avatar
-    //             sx={{
-    //               width: 24,
-    //               height: 24,
-    //               background: '#fff',
-    //               border: '2px solid',
-    //             }}
-    //             variant="rounded"
-    //           >
-    //              <Article
-    //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-    //               />
-    //           </Avatar>
-    //         </IconButton>
-    //       </Tooltip>
-    //     </>;
-
-    //   },
-    // },
+ 
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -607,6 +601,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const handle_open_buscarr = (): void => {
     set_is_buscarr(true);
   };
+
+
   return (
     <>
       <Grid
@@ -647,7 +643,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handle_position_tab_change}>
                   <Tab label="Deudores" value="1" />
-                  <Tab label="Generar Liquidación" value="2" />
+                  <Tab label="Generar Liquidación" disabled value="2" />
                 </TabList>
               </Box>
 
@@ -699,7 +695,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                             obligaciones.length !== 0 ? (
                               <>
 
-                                <TablaObligacionesUsuarioConsulta set_position_tab={set_position_tab} is_modal_active={is_modal_activee} set_is_modal_active={set_is_buscarr} />
+                                <TablaObligacionesUsuarioConsulta
+                                  set_position_tab={set_position_tab}
+                                  is_modal_active={is_modal_activee}
+                                  set_is_modal_active={set_is_buscarr}
+                                  set_selectedIds={set_selectedIds}
+                                  selectedIds={selectedIds}
+                                />
                               </>
                             ) : <p>.</p>
                           }
@@ -713,6 +715,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 {/* INPUTS EDITAR LIQUIDACION */}
                 <GenerarLiquidacion
+                  set_form_liquidacion={set_form_liquidacion}
                   form_liquidacion={form_liquidacion}
                   nombre_deudor={nombre_deudor}
                   rows_detalles={rows_detalles}
@@ -727,8 +730,11 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                   handle_input_form_liquidacion_change={handle_input_form_liquidacion_change}
                   handle_select_form_liquidacion_change={handle_select_form_liquidacion_change}
                   handle_submit_liquidacion={handle_submit_liquidacion}
+                  handle_submit_liquidacionma={handle_submit_liquidacionma}
                   set_fecha_liquidacion={set_fecha_liquidacion}
                   set_fecha_vencimiento={set_fecha_vencimiento}
+                  set_selectedIds={set_selectedIds}
+                  selectedIds={selectedIds}
                 />
               </TabPanel>
             </TabContext>
@@ -743,6 +749,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
+            form_liquidacion={form_liquidacion}
             rows_detalles={rows_detalles}
             estado_expediente={estado_expediente}
             set_rows_detalles={set_rows_detalles}
