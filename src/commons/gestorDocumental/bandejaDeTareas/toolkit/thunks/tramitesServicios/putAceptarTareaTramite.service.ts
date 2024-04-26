@@ -20,8 +20,8 @@ export const putAceptarTareaTramite = async (idTarea: number) => {
         ...response.data,
         // ? la data del expediente vendrá proximanente dentro del servicio establecido por parte de backend, en la generacion del auto de inicio y del pago que vendría por parte de recaudo
         data_expediente: {
-          auto: 'http://accioneduca.org/admin/archivos/modulos/ayudanos/prueba.pdf',
-          pago: 'https://seguimiento.agoraparticipa.org/docs/PDF_TEXT-CA4Bn.pdf',
+          auto: response.data?.data_expediente ?? 'http://accioneduca.org/admin/archivos/modulos/ayudanos/prueba.pdf',
+          pago: response.data?.pago ?? 'https://seguimiento.agoraparticipa.org/docs/PDF_TEXT-CA4Bn.pdf',
         },
       };
 
