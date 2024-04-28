@@ -19,15 +19,15 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
     estado: '',
   });
 
+  const [show_loader, set_show_loader] = useState(false);
   const [show_chart, set_show_chart] = useState(false);
-  const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
+  const {rows_armonizacion, fetch_data_armonizaciones} = useContext(DataContextPgar);
 
   useEffect(() => {
     fetch_data_armonizaciones();
   }, []);
 
   const handle_change_armonizacion = (event: any) => {
-    set_show_chart(false);
     const id_armonizacion_select = event.target.value;
     const armonizacion_select = rows_armonizacion.find(armonizacion => armonizacion.id_armonizar === id_armonizacion_select);
     if (armonizacion_select) {
@@ -45,11 +45,14 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
 
   useEffect(() => {
     if(form_values.id_planPAI && form_values.id_planPGAR) {
+      set_show_chart(false);
+      set_show_loader(true);
       get_tablero_por_eje(Number(form_values.id_planPAI), Number(form_values.id_planPGAR)).then((data: any) => {
         set_show_chart(true);
         load_chart_data(data);
       }).catch((error: any) => {
-        control_error(error);
+        set_show_loader(false);
+        control_error(error.response.data.detail);
       });
     }
   }, [form_values.id_planPAI, form_values.id_planPGAR]);
@@ -58,15 +61,11 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
     let series_obj: any = {};
     let categories: any = [];
 
-    let nombres: any = {
-      "pvance_fisico": "Porcentaje AFIS",
-      "pavance_fisico_acomulado": "Porcentaje AFISA",
-      "pavance_financiero": "Porcentaje AFIN",
-      "pavance_recursos_obligados": "Porcentaje ARO"
-    };
-
     if (data.length) {
-      data.forEach((ind: any, index: number) => {
+      let contador = 0;
+      data.forEach((ind: any) => {
+        if(ind.porcentajes.length === 0) contador++;
+
         const words = ind.nombre.split(' ');
         const grouped_words = [];
 
@@ -76,20 +75,17 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
 
         categories.push(grouped_words);
 
-        // Inicializar todas las series para este eje estratégico
         for (let ano = 1; ano <= 4; ano++) {
           const anio_str = `Año ${ano}`;
           if (!series_obj[anio_str]) {
             series_obj[anio_str] = {
-              'pvance_fisico': { name: 'Porcentaje A. FIS ' + ano, data: [], group: anio_str },
-              'pavance_fisico_acomulado': { name: 'Porcentaje A. FIS AC ' + ano, data: [], group: anio_str },
-              'pavance_financiero': { name: 'Porcentaje A. FIN ' + ano, data: [], group: anio_str },
-              'pavance_recursos_obligados': { name: 'Porcentaje A. REC OBL ' + ano, data: [], group: anio_str }
+              'pvance_fisico': { name: 'Porcentaje A. FIS ' + anio_str, data: [], group: anio_str },
+              'pavance_fisico_acomulado': { name: 'Porcentaje A. FIS AC ' + anio_str, data: [], group: anio_str },
+              'pavance_financiero': { name: 'Porcentaje A. FIN ' + anio_str, data: [], group: anio_str },
+              'pavance_recursos_obligados': { name: 'Porcentaje A. REC OBL ' + anio_str, data: [], group: anio_str }
             };
           }
         }
-
-        let length_porcentajes = ind.porcentajes.length;
 
         ind.porcentajes.forEach((porcentaje: any) => {
           const ano = `Año ${porcentaje.año}`;
@@ -103,7 +99,25 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
 
       });
 
-      console.log(series_obj)
+      if(contador === data.length) {
+        set_show_loader(false);
+        set_show_chart(false);
+        set_chart_data({
+          ...chart_data,
+          series: [],
+          options: {
+            ...chart_data.options,
+            xaxis: {
+              ...chart_data.options.xaxis,
+              categories: [],
+            }
+          }
+        });
+        return control_error('No se encontraron datos para mostrar en la gráfica');
+      }else{
+        set_show_loader(false);
+      }
+
 
       let series: any = [];
 
@@ -112,8 +126,6 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
           series.push(series_obj[group][serie]);
         }
       }
-
-      console.log(series)
 
       set_chart_data({
         ...chart_data,
@@ -162,14 +174,23 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
           }
       },
       dataLabels: {
-        enabled: true
+        enabled: true,
+        formatter: function(val) {
+          return val + '%';
+        }
       },
       legend: {
         position: 'bottom',
-        horizontalAlign: 'center'
+        horizontalAlign: 'center',
+
       },
       xaxis: {
         categories: [],
+        labels: {
+          formatter: function(value) {
+            return value + '%';
+          }
+        }
       },
       yaxis: {
         labels: {
@@ -255,10 +276,10 @@ export const BusquedaIndicadorEjeEstrategico: React.FC = () => {
             disabled
           />
         </Grid>
-
+        {show_loader && <div className="loader"></div>}
         {show_chart && <Grid item xs={12} sm={12} my={4} mx={2} sx={{
-          background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
-          backgroundSize: 'contain',
+          // background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
+          // backgroundSize: 'contain',
         }}>
           <ReactApexChart options={chart_data.options} series={chart_data.series} type="bar" height={600} />
         </Grid>}

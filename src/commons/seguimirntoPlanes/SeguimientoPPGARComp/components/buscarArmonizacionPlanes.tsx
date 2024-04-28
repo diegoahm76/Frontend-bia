@@ -231,9 +231,9 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
     const current_indicador_pgar = indicadores_pgar.find((indicador: any) => indicador.id_indicador === id_indicador_pgar);
     if(current_indicador_pgar){
       let medida;
-      if (current_indicador_pgar.medida == 'NUM') {
+      if (current_indicador_pgar?.medida == 'NUM') {
         medida = 'Número';
-      } else if (current_indicador_pgar.medida == 'POR') {
+      } else if (current_indicador_pgar?.medida == 'POR') {
         medida = 'Porcentaje';
       } else {
           medida = 'Tiempo';
@@ -417,7 +417,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
     const value = event.target.value;
     if(id_indicador_pai){
       const indicador_select = indicadores_pai.find((indicador: any) => indicador.id_indicador === id_indicador_pai);
-      if(indicador_select.medida === 'POR'){
+      if(indicador_select?.medida === 'POR'){
         const numero = parseFloat(value);
         (numero < 0 || numero > 100 || isNaN(numero))
           ? set_error_meta('El valor debe estar entre 0 y 100')
@@ -436,7 +436,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
     const value = event.target.value;
     if(id_indicador_pai){
       const indicador_select = indicadores_pai.find((indicador: any) => indicador.id_indicador === id_indicador_pai);
-      if(indicador_select.medida === 'POR'){
+      if(indicador_select?.medida === 'POR'){
         const numero = parseFloat(value);
         (numero < 0 || numero > 100 || isNaN(numero))
           ? set_error_avance_meta('El valor debe estar entre 0 y 100')
@@ -454,7 +454,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
   useEffect(() => {
     if(avance_meta_fisica_anual && id_indicador_pai){
       const indicador_select = indicadores_pai.find((indicador: any) => indicador.id_indicador === id_indicador_pai);
-      if(indicador_select.medida === 'POR'){
+      if(indicador_select?.medida === 'POR'){
         const numero = parseFloat(avance_meta_fisica_anual);
         (numero < 0 || numero > 100 || isNaN(numero))
           ? set_error_avance_meta('El valor debe estar entre 0 y 100')
@@ -657,6 +657,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
       limpiar_informacion_planes();
       limpiar_form_registro();
       set_show_plan_info(false);
+      set_show_registro_avance(false);
     }
     if (mode.editar) {
       set_show_plan_info(true);
@@ -930,7 +931,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
                     size='small'
                     fullWidth
                     label="Medida"
-                    value={form_indicador_data.medida || ''}
+                    value={form_indicador_data?.medida || ''}
                     disabled
                 />
                 </Grid>
@@ -1114,7 +1115,7 @@ export const BusquedaArmonizacionPlanes: React.FC = () => {
           </>
         )}
       </Grid>
-      {!show_registro_avance && (
+      {show_registro_avance && (
         <Grid
           container
           spacing={2}

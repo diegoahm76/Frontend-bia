@@ -9,28 +9,7 @@ import { control_error } from "../../../../../helpers";
 import { get_ejes_estrategicos_id_objetivo } from "../../../SeguimientoPGAR/services/services";
 import { Gradient } from "./Gradient";
 import React from "react";
-
-interface Porcentaje {
-  año: number;
-  pvance_fisico: number;
-  pavance_fisico_acomulado: number;
-  pavance_financiero: number;
-  pavance_recursos_obligados: number;
-}
-
-interface Eje {
-  id_eje_estrategico: number;
-  porcentajes: Porcentaje[];
-  nombre: string;
-  id_tipo_eje: number;
-  id_plan: number | null;
-  id_objetivo: number;
-}
-
-interface Gauge {
-  value: number;
-  label: string;
-}
+import { Gauge } from "../models/interfaces";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
@@ -50,9 +29,10 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
     anio: 0,
   });
 
+  const [show_loader, set_show_loader] = useState(false);
   const [show_chart, set_show_chart] = useState(false);
   const [obj_data, set_obj_data] = useState<Record<string, Gauge[]>>({});
-  const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
+  const {rows_armonizacion, fetch_data_armonizaciones} = useContext(DataContextPgar);
 
   useEffect(() => {
     fetch_data_armonizaciones();
@@ -110,9 +90,12 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
 
   useEffect(() => {
     if(form_values.id_eje_estrategico && form_values.id_planPAI) {
+      set_show_chart(false);
+      set_show_loader(true);
       get_tablero_por_objetivo_ejes(Number(form_values.id_planPAI), Number(form_values.id_eje_estrategico)).then((data: any) => {
         set_obj_data(handle_search(data[0]));
       }).catch((error: any) => {
+        set_show_loader(false);
         control_error(error);
       });
     }
@@ -121,7 +104,6 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
   const handle_search = (obj: any) => {
     let resultado: any = {};
     if(obj.porcentajes.length !== 0) {
-      set_show_chart(true);
       for (let porcentaje of obj.porcentajes) {
         let anio_key = 'Año ' + porcentaje.año;
         let valores = [
@@ -132,7 +114,10 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
         ];
         resultado[anio_key] = valores;
       }
+      set_show_chart(true);
+      set_show_loader(false);
     }else{
+      set_show_loader(false);
       control_error('No se encontraron datos');
     }
     return resultado;
@@ -156,7 +141,7 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Tablero de Control General PGAR por Objetivo" />
+          <Title title="Tablero de Control PGAR por Objetivo y Eje Estratégico" />
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -259,6 +244,7 @@ export const BusquedaIndicadorObjetivoyEje: React.FC = () => {
           display: 'flex',
           flexWrap: 'wrap',
         }}>
+        {show_loader && <div className="loader"></div>}
         {show_chart && <Grid className="anio-container" container spacing={2} mx={2}>
           {Object.entries(obj_data).map(([anio, data]) => (
               <React.Fragment key={anio}>

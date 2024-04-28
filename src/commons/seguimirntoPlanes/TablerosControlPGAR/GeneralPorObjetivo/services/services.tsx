@@ -37,6 +37,26 @@ import { api } from "../../../../../api/axios";
     return response.data.data;
   };
 
+  export const get_tablero_general_ejes = async (
+    id_planPAI: number,
+    id_planPGAR: number
+  ): Promise<any> => {
+    const response = await api.get(
+      `seguimiento/planes/tablero-control-general-ejes/?planPAI=${id_planPAI}&planPGAR=${id_planPGAR}`
+    );
+    return response.data.data;
+  };
+
+  export const get_tablero_general_objetivos = async (
+    id_planPAI: number,
+    id_planPGAR: number
+  ): Promise<any> => {
+    const response = await api.get(
+      `seguimiento/planes/tablero-control-general-objetivos/?planPAI=${id_planPAI}&planPGAR=${id_planPGAR}`
+    );
+    return response.data.data;
+  };
+
   // --------------------------- BUSQUEDAS AVANZADAS ------------------------------------------
 
   // ? ----------------------------------------------- [ POST ] -----------------------------------------------
