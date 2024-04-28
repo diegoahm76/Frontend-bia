@@ -5,30 +5,9 @@ import { Title } from "../../../../../components/Title";
 import '../css/tableros_styles.css'
 import { SemiCircleGauge } from "./SemiCircle";
 import { get_tablero_por_eje } from "../services/services";
-import { control_error } from "../../../../../helpers";
+import { control_error, control_success } from "../../../../../helpers";
 import React from "react";
-
-interface Porcentaje {
-  año: number;
-  pvance_fisico: number;
-  pavance_fisico_acomulado: number;
-  pavance_financiero: number;
-  pavance_recursos_obligados: number;
-}
-
-interface Eje {
-  id_eje_estrategico: number;
-  porcentajes: Porcentaje[];
-  nombre: string;
-  id_tipo_eje: number;
-  id_plan: number | null;
-  id_objetivo: number;
-}
-
-interface Gauge {
-  value: number;
-  label: string;
-}
+import { Eje, Gauge, Porcentaje } from "../models/interfaces";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaIndicadorDetallado: React.FC = () => {
@@ -42,6 +21,7 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
     estado: '',
   });
 
+  const [show_loader, set_show_loader] = useState(false);
   const [show_chart, set_show_chart] = useState(false);
   const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
   const [array_data, set_array_data] = useState<Record<string, Record<string, Gauge[]>>>({});
@@ -51,7 +31,6 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
   }, []);
 
   const handle_change_armonizacion = (event: any) => {
-    set_show_chart(false);
     const id_armonizacion_select = event.target.value;
     const armonizacion_select = rows_armonizacion.find(armonizacion => armonizacion.id_armonizar === id_armonizacion_select);
     if (armonizacion_select) {
@@ -69,16 +48,23 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
 
   useEffect(() => {
     if(form_values.id_planPAI && form_values.id_planPGAR) {
+      set_show_chart(false);
+      set_show_loader(true);
       get_tablero_por_eje(Number(form_values.id_planPAI), Number(form_values.id_planPGAR)).then((data: any) => {
+        set_show_chart(true);
         let contador: number = 0;
         data.forEach((el: any) => {
           if(el.porcentajes.length == 0) contador++;
         });
-        if(data.length ==  contador) control_error('No se encontraron datos');
-        set_show_chart(true);
+        if(data.length ==  contador){
+          set_show_loader(false);
+          set_show_chart(false);
+          control_error('No se encontraron datos');
+        }
         load_chart_data(data);
       }).catch((error: any) => {
-        control_error(error);
+        set_show_loader(false);
+        control_error(error.response.data.detail);
       });
     }
   }, [form_values.id_planPAI, form_values.id_planPGAR]);
@@ -100,7 +86,7 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
       });
       return acc;
     }, {});
-    console.log(array)
+    set_show_loader(false);
     set_array_data(array);
   };
 
@@ -177,6 +163,7 @@ export const BusquedaIndicadorDetallado: React.FC = () => {
             disabled
           />
         </Grid>
+        {show_loader && <div className="loader"></div>}
         {show_chart && Object.entries(array_data).map(([year, ejes], index) => (
         <React.Fragment key={year} >
           <h2 className="title">Año {index + 1}</h2>

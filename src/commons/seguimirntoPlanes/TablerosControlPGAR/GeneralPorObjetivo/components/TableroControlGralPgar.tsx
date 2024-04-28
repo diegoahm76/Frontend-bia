@@ -5,7 +5,7 @@ import { DataContextPgar } from "../../../SeguimientoPGAR/context/context";
 import { InfoCard } from "./InfoCard";
 import { StackedBarChart } from "./StackedBarChart";
 import { LineChart } from "./LineChart";
-import { get_tablero_por_eje } from "../services/services";
+import { get_tablero_general_ejes, get_tablero_general_objetivos, get_tablero_por_eje } from "../services/services";
 import { control_error } from "../../../../../helpers";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -22,7 +22,10 @@ export const TableroGeneralPgar: React.FC = () => {
     estado: '',
   });
 
+  const [show_loader, set_show_loader] = useState(false);
+  const [show_dashboard, set_show_dashboard] = useState(false);
   const [data_chart, set_data_chart] = useState([]);
+  const [line_data_chart, set_line_data_chart] = useState([{}]);
   const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
 
   useEffect(() => {
@@ -49,90 +52,53 @@ export const TableroGeneralPgar: React.FC = () => {
 
   useEffect(() => {
     if(form_values.id_planPAI && form_values.id_planPGAR) {
+      set_show_loader(true);
+      set_show_dashboard(false);
       get_tablero_por_eje(Number(form_values.id_planPAI), Number(form_values.id_planPGAR)).then((data: any) => {
+        set_show_dashboard(true);
+        set_show_loader(false);
         set_data_chart(data);
-        // set_show_chart(true);
-        // load_chart_data(data);
       }).catch((error: any) => {
+        set_show_loader(false);
         control_error(error);
       });
+
+      get_tablero_general_ejes(Number(form_values.id_planPAI), Number(form_values.id_planPGAR)).then((data: any) => {
+        set_show_dashboard(true);
+        set_show_loader(false);
+        handle_data_cards(data);
+      }).catch((error: any) => {
+        set_show_loader(false);
+        control_error(error);
+      });
+
+      get_tablero_general_objetivos(Number(form_values.id_planPAI), Number(form_values.id_planPGAR)).then((data: any) => {
+        set_show_dashboard(true);
+        set_show_loader(false);
+        set_line_data_chart(data);
+      }).catch((error: any) => {
+        set_show_loader(false);
+        control_error(error);
+      });
+
     }
   }, [form_values.id_planPAI, form_values.id_planPGAR]);
 
-  const idfo_data = [
-    { value: '90', label: 'AVANCE FISICO', color: 'lightblue' },
-    { value: '90', label: 'AVANCE FISICO', color: 'aquamarine' },
-    { value: '90', label: 'AVANCE FISICO', color: 'yellow' },
-    { value: '90', label: 'AVANCE FISICO', color: 'gray' },
-    // ... más datos
-  ];
+  const [card_data, set_card_data] = useState([
+    { value: null, label: 'PORCENTAJE AVANCE FISICO', color: '#47B9F6' },
+    { value: null, label: 'PORCENTAJE AVANCE FISICO ACUMULADO', color: '#45F7BC' },
+    { value: null, label: 'PORCENTAJE AVANCE FINANCIERO', color: '#91F647' },
+    { value: null, label: 'PORCENTAJE AVANCE RECURSOS OBLIGADOS', color: '#C447F6' },
+  ]);
 
-
-  // Estado inicial para la serie y opciones de la gráfica
-  const [chart_data, set_chart_data] = useState({
-    series: [
-      {
-        name: 'Q1 Budget',
-        group: 'budget',
-        data: [44000, 55000, 41000, 67000, 22000]
-      },
-      {
-        name: 'Q1 Actual',
-        group: 'actual',
-        data: [48000, 50000, 40000, 65000, 25000]
-      },
-      {
-        name: 'Q2 Budget',
-        group: 'budget',
-        data: [13000, 36000, 20000, 8000, 13000]
-      },
-      {
-        name: 'Q2 Actual',
-        group: 'actual',
-        data: [20000, 40000, 25000, 10000, 12000]
-      }
-    ],
-      options: {
-        colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560'],
-        chart: {
-            height: 350,
-            type: 'bar' as const, // Corregido para ser reconocido como un valor específico y no un string genérico
-            stacked: true,
-            events: {
-                click: function (chart: any, w: any, e: any) {
-                    // Puedes manejar clics en la gráfica aquí
-                }
-            },
-            toolbar: {
-                show: true
-              },
-              zoom: {
-                enabled: true
-              }
-        },
-        plotOptions: {
-            bar: {
-                // distributed: true,
-                barHeight: '75%',
-                horizontal: true,
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        legend: {
-            show: false
-        },
-        xaxis: {
-          categories: ['Eje Estratégico 1', 'Eje Estratégico 2', 'Eje Estratégico 3', 'Eje Estratégico 4', 'Eje Estratégico 5', 'Eje Estratégico 6', 'Eje Estratégico 7', 'Eje Estratégico 8'],
-          labels: {
-            style: {
-              fontSize: '12px'
-            }
-          }
-      },
-      },
-  });
+  const handle_data_cards = (data: any) => {
+    set_card_data([
+      { value: data.pvance_fisico, label: 'PORCENTAJE AVANCE FISICO', color: '#47B9F6' },
+      { value: data.pavance_fisico_acomulado, label: 'PORCENTAJE AVANCE FISICO ACUMULADO', color: '#45F7BC' },
+      { value: data.pavance_financiero, label: 'PORCENTAJE AVANCE FINANCIERO', color: '#91F647' },
+      { value: data.pavance_recursos_obligados, label: 'PORCENTAJE AVANCE RECURSOS OBLIGADOS', color: '#C447F6' },
+    ]);
+  }
 
   return (
     <>
@@ -207,27 +173,27 @@ export const TableroGeneralPgar: React.FC = () => {
             disabled
           />
         </Grid>
-
-        <Grid item xs={12} sm={12} my={4} mx={2}>
+        {show_loader && <div className="loader"></div>}
+        {show_dashboard && <Grid item xs={12} sm={12} my={6}>
           <Grid container spacing={6}>
             {/* Tarjetas de información */}
-            {idfo_data.map((data, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+            {card_data.map((data, index) => (
+              <Grid item xs={12} sm={6} lg={3} key={index}>
                 <InfoCard value={data.value} label={data.label} color={data.color} />
               </Grid>
             ))}
 
             {/* Gráfico de barras apiladas */}
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6}>
               <StackedBarChart data={data_chart}/>
             </Grid>
 
             {/* Gráfico de líneas */}
-            <Grid item xs={6}>
-              <LineChart />
+            <Grid xs={12} lg={6} mt={6}>
+              <LineChart data={line_data_chart} />
             </Grid>
           </Grid>
-        </Grid>
+        </Grid>}
       </Grid>
     </>
   )
