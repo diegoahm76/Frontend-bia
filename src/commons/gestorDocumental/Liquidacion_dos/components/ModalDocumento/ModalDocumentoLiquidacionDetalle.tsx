@@ -11,6 +11,7 @@ import { PreciosContext } from "../../context/PersonalContext";
 import PaymentIcon from '@mui/icons-material/Payment';
 import { control_error, control_success } from "../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
 import { useNavigate } from "react-router-dom";
+import AccountBalanceOutlinedIcon from '@material-ui/icons/AccountBalanceOutlined';
 
 export interface Persona {
     id_persona: number;
@@ -56,7 +57,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
             };
             const res = await api.post(url, postData);
             const numeroConsulta = res.data && res.data.data;
-            window.location.href =numeroConsulta?.redirect_url;
+            window.location.href = numeroConsulta?.redirect_url;
             control_success("se creo correctamente");
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -107,6 +108,14 @@ export const ModalDocumentoLiquidacionDetalle = () => {
         <>
 
             <Button
+                style={{ marginTop: 15, backgroundColor: "#009688", width: "95%" }}
+                fullWidth
+                variant="contained"
+                onClick={openModal}
+            >
+                <AccountBalanceOutlinedIcon style={{ fontSize: 24, color: "white" }} />
+            </Button>
+            {/* <Button
                 style={{ marginTop: 15, backgroundColor: "green", color: "white", width: "95%" }}
                 color="success" // Cambia el color según si es una actualización o creación
                 fullWidth
@@ -115,7 +124,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                 onClick={openModal}
             >
                 Iniciar Pago
-            </Button>
+            </Button> */}
 
             <Grid container spacing={2}>
 
