@@ -1,11 +1,11 @@
 import { Button, Chip, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction } from 'react';
-import TitleDivider from './TitleDivider';
 import SearchIcon from '@mui/icons-material/Search';
 import { interface_busqueda_operario, interface_inputs_funcionarios, interface_tipos_documentos, response_busqueda_operario } from '../interfeces/types';
 import { useDispatch } from 'react-redux';
 import { control_error, control_success } from '../../../../helpers';
 import { get_obtener_operarios } from '../thunks/despacho_solicitudes';
+import { Title } from '../../../../components';
 
 
 interface props {
@@ -53,7 +53,7 @@ const FuncionarioOperario: FC<props> = ({
 
   const buscar_funcionario = () => {
     if (!('tp_documento_funcionario_operario' in inputs_funcionarios) ||
-     !('documento_funcionario_operario' in inputs_funcionarios)){
+      !('documento_funcionario_operario' in inputs_funcionarios)) {
       control_error('Debe ingresar el tipo y número de documento');
     } else {
       get_obtener_operarios_fc();
@@ -63,7 +63,9 @@ const FuncionarioOperario: FC<props> = ({
 
   return (
     <Grid container spacing={2} item xs={12}>
-      <TitleDivider title="FUNCIONARIO OPERARIO" />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario operario' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <FormControl required size="small" fullWidth>
