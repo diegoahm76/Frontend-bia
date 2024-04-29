@@ -6,8 +6,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import TablaArticulosDespachados from '../tables/TablaArticulosDespachados';
 import { interface_resumen_despacho_sin_solicitud } from '../interfeces/types';
-import TitleDivider from './TitleDivider';
-
 interface props {
   data_solicitud_ver_por_id_sin_solicitud: interface_resumen_despacho_sin_solicitud
 }
@@ -65,7 +63,9 @@ const ResumenSinSolicitudDespacho: React.FC<props> = ({
           </Grid>
         </Grid>
 
-        <TitleDivider title='FUNCIONARIO QUE DESPACHA' />
+        <Grid item mt={3} xs={12}>
+          <Title title='Funcionario que despacha' />
+        </Grid>
 
         <Grid item xs={12} lg={3}>
           <TextField
@@ -107,7 +107,9 @@ const ResumenSinSolicitudDespacho: React.FC<props> = ({
           />
         </Grid>
 
-        <TitleDivider title='FUNCIONARIO QUE ANULA DESPACHO' />
+        <Grid item mt={3} xs={12}>
+          <Title title='Funcionario que anula despacho' />
+        </Grid>
 
         <Grid item xs={12} lg={3}>
           <TextField
