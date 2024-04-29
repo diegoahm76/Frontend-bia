@@ -5,9 +5,9 @@ import { LiquidacionPlantilla } from "../plantillaHtml/Liquidacion"
 import { Title } from "../../../../../components/Title"
 import { useAppSelector } from "../../../../../hooks";
 import { useEffect, useState } from "react";
-import { ElementoPQRS } from "../GenerarLiquidacion/GenerarLiquidacion";
 import { useNavigate } from "react-router-dom"; // Asumo que estás utilizando react-router
 import { ArrowBack } from '@mui/icons-material';
+import { ElementoPQRS } from "../../interfaces/InterfacesLiquidacion";
 
 const initialData: ElementoPQRS = {
     costo_proyecto: "",
@@ -31,6 +31,8 @@ export const DocumentoPagoLiquidacion = () => {
 
     const [data_liquidacion, set_data_liquidacion] = useState<ElementoPQRS>(initialData);
 
+    console.log("data_liquidacion", data_liquidacion);
+
     const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
         (state) =>
             state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
@@ -42,19 +44,19 @@ export const DocumentoPagoLiquidacion = () => {
         }
     }, [currentElementPqrsdComplementoTramitesYotros]);
 
-    console.log("Costo del proyecto:", data_liquidacion.costo_proyecto);
-    console.log("Estado actual de la solicitud:", data_liquidacion.estado_actual_solicitud);
-    console.log("Fecha de inicio:", data_liquidacion.fecha_inicio);
-    console.log("Fecha de radicado:", data_liquidacion.fecha_radicado);
-    console.log("Fecha de registro:", data_liquidacion.fecha_registro);
-    console.log("Medio de solicitud:", data_liquidacion.medio_solicitud);
-    console.log("Nombre completo del titular:", data_liquidacion.nombre_completo_titular);
-    console.log("Nombre del proyecto:", data_liquidacion.nombre_proyecto);
-    console.log("Nombre del trámite:", data_liquidacion.nombre_tramite);
-    console.log("Pago realizado:", data_liquidacion.pago);
-    console.log("Radicado:", data_liquidacion.radicado);
-    console.log("Tipo de solicitud:", data_liquidacion.tipo_solicitud);
-    console.log("data_liquidacion", data_liquidacion)
+    // console.log("Costo del proyecto:", data_liquidacion.costo_proyecto);
+    // console.log("Estado actual de la solicitud:", data_liquidacion.estado_actual_solicitud);
+    // console.log("Fecha de inicio:", data_liquidacion.fecha_inicio);
+    // console.log("Fecha de radicado:", data_liquidacion.fecha_radicado);
+    // console.log("Fecha de registro:", data_liquidacion.fecha_registro);
+    // console.log("Medio de solicitud:", data_liquidacion.medio_solicitud);
+    // console.log("Nombre completo del titular:", data_liquidacion.nombre_completo_titular);
+    // console.log("Nombre del proyecto:", data_liquidacion.nombre_proyecto);
+    // console.log("Nombre del trámite:", data_liquidacion.nombre_tramite);
+    // console.log("Pago realizado:", data_liquidacion.pago);
+    // console.log("Radicado:", data_liquidacion.radicado);
+    // console.log("Tipo de solicitud:", data_liquidacion.tipo_solicitud);
+    // console.log("data_liquidacion", data_liquidacion)
     return (
 
         <Grid container alignItems="center" justifyContent="center">

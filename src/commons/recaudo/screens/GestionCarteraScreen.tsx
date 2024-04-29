@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useState, useEffect, useContext } from 'react';
 import { Avatar, Box, Grid, IconButton, type SelectChangeEvent, Tab, Tooltip, Chip, Pagination, Stack, TextField, Button } from "@mui/material"
@@ -19,6 +20,11 @@ import { CreateProcesoModal } from '../components/GestionCartera/modal/CreatePro
 import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
 import { EtapaProcesoConext } from '../components/GestionCartera/Context/EtapaProcesoContext';
 import { toast } from 'react-toastify';
+import { control_error, control_success } from '../../../helpers';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
+import { showAlert } from '../../../utils/showAlert/ShowAlert';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -65,6 +71,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [filtered_nombres, set_filtered_nombres] = useState<string>('');
   const [filtered_apellidos, set_filtered_apellidos] = useState<string>('');
   const [filtered_identificacion, set_filtered_identificacion] = useState<string>('');
+  const [datos, set_datos] = useState<string>('');
 
   const columns_carteras: GridColDef[] = [
     {
@@ -190,7 +197,7 @@ export const GestionCarteraScreen: React.FC = () => {
         return categorias.find((categoria) => categoria.id === params.row.proceso_cartera[0]?.id_categoria)?.categoria ?? 'Sin subetapa activa';
       }
     },
-   
+
     {
       field: 'monto_inicial',
       headerName: 'Saldo Capital',
@@ -243,7 +250,7 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_id_cartera(params.row.id);
                   set_position_tab('2');
                   set_data_complemet(params.row);
-
+                  set_datos(params.row);
                   set_etapa_proceso((prevEtapa: any) => ({
                     ...prevEtapa,
                     mostrar_modal: true,
@@ -304,7 +311,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-      console.log(error);
+        console.log(error);
       })
       .finally(() => {
         set_loading(false);
@@ -465,7 +472,7 @@ export const GestionCarteraScreen: React.FC = () => {
     }
   };
 
-  
+
   const mover_subetapa_actual = (): void => {
     if (id_subetapa_destino) {
       api.post(`recaudo/procesos/actualizar-categoria-proceso/${id_proceso}/`, {
@@ -682,6 +689,38 @@ export const GestionCarteraScreen: React.FC = () => {
   const handle_pagination_change = (event: React.ChangeEvent<unknown>, value: number): void => {
     set_current_page((value - 1) * 10);
   };
+  const [loadingg, setLoading] = useState(false);
+  function handleClick() {
+    setLoading(true);
+    unifiedSearchSubmit(); 
+    fetchHistorico();
+  }
+
+
+  const unifiedSearchSubmit = async () => { 
+      showAlert(
+        'Opps...',
+        'Esto puede tardar algunos minutos',
+        'info'
+      ); 
+  };
+
+  
+  const fetchHistorico = async (): Promise<void> => {
+    try {
+      const url = "/recaudo/configuracion_baisca/cronjop/";
+      const res = await api.get(url);
+      // const HistoricoData: Historico[] = res.data?.data || [];
+      // setHistorico(HistoricoData);
+      control_success("Datos actualizados ");
+      setLoading(false)
+    } catch (error: any) {
+      // console.error(error);
+      setLoading(false)
+
+      control_error(error.response.data.detail);
+    }
+  };
 
   return (
     <>
@@ -759,6 +798,24 @@ export const GestionCarteraScreen: React.FC = () => {
                   >
                     Limpiar
                   </Button>
+
+                  <Grid item xs={12} sm={4.1}>
+
+                  </Grid>
+
+
+                  <LoadingButton
+                    color="success"
+                    onClick={handleClick}
+                    loading={loadingg}
+                    loadingPosition="start"
+                    startIcon={<SettingsInputAntennaIcon />}
+                    variant="contained"
+                  >
+                    <span>Actualizar base de datos </span>
+                  </LoadingButton>
+
+                  
                 </Box>
                 <DataGrid
                   density='standard'
@@ -795,6 +852,7 @@ export const GestionCarteraScreen: React.FC = () => {
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <EditarCartera
+                  datos={datos}
                   id_flujo_destino={id_flujo_destino}
                   selected_proceso={selected_proceso}
                   flujos_destino={flujos_destino}

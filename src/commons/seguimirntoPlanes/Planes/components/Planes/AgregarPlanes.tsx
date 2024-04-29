@@ -24,8 +24,9 @@ import { tipo_plan } from '../../choices/selects';
 import { LoadingButton } from '@mui/lab';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import SaveIcon from '@mui/icons-material/Save';
-import { useAppSelector } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect } from 'react';
+import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarPlanes: React.FC = () => {
@@ -47,7 +48,7 @@ export const AgregarPlanes: React.FC = () => {
 
   const { mode, plan } = useAppSelector((state) => state.planes);
 
-  //  console.log('')(plan, 'plan');
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (mode.crear) {
@@ -333,6 +334,25 @@ export const AgregarPlanes: React.FC = () => {
             />
           </Grid>
           <Grid container spacing={2} justifyContent="flex-end">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="error"
+                disabled={false}
+                onClick={() => {
+                  limpiar_formulario_planes();
+                  dispatch(
+                    set_current_mode_planes({
+                      ver: true,
+                      crear: false,
+                      editar: false,
+                    })
+                  );
+                }}
+              >
+                Cerrar
+              </Button>
+            </Grid>
             <Grid item>
               <Button
                 variant="outlined"

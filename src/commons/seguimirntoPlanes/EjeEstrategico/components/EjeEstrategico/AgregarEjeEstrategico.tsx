@@ -166,7 +166,7 @@ export const AgregarEjeEstrategico: React.FC = () => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  // label="Tipo de eje"
+                  label="Tipo de eje"
                   select
                   size="small"
                   margin="dense"

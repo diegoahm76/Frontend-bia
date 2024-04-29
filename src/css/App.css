@@ -497,3 +497,21 @@ body::-webkit-scrollbar-thumb {
   width: 100%; /* Ajusta la imagen al ancho del contenedor */
   height: auto; /* Altura ajustada automáticamente */
 }
+
+/* Estilos para el componente de gráficos ApexCharts */
+.apexcharts-legend-series {
+  margin-top: 1rem;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.apexcharts-xaxis-label{
+  white-space: normal !important;
+  height: auto !important;
+}
+
+.apexcharts-legend-marker{
+  flex-shrink: 0;
+}

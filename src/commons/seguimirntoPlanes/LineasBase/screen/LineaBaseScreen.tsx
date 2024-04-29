@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { set_current_mode_planes } from "../../store/slice/indexPlanes";
 import { Grid } from "@mui/material";
@@ -11,10 +11,11 @@ import { AgregarLineaBase } from "../components/AgregarLineaBase";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LineaBaseScreen: React.FC = () => {
     const { mode } = useAppSelector((state) => state.planes);
-
+    const [evaluate, set_evaluate] = useState(false);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
+      set_evaluate(true);
       dispatch(
         set_current_mode_planes({
           ver: false,
@@ -47,7 +48,7 @@ export const LineaBaseScreen: React.FC = () => {
         </Grid>
 
         <BusquedaMetasPgar />
-        {mode.ver ? <ListarLineasBase /> : null}
+        {(mode.ver && evaluate) ? <ListarLineasBase /> : null}
         {mode.crear || mode.editar ? <AgregarLineaBase /> : null}
         <Grid
           container

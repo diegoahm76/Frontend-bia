@@ -64,12 +64,12 @@ interface IProps {
     handle_input_form_liquidacion_change: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handle_select_form_liquidacion_change: (event: SelectChangeEvent) => void;
     handle_submit_liquidacion: () => void;
-    handle_submit_liquidacionma:any,
+    handle_submit_liquidacionma: any,
     set_fecha_liquidacion: Dispatch<SetStateAction<dayjs.Dayjs>>;
     set_fecha_vencimiento: Dispatch<SetStateAction<dayjs.Dayjs>>;
     selectedIds: any;
     set_selectedIds: any;
-    set_form_liquidacion:any;
+    set_form_liquidacion: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -192,13 +192,25 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         set_form_liquidacion((prevData: any) => ({
             ...prevData,
             id_expediente: selectedIds[0].toString(),
-           
+
         }));
 
     }, [selectedIds]);
-   
+
+    const handleClick = () => {
+        console.log(selectedIds);
+        console.log("2222222");
+    };
     return (
         <>
+
+
+
+            {/* <Button color='success'
+                variant='contained'
+                onClick={handleClick}>CONSOLE </Button> */}
+
+
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>
                     <FormControl size="small" fullWidth>
@@ -223,7 +235,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                         <FormHelperText>Seleccione el expediente</FormHelperText>
                     </FormControl>
                 </Grid>
-               {/* { selectedIds[0].toString()}
+                {/* { selectedIds[0].toString()}
                ññ
                {form_liquidacion.id_expediente} */}
                 <Grid item xs={12} sm={4}>
@@ -263,7 +275,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 </Grid>
 
 
- 
+
                 <Grid item xs={12} sm={4}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
@@ -485,7 +497,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
                             onClick={handle_submit_liquidacion}
 
-                            
+
                         >
                             Guardar
                         </Button>
