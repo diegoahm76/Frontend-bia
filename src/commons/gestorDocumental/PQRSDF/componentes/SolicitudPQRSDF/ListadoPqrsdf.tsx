@@ -31,6 +31,7 @@ import { get_pqr_types_service } from '../../store/thunks/pqrsdfThunks';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import  AddBox  from '@mui/icons-material/AddBox';
 import RestartAltIcon  from '@mui/icons-material/RestartAlt';
+import { setCurrentPersonaRespuestaUsuario } from '../../../TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoPqrsdf = () => {
   const dispatch = useAppDispatch();
@@ -39,6 +40,9 @@ const ListadoPqrsdf = () => {
     (state) => state.pqrsdf_slice
   );
   const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
+    //* states from redux
+    const { currentPersonaRespuestaUsuario } = useAppSelector((state) => state.ResRequerimientoOpaSlice);
+
 
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
@@ -79,6 +83,10 @@ const ListadoPqrsdf = () => {
       if ('id_solicitud_al_usuario_sobre_pqrsdf' in selectedPqr) {
         set_button_option('request');
         console.log(selectedPqr);
+        dispatch(setCurrentPersonaRespuestaUsuario({
+          ...currentPersonaRespuestaUsuario,
+          ...selectedPqr,
+        } as any));
         const pqr = pqrs.find(
           (objeto: IObjPqr) => objeto.id_PQRSDF === selectedPqr.id_pqrsdf
         );
@@ -186,6 +194,10 @@ const ListadoPqrsdf = () => {
           <IconButton
             onClick={() => {
               set_detail_is_active(true);
+              dispatch(setCurrentPersonaRespuestaUsuario({
+                ...currentPersonaRespuestaUsuario,
+                rowData,
+              } as any));
               setSelectedPqr(rowData);
             }}
           >

@@ -117,19 +117,19 @@ any): JSX.Element => {
                     options={
                       [
                         {
-                          value: 'Telefóno',
+                          value: 1,
                           label: 'Telefóno',
                         },
                         {
-                          value: 'Portal web',
+                          value: 2,
                           label: 'Portal web',
                         },
                         {
-                          value: 'Redes sociales',
+                          value: 3,
                           label: 'Redes sociales',
                         },
                         {
-                          value: 'Instalaciones de la corporación',
+                          value: 4,
                           label: 'Instalaciones de la corporación',
                         },
                       ] ?? []
