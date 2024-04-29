@@ -6,11 +6,11 @@ import { control_error } from '../../../../helpers';
 import FuncionarioResponsable from '../components/FuncionarioResponsable';
 import FuncionarioOperario from '../components/FuncionarioOperario';
 import ModalBusquedaFuncionarios from '../manners/ModalBusquedaFuncionarios';
-import TitleDivider from '../components/TitleDivider';
 import ModalBusquedaBodega from '../manners/ModalBusquedaBodega';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Title } from '../../../../components';
 
 
 interface props {
@@ -186,7 +186,9 @@ const BusquedaFuncionarios: FC<props> = ({
       />
 
       <Grid container spacing={2} item xs={12}>
-        <TitleDivider title="BODEGA PREDETERMINADA" />
+        <Grid item mt={3} xs={12}>
+          <Title title='Bodega predeterminada' />
+        </Grid>
 
         <Grid item xs={12} lg={3}>
           <FormControl required size="small" fullWidth>

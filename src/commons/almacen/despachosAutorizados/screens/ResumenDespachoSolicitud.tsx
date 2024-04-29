@@ -1,21 +1,22 @@
 import { FormLabel, Grid, Switch, TextField } from '@mui/material';
 import React, { FC } from 'react';
-import { interface_resumen_despacho_sin_solicitud } from '../interfeces/types';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import ResumenSinSolicitudDespacho from '../components/ResumenSinSolicitudDespacho';
+import { interface_resumen_solicitud_despacho } from '../interfaces/types';
 import { Title } from '../../../../components';
+import TablaArticulosSolicitados from '../tables/TablaArticulosSolicitados';
+import ResumenSinSolicitudDespacho from '../components/ResumenSinSolicitudDespacho';
 import PrintResumenPDF from '../../autorizarDespachos/components/PrintResumenPDF';
 
 
 interface props {
-  data_solicitud_ver_por_id_sin_solicitud: interface_resumen_despacho_sin_solicitud
+  data_resumen_solicitud_despacho: interface_resumen_solicitud_despacho
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const ResumenDespachoSinSolicitud: FC<props> = ({
-  data_solicitud_ver_por_id_sin_solicitud,
+const ResumenDespachoSolicitud: FC<props> = ({
+  data_resumen_solicitud_despacho,
 }) => {
 
   return (
@@ -29,10 +30,10 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Estado despacho: "
           value={
-            data_solicitud_ver_por_id_sin_solicitud?.estado_despacho === 'Ep' ? 'En espera' :
-              data_solicitud_ver_por_id_sin_solicitud?.estado_despacho === 'Ac' ? 'Aceptada' :
-                data_solicitud_ver_por_id_sin_solicitud?.estado_despacho === 'Re' ? 'Rechazada' :
-                  data_solicitud_ver_por_id_sin_solicitud?.estado_despacho === 'An' ? 'Anulada' : ''
+            data_resumen_solicitud_despacho?.estado_despacho === 'Ep' ? 'En espera' :
+              data_resumen_solicitud_despacho?.estado_despacho === 'Ac' ? 'Aceptada' :
+                data_resumen_solicitud_despacho?.estado_despacho === 'Re' ? 'Rechazada' :
+                  data_resumen_solicitud_despacho?.estado_despacho === 'An' ? 'Anulada' : ''
           }
         />
       </Grid>
@@ -43,7 +44,7 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           fullWidth
           size="small"
           label="¿Es despacho sin solicitud?"
-          value={data_solicitud_ver_por_id_sin_solicitud?.despacho_sin_solicitud ? 'SI' : 'NO'}
+          value={data_resumen_solicitud_despacho?.despacho_sin_solicitud ? 'SI' : 'NO'}
         />
       </Grid>
 
@@ -53,9 +54,9 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
             disabled
             label="Fecha de solicitud:"
             value={
-              !(dayjs(data_solicitud_ver_por_id_sin_solicitud?.fecha_solicitud ?? null)).isValid() ?
+              !(dayjs(data_resumen_solicitud_despacho?.fecha_solicitud ?? null)).isValid() ?
                 null :
-                dayjs(data_solicitud_ver_por_id_sin_solicitud?.fecha_solicitud ?? null)
+                dayjs(data_resumen_solicitud_despacho?.fecha_solicitud ?? null)
             }
             onChange={() => { }} // No hace nada
             renderInput={(params) => (
@@ -65,7 +66,7 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
         </LocalizationProvider>
       </Grid>
 
-      <Grid item mt={3} xs={12}>
+      <Grid container item xs={12} mt={2}>
         <Title title='Funcionario solicitante' />
       </Grid>
 
@@ -75,7 +76,7 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           fullWidth
           size="small"
           label="Tipo de documento:"
-          value={data_solicitud_ver_por_id_sin_solicitud?.tipo_documento_persona_solicita ?? ''}
+          value={data_resumen_solicitud_despacho?.tipo_documento_persona_solicita ?? ''}
         />
       </Grid>
 
@@ -85,7 +86,7 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           fullWidth
           size="small"
           label="Número de documento:"
-          value={data_solicitud_ver_por_id_sin_solicitud?.numero_documento_persona_solicita ?? ''}
+          value={data_resumen_solicitud_despacho?.numero_documento_persona_solicita ?? ''}
         />
       </Grid>
 
@@ -95,7 +96,7 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           fullWidth
           size="small"
           label="Nombres:"
-          value={data_solicitud_ver_por_id_sin_solicitud?.primer_nombre_persona_solicita ?? ''}
+          value={data_resumen_solicitud_despacho?.primer_nombre_persona_solicita ?? ''}
         />
       </Grid>
 
@@ -105,11 +106,11 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           fullWidth
           size="small"
           label="Apellidos:"
-          value={data_solicitud_ver_por_id_sin_solicitud?.primer_apellido_persona_solicita ?? ''}
+          value={data_resumen_solicitud_despacho?.primer_apellido_persona_solicita ?? ''}
         />
       </Grid>
 
-      <Grid item mt={3} xs={12}>
+      <Grid container item xs={12} mt={2}>
         <Title title='Funcionario responsable' />
       </Grid>
 
@@ -120,8 +121,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Tipo de documento:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.tipo_documento_funcionario_resp_unidad ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.tipo_documento_funcionario_resp_unidad ?? ''
               : ''
           }
         />
@@ -134,8 +135,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Número de documento:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.numero_documento_funcionario_resp_unidad ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.numero_documento_funcionario_resp_unidad ?? ''
               : ''
           }
         />
@@ -148,8 +149,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Nombres:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.primer_nombre_funcionario_resp_unidad ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.primer_nombre_funcionario_resp_unidad ?? ''
               : ''
           }
         />
@@ -162,8 +163,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Apellidos:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.primer_apellido_funcionario_resp_unidad ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.primer_apellido_funcionario_resp_unidad ?? ''
               : ''
           }
         />
@@ -176,8 +177,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Observación:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.observacion ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.observacion ?? ''
               : ''
           }
         />
@@ -189,10 +190,10 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
             disabled
             label="Fecha de asignación:"
             value={
-              Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-                !(dayjs(data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.fecha_asignacion ?? null)).isValid() ?
+              Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+                !(dayjs(data_resumen_solicitud_despacho?.asignaciones_activo[0]?.fecha_asignacion ?? null)).isValid() ?
                   null :
-                  dayjs(data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.fecha_asignacion ?? null)
+                  dayjs(data_resumen_solicitud_despacho?.asignaciones_activo[0]?.fecha_asignacion ?? null)
                 : null
             }
             onChange={() => { }} // No hace nada
@@ -203,7 +204,7 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
         </LocalizationProvider>
       </Grid>
 
-      <Grid item mt={3} xs={12}>
+      <Grid container item xs={12} mt={2}>
         <Title title='Funcionario operario' />
       </Grid>
 
@@ -214,8 +215,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Tipo de documento:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.tipo_documento_persona_operario ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.tipo_documento_persona_operario ?? ''
               : ''
           }
         />
@@ -228,8 +229,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Número de documento:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.numero_documento_persona_operario ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.numero_documento_persona_operario ?? ''
               : ''
           }
         />
@@ -242,8 +243,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Nombres:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.primer_nombre_persona_operario ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.primer_nombre_persona_operario ?? ''
               : ''
           }
         />
@@ -256,8 +257,8 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           size="small"
           label="Apellidos:"
           value={
-            Object.keys(data_solicitud_ver_por_id_sin_solicitud).length !== 0 ?
-              data_solicitud_ver_por_id_sin_solicitud?.asignaciones_activo[0]?.primer_apellido_persona_operario ?? ''
+            Object.keys(data_resumen_solicitud_despacho).length !== 0 ?
+              data_resumen_solicitud_despacho?.asignaciones_activo[0]?.primer_apellido_persona_operario ?? ''
               : ''
           }
         />
@@ -269,7 +270,7 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
           fullWidth
           size="small"
           label="¿Despacho anulado?:"
-          value={data_solicitud_ver_por_id_sin_solicitud?.despacho_anulado ? 'SI' : 'NO'}
+          value={data_resumen_solicitud_despacho?.despacho_anulado ? 'SI' : 'NO'}
         />
       </Grid>
 
@@ -277,11 +278,11 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             disabled
-            label="Fecha de anulacion:"
+            label="Fecha anulación:"
             value={
-              !(dayjs(data_solicitud_ver_por_id_sin_solicitud?.fecha_anulacion ?? null)).isValid() ?
+              !(dayjs(data_resumen_solicitud_despacho?.fecha_anulacion ?? null)).isValid() ?
                 null :
-                dayjs(data_solicitud_ver_por_id_sin_solicitud?.fecha_anulacion ?? null)
+                dayjs(data_resumen_solicitud_despacho?.fecha_anulacion ?? null)
             }
             onChange={() => { }} // No hace nada
             renderInput={(params) => (
@@ -291,8 +292,22 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
         </LocalizationProvider>
       </Grid>
 
+      <Grid container item xs={12} sx={{
+        position: "relative",
+        background: "#FAFAFA",
+        borderRadius: "15px",
+        p: "40px",
+        my: "20px",
+        boxShadow: "0px 3px 6px #042F4A26",
+      }}>
+        <Title title="Artículos solicitados" />
+        <TablaArticulosSolicitados
+          articulos_solicitados={data_resumen_solicitud_despacho?.items_solicitud}
+        />
+      </Grid>
+
       <ResumenSinSolicitudDespacho
-        data_solicitud_ver_por_id_sin_solicitud={data_solicitud_ver_por_id_sin_solicitud}
+        data_resumen_solicitud_despacho={data_resumen_solicitud_despacho}
       />
 
 
@@ -301,4 +316,4 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default ResumenDespachoSinSolicitud;
+export default ResumenDespachoSolicitud;

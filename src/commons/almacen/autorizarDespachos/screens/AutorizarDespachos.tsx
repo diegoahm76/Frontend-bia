@@ -4,6 +4,7 @@ import { Title } from '../../../../components';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import DespachosEnProceso from './DespachosEnProceso';
 import { interface_resumen_solicitud_despacho } from '../interfaces/types';
+import ResumenDespachoSolicitud from './ResumenDespachoSolicitud';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
@@ -65,8 +66,10 @@ const AutorizarDespachos = () => {
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
-                <Grid container spacing={2} rowSpacing={7}>
-
+                <Grid container spacing={2} rowSpacing={3}>
+                  <ResumenDespachoSolicitud
+                    data_resumen_solicitud_despacho={data_resumen_solicitud_despacho}
+                  />
                 </Grid>
               </TabPanel>
             </TabContext>

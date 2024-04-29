@@ -3,19 +3,17 @@ import React, { useState } from 'react';
 import { Title } from '../../../../components';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import TablaArticulosDespachados from '../tables/TablaArticulosDespachados';
-import { interface_articulos_despachados, interface_inputs_resumen_despacho } from '../interfaces/types';
 import dayjs from 'dayjs';
+import { interface_resumen_solicitud_despacho } from '../interfaces/types';
+import TablaArticulosDespachados from '../tables/TablaArticulosDespachados';
 
 interface props {
-  inputs_resumen_despacho: interface_inputs_resumen_despacho
-  data_articulos_despachados: interface_articulos_despachados[]
+  data_resumen_solicitud_despacho: interface_resumen_solicitud_despacho
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const ResumenDespacho: React.FC<props> = ({
-  inputs_resumen_despacho,
-  data_articulos_despachados,
+const ResumenSinSolicitudDespacho: React.FC<props> = ({
+  data_resumen_solicitud_despacho,
 }) => {
 
   return (
@@ -36,10 +34,11 @@ const ResumenDespacho: React.FC<props> = ({
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 disabled
-                label="Fecha de despacho:"
-                value={!(dayjs(inputs_resumen_despacho.fecha_despacho)).isValid() ? 
-                  null :
-                  dayjs(inputs_resumen_despacho.fecha_despacho)
+                label="Fecha despacho:"
+                value={
+                  !(dayjs(data_resumen_solicitud_despacho?.fecha_despacho ?? null)).isValid() ?
+                    null :
+                    dayjs(data_resumen_solicitud_despacho?.fecha_despacho ?? null)
                 }
                 onChange={() => { }} // No hace nada
                 renderInput={(params) => (
@@ -55,22 +54,25 @@ const ResumenDespacho: React.FC<props> = ({
               fullWidth
               size="small"
               label="Observación: "
-              value={inputs_resumen_despacho.motivo ?? ''}
+              value={
+                Object.keys(data_resumen_solicitud_despacho).length !== 0
+                  ?
+                  data_resumen_solicitud_despacho?.observacion ?? ''
+                  : ''
+              }
             />
           </Grid>
         </Grid>
 
-        <Grid item mt={3} xs={12}>
-          <Title title='Funcionario que despacha' />
-        </Grid>
+        <Title title='Funcionario que despacha' />
 
         <Grid item xs={12} lg={3}>
           <TextField
             disabled
             fullWidth
             size="small"
-            label="Tipo de documento"
-            value={inputs_resumen_despacho.tp_documento_pers_despacha ?? ''}
+            label="Tipo de documento:"
+            value={data_resumen_solicitud_despacho?.tipo_documento_persona_persona_despacha ?? ''}
           />
         </Grid>
 
@@ -79,8 +81,8 @@ const ResumenDespacho: React.FC<props> = ({
             disabled
             fullWidth
             size="small"
-            label="Documento"
-            value={inputs_resumen_despacho.documento_pers_despacha ?? ''}
+            label="Número de documento:"
+            value={data_resumen_solicitud_despacho?.numero_documento_persona_persona_despacha ?? ''}
           />
         </Grid>
 
@@ -89,8 +91,8 @@ const ResumenDespacho: React.FC<props> = ({
             disabled
             fullWidth
             size="small"
-            label="Nombres"
-            value={inputs_resumen_despacho.nombres_pers_despacha ?? ''}
+            label="Nombres:"
+            value={data_resumen_solicitud_despacho?.primer_nombre_persona_persona_despacha ?? ''}
           />
         </Grid>
 
@@ -99,32 +101,20 @@ const ResumenDespacho: React.FC<props> = ({
             disabled
             fullWidth
             size="small"
-            label="Apellidos"
-            value={inputs_resumen_despacho.apellidos_pers_despacha ?? ''}
+            label="Apellidos:"
+            value={data_resumen_solicitud_despacho?.primer_apellido_persona_persona_despacha ?? ''}
           />
         </Grid>
 
-        <Grid item mt={3} xs={12}>
-          <Title title='Funcionario que anula' />
-        </Grid>
+        <Title title='Funcionario que anula el despacho' />
 
         <Grid item xs={12} lg={3}>
           <TextField
             disabled
             fullWidth
             size="small"
-            label="Tipo de documento"
-            value={inputs_resumen_despacho.tp_documento_pers_anula ?? ''}
-          />
-        </Grid>
-
-        <Grid item xs={12} lg={3}>
-          <TextField
-            disabled
-            fullWidth
-            size="small"
-            label="Documento"
-            value={inputs_resumen_despacho.documento_pers_anula ?? ''}
+            label="Tipo de documento:"
+            value={data_resumen_solicitud_despacho?.tipo_documento_persona_anula ?? ''}
           />
         </Grid>
 
@@ -133,8 +123,8 @@ const ResumenDespacho: React.FC<props> = ({
             disabled
             fullWidth
             size="small"
-            label="Nombres"
-            value={inputs_resumen_despacho.nombres_pers_anula ?? ''}
+            label="Número de documento:"
+            value={data_resumen_solicitud_despacho?.numero_documento_persona_anula ?? ''}
           />
         </Grid>
 
@@ -143,8 +133,18 @@ const ResumenDespacho: React.FC<props> = ({
             disabled
             fullWidth
             size="small"
-            label="Apellidos"
-            value={inputs_resumen_despacho.apellidos_pers_anula ?? ''}
+            label="Nombres:"
+            value={data_resumen_solicitud_despacho?.primer_nombre_persona_anula ?? ''}
+          />
+        </Grid>
+
+        <Grid item xs={12} lg={3}>
+          <TextField
+            disabled
+            fullWidth
+            size="small"
+            label="Apellidos:"
+            value={data_resumen_solicitud_despacho?.primer_apellido_persona_anula ?? ''}
           />
         </Grid>
 
@@ -153,30 +153,32 @@ const ResumenDespacho: React.FC<props> = ({
             disabled
             fullWidth
             size="small"
-            label="Justificación"
-            value={inputs_resumen_despacho.justificacion ?? ''}
+            label="Justificación de la anulación:"
+            value={data_resumen_solicitud_despacho?.justificacion_anulacion ?? ''}
           />
         </Grid>
 
         <Grid item xs={12} lg={3}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              disabled
-              label="Fecha de anulación:"
-              value={!(dayjs(inputs_resumen_despacho.fecha_anulacion)).isValid() ?
-                null :
-                dayjs(inputs_resumen_despacho.fecha_anulacion)
-              }
-              onChange={() => { }} // No hace nada
-              renderInput={(params) => (
-                <TextField fullWidth size="small" {...params} />
-              )}
-            />
-          </LocalizationProvider>
-        </Grid>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled
+                label="Fecha anulacion:"
+                value={
+                  !(dayjs(data_resumen_solicitud_despacho?.fecha_anulacion ?? null)).isValid() ?
+                    null :
+                    dayjs(data_resumen_solicitud_despacho?.fecha_anulacion ?? null)
+                }
+                onChange={() => { }} // No hace nada
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
 
-        <TablaArticulosDespachados 
-          articulos_despachados={data_articulos_despachados}
+
+        <TablaArticulosDespachados
+          articulos_despachados={data_resumen_solicitud_despacho?.items_despacho}
         />
 
       </Grid>
@@ -185,4 +187,4 @@ const ResumenDespacho: React.FC<props> = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default ResumenDespacho;
+export default ResumenSinSolicitudDespacho;

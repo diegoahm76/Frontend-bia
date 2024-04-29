@@ -11,6 +11,7 @@ import { control_error, control_success } from '../../../../helpers';
 import Swal from 'sweetalert2';
 import { useAppDispatch } from '../../../../hooks';
 import { put_editar_anexo_despacho } from '../thunks/despachos_autorizados';
+import ResumenDespachoSolicitud from './ResumenDespachoSolicitud';
 
 
 
@@ -143,8 +144,10 @@ const DespachosAutorizados = () => {
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
-                <Grid container spacing={2} rowSpacing={7}>
-
+                <Grid container spacing={2} rowSpacing={3}>
+                  <ResumenDespachoSolicitud
+                    data_resumen_solicitud_despacho={data_resumen_solicitud_despacho}
+                  />
                 </Grid>
               </TabPanel>
             </TabContext>
