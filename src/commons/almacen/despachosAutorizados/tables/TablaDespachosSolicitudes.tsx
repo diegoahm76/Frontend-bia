@@ -51,7 +51,7 @@ const TablaDespachosSolicitudes: React.FC<Props> = ({
 
   const ver_solicitud = (row: any) => {
     set_accion('ver');
-    set_position_tab('4');
+    set_position_tab('2');
 
     dispatch(get_obtener_resumen_solicitud_despacho(row.id_despacho_activo))
       .then((response: response_resumen_solicitud_despacho) => {
