@@ -124,7 +124,6 @@ export const ListarMetasPgar: React.FC = () => {
       if (id_eje_estrategico) {
         fetch_data_meta_pgar();
       }
-      console.log(id_eje_estrategico)
     }, [id_eje_estrategico]);
 
     return (

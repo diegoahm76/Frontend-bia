@@ -25,6 +25,7 @@ import { ConsultarPOAIRoutes } from '../ConsultaPOAI/routes/ConsultarPOAIRoutes'
 import { ConsultasRoutes } from '../Tableros/router/ConsultasRoutes';
 import { SeguimientoPOAIRoutes } from '../SeguiminetoPOAI/router/SeguimientoPOAIRoutes';
 import { SeguimientoPgarRoutes } from '../SeguimientoPGAR/routes/SeguimientoPgarRoutes';
+import { TablerosControlRoutes } from '../TablerosControlPGAR/routes/TablerosControlRoutes';
 
 const routes = [
   {
@@ -46,6 +47,11 @@ const routes = [
     path: 'seguimiento_pgar/',
     name: 'seguimiento_pgar',
     component: () => <SeguimientoPgarRoutes />,
+  },
+  {
+    path: 'tableros_control/',
+    name: 'tableros_control',
+    component: () => <TablerosControlRoutes />,
   },
   {
     path: 'objetivos/',

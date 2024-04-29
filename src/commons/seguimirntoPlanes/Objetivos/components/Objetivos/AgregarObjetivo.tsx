@@ -118,13 +118,32 @@ export const AgregarObjetivo: React.FC = () => {
                   helperText={
                     errors_objetivo.nombre_objetivo
                       ? 'Es obligatorio ingresar un nombre'
-                      : 'Ingrese un nombre'
+                      : 'Ingrese un nombre para el objetivo'
                   }
                 />
               )}
             />
           </Grid>
           <Grid container spacing={2} justifyContent="flex-end">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="error"
+                disabled={false}
+                onClick={() => {
+                  limpiar_formulario_objetivo();
+                  dispatch(
+                    set_current_mode_planes({
+                      ver: true,
+                      crear: false,
+                      editar: false,
+                    })
+                  );
+                }}
+              >
+                Cerrar
+              </Button>
+            </Grid>
             <Grid item>
               <Button
                 variant="outlined"

@@ -46,7 +46,6 @@ export const ArmonizacionPlanesScreen: React.FC = () => {
         </Grid>
 
         <ListarArmonizaciones />
-        {/* {mode.ver ? <ListarIndicadoresPgar /> : null} */}
         {mode.crear || mode.editar ? <AgregarArmonizacionPlanes /> : null}
         <Grid
           container

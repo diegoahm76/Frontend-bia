@@ -29,7 +29,7 @@ export interface IEjeEstrategico {
   id_plan?: number | null;
   id_programa: number | null;
   id_objetivo?: number | null;
-  id_tipo_eje?: number | null;
+  id_tipo_eje?: number | string;
 }
 // Objetivo
 export interface IObjetivo {
@@ -121,7 +121,7 @@ export interface IActividadPgar {
 }
 // Indicador PGAR
 export interface IIndicadorPgar {
-  id_indicador: number | null;
+  id_indicador: number | string;
   nombre_indicador: string;
   numero_indicador: string;
   nombre_linea_base: string;
@@ -132,14 +132,14 @@ export interface IIndicadorPgar {
   nombre_meta?: string;
   nombre_actividad?: string;
   nombre_plan?: string;
-  id_medicion?: number | null;
-  id_actividad?: number | null;
-  id_plan?: number | null;
-  id_linea_base?: number | null;
-  id_meta_eje?: number | null;
-  id_eje_estrategico?: number | null;
-  id_objetivo?: number | null;
-  id_unidad_organizacional?: number | null;
+  id_medicion?: number | string;
+  id_actividad?: number | string;
+  id_plan?: number | string;
+  id_linea_base?: number | string;
+  id_meta_eje?: number | string;
+  id_eje_estrategico?: number | string;
+  id_objetivo?: number | string;
+  id_unidad_organizacional?: number | string;
   fecha_creacion: string;
   cumplio: boolean;
 }
@@ -527,6 +527,8 @@ export interface IPlanesIndex {
   indicador_pgar: IIndicadorPgar;
   armonizacion_pgar: any;
   seguimiento_pgar: any;
+  accion_correctiva: any;
+  tramite: any;
   proyecto: IProyectos;
   producto: IProductos;
   actividad: IActividades;

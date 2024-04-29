@@ -158,7 +158,7 @@ export const ListarSubprograma: React.FC = () => {
             </Box>
           </Grid>
         </>
-        <Grid container spacing={2} justifyContent="flex-end">
+        <Grid container spacing={2} my={1} justifyContent="flex-end">
           <Grid item>
             <Button
               variant="outlined"

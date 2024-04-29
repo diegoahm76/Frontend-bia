@@ -101,48 +101,50 @@ export const AgregarMetaPgar: React.FC = () => {
             <Grid item xs={12}>
               <Title title="Registro de Metas PGAR" />
             </Grid>
-            {mode.editar ? (
-              <>
-                <Grid item xs={12} sm={6}>
-                    <Controller
-                        name="nombre_plan"
-                        control={control_meta}
-                        rules={{ required: false }}
-                        render={({ field: { onChange, value } }) => (
-                        <TextField
-                            fullWidth
-                            size="small"
-                            label="Nombre del Plan"
-                            variant="outlined"
-                            value={value}
-                            disabled={true}
-                            required={true}
-                            onChange={onChange}
-                        />
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="nombre_eje_estrategico"
-                    control={control_meta}
-                    rules={{ required: false }}
-                    render={({ field: { onChange, value } }) => (
-                      <TextField
-                        fullWidth
-                        size="small"
-                        label="Nombre del Eje Estratégico"
-                        variant="outlined"
-                        value={value}
-                        disabled={true}
-                        required={true}
-                        onChange={onChange}
+            {
+              mode.editar && (
+                <>
+                  <Grid item xs={12} sm={6}>
+                      <Controller
+                          name="nombre_plan"
+                          control={control_meta}
+                          rules={{ required: false }}
+                          render={({ field: { onChange, value } }) => (
+                          <TextField
+                              fullWidth
+                              size="small"
+                              label="Nombre del Plan"
+                              variant="outlined"
+                              value={value}
+                              disabled={true}
+                              required={true}
+                              onChange={onChange}
+                          />
+                          )}
                       />
-                    )}
-                  />
-                </Grid>
-              </>
-            ) : null}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="nombre_eje_estrategico"
+                      control={control_meta}
+                      rules={{ required: false }}
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          fullWidth
+                          size="small"
+                          label="Nombre del Eje Estratégico"
+                          variant="outlined"
+                          value={value}
+                          disabled={true}
+                          required={true}
+                          onChange={onChange}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </>
+              )
+            }
             <Grid item xs={12} sm={6}>
               <Controller
                 name="numero_meta_eje"
