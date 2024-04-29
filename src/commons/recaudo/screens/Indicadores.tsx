@@ -45,6 +45,7 @@ interface Historico {
     formulario: string;
     id_indicador: any;
     indicadorvalor_set: IndicadorValor[];
+    interpretacion:any;
 }
 
 
@@ -521,6 +522,7 @@ export const Indicadores: React.FC = () => {
     const formularioo = Historico.length > 0 ? Historico[0].formulario : '';
     const indicadorvalor = Historico.length > 0 ? Historico[0].indicadorvalor_set : [];
     const id_indicador = Historico.length > 0 ? Historico[0].id_indicador : [];
+    const interpretacion = Historico.length > 0 ? Historico[0].interpretacion : [];
 
 
 
@@ -549,7 +551,8 @@ export const Indicadores: React.FC = () => {
             responsable_creacion: responsable_creacion,
             tipo_indicador: tipo_indicador,
             // formulario: formularioo,
-            indicadorvalor_set: indicadorvalor
+            indicadorvalor_set: indicadorvalor,
+            interpretacion:interpretacion
         }));
     };
 
