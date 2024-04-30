@@ -23,9 +23,8 @@ const ListadoBienesEntrega = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    //  console.log('')(bienes_entrada, bienes_entrega);
-    if (bienes_entrada.length > 0) {
-      if (bienes_entrega.length > 0) {
+    if (bienes_entrada?.length !== null && bienes_entrada?.length > 0){
+      if (bienes_entrega?.length !== null && bienes_entrega?.length > 0) {
         const aux_items: IObjBienesEntrada[] = [];
         let despachada: number = 0;
 
@@ -62,9 +61,9 @@ const ListadoBienesEntrega = () => {
   useEffect(() => {
 
     //  console.log('')(bienes_entrada, bienes_entrega);
-    if (bienes_entrada.length > 0) {
+    if (bienes_entrada?.length > 0 && bienes_entrada?.length !== null) {
       //  console.log('')("Bienes entrega")
-      if (bienes_entrega.length > 0) {
+      if (bienes_entrega.length > 0 && bienes_entrega.length !== null) {
         const aux_items: IObjBienesEntrada[] = [];
         // let bien: IObjBienDespacho | undefined;
         let despachada: number = 0;
@@ -181,7 +180,7 @@ const ListadoBienesEntrega = () => {
         >
           <Box sx={{ width: '100%' }}>
             <Title title="Bienes de Entrada Seleccionada" />
-               <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
+            <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
 
               {download_xls({ nurseries: bienes_entrada_aux, columns: columns_bienes_entrega })}
               {download_pdf({ nurseries: bienes_entrada_aux, columns: columns_bienes_entrega, title: "Bienes de Entrada" })}
