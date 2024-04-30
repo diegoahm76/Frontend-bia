@@ -16,14 +16,14 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
     nombre_planPGAR: '',
     nombre_planPAI: '',
     objetivoPGAR: [],
-    ejesEstrategicosPAI: [],
     estado: '',
     id_objetivo: '',
     anio: 0,
   });
 
+  const [show_loader, set_show_loader] = useState(false);
   const [show_chart, set_show_chart] = useState(false);
-  const {rows_armonizacion, fetch_data_armonizaciones, fetch_data_seguimiento_pgar} = useContext(DataContextPgar);
+  const {rows_armonizacion, fetch_data_armonizaciones} = useContext(DataContextPgar);
 
   useEffect(() => {
     fetch_data_armonizaciones();
@@ -42,7 +42,6 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
         nombre_planPGAR: armonizacion_select.nombre_planPGAR,
         nombre_planPAI: armonizacion_select.nombre_planPAI,
         objetivoPGAR: armonizacion_select.objetivoPGAR,
-        ejesEstrategicosPAI: armonizacion_select.ejesEstrategicosPAI,
         estado: armonizacion_select.estado,
       });
     }
@@ -65,8 +64,10 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
   }
 
   const handle_click_open = () => {
+    set_show_loader(true);
     get_tablero_por_objetivo(Number(form_values.id_objetivo), form_values.anio).then((data) => {
       set_show_chart(true);
+      let contador = 0;
       let series: any = [];
       let porcentajes_obj: any = {
         "pvance_fisico": [],
@@ -84,6 +85,7 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
       let categories: any = [];
       if (data.length) {
         data.forEach((ind: any) => {
+          if(ind.porcentajes === 0) contador++;
           const words = ind.nombre.split(' ');
           const grouped_words = [];
 
@@ -96,6 +98,25 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
             porcentajes_obj[key].push(ind.porcentajes[key]);
           });
         });
+
+        if(contador === data.length) {
+          set_show_chart(false);
+          set_chart_data({
+            ...chart_data,
+            series: [],
+            options: {
+              ...chart_data.options,
+              xaxis: {
+                ...chart_data.options.xaxis,
+                categories: [],
+              }
+            }
+          });
+          set_show_loader(false);
+          return control_error('No se encontraron datos para el año seleccionado');
+        }
+
+        set_show_loader(false);
 
         series = Object.keys(porcentajes_obj).map(key => {
           return {
@@ -116,6 +137,7 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
         });
       }
     }).catch((error) => {
+      set_show_loader(false);
       control_error(error.response.data.detail);
     });
   }
@@ -149,7 +171,10 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
             }
         },
         dataLabels: {
-          enabled: true
+          enabled: true,
+          formatter: function(val) {
+            return val + '%';
+          }
         },
         legend: {
           position: 'bottom',
@@ -163,6 +188,11 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
         },
         xaxis: {
           categories: [],
+          labels: {
+            formatter: function(value) {
+              return value + '%';
+            }
+          }
         },
         yaxis: {
           labels: {
@@ -294,9 +324,10 @@ export const BusquedaIndicadorObjetivo: React.FC = () => {
               Buscar
             </Button>
           </Grid>
+        {show_loader && <div className="loader"></div>}
         {show_chart && <Grid item xs={12} sm={12} my={4} mx={2} sx={{
-          background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
-          backgroundSize: 'contain',
+          // background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
+          // backgroundSize: 'contain',
         }}>
           <ReactApexChart options={chart_data.options} series={chart_data.series} type="bar" height={500} />
         </Grid>}

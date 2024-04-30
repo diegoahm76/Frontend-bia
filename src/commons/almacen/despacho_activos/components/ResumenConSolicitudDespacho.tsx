@@ -67,9 +67,7 @@ const ResumenConSolicitudDespacho: React.FC<props> = ({
         </Grid>
 
         <Grid item mt={3} xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
-            <Chip label="FUNCIONARIO QUE DESPACHA" size="small" />
-          </Divider>
+          <Title title='Funcionario que despacha' />
         </Grid>
 
         <Grid item xs={12} lg={3}>
@@ -133,9 +131,7 @@ const ResumenConSolicitudDespacho: React.FC<props> = ({
         </Grid>
 
         <Grid item mt={3} xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
-            <Chip label="FUNCIONARIO QUE ANULA" size="small" />
-          </Divider>
+          <Title title='Funcionario que anula despacho' />
         </Grid>
 
         <Grid item xs={12} lg={3}>

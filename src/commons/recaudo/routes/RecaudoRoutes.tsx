@@ -32,7 +32,7 @@ export const RecaudoRoutes: React.FC = () => {
     <EtapaProcesoProvider >
     <Routes>
       {/* <Route path="datos/*" element={<RecaudoScreen />} /> */}
-      <Route path="facturacion/*" element={<Facturacion/>} />
+      <Route path="documento/*" element={<Facturacion/>} />
       <Route path="reportes/*" element={<ReportesRoutes />} />
       <Route path="Sup_Etapas/*" element={<SupEtapasProceso />} />
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />

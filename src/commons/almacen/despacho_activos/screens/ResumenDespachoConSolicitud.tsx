@@ -4,10 +4,11 @@ import { interface_resumen_despacho_con_solicitud } from '../interfeces/types';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import TitleDivider from '../components/TitleDivider';
 import { Title } from '../../../../components';
 import TablaArticulosSolicitados from '../tables/TablaArticulosSolicitados';
 import ResumenConSolicitudDespacho from '../components/ResumenConSolicitudDespacho';
+import { convertir_cod_estado } from '../../solicitudDeActivos/validations/validations';
+import PrintResumenPDF from '../../autorizarDespachos/components/PrintResumenPDF';
 
 
 interface props {
@@ -23,13 +24,15 @@ const ResumenDespachoConSolicitud: FC<props> = ({
 
   return (
     <>
+      <PrintResumenPDF />
+      
       <Grid item xs={12} lg={3}>
         <TextField
           disabled
           fullWidth
           size="small"
           label="Estado despacho: "
-          value={data_solicitud_ver_por_id_con_solicitud?.estado_solicitud ?? ''}
+          value={convertir_cod_estado(data_solicitud_ver_por_id_con_solicitud?.estado_solicitud) || ''}
         />
       </Grid>
 
@@ -41,9 +44,9 @@ const ResumenDespachoConSolicitud: FC<props> = ({
             value={
               Object.keys(data_solicitud_ver_por_id_con_solicitud).length !== 0 ?
                 !(dayjs(data_solicitud_ver_por_id_con_solicitud?.items_despacho[0]?.fecha_devolucion ?? null))?.isValid() ?
-                null :
-                dayjs(data_solicitud_ver_por_id_con_solicitud?.items_despacho[0]?.fecha_devolucion ?? null)
-              : null
+                  null :
+                  dayjs(data_solicitud_ver_por_id_con_solicitud?.items_despacho[0]?.fecha_devolucion ?? null)
+                : null
             }
             onChange={() => { }} // No hace nada
             renderInput={(params) => (
@@ -79,7 +82,9 @@ const ResumenDespachoConSolicitud: FC<props> = ({
         />
       </Grid>
 
-      <TitleDivider title='FUNCIONARIO SOLICITANTE' />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario solicitante' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField
@@ -121,7 +126,9 @@ const ResumenDespachoConSolicitud: FC<props> = ({
         />
       </Grid>
 
-      <TitleDivider title='FUNCIONARIO RESPONSABLE' />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario responsable' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField
@@ -187,7 +194,9 @@ const ResumenDespachoConSolicitud: FC<props> = ({
         </LocalizationProvider>
       </Grid>
 
-      <TitleDivider title='FUNCIONARIO OPERARIO' />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario operario' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField
@@ -229,7 +238,9 @@ const ResumenDespachoConSolicitud: FC<props> = ({
         />
       </Grid>
 
-      <TitleDivider title='FUNCIONARIO QUE CIERRA POR NO DISPONIBILIDAD EN ALMACÉN' />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario que cierra por no disponibilidad en almacén' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField
@@ -298,7 +309,9 @@ const ResumenDespachoConSolicitud: FC<props> = ({
         </LocalizationProvider>
       </Grid>
 
-      <TitleDivider title='FUNCIONARIO ALMACÉN RECHAZA LA SOLICITUD' />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario almacén que rechaza la solicitud' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField

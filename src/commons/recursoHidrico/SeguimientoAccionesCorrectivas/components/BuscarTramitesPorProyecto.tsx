@@ -164,6 +164,8 @@ export const BusquedaTramitesProyectos: React.FC = () => {
       set_count(data.count);
       if (data.results.data.length) {
         set_rows(data.results.data);
+      }else{
+        control_error('No se encontraron resultados');
       }
     } catch (error: any) {
       control_error(error.response?.data.detail ?? 'Error en la búsqueda');
