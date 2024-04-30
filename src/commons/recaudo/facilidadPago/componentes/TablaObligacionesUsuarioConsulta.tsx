@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 import { Divider, Dialog, } from '@mui/material';
 import { Title } from '../../../../components';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import PaidIcon from '@mui/icons-material/Paid';
 
 interface RootState {
   obligaciones: {
@@ -396,6 +397,18 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
 
                 >
 
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    sx={{ marginTop: '30px' }}
+                    startIcon={<PaidIcon />}
+                    disabled={selectedIds.length === 0}
+                    onClick={() => {
+                      set_position_tab('2');
+                    }}
+                  >
+                    Generar Proceso Persuasivo
+                  </Button>
                   <Button
                     color='primary'
                     variant='contained'

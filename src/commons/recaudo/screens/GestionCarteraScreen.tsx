@@ -25,6 +25,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
 import { showAlert } from '../../../utils/showAlert/ShowAlert';
+import { DocumentoPagoPersuasivo } from '../components/GestionCartera/DocumentoPagoPersuasivo';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -692,20 +693,20 @@ export const GestionCarteraScreen: React.FC = () => {
   const [loadingg, setLoading] = useState(false);
   function handleClick() {
     setLoading(true);
-    unifiedSearchSubmit(); 
+    unifiedSearchSubmit();
     fetchHistorico();
   }
 
 
-  const unifiedSearchSubmit = async () => { 
+  const unifiedSearchSubmit = async () => {
       showAlert(
         'Opps...',
         'Esto puede tardar algunos minutos',
         'info'
-      ); 
+      );
   };
 
-  
+
   const fetchHistorico = async (): Promise<void> => {
     try {
       const url = "/recaudo/configuracion_baisca/cronjop/";
@@ -746,6 +747,7 @@ export const GestionCarteraScreen: React.FC = () => {
                 <TabList onChange={handle_tablist_change}>
                   <Tab label="Gestion Cartera" value="1" />
                   <Tab label="Editar Cartera" value="2" />
+                  <Tab label="Cobro Persuasivo" value="3" />
                 </TabList>
               </Box>
 
@@ -815,7 +817,7 @@ export const GestionCarteraScreen: React.FC = () => {
                     <span>Actualizar base de datos </span>
                   </LoadingButton>
 
-                  
+
                 </Box>
                 <DataGrid
                   density='standard'
@@ -866,6 +868,10 @@ export const GestionCarteraScreen: React.FC = () => {
                   mover_subetapa_actual={mover_subetapa_actual}
                 />
 
+              </TabPanel>
+
+              <TabPanel value="3" sx={{ p: '20px 0' }}>
+                  <DocumentoPagoPersuasivo></DocumentoPagoPersuasivo>
               </TabPanel>
             </TabContext>
           </Box>
