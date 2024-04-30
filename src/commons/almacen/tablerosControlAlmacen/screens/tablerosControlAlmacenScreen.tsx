@@ -66,6 +66,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   { id: 'EI', value: 'Entradas a inventario' },
   { id: 'MSI', value: 'Movimientos sobre incautados' },
   { id: 'MR', value: 'Mantenimientos realizados' }]
+  
   const lt_tipo_despacho = [{ id: 'DG', value: 'Despacho general' }, { id: 'DV', value: 'Despacho a vivero' }];
   const lt_presentacion = [{ id: "UND", value: "Unidad" }, { id: "BN", value: "Bien" }];
   const lt_presentacion_b = [{ id: "BD", value: "Bodega" }, { id: "BN", value: "Bien" }];
