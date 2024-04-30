@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useState, useEffect, useContext } from "react";
-import { Button, Container, Grid, FormControl, InputLabel, MenuItem, Select, FormHelperText, Dialog, TextField } from "@mui/material";
+import { Button, Grid, FormControl, InputLabel, MenuItem, Select, FormHelperText, Dialog, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import PaymentOutlinedIcon from '@mui/icons-material/PaymentOutlined';
 import { Title } from "../../../../../components/Title";
 import { api } from "../../../../../api/axios";
-import { DescriptionOutlined } from '@mui/icons-material';
 import { BuscadorPerzonasStiven } from "../../../WorkFlowPQRSDF/components/BuscadorPersonaPersonalizado/BuscadorPerzonas";
 import { PreciosContext } from "../../context/PersonalContext";
 import PaymentIcon from '@mui/icons-material/Payment';
 import { control_error, control_success } from "../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
 import { useNavigate } from "react-router-dom";
-import AccountBalanceOutlinedIcon from '@material-ui/icons/AccountBalanceOutlined';
 
 export interface Persona {
     id_persona: number;
@@ -20,6 +18,7 @@ export interface Persona {
     primer_apellido: string;
     segundo_apellido: string;
 }
+
 export const ModalDocumentoLiquidacionDetalle = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -104,27 +103,34 @@ export const ModalDocumentoLiquidacionDetalle = () => {
         fetchDatosChoises();
     }, []);
 
+    const button_style = {
+
+        borderRadius: '50%',
+        width: '40px',
+        height: '40px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    };
+
     return (
         <>
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto', // Centrar horizontalmente
+                }}
+            >
 
-            <Button
-                style={{ marginTop: 15, backgroundColor: "#009688", width: "95%" }}
-                fullWidth
-                variant="contained"
-                onClick={openModal}
-            >
-                <AccountBalanceOutlinedIcon style={{ fontSize: 24, color: "white" }} />
-            </Button>
-            {/* <Button
-                style={{ marginTop: 15, backgroundColor: "green", color: "white", width: "95%" }}
-                color="success" // Cambia el color según si es una actualización o creación
-                fullWidth
-                variant="contained"
-                startIcon={<PaymentOutlinedIcon />} // Icono de PDF
-                onClick={openModal}
-            >
-                Iniciar Pago
-            </Button> */}
+                <button
+                    style={button_style}
+                    onClick={openModal}
+                >
+                    <img style={{ width: 65 }} src="../image/botones/Boton_pse.webp" alt="PSE Button" />
+                </button>
+            </div>
 
             <Grid container spacing={2}>
 
