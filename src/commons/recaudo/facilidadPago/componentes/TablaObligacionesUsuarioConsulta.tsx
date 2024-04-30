@@ -411,6 +411,8 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
                   <Button
                     color='primary'
                     variant='contained'
+                    disabled={selected.length === 0}
+
                     startIcon={<Add />}
                     sx={{ marginTop: '30px' }}
                     onClick={() => {
