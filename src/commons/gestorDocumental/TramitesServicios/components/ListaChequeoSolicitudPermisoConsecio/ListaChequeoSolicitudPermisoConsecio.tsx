@@ -116,7 +116,7 @@ export const ControlledAccordions = () => {
         {
             field: 'aprobado',
             headerName: 'Aprobado',
-            flex:1,
+            flex: 1,
             renderCell: (params: any) => (
                 <Chip
                     label={activeDocuments.find(doc => doc.name === params.row.formato)?.aprobado ? 'Aprobado' : 'No aprobado'}
@@ -188,6 +188,12 @@ export const ControlledAccordions = () => {
                 </Grid>
 
             </Grid>
+
+            <Grid item xs={12}>
+                <Title title="Aprovacion de Documento" />
+            </Grid>
+
+
             <Grid item xs={12} style={{ marginTop: 15 }}>
                 {form_data.map((item: any) => (
                     <Accordion
@@ -282,22 +288,22 @@ export const ControlledAccordions = () => {
                 ))}
             </Grid>
 
-            <Grid container alignItems="center" justifyContent="center">
+            {/* <Grid container alignItems="center" justifyContent="center">
                 <Grid item xs={4} style={{ marginTop: 15 }} >
                     <Button startIcon={<ArrowForwardIcon />}
                         variant="outlined"
                         color='warning'
                         onClick={() => setActiveStep(activeStep + 1)}
                     >
-                        Continuar con Requerimiento
+                        Continuar Tramite 
                     </Button>
                 </Grid>
 
-            </Grid>
+            </Grid> */}
 
 
             <Grid container justifyContent="flex-end">
-                <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+                <Grid item xs={12} sm={4} >
                     <Button
                         fullWidth
                         style={{ width: "90%", marginTop: 15 }}
@@ -311,6 +317,19 @@ export const ControlledAccordions = () => {
                         Volver
                     </Button>
                 </Grid>
+
+
+                <Grid item xs={4} style={{ marginTop: 15 }} >
+                    <Button startIcon={<ArrowForwardIcon />}
+                        variant="outlined"
+                        color='warning'
+                        onClick={() => setActiveStep(activeStep + 1)}
+                    >
+                        Continuar Tramite 
+                    </Button>
+                </Grid>
+
+
             </Grid>
 
 
