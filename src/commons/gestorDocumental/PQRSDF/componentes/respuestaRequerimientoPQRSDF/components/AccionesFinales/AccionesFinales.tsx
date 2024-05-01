@@ -8,6 +8,7 @@ import { control_warning } from '../../../../../../almacen/configuracion/store/t
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 import { resetItems } from '../../../../../TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
+import { postRequerimientoUsuario } from '../../services/postRequerimiento.service';
 
 export const AccionesFinales = ({ resetFormulario }: any): JSX.Element => {
   //* dispatch declaration
@@ -35,12 +36,11 @@ export const AccionesFinales = ({ resetFormulario }: any): JSX.Element => {
     console.log({
       asunto: anexosCreados[0]?.asunto,
       descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-      id_requerimiento: +currentPersonaRespuestaUsuario?.id_requerimiento,
+      id_solicitud_usu_PQR: +currentPersonaRespuestaUsuario?.id_solicitud_al_usuario_sobre_pqrsdf,
       medio_de_solicitud: anexosCreados[0]?.medio_de_solicitud?.value,
       representacion_legal: representacion_legal?.cod_relacion_con_el_titular,
     });
 
-    return;
     const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
       if (a.ruta_soporte && !b.ruta_soporte) {
         return -1;
@@ -87,7 +87,9 @@ export const AccionesFinales = ({ resetFormulario }: any): JSX.Element => {
       JSON.stringify({
         asunto: anexosCreados[0]?.asunto,
         descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-        id_requerimiento: +currentPersonaRespuestaUsuario?.id_requerimiento,
+        id_solicitud_usu_PQR: +currentPersonaRespuestaUsuario?.id_solicitud_al_usuario_sobre_pqrsdf,
+        medio_de_solicitud: anexosCreados[0]?.medio_de_solicitud?.value,
+        representacion_legal: representacion_legal?.cod_relacion_con_el_titular
       })
     );
     /*  formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);*/
@@ -124,11 +126,11 @@ export const AccionesFinales = ({ resetFormulario }: any): JSX.Element => {
       );
     });
 
-    /*postRequerimientoUsuario(formData, setLoadingButton)
+    postRequerimientoUsuario(formData, setLoadingButton)
       .then(() => {
         handleReset();
         resetFormulario({});
-        setInfoReset({});
+        //setInfoReset({});
         dispatch(resetItems());
 
         Swal.fire({
@@ -140,7 +142,7 @@ export const AccionesFinales = ({ resetFormulario }: any): JSX.Element => {
       })
       .catch((error) => {
         console.error('Error in postRequerimientoUsuario:', error);
-      });*/
+      });
   };
 
   const handleSubmit = async () => {

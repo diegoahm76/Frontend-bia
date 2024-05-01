@@ -5,14 +5,42 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import Select from 'react-select';
 import { useStepperRequerimiento } from '../../../../../../bandejaDeTareas/hook/useStepperRequerimiento';
 import { control_warning } from '../../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { MedioSolicitud } from './../../../../../../configuracionMediosSolicitud/interfaces/inerfacesMediosSolicitud';
+import { useEffect, useState } from 'react';
+import { api } from '../../../../../../../../api/axios';
 
 export const FormParte2 = ({
   controlFormulario,
   watchFormulario,
-}:
-any): JSX.Element => {
+}: any): JSX.Element => {
   // ? stepper hook
   const { handleNext } = useStepperRequerimiento();
+  const [medioSolicitud, setMedioSolicitud] = useState([]);
+
+  useEffect(() => {
+    const getMedioSolicitud = async () => {
+      try {
+        /*const response = await MedioSolicitud.getAll();
+        setMedioSolicitud(response.data)*/
+        const url = `gestor/pqr/tipos_pqr/buscar-medio-solicitud/`;
+        const { data } = await api.get(url);
+        console.log('medios de solicitud', data);
+
+        if (data?.data) {
+          const medios = data?.data.map((item: any) => ({
+            ...item,
+            value: item.id_medio_solicitud,
+            label: item.nombre,
+          }));
+          setMedioSolicitud(medios);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getMedioSolicitud();
+  }, []);
+
   return (
     <>
       <form
@@ -114,26 +142,7 @@ any): JSX.Element => {
                     onChange={(selectedOption) => {
                       onChange(selectedOption);
                     }}
-                    options={
-                      [
-                        {
-                          value: 1,
-                          label: 'Telefóno',
-                        },
-                        {
-                          value: 2,
-                          label: 'Portal web',
-                        },
-                        {
-                          value: 3,
-                          label: 'Redes sociales',
-                        },
-                        {
-                          value: 4,
-                          label: 'Instalaciones de la corporación',
-                        },
-                      ] ?? []
-                    }
+                    options={medioSolicitud ?? []}
                     placeholder="Seleccionar"
                   />
                   <label>
@@ -169,7 +178,7 @@ any): JSX.Element => {
                   fullWidth
                   multiline
                   rows={5}
-                  name='descripcion_de_la_solicitud'
+                  name="descripcion_de_la_solicitud"
                   label="Descripción de la solicitud"
                   size="small"
                   variant="outlined"
