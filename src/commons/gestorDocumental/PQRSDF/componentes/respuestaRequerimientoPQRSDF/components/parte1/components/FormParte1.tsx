@@ -75,13 +75,13 @@ export const FormParte1 = ({ controlFormulario }: any): JSX.Element => {
               fullWidth
               disabled
               size="small"
-              label="Info PQRSDF"
+              label="Información del requerimiento"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               inputProps={{
                 maxLength: 50,
               }}
-              value={currentPersonaRespuestaUsuario?.tipo_tramite ?? 'N/A'}
+              value={currentPersonaRespuestaUsuario?.descripcion ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -89,13 +89,13 @@ export const FormParte1 = ({ controlFormulario }: any): JSX.Element => {
               fullWidth
               disabled
               size="small"
-              label="Estado"
+              label="Nombre de tipo de oficio"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               inputProps={{
                 maxLength: 10,
               }}
-              value={currentPersonaRespuestaUsuario?.estado ?? 'N/A'}
+              value={currentPersonaRespuestaUsuario?.nombre_tipo_oficio ?? 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -107,7 +107,7 @@ export const FormParte1 = ({ controlFormulario }: any): JSX.Element => {
               disabled
               InputLabelProps={{ shrink: true }}
               value={
-                formatDate(currentPersonaRespuestaUsuario?.fecha_radicado) ??
+                formatDate(currentPersonaRespuestaUsuario?.fecha_solicitud) ??
                 'N/A'
               }
             />
