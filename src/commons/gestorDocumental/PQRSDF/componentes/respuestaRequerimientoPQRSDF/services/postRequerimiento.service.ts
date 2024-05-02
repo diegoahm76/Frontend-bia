@@ -8,7 +8,7 @@ export const postRequerimientoUsuario = async (
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   // gestor/bandeja-tareas/opa/requerimiento/tramite/create/
-  const url = `gestor/bandeja-tareas/pqrsdf/requerimiento/create/`;
+  const url = `gestor/complementos-pqr/respuesta-requerimiento/create-respuesta-requerimiento/`;
   try {
     if (!formData || typeof formData !== 'object') {
       throw new Error('Invalid formData');

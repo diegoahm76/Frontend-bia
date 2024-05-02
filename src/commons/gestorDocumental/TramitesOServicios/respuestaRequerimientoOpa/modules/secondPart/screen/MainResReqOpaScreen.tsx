@@ -25,7 +25,7 @@ export const MainResReqOpaScreen = (): JSX.Element => {
     });
 
     // ? tambien se entra a re iniciar el módulo de asignación de usuario || mejor cuando se de en el finish y se envie la solicitud al usuario, por tanto se hará en el componente de stepper o en submit de envío
-    dispatch(resetItems())
+    // dispatch(resetItems())
     handleReset();
   }, []);
 
