@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import {
@@ -19,7 +20,7 @@ import FormInputNoController from '../form/FormInputNoController';
 import FormSelectController from '../form/FormSelectController';
 import FormButton from '../form/FormButton';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
 import { v4 as uuid } from 'uuid';
@@ -33,6 +34,7 @@ import AltRouteIcon from '@mui/icons-material/AltRoute';
 import FormCheckboxController from '../form/FormCheckboxController';
 import FormButtonGrid from '../form/FormButtonGrid';
 import FormKeywords from '../form/FormKeywords';
+import { setCurrentPersonaRespuestaUsuario } from '../../../commons/gestorDocumental/TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 interface IProps {
   set_models: any;
   form_filters: any[];
@@ -68,6 +70,8 @@ const SeleccionarModeloDialogForm = ({
 }: IProps) => {
   const dispatch = useAppDispatch();
   const [selected_row, set_selected_row] = useState([]);
+
+  const { currentPersonaRespuestaUsuario } = useAppSelector((state) => state.ResRequerimientoOpaSlice);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
   const TypeDatum: any = (input: any) => {
@@ -280,6 +284,11 @@ const SeleccionarModeloDialogForm = ({
     const model = models.find((p) => p[row_id] === selected_row[0]);
     if (model !== undefined) {
       dispatch(set_current_model(model));
+      console.log('model', model);
+      dispatch(setCurrentPersonaRespuestaUsuario({
+        ...currentPersonaRespuestaUsuario,
+        ...model,
+      } as any));
       set_models([]);
       handle_close_select_model();
     }
