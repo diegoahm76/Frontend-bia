@@ -67,7 +67,6 @@ export const DocumentoPagoLiquidacion = () => {
             </Grid>
 
 
-
             <Grid item xs={10}>
                 <LiquidacionPlantilla data={data_liquidacion} />
             </Grid>

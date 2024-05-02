@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button, Grid, FormControl, InputLabel, MenuItem, Select, FormHelperText, Dialog, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import PaymentOutlinedIcon from '@mui/icons-material/PaymentOutlined';
 import { Title } from "../../../../../components/Title";
 import { api } from "../../../../../api/axios";
 import { BuscadorPerzonasStiven } from "../../../WorkFlowPQRSDF/components/BuscadorPersonaPersonalizado/BuscadorPerzonas";
@@ -121,6 +120,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto', // Centrar horizontalmente
+                    marginTop:15
                 }}
             >
 
@@ -188,11 +188,11 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
 
                             <Grid container justifyContent="center">
-                                <Grid item xs={12} >
+                                {/* <Grid item xs={12} >
                                     <Grid container alignItems="center" justifyContent="center">
                                         <Title title="Beneficiario" />
                                     </Grid>
-                                </Grid>
+                                </Grid> */}
 
 
                                 <Grid container justifyContent="center" style={{ marginTop: 15 }}>

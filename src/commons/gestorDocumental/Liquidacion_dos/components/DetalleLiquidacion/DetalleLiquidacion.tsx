@@ -203,7 +203,7 @@ export const DetalleLiquidacion = () => {
       ...prevState,
       valorfuncionario: valor // Establecer el valor fijo
     }));
-  }, [valor_total]); // Se ejecutará solo una vez después de la inicialización del componente
+  }, [valor]); // Se ejecutará solo una vez después de la inicialización del componente
 
 
   useEffect(() => {

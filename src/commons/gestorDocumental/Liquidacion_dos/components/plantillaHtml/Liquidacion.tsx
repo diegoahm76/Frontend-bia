@@ -31,7 +31,7 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
 
     console.log("La suma de los valores es:", sumaValores);
 
- 
+
 
     const NombreTitular = data.nombre_completo_titular;
     const fechaActual = new Date();
@@ -375,7 +375,6 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
         <>
             <Grid container spacing={1}>
 
-
                 <Grid container alignItems="center" justifyContent="center">
                     <Grid item xs={3}>
                         <Button
@@ -389,24 +388,25 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
                         </Button>
                     </Grid>
 
-                    
-                    {/* <Grid item xs={12}>
-                    <NumerosLetras data={124000} />
-                    </Grid> */}
-
                     <Grid item xs={3}>
                         <div style={{ position: "relative" }}>
-                            <ModalDocumentoLiquidacionDetalle />
+                            <div className="modalWrapper">
+                                <ModalDocumentoLiquidacionDetalle />
+                            </div>
                         </div>
                     </Grid>
                     <Grid item xs={3}>
                         <div style={{ position: "relative" }}>
-                            <ModalNotificacionUsuario />
+                            <div className="modalWrapper">
+                                <ModalNotificacionUsuario />
+                            </div>
                         </div>
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                    <div style={{ position: "relative" }}>
+                        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                    </div>
                 </Grid>
             </Grid>
         </>
