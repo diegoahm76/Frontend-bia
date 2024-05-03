@@ -143,8 +143,6 @@ export const Amortizacion: React.FC = () => {
     console.log('2222222');
   };
 
-  
-
   const [selectedInterest, setSelectedInterest] = useState<string>('');
 
   const handleChange = (event: any) => {
@@ -153,8 +151,18 @@ export const Amortizacion: React.FC = () => {
     set_tasa_usura(parseFloat(value));
   };
   const meses = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
   ];
   return (
     <>
