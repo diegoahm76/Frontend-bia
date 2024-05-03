@@ -4,8 +4,9 @@ import { interface_resumen_despacho_sin_solicitud } from '../interfeces/types';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import TitleDivider from '../components/TitleDivider';
 import ResumenSinSolicitudDespacho from '../components/ResumenSinSolicitudDespacho';
+import { Title } from '../../../../components';
+import PrintResumenPDF from '../../autorizarDespachos/components/PrintResumenPDF';
 
 
 interface props {
@@ -19,13 +20,20 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
 
   return (
     <>
+      <PrintResumenPDF />
+
       <Grid item xs={12} lg={3}>
         <TextField
           disabled
           fullWidth
           size="small"
           label="Estado despacho: "
-          value={data_solicitud_ver_por_id_sin_solicitud?.estado_despacho ?? ''}
+          value={
+            data_solicitud_ver_por_id_sin_solicitud?.estado_despacho === 'Ep' ? 'En espera' :
+              data_solicitud_ver_por_id_sin_solicitud?.estado_despacho === 'Ac' ? 'Aceptada' :
+                data_solicitud_ver_por_id_sin_solicitud?.estado_despacho === 'Re' ? 'Rechazada' :
+                  data_solicitud_ver_por_id_sin_solicitud?.estado_despacho === 'An' ? 'Anulada' : ''
+          }
         />
       </Grid>
 
@@ -57,7 +65,9 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
         </LocalizationProvider>
       </Grid>
 
-      <TitleDivider title='FUNCIONARIO SOLICITANTE' />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario solicitante' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField
@@ -99,7 +109,9 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
         />
       </Grid>
 
-      <TitleDivider title='FUNCIONARIO RESPONSABLE' />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario responsable' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField
@@ -191,7 +203,9 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
         </LocalizationProvider>
       </Grid>
 
-      <TitleDivider title='FUNCIONARIO OPERARIO' />
+      <Grid item mt={3} xs={12}>
+        <Title title='Funcionario operario' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField
@@ -263,11 +277,11 @@ const ResumenDespachoSinSolicitud: FC<props> = ({
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             disabled
-            label="Fecha despacho:"
+            label="Fecha de anulacion:"
             value={
-              !(dayjs(data_solicitud_ver_por_id_sin_solicitud?.fecha_despacho ?? null)).isValid() ?
+              !(dayjs(data_solicitud_ver_por_id_sin_solicitud?.fecha_anulacion ?? null)).isValid() ?
                 null :
-                dayjs(data_solicitud_ver_por_id_sin_solicitud?.fecha_despacho ?? null)
+                dayjs(data_solicitud_ver_por_id_sin_solicitud?.fecha_anulacion ?? null)
             }
             onChange={() => { }} // No hace nada
             renderInput={(params) => (

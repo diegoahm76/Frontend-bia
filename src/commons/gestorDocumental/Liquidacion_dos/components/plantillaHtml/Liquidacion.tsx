@@ -9,6 +9,7 @@ import { ModalDocumentoLiquidacionDetalle } from '../ModalDocumento/ModalDocumen
 import { PreciosContext } from '../../context/PersonalContext';
 import { ElementoPQRS } from '../../interfaces/InterfacesLiquidacion';
 import { ModalNotificacionUsuario } from '../ModalDocumento/ModalNotificacionUsuario';
+import { NumerosLetras } from '../../utils/NumerosLetras';
 
 
 interface props_data {
@@ -18,8 +19,8 @@ interface props_data {
 
 export const LiquidacionPlantilla = ({ data }: props_data) => {
 
-    const { precios } = useContext(PreciosContext);
-
+    const { precios, usuario } = useContext(PreciosContext);
+    console.log(usuario)
     console.log(precios);
 
     const sumaValores = precios.reduce((total, item) => {
@@ -30,58 +31,7 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
 
     console.log("La suma de los valores es:", sumaValores);
 
-    const ConvertirNumeroAPalabras = (numero: any) => {
-        const unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
-        const decenas = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
-        const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
-
-        const miles = ['mil', 'millón', 'millones'];
-
-        const ConvertirNumeroMenorAMil = (numeroMenorAMil: number): string => {
-            if (numeroMenorAMil === 0) {
-                return '';
-            } else if (numeroMenorAMil < 10) {
-                return unidades[numeroMenorAMil];
-            } else if (numeroMenorAMil < 20) {
-                switch (numeroMenorAMil) {
-                    case 10: return 'diez';
-                    case 11: return 'once';
-                    case 12: return 'doce';
-                    case 13: return 'trece';
-                    case 14: return 'catorce';
-                    case 15: return 'quince';
-                    default: return 'dieci' + ConvertirNumeroMenorAMil(numeroMenorAMil % 10);
-                }
-            } else if (numeroMenorAMil < 100) {
-                return decenas[Math.floor(numeroMenorAMil / 10)] + ' ' + ConvertirNumeroMenorAMil(numeroMenorAMil % 10);
-            } else {
-                return centenas[Math.floor(numeroMenorAMil / 100)] + ' ' + ConvertirNumeroMenorAMil(numeroMenorAMil % 100);
-            }
-        }
-
-        const ConvertirNumero = (numero: number) => {
-            if (numero === 0) {
-                return 'cero';
-            } else if (numero < 1000) {
-                return ConvertirNumeroMenorAMil(numero);
-            } else {
-                let resultado = '';
-                let contadorMiles = 0;
-                while (numero > 0) {
-                    const fragmento = numero % 1000;
-                    if (fragmento !== 0) {
-                        resultado = ConvertirNumeroMenorAMil(fragmento) + ' ' + miles[contadorMiles] + ' ' + resultado;
-                    }
-                    numero = Math.floor(numero / 1000);
-                    contadorMiles++;
-                }
-                return resultado.trim();
-            }
-        }
-
-        return ConvertirNumero(numero);
-    }
-
+ 
 
     const NombreTitular = data.nombre_completo_titular;
     const fechaActual = new Date();
@@ -97,7 +47,7 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
     const ValorCapital = sumaValores;
     const interes = "$11111";
     const ValorTotal = data.costo_proyecto; // Ciento veinte mil
-    const ValorTotalEscrito = ConvertirNumeroAPalabras(ValorTotal);
+    const ValorTotalEscrito = NumerosLetras(123000);
     const ValorTotalEscritoEnMayusculas = ValorTotalEscrito;
 
 
@@ -439,6 +389,11 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
                         </Button>
                     </Grid>
 
+                    
+                    {/* <Grid item xs={12}>
+                    <NumerosLetras data={124000} />
+                    </Grid> */}
+
                     <Grid item xs={3}>
                         <div style={{ position: "relative" }}>
                             <ModalDocumentoLiquidacionDetalle />
@@ -449,7 +404,7 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
                             <ModalNotificacionUsuario />
                         </div>
                     </Grid>
-                    </Grid>
+                </Grid>
                 <Grid item xs={12}>
                     <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
                 </Grid>
