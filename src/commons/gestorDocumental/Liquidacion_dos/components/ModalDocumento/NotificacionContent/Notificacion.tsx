@@ -30,28 +30,6 @@ export const CorreoNotificacinSinPopos = ({ closeModal }: any) => {
 
 
 
-    // const EnviarSolicitudMSM = async () => {
-    //     try {
-    //         const url = '/hidrico/zonas-hidricas/enviar_sms/';
-    //         const postData = {
-    //             "telefono": "573126459868",
-    //             "mensaje": "Hola, este es un mensaje de prueba."
-    //         };
-    //         const res = await api.post(url, postData);
-    //         const numeroConsulta = res.data.data;
-    //         if (res.status === 200) {
-    //             control_success("Se Notificó a la persona correctamente");  // Mensaje de éxito
-    //         } else {
-    //             control_error("Hubo un problema al procesar la solicitud.");
-    //         }
-    //     } catch (error: any) {
-    //         control_error(error.response?.data?.detail);
-    //     }
-
-    //     CrearNuevaSubSeccionEmpresa();
-    // };
-
-
     const CrearNuevaSubSeccionEmpresa = async () => {
         try {
             const url = '/hidrico/zonas-hidricas/enviar_correo/';

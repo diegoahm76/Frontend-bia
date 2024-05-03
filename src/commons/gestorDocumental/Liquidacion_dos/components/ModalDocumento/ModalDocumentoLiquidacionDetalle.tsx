@@ -24,7 +24,6 @@ export const ModalDocumentoLiquidacionDetalle = () => {
     const [dataChoise, setDataChoise] = useState<any[]>([]);
     const [form_tipo, set_tipo] = useState({ id_expediente: '' }); // Agregar estado para el formulario
     const [persona, set_persona] = useState<Persona | undefined>();
-    console.log("persona", persona);
     const { form, setForm, precios } = useContext(PreciosContext);
     const navigate = useNavigate();
 
@@ -188,12 +187,6 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
 
                             <Grid container justifyContent="center">
-                                {/* <Grid item xs={12} >
-                                    <Grid container alignItems="center" justifyContent="center">
-                                        <Title title="Beneficiario" />
-                                    </Grid>
-                                </Grid> */}
-
 
                                 <Grid container justifyContent="center" style={{ marginTop: 15 }}>
 
@@ -231,7 +224,6 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
                                         <BuscadorPerzonasStiven onResultt={handleResult} />
                                     </Grid>
-
                                 </Grid>
 
 
@@ -265,17 +257,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                         onChange={handleSelectChangeBasico}
                                     />
                                 </Grid>
-
-
                             </Grid>
-
-
-
-
-
-
-
-
 
 
                             <Grid container alignItems="center" justifyContent="center">
@@ -293,9 +275,6 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                 </Grid>
 
 
-
-
-
                                 <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
                                     <Button
                                         fullWidth
@@ -309,10 +288,6 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                     </Button>
                                 </Grid>
                             </Grid>
-
-
-
-
                         </Grid>
                     </Dialog >
                 </Grid>

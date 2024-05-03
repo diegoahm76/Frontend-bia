@@ -60,7 +60,7 @@ export const BotonesFinales = () => {
           color="error"
           onClick={() => {
             navigate('/app/gestor_documental/liquidacion/documneto');
-            localStorage.setItem("valor_recarga", false.toString()); // Convertir a cadena usando toString()
+            // localStorage.setItem("valor_recarga", false.toString()); // Convertir a cadena usando toString()
 
           }}
         >

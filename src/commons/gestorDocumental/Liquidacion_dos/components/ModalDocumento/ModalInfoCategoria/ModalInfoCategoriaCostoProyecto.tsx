@@ -33,7 +33,6 @@ export const ModalInfoCategoriaCostoProyecto = () => {
             const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
             const data_consulta = res.data.data;
             setRows(data_consulta)
-            console.log(data_consulta)
         } catch (error) {
             console.error(error);
         }

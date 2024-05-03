@@ -1,38 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState, createContext, Dispatch, SetStateAction, ReactNode } from "react";
-
-// Definición del tipo para los elementos del array de precios
-interface PrecioItem {
-    nivel: number;
-    valor: string;
-    nombre: string;
-    descripcion: string;
-    valorfuncionario_mes?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
-    viaticos?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
-    dias?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
-    resultado?:string;
-}
-
-
-// Definición del tipo para el tercer estado
-interface UsuarioInfo {
-    nombres: string;
-    apellidos: string;
-    identificacion: string;
-    telefono: string;
-    email: string;
-    nombreCategoria: string;
-}
-
-
-
-
-// Definición del tipo para el objeto de valores adicionales
-interface ValoresPos {
-    id_expediente: string;
-    Email: string;
-    telefono_cliente: string;
-}
+import { LiquidacionState, PrecioItem, UsuarioInfo, ValoresPos, ValoresProyectoPorcentajes, liquidacionValoresIniciales, valoresInicialesProyectoPorcentaje } from "../interfaces/InterfacesLiquidacion";
 
 // Definición del tipo para el contexto de precios
 interface PreciosTypes {
@@ -42,6 +10,10 @@ interface PreciosTypes {
     setForm: Dispatch<SetStateAction<ValoresPos>>; // Función para actualizar el formulario
     usuario: UsuarioInfo;
     setUsuario: Dispatch<SetStateAction<UsuarioInfo>>;
+    logs: ValoresProyectoPorcentajes;
+    setLogs: Dispatch<SetStateAction<ValoresProyectoPorcentajes>>;
+    liquidacionState: LiquidacionState;
+    setLiquidacionState: Dispatch<SetStateAction<LiquidacionState>>;
 }
 
 // Creación del contexto para manejar los precios y el formulario
@@ -50,8 +22,12 @@ export const PreciosContext = createContext<PreciosTypes>({
     setPrecios: () => { }, // Función por defecto para actualizar precios
     form: { id_expediente: '', Email: '', telefono_cliente: '' }, // Formulario inicializado con valores vacíos
     setForm: () => { }, // Función por defecto para actualizar el formulario
-    usuario:{identificacion:'',nombres:'',apellidos:'',telefono:'',email:'',nombreCategoria:''},
-    setUsuario:()=>{}
+    usuario:{identificacion:'',nombres:'',apellidos:'',telefono:'',email:'',nombreCategoria:'',direccion:''},
+    setUsuario:()=>{},
+    logs: valoresInicialesProyectoPorcentaje,
+    setLogs:()=>{},
+    liquidacionState: liquidacionValoresIniciales,
+    setLiquidacionState: () => {}
 });
 
 // Props para el componente PreciosProvider
@@ -65,8 +41,12 @@ export const PreciosProvider = ({ children }: PreciosProviderProps): JSX.Element
     const [precios, setPrecios] = useState<PrecioItem[]>([]); // Inicialmente el array de precios está vacío
     // Estado para almacenar el formulario
     const [form, setForm] = useState<ValoresPos>({ id_expediente: '', Email: '', telefono_cliente: '' }); // Inicialmente el formulario tiene valores vacíos
-  
-    const [usuario, setUsuario] = useState<UsuarioInfo>({identificacion:'',nombres:'',apellidos:'',telefono:'',email:'',nombreCategoria:''});
+    // Estado para almacenar la información del usuario
+    const [usuario, setUsuario] = useState<UsuarioInfo>({identificacion:'',nombres:'',apellidos:'',telefono:'',email:'',nombreCategoria:'',direccion:''});
+    // Estado para almacenar los valores relacionados con el proyecto y los porcentajes
+    const [logs, setLogs] = useState<ValoresProyectoPorcentajes>(valoresInicialesProyectoPorcentaje);
+    // Estado para almacenar los valores relacionados con la liquidación
+    const [liquidacionState, setLiquidacionState] = useState<LiquidacionState>(liquidacionValoresIniciales);
 
     // Valor del contexto que se proporcionará a los componentes hijos
     const value: PreciosTypes = {
@@ -75,7 +55,11 @@ export const PreciosProvider = ({ children }: PreciosProviderProps): JSX.Element
         form,
         setForm,
         usuario,
-        setUsuario
+        setUsuario,
+        logs,
+        setLogs,
+        liquidacionState,
+        setLiquidacionState
     };
 
     return (
@@ -85,3 +69,4 @@ export const PreciosProvider = ({ children }: PreciosProviderProps): JSX.Element
         </PreciosContext.Provider>
     );
 };
+

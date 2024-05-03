@@ -13,17 +13,7 @@ import { PreciosContext } from "../../context/PersonalContext";
 import { ModalInfoCategoriaCostoProyecto } from "../ModalDocumento/ModalInfoCategoria/ModalInfoCategoriaCostoProyecto";
 
 
-interface ValoresProyectoPorcentajes {
-  valorMinimo: number;
-  capacidad: string;
-  valor: string;
-}
 
-const valoresInicialesProyectoPorcentaje: ValoresProyectoPorcentajes = {
-  valorMinimo: 0, // Asigna un valor numérico aquí
-  capacidad: "", // Asigna un valor de cadena aquí
-  valor: "" // Asigna un valor de cadena aquí
-};
 
 
 interface Registro {
@@ -40,13 +30,13 @@ interface Registro {
 
 export const GenerarLiquidacion = () => {
 
-
+  // const [logs, setLogs] = useState<ValoresProyectoPorcentajes>(valoresInicialesProyectoPorcentaje);
+  
   const [datosConsulta, setDatosConsulta] = useState<DatosConsulta>(DatosConsulta);
   const { userinfo: { id_persona, email, telefono_celular, numero_documento } } = useSelector((state: AuthSlice) => state.auth);
   const [data_liquidacion, set_data_liquidacion] = useState<ElementoPQRS | null>(null);
-  const { usuario, setUsuario } = useContext(PreciosContext);
+  const { usuario, setUsuario ,logs, setLogs} = useContext(PreciosContext);
   const [valores_porcentaje, set_valores_porcentaje] = useState<Registro[]>([])
-  const [logs, setLogs] = useState<ValoresProyectoPorcentajes>(valoresInicialesProyectoPorcentaje);
   const fechaActual = new Date().toLocaleDateString(); // Obtiene la fecha actual en formato de cadena de texto
 
 
@@ -70,7 +60,8 @@ export const GenerarLiquidacion = () => {
         identificacion: data_consulta.NIdenticion,
         telefono: data_consulta.Ntelefono,
         email: data_consulta.Correo,
-        nombreCategoria: data_consulta.subject
+        nombreCategoria: data_consulta.subject,
+        direccion:data_consulta.Direccion
       });
     } catch (error) {
       console.error(error);
@@ -116,7 +107,6 @@ export const GenerarLiquidacion = () => {
   // Obtener el valor si se encontró la configuración correspondiente
   const valorSMMV = configuracionSMMV ? configuracionSMMV.valor : undefined;
 
-  console.log("Valor del salario mínimo mensual vigente:", valorSMMV)
 
   const TraerValorSalirioMinimoMensual = async (): Promise<void> => {
     try {
@@ -130,30 +120,20 @@ export const GenerarLiquidacion = () => {
   }
 
 
-
   //sacar el porcentaje con la varaible de el sueldo minimo
 
   const valor_minimo = parseInt(data_liquidacion?.costo_proyecto || "0") / parseInt(logs.valor);
-
 
 
   const calcular = () => {
     valores_porcentaje.forEach(registro => {
       try {
         // Reemplazar 'minimo' en la fórmula con el valor correspondiente
-        const formula = registro.formula.replace(/minimo/g, valor_minimo.toString());
-
-        // Evaluar la fórmula
-        if (eval(formula)) {
-          const logData = { valorMinimo: valor_minimo, capacidad: registro.capacidad, valor: registro.valor };
-
-          console.log(`El valor mínimo ${valor_minimo} coincide con la capacidad: ${registro.capacidad}  y ${registro.valor}`);
+        // const formula = registro.formula.replace(/minimo/g, valor_minimo.toString());
+          const logData = { valorMinimo: valor_minimo, capacidad: registro.capacidad, valor: registro.valor,valor_subsidio_trasporte:"250" };
           setLogs(logData);
 
-
-        }
       } catch (error) {
-        // console.error(`Error al evaluar la fórmula para el registro con ID ${registro.id}: ${error}`);
       }
     });
   }
@@ -182,7 +162,6 @@ export const GenerarLiquidacion = () => {
       {/* Maquetación de los componentes */}
       <Grid container spacing={2}>
 
-        <Button onClick={calcular}>xxxx</Button>
         <Grid item xs={12}>
           <Title title="Solicitante" />
         </Grid>

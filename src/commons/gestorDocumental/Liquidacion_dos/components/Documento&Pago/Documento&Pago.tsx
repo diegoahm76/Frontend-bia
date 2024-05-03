@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asumo que estás utilizando react-router
 import { ArrowBack } from '@mui/icons-material';
 import { ElementoPQRS } from "../../interfaces/InterfacesLiquidacion";
+import { ModalConfirmacionLiquidacion } from "../ModalDocumento/ModalConfirmacionLiquidacion/ModalConfirmacionLiquidacion";
 
 const initialData: ElementoPQRS = {
     costo_proyecto: "",
@@ -62,6 +63,7 @@ export const DocumentoPagoLiquidacion = () => {
 
 
             <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+
                 <Button
                     fullWidth
                     style={{ width: "90%", marginTop: 15, color: "white", backgroundColor: "red" }}
@@ -75,7 +77,15 @@ export const DocumentoPagoLiquidacion = () => {
                     Regresar
                 </Button>
             </Grid>
-        </Grid>
+
+            <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+
+                <ModalConfirmacionLiquidacion />
+
+            </Grid>
+
+
+        </Grid >
 
     )
 }
