@@ -766,6 +766,10 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     set_deudores(deudoresFiltrados);
   };
 
+
+
+  
+
   const handleClear = () => {
     setFiltroNombres('');
     setFiltroIdentificacion('');
