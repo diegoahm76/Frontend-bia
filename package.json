@@ -65,7 +65,7 @@
     "xmlbuilder": "^15.1.1"
   },
   "scripts": {
-    "dev": "node --max-old-space-size=10240 node_modules/react-scripts/scripts/start.js",
+    "dev": "node --max-old-space-size=10240 node_modules/react-scripts/scripts/start.js -p 3001",
     "mobile": "node --max-old-space-size=3072 node_modules/react-scripts/scripts/start.js -p 3000 -H 0.0.0.0",
     "start": "node --max-old-space-size=4096 node_modules/react-scripts/scripts/start.js --no-warnings",
     "build": "node --max-old-space-size=4096 node_modules/react-scripts/scripts/build.js",
