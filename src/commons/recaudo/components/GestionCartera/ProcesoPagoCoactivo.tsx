@@ -8,20 +8,15 @@ import {
   TextField,
   Typography,
   type SelectChangeEvent,
+  Stack,
   InputLabel,
   Box,
   Tab,
-  FormHelperText,
-  Tooltip,
-  IconButton,
-  Avatar
+  FormHelperText
 } from "@mui/material"
 import { CloudUpload } from '@mui/icons-material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import DescriptionIcon from '@mui/icons-material/Description';
-import type { FlujoProceso } from "../../interfaces/flujoProceso";
-import { useContext, useEffect, type Dispatch, type SetStateAction } from "react";
-import type { AtributoEtapa } from "../../interfaces/proceso";
+import { useContext, useEffect} from "react";
 import { Title } from "../../../../components/Title";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { SyntheticEvent, useState } from "react";
@@ -31,81 +26,22 @@ import { EtapaProcesoConext } from "./Context/EtapaProcesoContext";
 import { api } from "../../../../api/axios";
 import { control_error } from "../../../../helpers";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { current } from '@reduxjs/toolkit';
+import { IncumplimientoFacilidadPagoDoc } from "./IncumplimientoFacilidadPago";
+import { SeguirAdelanteDoc } from "./SeguirAdelanteDoc";
+import { MandamientoPagoDoc } from "./MandamientoPagoDoc";
 
-interface IProps {
-  id_flujo_destino: string;
-  selected_proceso: {
-    fecha_facturacion: string;
-    numero_factura: string;
-    codigo_contable: string;
-    monto_inicial: string;
-    dias_mora: string;
-    valor_intereses: string;
-    valor_sancion: string;
-    etapa: string;
-
-  },
-  flujos_destino: FlujoProceso[];
-  id_proceso: string;
-  id_cartera: string;
-  id_subetapa_destino: string;
-  subetapas: AtributoEtapa[];
-  handle_select_change: (event: SelectChangeEvent) => void;
-  set_open_requisitos_modal: Dispatch<SetStateAction<boolean>>;
-  set_open_create_proceso_modal: Dispatch<SetStateAction<boolean>>;
-  mover_subetapa_actual: () => void;
-  datos: any;
-}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DocumentoPagoPersuasivo: React.FC<any> = ({
+export const ProcesoPagoCoactivo: React.FC<any> = ({
   datos
 }: {datos: any}) => {
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: '#', minWidth: 100, flex: 1, valueGetter: (params) => params.row.id + 1},
-    { field: 'expediente', headerName: 'Expediente', minWidth: 200, flex: 6 },
-    {
-      field: 'acciones',
-      headerName: 'Acciones',
-      minWidth: 100,
-      flex: 1,
-      renderCell: (params) => {
-        return (
-          <>
-            <Tooltip title='Ver documentos asociados'>
-              <IconButton
-                onClick={() => {
-                  set_current_expediente(params.row.expediente);
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <VisibilityIcon
-                    sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px'
-                    }}
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-          </>
-        )
-      }
-    }
+    { field: 'expediente', headerName: 'Expediente', minWidth: 200, flex: 6 }
   ];
 
-  const subetapas = [{ id: '1', nombre: 'Subetapa 1' }, { id: '2', nombre: 'Subetapa 2' }];
+  const subetapas = [{ id: '1', nombre: 'Mandamiento de Pago' }, { id: '2', nombre: 'Seguir Adelante' }];
 
   const [position_tab, set_position_tab] = useState('1');
   const [is_generate_resolucion, set_is_generate_resolucion] = useState(true);
@@ -115,9 +51,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
   const [expedientes_deudor, set_expedientes_deudor] = useState<any[]>([]);
   const [current_deudor, set_current_deudor] = useState<any>({});
   const [data_clean, set_data_clean] = useState<any>([]);
-  const [rows, set_rows] = useState<any[]>([]);
   const [id_subetapa, set_id_subetapa] = useState<string>('1');
-  const [current_expediente, set_current_expediente] = useState<any>(null);
 
   const { is_from_liquidacion, obligaciones_from_liquidacion, id_deudor, set_etapa_proceso, set_is_from_liquidacion } = useContext(EtapaProcesoConext);
 
@@ -125,7 +59,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
     set_position_tab(newValue);
   };
 
-  const handle_change_resolucion = (event: any) => {
+  const handle_change_mandamiento = (event: any) => {
     const file = event.target.files[0];
     const url: any = URL.createObjectURL(file);
     set_resolucion_url(url);
@@ -141,7 +75,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
     set_position_tab('2');
   };
 
-  const handle_click_generate_resolucion = () => {
+  const handle_click_generate_mandamiento = () => {
     set_is_generate_resolucion(true);
     set_resolucion_url(null);
     set_position_tab('1');
@@ -156,13 +90,6 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
   const handle_change_subetapa = (event: any) => {
     set_id_subetapa(event.target.value);
   }
-
-  useEffect(() => {
-    if (!is_from_liquidacion) {
-      set_rows([]);
-      console.log(rows)
-    }
-  }, [is_from_liquidacion]);
 
   useEffect(() => {
     if (id_deudor) {
@@ -180,36 +107,16 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
   }, [id_deudor]);
 
   useEffect(() => {
-    if(obligaciones_from_liquidacion.length && id_deudor && is_from_liquidacion){
+    if(obligaciones_from_liquidacion.length && id_deudor){
       const deudor = obligaciones_from_liquidacion.find((item: any) => item.id_deudor === id_deudor);
       if (deudor) {
         set_current_deudor(deudor);
       }
-      let filtered_data = obligaciones_from_liquidacion.filter((item: any) => item.id_deudor === id_deudor);
-      const unique_nro_expediente = [...new Set(filtered_data.map(item => item.nro_expediente))];
-      const rows = unique_nro_expediente.map((expediente, index) => ({
-        id: index,
-        expediente
-      }));
-      set_rows(rows);
-      if(rows.length == 1) set_data_clean(filtered_data);
-      //Code para filtrar por expediente
-      if (current_expediente !== null) {
-        filtered_data = filtered_data.filter((item: any) => item.nro_expediente === current_expediente);
-        set_data_clean(filtered_data);
-      }
     }
 
-
-  }, [obligaciones_from_liquidacion, id_deudor, current_expediente]);
-
-  const show_documentos = (): boolean => {
-    if(rows.length > 1 && current_expediente === null){
-      return false;
-    }else{
-      return true;
-    }
-  }
+    const filtered_data = obligaciones_from_liquidacion.filter((item: any) => item.id_deudor === id_deudor);
+    set_data_clean(filtered_data);
+  }, [obligaciones_from_liquidacion, id_deudor]);
 
   useEffect(() => console.log(current_deudor), [current_deudor]);
   useEffect(() => console.log(expedientes_deudor), [expedientes_deudor]);
@@ -229,8 +136,8 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
           boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
-        <Title title="Proceso Cobro Persuasivo"></Title>
-        {(current_deudor?.id_deudor || datos?.id_deudor) && <Grid container spacing={2} mt={2}>
+        <Title title="Proceso Cobro Coactivo"></Title>
+        {current_deudor?.id_deudor && <Grid container spacing={2} mt={2}>
           <Grid item xs={12} md={6} lg={4} sx={{margin: 'auto'}}>
             <TextField
               fullWidth
@@ -238,7 +145,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
               name="documento"
               label="Documento"
               helperText="Documento"
-              value={current_deudor?.numero_identificacion || datos.id_deudor.identificacion}
+              value={current_deudor.numero_identificacion || ''}
               disabled
             />
           </Grid>
@@ -249,7 +156,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
               name="nombreDeudor"
               label="Nombre deudor"
               helperText="Nombre deudor"
-              value={current_deudor?.nombre_completo || datos.id_deudor.nombres + ' ' + datos.id_deudor.apellidos}
+              value={current_deudor.nombre_completo || ''}
               disabled
             />
           </Grid>
@@ -263,25 +170,14 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
               disabled
             />
           </Grid> */}
-          {(rows.length == 1) && <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              fullWidth
-              size="small"
-              name="codigoExpediente"
-              label="Expediente"
-              helperText="Expediente relacionado"
-              value={rows[0].expediente}
-              disabled
-            />
-          </Grid>}
           <Grid item xs={12} md={6} lg={4}>
               <FormControl required size='small' fullWidth>
-                <InputLabel>Subetapa Proceso Persuasivo</InputLabel>
+                <InputLabel>Subetapa Proceso Coactivo</InputLabel>
                 <Select
                   disabled={false}
                   multiline
                   value={id_subetapa || ''}
-                  label="Subetapa Proceso Persuasivo"
+                  label="Subetapa Proceso Coactivo"
                   onChange={handle_change_subetapa}
                 >
                   <MenuItem value="">
@@ -306,18 +202,6 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
               disabled
             />
           </Grid> */}
-          {(rows.length > 1) && <Grid item xs={12} lg={6} sx={{margin: 'auto'}}>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={rows}
-              columns={columns}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              getRowId={(row) => row.id}
-              getRowHeight={() => 'auto'}
-            />
-           </Grid>}
         </Grid>}
         <Typography variant="subtitle1" sx={{fontWeight: 'bold'}} mt={5} mb={2}>Cargue o Generación de Documentos</Typography>
         <Grid container spacing={2} mb={2}>
@@ -329,7 +213,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
               component="label"
               startIcon={<CloudUpload />}
             >
-              CARGAR RESOLUCIÓN
+              CARGAR MANDAMIENTO DE PAGO
               <input
                 hidden
                 type="file"
@@ -339,7 +223,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
                 autoFocus
                 style={{ opacity: 0 }}
                 name="anexos"
-                onChange={handle_change_resolucion}
+                onChange={handle_change_mandamiento}
               />
             </Button>
           </Grid>
@@ -372,9 +256,9 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
                 size='medium'
                 component="label"
                 startIcon={<DescriptionIcon />}
-                onClick={handle_click_generate_resolucion}
+                onClick={handle_click_generate_mandamiento}
               >
-                GENERAR RESOLUCIÓN
+                GENERAR MANDAMIENTO DE PAGO
               </Button>
           </Grid>
           <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
@@ -392,27 +276,26 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
         </Grid>
       </Grid>
         {/* {(is_generate_cobro || is_generate_resolucion || resolucion_url || cobro_url) && <TabContext value={position_tab}> */}
-        {(is_generate_cobro || is_generate_resolucion || resolucion_url || cobro_url) && show_documentos() && (datos || obligaciones_from_liquidacion.length) &&
+        {(is_generate_cobro || is_generate_resolucion || resolucion_url || cobro_url) && (datos || obligaciones_from_liquidacion.length) &&
         <TabContext value={position_tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handle_tablist_change}>
-              {(is_generate_resolucion || resolucion_url) && (id_subetapa == '1') && <Tab label={is_generate_resolucion ? 'RESOLUCIÓN GENERADA' : 'RESOLUCIÓN CARGADA'} value="1" />}
+              {(is_generate_resolucion || resolucion_url) && (id_subetapa == '1') && <Tab label={is_generate_resolucion ? 'MANDAMIENTO DE PAGO GENERADO' : 'MANDAMIENTO DE PAGO CARGADO'} value="1" />}
               {(is_generate_cobro || cobro_url) && (id_subetapa == '1') && <Tab label={is_generate_cobro ? 'COBRO GENERADO' : 'COBRO CARGADO'} value="2" />}
-              {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_resolucion ? 'RESOLUCIÓN GENERADA SUBETAPA 2' : 'RESOLUCIÓN CARGADA SUBETAPA 2'} value="1" />}
-              {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_cobro ? 'COBRO GENERADO SUBETAPA 2' : 'COBRO CARGADO SUBETAPA 2'} value="2" />}
+              {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_resolucion ? 'DOCUMENTO SEGUIR ADELANTE GENERADO' : 'DOCUMENTO SEGUIR ADELANTE CARGADO'} value="1" />}
+              {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_cobro ? 'COBRO GENERADO' : 'COBRO CARGADO'} value="2" />}
             </TabList>
           </Box>
 
           <TabPanel value="1" sx={{ p: '20px 0' }}>
-            <CobroPersuasivo
-              datos={datos}
-              currentDeudor={current_deudor}
-              dataClean={data_clean}
-              id_deudor={id_deudor}
-              is_generate_resolucion={is_generate_resolucion}
-              resolucion_url={resolucion_url}
-              id_subetapa={id_subetapa}
-            />
+            {id_subetapa == '1'
+            ? <MandamientoPagoDoc
+                datos={datos}
+              />
+            : <SeguirAdelanteDoc
+                datos={datos}
+              />
+            }
           </TabPanel>
 
           <TabPanel value="2" sx={{ p: '20px 0' }}>

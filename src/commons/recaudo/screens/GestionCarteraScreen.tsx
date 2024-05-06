@@ -26,6 +26,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
 import { showAlert } from '../../../utils/showAlert/ShowAlert';
 import { DocumentoPagoPersuasivo } from '../components/GestionCartera/DocumentoPagoPersuasivo';
+import { ProcesoPagoCoactivo } from '../components/GestionCartera/ProcesoPagoCoactivo';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -67,7 +68,9 @@ export const GestionCarteraScreen: React.FC = () => {
   const [open_create_proceso_modal, set_open_create_proceso_modal] = useState(false);
   const [valores_proceso, set_valores_proceso] = useState<ValoresProceso[][]>([]);
   const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
-  const { set_etapa_proceso } = useContext(EtapaProcesoConext);
+  const { is_from_liquidacion, set_etapa_proceso, set_is_from_liquidacion } = useContext(EtapaProcesoConext);
+  const [cobro_persuasivo_active, set_cobro_persuasivo_active] = useState<boolean>(false);
+  const [cobro_coactivo_active, set_cobro_coactivo_active] = useState<boolean>(false);
 
   const [filtered_nombres, set_filtered_nombres] = useState<string>('');
   const [filtered_apellidos, set_filtered_apellidos] = useState<string>('');
@@ -256,6 +259,7 @@ export const GestionCarteraScreen: React.FC = () => {
                     ...prevEtapa,
                     mostrar_modal: true,
                   }));
+                  set_is_from_liquidacion(false);
 
 
                 }}
@@ -284,6 +288,34 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     }
   ];
+
+  useEffect(() => {
+    if(id_etapa){
+      //TODO: Utilizar servicio para traer la etapa y comparar, el id puede cambiar en el futuro
+      (id_etapa == 13 || id_etapa == 14)
+        ? set_cobro_persuasivo_active(true)
+        : set_cobro_persuasivo_active(false);
+
+      (id_etapa == 14)
+        ? set_cobro_coactivo_active(true)
+        : set_cobro_coactivo_active(false);
+
+      // api.get(`recaudo/procesos/etapas/${id_etapa}`)
+      //   .then((response) => {
+      //     console.log(response.data)
+      //   })
+      //   .catch((error) => {
+      //      console.log('')(error);
+      //   })
+    }
+  }, [id_etapa]);
+
+  useEffect(() => {
+    if(is_from_liquidacion){
+      set_cobro_persuasivo_active(true);
+      set_position_tab('3');
+    }
+  }, [is_from_liquidacion])
 
   useEffect(() => {
     api.get('recaudo/procesos/procesos-sin-finalizar')
@@ -746,8 +778,9 @@ export const GestionCarteraScreen: React.FC = () => {
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handle_tablist_change}>
                   <Tab label="Gestion Cartera" value="1" />
-                  <Tab label="Editar Cartera" value="2" />
-                  <Tab label="Cobro Persuasivo" value="3" />
+                  <Tab label="Editar Cartera" value="2" disabled={is_from_liquidacion}/>
+                  {cobro_persuasivo_active && <Tab label="Proceso cobro Persuasivo" value="3" disabled={false}/>}
+                  {cobro_coactivo_active && <Tab label="Proceso Cobro Coactivo" value="4" disabled={false}/>}
                 </TabList>
               </Box>
 
@@ -870,9 +903,16 @@ export const GestionCarteraScreen: React.FC = () => {
 
               </TabPanel>
 
-              <TabPanel value="3" sx={{ p: '20px 0' }}>
-                  <DocumentoPagoPersuasivo></DocumentoPagoPersuasivo>
-              </TabPanel>
+              {cobro_persuasivo_active && <TabPanel value="3" sx={{ p: '20px 0' }}>
+                  <DocumentoPagoPersuasivo
+                    datos={datos}
+                  ></DocumentoPagoPersuasivo>
+              </TabPanel>}
+              {cobro_coactivo_active && <TabPanel value="4" sx={{ p: '20px 0' }}>
+                  <ProcesoPagoCoactivo
+                    datos={datos}
+                  ></ProcesoPagoCoactivo>
+              </TabPanel>}
             </TabContext>
           </Box>
         </Grid>
@@ -913,6 +953,8 @@ export const GestionCarteraScreen: React.FC = () => {
       />
 
       <NotificationModal
+        id_etapa_destino={Number(id_etapa_destino)}
+        set_position_tab={set_position_tab}
         open_notification_modal={open_notification_modal}
         set_open_notification_modal={set_open_notification_modal}
         notification_info={notification_info}

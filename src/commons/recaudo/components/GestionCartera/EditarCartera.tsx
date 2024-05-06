@@ -14,13 +14,10 @@ import {
   Tab
 } from "@mui/material"
 import type { FlujoProceso } from "../../interfaces/flujoProceso";
-import { SyntheticEvent, useState, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import SaveIcon from '@mui/icons-material/Save';
 import type { AtributoEtapa } from "../../interfaces/proceso";
-import { CobroPersuasivo } from "./CobroPersuasivo";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { DocumentoPersuasivoPago } from "./DocumentoPersuasivoPago";
 
 
 interface IProps {
@@ -63,14 +60,6 @@ export const EditarCartera: React.FC<IProps> = ({
   mover_subetapa_actual,
   datos
 }: IProps) => {
-
-  const [position_tab, set_position_tab] = useState('1');
-  const handle_tablist_change = (event: SyntheticEvent, newValue: string): void => {
-    set_position_tab(newValue);
-    if (newValue === '1') {
-    }
-  };
-
 
   // console.log("subetapas", subetapas)
   return (
@@ -552,28 +541,6 @@ export const EditarCartera: React.FC<IProps> = ({
           </Grid>
         </Stack>
       </Grid>
-      <TabContext value={position_tab}>
-
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <TabList onChange={handle_tablist_change}>
-                  <Tab label="Resolución" value="1" />
-                  <Tab label="Cobro" value="2" />
-                </TabList>
-              </Box>
-
-              <TabPanel value="1" sx={{ p: '20px 0' }}>
-                <CobroPersuasivo
-                  datos={datos}
-                />
-              </TabPanel>
-
-              <TabPanel value="2" sx={{ p: '20px 0' }}>
-                <DocumentoPersuasivoPago
-                    datos={datos}
-                  />
-              </TabPanel>
-            </TabContext>
-
     </>
   )
 }

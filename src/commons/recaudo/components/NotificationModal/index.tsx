@@ -12,14 +12,18 @@ interface IProps {
     type: string;
     message: string;
   }
+  id_etapa_destino?: number;
+  set_position_tab?: Dispatch<SetStateAction<string>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const NotificationModal = ({ open_notification_modal, set_open_notification_modal, notification_info }: IProps): JSX.Element => {
+export const NotificationModal = ({ open_notification_modal, set_open_notification_modal, notification_info, id_etapa_destino, set_position_tab }: IProps): JSX.Element => {
 
   const handle_close = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     event.stopPropagation();
+    if(id_etapa_destino == 13) set_position_tab!('3');
+    if(id_etapa_destino == 14) set_position_tab!('4');
     set_open_notification_modal(false);
   };
 
@@ -50,7 +54,7 @@ export const NotificationModal = ({ open_notification_modal, set_open_notificati
   //   if (type === 'error') {
   //     return '#ff3333';
   //   }
-    
+
   //   return '#000';
   // };
 
