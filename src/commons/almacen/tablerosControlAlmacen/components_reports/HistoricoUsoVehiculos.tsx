@@ -88,9 +88,12 @@ const HistoricoUsoVehiculos: FC<props> = ({
               onChange={(e: SelectChangeEvent) => {
                 // limpiamos los datos de la tabla
                 set_data_huv([]);
+                // limpiamos el vehiculo seleccionado
+                set_data_vehiculo_seleccionado({} as interface_busqueda_vehiculos)
                 // agregamos el nuevo valor
                 set_inputs_huv({
                   ...inputs_huv,
+                  nombre_vehiculo: '',
                   tipo_consulta: e.target.value,
                 });
               }}
@@ -179,8 +182,8 @@ const HistoricoUsoVehiculos: FC<props> = ({
                   }
                 >
                   <MenuItem value=''>Todos</MenuItem>
-                  <MenuItem value='PENDIENTE'>Propio</MenuItem>
-                  <MenuItem value='PENDIENTE'>Arrendado</MenuItem>
+                  <MenuItem value='true'>Propio</MenuItem>
+                  <MenuItem value='false'>Arrendado</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

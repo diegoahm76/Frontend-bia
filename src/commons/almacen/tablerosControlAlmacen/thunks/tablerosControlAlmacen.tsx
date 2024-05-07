@@ -81,10 +81,19 @@ export const obtener_control_stock: any = (solicitable_vivero: boolean) => {
   };
 };
 // Consumo Bienes por Unidad
-export const obtener_movimientos_incautados: any = (filtros: { fecha_desde: string,fecha_hasta: string }) => {
+export const obtener_movimientos_incautados: any = (filtros: { 
+  categoria: string,
+  fecha_desde: string,
+  fecha_hasta: string }) => {
   return async () => {
     try {
-      const { data } = await api.get(`almacen/reportes/movimientos-incautados/get-list/?fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}`);
+      const { data } = await api.get(`almacen/reportes/movimientos-incautados/get-list/?categoria=${
+        filtros.categoria
+      }&fecha_desde=${
+        filtros.fecha_desde
+      }&fecha_hasta=${
+        filtros.fecha_hasta
+      }`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -264,6 +273,18 @@ export const get_tipos_vehiculos: any = () => {
   };
 };
 
+// Obtiene listado de tipos de vehiculos
+export const get_tipos_bienes: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/choices/tipo-bien/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtiene el historico de uso de vehiculos por id_hoja_de_vida
 export const get_historico_vehiculo: any = (id_hoja_de_vida: string) => {
   return async () => {
@@ -277,10 +298,23 @@ export const get_historico_vehiculo: any = (id_hoja_de_vida: string) => {
 };
 
 // Obtiene el historico de uso de vehiculos por id_hoja_de_vida
-export const get_historico_todos_vehiculos: any = () => {
+export const get_historico_todos_vehiculos: any = (
+  tipo_vehiculo: string,
+  fecha_desde: string,
+  fecha_hasta: string,
+  es_arrendado: string,
+) => {
   return async () => {
     try {
-      const { data } = await api.get(`/PENDIENTEEE/`);
+      const { data } = await api.get(`/almacen/reportes/historico-viajes-agendados/get-list/?tipo_vehiculo=${
+          tipo_vehiculo
+        }&fecha_desde=${
+          fecha_desde
+        }&fecha_hasta=${
+          fecha_hasta
+        }&es_arrendado=${
+          es_arrendado
+        }`);
       return data;
     } catch (error: any) {
       return error as AxiosError;

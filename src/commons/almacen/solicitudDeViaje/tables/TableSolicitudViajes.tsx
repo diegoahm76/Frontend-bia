@@ -53,7 +53,6 @@ const TableSolicitudViajes: FC<props_table> = ({
    * @returns {void}
    */
   const ver_solicitud = (params: data_solicitud_viaje) => {
-    console.log(params);
     set_mostrar_solicitud_viaje(true);
     set_id_solicitud_editar(Number(params.id_solicitud));
     set_accion('ver');
@@ -143,12 +142,14 @@ const TableSolicitudViajes: FC<props_table> = ({
       width: 80,
       align: 'center',
       headerAlign: 'center',
-      renderCell: (params) => (
-        <VisibilityIcon
-          sx={{ cursor: 'pointer', fontSize: '28px', display: params.row.estado_solicitud === 'Finalizada' || params.row.estado_solicitud === 'Respondida' ? 'inline-block' : 'none' }}
-          onClick={() => ver_solicitud(params.row)}
-        />
-      ),
+      renderCell: (params) => {
+        if (params.row.estado_solicitud === 'FN' || params.row.estado_solicitud === 'RE') {
+          return <VisibilityIcon
+            sx={{ cursor: 'pointer', fontSize: '28px' }}
+            onClick={() => ver_solicitud(params.row)}
+          />
+        }
+      }
     },
     {
       field: 'editar',

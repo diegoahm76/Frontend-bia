@@ -27,7 +27,9 @@ const TablaHistoricoUsoVehiculos: React.FC<props> = ({
     { field: 'placa', headerName: 'Placa', minWidth: 150, flex: 1 },
     { field: 'marca', headerName: 'Marca', minWidth: 150, flex: 1 },
     { field: 'tipo_vehiculo', headerName: 'Tipo vehículo', minWidth: 150, flex: 1 },
-    { field: 'PENDIENTE', headerName: 'Responsable del vehículo', minWidth: 150, flex: 1 },
+    { field: 'responsable', headerName: 'Responsable del vehículo', minWidth: 300, flex: 1,
+      renderCell: (params) => `${params.row.primer_nombre_responsable_vehiculo} ${params.row.primer_apellido_responsable_vehiculo}`
+    },
     {
       field: 'fecha_partida_asignada', headerName: 'Fecha de salida', minWidth: 150, flex: 1,
       valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY')
@@ -39,8 +41,8 @@ const TablaHistoricoUsoVehiculos: React.FC<props> = ({
       valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY')
     },
     {field: 'hora_retorno', headerName: 'Hora de llegada', minWidth: 150, flex: 1},
-    { field: 'Municipio_desplazamiento', headerName: 'Municipio de desplazamiento', minWidth: 150, flex: 1 },
-    { field: 'funcionario_autorizo', headerName: 'Funcionario que autorizó', minWidth: 150, flex: 1 },
+    { field: 'Municipio_desplazamiento', headerName: 'Municipio de desplazamiento', minWidth: 220, flex: 1 },
+    { field: 'funcionario_autorizo', headerName: 'Funcionario que autorizó', minWidth: 300, flex: 1 },
     { field: 'ya_inicio', headerName: '¿Viaje inicio?', minWidth: 150, flex: 1,
       renderCell: (params) => params.row.ya_inicio ? 'Si' : 'No'
     },
