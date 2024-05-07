@@ -7,14 +7,14 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
-import { interface_movimientos_inventario } from '../interfaces/types';
+import { interface_almacen_bienes_prestamo } from '../interfaces/types';
 
 interface custom_column extends GridColDef {
-  renderCell?: (params: { row: interface_movimientos_inventario }) => React.ReactNode;
+  renderCell?: (params: { row: interface_almacen_bienes_prestamo }) => React.ReactNode;
 }
 
 interface props {
-  data: interface_movimientos_inventario[];
+  data: interface_almacen_bienes_prestamo[];
 }
 
 const TablaReportesAlmacenBienesPrestamo: React.FC<props> = ({
@@ -26,12 +26,12 @@ const TablaReportesAlmacenBienesPrestamo: React.FC<props> = ({
     {field: 'nombre_bien', headerName:'Nombre bien', minWidth:250, flex:1},
     {field: 'identificador_bien', headerName:'Identificador del bien', minWidth:150, flex:1},
     {field: 'nombre_marca', headerName:'Marca del bien', minWidth:150, flex:1},
-    {field: 'PENDIENTE', headerName:'Fecha del prestamo', minWidth:180, flex:1,
+    {field: 'fecha_ultimo_movimiento', headerName:'Fecha del prestamo', minWidth:180, flex:1,
       valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY'),
     },
-    {field: 'PENDIENTEE', headerName:'Funcionario responsable', minWidth:240, flex:1},
+    {field: 'nombre_persona_responsable', headerName:'Funcionario responsable', minWidth:240, flex:1},
     {field: 'ubicacion', headerName:'Ubicación', minWidth:200, flex:1},
-    {field: 'categoria', headerName:'Categoria', minWidth:200, flex:1},
+    {field: 'nombre_categoria', headerName:'Categoria', minWidth:200, flex:1},
   ];
 
  
