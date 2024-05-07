@@ -14,7 +14,7 @@ import {
   FormHelperText,
   CircularProgress,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch } from '../../../../hooks';
@@ -32,6 +32,8 @@ import {
   get_historico_todos_vehiculos,
   get_historico_vehiculo,
   get_movimientos_inventario,
+  get_tipos_bienes,
+  get_tipos_categorias,
   obtener_consumo_bienes_und,
   obtener_control_stock,
   obtener_entradas_inventario,
@@ -53,6 +55,7 @@ import {
   interface_inputs_bce,
   interface_inputs_huv,
   interface_inputs_mafi,
+  interface_inputs_msi,
   interface_inputs_rabp,
   interface_movimientos_inventario,
   response_bienes_consumo_entregado,
@@ -109,6 +112,46 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   const [data_vehiculo_seleccionado, set_data_vehiculo_seleccionado] = useState<interface_busqueda_vehiculos>(Object);
   // data de historico de uso de vehiculos
   const [data_huv, set_data_huv] = useState<interface_historico_vehiculo[]>([]);
+  
+  // Actualizacion a MSI
+  // tipos de castegorias de bienes [carro, computador, etc]
+  const [tipos_categoria, set_tipos_categoria] = useState<any[]>([]);
+  // tipos de bienes [activo fijo, consumo]
+  const [tipos_bienes, set_tipos_bienes] = useState<any[]>([]);
+  // input agregados a la actualizacion de MSI
+  const [inputs_msi, set_inputs_msi] = useState<interface_inputs_msi>(Object)
+
+
+  const get_tipos_categoria_fc = async () => {
+    dispatch(get_tipos_categorias()).then((response: any) => {
+      if (Object.keys(response).length !== 0) {
+        set_tipos_categoria(response);
+      } else {
+        control_error('Hubo un error al obtener los tipos de categorias');
+        set_tipos_categoria([]);
+      }
+    });
+  };
+
+  const get_tipos_bienes_fc = async () => {
+    dispatch(get_tipos_bienes()).then((response: any) => {
+      if (Object.keys(response).length !== 0) {
+        set_tipos_bienes(response);
+      } else {
+        control_error('Hubo un error al obtener los tipos de bien');
+        set_tipos_bienes([]);
+      }
+    });
+  };
+
+  const servicios_obtenidos = useRef(false);
+  useEffect(() => {
+    if (!servicios_obtenidos.current) {
+      get_tipos_categoria_fc();
+      get_tipos_bienes_fc();
+      servicios_obtenidos.current = true;
+    }
+  }, [servicios_obtenidos]);
 
 
   useEffect(() => {
@@ -251,6 +294,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     set_data_rabp([]);
     set_inputs_bce({} as interface_inputs_bce);
     set_data_bce([]);
+    set_data_vehiculo_seleccionado({} as interface_busqueda_vehiculos)
+    set_data_huv([]);
+    set_inputs_huv({} as interface_inputs_huv);
   };
 
   const limpiar_todo: () => void = () => {
@@ -335,14 +381,40 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'MSI':
-        if (fecha_desde === null || fecha_hasta === null) {
-          set_error_fecha_desde(fecha_desde === null);
-          set_error_fecha_hasta(fecha_hasta === null);
+        set_loadding_consultar(true);
+        // MSI - Movimientos sobre incautados
+        if(inputs_msi?.tipo_bien === '' || inputs_msi?.tipo_bien === undefined){
+          control_error('Debe seleccionar un tipo de bien para realizar la consulta');
+          set_loadding_consultar(false);
           return;
+        } else {
+            if (fecha_desde === null || fecha_hasta === null) {
+              control_error('Debe seleccionar un rango de fechas para realizar la consulta');
+              set_loadding_consultar(false);
+              return;
+            }
+            dispatch(
+              obtener_movimientos_incautados({
+                categoria: inputs_msi?.tipo_bien === 'A' ? inputs_msi?.tipo_categoria : '',
+                fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), 
+                fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD')
+              }))
+                .then((response: any) => {
+                  if(Object.keys(response).length === 0){
+                    set_loadding_consultar(false);
+                    control_error('Hubo un error al obtener los movimientos de incautados');
+                  } else {
+                    if(response.data.length === 0){
+                      set_loadding_consultar(false);
+                      control_error('No se encontraron resultados');
+                    } else {
+                      set_resultado_busqueda(response.data);
+                      set_loadding_consultar(false);
+                    }
+                  }
+            });
         }
-        dispatch(obtener_movimientos_incautados({ fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
-          set_resultado_busqueda(response.data);
-        });
+
         break;
       case 'MR':
         if (fecha_desde === null || fecha_hasta === null) {
@@ -440,8 +512,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         break;
       case 'HUV':
         // Histórico de Uso de Vehículos
-        if(inputs_huv.tipo_consulta === 'vehiculo_especifico'){
-          if(Object.keys(data_vehiculo_seleccionado).length === 0){
+        if (inputs_huv.tipo_consulta === 'vehiculo_especifico') {
+          // En caso que el tipo de consulta del input de seleccion sea por vehiculo especifico
+          if (Object.keys(data_vehiculo_seleccionado).length === 0) {
             control_error('Debe seleccionar un vehículo para realizar la consulta');
             return;
           } else {
@@ -464,10 +537,16 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
               }
             });
           }
-        } else if(inputs_huv.tipo_consulta === 'todos_vehiculos'){
+        } else if (inputs_huv.tipo_consulta === 'todos_vehiculos') {
+          // En caso que el tipo de consulta del input de seleccion sea por todos los vehiculos
           set_loadding_consultar(true);
           dispatch(
-            get_historico_todos_vehiculos()
+            get_historico_todos_vehiculos(
+              inputs_huv.tipo_vehiculo ?? '',
+              inputs_huv.fecha_desde ?? '',
+              inputs_huv.fecha_hasta ?? '',
+              inputs_huv.propiedad === 'true' ? 'True' : inputs_huv.propiedad === 'false' ? 'False' : '',
+            )
           ).then((response: response_historico_vehiculo) => {
             if (Object.keys(response)?.length !== 0) {
               if (response.data?.length > 0) {
@@ -546,6 +625,10 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     }
     return data;
   };
+
+  useEffect(()=>{
+    console.log(inputs_msi)
+  },[inputs_msi])
 
   return (
     <>
@@ -830,74 +913,109 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                 )}
                 {seleccion_tablero_control === 'MSI' && (
                   <Grid item container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-end"
-                        spacing={2}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Fecha desde"
-                              value={fecha_desde}
-                              onChange={(newValue) => {
-                                handle_change_fecha_desde(newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  fullWidth
-                                  size="small"
-                                  {...params}
-                                  error={error_fecha_desde}
-                                />
-                              )}
-                              maxDate={fecha_hasta}
-                            />
-                          </LocalizationProvider>
-                          {error_fecha_desde && (
-                            <FormHelperText error>
-                              {'El campo es obligatorio.'}
-                            </FormHelperText>
+                    <Grid item xs={12}>
+                      <FormControl required size="small" fullWidth>
+                        <InputLabel>Tipo bien: </InputLabel>
+                        <Select
+                          label="Tipo bien :"
+                          value={inputs_msi.tipo_bien}
+                          fullWidth
+                          onChange={(e: SelectChangeEvent) => {
+                            // limpiamos la data del resultado
+                            set_resultado_busqueda([]);
+                            // agregamos el valor seleccionado
+                            set_inputs_msi({
+                              ...inputs_msi,
+                              tipo_bien: e.target.value,
+                            });
+                          }}
+                        >
+                          {tipos_bienes?.length !== 0 ? (
+                            tipos_bienes?.map((tipo_bien) => (
+                              <MenuItem key={tipo_bien[0]} value={tipo_bien[0]}>
+                                {tipo_bien[1]}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem value={''}>Cargando...</MenuItem>
                           )}
-                        </Grid>
-                      </Stack>
+                        </Select>
+                      </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-start"
-                        spacing={2}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Fecha hasta"
-                              value={fecha_hasta}
-                              onChange={(newValue) => {
-                                handle_change_fecha_hasta(newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  fullWidth
-                                  size="small"
-                                  {...params}
-                                  error={error_fecha_hasta}
-                                />
-                              )}
-                              minDate={fecha_desde}
-                              disabled={fecha_desde == null}
+
+                    {inputs_msi?.tipo_bien === 'A' &&
+                      <Grid item xs={12} lg={4}>
+                        <FormControl required size="small" fullWidth>
+                          <InputLabel>Categoria: </InputLabel>
+                          <Select
+                            label="Categoria :"
+                            value={inputs_msi.tipo_categoria}
+                            fullWidth
+                            onChange={(e: SelectChangeEvent) => {
+                              set_inputs_msi({
+                                ...inputs_msi,
+                                tipo_categoria: e.target.value,
+                              });
+                            }}
+                          >
+                            {tipos_categoria?.length !== 0 ? (
+                              tipos_categoria?.map((tipo_movimiento) => (
+                                <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
+                                  {tipo_movimiento[1]}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              <MenuItem value={''}>Cargando...</MenuItem>
+                            )}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    }
+
+
+                    <Grid item xs={12} sm={inputs_msi?.tipo_bien === 'A' ? 4 : 6}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="Fecha desde"
+                          value={fecha_desde}
+                          onChange={(newValue) => {
+                            handle_change_fecha_desde(newValue);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              fullWidth
+                              size="small"
+                              {...params}
+                              error={error_fecha_desde}
                             />
-                          </LocalizationProvider>
-                          {error_fecha_hasta && (
-                            <FormHelperText error>
-                              {'El campo es obligatorio.'}
-                            </FormHelperText>
                           )}
-                        </Grid>
-                      </Stack>
+                          maxDate={fecha_hasta}
+                        />
+                      </LocalizationProvider>
+                    </Grid>
+
+                    <Grid item xs={12} sm={inputs_msi?.tipo_bien === 'A' ? 4 : 6}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="Fecha hasta"
+                          value={fecha_hasta}
+                          onChange={(newValue) => {
+                            handle_change_fecha_hasta(newValue);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              fullWidth
+                              size="small"
+                              {...params}
+                              error={error_fecha_hasta}
+                            />
+                          )}
+                          minDate={fecha_desde}
+                          disabled={fecha_desde == null}
+                        />
+                      </LocalizationProvider>
                     </Grid>
                   </Grid>
                 )}
