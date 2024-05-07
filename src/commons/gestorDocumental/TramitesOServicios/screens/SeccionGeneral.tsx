@@ -18,7 +18,7 @@ import { DocumentosAnexos } from './DocumentosAnexos';
 import { ResumenTramite } from './ResumenTramite';
 import { Radicado } from './Radicado';
 import { radicar_opa } from '../thunks/TramitesOServicios';
-import { useAppDispatch } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { TramitesEnProceso } from './TramitesEnProceso';
 import { useNavigate } from 'react-router-dom';
 import FeedIcon from '@mui/icons-material/Feed';
@@ -29,6 +29,7 @@ import { control_warning } from '../../../almacen/configuracion/store/thunks/Bod
 import CallToActionIcon from '@mui/icons-material/CallToAction';
 import { FormContextMetadatos } from '../../TramitesServicios/context/MetadatosContext';
 import Swal from 'sweetalert2';
+import { MainPartRepresentacionPersona } from '../representacionPersona/screen/MainRepresentacionPersona';
 const class_css = {
   position: 'relative',
   background: '#FAFAFA',
@@ -85,6 +86,11 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   const [completed, setCompleted] = React.useState<{ [k: number]: boolean }>(
     {}
   );
+  const { currentPersonaRespuestaUsuario } = useAppSelector(
+    (state) => state.ResRequerimientoOpaSlice
+  );
+
+  const {representacion_legal} = useAppSelector((state) => state.auth);
   const { archivos, set_archivos, setForm } = useContext(FormContextMetadatos);
   const totalSteps = () => {
     return steps.length;
@@ -100,6 +106,15 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   };
   const handleComplete = () => {
     if (activeStep === 0) {
+      if(currentPersonaRespuestaUsuario === null){
+        Swal.fire({
+          icon: 'warning',
+          title: 'Atención',
+          text: `Por favor, selecciona una persona antes de continuar.`,
+          confirmButtonText: 'Entendido',
+        });
+        return;
+      }
       set_crear_tramite(true);
     }
     if (activeStep === 1) {
@@ -123,6 +138,8 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
       dispatch(radicar_opa(response_paso_1?.id_solicitud_tramite)).then(
         (response: any) => {
           if (response.success) {
+            console.log('currentRepresentacionPersona', currentPersonaRespuestaUsuario);
+            console.log('representación legal', representacion_legal)
             set_radicado(response.data);
             const newCompleted = completed;
             newCompleted[activeStep] = true;
@@ -305,6 +322,8 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                 <div>
                   <React.Fragment>
                     {activeStep === 0 && (
+                      <>
+                        <MainPartRepresentacionPersona/>
                       <Box>
                         <Grid
                           container
@@ -322,6 +341,8 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                           ></TipoTramite>
                         </Grid>
                       </Box>
+                      </>
+
                     )}
                     {activeStep === 1 && (
                       <Box>

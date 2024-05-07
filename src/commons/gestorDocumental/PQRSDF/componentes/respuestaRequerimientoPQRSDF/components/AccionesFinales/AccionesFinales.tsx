@@ -82,14 +82,21 @@ export const AccionesFinales = ({ resetFormulario }: any): JSX.Element => {
 "id_solicitud_usu_PQR":127
 }*/
 
+/*{"asunto":"Requerimiento inicial",
+"descripcion":"solicitud de documento",
+"id_medio_solicitud_comple":115,
+"cod_relacion_titular":"MP",
+"id_solicitud_usu_PQR":127
+}*/
+
     formData.append(
       'ComplementosUsu_PQR',
       JSON.stringify({
         asunto: anexosCreados[0]?.asunto,
         descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
         id_solicitud_usu_PQR: +currentPersonaRespuestaUsuario?.id_solicitud_al_usuario_sobre_pqrsdf,
-        medio_de_solicitud: anexosCreados[0]?.medio_de_solicitud?.value,
-        representacion_legal: representacion_legal?.cod_relacion_con_el_titular
+        id_medio_solicitud_comple: anexosCreados[0]?.medio_de_solicitud?.value,
+        cod_relacion_titular: representacion_legal?.cod_relacion_con_el_titular
       })
     );
     /*  formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);*/
@@ -110,7 +117,7 @@ export const AccionesFinales = ({ resetFormulario }: any): JSX.Element => {
             nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
             descripcion: anexo?.descripcionMetadatos,
             asunto: anexo?.asuntoMetadatos,
-            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
+            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value.toUpperCase(),
             nro_folios_documento: +anexo?.numero_folios
               ? +anexo?.numero_folios
               : 0,
