@@ -26,9 +26,10 @@ import CallToActionIcon from '@mui/icons-material/CallToAction';
 import Swal from 'sweetalert2';
 import { FormContextMetadatos } from '../../../TramitesServicios/context/MetadatosContext';
 import { Title } from '../../../../../components';
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { radicar_opa } from './thunks/TramitesOServicios';
+import { MainPartRepresentacionPersona } from '../../representacionPersona/screen/MainRepresentacionPersona';
 const class_css = {
   position: 'relative',
   background: '#FAFAFA',
@@ -85,6 +86,11 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   const [completed, setCompleted] = React.useState<{ [k: number]: boolean }>(
     {}
   );
+  const { currentPersonaRespuestaUsuario } = useAppSelector(
+    (state) => state.ResRequerimientoOpaSlice
+  );
+  const {representacion_legal} = useAppSelector((state) => state.auth);
+  
   const { archivos, set_archivos, setForm } = useContext(FormContextMetadatos);
   const totalSteps = () => {
     return steps.length;
@@ -100,6 +106,15 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   };
   const handleComplete = () => {
     if (activeStep === 0) {
+      if(currentPersonaRespuestaUsuario === null){
+        Swal.fire({
+          icon: 'warning',
+          title: 'Atención',
+          text: `Por favor, selecciona una persona antes de continuar.`,
+          confirmButtonText: 'Entendido',
+        });
+        return;
+      }
       set_crear_tramite(true);
     }
     if (activeStep === 1) {
@@ -123,6 +138,8 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
       dispatch(radicar_opa(response_paso_1?.id_solicitud_tramite)).then(
         (response: any) => {
           if (response.success) {
+            console.log('representación legal', representacion_legal)
+            console.log('currentPersonaRespuestaUsuario', currentPersonaRespuestaUsuario)
             set_radicado(response.data);
             const newCompleted = completed;
             newCompleted[activeStep] = true;
@@ -305,23 +322,26 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                 <div>
                   <React.Fragment>
                     {activeStep === 0 && (
-                      <Box>
-                        <Grid
-                          container
-                          sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
-                        >
-                          <TipoTramite
-                            usuario={props.usuario}
-                            crear_tramite={crear_tramite}
-                            set_formulario_paso_uno={set_formulario_paso_uno}
-                            set_crear_tramite={set_crear_tramite}
-                            set_crear_tramite_error={set_crear_tramite_error}
-                            limpiar={limpiar}
-                            set_tramite_servicio={set_tramite_servicio}
-                            set_response_paso_1={set_response_paso_1}
-                          ></TipoTramite>
-                        </Grid>
-                      </Box>
+                      <>
+                      <MainPartRepresentacionPersona/>
+                    <Box>
+                      <Grid
+                        container
+                        sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}
+                      >
+                        <TipoTramite
+                          usuario={props.usuario}
+                          crear_tramite={crear_tramite}
+                          set_formulario_paso_uno={set_formulario_paso_uno}
+                          set_crear_tramite={set_crear_tramite}
+                          set_crear_tramite_error={set_crear_tramite_error}
+                          limpiar={limpiar}
+                          set_tramite_servicio={set_tramite_servicio}
+                          set_response_paso_1={set_response_paso_1}
+                        ></TipoTramite>
+                      </Grid>
+                    </Box>
+                    </>
                     )}
                     {activeStep === 1 && (
                       <Box>

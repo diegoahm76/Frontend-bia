@@ -128,7 +128,7 @@ const ModalBusquedaVehiculos: React.FC<props> = ({
               boxShadow: '0px 3px 6px #042F4A26',
             }}
           >
-            <Title title='Búsqueda de operario' />
+            <Title title='Búsqueda de vehículos' />
 
             <Box
               component="form"

@@ -15,6 +15,13 @@ export interface interface_inputs_bce {
   fecha_hasta: string
 }
 
+export interface interface_inputs_msi {
+  tipo_bien: string
+  tipo_categoria: string
+  fecha_desde: string
+  fecha_hasta: string
+}
+
 export interface interface_inputs_huv {
   tipo_consulta: string
   nombre_vehiculo: string
@@ -173,4 +180,51 @@ export interface interface_historico_vehiculo {
   id_solicitud_viaje: number
   cod_municipio_destino: string
   id_persona_autoriza: number
+  primer_nombre_responsable_vehiculo: string
+  primer_apellido_responsable_vehiculo: string
+}
+
+export interface response_almace_bienes_prestamo {
+  success: boolean
+  detail: string
+  data: interface_almacen_bienes_prestamo[]
+}
+
+export interface interface_almacen_bienes_prestamo {
+  id_inventario: number
+  nombre_bien: string
+  codigo_bien: string
+  identificador_bien: string
+  id_marca: number
+  nombre_marca: string
+  nombre_bodega: string
+  estado: string
+  codigo_categoria: string
+  nombre_categoria: string
+  valor_unitario: number
+  id_item_entrada_almacen: number
+  cantidad: number
+  ubicacion: string
+  tipo_movimiento: string
+  nombre_persona_responsable: any
+  nombre_persona_origen: string
+  fecha_ingreso: string
+  numero_doc_origen: string
+  valor_ingreso: string
+  realizo_baja: any
+  realizo_salida: any
+  ubicacion_en_bodega: boolean
+  ubicacion_asignado: any
+  ubicacion_prestado: boolean
+  fecha_ultimo_movimiento: string
+  tipo_doc_ultimo_movimiento: string
+  id_registro_doc_ultimo_movimiento?: number
+  cantidad_entrante_consumo: any
+  cantidad_saliente_consumo: any
+  id_bien: number
+  id_bodega: number
+  cod_tipo_entrada: number
+  id_persona_origen: number
+  id_persona_responsable: any
+  cod_estado_activo: string
 }
