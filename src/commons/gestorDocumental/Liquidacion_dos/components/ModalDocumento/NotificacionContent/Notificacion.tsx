@@ -9,7 +9,7 @@ import { Title } from "../../../../../../components/Title";
 import { PreciosContext } from "../../../context/PersonalContext";
 
 
-export const CorreoNotificacinSinPopos = ({ closeModal }: any) => {
+export const CorreoNotificacinSinPopos = () => {
 
     const { usuario } = useContext(PreciosContext)
     
@@ -53,20 +53,10 @@ export const CorreoNotificacinSinPopos = ({ closeModal }: any) => {
 
     return (
         <>
-            {etapa_proceso.mostrar_modal && (
-                <>
-                    <Grid
-                        container
-                        alignItems="center" justifyContent="center"
-                        sx={{
-                            position: 'relative',
-                            background: '#FAFAFA',
-                            borderRadius: '15px',
-                            p: '20px',
-                            mb: '20px',
-                            boxShadow: '0px 3px 6px #042F4A26'
-                        }}
-                    >
+                       <Grid container alignItems="center" justifyContent="center">
+
+          
+               
                         <Grid item xs={12}>
                             <Title title={`Informacion a Enviar a ${etapa_proceso.nombres} ${etapa_proceso.apellidos}`} />
                         </Grid>
@@ -124,19 +114,9 @@ export const CorreoNotificacinSinPopos = ({ closeModal }: any) => {
                             >
                                 Notificar
                             </Button>
-
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                startIcon={<CancelIcon />}
-                                style={{ width: 150, margin: 7 }}
-                                onClick={closeModal}
-                            >
-                                Cancelar
-                            </Button>
                         </Grid>
-                    </Grid >
-                </>)}
+                        </Grid>
+
         </>
     );
 };

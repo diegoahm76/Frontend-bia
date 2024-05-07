@@ -84,14 +84,16 @@ export interface ValoresProyectoPorcentajes {
     valorMinimo: number;
     capacidad: string;
     valor: string;
-    valor_subsidio_trasporte:string
+    valor_subsidio_trasporte:string;
+    total_valor_veiculos:string;
 }
 
 export const valoresInicialesProyectoPorcentaje: ValoresProyectoPorcentajes = {
     valorMinimo: 0,
     capacidad: "", 
     valor: "" ,
-    valor_subsidio_trasporte:"200"
+    valor_subsidio_trasporte:"0",
+    total_valor_veiculos:""
 };
 
 // Definición del tipo para el objeto de valores adicionales
@@ -166,3 +168,61 @@ export const liquidacionValoresIniciales: LiquidacionState = {
 };
 
 
+export interface Respuesta {
+
+  consecutivo: string;
+  nro_consecutivo: string;
+  fecha_consecutivo:string;
+  radicado_nuevo:string
+  nombre_completo:string;
+  numero_documento:string
+}
+
+export interface OpcionLiquidacion {
+  id: number;
+  nombre: string;
+  estado: number;
+  version: number;
+  funcion: string;
+  variables: {
+    [key: string]: string;
+  };
+  bloques: string;
+}
+
+
+
+export interface Registro {
+  id: number;
+  capacidad: string;
+  valor: string;
+  editable: boolean;
+  formula: string;
+}
+
+export interface ConfiguracionBasica {
+  valor: any;
+  fecha_fin: any;
+  variables: any;
+  fecha_inicio: any;
+  descripccion: any;
+  nombre_variable: any;
+  nombre_tipo_cobro: any;
+  nombre_tipo_rentaany: any;
+  id_valores_variables: any;
+}
+
+export const initialData: ElementoPQRS = {
+  costo_proyecto: "",
+  estado_actual_solicitud: "",
+  fecha_inicio: null,
+  fecha_radicado: "",
+  fecha_registro: "",
+  medio_solicitud: "",
+  nombre_completo_titular: "",
+  nombre_proyecto: "",
+  nombre_tramite: null,
+  pago: false,
+  radicado: "",
+  tipo_solicitud: ""
+};

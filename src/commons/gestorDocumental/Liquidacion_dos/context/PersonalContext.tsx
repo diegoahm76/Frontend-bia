@@ -22,12 +22,12 @@ export const PreciosContext = createContext<PreciosTypes>({
     setPrecios: () => { }, // Función por defecto para actualizar precios
     form: { id_expediente: '', Email: '', telefono_cliente: '' }, // Formulario inicializado con valores vacíos
     setForm: () => { }, // Función por defecto para actualizar el formulario
-    usuario:{identificacion:'',nombres:'',apellidos:'',telefono:'',email:'',nombreCategoria:'',direccion:''},
-    setUsuario:()=>{},
+    usuario: { identificacion: '', nombres: '', apellidos: '', telefono: '', email: '', nombreCategoria: '', direccion: '' },
+    setUsuario: () => { },
     logs: valoresInicialesProyectoPorcentaje,
-    setLogs:()=>{},
+    setLogs: () => { },
     liquidacionState: liquidacionValoresIniciales,
-    setLiquidacionState: () => {}
+    setLiquidacionState: () => { }
 });
 
 // Props para el componente PreciosProvider
@@ -42,11 +42,13 @@ export const PreciosProvider = ({ children }: PreciosProviderProps): JSX.Element
     // Estado para almacenar el formulario
     const [form, setForm] = useState<ValoresPos>({ id_expediente: '', Email: '', telefono_cliente: '' }); // Inicialmente el formulario tiene valores vacíos
     // Estado para almacenar la información del usuario
-    const [usuario, setUsuario] = useState<UsuarioInfo>({identificacion:'',nombres:'',apellidos:'',telefono:'',email:'',nombreCategoria:'',direccion:''});
+    const [usuario, setUsuario] = useState<UsuarioInfo>({ identificacion: '', nombres: '', apellidos: '', telefono: '', email: '', nombreCategoria: '', direccion: '' });
     // Estado para almacenar los valores relacionados con el proyecto y los porcentajes
     const [logs, setLogs] = useState<ValoresProyectoPorcentajes>(valoresInicialesProyectoPorcentaje);
     // Estado para almacenar los valores relacionados con la liquidación
     const [liquidacionState, setLiquidacionState] = useState<LiquidacionState>(liquidacionValoresIniciales);
+
+    console.log("logs", logs, "liquidacionState", liquidacionState, "usuario", usuario, "form", form,"precios",precios);
 
     // Valor del contexto que se proporcionará a los componentes hijos
     const value: PreciosTypes = {

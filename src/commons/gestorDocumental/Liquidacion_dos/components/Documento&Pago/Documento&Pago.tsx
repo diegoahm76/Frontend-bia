@@ -7,32 +7,15 @@ import { useAppSelector } from "../../../../../hooks";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asumo que estás utilizando react-router
 import { ArrowBack } from '@mui/icons-material';
-import { ElementoPQRS } from "../../interfaces/InterfacesLiquidacion";
-import { ModalConfirmacionLiquidacion } from "../ModalDocumento/ModalConfirmacionLiquidacion/ModalConfirmacionLiquidacion";
-
-const initialData: ElementoPQRS = {
-    costo_proyecto: "",
-    estado_actual_solicitud: "",
-    fecha_inicio: null,
-    fecha_radicado: "",
-    fecha_registro: "",
-    medio_solicitud: "",
-    nombre_completo_titular: "",
-    nombre_proyecto: "",
-    nombre_tramite: null,
-    pago: false,
-    radicado: "",
-    tipo_solicitud: ""
-};
+import { ElementoPQRS, initialData } from "../../interfaces/InterfacesLiquidacion";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 
 export const DocumentoPagoLiquidacion = () => {
 
     const navigate = useNavigate();
-
     const [data_liquidacion, set_data_liquidacion] = useState<ElementoPQRS>(initialData);
 
-    console.log("data_liquidacion", data_liquidacion);
 
     const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
         (state) =>
@@ -63,7 +46,6 @@ export const DocumentoPagoLiquidacion = () => {
 
 
             <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-
                 <Button
                     fullWidth
                     style={{ width: "90%", marginTop: 15, color: "white", backgroundColor: "red" }}
@@ -80,8 +62,17 @@ export const DocumentoPagoLiquidacion = () => {
 
             <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
 
-                <ModalConfirmacionLiquidacion />
-
+                <Button
+                    fullWidth
+                    style={{ width: "90%", marginTop: 15, color: "white", backgroundColor: "orange" }}
+                    variant="contained"
+                    endIcon={<ArrowForwardIcon />}
+                    onClick={() => {
+                        navigate('/app/gestor_documental/liquidacion/finalizar_liquidacion');
+                    }}
+                >
+                    Continuar
+                </Button>
             </Grid>
 
 

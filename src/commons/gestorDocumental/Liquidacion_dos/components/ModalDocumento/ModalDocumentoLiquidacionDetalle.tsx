@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useState, useEffect, useContext } from "react";
-import { Button, Grid, FormControl, InputLabel, MenuItem, Select, FormHelperText, Dialog, TextField } from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
-import { Title } from "../../../../../components/Title";
+import { Grid, FormControl, InputLabel, MenuItem, Select, FormHelperText, Dialog, TextField } from "@mui/material";
 import { api } from "../../../../../api/axios";
 import { BuscadorPerzonasStiven } from "../../../WorkFlowPQRSDF/components/BuscadorPersonaPersonalizado/BuscadorPerzonas";
 import { PreciosContext } from "../../context/PersonalContext";
-import PaymentIcon from '@mui/icons-material/Payment';
 import { control_error, control_success } from "../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
 import { useNavigate } from "react-router-dom";
+import { Title } from "../../../../../components/Title";
 
 export interface Persona {
     id_persona: number;
@@ -20,7 +18,6 @@ export interface Persona {
 
 export const ModalDocumentoLiquidacionDetalle = () => {
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataChoise, setDataChoise] = useState<any[]>([]);
     const [form_tipo, set_tipo] = useState({ id_expediente: '' }); // Agregar estado para el formulario
     const [persona, set_persona] = useState<Persona | undefined>();
@@ -28,9 +25,6 @@ export const ModalDocumentoLiquidacionDetalle = () => {
     const navigate = useNavigate();
 
 
-
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
 
 
 
@@ -102,7 +96,7 @@ export const ModalDocumentoLiquidacionDetalle = () => {
     }, []);
 
     const button_style = {
-
+        marginTop: '15px',
         borderRadius: '50%',
         width: '40px',
         height: '40px',
@@ -113,184 +107,124 @@ export const ModalDocumentoLiquidacionDetalle = () => {
 
     return (
         <>
-            <div
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto', // Centrar horizontalmente
-                    marginTop:15
-                }}
-            >
+            <Grid container alignItems="center" justifyContent="center">
+                <Grid item xs={12}>
+                    <Title title="Iniciar Pago PSE"></Title>
+                </Grid>
 
+                <Grid item xs={6} style={{ marginTop: 15 }}>
+
+                    <FormControl size="small" fullWidth>
+                        <InputLabel>Tipo Pago</InputLabel>
+                        <Select
+                            label='Expediente'
+                            name="id_expediente"
+                            value={form_tipo.id_expediente}
+                            onChange={handleSelectChange}
+                            variant="standard"
+                            MenuProps={{
+                                PaperProps: {
+                                    style: {
+                                        maxHeight: 48 * 4.5, // Ajusta la altura máxima del menú desplegable
+                                        width: 100, // Ajusta el ancho del menú desplegable
+                                    },
+                                },
+                            }}
+                        >
+                            {dataChoise.map((option, index) => (
+                                <MenuItem key={option[0]} value={option[0]} style={{ minWidth: 120 }}>
+                                    {option[1]}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>Seleccione el Pago</FormHelperText>
+                    </FormControl>
+                </Grid>
+
+            </Grid>
+
+
+            <Grid container justifyContent="center">
+
+                <Grid container justifyContent="center" style={{ marginTop: 15 }}>
+
+
+                    {nombres_concatenados && (
+                        <>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    label="Nombre Titular"
+                                    value={nombres_concatenados}
+                                    disabled
+                                    style={{ width: '95%' }}
+                                />
+                            </Grid>
+
+
+                            <Grid item xs={12} sm={5}>
+                                <TextField
+                                    label='Apeliido Cliente'
+                                    name="apellido_cliente"
+                                    value={apellidos_concatenados}
+                                    size="small"
+                                    style={{ width: '95%' }}
+                                    disabled
+                                    fullWidth
+                                />
+                            </Grid>
+                        </>
+                    )}
+
+                    <Grid item xs={1} >
+
+                        <BuscadorPerzonasStiven onResultt={handleResult} />
+                    </Grid>
+                </Grid>
+
+
+
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        label='Email'
+                        name="Email"
+                        value={form.Email}
+                        style={{ width: '95%', marginTop: 15 }}
+                        size="small"
+                        fullWidth
+                        onChange={handleSelectChangeBasico}
+                    />
+                </Grid>
+
+
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        label='Telefono Cliente'
+                        name="telefono_cliente"
+                        value={form.telefono_cliente}
+                        size="small"
+                        style={{ width: '95%', marginTop: 15 }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        fullWidth
+                        onChange={handleSelectChangeBasico}
+                    />
+                </Grid>
+            </Grid>
+
+
+            <Grid container alignItems="center" justifyContent="center">
                 <button
                     style={button_style}
-                    onClick={openModal}
+                    onClick={iniciarpago}
                 >
                     <img style={{ width: 65 }} src="../image/botones/Boton_pse.webp" alt="PSE Button" />
                 </button>
-            </div>
-
-            <Grid container spacing={2}>
-
-
-                <Grid item xs={12}>
-                    <Dialog open={isModalOpen} fullWidth maxWidth="md">
-                        <Grid
-                            container
-                            sx={{
-                                position: 'relative',
-                                background: '#FAFAFA',
-                                borderRadius: '15px',
-                                p: '20px',
-                                mb: '20px',
-                                boxShadow: '0px 3px 6px #042F4A26',
-                            }}
-                        >
-                            <Grid item xs={12}>
-                                <Title title="Tipo Pago" />
-                            </Grid>
-
-
-                            <Grid container alignItems="center" justifyContent="center">
-
-                                <Grid item xs={6} style={{ marginTop: 15 }}>
-
-                                    <FormControl size="small" fullWidth>
-                                        <InputLabel>Tipo Pago</InputLabel>
-                                        <Select
-                                            label='Expediente'
-                                            name="id_expediente"
-                                            value={form_tipo.id_expediente}
-                                            onChange={handleSelectChange}
-                                            variant="standard"
-                                            MenuProps={{
-                                                PaperProps: {
-                                                    style: {
-                                                        maxHeight: 48 * 4.5, // Ajusta la altura máxima del menú desplegable
-                                                        width: 100, // Ajusta el ancho del menú desplegable
-                                                    },
-                                                },
-                                            }}
-                                        >
-                                            {dataChoise.map((option, index) => (
-                                                <MenuItem key={option[0]} value={option[0]} style={{ minWidth: 120 }}>
-                                                    {option[1]}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        <FormHelperText>Seleccione el Pago</FormHelperText>
-                                    </FormControl>
-                                </Grid>
-
-                            </Grid>
-
-
-                            <Grid container justifyContent="center">
-
-                                <Grid container justifyContent="center" style={{ marginTop: 15 }}>
-
-
-                                    {nombres_concatenados && (
-                                        <>
-                                            <Grid item xs={12} sm={5}>
-                                                <TextField
-                                                    variant="outlined"
-                                                    size="small"
-                                                    fullWidth
-                                                    label="Nombre Titular"
-                                                    value={nombres_concatenados}
-                                                    disabled
-                                                    style={{ width: '95%' }}
-                                                />
-                                            </Grid>
-
-
-                                            <Grid item xs={12} sm={5}>
-                                                <TextField
-                                                    label='Apeliido Cliente'
-                                                    name="apellido_cliente"
-                                                    value={apellidos_concatenados}
-                                                    size="small"
-                                                    style={{ width: '95%' }}
-                                                    disabled
-                                                    fullWidth
-                                                />
-                                            </Grid>
-                                        </>
-                                    )}
-
-                                    <Grid item xs={1} >
-
-                                        <BuscadorPerzonasStiven onResultt={handleResult} />
-                                    </Grid>
-                                </Grid>
-
-
-
-
-                                <Grid item xs={12} sm={4}>
-                                    <TextField
-                                        label='Email'
-                                        name="Email"
-                                        value={form.Email}
-                                        style={{ width: '95%', marginTop: 15 }}
-                                        size="small"
-                                        fullWidth
-                                        onChange={handleSelectChangeBasico}
-                                    />
-                                </Grid>
-
-
-
-                                <Grid item xs={12} sm={4}>
-                                    <TextField
-                                        label='Telefono Cliente'
-                                        name="telefono_cliente"
-                                        value={form.telefono_cliente}
-                                        size="small"
-                                        style={{ width: '95%', marginTop: 15 }}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        fullWidth
-                                        onChange={handleSelectChangeBasico}
-                                    />
-                                </Grid>
-                            </Grid>
-
-
-                            <Grid container alignItems="center" justifyContent="center">
-                                <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-                                    <Button
-                                        startIcon={<PaymentIcon />}
-                                        fullWidth
-                                        style={{ width: "90%", marginTop: 15, marginLeft: 8, backgroundColor: "green ", color: "white" }}
-                                        variant="contained"
-                                        color="error"
-                                        onClick={iniciarpago}
-                                    >
-                                        Iniciar Pago
-                                    </Button>
-                                </Grid>
-
-
-                                <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-                                    <Button
-                                        fullWidth
-                                        startIcon={<ClearIcon />}
-                                        style={{ width: "90%", marginTop: 15, backgroundColor: "red", color: "white" }}
-                                        variant="contained"
-                                        color="error"
-                                        onClick={closeModal}
-                                    >
-                                        Salir
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Dialog >
-                </Grid>
             </Grid>
         </>
     );

@@ -51,7 +51,7 @@ export const BotonesFinales = () => {
 
      
 
-      <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+      <Grid item xs={12} sm={4}>
         <Button
           startIcon={<DescriptionOutlinedIcon />}
           fullWidth
@@ -64,7 +64,7 @@ export const BotonesFinales = () => {
 
           }}
         >
-          documento
+          Generar documento
         </Button>
       </Grid>
 
