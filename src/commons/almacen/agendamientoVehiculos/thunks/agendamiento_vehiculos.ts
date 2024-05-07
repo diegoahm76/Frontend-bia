@@ -127,3 +127,14 @@ export const listar_municipios: any = () => {
     }
   };
 };
+
+export const get_resumen_solicitud: any = (id_solicitud_viaje : string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/vehiculos/obtener-informacion-viajes/${id_solicitud_viaje}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
