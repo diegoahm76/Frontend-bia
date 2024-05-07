@@ -13,6 +13,7 @@ import { Title } from '../../../../components';
 import ResumenDespacho from './ResumenDespacho';
 import { useAppDispatch } from '../../../../hooks';
 import TablaArticulosSolicitados from '../tables/TablaArticulosSolicitados';
+import PrintResumenPDF from '../../autorizarDespachos/components/PrintResumenPDF';
 
 
 interface props {
@@ -32,7 +33,8 @@ const ResumenSolicitud: React.FC<props> = ({
 
   return (
     <>
-      <Grid item xs={12}>
+
+      <Grid item xs={12} lg={11}>
         <Grid item xs={12} lg={3}>
           <FormLabel htmlFor="solicitud_prestamo">
             ¿Es solicitud de préstamo?
@@ -45,6 +47,10 @@ const ResumenSolicitud: React.FC<props> = ({
         </Grid>
       </Grid>
 
+      <Grid item xs={12} lg={1}>
+        <PrintResumenPDF />
+      </Grid>
+      
       <Grid item xs={12} lg={3}>
         <TextField
           fullWidth
@@ -99,9 +105,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
-            <Chip label="FUNCIONARIO QUIEN SOLICITÓ" size="small" />
-          </Divider>
+          <Title title='Funcionario quien solicitó' />
         </Grid>
 
         <Grid item xs={12} lg={3}>
@@ -157,9 +161,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
-            <Chip label="FUNCIONARIO RESPONSABLE" size="small" />
-          </Divider>
+          <Title title='Funcionario responsable' />
         </Grid>
 
         <Grid item xs={12} lg={3}>
@@ -242,9 +244,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
-            <Chip label="FUNCIONARIO OPERARIO" size="small" />
-          </Divider>
+          <Title title='Funcionario operario' />
         </Grid>
 
 
@@ -302,9 +302,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
-            <Chip label="FUNCIONARIO QUE CIERRA POR NO DISPONIBILIDAD EN ALMACÉN" size="small" />
-          </Divider>
+          <Title title='Funcionario que cierra por no disponibilidad en almacén' />
         </Grid>
 
         <Grid item xs={12} lg={3}>
@@ -386,9 +384,7 @@ const ResumenSolicitud: React.FC<props> = ({
 
       <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
-            <Chip label="FUNCIONARIO DE ALMACÉN QUE RECHAZA LA SOLICITUD" size="small" />
-          </Divider>
+          <Title title='Funcionario de almacén que rechaza la solicitud' />
         </Grid>
 
         <Grid item xs={12} lg={3}>

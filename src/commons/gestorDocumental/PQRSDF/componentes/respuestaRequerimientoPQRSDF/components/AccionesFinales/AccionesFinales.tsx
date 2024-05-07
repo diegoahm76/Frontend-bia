@@ -8,12 +8,9 @@ import { control_warning } from '../../../../../../almacen/configuracion/store/t
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 import { resetItems } from '../../../../../TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 import { AccionesFinalModulo } from '../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
+import { postRequerimientoUsuario } from '../../services/postRequerimiento.service';
 
-
-
-export const AccionesFinales = ({
-  resetFormulario,
-}: any): JSX.Element => {
+export const AccionesFinales = ({ resetFormulario }: any): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
@@ -26,12 +23,24 @@ export const AccionesFinales = ({
   const { anexosCreados } = useAppSelector(
     (state) => state.ResRequerimientoOpaSlice
   );
-  const { currentPersonaRespuestaUsuario } =
-    useAppSelector((state: any) => state.ResRequerimientoOpaSlice);
+  const { currentPersonaRespuestaUsuario } = useAppSelector(
+    (state: any) => state.ResRequerimientoOpaSlice
+  );
+
+  const {representacion_legal} = useAppSelector((state: any) => state.auth);
 
   //* handleSumbit
 
   const sendDataByFormData = () => {
+    console.log('estos son los anexos creados', anexosCreados);
+    console.log({
+      asunto: anexosCreados[0]?.asunto,
+      descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
+      id_solicitud_usu_PQR: +currentPersonaRespuestaUsuario?.id_solicitud_al_usuario_sobre_pqrsdf,
+      medio_de_solicitud: anexosCreados[0]?.medio_de_solicitud?.value,
+      representacion_legal: representacion_legal?.cod_relacion_con_el_titular,
+    });
+
     const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
       if (a.ruta_soporte && !b.ruta_soporte) {
         return -1;
@@ -42,7 +51,9 @@ export const AccionesFinales = ({
       return 0;
     });
     if (!Array.isArray(anexosCreados) || anexosCreados.length === 0) {
-      control_warning('No se ha creado ningún anexo, o hay un error en la creación de los anexos');
+      control_warning(
+        'No se ha creado ningún anexo, o hay un error en la creación de los anexos'
+      );
       return;
     }
 
@@ -65,16 +76,30 @@ export const AccionesFinales = ({
 
     const formData = new FormData();
 
+    /*    {"asunto":"Requerimiento inicial","descripcion":"solicitud de documento",
+"id_medio_solicitud_comple":115,
+"cod_relacion_titular":"MP",
+"id_solicitud_usu_PQR":127
+}*/
+
+/*{"asunto":"Requerimiento inicial",
+"descripcion":"solicitud de documento",
+"id_medio_solicitud_comple":115,
+"cod_relacion_titular":"MP",
+"id_solicitud_usu_PQR":127
+}*/
+
     formData.append(
-      'solicitud_usu_PQRSDF',
+      'ComplementosUsu_PQR',
       JSON.stringify({
         asunto: anexosCreados[0]?.asunto,
         descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-        id_requerimiento:
-          +currentPersonaRespuestaUsuario?.id_requerimiento,
+        id_solicitud_usu_PQR: +currentPersonaRespuestaUsuario?.id_solicitud_al_usuario_sobre_pqrsdf,
+        id_medio_solicitud_comple: anexosCreados[0]?.medio_de_solicitud?.value,
+        cod_relacion_titular: representacion_legal?.cod_relacion_con_el_titular
       })
     );
-  /*  formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);*/
+    /*  formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);*/
 
     sortedAnexos.forEach((anexo: any, index: number) => {
       formData.append('archivo', anexo.ruta_soporte);
@@ -92,7 +117,7 @@ export const AccionesFinales = ({
             nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
             descripcion: anexo?.descripcionMetadatos,
             asunto: anexo?.asuntoMetadatos,
-            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
+            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value.toUpperCase(),
             nro_folios_documento: +anexo?.numero_folios
               ? +anexo?.numero_folios
               : 0,
@@ -108,11 +133,11 @@ export const AccionesFinales = ({
       );
     });
 
-    /*postRequerimientoUsuario(formData, setLoadingButton)
+    postRequerimientoUsuario(formData, setLoadingButton)
       .then(() => {
         handleReset();
         resetFormulario({});
-        setInfoReset({});
+        //setInfoReset({});
         dispatch(resetItems());
 
         Swal.fire({
@@ -124,7 +149,7 @@ export const AccionesFinales = ({
       })
       .catch((error) => {
         console.error('Error in postRequerimientoUsuario:', error);
-      });*/
+      });
   };
 
   const handleSubmit = async () => {
@@ -173,7 +198,7 @@ export const AccionesFinales = ({
       loadingButton={LoadingButton}
       handleSubmit={handleSubmit}
       reset_states={reset}
-      textGuardar='RADICAR RESPUESTA REQUERIMIENTO'
+      textGuardar="RADICAR RESPUESTA REQUERIMIENTO"
     />
   );
 };

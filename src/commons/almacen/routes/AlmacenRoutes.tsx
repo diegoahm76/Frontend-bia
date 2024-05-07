@@ -33,6 +33,7 @@ import ReasingnacionResponsable from '../reasignacion_responsable/screens/Reasig
 import AutorizarDespachos from '../autorizarDespachos/screens/AutorizarDespachos';
 import DespachosAutorizados from '../despachosAutorizados/screens/DespachosAutorizados';
 import AutorizarSolicitudViajes from '../autorizar_solicitud_viajes/screens/AutorizarSolicitudViajes';
+import GeneradorCodigoBarras from '../generador_codigo_barras/screens/GeneradorCodigoBarras';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -159,6 +160,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="despachos_autorizados/*"
         element={<DespachosAutorizados />}
+      />
+      <Route
+        path="generador_codigo_barras/*"
+        element={<GeneradorCodigoBarras />}
       />
       <Route
         path="otras_entregas/*"

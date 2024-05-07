@@ -29,6 +29,7 @@ import type {
   IIndicadorPgar,
 } from '../../types/types';
 import { IPlan } from '../../Consultas/types/types';
+import { ITramite } from '../../../recursoHidrico/SeguimientoAccionesCorrectivas/interfaces/types';
 
 export const initial_state_planes: IPlanes = {
   id_plan: null,
@@ -54,7 +55,7 @@ export const initial_state_eje_estrategico: IEjeEstrategico = {
   nombre: '',
   id_plan: null,
   id_programa: null,
-  id_tipo_eje: null,
+  id_tipo_eje: '',
 };
 
 export const initial_state_objetivo_plan: IObjetivo = {
@@ -129,7 +130,7 @@ export const initial_state_actividad_pgar: IActividadPgar = {
 }
 
 export const initial_state_indicador_pegar: IIndicadorPgar = {
-  id_indicador: null,
+  id_indicador: "",
   numero_indicador: '',
   nombre_indicador: '',
   nombre_linea_base: '',
@@ -140,14 +141,14 @@ export const initial_state_indicador_pegar: IIndicadorPgar = {
   nombre_plan: '',
   nombre_eje_estrategico: '',
   nombre_meta: '',
-  id_medicion: null,
-  id_actividad: null,
-  id_plan: null,
-  id_linea_base: null,
-  id_meta_eje: null,
-  id_eje_estrategico: null,
-  id_objetivo: null,
-  id_unidad_organizacional: null,
+  id_medicion: "",
+  id_actividad: "",
+  id_plan: "",
+  id_linea_base: "",
+  id_meta_eje: "",
+  id_eje_estrategico: "",
+  id_objetivo: "",
+  id_unidad_organizacional: "",
   fecha_creacion: '',
   cumplio: false,
 }
@@ -192,6 +193,51 @@ export const initial_state_seguimiento_pgar: any = {
   id_objetivo: null,
   fecha_creacion: '',
   cumplio: false,
+}
+
+export const initial_state_accion_correctiva: any = {
+  id_accion_correctiva: '',
+  nombre_accion: '',
+  descripcion: '',
+  observaciones: '',
+  fecha_creacion: '',
+  fecha_cumplimiento: '',
+  cumplio: false,
+}
+
+export const initial_state_tramite: ITramite = {
+  id_solicitud_tramite: '',
+  numero_documento: '',
+  radicado: '',
+  nombre_solicitante: '',
+  cod_relacion_con_el_titular: '',
+  cod_tipo_operacion_tramite: '',
+  costo_proyecto: '',
+  pago: false,
+  id_pago_evaluacion: '',
+  fecha_registro: '',
+  fecha_envio_solicitud: '',
+  fecha_finalizada_solicitud: '',
+  cantidad_predios: '',
+  solicitud_enviada: false,
+  fecha_radicado: '',
+  fecha_expediente: '',
+  fecha_inicio: '',
+  requiere_digitalizacion: false,
+  fecha_envio_definitivo_a_digitalizacion: '',
+  fecha_digitalizacion_completada: '',
+  fecha_rta_final_gestion: '',
+  fecha_ini_estado_actual: '',
+  id_persona_titular: '',
+  id_persona_interpone: '',
+  id_medio_solicitud: '',
+  id_persona_registra:  '',
+  id_sucursal_recepcion_fisica: '',
+  id_radicado: '',
+  id_expediente: '',
+  id_auto_inicio: '',
+  id_persona_rta_final_gestion: '',
+  id_estado_actual_solicitud: '',
 }
 
 export const initial_state_proyecto: IProyectos = {
@@ -586,6 +632,8 @@ export const initial_state: IPlanesIndex = {
   indicador_pgar: initial_state_indicador_pegar,
   armonizacion_pgar: initial_state_armonizacion_pgar,
   seguimiento_pgar: initial_state_seguimiento_pgar,
+  accion_correctiva: initial_state_accion_correctiva,
+  tramite: initial_state_tramite,
   proyecto: initial_state_proyecto,
   producto: initial_state_productos,
   actividad: initial_state_actividades,
@@ -678,6 +726,18 @@ export const planes_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.seguimiento_pgar = action.payload;
+    },
+    set_current_tramite: (
+      state: IPlanesIndex,
+      action: PayloadAction<any>
+    ) => {
+      state.tramite = action.payload;
+    },
+    set_current_accion_correctiva : (
+      state: IPlanesIndex,
+      action: PayloadAction<any>
+    ) => {
+      state.accion_correctiva = action.payload;
     },
     set_current_proyecto: (
       state: IPlanesIndex,
@@ -803,6 +863,8 @@ export const {
   set_current_indicador_pgar,
   set_current_armonizacion_pgar,
   set_current_seguimiento_pgar,
+  set_current_accion_correctiva,
+  set_current_tramite,
   set_current_proyecto,
   set_current_producto,
   set_current_actividad,

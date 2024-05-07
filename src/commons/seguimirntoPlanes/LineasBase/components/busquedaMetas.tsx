@@ -172,7 +172,6 @@ export const BusquedaMetasPgar: React.FC = () => {
       set_is_search(true);
       try {
         set_rows([]);
-        console.log(nombre_eje_estrategico, nombre_meta_eje)
         const {
           data: { data },
         } = await search_meta({

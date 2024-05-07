@@ -57,6 +57,7 @@ import { ModalAndLoadingProvider } from '../../../context/GeneralContext';
 import { PanelVentanillaProvider } from '../integracionVital/context/PanelVentanillaContext';
 import { RouteArchibo } from '../ArchivadosOtros/routes/RouteArchibo';
 import { LiquidacionRutesPago } from '../Liquidacion_dos/routes/LiquidacionRutes';
+import { Facturacion } from '../../recaudo/screens/Facturacion';
 
 const routes = [
   {
@@ -164,6 +165,12 @@ const routes = [
     name: 'encuesta_asignacion',
     component: () => <EncuestaRoutes />,
   },
+  {
+    path: 'documentos/',
+    name: 'documentos',
+    component: () => <Facturacion />,
+  },
+  
 
   {
     path: 'Interno_encuesta/',

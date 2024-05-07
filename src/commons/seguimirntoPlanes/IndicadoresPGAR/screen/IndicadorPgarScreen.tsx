@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { set_current_mode_planes } from "../../store/slice/indexPlanes";
 import { Grid } from "@mui/material";
@@ -11,10 +11,12 @@ import { AgregarIndicadorPgar } from "../components/AgregarIndicadorPgar";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const IndicadorPgarScreen: React.FC = () => {
     const { mode } = useAppSelector((state) => state.planes);
+    const [evaluate, set_evaluate] = useState(false);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
+      set_evaluate(true);
       dispatch(
         set_current_mode_planes({
           ver: false,
@@ -47,8 +49,8 @@ export const IndicadorPgarScreen: React.FC = () => {
         </Grid>
 
         <BusquedaActividadesPgar />
-        {mode.ver ? <ListarIndicadoresPgar /> : null}
-        {mode.crear || mode.editar ? <AgregarIndicadorPgar /> : null}
+        {evaluate && mode.ver ? <ListarIndicadoresPgar /> : null}
+        {evaluate && (mode.crear || mode.editar) ? <AgregarIndicadorPgar /> : null}
         <Grid
           container
           spacing={2}

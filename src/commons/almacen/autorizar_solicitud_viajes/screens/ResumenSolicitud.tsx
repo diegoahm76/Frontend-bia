@@ -4,7 +4,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { interface_inputs_resumen_solicitud } from '../interfaces/types';
 import { parseHora } from '../thunks/autorizar_solicitud_viajes';
-import TitleDivider from '../../despacho_activos/components/TitleDivider';
 import TablaPersonasViajan from '../tables/TablaPersonasViajan';
 import { Title } from '../../../../components';
 import dayjs from 'dayjs';
@@ -25,7 +24,9 @@ const ResumenSolicitud: FC<props> = ({
   return (
     <>
 
-      <TitleDivider title="INFORMACION GENERAL" />
+      <Grid item mt={3} xs={12}>
+        <Title title='Información general' />
+      </Grid>
 
       <Grid item xs={12} lg={3}>
         <TextField
@@ -302,7 +303,9 @@ const ResumenSolicitud: FC<props> = ({
         </Grid>
       }
 
-      <TitleDivider title="AGENDAMIENTO - VEHÍCULO - CONDUCTOR" />
+      <Grid item mt={3} xs={12}>
+        <Title title='Agendamiento - vehículo - conductor' />
+      </Grid>
 
       <Grid item xs={12} lg={4}>
         <TextField

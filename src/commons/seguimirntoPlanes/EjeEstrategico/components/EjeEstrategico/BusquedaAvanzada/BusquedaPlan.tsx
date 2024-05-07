@@ -120,6 +120,7 @@ export const BusquedaPlan: React.FC = () => {
             size="small"
             onClick={() => {
               set_id_plan(params.row.id_plan);
+              set_id_objetivo(null)
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -195,7 +196,6 @@ export const BusquedaPlan: React.FC = () => {
 
   const on_submit_advance = handle_submit(
     async ({ nombre_plan, sigla_plan }) => {
-      set_id_objetivo(null);
       set_is_search(true);
       try {
         set_rows([]);
@@ -228,6 +228,7 @@ export const BusquedaPlan: React.FC = () => {
 
   useEffect(() => {
     if(id_objetivo){
+      console.log('hola')
       clean_form_advance_search();
       set_is_search(false);
     }
