@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useState, useEffect, SyntheticEvent } from 'react';
-import { Box, Grid, Tab } from "@mui/material";
+import { Box, Button, Chip, Grid, Tab } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { GenerarLiquidacion } from '../components/GenerarLiquidacion/GenerarLiquidacion';
 import { Title } from '../../../../components/Title';
 import { api } from '../../../../api/axios';
 import { BotonesFinales } from '../components/BotonesFinales/BotonesFinales';
+import { LetraFormatoHumano } from '../utils/LetraFormatoHumano';
+import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
+import { useNavigate } from 'react-router-dom';
 
 export interface Deudor {
     id_pago: string;
@@ -44,7 +47,7 @@ export const BuscarPagosIniciados: React.FC = () => {
             minWidth: 150,
             flex: 1,
             valueGetter: (params) => {
-                return params.row.id_liquidacion ? params.row.id_liquidacion.fecha_liquidacion : '';
+                return params.row.id_liquidacion ? LetraFormatoHumano(params.row.id_liquidacion.fecha_liquidacion) : '';
             },
         },
         {
@@ -53,7 +56,7 @@ export const BuscarPagosIniciados: React.FC = () => {
             minWidth: 150,
             flex: 1,
             valueGetter: (params) => {
-                return params.row.id_liquidacion ? params.row.id_liquidacion.vencimiento : '';
+                return params.row.id_liquidacion ? LetraFormatoHumano(params.row.id_liquidacion.vencimiento) : '';
             },
         },
         {
@@ -83,15 +86,15 @@ export const BuscarPagosIniciados: React.FC = () => {
                 return params.row.id_liquidacion ? params.row.id_liquidacion.valor : '';
             },
         },
-        {
-            field: 'estado',
-            headerName: 'Estado',
-            minWidth: 150,
-            flex: 1,
-            valueGetter: (params) => {
-                return params.row.id_liquidacion ? params.row.id_liquidacion.estado : '';
-            },
-        },
+        // {
+        //     field: 'estado',
+        //     headerName: 'Estado',
+        //     minWidth: 150,
+        //     flex: 1,
+        //     valueGetter: (params) => {
+        //         return params.row.id_liquidacion ? params.row.id_liquidacion.estado : '';
+        //     },
+        // },
 
         {
             field: 'desc_estado_pago',
@@ -104,12 +107,18 @@ export const BuscarPagosIniciados: React.FC = () => {
             headerName: 'Fecha Inicio Pago',
             minWidth: 150,
             flex: 1,
+            valueFormatter: (params) => {
+                return LetraFormatoHumano(params.value);
+            },
         },
         {
             field: 'fecha_pago',
             headerName: 'Fecha Pago',
             minWidth: 150,
             flex: 1,
+            valueFormatter: (params) => {
+                return LetraFormatoHumano(params.value);
+            },
         },
         {
             field: 'estado_pago',
@@ -122,7 +131,52 @@ export const BuscarPagosIniciados: React.FC = () => {
             headerName: 'Notificación',
             minWidth: 150,
             flex: 1,
+            renderCell: (params) => {
+                const isNotificado = params.value;
+                return (
+                    <Chip
+                        label={isNotificado ? 'Notificado' : 'No Notificado'}
+                        color={isNotificado ? 'primary' : 'secondary'}
+                        variant="outlined"
+                    />
+                );
+            },
+        },
+        // {
+        //     field: 'comprobante_pago',
+        //     headerName: 'Comprobante Pago',
+        //     minWidth: 150,
+        //     flex: 1,
+        //     valueGetter: (params) => {
+        //         return params.row.comprobante_pago_url ? params.row.comprobante_pago_url : '';
+        //     },
+        // },
+        {
+            field: 'comprobante_pago',
+            headerName: 'Comprobante Pago',
+            minWidth: 150,
+            flex: 1,
+            renderCell: (params) => {
+                const rutaArchivo = '/media/home/BIA/Recaudo/GDEA/Pagos/b8b2ee887853e28739d1.pdf'; // Ruta del archivo PDF
+                const urlCompleta = api + rutaArchivo; // Concatena la URL base de la API con la ruta del archivo PDF
+        
+                return (
+                    <Button
+                        fullWidth
+                        style={{ width: "90%", marginTop: 15, backgroundColor: "green", color: "white" }}
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                            window.location.href = urlCompleta;
+                        }}
+                    >
+                        Documento
+                    </Button>
+                );
+            },
         }
+        
+
     ];
 
 
@@ -159,7 +213,7 @@ export const BuscarPagosIniciados: React.FC = () => {
                 <Grid item xs={12}>
                     <Title title="Pagos Iniciados"></Title>
                 </Grid>
-                <Grid item xs={12} style={{marginTop:15}}>
+                <Grid item xs={12} style={{ marginTop: 15 }}>
 
                     <DataGrid
                         density='compact'

@@ -261,7 +261,7 @@ export const ConsultarWorkFlow = () => {
                     />
                 </Grid>
 
-                <Grid item xs={9} style={{ marginTop: 25 }}  >
+                <Grid item xs={9} style={{ marginTop: 0 }}  >
 
                     <BuscadorPersona
                         onResult={(data) => {
