@@ -1,39 +1,39 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { useContext, useEffect, useState} from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PreciosContext } from "../../context/PersonalContext";
 import { DataGrid, GridCellParams } from "@mui/x-data-grid";
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from "../../../../../components/Title";
 import { api } from "../../../../../api/axios";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TipologiaDocumental } from "../../interfaces/InterfacesLiquidacion";
+import { OpcionLiquidacion, TipologiaDocumental } from "../../interfaces/InterfacesLiquidacion";
 import CalculateIcon from '@mui/icons-material/Calculate';
+import { InputAdornment } from "@mui/material";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { formatNumber } from "../../utils/NumerosPuntosMiles";
 
-export interface OpcionLiquidacion {
-  id: number;
-  nombre: string;
-  estado: number;
-  version: number;
-  funcion: string;
-  variables: {
-    [key: string]: string;
-  };
-  bloques: string;
-}
+
 
 export const DetalleLiquidacion = () => {
 
-  const { precios, setPrecios } = useContext(PreciosContext);
+  const { precios, setPrecios ,logs} = useContext(PreciosContext);
   const [descripcion, setDescripcion] = useState('');
   const [valor, setValor] = useState('');
   const [data_choise, set_data_choise] = useState<TipologiaDocumental[]>([]);
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
-  // const [resultado, setResultado] = useState(null);
   const [variableValues, setVariableValues] = useState<{ [key: string]: string }>({});
   const [valor_total, set_valor_total] = useState();
 
+  
+  const sumaValores = precios.reduce((total, item) => {
+    // Convierte el valor a número antes de sumarlo
+    const valorNumerico = parseInt(item.resultado || "0");
+    return total + valorNumerico;
+}, 0);
+
+  const total_actual =parseInt(logs.total_valor_veiculos)+sumaValores||"0";
 
 
   const fetch_datos_choises = async (): Promise<void> => {
@@ -100,20 +100,21 @@ export const DetalleLiquidacion = () => {
 
 
 
+
   const columns = [
     // { field: 'id', headerName: 'ID', flex: 1 },
     { field: 'descripcion', headerName: 'Funcionario', flex: 1 },
-    { field: 'valor', headerName: 'Valor', flex: 1 },
+    { field: 'valor', headerName: 'Valor', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) },
     { field: 'nivel', headerName: 'Nivel', flex: 1 },
-    { field: 'valorfuncionario_mes', headerName: 'Valor Funcionario', flex: 1 },
-    { field: 'viaticos', headerName: 'Viáticos', flex: 1 },
+    { field: 'valorfuncionario_mes', headerName: 'Valor Funcionario', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) },
+    { field: 'viaticos', headerName: 'Viáticos', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) },
     { field: 'dias', headerName: 'Días', flex: 1 },
-    { field: 'resultado', headerName: 'Resultado', flex: 1 }, // Nueva columna para el resultado
+    { field: 'resultado', headerName: 'Resultado', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) }, // Aplicar la función de formato
     {
       field: 'Acciones',
       headerName: 'Acciones',
       flex: 1,
-      renderCell: (params: GridCellParams) => (
+      renderCell: (params:any) => (
         <IconButton color="error" onClick={() => handleRemovePrice(params.row.id - 1)}>
           <DeleteIcon />
         </IconButton>
@@ -186,7 +187,6 @@ export const DetalleLiquidacion = () => {
         set_opciones_liquidacion(response.data.data);
       })
       .catch((error) => {
-        //  console.log('')(error);
       });
   }, []);
 
@@ -196,14 +196,12 @@ export const DetalleLiquidacion = () => {
     set_valor_total(resultadoo)
   }
 
-
-
   useEffect(() => {
     setVariableValues(prevState => ({
       ...prevState,
       valorfuncionario: valor // Establecer el valor fijo
     }));
-  }, [valor_total]); // Se ejecutará solo una vez después de la inicialización del componente
+  }, [valor]); // Se ejecutará solo una vez después de la inicialización del componente
 
 
   useEffect(() => {
@@ -321,16 +319,11 @@ export const DetalleLiquidacion = () => {
                 </Select>
               </FormControl>
             </Grid>
-
-
-
-          
           </Grid>
 
 
 
           <Grid container alignItems="center" justifyContent="center">
-
             <Grid item xs={4}>
               <Button
                 onClick={Enviar_Valor}
@@ -353,7 +346,15 @@ export const DetalleLiquidacion = () => {
                 fullWidth
                 size="small"
                 value={valor_total || ''}
-                disabled />
+                disabled
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AttachMoneyIcon />
+                    </InputAdornment>
+                  )
+                }}
+              />
             </Grid>
 
 
@@ -379,6 +380,31 @@ export const DetalleLiquidacion = () => {
 
           </div>
         </Grid>
+
+
+
+        <Grid item xs={12} sm={3}>
+          <TextField
+            label="Pre Total"
+            style={{ marginTop: 15 }}
+            name="valor"
+            type="text" // Cambiado de 'number' a 'text'
+            size="medium"
+            disabled
+            fullWidth
+            value={total_actual ? formatNumber(total_actual) : ""}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AttachMoneyIcon />
+                </InputAdornment>
+              )
+            }}
+          />
+        </Grid>
+
+
+
       </Grid>
 
 
