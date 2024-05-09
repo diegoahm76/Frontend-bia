@@ -9,6 +9,7 @@ import { ElementoPQRS } from '../../interfaces/InterfacesLiquidacion';
 import { NumerosLetras } from '../../utils/NumerosLetras';
 import 'leaflet/dist/leaflet.css';
 import { api } from '../../../../../api/axios';
+import { formatNumber } from '../../utils/NumerosPuntosMiles';
 
 interface props_data {
     data: ElementoPQRS
@@ -25,7 +26,7 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
         return total + valorNumerico;
     }, 0);
 
- 
+
 
     const NombreTitular = data.nombre_completo_titular;
     const fechaActual = new Date();
@@ -38,10 +39,16 @@ export const LiquidacionPlantilla = ({ data }: props_data) => {
     let TipoCobro = "COBRO POR VISITAS DE EVALUACION";
     const radicado = data.radicado;
     const fechaRadicado = new Date(data.fecha_radicado).toLocaleDateString();
-    const ValorCapital = sumaValores + parseInt(logs.total_valor_veiculos);
-    const interes = ValorCapital * 0.25; // 25% expresado como decimal (0.25)
-    const ValorTotal = ValorCapital + interes;
-    const ValorTotalEscrito = NumerosLetras(ValorTotal);
+    const ValorCapital = formatNumber(sumaValores + parseInt(logs.total_valor_veiculos));
+    const ValorCapital_n = sumaValores + parseInt(logs.total_valor_veiculos);
+
+    const interes = formatNumber(ValorCapital_n * 0.25); 
+    const interes_n = ValorCapital_n * 0.25; 
+
+    const ValorTotal = formatNumber(ValorCapital_n + interes_n);
+    const ValorTotal_n = ValorCapital_n + interes_n;
+
+    const ValorTotalEscrito = NumerosLetras(ValorTotal_n);
     const ValorTotalEscritoEnMayusculas = ValorTotalEscrito;
 
 
