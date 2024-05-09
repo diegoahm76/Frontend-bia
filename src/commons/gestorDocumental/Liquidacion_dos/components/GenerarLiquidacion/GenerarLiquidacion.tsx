@@ -21,7 +21,7 @@ export const GenerarLiquidacion = () => {
   const [datosConsulta, setDatosConsulta] = useState<DatosConsulta>(DatosConsulta);
   const { userinfo: { id_persona, email, telefono_celular, numero_documento } } = useSelector((state: AuthSlice) => state.auth);
   const [data_liquidacion, set_data_liquidacion] = useState<ElementoPQRS | null>(null);
-  const { usuario, setUsuario, logs, setLogs } = useContext(PreciosContext);
+  const { usuario, setUsuario, logs, setLogs ,setLiquidacionState,liquidacionState} = useContext(PreciosContext);
   const [valores_porcentaje, set_valores_porcentaje] = useState<Registro[]>([])
   const fechaActual = new Date().toLocaleDateString(); // Obtiene la fecha actual en formato de cadena de texto
   const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
@@ -55,6 +55,11 @@ export const GenerarLiquidacion = () => {
         email: data_consulta.Correo,
         nombreCategoria: data_consulta.subject,
         direccion: data_consulta.Direccion
+      });
+
+      setLiquidacionState({
+        ...liquidacionState,
+        id_solicitud_tramite:""
       });
     } catch (error) {
       console.error(error);
