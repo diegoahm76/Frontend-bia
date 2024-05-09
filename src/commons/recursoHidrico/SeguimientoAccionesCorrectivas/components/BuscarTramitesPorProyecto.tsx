@@ -144,7 +144,6 @@ export const BusquedaTramitesProyectos: React.FC = () => {
   const clean_form_advance_search = (): void => {
     set_nombre_proyecto('');
     set_page(1);
-    set_rows([]);
   }
 
   const handle_close = (): void => {

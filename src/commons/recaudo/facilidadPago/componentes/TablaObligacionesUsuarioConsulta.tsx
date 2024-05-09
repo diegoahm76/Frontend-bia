@@ -466,8 +466,8 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
                     disabled={selectedIds.length === 0}
                     onClick={() => {
                       // navigate('../facilidades_pago/registro');
-                      void handle_submit();
-                      // set_position_tab('2');
+                      // void handle_submit();
+                      set_position_tab('2');
                     }}
                   >
                     Liquidar

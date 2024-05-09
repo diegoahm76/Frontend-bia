@@ -29,6 +29,9 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { IncumplimientoFacilidadPagoDoc } from "./IncumplimientoFacilidadPago";
 import { SeguirAdelanteDoc } from "./SeguirAdelanteDoc";
 import { MandamientoPagoDoc } from "./MandamientoPagoDoc";
+import { FormatoRecursoReposicion } from "./FormatoRecursoReposicion";
+import { FormatoResolverExcepciones } from "./FormatoResolverExcepciones";
+import { LiquidacionCredito } from "./LiquidacionCredito";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -289,7 +292,10 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
 
           <TabPanel value="1" sx={{ p: '20px 0' }}>
             {id_subetapa == '1'
-            ? <MandamientoPagoDoc
+            // ? <MandamientoPagoDoc
+            //     datos={datos}
+            //   />
+            ? <LiquidacionCredito
                 datos={datos}
               />
             : <SeguirAdelanteDoc

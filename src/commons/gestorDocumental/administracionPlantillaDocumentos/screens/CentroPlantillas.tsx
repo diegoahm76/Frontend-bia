@@ -151,7 +151,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
       const res: any = await api.get(url);
       let numero_consulta: any = res.data.data;
       set_data_choise(numero_consulta);
-      // //  console.log('')(numero_consulta); 
+      // //  console.log('')(numero_consulta);
     } catch (error) {
       console.error(error);
     }
@@ -193,6 +193,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
 
     <Grid
       container
+      spacing={2}
       sx={{
         position: 'relative',
         background: '#FAFAFA',
@@ -206,9 +207,9 @@ export const MostrarCentroPlantillas: React.FC = () => {
         <Title title="Descargar Plantillas" />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
-          style={{ width: '90%', marginTop: 20 }}
+          size='small'
           label={`Buscar por Nombre de Plantilla`}
           variant="outlined"
           fullWidth
@@ -217,9 +218,10 @@ export const MostrarCentroPlantillas: React.FC = () => {
             set_nombre_plantilla(e.target.value);
           }}
         />
-
+      </Grid>
+      <Grid item xs={12} md={6}>
         <TextField
-          style={{ width: '90%', marginTop: 7 }}
+          size='small'
           label={`Buscar por Descripccion`}
           variant="outlined"
           fullWidth
@@ -228,9 +230,11 @@ export const MostrarCentroPlantillas: React.FC = () => {
             set_Descripccion(e.target.value);
           }}
         />
+      </Grid>
+      <Grid item xs={12} md={6}>
         <TextField
-          style={{ width: '90%', marginTop: 7 }}
           label={`Buscar por Extension`}
+          size='small'
           variant="outlined"
           fullWidth
           value={Extension}
@@ -238,13 +242,12 @@ export const MostrarCentroPlantillas: React.FC = () => {
             set_Extension(e.target.value);
           }}
         />
-
       </Grid>
-      <Grid item xs={6}>
-        <FormControl fullWidth style={{ marginTop: 20 }}>
-          <InputLabel id="choise-label">Tipologia Documental</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
+      <Grid item xs={12} md={6}>
+        <FormControl fullWidth>
+          <TextField
+            select
+            size='small'
             id="choise-seleccionado-tipologia"
             value={choise_seleccionado_tipologia}
             label="Tipologia Documental"
@@ -255,13 +258,14 @@ export const MostrarCentroPlantillas: React.FC = () => {
                 {item.nombre}
               </MenuItem>
             ))}
-          </Select>
+          </TextField>
         </FormControl>
-
-        <FormControl fullWidth style={{ marginTop: 5 }}>
-          <InputLabel id="choise-label">Disponibilidad</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <FormControl fullWidth>
+          <TextField
+            select
+            size='small'
             value={choise_seleccionado_disponivilidad}
             label="Disponibilidad"
             onChange={(event): any => {
@@ -273,13 +277,11 @@ export const MostrarCentroPlantillas: React.FC = () => {
                 {item.label}
               </MenuItem>
             ))}
-          </Select>
+          </TextField>
         </FormControl>
       </Grid>
-      <Grid container style={{ marginTop: 10 }}>
-
-        <Grid item xs={6}>
-
+      <Grid container style={{ marginTop: 20 }}>
+        <Grid item xs={12} md={6} sx={{display: 'flex', alignItems: 'center'}}>
           <Checkbox
             onChange={(e) => {
               setChecked(e.target.checked);
@@ -291,23 +293,21 @@ export const MostrarCentroPlantillas: React.FC = () => {
           </label>
 
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} md={6} sx={{display: 'flex', justifyContent: 'end', gap: '1rem'}}>
           <Button
             color="primary"
-            fullWidth
+            sx={{ width: '30%' }}
             variant="contained"
             startIcon={<SearchIcon />}
-            style={{ width: '80%' }}
             onClick={() => { set_activaador(!activador) }}
           >
             Buscar
           </Button>
-        </Grid>
-        <Grid item xs={3}>
-          <Button fullWidth variant="outlined"
+          <Button
+            sx={{ width: '30%' }}
+            variant="outlined"
             startIcon={<CleanIcon />}
-
-            style={{ width: '80%' }} onClick={limpiar} >
+            onClick={limpiar} >
             limpiar
           </Button>
         </Grid>

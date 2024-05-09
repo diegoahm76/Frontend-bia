@@ -5,13 +5,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable'
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 import { logo_cormacarena_h } from '../../../conservacion/Reportes/logos/logos';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Grid } from '@mui/material';
 
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const CobroPersuasivo: React.FC<any> = ({
   datos,
@@ -24,24 +25,10 @@ export const CobroPersuasivo: React.FC<any> = ({
 }: {datos: any, is_generate_resolucion: boolean, resolucion_url: any, id_deudor: number, id_subetapa: number, currentDeudor: any, dataClean: any}) => {
 
   const [visor, setVisor] = useState('');
-  const [altura, setAltura] = useState(0);
   const [currentConsecutivo, setCurrentConsecutivo] = useState(0);
   let data: any[] = [];
 
   let sumaTotal: string | number = 0;
-
-  const columns = [
-    { header: 'Acción', dataKey: 'accion' },
-    { header: 'Nombres y apellidos completos', dataKey: 'nombre' },
-    { header: 'Cargo', dataKey: 'cargo' },
-    { header: 'Firma', dataKey: 'firma' }
-  ];
-
-  const data2 = [
-    { accion: 'Proyectó:', nombre: 'DIANA PATRICIA LADINO LADINO', cargo: 'ABOGADA GRUPO RENTAS', firma: '' },
-    { accion: 'Revisó', nombre: 'FERNANDO RUEDA LONDOÑO', cargo: 'COORDINADOR GRUPO RENTAS', firma: '' },
-    { accion: 'Aprobó', nombre: 'FERNANDO RUEDA LONDOÑO', cargo: 'COORDINADOR GRUPO RENTAS', firma: '' } // Ajustar según los datos necesarios
-  ];
 
   useEffect(() => {
     if(datos?.id_deudor && is_generate_resolucion){
@@ -50,7 +37,7 @@ export const CobroPersuasivo: React.FC<any> = ({
         data.push([datos.nombre, datos.monto_inicial, datos.valor_intereses, Number(datos.monto_inicial) + Number(datos.valor_intereses)])
         sumaTotal = (Number(datos.monto_inicial) + Number(datos.valor_intereses)).toLocaleString('es-CO');
       }
-      generarResolucion();
+      generatePDF();
     }
 
     if(currentDeudor?.id_deudor && is_generate_resolucion && dataClean.length && !datos?.id_deudor){
@@ -64,261 +51,189 @@ export const CobroPersuasivo: React.FC<any> = ({
       const total2 = data.reduce((acc, curr) => acc + parseFloat(curr[2].replace(',', '')), 0);
       data.push(['TOTAL', total1.toLocaleString('es-CO'), total2.toLocaleString('es-CO'), (total1 + total2).toLocaleString('es-CO')]);
       sumaTotal = (total1 + total2).toLocaleString('es-CO');
-      generarResolucion();
+      generatePDF();
     }
-  }, [is_generate_resolucion, currentDeudor, dataClean, datos, altura]);
 
+  }, [is_generate_resolucion, currentDeudor, dataClean, datos]);
 
-  const generarResolucion = () => {
-    const doc = new jsPDF();
-    const anchoPagina = doc.internal.pageSize.width;
-    const alturaPagina = doc.internal.pageSize.height;
-    const header = () => {
-      doc.text('    ', anchoPagina / 2, 20, { align: 'center' });
-      doc.setFontSize(12);
-      doc.addImage(logo_cormacarena_h, 160, 10, 40, 10);
-    };
-    const footer = () => {
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(128, 128, 128);
-      const pageSize = doc.internal.pageSize;
-      const pageHeight = pageSize.getHeight();
-      doc.setFontSize(7);
-      doc.text('AUTORIDAD AMBIENTAL EN EL DEPARTAMENTO DEL META - NIT 822000091-2', 10, pageHeight - 20);
-      doc.setFont('times', 'normal');
-      doc.text('Carrera 44C No33B-24 barrio Barzal Villavicencio (Meta) - Colombia', 10, pageHeight - 17);
-      doc.text('PBX 6730420 - 6730417 - 6730418 PQR 6730420 Ext. 105', 10, pageHeight - 14);
-      doc.text('Linea Gratuita: 018000117177', 10, pageHeight - 11);
-      doc.setFont('helvetica', 'bold');
-      doc.text('www.cormacarena.gov.co  info@cormacarena.gov.co', 10, pageHeight - 8);
-      doc.setFont('times', 'normal');
-      doc.setFontSize(10);
-      doc.text('Corporación para el', pageSize.getWidth() - 10, pageHeight - 20, { align: 'right' });
-      doc.text('Desarrollo sostenible', pageSize.getWidth() - 10, pageHeight - 16, { align: 'right' });
-      doc.text('del Área de Manejo', pageSize.getWidth() - 10, pageHeight - 12, { align: 'right' });
-      doc.text('Especial La Macarena', pageSize.getWidth() - 10, pageHeight - 8, { align: 'right' });
-      doc.setTextColor(0, 0, 0);
-    };
-    const agregarEncabezado = () => {
-      doc.setFontSize(12);
-
-      const margenIzquierdo = 22;
-      const margenSuperior = 30;
-      const lineaAltura = 5;
-      const textoEncabezado = [
-        `${currentConsecutivo}`,
-        "",
-        "",
-        "Villavicencio,",
-        "",
-        "",
-        "Señores",
-        `${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}`,
-        "CL 27 SUR 43-56",
-        `Teléfono: ${datos?.id_deudor?.telefono || ''}`,
-        `E-mail: ${datos?.id_deudor?.email || currentDeudor.email}`,
-        "Villavicencio, Meta"
-      ];
-
-      const anchoMaximo = 80;
-      let yPosition = margenSuperior;
-
-      textoEncabezado.forEach((linea) => {
-        const texto = doc.splitTextToSize(linea, anchoMaximo);
-        doc.text(texto, margenIzquierdo, yPosition);
-        yPosition += (texto.length * lineaAltura);
-        setAltura(yPosition);
-      });
-
-      let xCuadro = 108;
-      let yCuadro1 = 25;
-      let anchoCuadro = 80;
-      let altoCuadro1 = 8;
-
-      doc.rect(xCuadro, yCuadro1, anchoCuadro, altoCuadro1);
-      doc.setFontSize(9);
-      doc.text('Al contestar cite el  número completo  de este oficio ', xCuadro + 5, yCuadro1 + 5);
-
-
-      let yCuadro = 40;
-      // Dibujar el cuadro
-      doc.setFontSize(9);
-      const espacioEntreLineas = 6;
-      let yTexto = yCuadro + 10;
-      doc.text('Cormacarena ', xCuadro + 30, yTexto);
-      yTexto += espacioEntreLineas;
-      doc.text(`Radicado:`, xCuadro + 10, yTexto);
-      yTexto += espacioEntreLineas;
-
-      doc.text(`Fecha: ${dayjs().format('DD/MM/YYYY')}`, xCuadro + 10, yTexto);
-      yTexto += espacioEntreLineas;
-      const anchoMaximo2 = 60;
-      const nombre = `Nombre: ${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}`;
-      let lineas = doc.splitTextToSize(nombre,  anchoPagina - 44);
-      lineas.forEach((linea: any) => {
-        const texto = doc.splitTextToSize(linea, anchoMaximo2);
-        doc.text(texto, xCuadro + 10, yTexto);
-        yTexto += (texto.length * lineaAltura);
-      });
-      let altoCuadro = yTexto - 38;
-      doc.rect(xCuadro, yCuadro, anchoCuadro, altoCuadro);
-      // doc.text(`Nombre: ${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}`, xCuadro + 10, yTexto); // Reemplazar X con el número de hojas
-        // doc.text(`Nombre: ${nombre}`, xCuadro + 10, yTexto); // Reemplazar X con el número de hojas
-    };
-    agregarEncabezado();
-    // ${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}
-    // Añadir información del usuario
-    doc.setFontSize(12);
-    const margenIzquierdo = 22;
-    let inicioAsuntoY = altura + 10;
-    let lineaAltura = 6;
-    let yTexto = inicioAsuntoY + 10;
-    const nextPage = (): void => {
-      if (yTexto > (alturaPagina - 40)) {
-        doc.addPage();
-        yTexto = 30;
-      }
-    }
-    doc.text("ASUNTO: Cobro Tasa por Utilización de Agua y ofrecimiento de descuento de intereses.", margenIzquierdo, inicioAsuntoY);
-    // doc.text("ASUNTO: Último Cobro Tasa por Utilización de Agua y ofrecimiento de descuento de intereses.", margenIzquierdo, inicioAsuntoY);
-    // doc.text("ASUNTO: Último Cobro Tasa Retributiva y ofrecimiento de descuento de intereses.", margenIzquierdo, inicioAsuntoY);
-    // doc.text("ASUNTO: Cobro persuasivo tasa retributiva.", margenIzquierdo, inicioAsuntoY);
-    let parrafo = `En atención al asunto de la referencia y revisados los registros contables de nuestra entidad, se evidencia que ${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}, identificado con cédula/NIT No. ${datos?.id_deudor?.identificacion || currentDeudor.numero_identificacion} presenta incumplimiento en el pago de las siguientes obligaciones:`;
-    let lineas = doc.splitTextToSize(parrafo,  anchoPagina - 44);
-    lineas.forEach((linea: any) => {
-      doc.text(linea, margenIzquierdo, yTexto);
-      yTexto += lineaAltura; // Incrementamos la posición y para la siguiente línea
-    });
-
+  const generatePDF = () => {
+    const anchoPagina = 595.28;
     const content = true ? 'TASA USO DE AGUA' : 'TASA RETRIBUTIVA';
-
-    //Tabla
-    autoTable(doc, {
-      head: [[{content, colSpan: 4 ,styles: {halign: 'center', fillColor: [160, 160, 160]}}],
-      ['CONCEPTO', 'CAPITAL', 'INTERESES', 'TOTAL']],
-      theme: 'grid',
-      body: data,
-      foot: [["", "TOTAL A PAGAR", sumaTotal]],
-      footStyles: { fillColor: [200, 200, 200], fontSize: 12, fontStyle: 'bold'},
-      showFoot: 'lastPage',
-      showHead: 'firstPage',
-      headStyles: { fillColor: [140, 140, 140] },
-      startY: yTexto + 6,
-      styles: {
-        cellPadding: 3,
-        fontSize: 10,
-        valign: 'middle',
+    const docDefinition = {
+      pageSize: 'A4',
+      pageMargins: [60, 80, 60, 80], // Márgenes de la página: [izquierda, arriba, derecha, abajo]
+      header: function(currentPage: any, pageCount: any) { // Función de encabezado
+        return [
+          {
+            image: logo_cormacarena_h, // Aquí deberías tener el logo en formato base64
+            width: 120,
+            height: 30,
+            alignment: 'right',
+            margin: [0, 20, 15, 0] // Margen para posicionar el logo en la esquina superior derecha
+          },
+        ];
       },
-      columnStyles: {
-        0: { cellWidth: 'auto' }, // Concepto
-        1: { cellWidth: 'auto' }, // Capital
-        2: { cellWidth: 'auto' }, // Intereses
-        3: { cellWidth: 'auto' }  // Total
+      footer: function(currentPage: any, pageCount: any) { // Función de pie de página
+        return [
+          {
+            columns: [
+              {
+                width: '50%',
+                text: [
+                  { text: 'AUTORIDAD AMBIENTAL EN EL DEPARTAMENTO DEL META - NIT 822000091-2\n', bold: true, fontSize: 7, color: '#808080' },
+                  { text: 'Carrera 44C No33B-24 barrio Barzal Villavicencio (Meta) - Colombia\n', fontSize: 7, color: '#808080' },
+                  { text: 'PBX 6730420 - 6730417 - 6730418 PQR 6730420 Ext. 105\n', fontSize: 7, color: '#808080' },
+                  { text: 'Linea Gratuita: 018000117177\n', fontSize: 7, color: '#808080' },
+                  { text: 'www.cormacarena.gov.co  info@cormacarena.gov.co\n', bold: true, fontSize: 7, color: '#808080' },
+                ],
+              },
+              {
+                width: '50%',
+                text: [
+                  { text: 'Corporación para el\n', alignment: 'right', fontSize: 9, color: '#808080', bold: true },
+                  { text: 'Desarrollo sostenible\n', alignment: 'right', fontSize: 9, color: '#808080', bold: true },
+                  { text: 'del Área de Manejo\n', alignment: 'right', fontSize: 9, color: '#808080', bold: true },
+                  { text: 'Especial La Macarena\n', alignment: 'right', fontSize: 9, color: '#808080', bold: true }
+                ],
+              }
+            ],
+            margin: [20, 20, 20, 10] // Margen para posicionar el texto en la parte inferior de la página
+          }
+        ];
       },
-      margin: { horizontal: 22, bottom: 40},
+      content: [
+        {
+          columns: [
+            {
+              width: '50%',
+              text: [
+                { text: `${currentConsecutivo}\n`, fontSize: 12, margin: [0, 10, 0, 0]},
+                { text: `\n`},
+                { text: `\n`},
+                { text: 'Villavicencio,\n', fontSize: 12 },
+                { text: `\n`},
+                { text: `\n`},
+                { text: 'Señores\n', fontSize: 12 },
+                { text: `${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}\n`, fontSize: 12 },
+                { text: 'CL 27 SUR 43-56\n', fontSize: 12 },
+                { text: `Teléfono: ${datos?.id_deudor?.telefono || ''}\n`, fontSize: 12 },
+                { text: [
+                    { text: `E-mail: `, fontSize: 12 },
+                    { text: `${datos?.id_deudor?.email || currentDeudor.email}\n`, decoration: 'underline', color: 'blue', link: `emailto: ${datos?.id_deudor?.email || currentDeudor.email}` }
+                  ]
+                },
+                { text: 'Villavicencio, Meta\n', fontSize: 12 },
+              ],
+            },
+            {
+              width: '50%',
+              stack: [
+                {
+                  canvas: [
+                    { type: 'rect', x: anchoPagina/2 - 290, y: 0, w: 230, h: 22 },
+                    { type: 'rect', x: anchoPagina/2 - 290, y: 35, w: 230, h: 100}
+                  ],
+                },
+                {
+                  absolutePosition: {x: 0, y: 87},
+                  stack: [
+                    { text: 'Al contestar cite el número completo de este oficio', alignment: 'right', fontSize: 9, margin: [ 0, 0, 15, 0 ] },
+                    { text: 'Cormacarena', alignment: 'right', fontSize: 9, margin: [ 0, 30, 90, 10 ] },
+                    { text: `Radicado: 123421421412`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 10 ]  },
+                    { text: `Fecha: ${dayjs().format('DD/MM/YYYY')}`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 10 ] },
+                    { text: `Nombre: ${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 10 ] }
+                  ],
+                }
+              ]
+            }
+          ],
+        },
+        { text: 'ASUNTO: Cobro persuasivo visita de control y seguimiento expediente 3.37.1.014.016', alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
+        { text: `En atención al asunto de la referencia y revisados los registros contables de nuestra entidad, se evidencia que ${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}, identificado con C.C./NIT No. ${datos?.id_deudor?.identificacion || currentDeudor.numero_identificacion} no ha cumplido con en el pago de las siguientes obligaciones:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        {
+          table: {
+            headerRows: 2,
+            widths: ['*', '*', '*', '*'],
+            body: [
+              [{text: content, colSpan: 4, alignment: 'center', fontSize: 11, bold: true}, {}, {}, {}],
+              [{text: 'CONCEPTO', alignment: 'center'}, {text: 'CAPITAL', alignment: 'center'}, {text: 'INTERESES*', alignment: 'center'}, {text: 'TOTAL', alignment: 'center'}],
+              ...data,
+              [{text: 'TOTAL A PAGAR', colSpan: 3, fillColor: '#C8C8C8', fontSize: 11, bold: true}, '', '', sumaTotal]
+            ]
+          },
+          layout: {
+            paddingLeft: function(i: any, node: any) { return 4; },
+            paddingRight: function(i: any, node: any) { return 4; },
+            paddingTop: function(i: any, node: any) { return 2; },
+            paddingBottom: function(i: any, node: any) { return 2; },
+          },
+          fontSize: 10,
+          margin: [20, 15, 20, 0]
+        },
+        { text: 'Intereses liquidados con corte a 28 de febrero de 2022 sin aplicar descuento del 80%', alignment: 'center', fontSize: 9, margin: [0, 2, 0, 0] },
+        { text: 'De acuerdo con lo anterior, comedidamente me permito invitarlo para que cancele la suma adeudada antes de la fecha de corte de intereses aquí establecida, o se comunique con la oficina del Grupo Rentas de CORMACARENA en donde le brindaremos la posibilidad de una facilidad de pago. De no tener respuesta suya, entenderemos su renuencia al pago, y nos veremos avocados a iniciar el cobro por vía coactiva con la onerosidad que esto le ocasionaría. ', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        // { text: 'En este mismo sentido nos permitimos informarle que Cormacarena dando aplicación a  los artículos 46 y 47 de la ley 2155 del 14 de septiembre de 2021, adoptó beneficios para los usuarios con obligaciones pendientes por pagar que se generaron con anterioridad al 30 de junio del año 2021, por concepto de Tasas (Tasa por utilización de agua, tasa retributiva, tasa compensatoria por caza de fauna silvestre y tasa de aprovechamiento forestal) otorgando descuentos del 80% del valor de los intereses moratorios.', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        // {
+        //   text: [
+        //     'De acuerdo con lo anterior, comedidamente me permito invitarlos a que cancelen la suma adeudada antes de la fecha de corte de intereses aquí establecida, ',
+        //     { text: 'en caso de querer acogerse al beneficio de descuento', decoration: 'underline' },
+        //     ' favor comunicarse al celular 310 206 1032 o al correo electrónico',
+        //     { text: 'gruporentas@cormacarena.gov.co', decoration: 'underline', color: 'blue', link: 'mailto:gruporentas@cormacarena.gov.co'},
+        //     ' manifestando su intención para generar la liquidación correspondiente.',
+        //   ],
+        //   alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
+        // },
+        {
+          text: [
+            'Así mismo se le informa que puede realizar el pago por concepto de ',
+            { text: 'Tasa por Utilización de Agua', decoration: 'underline' },
+            ' en las oficinas del banco BBVA - ahorros 854001674 convenio 33283, o en las oficinas de BANCOLOMBIA – ahorros 36400028723 convenio 87321.',
+          ],
+          alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
+        },
+        {
+          text: [
+            'También  puede efectuar su pago en línea o transferencia electrónica ingresando a la página web ',
+            { text: 'www.cormacarena.gov.co', decoration: 'underline', color: 'blue', link: 'www.cormacarena.gov.co' },
+            ' en el enlace «consulta y pagos, en el ítem recaudo de visitas de control y seguimiento, diligenciar el formulario».',
+          ],
+          alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
+        },
+        {
+          text: [
+            'En caso de realizar el pago, allegue copia de la consignación a los siguientes correos electrónicos ',
+            { text: 'gruporentas@cormacarena.gov.co, ', decoration: 'underline', color: 'blue', link: 'mailto: gruporentas@cormacarena.gov.co' },
+            { text: 'info@cormacarena.gov.co, ', decoration: 'underline', color: 'blue', link: 'mailto: info@cormacarena.gov.co' },
+            ' o en las oficinas de CORMACARENA para que obre como prueba y dar por terminado este proceso.',
+          ],
+          alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
+        },
+        { text: 'Cualquier duda por favor comunicarse al teléfono 608-6730420 extensión 504', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        { text: 'Cordialmente, ', alignment: 'justify', fontSize: 12, margin: [0, 20, 0, 0] },
+        { text: '__________________________________', alignment: 'justify', fontSize: 12, margin: [0, 40, 0, 0] },
+        { text: 'FERNANDO RUEDA LONDOÑO', alignment: 'justify', fontSize: 12, margin: [0, 2, 0, 0] },
+        { text: 'Coordinador Grupo Rentas', alignment: 'justify', fontSize: 12, margin: [0, 2, 0, 0] },
+        {
+          table: {
+            headerRows: 3,
+            widths: ['auto', '*', '*', '*'],
+            body: [
+              [{text: 'Nombre y apellidos completos', colSpan: 2, alignment: 'center'}, {}, {text: 'Cargo', alignment: 'center'}, {text: 'Firma', alignment: 'center'}],
+              ['Aprobó', {text: 'Nombre', rowSpan: 2}, {text: 'Nombre', rowSpan: 2}, {text: 'Nombre', rowSpan: 2}],
+              ['Revisó', {}, {}, {}],
+              ['Proyectó', {}, {}, {}],
+              // ... más filas de datos
+            ]
+          },
+          fontSize: 9,
+          margin: [40, 15, 40, 0]
+        }
+      ]
+    };
+    pdfMake.createPdf(docDefinition).getDataUrl((dataUrl: any) => {
+      setVisor(dataUrl);
     });
-    doc.setFontSize(10);
-    yTexto = (doc as any).lastAutoTable.finalY;
-    nextPage();
-    doc.text('Intereses liquidados con corte a 28 de febrero de 2022 sin aplicar descuento del 80%', 22, yTexto + 4);
-    doc.setFontSize(12);
-    yTexto += 15;
-    parrafo = `En este mismo sentido nos permitimos informarle que Cormacarena dando aplicación a  los artículos 46 y 47 de la ley 2155 del 14 de septiembre de 2021, adoptó beneficios para los usuarios con obligaciones pendientes por pagar que se generaron con anterioridad al 30 de junio del año 2021, por concepto de Tasas (Tasa por utilización de agua, tasa retributiva, tasa compensatoria por caza de fauna silvestre y tasa de aprovechamiento forestal) otorgando descuentos del 80% del valor de los intereses moratorios.`;
-    lineas = doc.splitTextToSize(parrafo,  anchoPagina - 44);
-    lineas.forEach((linea: any) => {
-      nextPage();
-      doc.text(linea, margenIzquierdo, yTexto);
-      yTexto += lineaAltura;
-    });
-    yTexto += 6;
-    parrafo = `De acuerdo con lo anterior, comedidamente me permito invitarlos a que cancelen la suma adeudada antes de la fecha de corte de intereses aquí establecida, en caso de querer acogerse al beneficio de descuento  favor comunicarse al celular 310 206 1032 o al correo electrónico  gruporentas@cormacarena.gov.co manifestando su intención para generar la liquidación correspondiente.`;
-    lineas = doc.splitTextToSize(parrafo,  anchoPagina - 44);
-    lineas.forEach((linea: any) => {
-      nextPage();
-      doc.text(linea, margenIzquierdo, yTexto);
-      yTexto += lineaAltura;
-    });
-    yTexto += 6;
-    parrafo = `Así mismo se le informa que pueden realizar el pago por concepto de Tasa por Utilización de Agua en la Cuenta de ahorros del banco BBVA No 854001633 ahorros convenio 33366.`;
-    // parrafo = `Así mismo se le informa que puede realizar el pago por concepto de Tasa Retributiva en la Cuenta del banco BBVA No 854001641 ahorros convenio 33365.`;
-    lineas = doc.splitTextToSize(parrafo,  anchoPagina - 44);
-    lineas.forEach((linea: any) => {
-      nextPage();
-      doc.text(linea, margenIzquierdo, yTexto);
-      yTexto += lineaAltura;
-    });
-    yTexto += 6;
-    parrafo = `También  puede efectuar su pago en línea o transferencia electrónica ingresando a la página web www.cormacarena.gov.co en el enlace «consulte y pague su obligación».`;
-    lineas = doc.splitTextToSize(parrafo,  anchoPagina - 44);
-    lineas.forEach((linea: any) => {
-      nextPage();
-      doc.text(linea, margenIzquierdo, yTexto);
-      yTexto += lineaAltura;
-    });
-    yTexto += 6;
-    parrafo = `De no tener respuesta suya, entenderemos su renuencia al pago, y nos veremos avocados a iniciar el cobro por vía coactiva con la onerosidad que esto le ocasionaría.`;
-    lineas = doc.splitTextToSize(parrafo,  anchoPagina - 44);
-    lineas.forEach((linea: any) => {
-      nextPage();
-      doc.text(linea, margenIzquierdo, yTexto);
-      yTexto += lineaAltura;
-    });
-    yTexto += 6;
-    parrafo = `En caso de haber efectuado ya el pago, favor haga caso omiso a la presente comunicación y allegue copia de la consignación al siguiente correo electrónico  gruporentas@cormacarena.gov.co, o en las  oficinas de CORMACARENA para que obre como prueba y dar por terminado este proceso de cobro persuasivo.`;
-    lineas = doc.splitTextToSize(parrafo,  anchoPagina - 44);
-    lineas.forEach((linea: any) => {
-      nextPage();
-      doc.text(linea, margenIzquierdo, yTexto);
-      yTexto += lineaAltura;
-    });
-    yTexto += 6;
-    nextPage();
-    doc.text("Cualquier duda por favor comuníquese al celular 310 206 1032.", margenIzquierdo, yTexto);
-    yTexto += 10;
-    if (yTexto > (alturaPagina - 40)) {
-      doc.addPage();
-      yTexto = 30;
-    }
-    doc.text("Cordialmente,", margenIzquierdo, yTexto);
-    yTexto += 15;
-    nextPage();
-    doc.text("___________________________", margenIzquierdo, yTexto);
-    doc.text("FERNANDO RUEDA LONDOÑO", margenIzquierdo, yTexto + 6);
-    doc.text("Coordinador Grupo Rentas", margenIzquierdo, yTexto + 12);
-    autoTable(doc, {
-      columns: columns,
-      body: data2,
-      theme: 'grid',
-      styles: {
-        cellPadding: 2,
-        fontSize: 9,
-        valign: 'middle',
-        halign: 'left',
-      },
-      headStyles: {
-        fillColor: [140, 140, 140],
-        fontStyle: 'bold'
-      },
-      startY: yTexto + 18,
-      margin: { horizontal: 22, bottom: 40 },
-      tableWidth: 'auto',
-      columnStyles: {
-        nombre: { cellWidth: 'auto' },
-        cargo: { cellWidth: 'auto' },
-        firma: { cellWidth: 'auto' }
-      },
-      willDrawCell: (data) => {
-      }
-    });
-    const pageCount = doc.internal.pages.length;
-    for(let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      header();
-      footer();
-    }
-    setVisor(doc.output('datauristring'));
-  };
-
+  }
 
   return (
     <>
@@ -341,8 +256,9 @@ export const CobroPersuasivo: React.FC<any> = ({
           <embed
             src={resolucion_url || visor}
             type="application/pdf"
-            width="100%"
-            height="1080px"
+            style={{display: 'flex', margin: 'auto'}}
+            width="80%"
+            height="900px"
           />
         </Grid>
       </Grid>

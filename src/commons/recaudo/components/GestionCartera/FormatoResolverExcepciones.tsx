@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 import { Grid } from '@mui/material';
 
 
-export const SeguirAdelanteDoc: React.FC<any> = ({
+export const FormatoResolverExcepciones: React.FC<any> = ({
   datos,
   id_deudor,
   id_subetapa,
@@ -23,24 +23,13 @@ export const SeguirAdelanteDoc: React.FC<any> = ({
 }: {datos: any, is_generate_resolucion: boolean, resolucion_url: any, id_deudor: number, id_subetapa: number, currentDeudor: any, dataClean: any}) => {
 
   const [visor, setVisor] = useState('');
-  const [altura, setAltura] = useState(0);
+  const [isSancionFormat, setIsSancionFormat] = useState(false);
   const [currentConsecutivo, setCurrentConsecutivo] = useState(0);
 
-  const columns = [
-    { header: 'Acción', dataKey: 'accion' },
-    { header: 'Nombres y apellidos completos', dataKey: 'nombre' },
-    { header: 'Cargo', dataKey: 'cargo' },
-    { header: 'Firma', dataKey: 'firma' }
-  ];
-
-  const data = [
-    { accion: 'Proyectó:', nombre: 'DIANA PATRICIA LADINO LADINO', cargo: 'ABOGADA GRUPO RENTAS', firma: '' },
-    { accion: 'Revisó', nombre: 'FERNANDO RUEDA LONDOÑO', cargo: 'COORDINADOR GRUPO RENTAS', firma: '' },
-    { accion: 'Aprobó', nombre: 'FERNANDO RUEDA LONDOÑO', cargo: 'COORDINADOR GRUPO RENTAS', firma: '' } // Ajustar según los datos necesarios
-  ];
-
   useEffect(() => {
-    if(datos?.id_deudor) generatePDF();
+    if(datos?.id_deudor){
+      generatePDF();
+    }
   }, [datos])
 
   const generatePDF = () => {
@@ -123,19 +112,26 @@ export const SeguirAdelanteDoc: React.FC<any> = ({
             }
           ],
         },
-        { text: 'El funcionario ejecutor de Cobro Coactivo, en virtud de las facultades que le concede la Ley 6 de 1992, Ley 1066 de 2006, Resolucion No 170 de 1999 y 2.6.05112 de febrero de 2005 , y demas normas legales complematarios,', alignment: 'justify', fontSize: 12, margin: [0, 20, 0, 0] },
+        { text: 'El funcionario Ejecutor o Juez de Ejecuciones Fiscales de La Corporación para el Desarrollo sostenible del área manejo especial la macarena – CORMACARENA  de conformidad con la Resolución No 2.6.05.112 de fecha 08 de Febrero de 2006, en uso de la Facultades de la ley 6 de 1992 y ley 1066 de 2006,', alignment: 'justify', fontSize: 12, margin: [0, 20, 0, 0] },
         { text: 'CONSIDERANDO', alignment: 'center', fontSize: 12, margin: [0, 15, 0, 0] },
-        { text: `Que con la entrada en vigencia de la Ley 1066 de 2006,  esta Corporacion procederá al recuado  de cartera de Jurisdicción Coactiva por los lineamientos del Estatuto Tributario.`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0]},
-        { text: `Que mediante resolución número PS-GJ.1.2.6.1.13.352 de fecha 	trece (13) de diciembre de 2013, se expide un mandamiento de pago a favor de CORMACARENA y en contra de la señora LAURA YENNY ANGARITA URIBE identificada con cédula de ciudadanía número 40.418.869, en atención a la multa impuesta mediante resolución número PS-GJ.1.2.6.10.1759 de fecha cuatro (04) de octubre de 2010. Ante la imposibilidad de notificar personalmente, se procede a notificar por publicado en la pagina web de la corporación el dia treinta y uno (31) de julio de 2015.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
-        { text: `Que vencidos los quince (15) días sin que el deudor propusiese excepciones y sin que hubiere pagado la obligación en su totalidad, de conformidad con el artículo 836 del Estatuto Tributario, se ordena seguir adelante la ejecución y se ordena se continúe la investigación de bienes del deudor a efectos de satisfacer el pago de la obligación.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
-        { text: `Por lo anterior y de conformidad con el artículo 836 del Estatuto Tributario, se ordena seguir adelante la ejecución.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
-        { text: 'Por mérito de lo expuesto,', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        { text: `Que mediante resolución número PS-GJ.1.2.6.1.23.00171 de fecha treinta y uno (31) de marzo de 2023, se expide un mandamiento de pago a favor de CORMACARENA y en contra de la sociedad de ENERGIA ELECTRICA DEL DEPARTAMENTO DEL GUAVIARE - ENERGUAVIARE S.A E.S.P, identificada con Nit 822.004.680-9, en atención a la visita técnica de control y seguimiento ordenada mediante auto número PS-GJ.1.2.64.19.1084 de fecha veinte (20) de marzo de 2019.  Mandamiento de pago notificado por correo el día trece (13) de diciembre de 2023.`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0]},
+        { text: `Que mediante oficio radicado en la corporación con el número 31591 de fecha veintisiete (27) de diciembre de 2023, la sociedad de ENERGIA ELECTRICA DEL DEPARTAMENTO DEL GUAVIARE - ENERGUAVIARE S.A E.S.P, a través de su apoderada judicial ARLENY AGUILAR HURTADO presento escrito de excepciones contra la resolución número PS-GJ.1.2.6.1.23.00171 de fecha treinta y uno (31) de marzo de 2023, por medio de la cual se expide un mandamiento de pago, a lo que me permito indicar lo siguiente:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+        { text: `Que conforme a lo señalado en el artículo 831 del Estatuto Tributario: Contra el mandamiento de pago procederán las siguientes excepciones:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+        { text: '1. Pago efectivo', alignment: 'justify', fontSize: 12, italics: true, underline: true, margin: [20, 15, 0, 0]},
+        { text: '2. La existencia de acuerdo de pago', alignment: 'justify', fontSize: 12, italics: true, margin: [20, 0, 0, 0]},
+        { text: '3. La falta de ejecutoria del título', alignment: 'justify', fontSize: 12, italics: true, margin: [20, 0, 0, 0]},
+        { text: '4. La pérdida de ejecutoria del título por revocación o suspensión provisional del acto administrativo, hecha por autoridad competente.', alignment: 'justify', fontSize: 12, italics: true, margin: [20, 0, 0, 0]},
+        { text: '5. Interposición de demanda de restablecimiento del derecho o de proceso de revisión de impuestos ante la jurisdicción de lo contencioso administrativo.', alignment: 'justify', fontSize: 12, italics: true, margin: [20, 0, 0, 0]},
+        { text: '6. La prescripción de la acción de cobro.', alignment: 'justify', fontSize: 12, italics: true, margin: [20, 0, 0, 0]},
+        { text: '7. La falta de título ejecutivo o incompetencia del funcionario que lo profirió.', alignment: 'justify', fontSize: 12, italics: true, margin: [20, 0, 0, 0]},
+        { text: `Así las cosas y teniendo en cuenta el escrito de fecha veintisiete (27) de diciembre de 2023, donde mencionan el pago efectivo por la suma de NUEVE MILLONES CIENTO CINCUENTA Y DOS MIL DOSCIENTOS NOVENTA Y OCHO PESOS MCTE ($9.152.298) el día diez (10) de octubre de 2019, se procedió a verificar en el sistema contable de la corporación y se confirmó dicho pago en la fecha mencionada.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+        { text: `Conforme a lo anterior, se desprende del estudio del presente expediente, que la obligación que dio origen al proceso administrativo de cobro coactivo en contra la sociedad de ENERGIA ELECTRICA DEL DEPARTAMENTO DEL GUAVIARE - ENERGUAVIARE S.A E.S. P, identificada con Nit. 822.004.680-9, se encuentra paga en su totalidad, por lo que ha desaparecido la causa para proseguir el proceso.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+        { text: 'Conforme a lo anterior, esta Corporación', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
         { text: 'RESUELVE', alignment: 'center', fontSize: 12, margin: [0, 15, 0, 0] },
-        { text: `ARTÍCULO PRIMERO: Ordenar seguir adelante la ejecución del mandamiento de pago número PS-GJ.1.2.6.1.13.352 de fecha 	trece (13) de diciembre de 2013, contra de la señora LAURA YENNY ANGARITA URIBE identificada con cédula de ciudadanía número 40.418.869, en atención a la multa impuesta mediante resolución número PS-GJ.1.2.6.10.1759 de fecha cuatro (04) de octubre de 2010.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
-        { text: `ARTÍCULO SEGUNDO: Notificar la presente resolución, previa citación para que comparezca el ejecutado y/o apoderado o representante legal, dentro de los diez (10) siguientes a la misma. En caso contrario notificar conforme lo establece el Estatuto Tributario.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
-        { text: `ARTÍCULO TERCERO: Una vez ejecutoriada la presente resolución, efectúese liquidación de crédito dentro del proceso administrativo de cobro coactivo referenciado.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
-        { text: `ARTÍCULO CUARTO: Ordenar la investigación de bienes del deudor, objeto de medida cautelar y materialización de las mismas. `, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
-        { text: `ARTICULO QUINTO: Contra el presente acto administrativo no procede recurso alguno, de conformidad con lo previsto en el artículo 833-1 del Estatuto Tributario.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        { text: `ARTÍCULO PRIMERO: Declarar probada la excepción interpuesta por la sociedad de ENERGIA ELECTRICA DEL DEPARTAMENTO DEL GUAVIARE - ENERGUAVIARE S.A E.S.P, identificada con Nit. 822.004.680-9, contra la resolución número PS-GJ.1.2.6.1.23.00171 de fecha treinta y uno (31) de marzo de 2023, por medio de la cual se expide un mandamiento de pago, y conforme a las razones expuestas en el considerando del presente acto administrativo.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        { text: `ARTÍCULO SEGUNDO: Decretar terminado el presente proceso administrativo de cobro coactivo en contra de la sociedad de ENERGIA ELECTRICA DEL DEPARTAMENTO DEL GUAVIARE - ENERGUAVIARE S.A E.S. P, identificada con Nit. 822.004.680-9, en atención a la visita técnica de control y seguimiento ordenada mediante auto número PS-GJ.1.2.64.19.1084 de fecha veinte (20) de marzo de 2019.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        { text: `ARTÍCULO TERCERO: Notificar la presente Resolución, previa citación para que comparezca el ejecutado y/o apoderado o representante legal, dentro de los diez (10) siguientes a la misma. En caso contrario notificar conforme lo establece el Estatuto Tributario.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        { text: `ARTÍCULO CUARTO: Contra la presente Resolución procede el recurso de reposición, conforme a lo dispuesto en el artículo 834 del Estatuto Tributario. `, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
         { text: 'NOTIFÍQUESE Y CÚMPLASE,', alignment: 'center', fontSize: 12, margin: [0, 15, 0, 0] },
         { text: '__________________________________', alignment: 'center', fontSize: 12, margin: [0, 40, 0, 0] },
         { text: 'JUAN CARLOS MEDINA GONZALES', alignment: 'center', fontSize: 12, margin: [0, 2, 0, 0] },
