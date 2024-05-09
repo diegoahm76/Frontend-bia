@@ -7,7 +7,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { api } from '../../../../../../api/axios';
 import { Title } from '../../../../../../components/Title';
-import { BuscadorPersona } from '../../../../ventanilla/registroPersonas/BuscadorPersonaV';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import { RadicadoData, ejemploData, initial_data } from '../interface/IBUsquedaAvanzadaRadicado';

@@ -34,6 +34,7 @@ export const ModalConfirmacionLiquidacion = () => {
             formData.append('id_persona', id_persona.toString());
             formData.append('fecha_actual', FechaElaboracion);
             formData.append('archivo', liquidacionState.archivo);
+            //  formData.append('id_solicitud_tramite', liquidacionState.id_solicitud_tramite);
 
             const respuesta = await api.post(url, formData);
 

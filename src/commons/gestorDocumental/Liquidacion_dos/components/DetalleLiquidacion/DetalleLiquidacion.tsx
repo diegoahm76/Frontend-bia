@@ -11,7 +11,7 @@ import { OpcionLiquidacion, TipologiaDocumental } from "../../interfaces/Interfa
 import CalculateIcon from '@mui/icons-material/Calculate';
 import { InputAdornment } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { formatNumber } from "../../utils/NumerosPuntosMiles";
+import { formatNumber, formatNumberTable } from "../../utils/NumerosPuntosMiles";
 
 
 
@@ -109,7 +109,7 @@ export const DetalleLiquidacion = () => {
     { field: 'valorfuncionario_mes', headerName: 'Valor Funcionario', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) },
     { field: 'viaticos', headerName: 'Viáticos', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) },
     { field: 'dias', headerName: 'Días', flex: 1 },
-    { field: 'resultado', headerName: 'Resultado', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) }, // Aplicar la función de formato
+    { field: 'resultado', headerName: 'Resultado', flex: 1, valueFormatter: (params:any) => formatNumberTable(params.value) }, // Aplicar la función de formato
     {
       field: 'Acciones',
       headerName: 'Acciones',
@@ -385,7 +385,7 @@ export const DetalleLiquidacion = () => {
 
         <Grid item xs={12} sm={3}>
           <TextField
-            label="Pre Total"
+            label="Sub Total"
             style={{ marginTop: 15 }}
             name="valor"
             type="text" // Cambiado de 'number' a 'text'
