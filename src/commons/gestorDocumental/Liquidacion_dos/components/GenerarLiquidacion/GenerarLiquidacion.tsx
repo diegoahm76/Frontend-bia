@@ -117,18 +117,18 @@ export const GenerarLiquidacion = () => {
   //sacar el porcentaje con la varaible de el sueldo minimo
 
   const valor_minimo = parseInt(data_liquidacion?.costo_proyecto || "0") / valorSMMV;
-
+  const valor_minimo_filtrado_estandar = valor_minimo < 100 ? 100 : valor_minimo;
 
   const calcular = () => {
     valores_porcentaje.forEach(registro => {
       try {
         // Reemplazar 'minimo' en la fórmula con el valor correspondiente (2000000)
-        const formula = registro.formula.replace(/minimo/g, valor_minimo.toString());
+        const formula = registro.formula.replace(/minimo/g, valor_minimo_filtrado_estandar.toString());
 
         // Evaluar la fórmula
         if (eval(formula)) {
 
-          const logData = { valorMinimo: valor_minimo, capacidad: registro.capacidad, valor: registro.valor, valor_subsidio_trasporte: "0", total_valor_veiculos: "" };
+          const logData = { valorMinimo: valor_minimo_filtrado_estandar, capacidad: registro.capacidad, valor: registro.valor, valor_subsidio_trasporte: "0", total_valor_veiculos: "" };
           setLogs(logData);
         } else {
         }
