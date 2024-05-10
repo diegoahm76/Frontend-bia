@@ -149,7 +149,15 @@ export const GenerarLiquidacion = () => {
     }));
   };
 
+  const handleInputChangeliquidacionState = (event: any) => {
+    const { name, value } = event.target;
+    setLiquidacionState(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+};
 
+  
 
   useEffect(() => {
     ComprobarInteresCobro();
@@ -576,7 +584,7 @@ export const GenerarLiquidacion = () => {
             size="small"
             fullWidth
             value={liquidacionState.numeroDeVehiculos}
-            onChange={handleInputChange}
+            onChange={handleInputChangeliquidacionState}
           />
         </Grid>
 
@@ -589,7 +597,7 @@ export const GenerarLiquidacion = () => {
             size="small"
             fullWidth
             value={liquidacionState.cantidadDeComisiones}
-            onChange={handleInputChange}
+            onChange={handleInputChangeliquidacionState}
           />
         </Grid>
 
