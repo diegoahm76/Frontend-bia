@@ -101,8 +101,8 @@ const actionsOpas: any[] = [
   },
 ];
 */
-
-    /*const shouldDisable = (actionId: string) => {
+  //* inicio should disable
+    const shouldDisable = (actionId: string) => {
       const isNoSeleccionado = !opa;
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
@@ -117,33 +117,32 @@ const actionsOpas: any[] = [
       const isEnVentanillaConPendientes =
         opa.estado_actual === 'EN VENTANILLA CON PENDIENTES';
       const isGestion = opa.estado_actual === 'EN GESTION';
-
+      const pendienteRevisionJuridica = opa.estado_asignacion_grupo === 'PENDIENTE DE REVISIÓN JURIDICA DE VENTANILLA';
+      const revisadoPorJuridicaDeVentanilla = opa.estado_asignacion_grupo === 'REVISADO POR JURIDICA DE VENTANILLA';
       if (isNoSeleccionado) {
         return true;
       }
 
-      //?  primer cas
+      //?  primer caso
       if (isRadicado && !hasAnexos) {
-        return !(actionId === 'Jurídica' || actionId === 'AsigGrup');
+        return !(actionId === 'Jurídica'); // || actionId === 'AsigGrup'
       }
       // ? segundo caso
       if (isRadicado && hasAnexos && !requiresDigitalization) {
         return !(
-          actionId === 'Jurídica' ||
-          actionId === 'AsigGrup' ||
-          actionId === 'Dig'
+          actionId === 'Jurídica'
         );
       }
       // ? tercer caso
       if (isRadicado && hasAnexos && requiresDigitalization) {
-        return !(actionId === 'Jurídica' || actionId === 'Dig');
+        return !(/*actionId === 'Jurídica' ||*/ actionId === 'Dig');
       }
       // ? cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
         return !(
-          actionId === 'Jurídica' ||
-          actionId === 'Dig' ||
-          actionId === 'AsigGrup'
+          actionId === 'Jurídica' // ||
+          //actionId === 'Dig' ||
+          // actionId === 'AsigGrup'
         );
       }
       // ? quinto caso
@@ -153,7 +152,15 @@ const actionsOpas: any[] = [
 
       // ? sexto caso
       if (isEnVentanillaConPendientes) {
-        return !(actionId === 'Dig' || actionId === 'Jurídica');
+        return !(actionId === 'Dig' /*|| actionId === 'Jurídica'*/);
+      }
+
+      if(pendienteRevisionJuridica){
+        return !(actionId === 'Jurídica');
+      }
+
+      if(revisadoPorJuridicaDeVentanilla){
+        return !(actionId === 'Jurídica' || actionId === 'AsigGrup')
       }
 
       if (isGestion) {
@@ -163,7 +170,8 @@ const actionsOpas: any[] = [
     const actionsOPAS = actionsOpas.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
-    }));*/
+    }));
+    // * fim should disable
     dispatch(setActionssToManagePermissionsOpas(actionsOpas));
   };
 
