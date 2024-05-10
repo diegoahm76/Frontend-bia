@@ -47,6 +47,7 @@ export interface DatosConsulta {
   radicate_bia: string;
   typeRequest: string;
   DateRadicate: string;
+
 }
 
 export const DatosConsulta: DatosConsulta = {
@@ -69,6 +70,7 @@ export const DatosConsulta: DatosConsulta = {
   radicate_bia: '',
   typeRequest: '',
   DateRadicate: '',
+
 };
 
 export interface PrecioItem {
@@ -80,6 +82,7 @@ export interface PrecioItem {
   viaticos?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
   dias?: string; // Haz que estas propiedades sean opcionales agregando el operador '?'
   resultado?: string;
+
 }
 
 // Definición del tipo para el tercer estado
@@ -147,6 +150,11 @@ export interface LiquidacionState {
   se_cobra: string | null;
   fecha_en_firme: string | null;
   nnum_origen_liq: string | null;
+  
+
+  numeroDeVehiculos: number,
+  cantidadDeComisiones: number,
+  
 }
 
 // Valores iniciales para el estado de la liquidación
@@ -180,6 +188,8 @@ export const liquidacionValoresIniciales: LiquidacionState = {
   se_cobra: null,
   fecha_en_firme: null,
   nnum_origen_liq: null,
+  numeroDeVehiculos: 0,
+  cantidadDeComisiones: 0,
 };
 
 

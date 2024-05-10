@@ -21,16 +21,12 @@ export const GenerarLiquidacion = () => {
   const [datosConsulta, setDatosConsulta] = useState<DatosConsulta>(DatosConsulta);
   const { userinfo: { id_persona, email, telefono_celular, numero_documento } } = useSelector((state: AuthSlice) => state.auth);
   const [data_liquidacion, set_data_liquidacion] = useState<ElementoPQRS | null>(null);
-  const { usuario, setUsuario, logs, setLogs, setLiquidacionState, liquidacionState } = useContext(PreciosContext);
+  const { usuario, setUsuario, logs, setLogs, setLiquidacionState, liquidacionState ,setPrecios} = useContext(PreciosContext);
   const [valores_porcentaje, set_valores_porcentaje] = useState<Registro[]>([])
   const fechaActual = new Date().toLocaleDateString(); // Obtiene la fecha actual en formato de cadena de texto
   const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
 
-  const [formVeiculos, setFormVeiculos] = useState({
-    numeroDeVehiculos: 0,
-    cantidadDeComisiones: 0,
-    valor: 0
-  });
+  const [formVeiculos, setFormVeiculos] = useState({valor: 0 });
 
 
   const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
@@ -104,7 +100,7 @@ export const GenerarLiquidacion = () => {
   const valorVH = configuracionVH ? configuracionVH.valor : undefined;
 
 
-  const total_valor_veiculos = (formVeiculos.numeroDeVehiculos * valorVH) * formVeiculos.cantidadDeComisiones || 0;
+  const total_valor_veiculos = (liquidacionState.numeroDeVehiculos * valorVH) * liquidacionState.cantidadDeComisiones || 0;
 
   const TraerValorSalirioMinimoMensual = async (): Promise<void> => {
     try {
@@ -147,7 +143,7 @@ export const GenerarLiquidacion = () => {
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
-    setFormVeiculos(prevState => ({
+    setPrecios(prevState => ({
       ...prevState,
       [name]: value
     }));
@@ -579,7 +575,7 @@ export const GenerarLiquidacion = () => {
             InputProps={{ inputProps: { min: 0 } }}
             size="small"
             fullWidth
-            value={formVeiculos.numeroDeVehiculos}
+            value={liquidacionState.numeroDeVehiculos}
             onChange={handleInputChange}
           />
         </Grid>
@@ -592,7 +588,7 @@ export const GenerarLiquidacion = () => {
             InputProps={{ inputProps: { min: 0 } }}
             size="small"
             fullWidth
-            value={formVeiculos.cantidadDeComisiones}
+            value={liquidacionState.cantidadDeComisiones}
             onChange={handleInputChange}
           />
         </Grid>

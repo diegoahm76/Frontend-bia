@@ -27,7 +27,7 @@ export const ConfiguracionUnidadOrganizacional = () => {
         T247consecutivoInicial,
         T247consecutivoActualAMostrar
     } = Datos_Return;
-console.log(Datos_Return)
+    console.log(Datos_Return)
     const columna_numero_1 = [
         { attribute: "Consecutivo inicial", value: T247consecutivoInicial || "" },
         { attribute: "Consecutivo Actual", value: T247consecutivoActualAMostrar || "" },
@@ -85,12 +85,24 @@ console.log(Datos_Return)
             [e.target.name]: e.target.value
         })
     }
+    const [id_organigrama, set_id_organigrama] = useState<number>(0);
+
+    const fetch_obtener_organigrama_Aatual = async (): Promise<void> => {
+        try {
+            const url = `/transversal/organigrama/get-organigrama-actual/ `;
+            const res: any = await api.get(url);
+            const numero_consulta: any = res.data.data;
+            set_id_organigrama(numero_consulta.id_organigrama);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 
 
     const fetch_choise_seccionsubseccion = async (): Promise<void> => {
         try {
-            const url = `/transversal/organigrama/unidades/get-sec-sub/132/`;
+            const url = `/transversal/organigrama/unidades/get-sec-sub/${id_organigrama}/`;
             const res: any = await api.get(url);
             const numero_consulta: any = res.data.data;
             set_seccionoSubseccion(numero_consulta);
@@ -173,22 +185,22 @@ console.log(Datos_Return)
 
     const Agragar_configuracion = () => {
         const { configuracion_por_unidad } = Formulario_Empresa;
-    
+
         // Verificar si el formulario es válido (no undefined y no tiene campos vacíos)
         const formularioValido = form && Object.values(form).every(value => value !== undefined && value !== '');
-    
+
         if (formularioValido) {
             // Verificar si ya existe un elemento con el mismo id_unidad_organizacional
             const existeConfiguracion = configuracion_por_unidad.some(
                 (configuracion: any) => configuracion.id_unidad_organizacional === form.id_unidad_organizacional
             );
-    
+
             if (!existeConfiguracion) {
                 Set_Formulario_Empresa({
                     ...Formulario_Empresa,
                     configuracion_por_unidad: [...configuracion_por_unidad, form],
                 });
-    
+
             } else {
                 // Manejar el caso donde ya existe la configuración
                 control_info("Ya existe");
@@ -198,7 +210,7 @@ console.log(Datos_Return)
             control_info("Formulario inválido");
         }
     };
-    
+
 
 
     const editarConfiguracion = () => {
@@ -229,12 +241,18 @@ console.log(Datos_Return)
     };
 
 
+    useEffect(() => {
+        fetch_obtener_organigrama_Aatual()
+    }, []);
+
 
     useEffect(() => {
         fetch_choise_seccionsubseccion().catch((error) => {
             console.error(error);
+
         });
-    }, []);
+        fetch_obtener_organigrama_Aatual()
+    }, [id_organigrama]);
 
     return (
         <>
@@ -351,7 +369,7 @@ console.log(Datos_Return)
                                         disabled={accion_realizar}
 
                                     >
-                                        Agregar 
+                                        Agregar
                                     </Button>
                                 </Grid>
 
@@ -370,7 +388,7 @@ console.log(Datos_Return)
                                             variant="contained"
                                             disabled={accion_realizar}
                                         >
-                                            Agregar 
+                                            Agregar
                                         </Button>
                                     </Grid>
                                 )
@@ -388,7 +406,7 @@ console.log(Datos_Return)
                                             variant="contained"
                                             disabled={accion_realizar}
                                         >
-                                            Agregar 
+                                            Agregar
                                         </Button>
                                     </Grid>
                                 )
