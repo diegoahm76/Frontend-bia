@@ -44,7 +44,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
                   label="Nombres"
                   size="small"
                   fullWidth
-                  value={`${obligaciones.nombre_completo}`}
+                  value={`${obligaciones.nombre_completo||"Sin Obligaciones"}`}
                 />
               </Grid>
               <Grid item xs={12} sm={3.5}>
@@ -53,7 +53,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={`${obligaciones.numero_identificacion}`}
+                  value={`${obligaciones.numero_identificacion||"Sin Obligaciones"}`}
                 />
               </Grid>
               <Grid item xs={12} sm={3.5}>
@@ -62,7 +62,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
-                  value={`${obligaciones.email}`}
+                  value={`${obligaciones.email||"Sin Obligaciones"}`}
                 />
               </Grid>
             </Grid>
