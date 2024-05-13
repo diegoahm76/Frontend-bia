@@ -47,7 +47,7 @@ export const tipos_tramites: any = () => {
 export const tramites_servicios: any = () => {
   return async () => {
     try {
-      const { data } = await api.get(`tramites/opa/tramites/get-list/O/`);
+      const { data } = await api.get(`tramites/opa/tramites/get-list/OP/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

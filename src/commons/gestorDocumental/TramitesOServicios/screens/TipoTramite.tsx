@@ -29,7 +29,7 @@ import {
   tipos_tramites,
   tramites_servicios,
 } from '../thunks/TramitesOServicios';
-import { useAppDispatch } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import SearchOutlined from '@mui/icons-material/SearchOutlined';
@@ -144,6 +144,7 @@ const lt_permisos_menor = [
 ];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TipoTramite: React.FC<IProps> = (props: IProps) => {
+  const {representacion_legal} = useAppSelector((state) => state.auth);
   const isProdOrBeta = 'https://bia.cormacarena.gov.co';
 
   const navigate = useNavigate();
@@ -260,7 +261,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
     opcion: any
   ) => {
     switch (opcion) {
-      case 'O':
+      case 'OP':
         tramites_servicios_fc();
         break;
       case 'L':
@@ -399,6 +400,8 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
           descripcion_direccion: descripcion,
           coordenada_x: coordenada_x,
           coordenada_y: coordenada_y,
+          cod_relacion_con_el_titular: representacion_legal?.cod_relacion_con_el_titular
+
         };
         props.set_formulario_paso_uno(obj_create);
         dispatch(create_tramite_servicio(obj_create)).then((response: any) => {
@@ -496,7 +499,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
             </FormHelperText>
           )}
         </Grid>
-        {tipo_tramite === 'O' && (
+        {tipo_tramite === 'OP' && (
           <>
             <Grid item xs={12} sm={12}>
               <span style={{ marginTop: '9px' }}>
