@@ -39,7 +39,7 @@ import {
 import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { AlertaDocumento } from './AlertaDocumento';
-import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
+
 export interface SerieSubserie {
   tiene_configuracion: any;
   id_cat_serie_und: number;
@@ -78,15 +78,6 @@ export const Facturacion: React.FC = () => {
   const [consecutivo_id, setConsecutivo_id] = useState<number | null>(null);
 
   const [radicadof, setradicadof] = useState<number | null>(null);
-  const [file, setFile] = useState('');
-
-  const onFileChange = (event: any) => {
-    const file = event.target.files[0];
-    const url: any = window.URL.createObjectURL(file);
-    setFile(url);
-  };
-
-  useEffect(() => console.log(file), [file])
 
   const handleSubmitRadicado = async () => {
     try {
@@ -391,19 +382,6 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
 
   const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
-  const [plantillas, setPlantillas] = useState<any[]>([]);
-
-  const fetch_data_busqueda_avanzada = async (): Promise<void> => {
-    try {
-      const url = `/gestor/plantillas/plantillas_documentos/get/`;
-      // Construye dinámicamente la URL de consulta
-      const res: any = await api.get(url);
-      let data: any = res.data.data;
-      setPlantillas(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const fetchUnidades = async () => {
     try {
@@ -420,12 +398,9 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
 
   useEffect(() => {
     fetchUnidades();
-    fetch_data_busqueda_avanzada();
   }, []);
 
   useEffect(() => {
-    const currentTemplate = plantillas.find((plantilla) => plantilla.id_plantilla_doc === opcionSeleccionada);
-    console.log(currentTemplate);
     generarHistoricoBajas();
   }, [opcionSeleccionada]);
 
@@ -796,13 +771,19 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
               label="Opción"
               onChange={handleChangeee}
             >
-              <MenuItem value="">Seleccione una opción</MenuItem>
-              {plantillas.map((plantilla) => (
-              <MenuItem key={plantilla.id_plantilla_doc} value={plantilla.id_plantilla_doc}>
-                {plantilla.nombre}
+              <MenuItem value="9">Vacio</MenuItem>
+              {/* <MenuItem value="5">5 </MenuItem> */}
+              <MenuItem value="6">Citación</MenuItem>
+              <MenuItem value="8">Notificación </MenuItem>
+              <MenuItem value="2">Remisión por aviso</MenuItem>
+              <MenuItem value="1">Solicitud de información</MenuItem>
+              <MenuItem value="3">
+                Constancia de publicación de citación
               </MenuItem>
-            ))}
-
+              <MenuItem value="4">
+                Constancia de publicación de notificación{' '}
+              </MenuItem>
+              {/* <MenuItem value="7">7</MenuItem> */}
             </Select>
           </FormControl>
         </Grid>
@@ -1477,21 +1458,13 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <input type="file" onChange={onFileChange} />
         <Grid item xs={12} sm={12}>
-          {file && (
-          <DocViewer
-            pluginRenderers={DocViewerRenderers}
-            documents={[{ uri: file }]}
-            style={{height: 1000}}
-          />
-        )}
-          {/* <embed
+          <embed
             src={visor}
             type="application/pdf"
             width="100%"
             height="1080px"
-          /> */}
+          />
         </Grid>
       </Grid>
     </>

@@ -6,7 +6,7 @@ import { DatePicker, LocalizationProvider, MobileTimePicker } from '@mui/x-date-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import SearchIcon from '@mui/icons-material/Search';
-import { data_buscar_vehiculo, interface_data_agendamiento_vehiculos, interface_detalles_vehiculos_agendados, interface_ver_agendamiento, response_data_agendamiento_vehiculos, response_detalles_vehiculos_agendados, response_ver_agendamiento } from '../interfaces/types';
+import { data_buscar_vehiculo, interface_data_agendamiento_vehiculos, interface_detalles_vehiculos_agendados, interface_resumen_solicitud, interface_ver_agendamiento, response_data_agendamiento_vehiculos, response_detalles_vehiculos_agendados, response_ver_agendamiento } from '../interfaces/types';
 import TablaAgendamientoVehiculos from '../tables/TablaAgendamientoVehiculos';
 import { buscar_detalles_vehiculos_agendados, buscar_solicitudes_agendamientos, editar_aprobacion_viaje, enviar_aprobacion_viaje, obtener_ver_agendamiento } from '../thunks/agendamiento_vehiculos';
 import { control_error, control_success } from '../../../../helpers';
@@ -20,6 +20,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import BuscarVehiculo from './BuscarVehiculo';
 import Swal from 'sweetalert2';
 import { parseHora } from '../../solicitudDeViaje/thunks/viajes';
+import ResumenSolicitud from './ResumenSolicitud';
 
 
 
@@ -47,8 +48,8 @@ const AgendamientoVehiculos: React.FC = () => {
   const [fecha_salida, set_fecha_salida] = useState<Dayjs>(dayjs());
   const [hora_salida, set_hora_salida] = useState<Date | null>(new Date());
 
-  const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false); 
-  
+  const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
+
   const [msj_error_numero_pasajeros, set_msj_error_numero_pasajeros] = useState<string>("");
 
   const [id_solicitud_viaje, set_id_solicitud_viaje] = useState<number>(0);
@@ -70,21 +71,24 @@ const AgendamientoVehiculos: React.FC = () => {
   const [data_detalles_vehiculos_agendados, set_data_detalles_vehiculos_agendados] = useState<interface_detalles_vehiculos_agendados[]>([]);
   const [data_ver_agendamiento, set_data_ver_agendamiento] = useState<interface_ver_agendamiento>(Object);
   const [data_editar_agendamiento, set_data_editar_agendamiento] = useState<interface_detalles_vehiculos_agendados>(Object);
-  
+
+  // data de el resumen de la solicitud de viaje
+  const [data_resumen_solicitud_viaje, set_data_resumen_solicitud_viaje] = useState<interface_resumen_solicitud>(Object);
+
 
 
   const obtener_asignaciones_vehiculos_filtros: () => void = () => {
     dispatch(buscar_solicitudes_agendamientos(
       fecha_solicitud_inicio?.format('YYYY-MM-DD') ?? '',
-      fecha_solicitud_fin?.format('YYYY-MM-DD')  ?? '',
+      fecha_solicitud_fin?.format('YYYY-MM-DD') ?? '',
       /*departamento*/'',
       /*municipio*/'',
       numero_pasajeros === 0 ? '' : numero_pasajeros,
       requiere_carga,
-      fecha_inicio_viaje?.format('YYYY-MM-DD')  ?? '',
-      fecha_fin_viaje?.format('YYYY-MM-DD')  ?? '',
+      fecha_inicio_viaje?.format('YYYY-MM-DD') ?? '',
+      fecha_fin_viaje?.format('YYYY-MM-DD') ?? '',
       estado_solicitud
-      ))
+    ))
       .then((response: response_data_agendamiento_vehiculos) => {
         if ('data' in response) {
           set_data_agendamiento_vehiculo(response.data);
@@ -118,10 +122,10 @@ const AgendamientoVehiculos: React.FC = () => {
       })
   }
 
-  const obtener_ver_agendamiento_fc: () => void = async() => {
+  const obtener_ver_agendamiento_fc: () => void = async () => {
     await dispatch(obtener_ver_agendamiento(id_solicitud_viaje))
-      .then((response: response_ver_agendamiento) => {       
-        if (response?.success === true) {       
+      .then((response: response_ver_agendamiento) => {
+        if (response?.success === true) {
           set_data_ver_agendamiento(response.data.viajes_agendados);
         } else {
           set_data_ver_agendamiento(Object);
@@ -130,12 +134,12 @@ const AgendamientoVehiculos: React.FC = () => {
   }
 
   useEffect(() => {
-    if(accion === 'ver_agendamiento'){
+    if (accion === 'ver_agendamiento') {
       obtener_ver_agendamiento_fc();
-    }    
+    }
     obtener_detalles_vehiculos_agendados();
-  }, [accion,id_solicitud_viaje, refrescar_tabla])
-  
+  }, [accion, id_solicitud_viaje, refrescar_tabla])
+
 
   const cambio_numero_pasajeros: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_numero_pasajeros(Number(e.target.value));
@@ -173,7 +177,7 @@ const AgendamientoVehiculos: React.FC = () => {
     }
   };
 
-  const cambio_hora_salida = (newTime:  dayjs.Dayjs | null) => {
+  const cambio_hora_salida = (newTime: dayjs.Dayjs | null) => {
     set_hora_salida(newTime?.toDate() || null);
   };
 
@@ -183,15 +187,13 @@ const AgendamientoVehiculos: React.FC = () => {
     }
   };
 
-  const cambio_hora_retorno = (newTime:  dayjs.Dayjs | null) => {
+  const cambio_hora_retorno = (newTime: dayjs.Dayjs | null) => {
     set_hora_retorno(newTime?.toDate() || null);
   };
 
-  useEffect(()=>{
-    if(accion === 'ver_agendamiento'){
-      console.log(data_ver_agendamiento);
-      
-      if(Object.keys(data_ver_agendamiento).length !== 0){
+  useEffect(() => {
+    if (accion === 'ver_agendamiento') {
+      if (Object.keys(data_ver_agendamiento).length !== 0) {
         set_conductor(data_ver_agendamiento.apellido_conductor + ' ' + data_ver_agendamiento.nombre_conductor);
         set_placa_vehiculo(data_ver_agendamiento.placa);
         set_nombre_vehiculo(data_ver_agendamiento.nombre);
@@ -204,10 +206,10 @@ const AgendamientoVehiculos: React.FC = () => {
         set_fecha_retorno(dayjs(data_ver_agendamiento.fecha_retorno_asignada));
         set_hora_salida(parseHora(data_ver_agendamiento.hora_partida ?? '00:00:00')?.toDate() || null);
         set_hora_retorno(parseHora(data_ver_agendamiento.hora_retorno ?? '00:00:00')?.toDate() || null);
-      } 
+      }
     }
-    if(accion === 'editar_agendamiento'){
-      if(Object.keys(data_editar_agendamiento).length !== 0){
+    if (accion === 'editar_agendamiento') {
+      if (Object.keys(data_editar_agendamiento).length !== 0) {
         set_conductor(data_editar_agendamiento.persona_conductor ?? '');
         set_placa_vehiculo(data_editar_agendamiento.placa);
         set_conductor_agregado(data_editar_agendamiento.persona_conductor);
@@ -220,9 +222,9 @@ const AgendamientoVehiculos: React.FC = () => {
         set_fecha_retorno(dayjs(data_editar_agendamiento.fecha_retorno_asignada));
         set_hora_salida(parseHora(data_editar_agendamiento.hora_partida ?? '00:00:00')?.toDate() || null);
         set_hora_retorno(parseHora(data_editar_agendamiento.hora_retorno ?? '00:00:00')?.toDate() || null);
-      } 
+      }
     }
-  },[data_ver_agendamiento,accion,id_solicitud_viaje])
+  }, [data_ver_agendamiento, accion, id_solicitud_viaje])
 
 
   const salir_agendamiento = () => {
@@ -245,29 +247,29 @@ const AgendamientoVehiculos: React.FC = () => {
     set_requiere_carga('');
     set_numero_pasajeros(0);
     set_fecha_inicio_viaje(null);
-    set_fecha_fin_viaje(null); 
+    set_fecha_fin_viaje(null);
   }
-  
-  const validar_form_solicitudes:() => Promise<boolean> = async() => {
-    if(fecha_solicitud_inicio?.isValid() === false){
+
+  const validar_form_solicitudes: () => Promise<boolean> = async () => {
+    if (fecha_solicitud_inicio?.isValid() === false) {
       control_error('Fecha de solicitud inicio inválida')
       return false;
-    } else if(fecha_solicitud_fin?.isValid() === false){
+    } else if (fecha_solicitud_fin?.isValid() === false) {
       control_error("Fecha de 'solicitud hasta' inválida")
       return false;
     }
     return true;
   }
 
-  const obtener_resultados_solicitudes = async() => {
+  const obtener_resultados_solicitudes = async () => {
     const form_validado = await validar_form_solicitudes();
-    if(form_validado){
+    if (form_validado) {
       obtener_asignaciones_vehiculos_filtros();
       limpiar_form_agendamiento();
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (Object.keys(vehiculo_encontrado).length !== 0) {
       set_conductor(vehiculo_encontrado.persona_conductor ?? '');
       set_placa_vehiculo(vehiculo_encontrado.placa ?? '');
@@ -279,7 +281,7 @@ const AgendamientoVehiculos: React.FC = () => {
       set_nombre_vehiculo('');
       set_marca('');
     }
-  },[vehiculo_encontrado])
+  }, [vehiculo_encontrado])
 
   const eliminar_vehiculo_agregado = () => {
     set_mostrar_vehiculo_agregado(false);
@@ -297,9 +299,9 @@ const AgendamientoVehiculos: React.FC = () => {
   }
 
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(data_solicitud_a_aprobar);
-  },[data_solicitud_a_aprobar])
+  }, [data_solicitud_a_aprobar])
 
   const agregar_vehiculo = () => {
     if (Object.keys(vehiculo_encontrado).length !== 0) {
@@ -320,7 +322,7 @@ const AgendamientoVehiculos: React.FC = () => {
   }
 
   const enviar_aprobacion_solicitud_viaje = () => {
-    if (Object.keys(vehiculo_encontrado).length !== 0 && Object.keys(data_solicitud_a_aprobar).length !== 0){
+    if (Object.keys(vehiculo_encontrado).length !== 0 && Object.keys(data_solicitud_a_aprobar).length !== 0) {
       Swal.fire({
         title: '¿Está de seguro de aprobar la solicitud?',
         showDenyButton: true,
@@ -332,12 +334,12 @@ const AgendamientoVehiculos: React.FC = () => {
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          if(accion === 'aprobar_agendamiento'){
+          if (accion === 'aprobar_agendamiento') {
             dispatch(enviar_aprobacion_viaje({
               id_solicitud_viaje: data_solicitud_a_aprobar.id_solicitud_viaje,
               id_persona_conductor: vehiculo_encontrado.id_vehiculo_conductor
             })).then((response: { success: boolean, detail: string, data: any }) => {
-              if(response?.success){
+              if (response?.success) {
                 control_success('Se aprobó la solicitud correctamente');
                 set_mostrar_vehiculos_agendados(true);
                 set_refrescar_tabla(!refrescar_tabla);
@@ -347,24 +349,24 @@ const AgendamientoVehiculos: React.FC = () => {
                 return;
               }
             })
-          } else if(accion === 'editar_agendamiento'){
-            dispatch(editar_aprobacion_viaje(data_solicitud_a_aprobar.id_viaje_agendado ,{id_vehiculo_conductor: vehiculo_encontrado.id_vehiculo_conductor}))
-            .then((response: any) => {
-              console.log(response);
-              
-              if(Object.keys(response)?.length !== 0){
-                control_success('Se editó el agendamiento correctamente');
-                set_refrescar_tabla(!refrescar_tabla);
-                return;
-              } else if (response?.detail) {
-                set_refrescar_tabla(!refrescar_tabla);
-                return;
-              }
-            })
+          } else if (accion === 'editar_agendamiento') {
+            dispatch(editar_aprobacion_viaje(data_solicitud_a_aprobar.id_viaje_agendado, { id_vehiculo_conductor: vehiculo_encontrado.id_vehiculo_conductor }))
+              .then((response: any) => {
+                console.log(response);
+
+                if (Object.keys(response)?.length !== 0) {
+                  control_success('Se editó el agendamiento correctamente');
+                  set_refrescar_tabla(!refrescar_tabla);
+                  return;
+                } else if (response?.detail) {
+                  set_refrescar_tabla(!refrescar_tabla);
+                  return;
+                }
+              })
             set_accion('ver_agendamiento');
           }
           return;
-        } else if(result.isDenied){
+        } else if (result.isDenied) {
           return;
         }
       });
@@ -388,227 +390,237 @@ const AgendamientoVehiculos: React.FC = () => {
             boxShadow: '0px 3px 6px #042F4A26',
           }}
         >
-          
-          <Title title='Agendamiento de vehículos' />
-          
-          <Grid container spacing={3} item xs={12} mt={0.5} mb={2}>
-            <Grid item xs={12} lg={4} sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label='Fecha de solicitud desde: '
-                  value={fecha_solicitud_inicio}
-                  onChange={(newValue) => {
-                    cambio_fecha_solicitud_inicio(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField required fullWidth size="small" {...params} />
-                  )}
-                />
-              </LocalizationProvider>
-            </Grid>
-
-            <Grid item xs={12} lg={4} sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label='Fecha de solicitud hasta: '
-                  value={fecha_solicitud_fin}
-                  onChange={(newValue) => {
-                    cambio_fecha_solicitud_fin(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField required fullWidth size="small" {...params} />
-                  )}
-                />
-              </LocalizationProvider>
-            </Grid>
-
-            <Grid item xs={12} lg={4}>
-              <FormControl required size='small' fullWidth>
-                <InputLabel>Departamento de destino</InputLabel>
-                <Select
-                  label="Departamento de destino"
-                  value={estado_solicitud}
-                  required
-                  fullWidth
-                  onChange={(e: SelectChangeEvent) => set_estado_solicitud(e.target.value)}
-                >
-                  <MenuItem value={''}></MenuItem>
-                  <MenuItem value={'ES'}>PENDIENTE</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} lg={4}>
-              <FormControl required size='small' fullWidth>
-                <InputLabel>Municipio de destino</InputLabel>
-                <Select
-                  label="Municipio de destino"
-                  value={estado_solicitud}
-                  required
-                  fullWidth
-                  onChange={(e: SelectChangeEvent) => set_estado_solicitud(e.target.value)}
-                >
-                  <MenuItem value={'ES'}>PENDIENTE</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} lg={4} sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <TextField
-                fullWidth
-                label='Número de pasajeros*:'
-                type={"number"}
-                value={numero_pasajeros}
-                error={msj_error_numero_pasajeros !== ''}
-                size="small"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={cambio_numero_pasajeros}
-              />
-            </Grid>
-
-            <Grid item xs={12} lg={4}>
-              <FormControl required size='small' fullWidth>
-                <InputLabel>¿Requiere carga?</InputLabel>
-                <Select
-                  label='¿Requiere carga?'
-                  value={requiere_carga}
-                  required
-                  fullWidth              
-                  onChange={(e: SelectChangeEvent) => set_requiere_carga(e.target.value)}
-                >
-                  <MenuItem value={'true'}>Si</MenuItem>
-                  <MenuItem value={'false'}>No</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} lg={4} sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              >
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label='Fecha inicio de viaje:'
-                  value={fecha_inicio_viaje}
-                  onChange={(newValue) => {
-                    cambio_fecha_inicio_viaje(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField required fullWidth size="small" {...params} />
-                  )}
-                />
-              </LocalizationProvider>
-            </Grid>
-
-            <Grid item xs={12} lg={4} sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              >
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label='Fecha fin de viaje:'
-                  value={fecha_fin_viaje}
-                  onChange={(newValue) => {
-                    cambio_fecha_fin_viaje(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField required fullWidth size="small" {...params} />
-                  )}
-                />
-              </LocalizationProvider>
-            </Grid>
-
-            <Grid item xs={12} lg={4}>
-              <FormControl required size='small' fullWidth>
-                <InputLabel>Estado_solicitud</InputLabel>
-                <Select
-                  label="Estado_solicitud"
-                  value={estado_solicitud}
-                  required
-                  fullWidth
-                  onChange={(e: SelectChangeEvent) => set_estado_solicitud(e.target.value)}
-                >
-                  <MenuItem value={'ES'}>En Espera</MenuItem>
-                  <MenuItem value={'RE'}>Respondida</MenuItem>
-                  <MenuItem value={'RC'}>Rechazada</MenuItem>
-                  <MenuItem value={'FN'}>Finalizada</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item container spacing={2} xs={12} sx={{display:'flex', justifyContent:'end'}} >
-              <Grid item xs={12} lg={4} sx={{
-                display:'flex',
-                justifyContent: 'center',
-                alignItems:'center'
-                }} >
-                <Button
-                  fullWidth
-                  color='primary'
-                  variant='contained'
-                  startIcon={<SearchIcon />}
-                  onClick={obtener_resultados_solicitudes}
-                >
-                  Buscar
-                </Button>
-              </Grid>
-
-              <Grid item xs={12} lg={4} sx={{
-                display:'flex',
-                justifyContent: 'center',
-                alignItems:'center',
-                }} >
-                <Button
-                  fullWidth
-                  color="inherit"
-                  variant="outlined"
-                  startIcon={<CleanIcon />}
-                  onClick={limpiar_form_agendamiento}
-                >
-                  Limpiar
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          {!mostrar_input_no_aprobado && 
-            <TablaAgendamientoVehiculos
+          {accion === 'ver_solicitud' ?
+            <ResumenSolicitud
+              data_resumen_solicitud_viaje={data_resumen_solicitud_viaje}
               set_accion={set_accion}
-              set_data_solicitud_a_aprobar={set_data_solicitud_a_aprobar}
-              set_mostrar_agendamiento_vehiculo={set_mostrar_agendamiento_vehiculo}
-              set_id_solicitud_viaje={set_id_solicitud_viaje}
-              set_mostrar_input_no_aprobado={set_mostrar_input_no_aprobado}
-              data_agendamiento_vehiculo={data_agendamiento_vehiculo}
-              set_mostrar_vehiculo_agregado={set_mostrar_vehiculo_agregado}
-              set_mostrar_vehiculos_agendados={set_mostrar_vehiculos_agendados}
             />
+            
+            :
+
+            <>
+              <Title title='Agendamiento de vehículos' />
+
+              <Grid container spacing={3} item xs={12} mt={0.5} mb={2}>
+                <Grid item xs={12} lg={4} sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label='Fecha de solicitud desde: '
+                      value={fecha_solicitud_inicio}
+                      onChange={(newValue) => {
+                        cambio_fecha_solicitud_inicio(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField required fullWidth size="small" {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+
+                <Grid item xs={12} lg={4} sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label='Fecha de solicitud hasta: '
+                      value={fecha_solicitud_fin}
+                      onChange={(newValue) => {
+                        cambio_fecha_solicitud_fin(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField required fullWidth size="small" {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+
+                <Grid item xs={12} lg={4}>
+                  <FormControl required size='small' fullWidth>
+                    <InputLabel>Departamento de destino</InputLabel>
+                    <Select
+                      label="Departamento de destino"
+                      value={estado_solicitud}
+                      required
+                      fullWidth
+                      onChange={(e: SelectChangeEvent) => set_estado_solicitud(e.target.value)}
+                    >
+                      <MenuItem value={''}></MenuItem>
+                      <MenuItem value={'ES'}>PENDIENTE</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} lg={4}>
+                  <FormControl required size='small' fullWidth>
+                    <InputLabel>Municipio de destino</InputLabel>
+                    <Select
+                      label="Municipio de destino"
+                      value={estado_solicitud}
+                      required
+                      fullWidth
+                      onChange={(e: SelectChangeEvent) => set_estado_solicitud(e.target.value)}
+                    >
+                      <MenuItem value={'ES'}>PENDIENTE</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} lg={4} sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                >
+                  <TextField
+                    fullWidth
+                    label='Número de pasajeros*:'
+                    type={"number"}
+                    value={numero_pasajeros}
+                    error={msj_error_numero_pasajeros !== ''}
+                    size="small"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={cambio_numero_pasajeros}
+                  />
+                </Grid>
+
+                <Grid item xs={12} lg={4}>
+                  <FormControl required size='small' fullWidth>
+                    <InputLabel>¿Requiere carga?</InputLabel>
+                    <Select
+                      label='¿Requiere carga?'
+                      value={requiere_carga}
+                      required
+                      fullWidth
+                      onChange={(e: SelectChangeEvent) => set_requiere_carga(e.target.value)}
+                    >
+                      <MenuItem value={'true'}>Si</MenuItem>
+                      <MenuItem value={'false'}>No</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} lg={4} sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label='Fecha inicio de viaje:'
+                      value={fecha_inicio_viaje}
+                      onChange={(newValue) => {
+                        cambio_fecha_inicio_viaje(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField required fullWidth size="small" {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+
+                <Grid item xs={12} lg={4} sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label='Fecha fin de viaje:'
+                      value={fecha_fin_viaje}
+                      onChange={(newValue) => {
+                        cambio_fecha_fin_viaje(newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField required fullWidth size="small" {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+
+                <Grid item xs={12} lg={4}>
+                  <FormControl required size='small' fullWidth>
+                    <InputLabel>Estado_solicitud</InputLabel>
+                    <Select
+                      label="Estado_solicitud"
+                      value={estado_solicitud}
+                      required
+                      fullWidth
+                      onChange={(e: SelectChangeEvent) => set_estado_solicitud(e.target.value)}
+                    >
+                      <MenuItem value={'ES'}>En Espera</MenuItem>
+                      <MenuItem value={'RE'}>Respondida</MenuItem>
+                      <MenuItem value={'RC'}>Rechazada</MenuItem>
+                      <MenuItem value={'FN'}>Finalizada</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item container spacing={2} xs={12} sx={{ display: 'flex', justifyContent: 'end' }} >
+                  <Grid item xs={12} lg={4} sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }} >
+                    <Button
+                      fullWidth
+                      color='primary'
+                      variant='contained'
+                      startIcon={<SearchIcon />}
+                      onClick={obtener_resultados_solicitudes}
+                    >
+                      Buscar
+                    </Button>
+                  </Grid>
+
+                  <Grid item xs={12} lg={4} sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }} >
+                    <Button
+                      fullWidth
+                      color="inherit"
+                      variant="outlined"
+                      startIcon={<CleanIcon />}
+                      onClick={limpiar_form_agendamiento}
+                    >
+                      Limpiar
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              {!mostrar_input_no_aprobado &&
+                <TablaAgendamientoVehiculos
+                  set_accion={set_accion}
+                  set_data_solicitud_a_aprobar={set_data_solicitud_a_aprobar}
+                  set_mostrar_agendamiento_vehiculo={set_mostrar_agendamiento_vehiculo}
+                  set_id_solicitud_viaje={set_id_solicitud_viaje}
+                  set_mostrar_input_no_aprobado={set_mostrar_input_no_aprobado}
+                  data_agendamiento_vehiculo={data_agendamiento_vehiculo}
+                  set_mostrar_vehiculo_agregado={set_mostrar_vehiculo_agregado}
+                  set_mostrar_vehiculos_agendados={set_mostrar_vehiculos_agendados}
+                  set_data_resumen_solicitud_viaje={set_data_resumen_solicitud_viaje}
+                />
+              }
+            </>
           }
-        </Grid>
-      }
+        </Grid>}
 
       {mostrar_input_no_aprobado &&
-        <RechazoSolicitud 
+        <RechazoSolicitud
           refrescar_tabla={refrescar_tabla}
           set_refrescar_tabla={set_refrescar_tabla}
           id_solicitud_viaje={id_solicitud_viaje}
@@ -660,95 +672,95 @@ const AgendamientoVehiculos: React.FC = () => {
             <Title title='Seleccionar vehículo' />
 
             <Grid item xs={12} lg={3} sx={{
-              display:'flex',
+              display: 'flex',
               justifyContent: 'center',
-              alignItems:'center',
-              }} >
-                <TextField
-                  label='Conductor:'
-                  fullWidth
-                  disabled
-                  placeholder='Buscar'
-                  value={conductor}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_conductor(e.target.value)}
-                  size="small"
-                />
+              alignItems: 'center',
+            }} >
+              <TextField
+                label='Conductor:'
+                fullWidth
+                disabled
+                placeholder='Buscar'
+                value={conductor}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_conductor(e.target.value)}
+                size="small"
+              />
             </Grid>
 
             <Grid item xs={12} lg={3} sx={{
-              display:'flex',
+              display: 'flex',
               justifyContent: 'center',
-              alignItems:'center',
-              }} >
-                <TextField
-                  label='Placa vehículo:'
-                  fullWidth
-                  disabled
-                  placeholder='Buscar'
-                  value={placa_vehiculo}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_placa_vehiculo(e.target.value)}
-                  size="small"
-                />
+              alignItems: 'center',
+            }} >
+              <TextField
+                label='Placa vehículo:'
+                fullWidth
+                disabled
+                placeholder='Buscar'
+                value={placa_vehiculo}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_placa_vehiculo(e.target.value)}
+                size="small"
+              />
             </Grid>
 
             <Grid item xs={12} lg={3} sx={{
-              display:'flex',
+              display: 'flex',
               justifyContent: 'center',
-              alignItems:'center',
-              }} >
-                <TextField
-                  label='Nombre de vehículo:'
-                  fullWidth
-                  disabled
-                  placeholder='Buscar'
-                  value={nombre_vehiculo}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_nombre_vehiculo(e.target.value)}
-                  size="small"
-                />
+              alignItems: 'center',
+            }} >
+              <TextField
+                label='Nombre de vehículo:'
+                fullWidth
+                disabled
+                placeholder='Buscar'
+                value={nombre_vehiculo}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_nombre_vehiculo(e.target.value)}
+                size="small"
+              />
             </Grid>
 
             <Grid item xs={12} lg={3} sx={{
-              display:'flex',
+              display: 'flex',
               justifyContent: 'center',
-              alignItems:'center',
-              }} >
-                <TextField
-                  label='Marca:'
-                  fullWidth
-                  disabled
-                  placeholder='Buscar'
-                  value={marca}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_marca(e.target.value)}
-                  size="small"
-                />
+              alignItems: 'center',
+            }} >
+              <TextField
+                label='Marca:'
+                fullWidth
+                disabled
+                placeholder='Buscar'
+                value={marca}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_marca(e.target.value)}
+                size="small"
+              />
             </Grid>
 
             <Grid item container spacing={2} xs={12} sx={{
-              display:'flex',
+              display: 'flex',
               justifyContent: 'end',
             }}>
               <Grid item xs={12} lg={3} sx={{
-                display:'flex',
+                display: 'flex',
                 justifyContent: 'center',
-                alignItems:'center'
-                }} >
+                alignItems: 'center'
+              }} >
                 <Button
                   fullWidth
                   color='primary'
                   variant='contained'
                   startIcon={<SearchIcon />}
                   disabled={accion !== 'aprobar_agendamiento' && accion !== 'editar_agendamiento'}
-                  onClick={()=>set_mostrar_buscar_vehiculo(true)}
+                  onClick={() => set_mostrar_buscar_vehiculo(true)}
                 >
                   Buscar
                 </Button>
               </Grid>
 
               <Grid item xs={12} lg={3} sx={{
-                display:'flex',
+                display: 'flex',
                 justifyContent: 'center',
-                alignItems:'center'
-                }} >
+                alignItems: 'center'
+              }} >
                 <Button
                   fullWidth
                   color='success'
@@ -773,80 +785,80 @@ const AgendamientoVehiculos: React.FC = () => {
                 p: '20px',
                 mt: '20px',
                 boxShadow: '0px 3px 6px #042F4A26',
-                display:'flex',
-                justifyContent:'space-between'
+                display: 'flex',
+                justifyContent: 'space-between'
               }}
-              >
+            >
               <Title title='Vehículo agregado' />
               <Grid item xs={12} lg={3} sx={{
-                display:'flex',
+                display: 'flex',
                 justifyContent: 'center',
-                alignItems:'center',
-                }} >
-                  <TextField
-                    label='Conductor:'
-                    fullWidth
-                    disabled
-                    placeholder='Buscar'
-                    value={conductor_agregado}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_conductor_agregado(e.target.value)}
-                    size="small"
-                  />
-              </Grid>
-              
-              <Grid item xs={12} lg={3} sx={{
-                display:'flex',
-                justifyContent: 'center',
-                alignItems:'center',
-                }} >
-                  <TextField
-                    label='Placa:'
-                    fullWidth
-                    disabled
-                    placeholder='Buscar'
-                    value={placa_vehiculo_agregado}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_placa_vehiculo_agregado(e.target.value)}
-                    size="small"
-                  />
+                alignItems: 'center',
+              }} >
+                <TextField
+                  label='Conductor:'
+                  fullWidth
+                  disabled
+                  placeholder='Buscar'
+                  value={conductor_agregado}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_conductor_agregado(e.target.value)}
+                  size="small"
+                />
               </Grid>
 
               <Grid item xs={12} lg={3} sx={{
-                display:'flex',
+                display: 'flex',
                 justifyContent: 'center',
-                alignItems:'center',
-                }} >
-                  <TextField
-                    label='Nombre de vehículo:'
-                    fullWidth
-                    disabled
-                    placeholder='Buscar'
-                    value={nombre_vehiculo_agregado}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_nombre_vehiculo_agregado(e.target.value)}
-                    size="small"
-                  />
+                alignItems: 'center',
+              }} >
+                <TextField
+                  label='Placa:'
+                  fullWidth
+                  disabled
+                  placeholder='Buscar'
+                  value={placa_vehiculo_agregado}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_placa_vehiculo_agregado(e.target.value)}
+                  size="small"
+                />
               </Grid>
 
               <Grid item xs={12} lg={3} sx={{
-                display:'flex',
+                display: 'flex',
                 justifyContent: 'center',
-                alignItems:'center',
-                }} >
-                  <TextField
-                    label='Marca:'
-                    fullWidth
-                    disabled
-                    placeholder='Buscar'
-                    value={marca_agregado}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>)=>set_marca_agregado(e.target.value)}
-                    size="small"
-                  />
+                alignItems: 'center',
+              }} >
+                <TextField
+                  label='Nombre de vehículo:'
+                  fullWidth
+                  disabled
+                  placeholder='Buscar'
+                  value={nombre_vehiculo_agregado}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_nombre_vehiculo_agregado(e.target.value)}
+                  size="small"
+                />
               </Grid>
 
               <Grid item xs={12} lg={3} sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }} >
+                <TextField
+                  label='Marca:'
+                  fullWidth
+                  disabled
+                  placeholder='Buscar'
+                  value={marca_agregado}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_marca_agregado(e.target.value)}
+                  size="small"
+                />
+              </Grid>
+
+              <Grid item xs={12} lg={3} sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
               >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
@@ -864,11 +876,11 @@ const AgendamientoVehiculos: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} lg={3} sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                >
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <MobileTimePicker
                     disabled
@@ -884,10 +896,10 @@ const AgendamientoVehiculos: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} lg={3} sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
               >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
@@ -905,11 +917,11 @@ const AgendamientoVehiculos: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} lg={3} sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                >
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <MobileTimePicker
                     disabled
@@ -925,15 +937,15 @@ const AgendamientoVehiculos: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} sx={{
-                  display: "flex",
-                  justifyContent: "end",
-                  alignItems: "center",
-                }}
-                >
+                display: "flex",
+                justifyContent: "end",
+                alignItems: "center",
+              }}
+              >
                 {accion !== 'ver_agendamiento' &&
                   <Grid item xs={0.4} >
                     <DeleteForeverIcon
-                      style={{cursor:'pointer', color:'#e74c3c',fontSize:'40px'}}
+                      style={{ cursor: 'pointer', color: '#e74c3c', fontSize: '40px' }}
                       onClick={eliminar_vehiculo_agregado}
                     />
                   </Grid>
@@ -944,13 +956,13 @@ const AgendamientoVehiculos: React.FC = () => {
 
 
           <Grid item xs={12} sx={{
-              display: "flex",
-              justifyContent: "end",
-              alignItems: "center",
-              marginTop: "20px",
-              gap: 4,
-            }}
-            >
+            display: "flex",
+            justifyContent: "end",
+            alignItems: "center",
+            marginTop: "20px",
+            gap: 4,
+          }}
+          >
 
             <Button
               color="success"
@@ -965,7 +977,7 @@ const AgendamientoVehiculos: React.FC = () => {
               color="error"
               variant="contained"
               startIcon={<ClearIcon />}
-              onClick={()=>salir_agendamiento()}
+              onClick={() => salir_agendamiento()}
             >
               Salir
             </Button>
@@ -981,7 +993,7 @@ const AgendamientoVehiculos: React.FC = () => {
           </Grid>
         </Grid>
       }
-      
+
     </>
   );
 }

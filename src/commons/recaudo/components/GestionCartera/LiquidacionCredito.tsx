@@ -28,7 +28,7 @@ export const LiquidacionCredito: React.FC<any> = ({
 
   useEffect(() => {
     if(datos?.id_deudor){
-      generateTerminacion();
+      generateAprobacion();
     }
   }, [datos])
 

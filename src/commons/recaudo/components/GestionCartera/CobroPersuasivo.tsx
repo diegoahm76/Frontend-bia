@@ -11,6 +11,7 @@ import { logo_cormacarena_h } from '../../../conservacion/Reportes/logos/logos';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Grid } from '@mui/material';
+import { AprobadoresProps } from "./models/interfaces";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -21,11 +22,28 @@ export const CobroPersuasivo: React.FC<any> = ({
   currentDeudor,
   dataClean,
   is_generate_resolucion,
-  resolucion_url
-}: {datos: any, is_generate_resolucion: boolean, resolucion_url: any, id_deudor: number, id_subetapa: number, currentDeudor: any, dataClean: any}) => {
+  resolucion_url,
+  aprobadores_data,
+  set_form_table_values,
+}: {datos: any,
+    is_generate_resolucion: boolean,
+    resolucion_url: any,
+    id_deudor: number, id_subetapa: number,
+    currentDeudor: any,
+    dataClean: any,
+    aprobadores_data: AprobadoresProps,
+    set_form_table_values: (value: any) => void,
+  }) => {
 
   const [visor, setVisor] = useState('');
   const [currentConsecutivo, setCurrentConsecutivo] = useState(0);
+  const [localForm, setLocalForm] = useState<AprobadoresProps>({
+    nombre_aprobador: '',
+    cargo_aprobador: '',
+    nombre_proyector: '',
+    cargo_proyector: '',
+    send_data: false,
+  });
   let data: any[] = [];
 
   let sumaTotal: string | number = 0;
@@ -51,10 +69,16 @@ export const CobroPersuasivo: React.FC<any> = ({
       const total2 = data.reduce((acc, curr) => acc + parseFloat(curr[2].replace(',', '')), 0);
       data.push(['TOTAL', total1.toLocaleString('es-CO'), total2.toLocaleString('es-CO'), (total1 + total2).toLocaleString('es-CO')]);
       sumaTotal = (total1 + total2).toLocaleString('es-CO');
+      if(aprobadores_data?.send_data){
+        set_form_table_values({
+          ...aprobadores_data,
+          send_data: false
+        })
+      }
+      console.log('hola 2');
       generatePDF();
     }
-
-  }, [is_generate_resolucion, currentDeudor, dataClean, datos]);
+  }, [is_generate_resolucion, currentDeudor, dataClean, datos, aprobadores_data]);
 
   const generatePDF = () => {
     const anchoPagina = 595.28;
@@ -219,9 +243,9 @@ export const CobroPersuasivo: React.FC<any> = ({
             widths: ['auto', '*', '*', '*'],
             body: [
               [{text: 'Nombre y apellidos completos', colSpan: 2, alignment: 'center'}, {}, {text: 'Cargo', alignment: 'center'}, {text: 'Firma', alignment: 'center'}],
-              ['Aprobó', {text: 'Nombre', rowSpan: 2}, {text: 'Nombre', rowSpan: 2}, {text: 'Nombre', rowSpan: 2}],
+              ['Aprobó', {text: aprobadores_data?.nombre_aprobador, rowSpan: 2}, {text: aprobadores_data?.cargo_aprobador, rowSpan: 2}, {text: '', rowSpan: 2}],
               ['Revisó', {}, {}, {}],
-              ['Proyectó', {}, {}, {}],
+              ['Proyectó', {text: aprobadores_data?.nombre_proyector}, {text: aprobadores_data?.cargo_proyector}, {}],
               // ... más filas de datos
             ]
           },

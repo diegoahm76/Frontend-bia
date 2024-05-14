@@ -140,6 +140,28 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
         }}
       >
         <Title title="Proceso Cobro Coactivo"></Title>
+        {!current_deudor?.id_deudor && <Grid item xs={12} md={6} lg={4} my={3}>
+              <FormControl required size='small' fullWidth>
+                <InputLabel>Subetapa Proceso Coactivo</InputLabel>
+                <Select
+                  disabled={false}
+                  multiline
+                  value={id_subetapa || ''}
+                  label="Subetapa Proceso Coactivo"
+                  onChange={handle_change_subetapa}
+                >
+                  <MenuItem value="">
+                    <em>Seleccione una opción</em>
+                  </MenuItem>
+                  {subetapas.map((subetapa: any) => (
+                    <MenuItem key={subetapa.id} value={subetapa.id}>
+                      {subetapa.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Seleccione una subetapa</FormHelperText>
+              </FormControl>
+          </Grid>}
         {current_deudor?.id_deudor && <Grid container spacing={2} mt={2}>
           <Grid item xs={12} md={6} lg={4} sx={{margin: 'auto'}}>
             <TextField
@@ -194,7 +216,7 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
                 </Select>
                 <FormHelperText>Seleccione una subetapa</FormHelperText>
               </FormControl>
-            </Grid>
+          </Grid>
           {/* <Grid item xs={12} md={6} lg={4}>
             <TextField
               fullWidth
@@ -206,7 +228,9 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
             />
           </Grid> */}
         </Grid>}
-        <Typography variant="subtitle1" sx={{fontWeight: 'bold'}} mt={5} mb={2}>Cargue o Generación de Documentos</Typography>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" sx={{fontWeight: 'bold', textAlign: 'center'}} mt={2} mb={2}>Cargue o Generación de Documentos</Typography>
+        </Grid>
         <Grid container spacing={2} mb={2}>
           <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
             <Button
@@ -298,6 +322,15 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
             ? <LiquidacionCredito
                 datos={datos}
               />
+            // ? <FormatoRecursoReposicion
+            //     datos={datos}
+            //   />
+            // ? <SeguirAdelanteDoc
+            //     datos={datos}
+            //   />
+            // ? <IncumplimientoFacilidadPagoDoc
+            //     datos={datos}
+            //   />
             : <SeguirAdelanteDoc
                 datos={datos}
               />

@@ -88,6 +88,8 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
   const [solicitud_respondida, set_solicitud_respondida] = useState<interface_solicitud_respondida>(Object);
 
   useEffect(() => {
+    
+    
     // Establece los datos de la solicitud de viaje en el estado correspondiente
     set_datos_solicitar_viaje({
       ...(accion === 'crear' ? { motivo_viaje_solicitado: motivo_viaje } : accion === 'editar' && { motivo_viaje: motivo_viaje }),
@@ -105,7 +107,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
       requiere_carga: switch_requiere_carga,  // Indica si se requiere compañía militar
       consideraciones_adicionales: consideraciones_adicionales,
       indicaciones_destino: indicadores_destino,
-      ...(accion === 'crear' ? {personas_viajan: data_personas_viajan.map((persona)=>persona.id_persona)} : {})
+      ...(accion === 'crear' ? { personas_viajan: data_personas_viajan.map((persona) => persona.id_persona) } : {})
     });
   }, [switch_expediente_asociado,
     departamento,
@@ -124,9 +126,9 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
     indicadores_destino,
     consideraciones_adicionales,
     motivo_viaje,
-    id_expediente
+    id_expediente,
+    data_personas_viajan
   ]);
-
 
   /**
    * Maneja el cambio de la fecha de salida.
@@ -258,7 +260,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
       control_error('El campo indicaciones de destino no puede estar vacío');
       set_msj_error_indicadores_destino('El campo indicaciones de destino no puede estar vacío');
       return false
-    } else if(accion === 'crear' && data_personas_viajan.length > numero_pasajeros){
+    } else if (accion === 'crear' && data_personas_viajan.length > numero_pasajeros) {
       control_error('El número de funcionarios seleccionados no puede ser mayor al valor del campo de número de pasajeros');
       return false;
     } else if (accion === 'editar') {
@@ -335,12 +337,12 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
     const validacion = await validar_datos();
     if (validacion) {
       dispatch(editar_solicitud_viaje(datos_solicitar_viaje, id_solicitud_editar))
-      .then((response: { success: boolean, detail: string, data: any }) => {
-        if (response.detail) {
-          set_refrescar_tabla(!refrescar_tabla);
-          return;
-        }
-      })
+        .then((response: { success: boolean, detail: string, data: any }) => {
+          if (response.detail) {
+            set_refrescar_tabla(!refrescar_tabla);
+            return;
+          }
+        })
       set_mostrar_solicitud_viaje(false);
       limpiar_formulario_solicitar_viaje();
     }
@@ -437,15 +439,11 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
    * Efecto secundario que se ejecuta al montar el componente y cuando cambian ciertos valores.
    * Obtiene la lista de departamentos, municipios y las solicitudes de viaje si se está editando o viendo una solicitud.
    */
-  const solicitudes_obtenidas = useRef(false);
   useEffect(() => {
-    if (!solicitudes_obtenidas.current) {
-      if (accion === 'editar' || accion === 'ver') {
-        obtener_solicitudes_fc();
-      }
-      solicitudes_obtenidas.current = true;
+    if (accion === 'editar' || accion === 'ver') {
+      obtener_solicitudes_fc();
     }
-  }, [id_solicitud_editar, accion]);
+  }, [accion, id_solicitud_editar]);
 
   /**
    * Efecto secundario que se ejecuta al cambiar el estado de `editar_datos_solicitar_viaje` o `id_solicitud_editar`.
@@ -453,8 +451,10 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
    */
   useEffect(() => {
     if (Object.keys(editar_datos_solicitar_viaje).length !== 0) {
+
       // Comprueba si la acción es 'editar' o 'ver'
       if (accion === 'editar' || accion === 'ver') {
+        console.log(editar_datos_solicitar_viaje);
         // Obtiene el motivo de viaje de los datos de edición o solicitud
         const motivo_viaje = editar_datos_solicitar_viaje.motivo_viaje
           ? editar_datos_solicitar_viaje.motivo_viaje
@@ -501,7 +501,9 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
         obtener_agendamiento_solicitud_fc(editar_datos_solicitar_viaje.id_solicitud_viaje);
       }
     }
-  }, [editar_datos_solicitar_viaje, id_solicitud_editar])
+  }, [editar_datos_solicitar_viaje, id_solicitud_editar, accion])
+
+
 
   /**
    * Obtiene el departamento seleccionado en base al código del departamento a editar.

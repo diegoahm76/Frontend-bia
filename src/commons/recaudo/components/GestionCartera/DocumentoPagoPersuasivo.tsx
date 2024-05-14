@@ -19,6 +19,7 @@ import {
 import { CloudUpload } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DescriptionIcon from '@mui/icons-material/Description';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import type { FlujoProceso } from "../../interfaces/flujoProceso";
 import { useContext, useEffect, type Dispatch, type SetStateAction } from "react";
 import type { AtributoEtapa } from "../../interfaces/proceso";
@@ -32,6 +33,7 @@ import { api } from "../../../../api/axios";
 import { control_error } from "../../../../helpers";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { current } from '@reduxjs/toolkit';
+import { AprobadoresProps } from "./models/interfaces";
 
 interface IProps {
   id_flujo_destino: string;
@@ -105,7 +107,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
     }
   ];
 
-  const subetapas = [{ id: '1', nombre: 'Subetapa 1' }, { id: '2', nombre: 'Subetapa 2' }];
+  const subetapas = [{ id: '1', nombre: 'Primer cobro persuasivo' }, { id: '2', nombre: 'Segundo cobro persuasivo' }];
 
   const [position_tab, set_position_tab] = useState('1');
   const [is_generate_resolucion, set_is_generate_resolucion] = useState(true);
@@ -118,6 +120,19 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
   const [rows, set_rows] = useState<any[]>([]);
   const [id_subetapa, set_id_subetapa] = useState<string>('1');
   const [current_expediente, set_current_expediente] = useState<any>(null);
+  const [form_table_values, set_form_table_values] = useState<AprobadoresProps>({
+    nombre_aprobador: '',
+    cargo_aprobador: '',
+    nombre_proyector: '',
+    cargo_proyector: '',
+  });
+  const [form_to_send, set_form_to_send] = useState<AprobadoresProps>({
+    nombre_aprobador: '',
+    cargo_aprobador: '',
+    nombre_proyector: '',
+    cargo_proyector: '',
+    send_data: false
+  });
 
   const { is_from_liquidacion, obligaciones_from_liquidacion, id_deudor, set_etapa_proceso, set_is_from_liquidacion } = useContext(EtapaProcesoConext);
 
@@ -155,6 +170,53 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
 
   const handle_change_subetapa = (event: any) => {
     set_id_subetapa(event.target.value);
+  }
+
+  const handle_nombre_aprobador = (event: any) => {
+    set_form_table_values({
+      ...form_table_values,
+      nombre_aprobador: event.target.value
+    });
+  }
+
+  const handle_cargo_aprobador = (event: any) => {
+    set_form_table_values({
+      ...form_table_values,
+      cargo_aprobador: event.target.value
+    });
+  }
+
+  const handle_nombre_proyector = (event: any) => {
+    set_form_table_values({
+      ...form_table_values,
+      nombre_proyector: event.target.value
+    });
+  }
+
+  const handle_cargo_proyector = (event: any) => {
+    set_form_table_values({
+      ...form_table_values,
+      cargo_proyector: event.target.value
+    });
+  }
+
+  const handle_click_update = () => {
+    set_form_to_send({
+      nombre_aprobador: form_table_values.nombre_aprobador,
+      cargo_aprobador: form_table_values.cargo_aprobador,
+      nombre_proyector: form_table_values.nombre_proyector,
+      cargo_proyector: form_table_values.cargo_proyector,
+      send_data: true
+    });
+  }
+
+  const clean_form = () => {
+    set_form_table_values({
+      nombre_aprobador: '',
+      cargo_aprobador: '',
+      nombre_proyector: '',
+      cargo_proyector: '',
+    });
   }
 
   useEffect(() => {
@@ -275,27 +337,88 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
             />
           </Grid>}
           <Grid item xs={12} md={6} lg={4}>
-              <FormControl required size='small' fullWidth>
-                <InputLabel>Subetapa Proceso Persuasivo</InputLabel>
-                <Select
-                  disabled={false}
-                  multiline
-                  value={id_subetapa || ''}
-                  label="Subetapa Proceso Persuasivo"
-                  onChange={handle_change_subetapa}
-                >
-                  <MenuItem value="">
-                    <em>Seleccione una opción</em>
+            <FormControl required size='small' fullWidth>
+              <InputLabel>Subetapa Proceso Persuasivo</InputLabel>
+              <Select
+                disabled={false}
+                multiline
+                value={id_subetapa || ''}
+                label="Subetapa Proceso Persuasivo"
+                onChange={handle_change_subetapa}
+              >
+                <MenuItem value="">
+                  <em>Seleccione una opción</em>
+                </MenuItem>
+                {subetapas.map((subetapa: any) => (
+                  <MenuItem key={subetapa.id} value={subetapa.id}>
+                    {subetapa.nombre}
                   </MenuItem>
-                  {subetapas.map((subetapa: any) => (
-                    <MenuItem key={subetapa.id} value={subetapa.id}>
-                      {subetapa.nombre}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>Seleccione una subetapa</FormHelperText>
-              </FormControl>
-            </Grid>
+                ))}
+              </Select>
+              <FormHelperText>Seleccione una subetapa</FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Aprobó y Revisó"
+              helperText="Nombre encargado"
+              onChange={handle_nombre_aprobador}
+              value={form_table_values.nombre_aprobador}
+            />
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Cargo"
+              helperText="Cargo del aprobador y revisor"
+              onChange={handle_cargo_aprobador}
+              value={form_table_values.cargo_aprobador}
+            />
+          </Grid>
+           <Grid item xs={12} md={6} lg={4}>
+            <TextField
+              fullWidth
+              size="small"
+              name="nombreDeudor"
+              label="Proyectó"
+              helperText="Nombre encargado"
+              onChange={handle_nombre_proyector}
+              value={form_table_values.nombre_proyector}
+            />
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Cargo"
+              helperText="Cargo del proyector"
+              onChange={handle_cargo_proyector}
+              value={form_table_values.cargo_proyector}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Button
+              size="medium"
+              variant="contained"
+              color="primary"
+              onClick={handle_click_update}
+              // endIcon={<CloudDownloadIcon />}
+            >
+              Actualizar
+            </Button>
+            <Button
+              sx={{ml: 2}}
+              size="medium"
+              variant="outlined"
+              startIcon={<CleanIcon />}
+              onClick={clean_form}
+            >
+              Limpiar
+            </Button>
+          </Grid>
           {/* <Grid item xs={12} md={6} lg={4}>
             <TextField
               fullWidth
@@ -306,7 +429,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
               disabled
             />
           </Grid> */}
-          {(rows.length > 1) && <Grid item xs={12} lg={6} sx={{margin: 'auto'}}>
+          {(rows.length > 1) && <Grid item xs={12} lg={8} sx={{margin: 'auto'}}>
             <DataGrid
               density="compact"
               autoHeight
@@ -412,6 +535,8 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
               is_generate_resolucion={is_generate_resolucion}
               resolucion_url={resolucion_url}
               id_subetapa={id_subetapa}
+              aprobadores_data={form_to_send}
+              set_form_table_values={set_form_table_values}
             />
           </TabPanel>
 

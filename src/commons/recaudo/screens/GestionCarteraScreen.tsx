@@ -817,6 +817,7 @@ export const GestionCarteraScreen: React.FC = () => {
                     }}
                   />
                   <Button
+                    size="small"
                     type='submit'
                     variant='contained'
                     color='primary'
@@ -825,6 +826,7 @@ export const GestionCarteraScreen: React.FC = () => {
                     Buscar
                   </Button>
                   <Button
+                    size="small"
                     type='button'
                     variant='outlined'
                     color='primary'
@@ -840,6 +842,7 @@ export const GestionCarteraScreen: React.FC = () => {
 
 
                   <LoadingButton
+                    size="small"
                     color="success"
                     onClick={handleClick}
                     loading={loadingg}
@@ -931,7 +934,7 @@ export const GestionCarteraScreen: React.FC = () => {
 
       <TabContext value={position_tab}>
         <TabPanel value="2" sx={{ p: '20px 0' }}>
-          <CobroCoactivo
+          {/* <CobroCoactivo
             rows_atributos={atributos_etapa}
             input_values={input_values}
             input_files={input_files}
@@ -941,7 +944,7 @@ export const GestionCarteraScreen: React.FC = () => {
             handle_file_change={handle_file_change}
             handle_post_valores_sin_archivo={handle_post_valores_sin_archivo}
             handle_post_valores_con_archivo={handle_post_valores_con_archivo}
-          />
+          /> */}
         </TabPanel>
       </TabContext>
 

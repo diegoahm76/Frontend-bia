@@ -88,7 +88,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
       renderCell: (params: any) => (
         <> <DownloadButton
           fileUrl={params.row.archivos_digitales.ruta_archivo}
-          fileName="nombre_archivo.pdf" // Puedes proporcionar un nombre de archivo deseado
+          // fileName="nombre_archivo.pdf" // Puedes proporcionar un nombre de archivo deseado
           condition={false} // Establece la condición según tus necesidades
         />
           <IconButton onClick={() => set_id_visualizar(params.row.id_plantilla_doc)}      >
