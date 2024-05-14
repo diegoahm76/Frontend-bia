@@ -123,19 +123,26 @@ export const ListaElementosTramites = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    /* const shouldDisable = (actionId: string) => {
+      const shouldDisable = (actionId: string) => {
       const isNoSeleccionado = !tramite;
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
       const hasAnexos = tramite.cantidad_anexos > 0;
       const requiresDigitalization = tramite.requiere_digitalizacion;
-      const isRadicado = tramite.estado_solicitud === 'RADICADO';
+      const isRadicado = tramite.estado_actual_solicitud === 'RADICADO';
       const isEnVentanillaSinPendientes =
-      tramite.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+      tramite.estado_actual_solicitud === 'EN VENTANILLA SIN PENDIENTES';
       const isEnVentanillaConPendientes =
-      tramite.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+      tramite.estado_actual_solicitud === 'EN VENTANILLA CON PENDIENTES';
+      const isEnGestion = tramite.estado_actual_solicitud === 'EN GESTION';
+      const pendienteRevisionJuridica = tramite.estado_actual_solicitud === 'PENDIENTE DE REVISIÓN JURIDICA DE VENTANILLA';
+      const revisadoPorJuridicaDeVentanilla = tramite.estado_actual_solicitud === 'REVISADO POR JURIDICA DE VENTANILLA';
+      const tramiteLiquidado = tramite.estado_actual_solicitud === 'LIQUIDADO';
+      const pendienteDePago = tramite.estado_actual_solicitud === 'PENDIENTE DE PAGO';
+      const pagad = tramite.estado_actual_solicitud === 'PAGADO';
 
-    
+        // pay
+      
 
       if (isNoSeleccionado) {
         return true;
@@ -143,28 +150,54 @@ export const ListaElementosTramites = (): JSX.Element => {
 
       //?  primer caso
       if (isRadicado && !hasAnexos) {
-        return !(actionId === 'AsigGrupOtro');
+        return !(actionId === 'Jurídica'); // || actionId === 'AsigGrup'
       }
       // ? segundo caso
       if (isRadicado && hasAnexos && !requiresDigitalization) {
-        return !(actionId === 'AsigGrupOtro' || actionId === 'DigOtro');
+        return !(
+          actionId === 'Jurídica'
+        );
       }
       // ? tercer caso
       if (isRadicado && hasAnexos && requiresDigitalization) {
-        return !(actionId === 'DigOtro');
+        return !(/*actionId === 'Jurídica' ||*/ actionId === 'Dig');
       }
       // ? cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-        return !(actionId === 'DigOtro' || actionId === 'AsigGrupOtro');
+        return !(
+          actionId === 'Jurídica' // ||
+          //actionId === 'Dig' ||
+          // actionId === 'AsigGrup'
+        );
       }
       // ? quinto caso
       if (isEnVentanillaSinPendientes && requiresDigitalization) {
-        return !(actionId === 'DigOtro');
+        return !(actionId === 'Dig');
       }
 
       // ? sexto caso
       if (isEnVentanillaConPendientes) {
-        return !(actionId === 'DigOtro');
+        return !(actionId === 'Dig' /*|| actionId === 'Jurídica'*/);
+      }
+
+      if(pendienteRevisionJuridica){
+        return !(actionId === 'Jurídica');
+      }
+
+      if(revisadoPorJuridicaDeVentanilla){
+        return !(actionId === 'Jurídica');
+      }
+
+      if(tramiteLiquidado){
+        return !(actionId === 'Jurídica' || actionId === 'Pay');
+      }
+
+      if(pendienteDePago){
+        return !(actionId === 'Jurídica' || actionId === 'Pay');
+      }
+
+      if(pagad){
+        return !(actionId === 'AsigGrup' || actionId === 'Jurídica' || actionId === 'Pay' || actionId === 'Dig');
       }
 
       if (isEnGestion) {
@@ -172,15 +205,14 @@ export const ListaElementosTramites = (): JSX.Element => {
       }
 
 
-
-
+    // ? se debe actualizar al valor de la consante
     const actionsTramites = actionsTramitesYServicios.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
     }));
 
-   dispatch(setActionssToManagePermissionsTramitesYServicios(actionsTramites));
-  };*/
+   dispatch(setActionssToManagePermissionsTramitesYServicios(actionsTramitesYServicios));
+  };
   };
 
   //* espacio para la definición de las columnas

@@ -152,7 +152,7 @@ const actionsOtros = [
       }
       // ? segundo caso
       if (isRadicado && hasAnexos && !requiresDigitalization) {
-        return !(actionId === 'AsigGrupOtro' || actionId === 'DigOtro');
+        return !(actionId === 'AsigGrupOtro' /*|| actionId === 'DigOtro'*/);
       }
       // ? tercer caso
       if (isRadicado && hasAnexos && requiresDigitalization) {
@@ -160,7 +160,7 @@ const actionsOtros = [
       }
       // ? cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-        return !(actionId === 'DigOtro' || actionId === 'AsigGrupOtro');
+        return !(/*actionId === 'DigOtro' ||*/ actionId === 'AsigGrupOtro');
       }
       // ? quinto caso
       if (isEnVentanillaSinPendientes && requiresDigitalization) {

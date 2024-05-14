@@ -201,7 +201,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
   }, [restablecer]);
 
   useEffect(() => {
-    if (tramite_servicio === 'O') {
+    if (tramite_servicio === 'OP') {
       set_steps([...steps, ...opas]);
     } else {
       set_steps(['Tipo de trámite']);
@@ -388,7 +388,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                         </Grid>
                       </Box>
                     )}
-                    {tramite_servicio === 'O' && (
+                    {tramite_servicio === 'OP' && (
                       <Box
                         sx={{
                           display: 'flex',

@@ -48,7 +48,7 @@ export const PreciosProvider = ({ children }: PreciosProviderProps): JSX.Element
     // Estado para almacenar los valores relacionados con la liquidación
     const [liquidacionState, setLiquidacionState] = useState<LiquidacionState>(liquidacionValoresIniciales);
 
-    console.log("logs", logs, "liquidacionState", liquidacionState, "usuario", usuario, "form", form,"precios",precios);
+    console.log( "liquidacionState", liquidacionState);
 
     // Valor del contexto que se proporcionará a los componentes hijos
     const value: PreciosTypes = {

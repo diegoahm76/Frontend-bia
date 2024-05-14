@@ -47,7 +47,7 @@ export const tipos_tramites: any = () => {
 export const tramites_servicios: any = () => {
   return async () => {
     try {
-      const { data } = await api.get(`tramites/opa/tramites/get-list/O/`);
+      const { data } = await api.get(`tramites/pm/tramites/get-list/PM/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -83,7 +83,7 @@ export const get_municipios: any = (departamento: number) => {
 export const get_info_persona: any = (persona_id: number) => {
   return async () => {
     try {
-      const { data } = await api.get(`tramites/opa/tramites/persona-titular/get-info/${persona_id}`);
+      const { data } = await api.get(`tramites/pm/tramites/persona-titular/get-info/${persona_id}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -95,7 +95,7 @@ export const get_info_persona: any = (persona_id: number) => {
 export const create_tramite_servicio: any = (tramite: any) => {
   return async () => {
     try {
-      const { data } = await api.post(`tramites/opa/tramites/inicio-tramite/create/`,tramite);
+      const { data } = await api.post(`tramites/pm/tramites/inicio-tramite/create/`,tramite);
       control_success(data.detail);
       return data;
     } catch (error: any) {
@@ -141,9 +141,9 @@ export const cargar_anexos_opas_metadatos: any = (id_tramite: any, documentos: a
 export const radicar_opa: any = (id_tramite: any) => {
   return async () => {
     try {
-      const { data } = await api.post(`tramites/opa/tramites/radicar/create/${id_tramite}/`);
+      const { data } = await api.post(`tramites/pm/tramites/radicar/create/${id_tramite}/`);
       await Swal.fire({
-        title: 'Radicación de trámite OPA',
+        title: 'Radicación de trámite - permiso menor',
         text: data.detail,
         icon: 'success',
         confirmButtonText: 'Aceptar',
@@ -159,7 +159,7 @@ export const radicar_opa: any = (id_tramite: any) => {
 export const eviar_correo_radicado: any = (id_tramite: any) => {
   return async () => {
     try {
-      const { data } = await api.post(`tramites/opa/tramites/radicar/volver-enviar/${id_tramite}/`);
+      const { data } = await api.post(`tramites/pm/tramites/radicar/volver-enviar/${id_tramite}/`);
       control_success(data.detail);
       return data;
     } catch (error: any) {
@@ -172,7 +172,7 @@ export const eviar_correo_radicado: any = (id_tramite: any) => {
 export const obtener_opas_por_titular: any = (id_persona_titular: any) => {
   return async () => {
     try {
-      const { data } = await api.get(`tramites/opa/tramites/list/${id_persona_titular}/`);
+      const { data } = await api.get(`tramites/pm/tramites/list/${id_persona_titular}/`);
       control_success(data.detail);
       return data;
     } catch (error: any) {
