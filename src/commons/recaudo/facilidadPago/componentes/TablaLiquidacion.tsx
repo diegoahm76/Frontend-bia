@@ -21,9 +21,10 @@ export const TablaLiquidacion: React.FC = () => {
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
   const [lista, set_lista] = useState(Array<Obligacion>);
-  console.log("lista",lista)
+  console.log("lista", lista, total, intereses, capital)
   const { plan_pagos } = useSelector((state: RootState) => state.plan_pagos);
   const { deudores } = useSelector((state: any) => state.deudores);
+  const [saldoCapital, setSaldoCapital] = useState<number | undefined>(0); // Inicializado con 0 o undefined^M
   const valor_abono_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
     currency: "COP",
@@ -192,9 +193,24 @@ export const TablaLiquidacion: React.FC = () => {
             style: "currency",
             currency: "COP",
           }).format(params.value)
-          const valorColumna1 = params.row.valor_capital_intereses;
+          const valorColumna1 = params.row.valor_capital_intereses * 1000;
+          const valor_abonado_inicial = deudores.valor_abonado;
 
-          handleValorAbonadoChange({ target: { value: valorColumna1 } }, 'valor_abonado', `valor_abonado_${params.id}`);
+          const valor_capital = params.row.monto_inicial * 1000;
+          const respuesta = valor_capital / valorColumna1;
+
+          console.log("valor_capital", valor_capital)
+          console.log("valorColumna1", valorColumna1)
+          console.log("valor_abonado_inicial", valor_abonado_inicial)
+          console.log("respuesta", respuesta);
+          const total = Math.round(valor_abonado_inicial * respuesta);
+          const totalFormateado = total.toLocaleString('es-ES');
+
+
+
+          console.log("11111111111111", valor_abonado_inicial, deudores.valor_abonado)
+
+          handleValorAbonadoChange({ target: { value: total } }, 'valor_abonado', `valor_abonado_${params.id}`);
         };
 
         return (
@@ -265,10 +281,11 @@ export const TablaLiquidacion: React.FC = () => {
         const dato = valoresAbonados[`valor_abonado_${params.id}`];
         const nuevoValor = params.row.valor_intereses;
         const resultado = parseFloat(dato) - parseFloat(nuevoValor);
-        // console.log("daots",dato,nuevoValor,resultado)
+
+        const totalFormateado = (valoresAbonados[`valor_abonado_${params.id}`] || 0).toLocaleString('es-ES');
         return (
           <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-            {resultado.toFixed(2)}
+                   {totalFormateado}
           </div>
         );
       },
@@ -279,8 +296,8 @@ export const TablaLiquidacion: React.FC = () => {
       width: 150,
       renderCell: (params) => {
         const dato = parseFloat(valoresAbonados[`valor_abonado_${params.id}`]);
-        const nuevoValor = parseFloat(params.row.valor_intereses);
-
+        const nuevoValor = params.row.valor_intereses * 1000;
+        const nuevoValorFormateado = nuevoValor.toLocaleString('es-ES');
         // Verificar si dato y nuevoValor son números válidos
         if (isNaN(dato) || isNaN(nuevoValor)) {
           return (
@@ -292,7 +309,7 @@ export const TablaLiquidacion: React.FC = () => {
 
         return (
           <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-            {nuevoValor.toFixed(2)}
+            +            {nuevoValorFormateado}
           </div>
         );
       },
@@ -304,11 +321,12 @@ export const TablaLiquidacion: React.FC = () => {
       renderCell: (params) => {
 
         const valor_Abonado = parseFloat(valoresAbonados[`valor_abonado_${params.id}`]);
-        const valor_capital = parseFloat(params.row.monto_inicial);
+        //const valor_capital = parseFloat(params.row.monto_inicial);
         const valor_interes = parseFloat(params.row.valor_intereses);
+        const valor_capital = params.row.monto_inicial * 1000;
 
         // Verificar si dato y nuevoValor son números válidos
-        if (isNaN(valor_Abonado) || isNaN(valor_capital) || isNaN(valor_interes)) {
+        if (isNaN(valor_Abonado) || isNaN(valor_capital)) {
           return (
             <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
               N/A
@@ -316,13 +334,15 @@ export const TablaLiquidacion: React.FC = () => {
           );
         }
         console.log("informacion", valor_Abonado, valor_capital.toFixed(2), valor_interes)
-        const resultado = valor_Abonado - (valor_capital + valor_interes);
+        const resultado = valor_capital - valor_Abonado;
+        setSaldoCapital(resultado);
         return (
           <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-            {resultado}
+            {resultado.toLocaleString('es-ES')}
           </div>
         )
       },
+
     },
   ];
 
@@ -422,7 +442,7 @@ export const TablaLiquidacion: React.FC = () => {
                       label="Saldo Capital"
                       size="small"
                       fullWidth
-                      value={''}
+                      value={saldoCapital !== undefined ? saldoCapital.toLocaleString('es-ES') : ''}
                     />
                   </Grid>
                 </Stack>
