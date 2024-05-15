@@ -59,7 +59,7 @@ export const SeguirAdelanteDoc: React.FC<any> = ({
           },
           { text: 'Resolución No. PS-GJ.1.2.6.1.24.012', alignment: 'center', color: '#BBBBBB', italics: true, fontSize: 11, margin: [0, 2, 0, 0]},
           { text: 'Fecha 23/01/2024', alignment: 'center', fontSize: 11, color: '#BBBBBB', italics: true, margin: [0, 2, 0, 0]},
-          { text: '«Por medio de la cual se resuelven unas excepciones»', alignment: 'center', fontSize: 11, color: '#BBBBBB', italics: true, margin: [0, 12, 0, 0]}
+          { text: '«Por medio de la cual se ordena seguir adelante la ejecución»', alignment: 'center', fontSize: 11, color: '#BBBBBB', italics: true, margin: [0, 12, 0, 0]}
         ];
       },
       footer: function(currentPage: any, pageCount: any) { // Función de pie de página

@@ -14,6 +14,7 @@ import {
   Dialog,
   Switch,
   Chip,
+  Typography,
 } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
@@ -44,6 +45,7 @@ import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { AlertaDocumento } from './AlertaDocumento';
 import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
+import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 export interface UnidadOrganizaciona {
   codigo: any;
   nombre: string;
@@ -66,6 +68,7 @@ export const GeneradorDocumentos: React.FC = () => {
   const [radicadof, setradicadof] = useState<number | null>(null);
   const [file, setFile] = useState('');
   const [urlFile, setUrlFile] = useState<any>(null);
+
 
   const [personaselet, setpersona] = useState<string[]>([]);
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
@@ -147,6 +150,8 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
   const [plantillas, setPlantillas] = useState<any[]>([]);
+  const [showVariables, setShowVariables] = useState(false);
+  const [variablesPlantilla, setVariablesPlantilla] = useState<any[]>([]);
 
   const fetch_data_plantillas = async (): Promise<void> => {
     try {
@@ -175,13 +180,8 @@ export const GeneradorDocumentos: React.FC = () => {
   const handleFileUpload = (event: any) => {
     const file = event.target.files[0];
     const url = URL.createObjectURL(file);
-    setFile('')
     setUrlFile({ name: file.name, url });
   };
-
-  useEffect(() => {
-    if(urlFile) console.log(urlFile);
-  }, [urlFile])
 
   const removeFile = () => {
     setUrlFile(null);
@@ -196,6 +196,7 @@ export const GeneradorDocumentos: React.FC = () => {
     if(plantillaSeleccionada?.archivos_digitales){
       removeFile()
       setFile(`https://back-end-bia-beta.up.railway.app${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
+      setVariablesPlantilla(plantillaSeleccionada.variables)
     }
   }, [plantillaSeleccionada]);
 
@@ -205,6 +206,13 @@ export const GeneradorDocumentos: React.FC = () => {
     setIdUnidadSeleccionada(selectedId);
   };
 
+  const handleEdicion = () => {
+    setShowVariables(!showVariables);
+  }
+
+  const generateBorrador = (data: any) => {
+    console.log(data);
+  }
 
   return (
     <>
@@ -281,63 +289,87 @@ export const GeneradorDocumentos: React.FC = () => {
                 >
                   {unidad.nombre}
                 </MenuItem>
-              ))}
-            </TextField>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={12}>
-          <TextField
-            rows={3}
-            fullWidth
-            multiline
-            size="small"
-            label="Observaciones"
-            variant="outlined"
-          />
-        </Grid>
-        <Grid item>
-          <Button
-            startIcon={<VisibilityIcon />}
-            variant="contained"
-            // onClick={generarHistoricoBajas}
-          >
-            Ver borrador
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            startIcon={<SaveIcon />}
-            color="success"
-            variant="contained"
-            // onClick={handle_open_buscar}
-            // disabled={isButtonDisabled}
-          >
-            Enviar Documento
-          </Button>
-        </Grid>
-        <Grid item lg={9}></Grid>
-        <Grid item sx={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-          <Button
-            component="label"
-            variant="outlined"
-            startIcon={<CloudUploadIcon />}
-          >
-            Cargar Plantilla
-            <input
-              type="file"
-              style={{ display: "none" }}
-              onChange={handleFileUpload}
-              accept=".doc, .docx"
-            />
-          </Button>
-          {urlFile && (
-            <Chip
-              label={urlFile.name}
-              onDelete={removeFile}
-              deleteIcon={<CloseIcon />}
-            />
-          )}
-        </Grid>
+                ))}
+              </TextField>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+              rows={3}
+              fullWidth
+              multiline
+              size="small"
+              label="Observaciones"
+              variant="outlined"
+              />
+            </Grid>
+            <FormularioGenerador
+              exCallback={generateBorrador}
+              variablesPlantilla={variablesPlantilla}
+              showVariables={showVariables}
+            ></FormularioGenerador>
+            <Grid item xs={12}>
+              {urlFile && (
+                <Chip
+                  label={urlFile.name}
+                  onDelete={removeFile}
+                  deleteIcon={<CloseIcon />}
+                />
+              )}
+            </Grid>
+            <Grid
+              container
+              spacing={2}
+              my={2}
+              mx={1}
+              sx={{ display: 'flex', justifyContent: 'end' }}
+            >
+              <Grid item>
+                <Button
+                  startIcon={<VisibilityIcon />}
+                  variant="contained"
+                  onClick={handleEdicion}
+                  disabled={!plantillaSeleccionada}
+                >
+                  {showVariables ? 'Deshabilitar edición campos' : 'Habilitar edición campos'}
+                </Button>
+              </Grid>
+              <Grid item sx={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                <Button
+                  component="label"
+                  variant="outlined"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Cargar Plantilla
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileUpload}
+                    accept=".doc, .docx"
+                  />
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                startIcon={<VisibilityIcon />}
+                variant="contained"
+                onClick={generateBorrador}
+                >
+                  Ver borrador
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  startIcon={<SaveIcon />}
+                  color="success"
+                  variant="contained"
+                  // onClick={handle_open_buscar}
+                  // disabled={isButtonDisabled}
+                >
+                  Enviar Documento
+                </Button>
+              </Grid>
+            </Grid>
       </Grid>
       <AlertaDocumento
         personaselet={personaselet}
@@ -363,12 +395,13 @@ export const GeneradorDocumentos: React.FC = () => {
         }}
       >
         <Grid item xs={12} sm={12}>
-          {(file || urlFile) && (
+          {(file) && (
             <>
               <Button
                 variant="contained"
                 color="primary"
                 href={file}
+                sx={{display: 'flex', m: 'auto', width: '200px', mb: '1.5rem'}}
                 download
                 endIcon={<CloudDownloadIcon />}
               >
@@ -376,7 +409,7 @@ export const GeneradorDocumentos: React.FC = () => {
               </Button>
               <DocViewer
                 pluginRenderers={DocViewerRenderers}
-                documents={[{ uri: file || urlFile.url }]}
+                documents={[{ uri: file }]}
                 style={{height: 1000, width: '70%', display: 'flex', margin: 'auto'}}
               />
             </>

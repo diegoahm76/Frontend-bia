@@ -75,7 +75,6 @@ export const CobroPersuasivo: React.FC<any> = ({
           send_data: false
         })
       }
-      console.log('hola 2');
       generatePDF();
     }
   }, [is_generate_resolucion, currentDeudor, dataClean, datos, aprobadores_data]);
@@ -134,19 +133,19 @@ export const CobroPersuasivo: React.FC<any> = ({
                 { text: `${currentConsecutivo}\n`, fontSize: 12, margin: [0, 10, 0, 0]},
                 { text: `\n`},
                 { text: `\n`},
-                { text: 'Villavicencio,\n', fontSize: 12 },
+                { text: `Villavicencio,\n`, fontSize: 12 },
                 { text: `\n`},
                 { text: `\n`},
                 { text: 'Señores\n', fontSize: 12 },
                 { text: `${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}\n`, fontSize: 12 },
-                { text: 'CL 27 SUR 43-56\n', fontSize: 12 },
+                { text: `CL 27 SUR 43-56\n`, fontSize: 12 },
                 { text: `Teléfono: ${datos?.id_deudor?.telefono || ''}\n`, fontSize: 12 },
                 { text: [
                     { text: `E-mail: `, fontSize: 12 },
                     { text: `${datos?.id_deudor?.email || currentDeudor.email}\n`, decoration: 'underline', color: 'blue', link: `emailto: ${datos?.id_deudor?.email || currentDeudor.email}` }
                   ]
                 },
-                { text: 'Villavicencio, Meta\n', fontSize: 12 },
+                { text: `Villavicencio, Meta\n`, fontSize: 12 },
               ],
             },
             {
@@ -172,7 +171,9 @@ export const CobroPersuasivo: React.FC<any> = ({
             }
           ],
         },
-        { text: 'ASUNTO: Cobro persuasivo visita de control y seguimiento expediente 3.37.1.014.016', alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
+        { text: `ASUNTO: Cobro persuasivo visita de control y seguimiento expediente 3.37.1.014.016`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
+        // { text: `ASUNTO: Cobro Tasa por Utilización de Agua y ofrecimiento de descuento de intereses`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
+        // { text: `ASUNTO: Cobro Tasa Retributiva y ofrecimiento de descuento de intereses`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
         { text: `En atención al asunto de la referencia y revisados los registros contables de nuestra entidad, se evidencia que ${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}, identificado con C.C./NIT No. ${datos?.id_deudor?.identificacion || currentDeudor.numero_identificacion} no ha cumplido con en el pago de las siguientes obligaciones:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
         {
           table: {
@@ -194,7 +195,7 @@ export const CobroPersuasivo: React.FC<any> = ({
           fontSize: 10,
           margin: [20, 15, 20, 0]
         },
-        { text: 'Intereses liquidados con corte a 28 de febrero de 2022 sin aplicar descuento del 80%', alignment: 'center', fontSize: 9, margin: [0, 2, 0, 0] },
+        { text: `Intereses liquidados con corte a 28 de febrero de 2022 sin aplicar descuento del 80%`, alignment: 'center', fontSize: 9, margin: [0, 2, 0, 0] },
         { text: 'De acuerdo con lo anterior, comedidamente me permito invitarlo para que cancele la suma adeudada antes de la fecha de corte de intereses aquí establecida, o se comunique con la oficina del Grupo Rentas de CORMACARENA en donde le brindaremos la posibilidad de una facilidad de pago. De no tener respuesta suya, entenderemos su renuencia al pago, y nos veremos avocados a iniciar el cobro por vía coactiva con la onerosidad que esto le ocasionaría. ', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
         // { text: 'En este mismo sentido nos permitimos informarle que Cormacarena dando aplicación a  los artículos 46 y 47 de la ley 2155 del 14 de septiembre de 2021, adoptó beneficios para los usuarios con obligaciones pendientes por pagar que se generaron con anterioridad al 30 de junio del año 2021, por concepto de Tasas (Tasa por utilización de agua, tasa retributiva, tasa compensatoria por caza de fauna silvestre y tasa de aprovechamiento forestal) otorgando descuentos del 80% del valor de los intereses moratorios.', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
         // {
@@ -210,7 +211,7 @@ export const CobroPersuasivo: React.FC<any> = ({
         {
           text: [
             'Así mismo se le informa que puede realizar el pago por concepto de ',
-            { text: 'Tasa por Utilización de Agua', decoration: 'underline' },
+            { text: `Tasa por Utilización de Agua`, decoration: 'underline' },
             ' en las oficinas del banco BBVA - ahorros 854001674 convenio 33283, o en las oficinas de BANCOLOMBIA – ahorros 36400028723 convenio 87321.',
           ],
           alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
@@ -266,15 +267,6 @@ export const CobroPersuasivo: React.FC<any> = ({
         spacing={2}
         m={2}
         p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
       >
         <Grid item xs={12} sm={12}>
           <embed

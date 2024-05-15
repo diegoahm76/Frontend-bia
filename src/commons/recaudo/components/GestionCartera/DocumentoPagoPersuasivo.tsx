@@ -281,239 +281,236 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
   return (
     <>
     <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26'
-        }}
-      >
-        <Title title="Proceso Cobro Persuasivo"></Title>
-        {(current_deudor?.id_deudor || datos?.id_deudor) && <Grid container spacing={2} mt={2}>
-          <Grid item xs={12} md={6} lg={4} sx={{margin: 'auto'}}>
-            <TextField
-              fullWidth
-              size="small"
-              name="documento"
-              label="Documento"
-              helperText="Documento"
-              value={current_deudor?.numero_identificacion || datos.id_deudor.identificacion}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4} sx={{margin: 'auto'}}>
-            <TextField
-              fullWidth
-              size="small"
-              name="nombreDeudor"
-              label="Nombre deudor"
-              helperText="Nombre deudor"
-              value={current_deudor?.nombre_completo || datos.id_deudor.nombres + ' ' + datos.id_deudor.apellidos}
-              disabled
-            />
-          </Grid>
-          {/* <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              fullWidth
-              size="small"
-              name="montoTotal"
-              label="Monto Total"
-              helperText="Valor monto total obligaciones sin intereses"
-              disabled
-            />
-          </Grid> */}
-          {(rows.length == 1) && <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              fullWidth
-              size="small"
-              name="codigoExpediente"
-              label="Expediente"
-              helperText="Expediente relacionado"
-              value={rows[0].expediente}
-              disabled
-            />
-          </Grid>}
-          <Grid item xs={12} md={6} lg={4}>
-            <FormControl required size='small' fullWidth>
-              <InputLabel>Subetapa Proceso Persuasivo</InputLabel>
-              <Select
-                disabled={false}
-                multiline
-                value={id_subetapa || ''}
-                label="Subetapa Proceso Persuasivo"
-                onChange={handle_change_subetapa}
-              >
-                <MenuItem value="">
-                  <em>Seleccione una opción</em>
-                </MenuItem>
-                {subetapas.map((subetapa: any) => (
-                  <MenuItem key={subetapa.id} value={subetapa.id}>
-                    {subetapa.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-              <FormHelperText>Seleccione una subetapa</FormHelperText>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Aprobó y Revisó"
-              helperText="Nombre encargado"
-              onChange={handle_nombre_aprobador}
-              value={form_table_values.nombre_aprobador}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Cargo"
-              helperText="Cargo del aprobador y revisor"
-              onChange={handle_cargo_aprobador}
-              value={form_table_values.cargo_aprobador}
-            />
-          </Grid>
-           <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              fullWidth
-              size="small"
-              name="nombreDeudor"
-              label="Proyectó"
-              helperText="Nombre encargado"
-              onChange={handle_nombre_proyector}
-              value={form_table_values.nombre_proyector}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Cargo"
-              helperText="Cargo del proyector"
-              onChange={handle_cargo_proyector}
-              value={form_table_values.cargo_proyector}
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Button
-              size="medium"
-              variant="contained"
-              color="primary"
-              onClick={handle_click_update}
-              // endIcon={<CloudDownloadIcon />}
-            >
-              Actualizar
-            </Button>
-            <Button
-              sx={{ml: 2}}
-              size="medium"
-              variant="outlined"
-              startIcon={<CleanIcon />}
-              onClick={clean_form}
-            >
-              Limpiar
-            </Button>
-          </Grid>
-          {/* <Grid item xs={12} md={6} lg={4}>
-            <TextField
-              fullWidth
-              size="small"
-              name="estadiExpediente"
-              label="Estado Expediente"
-              helperText="Estado Expediente"
-              disabled
-            />
-          </Grid> */}
-          {(rows.length > 1) && <Grid item xs={12} lg={8} sx={{margin: 'auto'}}>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={rows}
-              columns={columns}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              getRowId={(row) => row.id}
-              getRowHeight={() => 'auto'}
-            />
-           </Grid>}
+      container
+    >
+      <Title title="Proceso Cobro Persuasivo"></Title>
+      {(current_deudor?.id_deudor || datos?.id_deudor) && <Grid container spacing={2} mt={2}>
+        <Grid item xs={12} md={6} lg={4} sx={{margin: 'auto'}}>
+          <TextField
+            fullWidth
+            size="small"
+            name="documento"
+            label="Documento"
+            helperText="Documento"
+            value={current_deudor?.numero_identificacion || datos.id_deudor.identificacion}
+            disabled
+          />
+        </Grid>
+        <Grid item xs={12} md={6} lg={4} sx={{margin: 'auto'}}>
+          <TextField
+            fullWidth
+            size="small"
+            name="nombreDeudor"
+            label="Nombre deudor"
+            helperText="Nombre deudor"
+            value={current_deudor?.nombre_completo || datos.id_deudor.nombres + ' ' + datos.id_deudor.apellidos}
+            disabled
+          />
+        </Grid>
+        {/* <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            fullWidth
+            size="small"
+            name="montoTotal"
+            label="Monto Total"
+            helperText="Valor monto total obligaciones sin intereses"
+            disabled
+          />
+        </Grid> */}
+        {(rows.length == 1) && <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            fullWidth
+            size="small"
+            name="codigoExpediente"
+            label="Expediente"
+            helperText="Expediente relacionado"
+            value={rows[0].expediente}
+            disabled
+          />
         </Grid>}
-        <Typography variant="subtitle1" sx={{fontWeight: 'bold'}} mt={5} mb={2}>Cargue o Generación de Documentos</Typography>
-        <Grid container spacing={2} mb={2}>
-          <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
-            <Button
+        <Grid item xs={12} md={6} lg={4}>
+            <TextField
+              fullWidth
+              disabled={false}
+              select
+              size="small"
+              value={id_subetapa || ''}
+              label="Subetapa Proceso Persuasivo"
+              onChange={handle_change_subetapa}
+            >
+              <MenuItem value="">
+                <em>Seleccione una opción</em>
+              </MenuItem>
+              {subetapas.map((subetapa: any) => (
+                <MenuItem key={subetapa.id} value={subetapa.id}>
+                  {subetapa.nombre}
+                </MenuItem>
+              ))}
+            </TextField>
+            <FormHelperText>Seleccione una subetapa</FormHelperText>
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Aprobó y Revisó"
+            helperText="Nombre encargado"
+            onChange={handle_nombre_aprobador}
+            value={form_table_values.nombre_aprobador}
+          />
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Cargo"
+            helperText="Cargo del aprobador y revisor"
+            onChange={handle_cargo_aprobador}
+            value={form_table_values.cargo_aprobador}
+          />
+        </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            fullWidth
+            size="small"
+            name="nombreDeudor"
+            label="Proyectó"
+            helperText="Nombre encargado"
+            onChange={handle_nombre_proyector}
+            value={form_table_values.nombre_proyector}
+          />
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Cargo"
+            helperText="Cargo del proyector"
+            onChange={handle_cargo_proyector}
+            value={form_table_values.cargo_proyector}
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Button
+            size="medium"
+            variant="contained"
+            color="primary"
+            onClick={handle_click_update}
+            // endIcon={<CloudDownloadIcon />}
+          >
+            Actualizar
+          </Button>
+          <Button
+            sx={{ml: 2}}
+            size="medium"
+            variant="outlined"
+            startIcon={<CleanIcon />}
+            onClick={clean_form}
+          >
+            Limpiar
+          </Button>
+        </Grid>
+        {/* <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            fullWidth
+            size="small"
+            name="estadiExpediente"
+            label="Estado Expediente"
+            helperText="Estado Expediente"
+            disabled
+          />
+        </Grid> */}
+        {(rows.length > 1) && <Grid item xs={12} lg={8} sx={{margin: 'auto'}}>
+          <DataGrid
+            density="compact"
+            autoHeight
+            rows={rows}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            getRowId={(row) => row.id}
+            getRowHeight={() => 'auto'}
+          />
+          </Grid>}
+      </Grid>}
+      <Grid item xs={12}>
+        <Typography variant="subtitle1" sx={{fontWeight: 'bold', textAlign: 'center'}} mt={5} mb={2}>Cargue o Generación de Documentos</Typography>
+      </Grid>
+      <Grid container spacing={2} mb={2}>
+        <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
+          <Button
+            variant="outlined"
+            fullWidth
+            size='medium'
+            component="label"
+            startIcon={<CloudUpload />}
+            disabled={!is_generate_resolucion}
+          >
+            CARGAR RESOLUCIÓN
+            <input
+              hidden
+              type="file"
+              accept=".pdf"
+              multiple
+              required
+              autoFocus
+              style={{ opacity: 0 }}
+              name="anexos"
+              onChange={handle_change_resolucion}
+            />
+          </Button>
+        </Grid>
+        <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
+          <Button
+            variant="outlined"
+            fullWidth
+            size='medium'
+            component="label"
+            disabled={!is_generate_resolucion}
+            startIcon={<CloudUpload />}
+          >
+            CARGAR DOCUMENTO DE COBRO
+            <input
+              hidden
+              type="file"
+              accept=".pdf"
+              multiple
+              required
+              autoFocus
+              style={{ opacity: 0 }}
+              name="anexos"
+              onChange={handle_change_cobro}
+            />
+          </Button>
+        </Grid>
+        <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
+          <Button
               variant="outlined"
               fullWidth
               size='medium'
               component="label"
-              startIcon={<CloudUpload />}
+              startIcon={<DescriptionIcon />}
+              disabled={is_generate_resolucion}
+              onClick={handle_click_generate_resolucion}
             >
-              CARGAR RESOLUCIÓN
-              <input
-                hidden
-                type="file"
-                accept=".pdf"
-                multiple
-                required
-                autoFocus
-                style={{ opacity: 0 }}
-                name="anexos"
-                onChange={handle_change_resolucion}
-              />
+              GENERAR RESOLUCIÓN
             </Button>
-          </Grid>
-          <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
-            <Button
+        </Grid>
+        <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
+          <Button
               variant="outlined"
               fullWidth
               size='medium'
               component="label"
-              startIcon={<CloudUpload />}
+              startIcon={<DescriptionIcon />}
+              disabled={is_generate_resolucion}
+              onClick={handle_click_generate_cobro}
             >
-              CARGAR DOCUMENTO DE COBRO
-              <input
-                hidden
-                type="file"
-                accept=".pdf"
-                multiple
-                required
-                autoFocus
-                style={{ opacity: 0 }}
-                name="anexos"
-                onChange={handle_change_cobro}
-              />
+              GENERAR DOCUMENTO DE COBRO
             </Button>
-          </Grid>
-          <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
-            <Button
-                variant="outlined"
-                fullWidth
-                size='medium'
-                component="label"
-                startIcon={<DescriptionIcon />}
-                onClick={handle_click_generate_resolucion}
-              >
-                GENERAR RESOLUCIÓN
-              </Button>
-          </Grid>
-          <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
-            <Button
-                variant="outlined"
-                fullWidth
-                size='medium'
-                component="label"
-                startIcon={<DescriptionIcon />}
-                onClick={handle_click_generate_cobro}
-              >
-                GENERAR DOCUMENTO DE COBRO
-              </Button>
-          </Grid>
         </Grid>
       </Grid>
+    </Grid>
         {/* {(is_generate_cobro || is_generate_resolucion || resolucion_url || cobro_url) && <TabContext value={position_tab}> */}
         {(is_generate_cobro || is_generate_resolucion || resolucion_url || cobro_url) && show_documentos() && (datos || obligaciones_from_liquidacion.length) &&
         <TabContext value={position_tab}>
@@ -521,8 +518,8 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
             <TabList onChange={handle_tablist_change}>
               {(is_generate_resolucion || resolucion_url) && (id_subetapa == '1') && <Tab label={is_generate_resolucion ? 'RESOLUCIÓN GENERADA' : 'RESOLUCIÓN CARGADA'} value="1" />}
               {(is_generate_cobro || cobro_url) && (id_subetapa == '1') && <Tab label={is_generate_cobro ? 'COBRO GENERADO' : 'COBRO CARGADO'} value="2" />}
-              {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_resolucion ? 'RESOLUCIÓN GENERADA SUBETAPA 2' : 'RESOLUCIÓN CARGADA SUBETAPA 2'} value="1" />}
-              {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_cobro ? 'COBRO GENERADO SUBETAPA 2' : 'COBRO CARGADO SUBETAPA 2'} value="2" />}
+              {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_resolucion ? 'RESOLUCIÓN GENERADA SEGUNDO CONRO' : 'RESOLUCIÓN CARGADA SEGUNDO COBRO'} value="1" />}
+              {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_cobro ? 'SEGUNDO COBRO GENERADO' : 'SEGUNDO COBRO CARGADO'} value="2" />}
             </TabList>
           </Box>
 

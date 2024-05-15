@@ -778,7 +778,7 @@ export const GestionCarteraScreen: React.FC = () => {
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handle_tablist_change}>
                   <Tab label="Gestion Cartera" value="1" />
-                  <Tab label="Editar Cartera" value="2" disabled={is_from_liquidacion}/>
+                  <Tab label="Editar Cartera" value="2" disabled={is_from_liquidacion || !datos}/>
                   {cobro_persuasivo_active && <Tab label="Proceso cobro Persuasivo" value="3" disabled={false}/>}
                   {cobro_coactivo_active && <Tab label="Proceso Cobro Coactivo" value="4" disabled={false}/>}
                 </TabList>
@@ -817,41 +817,42 @@ export const GestionCarteraScreen: React.FC = () => {
                     }}
                   />
                   <Button
-                    size="small"
                     type='submit'
                     variant='contained'
                     color='primary'
                     startIcon={<SearchIcon />}
+                    sx={{ height: 'fit-content' }}
                   >
                     Buscar
                   </Button>
                   <Button
-                    size="small"
                     type='button'
                     variant='outlined'
                     color='primary'
                     startIcon={<ClearIcon />}
+                    sx={{ height: 'fit-content' }}
                     onClick={clear_filter}
                   >
                     Limpiar
                   </Button>
 
-                  <Grid item xs={12} sm={4.1}>
+                  {/* <Grid item xs={12} sm={4.1}>
 
+                  </Grid> */}
+
+                  <Grid sx={{display: 'flex', justifyContent: 'end', width: '40%'}}>
+                    <LoadingButton
+                      color="success"
+                      onClick={handleClick}
+                      loading={loadingg}
+                      loadingPosition="start"
+                      startIcon={<SettingsInputAntennaIcon />}
+                      sx={{ height: 'fit-content' }}
+                      variant="contained"
+                    >
+                      Actualizar base de datos
+                    </LoadingButton>
                   </Grid>
-
-
-                  <LoadingButton
-                    size="small"
-                    color="success"
-                    onClick={handleClick}
-                    loading={loadingg}
-                    loadingPosition="start"
-                    startIcon={<SettingsInputAntennaIcon />}
-                    variant="contained"
-                  >
-                    <span>Actualizar base de datos </span>
-                  </LoadingButton>
 
 
                 </Box>
@@ -924,10 +925,10 @@ export const GestionCarteraScreen: React.FC = () => {
 
 
 
-      <SeccionEnvio_MSM_CORREO_F
+      {position_tab !== '1' && <SeccionEnvio_MSM_CORREO_F
         selected_proceso={selected_proceso}
 
-      />
+      />}
 
 
 

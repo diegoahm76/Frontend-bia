@@ -86,7 +86,8 @@ export const MandamientoPagoDoc: React.FC<any> = ({
               width: '50%',
               text: [
                 { text: `Proceso No. ${currentConsecutivo}\n`, fontSize: 12, margin: [0, 10, 0, 0]},
-                { text: 'Asunto: Visita técnica de control y seguimiento\n', fontSize: 12 },
+                { text: `Asunto: Visita técnica de control y seguimiento\n`, fontSize: 12 },
+                // { text: `Asunto: Tasa por utilización de agua \n`, fontSize: 12 },
                 { text: `Contra:  ${datos?.id_deudor?.nombres || ''}\n`, fontSize: 12 },
                 { text: `.\t\t\tCC/Nit. ${datos?.id_deudor?.identificacion || ''}\n`, fontSize: 12 },
               ],
@@ -96,14 +97,14 @@ export const MandamientoPagoDoc: React.FC<any> = ({
               stack: [
                 {
                   canvas: [
-                    { type: 'rect', x: anchoPagina/2 - 290, y: 0, w: 230, h: 22 },
-                    { type: 'rect', x: anchoPagina/2 - 290, y: 35, w: 230, h: 85}
+                    // { type: 'rect', x: anchoPagina/2 - 290, y: 0, w: 230, h: 22 },
+                    { type: 'rect', x: anchoPagina/2 - 290, y: 0, w: 230, h: 85}
                   ],
                 },
                 {
-                  absolutePosition: {x: 0, y: 132},
+                  absolutePosition: {x: 0, y: 97},
                   stack: [
-                    { text: 'Al contestar cite el número completo de este oficio', alignment: 'right', fontSize: 9, margin: [ 0, 0, 15, 0 ] },
+                    // { text: 'Al contestar cite el número completo de este oficio', alignment: 'right', fontSize: 9, margin: [ 0, 0, 15, 0 ] },
                     { text: 'Cormacarena', alignment: 'right', fontSize: 9, margin: [ 0, 30, 90, 10 ] },
                     { text: `Radicado: 123421421412`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 5 ]  },
                     { text: `Fecha: ${dayjs().format('DD/MM/YYYY')}`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 5 ] },
@@ -119,7 +120,7 @@ export const MandamientoPagoDoc: React.FC<any> = ({
           ? { text: [
                 'De conformidad con el numeral 7 del artículo 150 y 269 de la Constitución Política de Colombia, que por remisión normativa preside en el artículo 23 del decreto 1768 de 1994, compilado por el artículo 2.2.8.4.1.23 del decreto 1076 de 2015, que señala: ',
                 { text: '«Las corporaciones tienen jurisdicción coactiva para hacer efectivos los créditos exigibles a su favor, de acuerdo con las normas establecidas para las entidades públicas del sector nacional, en la Ley 6ª de 1992 o la norma que modifique o sustituya»', italics: true },
-                ' y la resolución 2.6.07.0073 del 15 de febrero de 2007',
+                `y la resolución 2.6.07.0073 del 15 de febrero de 2007`,
                 { text: '«Por medio del cual se establece el Reglamento interno de cartera de la Corporación para el Desarrollo Sostenible del Área de Manejo Especial La Macarena»', italics: true },
                 ' proferida por esta Corporación, se dispone lo siguiente:',
               ],
@@ -129,7 +130,7 @@ export const MandamientoPagoDoc: React.FC<any> = ({
 
         isSancionFormat
           ? { text: `Que con el fin de vigilar y efectuar un seguimiento oportuno y eficaz de las acreencias que por cualquier concepto se adeuden a la Corporación, el jefe de la Oficina Asesora Jurídica a través del grupo rentas podrá adelantar el presente procedimiento de cobro coactivo de conformidad con lo establecido en el Estatuto Tributario Nacional Colombiano -en adelante ET-`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] }
-          : {text: `Que dentro del expediente número 3.37.2.3.016.005, mediante resolución número PS-GJ.1.2.6.17.2164 de fecha veintiocho (28) de noviembre de 2017, CORMACARENA otorga al señor WILMER ALEJANDRO GARAVITO MEDINA   identificado con cedula de ciudadanía No. 86.083.859, concesión de aguas superficiales, por un caudal concesionado de 6.68 lts/seg para uso pecuario.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+          : {text: `Que dentro del expediente número 3.37.2.3.016.005, mediante resolución número PS-GJ.1.2.6.17.2164 de fecha veintiocho (28) de noviembre de 2017, CORMACARENA otorga al señor ${datos?.id_deudor?.nombres} ${datos?.id_deudor?.apellidos || ''} identificado con cedula de ciudadanía No. ${datos?.id_deudor?.identificacion || ''}, concesión de aguas superficiales, por un caudal concesionado de 6.68 lts/seg para uso pecuario.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
 
         isSancionFormat
           ? { text: 'Que forman parte del patrimonio y rentas de la Corporación, las descritas en los artículos 42 al 46 de la ley 99 de 1993, como lo son, el recaudo de las contribuciones por concepto de tasas retributivas, tasas por utilización de aguas, derechos, tarifas, sanciones y multas impuestas, entre otras, que forman parte de nuestra jurisdicción.', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] }
@@ -137,12 +138,12 @@ export const MandamientoPagoDoc: React.FC<any> = ({
 
         isSancionFormat
           ? { text: [
-                'Que para efectos de liquidar los intereses moratorios de las obligaciones descritas anteriormente, la resolución 2.6.07.0073 del 15 de febrero de 2007, dispuso reglamentar su tasación bajo las siguientes condiciones: ',
+                `Que para efectos de liquidar los intereses moratorios de las obligaciones descritas anteriormente, la resolución 2.6.07.0073 del 15 de febrero de 2007, dispuso reglamentar su tasación bajo las siguientes condiciones: `,
                 { text: 'i) Sanciones y otras obligaciones diferentes a impuestos tasas y contribuciones fiscales continuará con el 12% anual conforme lo establece la Ley 68 de 1923, ii) La no transferencia oportuna del porcentaje ambiental, regirá los establecidos en el Código Civil de conformidad con el artículo 5 del Decreto 1339 de 1994, y iii) Tasa retributiva o compensatoria y Tasa por uso de Agua, interés compuesto supeditado a la usura certificada por la Superintendencia Financiera para el respectivo mes (Ley 1066 de 2006)', italics: true },
               ],
               alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
             }
-          : {text: `Que el grupo Rentas de la oficina Jurídica de esta Corporación, emitió los siguientes documentos de cobro por concepto de tasa por utilización de aguas, señalándose como obligaciones pendientes de pago por parte del señor WILMER ALEJANDRO GARAVITO MEDINA identificado con cédula de ciudadanía número 86.083.859:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+          : {text: `Que el grupo Rentas de la oficina Jurídica de esta Corporación, emitió los siguientes documentos de cobro por concepto de tasa por utilización de aguas, señalándose como obligaciones pendientes de pago por parte del señor ${datos?.id_deudor?.nombres} ${datos?.id_deudor?.apellidos || ''} identificado con cédula de ciudadanía número ${datos?.id_deudor?.identificacion || ''}:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
 
         isSancionFormat && { text: [
             'Que en el Artículo 826 del ET establece ',
@@ -155,7 +156,7 @@ export const MandamientoPagoDoc: React.FC<any> = ({
         },
 
         isSancionFormat
-          ? { text: `Por lo anterior, y en el marco de legalidad del presente acto, se procederá a ejecutar a favor de la corporación y en contra de la empresa 5 EXPRESS SERVICIOS S.A.S identificada con Nit. 892.100.110-8, las siguientes obligaciones:  `, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] }
+          ? { text: `Por lo anterior, y en el marco de legalidad del presente acto, se procederá a ejecutar a favor de la corporación y en contra de ${datos?.id_deudor?.nombres} ${datos?.id_deudor?.apellidos || ''} identificado con C.C./Nit. ${datos?.id_deudor?.identificacion || ''}, las siguientes obligaciones:  `, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] }
           : { text: `- G.R-2022-011414 de fecha veintinueve (29) de abril de 2022.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
 
         !isSancionFormat && { text: 'Que los títulos ejecutivos comprendidos dentro de este proceso coactivo es un título complejo compuesto por dos (2) diferentes actos administrativos:', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
@@ -168,10 +169,10 @@ export const MandamientoPagoDoc: React.FC<any> = ({
               ],
               alignment: 'justify', fontSize: 12, margin: [20, 15, 0, 0]
             }
-          : { text: '1. Resolución número PS-GJ.1.2.6.17.2164 de fecha veintiocho (28) de noviembre de 2017', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+          : { text: `1. Resolución número PS-GJ.1.2.6.17.2164 de fecha veintiocho (28) de noviembre de 2017`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
 
         isSancionFormat
-          ? { text: `Revisados los registros contables de la Corporación se verificó que la empresa 5 EXPRESS SERVICIOS S.A.S identificada con Nit. 892.100.110-8, no realizó el pago total de la citada visita de control y seguimiento.`, alignment: 'justify', fontSize: 12, margin: [20, 15, 0, 0] }
+          ? { text: `Revisados los registros contables de la Corporación se verificó que ${datos?.id_deudor?.nombres} ${datos?.id_deudor?.apellidos || ''} identificada con C.C./Nit. ${datos?.id_deudor?.identificacion || ''}, no realizó el pago total de la citada visita de control y seguimiento.`, alignment: 'justify', fontSize: 12, margin: [20, 15, 0, 0] }
           : {text: `2. Documentos de cobro número G.R-2022-011414 de fecha veintinueve (29) de abril de 2022`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
 
         isSancionFormat
@@ -184,7 +185,7 @@ export const MandamientoPagoDoc: React.FC<any> = ({
 
         { text: 'Por mérito de lo expuesto,', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
         { text: 'RESUELVE', alignment: 'center', fontSize: 12, margin: [0, 15, 0, 0] },
-        { text: 'ARTÌCULO PRIMERO: Librar mandamiento de pago a favor de la Corporación para el Desarrollo Sostenible del Área de Manejo Especial la Macarena CORMACARENA para que en el término de quince (15) días siguientes a la notificación del presente mandamiento de pago, que la empresa 5 EXPRESS SERVICIOS S.A.S identificada con Nit. 892.100.110-8, cancele en la cuenta de depósitos judiciales del Banco Agrario No. 500019196301 sucursal Villavicencio a nombre de C.A.R. CORMACARENA C. COACTIVO, los siguientes valores:', alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
+        { text: `ARTÍCULO PRIMERO: Librar mandamiento de pago a favor de la Corporación para el Desarrollo Sostenible del Área de Manejo Especial la Macarena CORMACARENA para que en el término de quince (15) días siguientes a la notificación del presente mandamiento de pago, que la empresa 5 EXPRESS SERVICIOS S.A.S identificada con Nit. 892.100.110-8, cancele en la cuenta de depósitos judiciales del Banco Agrario No. 500019196301 sucursal Villavicencio a nombre de C.A.R. CORMACARENA C. COACTIVO, los siguientes valores:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },
 
         isSancionFormat
           ? { text:
@@ -226,15 +227,6 @@ export const MandamientoPagoDoc: React.FC<any> = ({
         spacing={2}
         m={2}
         p={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
       >
         <Grid item xs={12} sm={12}>
           <embed
