@@ -58,6 +58,8 @@ import { PanelVentanillaProvider } from '../integracionVital/context/PanelVentan
 import { RouteArchibo } from '../ArchivadosOtros/routes/RouteArchibo';
 import { LiquidacionRutesPago } from '../Liquidacion_dos/routes/LiquidacionRutes';
 import { Facturacion } from '../../recaudo/screens/Facturacion';
+import { StepperProvider } from '../TramitesServicios/context/SteperContext';
+
 
 const routes = [
   {
@@ -241,7 +243,7 @@ const routes = [
   {
     path: 'tramites',
     name: 'tramites',
-    component: () => <TramitesServiciosRouter />,
+    component: () => <StepperProvider> <TramitesServiciosRouter /> </StepperProvider>,
   },
   {
     path: 'digitalizacion_opas/',
