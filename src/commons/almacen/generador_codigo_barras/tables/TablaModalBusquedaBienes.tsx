@@ -29,7 +29,7 @@ const TablaModalBusquedaBienes: React.FC<Props> = ({
 
   const asignar_funcionario = (newSelectionModel: GridSelectionModel) => {
     if (newSelectionModel.length > 0) {
-      const dato_seleccionado = data_bienes.find(row => row.id_bien === newSelectionModel[0]);
+      const dato_seleccionado = data_bienes.find(row => row.id_inventario === newSelectionModel[0]);
       const vehiculo_arrendado = dato_seleccionado ?? Object;
       set_data_bien_temp(vehiculo_arrendado);
     }
@@ -80,7 +80,7 @@ const TablaModalBusquedaBienes: React.FC<Props> = ({
         rowsPerPageOptions={[5]}
         onSelectionModelChange={asignar_funcionario}
         experimentalFeatures={{ newEditingApi: true }}
-        getRowId={(row) => row?.id_bien !== undefined ? row.id_bien : uuidv4()}
+        getRowId={(row) => row?.id_inventario !== undefined ? row.id_inventario : uuidv4()}
       />
     </>
   );
