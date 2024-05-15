@@ -3,7 +3,7 @@
 import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { obligaciones_seleccionadas } from '../slices/ObligacionesSlice';
 import { get_datos_deudor } from '../slices/DeudoresSlice';
@@ -17,6 +17,8 @@ import dayjs from 'dayjs';
 import { Divider, Dialog, } from '@mui/material';
 import { Title } from '../../../../components';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import PaidIcon from '@mui/icons-material/Paid';
+import { EtapaProcesoConext } from '../../components/GestionCartera/Context/EtapaProcesoContext';
 
 interface RootState {
   obligaciones: {
@@ -42,8 +44,13 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
   const [modal_opcion, set_modal_opcion] = useState(0);
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
   const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
+  const [obligaciones_gestor, set_obligaciones_gestor] = useState(Array<Obligacion>)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
+
+  const { set_obligaciones_from_liquidacion, set_is_from_liquidacion, set_id_deudor } = useContext(
+    EtapaProcesoConext
+  );
 
   const handle_open = (opcion: number): void => {
     set_modal(true)
@@ -114,8 +121,37 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
     set_selectedIds(newSelectedIds);
 
     set_selected(new_selected);
-
   };
+
+  const handle_gestor_cartera = (obligacion: Obligacion): void => {
+    const selected_index = obligaciones_gestor.findIndex(ob => ob.id === obligacion.id);
+    let new_selected: any[] = [];
+
+    if (selected_index === -1) {
+      const new_obligacion = {
+        ...obligacion,
+        id_deudor: obligaciones.id_deudor,
+        nombre_completo: obligaciones.nombre_completo,
+        numero_identificacion: obligaciones.numero_identificacion,
+        email: obligaciones.email,
+      };
+      new_selected = [...obligaciones_gestor, new_obligacion];
+    } else {
+      new_selected = [
+        ...obligaciones_gestor.slice(0, selected_index),
+        ...obligaciones_gestor.slice(selected_index + 1),
+      ];
+    }
+
+    set_obligaciones_gestor(new_selected);
+  }
+
+  const handle_generate_proceso_persuasivo = (): void => {
+    set_obligaciones_from_liquidacion(obligaciones_gestor);
+    set_is_from_liquidacion(true);
+    set_id_deudor(obligaciones.id_deudor);
+    navigate('/app/recaudo/gestion_cartera');
+  }
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -169,6 +205,19 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
       set_selectedIds(newSelectedd);
     }
 
+    if (obligaciones_gestor.length === lista_obligaciones.length) {
+      set_obligaciones_gestor([]);
+    } else {
+      const newObligaciones = lista_obligaciones.map(obligacion => ({
+        ...obligacion,
+        id_deudor: obligaciones.id_deudor,
+        nombre_completo: obligaciones.nombre_completo,
+        numero_identificacion: obligaciones.numero_identificacion,
+        email: obligaciones.email,
+      }));
+      set_obligaciones_gestor(newObligaciones);
+    }
+
   };
 
 
@@ -183,7 +232,10 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
             // checked={selected.indexOf(params.row.nombre) !== -1 }
             checked={selected.indexOf(params.row.nombre) !== -1 && selectedIds.indexOf(params.row.id) !== -1}
 
-            onClick={(event) => handle_click(event, params.row.nombre, params.row.id)}
+            onClick={(event) =>{
+              handle_click(event, params.row.nombre, params.row.id)
+              handle_gestor_cartera(params.row)
+            }}
 
           // onClick={(event) => {
           //   handle_click(event, params.row.nombre);
@@ -400,9 +452,21 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
                     color='primary'
                     variant='contained'
                     sx={{ marginTop: '30px' }}
+                    startIcon={<PaidIcon />}
+                    disabled={selectedIds.length === 0}
+                    onClick={() => void handle_generate_proceso_persuasivo()}
+                  >
+                    Generar Proceso Persuasivo
+                  </Button>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    sx={{ marginTop: '30px' }}
                     startIcon={<RequestQuoteIcon />}
                     disabled={selectedIds.length === 0}
                     onClick={() => {
+                      // navigate('../facilidades_pago/registro');
+                      // void handle_submit();
                       set_position_tab('2');
                     }}
                   >

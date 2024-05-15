@@ -248,18 +248,18 @@ export const Facturacion: React.FC = () => {
     } de la tasa por utilización de agua.
 
 Cordial Saludo,
-Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información: 
+Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información:
 a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${
       Fecha_a ? Fecha_a : '__________'
-    } .  
+    } .
 b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${
       Fecha_b ? Fecha_b : '__________'
-    } .  
+    } .
 Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${
       Fecha_entrega ? Fecha_entrega : '__________'
     } , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.
 
- 
+
      `;
 
     let textoAMostrar: string;
@@ -271,13 +271,13 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
   } de la tasa por utilización de agua.
 
 Cordial Saludo,
-Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información: 
+Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información:
 a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${
         Fecha_a ? Fecha_a : '__________'
-      } .  
+      } .
 b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${
         Fecha_b ? Fecha_b : '__________'
-      } .  
+      } .
 Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${
         Fecha_entrega ? Fecha_entrega : '__________'
       } , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.

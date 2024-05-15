@@ -165,7 +165,6 @@ export const BusquedaTramiteExpediente: React.FC = () => {
       numero_expediente: '',
       numero_radicado: '',
     });
-    set_rows([]);
     set_page(1);
   }
 
