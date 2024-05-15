@@ -58,7 +58,7 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
         try {
             const url = '/hidrico/zonas-hidricas/enviar_correo/';
             const postData = {
-                "correo": "vigoyahector90@gmail.com",
+                "correo": "ppplopez93@gmail.com",
                 "nombre": etapa_proceso.nombres,
                 "asunto": nombreCategoria2,
                 "mensaje": observacion
@@ -122,7 +122,7 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
                         }}
                     >
                         <Grid item xs={12}>
-                            <Title title={`Informacion a Enviar a ${etapa_proceso.nombres} ${etapa_proceso.apellidos}`}></Title>
+                            <Title title={`Información a Enviar a ${etapa_proceso.nombres} ${etapa_proceso.apellidos}`}></Title>
                         </Grid>
                         <Grid item xs={12}>
                             <p style={{ fontSize: '1.2em', fontWeight: 'bold', color: 'black' }}>
@@ -156,15 +156,15 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
 
                             <Grid item xs={12}>
                                 <TextField
-                                    style={{ width: '85%', marginTop: 10, marginLeft: 20, marginRight: 20 }}
                                     variant="outlined"
-                                    label="Observacion"
+                                    label="Observación"
                                     fullWidth
                                     name="Observacion Adicional"
                                     value={observacion}
+                                    rows={3}
+                                    multiline
                                     onChange={(e: any) => set_observacion(e.target.value)}
                                 />
-
                             </Grid>
                             <p>Gracias por su atención.</p>
                         </Grid>
@@ -194,12 +194,12 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
                             </Button>
                         </Grid>
                     </Grid >
-               
-               
-               
+
+
+
                <BottonPayPalFuncion/>
-               
-               
+
+
                 </>)}
 
 

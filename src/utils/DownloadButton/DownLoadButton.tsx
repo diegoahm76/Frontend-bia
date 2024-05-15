@@ -14,7 +14,6 @@ import {
 
 export const DownloadButton = ({
   fileUrl,
-  fileName,
   condition,
 }: DownloadButtonProps) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
@@ -27,12 +26,12 @@ export const DownloadButton = ({
 
   return (
     <>
-      <a
+      {/* <a
         target="_blank"
         rel="noopener noreferrer"
         href={
-          fileUrl
-          /*fileUrl &&
+          `https://back-end-bia-beta.up.railway.app${fileUrl}`
+          fileUrl &&
           fileUrl.includes(
             process.env.NODE_ENV === 'production'
               ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
@@ -47,17 +46,18 @@ export const DownloadButton = ({
                     `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
                   : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
                     `${DEFAULT_PROD_DOWNLOAD_FILES_URL}`
-              }${fileUrl}`*/
+              }${fileUrl}`
         }
         ref={linkRef}
         style={{ display: 'none' }}
-        download={fileName}
-      />
+        download
+      /> */}
       <Button
         // fullWidth
         variant="contained"
         disabled={condition}
-        onClick={handleDownload}
+        href={`https://back-end-bia-beta.up.railway.app${fileUrl}`}
+        download
       >
         <FileDownloadIcon />
       </Button>

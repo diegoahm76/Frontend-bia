@@ -12,7 +12,7 @@ export const get_busqueda_tramites = async (
 ): Promise<any> => {
   let url = `hidrico/bibliotecas/busqueda_tramites/?page=${page}&page_size=10`
   if (nombre_proyecto) url += `&nombre_proyecto=${nombre_proyecto}`
-  if (numero_expediente) url += `&numero_expediente=${numero_expediente}`
+  if (numero_expediente) url += `&nro_expediente=${numero_expediente}`
   const response = await api.get(url);
   console.log(response.data)
   return response.data;
