@@ -25,9 +25,11 @@ const TablaMovimientosInventario: React.FC<props> = ({
 }) => {
 
   let columns: custom_column[] = [
+    {field: 'estado', headerName:'Estado bien', minWidth:150, flex:1},
     {field: 'codigo_bien', headerName:'Código bien', minWidth:150, flex:1},
     {field: 'nombre_bien', headerName:'Nombre bien', minWidth:250, flex:1},
     {field: 'identificador_bien', headerName:'Identificador del bien', minWidth:150, flex:1},
+    {field: 'nombre_persona_responsable', headerName:'Funcionario responsable', minWidth:300, flex:1},
     {field: 'nombre_marca', headerName:'Marca del bien', minWidth:150, flex:1},
     {field: 'tipo_movimiento', headerName:'Tipo de movimiento', minWidth:240, flex:1},
     {field: 'fecha_ultimo_movimiento', headerName:'Fecha del movimiento', minWidth:180, flex:1,

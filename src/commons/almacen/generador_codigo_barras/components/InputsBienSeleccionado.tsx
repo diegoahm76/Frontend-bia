@@ -44,7 +44,7 @@ const InputsBienSeleccionado: FC = () => {
 
     // --------------------- CODIGO DE BARRAS ------------------ //
     const canvas = document.createElement('canvas');
-    JsBarcode(canvas, data_bien_seleccionado.identificador_bien, {
+    JsBarcode(canvas, data_bien_seleccionado.cod_tipo_bien === 'A' ? data_bien_seleccionado.identificador_bien : data_bien_seleccionado.codigo_bien, {
         format: 'CODE128',
         displayValue: false,
         margin: 2,
@@ -69,18 +69,11 @@ const InputsBienSeleccionado: FC = () => {
     generar_texto_centrado(data_bien_seleccionado?.nombre_bien, 7, 16, doc_barr_code);
 
     // ----- COD IDENTIFICADO, PIE DE CODIGO BARRA ----------- //
-    generar_texto_centrado(`COD IDENT.: ${data_bien_seleccionado?.identificador_bien}`, 5, 13.2, doc_barr_code);
+    generar_texto_centrado(`COD IDENT.: ${data_bien_seleccionado.cod_tipo_bien === 'A' ? data_bien_seleccionado.identificador_bien : data_bien_seleccionado.codigo_bien}`, 5, 13.4, doc_barr_code);
 
-    
-    // -------------- TEXTO DE: "FECHA GENERACION" --------------- //
-    doc_barr_code.setFontSize(6);
-    doc_barr_code.text(`FECHA IMPRESIÓN`, 28, 21);
-    // -------------- FECHA DE IMPRESION --------------- //
-    doc_barr_code.text(dayjs().format('DD/MM/YYYY'), 31, 23);
-    
     // -------------- S/N - PIE PAGINA DE PDF --------------- //
     doc_barr_code.setFontSize(6);
-    doc_barr_code.text(`S/N: ${data_bien_seleccionado?.identificador_bien}`, 3, 21.5);
+    doc_barr_code.text(`S/N: ${data_bien_seleccionado.cod_tipo_bien === 'A' ? data_bien_seleccionado.identificador_bien : data_bien_seleccionado.codigo_bien}`, 3, 21.5);
 
     // ----------- COD -  PIE PAGINA DE PDF ---------------- //
     doc_barr_code.setFontSize(6);
