@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Grid, Dialog, Typography, Paper } from "@mui/material";
+import { Button } from "@mui/material";
 import ReceiptIcon from '@mui/icons-material/Receipt';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { control_error } from "../../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success";
 import { api } from "../../../../../../api/axios";
 import { useSelector } from "react-redux";
@@ -10,15 +9,14 @@ import { AuthSlice } from "../../../../../auth/interfaces/authModels";
 import { PreciosContext } from "../../../context/PersonalContext";
 import { LetraFormatoHumano } from "../../../utils/LetraFormatoHumano";
 import { Respuesta } from "../../../interfaces/InterfacesLiquidacion";
+import Swal from 'sweetalert2';
 
 
 export const ModalConfirmacionLiquidacion = () => {
     const { liquidacionState,precios } = useContext(PreciosContext);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [respuesta, setRespuesta] = useState<Respuesta | null>(null);
 
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+
     const fechaActual = new Date();
     const FechaElaboracion = fechaActual.toISOString();
 
@@ -34,6 +32,7 @@ export const ModalConfirmacionLiquidacion = () => {
             formData.append('id_persona', id_persona.toString());
             formData.append('fecha_actual', FechaElaboracion);
             formData.append('archivo', liquidacionState.archivo);
+            formData.append('id_solicitud_tramite', liquidacionState.id_solicitud_tramite.toString());
 
             const respuesta = await api.post(url, formData);
 
@@ -49,36 +48,7 @@ export const ModalConfirmacionLiquidacion = () => {
     };
 
 
-    const data_send = {
-        "fecha_liquidacion": "2024-04-30",
-        "vencimiento": "2023-05-03",
-        "periodo_liquidacion": 1,
-        "valor": 10000,
-        "id_deudor": null,
-        "id_expediente": null,
-        "ciclo_liquidacion": "test",
-        "id_solicitud_tramite": 2069,
-        "id_tipo_renta": null,
-        "num_liquidacion": null,
-        "agno": null,
-        "periodo": null,
-        "nit": null,
-        "fecha": null,
-        "valor_liq": null,
-        "valor_pagado": null,
-        "valor_prescripcion": null,
-        "anulado": null,
-        "num_resolucion": null,
-        "agno_resolucion": null,
-        "cod_origen_liq": null,
-        "observacion": null,
-        "cod_tipo_beneficio": null,
-        "fecha_contab": null,
-        "se_cobra": null,
-        "fecha_en_firme": null,
-        "nnum_origen_liq": null
-    }
-
+   
     const nuevoArreglo = precios.map((item, index) => {
         return {
           id_opcion_liq: 1,
@@ -90,36 +60,16 @@ export const ModalConfirmacionLiquidacion = () => {
         };
       });
 
-      const blobToBase64 = (blob: Blob) => {
-        return new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onloadend = () => {
-            if (typeof reader.result === 'string') {
-              const base64Data = reader.result.split(',')[1];
-              resolve(base64Data);
-            } else {
-              reject(new Error('Error al leer el archivo'));
-            }
-          };
-          reader.onerror = (error) => {
-            reject(error);
-          };
-        });
-      };
-      
+
     const Guardar_Liquidacion = async () => {
         try {
-            const base64String = await blobToBase64(liquidacionState.archivo);
-            const base64Blob = new Blob([base64String], { type: 'application/pdf' });
 
 
             const url = `recaudo/liquidaciones/liquidacion-tramite/`;
             const formData = new FormData();
-            formData.append('data_liquidacion', JSON.stringify(data_send));
+            formData.append('data_liquidacion', JSON.stringify(liquidacionState));
             formData.append('data_detalles', JSON.stringify(nuevoArreglo));
-            formData.append('archivo_liquidacion', base64Blob);
-
+            formData.append('archivo_liquidacion', liquidacionState.archivo);
             const respuesta = await api.post(url, formData)
             if (respuesta && respuesta.data) {
                 console.log(respuesta)
@@ -135,74 +85,25 @@ export const ModalConfirmacionLiquidacion = () => {
 
 
 
-
-
-
-
-
-
     useEffect(() => {
-        if (isModalOpen) {
-            fetch_Actualizar_archivo_digital();
-        }
-    }, [isModalOpen]);
-
-    const renderContent = () => {
-        if (!respuesta) {
-            return (
-                <Grid container spacing={0} justifyContent="center" alignItems="center">
-                    <Typography variant="body1" style={{ textAlign: "center" }}>
-                        Cargando...
-                    </Typography>
-                </Grid>
-            );
-        }
-
         if (respuesta) {
-            return (
-                <>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" style={{ textAlign: "center" }}>
-                            <span style={{ fontWeight: "bold", color: "#333" }}>Usuario:</span> {respuesta.nombre_completo}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="body1" style={{ textAlign: "center" }}>
-                            <span style={{ fontWeight: "bold", color: "#333" }}>Expediente:</span> {respuesta.consecutivo}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="body1" style={{ textAlign: "center" }}>
-                            <span style={{ fontWeight: "bold", color: "#333" }}>Radicado:</span> {respuesta.radicado_nuevo}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="body1" style={{ textAlign: "center" }}>
-                            <span style={{ fontWeight: "bold", color: "#333" }}>Proceso:</span> {respuesta.nro_consecutivo}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="body1" style={{ textAlign: "center" }}>
-                            <span style={{ fontWeight: "bold", color: "#333" }}>Fecha:</span> {LetraFormatoHumano(respuesta.fecha_consecutivo)}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="body1" style={{ textAlign: "center" }}>
-                            <span style={{ fontWeight: "bold", color: "#333" }}>Documento:</span> {respuesta.numero_documento}
-                        </Typography>
-                    </Grid>
-                </>
-            );
-        } else {
-            return (
-                <Grid container spacing={0} justifyContent="center" alignItems="center">
-                    <Typography variant="body1" style={{ textAlign: "center" }}>
-                        Error al generar la liquidación. Por favor, inténtalo de nuevo.
-                    </Typography>
-                </Grid>
-            );
+            Swal.fire({
+                icon: 'success',
+                title: 'Detalle de la liquidación',
+                html: `
+                    <div>
+                        <p><strong>Usuario:</strong> ${respuesta.nombre_completo}</p>
+                        <p><strong>Expediente:</strong> ${respuesta.consecutivo}</p>
+                        <p><strong>Radicado:</strong> ${respuesta.radicado_nuevo}</p>
+                        <p><strong>Proceso:</strong> ${respuesta.nro_consecutivo}</p>
+                        <p><strong>Fecha:</strong> ${LetraFormatoHumano(respuesta.fecha_consecutivo)}</p>
+                        <p><strong>Documento:</strong> ${respuesta.numero_documento}</p>
+                    </div>
+                `,
+                showConfirmButton: true,
+            });
         }
-    };
+    }, [respuesta]);
 
 
     return (
@@ -213,31 +114,11 @@ export const ModalConfirmacionLiquidacion = () => {
                 fullWidth
                 variant="contained"
                 startIcon={<ReceiptIcon />}
-                onClick={openModal}
+                onClick={fetch_Actualizar_archivo_digital}
             >
-                Generar Liquidacion
+                Generar Liquidacionn
             </Button>
 
-            <Dialog open={isModalOpen} onClose={closeModal} fullWidth maxWidth="sm" PaperComponent={Paper} scroll="body">
-                <Grid container spacing={0} justifyContent="center" alignItems="center">
-                    {renderContent()}
-                    <Grid container alignItems="center" justifyContent="center">
-
-                        <Button onClick={Guardar_Liquidacion}>xxxxx</Button>
-                        <Grid item xs={4}>
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                startIcon={<CancelIcon />}
-                                style={{ width: 150, margin: 7, color: "white", backgroundColor: "red" }}
-                                onClick={closeModal}
-                            >
-                                Cerrar
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Dialog>
         </>
     );
 };

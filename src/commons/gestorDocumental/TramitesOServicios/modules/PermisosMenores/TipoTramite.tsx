@@ -18,7 +18,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import SearchOutlined from '@mui/icons-material/SearchOutlined';
 import { Geolocalizacion } from './geolocalizacionScreen';
 import InsightsIcon from '@mui/icons-material/Insights';
-import { useAppDispatch } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { create_tramite_servicio, get_departamentos, get_municipios, tipos_tramites, tramites_servicios } from './thunks/TramitesOServicios';
 import { DialogGeneradorDeDirecciones } from '../../../../../components/DialogGeneradorDeDirecciones';
 interface IProps {
@@ -129,6 +129,7 @@ const lt_permisos_menor = [
 ];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TipoTramite: React.FC<IProps> = (props: IProps) => {
+  const {representacion_legal} = useAppSelector((state) => state.auth);
   const isProdOrBeta = 'https://bia.cormacarena.gov.co';
 
   const navigate = useNavigate();
@@ -182,8 +183,8 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
 
   const tramites_servicios_fc: () => void = () => {
     dispatch(tramites_servicios()).then((response: any) => {
-      set_lt_tramites_servicios(lt_permisos_menor);
-      //set_lt_tramites_servicios(response.data);
+      //set_lt_tramites_servicios(lt_permisos_menor);
+      set_lt_tramites_servicios(response.data);
     });
   };
 
@@ -245,16 +246,16 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
   const set_lt_tramites_servicios_por_tramite: (opcion: any) => void = (
     opcion: any
   ) => {
-    /*switch (opcion) {
-      case 'O':
+    switch (opcion) {
+      case 'PM':
         tramites_servicios_fc();
         break;
       case 'L':
         set_lt_tramites_servicios(lt_licencias_amb);
         break;
-      case 'P':*/
+      case 'P':
         set_lt_tramites_servicios(lt_permisos_menor);
-   /*     break;
+       break;
       case 'D':
         set_lt_tramites_servicios(lt_determinantes_amb);
         break;
@@ -262,7 +263,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
       default:
         set_lt_tramites_servicios([]);
         break;
-    }*/
+    }
   };
 
   const cambio_tramite_servicio: (event: SelectChangeEvent) => void = (
@@ -385,6 +386,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
           descripcion_direccion: descripcion,
           coordenada_x: coordenada_x,
           coordenada_y: coordenada_y,
+          cod_relacion_con_el_titular: representacion_legal?.cod_relacion_con_el_titular
         };
         props.set_formulario_paso_uno(obj_create);
         dispatch(create_tramite_servicio(obj_create)).then((response: any) => {
@@ -442,13 +444,18 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
               readOnly={false}
               error={error_tipo_tramite}
             >
-              {[
-                ['P', 'Permisos menores'],
-              ].map((m: any) => (
+              {lt_tipos_tramites.map((m: any) => (
                 <MenuItem key={m[0]} value={m[0]}>
                   {m[1]}
                 </MenuItem>
               ))}
+             {/* {[
+                ['PM', 'Permisos menores'],
+              ].map((m: any) => (
+                <MenuItem key={m[0]} value={m[0]}>
+                  {m[1]}
+                </MenuItem>
+              ))}*/}
             </Select>
           </FormControl>
           {error_tipo_tramite && (
@@ -484,7 +491,7 @@ export const TipoTramite: React.FC<IProps> = (props: IProps) => {
             </FormHelperText>
           )}
         </Grid>
-        {tipo_tramite === 'P' && (
+        {tipo_tramite === 'PM' && (
           <>
             <Grid item xs={12} sm={12}>
               <span style={{ marginTop: '9px' }}>

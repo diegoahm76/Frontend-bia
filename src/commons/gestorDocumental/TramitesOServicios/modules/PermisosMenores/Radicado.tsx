@@ -76,7 +76,7 @@ export const Radicado: React.FC<IProps> = (props: IProps) => {
           }}
         >
           <Typography variant="button" gutterBottom>
-            Otro procedimiento administrativo radicado con éxito
+            Elemento radicado con éxito
           </Typography>
         </Grid>
         <Grid item spacing={2}>
