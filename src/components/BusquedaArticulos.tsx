@@ -42,6 +42,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
   const [nombre, set_nombre] = useState<string>('');
   const [bienes, set_bienes] = useState<any>(null);
   const [seleccion_articulo, set_seleccion_articulo] = useState<Record<string, any> | null>(null);
+  const [loadding_tabla, set_loadding_tabla] = useState<boolean>(false);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
@@ -52,19 +53,18 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
   };
 
   const accionar_busqueda: any = () => {
-    /*if (nombre === '' && codigo === '') {
-      set_bienes(bienes_before);
-      return;
-    }
-    const data_filter = bienes_before.filter(
-      (gv) =>
-        Boolean(gv.nombre.includes(nombre)) &&
-        gv.codigo_bien.toString().includes(codigo)
-    );*/
+    set_loadding_tabla(true);
+
     dispatch(obtener_entradas_filtros(codigo ?? '', nombre ?? '')).then(
-      (response: { success: boolean; detail: string; data: any[] }) => {
+      (response: any) => {
         if (Object.keys(response).length !== 0) {
-          set_bienes(response.data);
+          set_bienes(()=>{
+            return {
+              pagination: response.pagination,
+              articulos: response.data
+            };
+          });
+          set_loadding_tabla(false);
         }
       }
     );
@@ -98,6 +98,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
       }
     );
   }, []);
+
   const columnsss: custom_column[] = [
     {
       field: 'id_bien',
@@ -113,7 +114,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      minWidth: 350,
+      minWidth: 420,
     },
     {
       field: 'tipo_bien',
@@ -141,10 +142,10 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
       return;
     }
 
-    set_bienes(null);
+    set_loadding_tabla(true);
 
     dispatch(obtener_bienes_por_pagina(
-      (Number(bienes.pagination.pagina_actual) + 1).toString())
+      (Number(bienes?.pagination.pagina_actual) + 1).toString())
     ).then(
       (response: any) => {
         if (response.success) {
@@ -157,6 +158,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
               articulos: articulos
             };
           });
+          set_loadding_tabla(false);
         }
       }
     );
@@ -166,11 +168,11 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
     if (Number(bienes.pagination.pagina_actual) === 1) {
       return;
     }
-    
-    set_bienes(null);
+
+    set_loadding_tabla(true);
 
     dispatch(obtener_bienes_por_pagina(
-      (Number(bienes.pagination.pagina_actual) - 1).toString())
+      (Number(bienes?.pagination.pagina_actual) - 1).toString())
     ).then(
       (response: any) => {
         if (response.success) {
@@ -183,6 +185,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
               articulos: articulos
             };
           });
+          set_loadding_tabla(false);
         }
       }
     );
@@ -289,7 +292,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                   <DataGrid
                     style={{ margin: '15px 0px' }}
                     density="compact"
-                    loading={bienes === null}
+                    loading={loadding_tabla}
                     autoHeight
                     rows={bienes?.articulos ?? []}
                     columns={columnsss ?? []}
@@ -316,8 +319,8 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
                       height: '40px',
                       borderRadius: '50%',
                       boxShadow: '0px 3px 6px #042F4A26',
-                      // quitamos el hover si es la primera pagina
-                      ...(Number(bienes?.pagination.pagina_actual) === 1 && {
+                      // quitamos el hover si es la primera pagina o si no hay datos
+                      ...(Number(bienes?.pagination.pagina_actual) === 1  && {
                         pointerEvents: 'none',
                         background: '#f2f2f2',
                       }),
