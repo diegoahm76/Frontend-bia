@@ -281,11 +281,11 @@ export const TablaLiquidacion: React.FC = () => {
         const dato = valoresAbonados[`valor_abonado_${params.id}`];
         const nuevoValor = params.row.valor_intereses;
         const resultado = parseFloat(dato) - parseFloat(nuevoValor);
-console.log(resultado)
+        console.log(resultado)
         const totalFormateado = (valoresAbonados[`valor_abonado_${params.id}`] || 0).toLocaleString('es-ES');
         return (
           <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                   {totalFormateado}
+            {totalFormateado}
           </div>
         );
       },
@@ -309,7 +309,7 @@ console.log(resultado)
 
         return (
           <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-            +            {nuevoValorFormateado}
+            {nuevoValorFormateado}
           </div>
         );
       },

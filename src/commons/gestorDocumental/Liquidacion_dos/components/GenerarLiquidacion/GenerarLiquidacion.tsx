@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, Grid, Switch, TextField } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
 import { DetalleLiquidacion } from "../DetalleLiquidacion/DetalleLiquidacion";
 import { api } from "../../../../../api/axios";
@@ -14,6 +14,7 @@ import { ModalInfoCategoriaCostoProyecto } from "../ModalDocumento/ModalInfoCate
 import { InputAdornment } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { formatNumber } from "../../utils/NumerosPuntosMiles";
+import { CapitalPagado } from "./CapitalPagado/CapitalPagado";
 
 export const GenerarLiquidacion = () => {
 
@@ -21,20 +22,42 @@ export const GenerarLiquidacion = () => {
   const [datosConsulta, setDatosConsulta] = useState<DatosConsulta>(DatosConsulta);
   const { userinfo: { id_persona, email, telefono_celular, numero_documento } } = useSelector((state: AuthSlice) => state.auth);
   const [data_liquidacion, set_data_liquidacion] = useState<ElementoPQRS | null>(null);
-  const { usuario, setUsuario, logs, setLogs, setLiquidacionState, liquidacionState ,setPrecios} = useContext(PreciosContext);
+  const { usuario, setUsuario, logs, setLogs, setLiquidacionState, liquidacionState, setPrecios } = useContext(PreciosContext);
   const [valores_porcentaje, set_valores_porcentaje] = useState<Registro[]>([])
   const fechaActual = new Date().toLocaleDateString(); // Obtiene la fecha actual en formato de cadena de texto
   const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
 
-  const [formVeiculos, setFormVeiculos] = useState({valor: 0 });
+
+  const [inputs, setInputs] = useState({
+    capitalPagado: 0,
+    valorAvaluo: 0
+  });
+  const [showTextField1, setShowTextField1] = useState(false);
+  const [showTextField2, setShowTextField2] = useState(false);
+
+  const handleSwitch1Change = () => {
+    setShowTextField1(!showTextField1);
+  };
+
+  const handleSwitch2Change = () => {
+    setShowTextField2(!showTextField2);
+  };
+
+  const handleInputChangeCapitalValor = (event: any) => {
+    const { name, value } = event.target;
+    const parsedValue = value.trim() === '' ? 0 : parseFloat(value);
+    setInputs({
+      ...inputs,
+      [name]: parsedValue
+    });
+  };
 
 
   const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
     (state) =>
       state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
   );
-
-
+  console.log(currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite)
   const fetch_datos_choises = async (): Promise<void> => {
     try {
       const url = `/tramites/general/get/?radicado=${currentElementPqrsdComplementoTramitesYotros?.radicado}`;
@@ -68,10 +91,6 @@ export const GenerarLiquidacion = () => {
     }
   };
 
-
-
-
-
   const ComprobarInteresCobro = async (): Promise<void> => {
     try {
       const url = `/recaudo/configuracion_baisca/sueldo_minimo/get/`;
@@ -83,10 +102,6 @@ export const GenerarLiquidacion = () => {
       console.error(error);
     }
   };
-
-
-
-
 
   // Filtrar las configuraciones básicas que tengan el nombre de variable "SMMV"
   const configuracionSMMV = configuraciones.find(configuracion => configuracion.nombre_variable === "SMMV");
@@ -115,10 +130,13 @@ export const GenerarLiquidacion = () => {
 
 
   //sacar el porcentaje con la varaible de el sueldo minimo
-
-  const valor_minimo = parseInt(data_liquidacion?.costo_proyecto || "0") / valorSMMV;
+  const variable_sumada_valores_capital_avaluo = (
+    (showTextField1 ? inputs.capitalPagado : 0) +
+    (showTextField2 ? inputs.valorAvaluo : 0) +
+    parseInt(data_liquidacion?.costo_proyecto || "0")
+  );
+  const valor_minimo = variable_sumada_valores_capital_avaluo / valorSMMV;
   const valor_minimo_filtrado_estandar = valor_minimo < 100 ? 100 : valor_minimo;
-
   const calcular = () => {
     valores_porcentaje.forEach(registro => {
       try {
@@ -137,10 +155,6 @@ export const GenerarLiquidacion = () => {
     });
   };
 
-
-
-
-
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
     setPrecios(prevState => ({
@@ -155,9 +169,9 @@ export const GenerarLiquidacion = () => {
       ...prevState,
       [name]: value
     }));
-};
+  };
 
-  
+
 
   useEffect(() => {
     ComprobarInteresCobro();
@@ -168,6 +182,10 @@ export const GenerarLiquidacion = () => {
   useEffect(() => {
     calcular();
   }, [valores_porcentaje])
+
+  useEffect(() => {
+    calcular();
+  }, [variable_sumada_valores_capital_avaluo])
 
 
   useEffect(() => {
@@ -190,9 +208,18 @@ export const GenerarLiquidacion = () => {
     <>
       <Grid container spacing={2}>
 
+
+
+        {/* <Grid item xs={12}>
+          <CapitalPagado />
+        </Grid> */}
+
+
+
         <Grid item xs={12}>
           <Title title="Solicitante" />
         </Grid>
+
 
         <Grid item xs={12} sm={4}>
           <TextField
@@ -478,6 +505,73 @@ export const GenerarLiquidacion = () => {
           <Title title="Cobro" />
         </Grid>
 
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={1}>
+              <Switch
+                checked={showTextField1}
+                onChange={handleSwitch1Change}
+                color="primary"
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                label={showTextField1 ? 'Capital pagado' : ' Ingresar capital pagado'}
+                name="capitalPagado"
+                value={showTextField1 ? inputs.capitalPagado : ''}
+                style={{ width: "95%" }}
+                size="small"
+                fullWidth
+                disabled={!showTextField1}
+                onChange={handleInputChangeCapitalValor}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AttachMoneyIcon />
+                    </InputAdornment>
+                  )
+                }}
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <Switch
+                checked={showTextField2}
+                onChange={handleSwitch2Change}
+                color="primary"
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                label={showTextField2 ? 'Valor avalúo' : 'Ingresar valor avalúo'}
+                name="valorAvaluo"
+                value={showTextField2 ? inputs.valorAvaluo : ''}
+                size="small"
+                style={{ width: "95%" }}
+                fullWidth
+                disabled={!showTextField2}
+                onChange={handleInputChangeCapitalValor}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AttachMoneyIcon />
+                    </InputAdornment>
+                  )
+                }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label="Valor Proyecto + adicional"
+                value={variable_sumada_valores_capital_avaluo || ""}
+                size="small"
+                fullWidth
+                disabled
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+
+
         <Grid item xs={12} sm={5}>
           <TextField
             label="Categoria de Cobro"
@@ -564,13 +658,7 @@ export const GenerarLiquidacion = () => {
             />
           </Grid>
 
-
         </Grid>
-
-
-
-
-
         <Grid item xs={12}>
           <Title title="Vehículos" />
         </Grid>
@@ -638,9 +726,6 @@ export const GenerarLiquidacion = () => {
             }}
           />
         </Grid>
-
-
-
 
       </Grid >
       <DetalleLiquidacion />
