@@ -1,10 +1,12 @@
-import { Box, Grid, Tab } from '@mui/material';
+import { Box, Button, Grid, Tab } from '@mui/material';
 import React, { useState } from 'react';
 import { Title } from '../../../../components';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import DespachosEnProceso from './DespachosEnProceso';
 import { interface_resumen_solicitud_despacho } from '../interfaces/types';
 import ResumenDespachoSolicitud from './ResumenDespachoSolicitud';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
@@ -74,6 +76,29 @@ const AutorizarDespachos = () => {
               </TabPanel>
             </TabContext>
           </Box>
+
+          <Grid item xs={12} sx={{
+            display: "flex",
+            justifyContent: "end",
+            alignItems: "center",
+            marginTop: "20px",
+            gap: 2,
+          }}
+          >
+            {position_tab === '2' &&
+              <Grid item xs={12} lg={2}>
+                <Button
+                  fullWidth
+                  color="error"
+                  variant="contained"
+                  startIcon={<ChevronLeftIcon />}
+                  onClick={() => set_position_tab('1')}
+                >
+                  Atrás
+                </Button>
+              </Grid>
+            }
+          </Grid>
         </Grid>
       </Grid>
     </>

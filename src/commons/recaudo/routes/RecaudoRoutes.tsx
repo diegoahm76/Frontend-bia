@@ -54,11 +54,11 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="talento_humano/*" element={<TalentoHumano />} />
       <Route path="graficas_indicadores/*" element={<IndicadoresRecaudo/>} />
 
-    
-      
-      
 
-      
+
+
+
+
       <Route path="/*" element={<Page404 />} />
     </Routes>
     </EtapaProcesoProvider>

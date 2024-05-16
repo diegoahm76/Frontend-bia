@@ -67,10 +67,12 @@ export const TipologiaDocumental: React.FC = () => {
     <>
       <Grid
         container
+        spacing={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
+          margin: '10px 0 20px 0',
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
@@ -105,13 +107,15 @@ export const TipologiaDocumental: React.FC = () => {
 
 
           {form.asociada_a_tipologia_doc_trd === "True" && (
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} md={8}>
               <FormControl fullWidth>
-                <InputLabel id="choise-label">Selecciona tipología documental</InputLabel>
-                <Select
+                <TextField
+                  select
                   id="demo-simple-select-2"
+                  margin="dense"
+                  size="small"
                   name="id_tipologia_doc_trd"
-                  label="Selecciona tipología documentall"
+                  label="Selecciona tipología documental"
                   value={form.id_tipologia_doc_trd || ""}
                   onChange={HandleCompletarDatos}
                 >
@@ -120,19 +124,23 @@ export const TipologiaDocumental: React.FC = () => {
                       {item.nombre}
                     </MenuItem>
                   ))}
-                </Select>
+                </TextField>
               </FormControl>
             </Grid>
           )}
 
         </Grid>
         {form.asociada_a_tipologia_doc_trd === "False" && (
-          <Grid item container spacing={1} style={{ margin: 1 }}>
-            <Grid item sm={1} >
+          <Grid item container spacing={2}>
+            {/* <Grid item sm={1} >
               <h5>¿Cual?</h5>
-            </Grid>
-            <Grid item xs={12} sm={5} >
+            </Grid> */}
+            <Grid item xs={12} md={6} >
               <TextField
+                label="¿Cuál?"
+                multiline
+                margin="dense"
+                size="small"
                 style={{}}
                 variant="outlined"
                 fullWidth
@@ -141,15 +149,14 @@ export const TipologiaDocumental: React.FC = () => {
                 onChange={HandleCompletarDatos}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label" style={{ marginTop: 5 }} >Sugerecias Creadas Anteriormente</InputLabel>
-
-                <Select
-                  labelId="demo-simple-select-label-3"
+                <TextField
+                  select
+                  size="small"
                   id="demo-simple-select-3"
                   name="otras_tipologias"
-                  label="Sugerecias Creadas Anteriormente"
+                  label="Sugerencias Creadas Anteriormente"
                   value={form.otras_tipologias}
                   onChange={HandleCompletarDatos}
                 >
@@ -158,7 +165,7 @@ export const TipologiaDocumental: React.FC = () => {
                       {item.otras_tipologias}
                     </MenuItem>
                   ))}
-                </Select>
+                </TextField>
               </FormControl>
             </Grid>
           </Grid>

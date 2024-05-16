@@ -171,6 +171,18 @@ export const obtener_bienes: any = () => {
   };
 };
 
+export const obtener_bienes_por_pagina: any = (pagina: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/bienes/entradas/search-bienes/?page=' + pagina);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtiene listado de estados
 export const obtener_estados: any = () => {
   return async () => {
