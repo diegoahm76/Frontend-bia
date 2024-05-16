@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { jsPDF } from 'jspdf';
 import { Iinformacion_opa, initialDataOpa } from '../../interfaces/InterfacesInicializacionJuridicaOpas';
-import { StepperContext } from '../../context/SteperContext';
+import { StepperContext } from '../../../context/SteperContext';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from "@mui/icons-material/Save";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
@@ -161,8 +161,10 @@ return (
       }}>
 
       {/* Título */}
-      <Grid item xs={12}>
-        <Title title="Creacion de Oficio de Requerimiento" />
+      <Grid item xs={12} sx={{
+        marginBottom: 3.2,
+      }}>
+        <Title title="Finalización de revisión Jurídica" />
       </Grid>
 
 
@@ -274,15 +276,15 @@ return (
 
 
 
-      <Grid container alignItems="center" justifyContent="center">
+     {/* <Grid container alignItems="center" justifyContent="center">
         <Grid item style={{ marginTop: 15 }}>
           <Button startIcon={<PictureAsPdfIcon />} color="success" variant='contained' onClick={generarHistoricoBajas}>
             Generar PDF
           </Button>
         </Grid>
-      </Grid>
+      </Grid>*/}
 
-      <Grid item xs={12} style={{ marginTop: 15 }}>
+     {/* <Grid item xs={12} style={{ marginTop: 15 }}>
 
         <embed
           src={visor}
@@ -291,7 +293,7 @@ return (
           height="500px"
         />
       </Grid>
-
+*/}
 
 
       <Grid container justifyContent="flex-end">
@@ -299,7 +301,7 @@ return (
         <Grid item xs={12} sm={5} md={3.4} lg={2.9}>
           <Button
             startIcon={<SaveIcon />}
-            style={{ width: "90%", marginTop: 15 }}
+            style={{ width: "90%", marginTop: 30 }}
             onClick={crear_configuracion_expediente_simple}
             color="success" // Cambia el color según si es una actualización o creación
             fullWidth
@@ -314,15 +316,15 @@ return (
         <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
           <Button
             fullWidth
-            style={{ width: "90%", marginTop: 15 }}
+            style={{ width: "90%", marginTop: 30 }}
             variant="contained"
-            color="error"
+            color="warning"
             startIcon={<ArrowBackIcon />} // Agrega el icono de flecha hacia atrás
             onClick={() => {
               setActiveStep(activeStep - 1);
             }}
           >
-            Volver
+            Paso anterior
           </Button>
         </Grid>
       </Grid>

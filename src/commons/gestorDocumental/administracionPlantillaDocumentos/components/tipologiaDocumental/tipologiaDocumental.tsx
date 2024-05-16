@@ -108,24 +108,26 @@ export const TipologiaDocumental: React.FC = () => {
 
           {form.asociada_a_tipologia_doc_trd === "True" && (
             <Grid item xs={12} md={8}>
-              <FormControl fullWidth>
-                <TextField
-                  select
-                  id="demo-simple-select-2"
-                  margin="dense"
-                  size="small"
-                  name="id_tipologia_doc_trd"
-                  label="Selecciona tipología documental"
-                  value={form.id_tipologia_doc_trd || ""}
-                  onChange={HandleCompletarDatos}
-                >
-                  {tipologia_documental?.map((item: any, index: number) => (
-                    <MenuItem key={index} value={item.id_tipologia_documental}>
-                      {item.nombre}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </FormControl>
+              <TextField
+                select
+                fullWidth
+                id="demo-simple-select-2"
+                margin="dense"
+                size="small"
+                name="id_tipologia_doc_trd"
+                label="Selecciona tipología documental"
+                value={form.id_tipologia_doc_trd || ""}
+                onChange={HandleCompletarDatos}
+              >
+                <MenuItem value="">
+                  <em>Seleccione una opción</em>
+                </MenuItem>
+                {tipologia_documental?.map((item: any, index: number) => (
+                  <MenuItem key={index} value={item.id_tipologia_documental}>
+                    {item.nombre}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
           )}
 
@@ -150,8 +152,8 @@ export const TipologiaDocumental: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
                 <TextField
+                  fullWidth
                   select
                   size="small"
                   id="demo-simple-select-3"
@@ -160,13 +162,15 @@ export const TipologiaDocumental: React.FC = () => {
                   value={form.otras_tipologias}
                   onChange={HandleCompletarDatos}
                 >
+                  <MenuItem value="">
+                    <em>Seleccione una opción</em>
+                  </MenuItem>
                   {tipologia_documental_otro?.map((item: any, index: number) => (
                     <MenuItem key={index} value={item.otras_tipologias}>
                       {item.otras_tipologias}
                     </MenuItem>
                   ))}
                 </TextField>
-              </FormControl>
             </Grid>
           </Grid>
         )}
