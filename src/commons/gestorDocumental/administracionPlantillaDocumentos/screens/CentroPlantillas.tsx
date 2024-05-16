@@ -253,6 +253,9 @@ export const MostrarCentroPlantillas: React.FC = () => {
             label="Tipologia Documental"
             onChange={(event): any => { set_choise_seleccionado_tipologia(event.target.value) }}
           >
+            <MenuItem value="">
+              <em>Seleccione una opción</em>
+            </MenuItem>
             {data_choise?.map((item: any, index: number) => (
               <MenuItem key={index} value={item.nombre}>
                 {item.nombre}
@@ -272,6 +275,9 @@ export const MostrarCentroPlantillas: React.FC = () => {
               set_choise_seleccionado_disponivilidad(event.target.value);
             }}
           >
+            <MenuItem value="">
+              <em>Seleccione una opción</em>
+            </MenuItem>
             {data_choise_disponivilidad?.map((item: any, index: number) => (
               <MenuItem key={index} value={item.value}>
                 {item.label}

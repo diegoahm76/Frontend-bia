@@ -133,30 +133,30 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
             <h5>Unidad organizacional :</h5>
           </Grid> */}
           <Grid item xs={12} md={10}>
-            <FormControl fullWidth>
-              <TextField
-                label="Unidad organizacional"
-                select
-                size="small"
-                id="demo-simple-select"
-                value={PQR_seleccionado[0]?.id_unidad_organizacional || ''} // Obtener la ID del primer elemento seleccionado
-                onChange={(event): any => {
-                  // Actualiza PQR_seleccionado con el elemento seleccionado
-                  const selectedItem = tipos_pqr.find(
-                    (item: any) => item.id_unidad_organizacional === event.target.value
-                  );
-                  set_PQR_seleccionado([selectedItem]);
-                }}
-              >
-                {tipos_pqr?.map((item: UnidadOrganizacional) => (
-                  <MenuItem key={item.id_unidad_organizacional} value={item.id_unidad_organizacional}>
-                    {item.nombre}
-                  </MenuItem>
-                ))}
-              </TextField>
-
-
-            </FormControl>
+            <TextField
+              label="Unidad organizacional"
+              select
+              fullWidth
+              size="small"
+              id="demo-simple-select"
+              value={PQR_seleccionado[0]?.id_unidad_organizacional || ''} // Obtener la ID del primer elemento seleccionado
+              onChange={(event): any => {
+                // Actualiza PQR_seleccionado con el elemento seleccionado
+                const selectedItem = tipos_pqr.find(
+                  (item: any) => item.id_unidad_organizacional === event.target.value
+                );
+                set_PQR_seleccionado([selectedItem]);
+              }}
+            >
+              <MenuItem value="">
+                <em>Seleccione una opción</em>
+              </MenuItem>
+              {tipos_pqr?.map((item: UnidadOrganizacional) => (
+                <MenuItem key={item.id_unidad_organizacional} value={item.id_unidad_organizacional}>
+                  {item.nombre}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} md={2} sx={{display: 'flex', justifyContent: 'end'}}>
             <Button fullWidth variant="contained" onClick={() => handleAcumularDatos()} >

@@ -12,7 +12,7 @@ import { Title } from '../../../../components/Title';
 import { set_current_mode_planes } from '../../../seguimirntoPlanes/store/slice/indexPlanes';
 import { format } from 'date-fns';
 import InfoIcon from '@mui/icons-material/Info';
-import { post_accion_correctiva, put_accion_correctiva } from '../services/services';
+import { get_tipo_acciones, post_accion_correctiva, put_accion_correctiva } from '../services/services';
 import { control_error, control_success } from '../../../../helpers';
 import { DataContextAccionesCorrectivas } from '../context/context';
 
@@ -32,8 +32,8 @@ interface form_accion_correlativa {
   id_accion?: string;
   id_tramite?: any;
   id_expediente?: any;
-  nombre_accion: string;
-  descripcion: string;
+  id_tipo_accion: string;
+  descripcion?: string;
   observacion_accion: string;
   fecha_creacion?: any;
   fecha_cumplimiento?: any;
@@ -43,11 +43,12 @@ interface form_accion_correlativa {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarAccionCorrectiva: React.FC = () => {
 
+  const [acciones_correctivas, set_acciones_correctivas] = useState<any[]>([]);
   const [form_accion_correctiva, set_form_accion_correctiva] = useState<form_accion_correlativa>({
     id_accion: '',
     id_tramite: '',
     id_expediente: '',
-    nombre_accion: '',
+    id_tipo_accion: '',
     descripcion: '',
     observacion_accion: '',
     fecha_creacion: dayjs().format('YYYY-MM-DDTHH:mm:ss'),
@@ -69,24 +70,20 @@ export const AgregarAccionCorrectiva: React.FC = () => {
   const limpiar_form_accion_correctiva = () => {
     set_form_accion_correctiva({
       id_accion: '',
-      nombre_accion: '',
+      id_tipo_accion: '',
       descripcion: '',
       observacion_accion: '',
       cumplida: false,
     });
   };
 
-  const handle_change_nombre_accion = (e: any) => {
+  const handle_change_accion = (e: any) => {
+    const id_tipo_accion = e.target.value;
+    const accion = acciones_correctivas.find((accion) => accion.id_tipo_accion === id_tipo_accion);
     set_form_accion_correctiva({
       ...form_accion_correctiva,
-      nombre_accion: e.target.value,
-    });
-  };
-
-  const handle_change_descripcion_accion = (e: any) => {
-    set_form_accion_correctiva({
-      ...form_accion_correctiva,
-      descripcion: e.target.value,
+      id_tipo_accion,
+      descripcion: accion?.descripcion,
     });
   };
 
@@ -151,6 +148,17 @@ export const AgregarAccionCorrectiva: React.FC = () => {
     }
   }
 
+  const get_traer_acciones = async (): Promise<void> => {
+    try {
+      const response = await get_tipo_acciones();
+      set_acciones_correctivas(response);
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
   const dispatch = useAppDispatch();
 
   const { mode, accion_correctiva, tramite } = useAppSelector((state) => state.planes);
@@ -168,9 +176,11 @@ export const AgregarAccionCorrectiva: React.FC = () => {
         tipo_tramite: tramite.tipo_tramite,
       });
     }
+    get_traer_acciones();
   }, []);
 
   useEffect(() => {
+    limpiar_form_accion_correctiva();
     if (mode.crear) {
       set_form_accion_correctiva({
         ...form_accion_correctiva,
@@ -184,16 +194,24 @@ export const AgregarAccionCorrectiva: React.FC = () => {
         id_accion: accion_correctiva.id_accion,
         id_tramite: accion_correctiva.id_tramite,
         id_expediente: accion_correctiva.id_expediente,
-        nombre_accion: accion_correctiva.nombre_accion,
-        descripcion: accion_correctiva.descripcion,
+        id_tipo_accion: accion_correctiva.id_tipo_accion,
         observacion_accion: accion_correctiva.observacion_accion,
         fecha_creacion: accion_correctiva.fecha_creacion,
         fecha_cumplimiento: accion_correctiva.fecha_cumplimiento,
         cumplida: accion_correctiva.cumplida,
       });
-      console.log(accion_correctiva, form_accion_correctiva)
     }
   }, [mode, accion_correctiva]);
+
+  useEffect(() => {
+    if(form_accion_correctiva.id_tipo_accion && !form_accion_correctiva.descripcion){
+      const accion = acciones_correctivas.find((accion) => accion.id_tipo_accion === form_accion_correctiva.id_tipo_accion);
+      set_form_accion_correctiva({
+        ...form_accion_correctiva,
+        descripcion: accion?.descripcion,
+      });
+    }
+  }, [form_accion_correctiva.id_tipo_accion]);
 
   return (
     <>
@@ -225,7 +243,7 @@ export const AgregarAccionCorrectiva: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de eje estrategico" />
+            <Title title="Registro de Acción Correctiva a Trámite" />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
@@ -301,13 +319,23 @@ export const AgregarAccionCorrectiva: React.FC = () => {
             <TextField
               fullWidth
               size="small"
-              label="Nombre Acción"
+              label="Acción Correctiva"
+              select
               variant="outlined"
               multiline
-              value={form_accion_correctiva.nombre_accion}
+              value={form_accion_correctiva.id_tipo_accion}
               required
-              onChange={handle_change_nombre_accion}
-            />
+              onChange={handle_change_accion}
+            >
+              <MenuItem value="">
+                <em>Seleccione una opción</em>
+              </MenuItem>
+              {acciones_correctivas.map((accion: any) => (
+                <MenuItem key={accion.id_tipo_accion} value={accion.id_tipo_accion}>
+                  {accion.nombre_tipo_accion}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -315,10 +343,10 @@ export const AgregarAccionCorrectiva: React.FC = () => {
               size="small"
               label="Descripción de la Acción"
               variant="outlined"
+              disabled
               multiline
               value={form_accion_correctiva.descripcion}
               required
-              onChange={handle_change_descripcion_accion}
             />
           </Grid>
           <Grid item xs={12}>
