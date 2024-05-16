@@ -21,11 +21,11 @@ export const DownloadButton = ({
 
   const url = baseURL.replace("/api/", "");
 
-  const handleDownload = () => {
-    if (linkRef.current != null) {
-      linkRef.current.click();
-    }
-  };
+  // const handleDownload = () => {
+  //   if (linkRef.current != null) {
+  //     linkRef.current.click();
+  //   }
+  // };
 
   return (
     <>

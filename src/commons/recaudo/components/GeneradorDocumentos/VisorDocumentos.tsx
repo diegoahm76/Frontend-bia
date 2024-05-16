@@ -37,7 +37,7 @@ export const VisorDocumentos: React.FC<any> = ({file}: {file: any}) => {
           </Button>
           <DocViewer
             pluginRenderers={DocViewerRenderers}
-            documents={[{ uri: file }]}
+            documents={[{ uri: file, fileType: 'docx' }]}
             style={{height: 1000, width: '70%', display: 'flex', margin: 'auto'}}
           />
         </>
