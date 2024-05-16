@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Button, Grid, Switch, TextField } from "@mui/material";
+import {  Grid, Switch, TextField } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
 import { DetalleLiquidacion } from "../DetalleLiquidacion/DetalleLiquidacion";
 import { api } from "../../../../../api/axios";
@@ -512,7 +512,9 @@ export const GenerarLiquidacion = () => {
                 checked={showTextField1}
                 onChange={handleSwitch1Change}
                 color="primary"
+                disabled={datosConsulta.TIdentificacion === "Nit"}
               />
+
             </Grid>
             <Grid item xs={3}>
               <TextField

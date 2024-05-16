@@ -7,9 +7,10 @@
 /* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
 import { useState } from 'react';
-import { Title } from '../../../components/Title';
+import { Title } from '../../../../components/Title';
 import { Grid, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
@@ -17,16 +18,8 @@ const GraficaApex = () => {
     // Asegúrate de que los estados iniciales y las opciones cumplan con los tipos esperados
     const estado = React.useState({
         series: [{
-            data: [20, 23, 24, 21,
-                10, 14, 27,
-                21, 14, 17,
-                26, 16, 12,
-                25, 15, 14,
-                24, 14, 16,
-                20, 34, 17,
-                24, 14, 17,
-                13, 14, 17,
-                20, 18, 12]
+            data: [200, 330, 348, 370,
+                100,]
         }],
         options: {
             chart: {
@@ -46,79 +39,45 @@ const GraficaApex = () => {
             xaxis: {
 
                 categories: [
-                    ['APROVECHAMIENTO', 'FORESTAL COACTIVO', ' DIFICIL RECAUDO'],
-                    ['VISITAS TECNICAS', 'POR COBRAR COACTIVO', ' DIFICIL RECAUDO'],
-                    ['PORCENTAJE Y SOBRETASA', 'AMBIENTAL VIGENCIA', 'DIFICIL RECAUDO'],
-                    ['MULTAS PERSUASIVO', 'DIFICIL RECAUDO',],
-                    ['MULTAS COACTIVO', 'DIFICIL RECAUDO',],
-                    ['TASA RETRIBUTIVA', 'COACTIVO', ' DIFICIL RECAUDO'],
-                    ['TASA USO DE', 'AGUA COACTIVO', 'DIFICIL RECAUDO'],
-                    ['TASA USO DE', 'AGUA PERSUASIVO', 'DIFICIL RECAUDO'],
-                    ['PORCENTAJE', 'AMBIENTAL ANTERIOR',],
-                    ['PORCENTAJE', 'AMBIENTAL ACTUAL',],
-                    ['SOBRETASA AMBIENTAL', 'VIGENCIA ANTERIOR',],
-                    ['VISITAS TECNICAS ', 'DE EVALUACION, SEGUMIENTO', 'Y CONTROL ACTUAL'],
-                    ['INTERESES VISITAS', 'TECNICAS POR COBRAR',],
-                    ['INTERESES', 'SOBRETASA AMBIENTAL', ''],
-                    ['INTERESES PORCENTAJE'],
-                    ['INTERESES', 'TASA RETRIBUTIVA',],
-                    ['INTERESES DEUDORES ', 'TASA USO DE AGUA'],
-                    ['INTERESES MULTAS ', 'Y SANCIONES'],
-                    ['MULTAS ANTERIOR',],
-                    ['MULTAS ACTUAL'],
-                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ANTERIOR TIYAVA'],
-                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ACTUAL GUAYURIBA'],
-                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO', ' ACTUAL APIAY'],
-                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ACTUAL GUATIQUIA'],
-                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ACTUAL RIO META'],
-                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ACTUAL GUARROJO'],
-                    ['TRANSFERENCIA DEL ', 'SECTOR ELECTRICO ', 'ACTUAL TILLAVA'],
-                    ['TASA RETRIBUTIVA  ', 'VIGENCIAS ANTERIORES'],
-                    ['TASA RETRIBUTIVA ACTUAL '],
-                    ['TASA USO DE AGUA  ', 'VIGENCIA ANTERIOR'],
-                    ['TASA USO DE AGUA ACTUAL ',],
+                    ['Visitas tecnicas de', 'evaluacions eguimiento', ' y control actual'],
+                    ['Tasa uso de agua  ', ' coactivo dificil recaudado'],
+                    ['Porcentaje ', 'ambiental actual'],
+                    ['Tasa retributiva coactivo ', 'difucil recaudo'],
+
+
+                    ['Multas coactivo ', 'difucil recaudo']
 
                 ],
-
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        fontSize: '9px',
-                    },
-                    // rotate: -45,
-                    // offsetX: -10, // Ajusta según necesidad
-                    // offsetY: 5,  // Ajusta según necesidad
-                },
-            },
+            }
         }
     })[0]; // Accede directamente al estado inicial desde el hook
 
     return (
         <div>
             <div id="chart">
-                <ReactApexChart options={estado.options} series={estado.series} type="bar" height={1500} />
+                <ReactApexChart options={estado.options} series={estado.series} type="bar" height={450} />
             </div>
         </div>
     );
 };
+
 
 export interface FormData {
 
     edad: any,
     fecha_hasta: any;
     fecha_desde: any;
-    deuda: any,
+    deuda: any;
+top:any;
 };
-
-export const CarteraEdad7: React.FC = () => {
-
+export const Reportetop1: React.FC = () => {
     const initialFormData: FormData = {
 
         fecha_desde: '',
         fecha_hasta: '',
         edad: '',
         deuda: '',
+        top:"",
     };
     const [formData, setFormData] = useState(initialFormData);
 
@@ -130,6 +89,7 @@ export const CarteraEdad7: React.FC = () => {
             [name]: value,
         }));
     };
+
 
     return (
         <>
@@ -144,9 +104,8 @@ export const CarteraEdad7: React.FC = () => {
                 }}
             >
                 <Grid item xs={12} sm={12}>
-                    <Title title="Reporte General Cartera Por Deuda" />
+                    <Title title="Reporte de Cartera Por Deuda y Edad –Top 1" />
                 </Grid>
-
                 <Grid item xs={12} sm={3}>
                     <TextField
                         fullWidth
@@ -186,10 +145,10 @@ export const CarteraEdad7: React.FC = () => {
                         variant="outlined"
                         size="small"
                         fullWidth
-                        value={'TODOS'}
-
                         onChange={handleInputChange}
                         // value={formData.edad}
+                        value={'TODOS'}
+
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
@@ -200,27 +159,38 @@ export const CarteraEdad7: React.FC = () => {
                         variant="outlined"
                         size="small"
                         fullWidth
+                        value={'TODOS'}
+
                         onChange={handleInputChange}
                         // value={formData.deuda}
-                        value={'TODOS'}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        label="Concepto "
+                        name="top"
+                        disabled
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        onChange={handleInputChange}
+                        // value={formData.deuda}
+                        value={'Top 5'}
 
                     />
                 </Grid>
-
-                
                 <Grid item>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        startIcon={<SearchIcon />}
-                        onClick={() => {
+          <Button
+            color="primary"
+            variant="contained"
+            startIcon={<SearchIcon />}
+            onClick={() => {
 
-                        }}
-                    >
-                        buscar
-                    </Button>
-                </Grid>
-
+            }}
+          >
+            buscar
+          </Button>
+        </Grid>
                 <Grid item xs={12} sm={12} sx={{
                     background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
                 }}  >

@@ -5,16 +5,16 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import 'leaflet/dist/leaflet.css';
-import { CarteraEdad7 } from './CarteraEdad7';
+import { CarteraEdad7 } from './Graficas/CarteraEdad7';
 import { SetStateAction, useState } from 'react';
 import { Title } from '../../../components/Title';
 import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
-import { ReporteEdad3 } from './ReporteEdad3';
-import { ReporteCartera4 } from './ReporteCartera4';
-import { CarteraEdad } from './CarteraEdad';
-import { Reportetop1 } from './Reportetop1';
-import { Reportetop2 } from './Reportetop2';
-import { CarteraTop } from './CarteraTop';
+import { ReporteEdad3 } from './Graficas/ReporteEdad3';
+import { ReporteCartera4 } from './Graficas/ReporteCartera4';
+import { CarteraEdad } from './Graficas/CarteraEdad';
+import { Reportetop1 } from './Graficas/Reportetop1';
+import { Reportetop2 } from './Graficas/Reportetop2';
+import { CarteraTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
   const [opcionSeleccionada, setOpcionSeleccionada] = useState('');

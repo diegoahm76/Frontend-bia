@@ -9,7 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import React, { useState } from 'react';
 import { ApexOptions } from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
-import { Title } from '../../../components/Title';
+import { Title } from '../../../../components/Title';
 import SearchIcon from '@mui/icons-material/Search';
 import { Grid, TextField, Button } from '@mui/material';
 
