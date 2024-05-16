@@ -6,46 +6,24 @@
 import {
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
   TextField,
   Button,
-  Dialog,
-  Switch,
   Chip,
-  Typography,
 } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
-import { jsPDF } from 'jspdf';
-import dayjs from 'dayjs';
-import { logo_cormacarena_h } from '../../conservacion/Reportes/logos/logos';
 import { Title } from '../../../components';
 import { useSelector } from 'react-redux';
 import { AuthSlice } from '../../auth/interfaces';
-import { api } from '../../../api/axios';
-import { BuscadorPersona } from '../../../components/BuscadorPersona';
+import { api, baseURL } from '../../../api/axios';
 import { control_error, control_success } from '../../../helpers';
-import { Persona } from '../../../interfaces/globalModels';
-import { UnidadOrganizacional } from '../../conservacion/solicitudMaterial/interfaces/solicitudVivero';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  remicion_viso,
-  constancia_publicacion,
-  plantila_4,
-  constancia_publicaci5,
-  citacion,
-  documento8,
-} from '../plantillasRecaudo/miguel';
-import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
-import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { AlertaDocumento } from './AlertaDocumento';
-import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
+import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
 export interface UnidadOrganizaciona {
   codigo: any;
   nombre: string;
@@ -68,7 +46,7 @@ export const GeneradorDocumentos: React.FC = () => {
   const [radicadof, setradicadof] = useState<number | null>(null);
   const [file, setFile] = useState('');
   const [urlFile, setUrlFile] = useState<any>(null);
-
+  const [updateBorrador, setUpdateBorrador] = useState(false);
 
   const [personaselet, setpersona] = useState<string[]>([]);
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
@@ -124,9 +102,9 @@ export const GeneradorDocumentos: React.FC = () => {
 
   useEffect(() => console.log(urlFile), [urlFile])
 
-  useEffect(() => {
-    fetchTiposRadicado();
-  }, []);
+  // useEffect(() => {
+  //   fetchTiposRadicado();
+  // }, []);
 
 
   const [idPlantilla, setIdPlantilla] = useState('');
@@ -158,9 +136,26 @@ export const GeneradorDocumentos: React.FC = () => {
       const url = `/gestor/plantillas/plantillas_documentos/get/`;
       const res: any = await api.get(url);
       let data: any = res.data.data;
+      if(data.length === 0) control_error('No se encontraron plantillas disponibles');
       setPlantillas(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      control_error(error.response.data.detail);
+    }
+  };
+
+  const generateDocument = async (data: any) => {
+    try {
+      const url = `/gestor/trd/consecutivo-tipologia-doc/`;
+      const resp: any = await api.post(url, data);
+      console.log(resp);
+      if(resp.data.data){
+        removeFile()
+        const url = baseURL.replace("/api/", "");
+        setFile(`${url}${resp.data.data.archivos_digitales.ruta_archivo}`)
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
     }
   };
 
@@ -172,7 +167,6 @@ export const GeneradorDocumentos: React.FC = () => {
       const unidadesData = res.data.data;
       setUnidades(unidadesData);
     } catch (error: any) {
-      // console.error(error);
       control_error(error.response.data.detail);
     }
   };
@@ -195,7 +189,8 @@ export const GeneradorDocumentos: React.FC = () => {
   useEffect(() => {
     if(plantillaSeleccionada?.archivos_digitales){
       removeFile()
-      setFile(`https://back-end-bia-beta.up.railway.app${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
+      const url = baseURL.replace("/api/", "");
+      setFile(`${url}${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
       setVariablesPlantilla(plantillaSeleccionada.variables)
     }
   }, [plantillaSeleccionada]);
@@ -210,8 +205,18 @@ export const GeneradorDocumentos: React.FC = () => {
     setShowVariables(!showVariables);
   }
 
-  const generateBorrador = (data: any) => {
+  const saveData = (data: any) => {
+    const sendData = {
+      plantilla: idPlantilla,
+      variable: 'B',
+      payload: data,
+    }
+    generateDocument(sendData);
     console.log(data);
+  }
+
+  const generateBorrador = () => {
+    setUpdateBorrador(true);
   }
 
   return (
@@ -304,7 +309,9 @@ export const GeneradorDocumentos: React.FC = () => {
               />
             </Grid>
             <FormularioGenerador
-              exCallback={generateBorrador}
+              exCallback={saveData}
+              sendData={updateBorrador}
+              setSendData={setUpdateBorrador}
               variablesPlantilla={variablesPlantilla}
               showVariables={showVariables}
             ></FormularioGenerador>
@@ -394,27 +401,7 @@ export const GeneradorDocumentos: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12} sm={12}>
-          {(file) && (
-            <>
-              <Button
-                variant="contained"
-                color="primary"
-                href={file}
-                sx={{display: 'flex', m: 'auto', width: '200px', mb: '1.5rem'}}
-                download
-                endIcon={<CloudDownloadIcon />}
-              >
-                Descargar
-              </Button>
-              <DocViewer
-                pluginRenderers={DocViewerRenderers}
-                documents={[{ uri: file }]}
-                style={{height: 1000, width: '70%', display: 'flex', margin: 'auto'}}
-              />
-            </>
-          )}
-        </Grid>
+        <VisorDocumentos file={file} />
       </Grid>
     </>
   );

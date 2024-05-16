@@ -3,10 +3,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
 
-export const FormularioGenerador: React.FC<any> = ({variablesPlantilla, showVariables, exCallback} : {variablesPlantilla: any[], showVariables: boolean, exCallback: (data: any) => void}) => {
+export const FormularioGenerador: React.FC<any> = ({variablesPlantilla, showVariables, sendData, exCallback, setSendData} : {variablesPlantilla: any[], showVariables: boolean, sendData: boolean, exCallback: (data: any) => void, setSendData: (bool: boolean) => void} ) => {
   const [formValues, setFormValues] = useState<any>({});
 
   const handleInputChange = (event: any, variable: string) => {
@@ -16,7 +16,12 @@ export const FormularioGenerador: React.FC<any> = ({variablesPlantilla, showVari
     });
   };
 
-  exCallback(formValues);
+  useEffect(() => {
+    if (sendData) {
+      exCallback(formValues);
+      setSendData(false);
+    }
+  }, [sendData]);
 
   const capitalizeAndSeparate = (name: string): string => {
     const words = name.split(/(?=[A-Z])/);

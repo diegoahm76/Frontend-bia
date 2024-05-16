@@ -84,23 +84,25 @@ export const FormatoCalidadAsociado: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <FormControl fullWidth>
-            <TextField
-              select
-              size="small"
-              id="demo-simple-select"
-              label="Seleccionar tipo de acceso"
-              name="cod_tipo_acceso"
-              value={form.cod_tipo_acceso}
-              onChange={HandleCompletarDatos}
-            >
-              {Tipos_acceso_consulta?.map((item: any, index: number) => (
-                <MenuItem key={index} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </FormControl>
+          <TextField
+            select
+            fullWidth
+            size="small"
+            id="demo-simple-select"
+            label="Seleccionar tipo de acceso"
+            name="cod_tipo_acceso"
+            value={form.cod_tipo_acceso}
+            onChange={HandleCompletarDatos}
+          >
+            <MenuItem value="">
+              <em>Seleccione una opción</em>
+            </MenuItem>
+            {Tipos_acceso_consulta?.map((item: any, index: number) => (
+              <MenuItem key={index} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
       </Grid>
     </>
