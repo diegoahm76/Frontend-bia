@@ -40,6 +40,7 @@ export const FormularioGenerador: React.FC<any> = (
       {showVariables && variablesPlantilla.length > 0 && variablesPlantilla.map((variable, i) => (
         <Grid item xs={12} lg={4} key={i}>
         <TextField
+          multiline
           fullWidth
           size="small"
           label={capitalizeAndSeparate(variable)}

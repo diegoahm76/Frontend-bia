@@ -118,3 +118,20 @@ export const search_avanzada = async ({
     }&nombre_comercial=${nombre_comercial ?? ''}`
   );
 };
+
+export const get_bandeja_tareas = async (): Promise<
+  AxiosResponse<ResponseServer<any[]>>
+> => {
+  return await api.get<ResponseServer<any[]>>(
+    '/gestor/bandeja-tareas/persona/bandeja/tareas/'
+  );
+};
+
+export const create_asignacion_documento = async (
+  data: any
+): Promise<AxiosResponse<ResponseServer<any>>> => {
+  return await api.post<ResponseServer<any>>(
+    '/gestor/bandeja-tareas/asginacion/documentos/create/',
+    data
+  );
+};
