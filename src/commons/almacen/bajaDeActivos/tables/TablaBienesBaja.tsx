@@ -48,6 +48,7 @@ const TablaBienesBaja: React.FC<props> = ({ bienes_seleccionados, set_bienes_sel
     { field: 'nombre_marca', headerName: 'Marca', width: 150, flex: 1 },
     { field: accion === 'crear' ? 'identificador_bien': 'doc_identificador_nro', headerName: 'Identificador bien', width: 150, flex: 1 },
     { field: 'valor_unitario', headerName: 'Valor unitario', width: 150, flex: 1 },
+    { field: 'depreciacion_valor', headerName: 'Valor depreciación', width: 150, flex: 1 },
     //fila para agregar una justificacion, que la escribe el usuario, es decir es editable
     { field: 'justificacion_baja_activo', headerName: 'Justificacion', width: 150, flex: 1, editable: true, },
   ]

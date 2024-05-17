@@ -7,11 +7,13 @@ import { ResReqOpaRouter } from '../respuestaRequerimientoOpa/router/ResReqOpaRo
 import { FormProviderMetadatos } from '../../TramitesServicios/context/MetadatosContext';
 import { MainScreenTiposTramites } from '../modules/TiposTramites/MainScreenTiposTramites';
 import { PermisosMenoresScreen } from '../modules/PermisosMenores/TramitesOServiciosScreen';
+import { StepperProvider } from '../../transferenciaDocumental/context/ContextControlSteper';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TramitesServiciosRouter = (): ReactElement => {
   return (
+    <StepperProvider>
     <FormProviderMetadatos>
       <UserProvider>
         <Routes>
@@ -35,5 +37,6 @@ export const TramitesServiciosRouter = (): ReactElement => {
         </Routes>
       </UserProvider>
     </FormProviderMetadatos>
+    </StepperProvider>
   );
 };

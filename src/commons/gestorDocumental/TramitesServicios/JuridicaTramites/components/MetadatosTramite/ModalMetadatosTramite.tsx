@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import CloseIcon from '@mui/icons-material/Close'; // Agregado: Importación de CloseIcon
-import { FormContextMetadatos } from '../../context/MetadatosContext';
+import { FormContextMetadatos } from '../../../context/MetadatosContext';
 import  CleanIcon  from '@mui/icons-material/CleaningServices';
 import { api } from '../../../../../../api/axios';
 import { handleApiError } from '../../../../../../utils/functions/errorManage';

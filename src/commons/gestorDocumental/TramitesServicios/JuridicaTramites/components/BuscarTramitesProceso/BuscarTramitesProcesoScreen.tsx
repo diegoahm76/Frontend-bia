@@ -7,13 +7,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { v4 as uuidv4 } from 'uuid';
 import { DataGrid } from "@mui/x-data-grid";
-import { StepperContext } from "../../context/SteperContext";
 import { PaymentChip, formatDate } from "../../utils/FormatoFecha";
 import { Title } from "../../../../../../components";
 import { download_xls } from "../../../../../../documentos-descargar/XLS_descargar";
 import { download_pdf } from "../../../../../../documentos-descargar/PDF_descargar";
 import { api } from "../../../../../../api/axios";
 import { RenderDataGrid } from "../../../../tca/Atom/RenderDataGrid/RenderDataGrid";
+import { StepperContext } from "../../../context/SteperContext";
 
 
 interface ItiposSolicitud {
@@ -122,6 +122,7 @@ export const BuscarTramitesProcesoScreen = () => {
     };
 
     const procesoVistaTramiete = (params: any) => {
+        console.log(params.row, 'vamos al paso 1')
         setActiveStep(activeStep + 1);
         set_id(data[0].id_solicitud_tramite)
 
@@ -195,6 +196,7 @@ export const BuscarTramitesProcesoScreen = () => {
     // Efecto secundario para cargar las opciones al cargar el componente
     useEffect(() => {
         choiseTipoPago();
+        // ? se debe quitar búsqueda inicial de los trámites en proceso
         BusquedaAvanzadaTramitesProceso();
     }, []);
 

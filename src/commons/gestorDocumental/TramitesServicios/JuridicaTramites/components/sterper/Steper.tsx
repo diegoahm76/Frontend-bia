@@ -10,7 +10,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
 import { useContext } from 'react';
-import { StepperContext } from '../../context/SteperContext';
+import { StepperContext } from '../../../context/SteperContext';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 
 // Estilos personalizados para el conector entre los pasos
@@ -86,7 +86,7 @@ const steps = [
   'Buscar trámite para revisión jurídica',
   'Trámites en proceso',
   'Documentos proporcionados para revisión',
-  'Creación de oficio jurídico',
+  'Trámite finalizado',
 ];
 
 export const CustomizedSteppers = (): JSX.Element => {
