@@ -34,6 +34,7 @@ import { FormatoRecursoReposicion } from "./FormatoRecursoReposicion";
 import { FormatoResolverExcepciones } from "./FormatoResolverExcepciones";
 import { LiquidacionCredito } from "./LiquidacionCredito";
 import { AprobadoresProps } from "./models/interfaces";
+import { OficiosEmbargos } from "./OficiosEmbargos";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -53,7 +54,8 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
     { id: '4', nombre: 'Ordenar Seguir Adelante' },
     { id: '5', nombre: 'Liquidación de Crédito' },
     { id: '6', nombre: 'Aprueba Liquidación de Crédito' },
-    { id: '7', nombre: 'Terminación de proceso Coactivo' },
+    { id: '7', nombre: 'Medida Cautelar' },
+    { id: '8', nombre: 'Terminación de proceso Coactivo' },
   ];
 
   const [position_tab, set_position_tab] = useState('1');
@@ -395,7 +397,8 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
             {id_subetapa == '4' && 'CARGAR DOCUMENTO SEGUIR ADELANTE'}
             {id_subetapa == '5' && 'CARGAR LIQUIDACIÓN DE CRÉDITO'}
             {id_subetapa == '6' && 'CARGAR APROBACIÓN LIQUIDACIÓN DE CRÉDITO'}
-            {id_subetapa == '7' && 'CARGAR TERMINACIÓN DE PROCESO COACTIVO'}
+            {id_subetapa == '7' && 'CARGAR MEDIDA CAUTELAR'}
+            {id_subetapa == '8' && 'CARGAR TERMINACIÓN DE PROCESO COACTIVO'}
             <input
               hidden
               type="file"
@@ -448,7 +451,8 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
             {id_subetapa == '4' && 'GENERAR DOCUMENTO SEGUIR ADELANTE'}
             {id_subetapa == '5' && 'GENERAR LIQUIDACIÓN DE CRÉDITO'}
             {id_subetapa == '6' && 'GENERAR APROBACIÓN LIQUIDACIÓN DE CRÉDITO'}
-            {id_subetapa == '7' && 'GENERAR TERMINACIÓN DE PROCESO COACTIVO'}
+            {id_subetapa == '7' && 'GENERAR MEDIDA CAUTELAR'}
+            {id_subetapa == '8' && 'GENERAR TERMINACIÓN DE PROCESO COACTIVO'}
             </Button>
         </Grid>
         {/* <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
@@ -478,7 +482,8 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
               {(is_generate_cobro || cobro_url) && (id_subetapa == '4') && <Tab label={is_generate_resolucion ? 'DOCUMENTO SEGUIR ADELANTE GENERADO' : 'DOCUMENTO SEGUIR ADELANTE CARGADO'} value="1" />}
               {(is_generate_cobro || cobro_url) && (id_subetapa == '5') && <Tab label={is_generate_resolucion ? 'LIQUIDACIÓN DE CRÉDITO GENERADO' : 'LIQUIDACIÓN DE CRÉDITO CARGADO'} value="1" />}
               {(is_generate_cobro || cobro_url) && (id_subetapa == '6') && <Tab label={is_generate_resolucion ? 'APROBACIÓN LIQUIDACIÓN DE CRÉDITO GENERADO' : 'APROBACIÓN LIQUIDACIÓN DE CRÉDITO CARGADO'} value="1" />}
-              {(is_generate_cobro || cobro_url) && (id_subetapa == '7') && <Tab label={is_generate_resolucion ? 'TERMINACIÓN DE PROCESO COACTIVO GENERADO' : 'TERMINACIÓN DE PROCESO COACTIVO CARGADO'} value="1" />}
+              {(is_generate_cobro || cobro_url) && (id_subetapa == '7') && <Tab label={is_generate_resolucion ? 'MEDIDA CAUTELAR GENERADA' : 'MEDIDA CAUTELAR CARGADA'} value="1" />}
+              {(is_generate_cobro || cobro_url) && (id_subetapa == '8') && <Tab label={is_generate_resolucion ? 'TERMINACIÓN DE PROCESO COACTIVO GENERADO' : 'TERMINACIÓN DE PROCESO COACTIVO CARGADO'} value="1" />}
               {/* {(is_generate_cobro || cobro_url) && (id_subetapa == '2') && <Tab label={is_generate_cobro ? 'COBRO GENERADO' : 'COBRO CARGADO'} value="2" />} */}
 
             </TabList>
@@ -505,12 +510,17 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
                     datos={datos}
                   />
             }
-            {(id_subetapa == '5' || id_subetapa == '6' || id_subetapa == '7')
+            {(id_subetapa == '5' || id_subetapa == '6' || id_subetapa == '8')
               &&  <LiquidacionCredito
                     id_subetapa={id_subetapa}
                     datos={datos}
                   />
             }
+            {id_subetapa == '7'
+              &&  <OficiosEmbargos
+                    id_subetapa={id_subetapa}
+                    datos={datos}
+                  />}
           </TabPanel>
 
           <TabPanel value="2" sx={{ p: '20px 0' }}>

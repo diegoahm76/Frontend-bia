@@ -23,6 +23,7 @@ import { ActivacionComponentRoutes } from '../components/aprobarDocumento/routes
 import { Indicadores } from '../screens/Indicadores';
 import { TalentoHumano } from '../screens/TalentoHumano';
 import { IndicadoresRecaudo } from '../screens/IndicadoresRecaudo';
+import { SeguimientoExpendientes } from '../screens/SeguimientoExpedientesScreen';
 
 
 
@@ -40,6 +41,7 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="historial_proceso/*" element={<HistorialProceso />} />
       <Route path="alertas/*" element={<ConfiguracionAlertasScreen />} />
       <Route path="gestion_cartera/*" element={<GestionCarteraScreen />} />
+      <Route path="seguimiento_expedientes/*" element={<SeguimientoExpendientes />} />
       <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
       <Route path="facilidades_pago/*" element={<FacilidadPagoRoutes />} />
       <Route path="estados_proceso/*" element={<EstadosProcesoScreen />} />

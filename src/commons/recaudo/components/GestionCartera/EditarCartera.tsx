@@ -17,7 +17,7 @@ import type { FlujoProceso } from "../../interfaces/flujoProceso";
 import { type Dispatch, type SetStateAction } from "react";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import SaveIcon from '@mui/icons-material/Save';
-import type { AtributoEtapa } from "../../interfaces/proceso";
+import type { AtributoEtapa, CategoriaAtributo } from "../../interfaces/proceso";
 
 
 interface IProps {
@@ -34,6 +34,7 @@ interface IProps {
 
   },
   flujos_destino: FlujoProceso[];
+  // categorias: CategoriaAtributo[];
   id_proceso: string;
   id_cartera: string;
   id_subetapa_destino: string;
