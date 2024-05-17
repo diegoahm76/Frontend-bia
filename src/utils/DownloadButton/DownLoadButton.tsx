@@ -31,8 +31,7 @@ export const DownloadButton = ({
         target="_blank"
         rel="noopener noreferrer"
         href={
-          fileUrl
-          /*fileUrl &&
+          fileUrl &&
           fileUrl.includes(
             process.env.NODE_ENV === 'development'
               ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
@@ -47,7 +46,7 @@ export const DownloadButton = ({
                     `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
                   : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
                     `${DEFAULT_PROD_DOWNLOAD_FILES_URL}`
-              }${fileUrl}`*/
+              }${fileUrl}`
         }
         ref={linkRef}
         style={{ display: 'none' }}

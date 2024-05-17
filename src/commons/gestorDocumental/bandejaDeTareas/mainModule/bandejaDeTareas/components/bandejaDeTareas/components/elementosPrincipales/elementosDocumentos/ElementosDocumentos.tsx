@@ -80,8 +80,8 @@ export const ElementosDocumentos = (): JSX.Element => {
           <>
               <>
                 <DownloadButton
-                fileName='prueba'
-                fileUrl='prueba.pdf'
+                fileName={params.row?.documento?.archivos_digitales?.nombre_de_Guardado ?? 'Nombre-Bia'}
+                fileUrl={params?.row?.documento?.archivos_digitales?.ruta_archivo ?? ''}
                 condition={false}
                   />
               </>
@@ -93,6 +93,7 @@ export const ElementosDocumentos = (): JSX.Element => {
                   marginLeft: '20px',
                 }}
                 onClick={() => {
+                  console.log(params.row)
                   navigate('/app/gestor_documental/documentos')
                   dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(params.row));
                 }}
