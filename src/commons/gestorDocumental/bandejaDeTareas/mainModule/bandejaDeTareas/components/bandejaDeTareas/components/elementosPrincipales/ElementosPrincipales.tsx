@@ -47,8 +47,8 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
     'Responder Otro': <ElementosOtros />,
     'RESPONDER OPA': <ElementoOPAS/>,
     'Responder OPA': <ElementoOPAS/>,
-    'Documentos': <ElementosDocumentos/>,
-    'documentos': <ElementosDocumentos/>
+    'Responder Documentos': <ElementosDocumentos/>,
+    'responder documentos': <ElementosDocumentos/>
   } as const;
 
   const tipoDeTarea = listaTareasPqrsdfTramitesUotrosUopas[0]?.tipo_tarea;

@@ -29,7 +29,7 @@ import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert'
 import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 import { control_info } from '../../../../../../../alertasgestor/utils/control_error_or_success';
 import { getListadoTramitesByPerson } from '../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
-import { getListadoTareasOpasByPerson } from '../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
+import { getListadoDocumentosByPerson, getListadoTareasOpasByPerson } from '../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
 import { BuscadorDocumentos } from './Documents/BuscadorDocumentos';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
@@ -176,88 +176,13 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
   const searchDocumentos = async () => {
     console.log('busvandodoodosojdapsjdpai')
     try {
-      dispatch(setListaTareasPqrsdfTramitesUotrosUopas([
-        {
-          "consecutivo": "nuevo.1.2.4.2024.003",
-          "fecha_consecutivo": "12/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-009",
-          "fecha_radicado salida o interno":  "12/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.004",
-          "fecha_consecutivo": "13/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-010",
-          "fecha_radicado salida o interno":  "13/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.005",
-          "fecha_consecutivo": "14/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-011",
-          "fecha_radicado salida o interno":  "14/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.006",
-          "fecha_consecutivo": "15/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-012",
-          "fecha_radicado salida o interno":  "15/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.007",
-          "fecha_consecutivo": "16/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-013",
-          "fecha_radicado salida o interno":  "16/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.008",
-          "fecha_consecutivo": "17/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-014",
-          "fecha_radicado salida o interno":  "17/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.009",
-          "fecha_consecutivo": "18/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-015",
-          "fecha_radicado salida o interno":  "18/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.010",
-          "fecha_consecutivo": "19/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-016",
-          "fecha_radicado salida o interno":  "19/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.011",
-          "fecha_consecutivo": "20/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-017",
-          "fecha_radicado salida o interno":  "20/12/2024",
-          "tipo_tarea": "Documentos"
-        },
-        {
-          "consecutivo": "nuevo.1.2.4.2024.012",
-          "fecha_consecutivo": "21/12/2024",
-          "persona_genera": "brayan barragan",
-          "radicado salida o interno": "salida-2024-018",
-          "fecha_radicado salida o interno":  "21/12/2024",
-          "tipo_tarea": "Documentos"
-        }
-      ]));
+
+
+      const res = await getListadoDocumentosByPerson(
+        id_persona,
+        handleSecondLoading,
+      );
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
       dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
     } catch (error) {
       console.error('Error:', error);

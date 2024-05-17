@@ -35,6 +35,7 @@ import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAle
 import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
 import { getDetalleDeTarea } from '../../../../../services/servicesStates/pqrsdf/detalleDeTarea/getDetalleDeTarea.service';
+import CallMadeIcon from '@mui/icons-material/CallMade';
 
 export const iconStyles = {
   color: 'white',
@@ -91,7 +92,9 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       });
 
       if (result.isConfirmed) {
-        const res = await putAceptarTarea(row.id_tarea_asignada, /*row.id_pqrsdf*/);
+        const res = await putAceptarTarea(
+          row.id_tarea_asignada /*row.id_pqrsdf*/
+        );
         console.log(res);
 
         const listadoTareas = await getListadoTareasByPerson(
@@ -144,7 +147,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       text: 'Seleccionaste una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
-
 
     // const shouldDisable = (actionId: string) => {
     //   if (!tareaPQRSDF) {
@@ -517,24 +519,32 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-            <Tooltip title="Ir al generador de documentos">
+            <Tooltip title="Ir a módulo de generador de documentos">
               <IconButton
-                onClick={handle_template}
+                sx={{
+                  marginLeft: '30px',
+                }}
+                onClick={() => {
+                  navigate('/app/gestor_documental/documentos');
+                  dispatch(
+                    setCurrentTareaPqrsdfTramitesUotrosUopas(params.row)
+                  );
+                }}
               >
                 <Avatar
                   sx={{
-                    width: 24,
-                    height: 24,
+                    width: 30,
+                    height: 30,
                     background: '#fff',
                     border: '2px solid',
                   }}
                   variant="rounded"
                 >
-                  <TextSnippetIcon
+                  <CallMadeIcon
                     sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px',
+                      color: 'success.main',
+                      width: '20px',
+                      height: '20px',
                     }}
                   />
                 </Avatar>

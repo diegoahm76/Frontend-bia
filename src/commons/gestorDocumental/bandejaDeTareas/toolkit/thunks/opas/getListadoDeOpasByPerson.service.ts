@@ -51,3 +51,39 @@ export const getListadoTareasOpasByPerson = async (
     setLoading(false);
   }
 };
+
+
+export const getListadoDocumentosByPerson = async (
+  idPersona: number,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+  try {
+    setLoading(true);
+
+      // /api/gestor/bandeja-tareas/tareas-asignadas/docs/get-by-persona/215/
+    const url = `gestor/bandeja-tareas/tareas-asignadas/docs/get-by-persona/${idPersona}/?radicado=&estado_asignacion=&estado_tarea&fecha_inicio&fecha_fin&requerimiento`;
+    const { data } = await api.get(url);
+
+    if (data && data?.data?.length) {
+      control_success(`${data?.detail}`);
+      return data.data;
+    }
+
+    showAlert(
+      'Atención...',
+      'No se encontraron documentos para este usuario',
+      'warning'
+    );
+
+    return [];
+  } catch (error) {
+    showAlert(
+      'Opps...',
+      'Ha ocurrido un error al buscar los documentos y/o no hay documentos asignados a este usuario',
+      'warning'
+    );
+    return [];
+  } finally {
+    setLoading(false);
+  }
+};

@@ -33,7 +33,6 @@ export const DownloadButton = ({
         target="_blank"
         rel="noopener noreferrer"
         href={
-          `https://back-end-bia-beta.up.railway.app${fileUrl}`
           fileUrl &&
           fileUrl.includes(
             process.env.NODE_ENV === 'development'
