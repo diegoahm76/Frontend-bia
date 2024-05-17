@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, FormControl, Grid, IconButton, MenuItem, Select, Tooltip } from '@mui/material';
+import { Button, FormControl, Grid, IconButton, MenuItem, Select, TextField, Tooltip } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { useContext, useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
@@ -27,15 +27,15 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
     if (PQR_seleccionado.length > 0) {
       // Obtiene el elemento seleccionado
       const selectedItem = PQR_seleccionado[0];
-  
+
       // Verifica si el elemento seleccionado ya está presente en variable_concatenada
       // const alreadyExists = alerta.some(item => item.id_unidad_organizacional === selectedItem.id_unidad_organizacional);
       const alreadyExists = form.acceso_unidades_dos.some((item) => item.id_unidad_organizacional === selectedItem.id_unidad_organizacional);
-  
+
       if (!alreadyExists) {
         // Agrega el elemento seleccionado a la alerta
         set_alerta([...alerta, selectedItem]);
-  
+
         set_form({
           ...form,
           // acceso_unidades: [...variable_concatenada, unidadOrganizacional],
@@ -47,7 +47,7 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
       }
     }
   };
-  
+
 
   const handleEliminarDato = (id: number) => {
     const updatedAlerta = alerta.filter((item) => item.id_unidad_organizacional !== id);
@@ -57,7 +57,7 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
     ...form,
     acceso_unidades_dos: updatedAlerta,
   });
-  
+
   };
 
   const fetch_data_get = async (): Promise<void> => {
@@ -92,7 +92,7 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
         // Celda personalizada con el botón
         <Tooltip title="Borrar unidad organizacional" placement="right">
         <Button
-        
+
           onClick={() => handleEliminarDato(params.row.id_unidad_organizacional)}
         >
            <DeleteIcon style={{ color: "red" }} />
@@ -113,10 +113,12 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
     <>
       <Grid
         container
+        spacing={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
+          margin: '10px 0 20px 0',
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
@@ -126,42 +128,43 @@ export const UnidadesOrganizacionalesAutorizadas: React.FC = () => {
           <Title title="Unidad organizacional autorizada" />
         </Grid>
 
-        <Grid item container spacing={1} style={{ margin: 1 }}>
-          <Grid item  xs={2.5}>
+        <Grid item container spacing={2} sx={{m: '0 auto'}}>
+          {/* <Grid item  xs={2.5}>
             <h5>Unidad organizacional :</h5>
+          </Grid> */}
+          <Grid item xs={12} md={10}>
+            <TextField
+              label="Unidad organizacional"
+              select
+              fullWidth
+              size="small"
+              id="demo-simple-select"
+              value={PQR_seleccionado[0]?.id_unidad_organizacional || ''} // Obtener la ID del primer elemento seleccionado
+              onChange={(event): any => {
+                // Actualiza PQR_seleccionado con el elemento seleccionado
+                const selectedItem = tipos_pqr.find(
+                  (item: any) => item.id_unidad_organizacional === event.target.value
+                );
+                set_PQR_seleccionado([selectedItem]);
+              }}
+            >
+              <MenuItem value="">
+                <em>Seleccione una opción</em>
+              </MenuItem>
+              {tipos_pqr?.map((item: UnidadOrganizacional) => (
+                <MenuItem key={item.id_unidad_organizacional} value={item.id_unidad_organizacional}>
+                  {item.nombre}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <Select
-                style={{ height: 50 }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={PQR_seleccionado[0]?.id_unidad_organizacional || ''} // Obtener la ID del primer elemento seleccionado
-                onChange={(event): any => {
-                  // Actualiza PQR_seleccionado con el elemento seleccionado
-                  const selectedItem = tipos_pqr.find(
-                    (item: any) => item.id_unidad_organizacional === event.target.value
-                  );
-                  set_PQR_seleccionado([selectedItem]);
-                }}
-              >
-                {tipos_pqr?.map((item: UnidadOrganizacional) => (
-                  <MenuItem key={item.id_unidad_organizacional} value={item.id_unidad_organizacional}>
-                    {item.nombre}
-                  </MenuItem>
-                ))}
-              </Select>
-
-
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} md={2} sx={{display: 'flex', justifyContent: 'end'}}>
             <Button fullWidth variant="contained" onClick={() => handleAcumularDatos()} >
               Agregar
             </Button>
           </Grid>
         </Grid>
-     
+
         <Grid item xs={12} style={{marginLeft:70,marginRight:70}}>
           <DataGrid
             density="compact"

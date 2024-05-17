@@ -22,6 +22,7 @@ import { Title } from '../../../components';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import { control_success, control_error } from '../../../helpers';
 import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
+import { BuscadorPersona2 } from '../../../components/BuscadorPersona2';
 
 
 export interface Persona {
@@ -314,14 +315,14 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
                 spacing={2}>
 
 
-                <Grid item>
+                {/* <Grid item>
                     <Button variant="contained" color="primary" onClick={selt1}>Lider de unidad</Button>
                 </Grid>
                 <Grid item>
                     <Button variant="contained" color="primary" onClick={selt2} >Perfil</Button>
-                </Grid>
+                </Grid> */}
                 <Grid item>
-                    <Button variant="contained" color="primary" onClick={selt3}>  BuscadorPersona</Button>
+                    <Button variant="contained" color="primary" onClick={selt3}>  Buscador Persona</Button>
                 </Grid>
                 {opcionSeleccionada === '1' && <>
                     <Grid container
@@ -415,7 +416,7 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
 
                     <>
                         <Grid item xs={12}>
-                            <BuscadorPersona
+                            <BuscadorPersona2
                                 onResult={(data) => {
                                     void on_result(data);
                                 }}
@@ -446,7 +447,7 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
                         </Grid>
 
                         <RenderDataGrid
-                            title='Lideres de personas  '
+                            title='Personas  '
                             columns={columnss ?? []}
                             rows={personaseleta ?? []}
                         />

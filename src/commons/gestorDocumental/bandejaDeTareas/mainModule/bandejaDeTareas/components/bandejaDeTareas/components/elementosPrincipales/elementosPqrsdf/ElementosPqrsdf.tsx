@@ -7,6 +7,7 @@ import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
 import ClearIcon from '@mui/icons-material/Clear';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -120,6 +121,13 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       return;
     }
   };
+
+  const handle_template = (): void => {
+    // set_obligaciones_from_liquidacion(obligaciones_gestor);
+    // set_is_from_liquidacion(true);
+    // set_id_deudor(obligaciones.id_deudor);
+    navigate('/app/gestor_documental/bandeja_tareas');
+  }
 
   const handleRejectClick = (_row: any) => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
@@ -511,7 +519,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-
             <Tooltip title="Ir a módulo de generador de documentos">
               <IconButton
                 sx={{

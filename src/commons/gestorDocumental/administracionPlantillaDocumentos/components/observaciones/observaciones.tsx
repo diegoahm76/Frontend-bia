@@ -73,6 +73,7 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       if (res.data) {
         // La solicitud fue exitosa
         control_success("se creo correctamente");
+        limpiar();
       } else {
         // La solicitud falló
         console.error('Error en la solicitud:', res.statusText);
@@ -151,10 +152,12 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
     <>
       <Grid
         container
+        spacing={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
+          margin: '10px 0 20px 0',
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
@@ -181,9 +184,9 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
         </Grid>
 
         <Grid item container spacing={1} style={{ marginLeft: 15 }}>
-         
+
             <h5>Activo</h5>
-    
+
           <Grid item xs={10} sm={4} >
 
 

@@ -72,6 +72,12 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
               valueGetter: (params) => params.row.responsable_bodega
             },
             {
+              field: 'nombre_proveedor',
+              headerName: 'Nombre proveedor',
+              width: 300,
+              valueGetter: (params) => params.row.nombre_proveedor
+            },
+            {
               field: 'entrada',
               headerName: 'Entrada',
               width: 300,
@@ -138,6 +144,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
     codigo_bien: string,
     cantidad_ingresada_total: number,
     responsable_bodega: string,
+    nombre_proveedor: string,
     detalle: [{ cantidad: number, entrada: string, fecha_entrada: string }],
   ) {
     return {
@@ -148,6 +155,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
       codigo_bien,
       cantidad_ingresada_total,
       responsable_bodega,
+      nombre_proveedor,
       detalle
     }
   }
@@ -172,6 +180,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
           <TableCell>{row.nombre_bien}</TableCell>
           <TableCell>{row.cantidad_ingresada_total}</TableCell>
           <TableCell>{row.responsable_bodega}</TableCell>
+          <TableCell>{row.nombre_proveedor}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -222,6 +231,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
                     <TableCell>Bien&nbsp;</TableCell>
                     <TableCell>Cantidad ingresada total&nbsp;</TableCell>
                     <TableCell>Responsable bodega&nbsp;</TableCell>
+                    <TableCell>Nombre proveedor&nbsp;</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

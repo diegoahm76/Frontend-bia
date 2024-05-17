@@ -10,6 +10,7 @@ import { PreciosContext } from "../../../context/PersonalContext";
 import { LetraFormatoHumano } from "../../../utils/LetraFormatoHumano";
 import { Respuesta } from "../../../interfaces/InterfacesLiquidacion";
 import Swal from 'sweetalert2';
+import { useAppSelector } from "../../../../../../hooks/hooks";
 
 
 export const ModalConfirmacionLiquidacion = () => {
@@ -24,6 +25,14 @@ export const ModalConfirmacionLiquidacion = () => {
         userinfo: { id_persona },
     } = useSelector((state: AuthSlice) => state.auth);
 
+    const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
+        (state) =>
+          state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
+      );
+      console.log(currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite)
+
+      
+
 
     const fetch_Actualizar_archivo_digital = async () => {
         try {
@@ -31,8 +40,8 @@ export const ModalConfirmacionLiquidacion = () => {
             const formData = new FormData();
             formData.append('id_persona', id_persona.toString());
             formData.append('fecha_actual', FechaElaboracion);
-            formData.append('archivo', liquidacionState.archivo);
-            formData.append('id_solicitud_tramite', liquidacionState.id_solicitud_tramite.toString());
+            formData.append('archivo-create-Nombre anexo', liquidacionState.archivo);
+            formData.append('id_solicitud_tramite',currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite);
 
             const respuesta = await api.post(url, formData);
 

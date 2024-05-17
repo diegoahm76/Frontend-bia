@@ -6,25 +6,32 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import { useState } from 'react';
-import { Title } from '../../../components/Title';
+import { useEffect, useState } from 'react';
+import { Title } from '../../../../components/Title';
 import { Grid, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { api } from '../../../../api/axios';
+
+
+
+
 
 const GraficaApex = () => {
+
+
+
+
     // Asegúrate de que los estados iniciales y las opciones cumplan con los tipos esperados
-    const estado = React.useState({
+
+    const [estado, setEstado] = useState({
         series: [{
-            data: [200, 330, 348, 370,
-                100,]
+            data: [0]
         }],
         options: {
             chart: {
-                // Especifica explícitamente el tipo de gráfico como un valor literal correspondiente
-                type: 'bar' as const, // La adición de `as const` asegura que el tipo sea tratado como un literal
+                type: 'bar' as const,
                 height: 350
             },
             plotOptions: {
@@ -37,47 +44,90 @@ const GraficaApex = () => {
                 enabled: false
             },
             xaxis: {
-
-                categories: [
-                    ['Visitas tecnicas de', 'evaluacions eguimiento', ' y control actual'],
-                    ['Tasa uso de agua  ', ' coactivo dificil recaudado'],
-                    ['Porcentaje ', 'ambiental actual'],
-                    ['Tasa retributiva coactivo ', 'difucil recaudo'],
-
-
-                    ['Multas coactivo ', 'difucil recaudo']
-
-                ],
-            }
+                categories: []
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        fontSize: '9px',
+                    },
+                },
+            },
         }
-    })[0]; // Accede directamente al estado inicial desde el hook
+    });
+
+
+
+    const carteraDeuda = async (): Promise<void> => {
+        try {
+            const url = `/recaudo/reportes/reporte-general-cartera-deuda/`;
+            const res = await api.get(url);
+            const data_consulta = res.data.data;
+            const data_consulta_dos = res.data.data;
+
+
+            // Extraer las claves y valores del objeto de datos
+            // const categories = Object.keys(data_consulta);
+            const data = Object.values(data_consulta).map((item: any) => item.total_sancion);
+            let categories: string[] = [];
+
+            if (data_consulta_dos && Array.isArray(data_consulta_dos)) {
+                categories = Object.values(data_consulta_dos).map((item: any) => item.codigo_contable__descripcion);
+            }
+            console.log("categories", categories)
+
+ 
+
+            setEstado({
+                series: [{ data }],
+                options: {
+                    ...estado.options,
+                    xaxis: {
+                        categories: categories as never[], // Aquí estamos forzando el tipo para evitar el error
+                    },
+                },
+            });
+
+
+
+
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+
+        carteraDeuda();
+    }, [])
+
 
     return (
         <div>
             <div id="chart">
-                <ReactApexChart options={estado.options} series={estado.series} type="bar" height={450} />
+                <ReactApexChart options={estado.options} series={estado.series} type="bar" height={1500} />
             </div>
         </div>
     );
 };
-
 
 export interface FormData {
 
     edad: any,
     fecha_hasta: any;
     fecha_desde: any;
-    deuda: any;
-top:any;
+    deuda: any,
 };
-export const Reportetop1: React.FC = () => {
+
+export const CarteraEdad7: React.FC = () => {
+
     const initialFormData: FormData = {
 
         fecha_desde: '',
         fecha_hasta: '',
         edad: '',
         deuda: '',
-        top:"",
     };
     const [formData, setFormData] = useState(initialFormData);
 
@@ -89,6 +139,9 @@ export const Reportetop1: React.FC = () => {
             [name]: value,
         }));
     };
+
+
+
 
 
     return (
@@ -104,8 +157,9 @@ export const Reportetop1: React.FC = () => {
                 }}
             >
                 <Grid item xs={12} sm={12}>
-                    <Title title="Reporte de Cartera Por Deuda y Edad –Top 1" />
+                    <Title title="Reporte General Cartera Por Deuda" />
                 </Grid>
+
                 <Grid item xs={12} sm={3}>
                     <TextField
                         fullWidth
@@ -145,10 +199,10 @@ export const Reportetop1: React.FC = () => {
                         variant="outlined"
                         size="small"
                         fullWidth
-                        onChange={handleInputChange}
-                        // value={formData.edad}
                         value={'TODOS'}
 
+                        onChange={handleInputChange}
+                    // value={formData.edad}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
@@ -159,38 +213,27 @@ export const Reportetop1: React.FC = () => {
                         variant="outlined"
                         size="small"
                         fullWidth
+                        onChange={handleInputChange}
+                        // value={formData.deuda}
                         value={'TODOS'}
 
-                        onChange={handleInputChange}
-                        // value={formData.deuda}
                     />
                 </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Concepto "
-                        name="top"
-                        disabled
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        onChange={handleInputChange}
-                        // value={formData.deuda}
-                        value={'Top 5'}
 
-                    />
-                </Grid>
+
                 <Grid item>
-          <Button
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={() => {
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        startIcon={<SearchIcon />}
+                        onClick={() => {
 
-            }}
-          >
-            buscar
-          </Button>
-        </Grid>
+                        }}
+                    >
+                        buscar
+                    </Button>
+                </Grid>
+
                 <Grid item xs={12} sm={12} sx={{
                     background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
                 }}  >
