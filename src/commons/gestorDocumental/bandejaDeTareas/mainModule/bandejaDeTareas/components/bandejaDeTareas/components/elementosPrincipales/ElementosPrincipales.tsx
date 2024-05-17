@@ -9,6 +9,7 @@ import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { ElementosOtros } from './elementosOtros/ElementosOtros';
 import { ElementosTramitesYServicios } from './elementosTramYServicios/ElementosTramitesYServicios';
 import { ElementoOPAS } from './elementosOPAS/ElementoOPAS';
+import { ElementosDocumentos } from './elementosDocumentos/ElementosDocumentos';
 
 export const ElementosPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
@@ -46,6 +47,8 @@ export const ElementosPrincipales: React.FC = (): JSX.Element => {
     'Responder Otro': <ElementosOtros />,
     'RESPONDER OPA': <ElementoOPAS/>,
     'Responder OPA': <ElementoOPAS/>,
+    'Documentos': <ElementosDocumentos/>,
+    'documentos': <ElementosDocumentos/>
   } as const;
 
   const tipoDeTarea = listaTareasPqrsdfTramitesUotrosUopas[0]?.tipo_tarea;

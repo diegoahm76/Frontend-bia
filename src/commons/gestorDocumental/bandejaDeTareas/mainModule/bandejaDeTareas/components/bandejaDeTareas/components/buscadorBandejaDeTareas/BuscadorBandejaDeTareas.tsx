@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext } from 'react';
 import { Button, Grid, Stack, TextField } from '@mui/material';
@@ -31,6 +30,7 @@ import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks
 import { control_info } from '../../../../../../../alertasgestor/utils/control_error_or_success';
 import { getListadoTramitesByPerson } from '../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
 import { getListadoTareasOpasByPerson } from '../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
+import { BuscadorDocumentos } from './Documents/BuscadorDocumentos';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -168,12 +168,101 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
       dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
       dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
-
-
     } catch (error) {
       console.error('Error:', error);
     }
   };
+
+  const searchDocumentos = async () => {
+    console.log('busvandodoodosojdapsjdpai')
+    try {
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas([
+        {
+          "consecutivo": "nuevo.1.2.4.2024.003",
+          "fecha_consecutivo": "12/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-009",
+          "fecha_radicado salida o interno":  "12/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.004",
+          "fecha_consecutivo": "13/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-010",
+          "fecha_radicado salida o interno":  "13/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.005",
+          "fecha_consecutivo": "14/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-011",
+          "fecha_radicado salida o interno":  "14/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.006",
+          "fecha_consecutivo": "15/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-012",
+          "fecha_radicado salida o interno":  "15/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.007",
+          "fecha_consecutivo": "16/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-013",
+          "fecha_radicado salida o interno":  "16/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.008",
+          "fecha_consecutivo": "17/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-014",
+          "fecha_radicado salida o interno":  "17/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.009",
+          "fecha_consecutivo": "18/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-015",
+          "fecha_radicado salida o interno":  "18/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.010",
+          "fecha_consecutivo": "19/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-016",
+          "fecha_radicado salida o interno":  "19/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.011",
+          "fecha_consecutivo": "20/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-017",
+          "fecha_radicado salida o interno":  "20/12/2024",
+          "tipo_tarea": "Documentos"
+        },
+        {
+          "consecutivo": "nuevo.1.2.4.2024.012",
+          "fecha_consecutivo": "21/12/2024",
+          "persona_genera": "brayan barragan",
+          "radicado salida o interno": "salida-2024-018",
+          "fecha_radicado salida o interno":  "21/12/2024",
+          "tipo_tarea": "Documentos"
+        }
+      ]));
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   const unifiedSearchSubmit = async () => {
     const tipoDeTarea =
@@ -209,6 +298,11 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         await searchOpas();
         break;
 
+      case 'Documentos':
+      case 'documentos':
+        await searchDocumentos();
+        break;
+
       default:
         showAlert(
           'Opss...',
@@ -223,7 +317,9 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
     // dispatch(setListaTareasPqrsdfTramitesUotrosUopas([]));
     reset_search_form();
-    control_info('Se han limpiado los campos de búsqueda y se ha deseleccionado la tarea actual');
+    control_info(
+      'Se han limpiado los campos de búsqueda y se ha deseleccionado la tarea actual'
+    );
   };
 
   return (
@@ -325,74 +421,84 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                 <BuscadorOpas
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
+              ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                  ?.label === 'Documentos' ? (
+                <BuscadorDocumentos
+                  controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
+                />
               ) : (
                 <>No hay elemento</>
               )}
+              {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                ?.label !== 'Documentos' && (
+                <>
+                  <Grid item xs={12} sm={4}>
+                    <Controller
+                      name="radicado"
+                      control={controlBusquedaBandejaTareas}
+                      defaultValue=""
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          fullWidth
+                          label="Radicado"
+                          type="text"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={(e) => {
+                            onChange(e.target.value);
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
 
-              <Grid item xs={12} sm={4}>
-                <Controller
-                  name="radicado"
-                  control={controlBusquedaBandejaTareas}
-                  defaultValue=""
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      label="Radicado"
-                      type="text"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
+                  <Grid item xs={12} sm={4}>
+                    <Controller
+                      name="fecha_inicio"
+                      control={controlBusquedaBandejaTareas}
+                      defaultValue=""
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          fullWidth
+                          label="Fecha inicio"
+                          type="date"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={(e) => {
+                            onChange(e.target.value);
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Grid>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Controller
+                      name="fecha_fin"
+                      control={controlBusquedaBandejaTareas}
+                      defaultValue=""
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          fullWidth
+                          label="Fecha final"
+                          type="date"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={(e) => {
+                            onChange(e.target.value);
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </>
+              )}
 
-              <Grid item xs={12} sm={4}>
-                <Controller
-                  name="fecha_inicio"
-                  control={controlBusquedaBandejaTareas}
-                  defaultValue=""
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      label="Fecha inicio"
-                      type="date"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Controller
-                  name="fecha_fin"
-                  control={controlBusquedaBandejaTareas}
-                  defaultValue=""
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      label="Fecha final"
-                      type="date"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
               {/* tambien se debe agregar la opción de otros */}
               {/* Otros */}
               {/* Tramites y servicios  */}
@@ -411,7 +517,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                 variant="contained"
                 startIcon={<SearchIcon />}
               >
-                BUSCAR TAREA
+                BUSCAR ELEMENTO
               </LoadingButton>
               <Button
                 color="primary"
@@ -428,4 +534,3 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     </>
   );
 };
-
