@@ -9,7 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import React, { useState } from 'react';
 import { ApexOptions } from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
-import { Title } from '../../../components/Title';
+import { Title } from '../../../../components/Title';
 import SearchIcon from '@mui/icons-material/Search';
 import { Grid, TextField, Button } from '@mui/material';
 
@@ -212,6 +212,7 @@ export const Reportetop2: React.FC = () => {
             buscar
           </Button>
         </Grid>
+        
         <Grid item xs={12} sm={12} sx={{
           background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
         }}  >

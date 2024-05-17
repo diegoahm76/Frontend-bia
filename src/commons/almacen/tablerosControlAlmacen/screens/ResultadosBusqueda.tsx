@@ -284,7 +284,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             headerName: 'Responsable bodega',
                             width: 300,
                             valueGetter: (params) => params.row.responsable_bodega
-                        }
+                        },
                     ]);
                     break;
                 default:

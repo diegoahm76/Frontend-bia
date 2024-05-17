@@ -9,13 +9,15 @@ import {
   Typography,
   type SelectChangeEvent,
   Stack,
-  InputLabel
+  InputLabel,
+  Box,
+  Tab
 } from "@mui/material"
 import type { FlujoProceso } from "../../interfaces/flujoProceso";
 import { type Dispatch, type SetStateAction } from "react";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import SaveIcon from '@mui/icons-material/Save';
-import type { AtributoEtapa } from "../../interfaces/proceso";
+import type { AtributoEtapa, CategoriaAtributo } from "../../interfaces/proceso";
 
 
 interface IProps {
@@ -32,6 +34,7 @@ interface IProps {
 
   },
   flujos_destino: FlujoProceso[];
+  // categorias: CategoriaAtributo[];
   id_proceso: string;
   id_cartera: string;
   id_subetapa_destino: string;
@@ -58,7 +61,6 @@ export const EditarCartera: React.FC<IProps> = ({
   mover_subetapa_actual,
   datos
 }: IProps) => {
-
 
   // console.log("subetapas", subetapas)
   return (
@@ -196,7 +198,7 @@ export const EditarCartera: React.FC<IProps> = ({
               justifyContent="center"
               alignItems="center"
               sx={{ my: '10px' }}
-            > 
+            >
               {datos.fecha_facturacion}
               {/* <Grid item xs={3}>
                 <Typography>Fecha inicio de mora</Typography>
@@ -247,7 +249,7 @@ export const EditarCartera: React.FC<IProps> = ({
 
 
 
-          {/* 
+          {/*
           <Grid item xs={12}>
             <Stack
               direction='row'
@@ -540,7 +542,6 @@ export const EditarCartera: React.FC<IProps> = ({
           </Grid>
         </Stack>
       </Grid>
-
     </>
   )
 }

@@ -23,6 +23,8 @@ import { DataContextAccionesCorrectivas } from '../context/context';
 // import { DataContextEjeEstrategico } from '../../context/context';
 // import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
+import { get_tipo_acciones } from '../services/services';
+import { control_error } from '../../../../helpers';
 // import {
 //   set_current_eje_estrategico,
 //   set_current_mode_planes,
@@ -32,6 +34,42 @@ import EditIcon from '@mui/icons-material/Edit';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarAccionesCorrectivas: React.FC = () => {
+
+  const { tramite } = useAppSelector((state) => state.planes);
+  const [acciones_correctivas, set_acciones_correctivas] = useState<any[]>([]);
+  const [data_tramite, set_data_tramite] = useState({
+    numero_documento: '',
+    nombre_solicitante: '',
+    cedula_catastral: '',
+    grupo_funcional: '',
+  });
+
+  const dispatch = useAppDispatch();
+  const { id_tramite, rows_acciones, set_id_expediente, set_id_tramite, set_id_accion, fetch_data_acciones_correctivas } = useContext(DataContextAccionesCorrectivas);
+
+  const get_traer_acciones = async (): Promise<void> => {
+    try {
+      const response = await get_tipo_acciones();
+      set_acciones_correctivas(response);
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (tramite) {
+      set_data_tramite({
+        numero_documento: tramite.numero_documento,
+        nombre_solicitante: tramite.nombre_solicitante,
+        cedula_catastral: tramite.cedula_catastral,
+        grupo_funcional: tramite.grupo_funcional,
+      });
+    }
+    get_traer_acciones();
+  }, []);
+
   const columns_eje: GridColDef[] = [
     {
       field: 'nombre_accion',
@@ -39,13 +77,25 @@ export const ListarAccionesCorrectivas: React.FC = () => {
       sortable: true,
       minWidth: 300,
       flex: 1,
+      valueGetter: (params) => {
+        if(params.row.id_tipo_accion && acciones_correctivas.length){
+          const accion = acciones_correctivas.find((item) => item.id_tipo_accion === params.row.id_tipo_accion);
+          return accion.nombre_tipo_accion || 'Sin nombre';
+        }
+      }
     },
     {
       field: 'descripcion',
       headerName: 'DESCRIPCIÓN ACCIÓN',
       sortable: true,
       minWidth: 300,
-      flex: 1
+      flex: 1,
+      valueGetter: (params) => {
+        if(params.row.id_tipo_accion && acciones_correctivas.length){
+          const accion = acciones_correctivas.find((item) => item.id_tipo_accion === params.row.id_tipo_accion);
+          return accion.descripcion || 'Sin nombre';
+        }
+      }
     },
     {
       field: 'observacion_accion',
@@ -138,28 +188,6 @@ export const ListarAccionesCorrectivas: React.FC = () => {
       ),
     },
   ];
-
-  const { tramite } = useAppSelector((state) => state.planes);
-  const [data_tramite, set_data_tramite] = useState({
-    numero_documento: '',
-    nombre_solicitante: '',
-    cedula_catastral: '',
-    grupo_funcional: '',
-  });
-
-  const dispatch = useAppDispatch();
-  const { id_tramite, rows_acciones, set_id_expediente, set_id_tramite, set_id_accion, fetch_data_acciones_correctivas } = useContext(DataContextAccionesCorrectivas);
-
-  useEffect(() => {
-    if (tramite) {
-      set_data_tramite({
-        numero_documento: tramite.numero_documento,
-        nombre_solicitante: tramite.nombre_solicitante,
-        cedula_catastral: tramite.cedula_catastral,
-        grupo_funcional: tramite.grupo_funcional,
-      });
-    }
-  }, []);
 
   useEffect(() => {
     if (id_tramite) {
