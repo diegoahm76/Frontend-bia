@@ -8,28 +8,26 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useRef } from 'react';
 import type { DownloadButtonProps } from './types/types';
 import {
-  baseURL,
   DEFAULT_BETA_DOWNLOAD_FILES_URL,
   DEFAULT_PROD_DOWNLOAD_FILES_URL,
 } from '../../api/axios';
 
 export const DownloadButton = ({
   fileUrl,
+  fileName,
   condition,
 }: DownloadButtonProps) => {
-  // const linkRef = useRef<HTMLAnchorElement>(null);
+  const linkRef = useRef<HTMLAnchorElement>(null);
 
-  const url = baseURL.replace("/api/", "");
-
-  // const handleDownload = () => {
-  //   if (linkRef.current != null) {
-  //     linkRef.current.click();
-  //   }
-  // };
+  const handleDownload = () => {
+    if (linkRef.current != null) {
+      linkRef.current.click();
+    }
+  };
 
   return (
     <>
-      {/* <a
+      <a
         target="_blank"
         rel="noopener noreferrer"
         href={
@@ -52,14 +50,13 @@ export const DownloadButton = ({
         }
         ref={linkRef}
         style={{ display: 'none' }}
-        download
-      /> */}
+        download={fileName}
+      />
       <Button
         // fullWidth
         variant="contained"
         disabled={condition}
-        href={`${url}${fileUrl}`}
-        download
+        onClick={handleDownload}
       >
         <FileDownloadIcon />
       </Button>
