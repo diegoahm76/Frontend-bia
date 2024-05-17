@@ -1,17 +1,12 @@
-
-
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
 import { Grid, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { api } from '../../../../api/axios';
 
 
 
@@ -30,7 +25,7 @@ export const CarteraTop: React.FC = () => {
     // Estado inicial para la serie y opciones de la gráfica
     const [chartData, setChartData] = useState({
         series: [{
-            data: [31, 26, 20, 21, 29, 10, 21, 22, 10, 10,]
+            data: [0]
         }],
         options: {
             chart: {
@@ -45,7 +40,7 @@ export const CarteraTop: React.FC = () => {
             colors: colors,
             plotOptions: {
                 bar: {
-                    columnWidth: '45%',
+                    columnWidth: '65%',
                     distributed: true,
                 }
             },
@@ -56,19 +51,7 @@ export const CarteraTop: React.FC = () => {
                 show: false
             },
             xaxis: {
-                categories: [
-                    ['MUNICIPIO DE', 'VILLAVICENCIO'],
-                    ['ECOLOGICAL', 'SOLUTIONS FOR OIL', 'INDUSTY S.A.S'],
-                    ['I-M.E.C S.A. E.S.P ', 'INGENIERIA', 'MEDICIONES', 'EMISIONES Y', 'CONTROLES'],
-                    ['EMPRESA DE ', 'SERVICIOS PUBLICOS', 'DE RESTREPO AGUA', 'VIVAS S.A E.S.P'],
-                    ['E.S.P. EMPRESA DE ', 'SERVICIOS PUBLICOS', 'DEL META "EDESA"'],
-                    ['EMPRESA DE ', 'SERVICIOS PUBLICOS', 'DE GRANADA E.S.P'],
-                    ['E.S.P. EMPRESA DE ', 'SERVICIOS PUBLICOS', 'DEL META "EDESA"'], 
-                    ['SALUDCOOP ENRIDAD', 'PROMOTORA DE', 'SALUD ORGANISMO', 'COOPERATIVO', 'SALUDCOOP EN', 'LIQUIDACION'], 
-                    ['EMPRESA DE', 'SERVICIO PUBLICOS', 'DE GRANADA E.S.P.'],
-                    ['EMPRESA DE', 'SERVICIO PUBLICOS', 'DE GRANADA E.S.P.'],
-
-                ],
+                categories:[],
                 labels: {
                   style: {
                     colors: colors,
@@ -99,6 +82,49 @@ export const CarteraTop: React.FC = () => {
             [name]: value,
         }));
     };
+
+
+    
+    const carteraDeudaTop = async (): Promise<void> => {
+        try {
+            const url = `/recaudo/reportes/reporte-general-cartera-deudores/`;
+            const res = await api.get(url);
+            const data_consulta = res.data.top_10_deudores;
+            const data = Object.values(data_consulta).map((item: any) => item.total_sancion);
+
+            let nombres: string[] = [];
+            if (data_consulta && Array.isArray(data_consulta)) {
+                nombres = Object.values(data_consulta).map((item: any) => item.nombres);
+            }
+       
+            // Actualizamos el estado de la gráfica con los nuevos valores
+            setChartData({
+                series: [{ data }],
+        
+                options: {
+                    ...chartData.options,
+                    xaxis: {
+                        categories: nombres as never[], // Aquí estamos forzando el tipo para evitar el error
+                        labels: {
+                            style: {
+                              colors: colors,
+                              fontSize: '12px'
+                            }
+                          }
+                    },
+                },
+            });
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        carteraDeudaTop();
+    }, []);
+
+    
     return (
         <>
             <Grid container

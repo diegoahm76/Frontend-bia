@@ -17,7 +17,7 @@ import { Reportetop2 } from './Graficas/Reportetop2';
 import { CarteraTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
-  const [opcionSeleccionada, setOpcionSeleccionada] = useState('4');
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('7');
 
   const handleChange = (event: {
     target: { value: SetStateAction<string> };
@@ -66,25 +66,32 @@ export const IndicadoresRecaudo: React.FC = () => {
                 <MenuItem value="1">
                   Reporte General de Cartera Por Edad
                 </MenuItem>
-                <MenuItem value="2">
-                  Reporte General Cartera Por Deuda{' '}
-                </MenuItem>
-                <MenuItem value="3">
-                  Reporte General de Cartera Por Deuda y Edad{' '}
-                </MenuItem>
 
                 <MenuItem value="4">
                   Reporte de Cartera Por Deuda y Edad –Top
                 </MenuItem>
 
+
+                <MenuItem value="2">
+                  Reporte General Cartera Por Deuda{' '}
+                </MenuItem>
+
+                <MenuItem value="7">
+                  Reporte General Cartera Top 10 Deudores x Concepto{' '}
+                </MenuItem>
+
+
+   
+
+               
                 <MenuItem value="5">
                   Reporte General de Cartera Por Deuda y Edad –Top
                 </MenuItem>
                 <MenuItem value="6">
                   Reporte General Cartera Por Edad – Deuda y Etapa{' '}
                 </MenuItem>
-                <MenuItem value="7">
-                  Reporte General Cartera Top 10 Deudores x Concepto{' '}
+                <MenuItem value="3">
+                  Reporte General de Cartera Por Deuda y Edad{' '}
                 </MenuItem>
               </Select>
             </FormControl>
