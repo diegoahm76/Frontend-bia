@@ -95,15 +95,18 @@ export const LoginForm: React.FC = () => {
               size="small"
               value={nombre_de_usuario ?? ''}
               onChange={on_input_change}
+              InputLabelProps={{ shrink: true }}
             />
           </Grid>
           <Grid item xs={12}>
             <FormControl size="small" fullWidth>
-              <InputLabel htmlFor="outlined-adornment-password">
+              <InputLabel htmlFor="outlined-adornment-password"
+              >
                 Contraseña *
               </InputLabel>
               <OutlinedInput
                 required
+                //InputLabelProps={{ shrink: true }}
                 id="outlined-adornment-password"
                 type={show_password ? 'text' : 'password'}
                 value={password ?? ''}
