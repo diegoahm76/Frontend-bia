@@ -25,7 +25,7 @@ export const CarteraEdad: React.FC = () => {
 
     // Estado para los datos de la cartera por edad
     const [CarteraEdad, set_CarteraEdad] = useState<CarteraEdadData>(initialCarteraEdad);
-    
+
     const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8'];
 
     // Estado para la serie de datos y las opciones de la gráfica
@@ -58,14 +58,9 @@ export const CarteraEdad: React.FC = () => {
             },
             xaxis: {
                 categories: [
-                    ['0 a', '30 dias'],
-                    ['181 a', '360 dias'],
+                    ['0', 'a', '30 dias'],
+                    ['181', 'a', '360 dias'],
                     ['mas de ', '360 dias'],
-
-                    // ['Peter', 'Brown'],
-                    // ['Mary', 'Evans'],
-                    // ['David', 'Wilson'],
-                    // ['Lily', 'Roberts'],
                 ],
                 labels: {
                     style: {
@@ -77,7 +72,7 @@ export const CarteraEdad: React.FC = () => {
         },
     });
 
-   
+
 
     // Función asincrónica para obtener los datos de la cartera por edad desde la API
     const GraficaCarteraEdad = async (): Promise<void> => {
@@ -127,7 +122,7 @@ export const CarteraEdad: React.FC = () => {
                     <Title title="Reporte General de Cartera Por Edad" />
                 </Grid>
 
-              
+
 
 
                 {/* Gráfica de ApexCharts */}

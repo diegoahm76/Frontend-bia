@@ -17,7 +17,7 @@ import { Reportetop2 } from './Graficas/Reportetop2';
 import { CarteraTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
-  const [opcionSeleccionada, setOpcionSeleccionada] = useState('');
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('4');
 
   const handleChange = (event: {
     target: { value: SetStateAction<string> };

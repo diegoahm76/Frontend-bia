@@ -6,12 +6,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
 import { Grid, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { api } from '../../../../api/axios';
 
 const GraficaApex = () => {
     // Asegúrate de que los estados iniciales y las opciones cumplan con los tipos esperados
@@ -131,6 +132,37 @@ export const CarteraEdad7: React.FC = () => {
         }));
     };
 
+    interface IcontenidoConcepto {
+        codigo_contable: number,
+        id: number,
+        total_sancion: number
+    }
+    interface InombreConcepto {
+        nombre: IcontenidoConcepto
+    }
+
+    const [CarteraDeudaTop, set_CarteraDeudaTop] = useState<InombreConcepto[]>([]);
+
+    console.log("CarteraDeudaTop", CarteraDeudaTop);
+
+    const carteraDeuda = async (): Promise<void> => {
+        try {
+            const url = `/recaudo/reportes/reporte-general-cartera-deuda/`;
+            const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
+            const data_consulta = res.data.top_5_por_codigo_contable;
+            set_CarteraDeudaTop(data_consulta)
+            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx", data_consulta)
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    useEffect(() => {
+        carteraDeuda();
+    }, [])
+
+
+
     return (
         <>
             <Grid container
@@ -189,7 +221,7 @@ export const CarteraEdad7: React.FC = () => {
                         value={'TODOS'}
 
                         onChange={handleInputChange}
-                        // value={formData.edad}
+                    // value={formData.edad}
                     />
                 </Grid>
                 <Grid item xs={12} sm={3}>
@@ -207,7 +239,7 @@ export const CarteraEdad7: React.FC = () => {
                     />
                 </Grid>
 
-                
+
                 <Grid item>
                     <Button
                         color="primary"
