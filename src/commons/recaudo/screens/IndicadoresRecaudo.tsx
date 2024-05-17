@@ -5,19 +5,19 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import 'leaflet/dist/leaflet.css';
-import { CarteraEdad7 } from './CarteraEdad7';
+import { CarteraEdad7 } from './Graficas/CarteraEdad7';
 import { SetStateAction, useState } from 'react';
 import { Title } from '../../../components/Title';
 import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
-import { ReporteEdad3 } from './ReporteEdad3';
-import { ReporteCartera4 } from './ReporteCartera4';
-import { CarteraEdad } from './CarteraEdad';
-import { Reportetop1 } from './Reportetop1';
-import { Reportetop2 } from './Reportetop2';
-import { CarteraTop } from './CarteraTop';
+import { ReporteEdad3 } from './Graficas/ReporteEdad3';
+import { ReporteCartera4 } from './Graficas/ReporteCartera4';
+import { CarteraEdad } from './Graficas/CarteraEdad';
+import { Reportetop1 } from './Graficas/Reportetop1';
+import { Reportetop2 } from './Graficas/Reportetop2';
+import { CarteraTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
-  const [opcionSeleccionada, setOpcionSeleccionada] = useState('');
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('7');
 
   const handleChange = (event: {
     target: { value: SetStateAction<string> };
@@ -66,25 +66,32 @@ export const IndicadoresRecaudo: React.FC = () => {
                 <MenuItem value="1">
                   Reporte General de Cartera Por Edad
                 </MenuItem>
-                <MenuItem value="2">
-                  Reporte General Cartera Por Deuda{' '}
-                </MenuItem>
-                <MenuItem value="3">
-                  Reporte General de Cartera Por Deuda y Edad{' '}
-                </MenuItem>
 
                 <MenuItem value="4">
                   Reporte de Cartera Por Deuda y Edad –Top
                 </MenuItem>
 
+
+                <MenuItem value="2">
+                  Reporte General Cartera Por Deuda{' '}
+                </MenuItem>
+
+                <MenuItem value="7">
+                  Reporte General Cartera Top 10 Deudores x Concepto{' '}
+                </MenuItem>
+
+
+   
+
+               
                 <MenuItem value="5">
                   Reporte General de Cartera Por Deuda y Edad –Top
                 </MenuItem>
                 <MenuItem value="6">
                   Reporte General Cartera Por Edad – Deuda y Etapa{' '}
                 </MenuItem>
-                <MenuItem value="7">
-                  Reporte General Cartera Top 10 Deudores x Concepto{' '}
+                <MenuItem value="3">
+                  Reporte General de Cartera Por Deuda y Edad{' '}
                 </MenuItem>
               </Select>
             </FormControl>

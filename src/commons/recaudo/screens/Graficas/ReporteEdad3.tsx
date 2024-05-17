@@ -7,13 +7,101 @@
 /* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
 import { useState } from 'react';
-import { Title } from '../../../components/Title';
+import { Title } from '../../../../components/Title';
 import { Grid, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
+const GraficaApex = () => {
+    // Asegúrate de que los estados iniciales y las opciones cumplan con los tipos esperados
+    const estado = React.useState({
+        series: [{
+            data: [21, 23, 24, 25,
+                26, 25, 24,
+                25, 24, 12,
+                16, 26, 12,
+                15, 25, 14,
+                20, 24, 16,
+                22, 24, 12,
+                22, 24, 17,
+                12, 24, 17,
+                22, 21,12]
+        }],
+        options: {
+            chart: {
+                // Especifica explícitamente el tipo de gráfico como un valor literal correspondiente
+                type: 'bar' as const, // La adición de `as const` asegura que el tipo sea tratado como un literal
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
 
+                categories: [
+                    ['APROVECHAMIENTO', 'FORESTAL COACTIVO', ' DIFICIL RECAUDO'],
+                    ['VISITAS TECNICAS', 'POR COBRAR COACTIVO', ' DIFICIL RECAUDO'],
+                    ['PORCENTAJE Y SOBRETASA', 'AMBIENTAL VIGENCIA', 'DIFICIL RECAUDO'],
+                    ['MULTAS PERSUASIVO', 'DIFICIL RECAUDO',],
+                    ['MULTAS COACTIVO', 'DIFICIL RECAUDO',],
+                    ['TASA RETRIBUTIVA', 'COACTIVO', ' DIFICIL RECAUDO'],
+                    ['TASA USO DE', 'AGUA COACTIVO', 'DIFICIL RECAUDO'],
+                    ['TASA USO DE', 'AGUA PERSUASIVO', 'DIFICIL RECAUDO'],
+                    ['PORCENTAJE', 'AMBIENTAL ANTERIOR',],
+                    ['PORCENTAJE', 'AMBIENTAL ACTUAL',],
+                    ['SOBRETASA AMBIENTAL', 'VIGENCIA ANTERIOR',],
+                    ['VISITAS TECNICAS ', 'DE EVALUACION, SEGUMIENTO', 'Y CONTROL ACTUAL'],
+                    ['INTERESES VISITAS', 'TECNICAS POR COBRAR',],
+                    ['INTERESES', 'SOBRETASA AMBIENTAL', ''],
+                    ['INTERESES PORCENTAJE'],
+                    ['INTERESES', 'TASA RETRIBUTIVA',],
+                    ['INTERESES DEUDORES ', 'TASA USO DE AGUA'],
+                    ['INTERESES MULTAS ', 'Y SANCIONES'],
+                    ['MULTAS ANTERIOR',],
+                    ['MULTAS ACTUAL'],
+                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ANTERIOR TIYAVA'],
+                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ACTUAL GUAYURIBA'],
+                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO', ' ACTUAL APIAY'],
+                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ACTUAL GUATIQUIA'],
+                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ACTUAL RIO META'],
+                    ['TRANSFERENCIA DEL', 'SECTOR ELECTRICO ', 'ACTUAL GUARROJO'],
+                    ['TRANSFERENCIA DEL ', 'SECTOR ELECTRICO ', 'ACTUAL TILLAVA'],
+                    ['TASA RETRIBUTIVA  ', 'VIGENCIAS ANTERIORES'],
+                    ['TASA RETRIBUTIVA ACTUAL '],
+                    ['TASA USO DE AGUA  ', 'VIGENCIA ANTERIOR'],
+                    ['TASA USO DE AGUA ACTUAL ',],
+
+                ],
+
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        fontSize: '9px',
+                    },
+                    // rotate: -45,
+                    // offsetX: -10, // Ajusta según necesidad
+                    // offsetY: 5,  // Ajusta según necesidad
+                },
+            },
+        }
+    })[0]; // Accede directamente al estado inicial desde el hook
+
+    return (
+        <div>
+            <div id="chart">
+                <ReactApexChart options={estado.options} series={estado.series} type="bar" height={1500} />
+            </div>
+        </div>
+    );
+};
 
 export interface FormData {
 
@@ -21,65 +109,9 @@ export interface FormData {
     fecha_hasta: any;
     fecha_desde: any;
     deuda: any,
-    top:any,
 };
-export const CarteraTop: React.FC = () => {
 
-    const colors = ['#008FFB', '#00E396', '#775DD0', '#FEB019', '#FF4560', '#546E7A', '#26a69a', '#D10CE8'];
-
-    // Estado inicial para la serie y opciones de la gráfica
-    const [chartData, setChartData] = useState({
-        series: [{
-            data: [31, 26, 20, 21, 29, 10, 21, 22, 10, 10,]
-        }],
-        options: {
-            chart: {
-                height: 350,
-                type: 'bar' as const, // Corregido para ser reconocido como un valor específico y no un string genérico
-                events: {
-                    click: function (chart: any, w: any, e: any) {
-                        // Puedes manejar clics en la gráfica aquí
-                    }
-                }
-            },
-            colors: colors,
-            plotOptions: {
-                bar: {
-                    columnWidth: '45%',
-                    distributed: true,
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            legend: {
-                show: false
-            },
-            xaxis: {
-                categories: [
-                    ['MUNICIPIO DE', 'VILLAVICENCIO'],
-                    ['ECOLOGICAL', 'SOLUTIONS FOR OIL', 'INDUSTY S.A.S'],
-                    ['I-M.E.C S.A. E.S.P ', 'INGENIERIA', 'MEDICIONES', 'EMISIONES Y', 'CONTROLES'],
-                    ['EMPRESA DE ', 'SERVICIOS PUBLICOS', 'DE RESTREPO AGUA', 'VIVAS S.A E.S.P'],
-                    ['E.S.P. EMPRESA DE ', 'SERVICIOS PUBLICOS', 'DEL META "EDESA"'],
-                    ['EMPRESA DE ', 'SERVICIOS PUBLICOS', 'DE GRANADA E.S.P'],
-                    ['E.S.P. EMPRESA DE ', 'SERVICIOS PUBLICOS', 'DEL META "EDESA"'], 
-                    ['SALUDCOOP ENRIDAD', 'PROMOTORA DE', 'SALUD ORGANISMO', 'COOPERATIVO', 'SALUDCOOP EN', 'LIQUIDACION'], 
-                    ['EMPRESA DE', 'SERVICIO PUBLICOS', 'DE GRANADA E.S.P.'],
-                    ['EMPRESA DE', 'SERVICIO PUBLICOS', 'DE GRANADA E.S.P.'],
-
-                ],
-                labels: {
-                  style: {
-                    colors: colors,
-                    fontSize: '12px'
-                  }
-                }
-              }
-            
-        },
-    });
-
+export const ReporteEdad3: React.FC = () => {
 
     const initialFormData: FormData = {
 
@@ -87,7 +119,6 @@ export const CarteraTop: React.FC = () => {
         fecha_hasta: '',
         edad: '',
         deuda: '',
-        top:"",
     };
     const [formData, setFormData] = useState(initialFormData);
 
@@ -105,8 +136,6 @@ export const CarteraTop: React.FC = () => {
                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
                 sx={{
                     position: 'relative',
-                    // background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
-
                     borderRadius: '15px',
                     background: '#FAFAFA',
                     boxShadow: '0px 3px 6px #042F4A26',
@@ -114,8 +143,9 @@ export const CarteraTop: React.FC = () => {
                 }}
             >
                 <Grid item xs={12} sm={12}>
-                    <Title title="Reporte General Cartera Top 10 Deudores x Concepto " />
+                    <Title title="Reporte General Cartera Por Edad – Deuda y Etapa" />
                 </Grid>
+
                 <Grid item xs={12} sm={3}>
                     <TextField
                         fullWidth
@@ -155,6 +185,7 @@ export const CarteraTop: React.FC = () => {
                         variant="outlined"
                         size="small"
                         fullWidth
+
                         onChange={handleInputChange}
                         // value={formData.edad}
                         value={'TODOS'}
@@ -163,7 +194,7 @@ export const CarteraTop: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Concepto deuda"
+                        label="Etapa "
                         name="deuda"
                         disabled
                         variant="outlined"
@@ -176,21 +207,7 @@ export const CarteraTop: React.FC = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Concepto "
-                        name="top"
-                        disabled
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        onChange={handleInputChange}
-                        // value={formData.top}
-                        value={'Top 10'}
-
-                    />
-                </Grid>
-
+                
                 <Grid item>
                     <Button
                         color="primary"
@@ -204,11 +221,13 @@ export const CarteraTop: React.FC = () => {
                     </Button>
                 </Grid>
 
+
                 <Grid item xs={12} sm={12} sx={{
                     background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
                 }}  >
-                    <ReactApexChart options={chartData.options} series={chartData.series} type="bar" height={350} />
+                    <GraficaApex />
                 </Grid>
+
 
             </Grid>
         </>

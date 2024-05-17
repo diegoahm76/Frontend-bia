@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import { Title } from '../../../components/Title';
+import { Title } from '../../../../components/Title';
 import { Grid, TextField, Button } from '@mui/material';
 import React, { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
