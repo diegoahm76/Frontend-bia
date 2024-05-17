@@ -47,6 +47,8 @@ export const GeneradorDocumentos: React.FC = () => {
   const [file, setFile] = useState('');
   const [urlFile, setUrlFile] = useState<any>(null);
   const [updateBorrador, setUpdateBorrador] = useState(false);
+  const [sendTemplate, setSendTemplate] = useState(false);
+  const [isNewData, setIsNewData] = useState(false);
 
   const [personaselet, setpersona] = useState<string[]>([]);
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
@@ -92,7 +94,6 @@ export const GeneradorDocumentos: React.FC = () => {
       const tipos: TipoRadicado[] = response.data.map(
         ([value, label]: [string, string]) => ({ value, label })
       );
-
       setTiposRadicado(tipos);
     } catch (error: any) {
       // console.error('Error al obtener los tipos de radicado:', error);
@@ -102,9 +103,9 @@ export const GeneradorDocumentos: React.FC = () => {
 
   useEffect(() => console.log(urlFile), [urlFile])
 
-  // useEffect(() => {
-  //   fetchTiposRadicado();
-  // }, []);
+  useEffect(() => {
+    fetchTiposRadicado();
+  }, []);
 
 
   const [idPlantilla, setIdPlantilla] = useState('');
@@ -130,6 +131,7 @@ export const GeneradorDocumentos: React.FC = () => {
   const [plantillas, setPlantillas] = useState<any[]>([]);
   const [showVariables, setShowVariables] = useState(false);
   const [variablesPlantilla, setVariablesPlantilla] = useState<any[]>([]);
+  const [currentBorrador, setCurrentBorrador] = useState<any>(null);
 
   const fetch_data_plantillas = async (): Promise<void> => {
     try {
@@ -152,6 +154,7 @@ export const GeneradorDocumentos: React.FC = () => {
       if(resp.data.data){
         removeFile()
         const url = baseURL.replace("/api/", "");
+        if(updateBorrador) setCurrentBorrador(resp.data.data)
         setFile(`${url}${resp.data.data.archivos_digitales.ruta_archivo}`)
       }
     } catch (error: any) {
@@ -189,9 +192,12 @@ export const GeneradorDocumentos: React.FC = () => {
   useEffect(() => {
     if(plantillaSeleccionada?.archivos_digitales){
       removeFile()
+      setUpdateBorrador(false)
+      setSendTemplate(false)
       const url = baseURL.replace("/api/", "");
       setFile(`${url}${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
-      setVariablesPlantilla(plantillaSeleccionada.variables)
+      let variablesFiltradas = plantillaSeleccionada.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
+      setVariablesPlantilla(variablesFiltradas);
     }
   }, [plantillaSeleccionada]);
 
@@ -206,17 +212,41 @@ export const GeneradorDocumentos: React.FC = () => {
   }
 
   const saveData = (data: any) => {
-    const sendData = {
+    let sendData: any = {
       plantilla: idPlantilla,
-      variable: 'B',
       payload: data,
+    };
+    if(updateBorrador && !sendTemplate){
+      sendData.variable = 'B';
     }
+
+    if(updateBorrador && sendTemplate || !updateBorrador && sendTemplate){
+      sendData.variable = 'DC';
+    }
+
+    if(tipos_radicado){
+      sendData.variable = 'DCR';
+      sendData.cod_tipo_radicado = tipos_radicado;
+    }
+    // if(sendTemplate && !updateBorrador){
+    //   sendData.variable = 'DC';
+    // }
+
+    // if(sendTemplate && updateBorrador){
+    //   sendData.variable = 'AD';
+    //   sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
+    // }
     generateDocument(sendData);
-    console.log(data);
   }
 
   const generateBorrador = () => {
+    setIsNewData(true);
     setUpdateBorrador(true);
+  }
+
+  const sendDocument = () => {
+    setIsNewData(true);
+    setSendTemplate(true);
   }
 
   return (
@@ -237,7 +267,7 @@ export const GeneradorDocumentos: React.FC = () => {
         }}
       >
         <Title title="Generación de documento" />
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} md={6}>
           <FormControl fullWidth size="small">
             <TextField
               select
@@ -258,7 +288,7 @@ export const GeneradorDocumentos: React.FC = () => {
           </FormControl>
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} md={6}>
           <FormControl fullWidth size="small">
             <TextField
               select
@@ -276,7 +306,7 @@ export const GeneradorDocumentos: React.FC = () => {
             </TextField>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        {/* <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <TextField
               select
@@ -297,7 +327,7 @@ export const GeneradorDocumentos: React.FC = () => {
                 ))}
               </TextField>
               </FormControl>
-            </Grid>
+          </Grid> */}
             <Grid item xs={12}>
               <TextField
               rows={3}
@@ -310,8 +340,10 @@ export const GeneradorDocumentos: React.FC = () => {
             </Grid>
             <FormularioGenerador
               exCallback={saveData}
-              sendData={updateBorrador}
-              setSendData={setUpdateBorrador}
+              sendBorradorData={updateBorrador}
+              sendTemplateData={sendTemplate}
+              isNewData={isNewData}
+              setIsNewData={setIsNewData}
               variablesPlantilla={variablesPlantilla}
               showVariables={showVariables}
             ></FormularioGenerador>
@@ -336,12 +368,12 @@ export const GeneradorDocumentos: React.FC = () => {
                   startIcon={<VisibilityIcon />}
                   variant="contained"
                   onClick={handleEdicion}
-                  disabled={!plantillaSeleccionada}
+                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
                 >
                   {showVariables ? 'Deshabilitar edición campos' : 'Habilitar edición campos'}
                 </Button>
               </Grid>
-              <Grid item sx={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+              {/* <Grid item sx={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
                 <Button
                   component="label"
                   variant="outlined"
@@ -355,12 +387,13 @@ export const GeneradorDocumentos: React.FC = () => {
                     accept=".doc, .docx"
                   />
                 </Button>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Button
                 startIcon={<VisibilityIcon />}
                 variant="contained"
                 onClick={generateBorrador}
+                disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
                 >
                   Ver borrador
                 </Button>
@@ -370,8 +403,8 @@ export const GeneradorDocumentos: React.FC = () => {
                   startIcon={<SaveIcon />}
                   color="success"
                   variant="contained"
-                  // onClick={handle_open_buscar}
-                  // disabled={isButtonDisabled}
+                  onClick={sendDocument}
+                  disabled={!plantillaSeleccionada}
                 >
                   Enviar Documento
                 </Button>

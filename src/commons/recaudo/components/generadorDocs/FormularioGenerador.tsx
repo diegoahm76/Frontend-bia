@@ -6,7 +6,10 @@
 import { useEffect, useState } from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
 
-export const FormularioGenerador: React.FC<any> = ({variablesPlantilla, showVariables, sendData, exCallback, setSendData} : {variablesPlantilla: any[], showVariables: boolean, sendData: boolean, exCallback: (data: any) => void, setSendData: (bool: boolean) => void} ) => {
+export const FormularioGenerador: React.FC<any> = (
+  {variablesPlantilla, showVariables, isNewData, exCallback, setIsNewData} :
+  {variablesPlantilla: any[], showVariables: boolean, isNewData: boolean, exCallback: (data: any) => void, setIsNewData: (bool: boolean) => void}
+) => {
   const [formValues, setFormValues] = useState<any>({});
 
   const handleInputChange = (event: any, variable: string) => {
@@ -17,11 +20,11 @@ export const FormularioGenerador: React.FC<any> = ({variablesPlantilla, showVari
   };
 
   useEffect(() => {
-    if (sendData) {
+    if (isNewData) {
       exCallback(formValues);
-      setSendData(false);
+      setIsNewData(false);
     }
-  }, [sendData]);
+  }, [isNewData]);
 
   const capitalizeAndSeparate = (name: string): string => {
     const words = name.split(/(?=[A-Z])/);

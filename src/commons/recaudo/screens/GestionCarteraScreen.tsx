@@ -364,6 +364,7 @@ export const GestionCarteraScreen: React.FC = () => {
   useEffect(() => {
     if (id_etapa) {
       const new_flujos_proceso = flujos_proceso.filter(flujo => flujo.id_etapa_origen.id === id_etapa);
+      console.log(flujos_proceso);
       set_flujos_destino(new_flujos_proceso);
     } else {
       set_flujos_destino(flujos_proceso);

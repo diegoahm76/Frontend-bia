@@ -17,7 +17,7 @@ export const DownloadButton = ({
   fileUrl,
   condition,
 }: DownloadButtonProps) => {
-  const linkRef = useRef<HTMLAnchorElement>(null);
+  // const linkRef = useRef<HTMLAnchorElement>(null);
 
   const url = baseURL.replace("/api/", "");
 
