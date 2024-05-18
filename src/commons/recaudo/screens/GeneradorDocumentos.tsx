@@ -10,6 +10,9 @@ import {
   TextField,
   Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
 } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../components';
@@ -21,9 +24,14 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { AlertaDocumento } from './AlertaDocumento';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
+import { data } from '../../almacen/gestionDeInventario/catalogoBienes/interfaces/Nodo';
+import { LoadingButton } from '@mui/lab';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 export interface UnidadOrganizaciona {
   codigo: any;
   nombre: string;
@@ -47,9 +55,21 @@ export const GeneradorDocumentos: React.FC = () => {
   const [file, setFile] = useState('');
   const [urlFile, setUrlFile] = useState<any>(null);
   const [updateBorrador, setUpdateBorrador] = useState(false);
+  const [sendTemplate, setSendTemplate] = useState(false);
+  const [isNewData, setIsNewData] = useState(false);
+  const [hasConsecutivo, setHasConsecutivo] = useState(false);
+  const [hasPersona, setHasPersona] = useState(false);
+  const [open_dialog, setOpenDialog] = useState(false);
 
   const [personaselet, setpersona] = useState<string[]>([]);
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
+
+  useEffect(() => {
+    if (personaselet.length > 0) {
+      setHasPersona(true);
+      console.log(personaselet);
+    }
+  }, [personaselet])
 
   const handleSubmitRadicado = async () => {
     try {
@@ -92,7 +112,6 @@ export const GeneradorDocumentos: React.FC = () => {
       const tipos: TipoRadicado[] = response.data.map(
         ([value, label]: [string, string]) => ({ value, label })
       );
-
       setTiposRadicado(tipos);
     } catch (error: any) {
       // console.error('Error al obtener los tipos de radicado:', error);
@@ -102,9 +121,9 @@ export const GeneradorDocumentos: React.FC = () => {
 
   useEffect(() => console.log(urlFile), [urlFile])
 
-  // useEffect(() => {
-  //   fetchTiposRadicado();
-  // }, []);
+  useEffect(() => {
+    fetchTiposRadicado();
+  }, []);
 
 
   const [idPlantilla, setIdPlantilla] = useState('');
@@ -130,6 +149,7 @@ export const GeneradorDocumentos: React.FC = () => {
   const [plantillas, setPlantillas] = useState<any[]>([]);
   const [showVariables, setShowVariables] = useState(false);
   const [variablesPlantilla, setVariablesPlantilla] = useState<any[]>([]);
+  const [currentBorrador, setCurrentBorrador] = useState<any>(null);
 
   const fetch_data_plantillas = async (): Promise<void> => {
     try {
@@ -152,8 +172,20 @@ export const GeneradorDocumentos: React.FC = () => {
       if(resp.data.data){
         removeFile()
         const url = baseURL.replace("/api/", "");
+        if(updateBorrador) setCurrentBorrador(resp.data.data)
         setFile(`${url}${resp.data.data.archivos_digitales.ruta_archivo}`)
       }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+
+  const createAsignacionDocumento = async (body: any) => {
+    try {
+      const url =
+        '/gestor/bandeja-tareas/asginacion/documentos/create/';
+      const res = await api.post(url, body);
+      control_success('Documento enviado correctamente');
     } catch (error: any) {
       control_error(error.response.data.detail);
     }
@@ -189,11 +221,18 @@ export const GeneradorDocumentos: React.FC = () => {
   useEffect(() => {
     if(plantillaSeleccionada?.archivos_digitales){
       removeFile()
+      setUpdateBorrador(false)
+      setSendTemplate(false)
       const url = baseURL.replace("/api/", "");
       setFile(`${url}${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
-      setVariablesPlantilla(plantillaSeleccionada.variables)
+      let variablesFiltradas = plantillaSeleccionada.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
+      setVariablesPlantilla(variablesFiltradas);
     }
   }, [plantillaSeleccionada]);
+
+  const hasValue = (obj: any) => {
+    return Object.values(obj).some(valor => valor !== null && valor !== undefined && valor !== '');
+  }
 
   const handleChange = (event: any) => {
     setUnidadSeleccionada(event.target.value as string);
@@ -206,18 +245,70 @@ export const GeneradorDocumentos: React.FC = () => {
   }
 
   const saveData = (data: any) => {
-    const sendData = {
+    let sendData: any = {
       plantilla: idPlantilla,
-      variable: 'B',
       payload: data,
+    };
+    if(updateBorrador && !sendTemplate){
+      hasValue(data)
+        ? sendData.variable = 'B'
+        : control_error('No se han ingresado datos para actualizar el borrador');
     }
-    generateDocument(sendData);
-    console.log(data);
+
+    if(updateBorrador && sendTemplate || !updateBorrador && sendTemplate){
+      if(hasValue(data)){
+        sendData.variable = 'DC'
+        setHasConsecutivo(true);
+      }else{
+        control_error('No se han ingresado datos para generar el documento');
+      }
+    }
+
+    if(tipos_radicado && tipos_radicado !== 'NA'){
+      if(hasValue(data)){
+        sendData.cod_tipo_radicado = tipos_radicado;
+        sendData.variable = 'DCR'
+        setHasConsecutivo(true);
+      }else{
+        control_error('No se han ingresado datos para generar el documento');
+      }
+    }
+    // if(sendTemplate && !updateBorrador){
+    //   sendData.variable = 'DC';
+    // }
+
+    // if(sendTemplate && updateBorrador){
+    //   sendData.variable = 'AD';
+    //   sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
+    // }
+    if(hasValue(data)) generateDocument(sendData);
+  }
+
+  const generateConsecutivo = () => {
+    setIsNewData(true);
+    setSendTemplate(true);
   }
 
   const generateBorrador = () => {
+    settipos_radicado('');
+    setSendTemplate(false);
+    setIsNewData(true);
     setUpdateBorrador(true);
   }
+
+  const sendDocument = () => {
+    const body = {
+      id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
+      id_persona_asignada: personaselet[0],
+    }
+    createAsignacionDocumento(body);
+    // setIsNewData(true);
+    // setSendTemplate(true);
+  }
+
+  const handle_close = (): void => {
+    setOpenDialog(false);
+  };
 
   return (
     <>
@@ -237,7 +328,7 @@ export const GeneradorDocumentos: React.FC = () => {
         }}
       >
         <Title title="Generación de documento" />
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} md={6}>
           <FormControl fullWidth size="small">
             <TextField
               select
@@ -258,7 +349,7 @@ export const GeneradorDocumentos: React.FC = () => {
           </FormControl>
         </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} md={6}>
           <FormControl fullWidth size="small">
             <TextField
               select
@@ -276,7 +367,7 @@ export const GeneradorDocumentos: React.FC = () => {
             </TextField>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        {/* <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <TextField
               select
@@ -297,7 +388,7 @@ export const GeneradorDocumentos: React.FC = () => {
                 ))}
               </TextField>
               </FormControl>
-            </Grid>
+          </Grid> */}
             <Grid item xs={12}>
               <TextField
               rows={3}
@@ -310,8 +401,10 @@ export const GeneradorDocumentos: React.FC = () => {
             </Grid>
             <FormularioGenerador
               exCallback={saveData}
-              sendData={updateBorrador}
-              setSendData={setUpdateBorrador}
+              sendBorradorData={updateBorrador}
+              sendTemplateData={sendTemplate}
+              isNewData={isNewData}
+              setIsNewData={setIsNewData}
               variablesPlantilla={variablesPlantilla}
               showVariables={showVariables}
             ></FormularioGenerador>
@@ -336,12 +429,22 @@ export const GeneradorDocumentos: React.FC = () => {
                   startIcon={<VisibilityIcon />}
                   variant="contained"
                   onClick={handleEdicion}
-                  disabled={!plantillaSeleccionada}
+                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
                 >
                   {showVariables ? 'Deshabilitar edición campos' : 'Habilitar edición campos'}
                 </Button>
               </Grid>
-              <Grid item sx={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+              <Grid item>
+                <Button
+                  startIcon={<VisibilityIcon />}
+                  variant="contained"
+                  onClick={generateConsecutivo}
+                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
+                >
+                  Generar Consecutivo
+                </Button>
+              </Grid>
+              {/* <Grid item sx={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
                 <Button
                   component="label"
                   variant="outlined"
@@ -355,12 +458,13 @@ export const GeneradorDocumentos: React.FC = () => {
                     accept=".doc, .docx"
                   />
                 </Button>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Button
                 startIcon={<VisibilityIcon />}
                 variant="contained"
                 onClick={generateBorrador}
+                disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
                 >
                   Ver borrador
                 </Button>
@@ -370,8 +474,8 @@ export const GeneradorDocumentos: React.FC = () => {
                   startIcon={<SaveIcon />}
                   color="success"
                   variant="contained"
-                  // onClick={handle_open_buscar}
-                  // disabled={isButtonDisabled}
+                  onClick={sendDocument}
+                  disabled={!plantillaSeleccionada || !hasConsecutivo || !hasPersona}
                 >
                   Enviar Documento
                 </Button>
@@ -402,6 +506,7 @@ export const GeneradorDocumentos: React.FC = () => {
         }}
       >
         <VisorDocumentos file={file} />
+
       </Grid>
     </>
   );

@@ -7,6 +7,7 @@ import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
 import ClearIcon from '@mui/icons-material/Clear';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -34,6 +35,7 @@ import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAle
 import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
 import { getDetalleDeTarea } from '../../../../../services/servicesStates/pqrsdf/detalleDeTarea/getDetalleDeTarea.service';
+import CallMadeIcon from '@mui/icons-material/CallMade';
 
 export const iconStyles = {
   color: 'white',
@@ -90,7 +92,9 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       });
 
       if (result.isConfirmed) {
-        const res = await putAceptarTarea(row.id_tarea_asignada, /*row.id_pqrsdf*/);
+        const res = await putAceptarTarea(
+          row.id_tarea_asignada /*row.id_pqrsdf*/
+        );
         console.log(res);
 
         const listadoTareas = await getListadoTareasByPerson(
@@ -118,6 +122,13 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     }
   };
 
+  const handle_template = (): void => {
+    // set_obligaciones_from_liquidacion(obligaciones_gestor);
+    // set_is_from_liquidacion(true);
+    // set_id_deudor(obligaciones.id_deudor);
+    navigate('/app/gestor_documental/bandeja_tareas');
+  }
+
   const handleRejectClick = (_row: any) => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
     handleOpenModalNuevo(true);
@@ -136,7 +147,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       text: 'Seleccionaste una tarea que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
-
 
     // const shouldDisable = (actionId: string) => {
     //   if (!tareaPQRSDF) {
@@ -504,6 +514,37 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                       color: 'warning.main',
                       width: '18px',
                       height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Ir a módulo de generador de documentos">
+              <IconButton
+                sx={{
+                  marginLeft: '30px',
+                }}
+                onClick={() => {
+                  navigate('/app/gestor_documental/documentos');
+                  dispatch(
+                    setCurrentTareaPqrsdfTramitesUotrosUopas(params.row)
+                  );
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <CallMadeIcon
+                    sx={{
+                      color: 'success.main',
+                      width: '20px',
+                      height: '20px',
                     }}
                   />
                 </Avatar>

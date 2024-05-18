@@ -73,6 +73,7 @@ export const ObservacionesAdministradorPlantillas: React.FC = () => {
       if (res.data) {
         // La solicitud fue exitosa
         control_success("se creo correctamente");
+        limpiar();
       } else {
         // La solicitud falló
         console.error('Error en la solicitud:', res.statusText);

@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useContext } from 'react';
 import { Button, Grid, Stack, TextField } from '@mui/material';
@@ -30,7 +29,8 @@ import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert'
 import { getListadoTareaasOtrosByPerson } from '../../../../../../toolkit/thunks/otros/getListadoTareasOtros.service';
 import { control_info } from '../../../../../../../alertasgestor/utils/control_error_or_success';
 import { getListadoTramitesByPerson } from '../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
-import { getListadoTareasOpasByPerson } from '../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
+import { getListadoDocumentosByPerson, getListadoTareasOpasByPerson } from '../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
+import { BuscadorDocumentos } from './Documents/BuscadorDocumentos';
 
 export const BuscadorBandejaDeTareas = (): JSX.Element => {
   //* redux states
@@ -168,12 +168,26 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
 
       dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
       dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
-
-
     } catch (error) {
       console.error('Error:', error);
     }
   };
+
+  const searchDocumentos = async () => {
+    console.log('busvandodoodosojdapsjdpai')
+    try {
+
+
+      const res = await getListadoDocumentosByPerson(
+        id_persona,
+        handleSecondLoading,
+      );
+      dispatch(setListaTareasPqrsdfTramitesUotrosUopas(res));
+      dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   const unifiedSearchSubmit = async () => {
     const tipoDeTarea =
@@ -209,6 +223,11 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
         await searchOpas();
         break;
 
+      case 'Documentos':
+      case 'documentos':
+        await searchDocumentos();
+        break;
+
       default:
         showAlert(
           'Opss...',
@@ -223,7 +242,9 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
     // dispatch(setListaTareasPqrsdfTramitesUotrosUopas([]));
     reset_search_form();
-    control_info('Se han limpiado los campos de búsqueda y se ha deseleccionado la tarea actual');
+    control_info(
+      'Se han limpiado los campos de búsqueda y se ha deseleccionado la tarea actual'
+    );
   };
 
   return (
@@ -325,74 +346,84 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                 <BuscadorOpas
                   controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
                 />
+              ) : controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                  ?.label === 'Documentos' ? (
+                <BuscadorDocumentos
+                  controlBusquedaBandejaTareas={controlBusquedaBandejaTareas}
+                />
               ) : (
                 <>No hay elemento</>
               )}
+              {controlBusquedaBandejaTareas?._formValues?.tipo_de_tarea
+                ?.label !== 'Documentos' && (
+                <>
+                  <Grid item xs={12} sm={4}>
+                    <Controller
+                      name="radicado"
+                      control={controlBusquedaBandejaTareas}
+                      defaultValue=""
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          fullWidth
+                          label="Radicado"
+                          type="text"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={(e) => {
+                            onChange(e.target.value);
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
 
-              <Grid item xs={12} sm={4}>
-                <Controller
-                  name="radicado"
-                  control={controlBusquedaBandejaTareas}
-                  defaultValue=""
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      label="Radicado"
-                      type="text"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
+                  <Grid item xs={12} sm={4}>
+                    <Controller
+                      name="fecha_inicio"
+                      control={controlBusquedaBandejaTareas}
+                      defaultValue=""
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          fullWidth
+                          label="Fecha inicio"
+                          type="date"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={(e) => {
+                            onChange(e.target.value);
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Grid>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Controller
+                      name="fecha_fin"
+                      control={controlBusquedaBandejaTareas}
+                      defaultValue=""
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          fullWidth
+                          label="Fecha final"
+                          type="date"
+                          size="small"
+                          variant="outlined"
+                          value={value}
+                          InputLabelProps={{ shrink: true }}
+                          onChange={(e) => {
+                            onChange(e.target.value);
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </>
+              )}
 
-              <Grid item xs={12} sm={4}>
-                <Controller
-                  name="fecha_inicio"
-                  control={controlBusquedaBandejaTareas}
-                  defaultValue=""
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      label="Fecha inicio"
-                      type="date"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Controller
-                  name="fecha_fin"
-                  control={controlBusquedaBandejaTareas}
-                  defaultValue=""
-                  render={({ field: { onChange, value } }) => (
-                    <TextField
-                      fullWidth
-                      label="Fecha final"
-                      type="date"
-                      size="small"
-                      variant="outlined"
-                      value={value}
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        onChange(e.target.value);
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
               {/* tambien se debe agregar la opción de otros */}
               {/* Otros */}
               {/* Tramites y servicios  */}
@@ -411,7 +442,7 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
                 variant="contained"
                 startIcon={<SearchIcon />}
               >
-                BUSCAR TAREA
+                BUSCAR ELEMENTO
               </LoadingButton>
               <Button
                 color="primary"
@@ -428,4 +459,3 @@ export const BuscadorBandejaDeTareas = (): JSX.Element => {
     </>
   );
 };
-
