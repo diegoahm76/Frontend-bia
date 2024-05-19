@@ -5,7 +5,7 @@
 import './css/swalStyles.css';
 import { useEffect, useState, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import {
   Box,
   Divider,
@@ -60,6 +60,7 @@ export const SideBar: FC<SideBarProps> = ({
   drawer_width,
 }: SideBarProps) => {
   //! useRoutes to navigate, use the hook to declare another routes
+  const navigate = useNavigate();
   const {
     handle_click_delegar_super,
     handle_datos_acceso,
@@ -272,7 +273,10 @@ export const SideBar: FC<SideBarProps> = ({
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                    dispatch(logout(''));
+                    if(globalThis.location){
+                      globalThis.location.reload()
+                      dispatch(logout(''));
+                    }
                   } else if (result.isDenied) {
                     void Swal.fire({
                       title: 'No se ha cerrado sesión',
