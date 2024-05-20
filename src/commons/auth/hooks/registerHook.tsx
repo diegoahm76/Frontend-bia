@@ -152,7 +152,7 @@ export const use_register = (): ReisterHookNew => {
         persona,
         password,
         redirect_url:
-        (process.env.NODE_ENV === 'production'
+        (process.env.NODE_ENV === 'development'
           ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
           : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
         ) + '/auth/activacion_cuenta',

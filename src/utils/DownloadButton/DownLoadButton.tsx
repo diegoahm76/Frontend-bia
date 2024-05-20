@@ -33,7 +33,7 @@ export const DownloadButton = ({
         href={
           fileUrl &&
           fileUrl.includes(
-            process.env.NODE_ENV === 'production'
+            process.env.NODE_ENV === 'development'
               ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
                   `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
               : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
@@ -41,7 +41,7 @@ export const DownloadButton = ({
           )
             ? fileUrl
             : `${
-                process.env.NODE_ENV === 'production'
+                process.env.NODE_ENV === 'development'
                   ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
                     `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
                   : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
