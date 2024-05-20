@@ -13,6 +13,8 @@ import FormDateRangePickerController from './FormDateRangePickerController';
 import FormCheckboxController from './FormCheckboxController';
 import FormButtonGrid from './FormButtonGrid';
 import FormKeywords from './FormKeywords';
+import BlankSpaceGrid from './BlankSpaceGrid';
+import FormInputSearchModelController from './FormInputSearchModelController';
 
 interface IProps {
   on_submit_form: any;
@@ -131,6 +133,7 @@ const PrimaryForm = ({
           min_date={form_input.min_date ?? null}
           max_date={form_input.max_date ?? null}
           format={form_input.format ?? null}
+          open_to={form_input.open_to ?? null}
         />
       );
     } else if (form_input.datum_type === 'date_picker_time_controller') {
@@ -230,8 +233,52 @@ const PrimaryForm = ({
           disabled={form_input.disabled ?? null}
         />
       );
+    } else if (form_input.datum_type === 'blank_space') {
+      return (
+        <BlankSpaceGrid
+          xs={form_input.xs}
+          md={form_input.md}
+          hidden_text={form_input.hidden_text ?? null}
+          margin={form_input.margin ?? null}
+          marginTop={form_input.marginTop ?? null}
+        />
+      );
+    } else if (form_input.datum_type === 'input_searcheable') {
+      return (
+        <FormInputSearchModelController
+          xs={form_input.xs}
+          md={form_input.md}
+          margin={form_input.margin ?? null}
+          marginTop={form_input.marginTop ?? null}
+          control_form={form_input.control_form ?? null}
+          control_name={form_input.control_name ?? null}
+          default_value={form_input.default_value ?? null}
+          rules={form_input.rules ?? null}
+          label={form_input.label ?? null}
+          type={form_input.type ?? null}
+          disabled={form_input.disabled ?? null}
+          helper_text={form_input.helper_text ?? null}
+          on_click_function={form_input.on_click_function ?? null}
+          icon_class={form_input.icon_class ?? null}
+          modal_select_model_title={form_input.modal_select_model_title ?? null}
+          modal_form_filters={form_input.modal_form_filters ?? null}
+          set_models={form_input.set_models ?? null}
+          get_filters_models={form_input.get_filters_models ?? null}
+          models={form_input.models ?? null}
+          columns_model={form_input.columns_model ?? null}
+          row_id={form_input.row_id ?? null}
+          open_search_modal={form_input.open_search_modal ?? null}
+          set_open_search_modal={form_input.set_open_search_modal ?? null}
+          set_current_model={form_input.set_current_model ?? null}
+        />
+      );
     }
   };
+
+  // const on_change_select = (value: any, name: string): void => {
+  //   console.log(value, name);
+  //   on_change_select_function(value, name);
+  // };
 
   return (
     <Box
