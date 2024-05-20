@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import 'leaflet/dist/leaflet.css';
 import { CarteraEdad7 } from './Graficas/CarteraEdad7';
@@ -17,7 +13,7 @@ import { Reportetop2 } from './Graficas/Reportetop2';
 import { CarteraTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
-  const [opcionSeleccionada, setOpcionSeleccionada] = useState('7');
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('3');
 
   const handleChange = (event: {
     target: { value: SetStateAction<string> };
@@ -81,17 +77,17 @@ export const IndicadoresRecaudo: React.FC = () => {
                 </MenuItem>
 
 
-   
 
-               
+
+
                 <MenuItem value="5">
                   Reporte General de Cartera Por Deuda y Edad –Top
                 </MenuItem>
-                <MenuItem value="6">
-                  Reporte General Cartera Por Edad – Deuda y Etapa{' '}
-                </MenuItem>
                 <MenuItem value="3">
                   Reporte General de Cartera Por Deuda y Edad{' '}
+                </MenuItem>
+                <MenuItem value="6">
+                  Reporte General Cartera Por Edad – Deuda y Etapa{' '}
                 </MenuItem>
               </Select>
             </FormControl>
