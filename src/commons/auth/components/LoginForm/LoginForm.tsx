@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Alert,
@@ -33,6 +33,8 @@ interface AuthSlice {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LoginForm: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const recaptchaRef: any = useRef(null);
   const theme = useTheme();
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
   const dispatch = useDispatch();
@@ -63,6 +65,16 @@ export const LoginForm: React.FC = () => {
 
   useEffect(() => {
     dispatch(logout(''));
+  }, []);
+
+  useEffect(() => {
+    if (is_blocked) {
+      dispatch(logout(''));
+    }
+  }, [is_blocked]);
+
+  useEffect(() => {
+    if (recaptchaRef.current as any) recaptchaRef.current.reset() as any;
   }, []);
 
   useEffect(() => {
@@ -100,13 +112,11 @@ export const LoginForm: React.FC = () => {
           </Grid>
           <Grid item xs={12}>
             <FormControl size="small" fullWidth>
-              <InputLabel htmlFor="outlined-adornment-password"
-              >
+              <InputLabel shrink htmlFor="outlined-adornment-password">
                 Contraseña *
               </InputLabel>
               <OutlinedInput
                 required
-                //InputLabelProps={{ shrink: true }}
                 id="outlined-adornment-password"
                 type={show_password ? 'text' : 'password'}
                 value={password ?? ''}
@@ -148,6 +158,7 @@ export const LoginForm: React.FC = () => {
             </Grid>
           )}
           <Grid
+            key={status}
             item
             container
             justifyContent="center"
@@ -159,9 +170,14 @@ export const LoginForm: React.FC = () => {
             }}
           >
             <ReCaptcha
+              key={status}
+              ref={recaptchaRef}
               className="g-recaptcha"
               // ? debe ser sitekey
-              sitekey={process.env.REACT_APP_SITE_KEY ?? ''}
+              sitekey={
+                process.env.REACT_APP_SITE_KEY ??
+                '6Les0QUkAAAAAPTVVR_hYRtOtwdGZm22HEl_-DjL'
+              }
               hl="es"
               onChange={() => {
                 set_value(true);

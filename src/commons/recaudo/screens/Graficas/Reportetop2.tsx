@@ -1,21 +1,14 @@
-
-
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
 import 'leaflet/dist/leaflet.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ApexOptions } from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
 import { Title } from '../../../../components/Title';
 import SearchIcon from '@mui/icons-material/Search';
 import { Grid, TextField, Button } from '@mui/material';
-
+import { api } from '../../../../api/axios';
 
 export interface FormData {
-
   edad: any,
   fecha_hasta: any;
   fecha_desde: any;
@@ -23,27 +16,18 @@ export interface FormData {
   top: any;
 };
 
+
+
 export const Reportetop2: React.FC = () => {
 
-  const [chartData] = useState<{
+  const [chartData, setChartData] = useState<{
     series: ApexAxisChartSeries | ApexNonAxisChartSeries,
     options: ApexOptions
   }>({
-    series: [{
-      name: '0 A 180',
-      data: [44, 55, 41, 67, 22,]
-    }, {
-      name: '181 A 360',
-      data: [13, 23, 20, 8, 13,]
-    }, {
-      name: 'MAS DE 360',
-      data: [11, 17, 15, 15, 21,]
-    },
-
-    ],
+    series: [],
     options: {
       chart: {
-        type: 'bar', // Asegúrese de que este valor es un tipo específico permitido.
+        type: 'bar',
         height: 350,
         stacked: true,
         toolbar: {
@@ -57,7 +41,7 @@ export const Reportetop2: React.FC = () => {
         breakpoint: 480,
         options: {
           legend: {
-            position: 'bottom', // Verifique que estos valores coincidan exactamente con los tipos permitidos.
+            position: 'bottom',
             offsetX: -10,
             offsetY: 0
           }
@@ -68,24 +52,15 @@ export const Reportetop2: React.FC = () => {
           horizontal: false,
           borderRadius: 10,
           dataLabels: {
-            position: 'top', // Esta propiedad necesita ser revisada si es parte de sus definiciones originales.
+            position: 'top',
           }
         },
       },
       xaxis: {
-        // type: 'datetime', // Asegúrese de que este valor es permitido para 'type'.
-        categories: [
-          ['MULTAS COACTIVO', 'DIFICIL RECAUDO '],
-          ['TASA RETRIBUTIVA ', 'COACTIVO', 'DIFICIL RECAUDO'],
-          ['.','PORCENTAJE AMBIENTAL', 'ACTUAL'],
-          ['TASA USO DE AGUA', 'COACTIVO', 'DIFICIL RECAUDO'],
-          ['VISTAS TECNNICAS DE EVALUACION', 'SEGIMIENTO Y CONTROL', 'ACTUAL']
-
-
-        ],
+        categories: [],
       },
       legend: {
-        position: 'right', // Asegúrese de que este valor es un tipo específico permitido.
+        position: 'right',
         offsetY: 40
       },
       fill: {
@@ -95,15 +70,14 @@ export const Reportetop2: React.FC = () => {
   });
 
   const initialFormData: FormData = {
-
     fecha_desde: '',
     fecha_hasta: '',
     edad: '',
     deuda: '',
     top: "",
   };
-  const [formData, setFormData] = useState(initialFormData);
 
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
@@ -112,6 +86,49 @@ export const Reportetop2: React.FC = () => {
       [name]: value,
     }));
   };
+
+  const carteraDeudaTop = async (): Promise<void> => {
+    try {
+      const url = `/recaudo/reportes/reporte-general-cartera-deuda-y-edad-top/`;
+      const res = await api.get(url);
+      const data_consulta = res.data.detalles_por_codigo_contable;
+      console.log("data_consulta", data_consulta);
+
+      const categorias = Object.keys(data_consulta);
+      const seriesData = [
+        {
+          name: '0 A 180',
+          data: categorias.map(categoria => data_consulta[categoria]["RANGO DE 0 - 180"] || 0),
+        },
+        {
+          name: '181 A 360',
+          data: categorias.map(categoria => data_consulta[categoria]["RANGO DE 181 - 360"] || 0),
+        },
+        {
+          name: 'MAS DE 360',
+          data: categorias.map(categoria => data_consulta[categoria]["RANGO DE 361 - EN ADELANTE"] || 0),
+        }
+      ];
+
+      setChartData({
+        series: seriesData,
+        options: {
+          ...chartData.options,
+          xaxis: {
+            categories: categorias,
+          },
+        },
+      });
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    carteraDeudaTop();
+  }, []);
+
   return (
     <>
       <Grid container
@@ -167,9 +184,7 @@ export const Reportetop2: React.FC = () => {
             size="small"
             fullWidth
             onChange={handleInputChange}
-            // value={formData.edad}
             value={'TODOS'}
-
           />
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -181,9 +196,7 @@ export const Reportetop2: React.FC = () => {
             size="small"
             fullWidth
             onChange={handleInputChange}
-            // value={formData.deuda}
             value={'TODOS'}
-
           />
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -195,9 +208,7 @@ export const Reportetop2: React.FC = () => {
             size="small"
             fullWidth
             onChange={handleInputChange}
-            // value={formData.deuda}
             value={'Top 5'}
-
           />
         </Grid>
         <Grid item>
@@ -206,27 +217,18 @@ export const Reportetop2: React.FC = () => {
             variant="contained"
             startIcon={<SearchIcon />}
             onClick={() => {
-
+              // Add functionality for the search button if needed
             }}
           >
-            buscar
+            Buscar
           </Button>
         </Grid>
-        
         <Grid item xs={12} sm={12} sx={{
           background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
         }}  >
           <ReactApexChart options={chartData.options} series={chartData.series} type="bar" height={350} />
-
         </Grid>
-
-
       </Grid>
     </>
   );
 };
-
-
-
-
-
