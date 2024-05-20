@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Avatar, Box, Grid, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Box, Grid, IconButton, Stack, Tooltip } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -27,6 +27,41 @@ import CloseIcon from '@mui/icons-material/Close';
 import { DialogNoticacionesComponent } from '../../../../../components/DialogNotificaciones';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuid } from 'uuid';
+import {
+  get_status_list_service,
+  get_document_types_service,
+  get_groups_list_service,
+  get_tareas_service_filter,
+  get_solicitudes_notificacion,
+  get_status_asignation_list_service,
+  aceptar_rechazar_asignacion_notificacion_service,
+  aceptar_rechazar_asignacion_tarea_service,
+  add_asignacion_notificacion,
+  add_asignacion_tarea,
+  get_solicitudes_notificacion_funcionario,
+  get_persons_service,
+  actualizar_tarea_service,
+  get_estados_notificacion,
+  cancelar_asignacion_tarean,
+} from '../store/thunks/notificacionesThunks';
+import {
+  set_notification_per_request,
+  set_notification_request,
+  set_notification_requests,
+  set_notifications_per_request,
+} from '../store/slice/notificacionesSlice';
+import { IObjNotificacionType } from '../interfaces/notificaciones';
+import DialogRechazo from '../componentes/DialogRechazo';
+import { AuthSlice } from '../../../../auth/interfaces';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import SolicitudDetailDialog from '../componentes/SolicitudDetailDialog';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import AnexosSoporteDetailDialog from '../componentes/AnexosSoporteDetailDialog';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import GestionarTareaDialog from '../componentes/GestionarTareaDialog';
+import UpdateIcon from '@mui/icons-material/Update';
+import DialogSetStatusTask from '../componentes/DialogSetStatusTask';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -43,284 +78,696 @@ import { v4 as uuid } from 'uuid';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function PanelAsignacionFuncionarioScreen(): JSX.Element {
   const dispatch = useAppDispatch();
+  const {
+    notification_requests,
+    list_document_types,
+    list_status,
+    list_status_asignation,
+    list_groups,
+    notification_request,
+    tipos_notificacion,
+    notifications_per_request,
+    notification_per_request,
+    persons,
+    estados_notificacion,
+  } = useAppSelector((state) => state.notificaciones_slice);
+  const [rechazo_is_active, set_rechazo_is_active] = useState<boolean>(false);
+  const [estado_is_active, set_estado_is_active] = useState<boolean>(false);
+  const [rechazo_tarea_is_active, set_rechazo_tarea_is_active] =
+    useState<boolean>(false);
+  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
+  const [anexos_is_active, set_anexos_is_active] = useState<boolean>(false);
+  const [tarea_is_active, set_tarea_is_active] = useState<boolean>(false);
+  const [tipo_tarea, set_tipo_tarea] = useState<string>('');
+
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
-      field: 'cod_tipo_PQRSDF',
+      field: 'nombre_tipo_documento',
       header: 'Tipo de documento',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.cod_tipo_PQRSDF}
+          {rowData.nombre_tipo_documento}
         </div>
       ),
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'fecha_registro',
-      header: 'Asunto',
+      field: 'radicado',
+      header: 'Radicado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(rowData.fecha_registro).toDateString()}
+          {rowData.radicado}
         </div>
       ),
       style: { width: 150 },
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'fecha_radicado',
+      field: 'expediente',
       header: 'Expediente',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.fecha_radicado === null
-            ? '-'
-            : new Date(rowData.fecha_radicado).toDateString()}
+          {rowData.expediente}
         </div>
       ),
     },
     {
       headerStyle: { width: '4rem' },
-      field: 'numero_radicado_entrada',
+      field: 'unidad_solicitante',
       header: 'Grupo solicitante',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.unidad_solicitante}
         </div>
       ),
     },
 
     {
-      field: 'nombre_estado_solicitud',
+      field: 'funcuinario_solicitante',
       headerStyle: { width: '4rem' },
       header: 'Funcionario solicitante',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.funcuinario_solicitante}
         </div>
       ),
     },
-
     {
-      field: 'nombre_estado_solicitud',
+      field: 'fecha_solicitud',
       headerStyle: { width: '4rem' },
       header: 'Fecha de la solicitud',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.fecha_solicitud && rowData.fecha_solicitud.split('T')[0]}
         </div>
       ),
     },
     {
-      field: 'nombre_estado_solicitud',
+      field: 'fecha_rta_final_gestion',
       headerStyle: { width: '4rem' },
-      header: 'Fecha de finalizacion',
+      header: 'Fecha de finalización',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.fecha_rta_final_gestion !== null &&
+            new Date(rowData.fecha_rta_final_gestion).toDateString()}
         </div>
       ),
     },
     {
-      field: 'Dias Faltantes',
-      headerStyle: { width: '4rem' },
-      header: 'Fecha de la solicitud',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
-      headerStyle: { width: '4rem' },
-      header: 'Aceptado',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
-      headerStyle: { width: '4rem' },
-      header: 'Medio de solicitud',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_estado_solicitud',
+      field: 'estado_solicitud',
       headerStyle: { width: '4rem' },
       header: 'Estado',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_entrada ?? 'SIN RADICAR'}
+          {rowData.estado_solicitud}
+        </div>
+      ),
+    },
+    {
+      field: 'cod_estado_asignacion',
+      headerStyle: { width: '4rem' },
+      header: 'Estado asignacion',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {list_status_asignation?.find(
+            (objeto: any) => objeto.key === rowData.cod_estado_asignacion
+          )?.label ?? 'Sin asignar'}
         </div>
       ),
     },
     {
       header: 'Acciones',
       headerStyle: { width: '4rem' },
-      body: (rowData) => (
-        <Tooltip title="Detalle">
-          <IconButton
-            onClick={() => {
-              set_detail_is_active(true);
-              setSelectedPqr(rowData);
-            }}
+      body: (rowData) => {
+        return rowData.cod_estado_asignacion === 'Pe' &&
+          rowData.id_persona_asignada == userinfo.id_persona ? (
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
-      ),
+            <Tooltip title="Aceptar">
+              <IconButton
+                onClick={() => {
+                  void dispatch(
+                    aceptar_rechazar_asignacion_notificacion_service(
+                      rowData.id_notificacion_correspondencia,
+                      true,
+                      '',
+                      rowData.id_persona_asignada
+                    )
+                  );
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <CheckIcon
+                    sx={{
+                      color: 'success.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Rechazar">
+              <IconButton
+                onClick={() => {
+                  set_rechazo_is_active(true);
+                  setSelectedPqr(rowData);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <CloseIcon
+                    sx={{
+                      color: 'error.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        ) : (
+          <>
+            <Tooltip title="Ver">
+              <IconButton
+                onClick={() => {
+                  set_detail_is_active(true);
+                  setSelectedPqr(rowData);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Ver anexos">
+              <IconButton
+                onClick={() => {
+                  set_anexos_is_active(true);
+                  setSelectedPqr(rowData);
+                  set_tipo_anexo('anexo');
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <AttachFileIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      },
     },
   ];
   const columns_solicitud: ColumnProps[] = [
     {
-      field: 'nombre_tipo_oficio',
+      field: 'tipo_gestion',
       header: 'Tipo de gestión',
       sortable: false,
     },
     {
-      field: 'fecha_radicado_salida',
-      header: 'Número de oficio o requerimiento',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.fecha_radicado_salida === null
-            ? '-'
-            : new Date(rowData.fecha_radicado).toDateString()}
-        </div>
-      ),
-    },
-    {
-      field: 'numero_radicado_salida',
-      header: 'Radicado',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {rowData.numero_radicado_salida === ''
-            ? 'SIN RADICAR'
-            : rowData.numero_radicado_salida}
-        </div>
-      ),
-    },
-
-    {
-      field: 'fecha_solicitud',
+      field: 'fecha_asignacion',
       header: 'Fecha de asignación',
       sortable: false,
       body: (rowData) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(rowData.fecha_solicitud).toDateString()}
+          {rowData.fecha_asignacion && rowData.fecha_asignacion.split('T')[0]}
+        </div>
+      ),
+    },
+    {
+      field: 'id_persona_asignada',
+      headerStyle: { width: '4rem' },
+      header: 'Funcionario asignado',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {persons?.find(
+            (objeto: any) => objeto.id_persona === rowData.id_persona_asignada
+          )?.nombre_completo ?? 'Sin asignar'}
+        </div>
+      ),
+    },
+    {
+      field: 'cod_estado_asignacion',
+      headerStyle: { width: '4rem' },
+      header: 'Estado asignacion',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {list_status_asignation?.find(
+            (objeto: any) => objeto.key === rowData.cod_estado_asignacion
+          )?.label ?? 'Sin asignar'}
+        </div>
+      ),
+    },
+    {
+      field: 'justificacion_rechazo_asignacion',
+      headerStyle: { width: '4rem' },
+      header: 'Justificación rechazo',
+      sortable: false,
+    },
+    {
+      field: 'fecha_actuacion',
+      header: 'Fecha actución',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.fecha_actuacion && rowData.fecha_actuacion.split('T')[0]}
+        </div>
+      ),
+    },
+    {
+      field: 'fecha_resuelta',
+      header: 'Fecha resuelta',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {rowData.fecha_resuelta && rowData.fecha_resuelta.split('T')[0]}
         </div>
       ),
     },
 
     {
       field: 'nombre_und_org_oficina_solicita',
-      header: 'Plazo de entrega',
+      header: 'Días en gestión',
       sortable: false,
     },
     {
-      field: 'nombre_und_org_oficina_solicita',
-      header: 'Días restantes',
-      sortable: false,
-    },
-    {
-      field: 'nombre_und_org_oficina_solicita',
+      field: 'id_estado_actual_registro',
       header: 'Estado',
       sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {estados_notificacion?.find(
+            (objeto: any) =>
+              objeto.id_estado_notificacion_correspondencia ===
+              rowData.id_estado_actual_registro
+          )?.nombre ?? 'Sin asignar'}
+        </div>
+      ),
     },
     {
       header: 'Acciones',
       headerStyle: { width: '4rem' },
-      body: (rowData) => (
-        <Tooltip title="Detalle">
-          <IconButton
-            onClick={() => {
-              set_detail_is_active(true);
-              setSelectedPqr(rowData);
-            }}
+      body: (rowData) => {
+        return rowData.cod_estado_asignacion === 'Pe' &&
+          rowData.id_persona_asignada === userinfo.id_persona ? (
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
-      ),
+            <Tooltip title="Aceptar">
+              <IconButton
+                onClick={() => {
+                  void dispatch(
+                    aceptar_rechazar_asignacion_tarea_service(
+                      rowData.id_registro_notificacion_correspondencia,
+                      true,
+                      '',
+                      rowData.id_persona_asignada
+                    )
+                  );
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <CheckIcon
+                    sx={{
+                      color: 'success.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Rechazar">
+              <IconButton
+                onClick={() => {
+                  set_rechazo_tarea_is_active(true);
+                  setSelectedPqr(rowData);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <CloseIcon
+                    sx={{
+                      color: 'error.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        ) : (
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+          >
+            <Tooltip title="Ver">
+              <IconButton
+                onClick={() => {
+                  set_detail_is_active(true);
+                  setSelectedPqr(rowData);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Ver soportes">
+              <IconButton
+                onClick={() => {
+                  set_anexos_is_active(true);
+                  setSelectedPqr(rowData);
+                  set_tipo_anexo('soporte');
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <AttachFileIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            {rowData.cod_estado_asignacion === 'Ac' &&
+              rowData.id_persona_asignada === userinfo.id_persona && (
+                <>
+                  <Tooltip title="Actualizar estado de tarea">
+                    <IconButton
+                      onClick={() => {
+                        set_estado_is_active(true);
+                        setSelectedPqr(rowData);
+                      }}
+                    >
+                      <Avatar
+                        sx={{
+                          width: 24,
+                          height: 24,
+                          background: '#fff',
+                          border: '2px solid',
+                        }}
+                        variant="rounded"
+                      >
+                        <UpdateIcon
+                          sx={{
+                            color: 'primary.main',
+                            width: '18px',
+                            height: '18px',
+                          }}
+                        />
+                      </Avatar>
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Gestionar tarea">
+                    <IconButton
+                      onClick={() => {
+                        // set_tarea_is_active(true);
+                        setSelectedPqr(rowData);
+                        set_tipo_tarea('');
+                      }}
+                      href={
+                        rowData.tipo_notificacion_correspondencia
+                          .publicar_pagina_gaceta
+                          ? `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
+                          : rowData.tipo_notificacion_correspondencia
+                              .publicar_pagina_edictos
+                          ? `/#/app/transversal/notificaciones/publicar/edictos`
+                          : rowData.tipo_notificacion_correspondencia
+                              .notificacion_correo_electronico
+                          ? `/#/app/transversal/notificaciones/publicar/correo_electronico`
+                          : rowData.tipo_notificacion_correspondencia
+                              .notificacion_medio_fisico
+                          ? `/#/app/transversal/notificaciones/publicar/correspondencia_fisica`
+                          : rowData.tipo_notificacion_correspondencia
+                              .notificacion_personal
+                          ? `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
+                          : `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
+                      }
+                    >
+                      <Avatar
+                        sx={{
+                          width: 24,
+                          height: 24,
+                          background: '#fff',
+                          border: '2px solid',
+                        }}
+                        variant="rounded"
+                      >
+                        <AssignmentIcon
+                          sx={{
+                            color: 'primary.main',
+                            width: '18px',
+                            height: '18px',
+                          }}
+                        />
+                      </Avatar>
+                    </IconButton>
+                  </Tooltip>
+                </>
+              )}
+            {rowData?.cod_estado_asignacion === 'Re' &&
+              (notification_requests?.find(
+                (objeto: any) =>
+                  objeto.id_notificacion_correspondencia ===
+                  rowData.id_notificacion_correspondencia
+              )?.id_persona_asignada ?? null) === userinfo.id_persona && (
+                <Tooltip title="Re-Asignar">
+                  <IconButton
+                    onClick={() => {
+                      void dispatch(
+                        add_asignacion_tarea({
+                          id_persona_asignada: rowData.id_persona_asignada,
+                          id_notificacion_correspondencia:
+                            rowData.id_notificacion_correspondencia,
+                          id_tipo_notificacion_correspondencia:
+                            rowData.id_tipo_notificacion_correspondencia,
+                        })
+                      );
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        background: '#fff',
+                        border: '2px solid',
+                      }}
+                      variant="rounded"
+                    >
+                      <SwapHorizIcon
+                        sx={{
+                          color: 'primary.main',
+                          width: '18px',
+                          height: '18px',
+                        }}
+                      />
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+              )}
+            {rowData?.cod_estado_asignacion === 'Pe' && (
+              <Tooltip title="Cancelar asignación">
+                <IconButton
+                  onClick={() => {
+                    void dispatch(
+                      cancelar_asignacion_tarean(
+                        rowData.id_registro_notificacion_correspondencia
+                      )
+                    );
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
+                    }}
+                    variant="rounded"
+                  >
+                    <RemoveIcon
+                      sx={{
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
+                      }}
+                    />
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+            )}
+          </Stack>
+        );
+      },
     },
   ];
   const definition_levels = [
     {
-      column_id: 'id_PQRSDF',
+      column_id: 'id_notificacion_correspondencia',
       level: 0,
       columns: columns_pqrs,
       table_name: 'Solicitudes de notificación',
       property_name: '',
     },
     {
-      column_id: 'id_solicitud_al_usuario_sobre_pqrsdf',
+      column_id: 'id_registro_notificacion_correspondencia',
       level: 1,
       columns: columns_solicitud,
       table_name: 'Registro de notificación por solicitud',
-      property_name: 'solicitudes_pqr',
+      property_name: 'registros_notificaciones',
     },
   ];
 
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
+  const [tipo_anexo, set_tipo_anexo] = useState('');
   const [expandedRows, setExpandedRows] = useState<
     DataTableExpandedRows | DataTableValueArray | undefined
   >(undefined);
-  const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
   const {
     control: control_notificacion,
     handleSubmit: handle_submit_notificacion,
     reset: reset_notificacion,
     watch,
+    getValues: get_values,
   } = useForm<any>();
   useEffect(() => {
-    setExpandedRows(undefined);
-    set_button_option('');
-    setSelectedPqr({});
-    set_detail_is_active(false);
+    dispatch(set_notification_request({}));
+    dispatch(set_notification_requests([]));
+    dispatch(set_notification_per_request({}));
+    dispatch(set_notifications_per_request([]));
+    dispatch(get_status_list_service());
+    dispatch(get_document_types_service());
+    dispatch(get_groups_list_service());
+    dispatch(get_status_asignation_list_service());
+    void dispatch(get_estados_notificacion());
+    void dispatch(get_persons_service('', '', '', '', '', ''));
   }, []);
-
+  useEffect(() => {
+    if (selectedPqr !== null) {
+      if ('id_registro_notificacion_correspondencia' in selectedPqr) {
+        dispatch(
+          set_notification_request(
+            notification_requests?.find(
+              (objeto: any) =>
+                objeto.id_notificacion_correspondencia ===
+                selectedPqr.id_notificacion_correspondencia
+            ) ?? {}
+          )
+        );
+        dispatch(set_notification_per_request(selectedPqr));
+        set_button_option('request');
+      } else {
+        dispatch(set_notification_request(selectedPqr));
+        dispatch(set_notification_per_request({}));
+        set_button_option('solicitud');
+      }
+    }
+  }, [selectedPqr]);
   // Notificaciones
   const [titulo_notificacion, set_titulo_notificacion] = useState<string>('');
   const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>('');
@@ -329,27 +776,6 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
   const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] =
     useState<boolean>(false);
 
-  const generar_notificación_reporte = (
-    titulo: string,
-    tipo: string,
-    mensaje: string,
-    active: boolean
-  ) => {
-    set_titulo_notificacion(titulo);
-    set_tipo_notificacion(tipo);
-    set_mensaje_notificacion(mensaje);
-    set_dialog_notificaciones_is_active(active);
-    set_abrir_modal(active);
-  };
-
-  const reporte_evolucion_lote_fc: () => void = () => {
-    generar_notificación_reporte(
-      'Notificación',
-      'warn',
-      '¿Estas seguro de devolver o rechazar la solicitud?',
-      true
-    );
-  };
   const columns_list: GridColDef[] = [
     {
       field: 'tipo_documento',
@@ -362,7 +788,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
       ),
     },
     {
-      field: 'numero_documento',
+      field: 'funcionario_asignado',
       headerName: 'Funcionario asignado',
       width: 200,
       renderCell: (params) => (
@@ -372,7 +798,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
       ),
     },
     {
-      field: 'nombre_completo',
+      field: 'fecha_asignacion',
       headerName: 'Fecha de la asignacion',
       width: 300,
       renderCell: (params) => (
@@ -403,7 +829,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
       ),
     },
     {
-      field: 'tipo_persona_3',
+      field: 'dias_faltantes',
       headerName: 'dias en gestión',
       width: 250,
       renderCell: (params) => (
@@ -423,6 +849,71 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
       ),
     },
   ];
+  const get_tareas: any = async () => {
+    const tipo_documento = get_values('tipo_documento') ?? '';
+    const radicado = get_values('radicado') ?? '';
+    const expediente = get_values('expediente') ?? '';
+    const grupo_solicitante = get_values('grupo_solicitante') ?? '';
+    const estado = get_values('estado') ?? '';
+    //const estado_asignacion = get_values('estado_asignacion') ?? '';
+    const funcionario_asignado = userinfo.id_persona;
+
+    const params: any = {};
+
+    if (tipo_documento !== '') {
+      params.tipo_documento = tipo_documento;
+    }
+
+    if (radicado !== '') {
+      params.radicado = radicado;
+    }
+
+    if (expediente !== '') {
+      params.expediente = expediente;
+    }
+
+    if (grupo_solicitante !== '') {
+      params.grupo_solicitante = grupo_solicitante;
+    }
+    if (estado !== '') {
+      params.estado = estado;
+    }
+    params.funcionario_asignado = funcionario_asignado;
+    params.flag = 'NO';
+    void dispatch(get_solicitudes_notificacion_funcionario(params));
+  };
+  const get_x: any = (data: any) => {
+    //  console.log('')(data);
+  };
+  const rechazar_solicitud_notificacion: any = (data: any) => {
+    void dispatch(
+      aceptar_rechazar_asignacion_notificacion_service(
+        selectedPqr.id_notificacion_correspondencia,
+        false,
+        data.justificacion,
+        selectedPqr.id_persona_asignada
+      )
+    );
+  };
+  const rechazar_tarea_notificacion: any = (data: any) => {
+    void dispatch(
+      aceptar_rechazar_asignacion_tarea_service(
+        selectedPqr.id_registro_notificacion_correspondencia,
+        false,
+        data.justificacion,
+        selectedPqr.id_persona_asignada
+      )
+    );
+  };
+  const actualizar_tarea_notificacion: any = (data: any) => {
+    void dispatch(
+      actualizar_tarea_service(
+        notification_per_request?.id_registro_notificacion_correspondencia,
+        data.id_estado,
+        notification_per_request?.id_persona_asignada ?? 0
+      )
+    );
+  };
   return (
     <>
       <Grid
@@ -437,8 +928,40 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Panel de asignación"></Title>
-
+          <Title title="Solicitudes asignadas funcionario"></Title>
+          <Grid container direction="row" padding={2} spacing={2}>
+            <Grid item xs={12} md={6}>
+              <FormButton
+                disabled={
+                  notification_request?.id_notificacion_correspondencia === null
+                }
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={null}
+                label="Ver solicitud"
+                type_button="button"
+                color_button="warning"
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormButton
+                disabled={
+                  (notification_request?.id_notificacion_correspondencia ===
+                    null ||
+                    notification_request?.id_persona_asignada !==
+                      userinfo.id_persona) &&
+                  (notification_request?.cod_estado_asignacion ?? 'Pe') !== 'Ac'
+                }
+                href={`/#/app/transversal/notificaciones/panel_asignacion_tarea_funcionario/`}
+                variant_button="outlined"
+                on_click_function={null}
+                icon_class={null}
+                label={'Asignar tarea'}
+                type_button="button"
+                color_button="primary"
+              />
+            </Grid>
+          </Grid>
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
@@ -450,28 +973,13 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'tipo_documento',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Tipo de documento',
-                disabled: true,
-                helper_text: '',
-                select_options: [],
-                option_label: 'label',
-                option_key: 'key',
-              },
-              {
-                datum_type: 'select_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_notificacion,
-                control_name: 'type_applicant',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Radicado',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
+                select_options: list_document_types,
                 option_label: 'label',
                 option_key: 'key',
               },
@@ -480,7 +988,19 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'radicado',
+                default_value: '',
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Radicado',
+                disabled: false,
+                helper_text: '',
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_notificacion,
+                control_name: 'expediente',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Expediente',
@@ -492,29 +1012,44 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'grupo_solicitante',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Grupo solicitante',
+                label: 'Grupo que proyecta',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
+                select_options: list_groups,
                 option_label: 'label',
                 option_key: 'key',
               },
 
+              // {
+              //   datum_type: 'select_controller',
+              //   xs: 12,
+              //   md: 4,
+              //   control_form: control_notificacion,
+              //   control_name: 'type_applicant',
+              //   default_value: '',
+              //   rules: { required_rule: { rule: true, message: 'Requerido' } },
+              //   label: 'Tipo de gestión',
+              //   disabled: false,
+              //   helper_text: '',
+              //   select_options: [],
+              //   option_label: 'label',
+              //   option_key: 'key',
+              // },
               {
                 datum_type: 'select_controller',
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'estado',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Grupo Tipo de gestión',
+                label: 'Estado solicitud',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
+                select_options: list_status,
                 option_label: 'label',
                 option_key: 'key',
               },
@@ -523,13 +1058,13 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'estado_asignacion',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Estado',
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
+                label: 'Estado asignación',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
+                select_options: list_status_asignation,
                 option_label: 'label',
                 option_key: 'key',
               },
@@ -537,6 +1072,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
           />
         </Grid>
         <Grid container direction="row" padding={2} spacing={2}>
+          <Grid item xs={12} md={6}></Grid>
           <Grid item xs={12} md={3}>
             <FormButton
               variant_button="outlined"
@@ -552,7 +1088,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
             <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="contained"
-                on_click_function={reporte_evolucion_lote_fc}
+                on_click_function={get_tareas}
                 icon_class={<CheckIcon />}
                 label={'Buscar'}
                 type_button="button"
@@ -561,19 +1097,44 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
             </Grid>
           </>
         </Grid>
-        <DataGrid
-          density="compact"
-          autoHeight
-          rows={[]}
-          columns={columns_list}
-          pageSize={10}
-          rowsPerPageOptions={[10]}
-          experimentalFeatures={{ newEditingApi: true }}
-          getRowId={(row) =>
-            row['id_notificacion' ?? uuid()] === null
-              ? uuid()
-              : row['id_notificacion' ?? uuid()]
-          }
+        <TableRowExpansion
+          products={notification_requests}
+          definition_levels={definition_levels}
+          selectedItem={selectedPqr}
+          setSelectedItem={setSelectedPqr}
+          expandedRows={expandedRows}
+          setExpandedRows={setExpandedRows}
+          onRowToggleFunction={get_x}
+        />
+        <DialogRechazo
+          is_modal_active={rechazo_is_active}
+          set_is_modal_active={set_rechazo_is_active}
+          action={rechazar_solicitud_notificacion}
+        />
+        <DialogRechazo
+          is_modal_active={rechazo_tarea_is_active}
+          set_is_modal_active={set_rechazo_tarea_is_active}
+          action={rechazar_tarea_notificacion}
+        />
+        <DialogSetStatusTask
+          is_modal_active={estado_is_active}
+          set_is_modal_active={set_estado_is_active}
+          action={actualizar_tarea_notificacion}
+        />
+        <SolicitudDetailDialog
+          is_modal_active={detail_is_active}
+          set_is_modal_active={set_detail_is_active}
+          action={button_option}
+        />
+        <AnexosSoporteDetailDialog
+          is_modal_active={anexos_is_active}
+          set_is_modal_active={set_anexos_is_active}
+          action={tipo_anexo}
+        />
+        <GestionarTareaDialog
+          is_modal_active={tarea_is_active}
+          set_is_modal_active={set_tarea_is_active}
+          action={tipo_tarea}
         />
       </Grid>
     </>
