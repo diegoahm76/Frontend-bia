@@ -25,18 +25,15 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuid } from 'uuid';
+import { IObjNotificacionType } from '../../interfaces/notificaciones';
 import {
-  IObjNotificacionType,
-  IObjTypeDocument,
-} from '../../interfaces/notificaciones';
-import {
-  add_tipo_documento_notificacion,
-  delete_tipo_documento_notificacion,
-  edit_tipo_documento_notificacion,
-  get_tipos_documento_notification,
+  add_tipo_notificacion,
+  delete_tipo_notificacion,
+  edit_tipo_notificacion,
+  get_tipos_notificacion,
 } from '../../store/thunks/notificacionesThunks';
 import {
-  set_tipo_documento_notificacion,
+  set_tipo_notificacion,
   reset_state,
 } from '../../store/slice/notificacionesSlice';
 import EditIcon from '@mui/icons-material/Edit';
@@ -55,7 +52,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function TiposDocumentoNotificacionScreen(): JSX.Element {
+export function TiposNotificacionScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const [checked_activo, set_checked_activo] = useState(false);
   const columns_pqrs: ColumnProps[] = [
@@ -316,8 +313,9 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
       property_name: 'solicitudes_pqr',
     },
   ];
-  const { tipo_documento_notificacion, tipos_documento_notificacion } =
-    useAppSelector((state) => state.notificaciones_slice);
+  const { tipo_notificacion, tipos_notificacion } = useAppSelector(
+    (state) => state.notificaciones_slice
+  );
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
   const [expandedRows, setExpandedRows] = useState<
@@ -337,17 +335,17 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
     set_button_option('');
     setSelectedPqr({});
     set_detail_is_active(false);
-    void dispatch(get_tipos_documento_notification());
+    void dispatch(get_tipos_notificacion());
   }, []);
   useEffect(() => {
-    reset_notificacion(tipo_documento_notificacion);
+    reset_notificacion(tipo_notificacion);
     if (
-      tipo_documento_notificacion?.activo !== null &&
-      tipo_documento_notificacion?.activo !== undefined
+      tipo_notificacion?.activo !== null &&
+      tipo_notificacion?.activo !== undefined
     ) {
-      set_checked_activo(tipo_documento_notificacion?.activo);
+      set_checked_activo(tipo_notificacion?.activo);
     }
-  }, [tipo_documento_notificacion]);
+  }, [tipo_notificacion]);
   const columns_list: GridColDef[] = [
     {
       field: 'nombre',
@@ -384,6 +382,16 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
       },
     },
 
+    {
+      field: 'tiempo_en_dias',
+      headerName: 'Días permitidos',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
     {
       field: 'registro_precargado',
       headerName: 'Precargado',
@@ -444,19 +452,13 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
               <IconButton
                 onClick={() => {
                   dispatch(
-                    set_tipo_documento_notificacion({
+                    set_tipo_notificacion({
                       ...params.row,
                       aplica_para: [
                         params.row.aplica_para_correspondencia &&
                           'correspondencia',
                         params.row.aplica_para_notificaciones &&
                           'notificaciones',
-                      ],
-                      aplica_para_acciones: [
-                        params.row.aplica_para_comunicaciones && 'comunicacion',
-                        params.row.aplica_para_notificaciones_publicaciones &&
-                          'notificacion',
-                        params.row.aplica_para_publicaciones && 'publicacion',
                       ],
                     })
                   );
@@ -515,7 +517,7 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
             <Tooltip title="Eliminar">
               <IconButton
                 onClick={() => {
-                  dispatch(delete_tipo_documento_notificacion(params.row));
+                  dispatch(delete_tipo_notificacion(params.row));
                 }}
               >
                 <Avatar
@@ -543,62 +545,51 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
     },
   ];
 
-  const on_submit = (data: IObjTypeDocument): void => {
+  const on_submit = (data: IObjNotificacionType): void => {
     if (
-      tipo_documento_notificacion?.id_tipo_documento !== null &&
-      tipo_documento_notificacion?.id_tipo_documento !== undefined
+      tipo_notificacion?.id_tipo_notificacion_correspondencia !== null &&
+      tipo_notificacion?.id_tipo_notificacion_correspondencia !== undefined
     ) {
       set_action('editar');
       if (data.aplica_para !== null && data.aplica_para !== undefined) {
-        const data_edit: IObjTypeDocument = {
+        const data_edit: IObjNotificacionType = {
           ...data,
           aplica_para_correspondencia:
             data.aplica_para.includes('correspondencia'),
           aplica_para_notificaciones:
             data.aplica_para.includes('notificaciones'),
-          aplica_para_notificaciones_publicaciones:
-            data.aplica_para_acciones?.includes('notificacion'),
-          aplica_para_publicaciones:
-            data?.aplica_para_acciones?.includes('publicacion'),
-          aplica_para_comunicaciones:
-            data?.aplica_para_acciones?.includes('comunicacion'),
           item_ya_usado: false,
           registro_precargado: false,
           activo: checked_activo,
         };
-        void dispatch(edit_tipo_documento_notificacion(data_edit));
+        void dispatch(edit_tipo_notificacion(data_edit));
       }
     } else {
       set_action('crear');
       if (data.aplica_para !== null && data.aplica_para !== undefined) {
-        const data_edit: IObjTypeDocument = {
+        const data_edit: IObjNotificacionType = {
           ...data,
           aplica_para_correspondencia:
             data.aplica_para.includes('correspondencia'),
           aplica_para_notificaciones:
             data.aplica_para.includes('notificaciones'),
-          aplica_para_notificaciones_publicaciones:
-            data?.aplica_para_acciones?.includes('notificacion'),
-          aplica_para_publicaciones:
-            data?.aplica_para_acciones?.includes('publicacion'),
-          aplica_para_comunicaciones:
-            data?.aplica_para_acciones?.includes('comunicacion'),
           item_ya_usado: false,
           registro_precargado: false,
           activo: checked_activo,
         };
-        void dispatch(add_tipo_documento_notificacion(data_edit));
+        void dispatch(add_tipo_notificacion(data_edit));
       }
     }
   };
   const descartar = (): void => {
     dispatch(
-      set_tipo_documento_notificacion({
-        ...tipo_documento_notificacion,
+      set_tipo_notificacion({
+        ...tipo_notificacion,
         nombre: null,
         activo: null,
         aplica_para: [],
-        aplica_para_acciones: [],
+        habiles_o_calendario: null,
+        tiempo_en_dias: null,
       })
     );
     set_action('crear');
@@ -618,7 +609,7 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Tipos de documento de notificaciones y/o correspondencias"></Title>
+          <Title title="Tipos de notificaciones y/o correspondencias"></Title>
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
@@ -632,7 +623,7 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
               {
                 datum_type: 'select_controller',
                 xs: 12,
-                md: 3,
+                md: 4,
                 control_form: control_notificacion,
                 control_name: 'aplica_para',
                 default_value: [],
@@ -649,26 +640,6 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
                 option_key: 'key',
               },
               {
-                datum_type: 'select_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'aplica_para_acciones',
-                default_value: [],
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Tipos de acción:',
-                disabled: false,
-                helper_text: '',
-                multiple: true,
-                select_options: [
-                  { label: 'Notificación', key: 'notificacion' },
-                  { label: 'Publicación', key: 'publicacion' },
-                  { label: 'Comunicación', key: 'comunicacion' },
-                ],
-                option_label: 'label',
-                option_key: 'key',
-              },
-              {
                 datum_type: 'input_controller',
                 xs: 12,
                 md: 4,
@@ -680,11 +651,62 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
                 disabled: false,
                 helper_text: '',
               },
+              {
+                datum_type: 'select_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_notificacion,
+                control_name: 'accion',
+                default_value: [],
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Acción relacionada:',
+                disabled: false,
+                helper_text: '',
+                select_options: [
+                  { label: 'Publicar en gaceta', key: 'a' },
+                  { label: 'Publicar edicto', key: 'b' },
+                  { label: 'Correo electronico', key: 'c' },
+                  { label: 'Correspondencia fisica', key: 'd' },
+                  { label: 'Notificacion personal', key: 'e' },
+                ],
+                option_label: 'label',
+                option_key: 'key',
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_notificacion,
+                control_name: 'tiempo_en_dias',
+                default_value: '',
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Días maximos permitidos',
+                disabled: false,
+                helper_text: '',
+              },
+              {
+                datum_type: 'select_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_notificacion,
+                control_name: 'habiles_o_calendario',
+                default_value: '',
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Aplica a:',
+                disabled: false,
+                helper_text: '',
+                select_options: [
+                  { label: 'Días habiles', key: 'H' },
+                  { label: 'Días calendario', key: 'C' },
+                ],
+                option_label: 'label',
+                option_key: 'key',
+              },
 
               {
                 datum_type: 'checkbox_controller',
                 xs: 12,
-                md: 2,
+                md: 4,
                 control_form: control_notificacion,
                 control_name: 'activo',
                 default_value: checked_activo,
@@ -727,15 +749,15 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
           <DataGrid
             density="compact"
             autoHeight
-            rows={tipos_documento_notificacion || []}
+            rows={tipos_notificacion || []}
             columns={columns_list}
             pageSize={10}
             rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) =>
-              row['id_tipo_documento' ?? uuid()] === null
+              row['id_tipo_notificacion_correspondencia' ?? uuid()] === null
                 ? uuid()
-                : row['id_tipo_documento' ?? uuid()]
+                : row['id_tipo_notificacion_correspondencia' ?? uuid()]
             }
           />
         </Grid>

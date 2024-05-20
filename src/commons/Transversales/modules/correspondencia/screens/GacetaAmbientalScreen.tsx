@@ -26,6 +26,7 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   control_success,
+  get_anexos_tarea,
   get_solicitud_notificacion_id_service,
   publicar_gaceta_service,
 } from '../store/thunks/notificacionesThunks';
@@ -130,7 +131,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Publicación en la gaceta ambiental"></Title>
+          <Title title="Despacho correspondencia"></Title>
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
@@ -354,7 +355,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
             />
           </Grid>
           <>
-            <Grid item xs={12} md={3}>
+            {/* <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="outlined"
                 on_click_function={null}
@@ -363,7 +364,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
                 type_button="button"
                 color_button="primary"
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="contained"

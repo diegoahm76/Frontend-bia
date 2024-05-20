@@ -29,7 +29,6 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuid } from 'uuid';
 import {
   add_asignacion_notificacion,
-  add_asignacion_tarea,
   get_asignaciones_id_person_service,
   get_document_types_service,
   get_persons_service,
@@ -38,7 +37,6 @@ import {
 } from '../store/thunks/notificacionesThunks';
 import { IObjNotificacionType } from '../interfaces/notificaciones';
 import SolicitudDetailDialog from '../componentes/SolicitudDetailDialog';
-import { AuthSlice } from '../../../../auth/interfaces';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -53,22 +51,8 @@ import { AuthSlice } from '../../../../auth/interfaces';
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
+export function PanelAsignacionCoordinadorScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const {
-    notification_requests,
-    list_document_types,
-    list_status,
-    list_groups,
-    notification_request,
-    person,
-    persons,
-    tipos_notificacion,
-    asignacion_funcionario,
-    list_status_asignation,
-  } = useAppSelector((state) => state.notificaciones_slice);
-  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
@@ -115,7 +99,38 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
         </div>
       ),
     },
-
+    {
+      field: 'id_persona_asignada',
+      headerStyle: { width: '4rem' },
+      header: 'Funcionario asignado',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {persons?.find(
+            (objeto: any) => objeto.id_persona === rowData.id_persona_asignada
+          )?.nombre_completo ?? 'Sin asignar'}
+        </div>
+      ),
+    },
+    {
+      field: 'cod_estado_asignacion',
+      headerStyle: { width: '4rem' },
+      header: 'Estado asignacion',
+      sortable: false,
+      body: (rowData) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {list_status_asignation?.find(
+            (objeto: any) => objeto.key === rowData.cod_estado_asignacion
+          )?.label ?? 'Sin asignar'}
+        </div>
+      ),
+    },
+    {
+      field: 'justificacion_rechazo_asignacion',
+      headerStyle: { width: '4rem' },
+      header: 'Justificación rechazo',
+      sortable: false,
+    },
     {
       field: 'funcuinario_solicitante',
       headerStyle: { width: '4rem' },
@@ -197,7 +212,11 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
       header: 'Tipo de gestión',
       sortable: false,
     },
-
+    {
+      field: 'funcionario_asignado',
+      header: 'Funcionario asignado',
+      sortable: false,
+    },
     {
       field: 'fecha_asignacion',
       header: 'Fecha de asignación',
@@ -207,38 +226,6 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
           {rowData.fecha_asignacion && rowData.fecha_asignacion.split('T')[0]}
         </div>
       ),
-    },
-    {
-      field: 'id_persona_asignada',
-      headerStyle: { width: '4rem' },
-      header: 'Funcionario asignado',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {persons?.find(
-            (objeto: any) => objeto.id_persona === rowData.id_persona_asignada
-          )?.nombre_completo ?? 'Sin asignar'}
-        </div>
-      ),
-    },
-    {
-      field: 'cod_estado_asignacion',
-      headerStyle: { width: '4rem' },
-      header: 'Estado asignacion',
-      sortable: false,
-      body: (rowData) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {list_status_asignation?.find(
-            (objeto: any) => objeto.key === rowData.cod_estado_asignacion
-          )?.label ?? 'Sin asignar'}
-        </div>
-      ),
-    },
-    {
-      field: 'justificacion_rechazo_asignacion',
-      headerStyle: { width: '4rem' },
-      header: 'Justificación rechazo',
-      sortable: false,
     },
     {
       field: 'fecha_actuacion',
@@ -306,18 +293,29 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
       column_id: 'id_notificacion_correspondencia',
       level: 0,
       columns: columns_pqrs,
-      table_name: 'Solicitudes de notificación',
+      table_name: 'Solicitudes de correspondencia',
       property_name: '',
     },
     {
       column_id: 'id_registro_notificacion_correspondencia',
       level: 1,
       columns: columns_solicitud,
-      table_name: 'Registro de notificación por solicitud',
+      table_name: 'Registro de tareas por solicitud',
       property_name: 'registros_notificaciones',
     },
   ];
-
+  const {
+    notification_requests,
+    list_document_types,
+    list_status,
+    list_groups,
+    notification_request,
+    person,
+    persons,
+    tipos_notificacion,
+    asignacion_funcionario,
+    list_status_asignation,
+  } = useAppSelector((state) => state.notificaciones_slice);
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
   const [expandedRows, setExpandedRows] = useState<
@@ -333,12 +331,11 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
   useEffect(() => {
     setExpandedRows(undefined);
     set_button_option('');
-    setSelectedPqr({});
+    // setSelectedPqr({});
     void dispatch(get_persons_service('', '', '', '', '', ''));
     void dispatch(get_tipos_notificacion());
     void dispatch(get_document_types_service());
-    void dispatch(get_status_asignation_list_service());
-    void dispatch(get_asignaciones_id_person_service(userinfo.id_persona));
+    dispatch(get_status_asignation_list_service());
 
     set_detail_is_active(false);
   }, []);
@@ -368,7 +365,7 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
       width: 200,
     },
     {
-      field: 'tarear_asignadas',
+      field: 'notificaciones_asignadas',
       headerName: 'Tareas asignadas',
       width: 300,
       renderCell: (params) => (
@@ -379,7 +376,7 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
     },
 
     {
-      field: 'tarear_resueltas',
+      field: 'notificaciones_resueltas',
       headerName: 'Tareas resueltas',
       width: 250,
       renderCell: (params) => (
@@ -389,7 +386,7 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
       ),
     },
     {
-      field: 'tarear_pendientes',
+      field: 'notificaciones_pendientes',
       headerName: 'Pendientes',
       width: 250,
       renderCell: (params) => (
@@ -420,7 +417,7 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
       notification_request?.id_notificacion_correspondencia !== undefined
     ) {
       void dispatch(
-        add_asignacion_tarea({
+        add_asignacion_notificacion({
           ...data,
           id_notificacion_correspondencia:
             notification_request.id_notificacion_correspondencia,
@@ -430,7 +427,6 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
   };
   const descartar = (): void => {
     reset_notificacion({
-      id_tipo_notificacion_correspondencia: null,
       id_persona_asigna: null,
       comentario: null,
     });
@@ -450,7 +446,7 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Panel de asignación"></Title>
+          <Title title="Panel de asignación solicitudes correspondencia"></Title>
 
           <PrimaryForm
             on_submit_form={null}
@@ -478,23 +474,8 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'id_tipo_notificacion_correspondencia',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Tipo de notificación',
-                disabled: false,
-                helper_text: '',
-                select_options: tipos_notificacion,
-                option_label: 'nombre',
-                option_key: 'id_tipo_notificacion_correspondencia',
-              },
-              {
-                datum_type: 'select_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_notificacion,
                 control_name: 'id_persona_asignada',
-                default_value: userinfo.id_persona,
+                default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Funcionario a asignar',
                 disabled: false,
@@ -554,7 +535,7 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
                 variant_button="contained"
                 on_click_function={handle_submit_notificacion(on_submit)}
                 icon_class={<CheckIcon />}
-                label={'Asignar tarea'}
+                label={'Asignar solicitud de correspondencia'}
                 type_button="button"
                 color_button="primary"
               />

@@ -459,14 +459,14 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       column_id: 'id_notificacion_correspondencia',
       level: 0,
       columns: columns_pqrs,
-      table_name: 'Solicitudes de notificación',
+      table_name: 'Solicitudes de correspondencia',
       property_name: '',
     },
     {
       column_id: 'id_registro_notificacion_correspondencia',
       level: 1,
       columns: columns_solicitud,
-      table_name: 'Registro de notificación por solicitud',
+      table_name: 'Registro de tarea por solicitud',
       property_name: 'registros_notificaciones',
     },
   ];
@@ -552,9 +552,8 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     if (funcionario_asignado !== '') {
       params.funcionario_asignado = funcionario_asignado;
     }
-    params.flag = 'NO';
     console.log(params);
-
+    params.flag = 'CD';
     void dispatch(get_solicitudes_notificacion(params));
   };
   const get_x: any = (data: any) => {
@@ -585,9 +584,9 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Listado de solicitudes de notificación"></Title>
+          <Title title="Listado de solicitudes de correspondencia"></Title>
           <Grid container direction="row" padding={2} spacing={2}>
-            <Grid item xs={12} md={3}>
+            {/* <Grid item xs={12} md={3}>
               <FormButton
                 disabled={false}
                 variant_button="outlined"
@@ -597,14 +596,14 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 type_button="button"
                 color_button="primary"
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12} md={2}>
               <FormButton
                 disabled={
                   notification_request?.id_notificacion_correspondencia === null
                 }
-                href={`/#/app/transversal/notificaciones/ver_notificacion/`}
+                href={`/#/app/transversal/correspondencia/ver_notificacion/`}
                 variant_button="contained"
                 on_click_function={null}
                 icon_class={null}
@@ -621,11 +620,11 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                     notification_request?.id_persona_asignada !== null) &&
                   (notification_request?.cod_estado_asignacion ?? 'Pe') !== 'Re'
                 }
-                href={`/#/app/transversal/notificaciones/panel_asignacion_coordinador/`}
+                href={`/#/app/transversal/correspondencia/panel_asignacion_coordinador/`}
                 variant_button="outlined"
                 on_click_function={null}
                 icon_class={null}
-                label={'Asignar solicitud de notificación'}
+                label={'Asignar solicitud de correspondencia'}
                 type_button="button"
                 color_button="primary"
               />

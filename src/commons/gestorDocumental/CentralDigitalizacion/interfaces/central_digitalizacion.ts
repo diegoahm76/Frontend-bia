@@ -98,6 +98,7 @@ export interface IObjExhibit {
   ya_digitalizado?: boolean | null;
   observacion_digitalizacion?: string | null;
   exhibit_link?: string | IObjFile | null;
+  ruta_archivo?: string | IObjFile | null;
   id_docu_de_arch_exp?: number | null;
   metadatos: IObjMetaData | null;
 }

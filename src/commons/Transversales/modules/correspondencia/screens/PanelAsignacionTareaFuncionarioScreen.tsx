@@ -306,14 +306,14 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
       column_id: 'id_notificacion_correspondencia',
       level: 0,
       columns: columns_pqrs,
-      table_name: 'Solicitudes de notificación',
+      table_name: 'Solicitudes de correspondencia',
       property_name: '',
     },
     {
       column_id: 'id_registro_notificacion_correspondencia',
       level: 1,
       columns: columns_solicitud,
-      table_name: 'Registro de notificación por solicitud',
+      table_name: 'Registro de tareas por solicitud',
       property_name: 'registros_notificaciones',
     },
   ];
@@ -450,7 +450,7 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Panel de asignación"></Title>
+          <Title title="Panel de asignación tareas correspondencia"></Title>
 
           <PrimaryForm
             on_submit_form={null}
@@ -481,10 +481,13 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
                 control_name: 'id_tipo_notificacion_correspondencia',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Tipo de notificación',
+                label: 'Tipo de correspondencia',
                 disabled: false,
                 helper_text: '',
-                select_options: tipos_notificacion,
+                select_options: tipos_notificacion?.filter(
+                  (tipo: IObjNotificacionType) =>
+                    tipo.aplica_para_correspondencia
+                ),
                 option_label: 'nombre',
                 option_key: 'id_tipo_notificacion_correspondencia',
               },

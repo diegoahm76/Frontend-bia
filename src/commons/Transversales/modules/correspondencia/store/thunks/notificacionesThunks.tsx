@@ -41,6 +41,7 @@ import {
 } from '../slice/notificacionesSlice';
 import { IObjListType } from '../../interfaces/notificaciones';
 import { set_exhibits } from '../../../../../gestorDocumental/CentralDigitalizacion/store/slice/centralDigitalizacionSlice';
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const control_error = (
   message: ToastContent = 'Algo pasó, intente de nuevo'
@@ -207,7 +208,7 @@ export const aceptar_rechazar_solicitud_notificacion_service = (
       );
       console.log(data);
 
-      dispatch(get_solicitudes_notificacion({ flag: 'NO' }));
+      dispatch(get_solicitudes_notificacion({ flag: 'CD' }));
       if (data.succes) {
         control_success(data.detail);
       } else {
@@ -248,7 +249,7 @@ export const aceptar_rechazar_asignacion_notificacion_service = (
       dispatch(
         get_solicitudes_notificacion_funcionario({
           funcionario_asignado: id_funcionario,
-          flag: 'NO',
+          flag: 'CD',
         })
       );
       if (data.succes) {
@@ -291,7 +292,7 @@ export const aceptar_rechazar_asignacion_tarea_service = (
       dispatch(
         get_solicitudes_notificacion_funcionario({
           funcionario_asignado: id_funcionario,
-          flag: 'NO',
+          flag: 'CD',
         })
       );
       if (data.succes) {
@@ -332,7 +333,7 @@ export const actualizar_tarea_service = (
       dispatch(
         get_solicitudes_notificacion_funcionario({
           funcionario_asignado: id_funcionario,
-          flag: 'NO',
+          flag: 'CD',
         })
       );
       if (data.succes) {
@@ -1049,7 +1050,7 @@ export const add_asignacion_notificacion = (estado: any): any => {
           estado.id_notificacion_correspondencia
         )
       );
-      dispatch(get_solicitudes_notificacion({ flag: 'NO' }));
+      dispatch(get_solicitudes_notificacion({ flag: 'CD' }));
       if (data.succes) {
         control_success(data.detail);
       } else {
@@ -1080,7 +1081,7 @@ export const cancelar_asignacion_notificacion = (estado: any): any => {
       //     estado.id_notificacion_correspondencia
       //   )
       // );
-      dispatch(get_solicitudes_notificacion({ flag: 'NO' }));
+      dispatch(get_solicitudes_notificacion({ flag: 'CD' }));
       if (data.succes) {
         control_success(data.detail);
       } else {
@@ -1115,7 +1116,7 @@ export const add_asignacion_tarea = (estado: any): any => {
       dispatch(
         get_solicitudes_notificacion_funcionario({
           funcionario_asignado: estado.id_persona_asignada,
-          flag: 'NO',
+          flag: 'CD',
         })
       );
       if (data.succes) {
@@ -1148,7 +1149,7 @@ export const cancelar_asignacion_tarean = (estado: any): any => {
       //     estado.id_notificacion_correspondencia
       //   )
       // );
-      dispatch(get_solicitudes_notificacion({ flag: 'NO' }));
+      dispatch(get_solicitudes_notificacion({ flag: 'CD' }));
       if (data.succes) {
         control_success(data.detail);
       } else {
@@ -1523,25 +1524,6 @@ export const get_anexos_tarea = (id: any): any => {
     }
   };
 };
-export const get_datos_documento = (id: any): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(
-        `gestor/notificaciones/get-datos-documentos/${id}/`
-      );
-      console.log(data);
-
-      dispatch(set_soportes(data.data));
-
-      return data;
-    } catch (error: any) {
-      console.log('add_pqrsdf_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
 // Obtener tipos pqr
 // export const get_pqr_types_service = (): any => {
 //   return async (dispatch: Dispatch<any>) => {

@@ -26,20 +26,22 @@ import CloseIcon from '@mui/icons-material/Close';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuid } from 'uuid';
 import {
-  add_estado_notificacion,
-  delete_estado_notificacion,
-  edit_estado_notificacion,
-  get_estados_notificacion,
+  add_tipo_soporte,
+  delete_tipo_soporte,
+  edit_tipo_soporte,
+  get_causas_notificacion,
   get_tipos_notificacion,
+  get_tipos_soporte,
 } from '../../store/thunks/notificacionesThunks';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { set_estado_notificacion } from '../../store/slice/notificacionesSlice';
+import { set_tipo_soporte } from '../../store/slice/notificacionesSlice';
 import {
-  IObjNotificacionStatus,
   IObjNotificacionType,
+  IObjSupportType,
 } from '../../interfaces/notificaciones';
+
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
 // import ListadoPqrsdf from '../componentes/SolicitudPQRSDF/ListadoPqrsdf';
@@ -53,10 +55,11 @@ import {
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function EstadosNotificacionScreen(): JSX.Element {
+export function TiposSoporteScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const { estado_notificacion, estados_notificacion, tipos_notificacion } =
-    useAppSelector((state) => state.notificaciones_slice);
+  const { tipo_soporte, tipos_soporte, tipos_notificacion } = useAppSelector(
+    (state) => state.notificaciones_slice
+  );
   const {
     control: control_notificacion,
     handleSubmit: handle_submit_notificacion,
@@ -67,17 +70,15 @@ export function EstadosNotificacionScreen(): JSX.Element {
   const [checked_activo, set_checked_activo] = useState(false);
 
   useEffect(() => {
+    void dispatch(get_tipos_soporte());
     void dispatch(get_tipos_notificacion());
   }, []);
   useEffect(() => {
-    reset_notificacion(estado_notificacion);
-    if (
-      estado_notificacion?.activo !== null &&
-      estado_notificacion?.activo !== undefined
-    ) {
-      set_checked_activo(estado_notificacion?.activo);
+    reset_notificacion(tipo_soporte);
+    if (tipo_soporte?.activo !== null && tipo_soporte?.activo !== undefined) {
+      set_checked_activo(tipo_soporte?.activo);
     }
-  }, [estado_notificacion]);
+  }, [tipo_soporte]);
   const columns_list: GridColDef[] = [
     {
       field: 'nombre',
@@ -90,7 +91,7 @@ export function EstadosNotificacionScreen(): JSX.Element {
       ),
     },
     {
-      field: 'cod_tipo_notificacion_correspondencia',
+      field: 'id_tipo_notificacion_correspondencia',
       headerName: 'Tipo de notificacion/correspondencia',
       width: 250,
       renderCell: (params) => (
@@ -164,7 +165,7 @@ export function EstadosNotificacionScreen(): JSX.Element {
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
-                  dispatch(set_estado_notificacion(params.row));
+                  dispatch(set_tipo_soporte(params.row));
                   set_action('editar');
                 }}
               >
@@ -220,7 +221,7 @@ export function EstadosNotificacionScreen(): JSX.Element {
             <Tooltip title="Eliminar">
               <IconButton
                 onClick={() => {
-                  dispatch(delete_estado_notificacion(params.row));
+                  dispatch(delete_tipo_soporte(params.row));
                 }}
               >
                 <Avatar
@@ -248,14 +249,14 @@ export function EstadosNotificacionScreen(): JSX.Element {
     },
   ];
 
-  const on_submit = (data: IObjNotificacionStatus): void => {
+  const on_submit = (data: IObjSupportType): void => {
     if (
-      estado_notificacion?.id_estado_notificacion_correspondencia !== null &&
-      estado_notificacion?.id_estado_notificacion_correspondencia !== undefined
+      tipo_soporte?.id_tipo_anexo_soporte !== null &&
+      tipo_soporte?.id_tipo_anexo_soporte !== undefined
     ) {
       set_action('editar');
       void dispatch(
-        edit_estado_notificacion({
+        edit_tipo_soporte({
           ...data,
           activo: checked_activo,
           item_ya_usado: false,
@@ -265,7 +266,7 @@ export function EstadosNotificacionScreen(): JSX.Element {
     } else {
       set_action('crear');
       void dispatch(
-        add_estado_notificacion({
+        add_tipo_soporte({
           ...data,
           activo: checked_activo,
           item_ya_usado: false,
@@ -276,12 +277,11 @@ export function EstadosNotificacionScreen(): JSX.Element {
   };
   const descartar = (): void => {
     dispatch(
-      set_estado_notificacion({
-        ...estado_notificacion,
+      set_tipo_soporte({
+        ...tipo_soporte,
         nombre: null,
         activo: null,
         id_tipo_notificacion_correspondencia: null,
-        cod_tipo_notificacion_correspondencia: null,
       })
     );
     set_action('crear');
@@ -301,7 +301,7 @@ export function EstadosNotificacionScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Estados de notificaciones y/o correspondencias"></Title>
+          <Title title="Tipos de soportes para anexos"></Title>
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
@@ -317,7 +317,7 @@ export function EstadosNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'cod_tipo_notificacion_correspondencia',
+                control_name: 'id_tipo_notificacion_correspondencia',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Tipo',
@@ -386,15 +386,15 @@ export function EstadosNotificacionScreen(): JSX.Element {
           <DataGrid
             density="compact"
             autoHeight
-            rows={estados_notificacion || []}
+            rows={tipos_soporte || []}
             columns={columns_list}
             pageSize={10}
             rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) =>
-              row['id_estado_notificacion_correspondencia' ?? uuid()] === null
+              row['id_tipo_anexo_soporte' ?? uuid()] === null
                 ? uuid()
-                : row['id_estado_notificacion_correspondencia' ?? uuid()]
+                : row['id_tipo_anexo_soporte' ?? uuid()]
             }
           />
         </Grid>

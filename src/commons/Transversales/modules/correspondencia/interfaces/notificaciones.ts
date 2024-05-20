@@ -230,12 +230,6 @@ export interface IObjNotificacionType{
   activo?: boolean | null;
   item_ya_usado?: boolean | null;
   aplica_para?: string[] | null;
-  accion?: string | null;
-  publicar_pagina_gaceta?:boolean | null;
-    publicar_pagina_edictos?:boolean | null;
-    notificacion_personal?:boolean | null;
-    notificacion_correo_electronico?:boolean | null;
-    notificacion_medio_fisico?:boolean | null;
 }
 
 export interface IObjNotificacionCause{

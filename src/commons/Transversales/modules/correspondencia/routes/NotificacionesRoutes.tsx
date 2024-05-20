@@ -24,21 +24,18 @@ export const NotificacionesRoutes: React.FC = () => {
   return (
     <Routes>
       <Route
-        path="panel_notificaciones"
+        path="panel_solicitudes_correspondencia"
         element={<PanelSolicitudNotificacionScreen />}
       />
       <Route
-        path="ver_notificacion"
+        path="ver_solicitud_correspondencia"
         element={<VerSolicitudNotificacionScreen />}
       />
       <Route
-        path="rechazar_notificacion"
+        path="rechazar_solicitud_correspondencia"
         element={<RechazoSolicitudNotificacionScreen />}
       />
-      <Route
-        path="crear_notificacion"
-        element={<CrearSolicitudNotificacionScreen />}
-      />
+
       <Route
         path="panel_asignacion_coordinador"
         element={<PanelAsignacionCoordinadorScreen />}
@@ -52,42 +49,10 @@ export const NotificacionesRoutes: React.FC = () => {
         element={<PanelAsignacionTareaFuncioanrioScreen />}
       />
       <Route path="panel_funcionario" element={<PanelFuncionarioScreen />} />
+
       <Route
-        path="parametrizacion/tipos_notificacion"
-        element={<TiposNotificacionScreen />}
-      />
-      <Route
-        path="parametrizacion/tipos_documento_notificacion"
-        element={<TiposDocumentoNotificacionScreen />}
-      />
-      <Route
-        path="parametrizacion/estados_notificacion"
-        element={<EstadosNotificacionScreen />}
-      />
-      <Route
-        path="parametrizacion/causas_notificacion"
-        element={<CausasNotificacionScreen />}
-      />
-      <Route
-        path="parametrizacion/tipos_soporte"
-        element={<TiposSoporteScreen />}
-      />
-      <Route
-        path="publicar/gaceta_ambiental"
+        path="gestionar_tarea_solicitud_correspondencia"
         element={<GacetaAmbientalScreen />}
-      />
-      <Route
-        path="publicar/correspondencia_fisica"
-        element={<CorrespondenciaFisicaScreen />}
-      />
-      <Route
-        path="publicar/correo_electronico"
-        element={<CorreoCertificadoScreen />}
-      />
-      <Route path="publicar/edictos" element={<PublicarEdictosScreen />} />
-      <Route
-        path="generador_documentos/generar"
-        element={<GeneradorDocumentosScreen />}
       />
 
       {/* <Route path="solicitud_pqrsdf" element={<SolicitudPqrsdfScreen />} />

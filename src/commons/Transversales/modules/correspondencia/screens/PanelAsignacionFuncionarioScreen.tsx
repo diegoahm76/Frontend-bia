@@ -585,28 +585,11 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                   <Tooltip title="Gestionar tarea">
                     <IconButton
                       onClick={() => {
-                        // set_tarea_is_active(true);
+                        //set_tarea_is_active(true);
                         setSelectedPqr(rowData);
                         set_tipo_tarea('');
                       }}
-                      href={
-                        rowData.tipo_notificacion_correspondencia
-                          .publicar_pagina_gaceta
-                          ? `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
-                          : rowData.tipo_notificacion_correspondencia
-                              .publicar_pagina_edictos
-                          ? `/#/app/transversal/notificaciones/publicar/edictos`
-                          : rowData.tipo_notificacion_correspondencia
-                              .notificacion_correo_electronico
-                          ? `/#/app/transversal/notificaciones/publicar/correo_electronico`
-                          : rowData.tipo_notificacion_correspondencia
-                              .notificacion_medio_fisico
-                          ? `/#/app/transversal/notificaciones/publicar/correspondencia_fisica`
-                          : rowData.tipo_notificacion_correspondencia
-                              .notificacion_personal
-                          ? `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
-                          : `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
-                      }
+                      href={`/#/app/transversal/correspondencia/gestionar_tarea_solicitud_correspondencia/`}
                     >
                       <Avatar
                         sx={{
@@ -710,14 +693,14 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
       column_id: 'id_notificacion_correspondencia',
       level: 0,
       columns: columns_pqrs,
-      table_name: 'Solicitudes de notificación',
+      table_name: 'Solicitudes de correspondencia',
       property_name: '',
     },
     {
       column_id: 'id_registro_notificacion_correspondencia',
       level: 1,
       columns: columns_solicitud,
-      table_name: 'Registro de notificación por solicitud',
+      table_name: 'Registro de tareas por solicitud',
       property_name: 'registros_notificaciones',
     },
   ];
@@ -879,7 +862,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
       params.estado = estado;
     }
     params.funcionario_asignado = funcionario_asignado;
-    params.flag = 'NO';
+    params.flag = 'CD';
     void dispatch(get_solicitudes_notificacion_funcionario(params));
   };
   const get_x: any = (data: any) => {
@@ -928,7 +911,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Solicitudes asignadas funcionario"></Title>
+          <Title title="Solicitudes correspondencia asignadas funcionario"></Title>
           <Grid container direction="row" padding={2} spacing={2}>
             <Grid item xs={12} md={6}>
               <FormButton
@@ -952,7 +935,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                       userinfo.id_persona) &&
                   (notification_request?.cod_estado_asignacion ?? 'Pe') !== 'Ac'
                 }
-                href={`/#/app/transversal/notificaciones/panel_asignacion_tarea_funcionario/`}
+                href={`/#/app/transversal/correspondencia/panel_asignacion_tarea_funcionario/`}
                 variant_button="outlined"
                 on_click_function={null}
                 icon_class={null}

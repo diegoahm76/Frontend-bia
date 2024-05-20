@@ -460,6 +460,17 @@ export function TiposNotificacionScreen(): JSX.Element {
                         params.row.aplica_para_notificaciones &&
                           'notificaciones',
                       ],
+                      accion: params.row.publicar_pagina_gaceta
+                        ? 'a'
+                        : params.row.publicar_pagina_edictos
+                        ? 'b'
+                        : params.row.notificacion_correo_electronico
+                        ? 'c'
+                        : params.row.notificacion_medio_fisico
+                        ? 'd'
+                        : params.row.notificacion_personal
+                        ? 'e'
+                        : null,
                     })
                   );
                   set_action('editar');
@@ -561,6 +572,11 @@ export function TiposNotificacionScreen(): JSX.Element {
           item_ya_usado: false,
           registro_precargado: false,
           activo: checked_activo,
+          publicar_pagina_gaceta: data.accion === 'a',
+          publicar_pagina_edictos: data.accion === 'b',
+          notificacion_correo_electronico: data.accion === 'c',
+          notificacion_medio_fisico: data.accion === 'd',
+          notificacion_personal: data.accion === 'e',
         };
         void dispatch(edit_tipo_notificacion(data_edit));
       }
@@ -576,6 +592,11 @@ export function TiposNotificacionScreen(): JSX.Element {
           item_ya_usado: false,
           registro_precargado: false,
           activo: checked_activo,
+          publicar_pagina_gaceta: data.accion === 'a',
+          publicar_pagina_edictos: data.accion === 'b',
+          notificacion_correo_electronico: data.accion === 'c',
+          notificacion_medio_fisico: data.accion === 'd',
+          notificacion_personal: data.accion === 'e',
         };
         void dispatch(add_tipo_notificacion(data_edit));
       }
@@ -590,6 +611,7 @@ export function TiposNotificacionScreen(): JSX.Element {
         aplica_para: [],
         habiles_o_calendario: null,
         tiempo_en_dias: null,
+        accion: null,
       })
     );
     set_action('crear');
@@ -642,7 +664,7 @@ export function TiposNotificacionScreen(): JSX.Element {
               {
                 datum_type: 'input_controller',
                 xs: 12,
-                md: 8,
+                md: 4,
                 control_form: control_notificacion,
                 control_name: 'nombre',
                 default_value: '',
@@ -650,6 +672,27 @@ export function TiposNotificacionScreen(): JSX.Element {
                 label: 'Nombre',
                 disabled: false,
                 helper_text: '',
+              },
+              {
+                datum_type: 'select_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_notificacion,
+                control_name: 'accion',
+                default_value: [],
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Acción relacionada:',
+                disabled: false,
+                helper_text: '',
+                select_options: [
+                  { label: 'Publicar en gaceta', key: 'a' },
+                  { label: 'Publicar edicto', key: 'b' },
+                  { label: 'Correo electronico', key: 'c' },
+                  { label: 'Correspondencia fisica', key: 'd' },
+                  { label: 'Notificacion personal', key: 'e' },
+                ],
+                option_label: 'label',
+                option_key: 'key',
               },
               {
                 datum_type: 'input_controller',
