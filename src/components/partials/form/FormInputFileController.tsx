@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DownloadButton } from '../../../utils/DownloadButton/DownLoadButton';
+import { useEffect } from 'react';
 
 interface IRuleMessage {
   rule: any;
